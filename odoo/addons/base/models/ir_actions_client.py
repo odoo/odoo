@@ -66,15 +66,12 @@ class IrActionsClient(models.Model):
                 _debug.logic("params_empty", action=record.id)
                 record.params = stored
                 continue
-            if isinstance(stored, bytes):
-                stored = stored.decode()
-            try:
-                record.params = safe_eval(stored, {"uid": self.env.uid})
-                _debug.logic("params_evaluated", action=record.id, bytes=len(stored))
-            except Exception as exc:
-                _debug.logic(
-                    "params_unparsable", action=record.id, error=type(exc).__name__
-                )
+            params = self._parse_params(stored)
+            if isinstance(params, dict):
+                _debug.logic("params_evaluated", action=record.id, keys=len(params))
+                record.params = params
+            else:
+                _debug.logic("params_unparsable", action=record.id)
                 record.params = False
 
     def _inverse_params(self) -> None:

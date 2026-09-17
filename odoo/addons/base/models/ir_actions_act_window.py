@@ -205,7 +205,7 @@ class IrActionsAct_Window(models.Model):
         if self.res_model not in self.env:
             _debug.logic("empty_list_help_stored", action=self.id, model=self.res_model)
             return stored_help
-        ctx = self.env["ir.actions.actions"]._eval_action_context(self.context)
+        ctx = self._eval_action_context(self.context)
         _debug.logic(
             "empty_list_help_delegated",
             action=self.id,

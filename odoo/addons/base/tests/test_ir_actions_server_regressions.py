@@ -848,3 +848,24 @@ class TestHistoryRecordsCodeNotItsAbsence(ServerActionCase):
         self.assertFalse(History.search([("action_id", "=", action.id)]))
         action.write({"code": "pass", "state": "code"})
         self.assertEqual(len(History.search([("action_id", "=", action.id)])), 1)
+
+
+@tagged("post_install", "-at_install")
+class TestACopysNameIsKept(ServerActionCase):
+    def test_the_copy_suffix_marks_the_name_custom(self):
+        action = self._action(state="code", code="pass", name=False)
+        self.env.flush_all()
+        self.assertFalse(action.name_is_custom)
+        copy = action.copy()
+        self.env.flush_all()
+        self.assertEqual(copy.name, "Execute Code (copy)")
+        self.assertTrue(copy.name_is_custom)
+        copy.write({"state": "object_write", "update_path": "name"})
+        self.env.flush_all()
+        self.assertEqual(copy.name, "Execute Code (copy)")
+
+    def test_a_copy_given_its_own_name_keeps_that_one(self):
+        action = self._action(state="code", code="pass", name=False)
+        copy = action.copy({"name": "Second"})
+        self.env.flush_all()
+        self.assertEqual((copy.name, copy.name_is_custom), ("Second", True))

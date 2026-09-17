@@ -1449,7 +1449,9 @@ class IrActionsServer(models.Model):
         res = False
         for action in self.sudo():
             eval_context = self._prepare_eval_context(action)
-            records = self._get_records_targeted(action)
+            records = eval_context["records"]
+            if records is None:
+                records = eval_context["model"]
             action.sudo(self.env.su)._check_access_to_run(records)
             with _debug.perf(
                 "run",
@@ -1772,9 +1774,10 @@ class IrActionsServer(models.Model):
     def copy_data(self, default: ValuesType | None = None) -> list[ValuesType]:
         default = default or {}
         vals_list = super().copy_data(default=default)
-        if not default.get("name"):
-            for vals in vals_list:
+        for vals in vals_list:
+            if not default.get("name"):
                 vals["name"] = _("%s (copy)", vals.get("name", ""))
+            vals["name_is_custom"] = True
         return vals_list
 
     def copy_translations(self, new, excluded=()):
@@ -1805,5 +1808,5 @@ class IrActionsServer(models.Model):
             "target": "current",
             "views": [[False, "form"]],
             "res_model": "ir.cron",
-            "res_id": self.ir_cron_ids.ids[0],
+            "res_id": self.ir_cron_ids[:1].id,
         }

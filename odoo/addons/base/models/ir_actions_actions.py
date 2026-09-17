@@ -187,10 +187,20 @@ class IrActionsActions(models.Model):
                 )
             for prefix in self._RESERVED_PATH_PREFIXES:
                 if action.path.startswith(prefix):
-                    _debug.logic("path_rejected", action=action.id, path=action.path)
+                    _debug.logic(
+                        "path_rejected",
+                        action=action.id,
+                        path=action.path,
+                        reason="reserved_prefix",
+                    )
                     raise ValidationError(_("'%s' is a reserved prefix.", prefix))
             if action.path in self._RESERVED_PATHS:
-                _debug.logic("path_rejected", action=action.id, path=action.path)
+                _debug.logic(
+                    "path_rejected",
+                    action=action.id,
+                    path=action.path,
+                    reason="reserved",
+                )
                 raise ValidationError(
                     _("'%s' is reserved, and can not be used as path.", action.path)
                 )

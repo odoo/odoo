@@ -196,8 +196,8 @@ class IrEmbeddedActions(models.Model):
                         record.is_visible = False
                         continue
                     record.is_visible = bool(
-                        record.parent_res_id in (False, active_id)
-                        and record.user_id.id in (False, self.env.uid)
+                        (not record.parent_res_id or record.parent_res_id == active_id)
+                        and (not record.user_id or record.user_id.id == self.env.uid)
                         and active_model_record.filtered_domain(domain_model)
                     )
                 else:

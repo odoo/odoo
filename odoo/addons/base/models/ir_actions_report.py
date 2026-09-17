@@ -417,22 +417,20 @@ class IrActionsReport(models.Model):
     def _render_template(
         self, template: str, values: dict[str, Any] | None = None
     ) -> bytes:
-        if values is None:
-            values = {}
-
         user = self.env.user
         view_obj = self.env["ir.ui.view"].with_context(inherit_branding=False)
-        values.update(
-            time=time,
-            context_timestamp=lambda t: fields.Datetime.context_timestamp(
+        values = {
+            **(values or {}),
+            "time": time,
+            "context_timestamp": lambda t: fields.Datetime.context_timestamp(
                 self.with_context(tz=user.tz), t
             ),
-            user=user,
-            res_company=self.env.company,
-            web_base_url=self.env["ir.config_parameter"]
+            "user": user,
+            "res_company": self.env.company,
+            "web_base_url": self.env["ir.config_parameter"]
             .sudo()
             .get_param("web.base.url", default=""),
-        )
+        }
         with _debug.perf("render_template", cr=self.env.cr, template=template):
             return view_obj._render_template(template, values).encode()
 

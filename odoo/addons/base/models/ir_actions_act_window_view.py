@@ -1,7 +1,4 @@
 from odoo import api, fields, models
-from odoo.libs.debug_log import DebugLog
-
-_debug = DebugLog(__name__)
 
 NON_WINDOW_VIEW_TYPES = ("search", "qweb")
 
@@ -42,14 +39,10 @@ class IrActionsAct_WindowView(models.Model):
         # records: the vocabulary is ir.ui.view's, read at call time, so a
         # module registering a type registers a window mode with it and
         # nothing has to say it twice.
-        modes = [
+        return [
             (value, label)
             for value, label in self.env["ir.ui.view"]
             ._fields["type"]
             ._description_selection(self.env)
             if value not in NON_WINDOW_VIEW_TYPES
         ]
-        _debug.logic(
-            "view_modes_resolved", count=len(modes), excluded=NON_WINDOW_VIEW_TYPES
-        )
-        return modes
