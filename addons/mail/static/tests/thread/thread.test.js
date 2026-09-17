@@ -667,7 +667,7 @@ test("basic rendering of canceled notification", async () => {
         res_id: channelId,
     });
     pyEnv["mail.notification"].create({
-        failure_type: "SMTP",
+        failure_type: "mail_smtp",
         mail_message_id: messageId,
         notification_status: "canceled",
         notification_type: "email",
