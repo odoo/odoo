@@ -5,7 +5,8 @@
             <xpath expr="//t[@t-call='web.external_layout']" position="before">
                 <t t-set="jp_recipient_partner" t-value="doc.partner_id"/>
                 <t t-set="jp_hide_zero_decimals"
-                   t-value="doc.company_id.sudo()._l10n_jp_hide_zero_decimals(doc._l10n_jp_printed_unit_prices())"/>
+                   t-value="doc.company_id.sudo()._l10n_jp_hide_zero_decimals(doc.order_line.mapped('price_unit'))
+                            and not any(line.discount &lt; 0 for line in doc.order_line)"/>
             </xpath>
 
             <xpath expr="//div[@t-field='doc.partner_id']" position="attributes">
@@ -13,10 +14,8 @@
             </xpath>
 
             <!-- The column drops its decimals only when every unit price in it is whole.
-                 A negative discount prints a surcharged price, so that is the one that counts. -->
-            <xpath expr="//td[@name='td_product_priceunit']/span[1]" position="attributes">
-                <attribute name="t-options">{'widget': 'float', 'precision': 0} if jp_hide_zero_decimals else {'widget': 'float', 'decimal_precision': 'Product Price'}</attribute>
-            </xpath>
+                 The surcharged price a negative discount prints is left alone: the
+                 column keeps its decimals whenever one is on the order. -->
             <xpath expr="//td[@name='td_product_priceunit']/span[2]" position="attributes">
                 <attribute name="t-options">{'precision': 0} if jp_hide_zero_decimals else {}</attribute>
             </xpath>
