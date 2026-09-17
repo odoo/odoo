@@ -4,7 +4,7 @@ import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
-import { useEmailHtmlConverter, useSavePendingImage } from "@mail/convert_inline/hooks";
+import { useEmailHtmlConverter, useEmailPendingImageTools } from "@mail/convert_inline/hooks";
 import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
 import { ThemeSelectorIframe } from "@mass_mailing/themes/theme_selector/theme_selector_iframe";
 import {
@@ -55,7 +55,7 @@ export class MassMailingHtmlField extends HtmlField {
             ],
             bundles: ["mass_mailing.assets_iframe_style"],
         });
-        this._savePendingImages = useSavePendingImage({
+        this.imageTools = useEmailPendingImageTools({
             getLastChangeId: () => this.lastChangeId,
             setLastChangeId: (id) => (this.lastChangeId = id),
         });
@@ -405,11 +405,19 @@ export class MassMailingHtmlField extends HtmlField {
     }
 
     /**
-     * @see useSavePendingImage
+     * @see useEmailPendingImageTools
+     * @override
+     */
+    prepareSaveWithPendingImages() {
+        this.imageTools.prepareSaveWithPendingImages({ editor: this.editor });
+    }
+
+    /**
+     * @see useEmailPendingImageTools
      * @override
      */
     async savePendingImages(content) {
-        await this._savePendingImages({ content, editor: this.editor });
+        await this.imageTools.savePendingImages({ content, editor: this.editor });
     }
 
     /**
