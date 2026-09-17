@@ -713,8 +713,9 @@ class StockMoveLine(models.Model):
             affected_pickings._check_entire_pack()
 
     def action_send_recall_email(self):
-        partners = self.picking_partner_id
-        if partners:
+        move_lines = self.filtered('picking_partner_id')
+        if move_lines:
+            template = self.env.ref('stock.mail_template_data_stock_move_line_recall', raise_if_not_found=False)
             return {
                 'name': _('Send Email'),
                 'type': 'ir.actions.act_window',
@@ -722,12 +723,14 @@ class StockMoveLine(models.Model):
                 'view_mode': 'form',
                 'target': 'new',
                 'context': {
-                    'default_composition_mode': 'mass_mail' if len(partners) > 1 else 'comment',
-                    'default_partner_ids': partners.ids,
-                    'default_model': 'stock.picking',
-                    'default_res_ids': self.picking_id.ids,
-                }
+                    'default_composition_mode': 'mass_mail',
+                    'default_model': 'stock.move.line',
+                    'default_res_ids': move_lines.ids,
+                    'default_template_id': template.id if template else False,
+                    'default_use_template': bool(template),
+                },
             }
+        return {}
 
     def _synchronize_quant(self, quantity, location, action="available", in_date=False, **quants_value):
         """ quantity should be express in product's UoM"""
@@ -1742,3 +1745,7 @@ class StockMoveLine(models.Model):
 
         description = ', '.join(description_items)
         return description
+
+    def _message_compute_subject(self):
+        self.ensure_one()
+        return self.reference
