@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_l10n_ge_withholding" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.l10n_ge_withholding</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']/parent::group" position="inside">
+                <field name="l10n_ge_wht_category_ids" widget="many2many_tags"
+                       invisible="'GE' not in fiscal_country_codes"
+                       options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
