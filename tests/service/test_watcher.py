@@ -96,6 +96,21 @@ class TestFSWatcherBase:
         mock_restart.assert_not_called()
         assert result is None
 
+    def test_a_windows_asset_path_is_recognised_and_invalidated(self, watcher):
+        # On Windows the watchdog backend reports native backslash paths; a
+        # POSIX-only "/static/" check would miss them and --dev=assets would
+        # silently ignore every asset edit there.
+        win_path = r"c:\odoo\addons\web\static\src\x.js"
+        with (
+            patch.object(_watcher.os, "sep", "\\"),
+            patch("odoo.service._watcher.current") as current,
+            patch.object(watcher, "on_asset_file_changed") as on_asset,
+        ):
+            current.return_value.dev_mode = ["assets"]
+            result = watcher.on_file_changed(win_path)
+        on_asset.assert_called_once_with(win_path)
+        assert result is None
+
 
 @pytest.mark.parametrize("phoenix", [False, True])
 def test_prefork_watcher_keeps_accepting_source_edits(tmp_path, phoenix):

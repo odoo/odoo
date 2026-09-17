@@ -254,7 +254,11 @@ class FSWatcherBase:
 
     def on_file_changed(self, path: str) -> bool | None:
         dev_mode = current().dev_mode
-        if path.endswith(ASSET_SUFFIXES) and "/static/" in path:
+        # The watchdog backend on Windows reports native backslash paths;
+        # a POSIX-only separator here would silently ignore every asset
+        # edit under --dev=assets there.
+        posix_path = path.replace(os.sep, "/")
+        if path.endswith(ASSET_SUFFIXES) and "/static/" in posix_path:
             _debug.logic(
                 "watcher.asset_changed", path=path, handled="assets" in dev_mode
             )
