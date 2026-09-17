@@ -57,3 +57,41 @@ export function createDummyProductForEvents(models) {
     }
     return eventProducts;
 }
+
+export function createRegistrationAnswer(models, textAnswers) {
+    return textAnswers.map(([questionId, answer]) => {
+        const ansId = models["event.question.answer"].get(parseInt(answer));
+        return [
+            "create",
+            {
+                question_id: models["event.question"].get(parseInt(questionId)),
+                ...(ansId ? { value_answer_id: ansId } : { value_text_box: answer }),
+            },
+        ];
+    });
+}
+
+export function extractRegistrationData(models, questions, userData = {}) {
+    const IDENTIFICATION_QUESTION_TYPES = new Set(["name", "email", "phone", "company_name"]);
+
+    return Object.entries(questions).reduce(
+        (acc, [qId, answer]) => {
+            if (!answer) {
+                return acc;
+            }
+
+            const question = models["event.question"].get(parseInt(qId));
+            if (!question) {
+                return acc;
+            }
+
+            acc.textAnswer[qId] = answer;
+            if (IDENTIFICATION_QUESTION_TYPES.has(question.question_type)) {
+                userData[question.question_type] ??= answer;
+            }
+
+            return acc;
+        },
+        { textAnswer: {}, userData }
+    );
+}
