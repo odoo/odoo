@@ -30,12 +30,27 @@ class ResourceResource(models.Model):
     _description = "Resources"
     _order = "name"
 
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+    )
     name = fields.Char(
         compute="_compute_name",
         inverse="_inverse_name",
         precompute=True,
         store=True,
         readonly=False,
+        required=True,
+    )
+    active = fields.Boolean(
+        default=True,
+        help="If the active field is set to False, it will allow you to hide the resource record without removing it.",
+    )
+    color = fields.Integer(default=lambda self: self._default_color())
+    resource_type = fields.Selection(
+        selection=[("user", "Human"), ("material", "Material")],
+        string="Type",
+        default="user",
         required=True,
     )
     partner_id = fields.Many2one(
@@ -46,20 +61,7 @@ class ResourceResource(models.Model):
         ondelete="restrict",
         help="The person this resource is. A material resource has none.",
     )
-    active = fields.Boolean(
-        default=True,
-        help="If the active field is set to False, it will allow you to hide the resource record without removing it.",
-    )
-    company_id = fields.Many2one(
-        comodel_name="res.company",
-        default=lambda self: self.env.company,
-    )
-    resource_type = fields.Selection(
-        selection=[("user", "Human"), ("material", "Material")],
-        string="Type",
-        default="user",
-        required=True,
-    )
+    phone_ids = fields.Many2many(related="partner_id.phone_ids")
     user_id = fields.Many2one(
         comodel_name="res.users",
         compute="_compute_user_id",
@@ -76,7 +78,6 @@ class ResourceResource(models.Model):
         inverse="_inverse_email",
         search="_search_email",
     )
-    phone_ids = fields.Many2many(related="partner_id.phone_ids")
 
     calendar_id = fields.Many2one(
         comodel_name="resource.calendar",
@@ -96,7 +97,6 @@ class ResourceResource(models.Model):
         required=True,
         help="The time zone where this resource works. Its working schedule is read in this zone: an 08:00-17:00 schedule means 08:00-17:00 here, whatever zone the schedule names. For an employee deployed away from the corporate office, set the zone of the place of work.",
     )
-    color = fields.Integer(default=lambda self: self._default_color())
     time_efficiency = fields.Float(
         string="Efficiency Factor",
         default=100,
