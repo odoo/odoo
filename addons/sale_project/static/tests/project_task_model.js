@@ -1,7 +1,6 @@
 import { fields, models } from "@web/../tests/web_test_helpers";
 import { projectModels } from "@project/../tests/project_models";
 
-
 export class ProjectTask extends projectModels.ProjectTask {
     _name = "project.task";
 
@@ -41,7 +40,11 @@ export class ProductProduct extends models.Model {
     name = fields.Char();
     type = fields.Selection({
         string: "Type",
-        selection: [("consu", "Goods"), ("service", "Service"), ("combo", "Combo")],
+        selection: [
+            ["consu", "Goods"],
+            ["service", "Service"],
+            ["combo", "Combo"],
+        ],
     });
 
     _records = [
