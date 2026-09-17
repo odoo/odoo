@@ -2975,8 +2975,7 @@ class TestOne2many(TransactionCase):
                 SELECT "res_partner"."parent_id" AS __inverse
                 FROM "res_partner"
                 WHERE (
-                    "res_partner"."active" IS TRUE
-                    AND EXISTS (SELECT FROM (
+                    EXISTS (SELECT FROM (
                         SELECT "res_partner_bank"."partner_id" AS __inverse
                         FROM "res_partner_bank"
                         WHERE "res_partner_bank"."sanitized_acc_number" LIKE %s
@@ -3066,8 +3065,7 @@ class TestOne2many(TransactionCase):
                 SELECT "res_partner"."parent_id" AS __inverse
                 FROM "res_partner"
                 WHERE (
-                    "res_partner"."active" IS TRUE
-                    AND EXISTS (SELECT FROM (
+                    EXISTS (SELECT FROM (
                         SELECT "res_partner_bank"."partner_id" AS __inverse
                         FROM "res_partner_bank"
                         WHERE "res_partner_bank"."sanitized_acc_number" LIKE %s
@@ -3146,8 +3144,7 @@ class TestOne2many(TransactionCase):
                 LEFT JOIN "res_country" AS "res_partner__state_id__country_id"
                     ON ("res_partner__state_id"."country_id" = "res_partner__state_id__country_id"."id")
                 WHERE (
-                    "res_partner"."active" IS TRUE
-                    AND "res_partner"."parent_id" IS NOT NULL
+                    "res_partner"."parent_id" IS NOT NULL
                     AND ("res_partner"."state_id" IS NOT NULL AND "res_partner__state_id__country_id"."code" LIKE %s)
                 )
             ) AS __sub WHERE __inverse = "res_partner"."id")
