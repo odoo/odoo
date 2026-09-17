@@ -179,13 +179,11 @@
     </template>
 
     <template id="payment_details">
-        <div class="row gap2 gap-md-0">
+        <div class="row gap2 gap-md-0 o_floating_labels">
             <input name="provider_id" type="hidden" id="provider_id" t-att-value="id"/>
             <input name="partner_id" type="hidden" t-att-value="partner_id"/>
-            <div class="col-12 col-md mt-0 mb-0">
-                <label for="customer_input" class="mt-0">
-                    <small>Payment Details (test data)</small>
-                </label>
+            <div class="col-12 col-md mb-0">
+                <label for="customer_input">Payment Details (test data)</label>
                 <input type="text"
                        name="customer_input"
                        id="customer_input"
@@ -193,9 +191,7 @@
                        placeholder="XXXX XXXX XXXX XXXX"/>
             </div>
             <div class="col-12 col-md mb-0">
-                <label for="simulated_payment_state" class="mt-0 text-muted">
-                    <small>Payment Status</small>
-                </label>
+                <label for="simulated_payment_state">Payment Status</label>
                 <select id="simulated_payment_state" class="form-select">
                     <option value="done" title="Successful payment">
                         Successful
