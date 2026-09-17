@@ -70,12 +70,13 @@ class TestJPSaleReport(AccountTestInvoicingCommon):
         self.assertNotIn('202.00', text)
         self.assertNotIn('105.00', text)
 
-    def test_unit_price_column_follows_the_surcharged_price(self):
-        # A negative discount prints the surcharged price, 200 + 10% = 220, and
-        # that whole number is what lets the column go without its decimals.
-        self.assertNotIn('220.00', self._render_unit_prices([(200.0, -10.0)]))
+    def test_unit_price_column_keeps_its_decimals_under_a_surcharge(self):
+        # A negative discount prints a surcharged price rather than the one held
+        # on the line, and the rule reads the line. So the column keeps its
+        # decimals for the whole order instead of risking a surcharge rounded
+        # away: 200 + 10% stays 220.00 even though it is whole.
+        self.assertIn('220.00', self._render_unit_prices([(200.0, -10.0)]))
 
-        # 101 + 10% = 111.10 keeps the decimals of the surcharge above it.
         text = self._render_unit_prices([(200.0, -10.0), (101.0, -10.0)])
         self.assertIn('220.00', text)
         self.assertIn('111.10', text)
