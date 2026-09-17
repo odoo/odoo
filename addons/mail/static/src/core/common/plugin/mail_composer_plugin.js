@@ -66,7 +66,10 @@ export class MailComposerPlugin extends Plugin {
     static shared = ["cancelSelection", "insert", "setCursorEnd", "updateEditableState"];
     resources = {
         on_will_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
-        paste_odoo_editor_html_overrides: this.handlePasteHtmlOverride.bind(this),
+        paste_odoo_editor_html_overrides: (selection, sanitizedFragment) =>
+            this.handlePasteHtmlOverride(sanitizedFragment),
+        paste_html_overrides: (selection, clipboardElem, sanitizedFragment) =>
+            this.handlePasteHtmlOverride(sanitizedFragment),
         should_bypass_paste_image_files_predicates: () => true,
         on_link_created_handlers: (linkEl) => (linkEl.target = "_blank"),
         hints: [
@@ -240,7 +243,7 @@ export class MailComposerPlugin extends Plugin {
         }
     }
 
-    handlePasteHtmlOverride(selection, sanitizedFragment) {
+    handlePasteHtmlOverride(sanitizedFragment) {
         if (sanitizedFragment.childNodes.length === 0) {
             return false;
         }
