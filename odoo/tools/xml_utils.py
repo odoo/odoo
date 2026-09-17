@@ -15,25 +15,26 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 
+# The characters to be escaped are the control characters #x0 to #x1F and #x7F (most of which cannot appear in XML)
+# [...] XML processors must accept any character in the range specified for Char:
+# `Char	   :: =   	#x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]`
+# source:https://www.w3.org/TR/xml/
+INVALID_XML_CHARS_CLASS = (
+    '[^'
+    '\u0009'
+    '\u000A'
+    '\u000D'
+    '\u0020-\uD7FF'
+    '\uE000-\uFFFD'
+    '\U00010000-\U0010FFFF'
+    ']'
+)
+INVALID_XML_CHARS = re.compile(INVALID_XML_CHARS_CLASS)
+
+
 def remove_control_characters(byte_node):
-    """
-    The characters to be escaped are the control characters #x0 to #x1F and #x7F (most of which cannot appear in XML)
-    [...] XML processors must accept any character in the range specified for Char:
-    `Char	   :: =   	#x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]`
-    source:https://www.w3.org/TR/xml/
-    """
-    return re.sub(
-        '[^'
-        '\u0009'
-        '\u000A'
-        '\u000D'
-        '\u0020-\uD7FF'
-        '\uE000-\uFFFD'
-        '\U00010000-\U0010FFFF'
-        ']'.encode(),
-        b'',
-        byte_node,
-    )
+    """Remove the characters outside of the XML `Char` production from a bytestring."""
+    return re.sub(INVALID_XML_CHARS_CLASS.encode(), b'', byte_node)
 
 
 class odoo_resolver(etree.Resolver):

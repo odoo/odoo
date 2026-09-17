@@ -23,6 +23,7 @@ from werkzeug import urls
 import odoo
 from odoo.loglevels import ustr
 from odoo.tools import misc
+from odoo.tools.xml_utils import INVALID_XML_CHARS
 
 _logger = logging.getLogger(__name__)
 
@@ -238,6 +239,7 @@ def html_normalize(src, filter_callback=None):
         return src
 
     src = ustr(src, errors='replace')
+    src = INVALID_XML_CHARS.sub('', src)
     # html: remove encoding attribute inside tags
     doctype = re.compile(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', re.IGNORECASE | re.DOTALL)
     src = doctype.sub(u"", src)
