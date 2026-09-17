@@ -1,16 +1,21 @@
 @media (max-width: 767.98px) { /* breakpoint-md */
     .o_control_panel_main_buttons {
         /* hide the ellipsis dropdown by default */
-        > .o-control-panel-adaptive-dropdown {
+        > .o-dropdown.o-control-panel-adaptive-dropdown.o-dropdown-caret {
             display: none;
+        }
+
+        &:not(:has(> :nth-child(n + 2 of :not(.d-none, .o_hidden, .o-control-panel-adaptive-dropdown))))
+            > :nth-child(1 of :not(.d-none, .o_hidden, .o-control-panel-adaptive-dropdown)) {
+            border-radius: var(--btn-border-radius);
         }
 
         /* hide the visible elements beside the first one and the ellipsis dropdown */
         > :nth-child(n + 2 of :not(.d-none, .o_hidden, .o-control-panel-adaptive-dropdown)) {
             display: none !important;
 
-            ~ .o-control-panel-adaptive-dropdown {
-                display: inline-block;
+            ~ .o-dropdown.o-control-panel-adaptive-dropdown.o-dropdown-caret {
+                display: flex;
             }
         }
     }

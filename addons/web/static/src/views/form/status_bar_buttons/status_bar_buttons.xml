@@ -2,15 +2,14 @@
 <templates xml:space="preserve">
 
     <t t-name="web.StatusBarButtons">
-        <div class="o_statusbar_buttons d-flex align-items-center align-content-around flex-wrap gap-1">
+        <div class="o_statusbar_buttons d-flex align-items-center align-content-around flex-wrap gap-1"
+             t-att-class="{ 'btn-group': this.uiService.isSmall }">
             <t t-if="this.uiService.isSmall">
                 <t t-set="firstSlot" t-value="this.visibleSlotNames[0]" />
                 <t t-set="otherSlots" t-value="this.visibleSlotNames.slice(1)" />
                 <t t-if="firstSlot" t-call-slot="{{ firstSlot }}" />
                 <Dropdown t-if="otherSlots.length">
-                    <button class="btn btn-secondary" title="More">
-                        <i class="oi oi-fw" data-icon="more_vert"/>
-                    </button>
+                    <button class="btn o-dropdown-caret dropdown-toggle-split" title="More"/>
                     <t t-set-slot="content">
                         <t t-foreach="otherSlots" t-as="slot" t-key="slot">
                             <DropdownItem class="'o-dropdown-item-unstyled-button'">
