@@ -121,11 +121,15 @@ def _apply_constraints(schema: dict[str, Any], spec: ParamSpec) -> dict[str, Any
 
 def param_spec_to_schema(spec: ParamSpec) -> dict[str, Any]:
     if spec.variants is not None:
-        schema: dict[str, Any] = {
-            "oneOf": [param_spec_to_schema(v) for v in spec.variants.values()],
+        one_of = [param_spec_to_schema(v) for v in spec.variants.values()]
+        if spec.allow_none:
+            # OpenAPI 3.1 dropped the 3.0 `nullable` keyword; null is a
+            # oneOf variant (the discriminator only applies to the objects).
+            one_of.append({"type": "null"})
+        return {
+            "oneOf": one_of,
             "discriminator": {"propertyName": spec.discriminator},
         }
-        return {**schema, "nullable": True} if spec.allow_none else schema
     if spec.fields is not None:
         schema = _prepare_object_schema(spec.fields)
     elif spec.constraints is not None:

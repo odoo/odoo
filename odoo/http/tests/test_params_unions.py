@@ -85,6 +85,23 @@ def test_a_union_without_a_unique_tag_per_member_is_declined():
     assert _specs(no_marker) == {}, "an undiscriminated union stays uncoerced"
 
 
+def test_a_nullable_union_gains_a_null_variant_not_the_removed_nullable_keyword():
+    def ep(self, payment: Payment | None = None): ...
+
+    route = RouteInfo(
+        rule="/pay",
+        methods=frozenset({"POST"}),
+        routing={"type": "json2", "auth": "none", "typed": True},
+        handler=ep,
+    )
+    doc = prepare_openapi_document([route])
+    body = doc["paths"]["/pay"]["post"]["requestBody"]["content"]["application/json"]
+    schema = body["schema"]["properties"]["payment"]
+    assert "nullable" not in schema, "OpenAPI 3.1 removed the 3.0 keyword"
+    assert schema["oneOf"][-1] == {"type": "null"}
+    assert schema["discriminator"] == {"propertyName": "kind"}
+
+
 def test_the_union_is_documented_as_one_of_with_its_discriminator():
     def ep(self, payment: Payment): ...
 
