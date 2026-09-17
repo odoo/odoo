@@ -767,7 +767,7 @@ describe("Import view", () => {
         await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Display name");
         if (isSmall()) {
             await contains(
-                ".o_control_panel_main_buttons button > [data-icon='more_vert']"
+                ".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown"
             ).click();
             await contains(".o-dropdown--menu button:visible").click();
         } else {
@@ -811,7 +811,7 @@ describe("Import view", () => {
         await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Selection");
         if (isSmall()) {
             await contains(
-                ".o_control_panel_main_buttons button > [data-icon='more_vert']"
+                ".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown"
             ).click();
             await contains(".o-dropdown--menu button:visible").click();
         } else {
@@ -876,7 +876,7 @@ describe("Import view", () => {
         await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Bar");
         if (isSmall()) {
             await contains(
-                ".o_control_panel_main_buttons button > [data-icon='more_vert']"
+                ".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown"
             ).click();
             await contains(".o-dropdown--menu button:visible").click();
         } else {
@@ -948,7 +948,7 @@ describe("Import view", () => {
         await contains(".o_import_field_many2many select").select("import_skip_records");
         if (isSmall()) {
             await contains(
-                ".o_control_panel_main_buttons button > [data-icon='more_vert']"
+                ".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown"
             ).click();
             await contains(".o-dropdown--menu button:visible").click();
         } else {
@@ -1106,7 +1106,7 @@ describe("Import view", () => {
         await contains("input#o_import_batch_limit").edit(1);
         if (isSmall()) {
             await contains(
-                ".o_control_panel_main_buttons button > [data-icon='more_vert']"
+                ".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown"
             ).click();
             await contains(".o-dropdown--menu button:visible").click();
         } else {
@@ -1238,7 +1238,7 @@ describe("Import view", () => {
 
         if (isSmall()) {
             await contains(
-                ".o_control_panel_main_buttons button > [data-icon='more_vert']"
+                ".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown"
             ).click();
             await contains(".o-dropdown--menu button:contains('Import')").click();
         } else {
@@ -1458,7 +1458,7 @@ describe("Import view", () => {
         await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Many2Many");
         if (isSmall()) {
             await contains(
-                ".o_control_panel_main_buttons button > [data-icon='more_vert']"
+                ".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown"
             ).click();
             await contains(".o-dropdown--menu button:visible").click();
         } else {
@@ -1512,7 +1512,7 @@ describe("Import view", () => {
 
         if (isSmall()) {
             await contains(
-                ".o_control_panel_main_buttons button > [data-icon='more_vert']"
+                ".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown"
             ).click();
             await contains(".o-dropdown--menu button:visible").click();
         } else {
@@ -1779,7 +1779,7 @@ test("locale separators only apply to CSV, not to other formats", async () => {
 
     const xlsxFile = new File(["fake_file"], "data.xlsx", { type: "text/plain" });
     if (isSmall()) {
-        await contains(".o_control_panel_main_buttons button > [data-icon='more_vert']").click();
+        await contains(".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown").click();
         await contains(".o-dropdown--menu .o_file_input_trigger").click();
     } else {
         await contains(".o_control_panel_main_buttons .o_file_input button").click();
