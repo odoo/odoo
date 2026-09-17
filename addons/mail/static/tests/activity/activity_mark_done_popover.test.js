@@ -18,7 +18,6 @@ test("activity mark done popover simplest layout", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
-        activity_category: "not_upload_file",
         can_write: true,
         res_id: partnerId,
         res_model: "res.partner",
@@ -41,7 +40,6 @@ test("activity with force next mark done popover simplest layout", async () => {
         chaining_type: "trigger",
     });
     pyEnv["mail.activity"].create({
-        activity_category: "not_upload_file",
         activity_type_id: activityTypeId,
         can_write: true,
         res_id: partnerId,
@@ -61,7 +59,6 @@ test("activity mark done popover mark done without feedback", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityId = pyEnv["mail.activity"].create({
-        activity_category: "not_upload_file",
         can_write: true,
         res_id: partnerId,
         res_model: "res.partner",
@@ -87,7 +84,6 @@ test("activity mark done popover mark done with feedback", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityId = pyEnv["mail.activity"].create({
-        activity_category: "not_upload_file",
         can_write: true,
         res_id: partnerId,
         res_model: "res.partner",
@@ -123,7 +119,6 @@ test("activity mark done popover mark done and schedule next", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityId = pyEnv["mail.activity"].create({
-        activity_category: "not_upload_file",
         can_write: true,
         res_id: partnerId,
         res_model: "res.partner",
@@ -168,7 +163,6 @@ test("[technical] activity mark done & schedule next with new action", async () 
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
-        activity_category: "not_upload_file",
         can_write: true,
         res_id: partnerId,
         res_model: "res.partner",
