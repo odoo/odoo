@@ -869,3 +869,29 @@ class TestACopysNameIsKept(ServerActionCase):
         copy = action.copy({"name": "Second"})
         self.env.flush_all()
         self.assertEqual((copy.name, copy.name_is_custom), ("Second", True))
+
+
+@tagged("post_install", "-at_install")
+class TestADelegatingCreatorsNameIsCustom(ServerActionCase):
+    """ir.cron creates its server action through _inherits, and a delegating
+    create hands every parent field a default, name_is_custom included; a
+    default of False there read as "not custom" and the cron's name went back
+    to the automated one on the next type change.
+    """
+
+    def test_a_cron_s_name_survives_a_type_change(self):
+        cron = self.env["ir.cron"].create(
+            {
+                "name": "Nightly",
+                "model_id": self.partner_model.id,
+                "state": "code",
+                "code": "pass",
+                "repeat_interval": 1,
+                "repeat_unit": "day",
+            }
+        )
+        self.env.flush_all()
+        self.assertTrue(cron.ir_actions_server_id.name_is_custom)
+        cron.write({"state": "object_write", "update_path": "name"})
+        self.env.flush_all()
+        self.assertEqual(cron.name, "Nightly")

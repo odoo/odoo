@@ -2407,6 +2407,19 @@ class TestIrActionsWriteThroughTheRoot(TransactionCase):
         with self.assertRaises(MissingError):
             root.name
 
+    def test_a_root_write_on_an_unsaved_record_is_not_lost(self):
+        Actions = self.env["ir.actions.actions"]
+        window = self.env["ir.actions.act_window"].create(
+            {"name": "root-new", "res_model": "res.partner"}
+        )
+        unsaved = Actions.new({"name": "n", "type": "ir.actions.actions"})
+        unsaved.write({"name": "n2"})
+        self.assertEqual(unsaved.name, "n2")
+        (Actions.browse(window.id) | unsaved).write({"help": "<p>h</p>"})
+        self.assertEqual(str(window.help), "<p>h</p>")
+        self.assertEqual(str(unsaved.help), "<p>h</p>")
+        self.assertTrue(Actions.browse().write({"help": "x"}))
+
     def test_a_root_write_normalizes_binding_view_types_too(self):
         window = self.env["ir.actions.act_window"].create(
             {"name": "root-normalize", "res_model": "res.partner"}

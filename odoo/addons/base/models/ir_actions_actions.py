@@ -265,10 +265,12 @@ class IrActionsActions(models.Model):
         return self._write_concrete(vals)
 
     def _write_as_concrete_types(self, vals: dict[str, Any]) -> bool:
+        result = True
+        if unsaved := self.filtered(lambda action: not action.id):
+            result = unsaved._write_concrete(vals)
         by_model = defaultdict(list)
         for action_id, model_name in self._get_model_names_concrete().items():
             by_model[model_name].append(action_id)
-        result = True
         for model_name, ids in by_model.items():
             records = self.env[model_name].browse(ids)
             if model_name == self._name:
@@ -552,7 +554,7 @@ class IrActionsActions(models.Model):
         return ""
 
     def _get_model_names_concrete(self) -> dict[int, str]:
-        if not self:
+        if not self.ids:
             return {}
         root = self.env.registry["ir.actions.actions"]
         by_table = self._get_model_names_by_table()

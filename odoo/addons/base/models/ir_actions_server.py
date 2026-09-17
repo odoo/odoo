@@ -166,7 +166,6 @@ class IrActionsServer(models.Model):
         store=True,
     )
     name_is_custom = fields.Boolean(
-        default=False,
         copy=True,
         help="Set once the name has been typed rather than derived from the "
         "action's type, so that changing the type stops renaming it.",
