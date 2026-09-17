@@ -658,9 +658,6 @@ export class MailThread extends models.ServerModel {
                 MailThread._message_compute_subject.call(this, [t.id]).get(t.id)
             );
         }
-        if (request_list.includes("display_name")) {
-            res.attr("display_name");
-        }
         if (request_list.includes("followers")) {
             res.attr("followersCount", (t) =>
                 MailFollowers.search_count([

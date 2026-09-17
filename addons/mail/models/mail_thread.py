@@ -5343,8 +5343,6 @@ class MailThread(models.AbstractModel):
             res.attr("recipientsCount", lambda t: recipient_count_by_tid[t.id])
             # recipient list with limit
             self._store_message_followers_fields(res, filter_recipients=True, reset=True)
-        if "display_name" in request_list:
-            res.attr("display_name")
         pinned_domain = (
             Domain("res_id", "in", self.ids)
             & Domain("model", "=", self._name)
