@@ -543,7 +543,7 @@ def test_fetchmany_defaults_to_one_row_like_psycopg():
 
 
 def test_a_fixture_keyed_by_params_answers_that_execution_only():
-    fixtures = {
+    fixtures: dict[str | tuple[str, tuple], list[tuple]] = {
         ("SELECT %s", (1,)): [(10,)],
         "SELECT %s": [(99,)],
     }

@@ -696,7 +696,7 @@ def model_test_env(
         # test reports its own error
         if langs:
             if had_own_locale:
-                registry.locale = prev_locale
+                registry.locale = cast("Locale", prev_locale)
             else:
                 registry.__dict__.pop("locale", None)
         if check_cache and not failed:

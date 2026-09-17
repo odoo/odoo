@@ -119,7 +119,7 @@ class InMemoryColumnStore:
 
     def fetch_and_add(
         self, model: BaseModel, column: str, record_id: int, delta: int
-    ) -> int:
+    ) -> int | None:
         row = self.storage.get_row(model._table, record_id)
         if row is None:
             # the SQL twin unpacks the RETURNING of an UPDATE that matched

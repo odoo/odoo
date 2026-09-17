@@ -278,7 +278,7 @@ class ColumnStore(typing.Protocol):
 
     def fetch_and_add(
         self, model: BaseModel, column: str, record_id: int, delta: int
-    ) -> int: ...
+    ) -> int | None: ...
 
     def try_write(
         self, model: BaseModel, column: str, record_id: int, value: typing.Any
@@ -333,7 +333,7 @@ class PostgresColumnStore:
 
     def fetch_and_add(
         self, model: BaseModel, column: str, record_id: int, delta: int
-    ) -> int:
+    ) -> int | None:
         # the row is locked for the statement, so two callers never take the same
         # value: NOWAIT surfaces the contention instead of queueing behind it
         table = SQL.identifier(model._table)

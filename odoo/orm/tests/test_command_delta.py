@@ -1,3 +1,5 @@
+from typing import Any
+
 from odoo import fields, models
 from odoo.orm.fields.relational._commands import CommandDelta
 from odoo.orm.model_test_env import model_test_env
@@ -102,7 +104,8 @@ class Node(models.Model):
 
 def test_a_falsy_set_payload_clears_instead_of_raising():
     # an RPC client can send [[6, 0, false]] or [[6, 0, null]]
-    for payload in (False, None, []):
+    payloads: tuple[Any, ...] = (False, None, [])
+    for payload in payloads:
         delta = CommandDelta.fold([(Command.SET, 0, payload)])
         assert delta.replaced
         assert delta.set_ids == ()
