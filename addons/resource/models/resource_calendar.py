@@ -551,7 +551,7 @@ class ResourceCalendar(models.Model):
                     dt0, dt1 = self._handle_flexible_leave_interval(dt0, dt1, leave)
                 result[resource.id].append((max(start, dt0), min(end, dt1), leave))
 
-        return {r.id: Intervals(result[r.id]) for r in resources_list}
+        return {r.id: Intervals(result[r.id], keep_distinct=True) for r in resources_list}
 
     def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, compute_leaves=True):
         """ Return the effective work intervals between the given datetimes. """
