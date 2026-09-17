@@ -77,8 +77,8 @@ class TestSimplifiedInvoice(TransactionCase):
 
     def test_02_invoice_above_limit(self):
         """Website orders above the limit keep the regular journal and are not simplified."""
-        # Above the limit, VAT is mandatory at checkout (see ResPartner.
-        # _get_mandatory_billing_address_fields), so the customer has one here too.
+        # Above the limit, an identifier is mandatory at checkout (see ResPartner.
+        # _l10n_es_ecommerce_identification_required), so the customer has one here too.
         partner_with_vat = self.env['res.partner'].create({
             'name': 'Spanish Customer With VAT',
             'country_id': self.env.ref('base.es').id,
