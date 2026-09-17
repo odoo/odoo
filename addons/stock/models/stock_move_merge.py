@@ -330,10 +330,10 @@ class StockMoveMerge(models.Model):
         if uom_qty is None:
             split_back = split_qty
         else:
-            split_back = self.product_uom_id._compute_quantity(
+            split_back = self.product_uom_id._get_quantity_in_unit(
                 split_qty, self.product_id.uom_id, round=False
             )
-        kept_back = self.product_uom_id._compute_quantity(
+        kept_back = self.product_uom_id._get_quantity_in_unit(
             new_product_qty, self.product_id.uom_id, round=False
         )
         if not math.isclose(kept_back + split_back, self.product_qty, rel_tol=1e-12):

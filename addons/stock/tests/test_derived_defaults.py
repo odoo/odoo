@@ -1132,7 +1132,7 @@ class TestANoOpWriteOfQuantityMovesNoStock(TransactionCase):
         whose sum happens to be exact would compare equal either way."""
         move = self._move_of_one_unit_measured_in_eighths()
         unrounded = sum(
-            line.product_uom_id._compute_quantity(
+            line.product_uom_id._get_quantity_in_unit(
                 line.quantity, move.product_uom_id, round=False
             )
             for line in move.move_line_ids
