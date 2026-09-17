@@ -127,3 +127,11 @@ def test_flushing_a_leaf_model_writes_the_root_rows_too():
         root.kind = "new"
         env["tree.leaf"].flush_model(["kind"])
         assert env.cr.storage.get_row("tree_root", root.id)["kind"] == "new"
+
+
+def test_an_unlink_through_one_model_drops_what_the_others_cached():
+    with model_test_env(Root, Leaf, Apart) as env:
+        root, leaf = _root_and_leaf(env)
+        assert root.kind == "old" and leaf.kind == "old"
+        leaf.unlink()
+        assert "kind" not in root._cache, "the root must not answer for a deleted row"

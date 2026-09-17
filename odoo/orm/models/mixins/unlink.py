@@ -151,8 +151,10 @@ class UnlinkMixin(_ModelStubs):
         env = self.env
         registry = env.registry
         cascades = registry.models_cascading_from
-        gone = {self._name}
-        todo = [self._name]
+        # the row a subtype deleted is the row every other model of its
+        # table-inheritance tree still holds in cache
+        gone = {self._name, *env._table_inheritance_tree(self._name)}
+        todo = list(gone)
         while todo:
             for model_name in cascades.get(todo.pop(), ()):
                 if model_name not in gone:

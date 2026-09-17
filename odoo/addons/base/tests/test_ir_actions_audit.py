@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 from psycopg.errors import IntegrityError
 
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval
@@ -2396,6 +2396,16 @@ class TestIrActionsWriteThroughTheRoot(TransactionCase):
         self.assertEqual(window.binding_sequence, 99)
         window.write({"binding_sequence": 7})
         self.assertEqual(root.binding_sequence, 7)
+
+    def test_the_root_does_not_answer_for_a_row_the_subtype_deleted(self):
+        window = self.env["ir.actions.act_window"].create(
+            {"name": "root-unlink", "res_model": "res.partner"}
+        )
+        root = self.env["ir.actions.actions"].browse(window.id)
+        self.assertEqual(root.name, "root-unlink")
+        window.unlink()
+        with self.assertRaises(MissingError):
+            root.name
 
     def test_a_root_write_normalizes_binding_view_types_too(self):
         window = self.env["ir.actions.act_window"].create(
