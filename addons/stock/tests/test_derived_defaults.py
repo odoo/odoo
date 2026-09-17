@@ -1303,3 +1303,120 @@ class TestSplittingAMoveCannotAlwaysConserve(TransactionCase):
             any("does NOT conserve" in line for line in captured.output),
             "a split that changes the total demanded must say so",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestReservationAgreesWithTheQuant(TransactionCase):
+    """`stock.quant.reserved_quantity` and the move lines holding that quant are
+    two records of one fact, and drift between them is what produces "not enough
+    stock" on stock that is free.
+
+    This is the counterpart to the two precision findings in this file: it holds
+    because reservation works in `quantity_product_uom`, which is declared
+    `min_display_digits` and therefore stored at FULL precision. The fields that
+    drifted -- `stock.move.quantity` and `inventory_diff_quantity` -- are the
+    ones declared `digits`.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.unit = cls.env.ref("uom.product_uom_unit")
+        cls.uoms = {"unit": cls.unit}
+        for name, factor in (("dozen", 12), ("third", 3), ("seventh", 7)):
+            cls.uoms[name] = cls.env["uom.uom"].create(
+                {
+                    "name": f"Reserve {name}",
+                    "relative_factor": factor,
+                    "relative_uom_id": cls.unit.id,
+                }
+            )
+        cls.warehouse = cls.env["stock.warehouse"].search([], limit=1)
+        cls.location = cls.warehouse.lot_stock_id
+        cls.customer_location = cls.env.ref("stock.stock_location_customers")
+
+    def _lines_hold(self, product):
+        lines = self.env["stock.move.line"].search(
+            [
+                ("product_id", "=", product.id),
+                ("location_id", "=", self.location.id),
+                ("state", "not in", ("done", "cancel")),
+            ]
+        )
+        return sum(lines.mapped("quantity_product_uom"))
+
+    def test_the_quant_and_its_lines_never_drift(self):
+        # short stock forces PARTIAL reservations, and thirds and sevenths make
+        # the reserved amounts unrepresentable at the display precision -- a
+        # sweep over round numbers would agree without proving anything
+        scenarios = [
+            ("plenty", 240.0, (1.0, 2.0, 3.0), None),
+            ("short", 10.0, (1.0, 2.0, 3.0), None),
+            ("short/unreserve", 10.0, (1.0, 2.0, 3.0), "unreserve"),
+            ("short/reduce", 10.0, (1.0, 2.0, 3.0), "reduce"),
+            ("short/cancel", 10.0, (1.0, 2.0, 3.0), "cancel"),
+            ("fractional/short", 5.0, (1.0 / 3.0, 2.0 / 7.0, 0.1), None),
+            ("fractional/plenty", 240.0, (1.0 / 3.0, 2.0 / 7.0, 0.1), "unreserve"),
+        ]
+        disagreements = []
+        awkward = checks = 0
+        for uom in self.uoms.values():
+            for label, stock, demands, action in scenarios:
+                product = self.env["product.product"].create(
+                    {
+                        "name": f"Reserve {uom.name} {label}",
+                        "is_storable": True,
+                        "uom_id": self.unit.id,
+                    }
+                )
+                self.env["stock.quant"]._update_available_quantity(
+                    product, self.location, stock
+                )
+                self.env.flush_all()
+                moves = self.env["stock.move"].create(
+                    [
+                        {
+                            "product_id": product.id,
+                            "product_uom_id": uom.id,
+                            "product_uom_qty": demand,
+                            "picking_type_id": self.warehouse.out_type_id.id,
+                            "location_id": self.location.id,
+                            "location_dest_id": self.customer_location.id,
+                        }
+                        for demand in demands
+                    ]
+                )
+                moves = moves._action_confirm(merge=False)
+                moves._action_assign()
+                if action == "unreserve":
+                    moves[0]._unreserve()
+                elif action == "reduce":
+                    moves[1].product_uom_qty = demands[1] / 2
+                elif action == "cancel":
+                    moves[2]._action_cancel()
+                self.env.flush_all()
+                self.env.invalidate_all()
+
+                quants = self.env["stock.quant"].search(
+                    [
+                        ("product_id", "=", product.id),
+                        ("location_id", "=", self.location.id),
+                    ]
+                )
+                reserved = sum(quants.mapped("reserved_quantity"))
+                held = self._lines_hold(product)
+                checks += 1
+                if round(reserved, 2) != reserved:
+                    awkward += 1
+                if abs(reserved - held) > 1e-9:
+                    disagreements.append(
+                        f"{uom.name} {label}: quant {reserved!r} vs lines {held!r}"
+                    )
+        self.assertGreater(checks, 25, "the sweep must exercise something")
+        self.assertGreater(
+            awkward,
+            0,
+            "no reserved amount needed more than the display precision, so this "
+            "sweep would agree without testing the thing it exists to test",
+        )
+        self.assertEqual(disagreements, [], "\n".join(disagreements))
