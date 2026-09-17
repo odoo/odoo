@@ -1718,8 +1718,9 @@ class IrAttachment(models.Model):
         if new:
             _logger.warning(
                 "Found %d non-public binary attachment(s) with `url` set "
-                "(showing %d); review that these are intended to be served via "
-                "ir.http._serve_fallback. First URLs: %s",
+                "(showing %d). ir.http._serve_fallback serves public rows only, "
+                "so these URLs answer 404; set `public` on the ones meant to be "
+                "served, or clear `url` on the rest. First URLs: %s",
                 total,
                 len(new),
                 new.mapped("url"),
@@ -1727,7 +1728,7 @@ class IrAttachment(models.Model):
         else:
             _logger.info(
                 "%d previously reported non-public binary attachment(s) with "
-                "`url` set remain unresolved (showing %d).",
+                "`url` set remain unresolved and unserved (showing %d).",
                 total,
                 len(suspicious),
             )

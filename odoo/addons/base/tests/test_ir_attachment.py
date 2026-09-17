@@ -1836,6 +1836,36 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
             "unresolved rows keep an INFO heartbeat",
         )
 
+    def test_audit_flags_exactly_what_the_fallback_refuses(self):
+        hidden, served = self.Attachment.sudo().create(
+            [
+                {
+                    "name": f"{name}.bin",
+                    "type": "binary",
+                    "url": f"/audit/{name}",
+                    "raw": b"x",
+                    "public": public,
+                }
+                for name, public in (("hidden", False), ("served", True))
+            ]
+        )
+        fallback_domain = [("public", "=", True)]
+        Attachment = self.Attachment.sudo()
+        self.assertFalse(
+            Attachment._get_serve_attachment(hidden.url, extra_domain=fallback_domain)
+        )
+        self.assertEqual(
+            Attachment._get_serve_attachment(served.url, extra_domain=fallback_domain),
+            served,
+        )
+        with self.assertLogs(
+            "odoo.addons.base.models.ir_attachment", level="WARNING"
+        ) as logs:
+            self.env["ir.attachment"]._audit_url_attachments()
+        warning = "\n".join(logs.output)
+        self.assertIn(hidden.url, warning)
+        self.assertNotIn(served.url, warning)
+
     def test_audit_url_attachments_silent_on_clean_fleet(self):
         self.env.cr.execute(
             "UPDATE ir_attachment SET public = TRUE "
