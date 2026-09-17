@@ -94,3 +94,20 @@ def test_in_memory_try_write_refuses_a_unique_duplicate_like_postgresql():
         assert columns.read(env["cs.claim"], "code", [b.id]) == {b.id: "Z"}
         # rewriting a row's own value is not a duplicate
         assert columns.try_write(env["cs.claim"], "code", a.id, "X") is True
+
+
+def test_in_memory_fetch_and_add_mirrors_the_sql_twin():
+    import pytest
+
+    with model_test_env(Claim, check_cache=False) as env:
+        rec = env["cs.claim"].create({"code": "X", "qty": 4})
+        null = env["cs.claim"].create({"code": "Y"})
+        env.flush_all()
+        columns = env.backend.columns
+        assert columns.fetch_and_add(env["cs.claim"], "qty", rec.id, 5) == 4
+        assert columns.read(env["cs.claim"], "qty", [rec.id]) == {rec.id: 9}
+        # NULL propagates: the old value is None and NULL + delta stays NULL
+        assert columns.fetch_and_add(env["cs.claim"], "qty", null.id, 5) is None
+        assert columns.read(env["cs.claim"], "qty", [null.id]) == {null.id: None}
+        with pytest.raises(ValueError):
+            columns.fetch_and_add(env["cs.claim"], "qty", 999999, 5)

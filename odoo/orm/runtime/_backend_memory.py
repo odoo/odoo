@@ -120,9 +120,15 @@ class InMemoryColumnStore:
     def fetch_and_add(
         self, model: BaseModel, column: str, record_id: int, delta: int
     ) -> int:
-        row = self.storage.get_row(model._table, record_id) or {}
-        value = row.get(column) or 0
-        self.storage.update_rows(model._table, [(record_id, {column: value + delta})])
+        row = self.storage.get_row(model._table, record_id)
+        if row is None:
+            # the SQL twin unpacks the RETURNING of an UPDATE that matched
+            # nothing: an absent row is an error, never a fabricated 0
+            raise ValueError(f"fetch_and_add: no row {record_id} in {model._table!r}")
+        value = row.get(column)
+        # NULL + delta is NULL on PostgreSQL, and the raw old value returns
+        new = None if value is None else value + delta
+        self.storage.update_rows(model._table, [(record_id, {column: new})])
         return value
 
     def try_write(
