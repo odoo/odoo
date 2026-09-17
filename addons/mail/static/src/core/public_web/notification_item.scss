@@ -1,4 +1,5 @@
 .o-mail-NotificationItem {
+    --mail-NotificationItem-lineHeight: 1.15rem;
     --list-group-bg: transparent;
     outline: 1px solid transparent;
     outline-offset: -1px;
@@ -45,7 +46,7 @@
 }
 
 .o-mail-NotificationItem-line {
-    line-height: 1.15rem;
+    line-height: var(--mail-NotificationItem-lineHeight);
 }
 
 .o-mail-NotificationItem-markAsRead {
