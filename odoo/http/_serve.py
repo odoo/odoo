@@ -372,6 +372,9 @@ class _RequestServeMixin(RequestState):
                 _debug.lifecycle("http.serve.cursor_reused", db=env.registry.db_name)
         if cr.readonly:
             _debug.logic("http.serve.cursor_still_readonly", db=env.registry.db_name)
+            # The caller's variable still names the cursor this method was
+            # handed; close the replacement here or its connection leaks.
+            cr.close()
             e = (
                 f"{self.httprequest.method} {self.httprequest.path} needs a "
                 f"read/write cursor and the registry handed back a read-only "

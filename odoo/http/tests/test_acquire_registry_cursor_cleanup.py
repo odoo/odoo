@@ -84,3 +84,32 @@ class TestAcquireRegistryCursorCleanup(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class _ReadonlyCursor(_TrackingCursor):
+    readonly = True
+
+    def rollback(self):
+        pass
+
+
+class TestOpenReadWriteCursorRefusal(unittest.TestCase):
+    def test_a_refused_readonly_replacement_is_closed_before_the_raise(self):
+        initial, fresh = _ReadonlyCursor(), _ReadonlyCursor()
+
+        class _Host:
+            _require_env = _serve._RequestServeMixin._require_env
+            _open_read_write_cursor = _serve._RequestServeMixin._open_read_write_cursor
+
+        host = _Host()
+        host.env = SimpleNamespace(
+            registry=SimpleNamespace(
+                db_name="testdb", cursor=lambda pin_key=None: fresh
+            )
+        )
+        host.httprequest = SimpleNamespace(method="POST", path="/x")
+        host.session = SimpleNamespace(sid="S" * 84)
+        with self.assertRaises(RuntimeError):
+            host._open_read_write_cursor(initial)
+        self.assertTrue(initial.closed)
+        self.assertTrue(fresh.closed, "the refused replacement cursor must not leak")
