@@ -2403,6 +2403,11 @@ class TestSpecificViewResolution(common.TransactionCase):
         self.assertIn("<b>specific</b>", self.specific.get_combined_arch())
         self.assertNotIn("<b>specific</b>", self.base.get_combined_arch())
 
+    def test_a_generic_resolution_pays_no_query_for_the_website(self):
+        self.env.invalidate_all()
+        with self.assertQueryCount(2):
+            self.base.get_combined_arch()
+
     def test_a_specific_view_is_validated_against_its_tree(self):
         with self.assertRaises(ValidationError):
             self.specific.write(
