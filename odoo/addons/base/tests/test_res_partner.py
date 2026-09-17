@@ -2423,6 +2423,36 @@ class TestPartnerAddressCompany(TransactionCase):
             self.assertEqual(partner.vat, "BEARCHIVE", partner.name)
         self.assertEqual(archived.street, "Sync Street")
 
+    def test_a_batch_commercial_write_syncs_the_children_in_one_pass(self):
+        Partner = self.env["res.partner"]
+
+        def queries_for(size):
+            companies = Partner.create(
+                [
+                    {"name": f"Batch Co {index}", "is_company": True}
+                    for index in range(size)
+                ]
+            )
+            Partner.create(
+                [
+                    {"name": f"Batch Kid {index}", "parent_id": company.id}
+                    for index, company in enumerate(companies)
+                ]
+            )
+            self.env.flush_all()
+            self.env.invalidate_all()
+            before = self.cr.sql_statement_count
+            companies.write({"vat": f"BEBATCH{size}"})
+            self.env.flush_all()
+            return self.cr.sql_statement_count - before
+
+        queries_for(2)
+        self.assertEqual(
+            queries_for(2),
+            queries_for(12),
+            "the descendants of a batch written the same values sync in one write",
+        )
+
     def test_children_sync_skips_walk_without_commercial_fields(self):
         company = self.env["res.partner"].create(
             {"name": "company", "is_company": True, "vat": "BE013456789"}

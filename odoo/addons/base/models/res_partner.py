@@ -200,7 +200,6 @@ class ResPartner(models.Model):
         comodel_name="res.partner",
         inverse_name="parent_id",
         string="Contact",
-        domain=[("active", "=", True)],
     )
     user_id: ResUsers = fields.Many2one(
         comodel_name="res.users",
@@ -1441,58 +1440,79 @@ class ResPartner(models.Model):
                     commercial_in_company._convert_fields_to_values(stale_fields)
                 )
 
-    def _sync_commercial_fields_to_descendants(
-        self, fields_to_sync: list[str] | None = None, *, new: bool = False
-    ) -> None:
-        self.check_singleton()
-        commercial_partner = self.commercial_partner_id
-        if fields_to_sync is None:
-            fields_to_sync = self._commercial_fields()
+    def _get_contact_descendants(self, *, new: bool = False) -> ResPartner:
         descendants = self.browse()
         frontier = self._get_contact_children(self, new=new)
         while frontier:
             descendants |= frontier
-            frontier = self._get_contact_children(frontier) - self - descendants
-        if descendants:
-            sync_vals = commercial_partner._convert_fields_to_values(fields_to_sync)
-            descendants_to_sync = descendants.filtered(
-                lambda d: any(
-                    d._fields[fname].convert_to_write(d[fname], d) != sync_vals[fname]
-                    for fname in fields_to_sync
+            frontier = (
+                self._get_contact_children(frontier, new=new) - self - descendants
+            )
+        return descendants
+
+    def _sync_commercial_fields_to_descendants(
+        self, fields_to_sync: list[str] | None = None, *, new: bool = False
+    ) -> None:
+        if fields_to_sync is None:
+            fields_to_sync = self._commercial_fields()
+        descendants = self._get_contact_descendants(new=new)
+        if not descendants:
+            return
+        # one write per distinct value set: a batch written the same values
+        # syncs every stale descendant of every partner at once
+        stale_by_values: dict[str, ResPartner] = {}
+        sync_vals_by_key: dict[str, dict[str, Any]] = {}
+        sync_vals_by_commercial = {
+            commercial.id: commercial._convert_fields_to_values(fields_to_sync)
+            for commercial in descendants.commercial_partner_id
+        }
+        for descendant in descendants:
+            sync_vals = sync_vals_by_commercial[descendant.commercial_partner_id.id]
+            if all(
+                descendant._fields[fname].convert_to_write(
+                    descendant[fname], descendant
                 )
-            )
-            _debug.pipeline(
-                "commercial_fields_synced_to_descendants",
-                partner=self.id,
-                descendants=len(descendants),
-                stale=len(descendants_to_sync),
-                fields=list(fields_to_sync),
-            )
-            if descendants_to_sync:
-                descendants_to_sync.write(sync_vals)
+                == sync_vals[fname]
+                for fname in fields_to_sync
+            ):
+                continue
+            key = repr(sorted(sync_vals.items()))
+            sync_vals_by_key[key] = sync_vals
+            stale_by_values[key] = stale_by_values.get(key, self.browse()) | descendant
+        _debug.pipeline(
+            "commercial_fields_synced_to_descendants",
+            partners=self.ids,
+            descendants=len(descendants),
+            stale=sum(len(stale) for stale in stale_by_values.values()),
+            writes=len(stale_by_values),
+            fields=list(fields_to_sync),
+        )
+        for key, stale in stale_by_values.items():
+            stale.write(sync_vals_by_key[key])
 
     @api.model
     def _get_contact_children(
         self, parents: ResPartner, *, new: bool = False
     ) -> ResPartner:
         # a record just created holds its children in cache, all active; an
-        # existing one may have archived children the child_ids domain hides
-        if new:
-            return parents.child_ids.filtered(lambda c: not c.is_company)
-        return self.with_context(active_test=False).search(
-            [("parent_id", "in", parents.ids), ("is_company", "=", False)]
-        )
+        # existing one may have archived children, and the one2many read
+        # prefetches for the whole batch where a search would run per record
+        if not new:
+            parents = parents.with_context(active_test=False)
+        return parents.child_ids.filtered(lambda c: not c.is_company)
 
     def _fields_sync(self, values: dict[str, Any], *, new: bool = False) -> None:
-        _debug.logic(
-            "fields_sync",
-            partner=self.id,
-            parent=self.parent_id.id,
-            type=self.type,
-            fields=list(values),
-        )
-        self._sync_from_parent(values)
-        self._sync_to_parent(values)
+        # parent-side syncs are per record; the children sync takes the batch
+        for partner in self:
+            _debug.logic(
+                "fields_sync",
+                partner=partner.id,
+                parent=partner.parent_id.id,
+                type=partner.type,
+                fields=list(values),
+            )
+            partner._sync_from_parent(values)
+            partner._sync_to_parent(values)
         self._sync_children(values, new=new)
 
     def _sync_from_parent(self, values: dict[str, Any]) -> None:
@@ -1541,10 +1561,13 @@ class ResPartner(models.Model):
             self.parent_id.write(synced_vals)
 
     def _sync_children(self, values: dict[str, Any], *, new: bool = False) -> None:
-        if self.commercial_partner_id == self:
-            fields_to_sync = values.keys() & self._commercial_fields()
-            if fields_to_sync:
-                self.sudo()._sync_commercial_fields_to_descendants(
+        fields_to_sync = values.keys() & self._commercial_fields()
+        if fields_to_sync:
+            commercial_selves = self.filtered(
+                lambda partner: partner.commercial_partner_id == partner
+            )
+            if commercial_selves:
+                commercial_selves.sudo()._sync_commercial_fields_to_descendants(
                     fields_to_sync, new=new
                 )
         address_fields = self._address_fields()
@@ -1553,7 +1576,7 @@ class ResPartner(models.Model):
                 lambda c: c.type == "contact"
             )
             _debug.logic(
-                "address_synced_to_children", partner=self.id, contacts=len(contacts)
+                "address_synced_to_children", partners=self.ids, contacts=len(contacts)
             )
             if contacts:
                 contacts._update_address(values)
@@ -1700,21 +1723,22 @@ class ResPartner(models.Model):
         tracked_fields: set[str],
         pre_values_list: list[dict[str, Any]],
     ) -> None:
-        synced = 0
+        # partners whose same fields changed took the same values: one sync
+        groups: dict[frozenset[str], ResPartner] = {}
         for partner, pre_values in zip(self, pre_values_list, strict=True):
-            updated = {
-                fname: vals[fname]
-                for fname in tracked_fields
-                if partner[fname] != pre_values[fname]
-            }
-            if updated:
-                synced += 1
-                partner._fields_sync(updated)
+            changed = frozenset(
+                fname for fname in tracked_fields if partner[fname] != pre_values[fname]
+            )
+            if changed:
+                groups[changed] = groups.get(changed, self.browse()) | partner
+        for changed, partners in groups.items():
+            partners._fields_sync({fname: vals[fname] for fname in changed})
         _debug.pipeline(
             "write_fields_synced",
             partners=len(self),
             tracked=sorted(tracked_fields),
-            synced=synced,
+            synced=sum(len(partners) for partners in groups.values()),
+            groups=len(groups),
         )
 
     def write(self, vals: dict[str, Any]) -> bool:
