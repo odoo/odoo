@@ -786,3 +786,18 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountPriceUnitRoun
             PosLoyalty.finalizeOrder("Cash", "100"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountNegativeLine", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product A", "1"),
+            ProductScreen.addOrderline("Voucher", "1"),
+            // 50 shared over 1000 - 100: both tax groups get the same 5.56% factor
+            PosLoyalty.hasRewardLine("on specific products", "-55.56"),
+            PosLoyalty.hasRewardLine("on specific products", "5.56"),
+            PosLoyalty.orderTotalIs("850.00"),
+            PosLoyalty.finalizeOrder("Cash", "850"),
+        ].flat(),
+});
