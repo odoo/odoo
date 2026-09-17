@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (3853 methods, 785 classes, 138 files)
+# All base tests (3855 methods, 786 classes, 138 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -102,7 +102,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 
 ## Test File Reference
 
-### Tagged Files (78 files, 453 classes)
+### Tagged Files (78 files, 454 classes)
 
 | File | Tags | Classes | Tests | Base Class |
 |------|------|---------|-------|------------|
@@ -182,7 +182,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_translate.py` | `post_install`, `-at_install` | 12 | 89 | BaseCase, TransactionCase |
 | `test_view_payload.py` | `post_install`, `-at_install` | 1 | 3 | TransactionCase |
 | `test_view_provenance.py` | `post_install`, `-at_install` | 1 | 5 | TransactionCase |
-| `test_views.py` | `post_install`, `-at_install`, `-standard`, `migration`, `render_all_views`, `post_install_l10n`, `at_install`, `modifiers` | 54 | 296 | TransactionCase, ViewCase, BaseCase, TransactionCaseWithUserDemo |
+| `test_views.py` | `post_install`, `-at_install`, `-standard`, `migration`, `render_all_views`, `post_install_l10n`, `at_install`, `modifiers` | 55 | 298 | TransactionCase, ViewCase, BaseCase, TransactionCaseWithUserDemo |
 | `test_x2many_cache_scope.py` | `post_install`, `-at_install` | 3 | 11 | TransactionCase |
 
 ### Untagged Files (60 files)
@@ -255,11 +255,11 @@ These run in **both** at_install and post_install phases by default.
 | Metric | Value |
 |--------|-------|
 | Total test files | 138 |
-| Total test classes | 785 |
-| Total test methods | 3853 |
+| Total test classes | 786 |
+| Total test methods | 3855 |
 | Files with @tagged | 78 (57%) |
 | Files without @tagged | 60 (43%) |
-| Classes using post_install | 250 |
+| Classes using post_install | 251 |
 | Unique tags | 28 |
 | Largest test file | test_db_cursor.py (117 classes, 389 tests) |
 
