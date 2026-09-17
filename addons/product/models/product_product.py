@@ -936,7 +936,19 @@ class ProductProduct(models.Model):
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
         if not name:
-            return super().name_search(name, domain, operator, limit)
+            domain = Domain(domain or Domain.TRUE)
+            favorite_products = self.search_fetch(
+                domain & Domain("is_favorite", "=", True), ["display_name"], limit=limit
+            )
+            limit_products = limit and limit - len(favorite_products)
+            products = favorite_products
+            if limit_products is None or limit_products > 0:
+                products |= self.search_fetch(
+                    domain & Domain("is_favorite", "=", False),
+                    ["display_name"],
+                    limit=limit_products,
+                )
+            return [(product.id, product.display_name) for product in products.sudo()]
         # search progressively by the most specific attributes
         positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
         is_positive = not operator in Domain.NEGATIVE_OPERATORS
