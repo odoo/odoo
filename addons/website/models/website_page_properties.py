@@ -270,11 +270,10 @@ class WebsitePageProperties(models.TransientModel):
         #
         # `dfd50c87d614` fixed the search half of this independently and landed
         # in the same branch; this batches the archives and the creates as
-        # well. Only the search half is gated: `_checker_batch._QUERY_METHODS`
-        # is search, search_count, search_fetch, search_read, name_search and
-        # _read_group, so a `create()` per record inside a loop is invisible to
-        # `lint_n_plus_one_query` and stays invisible however many rows it
-        # writes.
+        # well. Only the search half is gated -- `lint_n_plus_one_query` reads
+        # six query methods and no write, so the inserts here were invisible to
+        # it; `_checker_batch`'s module docstring says why, and this method is
+        # the example it cites.
         #
         # The search carries both clauses. An earlier version of this dropped
         # the `website_id` one and filtered on the key afterwards, to avoid
