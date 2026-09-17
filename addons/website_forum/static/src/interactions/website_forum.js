@@ -381,7 +381,10 @@ export class WebsiteForum extends Interaction {
         postBeingValidated.classList.add("d-none");
         let ok;
         try {
-            ok = (await this.waitFor(fetch(currentTargetEl.href))).ok;
+            ok = (await this.waitFor(fetch(currentTargetEl.href), {
+                method: "POST",
+                body: JSON.stringify({ csrf_token: odoo.csrf_token, }),
+            })).ok;
         } catch {
             // Calling the endpoint like this returns an HTML page. As we can't
             // extract the error message from that, we disregard it and simply

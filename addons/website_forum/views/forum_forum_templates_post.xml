@@ -198,10 +198,22 @@
                 <p>This post is currently awaiting moderation and is not published yet.<br/>
                     As a moderator you can either <b>Accept</b> or <b>Reject</b> this post.</p>
                 <div>
-                    <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" type="button" class="btn btn-success">
-                        <i class="fa fa-check fa-fw me-1"/>Accept</a>
-                    <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" type="button" class="btn btn-danger">
-                        <i class="fa fa-times fa-fw me-1"/>Reject</a>
+                    <t t-call="website_forum.link_button">
+                        <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(question) + '/validate'"/>
+                        <t t-set="classes" t-value="'btn btn-success'"/>
+                        <t t-set="label">Accept</t>
+                        <t t-set="title">Accept</t>
+                        <t t-set="icon" t-value="'fa-check fa-fw me-1'"/>
+                        <t t-set="karma" t-value="forum.karma_moderate if not forum.can_moderate else 0"/>
+                    </t>
+                    <t t-call="website_forum.link_button">
+                        <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(question) + '/refuse'"/>
+                        <t t-set="classes" t-value="'btn btn-danger'"/>
+                        <t t-set="label">Reject</t>
+                        <t t-set="title">Reject</t>
+                        <t t-set="icon" t-value="'fa-times fa-fw me-1'"/>
+                        <t t-set="karma" t-value="forum.karma_moderate if not forum.can_moderate else 0"/>
+                    </t>
                 </div>
             </div>
             <div t-if="question.state == 'pending' and user.karma &lt; forum.karma_moderate" class="alert alert-warning mb-0 text-center" role="status" >
