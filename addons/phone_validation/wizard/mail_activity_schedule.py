@@ -25,3 +25,6 @@ class MailActivitySchedule(models.TransientModel):
         record.check_access("read")
         recipient_info = record._phone_get_recipients_info()[record.id]
         return recipient_info["number"]
+
+    def _get_phone_number_for_activity(self):
+        return self.phone_formatted
