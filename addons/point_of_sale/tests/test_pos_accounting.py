@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from unittest.mock import patch
+
 from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import Form, freeze_time
+from odoo.tools import mute_logger
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -181,12 +184,14 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             ],
         })
 
-    def get_pos_session(self):
-        return self.pos_config.current_session_id
+    def get_pos_session(self, config=None):
+        config = config or self.pos_config
+        return config.current_session_id
 
-    def open_pos_session(self, opening=0, note=""):
-        self.pos_config.open_ui()
-        session = self.get_pos_session()
+    def open_pos_session(self, opening=0, note="", config=None):
+        config = config or self.pos_config
+        config.open_ui()
+        session = self.get_pos_session(config)
         session.set_opening_control(opening, note)
         self.assertEqual(session.state, 'opened')
         return session
@@ -206,7 +211,8 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(session.state, 'closed')
         return session
 
-    def create_pos_order(self, payment_method=[], products=[], extra_data={}):
+    def create_pos_order(self, payment_method=[], products=[], extra_data={}, session=None):
+        session = session or self.get_pos_session()
         order = {
             'amount_total': 0,
             'amount_paid': 0,
@@ -215,7 +221,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             'state': 'draft',
             'date_order': fields.Datetime.to_string(fields.Datetime.now()),
             'company_id': self.env.company.id,
-            'session_id': self.get_pos_session().id,
+            'session_id': session.id,
             'lines': [Command.create({
                 'qty': 1,
                 'product_id': product.id,
@@ -2038,6 +2044,77 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertTrue(order_move.reversal_move_ids)
         other_orders = session.order_ids - order
         self.assertFalse(other_orders.account_move.reversal_move_ids)
+
+    @mute_logger('odoo.addons.point_of_sale.models.pos_session')
+    def test_launch_cron_generate_invoice_period_rollback_on_failure(self):
+        session_ok = self.open_pos_session()
+        order_ok = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 11.2}]],
+            products=[[self.product_12, {}]],
+            session=session_ok,
+        )
+
+        cash_journal_2 = self.env['account.journal'].create({
+            'name': 'Cash Test 2',
+            'type': 'cash',
+            'company_id': self.main_company.id,
+            'code': 'CSH2',
+            'sequence': 10,
+        })
+        cash_pm_2 = self.env['pos.payment.method'].create({
+            'name': 'Cash 2',
+            'type': 'cash',
+            'journal_id': cash_journal_2.id,
+        })
+        pos_config_2 = self.env['pos.config'].create({
+            'name': 'PoS Config 2',
+            'journal_id': self.config_sale_journal.id,
+            'payment_method_ids': [(4, cash_pm_2.id)],
+        })
+        session_ko = self.open_pos_session(config=pos_config_2)
+        order_ko = self.create_pos_order(
+            payment_method=[[cash_pm_2, {'amount': 11.2}]],
+            products=[[self.product_12, {}]],
+            session=session_ko,
+        )
+
+        # Force an accounting failure for the session_ko
+        PosOrderModel = self.env.registry['pos.order']
+        original_prepare_payments = PosOrderModel._prepare_account_move_line_data_for_payments
+
+        def patched_prepare_payments(orders, partner=None):
+            result = original_prepare_payments(orders, partner=partner)
+            if orders and orders[0].session_id == session_ko:
+                result[0]['account.move.line']['amount_currency'] += 0.01
+            return result
+
+        # Marker to identify the failing session in the accounting entries
+        marker = 'TEST_MARKER_KO'
+        PosSessionModel = self.env.registry['pos.session']
+        original_prepare_move_vals = PosSessionModel._prepare_session_move_vals
+
+        def patched_prepare_move_vals(session, orders):
+            vals = original_prepare_move_vals(session, orders)
+            if session == session_ko:
+                vals['ref'] = marker
+            return vals
+
+        with patch.object(PosOrderModel, '_prepare_account_move_line_data_for_payments', patched_prepare_payments), \
+            patch.object(PosSessionModel, '_prepare_session_move_vals', patched_prepare_move_vals):
+            self.env['pos.session']._launch_cron_generate_invoice_period()
+
+        # Healthy session is validated normally
+        self.assertEqual(order_ok.state, 'done')
+        self.assertTrue(session_ok.sale_move_ids)
+        for move in session_ok.sale_move_ids:
+            self.assertEqual(move.state, 'posted')
+            self.assertAlmostEqual(sum(move.line_ids.mapped('balance')), 0)
+
+        # Failing session is not validated and accounting entries are rolled back
+        self.assertFalse(session_ko.sale_move_ids)
+        self.assertFalse(order_ko.account_move)
+        self.assertEqual(order_ko.state, 'paid')
+        self.assertFalse(self.env['account.move'].search([('ref', '=', marker)]))
 
     def test_pos_closing_journal_set(self):
         """ With a Closing Journal, the closing entries go there while the customer invoices
