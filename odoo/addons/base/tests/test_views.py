@@ -7852,6 +7852,23 @@ class TestViewWriteContract(ViewCase):
             model="res.partner",
         )
 
+    def test_a_customization_made_while_loading_is_still_dropped(self):
+        Custom = self.env["ir.ui.view.custom"]
+        with self.env.registry.loading_window():
+            view = self.assertValid(
+                '<form><field name="name"/></form>', name="cl", model="res.partner"
+            )
+            view.write({"priority": 5})  # takes the snapshot
+            custom = Custom.create(
+                {
+                    "ref_id": view.id,
+                    "user_id": self.env.uid,
+                    "arch": '<form><field name="name"/></form>',
+                }
+            )
+            view.write({"arch": '<form><field name="email"/></form>'})
+            self.assertFalse(custom.exists())
+
     def test_two_overlays_setting_one_attribute_report_a_conflict(self):
         primary = self.assertValid(
             '<form><field name="name"/></form>', name="cf p", model="res.partner"

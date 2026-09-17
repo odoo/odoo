@@ -99,6 +99,7 @@ _REVALIDATE_ON_CHANGE = frozenset({"mode", "model", "priority", "type"})
 _COMBINATION_ERRORS = (ValidationError, ValueError, etree.ParseError, TypeError)
 
 _KEYS_WITH_COPIES = "ir.ui.view.keys_with_copies"
+_CUSTOMIZED_VIEW_IDS = "ir.ui.view.customized_view_ids"
 
 _CTE_EXCLUDED_FIELDS = frozenset(
     {
@@ -1071,11 +1072,7 @@ class IrUiView(models.Model):
             vals = {**vals, "arch_updated": True}
 
         if _TEMPLATE_CACHE_FIELDS.intersection(vals):
-            custom_view = (
-                self.env["ir.ui.view.custom"]
-                .sudo()
-                .search([("ref_id", "in", self.ids)])
-            )
+            custom_view = self._get_customizations()
             _debug.lifecycle(
                 "write.template_cache_cleared",
                 views=len(self),
@@ -1133,6 +1130,29 @@ class IrUiView(models.Model):
             if combined_before:
                 self._refuse_recombination(error)
         return res
+
+    def _get_customizations(self) -> Any:
+        """The users' customizations of these views, which a write on what
+        the view shows drops. While loading, the views that carry one are one
+        query per pass: every view written from a data file asked its own."""
+        Custom = self.env["ir.ui.view.custom"].sudo()
+        if self.pool.is_loading:
+            state = self.pool.loading.state(_CUSTOMIZED_VIEW_IDS, dict)
+            if "ids" not in state:
+                rows = self.env.execute_query(
+                    SQL("SELECT DISTINCT ref_id FROM ir_ui_view_custom")
+                )
+                state["ids"] = {ref_id for (ref_id,) in rows}
+                _debug.perf.count("customized_views_loaded", views=len(state["ids"]))
+            if state["ids"].isdisjoint(self.ids):
+                return Custom
+        return Custom.search([("ref_id", "in", self.ids)])
+
+    @api.model
+    def _forget_customized_views(self) -> None:
+        # a customization made while loading changes which views carry one
+        if self.pool.is_loading:
+            self.pool.loading.state(_CUSTOMIZED_VIEW_IDS, dict).clear()
 
     def _can_combine(self) -> bool:
         try:
@@ -1708,9 +1728,7 @@ class IrUiView(models.Model):
                 archs.append(copy.deepcopy(combined[key]))
                 continue
             archs.append(combined.setdefault(key, root._combine(hierarchy)))
-        _debug.perf.count(
-            "combined_archs", requested=len(archs), combined=len(combined)
-        )
+        _debug.perf.count("combine_batch", requested=len(archs), combined=len(combined))
         return archs
 
     def _get_view_refs(self, node: _Element) -> dict[str, str]:
