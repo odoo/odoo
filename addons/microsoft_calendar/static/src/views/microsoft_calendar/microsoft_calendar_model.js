@@ -41,11 +41,6 @@ patch(AttendeeCalendarModel.prototype, {
 
     async syncMicrosoftCalendar(silent = false) {
         this.state.microsoftPendingSync = true;
-        const params = new URLSearchParams(window.location.search);
-        if (params.get("auth_success")) {
-            await this.orm.call("res.users", "restart_microsoft_synchronization");
-        }
-
         const result = await rpc(
             "/microsoft_calendar/sync_data",
             {

@@ -66,7 +66,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
 
     def write(self, vals):
         fields_to_sync = [x for x in vals if x in self._get_microsoft_synced_fields()]
-        if fields_to_sync and 'need_sync_m' not in vals and self.env.user._get_microsoft_sync_status() == "sync_active":
+        if fields_to_sync and 'need_sync_m' not in vals:
             vals['need_sync_m'] = True
 
         result = super().write(vals)
@@ -99,9 +99,6 @@ class MicrosoftCalendarSync(models.AbstractModel):
 
     @api.model_create_multi
     def create(self, vals_list):
-        if self.env.user.microsoft_synchronization_stopped:
-            for vals in vals_list:
-                vals.update({'need_sync_m': False})
         records = super().create(vals_list)
 
         if self.env.user._get_microsoft_sync_status() != "sync_paused":
@@ -519,13 +516,6 @@ class MicrosoftCalendarSync(models.AbstractModel):
         """
         Return a set of field names. Changing one of these fields
         marks the record to be re-synchronized.
-        """
-        raise NotImplementedError()
-
-    @api.model
-    def _restart_microsoft_sync(self):
-        """ Turns on the microsoft synchronization for all the events of
-        a given user.
         """
         raise NotImplementedError()
 

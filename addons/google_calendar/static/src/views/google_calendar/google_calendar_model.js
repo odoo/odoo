@@ -80,14 +80,6 @@ patch(AttendeeCalendarModel.prototype, {
 
     async syncGoogleCalendar(silent = false) {
         this.state.googlePendingSync = true;
-        const params = new URLSearchParams(window.location.search);
-        if (params.get("auth_success")) {
-            await this.orm.call(
-                "res.users",
-                "restart_google_synchronization",
-            );
-        }
-
         const result = await rpc(
             "/google_calendar/sync_data",
             {
