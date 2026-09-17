@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from odoo.fields import Domain
 
 
 class ResourceAsset(models.Model):
@@ -86,29 +85,17 @@ class ResourceAsset(models.Model):
         self.check_singleton()
         return self.license_plate or self.vin_sn or self.name or self.env._("No Plate")
 
-    def _get_service_domain(self):
-        return Domain("asset_id", "in", self.ids) & Domain("log_type", "=", "service")
-
     def _compute_service_count(self):
-        counts = dict(
-            self.env["resource.asset.log"]._read_group(
-                self._get_service_domain(), ["asset_id"], ["__count"]
-            )
-        )
+        counts = self._get_log_counts_by_type()
         for asset in self:
-            asset.service_count = counts.get(asset, 0)
+            asset.service_count = counts[asset.id]["service"]
 
     def action_view_services(self):
-        self.check_singleton()
-        action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
-            "fleet.fleet_vehicle_service_action"
+        return self._action_view_logs(
+            [("log_type", "=", "service")],
+            {"search_default_groupby_product": 1},
+            xml_id="fleet.fleet_vehicle_service_action",
         )
-        action["domain"] = [("asset_id", "=", self.id), ("log_type", "=", "service")]
-        action["context"] = {
-            "default_asset_id": self.id,
-            "search_default_groupby_product": 1,
-        }
-        return action
 
     def action_view_odometer(self):
         self.check_singleton()

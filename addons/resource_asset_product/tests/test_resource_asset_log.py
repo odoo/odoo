@@ -148,3 +148,63 @@ class TestResourceAssetLogOdometer(TransactionCase):
         self.asset.odometer_uom_id = self.km
 
         self.assertEqual(self.asset.odometer_uom_id, self.km)
+
+
+@tagged("post_install", "-at_install")
+class TestResourceAssetLedgerSurface(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Log = cls.env["resource.asset.log"]
+        cls.asset = cls.env["resource.asset"].create(
+            {"name": "Press", "kind_id": cls.env.ref("resource_asset.kind_tool").id}
+        )
+        cls.service = cls.env["product.product"].create(
+            {
+                "name": "Belt change",
+                "categ_id": cls.env["product.category"]
+                .create({"name": "Repairs", "log_type": "service"})
+                .id,
+            }
+        )
+
+    def test_an_asset_counts_every_log_booked_against_it(self):
+        self.assertEqual(self.asset.log_count, 0)
+
+        self.Log.create(
+            [
+                {"asset_id": self.asset.id, "product_id": self.service.id},
+                {"asset_id": self.asset.id},
+            ]
+        )
+        self.asset.invalidate_recordset(["log_count"])
+
+        self.assertEqual(self.asset.log_count, 2)
+        self.assertEqual(
+            self.asset._get_log_counts_by_type()[self.asset.id]["service"], 1
+        )
+
+    def test_an_archived_log_leaves_the_count_it_was_in(self):
+        log = self.Log.create({"asset_id": self.asset.id})
+        self.asset.invalidate_recordset(["log_count"])
+        self.assertEqual(self.asset.log_count, 1)
+
+        log.active = False
+        self.asset.invalidate_recordset(["log_count"])
+
+        self.assertEqual(self.asset.log_count, 0)
+
+    def test_the_ledger_button_opens_this_assets_rows(self):
+        action = self.asset.action_view_logs()
+
+        self.assertEqual(action["res_model"], "resource.asset.log")
+        self.assertEqual(action["domain"], [("asset_id", "=", self.asset.id)])
+        self.assertEqual(action["context"]["default_asset_id"], self.asset.id)
+
+    def test_a_window_onto_a_slice_keeps_the_assets_own_filter(self):
+        action = self.asset._action_view_logs([("log_type", "=", "service")])
+
+        self.assertEqual(
+            action["domain"],
+            [("asset_id", "=", self.asset.id), ("log_type", "=", "service")],
+        )

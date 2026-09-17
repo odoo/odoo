@@ -1,6 +1,19 @@
+import ast
+from collections import defaultdict
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+
+
+def _literal_context(context):
+    if isinstance(context, dict):
+        return context
+    try:
+        parsed = ast.literal_eval(context or "{}")
+    except SyntaxError, ValueError:
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
 
 
 class ResourceAsset(models.Model):
@@ -31,6 +44,12 @@ class ResourceAsset(models.Model):
         string="Flagged Parts",
         compute="_compute_part_flagged_count",
     )
+    log_count = fields.Integer(
+        string="Ledger Entries",
+        compute="_compute_log_count",
+        compute_sudo=True,
+        help="Logs booked against this asset, whatever their state. An archived log is not counted.",
+    )
     kind_id = fields.Many2one(
         compute="_compute_kind_id",
         precompute=True,
@@ -57,6 +76,43 @@ class ResourceAsset(models.Model):
 
     def _get_log_model(self):
         return self.env["resource.asset.log"].with_context(active_test=True)
+
+    def _get_log_counts_by_type(self):
+        counts = defaultdict(lambda: defaultdict(int))
+        if not self.ids:
+            return counts
+        for asset, log_type, count in self._get_log_model()._read_group(
+            [("asset_id", "in", self.ids)],
+            ["asset_id", "log_type"],
+            ["__count"],
+        ):
+            counts[asset.id][log_type] += count
+        return counts
+
+    @api.depends("log_ids", "log_ids.log_type", "log_ids.active")
+    def _compute_log_count(self):
+        counts = self._get_log_counts_by_type()
+        for asset in self:
+            asset.log_count = sum(counts[asset.id].values())
+
+    def _get_log_action_xml_id(self):
+        return "resource_asset_product.action_resource_asset_log"
+
+    def _action_view_logs(self, domain=(), context=None, xml_id=None):
+        self.check_singleton()
+        action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
+            xml_id or self._get_log_action_xml_id()
+        )
+        action["domain"] = [("asset_id", "=", self.id), *domain]
+        action["context"] = {
+            **_literal_context(action.get("context")),
+            "default_asset_id": self.id,
+            **(context or {}),
+        }
+        return action
+
+    def action_view_logs(self):
+        return self._action_view_logs()
 
     def _get_latest_ledger_reading(self):
         """{asset id: (odometer, date)} of the newest positive reading in the

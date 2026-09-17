@@ -8,6 +8,14 @@
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button
+                    name="action_view_logs"
+                    type="object"
+                    icon="fa-book"
+                    groups="resource_asset.group_asset_user"
+                    class="oe_stat_button">
+                    <field name="log_count" string="Ledger" widget="statinfo" />
+                </button>
+                <button
                     name="action_view_parts"
                     type="object"
                     string="Parts"
