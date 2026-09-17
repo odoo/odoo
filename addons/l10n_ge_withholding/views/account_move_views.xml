@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_inherit_l10n_ge_withholding" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_ge_withholding</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='tax_ids']" position="attributes">
+                <attribute name="domain">([('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]
+                    + (['|', ('l10n_ge_wht_category_ids', '=', False), ('l10n_ge_wht_category_ids', 'in', parent.l10n_ge_wht_category_ids)] if parent.l10n_ge_wht_category_ids else []))</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/form//field[@name='tax_ids']" position="attributes">
+                <attribute name="domain">([('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]
+                    + (['|', ('l10n_ge_wht_category_ids', '=', False), ('l10n_ge_wht_category_ids', 'in', parent.l10n_ge_wht_category_ids)] if parent.l10n_ge_wht_category_ids else []))</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
