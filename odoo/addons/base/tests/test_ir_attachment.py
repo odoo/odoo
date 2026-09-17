@@ -3532,7 +3532,9 @@ class TestGcChecklistAddressing(TransactionCaseWithUserDemo):
         stray.write_bytes(b"")
         self.addCleanup(stray.unlink, True)
         self.assertNotEqual(
-            self.Attachment._normalize_store_key(str(stray.relative_to(self.checklist))),
+            self.Attachment._normalize_store_key(
+                str(stray.relative_to(self.checklist))
+            ),
             str(stray.relative_to(self.checklist)),
             "this test needs a name the sanitizer rewrites",
         )

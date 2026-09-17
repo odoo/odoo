@@ -367,7 +367,7 @@ class IrAttachment(models.Model):
         if not self:
             _debug.logic("write.skipped", reason="empty_recordset", fields=list(vals))
             return True
-        if "res_model" in vals or "res_id" in vals:
+        if not self.env.su and ("res_model" in vals or "res_id" in vals):
             model_and_ids = defaultdict(OrderedSet)
             new_model = self._coerce_model_name(vals.get("res_model"))
             if "res_model" in vals and "res_id" in vals:
@@ -1061,24 +1061,34 @@ class IrAttachment(models.Model):
 
     @api.model
     def _remove_stored_file(self, fname: str) -> None:
-        self._get_storage_backend_for_key(fname).remove(fname)
+        self._remove_stored_file_multi((fname,))
 
     @api.model
     def _remove_stored_file_multi(self, fnames: Collection[str]) -> None:
         plain_fnames = []
+        remote_fnames = []
         for fname in fnames:
-            if "://" in fname:
-                self._get_storage_backend_for_key(fname).remove(fname)
-            else:
-                plain_fnames.append(fname)
+            (remote_fnames if "://" in fname else plain_fnames).append(fname)
         _debug.lifecycle(
             "stored_files_released",
             total=len(fnames),
-            remote=len(fnames) - len(plain_fnames),
+            remote=len(remote_fnames),
             marked_for_gc=len(plain_fnames),
         )
         if plain_fnames:
             self._mark_for_gc_multi(plain_fnames)
+        if remote_fnames:
+            # a remote delete cannot be rolled back with the transaction that
+            # dropped the reference, so it waits for the commit
+            self.env.cr.postcommit.add(
+                functools.partial(self._remove_remote_files, remote_fnames)
+            )
+
+    @api.model
+    def _remove_remote_files(self, fnames: Collection[str]) -> None:
+        _debug.lifecycle("remote_files_removed", count=len(fnames))
+        for fname in fnames:
+            self._get_storage_backend_for_key(fname).remove(fname)
 
     @api.model
     def _is_content_collision_check_enabled(self) -> bool:
@@ -1908,7 +1918,7 @@ class IrAttachment(models.Model):
                         filepath,
                     )
                     with contextlib.suppress(OSError):
-                        Path(filepath).unlink()
+                        filepath.unlink()
                     dropped += 1
                     continue
                 if fname not in whitelist:
@@ -1927,7 +1937,7 @@ class IrAttachment(models.Model):
                             filepath,
                         )
                         with contextlib.suppress(OSError):
-                            Path(filepath).unlink()
+                            filepath.unlink()
                         dropped += 1
                         continue
                     try:
@@ -1942,9 +1952,9 @@ class IrAttachment(models.Model):
                         )
                         continue
                 with contextlib.suppress(OSError):
-                    Path(filepath).unlink()
+                    filepath.unlink()
 
-        _logger.info("filestore gc %d checked, %d removed", len(checklist), removed)
+        _logger.debug("filestore gc %d checked, %d removed", len(checklist), removed)
         _debug.lifecycle(
             "gc_file_store_sweep",
             checked=len(checklist),

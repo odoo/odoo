@@ -57,6 +57,31 @@ class TestIrAttachmentStorage(TransactionCase):
         finally:
             STORAGE_BACKENDS.pop("fake_s3")
 
+    def test_remote_key_removal_waits_for_the_commit(self):
+        removed = []
+
+        class FakeRemoteStorage(AttachmentStorage):
+            location = "fake_remote"
+            key_scheme = "fake-remote"
+
+            def remove(self, key):
+                removed.append(key)
+
+        register_storage(FakeRemoteStorage)
+        self.addCleanup(STORAGE_BACKENDS.pop, "fake_remote", None)
+        attachment = self.Attachment.create({"name": "remote", "raw": b"x"})
+        attachment.flush_recordset()
+        self.env.cr.execute(
+            "UPDATE ir_attachment SET store_fname = %s WHERE id = %s",
+            ["fake-remote://bucket/key", attachment.id],
+        )
+        attachment.invalidate_recordset()
+
+        attachment.unlink()
+        self.assertEqual(removed, [], "a remote delete must not precede the commit")
+        self.env.cr.postcommit.run()
+        self.assertEqual(removed, ["fake-remote://bucket/key"])
+
     def test_unknown_scheme_warns_once(self):
         dbname = self.env.cr.dbname
         self.addCleanup(
