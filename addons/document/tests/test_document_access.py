@@ -1207,7 +1207,20 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         self.assertEqual(self.document_gif.access_internal, "none")
         self.assertEqual(self.document_txt.access_internal, "none")
         self.assertEqual(self.document_gif.access_via_link, "none")
-        self.assertEqual(self.document_txt.access_via_link, "view")
+        # Propagation reaches the children for BOTH fields of that one call.
+        # This used to assert "view" -- the value `setUpClass` wrote onto this
+        # document directly -- because the walk was seeded only from rows whose
+        # value differed and `folder_b` already held `access_via_link="none"`.
+        # So one field of the call propagated and the other silently did not,
+        # decided by what the folder happened to hold rather than by what was
+        # asked for. `TestAccessPropagation` pins the general case.
+        self.assertEqual(self.document_txt.access_via_link, "none")
+
+        # What the rest of this test is about is link access INHERITED from the
+        # parent folder, and it needs this document to carry its own. Put it
+        # back the way `setUpClass` had it -- deliberately and after the
+        # propagation, rather than by surviving it.
+        self.document_txt.access_via_link = "view"
         with mute_logger("odoo.addons.document.models.document_document"):
             document_txt_private = self.document_txt.copy()
         self.assertIn(document_txt_private.access_ids.role, {False, "edit"})

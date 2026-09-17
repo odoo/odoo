@@ -1,3 +1,4 @@
+from . import test_access_propagation
 from . import test_attachment_access
 from . import test_attachment_split
 from . import test_controllers

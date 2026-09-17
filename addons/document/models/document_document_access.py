@@ -519,7 +519,6 @@ class DocumentsDocument(models.Model):
 
             candidates_domain = Domain(
                 [
-                    (field, "!=", value),
                     ("shortcut_document_id", "=", False),
                     ("id", "in" if skip_propagation else "child_of", self.ids),
                 ]
@@ -558,6 +557,9 @@ class DocumentsDocument(models.Model):
                       FROM documents_and_shortcuts AS doc
                         -- document | document.children_ids | document.shortcut_ids
                      WHERE document_document.id = doc.id
+                       -- only rows that actually change: no needless write, and
+                       -- tracking is returned the old value of a real change
+                       AND document_document.%(field)s IS DISTINCT FROM %(value)s
                  RETURNING doc.id, doc.%(field)s
             """,
                     field=SQL.identifier(field),
