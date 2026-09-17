@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, exceptions, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import convert, float_compare, float_is_zero, format_datetime
-from odoo.tools.date_utils import float_to_time, sum_intervals, time_to_float
+from odoo.tools.date_utils import float_to_time, sum_intervals, time_to_float, localized
 from odoo.tools.intervals import Intervals
 
 
@@ -604,9 +604,9 @@ class HrAttendance(models.Model):
 
     def _get_localized_times(self):
         self.ensure_one()
-        tz = ZoneInfo(self.employee_id.sudo()._get_version(self.check_in.date()).tz)
-        localized_start = self.check_in.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
-        localized_end = self.check_out.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        tz = ZoneInfo(self.employee_id.sudo()._get_version(self.check_in.date()).tz) if self.employee_id and self.check_in else self.env.tz
+        localized_start = self.check_in.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None) if self.check_in else self.check_in
+        localized_end = self.check_out.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None) if self.check_out else self.check_out
         return localized_start, localized_end
 
     def _get_break_duration_within_period(self, start, stop):
