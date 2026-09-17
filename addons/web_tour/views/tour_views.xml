@@ -10,6 +10,7 @@
                     </div>
                 </header>
                 <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
                         <h1><field class="text-break" options="{'line_breaks': False}" widget="text" name="name" placeholder="e.g. My_Tour"/></h1>
                     </div>
@@ -75,15 +76,15 @@
     <menuitem action="tour_action" id="menu_tour_action" parent="base.next_id_2" sequence="5"/>
 
 
-    <record id="tour_export_js_action" model="ir.actions.server">
-        <field name="name">Export JS</field>
+    <record id="tour_export_xml_action" model="ir.actions.server">
+        <field name="name">Export XML</field>
         <field name="model_id" ref="web_tour.model_web_tour_tour"/>
         <field name="binding_model_id" ref="web_tour.model_web_tour_tour"/>
         <field name="binding_view_types">form</field>
         <field name="state">code</field>
         <field name="code">
 if records:
-    action = records.export_js_file()
+    action = records.export_xml_file()
         </field>
     </record>
 </odoo>
