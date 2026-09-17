@@ -39,9 +39,9 @@ def apply_specs(
     and named by the id ``identify()`` derives for that node; the spec then
     applies as an id-addressed :class:`Patch`, which is what the result lists
     for it. A spec whose target cannot be located, whose content holds a
-    ``$0`` in a text node beside other text, whose position is not one of the
-    five, or whose patch the merge refuses (a bad separator, say) applies the
-    XML way through ``apply_xml`` — which reports a spec it cannot apply in
+    ``$0`` in a text node beside other text, whose outer replace carries text,
+    whose position is not one of the five, or whose patch the merge refuses
+    (a bad separator, say) applies the XML way through ``apply_xml`` — which reports a spec it cannot apply in
     its own words, and that is what this raises — and the result lists the
     spec element itself. Specs address the tree the specs before them leave,
     so they apply in order; ``state`` accumulates the provenance, and a node
@@ -68,6 +68,7 @@ def apply_specs(
                 "apply_specs.xml_way",
                 origin=origin,
                 spec=spec.tag,
+                expr=spec.get("expr"),
                 position=spec.get("position", "inside"),
                 reason=reason,
             )
@@ -255,7 +256,9 @@ def _translate(
             )
         return Patch(op, target_id, attributes=tuple(changes), origin=origin)
     text = spec.text if spec.text and spec.text.strip() else None
-    if text and op in ("replace", "replace_inner"):
+    # an outer replace puts its content in the target's place and carries no
+    # text there; an inner one puts the text in the emptied node
+    if text and op == "replace":
         return None
     content: list[Node | Move] = []
     for child in spec:

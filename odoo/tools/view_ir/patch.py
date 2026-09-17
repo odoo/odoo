@@ -133,7 +133,9 @@ def apply_one(result: Applied, patch: Patch, ids: dict[str, Node]) -> None:
     if patch.op == "inside":
         _insert(target, len(target.children), content, patch.text)
     elif patch.op == "replace_inner":
+        # the XML combine drops the node's text with its children
         target.children = []
+        target.text = None
         _insert(target, 0, content, patch.text)
     elif target is result.root:
         result.root = content[0]

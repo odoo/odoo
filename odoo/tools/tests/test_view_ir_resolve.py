@@ -165,6 +165,20 @@ class TestTranslateSpecs(unittest.TestCase):
         # would have left at the refusal
         self.assertIsNotNone(next(applied.root.find("footer"), None))
 
+    def test_an_inner_replace_drops_the_old_text_and_may_carry_text(self):
+        base = '<form><h1 class="x">Old <i>text</i> tail</h1><p>after</p></form>'
+        for spec_xml in (
+            '<xpath expr="//h1" position="replace" mode="inner"><b>New</b></xpath>',
+            '<xpath expr="//h1" position="replace" mode="inner">About Us</xpath>',
+            '<xpath expr="//h1" position="replace" mode="inner">About <b>Us</b> now</xpath>',
+        ):
+            xml_result, _translated, applied, fallbacks = both_ways(base, spec_xml)
+            self.assertEqual(fallbacks, [], spec_xml)
+            self.assertEqual(
+                canon(view_ir.to_arch(applied.root)), canon(xml_result), spec_xml
+            )
+            self.assertNotIn(b"Old", canon(view_ir.to_arch(applied.root)))
+
     def test_the_xml_way_may_replace_the_root(self):
         xml_result, translated, applied, _fallbacks = both_ways(
             BASE,

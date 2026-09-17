@@ -1505,6 +1505,10 @@ class IrUiView(models.Model):
             if combined is None:
                 combined_arch = view.apply_inheritance_specs(combined_arch, arch)
             else:
+                if view.mode == "primary":
+                    # a primary child starts a view of its own: what it sets
+                    # over its base is its definition, not a conflict
+                    combined.managed.clear()
                 patched += view._apply_overlay(combined, arch)  # debuglog
 
             for child_view in reversed(hierarchy[view]):

@@ -7892,6 +7892,61 @@ class TestPreloadViews(ViewCase):
 
 
 @tagged("post_install", "-at_install")
+class TestAttributeConflicts(ViewCase):
+    def _conflicts(self, view):
+        # assertLogs fails on silence, and no conflict is the point here
+        records = []
+        handler = logging.Handler()
+        handler.emit = records.append
+        logger = logging.getLogger("odoo.debug.logic.base.ir_ui_view")
+        level = logger.level
+        logger.setLevel(logging.DEBUG)
+        logger.addHandler(handler)
+        try:
+            view.get_combined_arch()
+        finally:
+            logger.removeHandler(handler)
+            logger.setLevel(level)
+        return [
+            record.getMessage()
+            for record in records
+            if "event=combine.attribute_conflicts" in record.getMessage()
+        ]
+
+    def _set_string(self, name, inherit_id, mode, label, priority=16):
+        return self.View.create(
+            {
+                "name": name,
+                "model": "res.partner",
+                "inherit_id": inherit_id,
+                "mode": mode,
+                "priority": priority,
+                "arch": f"""<field name="name" position="attributes">
+                    <attribute name="string">{label}</attribute></field>""",
+            }
+        )
+
+    def test_a_primary_child_overriding_its_base_is_no_conflict(self):
+        primary = self.assertValid(
+            '<form><field name="name"/></form>', name="ac p", model="res.partner"
+        )
+        self._set_string("ac ext", primary.id, "extension", "Base label")
+        child = self._set_string("ac child", primary.id, "primary", "Child label")
+        self.assertEqual(self._conflicts(child), [])
+        self.assertIn('string="Child label"', child.get_combined_arch())
+
+    def test_an_extension_over_a_primary_child_setting_is_a_conflict(self):
+        primary = self.assertValid(
+            '<form><field name="name"/></form>', name="ac p2", model="res.partner"
+        )
+        child = self._set_string("ac child2", primary.id, "primary", "Child label")
+        self._set_string("ac child ext", child.id, "extension", "Extension label")
+        conflicts = self._conflicts(child)
+        self.assertEqual(len(conflicts), 1, conflicts)
+        self.assertIn("attributes=['string']", conflicts[0])
+
+
+@tagged("post_install", "-at_install")
 class TestCombineBatching(ViewCase):
     def _tree(self, size):
         root = self.assertValid(
