@@ -1611,14 +1611,15 @@ class IrUiView(models.Model):
         # resolved alone, so a batch admits no other view's ancestors
         admitted: set[int] | None = None
         if not self.pool.ready and not self.env.context.get("load_all_views"):
-            # a view every chain holds is admitted for every view: only the
-            # rest need their module looked up
+            # only a view that can be a child needs its module looked up: not
+            # a root, not one every chain holds (admitted for every view)
             in_every_chain = (
                 set.intersection(*map(set, parented)) if parented else set()
             )
+            root_ids = {view.id for view in all_tree_views if not view.inherit_id}
             admitted = set(
                 all_tree_views._filter_loaded_views(
-                    set(check_view_ids) | in_every_chain
+                    set(check_view_ids) | in_every_chain | root_ids
                 ).ids
             )
             _debug.logic(
