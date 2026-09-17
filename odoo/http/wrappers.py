@@ -390,6 +390,15 @@ class ResponseStream(Proxy):
 
 
 class Response(Proxy):
+    """Typed facade over :class:`_Response`.
+
+    The surface is deliberately minimal: only the attributes listed below
+    exist on the public class, and standard werkzeug response attributes left
+    out on purpose (``vary``, ``allow``, ``www_authenticate``, ``date``,
+    ``content_range``, ``accept_ranges``) raise ``AttributeError``. Anything
+    beyond this surface goes through ``response.headers``.
+    """
+
     _wrapped__ = _Response
 
     __call__ = ProxyFunc()

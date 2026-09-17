@@ -35,8 +35,12 @@ CORS_DEFAULT_ALLOWED_HEADERS = (
 )
 """What a preflight allows when the client names no `Access-Control-Request-Headers`.
 
-A route narrows this with `@route(cors_allow_headers=...)`; without one the
-preflight echoes whatever the client asked for and this is only the fallback.
+This list is NOT a ceiling. Without `@route(cors_allow_headers=...)` the
+preflight deliberately echoes whatever headers the client asked for — the
+origin was already vetted before any of this is emitted, so restricting header
+names would add friction without adding a boundary. The list above only
+answers a preflight that asks for nothing. A route that needs a real
+allow-list declares one with `cors_allow_headers=`.
 """
 
 REJECTED_HTTP_METHODS = ("TRACE",)
