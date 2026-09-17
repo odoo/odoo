@@ -1018,10 +1018,20 @@ class IrFieldsConverter(models.AbstractModel):
         if value == "":
             return RefLookup(False, field_type, "", warnings)
         RelatedModel = self.env[field.comodel_name]
-        self._flush_import(model=field.comodel_name)
         ids = RelatedModel.name_search(name=value, operator="=")
+        flushed = False
+        if not ids:
+            # only a miss can be a record an earlier row of this import is
+            # still holding; flushing before every search split a 3000-row
+            # import into 3000 single-row creates
+            self._flush_import(model=field.comodel_name)
+            flushed = True
+            ids = RelatedModel.name_search(name=value, operator="=")
         _debug.perf.count(
-            "ref_name_searched", model=RelatedModel._name, matches=len(ids)
+            "ref_name_searched",
+            model=RelatedModel._name,
+            matches=len(ids),
+            flushed=flushed,
         )
         if ids:
             if len(ids) > 1:

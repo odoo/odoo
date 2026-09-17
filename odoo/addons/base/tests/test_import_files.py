@@ -570,6 +570,39 @@ class TestFieldConverters(TransactionCase):
             self.env["res.partner"].browse(result["ids"]).mapped("parent_id"), parent
         )
 
+    def test_references_to_existing_records_do_not_split_the_batch(self):
+        Partner = self.env["res.partner"]
+        Partner.create([{"name": f"IFLD96 parent {i}"} for i in range(40)])
+        self.env.flush_all()
+        PartnerClass = type(Partner)
+        batches = []
+        original = PartnerClass._load_data_list
+
+        def spy(this, data_list, *args, **kwargs):
+            batches.append(len(data_list))
+            return original(this, data_list, *args, **kwargs)
+
+        rows = [[f"IFLD96 child {i}", f"IFLD96 parent {i}"] for i in range(40)]
+        with patch.object(PartnerClass, "_load_data_list", spy):
+            result = Partner.load(["name", "parent_id"], rows)
+        self.assertFalse(result["messages"])
+        self.assertEqual(len(result["ids"]), 40)
+        self.assertEqual(
+            batches,
+            [40],
+            "a name that already resolves must not flush the pending batch",
+        )
+
+    def test_a_reference_to_an_earlier_row_of_the_same_import_resolves(self):
+        Partner = self.env["res.partner"]
+        result = Partner.load(
+            ["name", "parent_id"],
+            [["IFLD96 first", ""], ["IFLD96 second", "IFLD96 first"]],
+        )
+        self.assertFalse(result["messages"])
+        first, second = Partner.browse(result["ids"])
+        self.assertEqual(second.parent_id, first)
+
     def test_reference_miss_is_not_cached(self):
         converter = self.converter.with_context(
             import_file=True,
