@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
 
@@ -255,65 +257,61 @@ class WebsitePageProperties(models.TransientModel):
     def write(self, vals):
         write_result = super().write(vals)
 
-        if "url" in vals:
-            moved = [record for record in self if record.old_url != record.url]
-            # the rewrites the new urls made obsolete, looked up once and
-            # indexed by (url, website) rather than searched per record
-            obsolete_by_target = {}
-            if moved:
-                Rewrite = self.env["website.rewrite"]
-                for rewrite in Rewrite.search(
-                    [
-                        ("url_from", "in", list({record.url for record in moved})),
-                        (
-                            "website_id",
-                            "in",
-                            list(
-                                {
-                                    vals.get("website_id")
-                                    or record.website_id.id
-                                    or False
-                                    for record in moved
-                                }
-                            ),
-                        ),
-                    ]
-                ):
-                    key = (rewrite.url_from, rewrite.website_id.id or False)
-                    obsolete_by_target[key] = (
-                        obsolete_by_target.get(key, Rewrite) | rewrite
-                    )
-            for record in moved:
-                old_url = record.old_url
-                new_url = record.url
-                website_id = vals.get("website_id") or record.website_id.id or False
+        if "url" not in vals:
+            return write_result
+        moved = [record for record in self if record.old_url != record.url]
+        if not moved:
+            return write_result
+
+        Rewrite = self.env["website.rewrite"]
+        website_by_record = {
+            record: (vals.get("website_id") or record.website_id.id or False)
+            for record in moved
+        }
+        obsolete_by_key = defaultdict(Rewrite.browse)
+        for rewrite in Rewrite.search(
+            [("url_from", "in", [record.url for record in moved])]
+        ):
+            obsolete_by_key[(rewrite.url_from, rewrite.website_id.id or False)] |= (
+                rewrite
+            )
+
+        to_archive = Rewrite.browse()
+        redirects_to_create = []
+        for record in moved:
+            website_id = website_by_record[record]
+            _debug.lifecycle(
+                "page_properties_url_changed",
+                page=record.target_model_id.id,
+                old=record.old_url,
+                new=record.url,
+                redirect=bool(vals.get("redirect_old_url")),
+            )
+            if obsolete := obsolete_by_key.get((record.url, website_id)):
                 _debug.lifecycle(
-                    "page_properties_url_changed",
+                    "obsolete_rewrites_archived",
                     page=record.target_model_id.id,
-                    old=old_url,
-                    new=new_url,
-                    redirect=bool(vals.get("redirect_old_url")),
+                    url=record.url,
+                    rewrites=obsolete.ids,
                 )
-                obsolete = obsolete_by_target.get((new_url, website_id))
-                if obsolete:
-                    _debug.lifecycle(
-                        "obsolete_rewrites_archived",
-                        page=record.target_model_id.id,
-                        url=new_url,
-                        rewrites=obsolete.ids,
-                    )
-                    obsolete.active = False
-                if vals.get("redirect_old_url"):
-                    self.env["website.rewrite"].create(
-                        {
-                            "name": vals.get("name") or record.name,
-                            "redirect_type": vals.get("redirect_type")
-                            or record.redirect_type,
-                            "url_from": old_url,
-                            "url_to": new_url,
-                            "website_id": website_id,
-                        }
-                    )
-                record.old_url = new_url
+                to_archive |= obsolete
+            if vals.get("redirect_old_url"):
+                redirects_to_create.append(
+                    {
+                        "name": vals.get("name") or record.name,
+                        "redirect_type": vals.get("redirect_type")
+                        or record.redirect_type,
+                        "url_from": record.old_url,
+                        "url_to": record.url,
+                        "website_id": website_id,
+                    }
+                )
+
+        if to_archive:
+            to_archive.active = False
+        if redirects_to_create:
+            Rewrite.create(redirects_to_create)
+        for record in moved:
+            record.old_url = record.url
 
         return write_result
