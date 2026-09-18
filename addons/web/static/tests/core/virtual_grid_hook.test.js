@@ -1,12 +1,10 @@
-import { useRef } from "@web/owl2/utils";
-import { beforeEach, expect, test } from "@odoo/hoot";
-import { resize, scroll } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { animationFrame, beforeEach, expect, resize, runAllTimers, scroll, test } from "@odoo/hoot";
+import { Component, signal, xml } from "@odoo/owl";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
 import { range } from "@web/core/utils/numbers";
 import { useVirtualGrid } from "@web/core/virtual_grid_hook";
+import { useRef } from "@web/owl2/utils";
 
 function objectToStyle(obj) {
     return Object.entries(obj)
@@ -61,7 +59,7 @@ function getTestComponent(virtualGridParams) {
         static props = [];
         static components = { Item };
         static template = xml`
-            <div class="scrollable" t-custom-ref="scrollable" style="${CONTAINER_STYLE}" dir="${localization.direction}">
+            <div t-if="this.render()" class="scrollable" t-custom-ref="scrollable" style="${CONTAINER_STYLE}" dir="${localization.direction}">
                 <div class="inner" t-att-style="this.innerStyle">
                     <t t-foreach="this.virtualRows" t-as="row" t-key="row.id">
                         <t t-foreach="this.virtualColumns" t-as="col" t-key="col.id">
@@ -71,6 +69,9 @@ function getTestComponent(virtualGridParams) {
                 </div>
             </div>
         `;
+
+        render = signal(true);
+
         setup() {
             const scrollableRef = useRef("scrollable");
             this.virtualGrid = useVirtualGrid({
@@ -168,8 +169,8 @@ test("required params only", async () => {
         }
     }
     const comp = await mountWithCleanup(C);
-    expect(comp.virtualGrid.rowsIndexes).toBe(undefined);
-    expect(comp.virtualGrid.columnsIndexes).toBe(undefined);
+    expect(comp.virtualGrid.rowsIndexes).toEqual([]);
+    expect(comp.virtualGrid.columnsIndexes).toEqual([]);
 });
 
 test("with empty rows and columns", async () => {
@@ -221,7 +222,7 @@ test("with columns only", async () => {
         }
     }
     const comp = await mountWithCleanup(C);
-    expect(comp.virtualGrid.rowsIndexes).toBe(undefined);
+    expect(comp.virtualGrid.rowsIndexes).toEqual([]);
     expect(comp.virtualGrid.columnsIndexes).toEqual([0, 99]);
 });
 
@@ -239,7 +240,7 @@ test("with rows only", async () => {
     }
     const comp = await mountWithCleanup(C);
     expect(comp.virtualGrid.rowsIndexes).toEqual([0, 99]);
-    expect(comp.virtualGrid.columnsIndexes).toBe(undefined);
+    expect(comp.virtualGrid.columnsIndexes).toEqual([]);
 });
 
 test("onChange", async () => {
@@ -321,4 +322,39 @@ test("horizontal scroll in RTL", async () => {
     await scroll(".scrollable", { left: -MAX_SCROLL_LEFT });
     await animationFrame();
     expect(comp.virtualGrid.columnsIndexes).toEqual([180, 199]);
+});
+
+test("renders correctly after the ref has been detached and reattached", async () => {
+    // FIXME: initialScroll doesn't make sense: the hook should adapt to the actual
+    // scroll position instead.
+    const comp = await mountWithCleanup(
+        getTestComponent({
+            initialScroll: { top: 2000 },
+        })
+    );
+
+    expect(".scrollable").toHaveCount(1);
+    expect(comp.virtualGrid.rowsIndexes).toEqual([35, 49]);
+    expect(comp.virtualGrid.columnsIndexes).toEqual([0, 19]);
+
+    await scroll(".scrollable", { top: 5000, left: 2000 });
+    await animationFrame();
+
+    expect(comp.virtualGrid.rowsIndexes).toEqual([95, 109]);
+    expect(comp.virtualGrid.columnsIndexes).toEqual([30, 59]);
+
+    comp.render.set(false);
+    await animationFrame();
+
+    expect(".scrollable").not.toHaveCount();
+    expect(comp.virtualGrid.rowsIndexes).toEqual([95, 109]); // didn't change
+    expect(comp.virtualGrid.columnsIndexes).toEqual([30, 59]); // didn't change
+
+    comp.render.set(true);
+    await animationFrame();
+
+    expect(".scrollable").toHaveCount(1);
+    // FIXME: initial scroll is lost here, this is wrong
+    expect(comp.virtualGrid.rowsIndexes).toEqual([95, 109]);
+    expect(comp.virtualGrid.columnsIndexes).toEqual([30, 59]);
 });
