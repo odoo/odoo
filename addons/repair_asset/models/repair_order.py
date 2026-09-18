@@ -11,6 +11,7 @@ class RepairOrder(models.Model):
     asset_id = fields.Many2one(
         comodel_name="resource.asset",
         compute="_compute_asset_id",
+        store=True,
         help="The asset this repair works on, when the repaired serial is one.",
     )
     asset_kind_id = fields.Many2one(related="asset_id.kind_id")

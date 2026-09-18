@@ -60,8 +60,12 @@ class L10nMxFleetEmissionInspection(models.Model):
     window_display = fields.Char(
         string="Window",
         compute="_compute_window",
+        store=True,
     )
-    window_start = fields.Date(compute="_compute_window")
+    window_start = fields.Date(
+        compute="_compute_window",
+        store=True,
+    )
     deadline = fields.Date(
         compute="_compute_window",
         store=True,

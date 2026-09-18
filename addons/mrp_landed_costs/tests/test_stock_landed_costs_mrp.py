@@ -165,7 +165,6 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         landed_cost = Form(
             self.env["stock.landed.cost"].with_user(self.allow_user)
         ).save()
-        landed_cost.target_model = "manufacturing"
 
         self.assertTrue(production_move.value)
 
@@ -230,7 +229,6 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         landed_cost = Form(
             self.env["stock.landed.cost"].with_user(stock_manager)
         ).save()
-        landed_cost.target_model = "manufacturing"
 
         self.assertTrue(man_order.move_finished_ids.value)
         landed_cost.mrp_production_ids = [(6, 0, [man_order.id])]
@@ -291,7 +289,6 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         landed_cost = Form(
             self.env["stock.landed.cost"].with_user(self.allow_user)
         ).save()
-        landed_cost.target_model = "manufacturing"
         landed_cost.mrp_production_ids = [(6, 0, [man_order.id])]
         landed_cost.cost_lines = [
             (

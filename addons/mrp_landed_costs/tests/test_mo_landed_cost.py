@@ -11,10 +11,9 @@ class TestMoLandedCost(TransactionCase):
             {"name": "MRP LC product", "type": "service", "landed_cost_ok": True}
         )
 
-    def _landed_cost(self, target_model="manufacturing"):
+    def _landed_cost(self):
         return self.env["stock.landed.cost"].create(
             {
-                "target_model": target_model,
                 "cost_lines": [
                     Command.create(
                         {
@@ -27,17 +26,15 @@ class TestMoLandedCost(TransactionCase):
             }
         )
 
-    def test_onchange_clears_mo_when_not_manufacturing(self):
+    def test_targeted_moves_empty_without_mo(self):
+        cost = self._landed_cost()
+        self.assertFalse(cost._get_targeted_move_ids())
+
+    def test_finished_moves_of_a_manufacturing_order_are_targeted(self):
         mrp_product = self.env["product.product"].create(
             {"name": "MRP LC finished good", "type": "consu"}
         )
         production = self.env["mrp.production"].create({"product_id": mrp_product.id})
-        cost = self._landed_cost(target_model="manufacturing")
+        cost = self._landed_cost()
         cost.mrp_production_ids = [Command.set(production.ids)]
-        cost.target_model = "picking"
-        cost._onchange_target_model()
-        self.assertFalse(cost.mrp_production_ids)
-
-    def test_targeted_moves_empty_without_mo(self):
-        cost = self._landed_cost(target_model="manufacturing")
-        self.assertFalse(cost._get_targeted_move_ids())
+        self.assertEqual(cost._get_targeted_move_ids(), production.move_finished_ids)
