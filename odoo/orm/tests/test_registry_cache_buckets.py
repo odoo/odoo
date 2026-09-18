@@ -13,6 +13,13 @@ BUCKET_OWNERS: dict[str, str] = {
     "default": "the implicit bucket — ormcache's fallback when none is named",
     "assets": "base/web — compiled asset bundles",
     "assets.links": "base/web — the asset link map",
+    "assets.files": (
+        "base — ir.asset's per-pattern static-file globs. Its own bucket for "
+        "the reason templates.mail has one: one page resolves 500-odd patterns, "
+        "and in the 512-entry `assets` LRU they evicted the compiled bundle "
+        "nodes, so a signed-in website page recompiled with esbuild on every "
+        "request (measured, signed-in /contactus warm: 112 -> 18 queries)"
+    ),
     "stable": "base — long-lived lookups (xmlids, ACLs, record-rule domains)",
     "templates": "base — QWeb template lookup",
     "templates.mail": (

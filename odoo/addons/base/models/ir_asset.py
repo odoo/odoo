@@ -290,13 +290,10 @@ class IrAsset(models.Model):
             ),
         )
 
-    # One glob per pattern per process: the bundles of one page resolve the
-    # same 500-odd patterns (`web/static/src/**/*` for each of them), and the
-    # mtimes this returns are already frozen by the cache on _get_asset_paths.
     @api.model
     @tools.conditional(
         _CACHE_ASSET_LOOKUPS,
-        tools.ormcache("full_path", "static_dir", cache="assets"),
+        tools.ormcache("full_path", "static_dir", cache="assets.files"),
     )
     def _get_static_files_cached(
         self, full_path: str, static_dir: str

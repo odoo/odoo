@@ -992,6 +992,21 @@ class TestAssetsCacheStores(TransactionCase):
         with self.assertRaises(ValueError):
             self.env.registry.clear_cache("assets.links")
 
+    def test_the_static_file_globs_do_not_occupy_the_resolution_store(self):
+        IrAsset = self.env["ir.asset"]
+        self.env.registry.clear_cache("assets")
+        IrAsset._get_asset_paths("web.assets_backend", {})
+        self.assertTrue(self._lrus()["assets.files"])
+        self.assertLess(
+            len(self._lrus()["assets"]),
+            len(self._lrus()["assets.files"]),
+            "a page's hundreds of globs must not evict its compiled bundles",
+        )
+        self.env["ir.asset"].create(
+            {"name": "probe", "bundle": self.BUNDLES[0], "path": "/some/x.js"}
+        )
+        self.assertFalse(self._lrus()["assets.files"])
+
 
 @tagged("post_install", "-at_install")
 class TestInstalledAddonGate(TransactionCase):

@@ -14,6 +14,7 @@ REGISTRY_CACHES = {
     "default": 8192,
     "assets": 512,
     "assets.links": 8192,
+    "assets.files": 8192,
     "stable": 1024,
     "templates": 1024,
     "templates.mail": 512,
@@ -35,7 +36,7 @@ CACHES_BY_KEY = {
         "xmlid",
         "mail",
     ),
-    "assets": ("assets", "assets.links", "templates.cached_values"),
+    "assets": ("assets", "assets.links", "assets.files", "templates.cached_values"),
     "stable": (
         "stable",
         "default",
