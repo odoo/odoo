@@ -229,11 +229,11 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(pos_order_pos0.account_move.journal_id, self.pos_config.invoice_journal_id)
         self.assertEqual(line.debit, 27, 'As it is a fifo product, the move\'s value should be 5*5 + 2*1')
 
-    def test_cogs_ship_later_uninvoiced_and_backorder(self):
+    def test_cogs_ship_later_uninvoiced(self):
         """
-        Check an uninvoiced ship-later delivery posts the cost of the delivered goods at closing.
-        Checks also that a backordered unit posts its cost only once it is delivered, and that
-        nothing is posted for costless products.
+        Check an uninvoiced ship-later delivery posts the cost of the delivered goods in the session account move.
+        Check that the reversal entry is correctly created when the ship later invoice is created
+        after the session closing.
         """
         product_no_cost = self.env['product.product'].create({
             'name': 'Costless product',
@@ -286,49 +286,36 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         session.close_session_from_ui()
 
         valuation_account = self.category.property_stock_valuation_account_id
-        variation_account = self.company.expense_account_id
 
-        # deliver one unit and backorder the rest
+        session_cogs_line = session.move_id.line_ids.filtered(lambda aml: aml.account_id.id == valuation_account.id)
+        self.assertEqual(len(session_cogs_line), 1)
+        self.assertEqual(session_cogs_line.balance, -200)  # $100 * 2 + $0 * 1
+
+        # Do the delivery
         picking = session.picking_ids
-        picking.move_ids.filtered(lambda m: m.product_id == self.product).quantity = 1
-        picking.move_ids.filtered(lambda m: m.product_id == product_no_cost).quantity = 0
-        backorder_action = picking.button_validate()
-        self.env['stock.backorder.confirmation'].with_context(backorder_action['context']).process()
+        picking.move_ids.filtered(lambda m: m.product_id == self.product).quantity = 2
+        picking.move_ids.filtered(lambda m: m.product_id == product_no_cost).quantity = 1
+        picking.button_validate()
 
-        # the delivered unit is valued at the product cost on the move but posts no accounting entry
         self.assertEqual(self.product.standard_price, 100)
-        out_move = picking.move_ids.filtered(lambda m: m.product_id == self.product)
-        self.assertRecordValues(out_move, [
-            {'value': 100, 'is_valued': True, 'account_move_id': False},
+        self.assertRecordValues(picking.move_ids, [
+            {'value': 200, 'is_valued': True, 'account_move_id': False},
+            {'value': 0, 'is_valued': True, 'account_move_id': False},
         ])
 
-        # the cost of the delivered unit is considered only at closing
-        closing_move = self.env['account.move'].browse(
-            self.company.action_close_stock_valuation(auto_post=True)['res_id'])
-        self.assertRecordValues(closing_move.line_ids.sorted(lambda line: line.debit), [
-            {'account_id': valuation_account.id, 'debit': 0,   'credit': 100},
-            {'account_id': variation_account.id, 'debit': 100, 'credit': 0},
+        # Create invoice after session is closed
+        order.action_pos_order_invoice()
+
+        # Check COGS lines
+        valuation_lines = self.env['account.move.line'].search([('account_id', '=', valuation_account.id)], order="id asc")
+        self.assertRecordValues(valuation_lines, [
+            {'debit': 500.0, 'credit': 0.0},  # 1st session closing
+            {'debit': 0.0, 'credit': 200.0},  # POS session COGS
+            {'debit': 0.0, 'credit': 200.0},  # POS order COGS
+            {'debit': 200.0, 'credit': 0.0},  # Reversal COGS
         ])
 
-        # deliver one unit and backorder the rest
-        backorder = picking.backorder_ids
-        backorder.move_ids.filtered(lambda m: m.product_id == self.product).quantity = 1
-        backorder.move_ids.filtered(lambda m: m.product_id == product_no_cost).quantity = 0
-        backorder_action = backorder.button_validate()
-        self.env['stock.backorder.confirmation'].with_context(backorder_action['context']).process()
-
-        # closing again considers the backordered unit's cost, once it is delivered
-        closing_move = self.env['account.move'].browse(
-            self.company.action_close_stock_valuation(auto_post=True)['res_id'])
-        self.assertRecordValues(closing_move.line_ids.sorted(lambda line: line.debit), [
-            {'account_id': valuation_account.id, 'debit': 0,   'credit': 100},
-            {'account_id': variation_account.id, 'debit': 100, 'credit': 0},
-        ])
-
-        # finally ship the costless product: nothing more is posted at closing
-        costless_backorder = backorder.backorder_ids
-        costless_backorder.move_ids.quantity = 1
-        costless_backorder.button_validate()
+        # Ensure that nothing more is posted at closing
         with self.assertRaisesRegex(UserError, "Everything is correctly closed"):
             self.company.action_close_stock_valuation(auto_post=True)
 
@@ -585,3 +572,74 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             {'account_id': self.account.id, 'balance': 100.0},
             {'account_id': self.category.property_stock_valuation_account_id.id, 'balance': -25.0},
             {'account_id': self.category.property_account_expense_categ_id.id, 'balance': 25.0}])
+
+    def test_cogs_invoice_after_closing_no_delivery(self):
+        """Check the COGS in the reversal entry when the invoice is created after the session was closed
+        and no delivery is attached to the POS order.
+        When the product price is updated between the closing entry and the invoice,
+        the reversal entry uses the same cost as the invoice,
+        making the cost used in the closing entry the effective one.
+        """
+        self.company.point_of_sale_update_stock_quantities = 'closing'
+        self.pos_config.open_ui()
+
+        # Open Session
+        pos_session = self.pos_config.current_session_id
+        pos_session.set_opening_control(0, None)
+
+        # Create Order
+        pos_order = self.PosOrder.create({
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'session_id': pos_session.id,
+            'lines': [Command.create({
+                'name': "OL/0001",
+                'product_id': self.product.id,
+                'price_unit': 200,
+                'qty': 1.0,
+                'price_subtotal': 200,
+                'price_subtotal_incl': 200,
+            })],
+            'amount_total': 200,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+
+        # Pay
+        payment_context = {"active_ids": [pos_order.id], "active_id": pos_order.id}
+        payment = self.PosMakePayment.with_context(payment_context).create({
+            'amount': 200.0,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        payment.with_context(payment_context).check()
+        self.assertEqual(pos_order.state, 'paid')
+
+        # Close Session
+        pos_session.post_closing_cash_details(200.0)
+        pos_session.close_session_from_ui()
+        self.assertEqual(pos_session.state, 'closed')
+
+        # Ensure delivery not attached to the order, but to the session
+        self.assertFalse(bool(pos_order.picking_ids))
+        self.assertTrue(bool(pos_session.picking_ids))
+
+        # Ensure COGS in POS session AccountMove:
+        valuation_account = self.category.property_stock_valuation_account_id
+        session_cog_line = pos_session.move_id.line_ids.filtered(lambda aml: aml.account_id.id == valuation_account.id)
+        self.assertEqual(len(session_cog_line), 1)
+        self.assertEqual(session_cog_line.balance, -100)
+
+        # Update the product price
+        self.product.standard_price = 150
+
+        # Create invoice after session is closed
+        pos_order.action_pos_order_invoice()
+
+        # Check COGS lines
+        valuation_lines = self.env['account.move.line'].search([('account_id', '=', valuation_account.id)], order="id asc")
+        self.assertRecordValues(valuation_lines, [
+            {'debit': 0.0, 'credit': 100.0},  # POS session COGS
+            {'debit': 0.0, 'credit': 150.0},  # POS order COGS
+            {'debit': 150.0, 'credit': 0.0},  # Reversal COGS
+        ])
