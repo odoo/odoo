@@ -5,7 +5,12 @@ import { patch } from "@web/core/utils/patch";
  * Speed up fade-in fade-out to avoid useless delay in tests.
  */
 async function patchSurveyForm() {
-    const { SurveyForm } = await import("@survey/interactions/survey_form");
+    // The registered class, not `import()`: on a page that carries the bundle a
+    // dynamic import runs a second copy of the module, which registers a
+    // second SurveyForm and takes the patch where nothing runs.
+    const SurveyForm = registry
+        .category("public.interactions")
+        .get("survey.SurveyForm");
     patch(SurveyForm.prototype, {
         submitForm() {
             this.fadeInOutDelay = 0;
