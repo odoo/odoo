@@ -13,6 +13,37 @@ __all__ = [
     "generic",
 ]
 
+
+# setters, so that the aliases below stay assignable like the attributes they shadow
+def _set_crop_box(self, value):
+    self.cropBox = value
+
+
+def _set_lower_left(self, value):
+    self.lowerLeft = value
+
+
+def _set_media_box(self, value):
+    self.mediaBox = value
+
+
+def _set_upper_right(self, value):
+    self.upperRight = value
+
+
+def _set_indirect_reference(self, value):
+    self.indirectRef = value
+
+
+PageObject.add_transformation = lambda self, ctm: self.addTransformation(ctm)
+PageObject.cropbox = property(lambda self: self.cropBox, _set_crop_box)
+PageObject.mediabox = property(lambda self: self.mediaBox, _set_media_box)
+PageObject.indirect_reference = property(lambda self: self.indirectRef, _set_indirect_reference)
+generic.PdfObject.get_object = lambda self: self.getObject()
+generic.RectangleObject.lower_left = property(lambda self: self.lowerLeft, _set_lower_left)
+generic.RectangleObject.upper_right = property(lambda self: self.upperRight, _set_upper_right)
+
+
 # by default PdfFileReader will overwrite warnings.showwarning which is what
 # logging.captureWarnings does, meaning it essentially reverts captureWarnings
 # every time it's called which is undesirable
@@ -26,6 +57,10 @@ class PdfReader(PdfFileReader):
             return None
         return super().getFormTextFields()
 
+    @property
+    def resolved_objects(self):
+        return self.resolvedObjects
+
 
 class PdfWriter(PdfFileWriter):
     def get_fields(self, *args, **kwargs):
@@ -33,3 +68,9 @@ class PdfWriter(PdfFileWriter):
 
     def _add_object(self, *args, **kwargs):
         return self._addObject(*args, **kwargs)
+
+    def add_metadata(self, infos):
+        return self.addMetadata(infos)
+
+    def write_stream(self, stream):
+        return self.write(stream)
