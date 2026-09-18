@@ -47,6 +47,7 @@ class account_journal(models.Model):
                       SELECT id, company_id
                         FROM account_bank_statement
                        WHERE journal_id = journal.id
+                         AND first_line_index IS NOT NULL
                     ORDER BY first_line_index DESC
                        LIMIT 1
                    ) statement ON TRUE
@@ -691,6 +692,7 @@ class account_journal(models.Model):
                              FROM account_bank_statement
                             WHERE journal_id = journal.id
                               AND company_id = ANY(%s)
+                              AND first_line_index IS NOT NULL
                          ORDER BY date DESC, id DESC
                             LIMIT 1
                    ) statement ON TRUE
