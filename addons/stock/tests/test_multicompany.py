@@ -898,3 +898,30 @@ class TestMultiCompany(TransactionCase):
         new_company = self.env['res.company'].create({'name': 'Company Z'})
         self.assertEqual(new_address.with_company(new_company).property_stock_customer, self.interco_location)
         self.assertEqual(new_address.with_company(new_company).property_stock_supplier, self.interco_location)
+
+    def test_route_assigned_warehouses_multi_company(self):
+        """ Make sure the warehouses linked to a route are correctly filtered/cleared when actions are made from a different company than the one
+            having a configuration set.
+        """
+        route = self.env['stock.route'].create({
+            'name': 'Common route',
+            'company_id': False,
+        })
+        route.with_company(self.company_a).write({
+            'warehouse_selectable': True,
+            'warehouse_ids': [Command.link(self.warehouse_a.id)],
+        })
+        self.assertRecordValues(route.with_company(self.company_a), [{'warehouse_selectable': True, 'warehouse_ids': self.warehouse_a.ids}])
+        route.with_company(self.company_b).write({
+            'warehouse_selectable': False,
+        })
+        self.assertRecordValues(route.with_company(self.company_b), [{'warehouse_selectable': False, 'warehouse_ids': []}])
+        route.with_company(self.company_b).write({
+            'warehouse_selectable': True,
+            'warehouse_ids': [Command.link(self.warehouse_b.id)],
+        })
+        self.assertRecordValues(route.with_company(self.company_b), [{'warehouse_selectable': True, 'warehouse_ids': self.warehouse_b.ids}])
+        route.write({
+            'company_id': self.company_a.id,
+        })
+        self.assertRecordValues(route.with_company(self.company_b), [{'warehouse_selectable': True, 'warehouse_ids': []}])
