@@ -58,7 +58,7 @@
                                 <td name="status" t-if="this.forecastMode"/>
                                 <td name="lead_time" t-if="this.forecastMode"/>
                                 <td name="route_column" class="text-end"><strong>Unit Cost</strong></td>
-                                <td name="cost" class="text-end" width="5rem"><t t-out="this.formatMonetary(byproduct.bom_cost / byproduct.quantity)"/></td>
+                                <td name="cost" class="text-end" width="5rem"><t t-out="this.formatMonetary(byproduct.bom_unit_cost / byproduct.quantity)"/></td>
                                 <td t-if="this.showAttachments"/>
                             </tr>
                         </t>
