@@ -149,12 +149,30 @@ class TestL10nArWebsiteSale(TestArCommon):
                 'l10n_ar_price_tax_excluded': 1200.00,
             })
 
+    def test_dni_required_above_final_consumer_limit(self):
+        """Strictly above the limit a DNI is required, and the checkout says why."""
+        ar, step = self.env.ref('base.ar'), self.env['website.checkout.step']
+        buyer = self.env['res.partner'].create({'name': "Juan Perez", 'country_id': ar.id})
+        cart = self.env['sale.order'].sudo().create({
+            'partner_id': buyer.id,
+            'website_id': self.ar_website.id,
+            'order_line': [Command.create({'product_id': self.product_1.product_variant_id.id})],
+        })
+        self.ar_website.l10n_ar_final_consumer_limit = cart.amount_total
+        self.assertFalse(buyer._get_mandatory_additional_identifiers(ar, order_sudo=cart))
+
+        self.ar_website.l10n_ar_final_consumer_limit = cart.amount_total - 0.01
+        self.assertEqual(buyer._get_mandatory_additional_identifiers(ar, order_sudo=cart), {'AR_DNI'})
+        self.assertIn("order requires", step._get_billing_address_alert(cart))
+        buyer.additional_identifiers = {'AR_DNI': '12345678'}
+        self.assertNotIn("identification", step._get_billing_address_alert(cart))
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nArWebsiteSaleCheckout(TestArCommon, HttpCase):
 
-    def test_arca_responsibility_shown_without_b2b_fields(self):
-        """The required ARCA Responsibility stays on the form when the b2b fields are disabled."""
+    def test_hidden_arca_responsibility_is_defaulted(self):
+        """A hidden ARCA Responsibility follows the country, a shown one defaults to CF."""
         website = self.env['website'].sudo().create({
             'name': 'AR Website',
             'company_id': self.company_data['company'].id,
@@ -172,7 +190,7 @@ class TestL10nArWebsiteSaleCheckout(TestArCommon, HttpCase):
         })
         self.authenticate(user.login, user.login, session_extra={'sale_order_id': cart.id})
         page = self.url_open(f'/shop/address?partner_id={user.partner_id.id}&address_type=billing').text
-        self.assertIn('name="l10n_ar_afip_responsibility_type_id"', page)
+        self.assertNotIn('name="l10n_ar_afip_responsibility_type_id"', page)
 
         cf = self.env.ref('l10n_ar.res_CF')
         res = self.url_open('/shop/address/submit', data={
@@ -187,7 +205,11 @@ class TestL10nArWebsiteSaleCheckout(TestArCommon, HttpCase):
             'zip': '2000',
             'country_id': self.env.ref('base.ar').id,
             'state_id': self.env.ref('base.state_ar_s').id,
-            'l10n_ar_afip_responsibility_type_id': cf.id,
         }).json()
         self.assertNotIn('invalid_fields', res)
         self.assertEqual(user.partner_id.l10n_ar_afip_responsibility_type_id, cf)
+
+        user.partner_id.l10n_ar_afip_responsibility_type_id = False
+        self.env.ref('website_sale.address_b2b').sudo().active = True
+        page = self.url_open(f'/shop/address?partner_id={user.partner_id.id}&address_type=billing').text
+        self.assertRegex(page, rf'value="{cf.id}"\s+selected')
