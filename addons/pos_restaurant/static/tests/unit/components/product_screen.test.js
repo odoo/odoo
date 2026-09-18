@@ -124,11 +124,12 @@ describe("Mobile Pay Button", () => {
     });
 });
 
-test("onWillRender replaces a finalized order with a new one that keeps its table and preset", async () => {
+test("replaces a finalized order with a new one that keeps its table and preset", async () => {
     const store = await setupPosEnv();
     const table = store.models["restaurant.table"].get(2);
     const preset = store.models["pos.preset"].get(1);
     const order = store.addNewOrder({ table_id: table, preset_id: preset });
+    store.router.navigate("ProductScreen", { orderUuid: order.uuid });
 
     await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
 
