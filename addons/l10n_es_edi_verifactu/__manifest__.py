@@ -13,6 +13,7 @@
         'views/l10n_es_edi_verifactu_document_views.xml',
         'views/report_invoice.xml',
         'views/res_config_settings_views.xml',
+        'views/account_journal_dashboard_view.xml',
         'data/ir_cron.xml',
         'security/ir.access.csv',
     ],
