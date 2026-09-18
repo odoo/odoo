@@ -717,4 +717,42 @@ describe("pos_store.js", () => {
             expect(order.lines[1].price_subtotal_incl).toEqual(7.5);
         });
     });
+
+    const setupScale = (store) => {
+        store.config.iface_electronic_scale = true;
+        const product = store.models["product.product"].get(5);
+        product.product_tmpl_id.to_weight = true;
+        const weighed = [];
+        store.weighProduct = async () => {
+            weighed.push(true);
+            return 2.5;
+        };
+        return { product, weighed };
+    };
+
+    test("scanned weighed product opens the scale", async () => {
+        const store = await setupPosEnv();
+        const { product, weighed } = setupScale(store);
+        const code = { type: "product", base_code: "0100100", code: "0100100" };
+        const line = await store.addLineToCurrentOrder(
+            { product_id: product, product_tmpl_id: product.product_tmpl_id },
+            { code },
+            product.product_tmpl_id.needToConfigure()
+        );
+        expect(weighed).toHaveLength(1);
+        expect(line.qty).toBe(2.5);
+    });
+
+    test("scanned weight barcode skips the scale", async () => {
+        const store = await setupPosEnv();
+        const { product, weighed } = setupScale(store);
+        const code = { type: "weight", base_code: "0100100", code: "0100100", value: 1.25 };
+        const line = await store.addLineToCurrentOrder(
+            { product_id: product, product_tmpl_id: product.product_tmpl_id },
+            { code },
+            product.product_tmpl_id.needToConfigure()
+        );
+        expect(weighed).toHaveLength(0);
+        expect(line.qty).toBe(1.25);
+    });
 });
