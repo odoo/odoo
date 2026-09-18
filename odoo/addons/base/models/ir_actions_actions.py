@@ -411,13 +411,8 @@ class IrActionsActions(models.Model):
             for action in all_actions:
                 action_data = dict(action)
                 groups = action_data.pop("group_ids", None)
-                if groups and not self.env.user.has_any_group_id(groups):
-                    continue
                 opens = action_data.pop(_BINDING_ACCESS_MODEL, None)
-                if opens and (
-                    opens not in self.env
-                    or not Access.check(opens, mode="read", raise_exception=False)
-                ):
+                if self._get_load_refusal(groups, opens):
                     continue
                 actions.append(action_data)
             if actions:
@@ -522,6 +517,48 @@ class IrActionsActions(models.Model):
         return groups
 
     @api.model
+    def _get_load_refusal(self, group_ids: Any, opens_model: str | None) -> str:
+        if group_ids and not self.env.user.has_any_group_id(tuple(group_ids)):
+            return "groups"
+        if opens_model and (
+            opens_model not in self.env
+            or not self.env["ir.model.access"].check(
+                opens_model, mode="read", raise_exception=False
+            )
+        ):
+            return "model"
+        return ""
+
+    def _get_load_refusal_of_record(self) -> str:
+        self.check_singleton()
+        config = self.sudo()
+        group_ids = config.group_ids.ids if "group_ids" in self._fields else ()
+        target = self._get_field_target_model()
+        return self._get_load_refusal(group_ids, config[target] if target else None)
+
+    def _audit_load(self) -> str:
+        reason = self._get_load_refusal_of_record()
+        if reason:
+            _debug.logic(
+                "load_would_refuse",
+                action=self.id,
+                type=self._name,
+                uid=self.env.uid,
+                reason=reason,
+            )
+            _logger.info(
+                "Action load audit: %s %r (id %s, xml_id %s) would be refused to "
+                "user %s by %s",
+                self._name,
+                self.sudo().name,
+                self.id,
+                self.sudo().xml_id or "-",
+                self.env.uid,
+                reason,
+            )
+        return reason
+
+    @api.model
     def _get_action_dict_by_xml_id(self, full_xml_id: str) -> dict[str, Any]:
         record = self.env.ref(full_xml_id)
         if not isinstance(self.env[record._name], self.env.registry[self._name]):
@@ -530,6 +567,7 @@ class IrActionsActions(models.Model):
                 "action_xmlid_wrong_type", xmlid=full_xml_id, model=record._name
             )
             raise ValueError(msg)
+        record._audit_load()
         return record._get_action_dict()
 
     def _get_action_dict(self) -> dict[str, Any]:

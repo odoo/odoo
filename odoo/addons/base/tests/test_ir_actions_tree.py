@@ -89,3 +89,92 @@ class TestIrActionsTree(TransactionCase):
     def test_a_domain_that_is_not_a_list_falls_back_to_empty(self):
         self.assertEqual(self.Actions._eval_action_domain("{'a': 1}"), [])
         self.assertEqual(self.Actions._eval_action_domain("1 +"), [])
+
+
+@tagged("post_install", "-at_install")
+class TestIrActionsLoadAudit(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = cls.env["res.users"].create(
+            {
+                "name": "load audit",
+                "login": "load_audit",
+                "group_ids": [(6, 0, [cls.env.ref("base.group_user").id])],
+            }
+        )
+        cls.system = cls.env.ref("base.group_system")
+        Window = cls.env["ir.actions.act_window"]
+        cls.open = Window.create({"name": "open", "res_model": "res.partner"})
+        cls.restricted = Window.create(
+            {
+                "name": "restricted",
+                "res_model": "res.partner",
+                "group_ids": [(6, 0, [cls.system.id])],
+            }
+        )
+        cls.closed_model = Window.create(
+            {"name": "closed", "res_model": "ir.config_parameter"}
+        )
+
+    def test_the_rule_is_the_one_bindings_apply(self):
+        as_user = lambda action: action.with_user(self.user)  # noqa: E731
+        self.assertEqual(as_user(self.open)._get_load_refusal_of_record(), "")
+        self.assertEqual(
+            as_user(self.restricted)._get_load_refusal_of_record(), "groups"
+        )
+        self.assertEqual(
+            as_user(self.closed_model)._get_load_refusal_of_record(), "model"
+        )
+        self.assertEqual(self.restricted._get_load_refusal_of_record(), "")
+
+    def test_a_type_without_groups_or_target_is_always_loadable(self):
+        url = self.env["ir.actions.act_url"].create({"name": "u", "url": "/x"})
+        self.assertEqual(url.with_user(self.user)._get_load_refusal_of_record(), "")
+
+    def test_bindings_and_load_agree(self):
+        model_id = self.env["ir.model"]._get("res.partner").id
+        (self.open + self.restricted).write({"binding_model_id": model_id})
+        bound = {
+            b["id"]
+            for b in self.env["ir.actions.actions"]
+            .with_user(self.user)
+            .get_bindings("res.partner")
+            .get("action", [])
+        }
+        for action in (self.open, self.restricted):
+            loadable = not action.with_user(self.user)._get_load_refusal_of_record()
+            self.assertEqual(action.id in bound, loadable, action.name)
+
+    def test_audit_mode_logs_and_still_serves(self):
+        logger = "odoo.addons.base.models.ir_actions_actions"
+        with self.assertLogs(logger, level="INFO") as captured:
+            reason = self.restricted.with_user(self.user)._audit_load()
+        self.assertEqual(reason, "groups")
+        self.assertIn("would be refused", captured.output[0])
+        self.assertIn(str(self.restricted.id), captured.output[0])
+        self.assertEqual(
+            self.restricted.with_user(self.user)._get_action_dict()["name"],
+            "restricted",
+        )
+        with self.assertNoLogs(logger, level="INFO"):
+            self.assertEqual(self.open.with_user(self.user)._audit_load(), "")
+
+    def test_load_by_xml_id_audits(self):
+        self.env["ir.model.data"].create(
+            {
+                "module": "base",
+                "name": "load_audit_restricted",
+                "model": "ir.actions.act_window",
+                "res_id": self.restricted.id,
+            }
+        )
+        with self.assertLogs(
+            "odoo.addons.base.models.ir_actions_actions", level="INFO"
+        ):
+            result = (
+                self.env["ir.actions.actions"]
+                .with_user(self.user)
+                ._get_action_dict_by_xml_id("base.load_audit_restricted")
+            )
+        self.assertEqual(result["id"], self.restricted.id)

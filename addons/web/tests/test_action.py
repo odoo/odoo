@@ -358,3 +358,43 @@ class TestLoadBreadcrumbs(HttpCase):
             ),
         )
         self.assertEqual(resp.json()["error"]["message"], "Odoo Server Error")
+
+
+@tagged("post_install", "-at_install", "web_http", "web_action")
+class TestLoadAudit(HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env["res.users"].create(
+            {
+                "name": "load audit",
+                "login": "load_audit",
+                "password": "load_audit_pw",
+                "group_ids": [(6, 0, [cls.env.ref("base.group_user").id])],
+            }
+        )
+        cls.restricted = cls.env["ir.actions.act_window"].create(
+            {
+                "name": "restricted",
+                "res_model": "res.partner",
+                "group_ids": [(6, 0, [cls.env.ref("base.group_system").id])],
+            }
+        )
+
+    def test_a_restricted_action_is_still_served_and_audited(self):
+        self.authenticate("load_audit", "load_audit_pw")
+        with self.assertLogs(
+            "odoo.addons.base.models.ir_actions_actions", level="INFO"
+        ) as captured:
+            resp = self.url_open(
+                "/web/action/load",
+                headers={"Content-Type": "application/json"},
+                data=json_dumps({"params": {"action_id": self.restricted.id}}),
+            )
+        self.assertEqual(resp.json()["result"]["id"], self.restricted.id)
+        self.assertTrue(
+            any(
+                "would be refused" in line and "groups" in line
+                for line in captured.output
+            )
+        )
