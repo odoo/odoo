@@ -70,6 +70,24 @@ test("fastValidate", async () => {
     expect(order.amount_paid).toBe(3.45);
 });
 
+test("full slots remain available in POS", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const preset = store.models["pos.preset"].get(2);
+    preset.slots_per_interval = 1;
+
+    await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+    store.selectPreset(preset);
+    await contains(".o_dialog .btn:contains('Tomorrow')").click();
+
+    const fullSlots = queryAll(".preset-slot-button.o_colorlist_item_numpad_color_1");
+    const fullSlot = preset.availabilities["2019-03-12"].find(
+        (s) => s.time === "2019-03-12 12:00:00"
+    );
+    expect(fullSlot.isFull).toBe(true);
+    expect(fullSlots[0].textContent.trim()).toBe("12:00");
+});
+
 test("long press on a product opens the product info popup", async () => {
     const { store } = await mountProductScreen();
 
