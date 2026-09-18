@@ -1,12 +1,48 @@
 .o_cw_popover {
-    max-height: 80vh;
-    max-width: 95vw;
-    width: 448px;
+    display: flex;
+    flex-direction: column;
+    max-height: var(--CwPopover-max-height, 80vh);
+    max-width: var(--CwPopover-max-width, 95vw);
+    width: var(--CwPopover-width, 448px);
     z-index: $zindex-modal - 1;
     font-size: $font-size-base;
 
+    @include media-breakpoint-down(md) {
+        height: 100%;
+        border-radius: inherit;
+        background: $popover-bg;
+        z-index: 1;
+
+        .o_popover:has(&) {
+            $-margin-top: #{map-get($spacers, 5) * 3};
+
+            --#{$prefix}popover-border-radius: #{map-get($spacers, 2)} #{map-get($spacers, 2)} 0 0;
+            --CwPopover-max-height: calc(100dvh - #{$-margin-top});
+            --CwPopover-max-width: auto;
+            --CwPopover-width: 100%;
+
+            // !important is mandatory to override default popover positioning
+            inset: 0 !important;
+            margin-top: $-margin-top;
+
+            &::before {
+                content: '';
+                position: absolute;
+                inset: -50% 0 50% 0;
+                display: block;
+                background: rgba(0, 0, 0, 0.25);
+                z-index: -1;
+                pointer-events: none;
+            }
+        }
+    }
+
     .o_card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
         min-height: 0;
+
         .o_popover_body {
             min-height: 0;
         }
