@@ -60,9 +60,9 @@
                             <i class="oi oi-filled" data-icon="mail" role="img" aria-label="Compose Mail"/> Send
                         </button>
                     </t>
-                    <button t-if="this.activity().phone" type="button" class="o-mail-Activity-call btn btn-link p-0 me-3" t-on-click="this.onClickPhoneNumber">
+                    <a t-if="this.activity().phone" t-att-href="this.phoneHref" class="o-mail-Activity-call btn btn-link p-0 me-3" t-on-click="this.onClickPhoneNumber">
                         <i class="oi oi-filled" data-icon="phone"/> Call
-                    </button>
+                    </a>
                     <t t-if="this.activity().can_write">
                         <button class="o-mail-Activity-markDone btn btn-link btn-success p-0 me-3" t-on-click="this.onClickMarkAsDone">
                             <i class="oi" data-icon="check"/> Done
