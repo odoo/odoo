@@ -300,6 +300,8 @@ class _RegistryFieldsMixin(_RegistryStubs):
 
     def _depended_fields_in_tree(self, dep_field: Field) -> tuple[Field, ...]:
         model_cls = self.models.get(dep_field.model_name)
+        if model_cls is None:
+            return (dep_field,)
         root = getattr(model_cls, "_table_inheritance_root", "")
         if not root or model_cls._table != root:
             return (dep_field,)

@@ -22,3 +22,7 @@ class _RegistryStubs:
 
         has_trigram: bool
         unaccent: typing.Any
+
+        @property
+        def model_names_by_inheritance_root(self) -> dict[str, tuple[str, ...]]:
+            pass
