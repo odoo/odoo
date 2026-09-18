@@ -100,7 +100,7 @@ class StockMove(models.Model):
     @api.depends('bom_line_id')
     def _compute_description_picking(self):
         super()._compute_description_picking()
-        bom_line_description = {}
+        bom_line_data = {}
         for bom in self.bom_line_id.bom_id:
             if bom.type != 'phantom':
                 continue
@@ -108,13 +108,27 @@ class StockMove(models.Model):
             line_ids = self.bom_line_id.filtered(lambda line: line.bom_id == bom).mapped('id')
             total = len(line_ids)
             for i, line_id in enumerate(line_ids):
-                bom_line_description[line_id] = '%s - %d/%d' % (bom.display_name, i + 1, total)
+                bom_line_data[line_id] = {
+                    'display_name': bom.display_name,
+                    'fraction': '%d/%d' % (i + 1, total),
+                }
 
         for move in self:
-            if not move.description_picking_manual and move.bom_line_id.id in bom_line_description:
+            if move.bom_line_id.id in bom_line_data:
+                curr_bom_line_data = bom_line_data.get(move.bom_line_id.id)
+                line_display_name, line_fraction = curr_bom_line_data.get('display_name'), curr_bom_line_data.get('fraction')
+                line_description = f'{line_display_name} - {line_fraction}'
                 if move.description_picking == move.product_id.display_name:
                     move.description_picking = ''
-                move.description_picking += ('\n' if move.description_picking else '') + bom_line_description.get(move.bom_line_id.id)
+                # if fraction is already there, skip
+                elif line_fraction in move.description_picking:
+                    continue
+                # if display name is already present, just add the fraction
+                elif line_display_name in move.description_picking:
+                    move.description_picking = move.description_picking.replace(line_display_name, line_description)
+                    continue
+
+                move.description_picking += ('\n' if move.description_picking else '') + line_description
 
     @api.depends('raw_material_production_id.priority')
     def _compute_priority(self):
