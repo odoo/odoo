@@ -26,6 +26,7 @@ export default class DevicesSynchronisation {
 
         // Connect websocket to receive synchronisation notification
         this.pos.data.connectWebSocket("SYNCHRONISATION", this.collect.bind(this));
+        this.pos.data.busFallback.registerFallback(this.readDataFromServer.bind(this));
     }
 
     /**
