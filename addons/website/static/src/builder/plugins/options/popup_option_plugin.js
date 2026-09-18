@@ -1,6 +1,7 @@
 import { SNIPPET_SPECIFIC, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/utils";
@@ -47,18 +48,23 @@ class PopupOptionPlugin extends Plugin {
             CopyAnchorAction,
             SetPopupDelayAction,
         },
-        empty_node_predicates: (el) => {
-            if (!el.matches?.(".s_popup")) {
-                return false;
-            }
-            const popupModalChildrenEls = [...(el.querySelector(".modal-content")?.children ?? [])];
-            return popupModalChildrenEls.every((child) => child.matches(".s_popup_close"));
-        },
+        before_setup_editor_handlers: this.setPopupEditorMessage.bind(this),
         on_cloned_handlers: this.onCloned.bind(this),
+        on_removed_handlers: this.onRemoved.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        on_snippet_over_dropzone_handlers: this.onSnippetOverDropzone.bind(this),
+        on_snippet_out_dropzone_handlers: this.onSnippetOutDropzone.bind(this),
+        on_snippet_inserted_handlers: this.onSnippetInserted.bind(this),
         on_will_remove_handlers: this.onWillRemove.bind(this),
         no_parent_containers: ".s_popup",
     };
+
+    setPopupEditorMessage() {
+        for (const popupEl of this.editable.querySelectorAll(".s_popup")) {
+            const isPopupEmpty = this.isPopupEmpty(popupEl);
+            this.updatePopupEmptyState(popupEl, isPopupEmpty);
+        }
+    }
 
     onCloned({ cloneEl }) {
         if (cloneEl.matches(".s_popup")) {
@@ -80,6 +86,55 @@ class PopupOptionPlugin extends Plugin {
         }
     }
 
+    onSnippetOverDropzone({ dragState }) {
+        const popupEl = dragState.currentDropzoneEl.closest(".s_popup");
+        if (popupEl) {
+            this.updatePopupEmptyState(popupEl, false);
+        }
+    }
+
+    onSnippetOutDropzone({ snippetEl, dragState }) {
+        const popupEl = dragState.currentDropzoneEl.closest(".s_popup");
+        if (popupEl) {
+            // The popup is considered empty if it only contains the dragged snippet.
+            const contentEls = [
+                ...popupEl.querySelectorAll(
+                    ".modal-content.oe_structure > *:not(.s_popup_close, .oe_drop_zone)"
+                ),
+            ].filter((el) => el !== snippetEl);
+            const isPopupEmpty = !contentEls.length;
+            this.updatePopupEmptyState(popupEl, isPopupEmpty);
+        }
+    }
+
+    onSnippetInserted(snippetEl) {
+        const popupEl = snippetEl.closest(".s_popup");
+        if (popupEl) {
+            const isPopupEmpty = this.isPopupEmpty(popupEl);
+            this.updatePopupEmptyState(popupEl, isPopupEmpty);
+        }
+    }
+
+    isPopupEmpty(popupEl) {
+        return !popupEl.querySelector(".modal-content.oe_structure > *:not(.s_popup_close)");
+    }
+
+    /**
+     * Shows/hides the empty structure message.
+     *
+     * @param {HTMLElement} popupEl
+     * @param {Boolean} showEmptyMessage
+     */
+    updatePopupEmptyState(popupEl, showEmptyMessage) {
+        const modalContentEl = popupEl.querySelector(".modal-content.oe_structure");
+        if (showEmptyMessage) {
+            modalContentEl.setAttribute("data-editor-message", _t("Drag blocks here"));
+        } else {
+            modalContentEl.removeAttribute("data-editor-message");
+        }
+        modalContentEl.classList.toggle("oe_structure_empty_message", showEmptyMessage);
+    }
+
     onWillRemove(el) {
         this.dependencies.visibility.toggleTargetVisibility(el, false);
         this.dependencies.history.addCustomMutation({
@@ -90,6 +145,14 @@ class PopupOptionPlugin extends Plugin {
                 this.dependencies.visibility.toggleTargetVisibility(el, true);
             },
         });
+    }
+
+    onRemoved({ nextTargetEl }) {
+        const popupEl = nextTargetEl?.closest(".s_popup");
+        if (popupEl) {
+            const isPopupEmpty = this.isPopupEmpty(popupEl);
+            this.updatePopupEmptyState(popupEl, isPopupEmpty);
+        }
     }
 
     assignUniqueID(editingElement) {
