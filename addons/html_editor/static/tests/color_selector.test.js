@@ -1149,7 +1149,7 @@ describe("color preview", () => {
         // Hover a color
         await hover("button[data-color='#CE0000']");
         expect(getContent(el)).toBe(`
-            <p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table">
+            <p data-selection-placeholder=""><br></p><div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td o_selected_td_bg_color_preview" style="background-color: rgba(206, 0, 0, 0.6); ${defaultTextColor}">
@@ -1162,13 +1162,13 @@ describe("color preview", () => {
                         </td>
                     </tr>
                 </tbody>
-            </table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            </table></div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `);
         // Hover out
         await hover(".o-we-toolbar .o-select-color-foreground");
         await animationFrame();
         expect(getContent(el)).toBe(`
-            <p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table">
+            <p data-selection-placeholder=""><br></p><div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td">
@@ -1181,7 +1181,7 @@ describe("color preview", () => {
                         </td>
                     </tr>
                 </tbody>
-            </table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            </table></div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `);
         await expectElementCount(".o-we-toolbar", 1);
     });
@@ -1217,7 +1217,7 @@ describe("color preview", () => {
         // Hover a color
         await hover("button[data-color='black']");
         expect(getContent(el)).toBe(`
-            <p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table">
+            <p data-selection-placeholder=""><br></p><div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td o_selected_td_bg_color_preview bg-black" style="${defaultTextColor}">
@@ -1230,13 +1230,13 @@ describe("color preview", () => {
                         </td>
                     </tr>
                 </tbody>
-            </table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            </table></div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `);
         // Hover out
         await hover(".o-we-toolbar .o-select-color-foreground");
         await animationFrame();
         expect(getContent(el)).toBe(`
-            <p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table">
+            <p data-selection-placeholder=""><br></p><div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td">
@@ -1249,7 +1249,7 @@ describe("color preview", () => {
                         </td>
                     </tr>
                 </tbody>
-            </table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            </table></div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `);
         await expectElementCount(".o-we-toolbar", 1);
     });

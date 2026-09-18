@@ -240,6 +240,11 @@ export class FontTypePlugin extends Plugin {
                 return false;
             }
         },
+        can_contain_selection_placeholder_predicates: (container) => {
+            if (container.nodeName === "BLOCKQUOTE") {
+                return true;
+            }
+        },
 
         /** Processors */
         clipboard_content_processors: this.processContentForClipboard.bind(this),
