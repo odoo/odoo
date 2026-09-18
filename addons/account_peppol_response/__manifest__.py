@@ -16,6 +16,7 @@ When receiving a document, you will be able to send a rejection or approval of t
         'data/cron.xml',
         'data/peppol_clarification_data.xml',
         'security/ir.model.access.csv',
+        'security/account_peppol_response_security.xml',
         'views/account_move_views.xml',
         'views/account_peppol_response_views.xml',
         'views/res_partner_views.xml',
