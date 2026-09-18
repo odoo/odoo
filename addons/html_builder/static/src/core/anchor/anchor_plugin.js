@@ -2,7 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-import { markup } from "@odoo/owl";
 import { AnchorDialog } from "./anchor_dialog";
 import { getElementsWithOption, getSnippetName } from "@html_builder/utils/utils";
 
@@ -133,6 +132,7 @@ export class AnchorPlugin extends Plugin {
         }
         const anchorLink = this.getAnchorLink(element);
         await browser.navigator.clipboard.writeText(anchorLink);
+<<<<<<< fda14be72ca618568b2cc7837adb348f55cd94ee
         const message = _t(
             "Anchor copied to clipboard%(br)s%(open_span)sLink: %(anchor_link)s%(close_span)s",
             {
@@ -142,12 +142,25 @@ export class AnchorPlugin extends Plugin {
                 close_span: markup`</span>`,
             }
         );
+||||||| 3a3b62d95e7c8ab86ea33a00de3e8ad6abcdf504
+        const message = _t(
+            "Anchor copied to clipboard%(br)s%(open_span)sLink: %(anchor_link)s%(close_span)s",
+            {
+                open_span: markup`<span style=" display: -webkit-box; -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical; overflow: hidden;">`,
+                anchor_link: anchorLink,
+                br: markup`<br>`,
+                close_span: markup`</span>`,
+            }
+        );
+=======
+        const message = _t("Anchor copied to clipboard");
+>>>>>>> f054d06fe6ec163b516f78d004e99bd4de4d5972
         const closeNotification = this.services.notification.add(message, {
             type: "success",
             buttons: [
                 {
                     name: _t("Edit"),
-                    primary: true,
                     onClick: () => {
                         closeNotification();
                         // Open the "rename anchor" dialog.
