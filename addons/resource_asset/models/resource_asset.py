@@ -28,11 +28,13 @@ class ResourceAsset(models.Model):
     _name = "resource.asset"
     _description = "Asset"
     _inherit = [
+        "mixin.table.inheritance.root",
         "mixin.mail.thread",
         "mixin.mail.activity",
         "mixin.avatar",
         "mixin.resource",
     ]
+    _table_inheritance_root = "resource_asset"
     _order = "name, id"
     _check_company_auto = True
 
@@ -850,6 +852,12 @@ class ResourceAsset(models.Model):
                 "active": False,
             }
         )
+
+    def _get_type_field_name(self) -> str:
+        """The table a row lives in is the only thing that says what kind of
+        asset it is. A stored column repeating it is a second answer that can
+        drift from the first, and nothing here reads the model name off a row."""
+        return ""
 
     def get_identifier(self, code):
         self.check_singleton()
