@@ -103,11 +103,7 @@ export function hasTextColorClass(element, mode) {
         return false;
     }
     const classRegex = mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX;
-    const parent = element.parentNode;
-    return (
-        classRegex.test(element.className) &&
-        (!parent || getComputedStyle(element)[mode] !== getComputedStyle(parent)[mode])
-    );
+    return classRegex.test(element.className);
 }
 
 /**
