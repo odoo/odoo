@@ -1,4 +1,4 @@
-from odoo import api, models
+from odoo import models
 
 
 class AccountMoveSendWizard(models.TransientModel):
@@ -39,9 +39,6 @@ class AccountMoveSendWizard(models.TransientModel):
 
     def _compute_sending_method_checkboxes(self):
         # EXTENDS 'account'
-
-        multiple_lines_records = self.env['account.move.send.wizard']
-
         for wizard in self:
             move = wizard.move_id
             partner = move.partner_id.commercial_partner_id
@@ -54,50 +51,25 @@ class AccountMoveSendWizard(models.TransientModel):
                 continue
 
             lookup_result = self.env['res.partner']._fetch_active_annuaire_lines(siren)
-            if line_count := lookup_result.get('count', 0):
-                if line_count == 1:
-                    partner.write({
-                        'peppol_eas': '0225',
-                        'peppol_endpoint': lookup_result.get('identifiers')[0],
-                    })
-                elif line_count > 1:
-                    multiple_lines_records |= wizard
+
+            if identifiers := lookup_result.get('identifiers', []):
+                if len(identifiers) == 1:
+                    updated_identifier = identifiers[0]
+                else:
+                    id_type, id_value = partner._l10n_fr_pdp_get_base_identifier()
+                    siren_siret = f"{siren}_{id_value}" if id_type == 'siret' else None
+
+                    if siren_siret and (siren_siret_identifiers := [identifier for identifier in identifiers if identifier.startswith(siren_siret)]):
+                        updated_identifier = min(siren_siret_identifiers, key=len)
+                    elif siren in identifiers:
+                        updated_identifier = siren
+                    else:
+                        updated_identifier = min(identifiers, key=len)
+
+                partner.write({
+                    'peppol_eas': '0225',
+                    'peppol_endpoint': updated_identifier,
+                    'invoice_edi_format': 'ubl_21_fr',
+                })
 
         super()._compute_sending_method_checkboxes()
-
-        # For a given SIREN, if more than one line exists on the annuaire, warn the user to go the partner's settings and choose
-        # the correct identifier as there is no way to know which line belongs to the partner, and disable the checkbox to send via peppol
-        for wizard in multiple_lines_records:
-            checkboxes = wizard.sending_method_checkboxes
-            if 'peppol' in checkboxes:
-                checkboxes['peppol'].update({
-                    'checked': False,
-                    'readonly': True,
-                    'disabled': True,
-                    'l10n_fr_pdp_ambiguous': True,
-                })
-                wizard.sending_method_checkboxes = checkboxes
-
-    @api.depends('sending_method_checkboxes')
-    def _compute_alerts(self):
-        # EXTENDS 'account'
-        super()._compute_alerts()
-
-        for wizard in self:
-            peppol_box = (wizard.sending_method_checkboxes or {}).get('peppol', {})
-            partner = wizard.move_id.partner_id.commercial_partner_id
-
-            if peppol_box.get('l10n_fr_pdp_ambiguous'):
-                new_alerts = wizard.alerts if wizard.alerts else {}
-
-                new_alerts['l10n_fr_pdp_ambiguous_annuaire'] = {
-                    'level': 'warning',
-                    'message': self.env._(
-                        "Multiple active registrations were found in the French directory for %(partner)s. "
-                        "Please select the correct e-invoicing identifier before sending.",
-                        partner=partner.display_name
-                    ),
-                    'action_text': self.env._("Open Partner Settings"),
-                    'action': partner._get_records_action(),
-                }
-                wizard.alerts = new_alerts
