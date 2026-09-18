@@ -932,6 +932,7 @@ class AccountMove(models.Model):
         tracking=True,
     )
     display_state = fields.Selection(
+        value_sql="_state_field_sql",
         selection=PAYMENT_STATE_SELECTION
         + [
             ("draft", "Draft"),
@@ -1005,6 +1006,7 @@ class AccountMove(models.Model):
     )
 
     move_sent_values = fields.Selection(
+        value_sql="_state_field_sql",
         selection=[
             ("sent", "Sent"),
             ("not_sent", "Not Sent"),
@@ -1918,15 +1920,14 @@ class AccountMove(models.Model):
             if not move.display_state:
                 move.display_state = move.state
 
-    def _field_to_sql(self, alias: str, fname: str, query=None) -> SQL:
-        if fname not in ("display_state", "move_sent_values"):
-            return super()._field_to_sql(alias, fname, query=query)
+    def _state_field_sql(self, field, alias: str, query=None) -> SQL:
+        fname = field.name
         _debug.logic("state_field_to_sql", field=fname, alias=alias)
-        is_move_sent = super()._field_to_sql(alias, "is_move_sent", query)
+        is_move_sent = self._field_to_sql(alias, "is_move_sent", query)
         if fname == "move_sent_values":
             return SQL("CASE WHEN %s THEN 'sent' ELSE 'not_sent' END", is_move_sent)
-        state = super()._field_to_sql(alias, "state", query)
-        payment_state = super()._field_to_sql(alias, "payment_state", query)
+        state = self._field_to_sql(alias, "state", query)
+        payment_state = self._field_to_sql(alias, "payment_state", query)
         return SQL(
             "CASE "
             "WHEN %(state)s = 'draft' "

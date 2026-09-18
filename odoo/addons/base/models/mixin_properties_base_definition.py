@@ -22,6 +22,7 @@ class MixinPropertiesBaseDefinition(models.AbstractModel):
         comodel_name="properties.base.definition",
         compute="_compute_properties_base_definition_id",
         search="_search_properties_base_definition_id",
+        value_sql="_properties_base_definition_id_sql",
     )
 
     def _compute_properties_base_definition_id(self) -> None:
@@ -37,6 +38,17 @@ class MixinPropertiesBaseDefinition(models.AbstractModel):
             records=len(self),
         )
         self.properties_base_definition_id = definition
+
+    def _properties_base_definition_id_sql(
+        self, field: fields.Field, alias: str, query: Any = None
+    ) -> SQL:
+        parent = (
+            self.env["properties.base.definition"]
+            .sudo()
+            ._get_definition_id_for_property_field(self._name, "properties")
+        )
+        _debug.logic("definition_to_sql", model=self._name, definition=parent)
+        return SQL("%s::int4", parent)
 
     def _search_properties_base_definition_id(
         self, operator: str, value: Any
@@ -83,15 +95,3 @@ class MixinPropertiesBaseDefinition(models.AbstractModel):
         return super().create(
             [{**vals, "properties_base_definition_id": parent} for vals in vals_list]
         )
-
-    def _field_to_sql(self, alias: str, fname: str, query: Any = None) -> SQL:
-        if fname == "properties_base_definition_id":
-            parent = (
-                self.env["properties.base.definition"]
-                .sudo()
-                ._get_definition_id_for_property_field(self._name, "properties")
-            )
-            _debug.logic("definition_to_sql", model=self._name, definition=parent)
-            return SQL("%s::int4", parent)
-
-        return super()._field_to_sql(alias, fname, query)

@@ -245,6 +245,9 @@ class Test_Read_GroupTask(models.Model):
         group_by_sql="_parity_group_sql",
         order_by_sql="_parity_order_sql",
     )
+    integer_squared = fields.Integer(
+        compute="_compute_integer_squared", value_sql="_integer_squared_sql"
+    )
 
     @api.depends("user_ids")
     def _compute_lead_user_id(self):
@@ -255,6 +258,15 @@ class Test_Read_GroupTask(models.Model):
     def _compute_parity(self):
         for task in self:
             task.parity = "even" if task.integer % 2 == 0 else "odd"
+
+    @api.depends("integer")
+    def _compute_integer_squared(self):
+        for task in self:
+            task.integer_squared = task.integer * task.integer
+
+    def _integer_squared_sql(self, field, alias, query):
+        integer = self._field_to_sql(alias, "integer", query)
+        return SQL("(%s * %s)", integer, integer)
 
     def _parity_sql(self, alias, query):
         return SQL(

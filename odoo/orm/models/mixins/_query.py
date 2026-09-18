@@ -299,6 +299,15 @@ class _QueryMixin(_ModelStubs):
 
         self._check_field_access(field, "read")
 
+        if field.value_sql:
+            # the field names the method that composes its SQL: an expression
+            # over other columns, a join it hangs on the query, a constant
+            if property_name:
+                raise ValueError(
+                    f"{field_expr!r}: a property of a field that composes its own SQL"
+                )
+            return getattr(self, field.value_sql)(field, alias, query)
+
         if not property_name and alias == self._table:
             # proven by the first fetch of the column to be exactly this
             # identifier (see _fetch_term); spelled once, reused by every

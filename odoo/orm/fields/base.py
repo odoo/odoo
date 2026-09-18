@@ -231,6 +231,7 @@ class Field[T](
     order_by_field: str | None = None
     group_by_sql: str | None = None
     order_by_sql: str | None = None
+    value_sql: str | None = None
     falsy_value_label: str | None = None
     prefetch: bool | str = True
 
@@ -424,6 +425,7 @@ class Field[T](
         for attribute, stand_in in (
             ("group_by_sql", "group_by_field"),
             ("order_by_sql", "order_by_field"),
+            ("value_sql", None),
         ):
             method_name = getattr(self, attribute)
             if method_name is None:
@@ -433,7 +435,7 @@ class Field[T](
                     f"Field {self}: {attribute}={method_name!r} names no method of "
                     f"{model._name}"
                 )
-            if getattr(self, stand_in) is not None:
+            if stand_in is not None and getattr(self, stand_in) is not None:
                 raise ValueError(
                     f"Field {self}: {attribute} and {stand_in} cannot both be set"
                 )

@@ -1173,6 +1173,35 @@ is worst when the field exists: ``ir_cron``'s ``_compute_next_call`` was a
 **A ``_selection_*`` method with a parameter is not a hook**: ``selection=`` calls
 it with nothing to pass. There are **0** left.
 
+**A field's SQL is declared on the field, never spelled as a model-wide
+override** ``[review]``. Three declarations name the model method that composes
+a field's SQL, the way ``search=`` names the one that composes its domain:
+``value_sql`` (the expression that stands for the field in a query --
+``(field, alias, query) -> SQL``), ``group_by_sql`` (its GROUP BY expression --
+``(field, alias, query) -> SQL``) and ``order_by_sql`` (its ORDER BY term --
+``(field, alias, direction, nulls, query) -> SQL``, returned through
+``_order_value_to_sql`` so a term under a grouped query is shaped like a
+column's). Where the SQL is another field's, the stand-ins ``group_by_field``
+and ``order_by_field`` name it and no method is needed. Setup refuses a hook
+that names no method and a hook beside its stand-in. The hook is named for the
+declaration and the field, as every field hook is: ``_value_sql_company_currency``,
+``_group_by_sql_activity_state``; several fields sharing one body are named
+for what they share (``_order_by_sql_activity``).
+
+The reason is what an override hides. ``_field_to_sql``, ``_read_group_groupby``
+and ``_order_field_to_sql`` are model-wide: an override that acts on one field
+and defers to ``super()`` for the rest is invisible as a per-field fact to
+anything that reads the model by its methods -- a reader looking for where
+``activity_state`` gets its SQL, a tool keying on method identity, and the Rust
+engine's routing gate, which saw thirteen mail-thread models of a plain
+database as "read path overridden in python" and served every grouped read on
+them from Python for a groupby nobody was asking for. Declared on the field, the
+same SQL is a static fact: the engine's export drops a field carrying any of the
+three from the kernel's registry, so a query naming it falls back to Python and
+every other field on the model routes. The model-method overrides that remain
+(``_read_group_select`` aggregate hooks, a custom granularity, an order term that
+is not a declared field) are the ones no field can yet declare.
+
 **What the misused prefix costs is a collision, not a misreading** ``[review]``.
 A reserved prefix is a claim that a field declaration somewhere names this
 method; while the claim is false the spelling is unowned, and another model is

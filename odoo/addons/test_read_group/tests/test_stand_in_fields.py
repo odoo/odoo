@@ -229,3 +229,20 @@ class TestStandInFields(common.TransactionCase):
                 self.assertRaisesRegex(ValueError, message),
             ):
                 field._check_stand_in_fields(self.Task)
+
+    def test_a_field_composing_its_own_sql_orders_groups_and_aggregates(self):
+        ordered = self.Task.search(self.domain, order="integer_squared desc")
+        self.assertEqual(ordered.mapped("integer"), [8, 4, 2, 1])
+        self.assertTrue(self.Task._is_field_sortable("integer_squared"))
+        groups = self.Task._read_group(
+            self.domain, ["integer_squared"], ["__count"], order="integer_squared"
+        )
+        self.assertEqual(groups, [(1, 1), (4, 1), (16, 1), (64, 1)])
+        [(total,)] = self.Task._read_group(self.domain, [], ["integer_squared:sum"])
+        self.assertEqual(total, 85)
+
+    def test_a_value_sql_hook_that_names_no_method_is_refused_at_setup(self):
+        field = fields.Char(value_sql="_nope")
+        field._setup_attrs__(type(self.Task), "probe_field")
+        with self.assertRaisesRegex(ValueError, "names no method"):
+            field._check_stand_in_fields(self.Task)

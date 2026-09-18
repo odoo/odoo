@@ -224,6 +224,7 @@ class CrmLead(models.Model):
         string="Currency",
         compute="_compute_company_currency",
         compute_sudo=True,
+        value_sql="_company_currency_sql",
     )
     date_closed = fields.Datetime(
         string="Closed Date",
@@ -504,30 +505,30 @@ class CrmLead(models.Model):
             else:
                 lead.company_currency = lead.company_id.currency_id
 
-    def _field_to_sql(self, alias, field_expr, query=None) -> SQL:
-        if field_expr == "company_currency":
-            alias_company = query.get_table_alias(self._table, "company_id")
-            company_field_sql = self._field_to_sql(self._table, "company_id", query)
-            query.add_join(
-                "LEFT JOIN",
-                alias_company,
-                "res_company",
-                SQL(
-                    "%s = %s",
-                    company_field_sql,
-                    SQL.identifier(alias_company, "id"),
-                ),
-            )
-            company_currency_expr = self.env["res.company"]._field_to_sql(
-                alias_company, "currency_id", query
-            )
-            return SQL(
-                "(CASE WHEN %s IS NOT NULL THEN %s ELSE %s END)",
+    def _company_currency_sql(self, field, alias, query) -> SQL:
+        if query is None:
+            raise ValueError("company_currency needs a query to hang its join on")
+        alias_company = query.get_table_alias(self._table, "company_id")
+        company_field_sql = self._field_to_sql(self._table, "company_id", query)
+        query.add_join(
+            "LEFT JOIN",
+            alias_company,
+            "res_company",
+            SQL(
+                "%s = %s",
                 company_field_sql,
-                company_currency_expr,
-                self.env.company.currency_id.id,
-            )
-        return super()._field_to_sql(alias, field_expr, query)
+                SQL.identifier(alias_company, "id"),
+            ),
+        )
+        company_currency_expr = self.env["res.company"]._field_to_sql(
+            alias_company, "currency_id", query
+        )
+        return SQL(
+            "(CASE WHEN %s IS NOT NULL THEN %s ELSE %s END)",
+            company_field_sql,
+            company_currency_expr,
+            self.env.company.currency_id.id,
+        )
 
     @api.depends("user_id", "type")
     def _compute_team_id(self):

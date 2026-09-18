@@ -60,32 +60,31 @@ class DocumentsDocument(models.Model):
         for document in self:
             document.last_access_date_group = values.get(document.id)
 
-    def _field_to_sql(self, alias: str, fname: str, query: Any = None) -> SQL:
-        if fname == "last_access_date_group":
-            if query is None:
-                msg = (
-                    "last_access_date_group needs a query to hang its join on; "
-                    "it cannot be rendered as a standalone expression"
-                )
-                raise ValueError(msg)
-            join_alias = f"{alias}__last_access"
-            subquery = SQL(
-                """(SELECT document_id,
-                    %s AS date_group
-                    FROM document_access
-                    WHERE partner_id = %s)""",
-                self._last_access_date_group_case_sql(),
-                self.env.user.partner_id.id,
+    def _last_access_date_group_sql(
+        self, field: fields.Field, alias: str, query: Any = None
+    ) -> SQL:
+        if query is None:
+            msg = (
+                "last_access_date_group needs a query to hang its join on; "
+                "it cannot be rendered as a standalone expression"
             )
-            condition = SQL(
-                "%s = %s",
-                SQL.identifier(join_alias, "document_id"),
-                SQL.identifier(alias, "id"),
-            )
-            query.add_join("LEFT JOIN", join_alias, subquery, condition)
-            return SQL.identifier(join_alias, "date_group")
-
-        return super()._field_to_sql(alias, fname, query)
+            raise ValueError(msg)
+        join_alias = f"{alias}__last_access"
+        subquery = SQL(
+            """(SELECT document_id,
+                %s AS date_group
+                FROM document_access
+                WHERE partner_id = %s)""",
+            self._last_access_date_group_case_sql(),
+            self.env.user.partner_id.id,
+        )
+        condition = SQL(
+            "%s = %s",
+            SQL.identifier(join_alias, "document_id"),
+            SQL.identifier(alias, "id"),
+        )
+        query.add_join("LEFT JOIN", join_alias, subquery, condition)
+        return SQL.identifier(join_alias, "date_group")
 
     def _get_last_access_date_group_cte(self) -> SQL:
         return SQL(

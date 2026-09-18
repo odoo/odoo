@@ -127,6 +127,7 @@ class HrEmployee(models.Model):
         comodel_name="hr.version",
         compute="_compute_version_id",
         search="_search_version_id",
+        value_sql="_version_id_sql",
         compute_sudo=True,
         store=False,
         required=True,
@@ -1733,12 +1734,9 @@ class HrEmployee(models.Model):
             "id", "in", self.env["hr.version"]._search(domain).select("employee_id")
         )
 
-    def _field_to_sql(
-        self, alias: str, field_expr: str, query: (Query | None) = None
-    ) -> SQL:
-        if field_expr == "version_id":
-            field_expr = "current_version_id"
-        return super()._field_to_sql(alias, field_expr, query)
+    def _version_id_sql(self, field, alias: str, query: (Query | None) = None) -> SQL:
+        # the current version's row: what the compute answers, as a column
+        return self._field_to_sql(alias, "current_version_id", query)
 
     def _get_version(self, date=None):
         date = date or fields.Date.today()

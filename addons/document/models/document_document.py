@@ -390,6 +390,7 @@ class DocumentsDocument(models.Model):
     )
 
     last_access_date_group = fields.Selection(
+        value_sql="_last_access_date_group_sql",
         selection=[
             ("0_older", "Older"),
             ("1_month", "This Month"),
