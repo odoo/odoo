@@ -125,13 +125,13 @@ export class AttendeeCalendarCalendarFilterSection extends CalendarFilterSection
 
     getDeleteCalendarDialogProps(filter) {
         return {
-            title: _t("Warning"),
-            body: _t(
-                "If you are the only person using this calendar, all of it's events will be deleted." +
+            title: filter.accessRole === 'owner' ? _t("Warning") : _t("Unsubscribe from calendar"),
+            body: filter.accessRole === 'owner' ? _t(
+                "If you are the only person using this calendar, all of its events will be deleted. " +
                 "Are you sure you want to proceed?\n\n" +
                 "This action cannot be reversed."
-            ),
-            confirmLabel: _t("Yes, delete this calendar"),
+            ) : _t("Are you sure you want to unsubscribe from this calendar?"),
+            confirmLabel: filter.accessRole === 'owner' ? _t("Yes, delete this calendar") : _t("Yes, unsubscribe"),
             cancelLabel: _t("Keep this calendar"),
             confirm: async () => {
                 await this.orm.unlink('calendar.user', [filter.recordId]);
