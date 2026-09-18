@@ -173,8 +173,8 @@ export class PosData {
 
         for (const [model, params] of modelsParams) {
             if (!params.getRecordsBasedOnLines) {
-                const data = this.models[model].getAll();
-                const recordsToPut = data.filter((record) => !params.condition(record));
+                const modelData = this.models[model].getAll();
+                const recordsToPut = modelData.filter((record) => !params.condition(record));
 
                 if (model === "pos.order.line") {
                     orderlinesToKeep = recordsToPut;
