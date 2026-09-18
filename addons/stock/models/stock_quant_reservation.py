@@ -308,7 +308,10 @@ class StockQuantReservation(models.Model):
     def _is_gather_domain_extended(
         self, domain, product_id, location_id, lot_id, package_id, owner_id, strict
     ):
-        return domain != type(self)._get_domain_gather(
+        # This class's own definition, not type(self)'s: an override is what is
+        # being detected, so resolving through the registry's MRO would compare
+        # the extended domain with itself and serve the cache to every caller.
+        return domain != StockQuantReservation._get_domain_gather(
             self, product_id, location_id, lot_id, package_id, owner_id, strict
         )
 

@@ -118,8 +118,10 @@ class StockQuant(models.Model):
         check_company=True,
         help="This is the owner of the quant",
     )
+    # No `digits`: these hold a quantity normalised into the product's unit,
+    # which nobody chose, so "Product Unit" precision would re-grid it and
+    # store a 2 g receipt of a kilogram product as 0.00 (c348d72fecfe).
     quantity = fields.Float(
-        digits="Product Unit",
         min_display_digits="Product Unit",
         default=0.0,
         readonly=True,
@@ -127,7 +129,6 @@ class StockQuant(models.Model):
         help="Quantity of products in this quant, in the default unit of measure of the product",
     )
     reserved_quantity = fields.Float(
-        digits="Product Unit",
         min_display_digits="Product Unit",
         default=0.0,
         readonly=True,
@@ -135,7 +136,6 @@ class StockQuant(models.Model):
         help="Quantity of reserved products in this quant, in the default unit of measure of the product",
     )
     available_quantity = fields.Float(
-        digits="Product Unit",
         min_display_digits="Product Unit",
         compute="_compute_available_quantity",
         help="On hand quantity which hasn't been reserved on a transfer, in the default unit of measure of the product",
