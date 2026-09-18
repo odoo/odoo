@@ -5,9 +5,14 @@ import { CartPage } from "@pos_self_order/app/pages/cart_page/cart_page";
 import { EatingLocationPage } from "@pos_self_order/app/pages/eating_location_page/eating_location_page";
 import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
+<<<<<<< fb884265442604edb702cb1ddf93eac1bc062bf6
 import { ChooseComboPopup } from "@pos_self_order/app/components/choose_combo_popup/choose_combo_popup";
 import { NumberPopup } from "@pos_self_order/app/components/number_popup/number_popup";
 import * as Utils from "@pos_self_order/../tests/unit/ui_utils";
+||||||| 13eb4691ebc519c1747c3c9ca6c3a0f64d6bbcdf
+=======
+import * as Utils from "@pos_self_order/../tests/unit/ui_utils";
+>>>>>>> 9e5b654c5b2cd995581637459a42f38de369ab5f
 
 definePosSelfModels();
 
@@ -526,4 +531,18 @@ test("sendDraftOrderToServer syncs tip even when order.changes is empty (extra s
     expect(tipLine.id).toBeOfType("number"); // synced to server
     expect(order.lines.some((l) => l.isTipLine())).toBe(true);
     expect(store.models["pos.order"].length).toBe(1);
+});
+
+test("slots at capacity should disabled in self order", async () => {
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
+    const preset = store.models["pos.preset"].get(2);
+    preset.slots_per_interval = 1;
+
+    const order = await getFilledSelfOrder(store);
+    order.preset_id = preset;
+    order.partner_id = false;
+
+    await mountWithCleanup(CartPage, {});
+    await Utils.clickCartButton("Order");
+    await Utils.checkSlotDisabled("12:00");
 });
