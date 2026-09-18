@@ -22,6 +22,7 @@ test("uiState", async () => {
         tip: { type: false, value: false },
         last_general_customer_note: "",
         last_internal_note: "",
+        isReprinting: false,
     });
 });
 
@@ -201,6 +202,57 @@ test("getPreparationChanges", async () => {
         combo_parent_uuid: firstLine?.combo_parent_id?.uuid,
         uom_is_base_unit: false,
     });
+});
+
+test("getPreparationChanges includes only products with a valid POS category", async () => {
+    const store = await setupPosEnv();
+    const models = store.models;
+    const product1 = models["product.template"].get(11); // Product's POS category 2 is included in the preparation categories.
+    const product2 = models["product.template"].get(12); // Product's POS category 4 is not included in the preparation categories.
+    const order = store.addNewOrder();
+    order.updateLastOrderChange();
+    expect(order.getChanges().addedQuantity).toHaveLength(0); // A new order has no preparation changes.
+    const product1Line = await store.addLineToOrder(
+        {
+            product_tmpl_id: product1,
+            qty: 1,
+        },
+        order
+    );
+    const addedLineChanges = order.getChanges().addedQuantity[0];
+    const expectedChange = (line, product) => ({
+        uuid: line.uuid,
+        basic_name: product.name,
+        product_id: product.id,
+        attribute_value_names: product.attribute_value_ids?.map((a) => a.name) || [],
+        quantity: 1,
+        group: false,
+        note: "",
+        customer_note: "",
+        pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
+        pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
+        combo_line_ids: product?.combo_line_ids || [],
+        combo_parent_uuid: product?.combo_parent_id?.uuid,
+        uom_is_base_unit: true,
+    });
+    // Product 1 belongs to a preparation category, so it is sent to the printer.
+    expect(addedLineChanges).toEqual(expectedChange(product1Line, product1));
+    order.updateLastOrderChange();
+    expect(order.getChanges().addedQuantity).toHaveLength(0);
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: product2,
+            qty: 1,
+        },
+        order
+    );
+    // Product 2 has no matching preparation category and produces no change.
+    expect(order.getChanges().addedQuantity).toHaveLength(0);
+    order.uiState.isReprinting = true;
+    const reprintLineChanges = order.getChanges().addedQuantity[0];
+    // Reprinting restores only lines that belong to a preparation category.
+    expect(reprintLineChanges).toEqual(expectedChange(product1Line, product1));
+    order.uiState.isReprinting = false;
 });
 
 test("removeOrderline", async () => {
