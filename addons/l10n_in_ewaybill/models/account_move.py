@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, RedirectWarning
 
 
 class AccountMove(models.Model):
@@ -22,6 +22,20 @@ class AccountMove(models.Model):
 
     def _get_l10n_in_ewaybill_form_action(self):
         return self.env.ref('l10n_in_ewaybill.l10n_in_ewaybill_form_action')._get_action_dict()
+
+    def _need_cancel_request(self):
+        # EXTENDS 'account'
+        return super()._need_cancel_request() or any(ewb.state == 'generated' for ewb in self.l10n_in_ewaybill_ids)
+
+    def button_request_cancel(self):
+        if ewaybill := self.l10n_in_ewaybill_ids.filtered(lambda ewb: ewb.state == 'generated'):
+            _t = self.env._
+            raise RedirectWarning(
+                _t("Please cancel the associated E-way Bill before cancelling this document."),
+                ewaybill._get_records_action(),
+                _t("Open E-way bill"),
+            )
+        return super().button_request_cancel()
 
     def action_l10n_in_ewaybill_create(self):
         self.ensure_one()
