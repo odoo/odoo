@@ -129,6 +129,30 @@ class TestViesIAP(HttpCase):
         )
         self.assertTrue(self.partner.vies_valid)
 
+    def test_vies_valid_child_computed_before_parent_in_batch(self):
+        """
+        A child sharing its parent's VAT must end up with the parent's real
+        vies_valid even if the child happens to be processed before the
+        parent in a batch recompute: Field.compute_value() removes the
+        whole batch from the "to compute" queue before running
+        _compute_vies_valid's loop, so partner.parent_id.vies_valid does
+        not trigger a recursive recompute of the parent when read from the
+        child - it just returns whatever is cached for it at that point.
+        """
+        self.mock_return_status = "valid"
+        parent = self.env['res.partner'].create({'name': 'Parent Co'})
+        child = self.env['res.partner'].create({
+            'name': 'Child Address',
+            'parent_id': parent.id,
+        })
+        # Queue the child's compute before the parent's: to_compute is an
+        # OrderedSet, so this reproduces a batch where the child would be
+        # iterated first without the fix.
+        child.vat = self.RANDOM_VAT
+        parent.vat = self.RANDOM_VAT
+        self.assertTrue(child.vies_valid)
+        self.assertTrue(parent.vies_valid)
+
     def test_vies_iap_cron(self):
         """
         Same as previous test, but for cases where the Odoo client db is unreachable (invalid
