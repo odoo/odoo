@@ -245,6 +245,7 @@ test("call activity displays phone actions", async () => {
     expect(".o-mail-Activity-phoneNumber .o-mail-Activity-call").toHaveCount(0);
     expect(".o-mail-Activity-call + .o-mail-Activity-markDone").toHaveCount(1);
     expect(".o-mail-Activity-call").not.toHaveClass("text-action");
+    expect(".o-mail-Activity-call").toHaveAttribute("href", "tel:+12025550182");
     expect(".o-mail-Activity-copy > span:last-child").toHaveStyle({
         height: "1px",
         overflow: "hidden",
@@ -273,7 +274,7 @@ test("call action remains available on a read-only activity", async () => {
     await start();
     await openFormView("res.partner", partnerId);
 
-    await contains(".o-mail-Activity-call");
+    await contains(".o-mail-Activity-call[href='tel:+12025550182']");
     expect(".o-mail-Activity-markDone, .o-mail-Activity-edit").toHaveCount(0);
 });
 
