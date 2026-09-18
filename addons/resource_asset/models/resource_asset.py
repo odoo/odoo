@@ -4,8 +4,11 @@ from datetime import timedelta
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 from odoo.tools.translate import html_translate
+
+_debug = DebugLog(__name__)
 
 CUSTODY_SILENT = "custody_silent"
 OPERATOR_ROLE = "operator"
@@ -458,6 +461,11 @@ class ResourceAsset(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if self._name == self._get_root_model_name():
+            dispatched = self._create_in_kind_models(vals_list)
+            if dispatched is not None:
+                return dispatched
+        self._check_kind_belongs_to_this_model(vals_list)
         Resource = self.env["resource.resource"].sudo()
         resource_vals_list = []
         for vals in vals_list:
@@ -485,6 +493,8 @@ class ResourceAsset(models.Model):
         return resource_vals
 
     def write(self, vals):
+        if "kind_id" in vals:
+            self._check_kind_belongs_to_this_model([vals])
         if "odometer_uom_id" in vals:
             self._check_odometer_uom_is_not_reinterpreted(vals["odometer_uom_id"])
         if "active" in vals and not vals["active"]:
@@ -853,10 +863,47 @@ class ResourceAsset(models.Model):
             }
         )
 
+    @api.model
+    def _get_model_for_kind(self, kind) -> str:
+        return kind.sudo().model_name or self._get_root_model_name()
+
+    def _create_in_kind_models(self, vals_list):
+        Kind = self.env["resource.asset.kind"]
+        by_model = defaultdict(list)
+        for index, vals in enumerate(vals_list):
+            kind = Kind.browse(vals.get("kind_id"))
+            by_model[self._get_model_for_kind(kind)].append((index, vals))
+        if set(by_model) <= {self._name}:
+            return None
+        _debug.pipeline(
+            "resource_asset.create_dispatched",
+            models={name: len(rows) for name, rows in by_model.items()},
+        )
+        created = {}
+        for model_name, indexed in by_model.items():
+            records = self.env[model_name].create([vals for __, vals in indexed])
+            for (index, __), record in zip(indexed, records, strict=True):
+                created[index] = record.id
+        return self.browse(created[index] for index in range(len(vals_list)))
+
+    def _check_kind_belongs_to_this_model(self, vals_list) -> None:
+        Kind = self.env["resource.asset.kind"]
+        for vals in vals_list:
+            kind = Kind.browse(vals.get("kind_id"))
+            if not kind:
+                continue
+            model_name = self._get_model_for_kind(kind)
+            if model_name != self._name:
+                raise ValidationError(
+                    self.env._(
+                        "An asset of kind %(kind)s is a %(model)s, and no row "
+                        "moves between the two tables. Create it there instead.",
+                        kind=kind.display_name,
+                        model=model_name,
+                    )
+                )
+
     def _get_type_field_name(self) -> str:
-        """The table a row lives in is the only thing that says what kind of
-        asset it is. A stored column repeating it is a second answer that can
-        drift from the first, and nothing here reads the model name off a row."""
         return ""
 
     def get_identifier(self, code):

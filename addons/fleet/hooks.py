@@ -5,6 +5,8 @@ from lxml import etree
 from odoo import api
 from odoo.tools import file_path
 
+from .table_inheritance import create_vehicle_table, move_vehicles_into_their_table
+
 _logger = logging.getLogger(__name__)
 
 _BRAND_DATA = "fleet/data/fleet_cars_data.xml"
@@ -20,10 +22,6 @@ def _declared_brands() -> list[tuple[str, str]]:
 
 
 def adopt_existing_manufacturers(cr) -> int:
-    # A brand is a manufacturer partner, so a database that already keeps its own
-    # manufacturers would gain a second partner for every name this module ships.
-    # Handing the xml id to the partner that is already there makes the data file
-    # update it instead of creating that twin.
     adopted = 0
     for xmlid, name in _declared_brands():
         cr.execute(
@@ -57,4 +55,6 @@ def adopt_existing_manufacturers(cr) -> int:
 
 
 def pre_init_hook(env: api.Environment) -> None:
+    create_vehicle_table(env.cr)
+    move_vehicles_into_their_table(env.cr)
     adopt_existing_manufacturers(env.cr)
