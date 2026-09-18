@@ -137,6 +137,10 @@ sent mails with personal token for the invitation of the survey.
                 "survey.survey_assets",
                 "survey.survey_user_input_session_assets",
             ],
+            "web.assets_frontend_minimal": [
+                "survey.survey_assets",
+                "survey.survey_user_input_session_assets",
+            ],
         },
         "external_libs": {
             "chartjs-plugin-datalabels": "/survey/static/lib/chartjs-plugin-datalabels.js",
