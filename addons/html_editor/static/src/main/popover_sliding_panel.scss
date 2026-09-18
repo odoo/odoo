@@ -1,0 +1,40 @@
+// Panel made of removable option cards, e.g. text shadows or URL parameters.
+.o-popover-sliding-panel {
+    --o-popover-sliding-panel-bg: #{$white};
+    --o-popover-sliding-panel-card-bg: rgba(0, 0, 0, 0.05);
+
+    font-size: $o-we-font-size;
+    background-color: var(--o-popover-sliding-panel-bg);
+
+    .o-popover-sliding-panel-back-icon {
+        aspect-ratio: 1 / 1;
+    }
+
+    .o-popover-sliding-panel-card {
+        border-radius: $border-radius-sm;
+        background-color: var(--o-popover-sliding-panel-card-bg);
+    }
+
+    .o-popover-sliding-panel-card-content {
+        border-right: $border-width solid var(--o-popover-sliding-panel-bg);
+    }
+
+    .o-popover-sliding-panel-card-remove-icon {
+        width: 32px;
+    }
+
+    .o-popover-sliding-panel-card-add-btn,
+    .o-popover-sliding-panel-card-remove-icon {
+        &, &:focus, &:hover, &:active {
+            background-color: transparent !important;
+        }
+    }
+
+    .o-popover-sliding-panel-card-add-btn {
+        border-style: dashed;
+
+        &, &:focus, &:hover, &:active {
+            border-color: var(--o-popover-sliding-panel-card-add-btn-border-color, var(--btn-border-color));
+        }
+    }
+}

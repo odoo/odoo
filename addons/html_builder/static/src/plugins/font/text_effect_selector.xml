@@ -49,18 +49,18 @@
         </div>
     </t>
     <t t-else="">
-        <div data-prevent-closing-overlay="true" class="o-hb-text-effect-options p-2">
+        <div data-prevent-closing-overlay="true" class="o-popover-sliding-panel p-2">
             <BuilderContext action="'updateTextEffect'">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <div class="d-flex align-items-center gap-1">
-                        <button type="button" class="oi o-hb-btn btn btn-secondary" data-icon="chevron_backward" t-on-click="this.onClickBack"
+                        <button type="button" class="o-popover-sliding-panel-back-icon oi o-hb-btn btn btn-secondary" data-icon="chevron_backward" t-on-click="this.onClickBack"
                                 title="Go back to effect selection" aria-label="Go back to effect selection"/>
                         <span>Text Shadow</span>
                     </div>
                 </div>
                 <t t-foreach="this.domState.shadowIndexes || []" t-as="shadowIndex" t-key="shadowIndex">
-                    <div class="o-hb-text-effect-shadow d-flex align-items-stretch mb-2">
-                        <div class="o-hb-text-effect-shadow-options pb-2 flex-grow-1">
+                    <div class="o-hb-text-effect-shadow o-popover-sliding-panel-card d-flex align-items-stretch mb-2">
+                        <div class="o-popover-sliding-panel-card-content pb-2 flex-grow-1">
                             <BuilderRow label.translate="Color" actionParam="{ mainParam: 'shadowColor', shadowIndex: shadowIndex }">
                                 <BuilderColorPicker enabledTabs="['custom', 'solid']" selectedTab="'solid'"
                                                     colorPickerClassName="''" colorPickerPopoverClassName="''"/>
@@ -74,12 +74,11 @@
                             </BuilderRow>
                         </div>
                         <div>
-                            <button type="button" class="oi oi-fw oi-filled o-hb-text-effect-remove-shadow m-auto o-hb-btn btn text-danger h-100" data-icon="delete"
-                                    t-on-click="() => this.onClickRemoveShadow(shadowIndex)" title="Remove shadow" aria-label="Remove shadow"/>
+                            <button type="button" class="oi oi-fw oi-filled o-popover-sliding-panel-card-remove-icon m-auto o-hb-btn btn text-danger h-100" data-icon="delete" t-on-click="() => this.onClickRemoveShadow(shadowIndex)" title="Remove shadow" aria-label="Remove shadow"/>
                         </div>
                     </div>
                 </t>
-                <button type="button" class="o-hb-text-effect-add-shadow o-hb-btn btn btn-secondary h-100 w-100 mb-2" t-on-click="this.onClickAddShadow">Add Shadow</button>
+                <button type="button" class="o-popover-sliding-panel-card-add-btn o-hb-btn btn btn-secondary h-100 w-100 mb-2" t-on-click="this.onClickAddShadow" title="Add shadow" aria-label="Add shadow">Add Shadow</button>
                 <div style="padding-right: 33px;">
                     <BuilderRow label.translate="Outline">
                         <BuilderNumberInput actionParam="'outline'" min="0" max="10" unit="'px'"/>

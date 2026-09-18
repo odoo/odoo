@@ -13,6 +13,9 @@
 }
 
 .o-we-linkpopover {
+    max-height: 440px;
+    scrollbar-width: thin;
+
     .custom-fill-color, .custom-text-color, .custom-border, .input-group {
         label {
             width: 70px;
@@ -26,6 +29,34 @@
     .form-control:focus, .form-select:focus, .form-check-input:focus {
         border-color: $input-focus-border-color !important;
         box-shadow: 0 0 0 $focus-ring-width rgba($input-focus-border-color, $focus-ring-opacity);
+    }
+
+    .o-popover-sliding-panel {
+        --o-popover-sliding-panel-bg: var(--#{$prefix}light);
+        --o-popover-sliding-panel-input-bg: #{$white};
+
+        width: 280px;
+
+        .o-popover-sliding-panel-card span {
+            color: rgba($body-color, 0.7);
+        }
+
+        .icon-sup {
+            @include o-we-icon-sup();
+        }
+
+        .o-popover-sliding-panel-card-content span {
+            flex: 0 0 38%;
+        }
+
+        .o-popover-sliding-panel-card-content input {
+            height: 24px;
+            padding: 0 map-get($spacers, 2);
+            font-size: inherit;
+            border-color: $o-we-item-border-color;
+            border-radius: $o-we-item-border-radius;
+            background-color: var(--o-popover-sliding-panel-input-bg);
+        }
     }
 
     .o_link_popover_container {
@@ -77,30 +108,6 @@
     }
 }
 /* rtl:end:ignore */
-
-.o_seo_option_child {
-    padding-left: 20px;
-    position: relative;
-
-    &::before, &::after {
-        content: "";
-        position: absolute;
-        left: 6px;
-        background: #999;
-    }
-
-    &::before {
-        top: 0;
-        height: calc(100% - 14px);
-        width: 1px;
-    }
-
-    &::after {
-        top: 16px;
-        width: 10px;
-        height: 1px;
-    }
-}
 
 .custom-border {
     @include o-input-number-no-arrows();
