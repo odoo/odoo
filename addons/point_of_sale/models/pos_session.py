@@ -438,9 +438,11 @@ class PosSession(models.Model):
         sessions = self.search(domain)
         for session in sessions:
             try:
-                session.with_company(session.company_id)._validate_session_accounting()
+                with self.env.cr.savepoint():
+                    session.with_company(session.company_id)._validate_session_accounting()
             except Exception as e:  # noqa: BLE001
                 # We don't block the cron if one session fails to validate, we log the error and continue with the next session
+                # The savepoint ensures a failure here does not leave partial accounting entries behind
                 _logger.error("Failed to validate session accounting for session %s: %s", session.id, e)
 
     @api.model
