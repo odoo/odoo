@@ -2,6 +2,7 @@
 
 import json
 import re
+from xml.etree import ElementTree as ET
 
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
@@ -449,6 +450,15 @@ class TestLkTaxInvoiceSequence(AccountTestInvoicingCommon):
 
         company_partner.vat = "123456789"
         self.assertFalse(self.env.company.l10n_lk_vat_registered)
+
+    def test_l10n_lk_vat_registered_company_form_layout(self):
+        """VAT Registered must render outside the identifiers block."""
+        arch = self.env["res.company"].get_view(view_type="form")["arch"]
+        tree = ET.fromstring(arch)
+        self.assertFalse(
+            tree.findall(".//div[@name='identifiers']//field[@name='l10n_lk_vat_registered']"),
+            "field must not be inside identifiers div",
+        )
 
     # ----------------------------------------
     # Tax Invoice Qualification (_l10n_lk_is_tax_invoice_company)
