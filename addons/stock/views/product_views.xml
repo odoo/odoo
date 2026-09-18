@@ -208,9 +208,9 @@
                     </group>
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="after">
-                    <group string="Traceability" name="traceability" groups="stock.group_production_lot" invisible="not tracking">
-                        <label for="serial_prefix_format" string="Custom Lot/Serial"/>
-                        <div class="d-flex">
+                    <group string="Traceability" name="traceability" groups="stock.group_production_lot" invisible="store_by not in ['lot', 'serial']">
+                        <label for="serial_prefix_format" string="Custom Lot/Serial" groups="stock.group_production_lot" invisible="store_by not in ['lot', 'serial']"/>
+                        <div class="d-flex" groups="stock.group_production_lot" invisible="store_by not in ['lot', 'serial']">
                             <field name="serial_prefix_format" style="max-width: 150px;"/>
                             <field name="next_serial" style="max-width: 150px;"/>
                         </div>
