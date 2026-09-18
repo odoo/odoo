@@ -2222,15 +2222,13 @@ class ProjectTask(models.Model):
         domain = super()._search_message_partner_ids(operator, operand)
         if domain is NotImplemented or self.env.user._is_internal():
             return domain
-        task_ids = tuple(
-            self._search(
-                domain,
-                limit=self.env.cr.IN_MAX,
-                active_test=False,
-                bypass_access=True,
-                order=self._order,  # reason: postgresql chooses a bad plan without explicit order
-            )
-        )
+        task_ids = self._search(
+            domain,
+            limit=self.env.cr.IN_MAX,
+            active_test=False,
+            bypass_access=True,
+            order=self._order,  # reason: postgresql chooses a bad plan without explicit order
+        ).get_result_ids()
         if len(task_ids) < self.env.cr.IN_MAX:
             domain = Domain('id', 'in', task_ids)
         return domain

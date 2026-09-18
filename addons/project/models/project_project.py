@@ -219,18 +219,20 @@ class ProjectProject(models.Model):
         if operator == 'in' and False in value:
             # matches the projects without any collaborator, together with the
             # ones matching the remaining values
-            all_collaborators_query = Collaborator._search([], bypass_access=True)
+            all_collaborators_query = Collaborator._search([], bypass_access=True, active_test=False)
             domain = Domain('id', 'not in', all_collaborators_query.subselect('project_id'))
             if remaining_value := [v for v in value if v is not False]:
                 domain |= self._search_collaborator_ids(operator, remaining_value)
             return domain
-        collaborator_project_query = Collaborator._search(Domain('id', operator, value), bypass_access=True).subselect('project_id')
-        project_ids = tuple(self._search(
+        collaborator_project_query = Collaborator._search(
+            Domain('id', operator, value), bypass_access=True, active_test=False
+        ).subselect('project_id')
+        project_ids = self._search(
             [('id', 'in', collaborator_project_query)],
             limit=self.env.cr.IN_MAX,
             active_test=False,
             bypass_access=True
-        ))
+        ).get_result_ids()
         if len(project_ids) < self.env.cr.IN_MAX:
             return Domain('id', 'in', project_ids)
         return Domain('id', 'in', collaborator_project_query)
