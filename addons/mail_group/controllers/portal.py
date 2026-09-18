@@ -232,7 +232,7 @@ class PortalMailGroup(http.Controller):
         # new route parameters
         if group_sudo and token and email:
             correct_token = group_sudo._generate_email_access_token(email)
-            if not consteq(correct_token, token):
+            if not consteq(correct_token.encode(), token.encode()):
                 raise werkzeug.exceptions.NotFound()
             group_sudo._leave_group(email)
         else:
