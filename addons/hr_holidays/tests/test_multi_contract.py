@@ -133,6 +133,8 @@ class TestHolidaysMultiContract(TestHolidayContract):
         self.assertEqual(leave.state, 'validate')
 
         self.contract_cdi.contract_date_end = date(2022, 6, 15)
+        no_overlap_leave = self.create_leave(date(2022, 7, 5), date(2022, 7, 10), name="Doctor Appointment", employee_id=self.jules_emp.id)
+        no_overlap_leave.action_approve()
         self.jules_emp.create_version({
             'date_version': date(2022, 6, 16),
             'contract_date_start': date(2022, 6, 16),
@@ -141,9 +143,8 @@ class TestHolidaysMultiContract(TestHolidayContract):
             'resource_calendar_id': self.calendar_40h.id,
             'wage': 5000.0,
         })
-
         leaves = self.env['hr.leave'].search([('employee_id', '=', self.jules_emp.id)])
-        self.assertEqual(len(leaves), 3)
+        self.assertEqual(len(leaves), 4)
         self.assertEqual(leave.state, 'refuse')
 
         first_leave = leaves.filtered(lambda l: l.date_from.day == 1 and l.date_to.day == 15)
@@ -428,3 +429,50 @@ class TestHolidaysMultiContract(TestHolidayContract):
         # Assert based on partial-time calendar
         self.assertEqual(leave.number_of_days, 1)
         self.assertEqual(leave.number_of_hours, 6)
+
+    def test_contract_creation_with_existing_leave(self):
+        employee = self.env['hr.employee'].create({
+            'name': "Employee",
+            "resource_calendar_id": self.calendar_40h.id,
+        })
+        employee.create_version({
+            "date_version": date(2026, 1, 1),
+            "contract_date_start": date(2026, 1, 1),
+            "contract_date_end": date(2026, 1, 31),
+            "resource_calendar_id": self.calendar_40h.id,
+            "wage": 1000.0,
+        })
+        leave = self.create_leave(date(2026, 1, 23), date(2026, 2, 10), employee_id=employee.id)
+        leave.action_approve()
+        contract_2 = employee.create_version({
+            "date_version": date(2026, 2, 1),
+            "resource_calendar_id": self.calendar_40h.id,
+            "wage": 1000.0,
+        })
+        contract_2.write({
+            'resource_calendar_id': self.calendar_35h.id,
+            'contract_date_start': date(2026, 2, 1),
+        })
+
+    def test_leave_with_contract_amendment(self):
+        employee = self.env['hr.employee'].create({
+            'name': "Employee",
+            "resource_calendar_id": self.calendar_40h.id,
+        })
+        employee.create_version({
+            "date_version": date(2026, 1, 1),
+            "contract_date_start": date(2026, 1, 1),
+            "contract_date_end": date(2026, 2, 28),
+            "resource_calendar_id": self.calendar_40h.id,
+            "wage": 1000.0,
+        })
+        leave = self.create_leave(date(2026, 1, 23), date(2026, 2, 10), employee_id=employee.id)
+        leave.action_approve()
+        version_2 = employee.create_version({
+            "date_version": date(2026, 2, 1),
+            "contract_date_start": date(2026, 1, 1),
+            "contract_date_end": date(2026, 2, 28),
+            "resource_calendar_id": self.calendar_40h.id,
+            "wage": 1000.0,
+        })
+        version_2.resource_calendar_id = self.calendar_35h.id
