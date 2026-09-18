@@ -10,5 +10,5 @@ export class MassMailingColorUIPlugin extends ColorUIPlugin {
 }
 
 registry
-    .category("mass_mailing-plugins")
+    .category("mass_mailing-builder-plugins")
     .add(MassMailingColorUIPlugin.id, MassMailingColorUIPlugin);
