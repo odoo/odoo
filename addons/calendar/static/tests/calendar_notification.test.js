@@ -62,6 +62,26 @@ test("can listen on bus and display notifications in DOM and click Detail", asyn
     assertSteps(["ir.actions.act_window"]);
 });
 
+test("fetches the pending alarms on startup, without waiting for a bus notification", async () => {
+    await startServer();
+    onRpc("/calendar/notify", () => {
+        step("notify");
+        return [
+            {
+                alarm_id: 1,
+                event_id: 2,
+                title: "Meeting",
+                message: "Meeting saved in a previous session",
+                timer: 0,
+                notify_at: "1978-04-14 12:45:00",
+            },
+        ];
+    });
+    await start();
+    await contains(".o_notification", { text: "Meeting saved in a previous session" });
+    assertSteps(["notify"]);
+});
+
 test("can listen on bus and display notifications in DOM and click Snooze", async () => {
     const pyEnv = await startServer();
     onRpc("/calendar/notify_ack", () => step("notifyAck"));
