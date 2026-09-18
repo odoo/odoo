@@ -11,6 +11,10 @@
                     <attribute name="js_class">currency_form</attribute>
                 </form>
 
+                <xpath expr="//field[@name='rounding']" position="attributes">
+                    <attribute name="widget">currency_rounding</attribute>
+                </xpath>
+
                 <xpath expr="//field[@name='decimal_places']" position="after">
                     <div colspan="2" invisible="not display_rounding_warning" class="alert alert-danger" role="alert">
                         <p class="m-0">
