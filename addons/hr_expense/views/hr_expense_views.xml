@@ -176,6 +176,10 @@
                                 invisible="state != 'submitted'"/>
                     </div>
                 </div>
+                <div class="alert alert-warning" role="alert" name="warning_existing_bill_reference_missing"
+                    invisible="not has_existing_bill or (has_existing_bill and existing_bill_id) or state != 'submitted'">
+                    The expense existing bill is not linked, please reference it before approving.
+                </div>
 
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -326,8 +330,8 @@
                                        style="margin-bottom: calc(0.25rem + var(--fieldWidget-margin-bottom))"
                                        nolabel="1"
                                        placeholder="Select Bill..."
-                                       context="{'name_as_amount_residual': 1, 'list_view_ref': 'hr_expense.view_move_list_expense'}"
-                                       readonly="not is_editable"
+                                       context="{'name_as_amount_total': 1, 'list_view_ref': 'hr_expense.view_move_list_expense'}"
+                                       readonly="not is_editable or state not in ['draft', 'submitted']"
                                        options="{'no_create': True}"
                                        groups="account.group_account_readonly"/>
                             </div>
