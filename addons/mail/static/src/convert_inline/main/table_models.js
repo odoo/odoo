@@ -100,15 +100,4 @@ export class EmptyCellLayout extends CellLayout {
         });
         super(options);
     }
-
-    renderToFragment(context = {}) {
-        const fragment = super.renderToFragment(context);
-        const comment = document.createComment("");
-        // TODO EGGMAIL: is there a better solution?
-        // body_html is normalized as xml, and empty elements in xml are
-        // self closing. This is not legal in html, so an empty comment is
-        // appended to avoid the issue.
-        fragment.firstElementChild.append(comment);
-        return fragment;
-    }
 }
