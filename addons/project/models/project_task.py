@@ -2248,10 +2248,9 @@ class ProjectTask(models.Model):
     @api.model
     def _get_thread_with_access(self, thread_id, *, project_sharing_id=None, token=None, **kwargs):
         if project_sharing_id:
-            if token := ProjectSharingChatter._check_project_access_and_get_token(
+            token = ProjectSharingChatter._check_project_access_and_get_token(
                 self, project_sharing_id, self._name, thread_id, token
-            ):
-                token = token
+            )
         return super()._get_thread_with_access(thread_id, project_sharing_id=project_sharing_id, token=token, **kwargs)
 
     def get_mention_suggestions(self, search, limit=8):
