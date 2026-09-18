@@ -15,11 +15,12 @@ import {
     getSnippetStructure,
     getSnippetView,
 } from "@html_builder/../tests/helpers";
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { animationFrame, queryText, tick, click } from "@odoo/hoot-dom";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { animationFrame, tick, click } from "@odoo/hoot-dom";
+import { patch } from "@web/core/utils/patch";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
 defineWebsiteModels();
 
@@ -165,7 +166,9 @@ test("Use the sidebar 'save snippet' buttons", async () => {
     expect(".o_notification_manager .o_notification_content").toHaveCount(1);
 
     // Check that the custom sections appeared.
-    await contains(".o_website_builder_sidebar .o_hb_snippets_tabs button:contains(Blocks)").click();
+    await contains(
+        ".o_website_builder_sidebar .o_hb_snippets_tabs button:contains(Blocks)"
+    ).click();
     expect(
         ".o_hb_snippets_menu div:contains('Custom Inner Content') div[name='Custom Button']"
     ).toHaveCount(1);
@@ -256,6 +259,14 @@ test("Use the sidebar 'create anchor' buttons", async () => {
         </section>
     `;
     await setupWebsiteBuilder(websiteContent);
+    // The toast only confirms the copy, so the created link is checked on the
+    // clipboard itself.
+    let copiedLinks;
+    patch(navigator.clipboard, {
+        async writeText(text) {
+            copiedLinks = text;
+        },
+    });
     const anchorSelector =
         ".o_customize_tab .o_hb_options_container > div:contains('Dummy Section') button.oe_snippet_anchor";
     const notificationContentSelector = ".o_notification_manager .o_notification_content";
@@ -268,7 +279,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     expect(anchorSelector).toHaveCount(1);
     await contains(anchorSelector).click();
     expect(notificationContentSelector).toHaveCount(1);
-    expect(queryText(notificationContentSelector)).toInclude("#Anchor-test");
+    expect(copiedLinks).toInclude("#Anchor-test");
     await contains(notificationCloseSelector).click();
     expect(":iframe section.first").toHaveAttribute("id", "Anchor-test");
     expect(":iframe section.first").toHaveAttribute("data-anchor", "true");
@@ -278,7 +289,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     await animationFrame();
     await contains(anchorSelector).click();
     await animationFrame();
-    expect(queryText(notificationContentSelector)).toInclude("#Dummy-Section");
+    expect(copiedLinks).toInclude("#Dummy-Section");
     await contains(notificationCloseSelector).click();
     expect(":iframe section.second").toHaveAttribute("id", "Dummy-Section");
 
@@ -286,7 +297,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     await contains(":iframe section.third").click();
     await animationFrame();
     await contains(anchorSelector).click();
-    expect(queryText(notificationContentSelector)).toInclude("#Dummy-Section2");
+    expect(copiedLinks).toInclude("#Dummy-Section2");
     expect(":iframe section.third").toHaveAttribute("id", "Dummy-Section2");
 
     // Edit anchor.
@@ -314,7 +325,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
         ".o_customize_tab .o_hb_options_container > div:contains('Column') button.oe_snippet_anchor"
     ).click();
     await animationFrame();
-    expect(queryText(notificationContentSelector)).toInclude("#Column");
+    expect(copiedLinks).toInclude("#Column");
     await contains(notificationCloseSelector).click();
     expect(":iframe section.fourth div.row div").toHaveAttribute("id", "Column");
 
@@ -332,7 +343,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
         ".o_customize_tab .o_hb_options_container > div:contains('Card') button.oe_snippet_anchor"
     ).click();
     await animationFrame();
-    expect(queryText(notificationContentSelector)).toInclude("#Card");
+    expect(copiedLinks).toInclude("#Card");
     await contains(notificationCloseSelector).click();
     expect(":iframe section.sixth div").toHaveAttribute("id", "Card");
 });
@@ -360,7 +371,9 @@ test("Show the overlay preview when hovering an options container", async () => 
     expect(".oe_overlay").toHaveCount(2);
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .col-lg-7");
 
-    await contains(".o_customize_tab .o_hb_options_container span:contains('Dummy Section')").hover();
+    await contains(
+        ".o_customize_tab .o_hb_options_container span:contains('Dummy Section')"
+    ).hover();
     expect(".overlay .o_overlay_options.d-none").toHaveCount(1);
     expect(".oe_overlay.oe_active.o_overlay_hidden").toHaveCount(1);
     expect(".oe_overlay.o_we_overlay_preview").toHaveRect(":iframe section");
@@ -516,7 +529,9 @@ test("Custom snippet appears in block and inner content on save and is removed o
     expect(".o_hb_snippets_menu .o_snippet[data-snippet-group='custom']").toHaveCount(1);
 
     // Delete the custom snippet and check that it is removed from the sidebar.
-    await click(".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
+    await click(
+        ".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
+    );
     await waitForSnippetDialog();
     await contains(
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe button:has([data-icon='delete'])"
