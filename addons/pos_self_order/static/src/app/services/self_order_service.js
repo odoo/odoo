@@ -358,6 +358,7 @@ export class SelfOrder extends Reactive {
                 options.categories[date].subCategories[slot.periode].options.push({
                     id: slot.datetime.toFormat("yyyy-MM-dd HH:mm:ss"),
                     name: this.getTime(slot.datetime),
+                    disabled: slot.isFull,
                 });
             }
         }
@@ -378,7 +379,7 @@ export class SelfOrder extends Reactive {
         try {
             const presetAvailabilities = await rpc(`/pos-self-order/get-slots`, {
                 access_token: this.access_token,
-                preset_id: this.currentOrder?.preset_id?.id,
+                preset_id: preset.id,
             });
             const localUsage = orderUsageUTCtoLocalUtil(presetAvailabilities.usage_utc);
             preset.computeAvailabilities(localUsage);

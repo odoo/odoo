@@ -169,6 +169,7 @@ export class CartPage extends Component {
 
             // Show timing selection popup only if preset uses timing
             if (useTiming) {
+                await this.selfOrder.syncPresetSlotAvaibility(order.preset_id);
                 result = await makeAwaitable(this.dialog, PillsSelectionPopup, {
                     options: this.presetTimingOptions,
                     title: _t("Select a hour"),
