@@ -976,11 +976,11 @@ class TestOneUserTwoEmployees(HrPresenceCase):
             "the company asking for 99 is not, from the same messages",
         )
 
-    def test_two_employees_of_one_user_share_a_timezone_by_construction(self):
-        """Not a defect of this module, but the limit of "the employee's own
-        timezone": resource.tz computes from partner_id.tz, and two employees of
-        one user reach the same partner. (A unique index on (user_id,
-        company_id) means they are always in different companies.)"""
+    @freeze_time("2026-04-05 03:30:00")
+    def test_two_employees_of_one_user_keep_their_own_timezone(self):
+        """A resource's timezone is its own -- the calendar's before the
+        partner's -- so two employees of one user, always in different
+        companies, each read "today" where they work."""
         first_company = self.env["res.company"].create({"name": "TZ One Co"})
         second_company = self.env["res.company"].create({"name": "TZ Two Co"})
         first_cal = self._make_calendar(first_company, "UTC")
@@ -1011,13 +1011,10 @@ class TestOneUserTwoEmployees(HrPresenceCase):
             second.user_id.partner_id,
             "fixture: one partner behind both",
         )
-        self.assertEqual(
-            first.tz,
-            second.tz,
-            "a tz written on one of them does not separate them",
-        )
+        self.assertEqual((first.tz, second.tz), ("UTC", "Pacific/Midway"))
         today = (first | second)._hr_presence_today()
-        self.assertEqual(today[first.id], today[second.id])
+        self.assertEqual(today[first.id], date(2026, 4, 5))
+        self.assertEqual(today[second.id], date(2026, 4, 4))
 
 
 @tagged("post_install", "-at_install")
