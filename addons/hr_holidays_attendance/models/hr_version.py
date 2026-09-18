@@ -162,7 +162,7 @@ class HrVersion(models.Model):
             vals.append(('attendance_ids', att))
         return vals
 
-    def _get_valid_leave_intervals(self, attendances, interval):
+    def _get_valid_leave_intervals(self, interval):
         payload = interval[2]
         if not payload:
             return [interval]

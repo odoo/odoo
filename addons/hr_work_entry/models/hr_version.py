@@ -54,7 +54,32 @@ class HrVersion(models.Model):
                 return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
         return self.env.ref('hr_work_entry.generic_work_entry_type_leave')
 
-    def _get_sub_leave_domain(self):
+    def _get_leave_work_entry_vals(self, interval, reference_leaves, bypassing_codes):
+        self.ensure_one()
+
+        work_entry_type_id = self._get_interval_leave_work_entry_type(
+            interval, reference_leaves, bypassing_codes
+        )
+
+        date_start = interval[0].astimezone(UTC).replace(tzinfo=None)
+        date_stop = interval[1].astimezone(UTC).replace(tzinfo=None)
+
+        vals = {
+            'date_start': date_start,
+            'date_stop': date_stop,
+            'work_entry_type_id': work_entry_type_id,
+            'employee_id': self.employee_id,
+            'company_id': self.company_id,
+            'version_id': self,
+        }
+
+        more_vals = self._get_more_vals_leave_interval(interval, reference_leaves)
+        if more_vals:
+            vals.update(dict(more_vals))
+
+        return vals
+
+    def _get_calendar_leave_domain(self):
         return Domain('calendar_id', 'in', [False] + self.resource_calendar_id.ids)
 
     def _get_leave_domain(self, start_dt, end_dt):
@@ -64,10 +89,19 @@ class HrVersion(models.Model):
             ('date_to', '>=', start_dt.replace(tzinfo=None)),
             ('company_id', 'in', [False] + self.company_id.ids),
         ])
-        return domain & self._get_sub_leave_domain()
+        return domain & self._get_calendar_leave_domain()
 
-    def _get_resource_calendar_leaves(self, start_dt, end_dt):
+    def _get_applicable_leaves(self, start_dt, end_dt):
         return self.env['resource.calendar.leaves'].search(self._get_leave_domain(start_dt, end_dt))
+
+    def _get_applicable_leaves_by_resource(self, start_dt, end_dt):
+        leaves = self._get_applicable_leaves(start_dt, end_dt)
+
+        result = defaultdict(lambda: self.env['resource.calendar.leaves'])
+        for leave in leaves:
+            result[leave.resource_id.id] |= leave
+
+        return result
 
     def _get_attendance_intervals(self, start_dt, end_dt):
         assert start_dt.tzinfo and end_dt.tzinfo, "function expects localized date"
@@ -76,11 +110,13 @@ class HrVersion(models.Model):
         result = dict()
         for calendar, versions in versions_with_calendar_work_entry_source.grouped('resource_calendar_id').items():
             fully_flex_versions = versions.filtered(lambda version: version._is_fully_flexible())
-            for version in fully_flex_versions:
-                result.update({version.employee_id.resource_id.id: Intervals([(start_dt, end_dt, self.env['resource.calendar.attendance'])])})
+            if fully_flex_versions:
+                flex_resource_ids = set(fully_flex_versions.mapped('employee_id.resource_id.id'))
+                for resource_id in flex_resource_ids:
+                    result[resource_id] = Intervals([(start_dt, end_dt, self.env['resource.calendar.attendance'])])
             remaining_versions = (versions - fully_flex_versions).with_prefetch()
-            resources_per_tz = remaining_versions._get_resources_per_tz()
             if remaining_versions:
+                resources_per_tz = remaining_versions._get_resources_per_tz()
                 result.update(calendar._attendance_intervals_batch(
                     start_dt,
                     end_dt,
@@ -94,7 +130,7 @@ class HrVersion(models.Model):
             return interval[2].work_entry_type_id[:1]
         return self.env['hr.work.entry.type'].browse(self._get_default_work_entry_type_id())
 
-    def _get_valid_leave_intervals(self, attendances, interval):
+    def _get_valid_leave_intervals(self, interval):
         self.ensure_one()
         return [interval]
 
@@ -122,122 +158,48 @@ class HrVersion(models.Model):
     def _get_version_work_entries_values(self, date_start, date_stop):
         start_dt = date_start.replace(tzinfo=UTC) if not date_start.tzinfo else date_start
         end_dt = date_stop.replace(tzinfo=UTC) if not date_stop.tzinfo else date_stop
-        version_vals = []
         bypassing_work_entry_type_codes = self._get_bypassing_work_entry_type_codes()
 
-        expected_attendances_by_resource = self.sudo()._get_attendance_intervals(start_dt, end_dt)
+        # {resource: Interval(start, end, resource.calendar.attendance())}
+        expected_attendances_intervals_by_resource = self.sudo()._get_attendance_intervals(start_dt, end_dt)
 
-        resource_calendar_leaves = self._get_resource_calendar_leaves(start_dt, end_dt)
-        # {resource: resource_calendar_leaves}
-        all_leaves_by_resource = defaultdict(lambda: self.env['resource.calendar.leaves'])
-        for leave in resource_calendar_leaves:
-            all_leaves_by_resource[leave.resource_id.id] |= leave
+        # {resource: resource.calendar.leave()}
+        all_leaves_by_resource = self._get_applicable_leaves_by_resource(start_dt, end_dt)
 
         tz_dates = {}
+        version_vals = []
         for version in self:
-            employee = version.employee_id
-            calendar = version.resource_calendar_id
-            resource = employee.resource_id
             tz = ZoneInfo(version._get_tz())
-            expected_attendances = expected_attendances_by_resource[resource.id]
+            employee = version.employee_id
+            # calendar = version.resource_calendar_id
+            resource = employee.resource_id
+            expected_attendances = expected_attendances_intervals_by_resource[resource.id]
 
-            # Other calendars: In case the employee has declared time off in another calendar
-            # Example: Take a time off, then a credit time.
-            resources_list = [self.env['resource.resource'], resource]
-            leave_result = defaultdict(list)
-            work_result = defaultdict(list)
-            for leave in itertools.chain(all_leaves_by_resource[False], all_leaves_by_resource[resource.id]):
-                for resource in resources_list:
-                    # Global time off is not for this calendar, can happen with multiple calendars in self
-                    if resource and leave.calendar_id and leave.calendar_id != calendar and not leave.resource_id:
-                        continue
-                    tz = tz if tz else ZoneInfo((resource or version).tz)
-                    if (tz, start_dt) in tz_dates:
-                        start = tz_dates[tz, start_dt]
-                    else:
-                        start = start_dt.astimezone(tz)
-                        tz_dates[tz, start_dt] = start
-                    if (tz, end_dt) in tz_dates:
-                        end = tz_dates[tz, end_dt]
-                    else:
-                        end = end_dt.astimezone(tz)
-                        tz_dates[tz, end_dt] = end
-                    dt0 = leave.date_from.astimezone(tz)
-                    dt1 = leave.date_to.astimezone(tz)
-                    leave_start_dt = max(start, dt0)
-                    leave_end_dt = min(end, dt1)
-                    leave_interval = (leave_start_dt, leave_end_dt, leave)
-                    leave_interval = version._get_valid_leave_intervals(expected_attendances, leave_interval)
-                    if leave_interval:
-                        if leave.count_as == 'absence':
-                            leave_result[resource.id] += leave_interval
-                        else:
-                            work_result[resource.id] += leave_interval
-            leaves_by_resource = {r.id: Intervals(leave_result[r.id], keep_distinct=True) for r in resources_list}
-            worked_leaves_by_resource = {r.id: Intervals(work_result[r.id], keep_distinct=True) for r in resources_list}
+            abscence_leaves_by_resource, worked_leaves_by_resource = version._get_absence_and_worked_leaves(all_leaves_by_resource, resource, tz_dates, start_dt, end_dt)
 
-            leaves = leaves_by_resource[resource.id]
+            abscence_leaves = abscence_leaves_by_resource[resource.id]
             worked_leaves = worked_leaves_by_resource[resource.id]
 
-            real_attendances = expected_attendances - leaves - worked_leaves
-            if version._is_fully_flexible():
-                real_leaves = leaves
-            elif version._is_flexible():
-                # Flexible hours case
-                # For multi day leaves, we want them to occupy the virtual working schedule 12 AM to average working days
-                # For one day leaves, we want them to occupy exactly the time it was taken, for a time off in days
-                # this will mean the virtual schedule and for time off in hours the chosen hours
-                one_day_leaves = Intervals([l for l in leaves if l[0].astimezone(tz).date() == l[1].astimezone(tz).date()], keep_distinct=True)
-                multi_day_leaves = leaves - one_day_leaves
-                resources_per_tz = version._get_resources_per_tz()
-                static_attendances = calendar._attendance_intervals_batch(
-                    start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
-                real_leaves = (static_attendances & multi_day_leaves) | one_day_leaves
-            elif version.has_static_work_entries() or not leaves:
-                real_leaves = version._get_real_leaves_static(leaves, expected_attendances)
-            else:
-                resources_per_tz = version._get_resources_per_tz()
-                static_attendances = calendar._attendance_intervals_batch(
-                    start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
-                real_leaves = version._get_real_leaves_static_attendance(leaves, static_attendances)
+            real_absence_leaves = version._get_real_absence_leaves(abscence_leaves, expected_attendances,  start_dt, end_dt, tz)
+            real_worked_leaves = version._get_real_worked_leaves(worked_leaves, real_absence_leaves)
 
-            real_worked_leaves = version._get_real_worked_leaves(worked_leaves, real_leaves)
-            real_attendances = version._get_real_attendances(expected_attendances, leaves, worked_leaves)
+            real_attendances = version._get_real_attendances(expected_attendances, abscence_leaves, worked_leaves)
 
             # A leave period can be linked to several resource.calendar.leave
-            split_leaves = []
-            for leave_interval in leaves:
-                if leave_interval[2] and len(leave_interval[2]) > 1:
-                    split_leaves += [(leave_interval[0], leave_interval[1], l) for l in leave_interval[2]]
-                else:
-                    split_leaves += [(leave_interval[0], leave_interval[1], leave_interval[2])]
-            leaves = split_leaves
-
-            split_worked_leaves = []
-            for worked_leave_interval in real_worked_leaves:
-                if worked_leave_interval[2] and len(worked_leave_interval[2]) > 1:
-                    split_worked_leaves += [(worked_leave_interval[0], worked_leave_interval[1], l) for l in worked_leave_interval[2]]
-                else:
-                    split_worked_leaves += [(worked_leave_interval[0], worked_leave_interval[1], worked_leave_interval[2])]
-            real_worked_leaves = split_worked_leaves
+            abscence_leaves = version._flatten_leave_intervals(abscence_leaves)
+            real_worked_leaves = version._flatten_leave_intervals(real_worked_leaves)
 
             # Attendances
             version_vals += version._get_real_attendance_work_entry_vals(real_attendances)
 
             for interval in real_worked_leaves:
-                work_entry_type = version._get_interval_leave_work_entry_type(interval, worked_leaves, bypassing_work_entry_type_codes)
-                # All benefits generated here are using datetimes converted from the employee's timezone
-                version_vals += [dict([
-                    ('date_start', interval[0].astimezone(UTC).replace(tzinfo=None)),
-                    ('date_stop', interval[1].astimezone(UTC).replace(tzinfo=None)),
-                    ('work_entry_type_id', work_entry_type),
-                    ('employee_id', employee),
-                    ('version_id', version),
-                    ('company_id', version.company_id),
-                ] + version._get_more_vals_leave_interval(interval, worked_leaves))]
+                vals = version._get_leave_work_entry_vals(
+                    interval, worked_leaves, bypassing_work_entry_type_codes
+                )
+                version_vals.append(vals)
 
-            leaves_over_attendances = Intervals(leaves, keep_distinct=True) & real_leaves
-            for interval in real_leaves:
+            leaves_over_attendances = Intervals(abscence_leaves, keep_distinct=True) & real_absence_leaves
+            for interval in real_absence_leaves:
                 # Could happen when a leave is configured on the interface on a day for which the
                 # employee is not supposed to work, i.e. no attendance_ids on the calendar.
                 # In that case, do try to generate an empty work entry, as this would raise a
@@ -246,20 +208,77 @@ class HrVersion(models.Model):
                     continue
                 leaves_over_interval = [l for l in leaves_over_attendances if l[0] >= interval[0] and l[1] <= interval[1]]
                 for leave_interval in [(l[0], l[1], interval[2]) for l in leaves_over_interval]:
-                    leave_entry_type = version._get_interval_leave_work_entry_type(leave_interval, leaves, bypassing_work_entry_type_codes)
-                    # leaves don't have work_entry_type_id set if you create them before having hr_work_entry_installed
-                    interval_leaves = [leave for leave in leaves if version._get_no_wet_or_wet_match(leave, leave_entry_type)]
-                    interval_start = leave_interval[0].astimezone(UTC).replace(tzinfo=None)
-                    interval_stop = leave_interval[1].astimezone(UTC).replace(tzinfo=None)
-                    version_vals += [dict([
-                        ('date_start', interval_start),
-                        ('date_stop', interval_stop),
-                        ('work_entry_type_id', leave_entry_type),
-                        ('employee_id', employee),
-                        ('company_id', version.company_id),
-                        ('version_id', version),
-                    ] + version._get_more_vals_leave_interval(interval, interval_leaves))]
+                    vals = version._get_leave_work_entry_vals(
+                        leave_interval, abscence_leaves, bypassing_work_entry_type_codes
+                    )
+                    version_vals.append(vals)
         return version_vals
+
+    def _get_absence_and_worked_leaves(self, all_leaves_by_resource, resource, tz_dates, start_dt, end_dt):
+        # Other calendars: In case the employee has declared time off in another calendar
+        # Example: Take a time off, then a credit time.
+        tz = ZoneInfo(self._get_tz())
+        resources_list = [self.env['resource.resource'], resource]
+        abscence_leave_result = defaultdict(list)
+        worked_leave_result = defaultdict(list)
+        for leave in itertools.chain(all_leaves_by_resource[False], all_leaves_by_resource[resource.id]):
+            for resource_i in resources_list:
+                # Global time off is not for this calendar, can happen with multiple calendars in self
+                if resource_i and leave.calendar_id and leave.calendar_id != self.resource_calendar_id and not leave.resource_id:
+                    continue
+                tz = tz if tz else ZoneInfo((resource_i or self).tz)
+                if (tz, start_dt) in tz_dates:
+                    start = tz_dates[tz, start_dt]
+                else:
+                    start = start_dt.astimezone(tz)
+                    tz_dates[tz, start_dt] = start
+                if (tz, end_dt) in tz_dates:
+                    end = tz_dates[tz, end_dt]
+                else:
+                    end = end_dt.astimezone(tz)
+                    tz_dates[tz, end_dt] = end
+                dt0 = leave.date_from.astimezone(tz)
+                dt1 = leave.date_to.astimezone(tz)
+                leave_start_dt = max(start, dt0)
+                leave_end_dt = min(end, dt1)
+                leave_interval = self._get_valid_leave_intervals((leave_start_dt, leave_end_dt, leave))
+                if leave_interval:
+                    if leave.count_as == 'absence':
+                        abscence_leave_result[resource_i.id] += leave_interval
+                    else:
+                        worked_leave_result[resource_i.id] += leave_interval
+        abscence_leaves_by_resource = {r.id: Intervals(abscence_leave_result[r.id], keep_distinct=True) for r in resources_list}
+        workeded_leaves_by_resource = {r.id: Intervals(worked_leave_result[r.id], keep_distinct=True) for r in resources_list}
+
+        return abscence_leaves_by_resource, workeded_leaves_by_resource
+
+    def _get_real_absence_leaves(self, absence_leaves, expected_attendances, start_dt, end_dt, tz):
+        """Calculates real effective leaves adjusted for contract schedule variants."""
+        self.ensure_one()
+        calendar = self.resource_calendar_id
+        emp_resource_id = self.employee_id.resource_id.id
+
+        if self._is_fully_flexible():
+            return absence_leaves
+        elif self._is_flexible():
+            one_day_leaves = Intervals(
+                [l for l in absence_leaves if l[0].astimezone(tz).date() == l[1].astimezone(tz).date()],
+                keep_distinct=True
+            )
+            multi_day_leaves = absence_leaves - one_day_leaves
+            resources_per_tz = self._get_resources_per_tz()
+            static_attendances = calendar._attendance_intervals_batch(
+                start_dt, end_dt, resources_per_tz=resources_per_tz
+            )[emp_resource_id]
+            return (static_attendances & multi_day_leaves) | one_day_leaves
+        elif self.has_static_work_entries() or not absence_leaves:
+            return self._get_real_leaves_static(absence_leaves, expected_attendances)
+        else:
+            resources_per_tz = self._get_resources_per_tz()
+            static_attendances = calendar._attendance_intervals_batch(
+                start_dt, end_dt, resources_per_tz=resources_per_tz
+            )[emp_resource_id]
+            return self._get_real_leaves_static_attendance(absence_leaves, static_attendances)
 
     # will override in attendance bridge to add overtime vals
     def _get_real_attendances(self, attendances, leaves, worked_leaves):
@@ -274,25 +293,14 @@ class HrVersion(models.Model):
     def _get_real_worked_leaves(self, worked_leaves, real_leaves):
         return worked_leaves - real_leaves
 
-    def _get_work_entries_values(self, date_start, date_stop):
-        """
-        Generate a work_entries list between date_start and date_stop for one version.
-        :return: list of dictionnary.
-        """
-        if isinstance(date_start, datetime):
-            version_vals = self._get_version_work_entries_values(date_start, date_stop)
-        else:
-            version_vals = []
-            versions_by_tz = defaultdict(lambda: self.env['hr.version'])
-            for version in self:
-                versions_by_tz[version._get_tz()] += version
-            for version_tz, versions in versions_by_tz.items():
-                tz = ZoneInfo(version_tz) if version_tz else UTC
-                version_vals += versions._get_version_work_entries_values(
-                    date_start.replace(tzinfo=tz),
-                    date_stop.replace(tzinfo=tz))
-
-        return version_vals
+    def _flatten_leave_intervals(self, intervals):
+        flatten_intervals = []
+        for start, stop, leaves in intervals:
+            if leaves and len(leaves) > 1:
+                flatten_intervals.extend((start, stop, leaf) for leaf in leaves)
+            else:
+                flatten_intervals.append((start, stop, leaves))
+        return flatten_intervals
 
     def has_static_work_entries(self):
         # True means this is calendar based, False it is attendance based.
@@ -301,6 +309,10 @@ class HrVersion(models.Model):
         return True
 
     def generate_work_entries(self, date_start, date_stop):
+        """
+        Generate a work_entries list between date_start and date_stop for self versions.
+        :return: list of dictionnary.
+        """
         # Generate work entries between 2 dates (datetime.date)
         # To correctly englobe the period, the start and end periods are converted
         # using the calendar timezone.
@@ -310,12 +322,10 @@ class HrVersion(models.Model):
         date_start = datetime.combine(fields.Datetime.to_datetime(date_start), datetime.min.time())
         date_stop = datetime.combine(fields.Datetime.to_datetime(date_stop), datetime.max.time())
 
-        versions_by_company_tz = defaultdict(lambda: self.env['hr.version'])
-        for version in self:
-            versions_by_company_tz[
-                version.company_id,
-                version.tz or version.employee_id.user_id.tz,
-            ] += version
+        versions_by_company_tz = self.grouped(
+            lambda v: (v.company_id, v.tz or v.employee_id.user_id.tz)
+        )
+
         new_work_entries = []
         for (company, version_tz), versions in versions_by_company_tz.items():
             tz = ZoneInfo(version_tz) if version_tz else UTC
@@ -336,23 +346,22 @@ class HrVersion(models.Model):
 
         intervals_to_generate = defaultdict(lambda: self.env['hr.version'])
 
-        for version_tz, versions in self.grouped(lambda v: v._get_tz()).items():
-            tz = ZoneInfo(version_tz) if version_tz else UTC
-            for version in versions:
-                version_start = fields.Datetime.to_datetime(version.date_start).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                version_stop = datetime.combine(fields.Datetime.to_datetime(version.date_end or date_stop),
-                                                 datetime.max.time()).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                if version_stop < date_start:
-                    continue
-                if date_start > version_stop or date_stop < version_start:
-                    continue
-                date_start_work_entries = max(date_start, version_start)
-                date_stop_work_entries = min(date_stop, version_stop)
-                intervals_to_generate[date_start_work_entries, date_stop_work_entries] |= version
+        # Versions already grouped by Timezone & this method just used once
+        for version in self:
+            tz = ZoneInfo(version._get_tz()) if version._get_tz() else UTC
+            version_start = fields.Datetime.to_datetime(version.date_start).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+            version_stop = datetime.combine(fields.Datetime.to_datetime(version.date_end or date_stop),
+                                             datetime.max.time()).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
 
-        for interval, versions in intervals_to_generate.items():
-            date_from, date_to = interval
-            vals_list.extend(versions._get_work_entries_values(date_from, date_to))
+            if version_stop < date_start or date_start > version_stop or date_stop < version_start:
+                continue
+
+            date_start_work_entries = max(date_start, version_start)
+            date_stop_work_entries = min(date_stop, version_stop)
+            intervals_to_generate[date_start_work_entries, date_stop_work_entries] |= version
+
+        for (date_from, date_to), versions in intervals_to_generate.items():
+            vals_list.extend(versions._get_version_work_entries_values(date_from, date_to))
 
         if not vals_list:
             return vals_list
