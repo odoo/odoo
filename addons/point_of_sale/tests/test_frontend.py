@@ -2472,6 +2472,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(order.amount_total, 2.80, "The total amount should be rounded to 2 decimals")
         self.assertEqual(order.amount_return, 0, "The return amount should be rounded to 2 decimals")
 
+    def test_stale_draft_read_keeps_order_paid(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_stale_draft_read_keeps_order_paid', login="pos_user")
+
     def test_offline_barcode_not_in_pos(self):
         """
         Tests that an unwanted error is not thrown when trying to scan a barcode while offline
