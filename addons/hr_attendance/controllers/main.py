@@ -273,6 +273,8 @@ class HrAttendance(http.Controller):
     @http.route('/hr_attendance/systray_check_in_out', type="jsonrpc", auth="user")
     def systray_attendance(self, latitude=False, longitude=False):
         employee = request.env.user.with_company(self._get_active_company(request)).employee_id
+        if not employee:
+            return self._get_employee_info_response(employee)
         geo_ip_response = self._get_geoip_response(mode='systray',
                                                   latitude=latitude,
                                                   longitude=longitude,
