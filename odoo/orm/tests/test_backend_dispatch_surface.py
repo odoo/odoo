@@ -229,6 +229,7 @@ QUERY_COMPILERS = frozenset(
         "_field_to_sql",
         "_order_to_sql",
         "_order_field_to_sql",
+        "_order_value_to_sql",
         "_traverse_related_sql",
         "_table_sql",
     }
