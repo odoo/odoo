@@ -16,7 +16,8 @@ import { usePopover } from "@web/core/popover/popover_hook";
 
 test("close popover when component is unmounted", async () => {
     class Comp extends Component {
-        static template = xml`<div t-att-id="this.props.id">in popover</div>`;
+        static template = xml`<div t-att-id="this.id">in popover</div>`;
+        id = useProps.static("id", t.string());
     }
 
     class CompWithPopover extends Component {

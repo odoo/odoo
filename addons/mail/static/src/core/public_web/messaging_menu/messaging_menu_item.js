@@ -31,6 +31,9 @@ export class MessagingMenuItem extends Component {
     isMobileOS = isMobileOS;
     root = signal();
 
+    // needed for thread actions (owner.props.chatWindow).
+    props = useProps();
+
     setup() {
         super.setup();
         // Sub-dropdowns (action menu, notification settings mute) closing should not
