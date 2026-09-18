@@ -84,10 +84,10 @@
                 <header>
                     <button name="action_validate" string="Validate" type="object"
                             class="btn-primary"
-                            invisible="state != 'draft'"
+                            invisible="state != 'draft' or not id or not is_manager"
                             groups="hr_attendance.group_hr_attendance_officer"/>
                     <button name="action_refuse" string="Refuse" type="object"
-                            invisible="state not in ('draft', 'validated')"
+                            invisible="state not in ('draft', 'validated') or not id or not is_manager"
                             groups="hr_attendance.group_hr_attendance_officer"/>
                     <button name="action_reset_to_draft" string="Reset to Draft" type="object"
                             invisible="state != 'refused'"
@@ -147,7 +147,7 @@
                             </group>
                             <group col="2" name="group_worked_hours">
                                 <field name="worked_hours" string="Worked Time" widget="float_time"/>
-                                <field name="work_entry_type_id" groups="hr.group_hr_user"/>
+                                <field name="work_entry_type_id" groups="hr.group_hr_user,hr_attendance.group_hr_attendance_own"/>
                                 <field name="break_duration" widget="float_time" readonly="not can_edit"/>
                             </group>
                         </group>
@@ -529,13 +529,14 @@
                        decoration-warning="state == 'draft'"
                        decoration-danger="state == 'refused'"
                        readonly="1"/>
+                <field name="is_manager" column_invisible="1"/>
                 <button name="action_validate" string="Validate" type="object"
                         icon="check"
-                        invisible="state != 'draft'"
+                        invisible="state != 'draft' or not is_manager"
                         groups="hr_attendance.group_hr_attendance_officer"/>
                 <button name="action_refuse" string="Refuse" type="object"
                         icon="close"
-                        invisible="state not in ('draft', 'validated')"
+                        invisible="state not in ('draft', 'validated') or not is_manager"
                         groups="hr_attendance.group_hr_attendance_officer"/>
                 <button name="action_reset_to_draft" string="Reset to Draft" type="object"
                         icon="undo"
