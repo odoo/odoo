@@ -50,7 +50,8 @@ export class Twitch extends AbstractThirdPartyVideo {
             url.pathname.startsWith("/collections/") ||
             urlMatch.groups.id === url.searchParams.get("collection");
         return {
-            isClip: url.hostname.includes("clip"),
+            // e.g. "clips.twitch.tv/EmbedId" or "twitch.tv/channel/clip/ClipId"
+            isClip: url.hostname.includes("clip") || url.pathname.includes("/clip/"),
             isCollection,
             // The id of a pure collection is already the collection.
             ...(isCollection && { collection: "" }),
