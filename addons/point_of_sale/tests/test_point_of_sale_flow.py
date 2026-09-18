@@ -2467,6 +2467,54 @@ class TestPointOfSaleFlow(CommonPosTest):
         order = self.env['pos.order'].search([])
         self.assertEqual(order.name, f"/AA - {order.pos_reference.split('-')[-1]} - 1.B")
 
+    def test_order_name_unique_across_device_identifiers(self):
+        """Two orders from different devices whose local per-device counters
+        independently reach the same number must still get different order names."""
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+
+        def make_order(pos_reference, uuid):
+            return {
+                'amount_paid': 750,
+                'amount_tax': 0,
+                'amount_return': 0,
+                'amount_total': 750,
+                'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+                'lines': [[0, 0, {
+                    'price_unit': 750.0,
+                    'product_id': self.product.id,
+                    'price_subtotal': 750.0,
+                    'price_subtotal_incl': 750.0,
+                    'tax_ids': [[6, False, []]],
+                    'qty': 1,
+                }]],
+                'name': f'Order {uuid}',
+                'partner_id': False,
+                'session_id': current_session.id,
+                'pos_reference': pos_reference,
+                'payment_ids': [[0, 0, {
+                    'amount': 750,
+                    'name': fields.Datetime.now(),
+                    'payment_method_id': self.bank_payment_method.id,
+                }]],
+                'uuid': uuid,
+                'user_id': self.env.uid,
+                'to_invoice': False,
+            }
+
+        # "261-1-000002" / "262-1-000002": two different device identifiers ("1" and
+        # "2"), each with their own local counter that independently reached 000002,
+        # the way two different devices of the same PoS would.
+        self.env['pos.order'].sync_from_ui([
+            make_order('261-1-000002', '11111-111-1111'),
+            make_order('262-1-000002', '22222-222-2222'),
+        ])
+        orders = self.env['pos.order'].search([('session_id', '=', current_session.id)], order='id')
+        self.assertEqual(len(orders), 2)
+        self.assertNotEqual(orders[0].name, orders[1].name)
+        self.assertEqual(orders[0].name, f"{self.pos_config_usd.name} - 1000002")
+        self.assertEqual(orders[1].name, f"{self.pos_config_usd.name} - 2000002")
+
     def test_valuation_order_invoiced_after_session_closed(self):
         """Test that an order can be invoiced after its session is closed.
         Scenario:
