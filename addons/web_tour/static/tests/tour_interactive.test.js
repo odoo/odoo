@@ -272,7 +272,10 @@ test("manual tour with alternative trigger", async () => {
         static props = ["*"];
     }
     await mountWithCleanup(Root);
-    await getService("tour_service").startTour("tour_des_flandres_2", { mode: "manual" });
+    await getService("tour_service").startTour("tour_des_flandres_2", {
+        mode: "manual",
+        fromDB: true,
+    });
     await contains(".button2").click();
     await contains(".button3").click();
     await contains(".button5").click();
