@@ -78,10 +78,7 @@ class CalendarEvent(models.Model):
                 res.setdefault("name", appointment_type.name)
             # set the maximum capacity if managing capacities
             if "total_capacity_reserved" in fields:
-                if (
-                    appointment_type.schedule_based_on == "resources"
-                    and resources
-                ):
+                if appointment_type.schedule_based_on == "resources" and resources:
                     res.setdefault(
                         "total_capacity_reserved",
                         sum(resource.capacity for resource in resources)
@@ -170,8 +167,12 @@ class CalendarEvent(models.Model):
         index="btree_not_null",
         tracking=True,
     )
-    appointment_type_schedule_based_on = fields.Selection(related="appointment_type_id.schedule_based_on")
-    appointment_type_manage_capacity = fields.Boolean(related="appointment_type_id.manage_capacity")
+    appointment_type_schedule_based_on = fields.Selection(
+        related="appointment_type_id.schedule_based_on"
+    )
+    appointment_type_manage_capacity = fields.Boolean(
+        related="appointment_type_id.manage_capacity"
+    )
     appointment_invite_id = fields.Many2one(
         comodel_name="appointment.invite",
         string="Appointment Invitation",
@@ -199,9 +200,9 @@ class CalendarEvent(models.Model):
         compute="_compute_resource_ids",
         inverse="_inverse_resource_ids_or_capacity",
         search="_search_resource_ids",
-        group_by_field="booked_resource_ids",
         copy=False,
         group_expand="_read_group_resource_ids",
+        group_by_field="booked_resource_ids",
     )
     booking_line_ids = fields.One2many(
         comodel_name="appointment.booking.line",

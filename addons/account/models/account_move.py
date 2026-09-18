@@ -932,7 +932,6 @@ class AccountMove(models.Model):
         tracking=True,
     )
     display_state = fields.Selection(
-        value_sql="_state_field_sql",
         selection=PAYMENT_STATE_SELECTION
         + [
             ("draft", "Draft"),
@@ -942,6 +941,7 @@ class AccountMove(models.Model):
         ],
         compute="_compute_display_state",
         copy=False,
+        value_sql="_state_field_sql",
     )
     amount_total_words = fields.Char(
         string="Amount total in words",
@@ -1006,7 +1006,6 @@ class AccountMove(models.Model):
     )
 
     move_sent_values = fields.Selection(
-        value_sql="_state_field_sql",
         selection=[
             ("sent", "Sent"),
             ("not_sent", "Not Sent"),
@@ -1014,6 +1013,7 @@ class AccountMove(models.Model):
         string="Sent",
         compute="_compute_move_sent_values",
         search="_search_move_sent_values",
+        value_sql="_state_field_sql",
     )
     invoice_user_id = fields.Many2one(
         comodel_name="res.users",
@@ -1886,7 +1886,9 @@ class AccountMove(models.Model):
                 group_sizes={k: len(v) for k, v in groups.items()},
             )
 
-        payment_data = self._prepare_payment_state_reconciliation_data(list(invoices.ids))
+        payment_data = self._prepare_payment_state_reconciliation_data(
+            list(invoices.ids)
+        )
         for invoice in invoices:
             reconciliation_vals = [
                 row

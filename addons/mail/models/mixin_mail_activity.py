@@ -71,16 +71,16 @@ class MixinMailActivity(models.AbstractModel):
         string="Next Activity Deadline",
         compute="_compute_activity_date_deadline",
         search="_search_activity_date_deadline",
-        order_by_sql="_activity_order_sql",
         readonly=True,
+        order_by_sql="_activity_order_sql",
         groups="base.group_user",
     )
     my_activity_date_deadline = fields.Date(
         string="My Activity Deadline",
         compute="_compute_my_activity_date_deadline",
         search="_search_my_activity_date_deadline",
-        order_by_sql="_activity_order_sql",
         readonly=True,
+        order_by_sql="_activity_order_sql",
         groups="base.group_user",
     )
     activity_summary = fields.Char(

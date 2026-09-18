@@ -24,8 +24,8 @@ class MixinUserFavorite(models.AbstractModel):
         compute="_compute_is_user_favorite",
         inverse="_inverse_is_user_favorite",
         search="_search_is_user_favorite",
-        order_by_sql="_is_user_favorite_order_sql",
         compute_sudo=True,
+        order_by_sql="_is_user_favorite_order_sql",
     )
 
     @api.depends("favorite_user_ids")

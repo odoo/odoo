@@ -9,7 +9,8 @@ class AccountAnalyticLine(models.Model):
     _inherit = "account.analytic.line"
 
     analytic_coverage = fields.Float(
-        compute="_compute_analytic_coverage", value_sql="_analytic_coverage_sql"
+        compute="_compute_analytic_coverage",
+        value_sql="_analytic_coverage_sql",
     )
 
     @_debug.perf.timed

@@ -127,11 +127,11 @@ class HrEmployee(models.Model):
         comodel_name="hr.version",
         compute="_compute_version_id",
         search="_search_version_id",
-        value_sql="_version_id_sql",
         compute_sudo=True,
         store=False,
         required=True,
         ondelete="cascade",
+        value_sql="_version_id_sql",
     )
     resource_calendar_id = fields.Many2one(
         related="version_id.resource_calendar_id",

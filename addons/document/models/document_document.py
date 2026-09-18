@@ -188,7 +188,8 @@ class DocumentsDocument(models.Model):
         required=True,
     )
     is_folder = fields.Boolean(
-        compute="_compute_is_folder", order_by_sql="_order_by_sql_is_folder"
+        compute="_compute_is_folder",
+        order_by_sql="_order_by_sql_is_folder",
     )
     thumbnail = fields.Binary(
         attachment=True,
@@ -393,8 +394,6 @@ class DocumentsDocument(models.Model):
     )
 
     last_access_date_group = fields.Selection(
-        value_sql="_last_access_date_group_sql",
-        order_by_sql="_order_by_sql_last_access_date_group",
         selection=[
             ("0_older", "Older"),
             ("1_month", "This Month"),
@@ -404,6 +403,8 @@ class DocumentsDocument(models.Model):
         string="Last Accessed On",
         compute="_compute_last_access_date_group",
         search="_search_last_access_date_group",
+        order_by_sql="_order_by_sql_last_access_date_group",
+        value_sql="_last_access_date_group_sql",
     )
 
     _res_model_res_id_idx = models.Index("(res_model, res_id)")
