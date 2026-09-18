@@ -324,3 +324,11 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         self.assertEqual(partner_2.phone, '123456789')
         self.assertEqual(partner_2.vat, 'VAT_TEST_NUMBER_124')
         self.assertEqual(partner_2.zip, '12345')
+
+    def test_pos_ui_opens_a_session_for_a_navigation_only(self):
+        self.authenticate('pos_user', 'pos_user')
+        open_session_domain = [('config_id', '=', self.main_pos_config.id), ('state', '!=', 'closed')]
+        self.url_open(f'/pos/ui/{self.main_pos_config.id}', headers={'Sec-Fetch-Mode': 'cors'})
+        self.assertFalse(self.env['pos.session'].search(open_session_domain), "caching the url must not open a session")
+        self.url_open(f'/pos/ui/{self.main_pos_config.id}', headers={'Sec-Fetch-Mode': 'navigate'})
+        self.assertTrue(self.env['pos.session'].search(open_session_domain), "opening the url must open a session")
