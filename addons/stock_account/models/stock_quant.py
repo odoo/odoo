@@ -48,21 +48,41 @@ class StockQuant(models.Model):
     def _compute_value(self):
         self.fetch(['company_id', 'location_id', 'owner_id', 'product_id', 'quantity', 'lot_id'])
         self.value = 0
-        for quant in self:
-            if not quant.location_id or not quant.product_id or\
-                    not quant.location_id._should_be_valued() or\
-                    quant._should_exclude_for_valuation() or\
-                    quant.product_id.uom_id.is_zero(quant.quantity):
-                continue
-            if quant.product_id.lot_valuated:
-                quantity = quant.lot_id.with_company(quant.company_id).product_qty
-                value = quant.lot_id.with_company(quant.company_id).total_value
-            else:
-                quantity = quant.product_id.with_company(quant.company_id)._with_valuation_context().qty_available
-                value = quant.product_id.with_company(quant.company_id).total_value
-            if quant.product_id.uom_id.is_zero(quantity):
-                continue
-            quant.value = quant.quantity * value / quantity
+        valued_quants = self.filtered(lambda quant: (
+            quant.location_id
+            and quant.product_id
+            and quant.location_id._should_be_valued()
+            and not quant._should_exclude_for_valuation()
+            and not quant.product_id.uom_id.is_zero(quant.quantity)
+        ))
+        # The valuation context only varies with the company, but building it searches every valued
+        # location and carries their ids in the context. Doing that per quant means one location
+        # search, and one environment lookup over that context, for each of them: build it once per
+        # company instead.
+        for company, quants in valued_quants.grouped('company_id').items():
+            lot_valued_quants = quants.filtered(lambda quant: quant.product_id.lot_valuated)
+            product_valued_quants = quants - lot_valued_quants
+            quantity_by_lot, value_by_lot = {}, {}
+            if lot_valued_quants:
+                lots = lot_valued_quants.lot_id.with_company(company)
+                quantity_by_lot = dict(zip(lots, lots.mapped('product_qty')))
+                value_by_lot = dict(zip(lots, lots.mapped('total_value')))
+            quantity_by_product, value_by_product = {}, {}
+            if product_valued_quants:
+                products = product_valued_quants.product_id.with_company(company)
+                quantity_by_product = dict(zip(products, products._with_valuation_context().mapped('qty_available')))
+                value_by_product = dict(zip(products, products.mapped('total_value')))
+            for quant in quants:
+                if quant.product_id.lot_valuated:
+                    # a quant without lot on a lot valuated product is not valued
+                    quantity = quantity_by_lot.get(quant.lot_id, 0)
+                    value = value_by_lot.get(quant.lot_id, 0)
+                else:
+                    quantity = quantity_by_product[quant.product_id]
+                    value = value_by_product[quant.product_id]
+                if quant.product_id.uom_id.is_zero(quantity):
+                    continue
+                quant.value = quant.quantity * value / quantity
 
     def _read_group_select(self, aggregate_spec, query):
         # flag value as aggregatable, and manually sum the values from the
