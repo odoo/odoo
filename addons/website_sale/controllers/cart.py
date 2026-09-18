@@ -241,9 +241,8 @@ class Cart(PaymentPortal):
 
         order_sudo._sync_cart_after_update()
 
-        main_product_line = request.env["sale.order.line"].browse(values["line_id"])
-        if main_product_line.product_type == "combo":
-            main_product_line._check_validity()
+        if updated_line.product_type == "combo":
+            updated_line._check_validity()
 
         positive_added_qty_per_line = {
             line_id: qty for line_id, qty in added_qty_per_line.items() if qty > 0
