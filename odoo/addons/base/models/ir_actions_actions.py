@@ -94,18 +94,13 @@ class IrActionsActions(models.Model):
         string="Action Type",
         required=True,
     )
-    xml_id = fields.Char(
-        string="External ID",
-        compute="_compute_xml_id",
-    )
     path = fields.Char(
         string="Path to show in the URL",
         copy=False,
     )
-    help = fields.Html(
-        string="Action Description",
-        translate=True,
-        help="Optional help text for the users with a description of the target view, such as its usage and purpose.",
+    xml_id = fields.Char(
+        string="External ID",
+        compute="_compute_xml_id",
     )
     binding_model_id = fields.Many2one(
         comodel_name="ir.model",
@@ -125,6 +120,11 @@ class IrActionsActions(models.Model):
     binding_icon = fields.Char(
         help="Icon classes shown next to this action in the contextual menu, "
         "e.g. 'fa-solid fa-envelope'.",
+    )
+    help = fields.Html(
+        string="Action Description",
+        translate=True,
+        help="Optional help text for the users with a description of the target view, such as its usage and purpose.",
     )
 
     _RESERVED_PATH_PREFIXES = ("m-", "action-")
