@@ -51,8 +51,12 @@ class PosOrder(models.Model):
     def _send_notification(self, order_ids):
         config_ids = order_ids.config_id
         for config in config_ids:
-            config.notify_synchronisation(config.current_session_id.id, self.env.context.get('device_identifier', 0))
             config._notify('ORDER_STATE_CHANGED', {})
+
+    # it will close the notification in other devices when someone reviews the order
+    def notify_self_order_reviewed(self):
+        for config, orders in self.grouped('config_id').items():
+            config._notify('SELF_ORDER_REVIEWED', {'order_ids': orders.ids})
 
     def _send_self_order_receipt(self):
         self.ensure_one()

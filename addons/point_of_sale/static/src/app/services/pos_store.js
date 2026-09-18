@@ -3190,6 +3190,9 @@ export class PosStore extends WithLazyGetterTrap {
         this.mobile_pane = "right";
         this.scanning = !this.scanning;
     }
+
+    // Used to override inside `pos_self_order`
+    _checkForSelfOrderNotifications(orders) {}
 }
 
 export const posService = {
