@@ -60,10 +60,13 @@ export class CarouselProductCard extends Interaction {
         } else {
             rpcParams.product_template_id = ev.currentTarget.dataset.productTemplateId;
         }
-        await this.waitFor(rpc("/shop/products/recently_viewed_delete", rpcParams));
         const dynamicSnippetProducts = this.el.closest(".s_dynamic_snippet_products");
-        this.services["public.interactions"].stopInteractions(dynamicSnippetProducts);
-        this.services["public.interactions"].startInteractions(dynamicSnippetProducts);
+        const interactions = this.services["public.interactions"];
+        await rpc("/shop/products/recently_viewed_delete", rpcParams);
+        if (dynamicSnippetProducts.isConnected) {
+            interactions.stopInteractions(dynamicSnippetProducts);
+            interactions.startInteractions(dynamicSnippetProducts);
+        }
     }
 }
 

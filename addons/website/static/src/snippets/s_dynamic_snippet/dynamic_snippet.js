@@ -20,7 +20,7 @@ export class DynamicSnippet extends Interaction {
         "[data-url]": {
             "t-on-click": this.callToAction,
         },
-        _window: { "t-on-resize": this.throttled(this.render) },
+        _window: { "t-on-resize": this.throttled(this.onWindowResize) },
         _root: {
             "t-att-class": () => ({
                 o_dynamic_empty: !this.isVisible,
@@ -164,7 +164,17 @@ export class DynamicSnippet extends Interaction {
         };
     }
 
+    onWindowResize() {
+        // The output reads the viewport only through the small-device
+        // breakpoint. Re-rendering on every resize looped in the website
+        // preview: new content resized the iframe, which fired resize again.
+        if (uiUtils.isSmall() !== this.renderedForSmallDevices) {
+            this.render();
+        }
+    }
+
     render() {
+        this.renderedForSmallDevices = uiUtils.isSmall();
         log.pipeline("render", () => ({
             items: this.data.length,
             withSample: this.withSample,
