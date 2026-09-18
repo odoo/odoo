@@ -154,7 +154,7 @@ class StockPutawayRule(models.Model):
                     return location_out
                 continue
             else:
-                child_locations = child_locations.filtered(lambda loc: loc.storage_category_id == putaway_rule.storage_category_id)
+                child_locations = child_locations.filtered(lambda loc: loc.storage_category_id == putaway_rule.storage_category_id and loc.id != location_out.id)
 
             # check if already have the product/package type stored
             for location in child_locations:
