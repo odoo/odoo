@@ -44,6 +44,9 @@ class SaleOrder(models.Model):
                                           "the order lines.")
     json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
     show_json_popover = fields.Boolean('Has late picking', compute='_compute_json_popover')
+    commitment_date = fields.Datetime(
+        string="Promised Delivery",
+        compute='_compute_commitment_date', inverse='_inverse_commitment_date', store=True)
 
     def _init_column_warehouse_id(self):
         """ Ensure the default warehouse_id is correctly assigned
@@ -155,16 +158,6 @@ class SaleOrder(models.Model):
                 picking = record.mapped('picking_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
                 picking.partner_id = new_partner
 
-        if 'commitment_date' in values:
-            # protagate commitment_date as the deadline of the related stock move.
-            # TODO: Log a note on each down document
-            deadline_datetime = values.get('commitment_date')
-            for order in self:
-                moves = order.order_line.move_ids.filtered(
-                    lambda m: m.state not in ('done', 'cancel') and m.location_dest_id.usage == 'customer'
-                )
-                moves.date_deadline = deadline_datetime or order.expected_date
-
         res = super().write(values)
         if values.get('order_line') and self.state == 'sale':
             for order in self:
@@ -216,6 +209,22 @@ class SaleOrder(models.Model):
                     order.warehouse_id = default_warehouse_id
                 else:
                     order.warehouse_id = order.user_id.with_company(order.company_id.id)._get_default_warehouse_id()
+
+    @api.depends('state', 'delivery_date')
+    def _compute_commitment_date(self):
+        for order in self:
+            if order.state == 'sale':
+                order.commitment_date = order.delivery_date
+
+    def _inverse_commitment_date(self):
+        for order in self:
+            # protagate commitment_date as the deadline of the related stock move.
+            # TODO: Log a note on each down document
+            deadline_datetime = order.commitment_date
+            moves = order.order_line.move_ids.filtered(
+                lambda m: m.state not in ('done', 'cancel') and m.location_dest_id.usage == 'customer'
+            )
+            moves.date_deadline = deadline_datetime or order.expected_date
 
     @api.onchange('partner_shipping_id')
     def _onchange_partner_shipping_id(self):
