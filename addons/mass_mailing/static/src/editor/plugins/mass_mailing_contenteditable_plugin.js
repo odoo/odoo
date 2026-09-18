@@ -22,5 +22,5 @@ export class MassMailingContenteditablePlugin extends Plugin {
 }
 
 registry
-    .category("basic-editor-plugins")
+    .category("mass_mailing-basic-editor-plugins")
     .add(MassMailingContenteditablePlugin.id, MassMailingContenteditablePlugin);

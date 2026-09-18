@@ -30,4 +30,6 @@ export class MassMailingSetupPlugin extends Plugin {
     }
 }
 
-registry.category("mass_mailing-plugins").add(MassMailingSetupPlugin.id, MassMailingSetupPlugin);
+registry
+    .category("mass_mailing-builder-plugins")
+    .add(MassMailingSetupPlugin.id, MassMailingSetupPlugin);
