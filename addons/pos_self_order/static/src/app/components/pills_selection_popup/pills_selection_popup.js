@@ -21,7 +21,7 @@ import { getDisplayDateInfo } from "@point_of_sale/utils";
  *         [subCategoryId]: {
  *           id: string,
  *           name: string,
- *           options: Array<{ id: string, name: string }>
+ *           options: Array<{ id: string, name: string, disabled: boolean }>
  *         }
  *      }
  *   }
