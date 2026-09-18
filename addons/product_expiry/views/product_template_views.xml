@@ -6,7 +6,7 @@
             <field name="inherit_id" ref="stock.product_template_form_view_stock" />
             <field name="arch" type="xml">
                 <group name="traceability" position="inside">
-                    <field name="use_expiration_date" string="Expiration Date" invisible="store_by not in ['lot', 'serial']"/>
+                    <field name="use_expiration_date" string="Expiration Date" groups="stock.group_production_lot" invisible="store_by not in ['lot', 'serial']"/>
                 </group>
                 <group name="stock_property" position="after">
                     <group string="Dates" name="expiry_and_lots" groups="stock.group_production_lot"
