@@ -63,6 +63,27 @@ READ_GROUP_AGGREGATE: Final[dict[str, Callable[[str, SQL], SQL]]] = {
 }
 
 
+#: the aggregate functions a non-stored compute answers by computing the field
+#: over each group's records and folding in Python (read_group/sql.py
+#: `_aggregates_through_records`); `recordset` and `any_value` are not among
+#: them, the first being the mechanism itself
+READ_GROUP_THROUGH_RECORDS: Final[frozenset[str]] = frozenset(
+    {
+        "sum",
+        "avg",
+        "min",
+        "max",
+        "count",
+        "count_distinct",
+        "array_agg",
+        "array_agg_distinct",
+        "bool_and",
+        "bool_or",
+        "sum_currency",
+    }
+)
+
+
 READ_GROUP_DISPLAY_FORMAT: Final[dict[str, str]] = {
     "hour": "hh:00 dd MMM",
     "day": "dd MMM yyyy",

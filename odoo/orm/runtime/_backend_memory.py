@@ -515,7 +515,9 @@ class _InMemoryReadGroup:
             return len
         fname, _property, func = parse_read_group_spec(spec)
         field = self.model._fields[fname]
-        if not field.column_type:
+        if not field.store and not self.model._aggregates_through_records(
+            field, func or ""
+        ):
             raise ValueError(f"Cannot convert {field} to SQL because it is not stored")
 
         storage = self.storage

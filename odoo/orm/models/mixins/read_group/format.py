@@ -15,6 +15,7 @@ from odoo.tools import (
     unique,
 )
 
+from .... import fields
 from ...._recordset import is_recordset
 from ....constants import (
     READ_GROUP_DISPLAY_FORMAT,
@@ -85,6 +86,11 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
             )
 
         fname, __, func = parse_read_group_spec(aggregate_spec)
+        field = self._fields.get(fname)
+        if field is not None and self._aggregates_through_records(field, func):
+            return self._read_group_fold_through_records(
+                field, func, raw_values, empty_value
+            )
         if func == "recordset":
             field = self._fields[fname]
             _debug.logic(
@@ -119,6 +125,97 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
             return (recordset(value) for value in raw_values)
 
         return ((value if value is not None else empty_value) for value in raw_values)
+
+    def _read_group_fold_through_records(
+        self, field, func: str, raw_values: Sequence, empty_value
+    ) -> Generator:
+        """Fold a non-stored compute over each group's records: the ids the
+        SELECT carried instead of a column (`_aggregates_through_records`),
+        browsed with one prefetch set so the field computes once for all
+        groups, then folded as the SQL aggregate would have folded a column.
+        A `False` value is the compute's NULL and is skipped as SQL skips
+        NULL, except by the array aggregates, which keep it as None."""
+        Model = self.env.registry[self._name]
+        prefetch_ids = tuple(
+            unique(id_ for ids in raw_values if ids for id_ in ids if id_)
+        )
+        all_records = Model(self.env, prefetch_ids, prefetch_ids)
+        if func == "sum_currency":
+            currency_field = self._fields[field.get_currency_field(self)]
+            to_currency = self.env.company.currency_id
+            today = fields.Date.context_today(self)
+
+        def value_of(record):
+            value = record[field.name]
+            if field.is_boolean:
+                return value
+            return None if value is False else value
+
+        def present(records):
+            return [v for v in (value_of(r) for r in records) if v is not None]
+
+        _debug.logic(
+            "read_group.postprocess.through_records",
+            model=self._name,
+            field=field.name,
+            func=func,
+            records=len(prefetch_ids),
+            groups=len(raw_values),
+        )
+
+        def fold(ids):
+            if not ids:
+                return empty_value
+            records = Model(self.env, tuple(unique(i for i in ids if i)), prefetch_ids)
+            if func == "sum_currency":
+                total = 0.0
+                for record in records:
+                    amount = value_of(record)
+                    if amount is None:
+                        continue
+                    currency = record[currency_field.name]
+                    total += (
+                        currency._convert(
+                            from_amount=amount,
+                            to_currency=to_currency,
+                            company=self.env.company,
+                            date=today,
+                        )
+                        if currency and currency != to_currency
+                        else amount
+                    )
+                return total
+            if func in ("array_agg", "array_agg_distinct"):
+                values = [value_of(r) for r in records]
+                if func == "array_agg_distinct":
+                    distinct = set(values)
+                    has_none = None in distinct
+                    distinct.discard(None)
+                    values = [*sorted(distinct), *([None] if has_none else [])]
+                return values or empty_value
+            values = present(records)
+            if func == "count":
+                return len(values)
+            if func == "count_distinct":
+                return len(set(values))
+            if not values:
+                return empty_value
+            if func == "sum":
+                return sum(values)
+            if func == "avg":
+                return sum(values) / len(values)
+            if func == "min":
+                return min(values)
+            if func == "max":
+                return max(values)
+            if func == "bool_and":
+                return all(values)
+            if func == "bool_or":
+                return any(values)
+            raise ValueError(f"Aggregate method {func!r} cannot fold {field}")
+
+        del all_records
+        return (fold(ids) for ids in raw_values)
 
     def _read_group_temporal_range(
         self, value, field, interval, granularity: str, locale: str, fmt: str

@@ -56,7 +56,9 @@ class Test_Read_GroupAggregateMonetary(models.Model):
         comodel_name="test_read_group.aggregate.monetary.related"
     )
 
-    currency_id = fields.Many2one(comodel_name="res.currency")
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+    )
     related_stored_currency_id = fields.Many2one(
         related="related_model_id.stored_currency_id"
     )
@@ -64,13 +66,24 @@ class Test_Read_GroupAggregateMonetary(models.Model):
         related="related_model_id.non_stored_currency_id"
     )
 
-    total_in_currency_id = fields.Monetary(currency_field="currency_id")
+    total_in_currency_id = fields.Monetary(
+        currency_field="currency_id",
+    )
     total_in_related_stored_currency_id = fields.Monetary(
         currency_field="related_stored_currency_id"
     )
     total_in_related_non_stored_currency_id = fields.Monetary(
         currency_field="related_non_stored_currency_id"
     )
+    total_twice = fields.Monetary(
+        currency_field="currency_id",
+        compute="_compute_total_twice",
+    )
+
+    @api.depends("total_in_currency_id")
+    def _compute_total_twice(self):
+        for record in self:
+            record.total_twice = record.total_in_currency_id * 2
 
 
 class Test_Read_GroupAggregate(models.Model):
@@ -248,6 +261,8 @@ class Test_Read_GroupTask(models.Model):
     integer_squared = fields.Integer(
         compute="_compute_integer_squared", value_sql="_integer_squared_sql"
     )
+    integer_doubled = fields.Integer(compute="_compute_integer_doubled")
+    is_big = fields.Boolean(compute="_compute_integer_doubled")
 
     @api.depends("user_ids")
     def _compute_lead_user_id(self):
@@ -258,6 +273,12 @@ class Test_Read_GroupTask(models.Model):
     def _compute_parity(self):
         for task in self:
             task.parity = "even" if task.integer % 2 == 0 else "odd"
+
+    @api.depends("integer")
+    def _compute_integer_doubled(self):
+        for task in self:
+            task.integer_doubled = task.integer * 2
+            task.is_big = task.integer >= 4
 
     @api.depends("integer")
     def _compute_integer_squared(self):

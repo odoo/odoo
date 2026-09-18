@@ -10,6 +10,7 @@ from ....constants import (
     READ_GROUP_AGGREGATE,
     READ_GROUP_ALL_TIME_GRANULARITY,
     READ_GROUP_NUMBER_GRANULARITY,
+    READ_GROUP_THROUGH_RECORDS,
     READ_GROUP_TIME_GRANULARITY,
     SQL_ORDER_DIR,
     SQL_ORDER_NULLS,
@@ -81,6 +82,14 @@ class _ReadGroupSQLMixin(_ModelStubs):
             SQL.identifier(alias_rate, "rate"),
         )
 
+    def _aggregates_through_records(self, field, func: str) -> bool:
+        return (
+            not field.store
+            and not field.related
+            and bool(field.compute)
+            and func in READ_GROUP_THROUGH_RECORDS
+        )
+
     def _read_group_select(self, aggregate_spec: str, query: Query) -> SQL:
         if aggregate_spec == "__count":
             return SQL("COUNT(*)")
@@ -101,6 +110,15 @@ class _ReadGroupSQLMixin(_ModelStubs):
 
         field = self._fields[fname]
         self._check_field_access(field, "read")
+        if self._aggregates_through_records(field, func):
+            _debug.logic(
+                "read_group.select.through_records",
+                model=self._name,
+                aggregate=aggregate_spec,
+            )
+            return READ_GROUP_AGGREGATE["recordset"](
+                self._table, SQL.identifier(self._table, "id")
+            )
         if func == "sum_currency":
             return self._read_group_select_sum_currency(field, fname, query)
 

@@ -127,48 +127,6 @@ class AccountAnalyticAccount(models.Model):
             self_context = self.with_context(analytic_plan_id=self.plan_id.id)
         return super(AccountAnalyticAccount, self_context).web_read(specification)
 
-    def _read_group_select(self, aggregate_spec, query):
-        # flag balance/debit/credit as aggregatable, and manually sum the values
-        # from the records in the group
-        if aggregate_spec in (
-            "balance:sum",
-            "balance:sum_currency",
-            "debit:sum",
-            "debit:sum_currency",
-            "credit:sum",
-            "credit:sum_currency",
-        ):
-            return super()._read_group_select("id:recordset", query)
-        return super()._read_group_select(aggregate_spec, query)
-
-    def _read_group_postprocess_aggregate(self, aggregate_spec, raw_values):
-        if aggregate_spec in (
-            "balance:sum",
-            "balance:sum_currency",
-            "debit:sum",
-            "debit:sum_currency",
-            "credit:sum",
-            "credit:sum_currency",
-        ):
-            field_name, op = aggregate_spec.split(":")
-            column = super()._read_group_postprocess_aggregate(
-                "id:recordset", raw_values
-            )
-            if op == "sum":
-                return (sum(records.mapped(field_name)) for records in column)
-            if op == "sum_currency":
-                return (
-                    sum(
-                        record.currency_id._convert(
-                            from_amount=record[field_name],
-                            to_currency=self.env.company.currency_id,
-                        )
-                        for record in records
-                    )
-                    for records in column
-                )
-        return super()._read_group_postprocess_aggregate(aggregate_spec, raw_values)
-
     @api.depends("line_ids.amount")
     def _compute_debit_credit_balance(self):
         def convert(amount, from_currency):

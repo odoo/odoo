@@ -109,6 +109,25 @@ process-lifetime cache must be registered in `CACHES_BY_KEY`. Detail:
 [*Concurrency, and why the process model is
 architectural*](runtime.md#concurrency-and-why-the-process-model-is-architectural).
 
+### A field's query behaviour is declared on the field, not dispatched by the model
+
+Where a field's SQL is not its column, the field says so: `value_sql`,
+`group_by_sql` and `order_by_sql` name the model method that composes the
+expression, the GROUP BY term or the ORDER BY term, and `group_by_field` /
+`order_by_field` name the stored field that stands in. An aggregate of a
+non-stored compute needs no declaration at all: `_read_group` selects the
+group's ids and folds the computed values in Python
+(`_aggregates_through_records`). The alternative — overriding
+`_field_to_sql`, `_read_group_groupby`, `_order_field_to_sql` or the
+`_read_group_select` pair on the model for one field and deferring to `super()`
+for the rest — is model-wide by construction: a reader looking for where one
+field gets its SQL finds a method every field goes through, and a tool that
+reads the model by its methods (the Rust engine's routing gate, which keys on
+method identity) must treat the whole model as Python. Declared, the same SQL
+is a static fact per field; the engine's export drops such a field from the
+kernel's registry so a query naming it falls back, and every other field on the
+model routes. Rule and signatures: `coding_guidelines.rst` §2.4.1.
+
 ### Access control is a model-layer concern, applied per operation
 
 Every model carries `AccessMixin` (`orm/models/mixins/access.py`), so checks are

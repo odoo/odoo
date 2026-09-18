@@ -1198,9 +1198,14 @@ database as "read path overridden in python" and served every grouped read on
 them from Python for a groupby nobody was asking for. Declared on the field, the
 same SQL is a static fact: the engine's export drops a field carrying any of the
 three from the kernel's registry, so a query naming it falls back to Python and
-every other field on the model routes. The model-method overrides that remain
-(``_read_group_select`` aggregate hooks, a custom granularity, an order term that
-is not a declared field) are the ones no field can yet declare.
+every other field on the model routes. **An aggregate of a non-stored compute needs no hook either**: ``_read_group``
+selects the group's ids and folds the computed values in Python
+(``_aggregates_through_records``), for ``sum``, ``avg``, ``min``, ``max``, the
+counts, the arrays, the booleans and ``sum_currency`` -- which is what
+``account.analytic.account`` spelled by hand for ``balance``, ``debit`` and
+``credit`` in two overrides. The model-method overrides that remain (a custom
+granularity, an order term that is not a declared field, an aggregate over a
+JSON column) are the ones no field can yet declare.
 
 **What the misused prefix costs is a collision, not a misreading** ``[review]``.
 A reserved prefix is a claim that a field declaration somewhere names this
