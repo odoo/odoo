@@ -407,7 +407,7 @@ export class CalendarModel extends Model {
 
         return data;
     }
-    makeContextDefaults(rawRecord) {
+    makeContextDefaults(rawRecord, { implicitEnd = false } = {}) {
         const { fieldMapping, scale } = this.meta;
 
         const context = { ...this.meta.context };
@@ -425,6 +425,11 @@ export class CalendarModel extends Model {
         }
         if (["month", "year"].includes(scale)) {
             context[`default_${fieldMapping.all_day || "allday"}`] = true;
+        }
+        if (implicitEnd) {
+            // The user did not pick an end (e.g. a single click), so server-side defaults
+            // may replace the defaulted end.
+            context.calendar_default_implicit_end = true;
         }
 
         return context;
