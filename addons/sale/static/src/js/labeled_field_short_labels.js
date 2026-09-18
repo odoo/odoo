@@ -8,17 +8,19 @@ import { _t } from "@web/core/l10n/translation";
  * function: at module load time, `_t` returns a lazy string that cannot be
  * evaluated yet.
  *
- * @return {Object} The abbreviated labels, by field name.
+ * Other modules can extend the labels by patching `shortLabels` and overriding
+ * `getShortLabels`, keeping each label registration close to the module that
+ * owns the field.
  */
-function getShortLabels() {
-    return {
-        margin: _t("M:"),
-        margin_percent: _t("M%:"),
-        price_total: _t("TI:"),
-        price_subtotal: _t("TE:"),
-        qty_delivered_percent: _t("D%:"),
-    };
-}
+export const shortLabels = {
+    getShortLabels() {
+        return {
+            price_total: _t("TI:"),
+            price_subtotal: _t("TE:"),
+            qty_delivered_percent: _t("D%:"),
+        };
+    },
+};
 
 /**
  * Get the abbreviated label of the provided field.
@@ -30,5 +32,5 @@ function getShortLabels() {
  * @return {String|undefined} The abbreviated label, if the field has one.
  */
 export function getShortLabel(name) {
-    return getShortLabels()[name];
+    return shortLabels.getShortLabels()[name];
 }
