@@ -141,6 +141,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
 
         # we can't send the ubl document again unless we regenerate the pdf
         move.invoice_pdf_report_id.unlink()
+        self.env.invalidate_all()  # recompute invoice_pdf_report_id
         with self._mock_send():
             wizard = self.create_send_and_print(move, default=True)
             self.assertEqual(wizard.invoice_edi_format, 'ubl_21_fr')
