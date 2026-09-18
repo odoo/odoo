@@ -269,7 +269,7 @@ test("pointer is added on top of overlay's stack", async () => {
 
     await mountWithCleanup(Root);
 
-    await getService("tour_service").startTour("tour1", { mode: "manual" });
+    await getService("tour_service").startTour("tour1", { mode: "manual", fromDB: true });
     getService("dialog").add(DummyDialog, {});
     await animationFrame();
     expect(`.o-overlay-item`).toHaveCount(2);
