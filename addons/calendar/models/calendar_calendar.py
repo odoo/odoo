@@ -36,7 +36,7 @@ class CalendarCalendar(models.Model):
     # Because we support importing shared calendars through sync, we can have calendars without an owner_id.
     owner_id = fields.Many2one('res.users', compute='_compute_owner_id')
     share_user_ids = fields.Many2many('res.users', string='Shared with', compute='_compute_share_user_ids',
-        inverse='_inverse_share_user_ids', domain="[('id', '!=', owner_id), ('share', '=', False)]")
+        inverse='_inverse_share_user_ids', domain="[('id', 'not in', [owner_id, uid]), ('share', '=', False)]")
     # The current user's membership record of this calendar, if any
     calendar_user_id = fields.Many2one(
         'calendar.user',
