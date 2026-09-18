@@ -1908,3 +1908,56 @@ class TestVariantsExclusion(ProductVariantsCommon):
         product_template._create_product_variant(product_template.attribute_line_ids.product_template_value_ids[1])
         self.assertEqual(len(product_template.product_variant_ids), 2)
         self.assertFalse(supplierinfo.product_id)
+
+
+@tagged('-post_install', 'at_install')  # breakes post install since stock overrides functionality
+class TestVariantsCreate(ProductVariantsCommon):
+    def test_qty_available_on_create(self):
+        """
+        Ensure that correct quantities are set when product.template is created.
+        Make sure that both `product.template` and `product.product` values are
+        set to the correct value.
+        The third product template should have quantities set to 0, since
+        it has multiple `product_variant_ids`.
+        """
+        product_templates = self.env['product.template'].create([
+            {
+                'name': 'Test Product 1',
+                'is_storable': True,
+                'qty_available': 10,
+            },
+            {
+                'name': 'Test Product 2',
+                'is_storable': True,
+                'qty_available': 5,
+            },
+            {
+                'name': 'Test Product 3',
+                'is_storable': True,
+                'qty_available': 20,
+                'attribute_line_ids': [
+                    Command.create({
+                        'attribute_id': self.size_attribute.id,
+                        'value_ids': [Command.link(self.size_attribute_s.id)],
+                    }),
+                    Command.create({
+                        'attribute_id': self.color_attribute.id,
+                        'value_ids': [Command.link(self.color_attribute_red.id), Command.link(self.color_attribute_blue.id)],
+                    }),
+                ],
+            }
+        ])
+
+        self.assertEqual(len(product_templates), 3)
+
+        self.assertEqual(product_templates[0].qty_available, 10)
+        self.assertEqual(product_templates[0].free_qty, 10)
+        self.assertEqual(product_templates[0].product_variant_ids.qty_available, 10)
+
+        self.assertEqual(product_templates[1].qty_available, 5)
+        self.assertEqual(product_templates[1].free_qty, 5)
+        self.assertEqual(product_templates[1].product_variant_ids.qty_available, 5)
+
+        self.assertEqual(len(product_templates[2].product_variant_ids), 2)
+        self.assertEqual(product_templates[2].qty_available, 0)
+        self.assertEqual(product_templates[2].free_qty, 0)
