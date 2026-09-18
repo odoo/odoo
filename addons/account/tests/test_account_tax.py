@@ -461,3 +461,11 @@ class TestAccountTax(AccountTestInvoicingCommon):
         # percentage tax, early exit
         search_method_ignored = get_search_method(0.125, 'REC 0.12 (Kopie)', amount_type='percent')
         self.assertIsNone(search_method_ignored)
+
+    def test_is_domestic_with_duplicate_tax(self):
+        """ Test that the is_domestic field is well computed when duplicating a tax """
+        tax = self.tax_sale_a
+        self.assertTrue(tax.company_id.domestic_fiscal_position_id in tax.fiscal_position_ids)
+        self.assertEqual(tax.is_domestic, True)
+        tax_copy = tax.copy({'name': 'new tax'})
+        self.assertEqual(tax_copy.is_domestic, True)
