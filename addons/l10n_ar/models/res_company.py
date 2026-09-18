@@ -18,6 +18,12 @@ class ResCompany(models.Model):
     l10n_ar_arca_activity_id = fields.Many2one(
         'l10n_ar.arca.activity', string='Principal Activity',
         help="Principal registered activity of the company. This is used to generate the IVA Simple CSV Tax Reports.")
+    l10n_ar_final_consumer_limit = fields.Monetary(
+        string="AR Final Consumer Max Amount",
+        default=10_000_000,
+        help="Order total above which a Consumidor Final must provide their DNI."
+        " Set by ARCA for sales to an unidentified Consumidor Final.",
+    )
 
     @api.onchange('country_id')
     def onchange_country(self):

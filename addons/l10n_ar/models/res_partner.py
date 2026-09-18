@@ -113,6 +113,15 @@ class ResPartner(models.Model):
         return {**super()._get_all_additional_identifiers_metadata(), **AR_ADDITIONAL_IDENTIFIERS_METADATA}
 
     @api.model
+    def _get_portal_additional_identifiers_whitelist(self, company=None, country=None):
+        whitelist = super()._get_portal_additional_identifiers_whitelist(company=company, country=country)
+        if company and company.account_fiscal_country_id.code == 'AR':
+            whitelist.add('PASSPORT')
+            if country and country.code == 'AR':
+                whitelist.update({'AR_CUIL', 'AR_DNI'})
+        return whitelist
+
+    @api.model
     def _commercial_fields(self):
         return super()._commercial_fields() + ['l10n_ar_afip_responsibility_type_id']
 
