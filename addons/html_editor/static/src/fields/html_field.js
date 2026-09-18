@@ -249,6 +249,7 @@ export class HtmlField extends Component {
         if (this.scope.isDestroyed()) {
             return;
         }
+        const recordResId = this.props.record?.resId;
         if (this.isDirty) {
             if (this.state.showCodeView) {
                 await this.updateValue(this.codeViewRef().value);
@@ -257,11 +258,17 @@ export class HtmlField extends Component {
             if (urgent) {
                 await this.updateValue(this.editor.getContent());
             }
+            if (recordResId !== this.props.record.resId) {
+                return;
+            }
             const changeId = this.lastChangeId;
             const editable = this.editor.editable;
             const el = await this.getEditorContent();
+            if (recordResId !== this.props.record.resId) {
+                return;
+            }
             this.pendingAttachmentsService.addPendingAttachments(
-                this.props.record?.resId,
+                recordResId,
                 extractUnmappedAttachmentsIds(editable)
             );
             const content = el.innerHTML;
