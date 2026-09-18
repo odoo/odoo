@@ -25,6 +25,7 @@ export class PaymentScreen extends Component {
     };
     props = useProps({
         orderUuid: t.string(),
+        editMode: t.boolean().optional(),
     });
 
     setup() {
@@ -396,5 +397,6 @@ registry.category("pos_pages").add("PaymentScreen", {
     route: `/pos/ui/${odoo.pos_config_id}/payment/{string:orderUuid}`,
     params: {
         orderUuid: true,
+        editMode: true,
     },
 });

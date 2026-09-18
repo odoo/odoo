@@ -1,5 +1,7 @@
 import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/l10n/translation";
 import { logPosMessage } from "./pretty_console_log";
+import { debounce } from "@web/core/utils/timing";
 
 const CONSOLE_COLOR = "#b56be3";
 /**
@@ -21,11 +23,88 @@ export default class DevicesSynchronisation {
     setup(dynamicModels, staticModels, posStore) {
         this.dynamicModels = new Set(dynamicModels);
         this.staticModels = new Set(staticModels);
+        this.orderNotifications = new Map();
+
         this.pos = posStore;
+        this.sound = posStore.sound;
+        this.notification = posStore.notification;
         this.models = posStore.models;
+        this.readDataFromServerDebounced = debounce(this.readDataFromServer.bind(this), 300);
 
         // Connect websocket to receive synchronisation notification
         this.pos.data.connectWebSocket("SYNCHRONISATION", this.collect.bind(this));
+        this.pos.data.connectWebSocket("SNOOZE_NOTIFICATION", (orderId) =>
+            this.snoozeNotification(orderId, false)
+        );
+    }
+
+    /**
+     * When an order is received from another device, display a notification to the user.
+     * @param {Object} order - The order object received from another device.
+     */
+    async displayNotification(order) {
+        if (this.orderNotifications.has(order.id)) {
+            return;
+        }
+
+        if (this.orderNotifications.size === 0) {
+            this.sound.play("order-receive-tone", {
+                loop: true,
+                volume: 1,
+            });
+        }
+
+        const button = {
+            name: _t("Review Order"),
+            onClick: () => {
+                const isPaid = ["paid", "done"].includes(order.state);
+                const stateOverride = {
+                    selectedPreset: order.preset_id || false,
+                    filter: isPaid ? "SYNCED" : "ACTIVE_ORDERS",
+                    search: {
+                        fieldName: "REFERENCE",
+                        searchTerm: order.getName(),
+                    },
+                };
+
+                this.pos.setOrder(order);
+                this.pos.navigate("TicketScreen", { stateOverride });
+                this.snoozeNotification(order.id, true);
+            },
+        };
+        const notificationDesc = _t("A new order just arrived - %s!", order.getName());
+        const closeNotification = this.notification.add(notificationDesc, {
+            type: "success",
+            sticky: true,
+            buttons: [button],
+            onClose: this.snoozeNotification.bind(this, order.id, true),
+        });
+
+        this.orderNotifications.set(order.id, closeNotification);
+    }
+
+    /**
+     * When another device snoozes a notification for an order.
+     * @param {Number} orderId - The ID of the order for which the notification was snoozed.
+     */
+    snoozeNotification(orderId, notify = false) {
+        const snoozer = this.orderNotifications.get(orderId);
+        if (!snoozer) {
+            return;
+        }
+
+        // Delete before closing: the notification's onClose calls back into
+        // this method, and it would recurse until the stack blows otherwise.
+        this.orderNotifications.delete(orderId);
+        snoozer();
+
+        if (!this.orderNotifications.size) {
+            this.sound.stop("order-receive-tone");
+        }
+
+        if (notify) {
+            this.pos.data.call("pos.order", "snooze_notification", [orderId]);
+        }
     }
 
     /**
@@ -83,7 +162,7 @@ export default class DevicesSynchronisation {
             this.processDeletedRecords(deleted_record_ids);
         }
 
-        return await this.readDataFromServer();
+        return await this.readDataFromServerDebounced();
     }
 
     /**
