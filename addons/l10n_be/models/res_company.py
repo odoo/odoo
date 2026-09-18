@@ -47,30 +47,17 @@ class ResCompany(models.Model):
             vat_disabled_purchase_06 = _get_or_create_chart_template_record(company, 'account.tax', 'attn_VAT-IN-06-ND', chart_template_data)
             vat_disabled_purchase_00 = _get_or_create_chart_template_record(company, 'account.tax', 'attn_VAT-IN-00-ND', chart_template_data)
             vat_disabled_purchase_taxes = vat_disabled_purchase_21 | vat_disabled_purchase_12 | vat_disabled_purchase_06 | vat_disabled_purchase_00
-            vat_disabled_purchase_21.original_tax_ids = self.env['account.tax'].with_context(active_test=False).search([
+            replaced_taxes = self.env['account.tax'].with_context(active_test=False)._read_group([
                 *self.env['account.tax']._check_company_domain(company),
                 ('type_tax_use', '=', 'purchase'),
-                ('amount', '=', 21),
-                ('id', '!=', vat_disabled_purchase_21.id),
-            ])
-            vat_disabled_purchase_12.original_tax_ids = self.env['account.tax'].with_context(active_test=False).search([
-                *self.env['account.tax']._check_company_domain(company),
-                ('type_tax_use', '=', 'purchase'),
-                ('amount', '=', 12),
-                ('id', '!=', vat_disabled_purchase_12.id),
-            ])
-            vat_disabled_purchase_06.original_tax_ids = self.env['account.tax'].with_context(active_test=False).search([
-                *self.env['account.tax']._check_company_domain(company),
-                ('type_tax_use', '=', 'purchase'),
-                ('amount', '=', 6),
-                ('id', '!=', vat_disabled_purchase_06.id),
-            ])
-            vat_disabled_purchase_00.original_tax_ids = self.env['account.tax'].with_context(active_test=False).search([
-                *self.env['account.tax']._check_company_domain(company),
-                ('type_tax_use', '=', 'purchase'),
-                ('amount', '=', 0),
-                ('id', '!=', vat_disabled_purchase_00.id),
-            ])
+                ('amount', 'in', [21, 12, 6, 0]),
+                ('id', 'not in', vat_disabled_purchase_taxes.ids),
+            ], groupby=['amount'], aggregates=['id:recordset'])
+            replaced_taxes_per_amount = dict(replaced_taxes)
+            vat_disabled_purchase_21.original_tax_ids = replaced_taxes_per_amount.get(21)
+            vat_disabled_purchase_12.original_tax_ids = replaced_taxes_per_amount.get(12)
+            vat_disabled_purchase_06.original_tax_ids = replaced_taxes_per_amount.get(6)
+            vat_disabled_purchase_00.original_tax_ids = replaced_taxes_per_amount.get(0)
 
             if company.vat_disabled:
                 company.account_purchase_receipt_fiscal_position_id = no_subject_to_vat_fp
