@@ -7,7 +7,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.fields import Domain
+from odoo.fields import Command, Domain
 
 
 class StockLocation(models.Model):
@@ -558,16 +558,6 @@ class StockRoute(models.Model):
             domain = [('company_id', '=', loc.company_id.id)] if loc.company_id else []
             loc.warehouse_domain_ids = self.env['stock.warehouse'].search(domain)
 
-    @api.onchange('company_id')
-    def _onchange_company(self):
-        if self.company_id:
-            self.warehouse_ids = self.warehouse_ids.filtered(lambda w: w.company_id == self.company_id)
-
-    @api.onchange('warehouse_selectable')
-    def _onchange_warehouse_selectable(self):
-        if not self.warehouse_selectable:
-            self.warehouse_ids = [(5, 0, 0)]
-
     def write(self, vals):
         if 'active' in vals:
             rules = self.with_context(active_test=False).rule_ids.sudo().filtered(lambda rule: rule.location_dest_id.active)
@@ -575,10 +565,18 @@ class StockRoute(models.Model):
                 rules.action_unarchive()
             else:
                 rules.action_archive()
+        warehouse_vals = []
         if 'warehouse_ids' in vals:
             old_warehouses = {route.id: route.warehouse_ids for route in self}
+        if 'warehouse_selectable' in vals and not vals.get('warehouse_selectable'):
+            warehouse_vals = [Command.clear()]
+        if vals.get('company_id') and not warehouse_vals:
+            warehouse_vals = [Command.unlink(wh.id) for wh in self.sudo().warehouse_ids if wh.company_id.id != vals.get('company_id')]
+        if warehouse_vals:
+            # Need to sudo this as warehouses could be defined in other companies, but wouldn't be cleared.
+            self.sudo().with_context(bypass_global_route_sync=True).write({'warehouse_ids': warehouse_vals})
         res = super().write(vals)
-        if 'warehouse_ids' in vals:
+        if 'warehouse_ids' in vals and not self.env.context.get('bypass_global_route_sync'):
             changed_warehouses = {
                 route: (old_warehouses[route.id] - route.warehouse_ids) | (route.warehouse_ids - old_warehouses[route.id])
                 for route in self
