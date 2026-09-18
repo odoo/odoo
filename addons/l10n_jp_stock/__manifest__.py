@@ -9,7 +9,7 @@
     ],
     'data': [
         'security/ir.access.csv',
-        'wizards/total_average_cost_views.xml',
+        'wizard/total_average_cost_views.xml',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
