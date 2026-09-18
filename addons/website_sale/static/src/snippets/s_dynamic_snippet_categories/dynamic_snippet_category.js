@@ -10,10 +10,10 @@ export class DynamicSnippetCategory extends DynamicSnippet {
         super.setup();
         this.templateKey = 'website_sale.s_dynamic_snippet_category.grid';
         const nodeData = this.el.dataset;
-        nodeData.button = nodeData.button || _t("Explore Now");
+        const buttonText = nodeData.button || _t("Explore Now");
         // Pass custom data to the template.
         nodeData.customTemplateData = JSON.stringify({
-            buttonText: nodeData.button,
+            buttonText: buttonText,
             includeParent: nodeData.parentCategoryId && nodeData.showParent,
             parentCategoryId: parseInt(nodeData.parentCategoryId),
         });

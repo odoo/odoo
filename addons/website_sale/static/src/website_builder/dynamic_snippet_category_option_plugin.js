@@ -26,6 +26,7 @@ export class DynamicSnippetCategoryOptionPlugin extends Plugin {
         if (snippetEl.matches("section.s_dynamic_snippet_category")) {
             for (const [optionName, value] of [
                 ['showParent', true],
+                ['templateKey', TEMPLATE_OPTIONS.clickable],
                 ['columns', 4],
                 ['rounded', 2],
                 ['gap', 3],
@@ -45,11 +46,14 @@ export class DynamicSnippetCategoryOptionPlugin extends Plugin {
 
 export class ToggleClickableAction extends BuilderAction {
     static id = 'toggleClickable';
+    isApplied({ editingElement }) {
+        return editingElement.dataset.templateKey === TEMPLATE_OPTIONS.clickable;
+    }
     apply({ editingElement }) {
-        const nodeData = editingElement.dataset;
-        nodeData.templateKey = nodeData.templateKey === TEMPLATE_OPTIONS['default']
-            ? TEMPLATE_OPTIONS['clickable']
-            : TEMPLATE_OPTIONS['default'];
+        editingElement.dataset.templateKey = TEMPLATE_OPTIONS.clickable;
+    }
+    clean({ editingElement }) {
+        editingElement.dataset.templateKey = TEMPLATE_OPTIONS.default;
     }
 }
 
