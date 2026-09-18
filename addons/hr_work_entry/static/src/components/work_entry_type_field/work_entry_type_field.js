@@ -1,11 +1,29 @@
 import { Component, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import {
     buildM2OFieldDescription,
     many2OneFieldProps,
 } from "@web/views/fields/many2one/many2one_field";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 
+//List View Widget
+export class WorkEntryTypeBadgeField extends Component {
+    static template = "hr_work_entry.WorkEntryTypeBadgeField";
+    props = useProps(standardFieldProps);
+}
+
+export const workEntryTypeBadgeField = {
+    component: WorkEntryTypeBadgeField,
+    fieldDependencies: [
+        { name: "color", type: "integer" },
+        { name: "display_code", type: "char" },
+        { name: "name", type: "char" },
+    ],
+};
+registry.category("fields").add("work_entry_type_badge", workEntryTypeBadgeField);
+
+//Form View M2O Widget
 export class WorkEntryTypeMany2One extends Many2One {
     /**
      * @override
@@ -46,11 +64,15 @@ export class Many2OneWorkEntryTypeField extends Component {
             specification: { display_code: 1, color: 1 },
         };
     }
+
+    get workEntryTypeData() {
+        return this.props.record.data[this.props.name];
+    }
 }
 
 export const many2OneWorkEntryTypeField = {
     ...buildM2OFieldDescription(Many2OneWorkEntryTypeField),
-    fieldDependencies: [
+    relatedFields: [
         { name: "display_code", type: "char" },
         { name: "color", type: "char" },
     ],
