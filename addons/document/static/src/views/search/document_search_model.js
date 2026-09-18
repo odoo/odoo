@@ -244,12 +244,12 @@ export class DocumentsSearchModel extends SearchModel {
         if (activeFolderId === "TRASH") {
             return [
                 { name: "create_date", asc: false },
-                { name: "is_folder", asc: false },
+                { name: "is_folder", asc: true },
             ];
         }
         if (activeFolderId === "RECENT") {
             return [
-                { name: "is_folder", asc: true },
+                { name: "is_folder", asc: false },
                 { name: "last_access_date_group", asc: false },
                 { name: "write_date", asc: false },
             ];

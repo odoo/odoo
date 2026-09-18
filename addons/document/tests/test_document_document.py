@@ -1282,7 +1282,7 @@ class TestCaseDocuments(TransactionCaseDocuments):
         doc_4 = self.env["document.document"].create([{"name": "D4"}])
         docs = doc_1 | doc_2 | doc_3 | doc_4
         result = self.env["document.document"].search(
-            [("id", "in", docs.ids)], order="is_folder, create_date DESC, id DESC"
+            [("id", "in", docs.ids)], order="is_folder DESC, create_date DESC, id DESC"
         )
 
         self.assertEqual(result[0], doc_2)

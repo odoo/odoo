@@ -144,22 +144,15 @@ class DocumentsDocument(models.Model):
             now - relativedelta(months=1),
         )
 
-    def _order_field_to_sql(
-        self, alias: str, field_name: str, direction: SQL, nulls: SQL, query: Any
+    def _order_by_sql_last_access_date_group(
+        self, field, alias: str, direction: SQL, nulls: SQL, query: Any
     ) -> SQL:
-        if field_name == "last_access_date_group":
-            sql_field = SQL(
-                "SELECT last_access_date FROM document_access WHERE partner_id = %s AND document_id = %s",
-                self.env.user.partner_id.id,
-                SQL.identifier(alias, "id"),
-            )
-            return SQL("(%s) %s %s", sql_field, direction, nulls)
-
-        if field_name == "is_folder":
-            sql_field = SQL("%s != 'folder'", SQL.identifier(alias, "type"))
-            return SQL("(%s) %s %s", sql_field, direction, nulls)
-
-        return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
+        sql_field = SQL(
+            "(SELECT last_access_date FROM document_access WHERE partner_id = %s AND document_id = %s)",
+            self.env.user.partner_id.id,
+            SQL.identifier(alias, "id"),
+        )
+        return self._order_value_to_sql(sql_field, direction, nulls, query)
 
     @api.model
     def _search_panel_get_folder_counts(self, model_domain: Domain) -> dict:

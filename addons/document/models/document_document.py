@@ -18,7 +18,7 @@ from odoo.exceptions import AccessError, MissingError, UserError, ValidationErro
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.filesystem import get_extension
-from odoo.tools import groupby
+from odoo.tools import SQL, groupby
 from odoo.tools.date_utils import time_unit_selection
 from odoo.tools.image import image_process
 from odoo.tools.misc import clean_context
@@ -186,6 +186,9 @@ class DocumentsDocument(models.Model):
         index=True,
         readonly=True,
         required=True,
+    )
+    is_folder = fields.Boolean(
+        compute="_compute_is_folder", order_by_sql="_order_by_sql_is_folder"
     )
     thumbnail = fields.Binary(
         attachment=True,
@@ -391,6 +394,7 @@ class DocumentsDocument(models.Model):
 
     last_access_date_group = fields.Selection(
         value_sql="_last_access_date_group_sql",
+        order_by_sql="_order_by_sql_last_access_date_group",
         selection=[
             ("0_older", "Older"),
             ("1_month", "This Month"),
@@ -1446,6 +1450,21 @@ class DocumentsDocument(models.Model):
 
         for record in accessible_records - folders:
             record.display_name = record.name
+
+    @api.depends("type")
+    def _compute_is_folder(self):
+        for document in self:
+            document.is_folder = document.type == "folder"
+
+    def _order_by_sql_is_folder(self, field, alias, direction, nulls, query):
+        # the term agrees with the value: folders are True, so "is_folder desc"
+        # lists them first, as the list view and the search model ask
+        return self._order_value_to_sql(
+            SQL("(%s = 'folder')", SQL.identifier(alias, "type")),
+            direction,
+            nulls,
+            query,
+        )
 
     @api.depends("name", "type", "shortcut_document_id.name")
     def _compute_file_extension(self) -> None:
