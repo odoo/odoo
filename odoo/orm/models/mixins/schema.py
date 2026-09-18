@@ -160,6 +160,15 @@ class SchemaMixin(_ModelStubs):
                         " NOT NULL" if field.required else ""
                     )
 
+                root_table = self._table_inheritance_root
+                inherits = (
+                    root_table if root_table and root_table != self._table else None
+                )
+                if inherits and not sql.table_exists(cr, inherits):
+                    sql.create_model_table(cr, inherits)
+                    _debug.lifecycle(
+                        "schema.root_table_created", model=self._name, table=inherits
+                    )
                 sql.create_model_table(
                     cr,
                     self._table,
@@ -171,6 +180,7 @@ class SchemaMixin(_ModelStubs):
                         )
                         if field.name != "id" and field.is_column
                     ],
+                    inherits=inherits,
                 )
                 _debug.lifecycle(
                     "schema.table_created", model=self._name, table=self._table

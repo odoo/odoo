@@ -1344,14 +1344,14 @@ class TestIrActionsUnlinkFollowsTheStorage(TransactionCase):
             with self.subTest(model=name):
                 self.assertIn(name, by_table[self.env[name]._table])
 
-    def test_the_root_table_is_the_only_ambiguous_one(self):
+    def test_every_table_of_the_tree_names_exactly_one_model(self):
         Actions = self.env["ir.actions.actions"]
-        ambiguous = {
-            table: names
-            for table, names in Actions._get_model_names_by_table().items()
-            if len(names) > 1
-        }
-        self.assertEqual(list(ambiguous), [Actions._table])
+        by_table = Actions._get_model_names_by_table()
+        self.assertEqual(
+            {table: len(names) for table, names in by_table.items()},
+            dict.fromkeys(by_table, 1),
+        )
+        self.assertEqual(by_table[Actions._table], ("ir.actions.actions",))
 
     def test_an_already_deleted_id_unlinks_like_any_other_model(self):
         action = self.env["ir.actions.act_url"].create(

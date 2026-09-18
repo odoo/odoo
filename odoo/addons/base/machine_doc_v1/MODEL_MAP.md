@@ -11,15 +11,19 @@ file per type, each inheriting `ir.actions.actions`.
 
 ### models/ir_actions_actions.py
 
-#### IrActions — `ir.actions.actions` (`_name`, `_table = ir_actions`)
+#### IrActions — `ir.actions.actions` (`_name`, `_table = ir_actions`, inherits `mixin.table.inheritance.root`)
 
-Base action model. All action types inherit from this.
+Base action model. All action types inherit from this, each with its own
+PostgreSQL table `INHERITS (ir_actions)`, created by the ORM from
+`_table_inheritance_root`. The root table itself is sealed by a
+`CHECK (false) NO INHERIT` constraint at init, after any row still sitting in
+it is moved to the table its `type` names.
 
 **Fields:**
 - `name` (Char, required, translatable)
 - `type` (Char, required) — Action type discriminator
 - `xml_id` (Char, computed) — External identifier
-- `path` (Char) — URL path (unique constraint)
+- `path` (Char) — URL path; uniqueness lives in `ir.actions.path`
 - `help` (Html, translatable) — Empty list help text
 - `binding_model_id` (Many2one → ir.model) — Model to bind action to
 - `binding_type` (Selection) — `action` or `report`
@@ -28,7 +32,7 @@ Base action model. All action types inherit from this.
 **Key Methods:**
 - `get_bindings(model_name)` — Retrieve bound actions for a model
 - `_get_action_dict_by_xml_id(full_xml_id)` — Read the action with this XML ID as a client-ready dict
-- `_get_action_dict()` — Return action data dict for webclient
+- `_get_action_dict()` — Return action data dict for webclient; `type` is the concrete model, not the stored column
 - `_get_fields_readable()` — Fields safe for web access
 
 ### models/ir_actions_path.py
@@ -89,9 +93,10 @@ View ordering within a window action.
 
 ### models/ir_actions_act_window_close.py
 
-#### IrActionsAct_Window_Close — `ir.actions.act_window_close` (`_name`, inherits actions)
+#### IrActionsAct_Window_Close — `ir.actions.act_window_close` (`_name`, `_table = ir_act_window_close`, inherits actions)
 
-Close window action. Minimal — just inherits type.
+Close window action. Minimal — just inherits type. Almost always returned as a
+dict from Python rather than stored; its table exists so the root stays empty.
 
 ### models/ir_actions_act_url.py
 
@@ -953,6 +958,22 @@ HTTP routing, authentication, and request dispatch.
 ---
 
 ## Module System
+
+### models/mixin_table_inheritance_root.py
+
+#### MixinTableInheritanceRoot — `mixin.table.inheritance.root` (AbstractModel)
+
+The machinery a PostgreSQL table-inheritance tree needs (`ir.actions.actions`,
+`resource.asset`): the concrete model of a row from its `tableoid`, root-level
+`write`/`unlink` dispatched to the concrete models, `ondelete` enforced in Python
+because no foreign key can target an inherited row, and a check at `init` that
+every subtype table really inherits the root.
+
+**Key Methods:**
+- `_get_concrete()` — The record re-browsed on its concrete model
+- `_get_model_names_concrete()` — Concrete model per id, from `tableoid` cross-checked with the type column
+- `_check_table_inheritance()` — Raise at init when the table does not inherit the declared root
+- `_apply_ondelete_unenforced()` — Cascade / set null / restrict for every relation the database cannot enforce
 
 ### models/mixin_module_link.py
 

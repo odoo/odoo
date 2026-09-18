@@ -1,13 +1,3 @@
-CREATE TABLE ir_actions (
-  id serial,
-  primary key(id)
-);
-CREATE TABLE ir_act_window (primary key(id)) INHERITS (ir_actions);
-CREATE TABLE ir_act_report_xml (primary key(id)) INHERITS (ir_actions);
-CREATE TABLE ir_act_url (primary key(id)) INHERITS (ir_actions);
-CREATE TABLE ir_act_server (primary key(id)) INHERITS (ir_actions);
-CREATE TABLE ir_act_client (primary key(id)) INHERITS (ir_actions);
-
 CREATE TABLE res_users (
     id serial NOT NULL,
     -- No FK references below, will be added later by ORM

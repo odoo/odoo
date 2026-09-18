@@ -108,6 +108,34 @@ class MixinTableInheritanceRoot(models.AbstractModel):
             by_table[self.env[model_name]._table].append(model_name)
         return frozendict({table: tuple(sorted(n)) for table, n in by_table.items()})
 
+    @api.private
+    def init(self) -> None:
+        super().init()
+        self._check_table_inheritance()
+
+    def _check_table_inheritance(self) -> None:
+        root_table = self._table_inheritance_root
+        if not root_table or self._table == root_table:
+            return
+        self.env.cr.execute(
+            SQL(
+                "SELECT 1 FROM pg_inherits i"
+                " JOIN pg_class c ON c.oid = i.inhrelid"
+                " JOIN pg_class p ON p.oid = i.inhparent"
+                " WHERE c.relname = %s AND p.relname = %s"
+                " AND c.relnamespace = current_schema::regnamespace",
+                self._table,
+                root_table,
+            )
+        )
+        if self.env.cr.fetchone():
+            return
+        raise ValueError(
+            f"{self._name} declares _table_inheritance_root = {root_table!r} but "
+            f"table {self._table!r} does not inherit it; the rows of one would be "
+            f"invisible to the other."
+        )
+
     def _get_type_field_name(self) -> str:
         """The stored column naming a row's concrete model, cross-checked
         against the table it was found in. Empty where the tree keeps none, and

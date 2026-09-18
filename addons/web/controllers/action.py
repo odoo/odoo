@@ -60,11 +60,11 @@ class Action(Controller):
                     _("The action '%s' does not exist.", action_id)
                 ) from exc
 
-        base_action = Actions.browse([action_id]).sudo().read(["type"])
-        if not base_action:
-            dbg.logic.debug("[action:%s] load: no base action row", action_id)
+        action = Actions.sudo().browse(action_id)._get_concrete()
+        if action._name == Actions._name or not action.exists():
+            dbg.logic.debug("[action:%s] load: no concrete action row", action_id)
             raise MissingActionError(_("The action '%s' does not exist", action_id))
-        action_type = base_action[0]["type"]
+        action_type = action._name
         if action_type == "ir.actions.report":
             dbg.logic.debug("[action:%s] load: report -> bin_size", action_id)
             request.update_context(bin_size=True)

@@ -1,9 +1,10 @@
-"""The vehicle table, which the ORM does not create.
+"""The vehicle table, created before the schema pass would.
 
-A table that inherits another is written by hand -- `base/data/base_data.sql`
-does the same for `ir_act_window` and its siblings -- because the schema pass
-only knows how to make an ordinary one. It has to exist before that pass runs,
-which is `pre_init_hook` on an install and the pre-migration on an upgrade.
+The ORM creates a table that inherits another from `_table_inheritance_root`,
+but only at the schema pass, and the rows of vehicle kind have to move out of
+`resource_asset` before that pass reads them -- which is `pre_init_hook` on an
+install and the pre-migration on an upgrade. So the table is made here, early,
+and the schema pass finds it in place.
 """
 
 import logging

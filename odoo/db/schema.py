@@ -199,13 +199,17 @@ SQL_ORDER_BY_TYPE = defaultdict(
 
 
 def create_model_table(
-    cr: BaseCursor, tablename: str, comment: str | None = None, columns: Sequence = ()
+    cr: BaseCursor,
+    tablename: str,
+    comment: str | None = None,
+    columns: Sequence = (),
+    inherits: str | None = None,
 ) -> None:
     for colname, coltype, _ in columns:
         if not _SQL_TYPE_TOKEN.fullmatch(coltype):
             raise _refuse_column_type(coltype, tablename, colname)
     colspecs = [
-        SQL("id SERIAL NOT NULL"),
+        *([] if inherits else [SQL("id SERIAL NOT NULL")]),
         *(
             SQL("%s %s", SQL.identifier(colname), SQL(coltype))
             for colname, coltype, _ in columns
@@ -214,9 +218,10 @@ def create_model_table(
     ]
     queries = [
         SQL(
-            "CREATE TABLE %s (%s)",
+            "CREATE TABLE %s (%s)%s",
             SQL.identifier(tablename),
             SQL(", ").join(colspecs),
+            SQL(" INHERITS (%s)", SQL.identifier(inherits)) if inherits else SQL(""),
         ),
     ]
     if comment:

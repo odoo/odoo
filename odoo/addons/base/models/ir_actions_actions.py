@@ -6,12 +6,13 @@ from typing import Any, Self
 
 from odoo import api, fields, models, tools
 from odoo.api import ValuesType
+from odoo.db import schema as sql
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.libs.datetime import timezone
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_compare
-from odoo.tools import _, frozendict
+from odoo.tools import SQL, _, frozendict
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -42,37 +43,39 @@ def _eval_with_missing_names_false(expr: str, eval_ctx: dict[str, Any]) -> Any:
             eval_ctx[name] = False
 
 
-def _eval_dict_or_default(
-    expr: str | None, eval_ctx: dict[str, Any], default: Any
+def _eval_or_default(
+    expr: str | None, eval_ctx: dict[str, Any], default: Any, expected: type
 ) -> Any:
+    kind = expected.__name__
     try:
-        result = _eval_with_missing_names_false(expr or "{}", eval_ctx)
+        result = _eval_with_missing_names_false(expr or repr(expected()), eval_ctx)
     except Exception as exc:
         if not isinstance(exc.__cause__, NameError):
             _logger.warning("Malformed action expression %r: %s", expr, exc)
-        _debug.logic("expression_defaulted", kind="dict", error=type(exc).__name__)
+        _debug.logic("expression_defaulted", kind=kind, error=type(exc).__name__)
         return default
-    if isinstance(result, dict):
+    if isinstance(result, expected):
         return result
-    _debug.logic("expression_defaulted", kind="dict", got=type(result).__name__)
+    _debug.logic("expression_defaulted", kind=kind, got=type(result).__name__)
     _logger.warning(
-        "Action expression %r evaluates to %s, not a dict", expr, type(result).__name__
+        "Action expression %r evaluates to %s, not a %s",
+        expr,
+        type(result).__name__,
+        kind,
     )
     return default
+
+
+def _eval_dict_or_default(
+    expr: str | None, eval_ctx: dict[str, Any], default: Any
+) -> Any:
+    return _eval_or_default(expr, eval_ctx, default, dict)
 
 
 def _eval_list_or_default(
     expr: str | None, eval_ctx: dict[str, Any], default: Any
 ) -> Any:
-    try:
-        result = safe_eval(expr or "[]", eval_ctx)
-    except Exception as exc:
-        _debug.logic("expression_defaulted", kind="list", error=type(exc).__name__)
-        return default
-    if not isinstance(result, list):
-        _debug.logic("expression_defaulted", kind="list", got=type(result).__name__)
-        return default
-    return result
+    return _eval_or_default(expr, eval_ctx, default, list)
 
 
 class IrActionsActions(models.Model):
@@ -150,6 +153,67 @@ class IrActionsActions(models.Model):
         "hierarchy",
         "activity",
     )
+
+    _ROOT_ROWS_CONSTRAINT = "ir_actions_root_holds_no_rows"
+
+    @api.private
+    def init(self) -> None:
+        super().init()
+        if self._name == self._get_root_model_name():
+            self.pool.post_init(self._seal_root_table)
+
+    def _seal_root_table(self) -> None:
+        cr = self.env.cr
+        if sql.get_constraint_definition(cr, self._table, self._ROOT_ROWS_CONSTRAINT):
+            return
+        moved = self._move_rows_out_of_root_table()
+        cr.execute(SQL("SELECT count(*) FROM ONLY %s", SQL.identifier(self._table)))
+        if stray := cr.fetchone()[0]:
+            _logger.error(
+                "%d row(s) sit in %s itself with a type that names no subtype table; "
+                "they are unreachable through any concrete action model and block "
+                "the constraint that keeps the root empty.",
+                stray,
+                self._table,
+            )
+            return
+        sql.add_constraint(
+            cr, self._table, self._ROOT_ROWS_CONSTRAINT, "CHECK (false) NO INHERIT"
+        )
+        _debug.lifecycle("root_table_sealed", table=self._table, moved=moved)
+
+    def _move_rows_out_of_root_table(self) -> int:
+        cr = self.env.cr
+        moved = 0
+        columns = SQL(", ").join(
+            SQL.identifier(name) for name in sql.get_table_columns(cr, self._table)
+        )
+        for model_name in self._get_model_names_in_tree():
+            table = self.env[model_name]._table
+            if table == self._table or not sql.table_exists(cr, table):
+                continue
+            cr.execute(
+                SQL(
+                    "WITH moved AS ("
+                    " DELETE FROM ONLY %(root)s WHERE type = %(type)s RETURNING *)"
+                    " INSERT INTO %(table)s (%(columns)s)"
+                    " SELECT %(columns)s FROM moved",
+                    root=SQL.identifier(self._table),
+                    table=SQL.identifier(table),
+                    type=model_name,
+                    columns=columns,
+                )
+            )
+            if cr.rowcount:
+                moved += cr.rowcount
+                _logger.info(
+                    "%d %s row(s) moved from %s into %s.",
+                    cr.rowcount,
+                    model_name,
+                    self._table,
+                    table,
+                )
+        return moved
 
     @api.constrains("type")
     def _check_type(self) -> None:
@@ -474,7 +538,7 @@ class IrActionsActions(models.Model):
         _debug.perf.count(
             "action_dict", action=self.id, type=self._name, fields=len(readable)
         )
-        return self.sudo().read(readable)[0]
+        return {**self.sudo().read(readable)[0], "type": self._name}
 
     def _get_fields_readable(self) -> frozenset[str]:
         return frozenset(
