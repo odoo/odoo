@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
 definePosModels();
 
@@ -70,4 +71,18 @@ test("Local changes must survive a synchronisation triggered by another device",
     await store.syncAllOrders();
     expect(order.lines).toHaveLength(3);
     expect(order.lines.every((l) => l.isSynced === true)).toBe(true);
+});
+
+test("A stale draft read does not reopen a paid order", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    order.state = "paid";
+    await store.syncAllOrders();
+    expect(order.finalized).toBe(true);
+
+    // The answer of a read started before the payment was committed
+    const staleOrder = { ...order.raw, state: "draft" };
+    onRpc("pos.order", "read_pos_orders", () => ({ "pos.order": [staleOrder] }));
+    await store.data.loadServerOrders([["state", "=", "draft"]]);
+    expect(order.state).toBe("paid");
 });
