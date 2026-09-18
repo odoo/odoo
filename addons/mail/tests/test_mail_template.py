@@ -308,7 +308,7 @@ class TestMailTemplate(MailCommon):
             (
                 # Note: lxml build against libxml2 2.14.0+ interprets slightly differently malformed HTMl snippets
                 """<p ou="<p t-out="object.name">"</p>""",
-                '<p ou="&lt;p t-out=" object.name"="">"</p>' if LIBXML_VERSION >= (2, 14, 0) else '<p ou="&lt;p t-out=" object.name="">"</p>',
+                '<p ou="&lt;p t-out=" object.name">"</p>' if LIBXML_VERSION >= (2, 14, 0) else '<p ou="&lt;p t-out=" object.name>"</p>',
             ),
             ('''<p title="'<p t-out='object.name'/>">''', '''<p title="'&lt;p t-out='object.name'/&gt;"></p>'''),
         )

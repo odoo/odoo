@@ -70,7 +70,6 @@ class MailComposerMixin(models.AbstractModel):
                 template_value = composer_mixin.template_id.body_html
                 # matching email_outgoing sanitize level
                 sanitize_vals = {
-                    'output_method': 'xml',
                     'sanitize_attributes': False,
                     'sanitize_conditional_comments': False,
                     'sanitize_form': True,
