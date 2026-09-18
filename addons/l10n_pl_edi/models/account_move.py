@@ -717,14 +717,6 @@ class AccountMove(models.Model):
             KSEF_FIRST_DAY,
         )
 
-    def _l10n_pl_edi_move_last_historic_date(self, company):
-        return self.env['ir.config_parameter'].sudo().set_param(
-            f'l10n_pl_edi.last_historic_date_{company.id}',
-            fields.Date.to_string(
-                self._l10n_pl_edi_move_back_date(self._l10n_pl_edi_get_last_historic_date(company)),
-            ),
-        )
-
     @api.model
     def _cron_l10n_pl_edi_download_bills(self):
         info = dict.fromkeys(('to_delete', 'to_download', 'retriggered', 'retrigger', 'retry_after'), False)
@@ -805,57 +797,85 @@ class AccountMove(models.Model):
                     self.env.cr.commit()
 
     def _l10n_pl_edi_request_bills_historic(self, company, info):
+        """ Check if we have still historic bills to collect """
         date_to = self._l10n_pl_edi_get_last_historic_date(company)
+        # If we haven't downloaded all invoices since the start of the KSeF EDI program
         if date_to > KSEF_FIRST_DAY:
+            # Request the new slice, from the last date, backwards
             date_from = self._l10n_pl_edi_move_back_date(date_to)
             if error := self._l10n_pl_edi_request_batch(company, date_from, date_to, info):
                 info['retrigger'] = True
                 info['retry_after'] = error.get('retry_after')
             else:
-                self._l10n_pl_edi_move_last_historic_date(company)
-                # If we have more, retrigger this for later, so we get another slice
+                # Move the window slice backward again
+                self.env['ir.config_parameter'].sudo().set_param(
+                    f'l10n_pl_edi.last_historic_date_{company.id}', fields.Date.to_string(date_from))
                 info['retrigger'] = date_from >= KSEF_FIRST_DAY
 
     def _l10n_pl_edi_check_batches(self, company, info):
-        service = KsefApiService(company)
-        to_download = to_delete = Attachment = self.env['ir.attachment']
-        retriggered, retrigger = False, info['retrigger']
-        for batch in Attachment._l10n_pl_edi_get_batches():
-            batch_data = json.loads(batch.raw.decode())
-            # Remove expired batches, files are not there anymore
+        def log_batch_error(batch_data, message):
+            date_from, date_to, error = batch_data['date_from'], batch_data['date_to'], batch_data.get('error')
+            _logger.error("%s Batch %s..%s %s: %s", KSEF_LOG_HEADER, date_from, date_to, message, error)
+
+        def check_expired(batch_data):
             date_expiry = batch_data.get('date_expiry') and fields.Datetime.from_string(batch_data['date_expiry'])
-            if date_expiry and date_expiry < fields.Datetime.now():
-                batch.unlink()
-                continue
+            if ret := date_expiry and date_expiry < fields.Datetime.now():
+                log_batch_error(batch_data, 'is expired')
+            return ret
+
+        def check_invalid_status(batch_data):
+            if ret := batch_data['status'] not in (100, 200):
+                log_batch_error(batch_data, 'is in error')
+            return ret
+
+        service = KsefApiService(company)
+        to_download = Attachment = self.env['ir.attachment']
+        retrigger = info['retrigger']
+
+        # Find downloaded batches and get their json values
+        batches = Attachment._l10n_pl_edi_get_batches()
+        batch_data_map = {batch: json.loads(batch.raw.decode()) for batch in batches}
+        today = today_datetime()
+
+        # Cron is retriggered if we have at least 1 batch or 1 move from today
+        retriggered = any(
+            date_from > today
+            for batch_data in batch_data_map.values()
+            if (date_from := fields.Datetime.from_string(batch_data['date_from']))
+        ) or bool(self.env['account.move'].search_count([
+            *self.env['account.move']._check_company_domain(company),
+            ('l10n_pl_edi_number', '!=', False),
+            ('move_date', '>', today),
+        ], limit=1))
+
+        # Unlink expired batches, the KSeF cloud has the files no more
+        to_delete = Attachment.union(
+            batch
+            for batch, batch_data in batch_data_map.items()
+            if check_expired(batch_data) or check_invalid_status(batch_data)
+        )
+        batches -= to_delete
+        to_delete.unlink()
+
+        def is_batch_to_be_retried(batch_data):
+            date_from, date_to = map(fields.Datetime.from_string(batch_data[x]) for x in ('date_from', 'date_to'))
             encryption_data = batch_data['encryption_data']
-            is_old = batch.create_date < today_datetime()
-            retriggered |= not is_old
-            match batch_data['status']:
-                case 200:
-                    # Set as to download, and to delete if old
-                    to_download |= batch
-                    to_delete |= batch.filtered(lambda x: x.create_date < today_datetime())
-                case 100:
-                    # Ask for a new state
-                    if batch_status := service.download_batch_status(
-                        number=batch_data['number'],
-                        date_from=fields.Datetime.from_string(batch_data['date_from']),
-                        date_to=fields.Datetime.from_string(batch_data['date_to']),
-                        encryption_data=encryption_data,
-                    ):
-                        batch.update({
-                            'raw': json.dumps(batch_status, indent=4).encode(),
-                            'mimetype': 'application/json'
-                        })
-                        retrigger = True
-                case _:
-                    # Warn the user and then delete
-                    date_from, date_to, error = batch_data['date_from'], batch_data['date_to'], batch_data.get('error')
-                    _logger.error("%s Batch %s..%s has failed download: %s", KSEF_LOG_HEADER, date_from, date_to, error)
-                    to_delete |= batch
+            if batch_status := service.download_batch_status(batch_data['number'], date_from, date_to, encryption_data):
+                batch.update({
+                    'raw': json.dumps(batch_status, indent=4).encode(),
+                    'mimetype': 'application/json'
+                })
+            return bool(batch_status)
+
+        for batch, batch_data in batch_data_map.items():
+            if batch_data['status'] == 200:
+                to_download |= batch
+            elif batch_data['status'] == 100 and is_batch_to_be_retried(batch_data):
+                retrigger = True
+
         return info.update({
             'to_delete': to_delete,
             'to_download': to_download,
-            'retriggered': retriggered,
             'retrigger': retrigger,
+            'retriggered': retriggered,
         })
