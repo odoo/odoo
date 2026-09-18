@@ -173,7 +173,7 @@ class ProductTemplate(models.Model):
 
         data['product.template'] = {
             **result,
-            'records': products._filtered_access('read'),
+            'records': products.with_context(active_test=True)._filtered_access('read'),
         }
 
         return data
