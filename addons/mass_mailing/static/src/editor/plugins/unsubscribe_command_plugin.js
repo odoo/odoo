@@ -34,8 +34,8 @@ export class UnsubscribeCommandPlugin extends Plugin {
 }
 
 registry
-    .category("mass_mailing-plugins")
+    .category("mass_mailing-builder-plugins")
     .add(UnsubscribeCommandPlugin.id, UnsubscribeCommandPlugin);
 registry
-    .category("basic-editor-plugins")
+    .category("mass_mailing-basic-editor-plugins")
     .add(UnsubscribeCommandPlugin.id, UnsubscribeCommandPlugin);

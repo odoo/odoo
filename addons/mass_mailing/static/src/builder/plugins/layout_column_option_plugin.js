@@ -40,5 +40,5 @@ export class MassMailingLayoutColumnPlugin extends Plugin {
 }
 
 registry
-    .category("mass_mailing-plugins")
+    .category("mass_mailing-builder-plugins")
     .add(MassMailingLayoutColumnPlugin.id, MassMailingLayoutColumnPlugin);

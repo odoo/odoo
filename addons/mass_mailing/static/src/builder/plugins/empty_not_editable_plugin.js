@@ -32,5 +32,5 @@ export class EmptyNotEditableElementsPlugin extends Plugin {
 }
 
 registry
-    .category("mass_mailing-plugins")
+    .category("mass_mailing-builder-plugins")
     .add(EmptyNotEditableElementsPlugin.id, EmptyNotEditableElementsPlugin);
