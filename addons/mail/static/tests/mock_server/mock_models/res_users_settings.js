@@ -8,8 +8,8 @@ import { patch } from "@web/core/utils/patch";
  */
 
 export class ResUsersSettings extends webModels.ResUsersSettings {
-    is_discuss_sidebar_category_channel_open = fields.Generic({ default: true });
-    is_discuss_sidebar_category_chat_open = fields.Generic({ default: true });
+    is_discuss_sidebar_category_channel_open = fields.Boolean({ default: true });
+    is_discuss_sidebar_category_chat_open = fields.Boolean({ default: true });
 
     /**
      * @param {number} guest_id
