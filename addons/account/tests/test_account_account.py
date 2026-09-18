@@ -391,6 +391,21 @@ class TestAccountAccount(TestAccountMergeCommon):
         new_account.code = alternate_code
         self.assertEqual(new_account.account_type, existing_account.account_type)
 
+    def test_compute_account_type_on_code_change(self):
+        """ Changing the code should recompute account_type and reconcile too, since reconcile depends on it. """
+        receivable_account = self.company_data['default_account_receivable']
+
+        new_code = self.env['account.account']._search_new_account_code(receivable_account.code)
+        with Form(self.env['account.account']) as account_form:
+            account_form.name = "A new account"
+            account_form.code = new_code
+            self.assertEqual(account_form.account_type, 'asset_receivable')
+            self.assertTrue(account_form.reconcile)
+
+        account = account_form.record
+        self.assertEqual(account.account_type, 'asset_receivable')
+        self.assertTrue(account.reconcile)
+
     def test_get_closest_parent_account(self):
         self.env['account.account'].create({
             'code': 99998,
