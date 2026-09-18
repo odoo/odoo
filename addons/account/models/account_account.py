@@ -772,12 +772,24 @@ class AccountAccount(models.Model):
         :returns: List of account ids, ordered by frequency (from most to least frequent)
         """
         account_domain = Domain('active', '=', True)
+<<<<<<< ea351e3d2ccd1df7fdb08385ff1208f29fa098c4
         if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
             account_domain &= Domain('internal_group', '=', 'income')
         elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
             account_domain &= Domain('internal_group', '=', 'expense')
 
         query = self.env['account.move.line'].with_company(company_id)._search([
+||||||| 8191cc6c3dcc809a721c1f3250d2e8d57e019034
+        if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
+            account_domain &= Domain('internal_group', '=', 'income')
+        elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
+            account_domain &= Domain('internal_group', '=', 'expense')
+        domain = [
+=======
+        if allowed_account_types := self._get_name_search_account_types(move_type):
+            account_domain &= Domain('account_type', 'in', allowed_account_types)
+        domain = [
+>>>>>>> 8054acbc2d88726b33e86c5aa37c6708bce83c4f
             *self.env['account.move.line']._check_company_domain(company_id),
             ('partner_id', '=', partner_id),
             ('account_id', 'any', account_domain),
