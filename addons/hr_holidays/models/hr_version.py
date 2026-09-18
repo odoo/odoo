@@ -19,6 +19,17 @@ class HrVersion(models.Model):
     _inherit = 'hr.version'
     _description = 'Employee Contract'
 
+<<<<<<< cbbaa6e3830aaf0208235662d8c2aec22b18f718
+||||||| fe8c7da4bec45f3d3a7aad22627392dfb9e1ae20
+    departure_do_cancel_time_off_requests = fields.Boolean(related='departure_id.do_cancel_time_off_requests')
+
+=======
+    def _get_hr_responsible_domain(self):
+        return [('share', '=', False), ('company_ids', 'in', self.env.company.ids), ('all_group_ids', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id)]
+
+    departure_do_cancel_time_off_requests = fields.Boolean(related='departure_id.do_cancel_time_off_requests')
+
+>>>>>>> dc026e372f9a26287aa256be38b55ebc23eb3da3
     @api.constrains('contract_date_start', 'contract_date_end')
     def _check_contracts(self):
         self._get_leaves()._check_contracts()
