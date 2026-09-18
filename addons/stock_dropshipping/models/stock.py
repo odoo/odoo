@@ -81,11 +81,17 @@ class StockPickingType(models.Model):
         },
     )
 
+    def _is_default_location_suitable(self, location, partner_usage):
+        if self.code == "dropship":
+            return location.usage == partner_usage
+        return super()._is_default_location_suitable(location, partner_usage)
+
     def _compute_default_location_src_id(self):
         dropship_types = self.filtered(lambda pt: pt.code == "dropship")
-        dropship_types.default_location_src_id = self.env.ref(
-            DROPSHIP_SOURCE_LOCATION_XMLID
-        ).id
+        suppliers = self.env.ref(DROPSHIP_SOURCE_LOCATION_XMLID)
+        dropship_types._update_derived_default_location(
+            "default_location_src_id", lambda picking_type: suppliers, "supplier"
+        )
 
         super(
             StockPickingType, self - dropship_types
@@ -93,9 +99,10 @@ class StockPickingType(models.Model):
 
     def _compute_default_location_dest_id(self):
         dropship_types = self.filtered(lambda pt: pt.code == "dropship")
-        dropship_types.default_location_dest_id = self.env.ref(
-            DROPSHIP_DEST_LOCATION_XMLID
-        ).id
+        customers = self.env.ref(DROPSHIP_DEST_LOCATION_XMLID)
+        dropship_types._update_derived_default_location(
+            "default_location_dest_id", lambda picking_type: customers, "customer"
+        )
 
         super(
             StockPickingType, self - dropship_types
