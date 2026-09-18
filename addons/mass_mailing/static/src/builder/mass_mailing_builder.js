@@ -28,6 +28,7 @@ export class MassMailingBuilder extends Component {
 
     props = useProps({
         builderProps: t.object(),
+        discardAndClose: t.function(),
         saveAndClose: t.function(),
         toggleCodeView: t.function().optional(),
     });
