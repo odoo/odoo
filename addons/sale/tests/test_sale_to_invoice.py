@@ -4,6 +4,7 @@
 from unittest.mock import patch
 
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools import float_is_zero
@@ -67,6 +68,29 @@ class TestSaleToInvoice(TestSaleCommon):
         domain += [('id', 'in', orders.ids)]
         result = self.env['sale.order'].search(domain)
         self.assertEqual(result, expected_result, "Unexpected result on search orders")
+
+    def test_unlink_order_with_invoice(self):
+        self.sale_order.action_confirm()
+        invoice = self.sale_order._create_invoices()
+        invoice.action_post()
+        self.sale_order._action_cancel()
+
+        # A posted invoice keeps the order linked, so deletion is blocked.
+        with self.assertRaises(UserError):
+            self.sale_order.unlink()
+        self.assertTrue(self.sale_order.exists())
+        self.assertEqual(invoice.invoice_line_ids.sale_line_ids.order_id, self.sale_order)
+
+        # Resetting the invoice to draft must not reopen the gap.
+        invoice.button_draft()
+        with self.assertRaises(UserError):
+            self.sale_order.unlink()
+        self.assertTrue(self.sale_order.exists())
+
+        # Once the invoice is cancelled, the order can be deleted.
+        invoice.button_cancel()
+        self.sale_order.unlink()
+        self.assertFalse(self.sale_order.exists())
 
     def test_search_invoice_ids(self):
         """Test searching on computed fields invoice_ids"""
