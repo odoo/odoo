@@ -12,7 +12,6 @@
                             <span t-if="this.showCallPreview">You've been invited to a meeting!</span>
                             <span t-else="">You've been invited to a chat!</span>
                         </h1>
-                        <span t-out="this.subtitle"/>
                     </div>
                     <div class="mb-3" t-if="this.store.self_guest and !this.store.self_user">
                         <label class="d-flex justify-content-between align-items-center mb-2">
