@@ -2089,3 +2089,6 @@ class Task(models.Model):
         ])
         partners = self.env["res.partner"].sudo()._search_mention_suggestions(domain, limit)
         return Store(partners).get_result()
+
+    def _get_partner_related_fields(self):
+        return (name for name, field in self._fields.items() if field.related and field.related.startswith('partner_id.'))
