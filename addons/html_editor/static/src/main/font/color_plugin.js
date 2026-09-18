@@ -230,7 +230,11 @@ export class ColorPlugin extends Plugin {
 
     requestColor(color, mode, previewMode = false) {
         const sel = this.dependencies.selection.getEditableSelection();
-        if (sel.isCollapsed) {
+        if (
+            sel.isCollapsed &&
+            (mode !== "backgroundColor" ||
+                !closestElement(sel.anchorNode, this.getResource("selected_table_cell_selector")))
+        ) {
             const block = closestBlock(sel.anchorNode);
             const colorNode = findUpTo(closestElement(sel.anchorNode), block, (node) =>
                 getColorOrClass(node, mode)
