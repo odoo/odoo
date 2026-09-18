@@ -315,10 +315,38 @@ according to the enabled options.
 
 <!-- ======   Sub-Template: Posts list : Posts Info (Stats)  ======================= -->
 <template id="post_info">
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
     <div t-attf-class="d-flex flex-wrap align-items-center justify-content-between small #{_info_classes or 'flex-grow-1 my-2'}">
         <div class="px-2 d-none d-xl-block">
             <span class="text-nowrap" title="Comments"><i class="oi oi-filled text-muted me-1" data-icon="chat_bubble"/><t t-out="len(blog_post.message_ids)"/></span>
             <span class="text-nowrap ps-2" title="Views"><i class="oi text-muted me-1" data-icon="bar_chart"/><t t-out="blog_post.visits"/></span>
+||||||| 77039cb4f2a386418db83d361973bcae1f238b8f
+    <div class="d-flex small flex-wrap mb-1 w-100">
+        <div t-attf-class="d-flex flex-wrap align-items-center justify-content-between mx-n2 #{opt_blog_list_view and 'flex-grow-0 w-auto mw-100' or 'flex-grow-1' }">
+            <time t-if="blog_post.published_date" t-field="blog_post.published_date" class="text-nowrap fw-bold px-2" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'medium'}"/>
+            <time t-elif="blog_post.publish_on" t-field="blog_post.publish_on" class="text-nowrap fw-bold px-2" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'medium'}"/>
+            <div t-if="is_view_active('website_blog.opt_posts_loop_show_stats')" class="px-2">
+                <b class="text-nowrap" title="Comments"><i class="fa fa-comment text-muted me-1"/><t t-out="len(blog_post.message_ids)"/></b>
+                <b class="text-nowrap ps-2" title="Views"><i class="fa fa-eye text-muted me-1"/><t t-out="blog_post.visits"/></b>
+            </div>
+            <b t-if="posts_list_show_parent_blog" class="text-nowrap text-truncate px-2">
+                <i class="fa fa-folder-open text-muted"/>
+                <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id"/>
+            </b>
+=======
+    <div class="d-flex small flex-wrap mb-1 w-100">
+        <div t-attf-class="d-flex flex-wrap align-items-center justify-content-between mx-n2 #{opt_blog_list_view and 'flex-grow-0 w-auto mw-100' or 'flex-grow-1' }">
+            <time t-if="blog_post.published_date" t-field="blog_post.published_date" class="text-nowrap fw-bold px-2" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'medium'}"/>
+            <time t-elif="blog_post.publish_on" t-field="blog_post.publish_on" class="text-nowrap fw-bold px-2" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'medium'}"/>
+            <div t-if="is_view_active('website_blog.opt_posts_loop_show_stats')" class="px-2">
+                <b class="text-nowrap" title="Comments"><i class="fa fa-comment text-muted me-1"/><t t-out="blog_post.message_counter()"/></b>
+                <b class="text-nowrap ps-2" title="Views"><i class="fa fa-eye text-muted me-1"/><t t-out="blog_post.visits"/></b>
+            </div>
+            <b t-if="posts_list_show_parent_blog" class="text-nowrap text-truncate px-2">
+                <i class="fa fa-folder-open text-muted"/>
+                <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id"/>
+            </b>
+>>>>>>> 616c8e6ade45a208c7a05e060edb6479148f875d
         </div>
     </div>
 </template>
