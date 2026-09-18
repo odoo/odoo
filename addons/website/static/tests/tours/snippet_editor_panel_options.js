@@ -29,6 +29,7 @@ const checkIfTextToolbarVisible = {
 };
 
 const oldWriteText = navigator.clipboard.writeText;
+let copiedText;
 
 registry.category("web_tour.tours").add("snippet_editor_panel_options", {
     steps: () => [
@@ -60,24 +61,22 @@ registry.category("web_tour.tours").add("snippet_editor_panel_options", {
             async run(helpers) {
                 // Patch and ignore write on clipboard in tour as we don't have
                 // permissions.
-                navigator.clipboard.writeText = () => {
+                navigator.clipboard.writeText = (text) => {
+                    copiedText = text;
                     console.info("Copy in clipboard ignored!");
                 };
                 await helpers.click();
             },
         },
         {
-            content: "Check the copied url from the notification toast",
+            content: "Check the copied url of the created anchor",
             trigger: ".o_notification_manager .o_notification_content",
             run() {
                 // Cleanup the patched clipboard method
                 navigator.clipboard.writeText = oldWriteText;
 
-                const { textContent } = this.anchor;
-                const url = textContent.substring(textContent.indexOf("/"));
-
                 // The url should not target the client action
-                if (url.startsWith("/@")) {
+                if (copiedText.startsWith("/@")) {
                     console.error("The anchor option should target the frontend");
                 }
 
@@ -85,7 +84,7 @@ registry.category("web_tour.tours").add("snippet_editor_panel_options", {
                     ".o_iframe_container iframe"
                 ).contentDocument;
                 const snippetId = iframeDocument.querySelector(".s_text_image").id;
-                if (!url || url.indexOf(snippetId) < 0) {
+                if (!copiedText || copiedText.indexOf(snippetId) < 0) {
                     console.error("The anchor option does not target the correct snippet.");
                 }
             },

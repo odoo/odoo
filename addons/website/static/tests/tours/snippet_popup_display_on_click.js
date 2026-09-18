@@ -10,6 +10,7 @@ import {
 } from "@website/js/tours/tour_utils";
 
 const oldWriteText = navigator.clipboard.writeText;
+let copiedAnchorUrl;
 
 registry.category("web_tour.tours").add("snippet_popup_display_on_click", {
     steps: () => [
@@ -34,21 +35,23 @@ registry.category("web_tour.tours").add("snippet_popup_display_on_click", {
             async run(helpers) {
                 // Patch and ignore write on clipboard in tour as we don't have
                 // permissions.
-                navigator.clipboard.writeText = () => {
+                navigator.clipboard.writeText = (text) => {
+                    copiedAnchorUrl = text;
                     console.info("Copy in clipboard ignored!");
                 };
                 await helpers.click();
             },
         },
         {
-            content: "Check the copied anchor from the notification toast",
+            content: "Check the copied anchor of the popup",
             trigger: ".o_notification_manager .o_notification_content",
             run() {
                 // Cleanup the patched clipboard method
                 navigator.clipboard.writeText = oldWriteText;
 
-                const notificationContent = this.anchor.innerText;
-                const anchor = notificationContent.substring(notificationContent.indexOf("#"));
+                // The toast only confirms the copy, so the anchor is checked on
+                // the value that was sent to the clipboard.
+                const anchor = copiedAnchorUrl.substring(copiedAnchorUrl.indexOf("#"));
 
                 if (anchor !== "#Win-%2420") {
                     console.error("The popup anchor is not '#Win-%2420' as expected.");
