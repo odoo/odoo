@@ -36,16 +36,16 @@
                     </li>
                 </ol>
             </t>
-            <div class="d-flex gap-1 text-truncate">
-                <div class="o_last_breadcrumb_item active d-flex gap-2 align-items-center min-w-0 lh-sm">
+            <div class="d-flex gap-1 min-w-0">
+                <div class="o_last_breadcrumb_item active d-flex gap-2 align-items-center min-w-0 lh-sm text-truncate">
                     <span class="min-w-0 text-truncate"><t t-call="web.Breadcrumb.Name"/></span>
                 </div>
                 <t t-call="web.Breadcrumb.Actions"/>
             </div>
         </div>
 
-        <div t-else="" class="o_breadcrumb d-flex gap-1 text-truncate">
-            <div class="o_last_breadcrumb_item active d-flex fs-4 min-w-0 align-items-center">
+        <div t-else="" class="o_breadcrumb d-flex gap-1 min-w-0">
+            <div class="o_last_breadcrumb_item active d-flex fs-4 min-w-0 align-items-center text-truncate">
                 <span class="min-w-0 text-truncate"><t t-call="web.Breadcrumb.Name"/></span>
             </div>
             <t t-call="web.Breadcrumb.Actions"/>
