@@ -6,4 +6,10 @@
     'depends': ['base'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'external_dependencies': {
+        'python': ['pylint'],
+        'apt': {
+            'pylint': 'pylint',
+        },
+    },
 }
