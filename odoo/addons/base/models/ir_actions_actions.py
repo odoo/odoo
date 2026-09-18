@@ -218,23 +218,6 @@ class IrActionsActions(models.Model):
     def _check_binding_view_types(self) -> None:
         self._check_view_type_vocabulary("binding_view_types")
 
-    @api.model
-    def _normalize_binding_view_types(self, view_types: str | bool) -> str | bool:
-        if not view_types:
-            return view_types
-        order = {
-            mode: index for index, mode in enumerate(self._BINDING_VIEW_TYPE_ORDER)
-        }
-        modes = dict.fromkeys(
-            mode.strip() for mode in view_types.split(",") if mode.strip()
-        )
-        normalized = ",".join(
-            sorted(modes, key=lambda mode: order.get(mode, len(order)))
-        )
-        if _debug.logic.enabled and normalized != view_types:
-            _debug.logic("view_types_normalized", given=view_types, result=normalized)
-        return normalized
-
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
         vals_list = [
@@ -289,6 +272,14 @@ class IrActionsActions(models.Model):
             record.xml_id = res.get(record.id)
 
     @api.model
+    def _eval_action_domain(self, domain: str | None, **names: Any) -> list:
+        return _eval_list_or_default(domain, self._prepare_expression_names(names), [])
+
+    @api.model
+    def _eval_action_context(self, context: str | None, **names: Any) -> dict:
+        return _eval_dict_or_default(context, self._prepare_expression_names(names), {})
+
+    @api.model
     @tools.ormcache(cache="stable")
     def _get_fields_read_by_bindings(self) -> frozenset[str]:
         return frozenset(
@@ -335,35 +326,6 @@ class IrActionsActions(models.Model):
         )
         _debug.logic("action_by_path", path=path, action=action.id)
         return action._get_concrete() if action else action
-
-    @api.model
-    def _eval_action_domain(self, domain: str | None, **names: Any) -> list:
-        return _eval_list_or_default(domain, self._prepare_expression_names(names), [])
-
-    @api.model
-    def _eval_action_context(self, context: str | None, **names: Any) -> dict:
-        return _eval_dict_or_default(context, self._prepare_expression_names(names), {})
-
-    @api.model
-    def _prepare_expression_names(self, names: dict[str, Any]) -> dict[str, Any]:
-        root = self.env["ir.actions.actions"]
-        return {**root._prepare_eval_context(root), **self.env.context, **names}
-
-    @api.model
-    def _prepare_eval_context(self, action: Any) -> dict[str, Any]:
-        return {
-            "uid": self.env.uid,
-            "user": self.env.user,
-            "allowed_company_ids": self.env.companies.ids,
-            "time": tools.safe_eval.time,
-            "datetime": tools.safe_eval.datetime,
-            "dateutil": tools.safe_eval.dateutil,
-            "timezone": timezone,
-            "float_compare": float_compare,
-            "b64encode": base64.b64encode,
-            "b64decode": base64.b64decode,
-            "Command": Command,
-        }
 
     @api.model
     def get_bindings(self, model_name: str) -> dict[str, list[dict[str, Any]]]:
@@ -469,6 +431,32 @@ class IrActionsActions(models.Model):
             }
         )
 
+    def _get_cache_groups_holding(self) -> set[str]:
+        groups = set()
+        for action in self:
+            if action.binding_model_id:
+                groups.add("actions")
+            if action.path:
+                groups.add("default")
+        return groups
+
+    def _get_cache_groups_invalidated_by(self, vals: dict[str, Any]) -> set[str]:
+        groups = set()
+        if "binding_model_id" in vals or (
+            not self._get_fields_read_by_bindings().isdisjoint(vals)
+            and any(action.binding_model_id for action in self)
+        ):
+            groups.add("actions")
+        if not self._get_fields_read_by_menus().isdisjoint(vals):
+            groups.add("default")
+        _debug.logic(
+            "cache_groups_invalidated",
+            actions=len(self),
+            fields=sorted(vals),
+            groups=sorted(groups),
+        )
+        return groups
+
     @api.model
     def _get_action_dict_by_xml_id(self, full_xml_id: str) -> dict[str, Any]:
         record = self.env.ref(full_xml_id)
@@ -506,6 +494,44 @@ class IrActionsActions(models.Model):
 
     def _get_keys_client_only(self) -> frozenset[str]:
         return frozenset()
+
+    @api.model
+    def _normalize_binding_view_types(self, view_types: str | bool) -> str | bool:
+        if not view_types:
+            return view_types
+        order = {
+            mode: index for index, mode in enumerate(self._BINDING_VIEW_TYPE_ORDER)
+        }
+        modes = dict.fromkeys(
+            mode.strip() for mode in view_types.split(",") if mode.strip()
+        )
+        normalized = ",".join(
+            sorted(modes, key=lambda mode: order.get(mode, len(order)))
+        )
+        if _debug.logic.enabled and normalized != view_types:
+            _debug.logic("view_types_normalized", given=view_types, result=normalized)
+        return normalized
+
+    @api.model
+    def _prepare_expression_names(self, names: dict[str, Any]) -> dict[str, Any]:
+        root = self.env["ir.actions.actions"]
+        return {**root._prepare_eval_context(root), **self.env.context, **names}
+
+    @api.model
+    def _prepare_eval_context(self, action: Any) -> dict[str, Any]:
+        return {
+            "uid": self.env.uid,
+            "user": self.env.user,
+            "allowed_company_ids": self.env.companies.ids,
+            "time": tools.safe_eval.time,
+            "datetime": tools.safe_eval.datetime,
+            "dateutil": tools.safe_eval.dateutil,
+            "timezone": timezone,
+            "float_compare": float_compare,
+            "b64encode": base64.b64encode,
+            "b64decode": base64.b64decode,
+            "Command": Command,
+        }
 
     def create_action(self) -> bool:
         self.check_access("write")
@@ -591,29 +617,3 @@ class IrActionsActions(models.Model):
                         allowed=", ".join(sorted(allowed)),
                     )
                 )
-
-    def _get_cache_groups_holding(self) -> set[str]:
-        groups = set()
-        for action in self:
-            if action.binding_model_id:
-                groups.add("actions")
-            if action.path:
-                groups.add("default")
-        return groups
-
-    def _get_cache_groups_invalidated_by(self, vals: dict[str, Any]) -> set[str]:
-        groups = set()
-        if "binding_model_id" in vals or (
-            not self._get_fields_read_by_bindings().isdisjoint(vals)
-            and any(action.binding_model_id for action in self)
-        ):
-            groups.add("actions")
-        if not self._get_fields_read_by_menus().isdisjoint(vals):
-            groups.add("default")
-        _debug.logic(
-            "cache_groups_invalidated",
-            actions=len(self),
-            fields=sorted(vals),
-            groups=sorted(groups),
-        )
-        return groups
