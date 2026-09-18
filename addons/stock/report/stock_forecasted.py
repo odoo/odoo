@@ -129,6 +129,26 @@ class StockForecasted(models.AbstractModel):
         res['user_can_edit_pickings'] = self.env.user.has_group('stock.group_stock_user')
         return res
 
+    def _prepare_report_line_minimal(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
+        """ Minimal counterpart of `_prepare_report_line`, for `_get_report_lines(minimal=True)`.
+
+        `stock.move._get_forecast_availability_outgoing` reads only `move_out`, `move_in`,
+        `quantity` and `replenishment_filled`; everything else the full line builds
+        (`format_date`, `_get_source_document`, `display_name`, the product/uom sub-dicts) is
+        pure overhead there. Keeping it a separate method also skips the `mrp`/`sale_stock`
+        overrides, which is correct: both return early when `read` is False.
+
+        `reserved_move`, `in_transit` and `read` are unused, and only accepted so this is a
+        drop-in replacement at the call sites.
+        """
+        product = product or (move_out.product_id if move_out else move_in.product_id)
+        return {
+            'move_out': move_out,
+            'move_in': move_in,
+            'replenishment_filled': replenishment_filled,
+            'quantity': float_round(quantity, precision_rounding=product.uom_id.rounding),
+        }
+
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
         product = product or (move_out.product_id if move_out else move_in.product_id)
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
@@ -187,26 +207,39 @@ class StockForecasted(models.AbstractModel):
     def _get_report_moves_fields(self):
         return ['id', 'date']
 
-    def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
+    def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True, minimal=False):
+        """
+        :param bool minimal: build lines with `_prepare_report_line_minimal` instead of
+            `_prepare_report_line`. Only for callers that reduce the report to per-out-move
+            quantities and dates, i.e. `stock.move._get_forecast_availability_outgoing`.
+            Lines without a `move_out` (stock in transit, unused remaining stock, unused in
+            moves) are then not built at all, since such callers discard them. Any caller
+            needing a complete line set must leave this False.
+        """
+
+        _build_line = self._prepare_report_line_minimal if minimal else self._prepare_report_line
 
         def _get_out_move_reserved_data(out, linked_moves, used_reserved_moves, currents):
             reserved_out = 0
             # the move to show when qty is reserved
             reserved_move = self.env['stock.move']
+            out_product_id = out.product_id.id
+            out_product_qty = out.product_qty
             for move in linked_moves:
                 if move.state not in ('partially_available', 'assigned'):
                     continue
                 # count reserved stock.
-                reserved = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
+                move_uom = move.product_id.uom_id
+                reserved = move.product_uom._compute_quantity(move.quantity, move_uom)
                 # check if the move reserved qty was counted before (happens if multiple outs share pick/pack)
-                reserved = min(reserved - used_reserved_moves[move], out.product_qty)
+                reserved = min(reserved - used_reserved_moves[move], out_product_qty)
                 if reserved and not reserved_move:
                     reserved_move = move
                 # add to reserved line data
                 reserved_out += reserved
                 used_reserved_moves[move] += reserved
-                currents[(out.product_id.id, move.location_id.id)] -= reserved
-                if float_compare(reserved_out, out.product_qty, precision_rounding=move.product_id.uom_id.rounding) >= 0:
+                currents[(out_product_id, move.location_id.id)] -= reserved
+                if float_compare(reserved_out, out_product_qty, precision_rounding=move_uom.rounding) >= 0:
                     break
 
             return {
@@ -220,28 +253,34 @@ class StockForecasted(models.AbstractModel):
             demand_out = out.product_qty - reserved_out
             linked_moves = reserved_data['linked_moves']
             taken_from_stock_out = 0
+            out_product_id = out.product_id.id
             for move in linked_moves:
                 if move.state in ('draft', 'cancel', 'assigned', 'done'):
                     continue
-                reserved = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
+                move_uom = move.product_id.uom_id
+                reserved = move.product_uom._compute_quantity(move.quantity, move_uom)
                 demand = max(move.product_qty - reserved, 0)
                 # to make sure we don't demand more than the out (useful when same pick/pack goes to multiple out)
                 demand = min(demand, demand_out)
-                if float_is_zero(demand, precision_rounding=move.product_id.uom_id.rounding):
+                if float_is_zero(demand, precision_rounding=move_uom.rounding):
                     continue
+                current_key = (out_product_id, move.location_id.id)
                 # check available qty for move if chained, move available is what was move by orig moves
                 if move.move_orig_ids:
-                    move_in_qty = sum(move.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('quantity'))
-                    sibling_moves = (move.move_orig_ids.move_dest_ids - move)
-                    move_out_qty = sum(sibling_moves.filtered(lambda m: m.state == 'done').mapped('quantity'))
+                    move_in_qty = sum(m.quantity for m in move.move_orig_ids if m.state == 'done')
+                    move_out_qty = sum(
+                        m.quantity
+                        for m in move.move_orig_ids.move_dest_ids
+                        if m != move and m.state == 'done'
+                    )
                     move_available_qty = move_in_qty - move_out_qty - reserved
                 else:
-                    move_available_qty = currents[(out.product_id.id, move.location_id.id)]
+                    move_available_qty = currents[current_key]
                 # count taken from stock, but avoid taking more than whats in stock in case of move origs,
                 # this can happen if stock adjustment is done after orig moves are done
-                taken_from_stock = min(demand, move_available_qty, currents[(out.product_id.id, move.location_id.id)])
+                taken_from_stock = min(demand, move_available_qty, currents[current_key])
                 if taken_from_stock > 0:
-                    currents[(out.product_id.id, move.location_id.id)] -= taken_from_stock
+                    currents[current_key] -= taken_from_stock
                     taken_from_stock_out += taken_from_stock
                 demand_out -= taken_from_stock
             return {
@@ -257,7 +296,7 @@ class StockForecasted(models.AbstractModel):
                     continue
                 taken_from_in = min(demand, in_data['qty'])
                 demand -= taken_from_in
-                lines.append(self._prepare_report_line(taken_from_in, move_in=in_data['move'], move_out=out, read=read))
+                lines.append(_build_line(taken_from_in, move_in=in_data['move'], move_out=out, read=read))
                 in_data['qty'] -= taken_from_in
                 if in_data['qty'] <= 0:
                     ins_to_remove.append(in_id)
@@ -290,9 +329,15 @@ class StockForecasted(models.AbstractModel):
 
         linked_moves_per_out = {}
         ins_ids = set(ins._ids)
+
+        outs.fetch(['product_id', 'product_qty', 'date', 'state'])
+
+        outs_per_product = defaultdict(list)
         for out in outs:
-            linked_move_ids = out._rollup_move_origs() - ins_ids
-            linked_moves_per_out[out] = self.env['stock.move'].browse(linked_move_ids)
+            linked_moves_per_out[out] = self.env['stock.move'].browse([
+                move_id for move_id in out._rollup_move_origs() if move_id not in ins_ids
+            ])
+            outs_per_product[out.product_id.id].append(out)
 
         # Gather all linked moves
         all_linked_move_ids = {
@@ -301,7 +346,7 @@ class StockForecasted(models.AbstractModel):
         all_linked_moves = self.env['stock.move'].browse(all_linked_move_ids)
 
         # Prewarm cache with sibling move's state/quantity
-        all_linked_moves.fetch(['move_orig_ids'])
+        all_linked_moves.fetch(['move_orig_ids', 'state', 'product_uom', 'quantity', 'product_id', 'product_qty', 'location_id'])
         all_linked_moves.move_orig_ids.fetch(['move_dest_ids'])
         all_linked_moves.move_orig_ids.move_dest_ids.fetch(['state', 'quantity'])
 
@@ -310,10 +355,6 @@ class StockForecasted(models.AbstractModel):
             linked_moves_per_out[out] = linked_moves.with_prefetch(
                 all_linked_moves._prefetch_ids
             )
-
-        outs_per_product = defaultdict(list)
-        for out in outs:
-            outs_per_product[out.product_id.id].append(out)
 
         dest_ids_to_in_ids, in_id_to_in_data = defaultdict(OrderedSet), {}
         ins_per_product = defaultdict(OrderedSet)
@@ -373,7 +414,7 @@ class StockForecasted(models.AbstractModel):
                 if reserved_out > 0:
                     demand_out = max(demand_out - reserved_out, 0)
                     in_transit = bool(reserved_move.move_orig_ids)
-                    lines.append(self._prepare_report_line(reserved_out, move_out=out, reserved_move=reserved_move, in_transit=in_transit, read=read))
+                    lines.append(_build_line(reserved_out, move_out=out, reserved_move=reserved_move, in_transit=in_transit, read=read))
 
                 if float_is_zero(demand_out, precision_rounding=product_rounding):
                     continue
@@ -381,7 +422,7 @@ class StockForecasted(models.AbstractModel):
                 # Reconcile with the current stock.
                 if taken_from_stock_out > 0:
                     demand_out = max(demand_out - taken_from_stock_out, 0)
-                    lines.append(self._prepare_report_line(taken_from_stock_out, move_out=out, read=read))
+                    lines.append(_build_line(taken_from_stock_out, move_out=out, read=read))
 
                 if float_is_zero(demand_out, precision_rounding=product_rounding):
                     continue
@@ -391,7 +432,7 @@ class StockForecasted(models.AbstractModel):
                 if unreservable_qty > 0:
                     demand_out -= unreservable_qty
                     transit_stock -= unreservable_qty
-                    lines.append(self._prepare_report_line(unreservable_qty, move_out=out, in_transit=True, read=read))
+                    lines.append(_build_line(unreservable_qty, move_out=out, in_transit=True, read=read))
 
                 if float_is_zero(demand_out, precision_rounding=product_rounding):
                     continue
@@ -407,7 +448,13 @@ class StockForecasted(models.AbstractModel):
                 demand = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids, read=read)
                 if not float_is_zero(demand, precision_rounding=product_rounding):
                     # Not reconciled
-                    lines.append(self._prepare_report_line(demand, move_out=out, replenishment_filled=False, read=read))
+                    lines.append(_build_line(demand, move_out=out, replenishment_filled=False, read=read))
+
+            # None of the lines below carry a `move_out`, and callers asking for minimal lines
+            # discard those, so don't build them at all. See `minimal` in this method's docstring.
+            if minimal:
+                continue
+
             # Stock in transit
             if not float_is_zero(transit_stock, precision_rounding=product_rounding):
                 lines.append(self._prepare_report_line(transit_stock, product=product, in_transit=True, read=read))
