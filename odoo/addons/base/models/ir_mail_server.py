@@ -91,7 +91,7 @@ smtplib.SMTP._print_debug = _print_debug
 
 # Python 3: workaround for bpo-35805, only partially fixed in Python 3.8.
 RFC5322_IDENTIFICATION_HEADERS = {'message-id', 'in-reply-to', 'references', 'resent-msg-id'}
-USER_DEFINED_HEADERS = {'bcc', 'cc', 'from', 'reply-to', 'subject', 'to'}
+USER_DEFINED_HEADERS = {'bcc', 'cc', 'from', 'reply-to', 'subject', 'to', 'list-unsubscribe'}
 _noFoldPolicy = email.policy.SMTP.clone(max_line_length=None)
 _maxFoldPolicy = email.policy.SMTP.clone(max_line_length=998)  # rfc5322#section-2.1.1
 class IdentificationFieldsNoFoldPolicy(email.policy.EmailPolicy):
