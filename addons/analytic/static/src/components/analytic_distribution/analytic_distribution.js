@@ -662,10 +662,11 @@ export class AnalyticDistribution extends Component {
             ".o_popover",
             ".modal:not(.o_inactive_modal):not(:has(.o_act_window))",
         ];
+        const activeModal = document.querySelector(".modal:not(.o_inactive_modal)");
         if (this.isDropdownOpen
             && !this.widgetRef.el.contains(ev.target)
             && (!ev.target.closest(selectors.join(",")) ||
-                document.querySelector(".modal:not(.o_inactive_modal)").contains(this.widgetRef.el))
+                activeModal?.contains(this.widgetRef.el))
             && !ev.target.isSameNode(document.documentElement)
            ) {
             this.forceCloseEditor();
