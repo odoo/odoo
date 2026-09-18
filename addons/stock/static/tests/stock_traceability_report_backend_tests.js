@@ -27,7 +27,7 @@ QUnit.module("Stock", {}, function (hooks) {
     QUnit.module("Traceability report");
 
     QUnit.test("Rendering with no lines", async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         const webClient = await createWebClient({
             serverData,
@@ -43,6 +43,7 @@ QUnit.module("Stock", {}, function (hooks) {
             target.querySelector(".o_stock_reports_page").textContent,
             "No operation made on this lot."
         );
+        assert.containsNone(target, ".o_cp_buttons > .btn-primary");
     });
 
     QUnit.test("Traceability Report action contains correct url in context", async function (assert) {
