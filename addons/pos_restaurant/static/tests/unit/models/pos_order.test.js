@@ -308,12 +308,30 @@ describe("pos.order restaurant patches", () => {
 
     test("ensureCourseSelection and getSelectedCourse", async () => {
         const store = await setupPosEnv();
-        const order = store.addNewOrder();
+        const order = await getFilledOrder(store);
         const course1 = store.addCourse();
-        course1.fired = false;
-        const course2 = store.addCourse();
+        const course2 = order.courses[1];
         course2.fired = true;
         order.ensureCourseSelection();
         expect(order.getSelectedCourse().uuid).toBe(course1.uuid);
+    });
+
+    test("ensureCourseSelection skips a course without preparation product", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        await store.addLineToOrder(
+            { product_tmpl_id: store.models["product.template"].get(12), qty: 1 },
+            order
+        );
+        const unrouted = store.addCourse();
+        const routed = order.courses[1];
+        const line = await store.addLineToOrder(
+            { product_tmpl_id: store.models["product.template"].get(5), qty: 1 },
+            order
+        );
+        line.course_id = routed;
+        order.ensureCourseSelection();
+        expect(unrouted.isReadyToFire()).toBe(true);
+        expect(order.getSelectedCourse().uuid).toBe(routed.uuid);
     });
 });
