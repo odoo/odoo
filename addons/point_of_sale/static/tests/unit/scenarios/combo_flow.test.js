@@ -1,7 +1,8 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, waitFor, queryAll } from "@odoo/hoot-dom";
+import { animationFrame, waitFor, queryAll, queryOne } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import {
     setupAndMountPosApp,
     createAttribute,
@@ -878,4 +879,40 @@ test("test_convert_orderlines_to_combo_with_same_product: same product with diff
     expect(Utils.hasOrderline({ productName: "Combo Product 4", quantity: "1" })).toBe(true);
     expect(Utils.hasOrderline({ productName: "Combo Product 6", quantity: "1" })).toBe(true);
     expect(queryAll(".orderline")).toHaveLength(5);
+});
+
+test("ProductComboPriceButtonDisabled: price numpad button is disabled for combo lines", async () => {
+    const store = await setupAndMountPosApp({ use_pricelist: false });
+    patch(store.accessRight, { disablePriceButton: true });
+
+    createComboSetup(store, {
+        id: 8400,
+        name: "Office Combo",
+        price: 30,
+        combos: [
+            {
+                name: "Combo 1",
+                items: [{ name: "Combo Product 2", price: 11 }],
+                basePrice: 10,
+                qtyFree: 1,
+                qtyMax: 1,
+            },
+        ],
+    });
+    await animationFrame();
+
+    const order = store.getOrder();
+
+    await Utils.clickDisplayedProduct("TEST");
+    await Utils.ensurePane("left");
+    expect(order.getSelectedOrderline().isPartOfCombo()).toBe(false);
+    expect(queryOne('.numpad button:contains("Price")').disabled).toBe(false);
+
+    await Utils.clickDisplayedProduct("Office Combo");
+    expect(order.getSelectedOrderline().isPartOfCombo()).toBe(true);
+    expect(queryOne('.numpad button:contains("Price")').disabled).toBe(true);
+
+    await Utils.clickOrderline("Combo Product 2");
+    expect(order.getSelectedOrderline().isPartOfCombo()).toBe(true);
+    expect(queryOne('.numpad button:contains("Price")').disabled).toBe(true);
 });
