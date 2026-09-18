@@ -49,7 +49,7 @@
         </div>
     </t>
     <t t-else="">
-        <div data-prevent-closing-overlay="true" class="o_hb_text_effect_options p-2">
+        <div data-prevent-closing-overlay="true" class="o_popover_sliding_panel p-2">
             <BuilderContext action="'updateTextEffect'">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <div class="d-flex align-items-center gap-1">
@@ -59,8 +59,8 @@
                     </div>
                 </div>
                 <t t-foreach="this.domState.shadowIndexes || []" t-as="shadowIndex" t-key="shadowIndex">
-                    <div class="o_hb_text_effect_shadow d-flex align-items-stretch mb-2">
-                        <div class="o_hb_text_effect_shadow_options pb-2 flex-grow-1">
+                    <div class="o_popover_sliding_panel_card d-flex align-items-stretch mb-2">
+                        <div class="o_popover_sliding_panel_card_content pb-2 flex-grow-1">
                             <BuilderRow label.translate="Color" actionParam="{ mainParam: 'shadowColor', shadowIndex: shadowIndex }">
                                 <BuilderColorPicker enabledTabs="['custom', 'solid']" selectedTab="'solid'"
                                                     colorPickerClassName="''" colorPickerPopoverClassName="''"/>
@@ -73,13 +73,10 @@
                                 <BuilderNumberInput actionParam="{ mainParam: 'shadowBlur', shadowIndex: shadowIndex }" unit="'px'" min="0"/>
                             </BuilderRow>
                         </div>
-                        <div>
-                            <button type="button" class="oi oi-fw oi-filled o_hb_text_effect_remove_shadow m-auto o_hb_btn btn text-danger h-100" data-icon="delete"
-                                    t-on-click="() => this.onClickRemoveShadow(shadowIndex)" title="Remove shadow" aria-label="Remove shadow"/>
-                        </div>
+                        <button type="button" class="btn oi oi-filled text-danger" data-icon="delete" t-on-click="() => this.onClickRemoveShadow(shadowIndex)" title="Remove shadow" aria-label="Remove shadow"/>
                     </div>
                 </t>
-                <button type="button" class="o_hb_text_effect_add_shadow o_hb_btn btn btn-secondary h-100 w-100 mb-2" t-on-click="this.onClickAddShadow">Add Shadow</button>
+                <button type="button" class="o_popover_sliding_panel_card_add_btn o_hb_btn btn btn-secondary h-100 w-100 mb-2" t-on-click="this.onClickAddShadow">Add Shadow</button>
                 <div style="padding-right: 33px;">
                     <BuilderRow label.translate="Outline">
                         <BuilderNumberInput actionParam="'outline'" min="0" max="10" unit="'px'"/>
