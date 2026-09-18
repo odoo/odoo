@@ -9,6 +9,48 @@
         <BuilderRow id="this.number_of_records_opt_row" position="replace"/>
         <BuilderRow id="this.filter_opt_row" position="replace"/>
         <BuilderRow id="this.section_title_opt_row" position="after">
+            <BuilderRow label.translate="Filters">
+                <BuilderSelect dataAttributeAction="'parentCategoryId'" preview="false">
+                    <BuilderSelectItem
+                        dataAttributeActionValue=""
+                        title.translate="All Categories"
+                    >
+                        All Categories
+                    </BuilderSelectItem>
+                    <t
+                        t-foreach="this.categories"
+                        t-as="category"
+                        t-key="category.id"
+                    >
+                        <BuilderSelectItem
+                            dataAttributeActionValue="`${category.id}`"
+                            label="category.name"
+                            t-out="category.name"
+                        />
+                    </t>
+                </BuilderSelect>
+            </BuilderRow>
+            <BuilderRow
+                t-if="this.dynamicOptionParams.domState.parentCategoryId"
+                label.translate="Parent Category"
+                dataAttributeAction="'showParent'"
+                preview="false"
+            >
+                <BuilderCheckbox dataAttributeActionValue="'true'"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Size">
+                <BuilderSelect>
+                    <BuilderSelectItem classAction="'s_dynamic_category_size_small'">
+                        Small
+                    </BuilderSelectItem>
+                    <BuilderSelectItem classAction="'s_dynamic_category_size_medium'">
+                        Medium
+                    </BuilderSelectItem>
+                    <BuilderSelectItem classAction="'s_dynamic_category_size_large'">
+                        Large
+                    </BuilderSelectItem>
+                </BuilderSelect>
+            </BuilderRow>
             <BuilderRow label.translate="Columns">
                 <BuilderRange
                     action="'setClassRange'"
@@ -49,19 +91,6 @@
                     max="5"
                 />
             </BuilderRow>
-            <BuilderRow label.translate="Size">
-                <BuilderSelect>
-                    <BuilderSelectItem classAction="'s_dynamic_category_size_small'">
-                        Small
-                    </BuilderSelectItem>
-                    <BuilderSelectItem classAction="'s_dynamic_category_size_medium'">
-                        Medium
-                    </BuilderSelectItem>
-                    <BuilderSelectItem classAction="'s_dynamic_category_size_large'">
-                        Large
-                    </BuilderSelectItem>
-                </BuilderSelect>
-            </BuilderRow>
             <BuilderRow label.translate="Alignment">
                 <BuilderButtonGroup>
                     <BuilderButton classAction="'s_dynamic_category_alignment_left'">
@@ -74,35 +103,6 @@
                         <i class="oi oi-fw" data-icon="format_align_right"/>
                     </BuilderButton>
                 </BuilderButtonGroup>
-            </BuilderRow>
-            <BuilderRow label.translate="Filters">
-                <BuilderSelect dataAttributeAction="'parentCategoryId'" preview="false">
-                    <BuilderSelectItem
-                        dataAttributeActionValue=""
-                        title.translate="All Categories"
-                    >
-                        All Categories
-                    </BuilderSelectItem>
-                    <t
-                        t-foreach="this.categories"
-                        t-as="category"
-                        t-key="category.id"
-                    >
-                        <BuilderSelectItem
-                            dataAttributeActionValue="`${category.id}`"
-                            label="category.name"
-                            t-out="category.name"
-                        />
-                    </t>
-                </BuilderSelect>
-            </BuilderRow>
-            <BuilderRow
-                t-if="this.dynamicOptionParams.domState.parentCategoryId"
-                label.translate="Parent Category"
-                dataAttributeAction="'showParent'"
-                preview="false"
-            >
-                <BuilderCheckbox dataAttributeActionValue="'true'"/>
             </BuilderRow>
             <BuilderRow label.translate="Clickable items">
                 <BuilderCheckbox
