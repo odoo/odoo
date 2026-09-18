@@ -28,6 +28,21 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
         work_entries_vals = self.version.generate_work_entries(date(2021, 9, 1), date(2021, 9, 30))
         self.assertEqual(len(attendances), len(work_entries_vals))
 
+    def test_attendance_based_break_duration_reduces_work_entry(self):
+        """
+        Test that an attendance of 8h with a 2h unpaid break should
+        only generate 6 hours of worked time (excluding the break)
+        """
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 9, 13, 8, 0, 0),
+            'check_out': datetime(2021, 9, 13, 16, 0, 0),
+            'break_duration': 2.0,
+        })
+        work_entries_vals = self.version.generate_work_entries(date(2021, 9, 13), date(2021, 9, 13))
+        total_work_entry_duration = sum(vals['duration'] for vals in work_entries_vals)
+        self.assertEqual(total_work_entry_duration, 6.0)
+
     def test_timezones(self):
         """ Basic check that timezones do not cause weird behaviors:
             * check that the date range of ``generate_work_entries`` accounts for timezones.
