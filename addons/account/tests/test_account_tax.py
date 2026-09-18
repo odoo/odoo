@@ -548,3 +548,11 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             hide_original_tax_ids=True,
         ).name_search(name='Name search tax')
         self.assertEqual(result, [(tax_1.id, tax_1.display_name)])
+
+    def test_is_domestic_with_duplicate_tax(self):
+        """ Test that the is_domestic field is well computed when duplicating a tax """
+        tax = self.tax_sale_a
+        self.assertTrue(tax.company_id.domestic_fiscal_position_id in tax.fiscal_position_ids)
+        self.assertEqual(tax.is_domestic, True)
+        tax_copy = tax.copy({'name': 'new tax'})
+        self.assertEqual(tax_copy.is_domestic, True)
