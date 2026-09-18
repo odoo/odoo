@@ -393,3 +393,42 @@ class TestVehicleInheritsWhatBindsAnAsset(TransactionCase):
             ["resource.asset"],
             "a rule written for one subtype must not narrow its siblings",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestFleetActionContexts(TransactionCase):
+    """An action's context is stored as source and evaluated without `ref`, and
+    a broken expression is defaulted to {} rather than raised. So a context that
+    calls `ref` is not an error anyone sees: it is a menu whose New button
+    quietly makes the wrong record."""
+
+    def test_every_fleet_action_context_survives_evaluation(self):
+        data = self.env["ir.model.data"].search(
+            [("module", "=", "fleet"), ("model", "=", "ir.actions.act_window")]
+        )
+        actions = self.env["ir.actions.act_window"].browse(data.mapped("res_id"))
+
+        empty = [
+            action.id
+            for action in actions
+            if action.context
+            and action.context.strip() not in ("{}", "")
+            and not action._eval_action_context(action.context)
+        ]
+
+        self.assertEqual(empty, [])
+
+    def test_the_vehicle_actions_default_what_they_promise(self):
+        vehicle_kind = self.env.ref("resource_asset.kind_vehicle")
+
+        vehicles = self.env.ref("fleet.fleet_vehicle_action")
+        models = self.env.ref("fleet.fleet_vehicle_model_action")
+
+        self.assertEqual(
+            vehicles._eval_action_context(vehicles.context)["default_kind_id"],
+            vehicle_kind.id,
+        )
+        model_context = models._eval_action_context(models.context)
+        self.assertEqual(model_context["default_asset_kind_id"], vehicle_kind.id)
+        self.assertEqual(model_context["default_type"], "consu")
+        self.assertFalse(model_context["default_sale_ok"])
