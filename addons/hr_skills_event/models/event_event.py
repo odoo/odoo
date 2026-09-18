@@ -13,7 +13,9 @@ class EventEvent(models.Model):
         # current employee as attendee of the event
         events = super().create(vals_list)
         if self.env.context.get('hr_skills_event_add_employee'):
-            if employee := self.env['hr.employee'].search([('id', '=', self.env.context['default_employee_id']), ('work_contact_id', '!=', False)], limit=1):
+            # Without an employee in the context the event comes from the onsite courses action, so we take the current one
+            employee_id = self.env.context.get('default_employee_id') or self.env.user.employee_id.id
+            if employee := self.env['hr.employee'].search([('id', '=', employee_id), ('work_contact_id', '!=', False)], limit=1):
                 partner = employee.work_contact_id
                 vals_list = [
                     {'partner_id': partner.id, 'event_id': event.id}
