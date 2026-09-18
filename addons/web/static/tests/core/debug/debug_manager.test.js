@@ -801,4 +801,84 @@ describe("DebugMenu", () => {
         expect(".modal").toHaveCount(0);
         expect(argSteps).toEqual([["partner", "foo", fooValue, true, true, false]]);
     });
+
+    test("set defaults: settings default value with date and datetime values", async () => {
+        serverState.debug = "1";
+
+        const dateValue = "2024-01-01 00:00:00";
+        const datetimeValue = "2024-01-01 12:34:56";
+        const argSteps = [];
+
+        onRpc("ir.default", "set", async (args) => {
+            argSteps.push(args.args);
+            return true;
+        });
+
+        class Partner extends models.Model {
+            _name = "partner";
+
+            dateField = fields.Date();
+            datetimeField = fields.Datetime();
+
+            _records = [
+                {
+                    id: 1,
+                    display_name: "p1",
+                    dateField: dateValue,
+                    datetimeField: datetimeValue,
+                },
+            ];
+
+            _views = {
+                form: `
+                    <form>
+                        <field name="dateField"/>
+                        <field name="datetimeField"/>
+                    </form>`,
+            };
+        }
+
+        defineModels([Partner]);
+
+        await mountWithCleanup(WebClient);
+
+        await getService("action").doAction({
+            name: "Partners",
+            res_model: "partner",
+            res_id: 1,
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+        });
+        await contains(".o_debug_manager button").click();
+        await contains(".dropdown-menu .dropdown-item:contains('Set Default Values')").click();
+        expect(".modal").toHaveCount(1);
+
+        expect(queryAllTexts`.modal #formview_default_fields option`).toEqual([
+            "",
+            "Date field = 01/01/2024",
+            "Datetime field = 01/01/2024 13:34:56",
+        ]);
+
+        expect(queryAllProperties(".modal #formview_default_fields option", "value")).toEqual([
+            "",
+            "dateField",
+            "datetimeField",
+        ]);
+
+        await contains(".modal #formview_default_fields").select("dateField");
+        await contains(".modal .modal-footer button:nth-child(2)").click();
+        expect(".modal").toHaveCount(0);
+
+        await contains(".o_debug_manager button").click();
+        await contains(".dropdown-menu .dropdown-item:contains('Set Default Values')").click();
+        expect(".modal").toHaveCount(1);
+        await contains(".modal #formview_default_fields").select("datetimeField");
+        await contains(".modal .modal-footer button:nth-child(2)").click();
+        expect(".modal").toHaveCount(0);
+
+        expect(argSteps).toEqual([
+            ["partner", "dateField", "2024-01-01", true, true, false],
+            ["partner", "datetimeField", "2024-01-01 12:34:56", true, true, false],
+        ]);
+    });
 });

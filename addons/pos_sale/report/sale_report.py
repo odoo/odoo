@@ -167,3 +167,11 @@ class SaleReport(models.Model):
             GROUP BY {self._group_by_pos()}
             )
         """
+
+    def _get_order_reference(self):
+        self.ensure_one()
+        if self.id < 0:
+            line = self.env['pos.order.line'].browse(-self.id)
+            line.fetch(['order_id'])
+            return line.order_id
+        return super()._get_order_reference()
