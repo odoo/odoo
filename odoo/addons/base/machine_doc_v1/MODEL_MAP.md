@@ -34,6 +34,8 @@ it is moved to the table its `type` names.
 - `_get_action_dict_by_xml_id(full_xml_id)` — Read the action with this XML ID as a client-ready dict
 - `_get_action_dict()` — Return action data dict for webclient; `type` is the concrete model, not the stored column
 - `_get_fields_readable()` — Fields safe for web access
+- `_get_field_target_model()` / `_get_field_groups()` — Per kind of action: the field naming the model it opens, the field holding the groups it is restricted to; empty on the root. The root asks these instead of probing its leaves' field names
+- `_get_fields_binding_extra()` — Per kind: what a binding ships beyond `_BINDING_READ_FIELDS`; an addon extends it through `super()` on the leaf it adds a column to
 
 ### models/ir_actions_path.py
 
@@ -972,10 +974,17 @@ The machinery a PostgreSQL table-inheritance tree needs (`ir.actions.actions`,
 because no foreign key can target an inherited row, and a check at `init` that
 every subtype table really inherits the root.
 
+The leaves' own many2ones *are* real foreign keys, and a cascading one deletes a
+leaf row inside PostgreSQL, behind that Python `ondelete`. The registry indexes
+those cascades (`cascades_into_inheritance_trees`, direct or through plain
+models, as dotted paths) and `BaseModel.unlink` unlinks the rows they would
+reach through the ORM first; `ir.model.unlink` does so before it drops tables.
+
 **Key Methods:**
 - `_get_concrete()` — The record re-browsed on its concrete model
 - `_get_model_names_concrete()` — Concrete model per id, from `tableoid` cross-checked with the type column
 - `_check_table_inheritance()` — Raise at init when the table does not inherit the declared root
+- `_constrain_type_to_table()` — `CHECK (type = '<model>')` on each leaf table one model owns; skipped, with an error, while rows naming another model remain
 - `_apply_ondelete_unenforced()` — Cascade / set null / restrict for every relation the database cannot enforce
 
 ### models/mixin_module_link.py
