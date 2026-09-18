@@ -2439,7 +2439,12 @@ class MailThread(models.AbstractModel):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
-        return
+        if poll_values := self.env.context.get("mail_create_poll_values"):
+            # sudo: mail.poll - can create a poll on an accessible thread.
+            self.env["mail.poll"].sudo().create({**poll_values, "start_message_id": message.id})
+        elif poll := self.env.context.get("mail_end_poll"):
+            # sudo: mail.poll - can close a poll on an accessible thread.
+            poll.sudo().end_message_id = message.id
 
     def _message_mail_after_hook(self, mails):
         """ Hook to add custom behavior after having sent an mass mailing.
@@ -4161,29 +4166,50 @@ class MailThread(models.AbstractModel):
             icon = "/web/image/res.partner/%d/avatar_128" % message.author_id.id
         else:
             icon = '/web/static/img/odoo-icon-192x192.png'
-
-        if tools.is_html_empty(body) and message.attachment_ids:
-            total_attachments = len(message.attachment_ids)
-            # sudo: ir.attachment - access voice_ids linked to an attachment, if present.
-            attachments = message.attachment_ids.sudo()
-
-            def get_attachment_label(attachment):
-                return self.env._("Voice Message") if attachment.voice_ids else attachment.name
-
-            if total_attachments == 1:
-                body = get_attachment_label(attachments[0])
-            elif total_attachments == 2:
+        if tools.is_html_empty(body):
+            # sudo - mail.poll: accessing polls of a message we just posted is acceptable.
+            if ended_poll := message.sudo().ended_poll_ids:
+                if winning_option := ended_poll.winning_option_id:
+                    body = self.env._(
+                        '%(author)s\'s poll "%(question)s" has closed. Winning answer: %(answer)s.',
+                        author=ended_poll.start_message_id.author_id.name,
+                        question=ended_poll.poll_question,
+                        answer=winning_option.option_label,
+                    )
+                else:
+                    body = self.env._(
+                        '%(author)s\'s poll "%(question)s" has closed.',
+                        author=ended_poll.start_message_id.author_id.name,
+                        question=ended_poll.poll_question,
+                    )
+            elif started_poll := message.sudo().started_poll_ids:
                 body = self.env._(
-                    "%(file1)s and %(file2)s",
-                    file1=get_attachment_label(attachments[0]),
-                    file2=get_attachment_label(attachments[1]),
+                    '%(author)s started a poll: "%(question)s".',
+                    author=message.author_id.name,
+                    question=started_poll.poll_question,
                 )
-            else:
-                body = self.env._(
-                    "%(file1)s and %(count)d other attachments",
-                    file1=get_attachment_label(attachments[0]),
-                    count=total_attachments - 1,
-                )
+            elif message.attachment_ids:
+                total_attachments = len(message.attachment_ids)
+                # sudo: ir.attachment - access voice_ids linked to an attachment, if present.
+                attachments = message.attachment_ids.sudo()
+
+                def get_attachment_label(attachment):
+                    return self.env._("Voice Message") if attachment.voice_ids else attachment.name
+
+                if total_attachments == 1:
+                    body = get_attachment_label(attachments[0])
+                elif total_attachments == 2:
+                    body = self.env._(
+                        "%(file1)s and %(file2)s",
+                        file1=get_attachment_label(attachments[0]),
+                        file2=get_attachment_label(attachments[1]),
+                    )
+                else:
+                    body = self.env._(
+                        "%(file1)s and %(count)d other attachments",
+                        file1=get_attachment_label(attachments[0]),
+                        count=total_attachments - 1,
+                    )
 
         return {
             'title': title,
