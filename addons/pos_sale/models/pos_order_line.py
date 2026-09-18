@@ -46,6 +46,12 @@ class PosOrderLine(models.Model):
         ]
         return params
 
+    def _prepare_base_line_for_taxes_computation(self):
+        res = super()._prepare_base_line_for_taxes_computation()
+        if self.sale_order_origin_id:
+            res['document_tax_mode'] = self.sale_order_origin_id.document_tax_mode
+        return res
+
     def _prepare_refund_data(self, refund_order):
         data = super()._prepare_refund_data(refund_order)
         data.update({
