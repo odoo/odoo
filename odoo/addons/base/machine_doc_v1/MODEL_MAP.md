@@ -170,7 +170,10 @@ renders. The PDF path (WeasyPrint engine, layouts, attachments) is `web`'s
 
 #### IrActionsServer — `ir.actions.server` (`_name`, inherits actions)
 
-Automated server actions — execute code, CRUD operations, or webhooks.
+Automated server actions — execute code, CRUD operations, or webhooks. The
+webhook HTTP delivery, target scrubbing and log target live in
+`odoo/libs/webhook.py` (Odoo-agnostic); the model schedules the delivery on
+commit and logs the scheduling and the rollback.
 
 **Fields:**
 - `state` (Selection, required) — `object_write`, `object_create`, `object_copy`, `code`, `webhook`, `multi`
@@ -1108,6 +1111,18 @@ Data import type conversion — converts external data formats to ORM field valu
 
 ## Embedded Actions
 
+### models/ir_actions_server_history.py
+
+#### IrActionsServerHistory — `ir.actions.server.history` (`_name`)
+
+One row per saved version of a server action's `code`, written by
+`ir.actions.server.write`; `_gc_histories` trims each action to its most
+recent versions.
+
+**Fields:**
+- `action_id` (Many2one → ir.actions.server, required, cascade)
+- `code` (Text)
+
 ### models/ir_actions_embedded.py
 
 #### IrEmbeddedActions — `ir.embedded.actions` (`_name`)
@@ -1967,7 +1982,8 @@ Quick lookup — file → model → primary role:
 | `ir_actions_client.py` | ir.actions.client | Client-side action (JS component) |
 | `ir_actions_todo.py` | ir.actions.todo | Configuration wizard queue |
 | `ir_actions_report.py` | ir.actions.report | PDF/HTML report rendering (WeasyPrint) |
-| `ir_actions_server.py` | ir.actions.server, .server.history, server.action.history.wizard | Automated actions (code/CRUD/webhook) |
+| `ir_actions_server.py` | ir.actions.server | Automated actions (code/CRUD/webhook); delivery in `odoo/libs/webhook.py` |
+| `ir_actions_server_history.py` | ir.actions.server.history | Code versions of a server action |
 | `ir_asset.py` | ir.asset | Asset bundle management |
 | `ir_asset_paths.py` | AssetPaths, BundleWalk (non-ORM) | Asset directive walk |
 | `ir_attachment.py` | ir.attachment | File storage (DB/filestore) |

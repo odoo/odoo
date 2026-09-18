@@ -880,9 +880,7 @@ ZeroDivisionError: division by zero"""
 
         with patch.object(requests.Session, "post", _patched_post):
             self.action.with_context(self.context).run()
-            with self.assertLogs(
-                "odoo.addons.base.models.ir_actions_server", level="WARNING"
-            ) as log_catcher:
+            with self.assertLogs("odoo.libs.webhook", level="WARNING") as log_catcher:
                 self.env.cr.postcommit.run()
         self.assertTrue(
             any("timed out" in line for line in log_catcher.output),
@@ -902,9 +900,7 @@ ZeroDivisionError: division by zero"""
 
         with patch.object(requests.Session, "post", _patched_post):
             self.action.with_context(self.context).run()
-            with self.assertLogs(
-                "odoo.addons.base.models.ir_actions_server", level="WARNING"
-            ) as log_catcher:
+            with self.assertLogs("odoo.libs.webhook", level="WARNING") as log_catcher:
                 self.env.cr.postcommit.run()
         output = "\n".join(log_catcher.output)
         self.assertIn(self.action.name, output, "the action must be identifiable")

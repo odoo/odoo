@@ -29,6 +29,7 @@ from . import ir_actions_act_url
 from . import ir_actions_client
 from . import ir_actions_todo
 from . import ir_actions_server
+from . import ir_actions_server_history
 from . import ir_actions_embedded
 from . import ir_actions_report
 

@@ -3,22 +3,17 @@ import logging
 from collections.abc import Callable
 from functools import partial
 from typing import Any, Literal, Self
-from urllib.parse import urlparse
-
-import babel
-import requests
 
 from odoo import api, fields, models, tools
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.libs.datetime import utc
+from odoo.libs import webhook
 from odoo.libs.debug_log import DebugLog
-from odoo.libs.guarded_http import RefusedDestination
 from odoo.libs.json import OPT_INDENT_2, OPT_SORT_KEYS
 from odoo.libs.json import dumps as json_dumps
 from odoo.libs.netguard import DestinationRefused
-from odoo.tools import _, get_lang
+from odoo.tools import _
 from odoo.tools.misc import unquote
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 
@@ -29,9 +24,6 @@ _server_action_logger = logging.getLogger(
 )
 
 
-_WEBHOOK_RESPONSE_MAX_BYTES = 1024 * 1024
-
-
 def _webhook_json_default(value: Any) -> str:
     if isinstance(value, bytes | bytearray):
         try:
@@ -39,25 +31,6 @@ def _webhook_json_default(value: Any) -> str:
         except UnicodeDecodeError:
             return base64.b64encode(value).decode()
     return str(value)
-
-
-def _get_webhook_log_target(url: str) -> str:
-    try:
-        return urlparse(url).hostname or "<unknown host>"
-    except ValueError:
-        return "<malformed URL>"
-
-
-def _scrub_webhook_url(message: str, url: str, target: str) -> str:
-    parsed = urlparse(url)
-    needles = [url]
-    if parsed.query:
-        needles.append(f"{parsed.path}?{parsed.query}")
-    if len(parsed.path) > 1:
-        needles.append(parsed.path)
-    for needle in needles:
-        message = message.replace(needle, f"<{target} webhook URL>")
-    return message
 
 
 class LoggerProxy:
@@ -71,55 +44,6 @@ class LoggerProxy:
 
 
 _LOGGER_PROXY = LoggerProxy()
-
-
-class IrActionsServerHistory(models.Model):
-    _name = "ir.actions.server.history"
-    _description = "Server Action History"
-    _order = "create_date desc, id desc"
-    _max_entries_per_action = 100
-
-    action_id = fields.Many2one(
-        comodel_name="ir.actions.server",
-        required=True,
-        ondelete="cascade",
-    )
-    code = fields.Text()
-
-    @api.depends("create_date", "create_uid")
-    @api.depends_context("lang", "tz")
-    def _compute_display_name(self) -> None:
-        self.display_name = False
-        locale = get_lang(self.env).code
-        tzinfo = self.env.tz
-        for history in self.filtered("create_date"):
-            dt = history.create_date.replace(microsecond=0, tzinfo=utc)
-            if tzinfo:
-                dt = dt.astimezone(tzinfo)
-            date_label = babel.dates.format_datetime(
-                dt,
-                tzinfo=tzinfo,
-                locale=locale,
-            )
-            history.display_name = _(
-                "%(date_label)s - %(author)s",
-                date_label=date_label,
-                author=history.create_uid.name,
-            )
-
-    @api.autovacuum
-    def _gc_histories(self) -> None:
-        result = self._read_group(
-            domain=[],
-            groupby=["action_id"],
-            aggregates=["id:recordset"],
-            having=[("__count", ">", self._max_entries_per_action)],
-        )
-        to_clean = self
-        for _action_id, history_ids in result:
-            to_clean |= history_ids.sorted()[self._max_entries_per_action :]
-        _debug.lifecycle("gc_histories", actions=len(result), removed=len(to_clean))
-        to_clean.unlink()
 
 
 WEBHOOK_SAMPLE_VALUES = {
@@ -156,6 +80,7 @@ class IrActionsServer(models.Model):
     _order = "sequence,name,id"
     _allow_sudo_commands = False
 
+    # FIELDS
     name = fields.Char(
         compute="_compute_names",
         store=True,
@@ -419,6 +344,8 @@ class IrActionsServer(models.Model):
 
     _WEBHOOK_TIMEOUT_CEILING = 60
 
+    # CONSTRAINT METHODS
+
     @api.constrains("webhook_timeout", "state")
     def _check_webhook_timeout(self) -> None:
         for action in self:
@@ -480,26 +407,7 @@ class IrActionsServer(models.Model):
                 )
             )
 
-    @api.model
-    def _default_update_path(self) -> str:
-        if not self.env.context.get("default_model_id"):
-            return ""
-        ir_model = self.env["ir.model"].browse(self.env.context["default_model_id"])
-        model = self.env[ir_model.model]
-        sensible_default_fields = [
-            "partner_id",
-            "user_id",
-            "user_ids",
-            "stage_id",
-            "state",
-            "active",
-        ]
-        for field_name in sensible_default_fields:
-            if field_name in model._fields and not model._fields[field_name].readonly:
-                _debug.logic("default_update_path", model=model._name, field=field_name)
-                return field_name
-        _debug.logic("default_update_path", model=model._name, field=None)
-        return ""
+    # CRUD METHODS
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
@@ -575,15 +483,22 @@ class IrActionsServer(models.Model):
             self._release_automated_names()
         return res
 
-    def _release_automated_names(self) -> None:
-        self._prefetch_automated_name_sources()
-        for action in self:
-            if (
-                action.name_is_custom
-                and action.name == action._prepare_automated_name()
-            ):
-                _debug.logic("automated_name_released", action=action.id)
-                action.name_is_custom = False
+    def copy_data(self, default: ValuesType | None = None) -> list[ValuesType]:
+        default = default or {}
+        vals_list = super().copy_data(default=default)
+        for vals in vals_list:
+            if not default.get("name"):
+                vals["name"] = _("%s (copy)", vals.get("name", ""))
+            vals["name_is_custom"] = True
+        return vals_list
+
+    def copy_translations(self, new, excluded=()):
+        super().copy_translations(new, excluded=(*excluded, "name"))
+        self._copy_translations_of_renamed_field(
+            new, "name", lambda record, term: record.env._("%s (copy)", term)
+        )
+
+    # COMPUTE METHODS
 
     @api.depends("state", "code")
     def _compute_show_code_history(self) -> None:
@@ -684,320 +599,6 @@ class IrActionsServer(models.Model):
                 action.crud_model_id = action.model_id
                 action.update_field_id = False
 
-    @api.onchange("name")
-    def _onchange_name(self) -> None:
-        self.name_is_custom = bool(self.name) and (
-            self.name != self._prepare_automated_name()
-        )
-        if not self.name:
-            self.automated_name = self._prepare_automated_name()
-            self.name = self.automated_name
-
-    @api.model
-    def _get_fields_warning_depends(self) -> list[str]:
-        return [
-            "state",
-            "model_id",
-            "group_ids",
-            "parent_id",
-            "child_ids.warning",
-            "child_ids.model_id",
-            "child_ids.group_ids",
-            "update_path",
-            "update_field_type",
-            "evaluation_type",
-            "sequence_id",
-            "webhook_field_ids",
-            "usage",
-        ]
-
-    def _get_child_warnings(self) -> list[str]:
-        self.check_singleton()
-        warnings = []
-        children_wrong_model = self.env["ir.actions.server"]
-        children_wrong_groups = self.env["ir.actions.server"]
-        children_with_warnings = self.env["ir.actions.server"]
-        for child in self.child_ids:
-            if self.model_id and child.model_id != self.model_id:
-                children_wrong_model |= child
-            if self.group_ids and child.group_ids != self.group_ids:
-                children_wrong_groups |= child
-            if child.warning:
-                children_with_warnings |= child
-        if _debug.logic.enabled and (
-            children_wrong_model or children_wrong_groups or children_with_warnings
-        ):
-            _debug.logic(
-                "child_warnings",
-                action=self.id,
-                children=len(self.child_ids),
-                wrong_model=len(children_wrong_model),
-                wrong_groups=len(children_wrong_groups),
-                with_warnings=len(children_with_warnings),
-            )
-
-        if children_wrong_model:
-            warnings.append(
-                _(
-                    "Following child actions should have the same model (%(model)s): %(children)s",
-                    model=self.model_id.name,
-                    children=", ".join(children_wrong_model.mapped("name")),
-                )
-            )
-
-        if children_wrong_groups:
-            warnings.append(
-                _(
-                    "Following child actions should have the same groups (%(groups)s): %(children)s",
-                    groups=", ".join(self.group_ids.mapped("name")),
-                    children=", ".join(children_wrong_groups.mapped("name")),
-                )
-            )
-
-        if children_with_warnings:
-            warnings.append(
-                _(
-                    "Following child actions have warnings: %(children)s",
-                    children=", ".join(children_with_warnings.mapped("name")),
-                )
-            )
-        return warnings
-
-    def _get_warning_messages(self) -> list[str]:
-        self.check_singleton()
-        warnings = self._get_child_warnings()
-
-        relation_chain = (
-            self._get_relation_chain("update_path")
-            if self.state == "object_write"
-            else []
-        )
-        if relation_chain and isinstance(relation_chain[-1], fields.Json):
-            warnings.append(
-                _(
-                    "JSON fields (such as '%s') are not supported.",
-                    relation_chain[-1].string,
-                )
-            )
-
-        if self.usage == "ir_cron" and self._is_live_record_required():
-            _debug.logic("cron_needs_record", action=self.id, state=self.state)
-            warnings.append(
-                _(
-                    "A scheduled action runs on no record, and this one needs "
-                    "one to act on. It would do nothing, every time it ran."
-                )
-            )
-
-        if self.state == "object_write" and self.evaluation_type == "sequence":
-            if self.update_field_type and self.update_field_type not in (
-                "char",
-                "text",
-            ):
-                warnings.append(
-                    _("A sequence must only be used with character fields.")
-                )
-            if not self.sequence_id:
-                _debug.logic("sequence_missing", action=self.id)
-                warnings.append(_("Choose the sequence the value is drawn from."))
-
-        if self.state == "webhook" and self.model_id:
-            restricted_fields = []
-            Model = self.env[self.model_id.model]
-            for model_field in self.webhook_field_ids:
-                field = Model._fields.get(model_field.name)
-                if field and field.groups:
-                    restricted_fields.append(f"- {model_field.field_description}")
-            if restricted_fields:
-                _debug.logic(
-                    "webhook_fields_restricted",
-                    action=self.id,
-                    restricted=len(restricted_fields),
-                    total=len(self.webhook_field_ids),
-                )
-                warnings.append(
-                    _(
-                        "Group-restricted fields cannot be included in "
-                        "webhook payloads, as it could allow any user to "
-                        "accidentally leak sensitive information. You will "
-                        "have to remove the following fields from the webhook payload:\n%(restricted_fields)s",
-                        restricted_fields="\n".join(restricted_fields),
-                    )
-                )
-
-        return warnings
-
-    @api.model
-    def _get_domain_children(self) -> Domain:
-        return Domain(
-            [
-                ("model_id", "=", unquote("model_id")),
-                ("parent_id", "=", False),
-                ("id", "!=", unquote("id")),
-            ]
-        )
-
-    def _prepare_automated_name(self) -> str:
-        self.check_singleton()
-        if self.state == "object_create":
-            return _("Create %(model_name)s", model_name=self.crud_model_id.name)
-        if self.state == "object_write":
-            return _("Update %(model_name)s", model_name=self.crud_model_id.name)
-        if self.state == "object_copy":
-            if not self.resource_ref:
-                return _("Duplicate ...")
-            return _("Duplicate %(record)s", record=self.resource_ref.display_name)
-        return dict(self._fields["state"]._description_selection(self.env)).get(
-            self.state, ""
-        )
-
-    @api.model
-    def _get_fields_name_depends(self) -> list[str]:
-        return [
-            "state",
-            "crud_model_id",
-            "resource_ref",
-            "name_is_custom",
-        ]
-
-    def _prefetch_automated_name_sources(self) -> None:
-        by_model = {}
-        for action in self:
-            reference = action.resource_ref if action.state == "object_copy" else None
-            if reference:
-                by_model.setdefault(reference._name, []).append(reference.id)
-        for model_name, ids in by_model.items():
-            self.env[model_name].browse(ids).mapped("display_name")
-
-    def _get_update_path_target(
-        self,
-    ) -> tuple[models.Model | Literal[False], models.Model | Literal[False]]:
-        self.check_singleton()
-        field_chain = self._get_relation_chain("update_path")
-        if not field_chain:
-            return False, False
-        last_field = field_chain[-1]
-        model_id = self.env["ir.model"]._get(last_field.model_name)
-        field_id = self.env["ir.model.fields"]._get(
-            last_field.model_name, last_field.name
-        )
-        return model_id, field_id
-
-    def _get_relation_chain(
-        self, searched_field_name: str, raise_on_error: bool = False
-    ) -> list[fields.Field]:
-        self.check_singleton()
-        if (
-            not searched_field_name
-            or searched_field_name not in self._fields
-            or not self[searched_field_name]
-            or not self.model_id
-        ):
-            return []
-        path = self[searched_field_name].split(".")
-        model = self.env[self.model_id.model]
-        chain = []
-        for i, field_name in enumerate(path):
-            is_last_field = i == len(path) - 1
-            if not field_name:
-                _debug.logic(
-                    "relation_chain_broken",
-                    action=self.id,
-                    field=searched_field_name,
-                    segment=i,
-                    reason="empty_segment",
-                )
-                if raise_on_error:
-                    raise ValidationError(
-                        _(
-                            "The path '%(path)s' contains an empty segment. "
-                            "Remove the extra '.'.",
-                            path=self[searched_field_name],
-                        )
-                    )
-                return []
-            if field_name not in model._fields:
-                _debug.logic(
-                    "relation_chain_broken",
-                    action=self.id,
-                    field=searched_field_name,
-                    segment=i,
-                    model=model._name,
-                    reason="unknown_field",
-                )
-                if raise_on_error:
-                    raise ValidationError(
-                        _(
-                            "Unknown field '%(field_name)s' on model '%(model_name)s'.",
-                            field_name=field_name,
-                            model_name=model._name,
-                        )
-                    )
-                return []
-            field = model._fields[field_name]
-            if not is_last_field:
-                if not field.relational:
-                    _debug.logic(
-                        "relation_chain_broken",
-                        action=self.id,
-                        field=searched_field_name,
-                        segment=i,
-                        model=model._name,
-                        reason="non_relational",
-                    )
-                    if raise_on_error:
-                        current_field = field.get_description(self.env)["string"]
-                        searched_field = self._fields[
-                            searched_field_name
-                        ].get_description(self.env)["string"]
-                        raise ValidationError(
-                            _(
-                                "The path in field '%(searched_field)s' contains a non-relational field (%(current_field)s) that is not the last segment. Only the last field in a path may be non-relational.",
-                                searched_field=searched_field,
-                                current_field=current_field,
-                            )
-                        )
-                    return []
-                model = self.env[field.comodel_name]
-            chain.append(field)
-        _debug.logic(
-            "relation_chain_resolved",
-            action=self.id,
-            field=searched_field_name,
-            depth=len(chain),
-            target=model._name,
-        )
-        return chain
-
-    def _get_relation_chain_label(self, chain: list[fields.Field]) -> str:
-        return " > ".join(field.get_description(self.env)["string"] for field in chain)
-
-    def _get_webhook_payload(self, record: models.Model) -> dict[str, Any]:
-        self.check_singleton()
-        payload = {
-            "_model": self.model_id.model,
-            "_id": record.id,
-            "_action": f"{self.name}(#{self.id})",
-        }
-        if self.webhook_field_ids and record:
-            payload.update(
-                record.read(self.webhook_field_ids.mapped("name"), load=None)[0]
-            )
-        payload["id"] = record.id
-        _debug.pipeline(
-            "webhook_payload_built",
-            action=self.id,
-            record=record.id,
-            fields=len(self.webhook_field_ids),
-        )
-        return payload
-
-    def _dump_webhook_payload(
-        self, payload: dict[str, Any], indent: bool = False
-    ) -> str:
-        option = OPT_SORT_KEYS | (OPT_INDENT_2 if indent else 0)
-        return json_dumps(payload, default=_webhook_json_default, option=option)
-
     @api.depends("state", "model_id.model", "webhook_field_ids", "name")
     def _compute_webhook_sample_payload(self) -> None:
         self.webhook_sample_payload = False
@@ -1031,12 +632,118 @@ class IrActionsServer(models.Model):
                     payload, indent=True
                 )
 
-    @api.model
-    def _get_fields_naming_target_model(self) -> frozenset[str]:
-        return super()._get_fields_naming_target_model() | {"model_id"}
+    @api.depends("evaluation_type", "update_field_id.ttype")
+    def _compute_value_field_to_show(self) -> None:
+        for action in self:
+            if action.evaluation_type == "sequence":
+                action.value_field_to_show = "sequence_id"
+            elif action.evaluation_type == "equation":
+                action.value_field_to_show = "value"
+            elif action.update_field_id.ttype in (
+                "one2many",
+                "many2one",
+                "many2many",
+            ):
+                action.value_field_to_show = "resource_ref"
+            elif action.update_field_id.ttype == "selection":
+                action.value_field_to_show = "selection_value"
+            elif action.update_field_id.ttype == "boolean":
+                action.value_field_to_show = "update_boolean_value"
+            elif action.update_field_id.ttype == "html":
+                action.value_field_to_show = "html_value"
+            else:
+                action.value_field_to_show = "value"
 
-    def _get_field_target_model(self) -> str:
-        return "model_name"
+    # INVERSE METHODS
+
+    @api.onchange("crud_model_id")
+    def _inverse_crud_model_id(self) -> None:
+        invalid = self.filtered(
+            lambda a: (
+                a.state == "object_copy"
+                and a.resource_ref
+                and a.resource_ref._name != a.crud_model_id.model
+            )
+        )
+        invalid.resource_ref = False
+        _debug.logic("crud_model_changed", actions=self.ids, cleared_refs=len(invalid))
+        invalid = self.filtered(
+            lambda a: (
+                a.link_field_id
+                and not (
+                    a.link_field_id.model == a.model_id.model
+                    and a.link_field_id.relation == a.crud_model_id.model
+                )
+            )
+        )
+        invalid.link_field_id = False
+
+    @api.onchange("resource_ref")
+    def _inverse_resource_ref(self) -> None:
+        for action in self.filtered(
+            lambda action: action.value_field_to_show == "resource_ref"
+        ):
+            if action.resource_ref:
+                action.value = str(action.resource_ref.id)
+
+    @api.onchange("selection_value")
+    def _inverse_selection_value(self) -> None:
+        for action in self.filtered(
+            lambda action: action.value_field_to_show == "selection_value"
+        ):
+            if action.selection_value:
+                action.value = action.selection_value.value
+
+    # ONCHANGE METHODS
+
+    @api.onchange("name")
+    def _onchange_name(self) -> None:
+        self.name_is_custom = bool(self.name) and (
+            self.name != self._prepare_automated_name()
+        )
+        if not self.name:
+            self.automated_name = self._prepare_automated_name()
+            self.name = self.automated_name
+
+    # ACTION METHODS
+
+    def action_view_code_history(self) -> dict[str, Any]:
+        self.check_singleton()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Code History"),
+            "target": "new",
+            "views": [(False, "form")],
+            "res_model": "server.action.history.wizard",
+            "context": {"default_action_id": self.id},
+        }
+
+    def action_view_parent_action(self) -> dict[str, Any]:
+        self.check_singleton()
+        return {
+            "type": "ir.actions.act_window",
+            "target": "current",
+            "views": [[False, "form"]],
+            "res_model": self._name,
+            "res_id": self.parent_id.id,
+        }
+
+    def action_view_scheduled_action(self) -> dict[str, Any]:
+        self.check_singleton()
+        if not self.ir_cron_ids:
+            _debug.logic("scheduled_action_missing", action=self.id)
+            raise UserError(
+                _("No scheduled action is associated with this server action.")
+            )
+        return {
+            "type": "ir.actions.act_window",
+            "target": "current",
+            "views": [[False, "form"]],
+            "res_model": "ir.cron",
+            "res_id": self.ir_cron_ids[:1].id,
+        }
+
+    # RUN METHODS
 
     def _is_batchable(self) -> bool:
         self.check_singleton()
@@ -1060,12 +767,6 @@ class IrActionsServer(models.Model):
             return bool(self.link_field_id)
         return True
 
-    def _get_fields_readable(self) -> frozenset[str]:
-        return super()._get_fields_readable() | {
-            "group_ids",
-            "model_name",
-        }
-
     def _resolve_runner(self) -> tuple[Callable | None, bool]:
         self.check_singleton()
         model_class = self.env.registry[self._name]
@@ -1079,17 +780,6 @@ class IrActionsServer(models.Model):
         if _debug.logic.enabled and fn_multi:
             _debug.logic("batch_runner_declined", action=self.id, state=self.state)
         return fn, False
-
-    def action_view_code_history(self) -> dict[str, Any]:
-        self.check_singleton()
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Code History"),
-            "target": "new",
-            "views": [(False, "form")],
-            "res_model": "server.action.history.wizard",
-            "context": {"default_action_id": self.id},
-        }
 
     def _run_action_code_multi(self, eval_context: dict[str, Any]) -> Any:
         if not self.code:
@@ -1205,7 +895,7 @@ class IrActionsServer(models.Model):
             "webhook_guard",
             phase="action",
             action=self.id,
-            target=_get_webhook_log_target(url),
+            target=webhook.get_log_target(url),
             blocked=blocked,
         )
         if blocked:
@@ -1222,7 +912,7 @@ class IrActionsServer(models.Model):
 
         action_label = payload["_action"]
         timeout = self.webhook_timeout
-        target = _get_webhook_log_target(url)
+        target = webhook.get_log_target(url)
 
         _logger.info("Webhook %s to %s", action_label, target)
         _logger.debug("POST JSON data for webhook call: %s", json_values)
@@ -1247,70 +937,6 @@ class IrActionsServer(models.Model):
         @self.env.cr.postcommit.add
         def _deliver_webhook_after_commit():
             deliver(json_values)
-
-    def _prepare_webhook_delivery(self, url, timeout, action_label, target):
-        return partial(
-            self._deliver_webhook_unauthenticated,
-            self.env["ir.egress"].session(
-                purpose="webhook", max_bytes=_WEBHOOK_RESPONSE_MAX_BYTES
-            ),
-            url,
-            timeout,
-            action_label,
-            target,
-        )
-
-    @staticmethod
-    def _deliver_webhook_unauthenticated(
-        session, url, timeout, action_label, target, json_values
-    ):
-        _logger.debug("Webhook %s to %s - start", action_label, target)
-        try:
-            with _debug.perf("webhook_post", target=target, timeout=timeout):
-                with session:
-                    response = session.post(
-                        url,
-                        data=json_values,
-                        headers={"Content-Type": "application/json"},
-                        timeout=timeout,
-                        allow_redirects=False,
-                    )
-            response.raise_for_status()
-            _logger.info("Webhook %s to %s - succeeded", action_label, target)
-            _debug.pipeline(
-                "webhook_delivered", target=target, status=response.status_code
-            )
-        except RefusedDestination as refusal:
-            _debug.logic(
-                "webhook_guard", phase="delivery", target=target, blocked=str(refusal)
-            )
-            _logger.error(
-                "Webhook %s to %s was NOT sent: %s. The address was allowed when "
-                "the action ran and is not any more -- the name resolved "
-                "differently between the check and the send.",
-                action_label,
-                target,
-                refusal,
-            )
-        except requests.exceptions.ReadTimeout:
-            _debug.logic("webhook_failed", target=target, reason="timeout")
-            _logger.warning(
-                "Webhook %s to %s timed out after %ss. The receiver may or "
-                "may not have processed it. Raise 'Webhook Timeout (s)' on "
-                "the action if the receiver is simply slow; if delivery has "
-                "to be certain, this action cannot give you that.",
-                action_label,
-                target,
-                timeout,
-            )
-        except requests.exceptions.RequestException as e:
-            _debug.logic("webhook_failed", target=target, reason=type(e).__name__)
-            _logger.error(
-                "Webhook %s to %s failed and will NOT be retried: %s",
-                action_label,
-                target,
-                _scrub_webhook_url(str(e), url, target),
-            )
 
     def _link_to_active_record(
         self, new_id: int, eval_context: dict[str, Any] | None = None
@@ -1621,27 +1247,370 @@ class IrActionsServer(models.Model):
         if config.link_field_id:
             records.check_access("write")
 
-    @api.depends("evaluation_type", "update_field_id.ttype")
-    def _compute_value_field_to_show(self) -> None:
+    # WEBHOOK METHODS
+
+    def _get_webhook_payload(self, record: models.Model) -> dict[str, Any]:
+        self.check_singleton()
+        payload = {
+            "_model": self.model_id.model,
+            "_id": record.id,
+            "_action": f"{self.name}(#{self.id})",
+        }
+        if self.webhook_field_ids and record:
+            payload.update(
+                record.read(self.webhook_field_ids.mapped("name"), load=None)[0]
+            )
+        payload["id"] = record.id
+        _debug.pipeline(
+            "webhook_payload_built",
+            action=self.id,
+            record=record.id,
+            fields=len(self.webhook_field_ids),
+        )
+        return payload
+
+    def _dump_webhook_payload(
+        self, payload: dict[str, Any], indent: bool = False
+    ) -> str:
+        option = OPT_SORT_KEYS | (OPT_INDENT_2 if indent else 0)
+        return json_dumps(payload, default=_webhook_json_default, option=option)
+
+    def _prepare_webhook_delivery(self, url, timeout, action_label, target):
+        return partial(
+            webhook.deliver,
+            self.env["ir.egress"].session(
+                purpose="webhook", max_bytes=webhook.RESPONSE_MAX_BYTES
+            ),
+            url,
+            timeout,
+            action_label,
+            target,
+        )
+
+    # HELPER METHODS
+
+    @api.model
+    def _default_update_path(self) -> str:
+        if not self.env.context.get("default_model_id"):
+            return ""
+        ir_model = self.env["ir.model"].browse(self.env.context["default_model_id"])
+        model = self.env[ir_model.model]
+        sensible_default_fields = [
+            "partner_id",
+            "user_id",
+            "user_ids",
+            "stage_id",
+            "state",
+            "active",
+        ]
+        for field_name in sensible_default_fields:
+            if field_name in model._fields and not model._fields[field_name].readonly:
+                _debug.logic("default_update_path", model=model._name, field=field_name)
+                return field_name
+        _debug.logic("default_update_path", model=model._name, field=None)
+        return ""
+
+    def _release_automated_names(self) -> None:
+        self._prefetch_automated_name_sources()
         for action in self:
-            if action.evaluation_type == "sequence":
-                action.value_field_to_show = "sequence_id"
-            elif action.evaluation_type == "equation":
-                action.value_field_to_show = "value"
-            elif action.update_field_id.ttype in (
-                "one2many",
-                "many2one",
-                "many2many",
+            if (
+                action.name_is_custom
+                and action.name == action._prepare_automated_name()
             ):
-                action.value_field_to_show = "resource_ref"
-            elif action.update_field_id.ttype == "selection":
-                action.value_field_to_show = "selection_value"
-            elif action.update_field_id.ttype == "boolean":
-                action.value_field_to_show = "update_boolean_value"
-            elif action.update_field_id.ttype == "html":
-                action.value_field_to_show = "html_value"
-            else:
-                action.value_field_to_show = "value"
+                _debug.logic("automated_name_released", action=action.id)
+                action.name_is_custom = False
+
+    @api.model
+    def _get_fields_warning_depends(self) -> list[str]:
+        return [
+            "state",
+            "model_id",
+            "group_ids",
+            "parent_id",
+            "child_ids.warning",
+            "child_ids.model_id",
+            "child_ids.group_ids",
+            "update_path",
+            "update_field_type",
+            "evaluation_type",
+            "sequence_id",
+            "webhook_field_ids",
+            "usage",
+        ]
+
+    def _get_child_warnings(self) -> list[str]:
+        self.check_singleton()
+        warnings = []
+        children_wrong_model = self.env["ir.actions.server"]
+        children_wrong_groups = self.env["ir.actions.server"]
+        children_with_warnings = self.env["ir.actions.server"]
+        for child in self.child_ids:
+            if self.model_id and child.model_id != self.model_id:
+                children_wrong_model |= child
+            if self.group_ids and child.group_ids != self.group_ids:
+                children_wrong_groups |= child
+            if child.warning:
+                children_with_warnings |= child
+        if _debug.logic.enabled and (
+            children_wrong_model or children_wrong_groups or children_with_warnings
+        ):
+            _debug.logic(
+                "child_warnings",
+                action=self.id,
+                children=len(self.child_ids),
+                wrong_model=len(children_wrong_model),
+                wrong_groups=len(children_wrong_groups),
+                with_warnings=len(children_with_warnings),
+            )
+
+        if children_wrong_model:
+            warnings.append(
+                _(
+                    "Following child actions should have the same model (%(model)s): %(children)s",
+                    model=self.model_id.name,
+                    children=", ".join(children_wrong_model.mapped("name")),
+                )
+            )
+
+        if children_wrong_groups:
+            warnings.append(
+                _(
+                    "Following child actions should have the same groups (%(groups)s): %(children)s",
+                    groups=", ".join(self.group_ids.mapped("name")),
+                    children=", ".join(children_wrong_groups.mapped("name")),
+                )
+            )
+
+        if children_with_warnings:
+            warnings.append(
+                _(
+                    "Following child actions have warnings: %(children)s",
+                    children=", ".join(children_with_warnings.mapped("name")),
+                )
+            )
+        return warnings
+
+    def _get_warning_messages(self) -> list[str]:
+        self.check_singleton()
+        warnings = self._get_child_warnings()
+
+        relation_chain = (
+            self._get_relation_chain("update_path")
+            if self.state == "object_write"
+            else []
+        )
+        if relation_chain and isinstance(relation_chain[-1], fields.Json):
+            warnings.append(
+                _(
+                    "JSON fields (such as '%s') are not supported.",
+                    relation_chain[-1].string,
+                )
+            )
+
+        if self.usage == "ir_cron" and self._is_live_record_required():
+            _debug.logic("cron_needs_record", action=self.id, state=self.state)
+            warnings.append(
+                _(
+                    "A scheduled action runs on no record, and this one needs "
+                    "one to act on. It would do nothing, every time it ran."
+                )
+            )
+
+        if self.state == "object_write" and self.evaluation_type == "sequence":
+            if self.update_field_type and self.update_field_type not in (
+                "char",
+                "text",
+            ):
+                warnings.append(
+                    _("A sequence must only be used with character fields.")
+                )
+            if not self.sequence_id:
+                _debug.logic("sequence_missing", action=self.id)
+                warnings.append(_("Choose the sequence the value is drawn from."))
+
+        if self.state == "webhook" and self.model_id:
+            restricted_fields = []
+            Model = self.env[self.model_id.model]
+            for model_field in self.webhook_field_ids:
+                field = Model._fields.get(model_field.name)
+                if field and field.groups:
+                    restricted_fields.append(f"- {model_field.field_description}")
+            if restricted_fields:
+                _debug.logic(
+                    "webhook_fields_restricted",
+                    action=self.id,
+                    restricted=len(restricted_fields),
+                    total=len(self.webhook_field_ids),
+                )
+                warnings.append(
+                    _(
+                        "Group-restricted fields cannot be included in "
+                        "webhook payloads, as it could allow any user to "
+                        "accidentally leak sensitive information. You will "
+                        "have to remove the following fields from the webhook payload:\n%(restricted_fields)s",
+                        restricted_fields="\n".join(restricted_fields),
+                    )
+                )
+
+        return warnings
+
+    @api.model
+    def _get_domain_children(self) -> Domain:
+        return Domain(
+            [
+                ("model_id", "=", unquote("model_id")),
+                ("parent_id", "=", False),
+                ("id", "!=", unquote("id")),
+            ]
+        )
+
+    def _prepare_automated_name(self) -> str:
+        self.check_singleton()
+        if self.state == "object_create":
+            return _("Create %(model_name)s", model_name=self.crud_model_id.name)
+        if self.state == "object_write":
+            return _("Update %(model_name)s", model_name=self.crud_model_id.name)
+        if self.state == "object_copy":
+            if not self.resource_ref:
+                return _("Duplicate ...")
+            return _("Duplicate %(record)s", record=self.resource_ref.display_name)
+        return dict(self._fields["state"]._description_selection(self.env)).get(
+            self.state, ""
+        )
+
+    @api.model
+    def _get_fields_name_depends(self) -> list[str]:
+        return [
+            "state",
+            "crud_model_id",
+            "resource_ref",
+            "name_is_custom",
+        ]
+
+    def _prefetch_automated_name_sources(self) -> None:
+        by_model = {}
+        for action in self:
+            reference = action.resource_ref if action.state == "object_copy" else None
+            if reference:
+                by_model.setdefault(reference._name, []).append(reference.id)
+        for model_name, ids in by_model.items():
+            self.env[model_name].browse(ids).mapped("display_name")
+
+    def _get_update_path_target(
+        self,
+    ) -> tuple[models.Model | Literal[False], models.Model | Literal[False]]:
+        self.check_singleton()
+        field_chain = self._get_relation_chain("update_path")
+        if not field_chain:
+            return False, False
+        last_field = field_chain[-1]
+        model_id = self.env["ir.model"]._get(last_field.model_name)
+        field_id = self.env["ir.model.fields"]._get(
+            last_field.model_name, last_field.name
+        )
+        return model_id, field_id
+
+    def _get_relation_chain(
+        self, searched_field_name: str, raise_on_error: bool = False
+    ) -> list[fields.Field]:
+        self.check_singleton()
+        if (
+            not searched_field_name
+            or searched_field_name not in self._fields
+            or not self[searched_field_name]
+            or not self.model_id
+        ):
+            return []
+        path = self[searched_field_name].split(".")
+        model = self.env[self.model_id.model]
+        chain = []
+        for i, field_name in enumerate(path):
+            is_last_field = i == len(path) - 1
+            if not field_name:
+                _debug.logic(
+                    "relation_chain_broken",
+                    action=self.id,
+                    field=searched_field_name,
+                    segment=i,
+                    reason="empty_segment",
+                )
+                if raise_on_error:
+                    raise ValidationError(
+                        _(
+                            "The path '%(path)s' contains an empty segment. "
+                            "Remove the extra '.'.",
+                            path=self[searched_field_name],
+                        )
+                    )
+                return []
+            if field_name not in model._fields:
+                _debug.logic(
+                    "relation_chain_broken",
+                    action=self.id,
+                    field=searched_field_name,
+                    segment=i,
+                    model=model._name,
+                    reason="unknown_field",
+                )
+                if raise_on_error:
+                    raise ValidationError(
+                        _(
+                            "Unknown field '%(field_name)s' on model '%(model_name)s'.",
+                            field_name=field_name,
+                            model_name=model._name,
+                        )
+                    )
+                return []
+            field = model._fields[field_name]
+            if not is_last_field:
+                if not field.relational:
+                    _debug.logic(
+                        "relation_chain_broken",
+                        action=self.id,
+                        field=searched_field_name,
+                        segment=i,
+                        model=model._name,
+                        reason="non_relational",
+                    )
+                    if raise_on_error:
+                        current_field = field.get_description(self.env)["string"]
+                        searched_field = self._fields[
+                            searched_field_name
+                        ].get_description(self.env)["string"]
+                        raise ValidationError(
+                            _(
+                                "The path in field '%(searched_field)s' contains a non-relational field (%(current_field)s) that is not the last segment. Only the last field in a path may be non-relational.",
+                                searched_field=searched_field,
+                                current_field=current_field,
+                            )
+                        )
+                    return []
+                model = self.env[field.comodel_name]
+            chain.append(field)
+        _debug.logic(
+            "relation_chain_resolved",
+            action=self.id,
+            field=searched_field_name,
+            depth=len(chain),
+            target=model._name,
+        )
+        return chain
+
+    def _get_relation_chain_label(self, chain: list[fields.Field]) -> str:
+        return " > ".join(field.get_description(self.env)["string"] for field in chain)
+
+    @api.model
+    def _get_fields_naming_target_model(self) -> frozenset[str]:
+        return super()._get_fields_naming_target_model() | {"model_id"}
+
+    def _get_field_target_model(self) -> str:
+        return "model_name"
+
+    def _get_fields_readable(self) -> frozenset[str]:
+        return super()._get_fields_readable() | {
+            "group_ids",
+            "model_name",
+        }
 
     @api.model
     @tools.ormcache("self.env.lang")
@@ -1650,44 +1619,6 @@ class IrActionsServer(models.Model):
             (model.model, model.name)
             for model in self.env["ir.model"].sudo().search([])
         )
-
-    @api.onchange("crud_model_id")
-    def _inverse_crud_model_id(self) -> None:
-        invalid = self.filtered(
-            lambda a: (
-                a.state == "object_copy"
-                and a.resource_ref
-                and a.resource_ref._name != a.crud_model_id.model
-            )
-        )
-        invalid.resource_ref = False
-        _debug.logic("crud_model_changed", actions=self.ids, cleared_refs=len(invalid))
-        invalid = self.filtered(
-            lambda a: (
-                a.link_field_id
-                and not (
-                    a.link_field_id.model == a.model_id.model
-                    and a.link_field_id.relation == a.crud_model_id.model
-                )
-            )
-        )
-        invalid.link_field_id = False
-
-    @api.onchange("resource_ref")
-    def _inverse_resource_ref(self) -> None:
-        for action in self.filtered(
-            lambda action: action.value_field_to_show == "resource_ref"
-        ):
-            if action.resource_ref:
-                action.value = str(action.resource_ref.id)
-
-    @api.onchange("selection_value")
-    def _inverse_selection_value(self) -> None:
-        for action in self.filtered(
-            lambda action: action.value_field_to_show == "selection_value"
-        ):
-            if action.selection_value:
-                action.value = action.selection_value.value
 
     def _coerce_number(self, converter: Any) -> Any:
         self.check_singleton()
@@ -1769,43 +1700,3 @@ class IrActionsServer(models.Model):
             case "set":
                 return [Command.set([target_id])]
         return []
-
-    def copy_data(self, default: ValuesType | None = None) -> list[ValuesType]:
-        default = default or {}
-        vals_list = super().copy_data(default=default)
-        for vals in vals_list:
-            if not default.get("name"):
-                vals["name"] = _("%s (copy)", vals.get("name", ""))
-            vals["name_is_custom"] = True
-        return vals_list
-
-    def copy_translations(self, new, excluded=()):
-        super().copy_translations(new, excluded=(*excluded, "name"))
-        self._copy_translations_of_renamed_field(
-            new, "name", lambda record, term: record.env._("%s (copy)", term)
-        )
-
-    def action_view_parent_action(self) -> dict[str, Any]:
-        self.check_singleton()
-        return {
-            "type": "ir.actions.act_window",
-            "target": "current",
-            "views": [[False, "form"]],
-            "res_model": self._name,
-            "res_id": self.parent_id.id,
-        }
-
-    def action_view_scheduled_action(self) -> dict[str, Any]:
-        self.check_singleton()
-        if not self.ir_cron_ids:
-            _debug.logic("scheduled_action_missing", action=self.id)
-            raise UserError(
-                _("No scheduled action is associated with this server action.")
-            )
-        return {
-            "type": "ir.actions.act_window",
-            "target": "current",
-            "views": [[False, "form"]],
-            "res_model": "ir.cron",
-            "res_id": self.ir_cron_ids[:1].id,
-        }

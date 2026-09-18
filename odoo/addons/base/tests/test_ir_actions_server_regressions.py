@@ -15,6 +15,7 @@ from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval
 
 _MODULE = "odoo.addons.base.models.ir_actions_server"
+_DELIVERY = "odoo.libs.webhook"
 
 
 class ServerActionCase(TransactionCase):
@@ -385,7 +386,7 @@ class TestWebhookGuardHoldsAtSendTime(ServerActionCase):
             self._resolving(["93.184.216.34"], ["127.0.0.1"]),
             patch.object(requests.Session, "send", _super_send),
             sending,
-            self.assertLogs(_MODULE, "ERROR") as logs,
+            self.assertLogs(_DELIVERY, "ERROR") as logs,
         ):
             action.with_context(**self._ctx(self._partners(1))).run()
             self.env.cr.postcommit.run()
