@@ -20,7 +20,7 @@ class ReportProjectTaskUser(models.Model):
         return super()._select() +  """,
                 CASE WHEN COALESCE(t.allocated_hours, 0) = 0 THEN 0.0 ELSE t.progress * 100 END as progress,
                 t.effective_hours,
-                CASE WHEN COALESCE(t.allocated_hours, 0) = 0 THEN 0.0 ELSE t.allocated_hours - t.effective_hours END as remaining_hours,
+                CASE WHEN COALESCE(t.allocated_hours, 0) = 0 THEN 0.0 ELSE t.remaining_hours END as remaining_hours,
                 CASE WHEN t.allocated_hours > 0 THEN t.remaining_hours / t.allocated_hours ELSE 0 END as remaining_hours_percentage,
                 COALESCE(t.allocated_hours, 0) as allocated_hours,
                 t.overtime,
@@ -35,5 +35,6 @@ class ReportProjectTaskUser(models.Model):
                 t.allocated_hours,
                 t.overtime,
                 t.progress,
+                t.remaining_hours,
                 t.total_hours_spent
         """
