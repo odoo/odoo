@@ -19,22 +19,6 @@
         <xpath expr="//div[hasclass('portal_details')]" position="attributes">
             <attribute name="t-if" add="(pos_order.company_id.country_code != 'PE')" separator="and" />
         </xpath>
-        <xpath expr="//div[@id='get_info_div']" position="attributes">
-            <attribute name="t-if" add="(pos_order.company_id.country_code != 'PE')" separator="and" />
-        </xpath>
-        <xpath expr="//div[@id='get_info_div']" position="after">
-            <h4 t-elif="pos_order.company_id.country_code == 'PE'">
-                Please
-                <a
-                    role="button"
-                    t-att-href="'/web/login?redirect=/pos/ticket/validate?access_token=%s' % access_token"
-                    style="margin-top: -11px"
-                >
-                    Sign in
-                </a>
-                in order to save your contact info
-            </h4>
-        </xpath>
 
         <!-- Show PE fields preview info, and show warning is a required field need to be completed -->
         <xpath expr="//t[@id='partner_vat']" position="before">
