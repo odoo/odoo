@@ -33,8 +33,14 @@ class StockPicking(models.Model):
 
     @api.depends('partner_id', 'carrier_id.max_weight', 'carrier_id.max_volume', 'carrier_id.must_have_tag_ids', 'carrier_id.excluded_tag_ids', 'move_ids.product_id.product_tag_ids', 'move_ids.product_id.weight', 'move_ids.product_id.volume')
     def _compute_allowed_carrier_ids(self):
+        Carrier = self.env['delivery.carrier']
+        # One search per company, the empty one of a new record included.
+        carriers_by_company = {}
         for picking in self:
-            carriers = self.env['delivery.carrier'].search(self.env['delivery.carrier']._check_company_domain(picking.company_id))
+            company = picking.company_id
+            if company not in carriers_by_company:
+                carriers_by_company[company] = Carrier.search(Carrier._check_company_domain(company))
+            carriers = carriers_by_company[company]
             picking.allowed_carrier_ids = carriers.available_carriers(picking.partner_id, picking) if picking.partner_id else carriers
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
