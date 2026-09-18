@@ -297,6 +297,33 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="hourly_cost">75</field>
         </record>
 
+        <record id="employee_light" model="hr.employee">
+            <field name="name">Monica Light</field>
+            <field name="user_id" ref="base.user_light"/>
+            <field name="category_ids" eval="[Command.set([ref('employee_category_4')])]"/>
+            <field name="work_contact_id" ref="base.partner_light"/>
+            <field name="date_version" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1))"/>
+            <field name="contract_date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1))"/>
+            <field name="employee_type_id" ref="contract_type_employee"/>
+            <field name="structure_type_id" ref="structure_type_employee"/>
+            <field name="wage">5000.00</field>
+            <field name="job_id" ref="hr.job_developer"/>
+            <field name="department_id" ref="dep_rd"/>
+            <field name="parent_id" ref="employee_admin"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+            <field name="private_street">118 Rue de l'Ange</field>
+            <field name="private_zip">5000</field>
+            <field name="private_city">Namur</field>
+            <field name="private_country_id" ref="base.be"/>
+            <field name="private_phone">+32-489-189-562</field>
+            <field name="private_email">light@yourcompany.example.com</field>
+            <field name="work_location_id" ref="work_location_1"/>
+            <field name="hr_responsible_id" ref="base.user_admin"/>
+            <field name="sex">female</field>
+            <field name="distance_home_work">23</field>
+            <field name="hourly_cost">100</field>
+        </record>
+
         <record id="work_contact_al" model="res.partner">
             <field name="name">Ronnie Hart</field>
             <field name="email">ronnie.hart87@example.com</field>
