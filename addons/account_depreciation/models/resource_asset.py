@@ -194,7 +194,7 @@ class ResourceAsset(models.Model):
     )
     value_depreciable_residual = fields.Monetary(
         string="Depreciable Value",
-        compute="_compute_value_residual",
+        compute="_compute_value_depreciable_residual",
         groups="account.group_account_readonly,account.group_account_invoice",
     )
     value_salvage = fields.Monetary(
@@ -547,7 +547,7 @@ class ResourceAsset(models.Model):
         "depreciation_move_ids.depreciation_value",
         "depreciation_move_ids.reversal_move_ids",
     )
-    def _compute_value_residual(self):
+    def _compute_value_depreciable_residual(self):
         grouped_moves = self.env["account.move"]._read_group(
             domain=[
                 ("depreciation_asset_id", "in", self.ids),

@@ -31,7 +31,7 @@ class AssetModify(models.TransientModel):
     )
     value_depreciable_residual = fields.Monetary(
         string="Depreciable Amount",
-        compute="_compute_value_residual",
+        compute="_compute_value_depreciable_residual",
         store=True,
         readonly=False,
         help="New residual amount for the asset",
@@ -130,7 +130,7 @@ class AssetModify(models.TransientModel):
             record.loss_account_id = record.company_id.loss_account_id
 
     @api.depends("date", "asset_id")
-    def _compute_value_residual(self):
+    def _compute_value_depreciable_residual(self):
         for record in self:
             record.value_depreciable_residual = (
                 record.asset_id._get_residual_value_at_date(record.date)
