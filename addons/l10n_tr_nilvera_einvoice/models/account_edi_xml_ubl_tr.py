@@ -52,7 +52,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'uuid': invoice.l10n_tr_nilvera_uuid,
             'document_type_code': 'SATIS' if invoice.move_type == 'out_invoice' else 'IADE',
             'due_date': False,
-            'line_count_numeric': len(invoice.line_ids),
+            'line_count_numeric': len(invoice.line_ids.filtered(lambda line: line.display_type == 'product')),
             'order_issue_date': invoice.invoice_date,
             'pricing_currency_code': invoice.currency_id.name.upper() if invoice.currency_id != invoice.company_id.currency_id else False,
             'currency_dp': 2,
