@@ -33,7 +33,7 @@ import {
     lastLeaf,
 } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
-import { childNodeIndex, nodeSize, leftPos, rightPos } from "../utils/position";
+import { childNodeIndex, nodeSize, leftPos, rightPos, DIRECTIONS } from "../utils/position";
 import { callbacksForCursorUpdate, normalizeCursorPosition } from "@html_editor/utils/selection";
 import {
     baseContainerGlobalSelector,
@@ -44,6 +44,10 @@ import { withSequence } from "@html_editor/utils/resource";
 import { isFakeLineBreak } from "@html_editor/utils/dom_state";
 import { NATIVE_MUTATION_TYPES } from "./dom_observer_plugin";
 
+export const PLAIN_TEXT_MODES = /** @type {const} */ {
+    SINGLE_LINE: "singleLine",
+    MULTI_LINE: "multiLine",
+};
 const IS_MARKER = Symbol("isMarker");
 /**
  * Create, position and return an empty text node before which to insert. It
@@ -94,6 +98,7 @@ const makeSpacesVisible = (text) =>
  * @property { DomPlugin['setTagName'] } setTagName
  * @property { DomPlugin['removeSystemProperties'] } removeSystemProperties
  * @property { DomPlugin['wrapInlinesInBlocks'] } wrapInlinesInBlocks
+ * @property { DomPlugin['shouldInsertAsPlainText'] } shouldInsertAsPlainText
  */
 
 /**
@@ -110,10 +115,11 @@ const makeSpacesVisible = (text) =>
  * @typedef {((insertedNodes: Node[]) => void)[]} inserted_content_processors
  * @typedef {((position: [node: Node, offset: number]) => void)[]} position_after_insertion_processors
  *
- * @typedef {((selection: EditorSelection) => boolean | undefined)[]} should_insert_as_text_predicates
  * @typedef {((element: HTMLElement) => boolean | void)[]} can_hold_selection_after_insertion_predicates
  * @typedef {((block: HTMLElement, parent: HTMLElement) => boolean | void)[]} can_insert_block_in_parent_predicates
  *
+ * @typedef {string[]} plain_text_container_selectors
+ * @typedef {string[]} multiline_plain_text_container_selectors
  * @typedef {string[]} system_attributes
  * @typedef {string[]} system_classes
  * @typedef {string[]} system_style_properties
@@ -131,6 +137,7 @@ export class DomPlugin extends Plugin {
         "setTagName",
         "removeSystemProperties",
         "wrapInlinesInBlocks",
+        "shouldInsertAsPlainText",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -308,31 +315,43 @@ export class DomPlugin extends Plugin {
      * @returns {Node[]} the inserted nodes
      */
     insert(content, { asPlainText } = {}) {
-        asPlainText ??=
-            this.checkPredicates(
-                "should_insert_as_text_predicates",
-                this.dependencies.selection.getEditableSelection()
-            ) ?? false;
+        const plainTextMode =
+            this.shouldInsertAsPlainText() || (asPlainText && PLAIN_TEXT_MODES.SINGLE_LINE);
         // Pre-process
         if (typeof content === "string") {
-            content = this.processTextForInsertion(content, asPlainText);
+            content = this.processStringForInsertion(content, !!plainTextMode);
         }
         let fragment = this.document.createDocumentFragment();
         if (content) {
             (isElement(content) ? [content] : children(content)).forEach(this.normalize.bind(this));
             fragment.replaceChildren(content);
         }
-        fragment = this.processThrough(
-            asPlainText ? "fragment_to_insert_as_text_processors" : "fragment_to_insert_processors",
-            fragment
-        );
+        if (plainTextMode) {
+            fragment = this.processThrough(
+                "fragment_to_insert_as_text_processors",
+                fragment,
+                plainTextMode
+            );
+        } else {
+            fragment = this.processThrough("fragment_to_insert_processors", fragment);
+        }
         this.dependencies.delete.deleteSelection();
         let nodes = this.processFragmentToInsert(fragment);
         if (!nodes.length) {
             return [];
         }
-        if (asPlainText) {
-            nodes = nodes.map((node) => this.document.createTextNode(node.textContent));
+        if (plainTextMode) {
+            nodes = nodes
+                .map((node) => {
+                    const text =
+                        plainTextMode === PLAIN_TEXT_MODES.MULTI_LINE && node.nodeName === "BR"
+                            ? "\n"
+                            : node.textContent;
+                    if (text.length) {
+                        return this.document.createTextNode(text);
+                    }
+                })
+                .filter(Boolean);
         }
 
         // Insert
@@ -348,13 +367,37 @@ export class DomPlugin extends Plugin {
     }
 
     /**
+     * Based on the given selection (or the current editable selection), use
+     * selector resources to determine whether inserting should be done as plain
+     * text or not and if so, whether multiline insertion (with `\n` characters)
+     * is supported. Return the plain text mode, or `false` if neither is
+     * applicable.
+     *
+     * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
+     * @returns {keyof typeof PLAIN_TEXT_MODES | false}
+     */
+    shouldInsertAsPlainText(selection = this.dependencies.selection.getEditableSelection()) {
+        const isLtr = selection.direction === DIRECTIONS.RIGHT;
+        const caret = isLtr ? selection.anchorNode : selection.focusNode;
+        const selector = this.getResource("multiline_plain_text_container_selectors").join(",");
+        if (closestElement(caret, (parent) => parent.matches(selector))) {
+            return PLAIN_TEXT_MODES.MULTI_LINE;
+        }
+        const singleSelector = this.getResource("plain_text_container_selectors").join(",");
+        if (closestElement(caret, (parent) => parent.matches(singleSelector))) {
+            return PLAIN_TEXT_MODES.SINGLE_LINE;
+        }
+        return false;
+    }
+
+    /**
      * Before inserting text, process its whitespace.
      *
      * @param {string} text
      * @param {boolean} asPlainText
      * @returns {DocumentFragment}
      */
-    processTextForInsertion(text, asPlainText) {
+    processStringForInsertion(text, asPlainText) {
         const doc = this.document;
         const fragment = doc.createDocumentFragment();
         if (asPlainText) {

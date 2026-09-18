@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
-import { isEmptyBlock, isInPre, isZWS } from "@html_editor/utils/dom_info";
+import { isEmptyBlock, isZWS } from "@html_editor/utils/dom_info";
 import {
     childNodes,
     closestElement,
@@ -12,6 +12,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { SPLIT_OPERATION_TYPES } from "@html_editor/core/split_plugin";
 import { unwrapContents } from "@html_editor/utils/dom";
+import { PLAIN_TEXT_MODES } from "@html_editor/core/dom_plugin";
 
 const rightLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
     leafOnly: true,
@@ -51,11 +52,8 @@ export class CodeBlockPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlockPRE.bind(this),
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
-        should_insert_as_text_predicates: (selection) => {
-            if (isInPre(selection.focusNode)) {
-                return true;
-            }
-        },
+        plain_text_container_selectors: "pre",
+        multiline_plain_text_container_selectors: "pre",
         fragment_to_insert_as_text_processors: withSequence(
             Infinity,
             this.processFragmentToInsertAsText.bind(this)
@@ -144,17 +142,13 @@ export class CodeBlockPlugin extends Plugin {
         return true;
     }
 
-    processFragmentToInsertAsText(fragment) {
-        const block = closestBlock(this.dependencies.selection.getEditableSelection().anchorNode);
-        if (block.nodeName !== "PRE") {
-            return fragment;
-        }
-        fragment = this.processThrough("fragment_to_insert_within_pre_processors", fragment);
+    processFragmentToInsertAsText(fragment, plainTextMode) {
+        const isMultiline = plainTextMode === PLAIN_TEXT_MODES.MULTI_LINE;
         const isDeepestBlock = (node) =>
             isBlock(node) && ![...node.querySelectorAll("*")].some(isBlock);
         const processNode = (node) => {
             const children = childNodes(node);
-            if (isDeepestBlock(node) && node.nextSibling) {
+            if (isMultiline && isDeepestBlock(node) && node.nextSibling) {
                 node.append(this.document.createTextNode("\n"));
             }
             if (node.nodeType === Node.ELEMENT_NODE) {

@@ -21,7 +21,7 @@ export class MediaUrlPastePlugin extends Plugin {
      * @param {string} text
      */
     openPowerboxOnUrlPaste(selection, text) {
-        if (!closestElement(selection.anchorNode, "pre") && isSingleUrl(text)) {
+        if (!this.dependencies.dom.shouldInsertAsPlainText(selection) && isSingleUrl(text)) {
             // Pasted content is a single URL.
             const selectionIsInsideALink = !!closestElement(selection.anchorNode, "a");
             const url = /^https?:\/\//i.test(text) ? text : "https://" + text;

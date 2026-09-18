@@ -55,6 +55,7 @@ export class FilePlugin extends Plugin {
                 },
             }),
         selectors_for_feff_providers: () => ".o_file_box",
+        plain_text_container_selectors: ".o_file_box",
         toolbar_namespace_providers: withSequence(
             80,
             (targetedNodes, editableSelection) =>
@@ -78,13 +79,6 @@ export class FilePlugin extends Plugin {
         are_shorthands_available_predicates: (node) => {
             if (closestElement(node, ".o_file_box")) {
                 return false;
-            }
-        },
-
-        /** Predicates */
-        should_insert_as_text_predicates: (selection) => {
-            if (closestElement(selection.anchorNode, ".o_file_box")) {
-                return true;
             }
         },
     };

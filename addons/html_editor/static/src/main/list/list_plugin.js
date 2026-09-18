@@ -46,6 +46,7 @@ import { pick } from "@web/core/utils/objects";
 import { weakMemoize } from "@html_editor/utils/functions";
 import { isColorGradient } from "@web/core/utils/colors";
 import { SPLIT_OPERATION_TYPES } from "@html_editor/core/split_plugin";
+import { PLAIN_TEXT_MODES } from "@html_editor/core/dom_plugin";
 
 const listSelectorItems = [
     {
@@ -1071,7 +1072,10 @@ export class ListPlugin extends Plugin {
         return clonedContents;
     }
 
-    processFragmentToInsertAsText(fragment) {
+    processFragmentToInsertAsText(fragment, plainTextMode) {
+        if (plainTextMode !== PLAIN_TEXT_MODES.MULTI_LINE) {
+            return fragment;
+        }
         const listItems = fragment.querySelectorAll("li:not(.oe-nested)");
         for (const li of listItems) {
             const nestingLvl = ancestors(li).filter(isListElement).length - 1;

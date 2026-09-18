@@ -88,11 +88,7 @@ export class CaptionPlugin extends Plugin {
                 return DISABLED_NAMESPACE;
             }
         }),
-        should_insert_as_text_predicates: (selection) => {
-            if (closestElement(selection.focusNode, CAPTION_SPAN_SELECTOR)) {
-                return true;
-            }
-        },
+        plain_text_container_selectors: CAPTION_SPAN_SELECTOR,
         normalize_processors: (root) => {
             let figures = [];
             if (root.matches(CAPTION_SPAN_SELECTOR)) {

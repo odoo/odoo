@@ -23,6 +23,7 @@ export class InlineCodePlugin extends Plugin {
             selectElements(root, ".o_inline_code").flatMap((code) =>
                 this.dependencies.feff.surroundWithFeffs(code, cursors)
             ),
+        plain_text_container_selectors: "code.o_inline_code",
         toolbar_namespace_providers: withSequence(70, (targetedNodes) => {
             const hasInlineCode = targetedNodes.some((node) =>
                 closestElement(node, "code.o_inline_code")
@@ -41,17 +42,6 @@ export class InlineCodePlugin extends Plugin {
         /** Overrides */
         are_similar_elements_overrides: ({ node, node2 }) => {
             if (node.matches("code.o_inline_code") && node2.matches("code.o_inline_code")) {
-                return true;
-            }
-        },
-
-        /** Predicates */
-        should_insert_as_text_predicates: (selection) => {
-            const caretNode =
-                selection.direction === DIRECTIONS.RIGHT
-                    ? selection.anchorNode
-                    : selection.focusNode;
-            if (closestElement(caretNode, "code.o_inline_code")) {
                 return true;
             }
         },

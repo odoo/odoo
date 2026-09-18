@@ -205,10 +205,15 @@ export class ClipboardPlugin extends Plugin {
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
 
-        this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
-            this.handlePasteOdooEditorHtml(selection, ev.clipboardData) ||
-            this.handlePasteHtml(selection, ev.clipboardData) ||
-            this.handlePasteText(selection, ev.clipboardData);
+        const textContent = ev.clipboardData.getData("text/plain");
+        if (textContent && this.dependencies.dom.shouldInsertAsPlainText(selection)) {
+            this.dependencies.dom.insert(textContent);
+        } else {
+            this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
+                this.handlePasteOdooEditorHtml(selection, ev.clipboardData) ||
+                this.handlePasteHtml(selection, ev.clipboardData) ||
+                this.handlePasteText(selection, ev.clipboardData);
+        }
 
         this.trigger("on_pasted_handlers", selection);
         this.dependencies.history.commit();
@@ -639,7 +644,10 @@ export class ClipboardPlugin extends Plugin {
                 deleteAndSetSelection(range.startContainer, range.startOffset);
             }
         }
-        if (odooEditorHtml) {
+        if (this.dependencies.dom.shouldInsertAsPlainText()) {
+            this.dependencies.dom.insert(ev.dataTransfer.getData("text"));
+            this.dependencies.history.commit();
+        } else if (odooEditorHtml) {
             const fragment = parseHTML(this.document, odooEditorHtml);
             this.dependencies.sanitize.sanitize(fragment);
             if (fragment.hasChildNodes()) {
