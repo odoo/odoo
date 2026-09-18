@@ -546,6 +546,8 @@ class IrHttp(models.AbstractModel):
         :param dict credential: A dictionary containing authentication data. Must include
             a "type" key (e.g., "password", "totp", "webauthn"). If empty, the method
             returns the list of available authentication methods.
+        :raises AccessDenied: if the credential type is not one of the user's enabled
+            authentication methods, or if the credential itself is invalid.
         """
         user = request.env.user
         auth_methods = user._get_auth_methods()
@@ -562,6 +564,9 @@ class IrHttp(models.AbstractModel):
                 'auth_methods': auth_methods,
                 'fingerprint_check': reauth_requirements.get('fingerprint_check'),
             }
+
+        if credential.get('type') not in auth_methods:
+            raise AccessDenied()
 
         auth = user._check_credentials(credential, {"interactive": True})
 
