@@ -11,7 +11,7 @@ from odoo.exceptions import ValidationError
 from freezegun import freeze_time
 
 from odoo.tests import tagged
-from odoo.tools import config
+from odoo.tools import config, file_open
 
 @tagged('global_leaves')
 class TestGlobalLeaves(TestHrHolidaysCommon):
@@ -221,6 +221,20 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             self.env['resource.calendar.leaves'].search(public_holidays_domain),
             existing_public_holidays,
         )
+
+    def test_public_holidays_files(self):
+        """ The public holidays are read in chronological order until the end of the loaded period: every
+            shipped file must have the expected header, no BOM and its dates in ascending order """
+        manifest = modules.get_manifest('hr_holidays')
+        public_holidays_files = [path for path in manifest['other_files'] if path.startswith('data/public_holidays/')]
+        self.assertTrue(public_holidays_files)
+        for path in public_holidays_files:
+            with self.subTest(path=path), file_open(f'hr_holidays/{path}', 'rb') as f:
+                lines = f.read().decode().splitlines()
+                self.assertEqual(lines[0], 'year,date,holiday')
+                dates = [line.split(',')[1] for line in lines[1:] if line]
+                self.assertEqual(dates, sorted(dates))
+                self.assertTrue(all(line.split(',')[0] == line.split(',')[1][:4] for line in lines[1:] if line))
 
     def test_public_holiday_wizard_add_creates_records_only_on_confirmation(self):
         self.company.country_id = self.env.ref('base.be')
