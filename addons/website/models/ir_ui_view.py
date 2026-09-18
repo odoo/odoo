@@ -495,7 +495,7 @@ class IrUiView(models.Model):
                     record.write({field: value})
 
                 if callable(Model._fields[field].translate):
-                    self._copy_custom_snippet_translations(record, field)
+                    self._copy_snippet_translations(record, field)
 
         except (ValueError, TypeError):
             raise ValidationError(_(
@@ -531,12 +531,12 @@ class IrUiView(models.Model):
         }
         vals.update(self._save_oe_structure_hook())
         oe_structure_view = self.env['ir.ui.view'].create(vals)
-        self._copy_custom_snippet_translations(oe_structure_view, 'arch_db')
+        self._copy_snippet_translations(oe_structure_view, 'arch_db')
 
         return True
 
     @api.model
-    def _copy_custom_snippet_translations(self, record, html_field):
+    def _copy_snippet_translations(self, record, html_field):
         """ Given a ``record`` and its HTML ``field``, detect any
         usage of a custom snippet and copy its translations.
         """
@@ -554,6 +554,12 @@ class IrUiView(models.Model):
             custom_snippet_view = self.search([('name', '=', custom_snippet_name)], limit=1)
             if custom_snippet_view:
                 self._copy_field_terms_translations(custom_snippet_view, 'arch_db', record, html_field)
+
+        for snippet_el in tree.xpath('//*[@data-snippet]'):
+            snippet_id = snippet_el.get('data-snippet')
+            snippet_view = self.search([('key', 'like', '%.' + snippet_id)], limit=1)
+            if snippet_view:
+                self._copy_field_terms_translations(snippet_view, 'arch_db', record, html_field)
 
     @api.model
     def _are_archs_equal(self, arch1, arch2):
@@ -689,7 +695,11 @@ class IrUiView(models.Model):
         if not view._are_archs_equal(old_arch, new_arch):
             view._set_noupdate()
             view.write({'arch': etree.tostring(new_arch, encoding='unicode')})
-            view._copy_custom_snippet_translations(view, 'arch_db')
+            view = view if view.website_id else view.search([
+                ('key', '=', view.key),
+                ('website_id', '=', current_website.id)
+            ], limit=1)
+            view._copy_snippet_translations(view, 'arch_db')
 
     @api.model
     def _get_allowed_root_attrs(self):

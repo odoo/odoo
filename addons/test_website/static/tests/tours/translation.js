@@ -68,6 +68,11 @@ function createNewPage() {
             trigger: ".o-we-linkpopover .btn-primary",
             run: "click",
         },
+        {
+            content: "Edit the title so it won't use translations from snippet",
+            trigger: ":iframe .s_banner h1",
+            run: "editor Custom Text That Has Never Been Translated Before",
+        },
         ...clickOnSave(50000, false),
     ];
 }
