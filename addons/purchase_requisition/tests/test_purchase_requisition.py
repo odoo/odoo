@@ -87,7 +87,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         bo.action_confirm()
 
         # lazy reproduction of clicking on "New Quotation" act_window button
-        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": bo.id, "default_user_id": False}))
+        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": [bo.id], "default_user_id": False}))
         po = po_form.save()
 
         self.assertEqual(po.order_line.price_unit, bo.line_ids.price_unit, 'The blanket order unit price should have been copied to purchase order')
@@ -187,7 +187,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
         purchase_template.action_confirm()
 
-        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": purchase_template.id, "default_user_id": False}))
+        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": [purchase_template.id], "default_user_id": False}))
         po = po_form.save()
         self.assertEqual(po.partner_id, purchase_template.vendor_id, 'The purchase template vendor should have been copied to purchase order')
         self.assertEqual(po.order_line[0].price_unit, purchase_template.line_ids[0].price_unit, 'The purchase template unit price should have been copied to purchase order')
@@ -204,7 +204,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.bo_requisition.requisition_type = 'purchase_template'
         requisition_2 = self.bo_requisition.copy({'name': 'requisition_2'})
         # Create purchase order from purchase requisition
-        po_form = Form(self.env['purchase.order'].with_context(default_requisition_id=requisition_2.id))
+        po_form = Form(self.env['purchase.order'].with_context(default_requisition_id=[requisition_2.id]))
         po = po_form.save()
         self.assertEqual(po.requisition_id, requisition_2)
         po.button_confirm()
@@ -253,7 +253,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         """ Only POs in draft are cancelled when the requisition is cancelled. """
         def _make_po():
             return self.env['purchase.order'].create({
-                'requisition_id': self.bo_requisition.id,
+                'requisition_id': [self.bo_requisition.id],
                 'partner_id': self.res_partner_1.id,
                 'order_line': [
                     Command.create({
