@@ -1330,6 +1330,10 @@ $-product-radius-map: (
 #o_wsale_cta_wrapper {
     &.o_wsale_cta_wrapper_boxed {
         max-width: 26rem;
+
+        > .border-bottom > * {
+            min-width: 0;
+        }
     }
 
     &.o_wsale_cta_wrapper_large .css_quantity {
