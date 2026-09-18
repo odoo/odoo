@@ -657,6 +657,7 @@ export class PosStore extends WithLazyGetterTrap {
                 this.removeOrder(order, false);
                 this.removePendingOrder(order);
             }
+            await Promise.all(ordersToDelete.map((order) => this.recycleOrderNumber(order)));
         }
 
         return true;
@@ -1355,8 +1356,18 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
-        this.device.saveUnusedNumber([order]);
-        return this.data.localDeleteCascade(order);
+        const removed = this.data.localDeleteCascade(order);
+        this.recycleOrderNumber(order);
+        return removed;
+    }
+    /**
+     * Recycle the receipt number only once the order is gone from IndexedDB,
+     * otherwise a reload restores it next to a new order using the same number.
+     */
+    recycleOrderNumber(order) {
+        return this.data
+            .deleteRecordsInIndexedDB("pos.order", [order.uuid])
+            .then(() => this.device.saveUnusedNumber([order]));
     }
 
     /**
