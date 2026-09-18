@@ -13,6 +13,12 @@
                 <field name="requisition_id" domain="[('state', '=', 'confirmed'), ('vendor_id', 'in', (partner_id, False)), ('company_id', '=', company_id)]"
                 options="{'no_create': True}"/>
             </field>
+            <field name="date_order" position="after">
+                <field invisible="not date_order_warning" name="date_order_warning" widget="deadline_warning_widget" class="d-contents"/>
+            </field>
+            <xpath expr="//page/field[@name='order_line']/list/field[@name='product_qty']" position="after">
+                <field invisible="not order_too_big_warning" name="order_too_big_warning" widget="deadline_warning_widget" class="d-contents" nolabel="1"/>
+            </xpath>
         </field>
     </record>
 

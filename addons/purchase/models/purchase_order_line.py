@@ -147,6 +147,20 @@ class PurchaseOrderLine(models.Model):
     )
     technical_price_unit = fields.Float(help="Technical field for price computation", readonly=False, store=True,
                                         compute='_compute_price_unit_and_date_planned_and_name')
+    date_order_warning = fields.Char(
+        compute='_compute_date_order_warning',
+        string='Order Deadline Warning',
+    )
+
+    @api.depends('date_order', 'state')
+    def _compute_date_order_warning(self):
+        now = fields.Datetime.now()
+        for order in self:
+            if order.date_order and order.date_order < now and order.state in ('draft', 'sent'):
+                order.date_order_warning = _("The order deadline has passed!")
+            else:
+                order.date_order_warning = False
+                order.date_order_warning = _("The order deadline has passed!")
 
     @api.depends('product_qty', 'price_unit', 'tax_ids', 'discount', 'document_tax_mode')
     def _compute_amount(self):
