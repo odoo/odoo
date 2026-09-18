@@ -2,7 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-import { markup } from "@odoo/owl";
 import { AnchorDialog } from "./anchor_dialog";
 import { getElementsWithOption, getSnippetName } from "@html_builder/utils/utils";
 
@@ -134,21 +133,12 @@ export class AnchorPlugin extends Plugin {
         }
         const anchorLink = this.getAnchorLink(element);
         await browser.navigator.clipboard.writeText(anchorLink);
-        const message = _t(
-            "Anchor copied to clipboard%(br)s%(open_span)sLink: %(anchor_link)s%(close_span)s",
-            {
-                open_span: markup`<span class="o_line_clamp o_line_clamp_1">`,
-                anchor_link: anchorLink,
-                br: markup`<br>`,
-                close_span: markup`</span>`,
-            }
-        );
+        const message = _t("Anchor copied to clipboard");
         const closeNotification = this.services.notification.add(message, {
             type: "success",
             buttons: [
                 {
                     name: _t("Edit"),
-                    primary: true,
                     onClick: () => {
                         closeNotification();
                         // Open the "rename anchor" dialog.
