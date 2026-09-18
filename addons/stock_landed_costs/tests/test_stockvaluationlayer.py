@@ -156,6 +156,36 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
         self.assertEqual(picking.move_ids.state, 'done')
         self.assertEqual(self.product1.standard_price, 10)
 
+    def test_two_landed_costs_on_standard_price_receipt(self):
+        """Receive 10 units valued at the standard price, then add two landed costs one after another
+        each cost raises the receipt value and standard price once."""
+        self.product1.categ_id.property_account_expense_categ_id = self.env['account.account'].create({
+            'code': 'EXP.LC',
+            'name': 'Landed Cost Expense',
+            'account_type': 'expense',
+        })
+        self.product1.standard_price = 100
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.supplier_location_id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.product1.id,
+                'product_uom_qty': 10,
+            })],
+        })
+        picking.action_confirm()
+        picking.button_validate()
+        self.assertEqual(picking.move_ids.value, 1000)
+
+        self._make_lc(picking.move_ids, 100)
+        self.assertEqual(picking.move_ids.value, 1100)
+        self._make_lc(picking.move_ids, 50)
+        self.assertEqual(picking.move_ids.value, 1150)
+        self.assertEqual(self.product1.total_value, 1150)
+        self.assertEqual(self.product1.standard_price, 115)
+
+
 @tagged('-at_install', 'post_install')
 class TestStockValuationLCFIFO(TestStockValuationLCCommon):
     @classmethod
