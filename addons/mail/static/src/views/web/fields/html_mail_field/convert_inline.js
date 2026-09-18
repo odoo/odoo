@@ -657,7 +657,10 @@ export function classToStyle(element, cssRules) {
                     node.style.setProperty(styleName, value);
                     if (value.includes("calc(")) {
                         // If value included a calc(), assign the node's computed style property value for Outlook compatibility
-                        node.style.setProperty(styleName, computedStyle.getPropertyValue(styleName));
+                        node.style.setProperty(
+                            styleName,
+                            computedStyle.getPropertyValue(styleName)
+                        );
                     }
                 }
             }
@@ -951,6 +954,17 @@ export async function toInline(element, cssRules) {
         const images = element.querySelectorAll("img");
         for (const image of images) {
             if (image.style[attributeName] !== "auto") {
+                if (
+                    attributeName === "width" &&
+                    !image.naturalWidth &&
+                    getComputedStyle(image).display === "block"
+                ) {
+                    // The image hasn't loaded yet (naturalWidth is 0). Its
+                    // src is populated server-side later (qweb compiled).
+                    // A block level img with no intrinsic size falls back to its
+                    // container's width which will stretch the image.
+                    continue;
+                }
                 const value =
                     image.getAttribute(attributeName) ||
                     (attributeName === "height" && image.offsetHeight) ||
