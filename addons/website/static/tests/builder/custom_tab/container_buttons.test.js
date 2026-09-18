@@ -15,11 +15,12 @@ import {
     getSnippetStructure,
     getSnippetView,
 } from "@html_builder/../tests/helpers";
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { animationFrame, queryText, tick, click } from "@odoo/hoot-dom";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { animationFrame, tick, click } from "@odoo/hoot-dom";
+import { browser } from "@web/core/browser/browser";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 defineWebsiteModels();
 
@@ -256,6 +257,14 @@ test("Use the sidebar 'create anchor' buttons", async () => {
         </section>
     `;
     await setupWebsiteBuilder(websiteContent);
+    // The toast only confirms the copy, so the created link is checked on the
+    // clipboard itself.
+    let copiedLinks;
+    patchWithCleanup(browser.navigator.clipboard, {
+        async writeText(text) {
+            copiedLinks = text;
+        },
+    });
     const anchorSelector =
         ".o_customize_tab .options-container > div:contains('Dummy Section') button.oe_snippet_anchor";
     const notificationContentSelector = ".o_notification_manager .o_notification_content";
@@ -268,7 +277,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     expect(anchorSelector).toHaveCount(1);
     await contains(anchorSelector).click();
     expect(notificationContentSelector).toHaveCount(1);
-    expect(queryText(notificationContentSelector)).toInclude("#Anchor-test");
+    expect(copiedLinks).toInclude("#Anchor-test");
     await contains(notificationCloseSelector).click();
     expect(":iframe section.first").toHaveAttribute("id", "Anchor-test");
     expect(":iframe section.first").toHaveAttribute("data-anchor", "true");
@@ -278,7 +287,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     await animationFrame();
     await contains(anchorSelector).click();
     await animationFrame();
-    expect(queryText(notificationContentSelector)).toInclude("#Dummy-Section");
+    expect(copiedLinks).toInclude("#Dummy-Section");
     await contains(notificationCloseSelector).click();
     expect(":iframe section.second").toHaveAttribute("id", "Dummy-Section");
 
@@ -286,7 +295,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     await contains(":iframe section.third").click();
     await animationFrame();
     await contains(anchorSelector).click();
-    expect(queryText(notificationContentSelector)).toInclude("#Dummy-Section2");
+    expect(copiedLinks).toInclude("#Dummy-Section2");
     expect(":iframe section.third").toHaveAttribute("id", "Dummy-Section2");
 
     // Edit anchor.
@@ -314,7 +323,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
         ".o_customize_tab .options-container > div:contains('Column') button.oe_snippet_anchor"
     ).click();
     await animationFrame();
-    expect(queryText(notificationContentSelector)).toInclude("#Column");
+    expect(copiedLinks).toInclude("#Column");
     await contains(notificationCloseSelector).click();
     expect(":iframe section.fourth div.row div").toHaveAttribute("id", "Column");
 
@@ -332,7 +341,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
         ".o_customize_tab .options-container > div:contains('Card') button.oe_snippet_anchor"
     ).click();
     await animationFrame();
-    expect(queryText(notificationContentSelector)).toInclude("#Card");
+    expect(copiedLinks).toInclude("#Card");
     await contains(notificationCloseSelector).click();
     expect(":iframe section.sixth div").toHaveAttribute("id", "Card");
 });
