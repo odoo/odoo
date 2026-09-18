@@ -81,6 +81,7 @@ class IrActionsActions(models.Model):
     _inherit = ["mixin.table.inheritance.root"]
     _table = "ir_actions"
     _table_inheritance_root = "ir_actions"
+    _dispatch_write_to_concrete = True
     _order = "name, id"
     _allow_sudo_commands = False
 
@@ -259,27 +260,6 @@ class IrActionsActions(models.Model):
             self.env.registry.clear_cache(*groups)
         return res
 
-    def write(self, vals: dict[str, Any]) -> bool:
-        if self._name == "ir.actions.actions":
-            _debug.logic("write_dispatched_to_concrete", count=len(self))
-            return self._write_as_concrete_types(vals)
-        return self._write_concrete(vals)
-
-    def _write_as_concrete_types(self, vals: dict[str, Any]) -> bool:
-        result = True
-        if unsaved := self.filtered(lambda action: not action.id):
-            result = unsaved._write_concrete(vals)
-        by_model = defaultdict(list)
-        for action_id, model_name in self._get_model_names_concrete().items():
-            by_model[model_name].append(action_id)
-        for model_name, ids in by_model.items():
-            records = self.env[model_name].browse(ids)
-            if model_name == self._name:
-                result = records._write_concrete(vals) and result
-            else:
-                result = records.write(vals) and result
-        return result
-
     def _write_concrete(self, vals: dict[str, Any]) -> bool:
         if "binding_view_types" in vals:
             vals = {
@@ -296,7 +276,7 @@ class IrActionsActions(models.Model):
             fields=list(vals),
             caches_cleared=sorted(groups),
         )
-        res = super().write(vals)
+        res = super()._write_concrete(vals)
         if "path" in vals:
             self._sync_path_reservations()
         if groups:

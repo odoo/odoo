@@ -157,6 +157,35 @@ class MixinTableInheritanceRoot(models.AbstractModel):
     def _get_cache_groups_holding(self) -> set[str]:
         return set()
 
+    _dispatch_write_to_concrete = False
+
+    def write(self, vals):
+        if (
+            self._dispatch_write_to_concrete
+            and self._name == self._get_root_model_name()
+        ):
+            _debug.logic("write_dispatched_to_concrete", count=len(self))
+            return self._write_as_concrete_types(vals)
+        return self._write_concrete(vals)
+
+    def _write_as_concrete_types(self, vals) -> bool:
+        result = True
+        if unsaved := self.filtered(lambda record: not record.id):
+            result = unsaved._write_concrete(vals)
+        by_model = defaultdict(list)
+        for record_id, model_name in self._get_model_names_concrete().items():
+            by_model[model_name].append(record_id)
+        for model_name, ids in by_model.items():
+            records = self.env[model_name].browse(ids)
+            if model_name == self._name:
+                result = records._write_concrete(vals) and result
+            else:
+                result = records.write(vals) and result
+        return result
+
+    def _write_concrete(self, vals) -> bool:
+        return super().write(vals)
+
     def unlink(self) -> bool:
         if self._name == self._get_root_model_name():
             _debug.logic("unlink_dispatched_to_concrete", count=len(self))
