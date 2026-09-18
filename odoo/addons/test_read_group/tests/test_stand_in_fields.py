@@ -185,3 +185,47 @@ class TestStandInFields(common.TransactionCase):
                 self.assertRaisesRegex(ValueError, message),
             ):
                 field._check_stand_in_fields(self.Task)
+
+    def test_a_groupby_on_a_sql_hooked_field_groups_by_its_expression(self):
+        groups = self.Task._read_group(
+            self.domain, ["parity"], ["__count", "id:array_agg"], order="parity"
+        )
+        by_python = {}
+        for task in self.tasks:
+            by_python.setdefault(task.parity, []).append(task.id)
+        self.assertEqual(
+            [(parity, count, sorted(ids)) for parity, count, ids in groups],
+            [
+                ("even", 3, sorted(by_python["even"])),
+                ("odd", 1, sorted(by_python["odd"])),
+            ],
+        )
+
+    def test_an_order_on_a_sql_hooked_field_sorts_by_its_expression(self):
+        ordered = self.Task.search(self.domain, order="parity desc, integer")
+        self.assertEqual(ordered.mapped("parity"), ["odd", "even", "even", "even"])
+        self.assertEqual(ordered.mapped("integer"), [1, 2, 4, 8])
+        self.assertTrue(self.Task._is_field_sortable("parity"))
+
+    def test_a_grouped_order_on_a_sql_hooked_field_orders_the_groups(self):
+        groups = self.Task._read_group(
+            self.domain, ["parity"], ["__count"], order="parity desc"
+        )
+        self.assertEqual([parity for parity, _count in groups], ["odd", "even"])
+
+    def test_a_sql_hook_that_names_no_method_is_refused_at_setup(self):
+        cases = [
+            (fields.Char(group_by_sql="_nope"), "names no method"),
+            (fields.Char(order_by_sql="_nope"), "names no method"),
+            (
+                fields.Char(group_by_sql="_parity_group_sql", group_by_field="key"),
+                "cannot both be set",
+            ),
+        ]
+        for field, message in cases:
+            field._setup_attrs__(type(self.Task), "probe_field")
+            with (
+                self.subTest(message=message),
+                self.assertRaisesRegex(ValueError, message),
+            ):
+                field._check_stand_in_fields(self.Task)

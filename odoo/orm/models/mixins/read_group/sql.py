@@ -238,6 +238,16 @@ class _ReadGroupSQLMixin(_ModelStubs):
             return self._read_group_groupby(
                 alias, field.group_by_field + groupby_spec[len(fname) :], query
             )
+        if field.group_by_sql and not seq_fnames and not granularity:
+            _debug.logic(
+                "read_group.groupby",
+                model=self._name,
+                groupby=groupby_spec,
+                field_type=field.type,
+                shape="sql_hook",
+                hook=field.group_by_sql,
+            )
+            return getattr(self, field.group_by_sql)(field, alias, query)
 
         _debug.logic(
             "read_group.groupby",

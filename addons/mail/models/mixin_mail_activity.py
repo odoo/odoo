@@ -7,7 +7,7 @@ from typing import Any, Literal
 
 from odoo import api, fields, models
 from odoo.api import DomainType, ValuesType
-from odoo.fields import Domain
+from odoo.fields import Domain, Field
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, Query, partition
 
@@ -40,6 +40,8 @@ class MixinMailActivity(models.AbstractModel):
         selection=[("overdue", "Overdue"), ("today", "Today"), ("planned", "Planned")],
         compute="_compute_activity_state",
         search="_search_activity_state",
+        group_by_sql="_activity_state_group_sql",
+        order_by_sql="_activity_order_sql",
         groups="base.group_user",
         help="Status based on activities\nOverdue: Due date is already passed\n"
         "Today: Activity date is today\nPlanned: Future activities.",
@@ -69,6 +71,7 @@ class MixinMailActivity(models.AbstractModel):
         string="Next Activity Deadline",
         compute="_compute_activity_date_deadline",
         search="_search_activity_date_deadline",
+        order_by_sql="_activity_order_sql",
         readonly=True,
         groups="base.group_user",
     )
@@ -76,6 +79,7 @@ class MixinMailActivity(models.AbstractModel):
         string="My Activity Deadline",
         compute="_compute_my_activity_date_deadline",
         search="_search_my_activity_date_deadline",
+        order_by_sql="_activity_order_sql",
         readonly=True,
         groups="base.group_user",
     )
@@ -420,11 +424,7 @@ class MixinMailActivity(models.AbstractModel):
     def _activity_state_join(self, alias: str, query: Query) -> SQL:
         return SQL.identifier(self._activity_aggregate_join(alias, query), "state")
 
-    def _read_group_groupby(self, alias: str, groupby_spec: str, query: Query) -> SQL:
-        if groupby_spec != "activity_state":
-            return super()._read_group_groupby(alias, groupby_spec, query)
-        self._check_field_access(self._fields["activity_state"], "read")
-
+    def _activity_state_group_sql(self, field: Field, alias: str, query: Query) -> SQL:
         return SQL(
             """CASE %s
                     WHEN -1 THEN 'overdue'
@@ -434,40 +434,21 @@ class MixinMailActivity(models.AbstractModel):
             self._activity_state_join(alias, query),
         )
 
-    def _order_field_to_sql(
-        self, alias: str, field_name: str, direction: SQL, nulls: SQL, query: Query
+    def _activity_order_sql(
+        self, field: Field, alias: str, direction: SQL, nulls: SQL, query: Query
     ) -> SQL:
-        if field_name not in (
-            "activity_date_deadline",
-            "my_activity_date_deadline",
-            "activity_state",
-        ):
-            return super()._order_field_to_sql(
-                alias, field_name, direction, nulls, query
-            )
-        if not self._has_field_access(self._fields[field_name], "read"):
-            return SQL.EMPTY
-
-        if field_name == "activity_state":
+        if field.name == "activity_state":
             sql_value = self._activity_state_join(alias, query)
         else:
             join_alias = self._activity_aggregate_join(
                 alias,
                 query,
-                user_id=self.env.uid if field_name.startswith("my_") else None,
+                user_id=self.env.uid if field.name.startswith("my_") else None,
             )
             sql_value = SQL.identifier(join_alias, "date_deadline")
-
-        if query._any_value_orderby:
-            sql_value = SQL("ANY_VALUE(%s)", sql_value)
-        elif query._collect_order_groupby:
-            query._order_groupby.append(sql_value)
-
-        return SQL(
-            "%s %s %s",
-            sql_value,
-            direction,
-            nulls if nulls.code else SQL("NULLS LAST"),
+        # a record with no activity sorts last whichever way the deadline goes
+        return self._order_value_to_sql(
+            sql_value, direction, nulls if nulls.code else SQL("NULLS LAST"), query
         )
 
     def _my_next_activity(self) -> MailActivity:

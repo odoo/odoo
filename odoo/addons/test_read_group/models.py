@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.tools import SQL
 
 
 class Test_Read_GroupOn_Date(models.Model):
@@ -238,11 +239,36 @@ class Test_Read_GroupTask(models.Model):
         group_by_field="user_ids",
     )
     ref = fields.Char(order_by_field="id")
+    parity = fields.Selection(
+        [("odd", "Odd"), ("even", "Even")],
+        compute="_compute_parity",
+        group_by_sql="_parity_group_sql",
+        order_by_sql="_parity_order_sql",
+    )
 
     @api.depends("user_ids")
     def _compute_lead_user_id(self):
         for task in self:
             task.lead_user_id = task.user_ids[:1]
+
+    @api.depends("integer")
+    def _compute_parity(self):
+        for task in self:
+            task.parity = "even" if task.integer % 2 == 0 else "odd"
+
+    def _parity_sql(self, alias, query):
+        return SQL(
+            "CASE WHEN %s %% 2 = 0 THEN 'even' ELSE 'odd' END",
+            self._field_to_sql(alias, "integer", query),
+        )
+
+    def _parity_group_sql(self, field, alias, query):
+        return self._parity_sql(alias, query)
+
+    def _parity_order_sql(self, field, alias, direction, nulls, query):
+        return self._order_value_to_sql(
+            self._parity_sql(alias, query), direction, nulls, query
+        )
 
 
 class Test_Read_GroupTag(models.Model):

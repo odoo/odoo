@@ -229,6 +229,8 @@ class Field[T](
     ) = None
     group_by_field: str | None = None
     order_by_field: str | None = None
+    group_by_sql: str | None = None
+    order_by_sql: str | None = None
     falsy_value_label: str | None = None
     prefetch: bool | str = True
 
@@ -390,6 +392,7 @@ class Field[T](
         pass
 
     def _check_stand_in_fields(self, model: BaseModel) -> None:
+        self._check_sql_hooks(model)
         for attribute in ("group_by_field", "order_by_field"):
             target_name = getattr(self, attribute)
             if target_name is None:
@@ -408,6 +411,31 @@ class Field[T](
                 raise ValueError(
                     f"Field {self}: group_by_field {target} groups other values "
                     f"than {self.type} {self.comodel_name or ''} does"
+                )
+
+    def _check_sql_hooks(self, model: BaseModel) -> None:
+        # A field whose SQL for a groupby or an order term is not its column
+        # names the model method that composes it, the way `search=` names
+        # the method that composes its domain. The method is a declaration a
+        # reader and a tool can find on the field, where an override of
+        # `_read_group_groupby` or `_order_field_to_sql` on the model is not:
+        # it hides the one field it acts on behind the identity of a method
+        # that every groupby and every order on the model goes through.
+        for attribute, stand_in in (
+            ("group_by_sql", "group_by_field"),
+            ("order_by_sql", "order_by_field"),
+        ):
+            method_name = getattr(self, attribute)
+            if method_name is None:
+                continue
+            if not callable(getattr(type(model), method_name, None)):
+                raise ValueError(
+                    f"Field {self}: {attribute}={method_name!r} names no method of "
+                    f"{model._name}"
+                )
+            if getattr(self, stand_in) is not None:
+                raise ValueError(
+                    f"Field {self}: {attribute} and {stand_in} cannot both be set"
                 )
 
     def get_depends(self, model: BaseModel) -> tuple[Iterable[str], Iterable[str]]:

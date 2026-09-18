@@ -293,6 +293,9 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
             return self._can_groupby_spec_duplicate_rows(
                 model, field.group_by_field + spec[len(fname) :]
             )
+        if field.group_by_sql:
+            # one expression per row of the model's own table
+            return False
         if field.is_properties:
             if not property_name:
                 raise ValueError(

@@ -139,6 +139,10 @@ class _QueryMixin(_ModelStubs):
                 nulls,
                 query,
             )
+        if field.order_by_sql:
+            return getattr(self, field.order_by_sql)(
+                field, alias, direction, nulls, query
+            )
 
         if field.is_many2one:
             seen = self.env.context.get("__m2o_order_seen", ())
@@ -161,11 +165,7 @@ class _QueryMixin(_ModelStubs):
                 sql_field = self._field_to_sql(alias, field_name, query)
 
             if coorder == "id":
-                if query._any_value_orderby:
-                    sql_field = SQL("ANY_VALUE(%s)", sql_field)
-                elif query._collect_order_groupby:
-                    query._order_groupby.append(sql_field)
-                return SQL("%s %s %s", sql_field, direction, nulls)
+                return self._order_value_to_sql(sql_field, direction, nulls, query)
 
             terms = []
             if nulls.code == "NULLS FIRST":
@@ -184,13 +184,19 @@ class _QueryMixin(_ModelStubs):
         sql_field = self._field_to_sql(alias, field_name, query)
         if field.is_boolean:
             sql_field = SQL("COALESCE(%s, FALSE)", sql_field)
+        return self._order_value_to_sql(sql_field, direction, nulls, query)
 
+    def _order_value_to_sql(
+        self, sql_value: SQL, direction: SQL, nulls: SQL, query: Query
+    ) -> SQL:
+        """The ORDER BY term for a value: under a grouped query the value is
+        either aggregated or added to the GROUP BY, which an `order_by_sql`
+        hook composing its own value must do the same way."""
         if query._any_value_orderby:
-            sql_field = SQL("ANY_VALUE(%s)", sql_field)
+            sql_value = SQL("ANY_VALUE(%s)", sql_value)
         elif query._collect_order_groupby:
-            query._order_groupby.append(sql_field)
-
-        return SQL("%s %s %s", sql_field, direction, nulls)
+            query._order_groupby.append(sql_value)
+        return SQL("%s %s %s", sql_value, direction, nulls)
 
     @api.model
     def _search(
