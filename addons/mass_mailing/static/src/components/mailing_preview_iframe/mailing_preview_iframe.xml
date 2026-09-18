@@ -44,7 +44,7 @@
                         </div>
                     </div>
                 </div>
-                <iframe t-ref="this.iframeRef" t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"/>
+                <iframe t-ref="this.iframeRef" srcdoc="" t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"/>
                 <div t-if="this.state.isMobileMode" class="o_is_mobile_footer">
                     <!--
                     Mobile Footer
