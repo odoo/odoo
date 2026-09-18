@@ -993,6 +993,9 @@ export class PosDataPlugin extends Plugin {
     }
 
     async loadServerOrders(domain) {
+        const finalizedStates = new Map(
+            this.models["pos.order"].filter((o) => o.finalized).map((o) => [o.uuid, o.state])
+        );
         const result = await this.callRelated(
             "pos.order",
             "read_pos_orders",
@@ -1005,6 +1008,10 @@ export class PosDataPlugin extends Plugin {
         const session = this.models["pos.session"].get(odoo.pos_session_id);
         const orders = result["pos.order"] || [];
         for (const order of orders) {
+            // A read started before the payment was committed must not reopen the order
+            if (finalizedStates.has(order.uuid) && !order.finalized) {
+                order.state = finalizedStates.get(order.uuid);
+            }
             // Clear commands
             order.serializeForORM();
             order.config_id = config;
