@@ -283,7 +283,7 @@ test("ReferenceField in modal write mode", async () => {
 });
 
 test("reference in form view", async () => {
-    expect.assertions(11);
+    expect.assertions(12);
 
     Product._views[["form", false]] = /* xml */ `
         <form>
@@ -354,6 +354,9 @@ test("reference in form view", async () => {
     expect(".o_field_widget[name=reference] .o-autocomplete--input").toHaveValue("xphone", {
         message: "widget should contain one input with the record",
     });
+    expect(".o_field_widget input").toHaveAttribute("placeholder", "Search a record...", {
+        message: "the record search box should have a default placeholder",
+    });
 
     await click(".o_field_widget[name=reference] .o_select_menu input");
     await animationFrame();
@@ -393,6 +396,21 @@ test("reference in form view", async () => {
     expect(".o_field_widget[name=reference] .o-autocomplete--input").toHaveValue("gold", {
         message: "should contain a link with the new value",
     });
+});
+
+test("selecting a model without choosing a record marks field invalid on save", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `<form><field name="reference" /></form>`,
+    });
+    await select("partner.type", { target: ".o_field_widget select" });
+    await animationFrame();
+    expect(".o_field_widget[name=reference]").not.toHaveClass("o_field_invalid");
+    await clickSave();
+    await animationFrame();
+    expect(".o_field_widget[name=reference]").toHaveClass("o_field_invalid");
 });
 
 test("Many2One 'Search more...' updates on resModel change", async () => {
