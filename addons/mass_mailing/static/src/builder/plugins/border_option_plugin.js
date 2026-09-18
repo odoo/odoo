@@ -8,6 +8,10 @@ export class MassMailingBorderOption extends BaseOptionComponent {
     props = useProps({
         withRoundCorner: t.boolean().optional(true),
     });
+
+    get withRoundCorner() {
+        return this.props.withRoundCorner;
+    }
 }
 
 registry.category("mass_mailing-options").add(MassMailingBorderOption.id, MassMailingBorderOption);

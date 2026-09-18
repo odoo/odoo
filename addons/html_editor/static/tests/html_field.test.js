@@ -29,7 +29,7 @@ import {
     tick,
     waitFor,
 } from "@odoo/hoot";
-import { onWillDestroy, proxy, signal, xml } from "@odoo/owl";
+import { onWillDestroy, proxy, signal, useProps, xml } from "@odoo/owl";
 import {
     clickSave,
     contains,
@@ -217,11 +217,12 @@ test("html field in readonly updated by onchange", async () => {
 test("html field in readonly with embedded components", async () => {
     patch(Counter, {
         template: xml`
-            <span t-ref="this.ref" class="counter" t-on-click="this.increment"><t t-out="this.props.name || ''"/>:<t t-out="this.value()"/></span>`,
+            <span t-ref="this.ref" class="counter" t-on-click="this.increment"><t t-out="this.name || ''"/>:<t t-out="this.value()"/></span>`,
     });
     patch(Counter.prototype, {
         setup() {
             super.setup();
+            this.name = useProps.static("name");
             onWillDestroy(() => expect.step("destroyed"));
         },
     });
