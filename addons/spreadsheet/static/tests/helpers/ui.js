@@ -24,7 +24,11 @@ class Parent extends Component {
 
 class ComponentWithStores extends Component {
     static template = xml`<t t-component="this.props.component" t-props="this.props.props"/>`;
-    static props = { model: Model };
+    props = useProps({
+        component: t.component(),
+        props: t.object(),
+        model: t.instanceOf(Model),
+    });
     setup() {
         const stores = useStoreProvider();
         stores.inject(ModelStore, this.props.model);

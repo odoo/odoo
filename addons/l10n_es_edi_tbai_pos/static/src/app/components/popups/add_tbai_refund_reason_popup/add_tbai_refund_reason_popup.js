@@ -1,10 +1,17 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, proxy } from "@odoo/owl";
+import { PosOrder } from "@point_of_sale/app/models/pos_order";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 
 export class AddTbaiRefundReasonPopup extends Component {
     static template = "l10n_es_edi_tbai_pos.AddTbaiRefundReasonPopup";
     static components = { Dialog };
+
+    props = useProps({
+        close: t.function(),
+        getPayload: t.function(),
+        order: t.instanceOf(PosOrder),
+    });
 
     setup() {
         this.pos = usePos();

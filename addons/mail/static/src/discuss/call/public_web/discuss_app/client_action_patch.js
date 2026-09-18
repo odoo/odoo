@@ -13,10 +13,9 @@ patch(DiscussClientAction.prototype, {
      * Checks if we are in a client action and if we have a query parameter requesting to join a call,
      * if so, the call is joined on the current discuss thread.
      */
-    async restoreDiscussThread() {
+    async restoreDiscussThread(action) {
         const hasFullScreenUrl = new URL(location.href).searchParams.has("fullscreen");
         await super.restoreDiscussThread(...arguments);
-        const action = this.props.action;
         if (!action) {
             return;
         }
