@@ -358,7 +358,7 @@ class AccountTax(models.Model):
     @api.depends('company_id', 'company_id.domestic_fiscal_position_id', 'fiscal_position_ids')
     def _compute_is_domestic(self):
         for tax in self:
-            tax.is_domestic = not tax.fiscal_position_ids or tax.company_id.domestic_fiscal_position_id in tax.fiscal_position_ids
+            tax.is_domestic = not tax.fiscal_position_ids or tax.company_id.domestic_fiscal_position_id in tax.fiscal_position_ids._origin
 
     @api.depends('fiscal_position_ids')
     def _compute_display_alternative_taxes_field(self):
