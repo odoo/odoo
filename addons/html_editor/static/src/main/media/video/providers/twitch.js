@@ -48,7 +48,8 @@ export class Twitch extends AbstractThirdPartyVideo {
      */
     static getCustomUrlOptions(url, urlMatch) {
         return {
-            isClip: url.hostname.includes("clip"),
+            // e.g. "clips.twitch.tv/EmbedId" or "twitch.tv/channel/clip/ClipId"
+            isClip: url.hostname.includes("clip") || url.pathname.includes("/clip/"),
             ...(urlMatch.groups.playlist && { collection: urlMatch.groups.playlist }),
         };
     }
