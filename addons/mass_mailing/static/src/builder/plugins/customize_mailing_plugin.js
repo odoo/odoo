@@ -220,7 +220,12 @@ export class CustomizeMailingPlugin extends Plugin {
 
 export class CustomizeMailingVariable extends BuilderAction {
     static id = "mass_mailing.CustomizeMailingVariable";
-    static dependencies = ["builderActions", "color", "mass_mailing.CustomizeMailingPlugin", "domObserver"];
+    static dependencies = [
+        "builderActions",
+        "color",
+        "mass_mailing.CustomizeMailingPlugin",
+        "domObserver",
+    ];
     isApplied({ value }) {
         return this.getValue(...arguments) === value;
     }
@@ -278,4 +283,6 @@ export class CustomizeMailingVariable extends BuilderAction {
     }
 }
 
-registry.category("mass_mailing-plugins").add(CustomizeMailingPlugin.id, CustomizeMailingPlugin);
+registry
+    .category("mass_mailing-builder-plugins")
+    .add(CustomizeMailingPlugin.id, CustomizeMailingPlugin);

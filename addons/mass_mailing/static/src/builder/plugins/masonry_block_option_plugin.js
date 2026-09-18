@@ -28,5 +28,5 @@ export class ChangeMasonryTemplate extends BuilderAction {
 }
 
 registry
-    .category("mass_mailing-plugins")
+    .category("mass_mailing-builder-plugins")
     .add(MasonryBlockTemplateOptionPlugin.id, MasonryBlockTemplateOptionPlugin);
