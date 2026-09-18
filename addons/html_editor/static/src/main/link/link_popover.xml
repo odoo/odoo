@@ -7,7 +7,7 @@
     </t>
 
     <t t-name="html_editor.linkPopover">
-        <div class="o-we-linkpopover d-flex bg-light overflow-auto shadow" t-on-keydown="this.onKeydown" role="dialog" aria-modal="true" aria-label="Link Popover">
+        <div class="o_popover o-we-linkpopover d-flex bg-light overflow-auto shadow" t-on-keydown="this.onKeydown" role="dialog" aria-modal="true" aria-label="Link Popover">
             <div t-if="this.state.editing" class="container-fluid d-flex vertical-center p-2" t-ref="this.editingWrapper">
                 <div t-if="this.state.isImage" class="col p-2 o_link_popover_container">
                     <div class="input-group mb-1">
@@ -21,18 +21,38 @@
                 </div>
                 <div t-else="" class="d-flex">
                     <t t-if="this.state.showAdvancedOptions">
-                        <div class="o_advance_option_panel">
-                            <div class="o_advance_options_grid" style="width: 200px;">
-                                <button class="oi btn btn-secondary border-10" data-icon="keyboard_arrow_left" t-on-click="this.toggleAdvancedOptions"/>
+                        <div class="o_popover_sliding_panel">
+                            <div class="d-flex align-items-center gap-1 mb-2">
+                                <button type="button" class="oi btn btn-secondary" data-icon="keyboard_arrow_left" title="Back" aria-label="Back" t-on-click="this.toggleAdvancedOptions"/>
+                                <span>Advanced Options</span>
+                            </div>
+                            <div class="o_advance_options_grid o_popover_sliding_panel_card ps-3 mb-2 pe-1">
                                 <t t-foreach="Object.values(this.state.advancedAttributeOptions)" t-as="opt" t-key="opt.label">
                                     <t t-if="!opt.requires or this.state.advancedAttributeOptions[opt.requires].isChecked">
-                                        <div class="o_seo_option_row d-flex justify-content-between align-items-center py-1 gap-2">
-                                            <span t-att-title="opt.description"><t t-out="opt.label"/></span>
+                                        <div class="d-flex justify-content-between align-items-center py-1 gap-2">
+                                            <span t-att-data-tooltip="opt.description">
+                                                <t t-out="opt.label"/>
+                                                <i t-if="opt.description" class="oi icon-sup" data-icon="question_mark" t-att-class="this.isRTL ? 'oi-flip-horizontal' : ''"/>
+                                            </span>
                                             <CheckBox value="opt.isChecked" onChange="this.toggleAdvancedAttr.bind(this, opt.id)"/>
                                         </div>
                                     </t>
                                 </t>
                             </div>
+                            <div t-foreach="this.state.urlParameters" t-as="param" t-key="param_index" class="o_popover_sliding_panel_card d-flex mb-2">
+                                <div class="o_popover_sliding_panel_card_content flex-grow-1 px-3 py-2">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span>Parameter</span>
+                                        <input class="form-control" t-model.proxy="param.name" t-on-input="this.updateUrlParameters"/>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <span>Value</span>
+                                        <input class="form-control" t-model.proxy="param.value" t-on-input="this.updateUrlParameters"/>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn oi oi-filled text-danger" data-icon="delete" title="Remove parameter" aria-label="Remove parameter" t-on-click="() => this.removeUrlParameter(param_index)"/>
+                            </div>
+                            <button type="button" class="o_popover_sliding_panel_card_add_btn btn btn-secondary w-100 mb-2" t-on-click="this.addUrlParameter">Add URL Parameter</button>
                         </div>
                     </t>
                 <t t-else="">

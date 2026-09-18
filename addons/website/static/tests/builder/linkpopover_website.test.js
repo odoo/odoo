@@ -276,8 +276,8 @@ test("should open seo advanced popup when gear icon is clicked", async () => {
     await waitFor(".o_we_href_input_link");
     await contains(".o_we_href_input_link").click();
     await contains(".o-we-linkpopover [data-icon='settings']").click();
-    expect(".o_advance_option_panel").toHaveCount(1);
-    expect(".o_advance_option_panel .o_seo_option_row").toHaveCount(4);
+    expect(".o_popover_sliding_panel").toHaveCount(1);
+    expect(".o_popover_sliding_panel .o-checkbox").toHaveCount(4);
 });
 
 test("should add rel='nofollow' when checkbox is selected and applied", async () => {
@@ -296,9 +296,9 @@ test("should add rel='nofollow' when checkbox is selected and applied", async ()
     await waitFor(".o_we_href_input_link");
     await contains(".o_we_href_input_link").click();
     await contains(".o-we-linkpopover [data-icon='settings']").click();
-    expect(".o_advance_option_panel").toHaveCount(1);
-    await contains(".o_seo_option_row:nth-of-type(1) input[type='checkbox']").click();
-    await contains(".o_advance_option_panel [data-icon='keyboard_arrow_left']").click();
+    expect(".o_popover_sliding_panel").toHaveCount(1);
+    await contains(".o_advance_options_grid > div:nth-of-type(1) input[type='checkbox']").click();
+    await contains(".o_popover_sliding_panel [data-icon='keyboard_arrow_left']").click();
     await waitFor(".o-we-linkpopover");
     await contains(".o_we_apply_link").click();
     expect(linkText).toHaveAttribute("rel", "nofollow");
@@ -320,11 +320,11 @@ test("should add multipule relAttribute in anchor tag when checkbox is selected 
     await waitFor(".o_we_href_input_link");
     await contains(".o_we_href_input_link").click();
     await contains(".o-we-linkpopover [data-icon='settings']").click();
-    expect(".o_advance_option_panel").toHaveCount(1);
-    await contains(".o_seo_option_row:nth-of-type(1) input[type='checkbox']").click();
-    await contains(".o_seo_option_row:nth-of-type(2) input[type='checkbox']").click();
-    await contains(".o_seo_option_row:nth-of-type(3) input[type='checkbox']").click();
-    await contains(".o_advance_option_panel [data-icon='keyboard_arrow_left']").click();
+    expect(".o_popover_sliding_panel").toHaveCount(1);
+    await contains(".o_advance_options_grid > div:nth-of-type(1) input[type='checkbox']").click();
+    await contains(".o_advance_options_grid > div:nth-of-type(2) input[type='checkbox']").click();
+    await contains(".o_advance_options_grid > div:nth-of-type(3) input[type='checkbox']").click();
+    await contains(".o_popover_sliding_panel [data-icon='keyboard_arrow_left']").click();
     await waitFor(".o-we-linkpopover");
     await contains(".o_we_apply_link").click();
     expect(linkText).toHaveAttribute("rel", "nofollow noreferrer sponsored");
@@ -346,14 +346,47 @@ test("should add _blank attribute on open in a new window is checked", async () 
     await waitFor(".o_we_href_input_link");
     await contains(".o_we_href_input_link").click();
     await contains(".o-we-linkpopover [data-icon='settings']").click();
-    expect(".o_advance_option_panel").toHaveCount(1);
-    await contains(".o_seo_option_row:nth-of-type(4) input[type='checkbox']").click();
-    await contains(".o_seo_option_row:nth-of-type(5) input[type='checkbox']").click();
-    await click(".o_advance_option_panel [data-icon='keyboard_arrow_left']");
+    expect(".o_popover_sliding_panel").toHaveCount(1);
+    await contains(".o_advance_options_grid > div:nth-of-type(4) input[type='checkbox']").click();
+    await contains(".o_advance_options_grid > div:nth-of-type(5) input[type='checkbox']").click();
+    await click(".o_popover_sliding_panel [data-icon='keyboard_arrow_left']");
     await waitFor(".o-we-linkpopover");
     await contains(".o_we_apply_link").click();
     expect(linkText).toHaveAttribute("target", "_blank");
     expect(linkText).toHaveAttribute("rel", "noopener");
+});
+
+test("should add, edit and remove URL parameters", async () => {
+    await setupWebsiteBuilder(
+        `<div id="wrapwrap"><a href="http://test.com/?e=1#top">link</a></div>`
+    );
+    const linkEl = queryOne(":iframe #wrapwrap a");
+    setSelection({
+        anchorNode: linkEl.firstChild,
+        anchorOffset: 1,
+    });
+    await waitFor(".o-we-linkpopover");
+    await contains(".o_we_edit_link").click();
+    await waitFor(".o_we_href_input_link");
+    await contains(".o-we-linkpopover [data-icon='settings']").click();
+
+    const cardContentSelector = ".o_popover_sliding_panel_card_content";
+    expect(`${cardContentSelector} div:first-child input`).toHaveValue("e");
+    await contains(`${cardContentSelector} + [data-icon='delete']`).click();
+    expect(cardContentSelector).toHaveCount(0);
+
+    for (const [name, value] of [
+        ["b", "2"],
+        ["d", "${a.c}"],
+    ]) {
+        await contains(".o_popover_sliding_panel_card_add_btn").click();
+        await contains(`${cardContentSelector}:last div:first-child input`).edit(name);
+        await contains(`${cardContentSelector}:last div:last-child input`).edit(value);
+    }
+    await click(".o_popover_sliding_panel [data-icon='keyboard_arrow_left']");
+    await waitFor(".o-we-linkpopover");
+    await contains(".o_we_apply_link").click();
+    expect(linkEl).toHaveAttribute("href", "http://test.com/?b=2&d=${a.c}#top");
 });
 
 test("should allow target _blank on custom button", async () => {
@@ -377,9 +410,9 @@ test("should allow target _blank on custom button", async () => {
         confirm: false,
     });
     await contains(".o-we-linkpopover [data-icon='settings']").click();
-    expect(".o_advance_option_panel").toHaveCount(1);
-    await contains(".o_seo_option_row:nth-of-type(4) input[type='checkbox']").click();
-    await click(".o_advance_option_panel [data-icon='keyboard_arrow_left']");
+    expect(".o_popover_sliding_panel").toHaveCount(1);
+    await contains(".o_advance_options_grid > div:nth-of-type(4) input[type='checkbox']").click();
+    await click(".o_popover_sliding_panel [data-icon='keyboard_arrow_left']");
     await waitFor(".o-we-linkpopover");
     await contains(".o_we_apply_link").click();
     const anchor = editor.editable.querySelector("a");

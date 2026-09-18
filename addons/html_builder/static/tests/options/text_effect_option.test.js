@@ -187,7 +187,7 @@ test("custom shadow hash is updated when editing text effect", async () => {
     const initialHash = textEffect.presetHash;
     expect(initialHash).toBe(getTextEffectPresetHash(textEffect));
 
-    await contains(".o_text_effect_popover .o-hb-text-effect-add-shadow").click();
+    await contains(".o_text_effect_popover .o_popover_sliding_panel_card_add_btn").click();
     await animationFrame();
 
     textEffect = JSON.parse(queryOne(":iframe [data-text-effect]").dataset.textEffect);
@@ -310,8 +310,8 @@ test("add multiple shadows on an element", async () => {
     await contains(".o-select-text-effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('Custom')").click();
     expect(".o_text_effect_popover [data-label='Color']").toHaveCount(1);
-    await contains(".o_text_effect_popover .o-hb-text-effect-add-shadow").click();
-    await contains(".o_text_effect_popover .o-hb-text-effect-add-shadow").click();
+    await contains(".o_text_effect_popover .o_popover_sliding_panel_card_add_btn").click();
+    await contains(".o_text_effect_popover .o_popover_sliding_panel_card_add_btn").click();
     await animationFrame();
     expect(".o_text_effect_popover [data-label='Color']").toHaveCount(3);
     expect(
@@ -333,18 +333,18 @@ test("delete one specific shadow on an element", async () => {
     await contains("[data-icon='more_vert']").click();
     await contains(".o-select-text-effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('Custom')").click();
-    await contains(".o_text_effect_popover .o-hb-text-effect-add-shadow").click();
-    await contains(".o_text_effect_popover .o-hb-text-effect-add-shadow").click();
+    await contains(".o_text_effect_popover .o_popover_sliding_panel_card_add_btn").click();
+    await contains(".o_text_effect_popover .o_popover_sliding_panel_card_add_btn").click();
     await animationFrame();
 
     const nthShadowBlurSelector = (index) =>
-        `.o-hb-text-effect-shadow:nth-child(${index + 1}) .hb-row[data-label='Blur'] input`;
+        `.o_popover_sliding_panel_card:nth-child(${index + 1}) .hb-row[data-label='Blur'] input`;
     await contains(nthShadowBlurSelector(1)).edit(5);
     await contains(nthShadowBlurSelector(2)).edit(6);
     await contains(nthShadowBlurSelector(3)).edit(7);
 
     await animationFrame();
-    await contains(".o-hb-text-effect-shadow:nth-child(3) [data-icon='delete']").click();
+    await contains(".o_popover_sliding_panel_card:nth-child(3) [data-icon='delete']").click();
     await animationFrame();
 
     expect(".o_text_effect_popover [data-label='Color']").toHaveCount(2);

@@ -1,5 +1,6 @@
 import { useCrossDocumentListener } from "../../utils/hooks";
 import { session } from "@web/session";
+import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import {
     Component,
@@ -73,6 +74,7 @@ export class LinkPopover extends Component {
     buttonSizesData = BUTTON_SIZES;
     buttonShapesData = BUTTON_SHAPES;
     buttonTypesData = BUTTON_TYPES;
+    isRTL = localization.direction === "rtl";
     editingWrapper = signal.ref();
     urlRef = signal.ref();
     labelRef = signal.ref();
@@ -131,6 +133,7 @@ export class LinkPopover extends Component {
             stripDomain: true,
             showAdvancedOptions: false,
             advancedAttributeOptions,
+            urlParameters: [],
         });
 
         this.updateDocumentState();
@@ -185,6 +188,34 @@ export class LinkPopover extends Component {
 
     toggleAdvancedOptions() {
         this.state.showAdvancedOptions = !this.state.showAdvancedOptions;
+        if (this.state.showAdvancedOptions) {
+            const query = this.state.url.split("#")[0].split("?")[1] || "";
+            this.state.urlParameters = query
+                .split("&")
+                .filter(Boolean)
+                .map((param) => {
+                    const [name, value = ""] = param.split(/=(.*)/);
+                    return { name, value };
+                });
+        }
+    }
+
+    addUrlParameter() {
+        this.state.urlParameters.push({ name: "", value: "" });
+    }
+
+    removeUrlParameter(index) {
+        this.state.urlParameters.splice(index, 1);
+        this.updateUrlParameters();
+    }
+
+    updateUrlParameters() {
+        const [url, ...hash] = this.state.url.split("#");
+        const query = this.state.urlParameters
+            .filter((param) => param.name)
+            .map((param) => `${param.name}=${param.value}`)
+            .join("&");
+        this.state.url = [url.split("?")[0] + (query && `?${query}`), ...hash].join("#");
     }
 
     toggleAdvancedAttr(attr) {

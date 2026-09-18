@@ -1,0 +1,22 @@
+.o_popover_sliding_panel {
+    background-color: var(--light);
+    font-size: var(--o-we-font-size);
+
+    .o_popover_sliding_panel_card_add_btn {
+        border-style: dashed;
+
+        &, &:active {
+            border-color: rgba(var(--body-color-rgb), 0.7);
+            background-color: transparent;
+        }
+    }
+
+    .o_popover_sliding_panel_card {
+        border-radius: var(--border-radius-sm);
+        background-color: rgba(var(--body-color-rgb), 0.05);
+
+        .o_popover_sliding_panel_card_content {
+            border-right: var(--border-width) solid var(--light);
+        }
+    }
+}
