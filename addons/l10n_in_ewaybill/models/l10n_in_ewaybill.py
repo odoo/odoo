@@ -125,6 +125,10 @@ class L10nInEwaybill(models.Model):
     transporter_id = fields.Many2one('res.partner', "Transporter", copy=False, tracking=True)
 
     error_message = fields.Html(readonly=True)
+    warning = fields.Json(
+        string="Warning",
+        compute='_compute_warning',
+    )
     blocking_level = fields.Selection([
         ("warning", "Warning"),
         ("error", "Error")],
@@ -148,6 +152,9 @@ class L10nInEwaybill(models.Model):
     attachment_file = fields.Binary(copy=False, attachment=True)
 
     # ------------Generic compute methods to be overriden in l10n_in_ewaybill_stock module---------------
+
+    def _compute_warning(self):
+        self.warning = {}
 
     def _get_ewaybill_dependencies(self):
         return ['account_move_id']
