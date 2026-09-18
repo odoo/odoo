@@ -75,6 +75,7 @@ export class WelcomePage extends Component {
         return !this.store.discuss.thread.channel.hasRtcSessionActive;
     }
 
+    /** @deprecated */
     get subtitle() {
         return _t(
             "%(open_tag_1)swith%(close_tag_1)s %(open_tag_2)s%(company_name)s%(close_tag_2)s",
