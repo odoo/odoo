@@ -311,6 +311,14 @@ class TestWebsiteForm(TransactionCase):
         with self.assertRaises(AccessError):
             IrModel.with_user(SUPERUSER_ID).get_fields_authorized("res.country", {})
 
+    def test_a_dedicated_route_reads_the_writable_fields_of_a_model_without_form_access(
+        self,
+    ):
+        country_model = self.env.ref("base.model_res_country").sudo()
+        self.assertFalse(country_model.website_form_access)
+        self.env["ir.model.fields"].formbuilder_whitelist("res.country", ["name"])
+        self.assertIn("name", country_model._get_fields_form_writable())
+
     def test_mail_form_signature_binds_cc_recipients(self):
         from odoo.addons.website.tools import website_form_signature_payload
 

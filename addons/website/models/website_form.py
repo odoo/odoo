@@ -69,7 +69,9 @@ class IrModel(models.Model):
             }
         return {
             k: v
-            for k, v in self.get_fields_authorized(self.model, property_origins).items()
+            for k, v in self._get_fields_authorized(
+                self.model, property_origins
+            ).items()
             if k in included
             or ("_property" in v and v["_property"]["field"] in included)
         }
@@ -90,6 +92,10 @@ class IrModel(models.Model):
         )
         if not model_record:
             raise AccessError(_("This model cannot be used in website forms."))
+        return self._get_fields_authorized(model_name, property_origins)
+
+    @api.model
+    def _get_fields_authorized(self, model_name, property_origins):
         model = self.env[model_name]
         fields_get = model.fields_get()
 
