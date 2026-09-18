@@ -166,6 +166,9 @@ class AccountMoveSend(models.AbstractModel):
         # Always silently generate a Factur-X and embed it inside the PDF for inter-portability
         if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') in ('facturx', 'zugferd'):
             xml_facturx = invoice_data['ubl_cii_xml_attachment_values']['raw']
+        # Never embed a xml with xrechnung pdf
+        elif invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') == 'xrechnung':
+            xml_facturx = b''
         else:
             xml_facturx = self.env['account.edi.xml.cii']._export_invoice(invoice)[0]
 
