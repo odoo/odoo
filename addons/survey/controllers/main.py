@@ -539,12 +539,15 @@ class Survey(http.Controller):
     def _prepare_question_html(
         self, survey_sudo: Any, answer_sudo: Any, **post: Any
     ) -> dict[str, Any]:
-        survey_data = self._prepare_survey_data(survey_sudo, answer_sudo, **post)
-
-        IrQweb = request.env["ir.qweb"].with_context(
-            lang=self.env["res.lang"]._get_data(id=answer_sudo.lang_id.id).code
+        lang_code = (
+            self.env["res.lang"]._get_data(id=answer_sudo.lang_id.id).code
             or self._get_lang_with_fallback(answer_sudo.sudo(False)).code
         )
+        survey_sudo = survey_sudo.with_context(lang=lang_code)
+        answer_sudo = answer_sudo.with_context(lang=lang_code)
+        survey_data = self._prepare_survey_data(survey_sudo, answer_sudo, **post)
+
+        IrQweb = request.env["ir.qweb"].with_context(lang=lang_code)
         if answer_sudo.state == "done":
             survey_content = IrQweb._render("survey.survey_fill_form_done", survey_data)
         else:
