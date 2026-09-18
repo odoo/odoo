@@ -16,6 +16,13 @@ class AccountMoveLine(models.Model):
             elif line.stock_move_id.repair_id and line.stock_move_id.description_picking_manual:
                 line.name = line.stock_move_id.description_picking
 
+    def _compute_cogs_move_ids(self):
+        super()._compute_cogs_move_ids()
+        for aml in self:
+            # a repair part is consumed rather than delivered, so it is not among the delivered moves
+            sale_lines = aml.cogs_origin_id.sale_line_ids if aml.cogs_origin_id else aml.sale_line_ids
+            aml.cogs_move_ids |= sale_lines.move_ids.filtered(lambda m: m.repair_line_type == 'add' and m.is_valued)
+
     def _use_inventory_valuation(self):
         moves = self.cogs_move_ids
         already_accounted = any(m.repair_id and m.account_move_id for m in moves.filtered(lambda m: m.repair_line_type == 'add'))
