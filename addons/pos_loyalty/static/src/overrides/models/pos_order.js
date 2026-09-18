@@ -5,6 +5,14 @@ import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "./pos_store";
 import { compute_price_force_price_include } from "@point_of_sale/app/models/utils/tax_utils";
 const { DateTime } = luxon;
+<<<<<<< fc5b7c7f7d314c4f8decce5d9852e80f195151b4:addons/pos_loyalty/static/src/overrides/models/pos_order.js
+||||||| 375133c114d00fecf82a042f07238ae624339fa7:addons/pos_loyalty/static/src/overrides/models/loyalty.js
+const mutex = new Mutex(); // Used for sequential cache updates
+const updateRewardsMutex = new Mutex();
+=======
+const mutex = new Mutex(); // Used for sequential cache updates
+export const updateRewardsMutex = new Mutex();
+>>>>>>> 12bf33d23193b6845e15d6e42d9c93a632723ce6:addons/pos_loyalty/static/src/overrides/models/loyalty.js
 
 function _newRandomRewardCode() {
     return (Math.random() + 1).toString(36).substring(3);
