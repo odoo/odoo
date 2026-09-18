@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sif_coa_tree" model="ir.ui.view">
+        <field name="name">sif.coa.list</field>
+        <field name="model">sif.coa</field>
+        <field name="arch" type="xml">
+            <list string="Master COA">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="account_type"/>
+                <field name="parent_id"/>
+                <field name="level"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sif_coa_form" model="ir.ui.view">
+        <field name="name">sif.coa.form</field>
+        <field name="model">sif.coa</field>
+        <field name="arch" type="xml">
+            <form string="Akun Rekening">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="account_type"/>
+                        </group>
+                        <group>
+                            <field name="parent_id"/>
+                            <field name="level"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sif_coa_search" model="ir.ui.view">
+        <field name="name">sif.coa.search</field>
+        <field name="model">sif.coa</field>
+        <field name="arch" type="xml">
+            <search string="Cari Akun COA">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="account_type"/>
+                <filter string="Aset" name="filter_asset" domain="[('account_type', '=', 'asset')]"/>
+                <filter string="Kewajiban" name="filter_liability" domain="[('account_type', '=', 'liability')]"/>
+                <filter string="Ekuitas" name="filter_equity" domain="[('account_type', '=', 'equity')]"/>
+                <filter string="Pendapatan" name="filter_income" domain="[('account_type', '=', 'income')]"/>
+                <filter string="Beban" name="filter_expense" domain="[('account_type', '=', 'expense')]"/>
+                <separator/>
+                <filter string="Kelompokkan Kategori Akun" name="group_account_type" context="{'group_by': 'account_type'}"/>
+                <filter string="Kelompokkan Induk Akun" name="group_parent" context="{'group_by': 'parent_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_sif_coa" model="ir.actions.act_window">
+        <field name="name">Master COA</field>
+        <field name="res_model">sif.coa</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_sif_coa_search"/>
+    </record>
+</odoo>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_presenly_schedule_generate_wizard_form" model="ir.ui.view">
+        <field name="name">presenly.schedule.generate.wizard.form</field>
+        <field name="model">presenly.schedule.generate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Locations from Working Hours">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Assign Work Locations to Working Hours</h1>
+                    </div>
+                    <div class="alert alert-info" role="alert">
+                        Working Hours supplies the authoritative days and times. Review the preview and select the physical Work Location for every period.
+                    </div>
+                    <group>
+                        <group string="Source">
+                            <field name="employee_id" widget="many2one_avatar_employee" readonly="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="calendar_id" readonly="1"/>
+                            <field name="calendar_two_weeks" invisible="1"/>
+                        </group>
+                        <group string="Generation">
+                            <field name="generation_mode" widget="radio"/>
+                            <field name="default_work_location_id"
+                                   options="{'no_create_edit': True}"
+                                   help="Used as the initial location for every preview row. Each row remains editable."/>
+                            <field name="check_in_tolerance_minutes"/>
+                            <field name="line_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="generation_mode != 'replace'">
+                        Replace mode deletes all regular Weekly location slots for this employee and rebuilds them from the preview. Specific Date exceptions are preserved.
+                    </div>
+                    <field name="line_ids" nolabel="1">
+                        <list editable="bottom"
+                              default_order="weekday, week_type, hour_from">
+                            <field name="company_id" column_invisible="True"/>
+                            <field name="weekday"/>
+                            <field name="week_type" optional="hide"/>
+                            <field name="hour_from" widget="float_time"/>
+                            <field name="hour_to" widget="float_time"/>
+                            <field name="work_location_id" required="1"
+                                   options="{'no_create_edit': True}"/>
+                        </list>
+                    </field>
+                    <div class="alert alert-info mt-3" role="alert"
+                         invisible="line_count == 0">
+                        To assign two schools inside one work period, edit the first row's end time and add another row for the remaining time. Generated slots are validated against Working Hours.
+                    </div>
+                    <div class="alert alert-success mt-3" role="alert"
+                         invisible="line_count != 0">
+                        No unassigned fixed Working Hours periods were found. The regular schedule is already covered, or the Working Hours calendar is flexible/empty.
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_generate" type="object"
+                            string="Generate Location Slots" class="btn-primary"
+                            invisible="line_count == 0"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
