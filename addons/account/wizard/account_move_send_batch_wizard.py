@@ -66,12 +66,11 @@ class AccountMoveSendBatchWizard(models.TransientModel):
                 if 'email' in sending_methods_for_move:
                     lightweight_settings['mail_partner_ids'] = move.partner_id.ids if move.partner_id.email else []
 
-                for sending_method in sending_methods_for_move:
-                    if self._is_applicable_to_move(sending_method, move, **lightweight_settings):
-                        summary_data[sending_method]['count'] += 1
-                        summary_data[sending_method]['moves'].append(move_info)
-                        if not summary_data[sending_method]['label']:
-                            summary_data[sending_method]['label'] = sending_methods[sending_method]
+                for sending_method in self._get_applicable_sending_methods(move, lightweight_settings):
+                    summary_data[sending_method]['count'] += 1
+                    summary_data[sending_method]['moves'].append(move_info)
+                    if not summary_data[sending_method]['label']:
+                        summary_data[sending_method]['label'] = sending_methods[sending_method]
 
             wizard.summary_data = summary_data
 
