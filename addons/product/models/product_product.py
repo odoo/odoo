@@ -130,14 +130,16 @@ class ProductProduct(models.Model):
             record.can_image_variant_1024_be_zoomed = record.image_variant_1920 and is_image_size_above(record.image_variant_1920, record.image_variant_1024)
 
     def _set_template_field(self, template_field, variant_field):
-        for record in self:
+        # read all values first: writing on a template invalidates the variants' cache
+        values = [(record, record[template_field]) for record in self]
+        for record, value in values:
             if (
                 # We are trying to remove a field from the variant even though it is already
                 # not set on the variant, remove it from the template instead.
-                (not record[template_field] and not record[variant_field])
+                (not value and not record[variant_field])
                 # We are trying to add a field to the variant, but the template field is
                 # not set, write on the template instead.
-                or (record[template_field] and not record.product_tmpl_id[template_field])
+                or (value and not record.product_tmpl_id[template_field])
                 # There is only one variant, always write on the template.
                 or self.search_count([
                     ('product_tmpl_id', '=', record.product_tmpl_id.id),
@@ -145,9 +147,9 @@ class ProductProduct(models.Model):
                 ]) <= 1
             ):
                 record[variant_field] = False
-                record.product_tmpl_id[template_field] = record[template_field]
+                record.product_tmpl_id[template_field] = value
             else:
-                record[variant_field] = record[template_field]
+                record[variant_field] = value
 
     @api.depends('product_tmpl_id.pricelist_rule_ids')
     def _compute_pricelist_rule_ids(self):
