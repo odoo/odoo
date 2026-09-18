@@ -179,3 +179,59 @@ class TestIrActionsLoadAudit(TransactionCase):
             )
         result = Actions._get_action_dict_by_xml_id("base.load_audit_restricted")
         self.assertEqual(result["id"], self.restricted.id)
+
+
+@tagged("post_install", "-at_install")
+class TestIrActionsConcreteCache(TransactionCase):
+    def _queries(self, fn):
+        before = self.env.cr.sql_log_count
+        result = fn()
+        return result, self.env.cr.sql_log_count - before
+
+    def test_a_second_resolution_of_the_same_id_costs_no_query(self):
+        window = self.env["ir.actions.act_window"].create(
+            {"name": "cache probe", "res_model": "res.partner"}
+        )
+        Actions = self.env["ir.actions.actions"]
+        self.env.flush_all()
+        self.env.registry.clear_cache("default")
+        first, cost_first = self._queries(
+            lambda: Actions.browse(window.id)._get_model_names_concrete()
+        )
+        second, cost_second = self._queries(
+            lambda: Actions.browse(window.id)._get_model_names_concrete()
+        )
+        self.assertEqual(first, {window.id: "ir.actions.act_window"})
+        self.assertEqual(second, first)
+        self.assertGreaterEqual(cost_first, 1)
+        self.assertEqual(cost_second, 0)
+
+    def test_a_batch_queries_only_the_ids_it_has_not_seen(self):
+        Window = self.env["ir.actions.act_window"]
+        seen = Window.create({"name": "seen", "res_model": "res.partner"})
+        unseen = Window.create({"name": "unseen", "res_model": "res.partner"})
+        Actions = self.env["ir.actions.actions"]
+        self.env.flush_all()
+        self.env.registry.clear_cache("default")
+        Actions.browse(seen.id)._get_model_names_concrete()
+        result, cost = self._queries(
+            lambda: Actions.browse([seen.id, unseen.id])._get_model_names_concrete()
+        )
+        self.assertEqual(
+            result,
+            {seen.id: "ir.actions.act_window", unseen.id: "ir.actions.act_window"},
+        )
+        self.assertGreaterEqual(cost, 1)
+
+    def test_a_missing_id_is_the_root_and_is_not_cached(self):
+        Actions = self.env["ir.actions.actions"]
+        missing = 10**8
+        self.env.registry.clear_cache("default")
+        self.assertEqual(
+            Actions.browse(missing)._get_model_names_concrete(),
+            {missing: "ir.actions.actions"},
+        )
+        _result, cost = self._queries(
+            lambda: Actions.browse(missing)._get_model_names_concrete()
+        )
+        self.assertGreaterEqual(cost, 1, "a miss is asked again, never memoised")

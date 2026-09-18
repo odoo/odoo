@@ -154,6 +154,39 @@ class MixinTableInheritanceRoot(models.AbstractModel):
     def _get_model_names_concrete(self) -> dict[int, str]:
         if not self.ids:
             return {}
+        root = self.env[self._get_root_model_name()]
+        cache = root._get_model_name_concrete.__cache__
+        lru = self.pool.ormcache_lrus[cache.cache_name]
+        found = {}
+        misses = []
+        for record_id in self.ids:
+            try:
+                found[record_id] = lru[cache.key(root, record_id)]
+            except KeyError:
+                misses.append(record_id)
+        if misses:
+            generation = cache.get_cache_generation(root)
+            queried = root._query_model_names_concrete(misses)
+            for record_id, model_name in queried.items():
+                cache.add_value(
+                    root, record_id, cache_value=model_name, generation=generation
+                )
+            found.update(queried)
+        _debug.perf.count(
+            "concrete_models_resolved",
+            records=len(self),
+            cached=len(self.ids) - len(misses),
+            queried=len(misses),
+        )
+        return {record_id: found.get(record_id, root._name) for record_id in self.ids}
+
+    @tools.ormcache("record_id", cache="default")
+    def _get_model_name_concrete(self, record_id: int) -> str:
+        return self._query_model_names_concrete([record_id]).get(
+            record_id, self._get_root_model_name()
+        )
+
+    def _query_model_names_concrete(self, ids: list[int]) -> dict[int, str]:
         root_name = self._get_root_model_name()
         root = self.env.registry[root_name]
         by_table = self._get_model_names_by_table()
@@ -165,7 +198,7 @@ class MixinTableInheritanceRoot(models.AbstractModel):
                 " JOIN pg_class c ON c.oid = r.tableoid WHERE r.id IN %s",
                 SQL.identifier("r", type_field) if type_field else SQL("NULL"),
                 SQL.identifier(root._table),
-                tuple(self.ids),
+                tuple(ids),
             )
         )
         found = {}
@@ -178,12 +211,12 @@ class MixinTableInheritanceRoot(models.AbstractModel):
                 found[record_id] = candidates[0] if len(candidates) == 1 else root_name
                 mismatched += 1  # debuglog
         _debug.perf.count(
-            "concrete_models_resolved",
-            records=len(self),
+            "concrete_models_queried",
+            ids=len(ids),
             found=len(found),
             type_mismatched=mismatched,
         )
-        return {record_id: found.get(record_id, root_name) for record_id in self.ids}
+        return found
 
     def _get_concrete(self) -> Self:
         self.check_singleton()

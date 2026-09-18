@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (3979 methods, 807 classes, 140 files)
+# All base tests (3982 methods, 808 classes, 140 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -102,7 +102,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 
 ## Test File Reference
 
-### Tagged Files (80 files, 475 classes)
+### Tagged Files (80 files, 476 classes)
 
 | File | Tags | Classes | Tests | Base Class |
 |------|------|---------|-------|------------|
@@ -131,7 +131,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_ir_actions_report_audit.py` | `post_install`, `-at_install` | 6 | 15 | TransactionCase |
 | `test_ir_actions_server_audit.py` | `post_install`, `-at_install` | 3 | 8 | TransactionCase |
 | `test_ir_actions_server_regressions.py` | `post_install`, `-at_install` | 21 | 56 | ServerActionCase |
-| `test_ir_actions_tree.py` | `post_install`, `-at_install` | 2 | 13 | TransactionCase |
+| `test_ir_actions_tree.py` | `post_install`, `-at_install` | 3 | 16 | TransactionCase |
 | `test_ir_actions_webhook.py` | `post_install`, `-at_install` | 4 | 20 | WebhookCase, TransactionCase |
 | `test_ir_asset.py` | `-at_install`, `post_install` | 1 | 1 | TransactionCase |
 | `test_ir_asset_audit.py` | `post_install`, `-at_install` | 20 | 68 | TransactionCase |
@@ -257,11 +257,11 @@ These run in **both** at_install and post_install phases by default.
 | Metric | Value |
 |--------|-------|
 | Total test files | 140 |
-| Total test classes | 807 |
-| Total test methods | 3979 |
+| Total test classes | 808 |
+| Total test methods | 3982 |
 | Files with @tagged | 80 (57%) |
 | Files without @tagged | 60 (43%) |
-| Classes using post_install | 270 |
+| Classes using post_install | 271 |
 | Unique tags | 28 |
 | Largest test file | test_db_cursor.py (117 classes, 389 tests) |
 
