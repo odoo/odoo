@@ -157,6 +157,7 @@ class PosController(PortalAccount):
                     ('date_order', '>=', date_order - timedelta(days=1)),
                     ('date_order', '<', date_order + timedelta(days=2)),
                     ('ticket_code', '=', form_values['ticket_code']),
+                    ('state', 'in', ('paid', 'done')),
                 ], limit=1)
                 if order:
                     return request.redirect('/pos/ticket/validate?access_token=%s' % (order.access_token))
@@ -165,7 +166,10 @@ class PosController(PortalAccount):
 
         elif request.httprequest.method == 'GET':
             if kwargs.get('order_uuid'):
-                order = self.env['pos.order'].sudo().search([('uuid', '=', kwargs['order_uuid'])], limit=1)
+                order = self.env['pos.order'].sudo().search([
+                    ('uuid', '=', kwargs['order_uuid']),
+                    ('state', 'in', ('paid', 'done')),
+                ], limit=1)
                 if order:
                     return request.redirect('/pos/ticket/validate?access_token=%s' % (order.access_token))
 
@@ -201,11 +205,14 @@ class PosController(PortalAccount):
 
         # If the route is called directly, return a 404
         if not access_token:
-            return request.not_found()
+            raise request.not_found()
         # Get the order using the access token. We can't use the id in the route because we may not have it yet when the QR code is generated.
-        pos_order = request.env['pos.order'].sudo().search([('access_token', '=', access_token)])
+        pos_order = request.env['pos.order'].sudo().search([
+            ('access_token', '=', access_token),
+            ('state', 'in', ('paid', 'done')),
+        ], limit=1)
         if not pos_order:
-            return request.not_found()
+            raise request.not_found()
 
         # Set the proper context in case of unauthenticated user accessing
         # from the main company website
