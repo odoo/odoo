@@ -1,7 +1,8 @@
 <templates>
+    <!-- srcdoc is set to force the document in no-quirks mode -->
     <t t-name="mail.EmailHtmlConverterReferenceIframe">
         <iframe t-att-sandbox="this.isBrowserSafari() ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
-            aria-hidden="true"
+            srcdoc="" aria-hidden="true"
             t-attf-style="
                 visibility: hidden !important;
                 pointer-events: none !important;
@@ -15,6 +16,7 @@
     </t>
     <t t-name="mail.EmailHtmlConverterHead">
         <meta http-equiv="Content-Security-Policy" content="script-src 'none';"/>
+        <meta name="referrer" content="same-origin"/>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     </t>
