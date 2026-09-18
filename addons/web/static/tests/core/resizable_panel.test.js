@@ -4,6 +4,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml, proxy } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 
@@ -180,4 +181,27 @@ test("default to minWidth if initialWidth is smaller than minWidth", async () =>
     }
     await mountWithCleanup(Parent);
     expect(".o_resizable_panel").toHaveRect({ width: 200 });
+});
+
+test("Resize should not crash when container is not mounted yet", async () => {
+    // Simulate resize event during mounting
+    patch(ResizablePanel.prototype, {
+        setup() {
+            super.setup();
+            expect(() => {
+                window.dispatchEvent(new Event("resize"));
+            }).not.toThrow();
+        },
+    });
+    class Parent extends Component {
+        static components = { ResizablePanel };
+        static template = xml`
+            <ResizablePanel>
+                <p>Panel</p>
+            </ResizablePanel>
+        `;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Parent);
+    expect(".o_resizable_panel").toHaveCount(1);
 });
