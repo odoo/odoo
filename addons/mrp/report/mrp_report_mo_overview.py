@@ -179,6 +179,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             'receipt': self._check_planned_start(production.date_deadline, self._get_replenishment_receipt(production, components)),
             'unit_cost': self._get_unit_cost(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id)),
             'mo_cost': currency.round(mo_cost),
+            'cost_share': remaining_cost_share,
             'currency_id': currency.id,
             'currency': currency,
         }
@@ -529,6 +530,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 remaining_cost_share, byproducts = self._get_byproducts_data(doc_in, initial_mo_cost, level + 2, replenishment_index)
                 replenishment['byproducts'] = byproducts
                 replenishment['summary']['mo_cost'] = initial_mo_cost * remaining_cost_share
+                replenishment['summary']['cost_share'] = remaining_cost_share
 
             if self._is_doc_in_done(doc_in):
                 replenishment['summary']['receipt'] = self._format_receipt_date('available')
