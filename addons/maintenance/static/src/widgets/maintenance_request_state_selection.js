@@ -52,7 +52,7 @@ export class MaintenanceRequestStateSelection extends StateSelectionField {
     }
 
     get isKanbanOrMobileView() {
-        return this.props.viewType === "kanban" || this.env.isSmall;
+        return this.props.viewType === "card" || this.env.isSmall;
     }
 
     getTogglerClass(currentValue) {
