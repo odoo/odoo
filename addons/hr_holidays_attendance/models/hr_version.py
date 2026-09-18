@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import datetime, time, UTC
+from datetime import datetime, time, timedelta, UTC
 from zoneinfo import ZoneInfo
 
 from odoo import api, models
@@ -90,10 +90,12 @@ class HrVersion(models.Model):
                         datetime.combine(end_day, time.max, tzinfo=tz).astimezone(UTC),
                         dummy,
                     ))
-                if check_out > check_in:
+                # exclude break from worked time
+                work_check_out = check_out - timedelta(hours=att.break_duration) if att.break_duration else check_out
+                if work_check_out > check_in:
                     wet = att.work_entry_type_id or self.env['hr.work.entry.type'].browse(default_wet_id)
-                    raw_att.append((check_in, check_out, wet))
-                    att_by_range[check_in, check_out] = att
+                    raw_att.append((check_in, work_check_out, wet))
+                    att_by_range[check_in, work_check_out] = att
 
             # priority-resolve attendance against wt-leave intervals (lower sequence wins)
             leave_types = {wet for _, _, wet in wt_iv_by_rid.get(rid, [])}
