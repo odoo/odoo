@@ -17,6 +17,7 @@ function getShortLabels() {
         price_total: _t("TI:"),
         price_subtotal: _t("TE:"),
         qty_delivered_percent: _t("D%:"),
+        qty_returned: _t("R:"),
     };
 }
 
