@@ -396,8 +396,6 @@ class HrVersion(models.Model):
         # Convert date_start/date_stop to date/duration
         # Split work entries over 2 days due to timezone conversion
         # Regroup work entries of the same type
-        mapped_periods = defaultdict(lambda: defaultdict(lambda: self.env['hr.employee']))
-        cached_periods = defaultdict(float)
         tz_by_version = {}
 
         def _get_tz(version):
@@ -445,33 +443,7 @@ class HrVersion(models.Model):
                 current = segment_end + timedelta(microseconds=1)
 
         vals_list = new_vals_list
-
-        for vals in vals_list:
-            if not vals.get('date_start') or not vals.get('date_stop'):
-                continue
-            date_start = vals['date_start']
-            date_stop = vals['date_stop']
-            tz = _get_tz(vals['version_id'])
-            if not self._generate_work_entries_postprocess_adapt_to_calendar(vals):
-                vals['date'] = date_start.astimezone(tz).date()
-                if 'duration' in vals:
-                    continue
-                elif (date_start, date_stop) in cached_periods:
-                    vals['duration'] = cached_periods[date_start, date_stop]
-                else:
-                    dt = date_stop - date_start
-                    duration = round(dt.total_seconds()) / 3600  # Number of hours
-                    cached_periods[date_start, date_stop] = duration
-                    vals['duration'] = duration
-                continue
-            version = vals['version_id']
-            calendar = version.resource_calendar_id
-            if not calendar and not version.hours_per_week and not version.hours_per_day:
-                vals['date'] = date_start.astimezone(tz).date()
-                vals['duration'] = 0.0
-                continue
-            employee = version.employee_id
-            mapped_periods[date_start, date_stop][calendar] |= employee
+        mapped_periods = self._generate_work_entries_duration(new_vals_list, _get_tz)
 
         # {(date_start, date_stop): {calendar: {'hours': foo}}}
         mapped_version_data = defaultdict(lambda: defaultdict(lambda: {'hours': 0.0}))
@@ -510,3 +482,35 @@ class HrVersion(models.Model):
             else:
                 merged_vals[key] = vals.copy()
         return list(merged_vals.values())
+
+    def _generate_work_entries_duration(self, vals_list, _get_tz):
+
+        cached_periods = defaultdict(float)
+        mapped_periods = defaultdict(lambda: defaultdict(lambda: self.env['hr.employee']))
+        for vals in vals_list:
+            if not vals.get('date_start') or not vals.get('date_stop'):
+                continue
+            date_start = vals['date_start']
+            date_stop = vals['date_stop']
+            tz = _get_tz(vals['version_id'])
+            if not self._generate_work_entries_postprocess_adapt_to_calendar(vals):
+                vals['date'] = date_start.astimezone(tz).date()
+                if 'duration' in vals:
+                    continue
+                elif (date_start, date_stop) in cached_periods:
+                    vals['duration'] = cached_periods[date_start, date_stop]
+                else:
+                    dt = date_stop - date_start
+                    duration = round(dt.total_seconds()) / 3600  # Number of hours
+                    cached_periods[date_start, date_stop] = duration
+                    vals['duration'] = duration
+                continue
+            version = vals['version_id']
+            calendar = version.resource_calendar_id
+            if not calendar and not version.hours_per_week and not version.hours_per_day:
+                vals['date'] = date_start.astimezone(tz).date()
+                vals['duration'] = 0.0
+                continue
+            employee = version.employee_id
+            mapped_periods[date_start, date_stop][calendar] |= employee
+        return mapped_periods
