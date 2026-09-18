@@ -1,5 +1,6 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import {
+    animationFrame,
     manuallyDispatchProgrammaticEvent,
     queryOne,
     queryRect,
@@ -20,6 +21,7 @@ const scrollTo = async function (el, scrollTarget, bottomFixedElement) {
     bottomFixedElement.style.top = scrollTarget + "px";
     bottomFixedElement.style.left = `calc(50% - ${queryRect(bottomFixedElement).width / 2}px)`;
     await manuallyDispatchProgrammaticEvent(document, "scroll");
+    await animationFrame();
 };
 
 const scrollToMiddle = async function (el, bottomFixedElement) {

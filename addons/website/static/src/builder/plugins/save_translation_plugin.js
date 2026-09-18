@@ -27,19 +27,16 @@ export class SaveTranslationPlugin extends Plugin {
             this.dependencies.savePlugin.groupElements(cleanDelayTranslationEls);
         const updateTranslationProms = [];
         const currentWebsiteLang = this.services.website.currentWebsite.metadata.lang;
+        // Empty on purpose: naming the language is what promotes its delayed
+        // translation to a validated one server-side (`_fr_FR` -> `fr_FR`), as
+        // it stands; posting the rendered terms would store a displayed
+        // fallback as a real translation.
         const translations = {};
         translations[currentWebsiteLang] = {};
         for (const [key, els] of Object.entries(groupedDelayTranslationElements)) {
             if (groupedDirtyElements[key]) {
                 log.logic("saveDelayTranslations: skip dirty group", { key });
                 continue;
-            }
-            for (const el of els) {
-                const sha = el.dataset["oeTranslationSourceSha"];
-                if (sha) {
-                    translations[currentWebsiteLang][sha] =
-                        this.getEscapedElement(el).innerHTML;
-                }
             }
             updateTranslationProms.push(
                 rpc("/website/field/translation/update", {
