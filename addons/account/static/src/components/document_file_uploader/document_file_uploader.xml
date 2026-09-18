@@ -15,7 +15,7 @@
     </t>
 
     <t t-name="account.DocumentViewUploadButton">
-        <DocumentFileUploader resModel="this.props.resModel">
+        <DocumentFileUploader t-if="!this.hideUploadButton or !this.uiService.isSmall" resModel="this.props.resModel">
             <t t-set-slot="toggler">
                 <t t-if="!this.hideUploadButton">
                     <button type="button" class="btn btn-secondary" data-hotkey="shift+i">
