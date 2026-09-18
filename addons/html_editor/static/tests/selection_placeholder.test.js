@@ -504,7 +504,7 @@ test("can undo/redo the persisting of selection placeholders", async () => {
             expect(getContent(editor.editable)).toBe(
                 makeContent(
                     "bc",
-                    `<p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>`
+                    `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>`
                 ),
                 { message: "Undo un-persisted the placeholder again." }
             );
