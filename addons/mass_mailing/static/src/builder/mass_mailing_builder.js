@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
 import { removePlugins } from "@html_builder/utils/utils";
@@ -25,12 +25,12 @@ class BuilderWithSnippetVersionControl extends Builder {
 export class MassMailingBuilder extends Component {
     static template = "mass_mailing.MassMailingBuilder";
     static components = { Builder: BuilderWithSnippetVersionControl };
-    static props = {
-        builderProps: { type: Object },
-        toggleCodeView: { type: Function, optional: true },
-        saveAndClose: { type: Function },
-        discardChanges: { type: Function },
-    };
+    props = useProps({
+        builderProps: t.object(),
+        discardAndClose: t.function(),
+        saveAndClose: t.function(),
+        toggleCodeView: t.function().optional(),
+    });
 
     get builderProps() {
         const builderProps = Object.assign({}, this.props.builderProps);
