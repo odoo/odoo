@@ -138,6 +138,21 @@ test("PhoneField in form view on normal screens (edit)", async () => {
     expect(`input[type="tel"]`).toHaveValue("new");
 });
 
+test("PhoneField can hide action buttons", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+            <form>
+                <field name="foo" widget="phone" options="{'display_buttons': False}"/>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name='foo'] input").toHaveValue("yop");
+    expect(".o_field_widget[name='foo'] .o_phone_form_link").toHaveCount(0);
+});
+
 test("PhoneField in editable list view on normal screens", async () => {
     onRpc("has_group", () => true);
     await mountView({

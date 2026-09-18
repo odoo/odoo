@@ -82,13 +82,19 @@ export const phoneField = {
             type: "field",
             availableTypes: ["char"],
         },
+        {
+            label: _t("Display action buttons"),
+            name: "display_buttons",
+            type: "boolean",
+            default: true,
+        },
     ],
     supportedTypes: ["char"],
     extractProps: ({ options, placeholder, viewType }) => ({
         placeholder,
         formattedField: options.formatted_field,
         dialField: options.dial_field,
-        displayButtons: viewType === "form",
+        displayButtons: viewType === "form" && (options.display_buttons ?? true),
     }),
 };
 
