@@ -126,6 +126,7 @@ class ResPartner(models.Model):
             ('9919', "Kennziffer des Unternehmensregisters"),
             ('9951', "San Marino VAT"),
             ('9953', "Vatican VAT"),
+            ('0242', "Service Provider ID"),
             ('AN', "O.F.T.P. (ODETTE File Transfer Protocol)"),
             ('AQ', "X.400 address for mail text"),
             ('AS', "AS2 exchange"),
@@ -232,7 +233,7 @@ class ResPartner(models.Model):
         value = field in self._fields and self[field]
 
         if (
-            country_code == 'BE'
+            country_code in ('BE', 'SK')  # TODO: wait for PR #280178 (income_tax_id/l10n_sk_dic) --> remove as company_registry wouldn't be possible for SK
             and field == 'company_registry'
             and not value
             and self.vat
