@@ -994,6 +994,34 @@ class TestRepair(common.TransactionCase):
         self.assertFalse(repair.exists())
         self.assertFalse(moves.exists())
 
+    def test_repair_owner_from_product_source_location(self):
+        """
+        Test that completing a repair keeps the owner of a consignment product
+        stored in the product source location, even when that location differs
+        from the component source location.
+        """
+        partner = self.res_partner_12
+        product = self.product_storable_no
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location_14, 1, owner_id=partner)
+        repair = self.env['repair.order'].create({
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'picking_type_id': self.stock_warehouse.repair_type_id.id,
+            'partner_id': partner.id,
+            'product_location_src_id': self.stock_location_14.id,
+        })
+        self.assertNotEqual(repair.location_id, repair.product_location_src_id)
+        repair.action_validate()
+        repair.action_repair_start()
+        repair.action_repair_end()
+        self.assertEqual(repair.state, 'done')
+        self.assertEqual(repair.move_id.move_line_ids.owner_id, partner)
+        self.assertEqual(
+            self.env['stock.quant']._get_available_quantity(
+                product, repair.product_location_dest_id, owner_id=partner, strict=True),
+            1,
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestRepairHttp(HttpCase):
