@@ -75,10 +75,10 @@
         </ul>
     </t>
     <t t-name="sale.ptav_pills">
-         <ul class="list-inline list-unstyled flex-grow-1 mb-0">
+         <ul class="d-flex flex-wrap gap-2 list-unstyled flex-grow-1 mb-0">
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
                 t-att-class="{'active': this.props.selected_attribute_value_ids.includes(ptav.id)}"
-                class="o_sale_product_configurator_ptav_pills list-inline-item">
+                class="o_sale_product_configurator_ptav_pills">
                 <label
                     class="btn btn-outline-secondary"
                     t-att-class="{ 'css_not_available': ptav.excluded }"
