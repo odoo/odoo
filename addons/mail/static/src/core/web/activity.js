@@ -13,7 +13,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { FileUploader } from "@web/views/fields/file_handler";
-import { callPhoneNumber } from "@web/core/phone/phone_call";
+import { callPhoneNumber, getPhoneHref } from "@web/core/phone/phone_call";
 
 export class Activity extends Component {
     static components = { ActivityMailTemplate, CopyButton, FileUploader };
@@ -68,6 +68,10 @@ export class Activity extends Component {
         return this.store.daysUntil(this.activity().date_deadline);
     }
 
+    get phoneHref() {
+        return getPhoneHref(this.activity().phone);
+    }
+
     onClickPhoneNumber(ev) {
         const activity = this.activity();
         return callPhoneNumber(
@@ -99,10 +103,9 @@ export class Activity extends Component {
     async onClickMail() {
         const activity = this.activity();
         const thread = this.thread();
-        const recipients = [
-            ...thread.suggestedRecipients,
-            ...thread.additionalRecipients
-        ].filter((r) => r.partner_id);
+        const recipients = [...thread.suggestedRecipients, ...thread.additionalRecipients].filter(
+            (r) => r.partner_id
+        );
         this.action.doAction(
             {
                 type: "ir.actions.act_window",
