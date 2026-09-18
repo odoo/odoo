@@ -833,3 +833,38 @@ class TestEdiZatca(TestSaEdiCommon):
             document.state, 'accepted',
             "The ZATCA document should be marked 'accepted' after a successful submission.",
         )
+
+    def test_zatca_xml_successfully_embedded_in_pdf(self):
+        """Test if the XML sent to ZATCA is successfully embedded in the PDF."""
+        invoice = self._create_test_invoice(
+            name='INV/2023/00034',
+            invoice_date='2023-03-10',
+            invoice_date_due='2023-03-10',
+            partner_id=self.partner_sa_simplified,
+            invoice_line_ids=[{
+                'product_id': self.product_burger.id,
+                'price_unit': self.product_burger.standard_price,
+                'quantity': 3,
+                'tax_ids': self.tax_15.ids,
+            }],
+        )
+        invoice.action_post()
+        moves_data = {
+            invoice.sudo(): {
+                **self.env['account.move.send']._get_default_sending_settings(invoice),
+            },
+        }
+
+        with self.allow_pdf_render(), patch.object(self.env.registry['l10n_sa_edi.document'], '_l10n_sa_submit_einvoice', self._mock_submit_response(ZATCA_RESPONSES['accepted'])):
+            self.env['account.move.send'].with_context(force_report_rendering=True)._generate_invoice_documents(moves_data)
+
+        to_unwrap = {
+            'import_file_type': 'pdf',
+            'name': 'test.pdf',
+            'raw': moves_data[invoice]['pdf_attachment_values']['raw'],
+            'origin_attachment': False,
+            'origin_import_file_type': False,
+        }
+        unwrapped_xml = self.env['account.move']._unwrap_attachment(to_unwrap)[0]
+        self.assertEqual(unwrapped_xml['import_file_type'], 'account.edi.xml.ubl_21')
+        self.assertEqual(unwrapped_xml['name'], invoice.l10n_sa_edi_document_id.name)
