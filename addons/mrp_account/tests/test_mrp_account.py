@@ -214,6 +214,30 @@ class TestMrpAccount(TestBomPriceCommon, TestMrpCommon):
             {'debit':  50.0, 'credit':  0.0},
         ])
 
+    def test_bom_and_mo_overview_extra_cost_with_byproduct(self):
+        """ Test that BoM and MO overviews split the extra cost between the finished
+        product and by-products according to their configured cost shares.
+        """
+        self.bom_2.sudo().write({
+            'type': 'normal',
+            'extra_cost': 100,
+            'byproduct_ids': [Command.create({
+                'product_id': self.screw.id,
+                'cost_share': 20,
+            })],
+        })
+        # Total cost including extra cost is 5725, split 80/20 between the finished product and by-product.
+        bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom_2.id)['lines']
+        self.assertEqual(bom_data['bom_cost'], 4580)
+        self.assertEqual(bom_data['byproducts'][0]['bom_cost'], 1145)
+
+        mo = self._create_mo(self.bom_2, 1)
+        mo.button_mark_done()
+        mo_data = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)['data']
+        self.assertEqual(mo_data['summary']['mo_cost'], 4580)
+        self.assertEqual(mo_data['extras']['total_mo_cost'], 5725)
+        self.assertEqual(mo_data['byproducts']['summary']['mo_cost'], 1145)
+
     def test_mo_overview_comp_different_uom(self):
         """ Test that the overview takes into account the uom of the component in the price computation
         """
