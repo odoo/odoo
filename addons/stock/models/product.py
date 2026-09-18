@@ -396,74 +396,122 @@ class ProductProduct(models.Model):
         return self._get_domain_locations_new(location_ids)
 
     def _get_domain_locations_new(self, location_ids) -> tuple[Domain, Domain, Domain]:
+        """Resolves the location subtree by `parent_path` prefix, not a recursive CTE.
+
+        Core builds one `WITH RECURSIVE descendants` Query and
+        reuses it in four domain leaves; `Query.subselect()` re-renders the CTE text
+        for each, so Postgres plans four independent SubPlans and walks the tree four
+        times - 31k locations under the DC view location, ~50ms and 66k buffers a
+        copy. This form is uncorrelated (the paths come from Python, not from a join
+        as in the pre-fa4881ea code), so each copy is an index-only scan on
+        stock_location's (parent_path, id) index. Revisit on upgrade.
+
+        Only sound while the hierarchy is the standard `location_id` one, which
+        `_parent_store` keeps `parent_path` in sync with.
+        """
         if not location_ids:
             return (Domain.FALSE,) * 3
+
         locations = self.env['stock.location'].browse(location_ids)
-        # TDE FIXME: should move the support of child_of + bypass_search_access directly in expression
-        # this optimizes [('location_id', 'child_of', locations.ids)]
-        # by avoiding the ORM to search for children locations and injecting a
-        # lot of location ids into the main query
+
         if self.env.context.get('strict'):
             loc_domain = Domain('location_id', 'in', locations.ids)
             dest_loc_domain = Domain('location_dest_id', 'in', locations.ids)
             dest_loc_domain_out = Domain('location_dest_id', 'not in', locations.ids)
-        elif locations:
-            descendants_query = Query(
-                locations.env,
-                'descendants',
-                SQL(
-                    """
-                    (
-                        WITH RECURSIVE descendants AS (
-                            SELECT id
-                            FROM stock_location
-                            WHERE id IN %s
-
-                            UNION
-
-                            SELECT sl.id
-                            FROM stock_location sl
-                            JOIN descendants d
-                                ON sl.location_id = d.id
-                        )
-                        SELECT id FROM descendants
-                    )
-                    """,
-                    tuple(locations.ids),
-                ),
+            return (
+                loc_domain,
+                dest_loc_domain & ~loc_domain,
+                loc_domain & dest_loc_domain_out,
             )
-            loc_domain = Domain('location_id', 'in', descendants_query)
+
+        paths = {path for path in locations.mapped('parent_path') if path}
+
+        alias = 'stock_location_descendants'
+        prefix_match = SQL("(%s)", SQL(" OR ").join(
+            SQL("%s LIKE %s", SQL.identifier(alias, 'parent_path'), path + '%')
+            for path in paths
+        ))
+
+        # Try to resolve subtree membership once. Leaving as a subquery makes Postgres
+        # re-scan stock_location per condition which is slow when large # of descendants
+        INLINE_MAX = 2000  # max number of inline ids to accept over subquery
+        [(n_inside, n_outside)] = self.env.execute_query(SQL(
+            "SELECT count(*) FILTER (WHERE COALESCE(%(match)s, FALSE)),"
+            "       count(*) FILTER (WHERE NOT COALESCE(%(match)s, FALSE))"
+            "  FROM %(table)s AS %(alias)s",
+            match=prefix_match,
+            table=SQL.identifier(locations._table),
+            alias=SQL.identifier(alias),
+        ))
+
+        # check if can filter descendants to small # of inline ids
+        if min(n_inside, n_outside) <= INLINE_MAX:
+            # If descendants below inline id threshold, inline whichever side is smaller.
+            # '~' flips 'in'/'not in' downstream, so the rest of this method is polarity-agnostic.
+            if n_inside <= n_outside:
+                op, where = 'in', SQL("COALESCE(%s, FALSE)", prefix_match)
+            else:
+                op, where = 'not in', SQL("NOT COALESCE(%s, FALSE)", prefix_match)
+
+            ids = [
+                loc_id for (loc_id,) in self.env.execute_query(SQL(
+                    "SELECT %s FROM %s AS %s WHERE %s",
+                    SQL.identifier(alias, 'id'),
+                    SQL.identifier(locations._table),
+                    SQL.identifier(alias),
+                    where,
+                ))
+            ]
+
+            loc_domain = Domain('location_id', op, ids)
             # The condition should be split for done and not-done moves as the final_dest_id only make sense
             # for the part of the move chain that is not done yet.
+            dest_loc_domain_done = Domain('location_dest_id', op, ids)
+            dest_loc_domain_in_progress = Domain([
+                '|',
+                    '&', ('location_final_id', '!=', False), ('location_final_id', op, ids),
+                    '&', ('location_final_id', '=', False), ('location_dest_id', op, ids),
+            ])
+        else:
+            # Too many descendant locations to inline, prefer subqueries
+            descendants_query = Query(locations.env, alias, SQL.identifier(locations._table))
+            descendants_query.add_where(prefix_match)
+            loc_domain = Domain('location_id', 'in', descendants_query)
+            # as above, the condition should be split for done and not-done moves
             dest_loc_domain_done = Domain('location_dest_id', 'in', descendants_query)
             dest_loc_domain_in_progress = Domain([
                 '|',
                     '&', ('location_final_id', '!=', False), ('location_final_id', 'in', descendants_query),
                     '&', ('location_final_id', '=', False), ('location_dest_id', 'in', descendants_query),
             ])
-            dest_loc_domain = Domain([
-                '|',
-                    '&', ('state', '=', 'done'), dest_loc_domain_done,
-                    '&', ('state', '!=', 'done'), dest_loc_domain_in_progress,
-            ])
-            dest_loc_domain_out = Domain([
-                '|',
-                    '&', ('state', '=', 'done'), ~dest_loc_domain_done,
-                    '&', ('state', '!=', 'done'), ~dest_loc_domain_in_progress,
-            ])
-            if self.env.context.get('skip_in_progress'):
-                return (
-                    loc_domain,
-                    dest_loc_domain_done & ~loc_domain,
-                    loc_domain & ~dest_loc_domain_done
-                )
+        dest_loc_domain = Domain([
+            '|',
+                '&', ('state', '=', 'done'), dest_loc_domain_done,
+                '&', ('state', '!=', 'done'), dest_loc_domain_in_progress,
+        ])
+        dest_loc_domain_out = Domain([
+            '|',
+                '&', ('state', '=', 'done'), ~dest_loc_domain_done,
+                '&', ('state', '!=', 'done'), ~dest_loc_domain_in_progress,
+        ])
+        if self.env.context.get('skip_in_progress'):
+            domain_move_in_loc = dest_loc_domain_done & ~loc_domain
+            domain_move_out_loc = loc_domain & ~dest_loc_domain_done
+        else:
+            domain_move_in_loc = dest_loc_domain & ~loc_domain
+            domain_move_out_loc = loc_domain & dest_loc_domain_out
+
+        if self.env.context.get('ignore_rental_returns'):
+            # Replicates sale_stock_renting.ProductProduct._get_domain_locations_new's
+            # adjustment: that override can never run here since we return without calling
+            # super() (this method fully replaces core's recursive-CTE computation, see
+            # docstring above), so the ignore_rental_returns exclusion has to be reapplied
+            # directly. Keep this in sync with
+            # enterprise/sale_stock_renting/models/product_product.py.
+            domain_move_in_loc &= Domain('location_id', 'not in', self.env.companies.rental_loc_id.ids)
 
         # returns: (domain_quant_loc, domain_move_in_loc, domain_move_out_loc)
-        return (
-            loc_domain,
-            dest_loc_domain & ~loc_domain,
-            loc_domain & dest_loc_domain_out,
-        )
+        return (loc_domain, domain_move_in_loc, domain_move_out_loc)
 
     def _search_qty_available(self, operator, value):
         # In the very specific case we want to retrieve products with stock available, we only need
