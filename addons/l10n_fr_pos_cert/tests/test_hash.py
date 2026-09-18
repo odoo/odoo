@@ -1,5 +1,5 @@
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
-from odoo.addons.account_edi.tests.common import AccountTestInvoicingCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo import fields
 

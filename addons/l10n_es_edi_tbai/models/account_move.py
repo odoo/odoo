@@ -102,7 +102,7 @@ class AccountMove(models.Model):
 
     @api.depends('l10n_es_tbai_post_document_id.chain_index')
     def _compute_show_reset_to_draft_button(self):
-        # EXTENDS account_edi account.move
+        # EXTENDS account account.move
         super()._compute_show_reset_to_draft_button()
 
         for move in self:
