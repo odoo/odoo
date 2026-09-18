@@ -51,8 +51,6 @@ export class TimeOffDashboard extends Component {
         );
         this.state.holidays = dashboardData["allocation_data"];
         this.state.allocationsNumber = dashboardData["allocations_number"];
-        this.hasAccrualAllocation = dashboardData["has_accrual_allocation"];
-        this.hasFutureAllocation = dashboardData["has_future_allocation"];
     }
 
     resetDate() {
@@ -72,7 +70,10 @@ export class TimeOffDashboard extends Component {
             type: "ir.actions.act_window",
             name: _t("Pending Allocations"),
             res_model: "hr.leave.allocation",
-            views: [[false, "list"], [false, "form"]],
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
             domain: [["state", "in", ["confirm", "validate1"]]],
             context,
         });
