@@ -8,6 +8,7 @@ class ProductTemplate(models.Model):
         comodel_name="resource.asset.kind",
         help="Set when each unit of this product is an asset in its own right: a vehicle, a machine, a phone. Empty for consumables and parts.",
     )
+    asset_kind_code = fields.Char(related="asset_kind_id.code")
     asset_count = fields.Integer(compute="_compute_asset_count")
 
     def _compute_asset_count(self):
