@@ -127,7 +127,7 @@ export class AttendeeCalendarCalendarFilterSection extends CalendarFilterSection
         return {
             title: _t("Warning"),
             body: _t(
-                "If you are the only person using this calendar, all of it's events will be deleted." +
+                "If you are the only person using this calendar, all of its events will be deleted. " +
                 "Are you sure you want to proceed?\n\n" +
                 "This action cannot be reversed."
             ),
