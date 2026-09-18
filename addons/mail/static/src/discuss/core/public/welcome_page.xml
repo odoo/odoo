@@ -2,6 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.WelcomePage">
+<<<<<<< 7f19d13e3ac1c31364866e10d1a3a4911e622e2a
     <div class="o-mail-WelcomePage container d-flex flex-column justify-content-md-center p-3 o-min-dvh-100">
         <div class="row row-gap-3 flex-lg-row-reverse justify-content-center">
             <div class="col-12 col-lg-4">
@@ -33,6 +34,26 @@
                     </button>
                     <small t-if="this.store.self_user and this.showCallPreview and this.noActiveParticipants" class="mt-2 text-center text-muted">No one else is here.</small>
                 </div>
+||||||| 8a27f853e891195239d7af20143580c0089995c0
+    <div class="o-mail-WelcomePage o-min-dvh-100 w-100 d-flex flex-column justify-content-md-center align-items-center bg-light p-3">
+        <h1 class="fw-light text-center">
+            <span t-if="showCallPreview">You've been invited to a meeting!</span>
+            <span t-else="">You've been invited to a chat!</span>
+        </h1>
+        <h2 class="m-3 m-md-5" t-esc="store.companyName"/>
+        <div class="w-100 d-flex justify-content-center gap-5" t-att-class="{'flex-column': ui.isSmall}">
+            <div t-if="showCallPreview" class="w-100 rounded-3 overflow-hidden" style="max-width: 640px;">
+                <CallPreview activateCamera="state.activateCamera" activateMicrophone="state.activateMicrophone" onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)" hasSettingsAtBottom="true"/>
+=======
+    <div class="o-mail-WelcomePage o-min-dvh-100 w-100 d-flex flex-column justify-content-md-center align-items-center bg-light p-3">
+        <h1 class="fw-light text-center mb-5">
+            <span t-if="showCallPreview">You've been invited to a meeting!</span>
+            <span t-else="">You've been invited to a chat!</span>
+        </h1>
+        <div class="w-100 d-flex justify-content-center gap-5" t-att-class="{'flex-column': ui.isSmall}">
+            <div t-if="showCallPreview" class="w-100 rounded-3 overflow-hidden" style="max-width: 640px;">
+                <CallPreview activateCamera="state.activateCamera" activateMicrophone="state.activateMicrophone" onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)" hasSettingsAtBottom="true"/>
+>>>>>>> d768abdc97aa103d56e854a9961a33c8c0e76b89
             </div>
             <div t-if="this.showCallPreview" class="col-12 col-lg-8">
                 <CallPreview activateCamera="this.state.activateCamera" activateMicrophone="this.state.activateMicrophone" onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)" hasSettingsAtBottom="true"/>
