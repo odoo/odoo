@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_partner_property_form_inherit_l10n_ge_edi" model="ir.ui.view">
+        <field name="name">res.partner.property.form.inherit.l10n.ge.edi</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='invoice_send_settings']" position="inside">
+                <label for="l10n_ge_edi_un_id" invisible="country_code != 'GE'"/>
+                <div class="o_row" invisible="country_code != 'GE'">
+                    <field name="l10n_ge_edi_un_id" nolabel="1" placeholder="Not fetched" class="oe_inline"/>
+                    <button name="action_l10n_ge_edi_fetch_un_id" type="object" class="btn btn-secondary btn-sm ms-2" string="Fetch Un Id"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
