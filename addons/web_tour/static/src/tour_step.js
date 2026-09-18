@@ -59,7 +59,8 @@ export class TourStep {
         const checkMode =
             isActiveArray.includes(mode) ||
             (!isActiveArray.includes("manual") && !isActiveArray.includes("auto"));
-        const checkRobot = !isActiveArray.includes("robot") || Boolean(this.tour.config?.robot);
+        const checkRobot =
+            !isActiveArray.includes("robot") || mode === "auto" || Boolean(this.tour.config?.robot);
         const edition =
             (session.server_version_info || "").at(-1) === "e" ? "enterprise" : "community";
         const checkEdition =
