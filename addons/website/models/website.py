@@ -2262,7 +2262,8 @@ class Website(models.Model):
         # SET the `<%` similarity threshold to 0.3 for the current transaction (cluster default is 0.6)
         self.env.cr.execute("SET LOCAL pg_trgm.word_similarity_threshold to 0.3;")
         for search_detail in search_details:
-            model_name, fields = search_detail['model'], search_detail['search_fields']
+            model_name = search_detail['model']
+            fields = search_detail.get('fuzzy_search_fields', search_detail['search_fields'])
             model = self.env[model_name]
             if search_detail.get('requires_sudo'):
                 model = model.sudo()
@@ -2326,7 +2327,8 @@ class Website(models.Model):
         match_pattern = r'[\w./-]{%s,}' % min(4, len(search) - 3)
         first = escape_psql(search[0])
         for search_detail in search_details:
-            model_name, fields = search_detail['model'], search_detail['search_fields']
+            model_name = search_detail['model']
+            fields = search_detail.get('fuzzy_search_fields', search_detail['search_fields'])
             model = self.env[model_name]
             if search_detail.get('requires_sudo'):
                 model = model.sudo()
