@@ -251,6 +251,25 @@ class TestCertificationBadge(common.TestSurveyCommon):
                 {"description": "What did you expect ? Schwepps!"}
             )
 
+    def test_a_survey_user_cannot_edit_a_badge_another_app_awards(self):
+        awarded = self.env["gamification.badge"].create(
+            {"name": "Awarded by a challenge", "rule_auth": "nobody"}
+        )
+        self.env["gamification.challenge"].create(
+            {
+                "name": "Challenge",
+                "reward_id": awarded.id,
+                "line_ids": [],
+            }
+        )
+        with self.assertRaises(AccessError):
+            awarded.with_user(self.survey_user).write({"description": "mine now"})
+        with self.assertRaises(AccessError):
+            awarded.with_user(self.survey_user).unlink()
+        self.certification_badge.with_user(self.survey_user).write(
+            {"description": "a certification badge is still the survey's"}
+        )
+
     def test_badge_configuration_multi(self):
         vals = {
             "title": "Certification Survey",

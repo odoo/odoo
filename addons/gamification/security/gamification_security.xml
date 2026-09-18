@@ -223,4 +223,15 @@
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
+    <record id="gamification_badge_rule_manager_edit" model="ir.rule">
+        <field name="name">Badge: manager: edit all</field>
+        <field name="model_id" ref="model_gamification_badge" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_gamification_manager'))]" />
+        <field name="perm_read" eval="0" />
+        <field name="perm_write" eval="1" />
+        <field name="perm_create" eval="1" />
+        <field name="perm_unlink" eval="1" />
+    </record>
+
 </odoo>

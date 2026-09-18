@@ -273,4 +273,17 @@
         <field name="groups" eval="[Command.link(ref('group_survey_user'))]" />
     </record>
 
+    <!-- GAMIFICATION BADGE: a survey user edits certification badges and unused ones -->
+    <record id="gamification_badge_rule_survey_user_edit" model="ir.rule">
+        <field name="name">Badge: survey user: certification or unused badges</field>
+        <field name="model_id" ref="gamification.model_gamification_badge" />
+        <field
+            name="domain_force">['|', ('survey_ids', '!=', False), '&amp;', ('challenge_ids', '=', False), ('owner_ids', '=', False)]</field>
+        <field name="groups" eval="[Command.link(ref('group_survey_user'))]" />
+        <field name="perm_read" eval="0" />
+        <field name="perm_write" eval="1" />
+        <field name="perm_create" eval="1" />
+        <field name="perm_unlink" eval="1" />
+    </record>
+
 </odoo>

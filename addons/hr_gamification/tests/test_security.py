@@ -38,7 +38,7 @@ class TestSecurity(common.TransactionCase):
             with self.subTest(rule=rule.name):
                 self.assertNotIn(base_group_user, rule.groups)
                 self.assertTrue(set(rule.groups.ids) <= {g.id for g in allowed})
-        self.assertEqual(len(rules), 4)
+        self.assertEqual(len(rules), 5)
 
 
 @tagged("post_install", "-at_install")
