@@ -1,5 +1,4 @@
-import { onMounted, onPatched, untrack } from "@odoo/owl";
-import { useLayoutEffect } from "@web/owl2/utils";
+import { onMounted, onPatched, onWillUnmount } from "@odoo/owl";
 import { memoize } from "@web/core/utils/functions";
 
 // ── Batch infrastructure ─────────────────────────────────────────────────────
@@ -108,47 +107,49 @@ function flushResizes() {
 export function useAutoresize(ref, options = {}) {
     let wasProgrammaticallyResized = false;
     let resize = null;
-    useLayoutEffect(
-        (el) => {
-            if (el) {
-                resize = (programmaticResize = false) => {
-                    wasProgrammaticallyResized = programmaticResize;
-                    if (options.ignoreIfEmpty && !el.value) {
-                        return;
-                    }
-                    pendingResizes.set(el, options);
-                    if (!flushScheduled) {
-                        flushScheduled = true;
-                        queueMicrotask(flushResizes);
-                    }
-                };
-                const onInput = () => resize(true);
-                el.addEventListener("input", onInput);
-                const resizeObserver = new ResizeObserver(() => {
-                    if (wasProgrammaticallyResized) {
-                        wasProgrammaticallyResized = false;
-                        return;
-                    }
-                    resize();
-                });
-                resizeObserver.observe(el);
-                return () => {
-                    el.removeEventListener("input", onInput);
-                    resizeObserver.unobserve(el);
-                    resizeObserver.disconnect();
-                    resize = null;
-                };
+    let observedEl = null;
+    let resizeObserver = null;
+    const onInput = () => resize?.(true);
+    onMounted(() => {
+        const el = ref();
+        if (!el) {
+            return;
+        }
+        observedEl = el;
+        resize = (programmaticResize = false) => {
+            wasProgrammaticallyResized = programmaticResize;
+            if (options.ignoreIfEmpty && !el.value) {
+                return;
             }
-        },
-        () => [untrack(ref)]
-    );
-    const resizeProgrammatically = () => {
+            pendingResizes.set(el, options);
+            if (!flushScheduled) {
+                flushScheduled = true;
+                queueMicrotask(flushResizes);
+            }
+        };
+        el.addEventListener("input", onInput);
+        resizeObserver = new ResizeObserver(() => {
+            if (wasProgrammaticallyResized) {
+                wasProgrammaticallyResized = false;
+                return;
+            }
+            resize();
+        });
+        resizeObserver.observe(el);
+        resize(true);
+    });
+    onPatched(() => {
         if (resize) {
             resize(true);
         }
-    };
-    onMounted(resizeProgrammatically);
-    onPatched(resizeProgrammatically);
+    });
+    onWillUnmount(() => {
+        observedEl?.removeEventListener("input", onInput);
+        resizeObserver?.disconnect();
+        resizeObserver = null;
+        observedEl = null;
+        resize = null;
+    });
 }
 
 /**
