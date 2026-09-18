@@ -747,6 +747,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         self.assertRecordValues(svls, [{'value': 4809.92, 'remaining_value': 4809.92}])
         self.assertAlmostEqual(svls.unit_cost, 0.87452999)
 
+<<<<<<< 2c1ce76770ea5d08f68027f5fe5fe7467db8f478
     @freeze_time('2024-01-01')
     def test_exchange_rate_return_after_reception(self):
         """ Buy a product valuated in real time (FIFO here, AVCO works the same way) in a
@@ -829,3 +830,112 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         self.assertTrue(
             exchange_move.line_ids.filtered(lambda l: l.account_id == stock_in_account)
         )
+||||||| b5f3a68bc5586d18caac65825bc9be8ebc9cac76
+            cd = self.company_data
+            stock_input_account, tax_purchase_account, account_payable_account, stock_valuation_account = (
+                cd['default_account_stock_in'],
+                cd['default_account_tax_purchase'],
+                cd['default_account_payable'],
+                cd['default_account_stock_valuation'],
+            )
+            self.assertRecordValues(
+                self.env['account.move.line'].search([], order='id asc'),
+                [
+                    {'account_id': stock_input_account.id,       'debit': 420.00,   'credit':   0.00},
+                    {'account_id': tax_purchase_account.id,      'debit':  63.00,   'credit':   0.00},
+                    {'account_id': account_payable_account.id,   'debit':   0.00,   'credit': 483.00},
+                    {'account_id': stock_input_account.id,       'debit':   0.00,   'credit': 420.00},
+                    {'account_id': stock_valuation_account.id,   'debit': 420.00,   'credit':   0.00},
+                ]
+            )
+=======
+            cd = self.company_data
+            stock_input_account, tax_purchase_account, account_payable_account, stock_valuation_account = (
+                cd['default_account_stock_in'],
+                cd['default_account_tax_purchase'],
+                cd['default_account_payable'],
+                cd['default_account_stock_valuation'],
+            )
+            self.assertRecordValues(
+                self.env['account.move.line'].search([], order='id asc'),
+                [
+                    {'account_id': stock_input_account.id,       'debit': 420.00,   'credit':   0.00},
+                    {'account_id': tax_purchase_account.id,      'debit':  63.00,   'credit':   0.00},
+                    {'account_id': account_payable_account.id,   'debit':   0.00,   'credit': 483.00},
+                    {'account_id': stock_input_account.id,       'debit':   0.00,   'credit': 420.00},
+                    {'account_id': stock_valuation_account.id,   'debit': 420.00,   'credit':   0.00},
+                ]
+            )
+
+    def _check_return_exchange_difference(self, rate_receipt, rate_return):
+        categ = self.test_product_order.categ_id
+        stock_journal_id = categ.property_stock_journal.id
+        exchange_journal_id = self.env.company.currency_exchange_journal_id.id
+        stock_val_account = categ.property_stock_valuation_account_id
+        stock_in_account = categ.property_stock_account_input_categ_id
+        # The fixture makes the valuation account reconcilable, which real charts of
+        # accounts do not; leaving it on routes the flow through another reconciliation.
+        stock_val_account.reconcile = False
+
+        date_receipt = '2024-01-01'
+        date_return = '2024-02-01'
+        foreign_currency = self.env.ref('base.EUR')
+        foreign_currency.active = True
+        self.env['res.currency.rate'].create([
+            {
+                'name': date_receipt,
+                'rate': rate_receipt,
+                'currency_id': foreign_currency.id,
+                'company_id': self.env.company.id,
+            },
+            {
+                'name': date_return,
+                'rate': rate_return,
+                'currency_id': foreign_currency.id,
+                'company_id': self.env.company.id,
+            },
+        ])
+
+        purchase_order = self._create_purchase(
+            self.test_product_order, date_receipt, quantity=10, price_unit=100, currency=foreign_currency)
+        receipt = purchase_order.picking_ids
+        self._process_pickings(receipt, date=date_receipt)
+
+        with freeze_time(date_return):
+            return_form = Form(self.env['stock.return.picking'].with_context(
+                active_ids=receipt.ids, active_id=receipt.id, active_model='stock.picking'))
+            return_wizard = return_form.save()
+            return_wizard.product_return_moves.quantity = 10.0
+            return_pick = self.env['stock.picking'].browse(return_wizard.create_returns()['res_id'])
+            self._process_pickings(return_pick, date=date_return)
+
+        relevant_amls = self.env['account.move.line'].search([
+            ('journal_id', 'in', (stock_journal_id, exchange_journal_id)),
+            ('date', '>=', date_receipt),
+        ], order='id asc')
+        exchange_move = relevant_amls.move_id.filtered(lambda m: m.journal_id.id == exchange_journal_id)
+
+        self.assertEqual(
+            len(relevant_amls.move_id), 3,
+            "There should be exactly 3 moves: Receipt, Return, and one Exchange Difference.")
+        self.assertEqual(
+            len(exchange_move), 1,
+            "The exchange difference should be posted in the currency exchange journal, not the stock journal.")
+        self.assertFalse(
+            exchange_move.line_ids.filtered(lambda l: l.account_id == stock_val_account),
+            "The exchange difference should not touch the stock valuation account.")
+        self.assertTrue(
+            exchange_move.line_ids.filtered(lambda l: l.account_id == stock_in_account))
+
+    @freeze_time('2024-01-01')
+    def test_exchange_rate_return_after_reception(self):
+        """Check that returning goods bought in a foreign currency after the rate rose books
+        the exchange difference as a realized gain/loss instead of against inventory value."""
+        self._check_return_exchange_difference(rate_receipt=2.0, rate_return=3.0)
+
+    @freeze_time('2024-01-01')
+    def test_exchange_rate_return_after_reception_rate_drop(self):
+        """Check that returning goods bought in a foreign currency after the rate dropped books
+        the exchange difference as a realized gain/loss instead of against inventory value."""
+        self._check_return_exchange_difference(rate_receipt=3.0, rate_return=2.0)
+>>>>>>> 3a61b593c9ce5f2d5a9bc6452f0c558f65d622f7

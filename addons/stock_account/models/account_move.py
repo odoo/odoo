@@ -320,16 +320,25 @@ class AccountMoveLine(models.Model):
     def _inverse_product_id(self):
         super(AccountMoveLine, self.filtered(lambda l: l.display_type != 'cogs'))._inverse_product_id()
 
+    def _use_stock_account_for_exchange(self):
+        layers = self.move_id.sudo().stock_valuation_layer_ids
+        valued_moves = layers.stock_move_id
+        return_moves = valued_moves.returned_move_ids | valued_moves.origin_returned_move_id
+
+        return bool(
+            layers
+            and not return_moves
+            and self.product_id.categ_id.property_cost_method != 'standard'
+            and self.product_id.categ_id.property_valuation == 'real_time'
+        )
+
     def _get_exchange_journal(self, company):
-        if (
-            self and self.move_id.sudo().stock_valuation_layer_ids and
-            self.product_id.categ_id.property_cost_method != 'standard' and
-            self.product_id.categ_id.property_valuation == 'real_time'
-        ):
+        if self._use_stock_account_for_exchange():
             return self.product_id.categ_id.property_stock_journal
         return super()._get_exchange_journal(company)
 
     def _get_exchange_account(self, company, amount):
+<<<<<<< 2c1ce76770ea5d08f68027f5fe5fe7467db8f478
         layers = self.move_id.sudo().stock_valuation_layer_ids if self else False
 
         is_return_or_refund = layers and any(
@@ -341,5 +350,14 @@ class AccountMoveLine(models.Model):
             self.product_id.categ_id.property_cost_method != 'standard' and
             self.product_id.categ_id.property_valuation == 'real_time'
         ):
+||||||| b5f3a68bc5586d18caac65825bc9be8ebc9cac76
+        if (
+            self and self.move_id.sudo().stock_valuation_layer_ids and
+            self.product_id.categ_id.property_cost_method != 'standard' and
+            self.product_id.categ_id.property_valuation == 'real_time'
+        ):
+=======
+        if self._use_stock_account_for_exchange():
+>>>>>>> 3a61b593c9ce5f2d5a9bc6452f0c558f65d622f7
             return self.product_id.categ_id.property_stock_valuation_account_id
         return super()._get_exchange_account(company, amount)
