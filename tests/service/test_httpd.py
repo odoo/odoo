@@ -832,7 +832,7 @@ def test_a_pipeline_longer_than_the_inline_cap_is_answered_in_full():
     with _server(ODOO_HTTP_HEAD_TIMEOUT="4") as srv:
         raw = _pipeline(srv.server_port, n, timeout=8.0)
     assert raw.count(b"HTTP/1.1 200 OK") == n
-    assert b"408" not in raw
+    assert b"HTTP/1.1 408" not in raw
     assert f'"/r{n - 1}"'.encode() in raw
 
 

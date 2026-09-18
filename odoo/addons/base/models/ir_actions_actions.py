@@ -7,7 +7,7 @@ from typing import Any, Self
 from odoo import api, fields, models, tools
 from odoo.api import ValuesType
 from odoo.db import schema as sql
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.libs.datetime import timezone
 from odoo.libs.debug_log import DebugLog
@@ -536,27 +536,27 @@ class IrActionsActions(models.Model):
         target = self._get_field_target_model()
         return self._get_load_refusal(group_ids, config[target] if target else None)
 
-    def _audit_load(self) -> str:
+    def _check_access_to_load(self) -> None:
         reason = self._get_load_refusal_of_record()
-        if reason:
-            _debug.logic(
-                "load_would_refuse",
-                action=self.id,
-                type=self._name,
-                uid=self.env.uid,
-                reason=reason,
-            )
-            _logger.info(
-                "Action load audit: %s %r (id %s, xml_id %s) would be refused to "
-                "user %s by %s",
-                self._name,
-                self.sudo().name,
-                self.id,
-                self.sudo().xml_id or "-",
-                self.env.uid,
-                reason,
-            )
-        return reason
+        if not reason:
+            return
+        _debug.logic(
+            "load_refused",
+            action=self.id,
+            type=self._name,
+            uid=self.env.uid,
+            reason=reason,
+        )
+        _logger.info(
+            "Action load refused: %s %r (id %s, xml_id %s) to user %s by %s",
+            self._name,
+            self.sudo().name,
+            self.id,
+            self.sudo().xml_id or "-",
+            self.env.uid,
+            reason,
+        )
+        raise AccessError(_("You don't have enough access rights to open this action."))
 
     @api.model
     def _get_action_dict_by_xml_id(self, full_xml_id: str) -> dict[str, Any]:
@@ -567,7 +567,7 @@ class IrActionsActions(models.Model):
                 "action_xmlid_wrong_type", xmlid=full_xml_id, model=record._name
             )
             raise ValueError(msg)
-        record._audit_load()
+        record._check_access_to_load()
         return record._get_action_dict()
 
     def _get_action_dict(self) -> dict[str, Any]:

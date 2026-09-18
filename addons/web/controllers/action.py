@@ -68,7 +68,15 @@ class Action(Controller):
         if action_type == "ir.actions.report":
             dbg.logic.debug("[action:%s] load: report -> bin_size", action_id)
             request.update_context(bin_size=True)
-        request.env[action_type].browse(action_id)._audit_load()
+        try:
+            request.env[action_type].browse(action_id)._check_access_to_load()
+        except AccessError as exc:
+            dbg.logic.debug(
+                "[action:%s] load: refused to uid %s", action_id, request.env.uid
+            )
+            raise MissingActionError(
+                _("The action '%s' does not exist", action_id)
+            ) from exc
         action = request.env[action_type].sudo().browse([action_id])
         with dbg.timer(
             request.env, "[action:%s] load: %s dict", action_id, action_type

@@ -241,7 +241,7 @@
         <record id="ir_actions_server_website_dashboard" model="ir.actions.server">
             <field name="name">Website: Dashboard</field>
             <field name="model_id" ref="website.model_website" />
-            <field name="group_ids" eval="[Command.link(ref('base.group_user'))]" />
+            <field name="group_ids" eval="[Command.clear()]" />
             <field name="state">code</field>
             <field name="code">action = model.action_dashboard_redirect()</field>
         </record>

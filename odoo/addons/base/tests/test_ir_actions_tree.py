@@ -1,6 +1,6 @@
 from psycopg.errors import CheckViolation
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
 
@@ -146,21 +146,24 @@ class TestIrActionsLoadAudit(TransactionCase):
             loadable = not action.with_user(self.user)._get_load_refusal_of_record()
             self.assertEqual(action.id in bound, loadable, action.name)
 
-    def test_audit_mode_logs_and_still_serves(self):
+    def test_a_refused_load_raises_and_is_logged(self):
         logger = "odoo.addons.base.models.ir_actions_actions"
-        with self.assertLogs(logger, level="INFO") as captured:
-            reason = self.restricted.with_user(self.user)._audit_load()
-        self.assertEqual(reason, "groups")
-        self.assertIn("would be refused", captured.output[0])
+        with (
+            self.assertLogs(logger, level="INFO") as captured,
+            self.assertRaises(AccessError),
+        ):
+            self.restricted.with_user(self.user)._check_access_to_load()
+        self.assertIn("refused", captured.output[0])
         self.assertIn(str(self.restricted.id), captured.output[0])
-        self.assertEqual(
-            self.restricted.with_user(self.user)._get_action_dict()["name"],
-            "restricted",
-        )
         with self.assertNoLogs(logger, level="INFO"):
-            self.assertEqual(self.open.with_user(self.user)._audit_load(), "")
+            self.open.with_user(self.user)._check_access_to_load()
+        self.restricted._check_access_to_load()
 
-    def test_load_by_xml_id_audits(self):
+    def test_a_closed_target_model_refuses_the_load(self):
+        with self.assertRaises(AccessError):
+            self.closed_model.with_user(self.user)._check_access_to_load()
+
+    def test_load_by_xml_id_refuses_a_non_member(self):
         self.env["ir.model.data"].create(
             {
                 "module": "base",
@@ -169,12 +172,10 @@ class TestIrActionsLoadAudit(TransactionCase):
                 "res_id": self.restricted.id,
             }
         )
-        with self.assertLogs(
-            "odoo.addons.base.models.ir_actions_actions", level="INFO"
-        ):
-            result = (
-                self.env["ir.actions.actions"]
-                .with_user(self.user)
-                ._get_action_dict_by_xml_id("base.load_audit_restricted")
+        Actions = self.env["ir.actions.actions"]
+        with self.assertRaises(AccessError):
+            Actions.with_user(self.user)._get_action_dict_by_xml_id(
+                "base.load_audit_restricted"
             )
+        result = Actions._get_action_dict_by_xml_id("base.load_audit_restricted")
         self.assertEqual(result["id"], self.restricted.id)

@@ -25,6 +25,7 @@ from . import test_catalog_mixin
 from . import test_init
 from . import test_ir_actions
 from . import test_ir_actions_audit
+from . import test_ir_actions_reach
 from . import test_ir_actions_tree
 from . import test_ir_actions_report_audit
 from . import test_ir_actions_server_audit

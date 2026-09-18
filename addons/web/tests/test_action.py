@@ -381,20 +381,38 @@ class TestLoadAudit(HttpCase):
             }
         )
 
-    def test_a_restricted_action_is_still_served_and_audited(self):
+    def _load(self, action_id):
+        return self.url_open(
+            "/web/action/load",
+            headers={"Content-Type": "application/json"},
+            data=json_dumps({"params": {"action_id": action_id}}),
+        ).json()
+
+    def test_a_restricted_action_is_refused_as_if_it_did_not_exist(self):
         self.authenticate("load_audit", "load_audit_pw")
         with self.assertLogs(
             "odoo.addons.base.models.ir_actions_actions", level="INFO"
         ) as captured:
-            resp = self.url_open(
-                "/web/action/load",
-                headers={"Content-Type": "application/json"},
-                data=json_dumps({"params": {"action_id": self.restricted.id}}),
-            )
-        self.assertEqual(resp.json()["result"]["id"], self.restricted.id)
+            body = self._load(self.restricted.id)
+        self.assertNotIn("result", body)
+        missing = self._load(self.restricted.id + 100000)["error"]["data"]
+        refused = body["error"]["data"]
+        self.assertEqual(refused["name"], missing["name"])
+        self.assertIn("does not exist", refused["message"])
         self.assertTrue(
-            any(
-                "would be refused" in line and "groups" in line
-                for line in captured.output
-            )
+            any("refused" in line and "groups" in line for line in captured.output)
         )
+
+    def test_a_member_loads_the_restricted_action(self):
+        self.authenticate("admin", "admin")
+        self.assertEqual(
+            self._load(self.restricted.id)["result"]["id"], self.restricted.id
+        )
+
+    def test_an_unreadable_target_model_is_refused_the_same_way(self):
+        closed = self.env["ir.actions.act_window"].create(
+            {"name": "closed", "res_model": "ir.config_parameter"}
+        )
+        self.authenticate("load_audit", "load_audit_pw")
+        body = self._load(closed.id)
+        self.assertIn("does not exist", body["error"]["data"]["message"])

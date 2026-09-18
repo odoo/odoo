@@ -557,9 +557,7 @@
     <record id="action_view_quants" model="ir.actions.server">
         <field name="name">Inventory</field>
         <field name="model_id" ref="model_stock_quant" />
-        <field
-            name="group_ids"
-            eval="[Command.link(ref('stock.group_stock_user')), Command.link(ref('stock.group_stock_readonly'))]" />
+        <field name="group_ids" eval="[Command.clear()]" />
         <field name="state">code</field>
         <field
             name="code">action = model.with_context(

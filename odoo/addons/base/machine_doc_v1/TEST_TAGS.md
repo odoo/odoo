@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (3976 methods, 806 classes, 139 files)
+# All base tests (3979 methods, 807 classes, 140 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -102,7 +102,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 
 ## Test File Reference
 
-### Tagged Files (79 files, 474 classes)
+### Tagged Files (80 files, 475 classes)
 
 | File | Tags | Classes | Tests | Base Class |
 |------|------|---------|-------|------------|
@@ -127,10 +127,11 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_import_files.py` | `post_install`, `-at_install` | 4 | 109 | TransactionCase |
 | `test_ir_actions.py` | `post_install`, `-at_install` | 7 | 104 | TestServerActionsBase, TransactionCase, TestCommonCustomFields |
 | `test_ir_actions_audit.py` | `post_install`, `-at_install` | 51 | 156 | TransactionCase |
+| `test_ir_actions_reach.py` | `post_install`, `-at_install` | 1 | 2 | TransactionCase |
 | `test_ir_actions_report_audit.py` | `post_install`, `-at_install` | 6 | 15 | TransactionCase |
 | `test_ir_actions_server_audit.py` | `post_install`, `-at_install` | 3 | 8 | TransactionCase |
 | `test_ir_actions_server_regressions.py` | `post_install`, `-at_install` | 21 | 56 | ServerActionCase |
-| `test_ir_actions_tree.py` | `post_install`, `-at_install` | 2 | 12 | TransactionCase |
+| `test_ir_actions_tree.py` | `post_install`, `-at_install` | 2 | 13 | TransactionCase |
 | `test_ir_actions_webhook.py` | `post_install`, `-at_install` | 4 | 20 | WebhookCase, TransactionCase |
 | `test_ir_asset.py` | `-at_install`, `post_install` | 1 | 1 | TransactionCase |
 | `test_ir_asset_audit.py` | `post_install`, `-at_install` | 20 | 68 | TransactionCase |
@@ -255,12 +256,12 @@ These run in **both** at_install and post_install phases by default.
 
 | Metric | Value |
 |--------|-------|
-| Total test files | 139 |
-| Total test classes | 806 |
-| Total test methods | 3976 |
-| Files with @tagged | 79 (57%) |
+| Total test files | 140 |
+| Total test classes | 807 |
+| Total test methods | 3979 |
+| Files with @tagged | 80 (57%) |
 | Files without @tagged | 60 (43%) |
-| Classes using post_install | 269 |
+| Classes using post_install | 270 |
 | Unique tags | 28 |
 | Largest test file | test_db_cursor.py (117 classes, 389 tests) |
 
