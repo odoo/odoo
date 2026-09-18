@@ -1,7 +1,7 @@
 from typing import Any
 
 from odoo import Command, api, fields, models
-from odoo.fields import Domain
+from odoo.fields import Domain, Field
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
@@ -24,6 +24,7 @@ class MixinUserFavorite(models.AbstractModel):
         compute="_compute_is_user_favorite",
         inverse="_inverse_is_user_favorite",
         search="_search_is_user_favorite",
+        order_by_sql="_is_user_favorite_order_sql",
         compute_sudo=True,
     )
 
@@ -139,18 +140,9 @@ class MixinUserFavorite(models.AbstractModel):
                 return True
         return super().write(vals)
 
-    def _order_field_to_sql(
-        self,
-        alias: str,
-        field_name: str,
-        direction: SQL,
-        nulls: SQL,
-        query: Any,
+    def _is_user_favorite_order_sql(
+        self, field: Field, alias: str, direction: SQL, nulls: SQL, query: Any
     ) -> SQL:
-        if field_name != "is_user_favorite":
-            return super()._order_field_to_sql(
-                alias, field_name, direction, nulls, query
-            )
         favorites = self._fields["favorite_user_ids"]
         sql_field = SQL(
             "%s IN (SELECT %s FROM %s WHERE %s = %s)",
@@ -160,10 +152,6 @@ class MixinUserFavorite(models.AbstractModel):
             SQL.identifier(favorites.column2),
             self.env.uid,
         )
-        if query._any_value_orderby:
-            sql_field = SQL("ANY_VALUE(%s)", sql_field)
-        elif query._collect_order_groupby:
-            query._order_groupby.append(sql_field)
         _debug.logic(
             "user_favorite_order_sql",
             model=self._name,
@@ -171,4 +159,4 @@ class MixinUserFavorite(models.AbstractModel):
             any_value=bool(query._any_value_orderby),
             groupby=bool(query._collect_order_groupby),
         )
-        return SQL("%s %s %s", sql_field, direction, nulls)
+        return self._order_value_to_sql(sql_field, direction, nulls, query)

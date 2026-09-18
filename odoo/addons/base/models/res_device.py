@@ -6,6 +6,7 @@ from typing import Any
 from odoo import api, fields, models
 from odoo.db.schema import drop_view_if_exists
 from odoo.exceptions import AccessError
+from odoo.fields import Field
 from odoo.http import (
     STORED_SESSION_BYTES,
     GeoIP,
@@ -73,6 +74,7 @@ class ResDeviceLog(models.Model):
     is_current = fields.Boolean(
         string="Current Device",
         compute="_compute_is_current",
+        order_by_sql="_is_current_order_sql",
     )
     linked_ip_addresses = fields.Text(
         string="Linked IP address",
@@ -128,23 +130,19 @@ class ResDeviceLog(models.Model):
                 )
             )
 
-    def _order_field_to_sql(
-        self,
-        alias: str,
-        field_name: str,
-        direction: Any,
-        nulls: Any,
-        query: Any,
+    def _is_current_order_sql(
+        self, field: Field, alias: str, direction: Any, nulls: Any, query: Any
     ) -> SQL:
-        if field_name == "is_current" and request and request.session.sid:
-            _debug.logic("order_by_is_current", direction=str(direction))
-            return SQL(
-                "%s = %s %s",
-                SQL.identifier(alias, "session_identifier"),
-                request.session.sid[:STORED_SESSION_BYTES],
-                direction,
-            )
-        return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
+        if not (request and request.session.sid):
+            # no session to compare against: the term sorts nothing
+            return SQL.EMPTY
+        _debug.logic("order_by_is_current", direction=str(direction))
+        return SQL(
+            "%s = %s %s",
+            SQL.identifier(alias, "session_identifier"),
+            request.session.sid[:STORED_SESSION_BYTES],
+            direction,
+        )
 
     def _is_mobile(self, platform: str | None) -> bool:
         if not platform:
