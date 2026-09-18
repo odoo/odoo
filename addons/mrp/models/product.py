@@ -33,10 +33,29 @@ class ProductTemplate(models.Model):
     is_kits = fields.Boolean(compute='_compute_is_kits', search='_search_is_kits')
 
     def _compute_bom_count(self):
-        for product in self:
-            product.bom_count = self.env['mrp.bom'].search_count(
-                ['|', ('product_tmpl_id', 'in', product.ids), ('byproduct_ids.product_id.product_tmpl_id', 'in', product.ids)]
-            )
+        count_per_template = collections.defaultdict(int)
+        count_boms_by_product_tmpl = self.env['mrp.bom']._read_group(
+            domain=[('product_tmpl_id', 'in', self.ids)],
+            groupby=['product_tmpl_id'],
+            aggregates=['__count'],
+        )
+
+        for template, count in count_boms_by_product_tmpl:
+            count_per_template[template] += count
+
+        # BoMs producing the template as a by-product, except its own BoMs (already counted above)
+        count_boms_by_byproduct = self.env['mrp.bom.byproduct']._read_group(
+            domain=[('product_id.product_tmpl_id', 'in', self.ids), ('bom_id.active', '=', True)],
+            groupby=['product_id.product_tmpl_id', 'bom_id.product_tmpl_id'],
+            aggregates=['bom_id:count_distinct'],
+        )
+
+        for byproduct_template, bom_template, count in count_boms_by_byproduct:
+            if byproduct_template != bom_template:
+                count_per_template[byproduct_template] += count
+
+        for template in self:
+            template.bom_count = count_per_template[template._origin]
 
     @api.depends_context('company')
     def _compute_is_kits(self):
@@ -142,11 +161,35 @@ class ProductProduct(models.Model):
     )
 
     def _compute_bom_count(self):
+        count_per_product, count_per_template = collections.defaultdict(int), collections.defaultdict(int)
+        count_bom_product_groups = self.env['mrp.bom']._read_group(
+            domain=[
+                '|',
+                    ('product_id', 'in', self.ids),
+                    '&',
+                        ('product_id', '=', False), ('product_tmpl_id', 'in', self.product_tmpl_id.ids)],
+            groupby=['product_id', 'product_tmpl_id'],
+            aggregates=['__count'],
+        )
+
+        for product, template, count in count_bom_product_groups:
+            if product:
+                count_per_product[product] += count
+            else:
+                count_per_template[template] += count
+
+        # no overlap with the BoMs above. `_check_bom_lines` already forbids a by-product equal to the BoM product.
+        count_bom_by_byproduct = self.env['mrp.bom.byproduct']._read_group(
+            domain=[('product_id', 'in', self.ids), ('bom_id.active', '=', True)],
+            groupby=['product_id'], 
+            aggregates=['bom_id:count_distinct'],
+        )
+
+        for product, count in count_bom_by_byproduct:
+            count_per_product[product] += count
+
         for product in self:
-            product.bom_count = self.env['mrp.bom'].search_count([
-                '|', '|', ('byproduct_ids.product_id', 'in', product.ids), ('product_id', 'in', product.ids),
-                '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product.product_tmpl_id.ids),
-            ])
+            product.bom_count = count_per_product[product._origin] + count_per_template[product._origin.product_tmpl_id]
 
     @api.depends_context('company')
     def _compute_is_kits(self):
