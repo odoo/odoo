@@ -53,6 +53,9 @@ Main Features
         'web.assets_backend': [
             'fleet/static/src/**/*',
         ],
+        'web.assets_tests': [
+            'fleet/static/tests/tours/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
