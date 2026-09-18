@@ -159,6 +159,20 @@ test("a playlist has no video thumbnail", async () => {
     ]);
 });
 
+test("a clip is embedded with the clip player", () => {
+    const clip = "clipId";
+    const embedUrl = `https://clips.twitch.tv/embed?clip=${clip}&parent=${window.location.hostname}&muted=true`;
+    // The clip of a channel url is embedded with the clip player as well.
+    for (const url of [
+        `https://www.twitch.tv/channel/clip/${clip}`,
+        `https://clips.twitch.tv/embed?clip=${clip}`,
+    ]) {
+        const platformClass = PLATFORMS.twitch;
+        const urlData = platformClass.getVideoUrlData(platformClass.isValidVideoUrl(url));
+        expect(urlData.embedUrl).toBe(embedUrl);
+    }
+});
+
 test("options are embedded in the url of each platform", () => {
     mockFetch(() => '{"data": "mockFetch api result data"}');
     const allOptions = { autoplay: true, loop: true, hideControls: true, hideFullscreen: true };
