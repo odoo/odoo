@@ -312,6 +312,30 @@ class TestPurchase(AccountTestInvoicingCommon):
         po.order_line.product_packaging_qty = 1.0
         self.assertEqual(po.order_line.product_qty, 12)
 
+    def test_compute_packaging_empty_uom(self):
+        """Removing the UoM of a packaged POL should not crash onchange."""
+        self.env.user.groups_id += self.env.ref('product.group_stock_packaging') | self.env.ref('uom.group_uom')
+        packaging = self.env['product.packaging'].create({
+            'name': "Pack of 5",
+            'product_id': self.product_a.id,
+            'qty': 5.0,
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        po_form = Form(po)
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_a
+            line.product_qty = 5.0
+            line.product_packaging_id = packaging
+        po_form.save()
+        with po_form.order_line.edit(0) as line:
+            line.product_uom = self.env['uom.uom']
+            self.assertFalse(line.product_uom)
+            line.product_uom = self.product_a.uom_id
+        po_form.save()
+
     def test_compute_packaging_01(self):
         """Create a PO and use packaging in a multicompany environment.
         Ensure any suggested packaging matches the PO's.
