@@ -1367,6 +1367,31 @@ class SaleOrderLine(models.Model):
 
         return lines
 
+    @api.model
+    def onchange_batch(self, values_list, field_names, fields_spec):
+
+        res = super().onchange_batch(values_list, field_names, fields_spec)
+
+        if values_list and not field_names:
+            for i, changes in enumerate(values_list):
+
+                # Preventing the bug where duplicating a line resets the price to the product's default.
+                # If a copied price_unit exists, we restore it and recalculate.
+                if 'price_unit' in changes:
+                    copied_price = changes['price_unit']
+                    line_vals = res[i].setdefault('value', {})
+                    reset_price = line_vals.get('price_unit', copied_price)
+
+                    if copied_price is not None and copied_price != reset_price:
+                        line_vals['price_unit'] = copied_price
+                        re_eval_changes = {**changes, **line_vals}
+                        second_res = super().onchange_batch([re_eval_changes], ['price_unit'], fields_spec)
+
+                        if second_res and second_res[0].get('value'):
+                            line_vals.update(second_res[0]['value'])
+
+        return res
+
     def _add_precomputed_values(self, vals_list):
         super()._add_precomputed_values(vals_list)
         for vals in vals_list:
@@ -1680,7 +1705,6 @@ class SaleOrderLine(models.Model):
             so_line.id: so_line._get_partner_display()
             for so_line in self
         }
-
     #=== HOOKS ===#
 
     def _is_delivery(self):
