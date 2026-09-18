@@ -631,7 +631,7 @@ class Html(BaseString):
                 'sanitize_tags': False,
                 'sanitize_attributes': False,
                 'sanitize_conditional_comments': False,
-                'sanitize_output_method': 'xml',
+                'sanitize_output_method': 'html',
             }.items() if key not in attrs})
         # Translated sanitized html fields must use html_translate or a callable.
         # `elif` intended, because HTML fields with translate=True and sanitize=False
