@@ -386,6 +386,9 @@ class IrModel(models.Model):
         model_data.unlink()
         _debug.pipeline("unlink_cascade", crons=len(crons), xmlids=len(model_data))
 
+        # while the tables their referrers live in still exist
+        self._unlink_inheritance_rows_cascaded()
+
         self.field_id._drop_m2m_tables()
         self._drop_table()
         res = super().unlink()

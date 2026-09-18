@@ -34,6 +34,19 @@ class IrActionsPath(models.Model):
     def init(self) -> None:
         self.env.cr.execute(
             SQL(
+                "DELETE FROM %s p WHERE NOT EXISTS"
+                " (SELECT 1 FROM %s a WHERE a.id = p.action_id)",
+                SQL.identifier(self._table),
+                SQL.identifier(self.env["ir.actions.actions"]._table),
+            )
+        )
+        if self.env.cr.rowcount:
+            _logger.warning(
+                "%d action path(s) outlived their action and were released.",
+                self.env.cr.rowcount,
+            )
+        self.env.cr.execute(
+            SQL(
                 """
                 INSERT INTO %s (path, action_id)
                      SELECT path, id FROM %s WHERE path IS NOT NULL

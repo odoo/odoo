@@ -2,10 +2,15 @@ from collections import defaultdict
 from typing import Self
 
 from odoo import api, models, tools
-from odoo.db.schema import table_exists
+from odoo.db.schema import (
+    column_exists,
+    table_exists,
+)
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, _, frozendict
+
+from .ir_model_common import MODULE_UNINSTALL_FLAG
 
 _debug = DebugLog(__name__)
 
@@ -293,6 +298,13 @@ class MixinTableInheritanceRoot(models.AbstractModel):
             self.env.registry.clear_cache(*groups)
         return result
 
+    def _is_column_dropped(self, model_name: str, field_name: str) -> bool:
+        # an uninstall drops columns and tables before the registry forgets them
+        model = self.env[model_name]
+        return bool(
+            self.env.context.get(MODULE_UNINSTALL_FLAG) or model._custom
+        ) and not column_exists(self.env.cr, model._table, field_name)
+
     def _apply_ondelete_unenforced(self) -> None:
         if not self:
             return
@@ -302,6 +314,8 @@ class MixinTableInheritanceRoot(models.AbstractModel):
         ) as span:
             fields_scanned = self._get_fields_ondelete_unenforced()
             for model_name, field_name, ondelete in fields_scanned:
+                if self._is_column_dropped(model_name, field_name):
+                    continue
                 references = (
                     self.env[model_name]
                     .sudo()
@@ -347,6 +361,8 @@ class MixinTableInheritanceRoot(models.AbstractModel):
             for record_id in self.ids
         ]
         for model_name, field_name in self._get_selections_ondelete_unenforced():
+            if self._is_column_dropped(model_name, field_name):
+                continue
             referring = (
                 self.env[model_name]
                 .sudo()
@@ -368,6 +384,10 @@ class MixinTableInheritanceRoot(models.AbstractModel):
             relation,
             column,
         ) in self._get_relations_ondelete_unenforced():
+            if self.env.context.get(MODULE_UNINSTALL_FLAG) and not table_exists(
+                self.env.cr, relation
+            ):
+                continue
             self.env.cr.execute(
                 SQL(
                     "DELETE FROM %s WHERE %s IN %s",

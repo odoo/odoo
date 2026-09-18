@@ -76,6 +76,36 @@ class _RegistryModelsMixin(_RegistryStubs):
         return index_model_names_by_inheritance_root(self.models)
 
     @functools.cached_property
+    def cascades_into_inheritance_trees(self) -> dict[str, tuple[tuple[str, str], ...]]:
+        referrers: dict[str, list[tuple[str, str]]] = {}
+        for root_table, names in self.model_names_by_inheritance_root.items():
+            root_fields = next(
+                (
+                    self.models[name]._fields
+                    for name in names
+                    if self.models[name]._table == root_table
+                ),
+                {},
+            )
+            for name in names:
+                model_cls = self.models[name]
+                for field in model_cls._fields.values():
+                    if (
+                        field.is_many2one
+                        and field.store
+                        and field.column_type
+                        and field.ondelete == "cascade"
+                        and (
+                            model_cls._table == root_table
+                            or field.name not in root_fields
+                        )
+                    ):
+                        referrers.setdefault(field.comodel_name, []).append(
+                            (name, field.name)
+                        )
+        return {comodel: tuple(sorted(pairs)) for comodel, pairs in referrers.items()}
+
+    @functools.cached_property
     def _prefetch_fields_by_model(
         self,
     ) -> dict[tuple[str, typing.Any], tuple[Field, ...]]:

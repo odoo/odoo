@@ -17,8 +17,13 @@ class TestActionBindings(common.TransactionCase):
 
         action1 = self.env.ref("base.action_attachment")
         action2 = self.env.ref("base.ir_default_menu_action")
-        action3 = self.env["ir.actions.report"].search(
-            [("group_ids", "=", False)], limit=1
+        action3 = self.env["ir.actions.report"].create(
+            {
+                "name": "tab-bindings report",
+                "model": "res.partner",
+                "report_name": "test_action_bindings.report_none",
+                "report_type": "qweb-html",
+            }
         )
         action1.binding_model_id = action2.binding_model_id = (
             action3.binding_model_id
@@ -27,12 +32,12 @@ class TestActionBindings(common.TransactionCase):
         bindings = Actions.get_bindings("res.partner")
         self.assertItemsEqual(
             bindings["action"],
-            (action1 + action2).read(["name", "binding_view_types"]),
+            (action1 + action2).read(list(Actions._BINDING_READ_FIELDS)),
             "Wrong action bindings",
         )
         self.assertItemsEqual(
             bindings["report"],
-            action3.read(["name", "binding_view_types"]),
+            action3.read(list(Actions._BINDING_READ_FIELDS)),
             "Wrong action bindings",
         )
 
@@ -43,12 +48,12 @@ class TestActionBindings(common.TransactionCase):
         bindings = Actions.get_bindings("res.partner")
         self.assertItemsEqual(
             bindings["action"],
-            action1.read(["name", "binding_view_types"]),
+            action1.read(list(Actions._BINDING_READ_FIELDS)),
             "Wrong action bindings",
         )
         self.assertItemsEqual(
             bindings["report"],
-            action3.read(["name", "binding_view_types"]),
+            action3.read(list(Actions._BINDING_READ_FIELDS)),
             "Wrong action bindings",
         )
 

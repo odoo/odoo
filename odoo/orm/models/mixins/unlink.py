@@ -1,6 +1,7 @@
 import typing
 from itertools import batched
 
+from odoo.db.schema import column_exists
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
 from odoo.tools.cache import TransactionMemo
@@ -57,6 +58,8 @@ class UnlinkMixin(_ModelStubs):
         )
         prof.mark("ondelete")
 
+        self._unlink_inheritance_rows_cascaded()
+
         self._discard_pending_recomputes()
         self.env.flush_all()
         prof.mark("flush")
@@ -101,6 +104,26 @@ class UnlinkMixin(_ModelStubs):
         self._log_unlink_profile(prof, len(deleted_ids))
 
         return True
+
+    def _unlink_inheritance_rows_cascaded(self) -> None:
+        referrers = self.env.registry.cascades_into_inheritance_trees.get(self._name)
+        if not referrers:
+            return
+        for model_name, field_name in referrers:
+            model = self.env[model_name].sudo().with_context(active_test=False)
+            if not column_exists(self.env.cr, model._table, field_name):
+                continue
+            rows = model.search([(field_name, "in", self.ids)])  # noqa: E8507  model varies
+            if model_name == self._name:
+                rows -= self
+            _debug.pipeline(
+                "unlink.inheritance_rows_cascaded",
+                model=self._name,
+                referrer=model_name,
+                field=field_name,
+                rows=len(rows),
+            )
+            rows.unlink()
 
     def _discard_pending_recomputes(self) -> None:
         core = self.env.core
