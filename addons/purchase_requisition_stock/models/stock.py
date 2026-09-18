@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class StockRule(models.Model):
@@ -12,7 +12,7 @@ class StockRule(models.Model):
         values = values[0]
         requisition = self._get_supplier_requisition(values)
         res['partner_ref'] = requisition.name
-        res['requisition_id'] = requisition.id
+        res['requisition_id'] = requisition
         if requisition.currency_id:
             res['currency_id'] = requisition.currency_id.id
         return res
@@ -31,6 +31,22 @@ class StockRule(models.Model):
         seller_info = values.get('supplier') or {}
         return seller_info.get('supplierinfo', self.env['product.supplierinfo']).purchase_requisition_id
 
+    def _pick_supplier(self, company, product, partner=False, qty=None, uom=False, date=None, params=False):
+        p = product.with_company(company)
+        all_sellers = p._get_filtered_sellers(partner_id=partner, quantity=None, date=None, uom_id=uom, params=params)
+        agreement_sellers = all_sellers.filtered(lambda s: s.purchase_requisition_id)
+        for agreement_seller in agreement_sellers:
+            if agreement_seller.purchase_requisition_line_id.remaining_qty < qty:
+                continue
+            if agreement_seller.min_qty > qty:
+                continue
+            if not date:
+                return agreement_seller._get_seller_info()
+            start_date = agreement_seller.purchase_requisition_id.date_start
+            end_date = agreement_seller.purchase_requisition_id.date_end
+            if (not start_date or date >= start_date) and (not end_date or date <= end_date):
+                return agreement_seller._get_seller_info()
+        return super()._pick_supplier(company, product, partner=partner, qty=qty, uom=uom, date=date, params=params)
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
