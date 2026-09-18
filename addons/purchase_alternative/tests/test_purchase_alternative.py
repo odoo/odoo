@@ -217,7 +217,7 @@ class TestPurchaseAlternative(TestPurchaseAlternativeCommon):
         })
         requisition_blanket.action_confirm()
         # lazy reproduction of clicking on "New Quotation" act_window button
-        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": requisition_blanket.id, "default_user_id": False}))
+        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": [requisition_blanket.id], "default_user_id": False}))
         po_1 = po_form.save()
         po_1.button_confirm()
         self.assertTrue(po_1.requisition_id, "The requisition_id should be set in the purchase order")
