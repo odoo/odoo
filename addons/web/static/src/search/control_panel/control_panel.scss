@@ -5,6 +5,8 @@
     @include media-only(screen) {
         .o_control_panel_breadcrumbs {
             --#{$variable-prefix}breadcrumb-font-size: #{$small-font-size};
+
+            min-width: 0;
         }
 
         @include media-breakpoint-down(md) {
