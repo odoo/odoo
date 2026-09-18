@@ -835,6 +835,11 @@
                                 <field name="engine">text</field>
                                 <field name="formula">(29)</field>
                             </record>
+                            <record id="l10n_kr_simplified_tp_vat_stpad_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">KR_STPAD.tax</field>
+                            </record>
                         </field>
                     </record>
                 </field>
