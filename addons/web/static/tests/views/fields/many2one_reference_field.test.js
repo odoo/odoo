@@ -45,7 +45,6 @@ class PartnerType extends models.Model {
 }
 
 class IrAttachment extends models.Model {
-    _name = "ir.attachment";
     name = fields.Char();
     res_model = fields.Char();
     res_id = fields.Many2oneReference({
@@ -55,7 +54,7 @@ class IrAttachment extends models.Model {
 
     _records = [
         { id: 1, name: "Parent Attachment", res_model: "ir.attachment", res_id: 2 },
-        { id: 2, name: "Child Attachment", res_model: "ir.attachment", res_id: 1 },
+        { id: 2, name: "Child Attachment", res_model: "ir.attachment", res_id: false },
     ];
 }
 
@@ -250,24 +249,17 @@ test("Many2OneReferenceField with no_create option", async () => {
 });
 
 test("Many2OneReferenceField patched domain doesn't crash on ir.attachment", async () => {
-    patch(Many2OneReferenceField.prototype,  {
-        get m2oProps() {
-            const props = super.m2oProps;
-            props.domain = () => [['id', '!=', this.props.record.resId]];
-            return props;
-        }
-    });
-
+    // The purpose of this test is to test the Many2OneReference patch for the ir.attachment model
+    // see attachment_patch.je
     await mountView({
         type: "form",
         resModel: "ir.attachment",
         resId: 1,
         arch: `
             <form>
-                <field name="name"/>
-                <field name="res_model"/>
+                <field name="res_model" invisible="1"/>
                 <field name="res_id"/>
             </form>`,
     });
-    expect(".o_field_widget[name='res_id']").toHaveCount(1);
+    expect(".o_field_widget[name=res_id] input").toHaveValue("Child Attachment");
 });
