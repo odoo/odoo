@@ -54,7 +54,9 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
      * @override
      */
     destroy() {
-        this._updateView({is_subscriber: false});
+        this._updateView({is_subscriber: false}, true);
+        this.el.parentElement.querySelectorAll('.s_turnstile').forEach(el => el.remove());
+        this._turnstile?.cleanSpinner();
         this._super.apply(this, arguments);
     },
 
@@ -66,8 +68,9 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
      * Modifies the elements to have the view of a subscriber/non-subscriber.
      *
      * @param {Object} data
+     * @param {boolean} [skipTurnstile=false]
      */
-    _updateView(data) {
+    _updateView(data, skipTurnstile) {
         const isSubscriber = data.is_subscriber;
         const subscribeBtnEl = this.el.querySelector('.js_subscribe_btn');
         const thanksBtnEl = this.el.querySelector('.js_subscribed_btn');
@@ -82,12 +85,12 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         subscribeBtnEl.classList.toggle('d-none', !!isSubscriber);
         thanksBtnEl.classList.toggle('d-none', !isSubscriber);
 
-        // When the website is in edit mode, window.top != window. We don't want turnstile to render during edit mode
-        // and mess up the DOM and saving it.
-        if (!isSubscriber && this._turnstile && window.top === window) {
+        // We don't want turnstile to render during edit mode and mess up the
+        // DOM and saving it.
+        if (!isSubscriber && !skipTurnstile && this._turnstile && !this.editableMode) {
             const el = this._turnstile.addTurnstile('website_mass_mailing_subscribe');
             if (el) {
-                this._turnstile.addSpinner(subscribeBtnEl);
+                this._turnstile.addSpinnerNoMangle(subscribeBtnEl);
                 el[0].classList.add('mt-3');
                 el.insertAfter(this.el);
                 this._turnstile.renderTurnstile(el);
