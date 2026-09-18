@@ -1649,6 +1649,7 @@ class PosOrder(models.Model):
                         self.partner_id,
                         metadata['foreign_currency_id'].id,
                         metadata['amount_currency'],
+                        move=invoice,
                     )
 
             to_reconcile = (payment_term_lines | all_payment_lines).filtered(
