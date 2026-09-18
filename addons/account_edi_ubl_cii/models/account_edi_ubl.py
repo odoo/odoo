@@ -4,7 +4,7 @@ from lxml import etree
 from stdnum.be import vat as be_vat
 
 from odoo import Command, _, fields, models
-from odoo.tools import formatLang, frozendict, html2plaintext, html_escape
+from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, unique
 from odoo.tools.float_utils import float_compare
 
 from odoo.addons.account.tools import dict_to_xml
@@ -2666,7 +2666,7 @@ class AccountEdiUBL(models.AbstractModel):
             if note := node.text:
                 payment_references.append(note)
 
-        if payment_reference := ','.join(payment_references):
+        if payment_reference := ','.join(unique(payment_references)):
             collected_values['to_write']['payment_reference'] = payment_reference
 
     def _import_ubl_invoice_add_delivery(self, collected_values):

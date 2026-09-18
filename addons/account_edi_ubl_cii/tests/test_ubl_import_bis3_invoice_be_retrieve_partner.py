@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.addons.account_edi_ubl_cii.tests.test_ubl_import_bis3_invoice_be import TestUblImportBis3InvoiceBE
 from odoo.tests import tagged
 
@@ -151,3 +152,23 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
             'vat': 'BE0727720427',
             'country_id': self.env.ref('base.be').id,
         }])
+
+    def test_import_bill_multiple_payment_means(self):
+        """ A bill listing several PaymentMeans must keep the reference once
+        and use the bank account already trusted by the supplier instead of a "random" one
+        """
+        supplier = self._create_partner_be(
+            bank_ids=[Command.create({'acc_number': 'BE00001', 'allow_out_payment': True})],
+        )
+        trusted_bank = supplier.bank_ids
+        invoice = self._import_invoice_as_attachment_on(test_name='test_import_bill_multiple_payment_means')
+        self.assertRecordValues(invoice, [{
+            'partner_id': supplier.id,
+            'payment_reference': '+++987/6543/12345+++',
+            'partner_bank_id': trusted_bank.id,
+        }])
+        self.assertEqual(
+            set(supplier.bank_ids.mapped('sanitized_acc_number')),
+            {'BE00001', 'BE00002', 'BE00003'},
+        )
+        self.assertEqual(supplier.bank_ids.filtered('allow_out_payment'), trusted_bank)
