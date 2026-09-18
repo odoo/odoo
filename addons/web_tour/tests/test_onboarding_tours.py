@@ -19,6 +19,22 @@ class TestOnboardingTours(HttpCase):
         'crm_tour', 'account_tour', 'point_of_sale_tour',
     ]
 
+    lazy_bundles_to_warm_up = (
+        'mass_mailing.assets_inside_builder_iframe',
+        'web_studio.studio_assets',
+    )
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        installed_modules = set(cls.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name'))
+        for bundle in cls.lazy_bundles_to_warm_up:
+            if bundle.split('.')[0] not in installed_modules:
+                continue
+            asset_bundle = cls.env['ir.qweb']._get_asset_bundle(bundle, css=True, js=True)
+            asset_bundle.js()
+            asset_bundle.css()
+
     @classmethod
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         # account_tour opens the accounting dashboard, which fetches bank institutions from odoofin
