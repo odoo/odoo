@@ -1,6 +1,7 @@
 import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
 import { patch } from "@web/core/utils/patch";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 patch(PosOrderline.prototype, {
     setup(_defaultObj) {
@@ -44,5 +45,17 @@ patch(PosOrderline.prototype, {
                     Math.max(saleOrderLine.qty_delivered, saleOrderLine.qty_invoiced)
             );
         }
+    },
+    getBaseLine(opts = {}) {
+        const extraTaxData = this.extra_tax_data;
+        const quantity = "quantity" in opts ? opts.quantity : this.getQuantity();
+        if (extraTaxData?.quantity && quantity && extraTaxData.quantity * quantity < 0) {
+            return super.getBaseLine({
+                ...opts,
+                extra_tax_data:
+                    accountTaxHelpers.reverse_quantity_base_line_extra_tax_data(extraTaxData),
+            });
+        }
+        return super.getBaseLine(opts);
     },
 });
