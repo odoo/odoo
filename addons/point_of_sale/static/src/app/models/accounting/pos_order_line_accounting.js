@@ -224,13 +224,13 @@ export class PosOrderlineAccounting extends Base {
             price_unit: priceUnit,
             discount: discount,
             tax_ids: this.tax_ids,
-            product_uom_id: product.uom_id,
+            product_uom_id: product?.uom_id,
             product_id: product,
             rate: 1.0,
             is_refund: this.isRefund(),
             ...customValues,
         };
-        if (order?.fiscal_position_id && product !== this.config.discount_product_id) {
+        if (order?.fiscal_position_id && product && product !== this.config.discount_product_id) {
             // Recompute taxes based on product and fiscal position.
             values.tax_ids = order.fiscal_position_id.getTaxesAfterFiscalPosition(values.tax_ids);
         }
