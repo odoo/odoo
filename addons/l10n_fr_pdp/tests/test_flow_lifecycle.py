@@ -689,6 +689,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
         self.company.partner_id.siret = 'invalid'
         self.company.partner_id.company_registry = False
+        self.company.partner_id.vat = False
         self.b2bi_customer.with_context(no_vat_validation=True).write({
             'vat': 'BE12345678901234567',
             'country_id': False,
