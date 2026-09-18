@@ -14,6 +14,16 @@
                 </button>
             </div>
         </xpath>
+        <xpath expr="//Composer" position="before">
+            <div t-if="this.composer() and this.thread()?.id" class="d-flex py-1 align-items-center">
+                <span class="flex-shrink-0 text-end fw-bold" style="width:55px">To: </span>
+                <RecipientsInput
+                    thread="this.thread()"
+                    recipientType="'to'"
+                    placeholder.translate="Add recipients"
+                />
+            </div>
+        </xpath>
     </t>
 
 </templates>
