@@ -73,6 +73,7 @@ class WebsiteSaleCommon(DeliveryCommon):
         (cls.product + cls.service_product).website_published = True
 
         cls.public_user = cls.website.user_id
+        cls.designer_user = cls.env.ref("base.user_admin")
         cls.public_partner = cls.public_user.partner_id
         cls.cart = cls.env["sale.order"].create({
             "partner_id": cls.partner.id,
