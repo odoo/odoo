@@ -35,7 +35,10 @@ export class Razorpay {
     }
 
     async cancelPayment(order) {
-        const data = { p2pRequestId: localStorage.getItem("p2pRequestId") };
+        const data = {
+            p2pRequestId: localStorage.getItem("p2pRequestId"),
+            order_token: order.access_token,
+        };
         try {
             const cancel_response = await rpc("/pos-self-order/razorpay-cancel-transaction/", {
                 access_token: this.access_token,
@@ -86,7 +89,10 @@ export class Razorpay {
      * calls every 10 sec until payment status not found.
      */
     async paymentPolling(order) {
-        const data = { p2pRequestId: localStorage.getItem("p2pRequestId") };
+        const data = {
+            p2pRequestId: localStorage.getItem("p2pRequestId"),
+            order_token: order.access_token,
+        };
         this.stopInactivePayment().then(() => (this.payment_stopped = true));
         const fetchPaymentStatus = async () => {
             try {
