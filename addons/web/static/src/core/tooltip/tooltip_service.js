@@ -2,6 +2,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { Tooltip } from "./tooltip";
 import { hasTouch } from "@web/core/browser/feature_detection";
+import { generateHTMLId } from "@web/core/utils/strings";
 
 import { whenReady } from "@odoo/owl";
 
@@ -69,6 +70,8 @@ export const tooltipService = {
          * Closes the currently opened tooltip if any, or prevent it from opening.
          */
         function cleanup() {
+            target?.removeAttribute("aria-describedby");
+            target?.removeAttribute("aria-details");
             target = null;
             browser.clearTimeout(openTooltipTimeout);
             openTooltipTimeout = null;
@@ -119,6 +122,7 @@ export const tooltipService = {
             if (!target.title) {
                 target.title = "";
             }
+            const tooltipId = generateHTMLId("tooltip_");
             const timeoutDelay = isHelpNode(el) ? 0 : delay;
             openTooltipTimeout = browser.setTimeout(() => {
                 // verify that the element is still in the DOM
@@ -126,9 +130,14 @@ export const tooltipService = {
                     closeTooltip = popover.add(
                         target,
                         Tooltip,
-                        { tooltip, template, info },
-                        { position }
+                        { tooltip, template, info, tooltipId },
+                        { position, role: "tooltip" }
                     );
+                    if (tooltip) {
+                        target.setAttribute("aria-describedby", tooltipId);
+                    } else if (template) {
+                        target.setAttribute("aria-details", tooltipId);
+                    }
                 }
             }, timeoutDelay);
         }
@@ -214,6 +223,12 @@ export const tooltipService = {
         function cleanupTooltip(ev) {
             if (target == ev.target) {
                 cleanup();
+            } else if (
+                ev.type === "focusout" &&
+                target === ev.target.closest(TOOLTIP_SELECTOR) &&
+                target !== ev.relatedTarget?.closest(TOOLTIP_SELECTOR)
+            ) {
+                cleanup();
             }
         }
         /**
@@ -262,8 +277,10 @@ export const tooltipService = {
 
             // Listen (using event delegation) to "mouseenter" events to open the tooltip if any
             document.body.addEventListener("mouseenter", onMouseenter, { capture: true });
+            document.body.addEventListener("focusin", onMouseenter, { capture: true });
             // Listen (using event delegation) to "mouseleave" events to close the tooltip if any
             document.body.addEventListener("mouseleave", cleanupTooltip, { capture: true });
+            document.body.addEventListener("focusout", cleanupTooltip, { capture: true });
             document.body.addEventListener("click", onClick, { capture: true });
         });
     },
