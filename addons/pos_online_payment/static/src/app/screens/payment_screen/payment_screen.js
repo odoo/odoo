@@ -1,7 +1,19 @@
+import { useEffect } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 
 patch(PaymentScreen.prototype, {
+    setup() {
+        super.setup(...arguments);
+
+        useEffect(() => {
+            // The paid order status will be sent from the server via the bus,
+            // so we need to validate the order locally when we detect it.
+            if (this.currentOrder.state === "paid") {
+                this.pos.validateOrder();
+            }
+        });
+    },
     get configPaymentMethods() {
         let configMethods = super.configPaymentMethods;
         // don't allow to update and edit and pay with online payments
