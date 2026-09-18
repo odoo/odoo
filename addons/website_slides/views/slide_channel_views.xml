@@ -260,7 +260,7 @@
                             <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not website_published or not active"/>
                             <field name="name" class="fw-bold fs-4 me-auto ms-1"/>
                             <field t-if="record.tag_ids" name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" class="mb-4 w-75 ms-1"/>
-                            <div class="row g-0 mb16 mt-1 ms-2 me-2">
+                            <div class="row g-0 mx-1">
                                 <div name="card_primary_left" class="col-6">
                                     <button class="btn btn-primary" name="open_website_url" type="object">View course</button>
                                 </div>
