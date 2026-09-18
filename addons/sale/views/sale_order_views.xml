@@ -503,6 +503,20 @@
                                 options="{'no_open': True, 'no_create': True}"
                                 readonly="state in ['cancel', 'sale']"/>
                         </div>
+                        <label
+                            for="currency_id"
+                            groups="base.group_multi_currency,!product.group_product_pricelist"
+                        />
+                        <div
+                            class="o_row"
+                            groups="base.group_multi_currency,!product.group_product_pricelist"
+                        >
+                            <field
+                                name="currency_id"
+                                options="{'no_open': True, 'no_create': True}"
+                                readonly="state in ['cancel', 'sale']"
+                            />
+                        </div>
                         <field name="currency_id" invisible="1"/>
                         <field
                             name="pricelist_id"
