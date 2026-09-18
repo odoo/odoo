@@ -152,24 +152,25 @@ class TestSudoCommandsWithoutDefaultEnv(unittest.TestCase):
             self.assertFalse(downgraded.env.su, "sudo must be dropped")
             self.assertEqual(downgraded.env.uid, 7, "and the real user adopted")
 
-    def test_a_non_su_writer_is_not_demoted(self):
+    def test_a_writer_switched_to_another_user_is_brought_back(self):
         with model_test_env(*self.MODELS) as env:
+            env.transaction.default_env = Environment(env.cr, 7, {})
             field = env["s.guard.host"]._fields["line_ids"]
-            comodel = env(user=7, su=False)["s.guard.line"]
-            self.assertIs(
-                field._check_sudo_commands(comodel),
-                comodel,
-                "a real user needs no demotion, even to another real user",
+            demoted = field._check_sudo_commands(env(user=9, su=False)["s.guard.line"])
+            self.assertFalse(demoted.env.su)
+            self.assertEqual(
+                demoted.env.uid,
+                7,
+                "with_user() must not reach a comodel that refuses sudo commands",
             )
 
-    def test_a_non_su_writer_keeps_its_own_uid_end_to_end(self):
-        # the transaction's default env is the base one (uid 1); the writer
-        # is another real user, and the comodel row must record THAT user
+    def test_the_transactions_own_user_keeps_its_uid_end_to_end(self):
         with model_test_env(*self.MODELS, IrModelAccess, IrRule) as env:
             user = env["res.users"].create({"name": "writer"})
             host = env["s.guard.host"].create({"name": "h"})
             env.flush_all()
             uenv = env(user=user.id, su=False)
+            env.transaction.default_env = uenv
             uenv["s.guard.host"].browse(host.id).write(
                 {"line_ids": [Command.create({"name": "made-by-writer"})]}
             )
