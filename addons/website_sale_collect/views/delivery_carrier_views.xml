@@ -36,8 +36,17 @@
             <p name="country_warning" position="attributes">
                 <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
             </p>
-            <field name="enable_delivery_estimate" position="attributes">
+            <label for="delivery_estimate_mode" position="attributes">
                 <attribute name="invisible" add="delivery_type != 'in_store'" separator=" and "/>
+            </label>
+            <div name="estimated_delivery" position="attributes">
+                <attribute name="invisible" add="delivery_type != 'in_store'" separator=" and "/>
+            </div>
+            <div name="delivery_calendar_row" position="attributes">
+                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
+            </div>
+            <field name="delivery_calendar_id" position="attributes">
+                <attribute name="required" add="delivery_type != 'in_store'" separator=" and "/>
             </field>
             <page name="pricing" position="before">
                 <page string="Stores" name="warehouses" invisible="delivery_type != 'in_store'">
