@@ -1510,12 +1510,12 @@ class TransactionCase(BaseCase):
             case_instance = self
 
             def _patched_run_wkhtmltopdf(self, args):
+                http_request_key = case_instance.http_request_key
                 with (
-                    patch.object(case_instance, 'http_request_key', 'wkhtmltopdf'),
                     release_test_lock(),
                     patch('odoo.tests.common._disable_flushing_cursor', True),
                 ):
-                    args = ['--cookie', TEST_CURSOR_COOKIE_NAME, 'wkhtmltopdf', *args]
+                    args = ['--cookie', TEST_CURSOR_COOKIE_NAME, http_request_key, *args]
                     return old_run_wkhtmltopdf(self, args)
 
             report_model = self.env.registry['ir.actions.report']
@@ -2644,12 +2644,12 @@ class HttpCase(TransactionCase):
         case_instance = self
 
         def _patched_run_wkhtmltopdf(self, args):
+            http_request_key = case_instance.http_request_key
             with (
-                patch.object(case_instance, 'http_request_key', 'wkhtmltopdf'),
                 release_test_lock(),
                 patch('odoo.tests.common._disable_flushing_cursor', True),
             ):
-                args = ['--cookie', TEST_CURSOR_COOKIE_NAME, 'wkhtmltopdf', *args]
+                args = ['--cookie', TEST_CURSOR_COOKIE_NAME, http_request_key, *args]
                 return old_run_wkhtmltopdf(self, args)
 
         report_model = self.env.registry['ir.actions.report']
