@@ -9,8 +9,10 @@ import {
     tick,
 } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { RPCCache } from "@web/core/network/rpc_cache";
+import { startRouter } from "@web/core/browser/router";
+import { isRPCCacheDisabled, RPCCache } from "@web/core/network/rpc_cache";
 import { IDBQuotaExceededError, IndexedDB } from "@web/core/utils/indexed_db";
+import { redirect } from "@web/core/utils/urls";
 
 const S_PENDING = Symbol("Promise");
 const DEFAULT_MAX_AGE = luxon.Duration.fromObject({ years: 1 }).toMillis();
@@ -26,6 +28,21 @@ function promiseState(promise) {
 }
 
 describe.current.tags("headless");
+
+test("isRPCCacheDisabled: depends on the 'cache' url param", async () => {
+    /** @param {string} url */
+    function loadUrl(url) {
+        redirect(url);
+        startRouter();
+        return isRPCCacheDisabled();
+    }
+    expect(loadUrl("/odoo")).toBe(false);
+    expect(loadUrl("/odoo?cache=0")).toBe(true);
+    expect(loadUrl("/odoo?cache=false")).toBe(true);
+    // the router serializes falsy values as an empty string
+    expect(loadUrl("/odoo?cache=")).toBe(true);
+    expect(loadUrl("/odoo?cache=1")).toBe(false);
+});
 
 test("RamCache: can cache a simple call", async () => {
     // The fist call to rpcCache.read saves the result on the RamCache.

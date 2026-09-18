@@ -1,6 +1,22 @@
 import { IDBQuotaExceededError, IndexedDB } from "@web/core/utils/indexed_db";
+import { router } from "../browser/router";
 import { deepCopy } from "../utils/objects";
 import { Crypto, CRYPTO_ALGO } from "../crypto";
+
+/**
+ * The rpc cache can be turned off for the current browsing session by putting
+ * `cache=0` in the url (see the "Disable RPC Cache" debug menu item). This is
+ * useful to check whether a bug comes from stale cached data.
+ *
+ * Note that the router serializes falsy values as an empty string, so a `cache`
+ * key kept in the url by a previous navigation reads as `cache=`, which must be
+ * understood as disabled as well.
+ *
+ * @returns {boolean}
+ */
+export function isRPCCacheDisabled() {
+    return [0, "", "false"].includes(router.current.cache);
+}
 
 /**
  * @typedef {{
