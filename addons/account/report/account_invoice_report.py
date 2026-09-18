@@ -50,13 +50,11 @@ class AccountInvoiceReport(models.Model):
         string='Untaxed Amount',
         readonly=True,
         currency_field='company_currency_id',
-        aggregator='sum_currency',
     )
     price_total = fields.Monetary(
         string='Total',
         readonly=True,
         currency_field='company_currency_id',
-        aggregator='sum_currency',
     )
     price_total_currency = fields.Monetary(string='Total in Currency', readonly=True, currency_field='currency_id')
     price_average = fields.Monetary(
@@ -69,13 +67,11 @@ class AccountInvoiceReport(models.Model):
         string='Margin',
         readonly=True,
         currency_field='company_currency_id',
-        aggregator='sum_currency',
     )
     inventory_value = fields.Monetary(
         string='Inventory Value',
         readonly=True,
         currency_field='company_currency_id',
-        aggregator='sum_currency',
     )
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
 
