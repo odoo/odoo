@@ -37,9 +37,10 @@ class AccountBankStatementLine(models.Model):
             aggregates=["id:recordset"],
         )
         for company, txs in txs_by_company:
+            communication_by_tx = {tx: tx._get_communication() for tx in txs}
             statement_lines = self.search([
                 ("company_id", "=", company.id),
-                ("payment_ref", "in", txs.mapped("reference")),
+                ("payment_ref", "in", list(communication_by_tx.values())),
             ])
             if not statement_lines:
                 continue
@@ -47,15 +48,8 @@ class AccountBankStatementLine(models.Model):
             lines_by_ref = statement_lines.grouped("payment_ref")
             for tx in txs:
                 if any(
-                    (
-                        line.partner_id == tx.partner_id.commercial_partner_id
-                        or (
-                            not line.partner_id
-                            and line.partner_name == tx.partner_id.commercial_partner_id.name
-                        )
-                    )
-                    and line.currency_id == tx.currency_id
+                    line.currency_id == tx.currency_id
                     and tx.currency_id.compare_amounts(line.amount, tx.amount) == 0
-                    for line in lines_by_ref.get(tx.reference, self)
+                    for line in lines_by_ref.get(communication_by_tx[tx], self)
                 ):
                     tx._record({const.CUSTOM_STATE_DONE_KEY: True})
