@@ -322,31 +322,28 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             if r.url.startswith(f"{origin}/api/pdp/1/pdp_annuaire_lookup"):
                 response = requests.Response()
                 response.status_code = 200
-                response._content = b'{"annuaire_lines": [{"identifier": "123456789_12345678900012"}, {"identifier": "123456789_12345678900034"}]}'
+                response._content = b'{"annuaire_lines": [{"identifier": "968515759_96851575900034"}, {"identifier": "968515759"}, {"identifier": "968515759_96851575905823"}]}'
                 return response
+            elif r.url.startswith(f"{origin}/api/pdp/1/annuaire_lookup?pdp_identifier="):
+                pdp_identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
+                return self._get_annuaire_lookup_response(pdp_identifier, "968515759_96851575905823")
             elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier="):
                 peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
-                return self._get_peppol_lookup_response(peppol_identifier, "9957:fr123456789")
-
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:968515759_96851575905823")
             return requests.Response()
 
         with (
             mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
             mock.patch.object(requests.sessions.Session, 'send', _request_handler),
         ):
-            wizard = self.env['account.move.send.wizard'].with_context(
+            self.env['account.move.send.wizard'].with_context(
                 active_model='account.move',
                 active_ids=invoice.ids
             ).create({})
 
-            peppol_box = wizard.sending_method_checkboxes.get('peppol', {})
-
             self.assertRecordValues(self.partner_a, [{
-                'peppol_eas': '9957',
-                'peppol_endpoint': 'FR123456789',
+                'peppol_eas': '0225',
+                'peppol_endpoint': '968515759_96851575905823',
                 'peppol_verification_state': 'valid',
-                'pdp_verification_display_state': 'peppol_valid',
+                'pdp_verification_display_state': 'pdp_valid',
             }])
-            self.assertTrue(peppol_box.get('disabled'))
-            self.assertTrue(peppol_box.get('l10n_fr_pdp_ambiguous'))
-            self.assertIn('l10n_fr_pdp_ambiguous_annuaire', wizard.alerts)
