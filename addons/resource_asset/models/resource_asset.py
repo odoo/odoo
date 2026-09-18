@@ -865,7 +865,13 @@ class ResourceAsset(models.Model):
 
     @api.model
     def _get_model_for_kind(self, kind) -> str:
-        return kind.sudo().model_name or self._get_root_model_name()
+        root = self._get_root_model_name()
+        if not kind.code:
+            return root
+        model_name = f"{root}.{kind.code}"
+        if model_name in self._get_model_names_in_tree():
+            return model_name
+        return root
 
     def _create_in_kind_models(self, vals_list):
         Kind = self.env["resource.asset.kind"]

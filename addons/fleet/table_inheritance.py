@@ -8,7 +8,7 @@ which is `pre_init_hook` on an install and the pre-migration on an upgrade.
 
 import logging
 
-from odoo.db.schema import column_exists, table_exists
+from odoo.db.schema import table_exists
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
@@ -31,20 +31,6 @@ def create_vehicle_table(cr) -> bool:
     _debug.lifecycle("fleet.vehicle_table.created", table=VEHICLE_TABLE)
     _logger.info("fleet: created %s inheriting resource_asset.", VEHICLE_TABLE)
     return True
-
-
-def name_the_vehicle_model(cr) -> None:
-    if not column_exists(cr, "resource_asset_kind", "model_name"):
-        _debug.logic("fleet.vehicle_model.not_nameable_yet")
-        _logger.info(
-            "fleet: resource_asset_kind.model_name is not there yet; upgrade "
-            "resource_asset in the same run for the vehicle kind to name its model."
-        )
-        return
-    cr.execute(
-        "UPDATE resource_asset_kind SET model_name = %s WHERE code = 'vehicle'",
-        ["resource.asset.vehicle"],
-    )
 
 
 def move_vehicles_into_their_table(cr) -> int:

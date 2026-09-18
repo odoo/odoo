@@ -1,5 +1,4 @@
-from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import fields, models
 
 
 class ResourceAssetKind(models.Model):
@@ -25,10 +24,6 @@ class ResourceAssetKind(models.Model):
         string="Refuse Incomplete Assets",
         help="Refuse an asset of this kind that is missing a required identifier, instead of only reporting the gap. Off by default: a unit usually arrives before its paperwork, and a fleet that is already incomplete would become unwritable.",
     )
-    model_name = fields.Char(
-        string="Asset Model",
-        help="The model an asset of this kind is a record of. Empty means resource.asset itself; a kind whose assets carry structure of their own names the model that holds it.",
-    )
     asset_properties_definition = fields.PropertiesDefinition(string="Asset Properties")
     asset_ids = fields.One2many(
         comodel_name="resource.asset",
@@ -39,18 +34,3 @@ class ResourceAssetKind(models.Model):
     _code_uniq = models.Constraint(
         "UNIQUE(code)", "Each asset kind code must be unique."
     )
-
-    @api.constrains("model_name")
-    def _check_model_name(self):
-        tree = self.env["resource.asset"]._get_model_names_in_tree()
-        for kind in self.filtered("model_name"):
-            if kind.model_name not in tree:
-                raise ValidationError(
-                    self.env._(
-                        "%(name)s names %(model)s, which is not an asset model. "
-                        "An asset kind names a model whose table inherits "
-                        "resource_asset, or nothing at all.",
-                        name=kind.name,
-                        model=kind.model_name,
-                    )
-                )

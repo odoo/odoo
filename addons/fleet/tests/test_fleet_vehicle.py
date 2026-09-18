@@ -220,10 +220,22 @@ class TestVehicleIsItsOwnModel(TransactionCase):
         cls.vehicle_kind = cls.env.ref("resource_asset.kind_vehicle")
         cls.tool_kind = cls.env.ref("resource_asset.kind_tool")
 
-    def test_the_vehicle_kind_names_the_vehicle_model(self):
-        self.assertEqual(self.vehicle_kind.model_name, "resource.asset.vehicle")
-        self.assertFalse(self.tool_kind.model_name)
+    def test_the_kind_code_is_the_only_name_the_model_needs(self):
+        self.assertEqual(
+            self.Asset._get_model_for_kind(self.vehicle_kind),
+            "resource.asset.vehicle",
+        )
+        self.assertEqual(
+            self.Asset._get_model_for_kind(self.tool_kind), "resource.asset"
+        )
         self.assertIn("resource.asset.vehicle", self.Asset._get_model_names_in_tree())
+
+    def test_a_kind_whose_code_names_no_model_is_a_plain_asset(self):
+        drone = self.env["resource.asset.kind"].create(
+            {"name": "Drone", "code": "drone"}
+        )
+
+        self.assertEqual(self.Asset._get_model_for_kind(drone), "resource.asset")
 
     def test_the_vehicle_table_inherits_the_asset_table(self):
         self.env.cr.execute(
