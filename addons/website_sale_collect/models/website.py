@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.http import request
+
+CLICK_AND_COLLECT_SESSION_CACHE_KEY = "website_sale_collect_pending_selection"
 
 
 class Website(models.Model):
@@ -11,6 +14,15 @@ class Website(models.Model):
         comodel_name="delivery.carrier",
         compute="_compute_in_store_dm_id",
     )
+
+    def _create_cart(self):
+        """Override to apply the Click & Collect selection made on the product page, if any, before
+        this cart existed."""
+        sale_order_sudo = super()._create_cart()
+        pending_selection = request.session.pop(CLICK_AND_COLLECT_SESSION_CACHE_KEY, None)
+        if pending_selection:
+            sale_order_sudo._apply_pending_cac_selection(pending_selection)
+        return sale_order_sudo
 
     def _compute_in_store_dm_id(self):
         in_store_delivery_methods = self.env["delivery.carrier"].search([
@@ -38,7 +50,12 @@ class Website(models.Model):
         free_qty = super()._get_product_available_qty(product, **kwargs)
         # As we can have warehouses from other companies in the available pick up stores, in such case we always need
         # to take the pick up store quantity into account, as they won't be factored in the company-specific free_qty.
-        if self.sudo().in_store_dm_id and (self.warehouse_id or any(w.company_id != self.company_id for w in self.sudo().in_store_dm_id.warehouse_ids)):
+        if self.sudo().in_store_dm_id and (
+            self.warehouse_id
+            or any(
+                w.company_id != self.company_id for w in self.sudo().in_store_dm_id.warehouse_ids
+            )
+        ):
             # Check free quantities in the in-store warehouses.
             return max(free_qty, self._get_max_in_store_product_available_qty(product, **kwargs))
         return free_qty
