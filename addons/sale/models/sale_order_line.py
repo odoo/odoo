@@ -1414,18 +1414,32 @@ class SaleOrderLine(models.Model):
 
             line.untaxed_amount_to_invoice = amount_to_invoice
 
+<<<<<<< 79f34d35c4806ebea77c06eafc1f1203e3d48aaf
     @api.depends(
         "discount", "price_total", "product_uom_qty", "qty_delivered", "qty_invoiced_posted"
     )
+||||||| fd06c4df5889e23cfb701c12d743b5652141a111
+    @api.depends('discount', 'price_total', 'product_uom_qty', 'qty_delivered', 'qty_invoiced_posted')
+=======
+    @api.depends('discount', 'price_total', 'product_uom_qty', 'qty_invoiced_posted')
+>>>>>>> ce27324f8c4442e7108716d79b9207a50ce9f121
     def _compute_amount_to_invoice(self):
         for line in self:
             if line.product_uom_qty:
+<<<<<<< 79f34d35c4806ebea77c06eafc1f1203e3d48aaf
                 uom_qty_to_consider = (
                     line.qty_delivered
                     if line.product_id.invoice_policy == "delivery"
                     else line.product_uom_qty
                 )
                 qty_to_invoice = uom_qty_to_consider - line.qty_invoiced_posted
+||||||| fd06c4df5889e23cfb701c12d743b5652141a111
+                uom_qty_to_consider = line.qty_delivered if line.product_id.invoice_policy == 'delivery' else line.product_uom_qty
+                qty_to_invoice = uom_qty_to_consider - line.qty_invoiced_posted
+=======
+                # The ordered quantity is what the customer committed to, delivered or not.
+                qty_to_invoice = line.product_uom_qty - line.qty_invoiced_posted
+>>>>>>> ce27324f8c4442e7108716d79b9207a50ce9f121
                 unit_price_total = line.price_total / line.product_uom_qty
                 line.amount_to_invoice = unit_price_total * qty_to_invoice
             else:
