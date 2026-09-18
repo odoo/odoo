@@ -52,6 +52,6 @@ export class PaymentScreenStatus extends Component {
     }
 
     get amountText() {
-        return this.pos.formatCurrency(this.order.remainingDueAmount);
+        return this.pos.formatCurrency(this.order.remainingDueAmount, this.order.orderCurrency.id);
     }
 }

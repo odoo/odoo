@@ -76,7 +76,7 @@
             }">
             <div class="total text-center text-dark"
                 t-att-style="!this.ui.isSmall? 'font-size: 125px;' : ''" >
-                <PriceFormatter price="this.pos.formatCurrency(this.currentOrder.totalDue)" />
+                <PriceFormatter price="this.orderTotalDue" />
             </div>
         </section>
     </t>
@@ -177,7 +177,7 @@
                                 t-as="currency"
                                 t-key="currency.id"
                                 t-on-click="() => this.addNewPaymentLine(paymentMethod, { currency })"
-                                class="btn btn-secondary d-flex justify-content-between w-100 mt-1"
+                                class="currency-wise-method btn btn-secondary d-flex justify-content-between w-100 mt-1"
                                 t-att-class="{ 'opacity-50': !paymentMethod.getPaymentInterfaceStates().status }">
                                 <span class="text-muted me-1" t-out="currency.name" />
                                 <span t-out="currency.convertFormatted(this.currentOrder.totalDue)" />

@@ -240,6 +240,11 @@ class PosOrder(models.Model):
                 'payment_method_id': cash_payment_method.id,
                 'is_change': True,
             }
+            if foreign_currency := order.payment_ids[0].foreign_currency_id:
+                return_payment_vals.update({
+                    'amount_currency': return_payment_vals['amount'] * foreign_currency.rate,
+                    'foreign_currency_id': foreign_currency.id,
+                })
             order.add_payment(return_payment_vals)
             order._compute_prices()
 
