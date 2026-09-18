@@ -290,6 +290,30 @@ class TestStockValuationLCFIFO(TestStockValuationLCCommon):
         self._make_lc(move1, 250)
         self.assertEqual(move1.remaining_value, 10250)
 
+    def test_landed_cost_on_zero_cost_receipt(self):
+        """Receive 10 units valued at a zero product cost, then 10 more through a purchase order
+        at 200. A landed cost of 100 on the first receipt only adds 100 to its value."""
+        self.product1.categ_id.property_account_expense_categ_id = self.company_data['default_account_expense']
+        self.product1.standard_price = 0
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.supplier_location_id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.product1.id,
+                'product_uom_qty': 10,
+            })],
+        })
+        receipt.action_confirm()
+        receipt.button_validate()
+        # Received without a purchase order or a bill, so valued at the product cost.
+        self.assertEqual(receipt.move_ids.value, 0)
+        self._make_in_move(self.product1, 10, unit_cost=200)
+        self.assertEqual(self.product1.standard_price, 100)
+
+        self._make_lc(receipt.move_ids, 100)
+        self.assertEqual(receipt.move_ids.value, 100)
+
 
 @tagged('-at_install', 'post_install')
 class TestStockValuationLCAVCO(TestStockValuationLCCommon):
@@ -378,6 +402,35 @@ class TestStockValuationLCAVCO(TestStockValuationLCCommon):
         self.assertEqual(product.total_value, 15)
         self.assertEqual(product.qty_available, 1)
         self.assertEqual(product.standard_price, 15)
+
+    def test_two_landed_costs_on_standard_price_receipt(self):
+        """Receive 10 units valued at the standard price and 10 more through a purchase order at a
+        higher price, then add two landed costs one after another on the first receipt. Each cost
+        raises the first receipt value once, on top of the price it was received at."""
+        self.product1.categ_id.property_account_expense_categ_id = self.company_data['default_account_expense']
+        # Set the product value prior to the moves so it is applied when their value is computed.
+        with freeze_time('2020-01-01'):
+            self.product1.standard_price = 100
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.supplier_location_id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.product1.id,
+                'product_uom_qty': 10,
+            })],
+        })
+        picking.action_confirm()
+        picking.button_validate()
+        self.assertEqual(picking.move_ids.value, 1000)
+        self._make_in_move(self.product1, 10, unit_cost=200)
+
+        self._make_lc(picking.move_ids, 100)
+        self.assertEqual(picking.move_ids.value, 1100)
+        self._make_lc(picking.move_ids, 50)
+        self.assertEqual(picking.move_ids.value, 1150)
+        self.assertEqual(self.product1.total_value, 3150)
+        self.assertEqual(self.product1.standard_price, 157.5)
 
 @tagged('-at_install', 'post_install')
 class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
