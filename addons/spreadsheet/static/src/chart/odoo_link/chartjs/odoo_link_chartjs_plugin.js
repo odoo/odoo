@@ -3,8 +3,8 @@ import {
     isChartJSMiddleClick,
 } from "@spreadsheet/chart/odoo_chart/odoo_chart_helpers";
 
-export const chartOdooLinkPlugin = {
-    id: "chartOdooLinkPlugin",
+export const chartJsOdooLinkPlugin = {
+    id: "chartJsOdooLinkPlugin",
     afterEvent(chart, { event }, { env, chartId }) {
         const odooLink = env?.model.getters.getChartOdooLink(chartId);
         const isDashboard = env?.model.getters.isDashboard();
