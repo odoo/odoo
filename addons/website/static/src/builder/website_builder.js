@@ -254,9 +254,10 @@ export class WebsiteBuilder extends Component {
             if (!editableEl) {
                 return {};
             }
+            const oeId = editableEl.dataset["oeId"];
             return {
                 resModel: editableEl.dataset["oeModel"],
-                resId: editableEl.dataset["oeId"],
+                resId: oeId ? Number(oeId) : oeId,
                 field: editableEl.dataset["oeField"],
                 type: editableEl.dataset["oeType"],
             };
