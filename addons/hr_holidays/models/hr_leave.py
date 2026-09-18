@@ -1309,11 +1309,10 @@ class HrLeave(models.Model):
             holiday.supported_attachment_ids_count = len(holiday.attachment_ids.ids)
 
     @api.depends_context('uid')
-    @api.depends('work_entry_type_support_document')
     def _compute_attachment_is_visible(self):
         is_privileged_user = self.env.user.has_groups('hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_manager')
         for leave in self:
-            if leave.work_entry_type_support_document and (is_privileged_user or self.env.uid in (leave.user_id.id, leave.create_uid.id)):
+            if (is_privileged_user or self.env.uid in (leave.user_id.id, leave.create_uid.id)):
                 leave.attachment_is_visible = True
             else:
                 leave.attachment_is_visible = False
