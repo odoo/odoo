@@ -135,6 +135,12 @@ class PaymentTransaction(models.Model):
     is_post_processed = fields.Boolean(
         string="Is Post-processed", help="Has the payment been post-processed"
     )
+    post_processing_error = fields.Text(
+        string="Post-processing Error",
+        help="An error was raised during the last post-processing attempt. When set, the transaction"
+             " is skipped by the post-processing cron until it is manually retried.",
+        readonly=True,
+    )
     tokenize = fields.Boolean(
         string="Create Token",
         help="Whether a payment token should be created when post-processing the transaction",
@@ -398,6 +404,7 @@ class PaymentTransaction(models.Model):
         :return: A client action to soft-reload the view.
         :rtype: dict
         """
+        self.post_processing_error = False  # Retry the transactions blocked by a previous error.
         self._post_process()
         return {"type": "ir.actions.client", "tag": "soft_reload"}
 
@@ -1093,6 +1100,7 @@ class PaymentTransaction(models.Model):
             "state_message": state_message,
             "last_state_change": fields.Datetime.now(),
             "is_post_processed": False,  # Reset to allow post-processing again for other states.
+            "post_processing_error": False,  # Reset to allow post-processing cron.
         })
         return txs_to_process
 
@@ -1132,6 +1140,7 @@ class PaymentTransaction(models.Model):
             # Retrieve all transactions matching the criteria for post-processing
             txs_to_post_process = self.search([
                 ("is_post_processed", "=", False),
+                ("post_processing_error", "=", False),
                 ("last_state_change", ">=", retry_limit_date),
             ])
         for tx in txs_to_post_process:
@@ -1142,11 +1151,71 @@ class PaymentTransaction(models.Model):
                     self.env.cr.commit()
             except psycopg2.OperationalError:
                 self.env.cr.rollback()  # Rollback and try later.
+            except (UserError, psycopg2.IntegrityError) as e:  # Also covers `ValidationError`.
+                # These errors persist and retrying would fail the same way without
+                # manual intervention. Retrying repeats everything, external API calls included, so
+                # letting it run can re-attempt/make repeat API calls hundreds of times a day.
+                self.env.cr.rollback()  # Rolback then log
+                _logger.warning(
+                    "An error occurred while post-processing transaction %(ref)s: %(err)s",
+                    {"ref": tx.reference, "err": e},
+                )
+                tx._block_post_processing(e)
             except Exception:
                 _logger.exception(
                     "An error occurred while post-processing transaction %s.", tx.reference
                 )
                 self.env.cr.rollback()
+
+    def _block_post_processing(self, error):
+        """Stop the cron from retrying an error that must be fixed manually.
+
+        After rolling back a failed transaction post-processing update,
+        we update the post_processing_error field with the error.
+
+        :param Exception error: The error encountered during transaction post-processing.
+        :return: None
+        """
+        self.ensure_one()
+
+        if isinstance(error, psycopg2.IntegrityError):
+            # Convert the error like `odoo.http.retrying` does
+            model = self.env["base"]
+            for model_class in self.env.registry.values():
+                if error.diag.table_name == model_class._table:
+                    model = self.env[model_class._name]
+                    break
+            error_message = model._sql_error_to_message(error)
+        else:
+            error_message = str(error)
+
+        # Update the transaction's post_processing_error field with the error
+        # This prevents the post-processing cron from retrying automatically
+        try:
+            self.post_processing_error = error_message
+            self.env.cr.commit()
+        except Exception:
+            self.env.cr.rollback()
+            _logger.exception(
+                "Could not record post-processing error of transaction %s.",
+                self.reference,
+            )
+            return
+
+        # Create a chatter message on the sale order since we can't do it on the transaction
+        try:
+            self._log_message_on_linked_documents(_(
+                "The transaction with reference %(ref)s could not be post-processed for the"
+                " following reason: %(error)s",
+                ref=self.reference,
+                error=error_message,
+            ))
+            self.env.cr.commit()
+        except Exception:
+            self.env.cr.rollback()
+            _logger.exception(
+                "Could not create post-processing error message for transaction %s.", self.reference
+            )
 
     def _post_process(self):
         """Post-process the transactions.
@@ -1159,6 +1228,7 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         self.is_post_processed = True
+        self.post_processing_error = False
 
     # === REQUEST HELPERS === #
 
