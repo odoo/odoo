@@ -553,6 +553,41 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             },
         })
 
+    def test_peppol_only_sending_method_batch_no_false_error(self):
+        """ A move sent via Peppol as its only sending method must be considered as sent, not flagged
+        as 'generated but not sent'.
+        """
+        self.valid_partner.invoice_edi_format = False
+        self.valid_partner.email = False
+
+        move_1 = self.create_move(self.valid_partner)
+        move_2 = self.create_move(self.valid_partner)
+        moves = (move_1 + move_2)
+        moves.action_post()
+        with mock_lookup_success('0208:0428759497'):
+            wizard = self.create_send_and_print(moves, default=True)
+        expected_result = {
+            "peppol": {
+                "count": 2,
+                "label": "by Peppol",
+                "moves": [
+                    {"id": move_1.id, "name": move_1.name, "partner_name": "Molly"},
+                    {"id": move_2.id, "name": move_2.name, "partner_name": "Molly"},
+                ],
+            },
+        }
+        self.assertEqual(wizard.summary_data, expected_result)
+        wizard.action_send_and_print()
+        with (
+            mock_send_document(),
+            self.enter_registry_test_mode(),
+        ):
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+
+        self.assertEqual(moves.mapped('peppol_move_state'), ['processing', 'processing'])
+        self.assertTrue(all(move.peppol_is_sent for move in moves))
+        self.assertFalse(moves.message_ids.filtered(lambda m: 'Invoice generated but not sent.' in (m.body or '')))
+
     def test_silent_error_while_creating_xml(self):
         """When in multi/async mode, the generation of XML can fail silently (without raising).
         This needs to be reflected as an error and put the move in Peppol Error state.
