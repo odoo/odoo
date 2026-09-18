@@ -77,6 +77,12 @@
     @include media-breakpoint-down(sm) {
         overflow: auto visible;
     }
+
+    @include media-breakpoint-up(md) {
+        + .o_kanban_renderer {
+            padding-top: map-get($spacers, 3);
+        }
+    }
 }
 
 .o_dropzone {
