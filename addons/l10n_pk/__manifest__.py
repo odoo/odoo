@@ -25,6 +25,7 @@ Activates:
     ],
     'auto_install': ['account'],
     'data': [
+        'data/ir_actions_server_data.xml',
         'data/ir_config_data.xml',
         'data/res_country_data.xml',
         'views/account_tax_views.xml',

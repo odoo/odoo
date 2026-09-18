@@ -5,7 +5,7 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//app[@name='account']" position="inside">
+            <xpath expr="//block[@id='peppol']" position="after">
                 <block id="pakistan_localization" title="Pakistan Electronic Invoicing (FBR)" invisible="country_code != 'PK'">
                     <div class="content-group">
                         <setting company_dependent="1" string="Enable Electronic Invoicing">
