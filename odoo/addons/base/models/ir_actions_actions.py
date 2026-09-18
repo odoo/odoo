@@ -95,6 +95,7 @@ class IrActionsActions(models.Model):
     )
     type = fields.Char(
         string="Action Type",
+        default=lambda self: self._name,
         required=True,
     )
     path = fields.Char(
@@ -371,7 +372,13 @@ class IrActionsActions(models.Model):
 
     @api.model
     def _get_fields_naming_target_model(self) -> frozenset[str]:
-        return frozenset(filter(None, [self._get_field_target_model()]))
+        name = self._get_field_target_model()
+        if not name:
+            return frozenset()
+        related = self._fields[name].related
+        return (
+            frozenset((name, related.split(".")[0])) if related else frozenset((name,))
+        )
 
     @api.model
     @tools.ormcache(cache="stable")

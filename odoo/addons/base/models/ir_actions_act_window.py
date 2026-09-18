@@ -16,10 +16,7 @@ class IrActionsAct_Window(models.Model):
     _description = "Action Window"
     _table = "ir_act_window"
     _inherit = ["ir.actions.actions"]
-    _order = "name, id"
-    _allow_sudo_commands = False
 
-    type = fields.Char(default="ir.actions.act_window")
     view_id = fields.Many2one(
         comodel_name="ir.ui.view",
         string="View Ref.",

@@ -6,10 +6,7 @@ class IrActionsAct_Url(models.Model):
     _description = "Action URL"
     _table = "ir_act_url"
     _inherit = ["ir.actions.actions"]
-    _order = "name, id"
-    _allow_sudo_commands = False
 
-    type = fields.Char(default="ir.actions.act_url")
     url = fields.Text(
         string="Action URL",
         required=True,

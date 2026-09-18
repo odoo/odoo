@@ -78,7 +78,6 @@ class IrActionsServer(models.Model):
     _table = "ir_act_server"
     _inherit = ["ir.actions.actions"]
     _order = "sequence,name,id"
-    _allow_sudo_commands = False
 
     # FIELDS
     name = fields.Char(
@@ -95,7 +94,6 @@ class IrActionsServer(models.Model):
         help="Set once the name has been typed rather than derived from the "
         "action's type, so that changing the type stops renaming it.",
     )
-    type = fields.Char(default="ir.actions.server")
     usage = fields.Selection(
         selection=[
             ("ir_actions_server", "Server Action"),
@@ -1598,10 +1596,6 @@ class IrActionsServer(models.Model):
 
     def _get_relation_chain_label(self, chain: list[fields.Field]) -> str:
         return " > ".join(field.get_description(self.env)["string"] for field in chain)
-
-    @api.model
-    def _get_fields_naming_target_model(self) -> frozenset[str]:
-        return super()._get_fields_naming_target_model() | {"model_id"}
 
     def _get_field_target_model(self) -> str:
         return "model_name"

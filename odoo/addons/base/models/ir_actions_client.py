@@ -15,10 +15,7 @@ class IrActionsClient(models.Model):
     _description = "Client Action"
     _inherit = ["ir.actions.actions"]
     _table = "ir_act_client"
-    _order = "name, id"
-    _allow_sudo_commands = False
 
-    type = fields.Char(default="ir.actions.client")
     tag = fields.Char(
         string="Client action tag",
         required=True,
