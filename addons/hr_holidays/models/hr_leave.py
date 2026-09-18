@@ -626,6 +626,10 @@ class HrLeave(models.Model):
 
     @api.depends('employee_id', 'request_date_from', 'request_date_to')
     def _compute_resource_calendar_id(self):
+        # Avoid recomputing the calendar in `_check_contracts`
+        # before the correct calendar is written to the version
+        if self.env.context.get('leave_skip_calendar_recompute', False):
+            return
         leaves_without_emp_or_date = self.filtered(
             lambda leave: not (leave.employee_id and leave.request_date_from and leave.request_date_to)
         )
@@ -663,17 +667,31 @@ class HrLeave(models.Model):
 
     def _get_overlapping_contracts(self):
         self.ensure_one()
+        dt_from = self.date_from.replace(tzinfo=UTC).astimezone(ZoneInfo(self.tz))
+        dt_to = self.date_to.replace(tzinfo=UTC).astimezone(ZoneInfo(self.tz))
         domain = Domain.AND([
             Domain('employee_id', '=', self.employee_id.id),
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
             Domain('active', '=', True),
             Domain('contract_date_start', '<=', self.date_to),
+||||||| 92ced215895d027a2b5606dbecbf3eb96b9dcd10
+            Domain('contract_date_start', '<=', self.date_to),
+=======
+            Domain('contract_date_start', '<=', dt_to),
+>>>>>>> b24e8b5bb073a59fee1ab6b93b049c026f205883
             Domain.OR([
-                Domain('contract_date_end', '>=', self.date_from),
+                Domain('contract_date_end', '>=', dt_from),
                 Domain('contract_date_end', '=', False),
             ])
         ])
         versions = self.env['hr.version'].sudo().search(domain)
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
         return versions.filtered(lambda v: v._is_overlapping_period(self.request_date_from, self.request_date_to))
+||||||| 92ced215895d027a2b5606dbecbf3eb96b9dcd10
+        return versions.filtered(lambda v: v._is_overlapping_period(self.date_from.date(), self.date_to.date()))
+=======
+        return versions.filtered(lambda v: v._is_overlapping_period(dt_from.date(), dt_to.date()))
+>>>>>>> b24e8b5bb073a59fee1ab6b93b049c026f205883
 
     @api.constrains('date_from', 'date_to')
     def _check_contracts(self):
