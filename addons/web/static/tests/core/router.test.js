@@ -1528,6 +1528,17 @@ describe("pushState", () => {
         expect(router.current).toEqual({ k1: 2, k2: 3 });
     });
 
+    test("the cache key is locked (rpc cache disabling survives navigation)", async () => {
+        redirect("/odoo?cache=0");
+        createRouter();
+        expect(router.current).toEqual({ cache: 0 });
+
+        router.pushState({ action: "some-action" }, { replace: true });
+        await tick();
+        expect(router.current).toEqual({ cache: 0, action: "some-action" });
+        expect(location.search).toBe("?cache=");
+    });
+
     test("can merge hash", async () => {
         createRouter();
 

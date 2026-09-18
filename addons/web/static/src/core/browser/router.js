@@ -291,7 +291,7 @@ export function startRouter() {
         reload: false,
         state: {},
     };
-    _lockedKeys = new Set(["debug", "lang"]);
+    _lockedKeys = new Set(["cache", "debug", "lang"]);
     _hiddenKeysFromUrl = new Set([...PATH_KEYS, "actionStack"]);
     if (browser.navigator.share) {
         router.shareUrl = shareUrl;

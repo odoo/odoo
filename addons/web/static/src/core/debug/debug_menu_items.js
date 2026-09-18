@@ -3,6 +3,7 @@ import { location, browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
+import { isRPCCacheDisabled } from "@web/core/network/rpc_cache";
 import { usePlugin } from "@odoo/owl";
 import { ORM } from "@web/core/orm_plugin";
 
@@ -53,6 +54,21 @@ export function becomeSuperuser() {
     };
 }
 
+export function toggleRPCCache() {
+    const disabled = isRPCCacheDisabled();
+    return {
+        type: "item",
+        description: disabled ? _t("Enable RPC Cache") : _t("Disable RPC Cache"),
+        callback: () => {
+            // the cache is only instantiated at startup, so the webclient has to
+            // be reloaded for the new value to be taken into account
+            router.pushState({ cache: disabled ? undefined : 0 }, { reload: true });
+        },
+        sequence: 570,
+        section: "tools",
+    };
+}
+
 function leaveDebugMode() {
     return {
         type: "item",
@@ -69,5 +85,6 @@ registry
     .category("default")
     .add("regenerateAssets", regenerateAssets)
     .add("becomeSuperuser", becomeSuperuser)
+    .add("toggleRPCCache", toggleRPCCache)
     .add("activateTestsAssetsDebugging", activateTestsAssetsDebugging)
     .add("leaveDebugMode", leaveDebugMode);
