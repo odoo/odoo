@@ -106,7 +106,7 @@ class ResConfigSettings(models.TransientModel):
         base_user = self.env.ref('base.group_user')
         base_user_implied_ids = base_user.implied_ids
         if not self.group_stock_multi_locations and location_grp in base_user_implied_ids and warehouse_grp in base_user_implied_ids:
-            raise UserError(_("You can't deactivate the multi-location if you have more than once warehouse by company"))
+            raise UserError(_("You can't deactivate the multi-location feature if you have more than one warehouse per company"))
 
         # Update all picking types of this company to keep their move_type aligned with the configured picking policy
         picking_types = self.env['stock.picking.type'].search([
