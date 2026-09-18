@@ -479,6 +479,7 @@ class TestRecruitment(MailCase, TransactionCase):
         self.flush_tracking()
         with self.mock_mail_gateway(), self.mock_mail_app():
             applicant = self.env['hr.applicant'].create({
+                'partner_id': partner.id,
                 'partner_name': 'Some Applicant',
                 'email_from': 'a.partner@example.com',
                 'partner_phone': '987654321',
