@@ -258,7 +258,7 @@ export class MassMailingHtmlField extends HtmlField {
         } else if (this.withBuilder) {
             return this.getBuilderConfig();
         } else {
-            return this.getSimpleEditorConfig();
+            return this.getBasicEditorConfig();
         }
     }
 
@@ -290,7 +290,7 @@ export class MassMailingHtmlField extends HtmlField {
         };
     }
 
-    getSimpleEditorConfig() {
+    getBasicEditorConfig() {
         const config = super.getConfig();
         const codeViewCommand = [config.resources?.user_commands]
             .filter(Boolean)
@@ -305,7 +305,7 @@ export class MassMailingHtmlField extends HtmlField {
             mediaModalParams: { ...config.mediaModalParams, validateUrl },
             Plugins: [...MAIN_EDITOR_PLUGINS, ...DYNAMIC_FIELD_PLUGINS]
                 .filter((P) => !["banner", "prompt", "link"].includes(P.id))
-                .concat(registry.category("basic-editor-plugins").getAll()),
+                .concat(registry.category("mass_mailing-basic-editor-plugins").getAll()),
         };
     }
 
