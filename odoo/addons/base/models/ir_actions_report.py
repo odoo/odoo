@@ -28,7 +28,8 @@ from odoo.service import security
 from odoo.http import request, root
 from odoo.tools import config, is_html_empty, parse_version, split_every
 from odoo.tools.barcode import check_barcode_encoding, createBarcodeDrawing, get_barcode_font
-from odoo.tools.misc import find_in_path
+from odoo.tools.lru import LRU
+from odoo.tools.misc import find_in_path, frozendict
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter, PdfReadError
 from odoo.tools.safe_eval import safe_eval, time
 
@@ -732,17 +733,19 @@ class IrActionsReport(models.Model):
             barcode_type = 'Code128'
 
         try:
-            barcode = createBarcodeDrawing(barcode_type, value=value, format='png', **kwargs)
-
-            # If a mask is asked and it is available, call its function to
-            # post-process the generated QR-code image
+            mask_to_apply = None
             if kwargs['mask']:
                 available_masks = self.get_available_barcode_masks()
                 mask_to_apply = available_masks.get(kwargs['mask'])
+            frozen_kwargs = frozendict(kwargs)
+            cache = self.env.cr.cache.setdefault('ir_actions_report_barcode', LRU(256))
+            cache_key = (barcode_type, value, frozen_kwargs, mask_to_apply)
+            if cache_key not in cache:
+                barcode = createBarcodeDrawing(barcode_type, value=value, format='png', **frozen_kwargs)
                 if mask_to_apply:
-                    mask_to_apply(kwargs['width'], kwargs['height'], barcode)
-
-            return barcode.asString('png')
+                    mask_to_apply(frozen_kwargs['width'], frozen_kwargs['height'], barcode)
+                cache[cache_key] = barcode.asString('png')
+            return cache[cache_key]
         except (ValueError, AttributeError):
             if barcode_type == 'Code128':
                 raise ValueError("Cannot convert into barcode.")
