@@ -4,6 +4,7 @@ import uuid
 from io import BytesIO
 from urllib.parse import quote
 
+from dateutil.parser import isoparse
 from lxml import etree
 from markupsafe import Markup
 
@@ -461,14 +462,19 @@ class StockPicking(models.Model):
         self._l10n_tr_nilvera_submit_document(xml_file)
 
     def action_generate_l10n_tr_edispatch_xml(self, is_list=False):
+        unvalidated_picking_names = []
         invalid_picking_names = []
         for picking in self:
             if picking.country_code == 'TR' and picking.picking_type_code == 'outgoing':
-                if picking._l10n_tr_validate_edispatch_fields():
+                if picking.state != 'done':
+                    unvalidated_picking_names.append(picking.name)
+                elif picking._l10n_tr_validate_edispatch_fields():
                     invalid_picking_names.append(picking.name)
                 else:
                     picking._l10n_tr_generate_edispatch_xml()
-        if is_list and invalid_picking_names:
+        if unvalidated_picking_names:
+            raise UserError(self.env._("Stock move must be validated before generating an e-Dispatch XML:\n- %s", '\n- '.join(unvalidated_picking_names)))
+        if invalid_picking_names:
             raise UserError(_("Error occurred in generating XML for following records:\n- %s", '\n- '.join(invalid_picking_names)))
 
     def _get_mail_thread_data_attachments(self):
@@ -685,14 +691,24 @@ class StockPicking(models.Model):
         return move_commands
 
     def _update_data_from_xml(self, file_data):
+        def parse_datetime(date_str, time_str):
+            # Nilvera sometimes sends dates with timezone offsets
+            if not time_str:
+                return date_str
+            return isoparse(f"{date_str}T{time_str}").replace(tzinfo=None)
+
         tree = file_data['xml_tree']
+
         # Dispatch Scheduled Date & Time
-        scheduled_datetime = self._get_tag_text('./cbc:IssueDate', tree) + " " + self._get_tag_text('./cbc:IssueTime', tree)
+        scheduled_datetime = parse_datetime(
+            self._get_tag_text('./cbc:IssueDate', tree),
+            self._get_tag_text('./cbc:IssueTime', tree),
+        )
 
         vals_to_update = {
             'scheduled_date': scheduled_datetime,
             'l10n_tr_nilvera_uuid': self._get_tag_text('./cbc:UUID', tree),
-            'origin': self.origin or self._get_tag_text('./cbc:ID', tree),  # sequence of the e-Receipt obtained from XML.
+            'origin': self._get_tag_text('./cbc:ID', tree) or self.origin,  # sequence of the e-Receipt obtained from XML.
             'move_ids': self._import_receipt_line_commands(tree),
         }
 
