@@ -50,20 +50,23 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
         self.assertIn('様', text)
 
     def test_unit_price_column_drops_a_decimal_part_worth_nothing(self):
+        # Two of each line, so that a unit price cannot hide inside its own subtotal.
         invoice = self._create_invoice(
             move_type='out_invoice',
             partner_id=self.partner_a,
             currency_id=self.env.ref('base.JPY'),
             invoice_line_ids=[
-                self._prepare_invoice_line(price_unit=202.0, product_id=self.product_a, tax_ids=self.tax_sale_a),
-                self._prepare_invoice_line(price_unit=105.0, product_id=self.product_a, tax_ids=self.tax_sale_a),
+                self._prepare_invoice_line(price_unit=202.0, quantity=2.0, product_id=self.product_a, tax_ids=self.tax_sale_a),
+                self._prepare_invoice_line(price_unit=105.0, quantity=2.0, product_id=self.product_a, tax_ids=self.tax_sale_a),
             ],
             post=True,
         )
         html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
         text = html2plaintext(html)
 
+        self.assertIn('202', text)
         self.assertNotIn('202.00', text)
+        self.assertIn('105', text)
         self.assertNotIn('105.00', text)
 
     def test_unit_price_column_keeps_its_decimals_for_one_line_that_needs_them(self):
@@ -72,8 +75,8 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
             partner_id=self.partner_a,
             currency_id=self.env.ref('base.JPY'),
             invoice_line_ids=[
-                self._prepare_invoice_line(price_unit=202.0, product_id=self.product_a, tax_ids=self.tax_sale_a),
-                self._prepare_invoice_line(price_unit=101.5, product_id=self.product_a, tax_ids=self.tax_sale_a),
+                self._prepare_invoice_line(price_unit=202.0, quantity=2.0, product_id=self.product_a, tax_ids=self.tax_sale_a),
+                self._prepare_invoice_line(price_unit=101.5, quantity=2.0, product_id=self.product_a, tax_ids=self.tax_sale_a),
             ],
             post=True,
         )

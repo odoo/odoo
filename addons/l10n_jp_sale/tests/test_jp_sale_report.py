@@ -47,14 +47,18 @@ class TestJPSaleReport(AccountTestInvoicingCommon):
         self.assertIn('Amount (円)', text)
 
     def _render_unit_prices(self, prices):
-        """Render an order of (price_unit, discount) pairs and return its text."""
+        """
+        Render an order of (price_unit, discount) pairs and return its text.
+
+        Lines hold two of each, so that a unit price cannot hide inside its own subtotal.
+        """
         order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'pricelist_id': self.jpy_pricelist.id,
             'order_line': [
                 Command.create({
                     'product_id': self.product_a.id,
-                    'product_uom_qty': 1,
+                    'product_uom_qty': 2,
                     'price_unit': price_unit,
                     'discount': discount,
                 })
@@ -67,7 +71,9 @@ class TestJPSaleReport(AccountTestInvoicingCommon):
     def test_unit_price_column_drops_a_decimal_part_worth_nothing(self):
         text = self._render_unit_prices([(202.0, 0.0), (105.0, 0.0)])
 
+        self.assertIn('202', text)
         self.assertNotIn('202.00', text)
+        self.assertIn('105', text)
         self.assertNotIn('105.00', text)
 
     def test_unit_price_column_keeps_its_decimals_under_a_surcharge(self):
