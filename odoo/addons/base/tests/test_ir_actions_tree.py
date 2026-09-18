@@ -55,6 +55,11 @@ class TestIrActionsTree(TransactionCase):
             )
 
     def test_load_resolves_the_concrete_model_from_the_table_not_the_column(self):
+        # a database upgraded with such rows keeps them: the constraint that
+        # forbids them is only added once none is left
+        self.env.cr.execute(
+            "ALTER TABLE ir_act_window DROP CONSTRAINT ir_act_window_type_names_model"
+        )
         self.env.cr.execute(
             "UPDATE ir_act_window SET type = 'ir.actions.client' WHERE id = %s",
             [self.window.id],

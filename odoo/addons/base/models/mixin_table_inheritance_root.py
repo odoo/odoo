@@ -1,9 +1,13 @@
+import logging
 from collections import defaultdict
 from typing import Self
 
 from odoo import api, models, tools
 from odoo.db.schema import (
+    add_constraint,
     column_exists,
+    drop_constraint,
+    get_constraint_definition,
     table_exists,
 )
 from odoo.exceptions import ValidationError
@@ -12,6 +16,7 @@ from odoo.tools import SQL, _, frozendict
 
 from .ir_model_common import MODULE_UNINSTALL_FLAG
 
+_logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
 
@@ -118,6 +123,46 @@ class MixinTableInheritanceRoot(models.AbstractModel):
     def init(self) -> None:
         super().init()
         self._check_table_inheritance()
+        self._constrain_type_to_table()
+
+    def _constrain_type_to_table(self) -> None:
+        type_field = self._get_type_field_name()
+        root_table = self._table_inheritance_root
+        if (
+            not type_field
+            or not root_table
+            or self._table == root_table
+            or self._get_model_names_by_table().get(self._table) != (self._name,)
+            or not table_exists(self.env.cr, self._table)
+        ):
+            return
+        cr = self.env.cr
+        name = f"{self._table}_{type_field}_names_model"
+        definition = f"CHECK ({type_field} = '{self._name}')"
+        current = get_constraint_definition(cr, self._table, name)
+        if current == definition:
+            return
+        cr.execute(
+            SQL(
+                "SELECT count(*) FROM ONLY %s WHERE %s IS DISTINCT FROM %s",
+                SQL.identifier(self._table),
+                SQL.identifier(type_field),
+                self._name,
+            )
+        )
+        if stray := cr.fetchone()[0]:
+            _logger.error(
+                "%d row(s) of %s name another model in %s; they block the "
+                "constraint that keeps the column and the table in agreement.",
+                stray,
+                self._table,
+                type_field,
+            )
+            return
+        if current:
+            drop_constraint(cr, self._table, name)
+        add_constraint(cr, self._table, name, definition)
+        _debug.lifecycle("type_constrained_to_table", table=self._table)
 
     def _check_table_inheritance(self) -> None:
         root_table = self._table_inheritance_root

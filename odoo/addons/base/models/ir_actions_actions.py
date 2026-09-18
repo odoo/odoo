@@ -224,14 +224,15 @@ class IrActionsActions(models.Model):
                     type=action.type,
                     model=action._name,
                 )
-                raise ValidationError(
-                    _(
-                        "Action type “%(type)s” does not match the model this action "
-                        "is stored in (“%(model)s”).",
-                        type=action.type,
-                        model=action._name,
-                    )
-                )
+                raise ValidationError(self._get_type_mismatch_message(action.type))
+
+    def _get_type_mismatch_message(self, action_type: str) -> str:
+        return _(
+            "Action type “%(type)s” does not match the model this action "
+            "is stored in (“%(model)s”).",
+            type=action_type,
+            model=self._name,
+        )
 
     @api.constrains("binding_model_id")
     def _check_binding_model(self) -> None:
@@ -283,6 +284,10 @@ class IrActionsActions(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
+        for vals in vals_list:
+            # the table refuses the row before _check_type can name the reason
+            if vals.get("type", self._name) != self._name:
+                raise ValidationError(self._get_type_mismatch_message(vals["type"]))
         vals_list = [
             {
                 **vals,
