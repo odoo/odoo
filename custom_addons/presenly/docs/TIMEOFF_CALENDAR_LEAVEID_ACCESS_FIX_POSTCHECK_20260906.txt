@@ -1,0 +1,70 @@
+PRESENLY TIME OFF CALENDAR leave_id ACCESS FIX — ROLLOUT POST-CHECK
+Date: 2026-09-06
+Database: odoo
+Module: presenly 19.0.13.4.0
+
+PURPOSE
+- Fix "You do not have enough rights to access the field leave_id on Time Off
+  Calendar" for users who have Presenly Approver but not the native
+  hr_holidays.group_hr_holidays_user group.
+
+ROOT CAUSE
+- Native field `hr.leave.report.calendar.leave_id` is declared with
+  `groups='hr_holidays.group_hr_holidays_user'`.
+- Yusril has `hr_holidays.group_hr_holidays_responsible` (Time Off
+  Responsible), not `group_hr_holidays_user`.
+- The Presenly related/computed fields on the calendar view read `leave_id`
+  without sudo, triggering the native field access error.
+
+FIX
+- In presenly_report_calendar.py:
+  - `presenly_approval_state` and `presenly_approval_progress` now use
+    `related_sudo=True`.
+  - `_compute_presenly_calendar_permissions` reads `record.sudo().leave_id`.
+  - `action_presenly_approve` and `action_presenly_open_reject_wizard` read the
+    leave id via `self.sudo().leave_id.id` and act through the leave recordset.
+- No native group was granted to Yusril; the native field restriction stays
+  intact, but Presenly controls only use sudo to reach the related leave.
+
+VERIFICATION
+- Yusril (uid 6, Time Off Responsible + Approver, no group_hr_holidays_user):
+  - reads 3 calendar records without error.
+  - reports no access errors on Presenly fields.
+- Native Approve/Refuse remain invisible on the popup.
+- Presenly Approve Current Level / Reject remain driven by presenly_can_*.
+
+TESTING
+- Isolated clone: odoo_presenly_calendar_leaveid_test_20260906_154000.
+- Final result: 42 test cases / 54 test stats.
+- Failures: 0.
+- Errors: 0.
+- Clone database and filestore were removed.
+
+STATIC VALIDATION
+- Python compilation: passed.
+- XML parsing: 19 files passed.
+- git diff --check: passed.
+
+DATA PRESERVATION
+Business fingerprint before and after rollout is identical:
+- Attendance: 4; ID sum 12.
+- Evidence: 10; ID sum 55.
+- Referenced selfie attachments: 7; ID sum 1210.
+- Permission requests: 0.
+- Time Off requests: 3; ID sum 48.
+- Approval routes: 2; ID sum 4.
+- Approval journeys: 1; ID sum 1.
+
+BACKUP
+- backups/presenly-migration/odoo-before-calendar-leaveid-fix-20260906-154000.dump
+- Backup retained after clone cleanup.
+
+ROLLOUT
+- Before: presenly 19.0.13.3.0.
+- After: presenly 19.0.13.4.0.
+- Main server PID: 29569.
+- http://127.0.0.1:8069/web/login returned HTTP 200.
+- Upgrade and active server logs contain no ERROR, CRITICAL, or traceback.
+
+NO COMMIT
+- No Git commit was created.

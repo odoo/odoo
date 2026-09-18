@@ -1,0 +1,98 @@
+PRESENLY WFA ATTENDANCE AND MODE SELECTION — ROLLOUT POST-CHECK
+Date: 2026-09-06
+Database: odoo
+Module: presenly 19.0.12.0.0
+
+SCOPE
+- Added Work From Anywhere (WFA) as an attendance mode.
+- WFA is temporary-approval-free and informational only: it records that the
+  employee is working from anywhere, with no geofence and no location limit.
+- Added a mobile mode-selection endpoint.
+- Added a dedicated mobile documentation file for mode selection.
+- Kept native hr.attendance as the transaction source and kept the Presenly
+  server as the owner of identity and timestamps.
+
+MODEL CHANGES
+hr.attendance gained:
+- presenly_attendance_mode: Selection(location, wfa), default location.
+
+presenly.attendance.event gained:
+- attendance_mode: Selection(location, wfa).
+- create_failed_event now records attendance_mode when the failed payload
+  contains it.
+
+Color semantics now treat WFA as not requiring a Work Location snapshot.
+A WFA record is still red if successful check-in/check-out evidence is missing,
+duration exceeds 16 hours, or the session is stale.
+
+CONTROLLER CHANGES
+New endpoint:
+- POST /api/presenly/v1/attendance/modes (auth=session, readonly)
+
+Existing endpoints extended:
+- status now returns attendance_mode, can_select_mode, and wfa_available.
+- can_check_in now allows WFA even when no scheduled/geofence-ready location.
+- check-in accepts attendance_mode or legacy mode alias.
+  - location: unchanged geofence path.
+  - wfa: no geofence, no work location required, GPS and selfie optional.
+- check-out derives mode from the active attendance and skips geofence and
+  same-location checks for WFA; GPS/selfie are optional for WFA.
+- _optional_coordinates validates partial GPS input; all-empty GPS is allowed.
+- _requested_mode normalizes "wfa"/"work-from-anywhere" and
+  "location"/"on-site"/"onsite".
+
+UI CHANGES
+- Attendance Context now shows Attendance Mode and Source.
+- Attendance list and search expose Attendance Mode, WFA filter, and Mode grouping.
+- Attendance Evidence list/form/search expose attendance_mode, WFA filter, and
+  Mode grouping.
+- Existing attendance records defaulted to location mode.
+
+DOCUMENTATION
+- New: custom_addons/presenly/docs/MOBILE_MODE_SELECTION.md
+- Updated: custom_addons/presenly/docs/MOBILE_API.md
+  - Added /attendance/modes endpoint.
+  - Added cross-link to MOBILE_MODE_SELECTION.md.
+  - Added status fields attendance_mode, can_select_mode, wfa_available.
+
+DATA PRESERVATION
+Business fingerprint before and after rollout is identical:
+- Attendance: 2 records; ID sum 3.
+- Evidence: 7 records; ID sum 28.
+- Referenced selfie attachments: 4; ID sum 670.
+- Permission requests: 0.
+- Time Off requests: 0.
+- Approval routes: 1; ID sum 1.
+- Existing attendance IDs 1 and 2 remain color 10 (green) and defaulted to
+  location mode.
+
+TESTING
+- Isolated clone: odoo_presenly_wfa_test_20260906_110500.
+- Final result: 38 test cases / 48 test stats.
+- Failures: 0.
+- Errors: 0.
+- New coverage:
+  - modes endpoint returns location and wfa with informational policy.
+  - WFA check-in without GPS/geofence succeeds and is recorded as wfa.
+  - WFA checkout succeeds without same-location/geofence validation.
+  - Existing GPS/selfie/data-URL negative tests still pass.
+- Clone database and filestore were removed.
+
+STATIC VALIDATION
+- Python compilation: passed.
+- XML parsing: 18 files passed.
+- git diff --check: passed.
+
+BACKUP
+- backups/presenly-migration/odoo-before-wfa-attendance-20260906-110500.dump
+- Backup retained after clone cleanup.
+
+ROLLOUT
+- Before: presenly 19.0.11.0.0.
+- After: presenly 19.0.12.0.0.
+- Main server PID: 11603.
+- http://127.0.0.1:8069/web/login returned HTTP 200.
+- Upgrade and active server logs contain no ERROR, CRITICAL, traceback, or view parse errors.
+
+NO COMMIT
+- No Git commit was created.

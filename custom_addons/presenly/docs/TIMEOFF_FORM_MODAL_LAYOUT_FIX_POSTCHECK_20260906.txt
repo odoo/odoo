@@ -1,0 +1,82 @@
+PRESENLY TIME OFF FORM & OVERVIEW MODAL LAYOUT FIX — ROLLOUT POST-CHECK
+Date: 2026-09-06
+Database: odoo
+Module: presenly 19.0.13.6.0
+
+PURPOSE
+- Fix the untidy layout of the Time Off detail form on
+  Management → Time Off → request detail.
+- Move Presenly Approve/Reject Current Level buttons into the Overview detail
+  modal (the native Odoo dialog), as requested.
+
+ROOT CAUSE
+1. The Presenly alerts and Approval Journey group were injected via
+   `<xpath expr="//div[hasclass('o_attachment_preview')]" position="before">`.
+   `o_attachment_preview` lives OUTSIDE the `<sheet>` (between `</sheet>` and
+   `<chatter>`), so the content rendered on the grey background below the white
+   form card → untidy.
+2. The Presenly action buttons lived in the `<header>`. The Overview/My Time
+   popup forms (`hr_leave_view_form_dashboard_new_time_off`,
+   `hr_leave_view_form_dashboard_manager_new_time_off`) set the header
+   invisible, so the buttons never appeared in the native modal dialog.
+
+CHANGES
+1. Moved the Presenly action button bar
+   (Submit for Approval, Approve Current Level, Reject, Cancel Request) from
+   the header INTO the sheet, before `o_hr_leave_content`.
+2. Moved the Presenly status alerts (info/warning/danger) into the sheet
+   before `o_hr_leave_content`.
+3. Moved the Approval Journey group into the sheet after `o_hr_leave_content`.
+4. Kept only the Presenly approval statusbar in the header.
+5. Removed the Presenly approve/reject buttons previously placed inside the
+   kanban card (the correct location is the Overview detail modal, not the
+   kanban card). Kanban draft/pending ribbons are retained.
+6. Retained the hidden helper fields and readonly attributes.
+
+VERIFICATION (composed views)
+- hr_leave_view_form_manager (full detail form):
+  - header has no Presenly action buttons.
+  - action buttons inside sheet: Submit, Approve Current Level, Reject,
+    Cancel Request.
+  - Approval Journey inside sheet.
+- hr_leave_view_form_dashboard_new_time_off (Overview/My Time modal):
+  - header invisible.
+  - action buttons inside sheet: same four buttons.
+  - Approval Journey inside sheet.
+- Kanban card no longer contains approve/reject buttons.
+
+TESTING
+- Isolated clone: odoo_presenly_form_layout_test_20260906_170000.
+- Final result: 42 test cases / 54 test stats.
+- Failures: 0.
+- Errors: 0.
+- Clone database and filestore were removed.
+
+STATIC VALIDATION
+- XML parsing: 19 files passed.
+- git diff --check: passed.
+
+DATA PRESERVATION
+Business fingerprint before and after rollout is identical (only module version
+differs):
+- Attendance: 4; ID sum 12.
+- Evidence: 10; ID sum 55.
+- Referenced selfie attachments: 7; ID sum 1210.
+- Permission requests: 0.
+- Time Off requests: 3; ID sum 48.
+- Approval routes: 2; ID sum 4.
+- Approval journeys: 1; ID sum 1.
+
+BACKUP
+- backups/presenly-migration/odoo-before-form-layout-fix-20260906-170000.dump
+- Backup retained after clone cleanup.
+
+ROLLOUT
+- Before: presenly 19.0.13.5.0.
+- After: presenly 19.0.13.6.0.
+- Main server PID: 36539.
+- http://127.0.0.1:8069/web/login returned HTTP 200.
+- Upgrade and active server logs contain no ERROR, CRITICAL, or traceback.
+
+NO COMMIT
+- No Git commit was created.
