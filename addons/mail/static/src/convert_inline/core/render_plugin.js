@@ -10,8 +10,6 @@ import {
     TextNodeLayout,
 } from "./render_models";
 import { withSequence } from "@html_editor/utils/resource";
-import { isSelfClosingElement } from "@html_editor/utils/dom_info";
-import { childNodes } from "@html_editor/utils/dom_traversal";
 
 /**
  * This plugin handles 4 conversion phases, leading to the ability to render the email html:
@@ -589,20 +587,6 @@ export class RenderPlugin extends Plugin {
             const br = this.config.referenceDocument.createElement("BR");
             paragraph.append(br);
             template.content.appendChild(paragraph);
-        }
-        for (const el of template.content.querySelectorAll(":empty")) {
-            const comments = childNodes(el).filter((node) => node.nodeType === Node.COMMENT_NODE);
-            if (comments.length === 0 && !isSelfClosingElement(el) && el.nodeName !== "T") {
-                el.appendChild(this.config.referenceDocument.createComment(""));
-                if (this.config.debug) {
-                    // Warning when an element is eligible to become an illegal
-                    // self-closing node due to backend parsing
-                    console.warn(
-                        "A comment childNode is expected for the following element to avoid backend XML parsing issues:",
-                        el
-                    );
-                }
-            }
         }
     }
 
