@@ -217,6 +217,7 @@
     <xpath expr="//header" position="before">
         <t t-set="cta_btn_text" t-value="False"/>
         <t t-set="header_content_width" t-valuef="container"/>
+        <t t-set="footer_content_width" t-valuef="container"/>
         <t t-set="cta_btn_href">/contactus</t>
         <t t-set="extra_items_toggle_aria_label">Extra items button</t>
         <t t-set="primary_additional_colors" t-value="False"/>
@@ -1782,7 +1783,7 @@
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo border text-break" t-ignore="true" t-if="not no_footer" style="--box-border-left-width: 0px; --box-border-right-width: 0px;">
             <section class="s_text_block pt40 pb16" data-snippet="s_text_block" data-name="Container">
-                <div class="container">
+                <div t-attf-class="#{footer_content_width}">
                     <div class="row">
                         <div class="col-lg-2 pt24 pb24">
                             <h5>Useful Links</h5>
@@ -1839,7 +1840,7 @@
         <div id="footer" class="oe_structure oe_structure_solo border text-break" t-ignore="true" t-if="not no_footer" style="--box-border-top-width: 0px; --box-border-left-width: 0px; --box-border-right-width: 0px;">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Container" data-oe-shape-data="{'shape':'html_builder/Bold/21', 'colors':{'c5': '#0000000D'},'flip':[],'showOnMobile':true,'shapeAnimationSpeed':'0'}">
             <div class="o_we_shape o_html_builder_Bold_21 o_shape_show_mobile" style="background-image: url('/html_editor/shape/html_builder/Bold/21.svg?c5=%230000000D');"/>
-                <div class="container s_allow_columns">
+                <div t-attf-class="#{footer_content_width} s_allow_columns">
                     <div class="row">
                         <div class="col-lg-12 pt48 pb24">
                             <h4>Designed for companies</h4>
@@ -1881,7 +1882,7 @@
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
             <section class="s_text_block pt32" data-snippet="s_text_block" data-name="Container">
-                <div class="container s_allow_columns">
+                <div t-attf-class="#{footer_content_width} s_allow_columns">
                     <div class="row">
                         <div class="col-lg-12 order-lg-0" style="order: 0;">
                             <div class="s_social_media text-center o_not_editable no_icon_color" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
@@ -1926,7 +1927,7 @@
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
             <section class="s_text_block pt48 pb16" data-snippet="s_text_block" data-name="Container" data-oe-shape-data="{'shape':'html_builder/Containers/03','colors':{'c5':'o-color-4'},'flip':[],'showOnMobile':true,'shapeAnimationSpeed':'0'}">
                 <div class="o_we_shape o_html_builder_Containers_03 o_shape_show_mobile" style="background-image: url('/html_editor/shape/html_builder/Containers/03.svg?c5=o-color-4');"/>
-                <div class="container">
+                <div t-attf-class="#{footer_content_width}">
                     <div class="row">
                         <div class="col-lg-2 col-10 offset-1 offset-lg-0 pb16">
                             <h5>Explore</h5>
@@ -1981,7 +1982,7 @@
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
             <section class="s_text_block pt40 pb40" data-snippet="s_text_block" data-name="Container">
-                <div class="container">
+                <div t-attf-class="#{footer_content_width}">
                     <div class="row align-items-center">
                         <div class="col-lg-2 offset-lg-0 col-8 offset-2 pt16 pb16">
                             <a href="/" class="o_footer_logo logo">
@@ -2024,7 +2025,7 @@
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
             <section class="s_text_block pt32 pb32" data-snippet="s_text_block" data-name="Container">
-                <div class="container">
+                <div t-attf-class="#{footer_content_width}">
                     <div class="row o_grid_mode" style="gap: 16px;" data-row-count="3">
                         <div class="col-lg-3 o_grid_item g-col-lg-3 g-height-2 offset-1 offset-lg-0 col-10 o_cc o_cc3 rounded pt16 pb16" style="z-index: 1; grid-area: 1 / 1 / 3 / 4; border-radius: 24px !important; --grid-item-padding-y: 30px; --grid-item-padding-x: 30px;">
                             <h6>How can we help?</h6>
@@ -2090,7 +2091,7 @@
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
             <section class="s_call_to_action pt56 pb32" data-snippet="s_call_to_action" data-name="Container" data-oe-shape-data="{'shape':'html_builder/Connections/14','colors':{'c5':'o-color-4'},'flip':['y'],'showOnMobile':true,'shapeAnimationSpeed':'0'}">
                 <div class="o_we_shape o_html_builder_Connections_14 o_shape_show_mobile" style="background-image: url('/html_editor/shape/html_builder/Connections/14.svg?c5=o-color-4&amp;flip=y'); background-position: 50% 0%;"/>
-                <div class="container s_allow_columns">
+                <div t-attf-class="#{footer_content_width} s_allow_columns">
                     <div class="row o_grid_mode" data-row-count="3">
                         <div class="o_grid_item g-col-lg-6 g-height-2 offset-1 offset-lg-0 col-10 order-lg-0 col-lg-6" style="z-index: 1; --grid-item-padding-x: 10px; --grid-item-padding-y: 0px; grid-area: 1 / 1 / 3 / 7; order: 0;">
                             <h2 class="h3-fs">50,000+ companies run Odoo to grow their businesses.</h2>
@@ -2122,7 +2123,7 @@
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
             <section class="s_text_block pt48" data-snippet="s_text_block" data-name="Container">
-                <div class="container">
+                <div t-attf-class="#{footer_content_width}">
                     <div class="row">
                         <div class="col-lg-3 pb24">
                             <h3>Designed <br/>for Companies</h3>
@@ -2164,7 +2165,7 @@
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
             <section class="s_text_block pt48 pb24" data-snippet="s_text_block" data-name="Top Part">
-                <div class="container">
+                <div t-attf-class="#{footer_content_width}">
                     <div class="row">
                         <div class="col-lg-2 order-lg-0 pb24" style="order: 1;">
                             <h5>Navigation</h5>
@@ -2213,7 +2214,7 @@
                 </div>
             </section>
             <section class="s_text_block o_footer_bottom_part pt8 pb8" style="position: relative; background-color: rgba(0, 0, 0, 0.05);" data-snippet="s_text_block" data-name="Bottom Part">
-                <div class="container">
+                <div t-attf-class="#{footer_content_width}">
                     <div class="row">
                         <div class="col-lg-6 pt8 pb8">
                             <div class="s_social_media text-start o_not_editable no_icon_color" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
@@ -2259,7 +2260,7 @@
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
             <section class="s_text_block pt24 pb24" data-snippet="s_text_block" data-name="Container">
-                <div class="container">
+                <div t-attf-class="#{footer_content_width}">
                     <div class="row">
                         <div class="col-lg-4">
                             <div class="s_text_highlight o_cc o_cc1 w-100 my-3 text-center" data-snippet="s_text_highlight" data-name="Text Highlight">
@@ -2387,7 +2388,7 @@
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
             <section class="s_text_block pt48 pb24" data-snippet="s_text_block" data-name="Top Part">
-                <div class="container">
+                <div t-attf-class="#{footer_content_width}">
                     <div class="row">
                         <div class="col-lg-3 col-9">
                             <a href="/" class="o_footer_logo logo">
@@ -2497,7 +2498,7 @@
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
             <section class="s_text_block pt24 pb24" data-snippet="s_text_block" data-name="Container">
-                <div class="container">
+                <div t-attf-class="#{footer_content_width}">
                     <div class="row o_grid_mode" style="gap: 24px;" data-row-count="7">
                         <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-4 offset-1 offset-lg-0 col-10 o_cc o_cc1" style="z-index: 1; grid-area: 1 / 1 / 5 / 5; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
                             <h5>Company</h5>
@@ -2590,6 +2591,19 @@
 <template id="footer_copyright_content_width_fluid" inherit_id="website.layout" name="Footer Copyright Width Fluid" active="False">
     <xpath expr="//*[hasclass('o_footer_copyright')]/div" position="attributes">
         <attribute name="class" remove="container" add="container-fluid" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Copyright Content Width -->
+<template id="footer_content_width_small" inherit_id="website.layout" name="Footer Copyright Width Small" active="False">
+    <xpath expr="//t[@t-set='footer_content_width']" position="attributes">
+        <attribute name="t-valuef">o_container_small</attribute>
+    </xpath>
+</template>
+
+<template id="footer_content_width_fluid" inherit_id="website.layout" name="Footer Copyright Width Fluid" active="False">
+    <xpath expr="//t[@t-set='footer_content_width']" position="attributes">
+        <attribute name="t-valuef">container-fluid</attribute>
     </xpath>
 </template>
 
