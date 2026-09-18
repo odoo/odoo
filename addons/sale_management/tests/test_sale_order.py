@@ -632,3 +632,17 @@ class TestSaleOrder(SaleManagementCommon):
                 self.sale_order.id, line.id, input_quantity=5
             )
         self.assertEqual(line.product_uom_qty, 5)
+
+    def test_save_as_template_does_not_alter_origingal_so(self):
+        """Check that saving a sale order as a quotation template keeps the discounts intact."""
+        order = self._create_so(
+            pricelist_id=self.discount_excluded_price_list.id,
+            order_line=[Command.create({"product_id": self.product_1.id})],
+        )
+        order.order_line.discount = 50.0
+
+        order.action_create_quotation_template()
+        self.env.invalidate_all()
+
+        self.assertTrue(order.sale_order_template_id)
+        self.assertEqual(order.order_line.discount, 50.0)
