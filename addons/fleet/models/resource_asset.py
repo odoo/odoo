@@ -83,7 +83,16 @@ class ResourceAsset(models.Model):
         and a serial says more about which vehicle this is than "No Plate"
         does."""
         self.check_singleton()
-        return self.license_plate or self.vin_sn or self.name or self.env._("No Plate")
+        if self.license_plate or self.vin_sn:
+            return self.license_plate or self.vin_sn
+        # The asset's own name is composed from its model and its serial, and
+        # the model is already the part before this one -- the same reason the
+        # plate is not appended to a label that ends in it.
+        name = self.name or ""
+        model = self.product_id.name or ""
+        if model and name.startswith(f"{model} "):
+            name = name[len(model) + 1 :]
+        return name or self.env._("No Plate")
 
     def _compute_service_count(self):
         counts = self._get_log_counts_by_type()

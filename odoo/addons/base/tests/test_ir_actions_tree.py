@@ -118,7 +118,7 @@ class TestIrActionsLoadAudit(TransactionCase):
         )
 
     def test_the_rule_is_the_one_bindings_apply(self):
-        as_user = lambda action: action.with_user(self.user)  # noqa: E731
+        as_user = lambda action: action.with_user(self.user)  # noqa: E731  reads as the sentence the assertions below are made of
         self.assertEqual(as_user(self.open)._get_load_refusal_of_record(), "")
         self.assertEqual(
             as_user(self.restricted)._get_load_refusal_of_record(), "groups"
