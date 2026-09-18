@@ -10,12 +10,13 @@ import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
 import { unwrapContents, splitTextNode } from "../utils/dom";
 import { fillHtmlTransferData } from "../utils/clipboard";
-import { childNodes, closestElement } from "../utils/dom_traversal";
+import { childNodes, closestElement, getTextNodesIterator } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { DIRECTIONS } from "../utils/position";
 import { isHtmlContentSupported } from "./selection_plugin";
 import { getRowIndex } from "@html_editor/utils/table";
+import { PLAIN_TEXT_MODES } from "./dom_plugin";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -100,7 +101,14 @@ export const CLIPBOARD_WHITELISTS = {
     styledTags: ["SPAN", "B", "STRONG", "I", "S", "U", "FONT", "TD", "COL", "TR", "TH"],
 };
 
-const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
+const makeSpacesVisible = (text) =>
+    text.replace(/( {2,})/g, (match) => {
+        let alternateValue = false;
+        return match.replace(/ /g, () => {
+            alternateValue = !alternateValue;
+            return alternateValue ? "\u00A0" : " ";
+        });
+    });
 
 /**
  * @typedef {Object} ClipboardShared
@@ -112,6 +120,8 @@ const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
  * @typedef {(() => void)[]} on_will_paste_handlers
  *
  * @typedef {((selection: EditorSelection, text: string) => boolean)[]} paste_text_overrides
+ *
+ * @typedef {((text: string, selection: EditorSelection) => text | undefined)[]} unsupported_paste_text_processors
  *
  * @typedef {((
  *     clonedContents: DocumentFragment,
@@ -205,43 +215,72 @@ export class ClipboardPlugin extends Plugin {
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
 
-        const textContent = ev.clipboardData.getData("text/plain");
-        if (textContent && this.dependencies.dom.shouldInsertAsPlainText(selection)) {
-            this.dependencies.dom.insert(textContent);
-        } else {
-            this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
-                this.handlePasteOdooEditorHtml(selection, ev.clipboardData) ||
-                this.handlePasteHtml(selection, ev.clipboardData) ||
-                this.handlePasteText(selection, ev.clipboardData);
+        const html = ev.clipboardData.getData("text/html");
+        let text = ev.clipboardData.getData("text/plain");
+        let plainTextMode = this.dependencies.dom.shouldInsertAsPlainText(selection);
+        if (!plainTextMode && html && !isHtmlContentSupported(selection)) {
+            text = this.processThrough("unsupported_paste_text_processors", text, selection);
+            plainTextMode = PLAIN_TEXT_MODES.MULTI_LINE;
+        } else if (plainTextMode !== PLAIN_TEXT_MODES.MULTI_LINE) {
+            text = makeSpacesVisible(text);
+        }
+        if ((plainTextMode || !html) && !this.delegateTo("paste_text_overrides", selection, text)) {
+            if (html && plainTextMode === PLAIN_TEXT_MODES.MULTI_LINE) {
+                // We need to paste with information on the HTML so we can
+                // properly convert it to formatted plain text.
+                // TODO AGE: see if I can avoid calling this here.
+                this.handlePasteHtml(selection, ev.clipboardData, plainTextMode);
+            } else if (html ? plainTextMode === PLAIN_TEXT_MODES.SINGLE_LINE : plainTextMode) {
+                this.dependencies.dom.insert(text, { plainTextMode });
+            } else {
+                // We don't have to insert as _plain_ text, but we're only
+                // inserting the `text/plain` content anyway since `text/html`
+                // is empty. So we insert a text node, then process the newlines.
+                const inserted = this.dependencies.dom.insert(this.document.createTextNode(text));
+                const insertedTextNodes = inserted.flatMap((node) =>
+                    isTextNode(node) ? node : [...getTextNodesIterator(node)]
+                );
+                for (const node of insertedTextNodes) {
+                    const textFragments = node.textContent.split(/\r?\n/);
+                    for (const textFragment of textFragments.slice(0, -1)) {
+                        if (textFragment.length && textFragment.length !== node.length) {
+                            const cursors = this.dependencies.selection.preserveSelection();
+                            const parent = node.parentElement;
+                            splitTextNode(node, textFragment.length, DIRECTIONS.RIGHT);
+                            node.textContent = node.textContent.replace(/\r?\n/, "");
+                            const split = this.dependencies.split.splitBlockNode(node, 0);
+                            if (split.lineBreaks) {
+                                // One for the textNode split, one for the BR.
+                                cursors.shiftOffset(parent, 2);
+                            } else if (split.after) {
+                                cursors.remapNode(parent, split.after);
+                            }
+                            cursors.restore();
+                        } else {
+                            // TODO AGE: redo this part.
+                            const next = node.nextSibling;
+                            if (next) {
+                                const cursors = this.dependencies.selection.preserveSelection();
+                                node.remove();
+                                this.dependencies.split.splitBlockNode(next, 0);
+                                cursors.restore();
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (!this.handlePasteOdooEditorHtml(selection, ev.clipboardData)) {
+            this.handlePasteHtml(selection, ev.clipboardData);
         }
 
         this.trigger("on_pasted_handlers", selection);
         this.dependencies.history.commit();
     }
     /**
-     * @param {EditorSelection} selection
-     * @param {DataTransfer} clipboardData
-     */
-    handlePasteUnsupportedHtml(selection, clipboardData) {
-        if (!isHtmlContentSupported(selection)) {
-            const text = this.processThrough(
-                "clipboard_paste_text_processors",
-                clipboardData.getData("text/plain"),
-                selection
-            );
-            this.dependencies.dom.insert(text);
-            return true;
-        }
-    }
-    /**
      * @param {DataTransfer} clipboardData
      */
     handlePasteOdooEditorHtml(selection, clipboardData) {
         const odooEditorHtml = clipboardData.getData("application/vnd.odoo.odoo-editor");
-        const textContent = clipboardData.getData("text/plain");
-        if (ONLY_LINK_REGEX.test(textContent)) {
-            return false;
-        }
         if (odooEditorHtml) {
             const fragment = parseHTML(this.document, odooEditorHtml);
             this.dependencies.sanitize.sanitize(fragment);
@@ -258,16 +297,12 @@ export class ClipboardPlugin extends Plugin {
      * @param {EditorSelection} selection
      * @param {DataTransfer} clipboardData
      */
-    handlePasteHtml(selection, clipboardData) {
+    handlePasteHtml(selection, clipboardData, plainTextMode) {
         const files =
             this.checkPredicates("should_bypass_paste_image_files_predicates") ?? false
                 ? []
                 : getImageFiles(clipboardData);
         const clipboardHtml = clipboardData.getData("text/html");
-        const textContent = clipboardData.getData("text/plain");
-        if (ONLY_LINK_REGEX.test(textContent)) {
-            return false;
-        }
         const fragment = parseHTML(this.document, clipboardHtml);
         this.dependencies.sanitize.sanitize(fragment);
         if (files.length || clipboardHtml) {
@@ -290,22 +325,10 @@ export class ClipboardPlugin extends Plugin {
                 if (closestElement(selection.anchorNode, "a")) {
                     this.dependencies.dom.insert(clipboardElem.textContent);
                 } else {
-                    this.dependencies.dom.insert(clipboardElem);
+                    this.dependencies.dom.insert(clipboardElem, { plainTextMode });
                 }
             }
             return true;
-        }
-    }
-    /**
-     * @param {EditorSelection} selection
-     * @param {DataTransfer} clipboardData
-     */
-    handlePasteText(selection, clipboardData) {
-        const text = clipboardData.getData("text/plain");
-        if (this.delegateTo("paste_text_overrides", selection, text)) {
-            return;
-        } else {
-            this.dependencies.dom.insert(text);
         }
     }
 

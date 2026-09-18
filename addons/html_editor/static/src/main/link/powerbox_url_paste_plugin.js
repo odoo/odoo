@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { isSingleUrl } from "./link_paste_plugin";
+import { PLAIN_TEXT_MODES } from "@html_editor/core/dom_plugin";
 
 /**
  * @typedef {import("@html_editor/core/user_command_plugin").UserCommand} UserCommand
@@ -35,7 +36,9 @@ export class MediaUrlPastePlugin extends Plugin {
                     // Open powerbox with commands to embed media or paste as
                     // link. Insert URL as text, revert it later if a command is
                     // triggered.
-                    this.dependencies.dom.insert(text, { asPlainText: true });
+                    this.dependencies.dom.insert(text, {
+                        plainTextMode: PLAIN_TEXT_MODES.MULTI_LINE,
+                    });
                     this.dependencies.history.commit();
                     this.dependencies.powerbox.openPowerbox({
                         commands,
