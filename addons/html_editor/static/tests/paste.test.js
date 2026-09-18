@@ -471,7 +471,7 @@ describe("Simple text", () => {
                 stepFunction: async (editor) => {
                     pasteText(editor, "ab\ncd");
                 },
-                contentAfter: "<div>ab</div><p>cd[]</p>",
+                contentAfter: "<div>ab</div><div>cd[]</div>",
             });
         });
     });

@@ -2,8 +2,9 @@ import { closestElement, getTextNodesIterator } from "@html_editor/utils/dom_tra
 import { URL_REGEX, cleanZWChars } from "./utils";
 import { isImageUrl } from "@html_editor/utils/url";
 import { Plugin } from "@html_editor/plugin";
-import { childNodeIndex } from "@html_editor/utils/position";
+import { childNodeIndex, DIRECTIONS } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
+import { splitTextNode } from "@html_editor/utils/dom";
 
 const splitTextAroundUrl = (text) => {
     // todo: add placeholder plugin that prevent any other plugin
@@ -32,62 +33,84 @@ export class LinkPastePlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_will_paste_handlers: this.selectFullySelectedLink.bind(this),
-        text_to_insert_processors: this.processTextToInsert.bind(this),
+        fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
     };
 
-    processTextToInsert(fragment) {
+    processFragmentToInsert(fragment) {
         const selection = this.dependencies.selection.getEditableSelection();
-        const selectionIsInsideALink = !!closestElement(selection.anchorNode, "a");
-        for (const node of [...getTextNodesIterator(fragment)]) {
-            const splitAroundUrl = splitTextAroundUrl(node.textContent);
-            if (isSingleUrl(splitAroundUrl)) {
-                // Pasted content is a single URL.
-                const text = node.textContent;
-                const url = /^https?:\/\//i.test(text) ? text : "https://" + text;
-                if (selectionIsInsideALink && isImageUrl(url)) {
-                    const img = this.document.createElement("IMG");
-                    img.setAttribute("src", url);
-                    node.before(img);
-                    node.remove();
-                } else if (!selectionIsInsideALink) {
-                    let label;
-                    const selectedText = cleanZWChars(selection.toString());
-                    if (!selection.isCollapsed && selectedText.length) {
-                        // If the entire link is selected and its label matches the URL,
-                        // replace the existing link with the new URL.
-                        const link = findInSelection(selection, "a");
-                        if (link) {
-                            const linkLabel = cleanZWChars(link.textContent);
-                            const href = link.getAttribute("href");
-                            const labelMatchesHref =
-                                linkLabel === href ||
-                                linkLabel + "/" === href ||
-                                linkLabel === href + "/";
-                            label = labelMatchesHref ? text : selectedText;
-                        } else {
-                            label = selectedText;
+        const isSelectionInsideALink = !!closestElement(selection.anchorNode, "a");
+        const textNodes = [...getTextNodesIterator(fragment)];
+        let isInsertingOnlyUrls = true;
+        const urls = textNodes
+            .flatMap((node) => {
+                if (closestElement(node, "a")) {
+                    return;
+                }
+                const splitAroundUrl = splitTextAroundUrl(node.textContent);
+                if (hasUrls(splitAroundUrl)) {
+                    const urls = [];
+                    for (const [splitIndex, split] of splitAroundUrl.entries()) {
+                        let url = node;
+                        if (split.length < node.length) {
+                            splitTextNode(node, split.length, DIRECTIONS.RIGHT);
+                            url = node.previousSibling;
                         }
-                    } else {
-                        label = text;
+                        // Even indices will always be plain text, and odd
+                        // indices will always be URL.
+                        if (splitIndex % 2) {
+                            urls.push(url);
+                        } else if (split.length) {
+                            isInsertingOnlyUrls = false;
+                        }
                     }
-                    node.before(this.dependencies.link.createLink(url, label));
-                    node.remove();
+                    return urls;
                 }
-            } else if (hasUrls(splitAroundUrl)) {
-                // Pasted content is multiple URLs.
-                for (let i = 0; i < splitAroundUrl.length; i++) {
-                    const text = splitAroundUrl[i];
-                    const url = /^https?:\/\//gi.test(text) ? text : "https://" + text;
-                    // Even indexes will always be plain text, and odd
-                    // indexes will always be URL. A url cannot be
-                    // transformed inside an existing link.
-                    if (i % 2 && !selectionIsInsideALink) {
-                        node.before(this.dependencies.link.createLink(url, text));
-                    } else if (text !== "") {
-                        node.before(this.document.createTextNode(text));
-                    }
-                }
+                isInsertingOnlyUrls = false;
+            })
+            .filter(Boolean);
+        const isInsertingOneUrl = isInsertingOnlyUrls && urls.length === 1;
+        // Inserted content is a single URL.
+        if (isInsertingOneUrl) {
+            const node = urls[0];
+            const text = node.textContent;
+            const url = /^https?:\/\//i.test(text) ? text : "https://" + text;
+            if (isSelectionInsideALink && isImageUrl(url)) {
+                const img = this.document.createElement("IMG");
+                img.setAttribute("src", url);
+                node.before(img);
                 node.remove();
+            } else if (!isSelectionInsideALink) {
+                let label;
+                const selectedText = cleanZWChars(selection.toString());
+                if (!selection.isCollapsed && selectedText.length) {
+                    // If the entire link is selected and its label matches the URL,
+                    // replace the existing link with the new URL.
+                    const link = findInSelection(selection, "a");
+                    if (link) {
+                        const linkLabel = cleanZWChars(link.textContent);
+                        const href = link.getAttribute("href");
+                        const labelMatchesHref =
+                            linkLabel === href ||
+                            linkLabel + "/" === href ||
+                            linkLabel === href + "/";
+                        label = labelMatchesHref ? text : selectedText;
+                    } else {
+                        label = selectedText;
+                    }
+                } else {
+                    label = text;
+                }
+                node.replaceWith(this.dependencies.link.createLink(url, label));
+            }
+            return fragment;
+        }
+        // Inserted content is multiple URLs.
+        for (const node of urls) {
+            const text = node.textContent;
+            const url = /^https?:\/\//gi.test(text) ? text : "https://" + text;
+            // A url cannot be transformed inside an existing link.
+            if (!isSelectionInsideALink) {
+                node.replaceWith(this.dependencies.link.createLink(url, text));
             }
         }
         return fragment;

@@ -79,14 +79,6 @@ const createMarkerNode = (node, offset) => {
     return marker;
 };
 const isFragment = (node) => node && node.nodeType === Node.DOCUMENT_FRAGMENT_NODE;
-const makeSpacesVisible = (text) =>
-    text.replace(/( {2,})/g, (match) => {
-        let alternateValue = false;
-        return match.replace(/ /g, () => {
-            alternateValue = !alternateValue;
-            return alternateValue ? "\u00A0" : " ";
-        });
-    });
 
 /**
  * @typedef {Object} DomShared
@@ -108,7 +100,6 @@ const makeSpacesVisible = (text) =>
  * @typedef {((nodesToInsert: Node[]) => container)[]} on_will_insert_handlers
  *
  * @typedef {((root: EditorContext["editable"] | HTMLElement) => EditorContext["editable"] | HTMLElement)[]} normalize_processors
- * @typedef {((fragment: DocumentFragment) => void)[]} text_to_insert_processors
  * @typedef {((fragment: DocumentFragment) => DocumentFragment)[]} fragment_to_insert_processors
  * @typedef {((fragment: DocumentFragment) => DocumentFragment)[]} fragment_to_insert_as_text_processors
  * @typedef {((element: HTMLElement, isFirst: boolean) => Element)[]} edge_block_to_unwrap_processors
@@ -311,18 +302,17 @@ export class DomPlugin extends Plugin {
     /**
      * @param {string | DocumentFragment | Element | null} content
      * @param {object} [options]
-     * @param {boolean} [options.asPlainText] if true, insert as plain text.
+     * @param {keyof typeof PLAIN_TEXT_MODES} [options.plainTextMode] if true, insert as plain text.
      * @returns {Node[]} the inserted nodes
      */
-    insert(content, { asPlainText } = {}) {
-        const plainTextMode =
-            this.shouldInsertAsPlainText() || (asPlainText && PLAIN_TEXT_MODES.SINGLE_LINE);
+    insert(content, { plainTextMode = this.shouldInsertAsPlainText() } = {}) {
         // Pre-process
-        if (typeof content === "string") {
-            content = this.processStringForInsertion(content, !!plainTextMode);
-        }
         let fragment = this.document.createDocumentFragment();
         if (content) {
+            if (typeof content === "string") {
+                content = this.document.createTextNode(content);
+                plainTextMode ||= PLAIN_TEXT_MODES.MULTI_LINE;
+            }
             (isElement(content) ? [content] : children(content)).forEach(this.normalize.bind(this));
             fragment.replaceChildren(content);
         }
@@ -341,12 +331,10 @@ export class DomPlugin extends Plugin {
             return [];
         }
         if (plainTextMode) {
+            const isMultiline = plainTextMode === PLAIN_TEXT_MODES.MULTI_LINE;
             nodes = nodes
                 .map((node) => {
-                    const text =
-                        plainTextMode === PLAIN_TEXT_MODES.MULTI_LINE && node.nodeName === "BR"
-                            ? "\n"
-                            : node.textContent;
+                    const text = isMultiline && node.nodeName === "BR" ? "\n" : node.textContent;
                     if (text.length) {
                         return this.document.createTextNode(text);
                     }
@@ -388,40 +376,6 @@ export class DomPlugin extends Plugin {
             return PLAIN_TEXT_MODES.SINGLE_LINE;
         }
         return false;
-    }
-
-    /**
-     * Before inserting text, process its whitespace.
-     *
-     * @param {string} text
-     * @param {boolean} asPlainText
-     * @returns {DocumentFragment}
-     */
-    processStringForInsertion(text, asPlainText) {
-        const doc = this.document;
-        const fragment = doc.createDocumentFragment();
-        if (asPlainText) {
-            fragment.textContent = text;
-            return fragment;
-        }
-        const { focusNode } = this.dependencies.selection.getEditableSelection();
-        // Replace consecutive spaces with alternating nbsp/space.
-        const lines = text.split(/\r?\n/).map(makeSpacesVisible);
-        // Replace new lines with paragraph breaks or line breaks.
-        const block = closestBlock(focusNode);
-        fragment.append(doc.createTextNode(lines.shift()));
-        if (findUpTo(focusNode, block.parentElement, this.split.isUnsplittable.bind(this))) {
-            for (const line of lines) {
-                fragment.append(doc.createElement("br"), doc.createTextNode(line));
-            }
-        } else {
-            for (const line of lines) {
-                fragment.append(this.createBaseContainer({ children: [doc.createTextNode(line)] }));
-            }
-        }
-        // The difference between this and `fragment_to_insert_processors` is
-        // that we know everything in the fragment was meant as text originally.
-        return this.processThrough("text_to_insert_processors", fragment);
     }
 
     /**
