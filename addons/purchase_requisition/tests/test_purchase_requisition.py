@@ -631,3 +631,40 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(po.partner_id, purchase_requisition.vendor_id, 'The partner should have been set from the purchase requisition')
         self.assertEqual(po.order_line.price_unit, purchase_requisition.line_ids.price_unit, 'The unit price should have been set from the purchase requisition')
         self.assertEqual(po.order_line.taxes_id, purchase_requisition.line_ids.product_id.supplier_taxes_id, 'The blanket order taxes should have been set')
+
+    def test_blanket_order_supplierinfo_company(self):
+        """ Test that supplierinfo created from a blanket order has the correct company """
+        company_a = self.env.company
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        product_mc = self.env['product.product'].with_company(company_a).create({
+            'name': 'Multi-Company Product',
+            'type': 'consu',
+        })
+        vendor_mc = self.env['res.partner'].with_company(company_a).create({
+            'name': 'Multi-Company Vendor',
+        })
+
+        # Create Blanket Order in Company A
+        requisition = self.env['purchase.requisition'].with_company(company_a).create({
+            'line_ids': [Command.create({
+                'product_id': product_mc.id,
+                'product_qty': 10.0,
+                'price_unit': 100.0,
+            })],
+            'requisition_type': 'blanket_order',
+            'vendor_id': vendor_mc.id,
+            'company_id': company_a.id,
+        })
+
+        # Confirm the requisition while in Company B context (with both companies allowed)
+        requisition.with_context(allowed_company_ids=[company_b.id, company_a.id]).with_company(company_b).action_confirm()
+
+        # Check created supplierinfo
+        supplierinfo = self.env['product.supplierinfo'].search([
+            ('product_id', '=', product_mc.id),
+            ('partner_id', '=', vendor_mc.id),
+            ('purchase_requisition_id', '=', requisition.id),
+        ])
+
+        self.assertTrue(supplierinfo, "Supplier info should have been created")
+        self.assertEqual(supplierinfo.company_id, company_a, "Supplier info should belong to Company A")
