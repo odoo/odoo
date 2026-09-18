@@ -234,8 +234,8 @@ class MetaModel(type):
     pool: Registry | None
     """Reference to the registry for registry classes, otherwise it is a definition class."""
 
-    _field_definitions: list[Field]
-    _table_object_definitions: list[TableObject]
+    _field_definitions__: list[Field]
+    _table_object_definitions__: list[TableObject]
     _name: str
     _register: bool  # need to define on each Model, default: True
     _log_access: bool  # when defined, add update log columns
@@ -248,9 +248,9 @@ class MetaModel(type):
         # this prevents assignment of non-fields on recordsets
         attrs.setdefault('__slots__', ())
         # this collects the fields defined on the class (via Field.__set_name__())
-        attrs.setdefault('_field_definitions', [])
+        attrs.setdefault('_field_definitions__', [])
         # this collects the table object definitions on the class (via TableObject.__set_name__())
-        attrs.setdefault('_table_object_definitions', [])
+        attrs.setdefault('_table_object_definitions__', [])
 
         if attrs.get('_register', True):
             # determine '_module'
@@ -463,7 +463,7 @@ class BaseModel(metaclass=MetaModel):
     _check_inherits_access: bool = True           #: check access for _inherits models
     _table: str = ''                 #: SQL table name used by model if :attr:`_auto`
     _table_objects: dict[str, TableObject] = frozendict()  #: SQL/Table objects
-    _inherit_children: OrderedSet[str]
+    _inherit_children__: OrderedSet[str]
 
     _rec_name: str = ''                           #: field to use for labeling records, default: ``name``
     _rec_names_search: Collection[str] = ()       #: fields to consider in ``name_search``

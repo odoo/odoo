@@ -48,7 +48,7 @@ class TableObject:
         if getattr(owner, 'pool', None) is None:  # models.is_model_definition(owner)
             # only for fields on definition classes, not registry classes
             self._module = owner._module
-            owner._table_object_definitions.append(self)
+            owner._table_object_definitions__.append(self)
 
     def get_definition(self, registry: Registry) -> str:
         raise NotImplementedError
