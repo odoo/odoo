@@ -177,14 +177,13 @@ class PosPaymentMethod(models.Model):
                     "debit": 0,
                     "credit": total_amount,
                     "name": _("POS Receivable Transfer"),
-                    "partner_id": account_payment.partner_id.id,
+                    "partner_id": session.config_id._default_partner().id,
                 }),
                 Command.create({
                     "account_id": account_payment.destination_account_id.id,
                     "debit": total_amount,
                     "credit": 0,
                     "name": _("Online Payment Transfer"),
-                    "partner_id": account_payment.partner_id.id,
                 }),
             ],
         })
