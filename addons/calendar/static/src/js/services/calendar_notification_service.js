@@ -17,6 +17,7 @@ export const calendarNotificationService = {
             displayCalendarNotification(payload);
         });
         bus_service.start();
+        getNextCalendarNotif();
 
         /**
          * Displays the Calendar notification on user's screen
