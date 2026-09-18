@@ -11,6 +11,8 @@ class MixinCalendarPrivacy(models.AbstractModel):
     # An inheriting model states which field links it to the event through
     # ``_privacy_event_fname``, and gets the guard for free.
     _privacy_event_fname = "event_id"
+    # the guard reads the event link alone; the model that owns the link names it
+    _search_visibility_fields = ()
 
     @api.model
     def _get_domain_privacy(self) -> Domain:

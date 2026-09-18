@@ -13,6 +13,7 @@ class CalendarRecurrence(models.Model):
     _description = "Event Recurrence Rule"
 
     _privacy_event_fname = "calendar_event_ids"
+    _search_visibility_fields = ("calendar_event_ids",)
 
     base_event_id = fields.Many2one(
         comodel_name="calendar.event",

@@ -20,6 +20,7 @@ class CalendarAttendee(models.Model):
     _rec_name = "common_name"
     _description = "Calendar Attendee Information"
     _order = "create_date ASC"
+    _search_visibility_fields = ("event_id",)
 
     def _default_access_token(self):
         return generate_calendar_token()
