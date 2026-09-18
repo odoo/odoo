@@ -19,7 +19,7 @@ class TestWebsiteEventSalePayment(TestWebsiteEventSaleCommon):
 
     def _validate(self, order):
         with MockRequest(self.env):
-            PaymentPortalOnsite()._validate_transaction_for_order(
+            PaymentPortalOnsite()._check_transaction_for_order(
                 self.env["payment.transaction"], order
             )
 
