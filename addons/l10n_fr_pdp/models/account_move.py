@@ -711,6 +711,6 @@ class AccountMove(models.Model):
         """ Identify UBL files. """
         # EXTENDS 'account'
         if (tree := file_data['xml_tree']) is not None:
-            if tree.findtext('{*}CustomizationID') == 'urn:cen.eu:en16931:2017#conformant#urn.cpro.gouv.fr:1p0:extended-ctc-fr':
+            if tree.findtext('{*}CustomizationID') == 'urn:cen.eu:en16931:2017' and self.env.company._get_peppol_proxy_type() == 'pdp':
                 return 'account.edi.xml.ubl_21_fr'
         return super()._get_import_file_type(file_data)
