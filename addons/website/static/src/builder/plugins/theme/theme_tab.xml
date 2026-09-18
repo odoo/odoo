@@ -137,16 +137,16 @@
 <t t-name="website.ThemeInputOption">
     <BuilderContext preview="false">
         <BuilderRow label.translate="Padding" tooltip.translate="Vertical and Horizontal padding" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput actionParam="'input-padding-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
-            <BuilderNumberInput actionParam="'input-padding-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
+            <BuilderNumberInput actionParam="'input-padding-y'" unit="'px'" saveUnit="'rem'" tooltip.translate="Vertical padding" prefixIcon="'height'"/>
+            <BuilderNumberInput actionParam="'input-padding-x'" unit="'px'" saveUnit="'rem'" tooltip.translate="Horizontal padding" prefixIcon="'arrow_range'"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Small" tooltip.translate="Vertical and Horizontal padding" level="1">
-                    <BuilderNumberInput actionParam="'input-padding-y-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
-                    <BuilderNumberInput actionParam="'input-padding-x-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
+                    <BuilderNumberInput actionParam="'input-padding-y-sm'" unit="'px'" saveUnit="'rem'" tooltip.translate="Vertical padding" prefixIcon="'height'"/>
+                    <BuilderNumberInput actionParam="'input-padding-x-sm'" unit="'px'" saveUnit="'rem'" tooltip.translate="Horizontal padding" prefixIcon="'arrow_range'"/>
                 </BuilderRow>
                 <BuilderRow label.translate="Large" tooltip.translate="Vertical and Horizontal padding" level="1">
-                    <BuilderNumberInput actionParam="'input-padding-y-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
-                    <BuilderNumberInput actionParam="'input-padding-x-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
+                    <BuilderNumberInput actionParam="'input-padding-y-lg'" unit="'px'" saveUnit="'rem'" tooltip.translate="Vertical padding" prefixIcon="'height'"/>
+                    <BuilderNumberInput actionParam="'input-padding-x-lg'" unit="'px'" saveUnit="'rem'" tooltip.translate="Horizontal padding" prefixIcon="'arrow_range'"/>
                 </BuilderRow>
             </t>
         </BuilderRow>

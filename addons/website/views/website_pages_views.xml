@@ -152,11 +152,11 @@
                 <t t-name="card">
                     <div class="text-truncate fw-bold fs-3">
                         <i t-if="record.is_homepage.raw_value" class="oi pe-2" data-icon="home"
-                            title="Home page of the current website"/>
+                            role="img" aria-label="Home page of the current website" title="Home page of the current website"/>
                         <field name="name" />
                     </div>
                     <div t-if="record.website_id.value" class="text-truncate fw-bold text-muted" groups="website.group_multi_website">
-                        <i class="oi me-1" data-icon="public" title="Website"/>
+                        <i class="oi me-1" data-icon="public" role="img" aria-label="Website" title="Website"/>
                         <field name="website_id" groups="website.group_multi_website"/>
                     </div>
                     <field name="website_url" class="text-truncate fw-bold text-primary mb-auto"/>

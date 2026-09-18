@@ -6,17 +6,17 @@ import { contains } from "@web/../tests/web_test_helpers";
 describe.current.tags("desktop");
 
 const websiteContent = `
-    <div class="s_rating pt16 pb16" data-rating-icon="star" data-snippet="s_rating" data-name="Rating">
+    <div class="s_rating pt16 pb16" data-rating-icon="star" data-snippet="s_rating" data-name="Rating" role="img" aria-label="3 out of 5 stars">
         <strong class="s_rating_title">Quality</strong>
         <div class="s_rating_icons o_not_editable">
             <span class="s_rating_active_icons">
-                <i class="oi oi-filled" data-icon="star"></i>
-                <i class="oi oi-filled" data-icon="star"></i>
-                <i class="oi oi-filled" data-icon="star"></i>
+                <i class="oi oi-filled" data-icon="star" role="presentation"></i>
+                <i class="oi oi-filled" data-icon="star" role="presentation"></i>
+                <i class="oi oi-filled" data-icon="star" role="presentation"></i>
             </span>
             <span class="s_rating_inactive_icons">
-                <i class="oi" data-icon="star"></i>
-                <i class="oi" data-icon="star"></i>
+                <i class="oi" data-icon="star" role="presentation"></i>
+                <i class="oi" data-icon="star" role="presentation"></i>
             </span>
         </div>
     </div>`;
@@ -40,18 +40,18 @@ test("change rating score", async () => {
         `<strong class="s_rating_title">Quality</strong>
         <div class="s_rating_icons o_not_editable" contenteditable="false" aria-label="1 out of 4 stars">
             <span class="s_rating_active_icons">
-                <i class="oi oi-filled" data-icon="star" contenteditable="false">
+                <i class="oi oi-filled" data-icon="star" role="presentation" contenteditable="false">
                     &ZeroWidthSpace;
                 </i>
             </span>
             <span class="s_rating_inactive_icons">
-                <i class="oi" data-icon="star" contenteditable="false">
+                <i class="oi" data-icon="star" role="presentation" contenteditable="false">
                     &ZeroWidthSpace;
                 </i>
-                <i class="oi" data-icon="star" contenteditable="false">
+                <i class="oi" data-icon="star" role="presentation" contenteditable="false">
                     &ZeroWidthSpace;
                 </i>
-                <i class="oi" data-icon="star" contenteditable="false">
+                <i class="oi" data-icon="star" role="presentation" contenteditable="false">
                     &ZeroWidthSpace;
                 </i>
             </span>

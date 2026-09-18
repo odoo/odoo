@@ -16,7 +16,7 @@
                     class="alert alert-danger small d-flex gap-2 mb-0 p-2"
                     role="alert"
                 >
-                    <i class="oi lh-base" data-icon="event_busy" role="img"/>
+                    <i class="oi lh-base" data-icon="event_busy" role="img" aria-hidden="true"/>
                     <span class="d-flex flex-column gap-1">
                         <t t-foreach="this.selectedLocation.closing_dates" t-as="period" t-key="period_index">
                             <span t-if="period.date_from === period.date_to">

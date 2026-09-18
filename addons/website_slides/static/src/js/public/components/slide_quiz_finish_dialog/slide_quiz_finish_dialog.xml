@@ -42,7 +42,7 @@
                         Check Profile
                     </a>
                     <button t-if="this.props.hasNext" type="button" class="btn btn-light border" t-on-click="this.onClickNext">
-                        Next <i class="oi" data-icon="chevron_forward"/>
+                        Next <i class="oi" data-icon="chevron_forward" role="img" aria-hidden="true"/>
                     </button>
                     <a t-else="" type="button" href="/slides" class="btn btn-light border">End course</a>
                 </div>
