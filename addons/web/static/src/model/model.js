@@ -11,8 +11,8 @@ import {
     EventBus,
     onWillStart,
     onWillUnmount,
-    onWillUpdateProps,
     signal,
+    useOnChange,
     useProps,
     useScope,
 } from "@odoo/owl";
@@ -141,7 +141,18 @@ export function useModel(ModelClass, params, options = {}) {
         await model.load(getSearchParams(compProps));
         model.whenReady.resolve();
     });
-    onWillUpdateProps((nextProps) => model.load(getSearchParams(nextProps)));
+    useOnChange(
+        () => SEARCH_KEYS.map((key) => compProps[key]),
+        async () => {
+            await model.load(getSearchParams(compProps));
+            // the render is no longer blocked by the load: it already happened
+            // with the previous data, so ask for another one.
+            if (scope.status === 1 /* mounted */) {
+                scope.render(true);
+            }
+        },
+        { initialRun: false }
+    );
     return model;
 }
 
@@ -213,7 +224,7 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
             model.useSampleModel = useSampleModel;
         }
         model.whenReady.resolve(); // resolve after the first successful load
-        if (scope.status === 1 /* mounted */ && !options.blockingWillUpdateProps) {
+        if (scope.status === 1 /* mounted */) {
             model.notify();
         }
     }
@@ -233,14 +244,14 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
             return prom;
         }
     });
-    onWillUpdateProps((nextProps) => {
-        useSampleModel = false;
-        const loadProm = load(nextProps);
-        if (options.blockingWillUpdateProps) {
-            // FIXME owl3: added for studio
-            return loadProm;
-        }
-    });
+    useOnChange(
+        () => SEARCH_KEYS.map((key) => compProps[key]),
+        () => {
+            useSampleModel = false;
+            load(compProps);
+        },
+        { initialRun: false }
+    );
 
     useSetupAction({
         getGlobalState() {
