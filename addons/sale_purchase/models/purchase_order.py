@@ -16,8 +16,7 @@ class PurchaseOrder(models.Model):
     )
     has_sale_order = fields.Boolean(
         string="Has Source Sale",
-        compute="_compute_sale_orders",
-        groups="sale.group_sale_salesman",
+        compute="_compute_has_sale_order",
         help="Technical field: whether the purchase order has associated sale orders.",
     )
 
@@ -25,7 +24,11 @@ class PurchaseOrder(models.Model):
     def _compute_sale_orders(self):
         for purchase in self:
             purchase.sale_order_count = len(purchase._get_sale_orders())
-            purchase.has_sale_order = bool(purchase.sale_order_count)
+
+    @api.depends("line_ids.sale_order_id")
+    def _compute_has_sale_order(self):
+        for purchase in self:
+            purchase.has_sale_order = bool(purchase.sudo()._get_sale_orders())
 
     def action_view_sale_orders(self):
         self.check_singleton()
