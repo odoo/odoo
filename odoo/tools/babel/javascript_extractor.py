@@ -68,7 +68,9 @@ def parse_template_string(
         if not inside_str:
             if character == '{' and prev_character == '$':
                 if keyword:
-                    break
+                    # We don't extract strings containing a variable expression inside a translation call.
+                    # We can't know what the final string will be.
+                    return
                 level += 1
             elif level and character == '}':
                 level -= 1
