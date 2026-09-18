@@ -3,7 +3,7 @@
 
     <template id="website_sale.dynamic_filter_template_product_public_category_default">
         <t t-foreach="records" t-as="category">
-            <t t-set="is_parent" t-value="category['id'] == parentCategoryId"/>
+            <t t-set="is_parent" t-value="category['id'] == parentId"/>
             <div
                 t-if="not is_parent or includeParent"
                 name="category_item"

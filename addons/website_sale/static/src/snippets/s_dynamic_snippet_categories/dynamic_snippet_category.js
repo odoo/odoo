@@ -9,19 +9,13 @@ export class DynamicSnippetCategory extends DynamicSnippet {
     setup(){
         super.setup();
         this.templateKey = 'website_sale.s_dynamic_snippet_category.grid';
-        const nodeData = this.el.dataset;
-        nodeData.button = nodeData.button || _t("Explore Now");
-        // Pass custom data to the template.
-        nodeData.customTemplateData = JSON.stringify({
-            buttonText: nodeData.button,
-            includeParent: nodeData.parentCategoryId && nodeData.showParent,
-            parentCategoryId: parseInt(nodeData.parentCategoryId),
-        });
     }
 
     getRpcParameters(){
+        const nodeData = this.el.dataset;
         return Object.assign(super.getRpcParameters(), {
-            parentId: parseInt(this.el.dataset.parentCategoryId),
+            buttonText: nodeData.button || _t("Explore Now"),
+            parentId: parseInt(nodeData.parentCategoryId),
         });
     }
 
