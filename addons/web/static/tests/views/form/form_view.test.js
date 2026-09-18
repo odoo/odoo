@@ -2300,6 +2300,51 @@ test(`label with empty string attribute renders to an empty label`, async () => 
     expect(`label.o_form_label`).toHaveText("");
 });
 
+test(`implicit label of a title`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="foo"/></h1>
+                    </div>
+                    <div class="oe_title">
+                        <label for="float_field"/>
+                        <h1><field name="float_field"/></h1>
+                    </div>
+                    <div class="oe_title">
+                        <span class="o_form_label">Draft</span>
+                        <h1><field name="int_field"/></h1>
+                    </div>
+                    <div class="oe_title">
+                        <h2>Static</h2>
+                        <h1><field name="bar"/></h1>
+                    </div>
+                </sheet>
+            </form>
+        `,
+        resId: 1,
+    });
+    // the field of a title is displayed as a box on small screens: it gets a
+    // label, only displayed in that layout and added right before that box
+    expect(queryAllTexts(`label.o_form_label`)).toEqual(["Foo", "Float field", "Bar"]);
+    expect(`.oe_title:eq(0) > *:first-child`).toHaveClass([
+        "o_form_label",
+        "o_label_implicit",
+        "d-md-none",
+    ]);
+    expect(`.oe_title:eq(0) > h1`).toHaveClass("o_outlined");
+    // a title the arch labels itself is left alone, be it with a <label/> or an
+    // "o_form_label" element
+    expect(`.o_label_implicit`).toHaveCount(2);
+    expect(`.oe_title:eq(2) > h1`).not.toHaveClass("o_outlined");
+    // the box is the element holding the field, not the first one of the title
+    expect(`.oe_title:eq(3) > h2`).not.toHaveClass("o_outlined");
+    expect(`.oe_title:eq(3) > label + h1.o_outlined`).toHaveCount(1);
+});
+
 test(`two mutually exclusive labels with a dynamic invisible attribute`, async () => {
     await mountView({
         resModel: "partner",
