@@ -472,6 +472,19 @@ export class PosOrder extends PosOrderAccounting {
                 data: _t("There is already an electronic payment in progress."),
             };
         }
+        // A QR code cannot be generated for a zero amount
+        if (
+            payment_method.payment_method_type === "qr_code" &&
+            !this.currency.isZero(this.remainingDue) &&
+            this.currency.isZero(this.remainingDueAfterPendingQr)
+        ) {
+            return {
+                status: false,
+                data: _t(
+                    "A QR code payment already covers the amount due. Send it or remove it first."
+                ),
+            };
+        }
 
         const totalAmountDue = this.getDefaultAmountDueToPayIn(payment_method);
         const newPaymentLine = this.models["pos.payment"].create({
@@ -517,6 +530,9 @@ export class PosOrder extends PosOrderAccounting {
 
     electronicPaymentInProgress() {
         return this.payment_ids.some(function (pl) {
+            if (pl.isUnsentQrCode()) {
+                return false;
+            }
             if (pl.payment_status) {
                 return !["done", "reversed"].includes(pl.payment_status);
             } else {

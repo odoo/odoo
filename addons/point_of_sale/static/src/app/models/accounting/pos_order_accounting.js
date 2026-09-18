@@ -220,10 +220,20 @@ export class PosOrderAccounting extends Base {
      * @returns A monetary value.
      */
     getDefaultAmountDueToPayIn(paymentMethod) {
+        const remainingDue = this.remainingDueAfterPendingQr;
         const amount = this.shouldRound(paymentMethod)
-            ? this.config_id.rounding_method.round(this.remainingDue)
-            : this.remainingDue;
+            ? this.config_id.rounding_method.round(remainingDue)
+            : remainingDue;
         return amount || this.change;
+    }
+    // Unsent QR code payments are not paid yet, but their amount is already reserved.
+    get remainingDueAfterPendingQr() {
+        const remainingDue = this.remainingDue;
+        const pending = this.payment_ids
+            .filter((pl) => pl.isUnsentQrCode())
+            .reduce((sum, pl) => sum + pl.getAmount(), 0);
+        const remaining = this.currency.round(remainingDue - pending);
+        return remaining * remainingDue > 0 ? remaining : 0;
     }
 
     /**
