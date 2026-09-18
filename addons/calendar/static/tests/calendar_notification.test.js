@@ -8,6 +8,7 @@ import {
     step,
 } from "@mail/../tests/mail_test_helpers";
 import { test } from "@odoo/hoot";
+import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import {
     onRpc,
     patchWithCleanup,
@@ -80,6 +81,27 @@ test("fetches the pending alarms on startup, without waiting for a bus notificat
     await start();
     await contains(".o_notification", { text: "Meeting saved in a previous session" });
     assertSteps(["notify"]);
+});
+
+test("schedules the alarm from notify_at rather than from the stale timer", async () => {
+    mockDate("2024-10-20 10:00:00");
+    const pyEnv = await startServer();
+    await start();
+    // 'timer' is computed when the alarm is pushed: a payload replayed by the
+    // bus after a reload carries a value that already elapsed.
+    pyEnv["bus.bus"]._sendone(serverState.partnerId, "calendar.alarm", [
+        {
+            alarm_id: 1,
+            event_id: 2,
+            title: "Meeting",
+            message: "Meeting in five minutes",
+            timer: 0,
+            notify_at: "2024-10-20 10:05:00",
+        },
+    ]);
+    await contains(".o_notification", { count: 0 });
+    await advanceTime(5 * 60 * 1000);
+    await contains(".o_notification", { text: "Meeting in five minutes" });
 });
 
 test("can listen on bus and display notifications in DOM and click Snooze", async () => {
