@@ -81,3 +81,27 @@ class TestMrpRepairFlow(TestMrpCommon):
             set(repair.move_ids.product_id.ids),
             set(self.product_5.bom_ids.bom_line_ids.product_id.ids)
         )
+
+    def test_repair_with_manufacture_mtso_link(self):
+        "The MO keeps its repair source when the shortage is manufactured."
+        self.route_mto.active = True
+        self.warehouse_1.repair_mto_pull_id.procure_method = 'mts_else_mto'
+        self.product_2.route_ids = [Command.set((self.route_mto | self.route_manufacture).ids)]
+        self.env['stock.quant']._update_available_quantity(self.product_2, self.stock_location, 1.0)
+        repair = self.env['repair.order'].create({
+            'picking_type_id': self.warehouse_1.repair_type_id.id,
+            'move_ids': [Command.create({
+                'repair_line_type': 'add',
+                'product_id': self.product_2.id,
+                'product_uom_qty': 2.0,
+            })],
+        })
+        repair.action_validate()
+        production = repair.reference_ids.production_ids
+        self.assertRecordValues(production, [{
+            'product_id': self.product_2.id,
+            'product_qty': 1.0,
+            'repair_count': 1,
+        }])
+        self.assertFalse(production.move_dest_ids.repair_id)
+        self.assertEqual(production.action_view_repair_orders()['res_id'], repair.id)
