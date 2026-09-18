@@ -855,6 +855,8 @@ class Post(models.Model):
         is created. Nothing is done if the comment's author already answered the
         question. """
         comment = self.env['mail.message'].sudo().browse(message_id)
+        if comment.model != 'forum.post':
+            return False
         post = self.browse(comment.res_id)
         if not comment.author_id or not comment.author_id.user_ids:  # only comment posted by users can be converted
             return False
