@@ -2594,7 +2594,9 @@ class AccountMoveLine(models.Model):
             other_aml_values=debit_values,
         )
 
-        if debit_currency != company_currency \
+        if self.env.context.get('no_exchange_difference'):
+            recon_currency = company_currency
+        elif debit_currency != company_currency \
             and debit_currency in debit_available_residual_amounts \
             and debit_currency in credit_available_residual_amounts:
             recon_currency = debit_currency
