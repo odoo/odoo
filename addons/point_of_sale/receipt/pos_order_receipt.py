@@ -12,6 +12,15 @@ from odoo import _, api, models, modules
 from odoo.tools.image import image_data_uri
 from odoo.tools.misc import format_datetime, format_time
 
+RECEIPT_TEXT_SIZE_MULTIPLIERS = {
+    'text-small': 0.8,
+    'text-normal': 1.0,
+    'text-large': 1.4,
+    'text-huge': 2.0,
+    'text-insane': 2.3,
+}
+RECEIPT_LINE_HEIGHT_RATIO = 1.4
+
 
 def _get_str_notes(note):
     """
@@ -62,7 +71,7 @@ class PosOrderReceipt(models.AbstractModel):
 
     @api.model
     def _order_receipt_format_currency(self, amount):
-        return self.currency_id.format(amount).replace('\xa0', ' ')  # Wkhtmltoimage does not support non-breaking spaces
+        return self.currency_id.format(amount)
 
     def _order_receipt_generate_taxe_data(self):
         sign = -1 if self.is_refund else 1
@@ -147,6 +156,21 @@ class PosOrderReceipt(models.AbstractModel):
     def _order_receipt_generate_cashier_name(self):
         return self.user_id.name.split(' ')[0] if self.user_id else ''
 
+    def _get_receipt_image_style(self):
+        printer = None
+        if not self.env.context.get('force_no_printer', False):
+            printer = self.config_id.receipt_printer_ids[:1]
+        style = printer._get_receipt_image_style() if printer else {'width': 500, 'font_size': 22, 'printable_width_mm': 72.0, 'dpi': 203}
+        font_size = style['font_size']
+        style['text_classes'] = {
+            name: {
+                'font_size': font_size * multiplier,
+                'line_height': font_size * multiplier * RECEIPT_LINE_HEIGHT_RATIO,
+            }
+            for name, multiplier in RECEIPT_TEXT_SIZE_MULTIPLIERS.items()
+        }
+        return style
+
     def order_receipt_generate_data(self, basic_receipt=False):
         self.ensure_one()
 
@@ -162,6 +186,7 @@ class PosOrderReceipt(models.AbstractModel):
         qr_code_value = f"{self.env.company.get_base_url()}/pos/ticket?order_uuid={self.uuid}"
         tip_percentage = [self.config_id.tip_percentage_1, self.config_id.tip_percentage_2, self.config_id.tip_percentage_3] if self.config_id.set_tip_after_payment and self.amount_total > 0 else False
         receipt_tz = self._order_receipt_tz()
+        receipt_style = self._get_receipt_image_style()
 
         return {
             'order': self.read(order_fields, load=False)[0],
@@ -197,6 +222,8 @@ class PosOrderReceipt(models.AbstractModel):
                     [f"{p}%", self._order_receipt_format_currency(self.amount_total * (p / 100))]
                     for p in tip_percentage
                 ] if tip_percentage else False,
+                'receipt_style': receipt_style,
+                'receipt_class': 'pos-receipt-narrow' if receipt_style.get('narrow') else '',
             },
         }
 
@@ -207,11 +234,26 @@ class PosOrderReceipt(models.AbstractModel):
 
     def order_receipt_generate_image(self, basic_receipt=False, width=500, height=0):
         content = self.order_receipt_generate_html(basic_receipt)
-        return self.env['ir.actions.report']._run_wkhtmltoimage(
-            [content],
-            width,
-            height,
-        )[0]
+        return self.env['ir.actions.report']._run_wkhtmltoimage([content], width, height)[0]
+
+    def order_receipt_generate_pdf(self, basic_receipt=False):
+        self.ensure_one()
+        style = self._get_receipt_image_style()
+        width = style['width']
+        dpi = style['dpi']
+        printable_width_mm = style['printable_width_mm']
+
+        page_width_px = round(printable_width_mm * dpi / 25.4)
+        image = self.order_receipt_generate_image(basic_receipt, width=width)
+        buffer = io.BytesIO()
+
+        with Image.open(io.BytesIO(image)) as receipt:
+            receipt = receipt.convert('RGB')
+            page = Image.new('RGB', (page_width_px, receipt.height), 'white')
+            page.paste(receipt, ((page_width_px - receipt.width) // 2, 0))
+            page.save(buffer, format='PDF', resolution=dpi)
+
+        return buffer.getvalue()
 
     # Order changes receipt generation
     def _order_change_has_prep_category(self, product, prep_categ_ids):
