@@ -135,7 +135,6 @@ class TestDeparture(TestHrCommon):
     def test_departure_notice_contract_date(self):
         self.emp_D.write({
             'employee_type_id': self.env.ref('hr.contract_type_employee').id,
-            'l10n_be_dimona_category': 'ivt',
         })
 
         departure = self.env['hr.employee.departure'].create({
