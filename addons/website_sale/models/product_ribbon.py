@@ -93,7 +93,8 @@ class ProductRibbon(models.Model):
     def _is_applicable_for(self, product, price_data):
         """Return whether the product matches the criteria of the ribbon automatic assignment.
 
-        :param product.product product: the displayed product
+        :param product.product|product.template product: the displayed product, or its
+            template if no variant is displayed (it is then sold out if all its variants are)
         :param dict price_data: price information for the given product
             (sales price for shop page, combination information for product page)
 
@@ -133,7 +134,6 @@ class ProductRibbon(models.Model):
         if (  # noqa: SIM103
             product
             and self.assign == "out_of_stock"
-            and not product.product_tmpl_id.allow_out_of_stock_order
             and product._is_sold_out()
         ):
             return True
