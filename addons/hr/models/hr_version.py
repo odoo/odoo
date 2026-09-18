@@ -52,7 +52,7 @@ class HrVersion(models.Model):
         )
 
     def _get_hr_responsible_domain(self):
-        return "[('share', '=', False), ('company_ids', 'in', company_id), ('all_group_ids', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
+        return [('share', '=', False), ('company_ids', 'in', self.env.company.ids), ('all_group_ids', 'in', self.env.ref('hr.group_hr_user').id)]
 
     company_id = fields.Many2one('res.company', compute='_compute_company_id', readonly=False,
                                  store=True, index=True, default=lambda self: self.env.company, tracking=1)
@@ -188,7 +188,7 @@ class HrVersion(models.Model):
 
     hr_responsible_id = fields.Many2one(
         'res.users', 'HR Responsible', tracking=1,
-        help='Person responsible for validating the employee\'s contracts.', domain=_get_hr_responsible_domain,
+        help='Person responsible for validating the employee\'s contracts.', domain=lambda self: self._get_hr_responsible_domain(),
         default=lambda self: self.env.user, required=True, groups="hr.group_hr_user")
 
     _check_contract_start_date_defined = models.Constraint(
