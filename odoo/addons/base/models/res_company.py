@@ -157,8 +157,8 @@ class ResCompany(models.Model):
     root_id = fields.Many2one(
         comodel_name="res.company",
         compute="_compute_hierarchy",
-        compute_sudo=True,
         search="_search_root_id",
+        compute_sudo=True,
     )
 
     currency_id = fields.Many2one(

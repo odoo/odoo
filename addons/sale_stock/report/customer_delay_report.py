@@ -29,10 +29,22 @@ class CustomerDelayReport(models.Model):
         string="Company",
         readonly=True,
     )
-    date = fields.Datetime(string="Effective Date", readonly=True)
-    qty_total = fields.Float(string="Total Quantity", readonly=True)
-    qty_on_time = fields.Float(string="On-Time Quantity", readonly=True)
-    on_time_rate = fields.Float(string="On-Time Delivery Rate", readonly=True)
+    date = fields.Datetime(
+        string="Effective Date",
+        readonly=True,
+    )
+    qty_total = fields.Float(
+        string="Total Quantity",
+        readonly=True,
+    )
+    qty_on_time = fields.Float(
+        string="On-Time Quantity",
+        readonly=True,
+    )
+    on_time_rate = fields.Float(
+        string="On-Time Delivery Rate",
+        readonly=True,
+    )
 
     def init(self):
         drop_view_if_exists(self.env.cr, "customer_delay_report")

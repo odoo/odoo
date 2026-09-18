@@ -6,7 +6,9 @@ class MixinProductVariantSelector(models.AbstractModel):
     _description = "Product Variant Selector Mixin"
 
     product_has_variants = fields.Boolean(
-        string="Has variants", required=True, default=False
+        string="Has variants",
+        default=False,
+        required=True,
     )
 
     def _get_product_variant_selector_defaults(self, fields_list):

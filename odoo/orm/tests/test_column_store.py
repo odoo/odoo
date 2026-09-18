@@ -1,6 +1,8 @@
 import typing
 
+from odoo import fields, models
 from odoo.orm.components.storage import DictBackend
+from odoo.orm.model_test_env import model_test_env
 from odoo.orm.runtime._backend_memory import InMemoryBackend
 from odoo.orm.runtime.backend import (
     ColumnStore,
@@ -64,9 +66,6 @@ def test_in_memory_merge_json_layers_fallback_stored_and_value():
     assert columns.read(_model(), "name", [2]) == {2: None}
     assert columns.merge_json(_model(), "name", 3, {}, {"fr_FR": "x"}) == 0
 
-
-from odoo import fields, models  # noqa: E402
-from odoo.orm.model_test_env import model_test_env  # noqa: E402
 
 _MOD = "test_column_store_contract"
 

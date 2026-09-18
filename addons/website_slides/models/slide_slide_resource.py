@@ -26,7 +26,10 @@ class SlideSlideResource(models.Model):
         store=True,
         readonly=False,
     )
-    is_name_default = fields.Boolean(default=True, copy=False)
+    is_name_default = fields.Boolean(
+        default=True,
+        copy=False,
+    )
     data = fields.Binary(
         string="Resource",
         compute="_compute_reset_resources",
