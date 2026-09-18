@@ -103,6 +103,15 @@ class AccountMoveSend(models.AbstractModel):
             vals['mail_attachments_widget'] = get_setting('mail_attachments_widget', default_value=mail_attachments_widget)
         return vals
 
+    @api.model
+    def _get_applicable_sending_methods(self, move):
+        sending_settings = self._get_default_sending_settings(move)
+        return [
+            sending_method
+            for sending_method in self._get_default_sending_methods(move)
+            if self._is_applicable_to_move(sending_method, move, **sending_settings)
+        ]
+
     # -------------------------------------------------------------------------
     # ALERTS
     # -------------------------------------------------------------------------
@@ -831,6 +840,17 @@ class AccountMoveSend(models.AbstractModel):
 
         # Generate all invoice documents (PDF and electronic documents if relevant).
         self._generate_invoice_documents(moves_data, allow_fallback_pdf=allow_fallback_pdf)
+
+        if from_cron:
+            for move, move_data in moves_data.items():
+                if not move_data.get('error') and not self._get_applicable_sending_methods(move):
+                    move_data['error'] = {
+                        'error_title': _("Invoice generated but not sent."),
+                        'errors': [_(
+                            "No valid sending method could be applied, so this invoice was not sent automatically. "
+                            "Please configure a sending method and send it manually."
+                        )],
+                    }
 
         # Manage errors.
         errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
