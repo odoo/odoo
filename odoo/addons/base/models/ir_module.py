@@ -631,7 +631,7 @@ class IrModuleModule(models.Model):
             self.env.cr.execute("LOCK ir_module_module IN EXCLUSIVE MODE")
         except psycopg2.OperationalError:
             self.env.cr.rollback()
-            raise UserError(_("Odoo is currently processing another module or scheduled operation.\n"
+            raise UserError(_("Odoo is currently processing another module.\n"
                                "Please try again later or contact your system administrator."))
         finally:
             Registry._lock.release()
