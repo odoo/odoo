@@ -142,7 +142,6 @@ class IrActionsActions(models.Model):
         "binding_sequence",
         "binding_icon",
     )
-    _BINDING_OPTIONAL_FIELDS = ("group_ids", "res_model", "domain")
     _BINDING_VIEW_TYPE_ORDER = (
         "list",
         "kanban",
@@ -351,8 +350,12 @@ class IrActionsActions(models.Model):
                 *self._BINDING_TYPE_FIELDS,
                 self._BINDING_MODEL_FIELD,
                 *self._BINDING_READ_FIELDS,
-                *self._BINDING_OPTIONAL_FIELDS,
                 *self._get_fields_naming_target_model(),
+                *(
+                    name
+                    for model_name in self._get_model_names_in_tree()
+                    for name in self.env[model_name]._get_fields_binding_extra()
+                ),
             )
         )
 
@@ -379,6 +382,16 @@ class IrActionsActions(models.Model):
         """The field naming the model this kind of action opens, for the kinds
         that open one. Empty where the action opens nothing."""
         return ""
+
+    def _get_field_groups(self) -> str:
+        """The field holding the groups this kind of action is restricted to.
+        Empty where the kind admits every user."""
+        return ""
+
+    def _get_fields_binding_extra(self) -> tuple[str, ...]:
+        """What a binding of this kind of action ships to the client beyond
+        `_BINDING_READ_FIELDS`."""
+        return ()
 
     @api.model
     def _get_action_by_path(self, path: str) -> Self:
@@ -466,17 +479,19 @@ class IrActionsActions(models.Model):
                 )
                 continue
             opens_field = actions._get_field_target_model()
+            groups_field = actions._get_field_groups()
             read_fields = [
                 *self._BINDING_READ_FIELDS,
-                *(f for f in self._BINDING_OPTIONAL_FIELDS if f in actions._fields),
+                *actions._get_fields_binding_extra(),
             ]
-            if opens_field and opens_field not in read_fields:
-                read_fields.append(opens_field)
+            for name in (opens_field, groups_field):
+                if name and name not in read_fields:
+                    read_fields.append(name)
             for action_data in actions.read(read_fields):
                 if "domain" in action_data and not action_data.get("domain"):
                     action_data.pop("domain")
-                if "group_ids" in action_data:
-                    action_data["group_ids"] = tuple(action_data["group_ids"])
+                if groups_field:
+                    action_data["group_ids"] = tuple(action_data.pop(groups_field))
                 if opens_field:
                     action_data[_BINDING_ACCESS_MODEL] = action_data.pop(opens_field)
                 result[binding_map[action_data["id"]]].append(frozendict(action_data))
@@ -532,7 +547,8 @@ class IrActionsActions(models.Model):
     def _get_load_refusal_of_record(self) -> str:
         self.check_singleton()
         config = self.sudo()
-        group_ids = config.group_ids.ids if "group_ids" in self._fields else ()
+        groups_field = self._get_field_groups()
+        group_ids = config[groups_field].ids if groups_field else ()
         target = self._get_field_target_model()
         return self._get_load_refusal(group_ids, config[target] if target else None)
 

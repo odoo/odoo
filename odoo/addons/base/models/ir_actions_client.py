@@ -107,6 +107,9 @@ class IrActionsClient(models.Model):
     def _get_field_target_model(self) -> str:
         return "res_model"
 
+    def _get_fields_binding_extra(self) -> tuple[str, ...]:
+        return ("res_model",)
+
     def _get_fields_readable(self) -> frozenset[str]:
         return super()._get_fields_readable() | {
             "context",

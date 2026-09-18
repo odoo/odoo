@@ -1,7 +1,5 @@
 from odoo import fields, models
 
-from odoo.addons.base.models.ir_actions_actions import IrActionsActions as BaseActions
-
 
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
@@ -13,14 +11,5 @@ class IrActionsServer(models.Model):
         "submenu, in the named section.",
     )
 
-
-class IrActionsActions(models.Model):
-    _inherit = "ir.actions.actions"
-
-    # _get_bindings ships these to the client for whichever action model
-    # declares them, so the section travels with the binding and the gear menu
-    # needs no round-trip of its own.
-    _BINDING_OPTIONAL_FIELDS = (
-        *BaseActions._BINDING_OPTIONAL_FIELDS,
-        "hr_presence_section",
-    )
+    def _get_fields_binding_extra(self) -> tuple[str, ...]:
+        return (*super()._get_fields_binding_extra(), "hr_presence_section")

@@ -218,6 +218,12 @@ class IrActionsAct_Window(models.Model):
     def _get_field_target_model(self) -> str:
         return "res_model"
 
+    def _get_field_groups(self) -> str:
+        return "group_ids"
+
+    def _get_fields_binding_extra(self) -> tuple[str, ...]:
+        return ("group_ids", "res_model", "domain")
+
     def _get_fields_readable(self) -> frozenset[str]:
         return super()._get_fields_readable() | {
             "context",

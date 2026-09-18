@@ -160,6 +160,12 @@ class IrActionsReport(models.Model):
     def _get_field_target_model(self) -> str:
         return "model"
 
+    def _get_field_groups(self) -> str:
+        return "group_ids"
+
+    def _get_fields_binding_extra(self) -> tuple[str, ...]:
+        return ("group_ids", "domain")
+
     def _get_fields_readable(self) -> frozenset[str]:
         return super()._get_fields_readable() | {
             "report_name",

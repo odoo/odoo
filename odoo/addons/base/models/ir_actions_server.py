@@ -1606,6 +1606,12 @@ class IrActionsServer(models.Model):
     def _get_field_target_model(self) -> str:
         return "model_name"
 
+    def _get_field_groups(self) -> str:
+        return "group_ids"
+
+    def _get_fields_binding_extra(self) -> tuple[str, ...]:
+        return ("group_ids",)
+
     def _get_fields_readable(self) -> frozenset[str]:
         return super()._get_fields_readable() | {
             "group_ids",
