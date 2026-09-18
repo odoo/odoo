@@ -39,6 +39,18 @@ class TestL10nFrPdpXml(TestPdpMessagesCommon):
         wizard.action_send_and_print()
         self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice")
 
+    def test_export_rounding(self):
+        """Test that the unit prices have at most 6 decimals. """
+        invoice = self._create_french_invoice(invoice_line_ids=[Command.create({
+            'product_id': self.product_a.id,
+            'quantity': 6.0,
+            'price_unit': 60.0,
+            'discount': 33.33,
+        })])
+        invoice.action_post()
+        self._send_patched(invoice)
+        self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice_rounding")
+
     def test_export_credit_note_partner_fr(self):
         invoice = self._create_french_invoice()
 
