@@ -378,6 +378,7 @@ class ReadMixin(_ModelStubs):
         fields_to_fetch = self._get_fields_to_fetch(
             field_names, ignore_when_in_cache=True
         )
+        self._flush_inheritance_tree_before_fetch(fields_to_fetch)
 
         in_prefetch_batch = self.env.transaction.prefetch_batch == (
             self._name,
@@ -448,6 +449,23 @@ class ReadMixin(_ModelStubs):
                 raise self.env.registry.access_policy.record_denied_error(
                     self.env, "read", forbidden
                 )
+
+    def _flush_inheritance_tree_before_fetch(self, fields_to_fetch) -> None:
+        if not self._is_table_inheritance_root():
+            return
+        for model_name in self.env._table_inheritance_tree(self._name):
+            other = self.env[model_name]
+            names = [
+                field.name for field in fields_to_fetch if field.name in other._fields
+            ]
+            if names:
+                _debug.pipeline(
+                    "read.fetch.flush_inheritance_sibling",
+                    model=self._name,
+                    sibling=model_name,
+                    fields=len(names),
+                )
+                other.flush_model(names)
 
     def _readable_prefetch_fields(self, prefetch: typing.Any) -> tuple[Field, ...]:
         fields = self.pool.prefetch_fields(self._name, prefetch)

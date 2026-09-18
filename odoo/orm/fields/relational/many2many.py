@@ -130,12 +130,26 @@ class Many2many(_RelationalMulti):
                         self.model_name != field.model_name
                         and not (model._auto and model.env[field.model_name]._auto)
                     )
+                    or self._shares_inheritance_tree(model, field)
                 ):
                     continue
                 raise TypeError(
                     f"Many2many fields {self} and {field} use the same table and columns"
                 )
             fields.add((self.model_name, self.name))
+
+    def _shares_inheritance_tree(self, model, field) -> bool:
+        if self.comodel_name != field.comodel_name:
+            return False
+        root = model._table_inheritance_root
+        shared = bool(root) and root == model.env[field.model_name]._table_inheritance_root
+        if shared:
+            _debug.logic(
+                "field.many2many.relation_shared_in_tree",
+                relation=self.relation,
+                models=(self.model_name, field.model_name),
+            )
+        return shared
 
     def _get_relation_triple(self) -> tuple[str, str, str]:
         if not (self.relation and self.column1 and self.column2):

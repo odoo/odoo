@@ -274,11 +274,16 @@ class _RegistryFieldsMixin(_RegistryStubs):
                     else:
                         for dependency in dependencies:
                             *path, dep_field = dependency
-                            bucket = new_triggers[dep_field][tuple(reversed(path))]
-                            if field not in bucket:
-                                bucket.append(field)
+                            key = tuple(reversed(path))
+                            for actual in self._depended_fields_in_tree(dep_field):
+                                bucket = new_triggers[actual][key]
+                                if field not in bucket:
+                                    bucket.append(field)
 
-            span.set(triggered_fields=len(new_triggers))
+            span.set(
+                triggered_fields=len(new_triggers),
+                inheritance_trees=len(self.model_names_by_inheritance_root),
+            )
             if not graph.set_triggers(new_triggers, epoch=start_epoch):
                 self.__dict__["_field_triggers_refused_at"] = graph.trigger_epoch
                 span.set(published=False)
@@ -292,6 +297,24 @@ class _RegistryFieldsMixin(_RegistryStubs):
 
             span.set(published=True)
             return graph.published_triggers
+
+    def _depended_fields_in_tree(self, dep_field: Field) -> tuple[Field, ...]:
+        model_cls = self.models.get(dep_field.model_name)
+        root = getattr(model_cls, "_table_inheritance_root", "")
+        if not root or model_cls._table != root:
+            return (dep_field,)
+        found = [dep_field]
+        for name in self.model_names_by_inheritance_root.get(root, ()):
+            other = self.models[name]
+            if other._table != root and dep_field.name in other._fields:
+                found.append(other._fields[dep_field.name])
+        if len(found) > 1:
+            _debug.logic(
+                "registry.field_triggers.tree_expanded",
+                field=f"{dep_field.model_name}.{dep_field.name}",
+                models=len(found),
+            )
+        return tuple(found)
 
     def is_modifying_relations(self, field: Field) -> bool:
         self._get_field_triggers()

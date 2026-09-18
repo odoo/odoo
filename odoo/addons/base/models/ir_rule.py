@@ -171,6 +171,23 @@ class IrRule(models.Model):
         )
         return failing
 
+    def _get_model_names_bound_by_rules(self, model_name: str) -> list[str]:
+        model_cls = self.env.registry.get(model_name)
+        root = getattr(model_cls, "_table_inheritance_root", "")
+        if not root or model_cls._table == root:
+            return [model_name]
+        bound = [model_name] + [
+            name
+            for name in self.env.registry.model_names_by_inheritance_root.get(root, ())
+            if self.env.registry[name]._table == root
+        ]
+        _debug.logic(
+            "rules.bound_by_inheritance_root",
+            model=model_name,
+            bound=bound[1:],
+        )
+        return bound
+
     def _get_rules(self, model_name: str, mode: str = "read") -> Self:
         check_access_mode(mode)
 
@@ -182,15 +199,15 @@ class IrRule(models.Model):
             """
             SELECT r.id FROM ir_rule r
             JOIN ir_model m ON (r.model_id=m.id)
-            WHERE m.model = %s AND r.active AND %s
+            WHERE m.model = ANY(%s) AND r.active AND %s
                 AND (r.global OR r.id IN (
                     SELECT rule_group_id FROM rule_group_rel rg
                     WHERE rg.group_id = ANY(%s)
                 ))
                 %s
             ORDER BY r.id
-        """,
-            model_name,
+            """,
+            self._get_model_names_bound_by_rules(model_name),
             self._PERM_COLUMNS[mode],
             list(self.env.user._get_group_ids()),
             self._get_clause_for_unloaded_module_rules(),

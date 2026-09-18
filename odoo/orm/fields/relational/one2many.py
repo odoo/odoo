@@ -88,11 +88,29 @@ class One2many(_RelationalMulti):
     def setup_inverses(
         self, registry: Registry, inverses: Collector[Field, Field]
     ) -> None:
-        if self.inverse_name:
-            invf = registry[self.comodel_name]._fields[self.inverse_name]
+        if not self.inverse_name:
+            return
+        for comodel_name in self._comodel_names_in_tree(registry):
+            invf = registry[comodel_name]._fields.get(self.inverse_name)
+            if invf is None:
+                continue
             if isinstance(invf, (Many2one, Many2oneReference)):
                 inverses.add(self, invf)
             inverses.add(invf, self)
+
+    def _comodel_names_in_tree(self, registry: Registry) -> tuple[str, ...]:
+        comodel = registry[self.comodel_name]
+        root = getattr(comodel, "_table_inheritance_root", "")
+        if not root or comodel._table != root:
+            return (self.comodel_name,)
+        names = tuple(registry.model_names_by_inheritance_root.get(root, ()))
+        if len(names) > 1:
+            _debug.logic(
+                "field.one2many.inverse_paired_in_tree",
+                field=f"{self.model_name}.{self.name}",
+                comodels=names,
+            )
+        return names or (self.comodel_name,)
 
     _description_relation_field = property(attrgetter("inverse_name"))
 

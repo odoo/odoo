@@ -46,6 +46,8 @@ class RecomputeMixin(_ModelStubs):
         if not self or not fnames:
             return
 
+        self._invalidate_inheritance_tree(fnames)
+
         core = self.env.core
 
         if before:
@@ -71,6 +73,35 @@ class RecomputeMixin(_ModelStubs):
                 create=create,
             )
             self._modified_trigger_loop(fnames, create, scheduler)
+
+    def _invalidate_inheritance_tree(self, fnames: Collection[str]) -> None:
+        tree = self.env._table_inheritance_tree(self._name) or (
+            self._siblings_of_inheritance_subtype()
+        )
+        if not tree:
+            return
+        _debug.pipeline(
+            "recompute.invalidate_inheritance_tree",
+            model=self._name,
+            siblings=len(tree),
+            records=len(self),
+            fields=len(fnames),
+        )
+        for model_name in tree:
+            other = self.env[model_name]
+            names = [name for name in fnames if name in other._fields]
+            if names:
+                other.browse(self._ids).invalidate_recordset(names)
+
+    def _siblings_of_inheritance_subtype(self) -> tuple[str, ...]:
+        root = self._table_inheritance_root
+        if not root or root == self._table:
+            return ()
+        return tuple(
+            name
+            for name in self.env.registry.model_names_by_inheritance_root.get(root, ())
+            if name != self._name
+        )
 
     def _modified_before(self, fnames: Collection[str]) -> None:
         return self.modified(fnames, before=True)
@@ -333,14 +364,6 @@ class RecomputeMixin(_ModelStubs):
 
     @classmethod
     def _get_check_coupled_fields(cls) -> dict[Field, tuple[Field, ...]]:
-        # A flush writes every dirty column of a record in one UPDATE. When a
-        # CHECK spans that column and a stored computed field still pending on
-        # the same record, the row reaches PostgreSQL half-updated -- the new
-        # value beside the stale one -- and the constraint rejects a state no
-        # finished transaction would hold. The couplings are read off the
-        # constraint definitions, so the flush stays lazy for every computed
-        # field no CHECK ties to a written column.
-
         def get_check_coupled_fields_uncached() -> dict[Field, tuple[Field, ...]]:
             columns = {
                 name: field

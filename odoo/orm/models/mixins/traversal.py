@@ -577,6 +577,36 @@ class TraversalMixin(_ModelStubs):
             return not strict
         return other.id in self._get_ancestor_ids()
 
+    def _is_relation_on_self(self, field) -> bool:
+        if field.comodel_name == self._name:
+            return True
+        root = self._table_inheritance_root
+        return bool(root) and self.env.registry[field.comodel_name]._table == root
+
+    def _get_hierarchy_table(self, field_name: str) -> str:
+        root = self._table_inheritance_root
+        if not root or root == self._table:
+            return self._table
+        root_model = next(
+            (
+                name
+                for name in self.env.registry.model_names_by_inheritance_root.get(
+                    root, ()
+                )
+                if self.env.registry[name]._table == root
+            ),
+            None,
+        )
+        if root_model and field_name in self.env.registry[root_model]._fields:
+            _debug.logic(
+                "traversal.hierarchy.reads_root_table",
+                model=self._name,
+                table=root,
+                field=field_name,
+            )
+            return root
+        return self._table
+
     def _has_cycle(self, field_name: str | None = None) -> bool:
         if not field_name:
             field_name = self._parent_name
@@ -587,7 +617,7 @@ class TraversalMixin(_ModelStubs):
 
         if not (
             (field.is_many2many or field.is_many2one)
-            and field.comodel_name == self._name
+            and self._is_relation_on_self(field)
             and field.store
         ):
             raise ValueError(
@@ -601,7 +631,11 @@ class TraversalMixin(_ModelStubs):
         if field.is_many2many:
             relation, column1, column2 = field._get_relation_triple()
         else:
-            relation, column1, column2 = self._table, "id", field_name
+            relation, column1, column2 = (
+                self._get_hierarchy_table(field_name),
+                "id",
+                field_name,
+            )
         cyclic = self.env.backend.has_cycle(self, relation, column1, column2, self.ids)
         _debug.perf.count(
             "traversal.cycle_checked",
