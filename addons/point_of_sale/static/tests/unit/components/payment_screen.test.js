@@ -3,6 +3,7 @@ import { mountWithCleanup, patchWithCleanup, mockService } from "@web/../tests/w
 import { setupPosEnv, getFilledOrder, expectFormattedPrice } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { queryOne } from "@odoo/hoot-dom";
+import { Deferred } from "@odoo/hoot-mock";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { localization } from "@web/core/l10n/localization";
 
@@ -93,4 +94,86 @@ test("Do not print stock report if not configured", async () => {
     await comp.addNewPaymentLine(firstPm);
     await comp.validateOrder();
     expect(order.picking_type_id.has_stock_reports_to_print).toBeEmpty();
+});
+
+// Selecting a QR code payment method opens its popup, resolved by the test.
+function mockQrPopup(store) {
+    const popups = [];
+    patchWithCleanup(store, {
+        showQR(payment) {
+            payment.setPaymentStatus("waiting");
+            const popup = new Deferred();
+            popups.push(popup);
+            return popup;
+        },
+    });
+    return popups;
+}
+
+test("Tip can be paid with another method once the QR code popup is closed", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const qrPm = store.models["pos.payment.method"].get(2);
+    const cashPm = store.models["pos.payment.method"].get(1);
+    qrPm.payment_method_type = "qr_code";
+    const popups = mockQrPopup(store);
+    const comp = await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+    expect(await comp.addNewPaymentLine(qrPm)).toBe(true);
+    expect(order.payment_ids[0].payment_status).toBe("waiting");
+    expect(order.electronicPaymentInProgress()).toBe(true);
+
+    popups[0].resolve(false);
+    await animationFrame();
+    expect(order.payment_ids[0].payment_status).toBe("retry");
+    expect(order.electronicPaymentInProgress()).toBe(false);
+    expect(await comp.addNewPaymentLine(cashPm)).toBe(true);
+    expect(order.payment_ids).toHaveLength(2);
+    // The cancelled QR code payment still reserves the whole amount due.
+    expect(order.payment_ids[1].getAmount()).toBe(0);
+    expect(order.isPaid()).toBe(false);
+});
+
+test("Split an order between a cancelled QR code payment and another method", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const qrPm = store.models["pos.payment.method"].get(2);
+    const cashPm = store.models["pos.payment.method"].get(1);
+    qrPm.payment_method_type = "qr_code";
+    const popups = mockQrPopup(store);
+    const comp = await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+    await comp.addNewPaymentLine(qrPm);
+    popups[0].resolve(false);
+    await animationFrame();
+    order.payment_ids[0].setAmount(10);
+    expect(await comp.addNewPaymentLine(cashPm)).toBe(true);
+    expect(order.payment_ids[1].getAmount()).toBe(7.85);
+    expect(order.isPaid()).toBe(false);
+
+    order.payment_ids[0].setPaymentStatus("done");
+    expect(order.isPaid()).toBe(true);
+});
+
+test("No second QR code payment for an amount already covered by a QR code", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const qrPm = store.models["pos.payment.method"].get(2);
+    qrPm.payment_method_type = "qr_code";
+    const popups = mockQrPopup(store);
+    const comp = await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+    await comp.addNewPaymentLine(qrPm);
+    popups[0].resolve(false);
+    await animationFrame();
+    expect(await comp.addNewPaymentLine(qrPm)).toBe(false);
+    expect(order.payment_ids).toHaveLength(1);
+
+    // The QR code payment only covers part of the amount due.
+    order.payment_ids[0].setAmount(10);
+    expect(await comp.addNewPaymentLine(qrPm)).toBe(true);
+    expect(order.payment_ids[1].getAmount()).toBe(7.85);
 });
