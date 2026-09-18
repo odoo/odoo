@@ -14,6 +14,7 @@ import { loadBundle } from "@web/core/assets";
 import { WebClient } from "@web/webclient/webclient";
 import { getDashboardServerData } from "./data";
 import { DashboardLoader } from "../../src/bundle/dashboard_action/dashboard_loader_service";
+import { MobileFigureContainer } from "../../src/bundle/dashboard_action/mobile_figure_container/mobile_figure_container";
 
 const { useSpreadsheetEnv } = hooks;
 
@@ -32,6 +33,13 @@ export async function createSpreadsheetDashboard(params = {}) {
             super.setup();
             model = this.model();
             env = useSpreadsheetEnv();
+        },
+    });
+    patchWithCleanup(MobileFigureContainer.prototype, {
+        setup() {
+            super.setup();
+            env = useSpreadsheetEnv();
+            model = this.props.spreadsheetModel;
         },
     });
 

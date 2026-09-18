@@ -12,7 +12,7 @@ import { render, useSubEnv } from "@web/owl2/utils";
 
 const { registries, stores, constants, helpers, owlPlugins } = spreadsheet;
 const { figureRegistry } = registries;
-const { ModelPlugin } = owlPlugins;
+const { ModelPlugin, PopoverContainerPlugin } = owlPlugins;
 const { ModelStore, useStoreProvider } = stores;
 const { isMobileOS } = helpers;
 
@@ -32,6 +32,9 @@ export class MobileFigureContainer extends Component {
         const stores = useStoreProvider();
         stores.inject(ModelStore, this.props.spreadsheetModel);
         providePlugins([ModelPlugin], { model: this.props.spreadsheetModel });
+        providePlugins([PopoverContainerPlugin], {
+            getPopoverContainerRect: () => this.getGridRect(),
+        });
         const onUpdate = () => render(this, true);
         const resizeObserver = new ResizeObserver(() => {
             this.containerWidth.set(this.figureContainer()?.offsetWidth || 0);
@@ -51,6 +54,17 @@ export class MobileFigureContainer extends Component {
             openSidePanel: () => {},
             isMobile: isMobileOS,
         });
+    }
+
+    getGridRect() {
+        return (
+            this.figureContainer()?.getBoundingClientRect() || {
+                top: 0,
+                left: 0,
+                width: 0,
+                height: 0,
+            }
+        );
     }
 
     get style() {
