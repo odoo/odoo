@@ -1,7 +1,7 @@
 import socket
 from urllib.parse import urlsplit
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ResCompany(models.Model):
@@ -26,3 +26,16 @@ class ResCompany(models.Model):
             return socket.gethostbyname(hostname)
         except (socket.gaierror, AttributeError):
             return False
+
+    @api.model
+    def _l10n_pk_edi_action_activate(self):
+        """Install the Pakistan e-invoicing module, then land the user on its settings."""
+        module = self.env['ir.module.module']._get('l10n_pk_edi')
+        if module.state != 'installed':
+            module.button_immediate_install()
+        # The install adds menus and views, so the client has to be reloaded to pick them up.
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+            'params': {'action_id': self.env.ref('account.action_account_config').id},
+        }
