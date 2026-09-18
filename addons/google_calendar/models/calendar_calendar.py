@@ -92,7 +92,7 @@ class CalendarCalendar(models.Model):
         new = google_calendars - updated - primary - deleted
 
         if primary:
-            self.env.user._find_or_create_primary_calendar().write({'google_id': primary.id})
+            self.env.user._find_or_create_primary_calendar().write({'google_id': primary.id, 'need_sync': False})
 
         # Create
         if new:
@@ -191,6 +191,8 @@ class CalendarCalendar(models.Model):
     @after_commit
     def _google_calendar_patch(self, calendar_service: GoogleCalendarService):
         self.ensure_one()
+        if not self.need_sync:
+            return  # already patched by another queued callback this transaction
         with google_calendar_token(self.env.user.sudo()) as token:
             if not token:
                 return
