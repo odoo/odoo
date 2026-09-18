@@ -88,7 +88,7 @@
         <field name="name">resource.calendar.list</field>
         <field name="model">resource.calendar</field>
         <field name="arch" type="xml">
-            <list string="Working Time">
+            <list string="Working Time" class="o_resource_calendar_list">
                 <field name="name" string="Working Time"/>
                 <field name="attendance_ids" string="Preview" widget="resource_calendar_hours_by_day"/>
                 <field name="hours_per_week" string="Schedule Total Time" optional="hide"/>
