@@ -357,25 +357,51 @@ export class TablePlugin extends Plugin {
     normalizeTable(root) {
         const tables = root.querySelectorAll("table");
         for (const table of tables) {
-            const firstRow = table.rows[0];
-            let colgroup;
-            for (const cell of firstRow?.children || []) {
-                const width = cell.style.width;
-                if (!width) {
-                    continue;
+            // Only one colgroup allowed, drop any extras.
+            table.querySelectorAll(":scope > colgroup ~ colgroup").forEach((el) => el.remove());
+            const cells = Array.from(table.rows[0]?.children ?? []);
+            let colgroup = table.querySelector(":scope > colgroup");
+            const hasInlineWidths = cells.some((cell) => cell.style.width);
+            if (colgroup || hasInlineWidths) {
+                colgroup = colgroup || document.createElement("colgroup");
+                const existingCols = [...colgroup.children];
+                let colIndex = 0;
+                for (const cell of cells) {
+                    const span = cell.colSpan || 1;
+                    const inlineWidth = parseFloat(cell.style.width);
+                    let knownWidth = 0;
+                    let unresolvedCount = 0;
+                    for (let index = 0; index < span; index++) {
+                        const existingCol = existingCols[colIndex + index];
+                        const existingWidth = existingCol && parseFloat(existingCol.style.width);
+                        if (existingWidth) {
+                            knownWidth += existingWidth;
+                        } else {
+                            unresolvedCount++;
+                        }
+                    }
+
+                    const perColWidth = unresolvedCount ? (inlineWidth - knownWidth) / unresolvedCount : NaN;
+                    for (let index = 0; index < span; index++) {
+                        const existingCol = existingCols[colIndex];
+                        const existingWidth = existingCol && parseFloat(existingCol.style.width);
+                        const col = existingCol || document.createElement("col");
+
+                        if (!existingWidth && perColWidth) {
+                            col.style.width = `${perColWidth}px`;
+                        }
+                        if (!existingCol) {
+                            colgroup.appendChild(col);
+                        }
+                        colIndex++;
+                    }
+
+                    cell.style.removeProperty("width");
                 }
-                if (!colgroup) {
-                    colgroup = this.document.createElement("colgroup");
+
+                if (!colgroup.isConnected) {
+                    table.prepend(colgroup);
                 }
-                // Apply width to col
-                const col = this.document.createElement("col");
-                col.style.width = width;
-                colgroup.appendChild(col);
-                // Remove the inline width from the cell
-                cell.style.removeProperty("width");
-            }
-            if (colgroup) {
-                table.prepend(colgroup);
             }
 
             // --- Normalize table colors ---
