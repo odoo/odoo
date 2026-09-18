@@ -5,7 +5,7 @@ import { user } from "@web/core/user";
 import { session } from "@web/session";
 import { _t } from "./core/l10n/translation";
 import { rpc } from "./core/network/rpc";
-import { RPCCache } from "./core/network/rpc_cache";
+import { isRPCCacheDisabled, RPCCache } from "./core/network/rpc_cache";
 import { mountComponent } from "./env";
 
 // Chrome iOS wraps some text nodes (like measures, email...)
@@ -33,7 +33,7 @@ export async function startWebClient(Webclient) {
     };
     odoo.isReady = false;
 
-    if (window.isSecureContext && session.browser_cache_secret) {
+    if (window.isSecureContext && session.browser_cache_secret && !isRPCCacheDisabled()) {
         rpc.setCache(new RPCCache("rpc", session.registry_hash, session.browser_cache_secret));
     }
 

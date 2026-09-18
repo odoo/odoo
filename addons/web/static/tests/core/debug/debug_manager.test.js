@@ -30,9 +30,15 @@ import {
 import { location } from "@web/core/browser/browser";
 import { useDebugCategory, useOwnDebugContext } from "@web/core/debug/debug_context";
 import { DebugMenu } from "@web/core/debug/debug_menu";
-import { becomeSuperuser, regenerateAssets } from "@web/core/debug/debug_menu_items";
+import {
+    becomeSuperuser,
+    regenerateAssets,
+    toggleRPCCache,
+} from "@web/core/debug/debug_menu_items";
+import { isRPCCacheDisabled } from "@web/core/network/rpc_cache";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
+import { redirect } from "@web/core/utils/urls";
 import { ActionDialog } from "@web/webclient/actions/action_dialog";
 import { openViewItem } from "@web/webclient/debug/debug_items";
 import { WebClient } from "@web/webclient/webclient";
@@ -215,6 +221,42 @@ describe("DebugMenu", () => {
         await click(item);
         await animationFrame();
         expect.verifySteps(["ir.attachment/regenerate_assets_bundles", "reloadPage"]);
+    });
+
+    test("can disable the rpc cache", async () => {
+        redirect("/odoo");
+        patchWithCleanup(location, {
+            reload: () => expect.step("reloadPage"),
+        });
+        debugRegistry.category("default").add("toggleRPCCache", toggleRPCCache);
+        await mountWithCleanup(DebugMenuParent);
+        await contains("button.dropdown-toggle").click();
+        const item = queryOne(".dropdown-menu .dropdown-item");
+        expect(item).toHaveText("Disable RPC Cache");
+        expect(isRPCCacheDisabled()).toBe(false);
+
+        await click(item);
+        await animationFrame();
+        expect(isRPCCacheDisabled()).toBe(true);
+        expect.verifySteps(["reloadPage"]);
+    });
+
+    test("can re-enable the rpc cache", async () => {
+        redirect("/odoo?cache=0");
+        patchWithCleanup(location, {
+            reload: () => expect.step("reloadPage"),
+        });
+        debugRegistry.category("default").add("toggleRPCCache", toggleRPCCache);
+        await mountWithCleanup(DebugMenuParent);
+        await contains("button.dropdown-toggle").click();
+        const item = queryOne(".dropdown-menu .dropdown-item");
+        expect(item).toHaveText("Enable RPC Cache");
+        expect(isRPCCacheDisabled()).toBe(true);
+
+        await click(item);
+        await animationFrame();
+        expect(isRPCCacheDisabled()).toBe(false);
+        expect.verifySteps(["reloadPage"]);
     });
 
     test("cannot acess the Become superuser menu if not admin", async () => {
