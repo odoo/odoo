@@ -12,4 +12,6 @@ export class MassMailingFontPlugin extends FontTypePlugin {
     };
 }
 
-registry.category("mass_mailing-plugins").add(MassMailingFontPlugin.id, MassMailingFontPlugin);
+registry
+    .category("mass_mailing-builder-plugins")
+    .add(MassMailingFontPlugin.id, MassMailingFontPlugin);
