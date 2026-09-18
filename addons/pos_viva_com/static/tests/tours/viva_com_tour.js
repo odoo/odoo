@@ -47,6 +47,10 @@ registry.category("web_tour.tours").add("VivaComTour", {
             PaymentScreen.isShown(),
             PaymentScreen.clickPaymentMethod("Viva"),
             PaymentScreen.clickSendButton(),
+            {
+                content: "wait for the terminal to be waiting for the card",
+                trigger: ".electronic_status:contains('Waiting for card')",
+            },
             mockVivaWebhook(),
             FeedbackScreen.isShown(),
             FeedbackScreen.clickNextOrder(),
@@ -60,6 +64,10 @@ registry.category("web_tour.tours").add("VivaComTour", {
                 content: "Click Refund",
                 trigger: "div.button:contains('Refund')",
                 run: "click",
+            },
+            {
+                content: "wait for the terminal to be processing the refund",
+                trigger: ".electronic_status:contains('Refund in process')",
             },
             mockVivaWebhook(),
             FeedbackScreen.isShown(),
