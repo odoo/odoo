@@ -301,18 +301,19 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             'tz': self.jules_emp.tz
         })
 
+        # an hourly request cannot span several days without a working schedule
         leave_paid = self.env['hr.leave'].create({
             'name': 'Paid leave',
             'employee_id': self.jules_emp.id,
             'work_entry_type_id': work_entry_type_paid.id,
             'request_date_from': datetime(2024, 9, 10),
-            'request_date_to': datetime(2024, 9, 13),
+            'request_date_to': datetime(2024, 9, 10),
         })
         leave_paid.with_user(SUPERUSER_ID)._action_validate()
 
         work_entries_vals = self.jules_emp.generate_work_entries(date(2024, 9, 10), date(2024, 9, 13))
         paid_leave_entry = [vals for vals in work_entries_vals if vals['work_entry_type_id'] == work_entry_type_paid]
-        self.assertEqual(len(paid_leave_entry), 4, "Four work entries should be created for a flexible employee")
+        self.assertEqual(len(paid_leave_entry), 1, "One work entry should be created for the leave of a flexible employee")
         self.assertEqual(sum(vals['duration'] for vals in work_entries_vals), 32, "The combined duration of the work entries for flexible employee should "
                                                                         "be number of days * hours per day")
 
