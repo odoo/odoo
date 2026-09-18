@@ -446,6 +446,32 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         self.assertEqual(current_session.state, 'closed', 'Session was not properly closed')
         self.assertEqual(order.state, 'done')
 
+<<<<<<< 3353cc8668b18e2903aed033269a982f1723706d
+||||||| c5ee7467c4b15d6b9599cb1c0af35abab9e8443a
+    def test_online_payment_amount_updated_after_order_modification(self):
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_online_payment_amount_updated_after_order_modification', login="pos_admin")
+        order = self.pos_config.current_session_id.order_ids.sorted(lambda o: o.id, reverse=True)[0]
+        self.assertEqual(order.state, "draft", "The order should still be in draft state, awaiting the online payment.")
+        self.assertEqual(order.amount_total, 96.0, "The increased order total should be synced to the server.")
+
+=======
+    def test_online_payment_amount_updated_after_order_modification(self):
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_online_payment_amount_updated_after_order_modification', login="pos_admin")
+        order = self.pos_config.current_session_id.order_ids.sorted(lambda o: o.id, reverse=True)[0]
+        self.assertEqual(order.state, "draft", "The order should still be in draft state, awaiting the online payment.")
+        self.assertEqual(order.amount_total, 96.0, "The increased order total should be synced to the server.")
+
+    def test_restaurant_online_payment_flow(self):
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('RestaurantOnlinePaymentTour', login="pos_admin")
+        order = self.pos_config.current_session_id.order_ids.sorted(lambda o: o.id, reverse=True)[0]
+        self.assertEqual(order.state, "paid", "The order should be paid.")
+        self.assertEqual(len(order.payment_ids), 1, "There should be one payment line in the order.")
+        self.assertEqual(order.payment_ids[0].payment_method_id.id, self.cash_payment_method.id, "The payment should be Cash.")
+
+>>>>>>> fa4e244b4be188e074149eab8c0afc94f71d18e4
     @classmethod
     def tearDownClass(cls):
         # Restore company values after the tests
