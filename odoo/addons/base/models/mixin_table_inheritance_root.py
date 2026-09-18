@@ -2,6 +2,7 @@ from collections import defaultdict
 from typing import Self
 
 from odoo import api, models, tools
+from odoo.db.schema import table_exists
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, _, frozendict
@@ -116,6 +117,14 @@ class MixinTableInheritanceRoot(models.AbstractModel):
     def _check_table_inheritance(self) -> None:
         root_table = self._table_inheritance_root
         if not root_table or self._table == root_table:
+            return
+        if not table_exists(self.env.cr, self._table):
+            _debug.lifecycle(
+                "table_inheritance.table_absent",
+                model=self._name,
+                table=self._table,
+                root=root_table,
+            )
             return
         self.env.cr.execute(
             SQL(
