@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_l10n_id_pajakio_update_status" model="ir.cron">
+        <field name="name">Pajak.io: Update status of invoices waiting for DJP approval</field>
+        <field name="model_id" ref="l10n_id_efaktur_coretax.model_l10n_id_efaktur_coretax_document"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_l10n_id_pajakio_update_waiting_status()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+</odoo>
