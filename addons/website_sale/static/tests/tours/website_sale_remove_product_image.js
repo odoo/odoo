@@ -62,11 +62,22 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content:
-                "Check that the snippet editor of the clicked image has been loaded",
-            trigger: ".o_customize_tab [data-container-title='Image']",
+            content: "Wait for the chosen image to replace the product's",
+            trigger:
+                ":iframe .o_product_detail_img_wrapper img:not([alt='Test Remove Image'])",
         },
-        ...removeImg,
+        {
+            // the replace re-targets the options a frame later: a Remove found
+            // before that belongs to the image the dialog just detached
+            content: "Click on Remove in the options of the chosen image",
+            trigger:
+                ".o_customize_tab [data-container-title='Image']:has(.o-hb-image-size-info:not(:contains(5.9 kB))) button[data-action-id='removeMedia']",
+            run: "click",
+        },
+        {
+            content: "Check that the snippet editor is not visible",
+            trigger: ".o_customize_tab:not(:has([data-container-title='Image']))",
+        },
     ],
 );
 registerWebsitePreviewTour(
