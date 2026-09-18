@@ -1,5 +1,7 @@
 import { loadBundle } from "@web/core/assets";
 
+// TODO EGGMAIL: move this file in web or in mail/utils
+
 /**
  * Execute a callback once an iframe is ready/loaded in the DOM. The iframe must
  * have same origin sandbox policy enabled, and must be in the DOM (Chrome does
@@ -9,7 +11,7 @@ import { loadBundle } from "@web/core/assets";
  * @template [T=any]
  * @param {I} iframe
  * @param {(iframe: I) => T} [callback]
- * @returns {Promise<T>}
+ * @returns {Promise<T>} Forever pending if the iframe is disconnected
  */
 export function loadIframe(iframe, callback = () => {}) {
     const { promise: iframeLoaded, resolve, reject } = Promise.withResolvers();
@@ -24,11 +26,12 @@ export function loadIframe(iframe, callback = () => {}) {
                 });
         }
     };
-    if (iframe.contentDocument?.readyState === "complete") {
-        // Browsers like Chrome don't make use of the load event for iframes without `src`
+    if (
+        iframe.contentDocument?.readyState === "complete" &&
+        (!iframe.hasAttribute("srcdoc") || iframe.contentDocument.URL === "about:srcdoc")
+    ) {
         onIframeLoaded();
     } else {
-        // Browsers like Firefox only make iframe document available after dispatching "load"
         iframe.addEventListener("load", () => onIframeLoaded(), { once: true });
     }
     return iframeLoaded;
@@ -42,10 +45,11 @@ export function loadIframe(iframe, callback = () => {}) {
  * @param {HTMLIFrameElement} iframe
  * @param {string[]} bundles assets bundle names
  * @param {Parameters<loadBundle>[1]} [options] type of files to load
+ * @returns {Promise<T>} Forever pending if the iframe is disconnected
  */
 export function loadIframeBundles(iframe, bundles, options) {
-    const bundleOptions = { js: false, targetDoc: iframe.contentDocument, ...options };
     return loadIframe(iframe, async () => {
+        const bundleOptions = { js: false, targetDoc: iframe.contentDocument, ...options };
         const result = [];
         for (const bundle of bundles) {
             result.push(await loadBundle(bundle, bundleOptions));
