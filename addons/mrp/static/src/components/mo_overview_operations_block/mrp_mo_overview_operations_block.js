@@ -21,7 +21,7 @@ export const MO_OVERVIEW_SUMMARY_SHAPE = {
 
 export const moOverviewOperationsBlockProps = {
     unfoldAll: t.boolean().optional(false),
-    operations: t.array(),
+    operations: t.array().optional(),
     summary: t.object(MO_OVERVIEW_SUMMARY_SHAPE),
     showOptions: SHOW_OPTIONS,
 };
