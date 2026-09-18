@@ -2900,3 +2900,144 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertTrue(resource_leave.exists(), "Resource calendar leave should still exist after employee departure")
         self.assertEqual(resource_leave.date_from.date(), date(2026, 3, 1), "Resource calendar leave start date should match the updated leave start date")
         self.assertEqual(resource_leave.date_to.date(), departure_date, "Resource calendar leave end date should match the updated leave end date")
+<<<<<<< c25973ed513fec312559e4fc9b79b5db58b7ccd1
+||||||| 6f1f28e19d568ad555a157cfc39d9503387b2a65
+
+    def test_holiday_type_allocation_future_leave(self):
+        """A validated future leave should already reduce the allocation's virtual_remaining_leaves."""
+        with freeze_time('2026-09-10'):
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Allocation',
+                'employee_id': self.employee_emp_id,
+                'work_entry_type_id': self.holidays_type_2.id,
+                'number_of_days': 10,
+                'state': 'confirm',
+                'date_from': '2026-01-01',
+                'date_to': '2026-12-31',
+            })
+            allocation.action_approve()
+
+            leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Holiday Request',
+                'employee_id': self.employee_emp_id,
+                'work_entry_type_id': self.holidays_type_2.id,
+                'request_date_from': '2026-11-02',
+                'request_date_to': '2026-11-06',
+            })
+            leave.with_user(self.user_hrmanager_id).action_approve()
+
+            self.assertEqual(leave.state, 'validate')
+            self.assertEqual(leave.number_of_days, 5)
+            self.assertEqual(allocation.virtual_remaining_leaves, 5,
+                'A validated future leave should already reduce the allocation remaining balance')
+=======
+
+    def test_holiday_type_allocation_future_leave(self):
+        """A validated future leave should already reduce the allocation's virtual_remaining_leaves."""
+        with freeze_time('2026-09-10'):
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Allocation',
+                'employee_id': self.employee_emp_id,
+                'work_entry_type_id': self.holidays_type_2.id,
+                'number_of_days': 10,
+                'state': 'confirm',
+                'date_from': '2026-01-01',
+                'date_to': '2026-12-31',
+            })
+            allocation.action_approve()
+
+            leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Holiday Request',
+                'employee_id': self.employee_emp_id,
+                'work_entry_type_id': self.holidays_type_2.id,
+                'request_date_from': '2026-11-02',
+                'request_date_to': '2026-11-06',
+            })
+            leave.with_user(self.user_hrmanager_id).action_approve()
+
+            self.assertEqual(leave.state, 'validate')
+            self.assertEqual(leave.number_of_days, 5)
+            self.assertEqual(allocation.virtual_remaining_leaves, 5,
+                'A validated future leave should already reduce the allocation remaining balance')
+
+    @freeze_time('2026-04-01')
+    def test_timeoff_duration_fully_flexible_employee_multi_day(self):
+        """ Test multi-day time off duration for fully flexible employees under various scenarios.
+        Scenarios covered:
+        - Mon-Fri full days request: duration should be 5 days.
+        - Mon PM to Fri AM half days request: duration should be 4 days.
+        - Mon-Fri with public holiday on Wednesday: public holiday should be subtracted, duration should be 4 days.
+        - Mon-Fri with public holiday on Wednesday but include_public_holidays_in_duration is True on type: duration should be 5 days.
+        """
+        employee_no_calendar = self.env['hr.employee'].create({
+            'name': 'Fully Flexible Employee',
+        })
+        employee_no_calendar.resource_calendar_id = False
+        self.holidays_type_half.leave_validation_type = 'hr'
+        leave_type_incl_ph = self.env['hr.work.entry.type'].create({
+            'name': 'NotLimitedHR with PH',
+            'requires_allocation': False,
+            'code': 'TEST',
+            'include_public_holidays_in_duration': True,
+        })
+        self.env['resource.calendar.leaves'].create([
+            {
+                'name': 'Public Holiday 1',
+                'date_from': datetime(2026, 4, 22, 0, 0, 0),
+                'date_to': datetime(2026, 4, 22, 23, 59, 59),
+                'calendar_id': False,
+                'company_id': employee_no_calendar.company_id.id,
+                'resource_id': False,
+            },
+            {
+                'name': 'Public Holiday 2',
+                'date_from': datetime(2026, 4, 29, 0, 0, 0),
+                'date_to': datetime(2026, 4, 29, 23, 59, 59),
+                'calendar_id': False,
+                'company_id': employee_no_calendar.company_id.id,
+                'resource_id': False,
+            }
+        ])
+        leave_data = [
+            {
+                'name': 'Mon-Fri full days request',
+                'request_date_from': date(2026, 4, 6),
+                'request_date_to': date(2026, 4, 10),
+                'work_entry_type_id': self.holidays_type_1.id,
+            },
+            {
+                'name': 'Mon PM to Fri AM half days request',
+                'request_date_from': date(2026, 4, 13),
+                'request_date_to': date(2026, 4, 17),
+                'work_entry_type_id': self.holidays_type_half.id,
+                'request_date_from_period': 'pm',
+                'request_date_to_period': 'am',
+            },
+            {
+                'name': 'Mon-Fri with public holiday on Wed (not included)',
+                'request_date_from': date(2026, 4, 20),
+                'request_date_to': date(2026, 4, 24),
+                'work_entry_type_id': self.holidays_type_1.id,
+            },
+            {
+                'name': 'Mon-Fri with public holiday on Wed (included)',
+                'request_date_from': date(2026, 4, 27),
+                'request_date_to': date(2026, 5, 1),
+                'work_entry_type_id': leave_type_incl_ph.id,
+            },
+        ]
+        leaves = self.env['hr.leave'].create([
+            {
+                **data,
+                'employee_id': employee_no_calendar.id,
+            }
+            for data in leave_data
+        ])
+        expected_days_list = [5.0, 4.0, 4.0, 5.0]
+        for leave, expected_days, data in zip(leaves, expected_days_list, leave_data):
+            self.assertEqual(
+                leave.number_of_days,
+                expected_days,
+                f"{data['name']} should have {expected_days} days duration"
+            )
+>>>>>>> c38ade1be023c487e1498b622c2b605e5ce70439
