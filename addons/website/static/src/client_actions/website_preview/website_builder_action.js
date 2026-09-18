@@ -555,7 +555,7 @@ export class WebsiteBuilderClientAction extends Component {
     waitForIframeReady() {
         return new Promise((resolve) => {
             const doc = this.websiteContent().contentDocument;
-            if (doc.body.hasAttribute("is-ready")) {
+            if (doc.body.getAttribute("is-ready") === "true") {
                 resolve();
             } else {
                 const observer = new MutationObserver(() => {
