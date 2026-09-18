@@ -28,6 +28,7 @@ export class MassMailingBuilder extends Component {
 
     props = useProps({
         builderProps: t.object(),
+        discardAndClose: t.function(),
         saveAndClose: t.function(),
         toggleCodeView: t.function().optional(),
     });
@@ -51,7 +52,7 @@ export class MassMailingBuilder extends Component {
         const massMailingPlugins = removePlugins(
             [
                 ...registry.category("builder-plugins").getAll(),
-                ...registry.category("mass_mailing-plugins").getAll(),
+                ...registry.category("mass_mailing-builder-plugins").getAll(),
             ],
             pluginsToRemove
         );
