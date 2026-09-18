@@ -44,7 +44,10 @@ $o-we-color-success: #00ff9e !default;
 
 .o_font_color_selector {
     .btn-tab {
-        min-width: 57px;
+        // This hardcoded 53px value is based on the 208px width of the color
+        // picker minus the trash button width. Changing it could make the tab
+        // buttons too wide depending on the displayed language.
+        min-width: 53px;
         padding: 3px;
         font-size: 12px;
 
