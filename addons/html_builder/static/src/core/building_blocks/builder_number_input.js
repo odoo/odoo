@@ -27,6 +27,7 @@ export class BuilderNumberInput extends Component {
         max: { type: Number, optional: true },
         composable: { type: Boolean, optional: true },
         applyWithUnit: { type: Boolean, optional: true },
+        isIntegerInput: { type: Boolean, optional: true },
     };
     static components = { BuilderComponent, BuilderTextInputBase };
     static defaultProps = {
@@ -96,7 +97,7 @@ export class BuilderNumberInput extends Component {
         if (!value && value !== 0) {
             return value;
         }
-        value = parseFloat(value);
+        value = this.props.isIntegerInput ? parseInt(value) : parseFloat(value);
         if (value < this.props.min) {
             return `${this.props.min}`;
         }
