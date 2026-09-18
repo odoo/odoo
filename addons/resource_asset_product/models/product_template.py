@@ -6,6 +6,7 @@ class ProductTemplate(models.Model):
 
     asset_kind_id = fields.Many2one(
         comodel_name="resource.asset.kind",
+        change_default=True,
         help="Set when each unit of this product is an asset in its own right: a vehicle, a machine, a phone. Empty for consumables and parts.",
     )
     asset_kind_code = fields.Char(related="asset_kind_id.code")
