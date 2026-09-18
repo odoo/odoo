@@ -411,14 +411,14 @@
                             </setting>
                         </block>
                         <block title="Accounting Firms mode">
-                            <setting  id="quick_edit_mode_enabled" company_dependent="1" help="A new field 'Total (tax inc.)' to speed up and control the encoding by automating line creation with the right account and tax.">
+                            <setting  id="quick_edit_mode_enabled" company_dependent="1" help="Add a 'Total (tax incl.)' field that speeds up encoding and improves accuracy by automatically creating lines with the correct account and tax.">
                                 <field name="quick_edit_mode_enabled"/>
                                 <field name="quick_edit_mode" required="quick_edit_mode_enabled" invisible="not quick_edit_mode_enabled"/>
                             </setting>
-                            <setting  id="document_sequence_editable" company_dependent="1" help="The document's sequence becomes editable on all documents.">
+                            <setting  id="document_sequence_editable" company_dependent="1" help="The document sequence number is now editable on all documents.">
                                 <field name="document_sequence_editable"/>
                             </setting>
-                            <setting  id="set_to_review_documents" company_dependent="1" help="Review all the modification done by the user with right under bookkeeper.">
+                            <setting  id="set_to_review_documents" company_dependent="1" help="Audit changes made by users whose role is lower than Bookkeeper.">
                                 <field name="set_to_review_documents"/>
                             </setting>
                         </block>
