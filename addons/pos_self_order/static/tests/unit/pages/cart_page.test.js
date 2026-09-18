@@ -4,6 +4,7 @@ import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { CartPage } from "@pos_self_order/app/pages/cart_page/cart_page";
 import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
+import * as Utils from "@pos_self_order/../tests/unit/ui_utils";
 
 definePosSelfModels();
 
@@ -88,4 +89,18 @@ test("add note button is not shown in kiosk mode", async () => {
 
     const orderNoteContainer = queryFirst(".order-note");
     expect(orderNoteContainer).toBe(null);
+});
+
+test("slots at capacity should disabled in self order", async () => {
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
+    const preset = store.models["pos.preset"].get(2);
+    preset.slots_per_interval = 1;
+
+    const order = await getFilledSelfOrder(store);
+    order.preset_id = preset;
+    order.partner_id = false;
+
+    await mountWithCleanup(CartPage, {});
+    await Utils.clickCartButton("Order");
+    await Utils.checkSlotDisabled("12:00");
 });

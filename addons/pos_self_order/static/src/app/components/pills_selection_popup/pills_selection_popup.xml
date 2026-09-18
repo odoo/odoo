@@ -37,6 +37,7 @@
                                 <div class="col-4 col-sm-3 col-md-2" t-foreach="options" t-as="option" t-key="option.id">
                                     <button class="option-item btn btn-secondary btn-sm w-100 py-2 fw-bold"
                                         t-out="option.name"
+                                        t-att-disabled="option.disabled"
                                         t-on-click="() => this.selectOption(option.id)"
                                         t-att-class="{
                                             'border border-primary': this.state.selectedOptionId === option.id,
