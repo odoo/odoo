@@ -298,27 +298,27 @@ class TestFillTemporal(common.TransactionCase):
 
         expected = [{
             '__extra_domain': ['&', ('date', '>=', '1916-08-13'), ('date', '<', '1916-08-20')],
-            'date:week': ('1916-08-13', 'W34 1916'),
+            'date:week': ('1916-08-13', 'W34 1916 (Aug 13 – 19)'),
             '__count': 2,
             'value:sum': 7,
         }, {
             '__extra_domain': ['&', ('date', '>=', '1916-08-20'), ('date', '<', '1916-08-27')],
-            'date:week': ('1916-08-20', 'W35 1916'),
+            'date:week': ('1916-08-20', 'W35 1916 (Aug 20 – 26)'),
             '__count': 1,
             'value:sum': 13,
         }, {
             '__extra_domain': ['&', ('date', '>=', '1916-08-27'), ('date', '<', '1916-09-03')],
-            'date:week': ('1916-08-27', 'W36 1916'),
+            'date:week': ('1916-08-27', 'W36 1916 (Aug 27 – Sep 2)'),
             '__count': 0,
             'value:sum': False,
         }, {
             '__extra_domain': ['&', ('date', '>=', '1916-09-03'), ('date', '<', '1916-09-10')],
-            'date:week': ('1916-09-03', 'W37 1916'),
+            'date:week': ('1916-09-03', 'W37 1916 (Sep 3 – 9)'),
             '__count': 0,
             'value:sum': False,
         }, {
             '__extra_domain': ['&', ('date', '>=', '1916-09-10'), ('date', '<', '1916-09-17')],
-            'date:week': ('1916-09-10', 'W38 1916'),
+            'date:week': ('1916-09-10', 'W38 1916 (Sep 10 – 16)'),
             '__count': 3,
             'value:sum': 20,
         }]
@@ -785,37 +785,37 @@ class TestFillTemporal(common.TransactionCase):
 
         expected = [{
             '__extra_domain': ['&', ('date', '>=', '1916-08-06'), ('date', '<', '1916-08-13')],
-            'date:week': ('1916-08-06', 'W33 1916'),
+            'date:week': ('1916-08-06', 'W33 1916 (Aug 6 – 12)'),
             '__count': 0,
             'value:sum': False,
         }, {
             '__extra_domain': ['&', ('date', '>=', '1916-08-13'), ('date', '<', '1916-08-20')],
-            'date:week': ('1916-08-13', 'W34 1916'),
+            'date:week': ('1916-08-13', 'W34 1916 (Aug 13 – 19)'),
             '__count': 2,
             'value:sum': 7,
         }, {
             '__extra_domain': ['&', ('date', '>=', '1916-08-20'), ('date', '<', '1916-08-27')],
-            'date:week': ('1916-08-20', 'W35 1916'),
+            'date:week': ('1916-08-20', 'W35 1916 (Aug 20 – 26)'),
             '__count': 1,
             'value:sum': 13,
         }, {
             '__extra_domain': ['&', ('date', '>=', '1916-08-27'), ('date', '<', '1916-09-03')],
-            'date:week': ('1916-08-27', 'W36 1916'),
+            'date:week': ('1916-08-27', 'W36 1916 (Aug 27 – Sep 2)'),
             '__count': 0,
             'value:sum': False,
         }, {
             '__extra_domain': ['&', ('date', '>=', '1916-09-03'), ('date', '<', '1916-09-10')],
-            'date:week': ('1916-09-03', 'W37 1916'),
+            'date:week': ('1916-09-03', 'W37 1916 (Sep 3 – 9)'),
             '__count': 0,
             'value:sum': False,
         }, {
             '__extra_domain': ['&', ('date', '>=', '1916-09-10'), ('date', '<', '1916-09-17')],
-            'date:week': ('1916-09-10', 'W38 1916'),
+            'date:week': ('1916-09-10', 'W38 1916 (Sep 10 – 16)'),
             '__count': 3,
             'value:sum': 20,
         }, {
             '__extra_domain': ['&', ('date', '>=', '1916-09-17'), ('date', '<', '1916-09-24')],
-            'date:week': ('1916-09-17', 'W39 1916'),
+            'date:week': ('1916-09-17', 'W39 1916 (Sep 17 – 23)'),
             '__count': 0,
             'value:sum': False,
         }]
