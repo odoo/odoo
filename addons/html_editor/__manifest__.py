@@ -78,6 +78,7 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/html_migrations/**/*',
             'html_editor/static/src/main/list/list.scss',
             'html_editor/static/src/main/media/file.scss',
+            'html_editor/static/src/main/table/table.scss',
             'html_editor/static/src/others/embedded_component_utils.js',
             'html_editor/static/src/others/embedded_components/core/**/*',
             'html_editor/static/src/utils/**/*',
