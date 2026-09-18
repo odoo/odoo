@@ -1,5 +1,7 @@
 from odoo.tests.common import TransactionCase, tagged
 
+from odoo.addons.base.models.ir_model_common import MODULE_UNINSTALL_FLAG
+
 
 @tagged("post_install", "-at_install")
 class TestCascadeIntoActionTree(TransactionCase):
@@ -60,6 +62,22 @@ class TestCascadeIntoActionTree(TransactionCase):
             ("ir.actions.act_window", "binding_model_id"), cascades["ir.model"]
         )
         self.assertIn(("ir.actions.server", "parent_id"), cascades["ir.actions.server"])
+
+    def test_registry_follows_a_cascade_through_a_plain_model(self):
+        cascades = self.env.registry.cascades_into_inheritance_trees
+        self.assertIn(
+            ("ir.actions.server", "update_field_id"), cascades["ir.model.fields"]
+        )
+        self.assertIn(
+            ("ir.actions.server", "update_field_id.model_id"), cascades["ir.model"]
+        )
+        self.assertIn(
+            ("ir.actions.server", "selection_value.field_id.model_id"),
+            cascades["ir.model"],
+        )
+        for pairs in cascades.values():
+            for __, path in pairs:
+                self.assertLessEqual(path.count("."), 3, path)
 
     def test_deleting_the_model_unlinks_its_actions_through_the_orm(self):
         action_ids = [self.window.id, self.server.id]
@@ -181,3 +199,83 @@ class TestCascadeIntoActionTree(TransactionCase):
             ),
             0,
         )
+
+    def test_a_cascade_through_a_deleted_models_field_unlinks_the_action(self):
+        holder = self.env["ir.model"].create(
+            {
+                "name": "Cascade Holder",
+                "model": "x_tab_holder",
+                "field_id": [
+                    (
+                        0,
+                        0,
+                        {
+                            "name": "x_probe_id",
+                            "ttype": "many2one",
+                            "relation": "x_tab_cascade",
+                            "field_description": "P",
+                        },
+                    )
+                ],
+            }
+        )
+        action = self.env["ir.actions.server"].create(
+            {
+                "name": "tab-cascade two steps",
+                "model_id": holder.id,
+                "state": "object_write",
+                "update_path": "x_probe_id.x_name",
+                "value": "x",
+                "path": "tab-cascade-two-steps",
+            }
+        )
+        self.assertEqual(action.update_field_id.model, "x_tab_cascade")
+        self.env.flush_all()
+        action_id = action.id
+
+        self.model.unlink()
+        self.env.flush_all()
+
+        self.assertEqual(
+            self._count("SELECT count(*) FROM ir_actions WHERE id = %s", action_id), 0
+        )
+        self.assertEqual(
+            self._count(
+                "SELECT count(*) FROM ir_actions_path WHERE action_id = %s", action_id
+            ),
+            0,
+        )
+
+    def test_a_referrer_column_dropped_by_an_uninstall_does_not_stop_the_unlink(self):
+        referrer = self.env["ir.model"].create(
+            {
+                "name": "Cascade Referrer",
+                "model": "x_tab_dropped",
+                "field_id": [
+                    (
+                        0,
+                        0,
+                        {
+                            "name": "x_action_id",
+                            "ttype": "many2one",
+                            "relation": "ir.actions.actions",
+                            "on_delete": "cascade",
+                            "field_description": "A",
+                        },
+                    )
+                ],
+            }
+        )
+        self.env.flush_all()
+        uninstalling = self.env(context={MODULE_UNINSTALL_FLAG: True})
+        self.env.cr.execute('ALTER TABLE "x_tab_dropped" DROP COLUMN "x_action_id"')
+        self.assertIn("x_action_id", self.env["x_tab_dropped"]._fields)
+        window_id = self.window.id
+
+        self.window.with_env(uninstalling).unlink()
+        self.env.flush_all()
+
+        self.assertEqual(
+            self._count("SELECT count(*) FROM ir_actions WHERE id = %s", window_id), 0
+        )
+        self.assertTrue(referrer.exists())

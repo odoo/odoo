@@ -16,6 +16,8 @@ if typing.TYPE_CHECKING:
 
 _debug = DebugLog(__name__)
 
+_CASCADE_PATH_MAX_MODELS = 4
+
 
 def index_model_names_by_inheritance_root(
     models: Mapping[str, type[BaseModel]],
@@ -103,7 +105,45 @@ class _RegistryModelsMixin(_RegistryStubs):
                         referrers.setdefault(field.comodel_name, []).append(
                             (name, field.name)
                         )
+        self._extend_cascades_through_plain_models(referrers)
         return {comodel: tuple(sorted(pairs)) for comodel, pairs in referrers.items()}
+
+    def _extend_cascades_through_plain_models(
+        self, referrers: dict[str, list[tuple[str, str]]]
+    ) -> None:
+        in_trees = {
+            name
+            for names in self.model_names_by_inheritance_root.values()
+            for name in names
+        }
+        frontier = [
+            (comodel, leaf, path, (comodel,))
+            for comodel, pairs in referrers.items()
+            for leaf, path in pairs
+        ]
+        while frontier:
+            comodel, leaf, path, trail = frontier.pop()
+            model_cls = self.models.get(comodel)
+            if (
+                model_cls is None
+                or comodel in in_trees
+                or model_cls._abstract
+                or len(trail) > _CASCADE_PATH_MAX_MODELS
+            ):
+                continue
+            for field in model_cls._fields.values():
+                if (
+                    field.is_many2one
+                    and field.store
+                    and field.column_type
+                    and field.ondelete == "cascade"
+                    and field.comodel_name not in trail
+                ):
+                    longer = f"{path}.{field.name}"
+                    referrers.setdefault(field.comodel_name, []).append((leaf, longer))
+                    frontier.append(
+                        (field.comodel_name, leaf, longer, (*trail, field.comodel_name))
+                    )
 
     @functools.cached_property
     def _prefetch_fields_by_model(

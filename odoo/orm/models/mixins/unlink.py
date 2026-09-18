@@ -109,21 +109,29 @@ class UnlinkMixin(_ModelStubs):
         referrers = self.env.registry.cascades_into_inheritance_trees.get(self._name)
         if not referrers:
             return
-        for model_name, field_name in referrers:
+        for model_name, path in referrers:
             model = self.env[model_name].sudo().with_context(active_test=False)
-            if not column_exists(self.env.cr, model._table, field_name):
+            if not model._is_path_in_database(path):
                 continue
-            rows = model.search([(field_name, "in", self.ids)])  # noqa: E8507  model varies
+            rows = model.search([(path, "in", self.ids)])  # noqa: E8507  model varies
             if model_name == self._name:
                 rows -= self
             _debug.pipeline(
                 "unlink.inheritance_rows_cascaded",
                 model=self._name,
                 referrer=model_name,
-                field=field_name,
+                path=path,
                 rows=len(rows),
             )
             rows.unlink()
+
+    def _is_path_in_database(self, path: str) -> bool:
+        model = self
+        for name in path.split("."):
+            if not column_exists(self.env.cr, model._table, name):
+                return False
+            model = self.env[model._fields[name].comodel_name]
+        return True
 
     def _discard_pending_recomputes(self) -> None:
         core = self.env.core
