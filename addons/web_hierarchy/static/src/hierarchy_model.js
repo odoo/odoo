@@ -510,8 +510,12 @@ export class HierarchyModel extends Model {
         this.activeFields = params.activeFields;
         this.defaultOrderBy = params.defaultOrderBy;
         this.notification = notification;
+        this.doCount = true;
         this.config = {
             domain: [],
+            offset: 0,
+            limit: params.limit,
+            totalRecords: -1,
             ...params.config,
             isRoot: true,
         };
@@ -598,7 +602,8 @@ export class HierarchyModel extends Model {
     async load(params = {}) {
         nodeId = forestId = treeId = 0;
         const { resIds, ...config } = this._getNextConfig(this.config, params);
-        const data = await this.keepLast.add(this._loadData({ ...config, resIds }));
+        const [data, totalRecords] = await this.keepLast.add(this._loadData({ ...config, resIds }));
+        config.totalRecords = totalRecords !== -1 ? totalRecords : config.totalRecords;
         this.root = this._createRoot(config, data);
         this.config = config;
         this.notify({ scrollTarget: "none" });
@@ -609,7 +614,7 @@ export class HierarchyModel extends Model {
      */
     async reload() {
         nodeId = forestId = treeId = 0;
-        const data = await this.keepLast.add(this._loadData(this.config, true));
+        const [data, _] = await this.keepLast.add(this._loadData(this.config, true));
         this.root = this._createRoot(this.config, data);
         this.notify({ scrollTarget: "none" });
     }
@@ -648,7 +653,7 @@ export class HierarchyModel extends Model {
                     ["id", "in", resIdsToFetch],
                 ],
             };
-            const data = await this._loadData(config);
+            const [data, _] = await this._loadData(config);
             this.root = this._createRoot(config, data);
             this.notify();
             return;
@@ -764,7 +769,21 @@ export class HierarchyModel extends Model {
                 // Just needed for the first load.
                 delete config.context.hierarchy_res_id;
             }
+
+            // if the domain actually changed we want to reset the offset.
+            // we also reset resIds here in case filter was changed in different view
+            if (currentConfig.domain.toString() !== params.domain.toString()) {
+                this.doCount = true
+                params.offset = 0
+                config.resIds = []
+            }
+            else if(config.totalRecords !== -1){
+                this.doCount = false  // this will reach if you revisit the page with same filter. Don't want to do a recount to preserve root count
+            }
         }
+
+        config.limit = params.limit === undefined ? currentConfig.limit : params.limit;
+        config.offset = params.offset === undefined ? currentConfig.offset : params.offset;
 
         // orderBy
         config.orderBy = "orderBy" in params ? params.orderBy : config.orderBy;
@@ -824,9 +843,11 @@ export class HierarchyModel extends Model {
     async _loadData(config, reload = false) {
         let onlyRoots = false;
         let domain = config.domain;
+        let totalRecords = -1;
         const resIds = reload ? this.resIds : config.resIds;
         if (resIds?.length > 0) {
             domain = [["id", "in", resIds]];
+            config.offset = 0;  // if we're revisiting the view and searching for specific records, we don't want to apply an offset
         } else if (this.isSearchDefaultOrEmpty()) {
             // If the current SearchModel query is the default one
             // configured for the action or there is no search query, an
@@ -836,6 +857,15 @@ export class HierarchyModel extends Model {
             domain = !domain.length
                 ? this.defaultDomain
                 : Domain.and([this.defaultDomain, domain]).toList({});
+        }
+        if (config.limit && this.doCount) {
+            const totalCount = await this.orm.searchCount(
+                this.resModel,
+                domain,
+                { context: this.context }
+            );
+            totalRecords = totalCount;
+            this.doCount = false;
         }
         const fieldsSpec = this._getFieldsSpec(config.context);
         const hierarchyRead = async () => {
@@ -847,6 +877,8 @@ export class HierarchyModel extends Model {
                     fieldsSpec,
                     this.parentFieldName,
                     this.childFieldName,
+                    config.offset,
+                    config.limit,
                     orderByToString(config.orderBy),
                 ],
                 { context: this.context }
@@ -857,7 +889,7 @@ export class HierarchyModel extends Model {
             domain = config.domain;
             result = await hierarchyRead();
         }
-        return this._formatData(result);
+        return [this._formatData(result), totalRecords];
     }
 
     _formatData(data) {
