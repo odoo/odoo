@@ -28,6 +28,7 @@ class HrEmployee(models.Model):
                     'work_location_id': employee[day].id,
                 }
 
+<<<<<<< 0164b2ba0eabfba25b563c130b4ed10c0848342a:addons/hr_calendar/models/hr_employee.py
         exceptions_for_period = self.env['hr.employee.location']
         if exceptions_for_period.has_access('read'):
             exceptions_for_period = self.env['hr.employee.location'].search_fetch([
@@ -35,6 +36,20 @@ class HrEmployee(models.Model):
                 ('date', '>=', start_date),
                 ('date', '<=', end_date)
             ], ['employee_id', 'date', 'work_location_name', 'work_location_id', 'work_location_type'])
+||||||| 19dc36aa70bd9a108c5789dbbd2652f43e7637d8:addons/hr_homeworking_calendar/models/hr_employee.py
+        exceptions_for_period = self.env['hr.employee.location'].search_read([
+            ('employee_id', 'in', self.ids),
+            ('date', '>=', start_date),
+            ('date', '<=', end_date)
+        ], ['employee_id', 'date', 'work_location_name', 'work_location_id', 'work_location_type'])
+=======
+        # sudo: for user without HR rights
+        exceptions_for_period = self.env['hr.employee.location'].sudo().search_read([
+            ('employee_id', 'in', self.ids),
+            ('date', '>=', start_date),
+            ('date', '<=', end_date)
+        ], ['employee_id', 'date', 'work_location_name', 'work_location_id', 'work_location_type'])
+>>>>>>> d8f8f61646941daed6e85723e058806a5646969e:addons/hr_homeworking_calendar/models/hr_employee.py
 
         for exception in exceptions_for_period:
             date = exception.date.strftime(DEFAULT_SERVER_DATE_FORMAT)
