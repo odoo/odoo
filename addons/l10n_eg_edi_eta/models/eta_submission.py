@@ -1,5 +1,5 @@
 import json
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 ETA_SUBMISSION_STATES = [
@@ -24,13 +24,21 @@ class L10nEgEdiEtaSubmission(models.Model):
     )
     message = fields.Char(string="Response Message")
     eta_json_filename = fields.Char(string="File")
+    is_latest = fields.Boolean(compute='_compute_is_latest')
+
+    @api.depends('move_id.l10n_eg_eta_submission_ids')
+    def _compute_is_latest(self):
+        for submission in self:
+            submission.is_latest = submission == submission.move_id.l10n_eg_eta_submission_ids[-1:]
 
     def action_retry(self):
         self.ensure_one()
         if alerts := self.move_id._get_l10n_eg_edi_alerts():
             return self.env['account.move.send']._raise_danger_alerts(alerts)
 
-        if error := self.move_id._l10n_eg_eta_send_invoice(notify=True):
+        if self.move_id.l10n_eg_edi_api_mode == 'demo':
+            self.move_id._l10n_eg_edi_simulate_send_invoices(notify=True)
+        elif error := self.move_id._l10n_eg_edi_send_invoices_in_batch(notify=True):
             if isinstance(error.get('error'), dict):
                 message = error['error'].get('message')
             else:
@@ -39,7 +47,7 @@ class L10nEgEdiEtaSubmission(models.Model):
 
     def action_resign(self):
         self.ensure_one()
-        if alerts := self.move_id._get_l10n_eg_edi_alerts():
+        if alerts := self.move_id.with_context(check_is_invoice_signed=False)._get_l10n_eg_edi_alerts():
             return self.env['account.move.send']._raise_danger_alerts(alerts)
         return self.move_id.action_post_sign_invoices()
 
