@@ -104,6 +104,48 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
         )
         self.assertEqual([rec[1] for rec in delay_reports], [100.0])
 
+    def test_a_vendor_return_is_not_an_on_time_receipt(self):
+        purchase_order = self.env["purchase.order"].create(
+            {
+                "partner_id": self.vendor.id,
+                "line_ids": [
+                    Command.create(
+                        {
+                            "product_id": self.product.id,
+                            "product_qty": 10.0,
+                            "product_uom_id": self.uom.id,
+                        }
+                    )
+                ],
+            }
+        )
+        purchase_order.action_confirm()
+        receipt = purchase_order.picking_ids
+        receipt.move_ids.quantity = 10.0
+        receipt.move_ids.picked = True
+        receipt._action_done()
+        wizard = Form(
+            self.env["stock.return.picking"].with_context(
+                active_ids=receipt.ids,
+                active_id=receipt.id,
+                active_model="stock.picking",
+            )
+        ).save()
+        wizard.product_return_moves.quantity = 3.0
+        vendor_return = self.env["stock.picking"].browse(
+            wizard.action_create_returns()["res_id"]
+        )
+        vendor_return.move_ids.quantity = 3.0
+        vendor_return.move_ids.picked = True
+        vendor_return._action_done()
+        self.env.invalidate_all()
+
+        self.assertEqual(self.vendor.on_time_rate, 100.0)
+        [(__, rate)] = self.env["vendor.delay.report"]._read_group(
+            [("partner_id", "=", self.vendor.id)], ["product_id"], ["on_time_rate:sum"]
+        )
+        self.assertEqual(rate, 100.0, "a return to the vendor counted as a receipt")
+
     def test_cancel_redraft_fulfilled(self):
         po = self.env["purchase.order"].create(
             {

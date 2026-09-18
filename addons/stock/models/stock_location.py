@@ -674,8 +674,14 @@ class StockLocation(models.Model):
         return bool(self.location_id) and self.usage != "view"
 
     def _is_outgoing(self):
+        return self._is_partner_end("customer")
+
+    def _is_incoming(self):
+        return self._is_partner_end("supplier")
+
+    def _is_partner_end(self, usage):
         self.check_singleton()
-        if self.usage == "customer":
+        if self.usage == usage:
             return True
         inter_company_location = (
             self.env.ref("stock.stock_location_inter_company", raise_if_not_found=False)

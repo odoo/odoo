@@ -91,9 +91,12 @@ class ResPartner(models.Model):
             [("purchase_line_id", "in", order_lines.ids), ("state", "=", "done")],
         )
         order_lines.fetch(["date_commitment", "partner_id", "product_uom_qty"])
-        moves.fetch(["purchase_line_id", "date", "quantity"])
+        moves.fetch(["purchase_line_id", "date", "quantity", "location_id"])
         moves = moves.filtered(
-            lambda m: m.date.date() <= m.purchase_line_id.date_commitment.date(),
+            lambda m: (
+                m.location_id._is_incoming()
+                and m.date.date() <= m.purchase_line_id.date_commitment.date()
+            ),
         )
         for move in moves:
             lines_quantity[move.purchase_line_id.id] += move.quantity

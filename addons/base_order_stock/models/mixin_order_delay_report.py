@@ -13,6 +13,11 @@ class MixinOrderDelayReport(models.AbstractModel):
     _order_table = ""
     _link_column = ""
     _date_commitment_alias = ""
+    # the move's end that meets the partner, and the usage it carries there:
+    # a return reverses the direction and shares the order line, so without
+    # this it counts as a second on-time transfer
+    _partner_location_field = ""
+    _partner_location_usage = ""
 
     partner_id = fields.Many2one(
         comodel_name="res.partner",
@@ -62,7 +67,7 @@ class MixinOrderDelayReport(models.AbstractModel):
         qty_on_time = self._get_qty_on_time()
         return {
             "id": "ol.id",
-            "date": "Min(m.date)",
+            "date": "Min(m.date) FILTER (WHERE m.state = 'done')",
             "product_id": "ol.product_id",
             "category_id": "Min(pc.id)",
             "partner_id": "ol.partner_id",
@@ -88,13 +93,31 @@ class MixinOrderDelayReport(models.AbstractModel):
             ("product_product", "p", "JOIN", "p.id = m.product_id"),
             ("product_template", "pt", "JOIN", "pt.id = p.product_tmpl_id"),
             ("uom_uom", "pt_uom", "JOIN", "pt_uom.id = pt.uom_id"),
+            (
+                "stock_location",
+                "pl",
+                "JOIN",
+                f"pl.id = m.{self._partner_location_field}",
+            ),
             ("product_category", "pc", "LEFT JOIN", "pc.id = pt.categ_id"),
             ("stock_move_line", "ml", "LEFT JOIN", "ml.move_id = m.id"),
             ("uom_uom", "ml_uom", "LEFT JOIN", "ml_uom.id = ml.product_uom_id"),
         ]
 
     def _get_where_conditions(self):
-        return [f"{self._get_date_commitment()} IS NOT NULL"]
+        return [
+            f"{self._get_date_commitment()} IS NOT NULL",
+            self._get_partner_end_condition(),
+        ]
+
+    def _get_partner_end_condition(self):
+        condition = f"pl.usage = '{self._partner_location_usage}'"
+        inter_company = self.env.ref(
+            "stock.stock_location_inter_company", raise_if_not_found=False
+        )
+        if inter_company and inter_company.parent_path:
+            condition = f"({condition} OR starts_with(pl.parent_path, '{inter_company.parent_path}'))"
+        return condition
 
     def _get_fields_group_by(self):
         return ["ol.id", "o.company_id"]
