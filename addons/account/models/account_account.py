@@ -791,6 +791,10 @@ class AccountAccount(models.Model):
             'domain': [('id', 'in', related_taxes_ids)],
         }
 
+    def is_deferred_account(self):
+        # meant to be extended by each l10n
+        return 'deferred' in self.name.lower()
+
     @api.model
     def get_import_templates(self):
         return [{
