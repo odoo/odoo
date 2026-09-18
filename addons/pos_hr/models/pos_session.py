@@ -92,6 +92,18 @@ class PosSession(models.Model):
             vals['employee_id'] = extras['employee_id']
         return vals
 
+    def get_session_employee_ids(self):
+        self.ensure_one()
+        orders_data = self.env['pos.order']._read_group(
+            [
+                ('session_id', '=', self.id),
+                ('state', 'in', ['paid', 'done']),
+                ('employee_id', '!=', False),
+            ],
+            groupby=['employee_id'],
+        )
+        return [employee.id for employee, in orders_data]
+
     def get_cash_in_out_list(self):
         cash_in_out_list = super().get_cash_in_out_list()
         if self.config_id.module_pos_hr:
