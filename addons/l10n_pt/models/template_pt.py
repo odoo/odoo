@@ -42,4 +42,8 @@ class AccountChartTemplate(models.AbstractModel):
                 vals['cash']['default_account_id'] = 'chart_11'
             if 'bank' in vals:
                 vals['bank']['default_account_id'] = 'chart_12'
+            # Different AT Series are needed for invoices and refunds. For consistency, have a dedicated sequence
+            # for refunds by default.
+            if 'sale' in vals:
+                vals['sale']['refund_sequence'] = True
         return vals
