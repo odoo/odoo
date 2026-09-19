@@ -223,7 +223,7 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
             'payment_reference': 'INV/2026/00001',
         }])
         self.assertRecordValues(imported_invoice.invoice_line_ids, [{
-            'name': self.product_a.name,
+            'name': f'{self.product_a.name}\nFREIGHT 2.0',
             'price_subtotal': 1.5,
             'price_unit': 2.0,
             'discount': 25.0,

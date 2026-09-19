@@ -2790,6 +2790,17 @@ class AccountEdiUBL(models.AbstractModel):
             else:
                 allowances.append(allowance_charge_values)
 
+            if reason_code == 'AEO':
+                allowance_charge_values['attempt_tax_values'] = tax_values = {
+                    'name': reason,
+                    'amount_type': 'fixed',
+                    'type_tax_use': odoo_document_type,
+                    'amount': amount,
+                    'tax_amount_currency': amount,
+                }
+                taxes_values.append(tax_values)
+                continue
+
             # Try to link the allowance / charge with a percentage tax.
             if not category_code:
                 continue
@@ -2799,6 +2810,7 @@ class AccountEdiUBL(models.AbstractModel):
                 'percentage': percentage,
             })
             allowance_charge_values['attempt_tax_values'] = tax_values = {
+                'name': reason,
                 'amount_type': 'percent',
                 'type_tax_use': odoo_document_type,
                 'ubl_cii_tax_category_code': category_code,
