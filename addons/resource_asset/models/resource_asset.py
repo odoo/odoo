@@ -31,6 +31,7 @@ class ResourceAsset(models.Model):
         "mixin.resource",
     ]
     _table_inheritance_root = "resource_asset"
+    _resource_type = "material"
     # Writes stay on the model the caller holds: a hook that runs on the
     # concrete model records the subtype's name in every polymorphic reference
     # (mail tracking, documents, attachments), splitting a vehicle's chatter
@@ -402,9 +403,11 @@ class ResourceAsset(models.Model):
 
     def _prepare_resource_values(self, vals, tz):
         resource_vals = super()._prepare_resource_values(vals, tz)
-        resource_vals["resource_type"] = "material"
         if self._around_the_clock(vals):
             resource_vals["calendar_id"] = False
+        # What the asset relays to its resource is born with the resource:
+        # popped here, it never reaches a related inverse run as the user.
+        resource_vals.update(self._pop_resource_vals(vals))
         return resource_vals
 
     @api.model_create_multi
@@ -414,17 +417,16 @@ class ResourceAsset(models.Model):
             if dispatched is not None:
                 return dispatched
         self._check_kind_belongs_to_this_model(vals_list)
-        Resource = self.env["resource.resource"].sudo()
         given = [dict(vals) for vals in vals_list]
         resource_vals_list = []
         for vals in vals_list:
             if vals.get("kind_id") and self._around_the_clock(vals):
                 vals["resource_calendar_id"] = False
-            if not vals.get("resource_id"):
-                vals["resource_id"] = Resource.create(
-                    self._prepare_resource_values(vals, vals.pop("tz", False))
-                ).id
-            resource_vals_list.append(self._pop_resource_vals(vals))
+            # A new resource takes these at birth (_prepare_resource_values);
+            # one given ready-made is written as the system after the create.
+            resource_vals_list.append(
+                self._pop_resource_vals(vals) if vals.get("resource_id") else {}
+            )
         assets = super().create(vals_list)
         for asset, resource_vals, vals in zip(
             assets, resource_vals_list, given, strict=True

@@ -523,7 +523,7 @@ class TestSetAsideColumnsAreSwept(TransactionCase):
         self.env.cr.execute(
             "ALTER TABLE resource_asset_vehicle ADD COLUMN legacy_probe varchar"
         )
-        self.env["resource.asset"].init()
+        self.env["resource.asset"]._drop_set_aside_member_columns()
         self.env.cr.execute(
             "SELECT 1 FROM information_schema.columns"
             " WHERE table_name = 'resource_asset_vehicle' AND column_name = 'legacy_probe'"

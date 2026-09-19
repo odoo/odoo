@@ -18,7 +18,12 @@ def migrate(cr, version):
         move_rows_into_subtype_table(cr, code, table)
         for column in columns:
             legacy = f"legacy_{column}"
-            if column_exists(cr, "resource_asset", legacy):
+            # A stored compute the subtype declares is computed from the
+            # identifier rows when its column is new, so the copy is a
+            # shortcut, never a requirement.
+            if column_exists(cr, "resource_asset", legacy) and column_exists(
+                cr, table, column
+            ):
                 cr.execute(
                     SQL(
                         "UPDATE %s SET %s = %s WHERE %s IS NULL AND %s IS NOT NULL",

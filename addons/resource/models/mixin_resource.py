@@ -57,6 +57,9 @@ class MixinResource(models.AbstractModel):
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
+        # The slot is created and written as the system: whoever may create
+        # the owner may give it its resource.
+        Resource = self.env["resource.resource"].sudo()
         resources_vals_list = []
         for vals in vals_list:
             if not vals.get("resource_id"):
@@ -64,7 +67,7 @@ class MixinResource(models.AbstractModel):
                     self._prepare_resource_values(vals, vals.pop("tz", False))
                 )
         if resources_vals_list:
-            resources = self.env["resource.resource"].create(resources_vals_list)
+            resources = Resource.create(resources_vals_list)
             resources_iter = iter(resources.ids)
             for vals in vals_list:
                 if not vals.get("resource_id"):
@@ -79,9 +82,9 @@ class MixinResource(models.AbstractModel):
         if attached:
             resources_by_id = {
                 resource.id: resource
-                for resource in self.env["resource.resource"]
-                .browse([vals["resource_id"] for vals in attached])
-                .exists()
+                for resource in Resource.browse(
+                    [vals["resource_id"] for vals in attached]
+                ).exists()
             }
             for vals in attached:
                 resource = resources_by_id.get(vals["resource_id"])
