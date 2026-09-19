@@ -153,12 +153,18 @@ class SmsSms(models.Model):
         domain = [('state', '=', 'outgoing'), ('to_delete', '!=', True)]
 
         batch_size = self._get_send_batch_size()
-        records = self.search(domain, limit=batch_size, order='id').try_lock_for_update()
+        records = self.search(domain, limit=batch_size, order='id')
+        # Lock records to prevent external record updates from creating deadlocks
+        records._lock_related_for_send()
+
         if not records:
             return
         for sms_api, sms in records._split_by_api():
             sms.with_context(sms_api=sms_api)._send(unlink_failed=False, unlink_sent=True, raise_exception=False)
         self.env['ir.cron']._commit_progress(len(records), remaining=self.search_count(domain) if len(records) == batch_size else 0)
+
+    def _lock_related_for_send(self):
+        """ For sms mass mailing deadlock prevention """
 
     def _get_send_batch_size(self):
         return int(self.env['ir.config_parameter'].sudo().get_param('sms.session.batch.size', 500))
