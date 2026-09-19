@@ -54,7 +54,7 @@ class AccountMoveLine(models.Model):
         check_company=True,
         bypass_search_access=True,
     )
-    journal_id = fields.Many2one(
+    journal_id = fields.Many2one(  # noqa: E8529  partial index (journal_id) WHERE amount_residual < 0: the open-items scan
         related="move_id.journal_id",
         precompute=True,
         store=True,
@@ -83,7 +83,7 @@ class AccountMoveLine(models.Model):
         store=True,
         readonly=True,
     )
-    move_name = fields.Char(
+    move_name = fields.Char(  # noqa: E8529  composite index (date, move_name, id): the ledger's sort key
         related="move_id.name",
         string="Number",
         store=True,
@@ -93,7 +93,7 @@ class AccountMoveLine(models.Model):
         related="move_id.state",
         store=True,
     )
-    date = fields.Date(
+    date = fields.Date(  # noqa: E8529  composite indexes (account_id, date) and (date, move_name, id)
         related="move_id.date",
         store=True,
         copy=False,
@@ -105,7 +105,7 @@ class AccountMoveLine(models.Model):
         copy=False,
         aggregator="min",
     )
-    ref = fields.Char(
+    ref = fields.Char(  # noqa: E8529  composite index (partner_id, ref): payment matching
         related="move_id.ref",
         store=True,
         index="trigram",
