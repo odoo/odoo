@@ -12,6 +12,7 @@ from odoo import api, fields, models, Command
 from odoo import _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import mute_logger, SQL
+from odoo.tools.sql import column_exists
 
 _logger = logging.getLogger('odoo.addons.base.partner.merge')
 
@@ -154,6 +155,36 @@ class MergePartnerAutomatic(models.TransientModel):
                         self._cr.execute(query, (dst_record.id, tuple(src_records.ids)))
                 except psycopg2.Error:
                     # updating fails, most likely due to a violated unique constraint
+                    # Try a more granular approach: update record by record
+                    m2m_table = not column_exists(self._cr, table, "id")
+                    target_column = column if m2m_table else "id"
+                    self._cr.execute(
+                        SQL("""SELECT %(target_column)s
+                            FROM %(table)s
+                            WHERE %(column)s IN %(record_ids)s""",
+                            target_column=SQL.identifier(target_column),
+                            table=SQL.identifier(table),
+                            column=SQL.identifier(column),
+                            record_ids=tuple(src_records.ids),
+                        )
+                    )
+                    record_ids_to_update = [x[0] for x in self._cr.fetchall()]
+                    for record_id in record_ids_to_update:
+                        try:
+                            with mute_logger('odoo.sql_db'), self._cr.savepoint():
+                                self._cr.execute(
+                                    SQL("""UPDATE %(table)s
+                                        SET %(column)s = %(target_record_id)s
+                                        WHERE %(target_column)s = %(record_id)s""",
+                                        target_column=SQL.identifier(target_column),
+                                        table=SQL.identifier(table),
+                                        column=SQL.identifier(column),
+                                        record_id=record_id,
+                                        target_record_id=dst_record.id,
+                                    )
+                                )
+                        except psycopg2.Error:
+                            _logger.debug("Failed to merge record %s", record_id, exc_info=True)
                     # keeping record with nonexistent partner_id is useless, better delete it
                     query = 'DELETE FROM "%(table)s" WHERE "%(column)s" IN %%s' % query_dic
                     self._cr.execute(query, (tuple(src_records.ids),))
