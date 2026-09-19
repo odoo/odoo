@@ -9,39 +9,8 @@
         <BuilderRow id="this.number_of_records_opt_row" position="replace"/>
         <BuilderRow id="this.filter_opt_row" position="replace"/>
         <BuilderRow id="this.section_title_opt_row" position="after">
-            <BuilderRow label.translate="Columns">
-                <BuilderRange dataAttributeAction="'columns'" min="2" max="5"/>
-            </BuilderRow>
-            <BuilderRow label.translate="Spacing">
-                <BuilderRange dataAttributeAction="'gap'" min="0" max="5"/>
-            </BuilderRow>
-            <BuilderRow label.translate="Roundness">
-                <BuilderRange dataAttributeAction="'rounded'" min="0" max="5"/>
-            </BuilderRow>
-            <BuilderRow label.translate="Size">
-                <BuilderSelect dataAttributeAction="'size'">
-                    <BuilderSelectItem dataAttributeActionValue="'small'">Small</BuilderSelectItem>
-                    <BuilderSelectItem dataAttributeActionValue="'medium'">
-                        Medium
-                    </BuilderSelectItem>
-                    <BuilderSelectItem dataAttributeActionValue="'large'">Large</BuilderSelectItem>
-                </BuilderSelect>
-            </BuilderRow>
-            <BuilderRow label.translate="Alignment">
-                <BuilderButtonGroup dataAttributeAction="'alignment'">
-                    <BuilderButton dataAttributeActionValue="'left'">
-                        <i class="oi oi-fw" data-icon="format_align_left"/>
-                    </BuilderButton>
-                    <BuilderButton dataAttributeActionValue="'center'">
-                        <i class="oi oi-fw" data-icon="format_align_center"/>
-                    </BuilderButton>
-                    <BuilderButton dataAttributeActionValue="'right'">
-                        <i class="oi oi-fw" data-icon="format_align_right"/>
-                    </BuilderButton>
-                </BuilderButtonGroup>
-            </BuilderRow>
             <BuilderRow label.translate="Filters">
-                <BuilderSelect dataAttributeAction="'parentCategoryId'">
+                <BuilderSelect dataAttributeAction="'parentCategoryId'" preview="false">
                     <BuilderSelectItem
                         dataAttributeActionValue=""
                         title.translate="All Categories"
@@ -65,14 +34,47 @@
                 t-if="this.dynamicOptionParams.domState.parentCategoryId"
                 label.translate="Parent Category"
                 dataAttributeAction="'showParent'"
+                preview="false"
             >
                 <BuilderCheckbox dataAttributeActionValue="'true'"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Size">
+                <BuilderSelect dataAttributeAction="'size'">
+                    <BuilderSelectItem dataAttributeActionValue="'small'">Small</BuilderSelectItem>
+                    <BuilderSelectItem dataAttributeActionValue="'medium'">
+                        Medium
+                    </BuilderSelectItem>
+                    <BuilderSelectItem dataAttributeActionValue="'large'">Large</BuilderSelectItem>
+                </BuilderSelect>
+            </BuilderRow>
+            <BuilderRow label.translate="Columns">
+                <BuilderRange dataAttributeAction="'columns'" min="2" max="5"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Spacing">
+                <BuilderRange dataAttributeAction="'gap'" min="0" max="5"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Roundness">
+                <BuilderRange dataAttributeAction="'rounded'" min="0" max="5"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Alignment">
+                <BuilderButtonGroup dataAttributeAction="'alignment'">
+                    <BuilderButton dataAttributeActionValue="'left'">
+                        <i class="oi oi-fw" data-icon="format_align_left"/>
+                    </BuilderButton>
+                    <BuilderButton dataAttributeActionValue="'center'">
+                        <i class="oi oi-fw" data-icon="format_align_center"/>
+                    </BuilderButton>
+                    <BuilderButton dataAttributeActionValue="'right'">
+                        <i class="oi oi-fw" data-icon="format_align_right"/>
+                    </BuilderButton>
+                </BuilderButtonGroup>
             </BuilderRow>
             <BuilderRow label.translate="Clickable items">
                 <BuilderCheckbox
                     id="'clickable_items_opt'"
                     action="'toggleClickable'"
                     classAction="'s_dynamic_category_clickable_items'"
+                    preview="false"
                 />
             </BuilderRow>
             <BuilderRow
@@ -110,7 +112,7 @@
                 />
             </BuilderRow>
             <BuilderRow label.translate="Button" t-if="!this.isActiveItem('clickable_items_opt')">
-                <BuilderTextInput dataAttributeAction="'button'"/>
+                <BuilderTextInput dataAttributeAction="'button'" preview="false"/>
             </BuilderRow>
         </BuilderRow>
     </t>
