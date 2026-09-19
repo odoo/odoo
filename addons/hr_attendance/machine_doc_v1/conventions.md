@@ -11,8 +11,8 @@ which day's schedule prices it, where its lunch falls, when the auto-check-out
 cron thinks its day ends — resolves through **one** pair of methods:
 
 ```python
-version = attendance._schedule_version()      # which hr.version was in force
-tz      = attendance._schedule_tz(version)    # and that version's timezone
+version = attendance._schedule_version()  # which hr.version was in force
+tz = attendance._schedule_tz(version)  # and that version's timezone
 ```
 
 `_schedule_version()` is a fixed point, not a lookup: the version is chosen by

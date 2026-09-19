@@ -38,13 +38,11 @@ class HrEmployee(models.Model):
     )
     last_check_in = fields.Datetime(
         related="last_attendance_id.check_in",
-        store=True,
         tracking=False,
         groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user",
     )
     last_check_out = fields.Datetime(
         related="last_attendance_id.check_out",
-        store=True,
         tracking=False,
         groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user",
     )

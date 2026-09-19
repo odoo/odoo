@@ -1,6 +1,6 @@
 {
     "name": "Attendances",
-    "version": "2.3",
+    "version": "2.4",
     "category": "Human Resources/Attendances",
     "sequence": 240,
     "summary": "Track employee attendance",
