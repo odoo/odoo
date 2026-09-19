@@ -350,7 +350,6 @@ class CalendarEvent(models.Model):
     res_model = fields.Char(
         related="res_model_id.model",
         string="Document Model Name",
-        store=True,
         readonly=True,
     )
     res_model_name = fields.Char(related="res_model_id.name")

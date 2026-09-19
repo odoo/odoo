@@ -23,9 +23,6 @@ class AppointmentBookingLine(models.Model):
     appointment_type_id = fields.Many2one(
         comodel_name="appointment.type",
         related="calendar_event_id.appointment_type_id",
-        precompute=True,
-        store=True,
-        index=True,
         readonly=True,
         ondelete="cascade",
     )
@@ -51,13 +48,11 @@ class AppointmentBookingLine(models.Model):
     event_start = fields.Datetime(
         related="calendar_event_id.start",
         string="Booking Start",
-        store=True,
         readonly=True,
     )
     event_stop = fields.Datetime(
         related="calendar_event_id.stop",
         string="Booking End",
-        store=True,
         readonly=True,
     )
 

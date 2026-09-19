@@ -59,16 +59,14 @@ class SurveyUserInputLine(models.Model):
 
     appointment_type_id = fields.Many2one(
         related="user_input_id.appointment_type_id",
-        store=True,
     )
-    calendar_event_id = fields.Many2one(
+    calendar_event_id = fields.Many2one(  # noqa: E8528  One2many inverse
         related="user_input_id.calendar_event_id",
         store=True,
         index=True,
     )
     partner_id = fields.Many2one(
         related="user_input_id.partner_id",
-        store=True,
     )
     question_type = fields.Selection(related="question_id.question_type")
 
