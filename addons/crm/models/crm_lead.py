@@ -625,7 +625,12 @@ class CrmLead(models.Model):
         others = self - leads
         others.day_close = None
         for lead in leads:
-            date_create = fields.Datetime.from_string(lead.create_date)
+            # to the second, as `date_closed` is: a lead closed in the second
+            # it was created has a negative sub-second interval, whose .days
+            # is -1, and abs() reads that as one day
+            date_create = fields.Datetime.from_string(lead.create_date).replace(
+                microsecond=0
+            )
             date_close = fields.Datetime.from_string(lead.date_closed)
             lead.day_close = abs((date_close - date_create).days)
 
