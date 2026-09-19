@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import typing
+from decimal import Decimal
 from operator import attrgetter
 from xmlrpc.client import MAXINT  # TODO change this
 
@@ -245,6 +246,9 @@ class Monetary(Field[float]):
             "Field %s with unknown currency_field %r" % (self, self.get_currency_field(model))
 
     def convert_to_column_insert(self, value, record, values=None, validate=True):
+        if value is None or value is False:
+            return None
+
         # retrieve currency from values or record
         currency_field_name = self.get_currency_field(record)
         currency_field = record._fields[currency_field_name]
@@ -263,14 +267,17 @@ class Monetary(Field[float]):
             currency = record[:1].sudo().with_context(prefetch_fields=False)[currency_field_name]
             currency = currency.with_env(record.env)
 
-        value = float(value or 0.0)
         if currency:
-            return float_repr(currency.round(value), currency.decimal_places)
-        return value
+            value = float(value or 0.0)
+            value = float_repr(currency.round(value), currency.decimal_places)
+
+        return Decimal(str(value) or 0)
 
     def convert_to_cache(self, value, records, validate=True):
-        # cache format: float
-        value = float(value or 0.0)
+        # cache format: Decimal | None
+        if value is None or value is False:
+            return None
+
         if value and validate:
             # FIXME @rco-odoo: currency may not be already initialized if it is
             # a function or related field!
@@ -279,26 +286,30 @@ class Monetary(Field[float]):
             # have the read permission of the currency field.
             currency = records.sudo().with_context(prefetch_fields=False)[currency_field]
             currency = currency.with_env(records.env)
+
             if len(currency) > 1:
                 raise ValueError("Got multiple currencies while assigning values of monetary field %s" % str(self))
-            elif currency:
+
+            if currency:
+                value = float(value)
                 value = currency.round(value)
                 # convert the rounded value to ``str`` and then to ``float`` to mimic the data flow of flushing and
                 # fetching, which promises ``value_written_to_cache == value_fetched_from_database`` even if the
                 # ``round`` method is not perfect.
-                value = float(float_repr(value, currency.decimal_places))
-        return value
+                value = float_repr(value, currency.decimal_places)
+
+        return Decimal(str(value) or 0)
 
     def convert_to_record(self, value, record):
-        return value or 0.0
+        return float(value or 0)
 
     def convert_to_read(self, value, record, use_display_name=True):
-        return value
+        return float(value or 0)
 
     def convert_to_write(self, value, record):
-        return value
+        return float(value or 0)
 
     def convert_to_export(self, value, record):
         if value or value == 0.0:
-            return value
+            return float(value)
         return ''
