@@ -1,6 +1,6 @@
 {
     "name": "Payment Engine",
-    "version": "2.2",
+    "version": "2.3",
     "category": "Hidden",
     "summary": "The payment engine used by payment provider modules.",
     "author": "Odoo S.A.",

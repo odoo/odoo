@@ -40,8 +40,6 @@ class PaymentTransaction(models.Model):
     company_id = fields.Many2one(
         # Indexed to speed-up ORM searches (from ir_rule or others)
         related="provider_id.company_id",
-        store=True,
-        index=True,
     )
     payment_method_id = fields.Many2one(
         comodel_name="payment.method",
