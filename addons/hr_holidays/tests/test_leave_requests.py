@@ -2902,3 +2902,180 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 expected_days,
                 f"{data['name']} should have {expected_days} days duration"
             )
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    @freeze_time('2026-01-23 10:00:00')
+    def test_hr_responsible_approve_refuse_leave(self):
+        """
+            The employee's HR responsible should be able to approve and refuse a leave whose
+            time off type is validated "By HR Responsible", even without any officer right on
+            Time Off.
+        """
+        respo_user = self.user_responsible
+        self.employee_emp.leave_manager_id = False
+        self.employee_emp.hr_responsible_id = respo_user
+        values = {
+            'name': 'Random Time Off',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.holidays_type_1.id,
+            'request_date_from': date(2026, 1, 23),
+            'request_date_to': date(2026, 1, 23),
+        }
+        leave = self.env['hr.leave'].with_user(self.user_employee).create(values)
+        leave.with_user(respo_user).action_refuse()
+        self.assertEqual(leave.state, 'refuse')
+        # Check that refusing after approving also works
+        leave = self.env['hr.leave'].with_user(self.user_employee).create(values)
+        leave.with_user(respo_user).action_approve()
+        self.assertEqual(leave.state, 'validate')
+        leave.with_user(respo_user).action_refuse()
+        self.assertEqual(leave.state, 'refuse')
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    @freeze_time('2026-01-23 10:00:00')
+    def test_hr_responsible_first_approval_double_validation(self):
+        """
+            On a "By HR Responsible and Time Off Approver" time off type, the HR responsible
+            can give the first approval (and refuse), but the final validation still requires
+            a Time Off Officer/Approver.
+        """
+        respo_user = self.user_responsible
+        self.employee_emp.leave_manager_id = False
+        self.employee_emp.hr_responsible_id = respo_user
+        self.env['hr.leave.allocation'].create({
+            'name': 'Annual Time Off',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.holidays_type_4.id,
+            'number_of_days': 20,
+            'state': 'confirm',
+            'date_from': '2026-01-01',
+            'date_to': '2026-12-31',
+        }).action_approve()
+        leave = self.env['hr.leave'].with_user(self.user_employee).create({
+            'name': 'Random Time Off',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.holidays_type_4.id,
+            'request_date_from': date(2026, 1, 23),
+            'request_date_to': date(2026, 1, 23),
+        })
+        leave.with_user(respo_user).action_approve()
+        self.assertEqual(leave.state, 'validate1')
+        with self.assertRaises(UserError):
+            leave.with_user(respo_user).action_approve()
+        leave.with_user(self.user_hrmanager_id).action_approve()
+        self.assertEqual(leave.state, 'validate')
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    @freeze_time('2026-01-23 10:00:00')
+    def test_hr_responsible_cannot_approve_manager_validation(self):
+        """ The HR responsible has no special right on a leave validated by the Time Off Approver only """
+        respo_user = self.user_responsible
+        self.employee_emp.leave_manager_id = False
+        self.employee_emp.hr_responsible_id = respo_user
+        leave = self.env['hr.leave'].with_user(self.user_employee).create({
+            'name': 'Random Time Off',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.holidays_type_3.id,
+            'request_date_from': date(2026, 1, 23),
+            'request_date_to': date(2026, 1, 23),
+        })
+        with self.assertRaises(UserError):
+            leave.with_user(respo_user).action_approve()
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    @freeze_time('2026-01-23 10:00:00')
+    def test_hr_responsible_of_another_employee_cannot_approve(self):
+        """ Being HR responsible of one employee doesn't grant any right on another employee's leaves """
+        self.employee_emp.leave_manager_id = False
+        self.employee_emp.hr_responsible_id = self.employee_hruser.user_id
+        leave = self.env['hr.leave'].with_user(self.user_employee).create({
+            'name': 'Random Time Off',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.holidays_type_1.id,
+            'request_date_from': date(2026, 1, 23),
+            'request_date_to': date(2026, 1, 23),
+        })
+        with self.assertRaises(AccessError):
+            leave.with_user(self.user_responsible).action_approve()
+
+
+@tagged('leave_requests')
+@tagged('at_install', '-post_install')  # LEGACY at_install
+class TestHrLeaveReportCalendarAccessRights(TestHrHolidaysCommon):
+    """ Test the approve/refuse actions available from the Time Off Overview (hr.leave.report.calendar) """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
+            'name': 'Unlimited',
+            'code': 'Unlimited',
+            'leave_validation_type': 'hr',
+            'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+
+    def _report_record(self, leave):
+        return self.env['hr.leave.report.calendar'].browse(leave.id)
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    @freeze_time('2026-01-23 10:00:00')
+    def test_hr_responsible_approve_refuse_from_overview(self):
+        """ The HR responsible can approve/refuse from the Overview a leave validated 'By HR Responsible' """
+        respo_user = self.user_responsible
+        self.employee_emp.leave_manager_id = False
+        self.employee_emp.hr_responsible_id = respo_user
+        self.work_entry_type.write({'leave_validation_type': 'hr'})
+        values = {
+            'name': 'Random Time Off',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': date(2026, 1, 23),
+            'request_date_to': date(2026, 1, 23),
+        }
+        leave = self.env['hr.leave'].with_user(self.user_employee).create(values)
+        self._report_record(leave).with_user(respo_user).action_refuse()
+        self.assertEqual(leave.state, 'refuse')
+
+        leave = self.env['hr.leave'].with_user(self.user_employee).create(values)
+        self._report_record(leave).with_user(respo_user).action_approve()
+        self.assertEqual(leave.state, 'validate')
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    @freeze_time('2026-01-23 10:00:00')
+    def test_hr_responsible_cannot_approve_manager_validation_from_overview(self):
+        """ The HR responsible has no special right from the Overview on a leave validated by the Time Off Approver only """
+        respo_user = self.user_responsible
+        self.employee_emp.leave_manager_id = False
+        self.employee_emp.hr_responsible_id = respo_user
+        self.work_entry_type.write({'leave_validation_type': 'manager'})
+        leave = self.env['hr.leave'].with_user(self.user_employee).create({
+            'name': 'Random Time Off',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': date(2026, 1, 23),
+            'request_date_to': date(2026, 1, 23),
+        })
+        with self.assertRaises(ValidationError):
+            self._report_record(leave).with_user(respo_user).action_approve()
+        with self.assertRaises(ValidationError):
+            self._report_record(leave).with_user(respo_user).action_refuse()
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    @freeze_time('2026-01-23 10:00:00')
+    def test_leave_manager_approve_refuse_from_overview(self):
+        """ The Time Off Approver can still approve/refuse from the Overview """
+        respo_user = self.user_responsible
+        self.employee_emp.leave_manager_id = respo_user
+        self.employee_emp.hr_responsible_id = self.employee_hruser.user_id
+        self.work_entry_type.write({'leave_validation_type': 'manager'})
+        leave = self.env['hr.leave'].with_user(self.user_employee).create({
+            'name': 'Random Time Off',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': date(2026, 1, 23),
+            'request_date_to': date(2026, 1, 23),
+        })
+        self._report_record(leave).with_user(respo_user).action_approve()
+        self.assertEqual(leave.state, 'validate')

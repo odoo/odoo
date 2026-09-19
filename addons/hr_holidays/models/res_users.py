@@ -20,10 +20,13 @@ class ResUsers(models.Model):
         if not any(u.has_group(approver_group) for u in self):
             return
 
-        res = self.env['hr.employee']._read_group(
+        leave_managers = self.env['hr.employee']._read_group(
             [('leave_manager_id', 'in', self.ids)],
             ['leave_manager_id'])
-        responsibles_to_remove_ids = set(self.ids) - {leave_manager.id for [leave_manager] in res}
+        hr_responsibles = self.env['hr.employee']._read_group(
+            [('hr_responsible_id', 'in', self.ids)],
+            ['hr_responsible_id'])
+        responsibles_to_remove_ids = set(self.ids) - {leave_manager.id for [leave_manager] in leave_managers} - {hr_responsible.id for [hr_responsible] in hr_responsibles}
         if responsibles_to_remove_ids:
             self.browse(responsibles_to_remove_ids).write({
                 'group_ids': [Command.unlink(self.env.ref(approver_group).id)],

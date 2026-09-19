@@ -285,6 +285,21 @@ class HrEmployee(models.Model):
             approver_group.sudo().write({'user_ids': group_updates})
         return super().create(vals_list)
 
+    def _sync_responsible_group(self, values, field_name):
+        """ Grant the 'hr_holidays.group_hr_holidays_responsible' group to the users
+        set as leave_manager_id or hr_responsible_id. Return the users needing to be
+        cleaned up from the group. """
+        old_responsibles = self.env['res.users']
+        if field_name in values:
+            old_responsibles = self.mapped(field_name)
+            if values[field_name]:
+                new_responsible = self.env['res.users'].browse(values[field_name])
+                old_responsibles -= new_responsible
+                approver_group = self.env.ref('hr_holidays.group_hr_holidays_responsible', raise_if_not_found=False)
+                if approver_group and not new_responsible.has_group('hr_holidays.group_hr_holidays_responsible'):
+                    new_responsible.sudo().write({'group_ids': [(4, approver_group.id)]})
+        return old_responsibles
+
     def write(self, vals):
         values = vals
         # Prevent the resource calendar of leaves to be updated by a write to
@@ -297,19 +312,12 @@ class HrEmployee(models.Model):
                 to_change = self.filtered(lambda e: e.leave_manager_id == e.parent_id.user_id or not e.leave_manager_id)
                 to_change.write({'leave_manager_id': values.get('leave_manager_id', manager.id)})
 
-        old_managers = self.env['res.users']
-        if 'leave_manager_id' in values:
-            old_managers = self.mapped('leave_manager_id')
-            if values['leave_manager_id']:
-                leave_manager = self.env['res.users'].browse(values['leave_manager_id'])
-                old_managers -= leave_manager
-                approver_group = self.env.ref('hr_holidays.group_hr_holidays_responsible', raise_if_not_found=False)
-                if approver_group and not leave_manager.has_group('hr_holidays.group_hr_holidays_responsible'):
-                    leave_manager.sudo().write({'group_ids': [(4, approver_group.id)]})
+        old_managers = self._sync_responsible_group(values, 'leave_manager_id')
+        old_hr_responsibles = self._sync_responsible_group(values, 'hr_responsible_id')
 
         res = super().write(values)
-        # remove users from the Responsible group if they are no longer leave managers
-        old_managers.sudo()._clean_leave_responsible_users()
+        # remove users from the Responsible group if they are no longer leave managers nor HR responsible
+        (old_managers + old_hr_responsibles).sudo()._clean_leave_responsible_users()
 
         # Change the resource calendar of the employee's leaves in the future
         # Other modules can disable this behavior by setting the context key

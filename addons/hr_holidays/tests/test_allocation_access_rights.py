@@ -48,6 +48,16 @@ class TestAllocationRights(TestHrHolidaysCommon):
             'unit_of_measure': 'day',
         })
 
+        cls.lt_validation_both = cls.env['hr.work.entry.type'].create({
+            'name': 'Validation = both',
+            'code': 'Validation = both',
+            'allocation_validation_type': 'both',
+            'requires_allocation': True,
+            'employee_requests': True,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+
     def request_allocation(self, user, values={}):
         values = dict(values, **{
             'name': 'Allocation',
@@ -217,3 +227,92 @@ class TestAccessRightsHolidayManager(TestAllocationRights):
         self.assertEqual(allocation.state, 'validate', "It should have been validated")
         allocation.action_refuse()
         self.assertEqual(allocation.state, 'refuse', "It should have been refused")
+
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
+class TestAccessRightsHrResponsible(TestAllocationRights):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        groups = cls.env.ref('hr_holidays.group_hr_holidays_employee') + cls.env.ref('hr.group_hr_user')
+        cls.user_responsible.group_ids |= groups
+        cls.employee_emp.hr_responsible_id = cls.user_responsible
+
+    def test_hr_responsible_approve_refuse_allocation(self):
+        """
+            The employee's HR responsible should be able to approve and refuse an allocation whose
+            time off type is validated "By HR Responsible", even without any officer right on
+            Time Off
+        """
+        values = {
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.lt_validation_hr.id,
+        }
+        allocation = self.request_allocation(self.user_employee.id, values)
+        allocation.with_user(self.user_responsible).action_refuse()
+        self.assertEqual(allocation.state, 'refuse')
+
+        allocation = self.request_allocation(self.user_employee.id, values)
+        allocation.with_user(self.user_responsible).action_approve()
+        self.assertEqual(allocation.state, 'validate')
+
+    def test_hr_responsible_first_approval_double_validation_allocation(self):
+        """
+            On a "By HR Responsible and Time Off Approver" allocation type, the HR responsible
+            can give the first approval (and refuse), but the final validation still requires
+            a Time Off Officer/Approver
+        """
+        values = {
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.lt_validation_both.id,
+        }
+        allocation = self.request_allocation(self.user_employee.id, values)
+        allocation.with_user(self.user_responsible).action_approve()
+        self.assertEqual(allocation.state, 'validate1')
+        with self.assertRaises(UserError):
+            allocation.with_user(self.user_responsible).action_approve()
+        allocation.with_user(self.user_hrmanager.id).action_approve()
+        self.assertEqual(allocation.state, 'validate')
+
+    def test_hr_responsible_refuse_double_validation_allocation(self):
+        """
+            On a "By HR Responsible and Time Off Approver" allocation type, the HR responsible
+            can refuse the allocation, both before and after giving the first approval.
+        """
+        values = {
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.lt_validation_both.id,
+        }
+        allocation = self.request_allocation(self.user_employee.id, values)
+        allocation.with_user(self.user_responsible).action_refuse()
+        self.assertEqual(allocation.state, 'refuse')
+
+        # Check that refusing after giving the first approval also works
+        allocation = self.request_allocation(self.user_employee.id, values)
+        allocation.with_user(self.user_responsible).action_approve()
+        self.assertEqual(allocation.state, 'validate1')
+        allocation.with_user(self.user_responsible).action_refuse()
+        self.assertEqual(allocation.state, 'refuse')
+
+    def test_hr_responsible_cannot_approve_manager_validation_allocation(self):
+        """ The HR responsible has no special right on an allocation validated by the Time Off Approver only """
+        values = {
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.lt_validation_manager.id,
+        }
+        allocation = self.request_allocation(self.user_employee.id, values)
+        with self.assertRaises(UserError):
+            allocation.with_user(self.user_responsible).action_approve()
+
+    def test_hr_responsible_of_another_employee_cannot_approve_allocation(self):
+        """ Being HR responsible of one employee doesn't grant any right on another employee's allocations """
+        # hr_responsible_id is required, so re-assign it rather than clear it
+        self.employee_emp.hr_responsible_id = self.employee_hruser.user_id
+        values = {
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.lt_validation_hr.id,
+        }
+        allocation = self.request_allocation(self.user_employee.id, values)
+        with self.assertRaises(AccessError):
+            allocation.with_user(self.user_responsible).action_approve()
