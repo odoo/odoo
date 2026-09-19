@@ -33,8 +33,6 @@ class SmsTemplate(models.Model):
     model = fields.Char(
         related="model_id.model",
         string="Related Document Model",
-        store=True,
-        index=True,
         readonly=True,
     )
     body = fields.Char(
