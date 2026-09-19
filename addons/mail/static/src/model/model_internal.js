@@ -28,10 +28,6 @@ export class ModelInternal {
     fieldsComputable = new Set();
     /** @type {Map<string, string>} */
     fieldsInverse = new Map();
-    /** @type {Map<string, () => void>} */
-    fieldsOnAdd = new Map();
-    /** @type {Map<string, () => void>} */
-    fieldsOnDelete = new Map();
     /** @type {Map<string, string>} */
     fieldsType = new Map();
     /**
@@ -101,14 +97,6 @@ export class ModelInternal {
                 }
                 case "inverse": {
                     this.fieldsInverse.set(fieldName, value);
-                    break;
-                }
-                case "onAdd": {
-                    this.fieldsOnAdd.set(fieldName, value);
-                    break;
-                }
-                case "onDelete": {
-                    this.fieldsOnDelete.set(fieldName, value);
                     break;
                 }
                 case "asProxy": {

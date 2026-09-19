@@ -17,10 +17,6 @@ const Markup = markup().constructor;
 export class StoreInternal extends RecordInternal {
     /** @type {Map<import("./record").Record, Map<string, true>>} */
     FC_QUEUE = new Map(); // field-computes
-    /** @type {Map<import("./record").Record, Map<string, Map<import("./record").Record, true>>>} */
-    FA_QUEUE = new Map(); // field-onadds
-    /** @type {Map<import("./record").Record, Map<string, Map<import("./record").Record, true>>>} */
-    FD_QUEUE = new Map(); // field-ondeletes
     /** @type {Map<Record, true>} */
     RD_QUEUE = new Map(); // record-deletes
     ERRORS = [];
@@ -35,8 +31,8 @@ export class StoreInternal extends RecordInternal {
     /**
      * Number of update functions currently running, nested included. An owl
      * computed() field holds its last value while one runs, as the relations
-     * it reads are written one by one. onAdd and onDelete run outside of
-     * them, at depth 0, so they read fresh values.
+     * it reads are written one by one. An immediate onChange runs outside of
+     * them, at depth 0, so it reads fresh values.
      */
     updateDepth = signal(0);
     raiseUpdateDepth = incrementFn(this.updateDepth);
@@ -65,7 +61,7 @@ export class StoreInternal extends RecordInternal {
     }
 
     /**
-     * @param {"compute"|"onAdd"|"onDelete"} type
+     * @param {"compute"|"delete"} type
      * @param {...any} params
      */
     ADD_QUEUE(type, ...params) {
@@ -87,46 +83,6 @@ export class StoreInternal extends RecordInternal {
                     this.FC_QUEUE.set(record, recMap);
                 }
                 recMap.set(fieldName, true);
-                break;
-            }
-            case "onAdd": {
-                /** @type {[import("./record").Record, string, import("./record").Record]} */
-                const [record, fieldName, addedRec] = params;
-                const Model = record.Model;
-                if (!Model._.fieldsOnAdd.get(fieldName)) {
-                    return;
-                }
-                let recMap = this.FA_QUEUE.get(record);
-                if (!recMap) {
-                    recMap = new Map();
-                    this.FA_QUEUE.set(record, recMap);
-                }
-                let fieldMap = recMap.get(fieldName);
-                if (!fieldMap) {
-                    fieldMap = new Map();
-                    recMap.set(fieldName, fieldMap);
-                }
-                fieldMap.set(addedRec, true);
-                break;
-            }
-            case "onDelete": {
-                /** @type {[import("./record").Record, string, import("./record").Record]} */
-                const [record, fieldName, removedRec] = params;
-                const Model = record.Model;
-                if (!Model._.fieldsOnDelete.get(fieldName)) {
-                    return;
-                }
-                let recMap = this.FD_QUEUE.get(record);
-                if (!recMap) {
-                    recMap = new Map();
-                    this.FD_QUEUE.set(record, recMap);
-                }
-                let fieldMap = recMap.get(fieldName);
-                if (!fieldMap) {
-                    fieldMap = new Map();
-                    recMap.set(fieldName, fieldMap);
-                }
-                fieldMap.set(removedRec, true);
                 break;
             }
         }
