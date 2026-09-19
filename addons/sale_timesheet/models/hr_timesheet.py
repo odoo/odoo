@@ -68,8 +68,6 @@ class AccountAnalyticLine(models.Model):
     )
     order_id = fields.Many2one(
         related="so_line.order_id",
-        store=True,
-        index=True,
         readonly=True,
     )
     is_so_line_edited = fields.Boolean(string="Is Sales Order Item Manually Edited")

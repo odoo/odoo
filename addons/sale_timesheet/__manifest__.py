@@ -1,5 +1,6 @@
 {
     "name": "Sales Timesheet",
+    "version": "1.1",
     "category": "Sales/Sales",
     "summary": "Sell based on timesheets",
     "description": """
