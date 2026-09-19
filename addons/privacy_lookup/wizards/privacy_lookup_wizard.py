@@ -279,7 +279,6 @@ class PrivacyLookupWizardLine(models.TransientModel):
     res_model = fields.Char(
         related="res_model_id.model",
         string="Document Model",
-        store=True,
         readonly=True,
     )
     resource_ref = fields.Reference(
