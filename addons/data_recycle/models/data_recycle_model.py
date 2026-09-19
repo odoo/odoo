@@ -44,7 +44,6 @@ class Data_RecycleModel(models.Model):
     res_model_name = fields.Char(
         related="res_model_id.model",
         string="Model Name",
-        store=True,
     )
     recycle_record_ids = fields.One2many(
         comodel_name="data_recycle.record",

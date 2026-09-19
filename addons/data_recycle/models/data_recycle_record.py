@@ -46,11 +46,9 @@ class Data_RecycleRecord(models.Model):
     )
     res_model_id = fields.Many2one(
         related="recycle_model_id.res_model_id",
-        store=True,
     )
     res_model_name = fields.Char(
         related="recycle_model_id.res_model_name",
-        store=True,
     )
 
     company_id = fields.Many2one(
