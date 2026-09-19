@@ -1282,7 +1282,6 @@ class Website(models.Model):
     @api.model
     def _get_settings_to_copy_onto_new_default_website(self):
         """Provide a list of settings that should always be set on the default website.
-
         When the default website changes, a check is performed. If some of these settings are not
         already set on the new default website, they are copied from the previous default website.
         """

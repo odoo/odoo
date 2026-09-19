@@ -9,22 +9,37 @@
                 <attribute name="context">{'default_available_in_pos': True}</attribute>
             </field>
 
-            <xpath expr="//field[@name='company_id']" position="replace">
+            <xpath expr="//group[@name='combo_left_col']" position="after">
                 <group>
-                    <field name="qty_max" string="Maximum items" />
-                    <field name="qty_free" string="Includes free" invisible="is_upsell"/>
-                    <field name="is_upsell" widget="boolean_toggle"/>
-                </group>
-                <group>
-                    <field name="base_price" widget="monetary" options="{'field_digits': True}"/>
                     <field
-                        name="company_id"
-                        placeholder="Visible to all"
-                        groups="base.group_multi_company"
-                        options="{'no_create': True}"
-                        class="oe_inline"
+                        name="base_price"
+                        widget="monetary"
+                        options="{'field_digits': True}"
+                        invisible="not context.get('is_from_pos')"
                     />
                 </group>
+            </xpath>
+
+            <xpath expr="//field[@name='included_qty']" position="before">
+                <field name="qty_max" string="Maximum items" invisible="not context.get('is_from_pos')"/>
+            </xpath>
+
+            <xpath expr="//field[@name='included_qty']" position="attributes">
+                <attribute name="invisible">is_upsell</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='included_qty']" position="after">
+                <field name="is_upsell" widget="boolean_toggle" invisible="not context.get('is_from_pos')"/>
+            </xpath>
+
+            <xpath expr="//group[@name='combo_groups']" position="before">
+                <div
+                    class="alert alert-warning"
+                    role="alert"
+                    invisible="not is_upsell or context.get('is_from_pos')"
+                >
+                    The included quantity of an <b>upsell combo</b> is considered 1 outside the POS.
+                </div>
             </xpath>
         </field>
     </record>

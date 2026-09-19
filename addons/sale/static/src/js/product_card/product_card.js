@@ -11,6 +11,7 @@ export class ProductCard extends Component {
         onClick: t.function(),
         isSelected: t.boolean().optional(),
         isConfigurable: t.boolean().optional(),
+        slots: t.object().optional(),
     });
 
     /**
