@@ -201,12 +201,26 @@ class PurchaseOrderLine(models.Model):
                 line.qty_to_invoice = 0
 
     @api.depends('name', 'order_id.name', 'qty_to_invoice', 'uom_id.name', 'price_unit', 'currency_id', 'product_id.display_name')
-    @api.depends_context('display_order_name', 'formatted_display_name')
+    @api.depends_context('display_order_name', 'formatted_display_name', 'purchase_matching_aml_id', 'invoice_qty')
     def _compute_display_name(self):
         if self.env.context.get('formatted_display_name') and self.env.context.get('display_order_name'):
+            precision = self.env['decimal.precision'].precision_get('Product Unit')
+            current_aml = self.env['account.move.line'].browse(self.env.context.get('purchase_matching_aml_id'))
             for line in self:
                 price = line.currency_id.format(line.price_unit_discounted)
-                header = f"**{line.order_id.name}**\t{line.qty_to_invoice} {line.uom_id.name}\t{price}"
+                quantity = line.qty_to_invoice
+                if current_aml.purchase_line_id == line and line.order_id.state == 'purchase':
+                    invoiced_qty = line.with_context(
+                        excluded_aml_ids=current_aml.ids,
+                    )._prepare_qty_invoiced()[line]
+                    invoice_qty = current_aml.product_uom_id._compute_quantity(
+                        self.env.context['invoice_qty'], line.uom_id
+                    )
+                    ordered_qty = line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received
+                    quantity = ordered_qty - invoiced_qty
+                    quantity -= -invoice_qty if current_aml.is_refund else invoice_qty
+                quantity = float_round(quantity, precision_digits=precision)
+                header = f"**{line.order_id.name}**\t{quantity} {line.uom_id.name}\t{price}"
                 detail = f"--{line.name}--"
                 line.display_name = f"{header}\n{detail}"
         elif self.env.context.get('display_order_name'):
