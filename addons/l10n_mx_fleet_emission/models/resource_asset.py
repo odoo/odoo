@@ -25,7 +25,6 @@ class ResourceAsset(models.Model):
         selection=STICKER_COLORS,
         related="l10n_mx_emission_calendar_id.color",
         string="Sticker Color",
-        store=True,
     )
     l10n_mx_emission_period = fields.Char(
         related="l10n_mx_emission_calendar_id.period_display",

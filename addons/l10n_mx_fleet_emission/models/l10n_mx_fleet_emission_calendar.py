@@ -117,19 +117,24 @@ class L10nMxFleetEmissionCalendar(models.Model):
 
     def _recompute_vehicles(self) -> None:
         # A vehicle's calendar depends on every row of this table, so a change here
-        # is pushed to all vehicles by hand, and so are the stored fields following
-        # the calendar: a recompute queued this way does not cascade to them.
+        # is pushed to all vehicles by hand; a recompute queued this way does not
+        # cascade, so what reads through the calendar is dropped from the cache.
         vehicles = (
             self.env["resource.asset"]
             .with_context(active_test=False)
             .search([("is_vehicle", "=", True)])
         )
-        vehicle_fields = ("l10n_mx_emission_calendar_id", "l10n_mx_emission_color")
-        for name in vehicle_fields:
-            self.env.add_to_compute(vehicles._fields[name], vehicles)
-        vehicles.flush_recordset(list(vehicle_fields))
+        self.env.add_to_compute(
+            vehicles._fields["l10n_mx_emission_calendar_id"], vehicles
+        )
+        vehicles.flush_recordset(["l10n_mx_emission_calendar_id"])
+        vehicles.invalidate_recordset(
+            ["l10n_mx_emission_color", "l10n_mx_emission_period"]
+        )
         inspections = self.env["l10n_mx.fleet.emission.inspection"].search(
             [("asset_id", "in", vehicles.ids)]
         )
-        for name in ("calendar_id", "sticker_color", "color_sequence", "deadline"):
-            self.env.add_to_compute(inspections._fields[name], inspections)
+        inspections.invalidate_recordset(
+            ["calendar_id", "sticker_color", "color_sequence"]
+        )
+        self.env.add_to_compute(inspections._fields["deadline"], inspections)

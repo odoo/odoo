@@ -172,7 +172,7 @@ class TestL10nMxFleetEmission(TransactionCase):
             ),
         )
 
-    def test_a_calendar_arriving_after_the_vehicle_stores_its_color(self) -> None:
+    def test_a_calendar_arriving_after_the_vehicle_gives_it_its_color(self) -> None:
         Calendar = self.env["l10n_mx.fleet.emission.calendar"]
         Calendar.search([]).unlink()
         vehicle = self._vehicle("ABC-125")
@@ -188,13 +188,13 @@ class TestL10nMxFleetEmission(TransactionCase):
                 "second_period_end": 8,
             }
         )
-        vehicle.invalidate_recordset()
-        self.env.cr.execute(
-            "SELECT l10n_mx_emission_color FROM resource_asset WHERE id = %s",
-            [vehicle.id],
-        )
-        self.assertEqual(self.env.cr.fetchone()[0], "yellow")
         self.assertEqual(vehicle.l10n_mx_emission_color, "yellow")
+        self.assertIn(
+            vehicle,
+            self.env["resource.asset"].search(
+                [("l10n_mx_emission_color", "=", "yellow")]
+            ),
+        )
 
     def test_the_inspection_follows_the_vehicle_driver(self) -> None:
         vehicle = self._vehicle("ABC-125")

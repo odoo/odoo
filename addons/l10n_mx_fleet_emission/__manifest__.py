@@ -1,6 +1,6 @@
 {
     "name": "Mexico - Vehicle Emissions Inspection",
-    "version": "2.0",
+    "version": "2.1",
     "category": "Human Resources/Fleet",
     "summary": "Emissions inspection sticker, windows and checklist per vehicle, from the plate",
     "description": """

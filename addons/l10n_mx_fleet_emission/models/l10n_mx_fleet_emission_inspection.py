@@ -31,20 +31,16 @@ class L10nMxFleetEmissionInspection(models.Model):
     )
     company_id = fields.Many2one(
         related="asset_id.company_id",
-        store=True,
     )
     calendar_id = fields.Many2one(
         related="asset_id.l10n_mx_emission_calendar_id",
-        store=True,
     )
     sticker_color = fields.Selection(
         selection=STICKER_COLORS,
         related="calendar_id.color",
-        store=True,
     )
     color_sequence = fields.Integer(
         related="calendar_id.sequence",
-        store=True,
     )
     color = fields.Integer(compute="_compute_color")
     year = fields.Integer(
