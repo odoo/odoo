@@ -76,6 +76,7 @@ export class Dashboard extends Component {
             }
             this.state.selectedCard = "";
         });
+        useBus(this.env.bus, "reload", () => this.loadDashboardData());
 
         onWillStart(async () => {
             await this.loadDashboardData();
