@@ -26,6 +26,14 @@ class LoyaltyRule(models.Model):
                 })
         return result
 
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        default = dict(default or {})
+        for line, vals in zip(self, vals_list):
+            if 'code' not in default and line.code:
+                vals['code'] = _("%s (copy)", line.code)
+        return vals_list
+
     def _get_reward_point_mode_selection(self):
         # The value is provided in the loyalty program's view since we may not have a program_id yet
         #  and makes sure to display the currency related to the program instead of the company's.
