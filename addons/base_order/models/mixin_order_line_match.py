@@ -353,7 +353,7 @@ class MixinOrderLineMatch(models.AbstractModel):
             ol.id,
             ol.id AS order_line_id,
             NULL::INTEGER AS aml_id,
-            ol.company_id,
+            o.company_id,
             ol.partner_id,
             ol.product_id,
             ol.product_qty AS line_qty,

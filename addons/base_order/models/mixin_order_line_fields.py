@@ -31,9 +31,6 @@ class MixinOrderLineFields(models.AbstractModel):
         comodel_name="res.company",
         related="order_id.company_id",
         string="Company",
-        precompute=True,
-        store=True,
-        index=True,
     )
     company_price_include = fields.Selection(related="company_id.account_price_include")
     currency_id = fields.Many2one(
