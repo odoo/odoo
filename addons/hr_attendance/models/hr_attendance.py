@@ -709,3 +709,9 @@ class HrAttendance(models.Model):
 
     def action_reset_to_draft(self):
         self.write({'state': 'draft'})
+
+    @api.model
+    def get_unusual_days(self, date_from, date_to=None):
+        employee_id = self.env.context.get('employee_id', False)
+        employee = self.env['hr.employee'].browse(employee_id) if employee_id else self.env.user.employee_id
+        return employee.sudo(False)._get_unusual_days(date_from, date_to)
