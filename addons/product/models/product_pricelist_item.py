@@ -566,7 +566,20 @@ class ProductPricelistItem(models.Model):
         uom.ensure_one()
 
         if self.compute_price == 'fixed':
-            return product.uom_id._compute_price(self.fixed_price, uom)
+            price = product.uom_id._compute_price(self.fixed_price, uom)
+
+            if self.applied_on == '0_product_variant':
+                # If a fixed price was defined for a specific variant, only extra prices from
+                # no variant attributes have to be considered.
+                extra_price = self.env.context.get('no_variant_attributes_price_extra', 0)
+            else:
+                # Variant -> add variant extra price + no_variant attributes extra price
+                # Template -> add extra prices from selected combination (if any)
+                extra_price = product._get_attributes_extra_price()
+            extra_price = product.uom_id._compute_price(extra_price, uom)
+            extra_price = self._convert_price(extra_price, product.currency_id, **kwargs)
+
+            return price + extra_price
 
         base_price = self._compute_base_price(product, quantity, uom, **kwargs)
         if self.compute_price in ('discount', 'markup'):
@@ -587,13 +600,13 @@ class ProductPricelistItem(models.Model):
                 price = min(
                     price, base_price + product_uom._compute_price(self.price_max_margin, uom)
                 )
-        else:  # empty self, or extended pricelist price computation logic
+        else:  # fixed price, empty self, or extended pricelist price computation logic
             price = base_price
 
         return price
 
     def _compute_base_price(
-        self, product, quantity, uom, *, currency=None, date=False, depth=0, base_prices=None, **kwargs
+        self, product, quantity, uom, *, currency=None, depth=0, base_prices=None, **kwargs
     ):
         """Compute the base price for a given rule.
 
@@ -617,7 +630,6 @@ class ProductPricelistItem(models.Model):
                     quantity,
                     currency=self.base_pricelist_id.currency_id,
                     uom=uom,
-                    date=date,
                     depth=depth + 1,
                     **kwargs,
                 )
@@ -629,11 +641,13 @@ class ProductPricelistItem(models.Model):
             src_currency = product.currency_id
             price = product._price_compute(rule_base, uom=uom)[product.id]
 
+        return self._convert_price(price, src_currency, currency=currency, **kwargs)
+
+    def _convert_price(self, price, src_currency, *, currency=None, date=False, **_):
         currency = currency or self.currency_id or self.env.company.currency_id
         currency.ensure_one()
         if src_currency != currency:
             price = src_currency._convert(price, currency, date=date, round=False)
-
         return price
 
     def _compute_price_before_discount(self, *args, **kwargs):
