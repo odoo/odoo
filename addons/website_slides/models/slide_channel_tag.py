@@ -51,8 +51,6 @@ class SlideChannelTag(models.Model):
     group_sequence = fields.Integer(
         related="group_id.sequence",
         string="Group sequence",
-        store=True,
-        index=True,
         readonly=True,
     )
     channel_ids = fields.Many2many(

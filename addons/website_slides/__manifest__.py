@@ -1,6 +1,6 @@
 {
     "name": "eLearning",
-    "version": "2.9",
+    "version": "2.10",
     "category": "Website/eLearning",
     "sequence": 125,
     "summary": "Manage and publish an eLearning platform",

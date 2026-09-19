@@ -19,8 +19,6 @@ class SlideSlidePartner(models.Model):
         comodel_name="slide.channel",
         related="slide_id.channel_id",
         string="Channel",
-        store=True,
-        index=True,
         ondelete="cascade",
     )
     partner_id = fields.Many2one(

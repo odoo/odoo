@@ -213,9 +213,9 @@ class WebsiteSlides(WebsiteProfile):
         return render_values
 
     def _get_slide_quiz_partner_info(self, slide, quiz_done=False):
-        return slide._get_quiz_info(
-            request.env.user.partner_id, quiz_done=quiz_done
-        )[slide.id]
+        return slide._get_quiz_info(request.env.user.partner_id, quiz_done=quiz_done)[
+            slide.id
+        ]
 
     def _get_slide_quiz_data(self, slide):
         is_editor = slide.channel_id.can_publish
