@@ -101,11 +101,15 @@ export class BomOverviewLine extends Component {
     }
 
     get hasComponents() {
-        return this.data.components && this.data.components.length > 0;
+        return this.data.components?.length > 0;
     }
 
     get hasOperations() {
-        return this.data.operations && this.data.operations.length > 0;
+        return this.data.operations?.length > 0;
+    }
+
+    get hasByproducts() {
+        return this.data.byproducts?.length > 0;
     }
 
     get hasQuantity() {
@@ -122,7 +126,9 @@ export class BomOverviewLine extends Component {
     }
 
     get hasFoldButton() {
-        return this.data.level > 0 && (this.hasComponents || this.hasOperations);
+        return (
+            this.data.level > 0 && (this.hasComponents || this.hasOperations || this.hasByproducts)
+        );
     }
 
     get marginMultiplicator() {
