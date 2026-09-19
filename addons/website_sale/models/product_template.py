@@ -178,7 +178,6 @@ class ProductTemplate(models.Model):
     _name_gist_idx = models.Index(lambda registry: get_translated_field_gist_index(registry, "name"))
     _description_gist_idx = models.Index(lambda registry: get_translated_field_gist_index(registry, "description"))
     _description_sale_gist_idx = models.Index(lambda registry: get_translated_field_gist_index(registry, "description_sale"))
-    _description_ecommerce_gist_idx = models.Index(lambda registry: get_translated_field_gist_index(registry, "description_ecommerce"))
     _default_code_gist_idx = models.Index(
         lambda registry: 'USING GIST(unaccent(default_code) gist_trgm_ops)'
         if registry.has_trigram and registry.has_unaccent == FunctionStatus.INDEXABLE
@@ -920,6 +919,7 @@ class ProductTemplate(models.Model):
             'model': 'product.template',
             'base_domain': domains,
             'search_fields': search_fields,
+            'fuzzy_search_fields': [f for f in search_fields if f != 'description_ecommerce'],
             'fetch_fields': fetch_fields,
             'mapping': mapping,
             'icon': 'fa-shopping-cart',
