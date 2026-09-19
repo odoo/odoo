@@ -393,6 +393,17 @@ class StockWarehouse(models.Model):
             PickingType.browse(warehouse_data['in_type_id']).write({'return_picking_type_id': warehouse_data.get('out_type_id', False)})
         return warehouse_data
 
+    def _create_or_update_global_routes_rules_for_route(self, route):
+        """ Recompute this warehouse's global-route rule(s) (mto, buy, ...)
+        that currently live on `route`, if any.
+
+        Only rules already tied to `route` are touched.
+        """
+        self.ensure_one()
+        global_rules = self._get_global_route_rules_values()
+        if any(self[rule_field] and self[rule_field].route_id == route for rule_field in global_rules):
+            self._create_or_update_global_routes_rules()
+
     def _create_or_update_global_routes_rules(self):
         """ Some rules are not specific to a warehouse(e.g MTO, Buy, ...)
         however they contain rule(s) for a specific warehouse. This method will
