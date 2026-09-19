@@ -36,7 +36,7 @@ class RatingRating(models.Model):
         index=True,
         ondelete="cascade",
     )
-    res_model = fields.Char(
+    res_model = fields.Char(  # noqa: E8529  index (res_model, res_id, write_date) partial
         related="res_model_id.model",
         string="Document Model",
         store=True,
@@ -70,7 +70,7 @@ class RatingRating(models.Model):
     # onto `ir.model` -- a no-op by construction, since the value can only ever
     # be what the related read already returns, but one that costs write access
     # on `ir.model` and so fails for any non-administrator.
-    parent_res_model = fields.Char(
+    parent_res_model = fields.Char(  # noqa: E8529  index (parent_res_model, parent_res_id, write_date) partial
         related="parent_res_model_id.model",
         string="Parent Document Model",
         store=True,

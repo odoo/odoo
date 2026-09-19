@@ -165,7 +165,7 @@ class ResPartnerBank(models.Model):
     )
     sequence = fields.Integer(default=10)
     currency_id = fields.Many2one(comodel_name="res.currency")
-    company_id = fields.Many2one(
+    company_id = fields.Many2one(  # noqa: E8529  UNIQUE (sanitized_acc_number, company_id) partial
         comodel_name="res.company",
         related="partner_id.company_id",
         string="Company",

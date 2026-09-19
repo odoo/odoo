@@ -227,7 +227,7 @@ class StockPicking(models.Model):
         index="btree_not_null",
         check_company=True,
     )
-    company_id = fields.Many2one(
+    company_id = fields.Many2one(  # noqa: E8529  UNIQUE (name, company_id) partial
         comodel_name="res.company",
         related="picking_type_id.company_id",
         string="Company",

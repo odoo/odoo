@@ -35,7 +35,7 @@ class ProductProduct(models.Model):
         ondelete="cascade",
         bypass_search_access=True,
     )
-    is_favorite = fields.Boolean(
+    is_favorite = fields.Boolean(  # noqa: E8529  index (is_favorite) partial
         related="product_tmpl_id.is_favorite",
         store=True,
         readonly=False,

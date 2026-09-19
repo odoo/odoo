@@ -40,7 +40,7 @@ class ResCompany(models.Model):
         index=True,
         required=True,
     )
-    name = fields.Char(
+    name = fields.Char(  # noqa: E8529  UNIQUE res_company_name_uniq
         related="partner_id.name",
         string="Company Name",
         store=True,

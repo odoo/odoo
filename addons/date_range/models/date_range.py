@@ -48,7 +48,7 @@ class DateRange(models.Model):
         "date range type archives its ranges too; restoring the type does not "
         "restore them, so a range archived by hand stays archived.",
     )
-    allow_overlap = fields.Boolean(
+    allow_overlap = fields.Boolean(  # noqa: E8529  EXCLUDE date_range_date_range_no_overlap; index (type_id) partial
         related="type_id.allow_overlap",
         store=True,
         # Denormalised so the ``date_range_no_overlap`` exclusion constraint can

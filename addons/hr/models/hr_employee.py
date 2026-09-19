@@ -109,7 +109,7 @@ class HrEmployee(models.Model):
         store=True,
         readonly=False,
     )
-    user_id = fields.Many2one(
+    user_id = fields.Many2one(  # noqa: E8529  UNIQUE (user_id, company_id) partial
         comodel_name="res.users",
         related="resource_id.user_id",
         string="User",

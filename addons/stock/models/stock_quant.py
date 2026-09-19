@@ -48,7 +48,7 @@ class StockQuant(models.Model):
         ondelete="restrict",
         bypass_search_access=True,
     )
-    company_id = fields.Many2one(
+    company_id = fields.Many2one(  # noqa: E8529  index (product_id, location_id, lot_id, package_id, owner_id, company_id)
         related="location_id.company_id",
         string="Company",
         store=True,

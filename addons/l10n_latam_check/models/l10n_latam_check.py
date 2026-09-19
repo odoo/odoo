@@ -4,7 +4,6 @@ import logging
 import stdnum
 
 from odoo import Command, _, api, fields, models
-from odoo.db.schema import index_exists
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -70,7 +69,7 @@ class L10n_LatamCheck(models.Model):
         store=True,
     )
     currency_id = fields.Many2one(related="payment_id.currency_id")
-    payment_channel_id = fields.Many2one(
+    payment_channel_id = fields.Many2one(  # noqa: E8529  UNIQUE (name, payment_channel_id) partial
         related="payment_id.payment_channel_id",
         store=True,
     )
@@ -178,7 +177,7 @@ class L10n_LatamCheck(models.Model):
         operations = (self.operation_ids + self.payment_id).filtered(
             lambda x: x.state not in ["draft", "canceled"]
         )
-        action = {
+        return {
             "name": _("Check Operations"),
             "type": "ir.actions.act_window",
             "res_model": "account.payment",
@@ -194,7 +193,6 @@ class L10n_LatamCheck(models.Model):
             "context": {"create": False},
             "domain": [("id", "in", operations.ids)],
         }
-        return action
 
     def action_show_reconciled_move(self):
         self.check_singleton()

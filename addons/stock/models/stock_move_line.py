@@ -113,7 +113,7 @@ class StockMoveLine(models.Model):
         index=True,
         check_company=True,
     )
-    state = fields.Selection(
+    state = fields.Selection(  # noqa: E8529  the WHERE clause of the partial index (product_id, location_id, lot_id, package_id, owner_id, company_id)
         related="move_id.state",
         store=True,
     )

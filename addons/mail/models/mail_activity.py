@@ -97,7 +97,7 @@ class MailActivity(models.Model):
         required=False,
         ondelete="cascade",
     )
-    res_model = fields.Char(
+    res_model = fields.Char(  # noqa: E8529  CHECK mail_activity_check_res_id_is_set_if_model; CHECK mail_activity_check_user_id_is_set_if_model; index (res_model, res_id)
         related="res_model_id.model",
         string="Related Document Model",
         precompute=True,

@@ -53,7 +53,7 @@ class AccountBankStatementLine(models.Model):
         check_company=True,
         bypass_search_access=True,
     )
-    journal_id = fields.Many2one(
+    journal_id = fields.Many2one(  # noqa: E8529  three indexes over (journal_id, company_id, internal_index)
         comodel_name="account.journal",
         related="move_id.journal_id",
         precompute=True,
@@ -63,7 +63,7 @@ class AccountBankStatementLine(models.Model):
         readonly=False,
         required=True,
     )
-    company_id = fields.Many2one(
+    company_id = fields.Many2one(  # noqa: E8529  three indexes over (journal_id, company_id, internal_index)
         comodel_name="res.company",
         related="move_id.company_id",
         precompute=True,
