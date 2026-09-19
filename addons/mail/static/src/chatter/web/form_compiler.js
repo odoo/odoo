@@ -35,7 +35,8 @@ function compileChatter(node, params) {
         hasParentReloadOnMessagePosted: Boolean(node.getAttribute("reload_on_post")),
         isAttachmentBoxVisibleInitially: Boolean(node.getAttribute("open_attachments")),
         threadId: "__comp__.props.record.resId or undefined",
-        threadModel: "__comp__.props.record.resModel",
+        threadModel:
+            "__comp__.props.archInfo.thread_model or __comp__.props.record.resModel",
         record: "__comp__.props.record",
         highlightMessageId: "__comp__.highlightMessageId",
     });
@@ -61,7 +62,8 @@ function compileAttachmentPreview(node, params) {
     setAttributes(webClientViewAttachmentViewContainerXml, {
         "t-component": "__comp__.mailComponents.AttachmentView",
         threadId: "__comp__.props.record.resId or undefined",
-        threadModel: "__comp__.props.record.resModel",
+        threadModel:
+            "__comp__.props.archInfo.thread_model or __comp__.props.record.resModel",
     });
     append(
         webClientViewAttachmentViewContainerHookXml,

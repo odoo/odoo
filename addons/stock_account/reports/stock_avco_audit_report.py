@@ -142,6 +142,9 @@ WHERE
 """
         self.env.cr.execute(query)
 
+    # The override flushes and delegates; it reads nothing the domain does not.
+    _search_visibility_fields = ()
+
     def _search(self, domain, *args, **kwargs):
         self.env.flush_all()
         return super()._search(domain, *args, **kwargs)

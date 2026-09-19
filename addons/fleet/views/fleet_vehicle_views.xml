@@ -3,7 +3,7 @@
 
     <record id="fleet_vehicle_view_form" model="ir.ui.view">
         <field name="name">resource.asset.form.fleet</field>
-        <field name="model">resource.asset</field>
+        <field name="model">resource.asset.vehicle</field>
         <field name="inherit_id" ref="resource_asset.resource_asset_view_form" />
         <field name="mode">primary</field>
         <field name="priority">20</field>
@@ -116,7 +116,7 @@
 
     <record id="fleet_vehicle_view_tree" model="ir.ui.view">
         <field name="name">resource.asset.list.fleet</field>
-        <field name="model">resource.asset</field>
+        <field name="model">resource.asset.vehicle</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <list
@@ -147,7 +147,7 @@
 
     <record id="fleet_vehicle_view_kanban" model="ir.ui.view">
         <field name="name">resource.asset.kanban.fleet</field>
-        <field name="model">resource.asset</field>
+        <field name="model">resource.asset.vehicle</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <kanban default_group_by="state" sample="1" highlight_color="color">
@@ -181,7 +181,7 @@
 
     <record id="fleet_vehicle_view_search" model="ir.ui.view">
         <field name="name">resource.asset.search.fleet</field>
-        <field name="model">resource.asset</field>
+        <field name="model">resource.asset.vehicle</field>
         <field name="inherit_id" ref="resource_asset.resource_asset_view_search" />
         <field name="mode">primary</field>
         <field name="priority">20</field>
@@ -225,11 +225,10 @@
 
     <record id="fleet_vehicle_action" model="ir.actions.act_window">
         <field name="name">Vehicles</field>
-        <field name="res_model">resource.asset</field>
+        <field name="res_model">resource.asset.vehicle</field>
         <field name="path">fleet</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="fleet_vehicle_view_search" />
-        <field name="domain">[('kind_id.code', '=', 'vehicle')]</field>
         <field
             name="context"
             eval="{'default_kind_id': ref('resource_asset.kind_vehicle')}" />
@@ -283,8 +282,8 @@
 
     <record id="action_fleet_vehicle_send_mail" model="ir.actions.server">
         <field name="name">Mail to Driver…</field>
-        <field name="model_id" ref="resource_asset.model_resource_asset" />
-        <field name="binding_model_id" ref="resource_asset.model_resource_asset" />
+        <field name="model_id" ref="fleet.model_resource_asset_vehicle" />
+        <field name="binding_model_id" ref="fleet.model_resource_asset_vehicle" />
         <field name="binding_view_types">list,kanban</field>
         <field name="binding_icon">fa-solid fa-envelope</field>
         <field name="state">code</field>

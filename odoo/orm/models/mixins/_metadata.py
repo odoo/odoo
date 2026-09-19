@@ -62,6 +62,8 @@ class _ModelMetadataMixin(_ModelStubs):
     _display_name_context_keys: tuple[str, ...] = ()
     _display_name_search_default: bool = False
     _display_name_search_exact: tuple[str, ...] = ()
+    _inherits_sudo_fields: tuple[str, ...] = ()
+    _inherits_rules: bool = True
     _fold_name: str = "fold"
 
     _translate: bool = True
@@ -123,4 +125,12 @@ class _ModelMetadataMixin(_ModelStubs):
         for name in self.pool.model_names_by_inheritance_root.get(root_table, ()):
             if self.pool[name]._table == root_table:
                 return name
+        return self._name
+
+    def _get_reference_model_name(self) -> str:
+        """The name a polymorphic reference (`res_model`, `mail.message.model`)
+        records for this model's rows. A model is its own reference; a member
+        of a table-inheritance tree overrides this with its root, because a
+        message, a follower or an attachment belongs to the row, whichever
+        model the row was read through."""
         return self._name

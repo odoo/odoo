@@ -12,6 +12,8 @@ patch(FormArchParser.prototype, {
     parse(xmlDoc, models, modelName) {
         const result = super.parse(...arguments);
         result.has_activities = Boolean(models[modelName].has_activities);
+        // A model that is a member of a table-inheritance tree threads on its root.
+        result.thread_model = models[modelName].thread_model || modelName;
         return result;
     },
 });

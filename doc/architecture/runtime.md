@@ -339,6 +339,15 @@ computed many2one, a one2many read as a scalar, a searched compute — on
 `resource.resource.asset_id`, `resource.resource.employee_id` and
 `resource.asset.workcenter_id`.
 
+**A tree member's polymorphic references name its root.** `BaseModel._get_reference_model_name()`
+is `_name` for an ordinary model and the root's name for a member of a table-inheritance tree
+(`mixin.table.inheritance.root`). A `One2many` over a `Many2oneReference` reads and writes that
+name, so `message_ids`, followers, activities and attachments of a row are the same set whichever
+model the row was read through; `mail.thread.get_views` hands the client `thread_model` for such a
+model and the form's chatter binds to it. Python that must record a reference itself records the
+reference name, never `self._name`. The rule exists because a message posted under
+`resource.asset.vehicle` was invisible to the same row read as `resource.asset`.
+
 **An x2many cache slot belongs to the access scope that filled it.** The field
 cache keys a context-dependent field's slot by the values `Field.depends_context`
 names (`lang`, `active_test`, `company`, `uid`); every x2many adds `access`

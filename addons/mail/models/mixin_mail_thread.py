@@ -704,6 +704,9 @@ class MixinMailThread(models.AbstractModel):
             self.env[self._name], self.env.registry["mixin.mail.activity"]
         ):
             res["models"][self._name]["has_activities"] = True
+        thread_model = self._get_reference_model_name()
+        if "form" in res["views"] and thread_model != self._name:
+            res["models"][self._name]["thread_model"] = thread_model
         return res
 
     def _compute_field_value(self, field: fields.Field, validate: bool = True) -> None:

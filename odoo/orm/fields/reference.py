@@ -300,7 +300,8 @@ class Many2oneReference(Integer):
             invf = typing.cast("_RelationalMulti", invf)
             additions: dict[IdType, tuple[IdType, ...]] = {}
             for records, value, model_ids in model_ids_per_update:
-                ids = model_ids.get(invf.model_name)
+                # A tree member's rows are referenced under the root's name.
+                ids = model_ids.get(env[invf.model_name]._get_reference_model_name())
                 if not ids:
                     continue
                 corecord = env[invf.model_name].browse(value)

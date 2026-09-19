@@ -3,7 +3,7 @@
 
     <record id="fleet_vehicle_view_form" model="ir.ui.view">
         <field name="name">resource.asset.form.fleet.l10n_mx_emission</field>
-        <field name="model">resource.asset</field>
+        <field name="model">resource.asset.vehicle</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_form" />
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
@@ -52,7 +52,7 @@
 
     <record id="fleet_vehicle_view_tree" model="ir.ui.view">
         <field name="name">resource.asset.list.fleet.l10n_mx_emission</field>
-        <field name="model">resource.asset</field>
+        <field name="model">resource.asset.vehicle</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree" />
         <field name="arch" type="xml">
             <field name="license_plate" position="after">
@@ -79,7 +79,7 @@
 
     <record id="fleet_vehicle_view_kanban" model="ir.ui.view">
         <field name="name">resource.asset.kanban.fleet.l10n_mx_emission</field>
-        <field name="model">resource.asset</field>
+        <field name="model">resource.asset.vehicle</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_kanban" />
         <field name="arch" type="xml">
             <field name="license_plate" position="after">
@@ -94,7 +94,7 @@
 
     <record id="fleet_vehicle_view_search" model="ir.ui.view">
         <field name="name">resource.asset.search.fleet.l10n_mx_emission</field>
-        <field name="model">resource.asset</field>
+        <field name="model">resource.asset.vehicle</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_search" />
         <field name="arch" type="xml">
             <filter name="planned" position="after">

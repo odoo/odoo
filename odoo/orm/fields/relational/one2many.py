@@ -135,7 +135,11 @@ class One2many(_RelationalMulti):
             comodel = env.registry[self.comodel_name]
             inverse_field = comodel._fields[self._get_inverse_name()]
             if inverse_field.is_many2one_reference:
-                return Domain(inverse_field.model_field, "=", self.model_name)
+                return Domain(
+                    inverse_field.model_field,
+                    "=",
+                    env[self.model_name]._get_reference_model_name(),
+                )
         return Domain.TRUE
 
     @override
@@ -335,7 +339,7 @@ class One2many(_RelationalMulti):
                     lines.mapped(inverse)
                     lines[inverse] = record
                     if reference_model_field:
-                        lines[reference_model_field] = model._name
+                        lines[reference_model_field] = model._get_reference_model_name()
                 to_link.clear()
 
         for recs, commands in records_commands_list:
@@ -371,7 +375,7 @@ class One2many(_RelationalMulti):
             for _ref, vals in delta.created:
                 line_vals = dict(vals)
                 if reference_model_field:
-                    line_vals[reference_model_field] = model._name
+                    line_vals[reference_model_field] = model._get_reference_model_name()
                 to_create.extend({**line_vals, inverse: record.id} for record in recs)
             if delta.linked:
                 to_link[recs[-1]].update(delta.linked)

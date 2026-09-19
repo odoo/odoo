@@ -58,13 +58,9 @@ class TestFleetVehicle(TransactionCase):
         )
         self.assertEqual(vehicle.display_name, "Probe Motors / Probe One / PRB-001")
         self.assertEqual(vehicle.get_identifier("plate"), "PRB-001")
-        self.assertIn(
-            vehicle,
-            self.env["resource.asset"].search(
-                self.env.ref("fleet.fleet_vehicle_action").domain
-                and [("kind_id.code", "=", "vehicle")]
-            ),
-        )
+        action = self.env.ref("fleet.fleet_vehicle_action")
+        self.assertEqual(action.res_model, "resource.asset.vehicle")
+        self.assertIn(vehicle.id, self.env[action.res_model].search([]).ids)
         self.assertFalse(
             self.env["resource.asset"]
             .create(
@@ -492,3 +488,44 @@ class TestIdentifierColumnsLiveOnTheVehicle(TransactionCase):
         vehicle = self.env["resource.asset.vehicle"].browse(van_id)
         self.assertEqual(vehicle._get_concrete()._name, "resource.asset.vehicle")
         self.assertEqual(vehicle.license_plate, "RTY-1")
+
+
+class TestAVehicleThreadsOnTheRoot(TransactionCase):
+    def test_the_vehicle_model_reads_and_writes_the_root_thread(self):
+        Asset = self.env["resource.asset"]
+        Vehicle = self.env["resource.asset.vehicle"]
+        van = Asset.create(
+            {"name": "Threaded", "kind_id": self.env.ref("resource_asset.kind_vehicle").id}
+        )
+        van.message_post(body="through the root")
+        vehicle = Vehicle.browse(van.id)
+        self.assertEqual(vehicle._get_reference_model_name(), "resource.asset")
+        self.assertEqual(vehicle.message_ids, van.message_ids)
+        vehicle.message_ids = [
+            (0, 0, {"body": "through the vehicle", "message_type": "comment"})
+        ]
+        self.assertEqual(set(van.message_ids.mapped("model")), {"resource.asset"})
+        self.assertEqual(len(van.message_ids), len(vehicle.message_ids))
+        self.assertIn(van, Asset.search([("message_ids.body", "ilike", "vehicle")]))
+        self.assertIn(
+            vehicle, Vehicle.search([("message_ids.body", "ilike", "through the root")])
+        )
+        views = Vehicle.get_views([[False, "form"]])
+        self.assertEqual(
+            views["models"]["resource.asset.vehicle"].get("thread_model"),
+            "resource.asset",
+        )
+        self.assertNotIn("thread_model", Asset.get_views([[False, "form"]])["models"]["resource.asset"])
+
+
+class TestSetAsideColumnsAreSwept(TransactionCase):
+    def test_a_member_table_loses_the_copy_of_a_column_the_root_set_aside(self):
+        self.env.cr.execute(
+            "ALTER TABLE resource_asset_vehicle ADD COLUMN legacy_probe varchar"
+        )
+        self.env["resource.asset"].init()
+        self.env.cr.execute(
+            "SELECT 1 FROM information_schema.columns"
+            " WHERE table_name = 'resource_asset_vehicle' AND column_name = 'legacy_probe'"
+        )
+        self.assertFalse(self.env.cr.fetchall())

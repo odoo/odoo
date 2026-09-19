@@ -3,7 +3,7 @@
 
     <record id="fleet_vehicle_view_form_inherit_hr" model="ir.ui.view">
         <field name="name">resource.asset.form.fleet.hr</field>
-        <field name="model">resource.asset</field>
+        <field name="model">resource.asset.vehicle</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_form" />
         <field name="arch" type="xml">
             <field name="operator_id" position="after">
@@ -18,7 +18,7 @@
 
     <record id="fleet_vehicle_view_search_inherit_hr" model="ir.ui.view">
         <field name="name">resource.asset.search.fleet.hr</field>
-        <field name="model">resource.asset</field>
+        <field name="model">resource.asset.vehicle</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_search" />
         <field name="arch" type="xml">
             <field name="operator_id" position="after">
@@ -29,7 +29,7 @@
 
     <record id="fleet_vehicle_view_tree_inherit_hr" model="ir.ui.view">
         <field name="name">resource.asset.list.fleet.hr</field>
-        <field name="model">resource.asset</field>
+        <field name="model">resource.asset.vehicle</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree" />
         <field name="arch" type="xml">
             <field name="operator_id" position="after">

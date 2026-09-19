@@ -24,6 +24,9 @@ class MixinTableInheritanceRoot(models.AbstractModel):
     _name = "mixin.table.inheritance.root"
     _description = "Table Inheritance Root"
 
+    def _get_reference_model_name(self) -> str:
+        return self._get_root_model_name()
+
     @api.model
     def _get_model_names_in_tree(self) -> frozenset[str]:
         root_table = self.env.registry[self._get_root_model_name()]._table
@@ -114,6 +117,58 @@ class MixinTableInheritanceRoot(models.AbstractModel):
         super().init()
         self._check_table_inheritance()
         self._constrain_type_to_table()
+        self._drop_set_aside_member_columns()
+
+    def _drop_set_aside_member_columns(self) -> None:
+        """A migration that moves a column off the root sets it aside as
+        `legacy_<name>` and drops it; a member table created with its columns
+        spelled out keeps its own copy of the set-aside column after the root
+        drops it (`attislocal`). Such a copy is nobody's field: it goes, with
+        the SQL views that read it, which their modules recreate."""
+        if not self._is_table_inheritance_root():
+            return
+        cr = self.env.cr
+        cr.execute(
+            r"""
+            SELECT child.relname, a.attname
+              FROM pg_inherits
+              JOIN pg_class child ON child.oid = pg_inherits.inhrelid
+              JOIN pg_class parent ON parent.oid = pg_inherits.inhparent
+              JOIN pg_attribute a ON a.attrelid = child.oid
+             WHERE parent.relname = %s
+               AND a.attname LIKE 'legacy\_%%'
+               AND a.attnum > 0 AND NOT a.attisdropped
+               AND NOT EXISTS (
+                   SELECT 1 FROM pg_attribute p
+                    WHERE p.attrelid = parent.oid AND p.attname = a.attname
+                      AND NOT p.attisdropped
+               )
+            """,
+            [self._table],
+        )
+        fields_by_table = self._get_model_names_by_table()
+        for table, column in cr.fetchall():
+            declared = any(
+                column in self.env[name]._fields for name in fields_by_table.get(table, ())
+            )
+            if declared:
+                continue
+            _logger.info(
+                "%s: dropping set-aside column %s.%s left behind by a migration.",
+                self._name,
+                table,
+                column,
+            )
+            cr.execute(
+                SQL(
+                    "ALTER TABLE %s DROP COLUMN %s CASCADE",
+                    SQL.identifier(table),
+                    SQL.identifier(column),
+                )
+            )
+            _debug.lifecycle(
+                "table_inheritance.set_aside_column_dropped", table=table, column=column
+            )
 
     def _constrain_type_to_table(self) -> None:
         type_field = self._get_type_field_name()
