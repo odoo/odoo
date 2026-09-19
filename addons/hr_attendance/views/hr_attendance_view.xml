@@ -84,10 +84,10 @@
                 <header>
                     <button name="action_validate" string="Validate" type="object"
                             class="btn-primary"
-                            invisible="state != 'draft'"
+                            invisible="state != 'draft' or not id"
                             groups="hr_attendance.group_hr_attendance_officer"/>
                     <button name="action_refuse" string="Refuse" type="object"
-                            invisible="state not in ('draft', 'validated')"
+                            invisible="state not in ('draft', 'validated') or not id"
                             groups="hr_attendance.group_hr_attendance_officer"/>
                     <button name="action_reset_to_draft" string="Reset to Draft" type="object"
                             invisible="state != 'refused'"

@@ -696,7 +696,12 @@ class HrAttendance(models.Model):
                     company = self.env.company
                     if vals.get('employee_id'):
                         company = self.env['hr.employee'].browse(vals['employee_id']).company_id or company
-                    vals['state'] = 'validated' if company.attendance_validation == 'no_validation' else 'draft'
+                    # auto-validate if the company doesn't require validation, or if the
+                    # creator is an attendance officer (same behaviour as time off requests)
+                    if company.attendance_validation == 'no_validation' or self.env.user.has_group('hr_attendance.group_hr_attendance_officer'):
+                        vals['state'] = 'validated'
+                    else:
+                        vals['state'] = 'draft'
         res = super().create(vals_list)
         res._update_tolerance_state()
         return res
