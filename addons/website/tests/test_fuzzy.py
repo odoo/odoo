@@ -133,7 +133,7 @@ class TestAutoComplete(TransactionCase):
 
     @classmethod
     def _create_page(cls, name, content, url):
-        cls.env['website.page'].create({
+        return cls.env['website.page'].create({
             'name': name,
             'type': 'qweb',
             'arch': f'<div>{content}</div>',
@@ -212,6 +212,148 @@ class TestAutoComplete(TransactionCase):
             "... brown fox jum...",
             "Should center around first token 'fox' when exact phrase 'fox runs' not found"
         )
+
+    def _website_env(self):
+        """ Provides an env carrying the 'website_id' context key that `env.website` relies on """
+        return self.website.with_context(website_id=self.website.id)
+
+    def _search_detail(self, with_tag_field=False):
+        """ Builds `website.page`'s search detail, optionally extended with a tag-like field """
+        website = self._website_env()
+        search_detail = website.env['website.page']._search_get_detail(website, 'name asc', {})
+        if with_tag_field:
+            search_detail['search_fields'] = [*search_detail['search_fields'], 'menu_ids.name']
+        return search_detail
+
+    def _ranked_urls(self, term, limit=20, with_tag_field=False):
+        """ Runs the real ranked search path and returns the resulting URLs """
+        _count, results = self._website_env()._search_ranked([self._search_detail(with_tag_field)], term, 0, limit)
+        return results[0]['results'].mapped('url')
+
+    def test_relevance_order(self):
+        """ Tests the relevance order of `_search_ranked()`'s SQL ranking """
+        filler_x, filler_y = 'x ' * 20, 'y ' * 20
+        big_x, big_y = 'x ' * 200, 'y ' * 200
+        self._create_page('alpha beta gamma', '', '/distance-title-best')
+        self._create_page('alphas beta gamma', '', '/distance-title-best-with-unperfect')
+        self._create_page('alpha x beta y gamma', '', '/distance-title-mid')
+        self._create_page('alpha beta', '', '/one-word-missing-title')
+        self._create_page(f'alpha {filler_x}beta {filler_y}gamma', '', '/distance-title-far')
+        self._create_page(f'alpha {filler_x}gamma', '', '/distance-title-far-missing')
+        self._create_page('generic result', f'{big_x}alpha beta gamma {big_y}', '/distance-desc-best')
+        self._create_page('generic result', f'{big_x}beta alpha gamma {big_y}', '/distance-desc-best-disordered')
+        self._create_page('generic result', f'{big_x}alpha xxxxxx beta xxxxxx gamma {big_y}', '/distance-desc-mid')
+        self._create_page('alpha beta', f'{big_x}alpha beta gamma {big_y}', '/distance-desc-best-missing-title')
+        tagged = self._create_page('alpha beta', '', '/one-word-missing-title-with-tag')
+        self.env['website.menu'].create({'name': 'gamma', 'page_id': tagged.id})
+
+        self.assertEqual(
+            [
+                '/distance-title-best',
+                '/distance-title-mid',
+                '/distance-title-far',
+                '/distance-desc-best-missing-title',
+                '/distance-desc-best',
+                '/distance-desc-best-disordered',
+                '/distance-desc-mid',
+                '/distance-title-best-with-unperfect',
+                '/one-word-missing-title-with-tag',
+                '/one-word-missing-title',
+                '/distance-title-far-missing',
+            ],
+            self._ranked_urls('alpha beta gamma', with_tag_field=True),
+            "The results order is not correct.",
+        )
+
+    def test_relevance_single_word_priority_name_tag_description(self):
+        """ For a single-word search, name matches rank above tag matches, which rank above description matches """
+        self._create_page('zzunique result', '', '/name-hit')
+        tagged = self._create_page('generic result', '', '/tag-hit')
+        self.env['website.menu'].create({'name': 'zzunique featured', 'page_id': tagged.id})
+        self._create_page('generic result', 'zzunique appears in description only', '/desc-hit')
+
+        self.assertEqual(
+            ['/name-hit', '/tag-hit', '/desc-hit'],
+            self._ranked_urls('zzunique', with_tag_field=True),
+            "Single-word search should prioritize name matches before tags, then description.",
+        )
+
+    def test_relevance_three_term_proximity(self):
+        """ Among results matching every search term, tighter proximity between the terms ranks higher """
+        filler_x, filler_y = 'x ' * 20, 'y ' * 20
+        self._create_page('alpha beta gamma', '', '/distance-best')
+        self._create_page('alpha x beta y gamma', '', '/distance-mid')
+        self._create_page(f'alpha {filler_x}beta {filler_y}gamma', '', '/distance-far')
+
+        self.assertEqual(
+            ['/distance-best', '/distance-mid', '/distance-far'],
+            self._ranked_urls('alpha beta gamma'),
+            "For 3-word searches, closer term proximity should rank higher.",
+        )
+
+    def test_relevance_missing_terms_rank_lower(self):
+        """ A result matching every search term ranks above one matching only some of them """
+        self._create_page('alpha beta gamma', '', '/all-terms-best')
+        self._create_page('alpha beta', '', '/missing-one')
+
+        self.assertEqual(
+            ['/all-terms-best', '/missing-one'],
+            self._ranked_urls('alpha beta gamma'),
+            "Results containing all terms must rank before those missing terms.",
+        )
+
+    def test_relevance_global_limit_is_global(self):
+        """ The global `limit` must cap the TOTAL result count across all `search_details` together """
+        for i in range(5):
+            self._create_page(f'alpha x{i} beta y{i} gamma', '', f'/bucket-a-{i}')
+        for i in range(5):
+            self._create_page(f'alpha x{i} beta y{i} gamma', '', f'/bucket-b-{i}')
+        best = self._create_page('alpha beta gamma', '', '/bucket-b-best')
+
+        detail_a = self._search_detail()
+        detail_a['base_domain'] = [*detail_a['base_domain'], [('url', '=like', '/bucket-a-%')]]
+        detail_b = self._search_detail()
+        detail_b['base_domain'] = [*detail_b['base_domain'], [('url', '=like', '/bucket-b-%')]]
+
+        _count, results = self._website_env()._search_ranked([detail_a, detail_b], 'alpha beta gamma', 0, 3)
+        urls = [url for search_detail in results for url in search_detail['results'].mapped('url')]
+        self.assertEqual(len(urls), 3, "the global limit must cap the total across both branches, not each one")
+        self.assertIn(best.url, urls, "the single best result must survive the global limit")
+
+    def test_relevance_proportionate_allocation(self):
+        """ `_search_apply_proportionate_allocation()` must distribute a global `limit` across groups proportionally """
+        for i in range(2):
+            self._create_page(f'alpha x{i} beta y{i} gamma', '', f'/bucket-a-{i}')
+        for i in range(30):
+            self._create_page(f'alpha x{i} beta y{i} gamma', '', f'/bucket-b-{i}')
+
+        detail_a = self._search_detail()
+        detail_a['base_domain'] = [*detail_a['base_domain'], [('url', '=like', '/bucket-a-%')]]
+        detail_b = self._search_detail()
+        detail_b['base_domain'] = [*detail_b['base_domain'], [('url', '=like', '/bucket-b-%')]]
+
+        limit = 10
+        count, results = self._website_env()._search_ranked(
+            [detail_a, detail_b], 'alpha beta gamma', 0, limit, per_model_limit=True,
+        )
+        self.assertEqual(count, 32, "the exact per-model counts must still be reported, unlimited")
+        self.assertEqual(len(results[0]['results']), 2)
+        self.assertEqual(len(results[1]['results']), limit)
+
+        self.WebsiteController._search_apply_proportionate_allocation(results, limit)
+        self.assertEqual(len(results[0]['results']), 2, "ceil(2/12 * 10) = 2, unaffected")
+        self.assertEqual(len(results[1]['results']), 9, "ceil(10/12 * 10) = 9, truncated by one")
+
+    def test_relevance_large_html_does_not_break_the_union(self):
+        """ A >1MB html field must not break the ranking query """
+        # The filler must be varied (not just repeated) since a repeated
+        # token packs small in a tsvector and would never hit the cap.
+        filler = ' '.join(f'filler{i}' for i in range(150000))
+        big_description = f'floccinaucinihilipilification {filler}'
+        self._create_page('Big page', big_description, '/big-page')
+        self._create_page('Other page', 'unrelated content', '/other-page')
+
+        self.assertEqual(['/big-page'], self._ranked_urls('floccinaucinihilipilification'))
 
     def test_01_few_results(self):
         """ Tests an autocomplete with exact match and less than the maximum number of results """
