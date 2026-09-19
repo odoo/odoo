@@ -23,8 +23,6 @@ class MixinBomComponent(models.AbstractModel):
     )
     company_id = fields.Many2one(
         related="bom_id.company_id",
-        store=True,
-        index=True,
         readonly=True,
     )
     product_qty = fields.Float(
