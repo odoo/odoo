@@ -3,6 +3,12 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
+export const popoverComponentProps = {
+    msg: t.string().optional(),
+    popoverTemplate: t.string().optional(),
+    title: t.string().optional(),
+};
+
 /**
  * Extend this to add functionality to Popover (custom methods etc.)
  * need to extend PopoverWidgetField as well and set its Popover Component to new extension
@@ -11,9 +17,7 @@ export class PopoverComponent extends Component {
     static template = "stock.popoverContent";
 
     props = useProps({
-        msg: t.string().optional(),
-        popoverTemplate: t.string().optional(),
-        title: t.string().optional(),
+        ...popoverComponentProps,
     });
 }
 
