@@ -16,6 +16,12 @@ export class ResUsersSettings extends Record {
     get channelNotifications() {
         return this.channel_notifications === false ? "mentions" : this.channel_notifications;
     }
+    /** @type {boolean} */
+    channel_push;
+    /** @type {boolean} */
+    chat_push;
+    /** @type {boolean} */
+    inbox_push;
     volume_settings_ids = fields.Many("res.users.settings.volumes", {
         inverse: "user_setting_id",
     });
