@@ -8,12 +8,12 @@
             <list string="Companies" decoration-muted="not active">
                 <field name="sequence" widget="handle" />
                 <field
-                    name="logo"
+                    name="image_1920"
                     widget="image"
                     width="30"
                     nolabel="1"
                     options="{'size': [24, 24], 'img_class': 'o_avatar rounded'}"
-                    invisible="not logo" />
+                    invisible="not image_1920" />
                 <field name="code" optional="show" />
                 <field name="name" />
                 <field name="partner_id" required="0" />
@@ -98,7 +98,7 @@
                     </div>
                     <div class="d-flex gap-2">
                         <field
-                            name="logo"
+                            name="image_1920"
                             widget="contact_image"
                             options="{'size': [100,100], 'img_class': 'rounded-4'}"
                             class="oe_avatar text-start float-none" />

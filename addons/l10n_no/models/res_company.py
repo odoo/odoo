@@ -1,10 +1,6 @@
-from odoo import fields, models
+from odoo import models
 
 
 class ResCompany(models.Model):
     _inherit = "res.company"
-
-    l10n_no_bronnoysund_number = fields.Char(
-        related="partner_id.l10n_no_bronnoysund_number",
-        readonly=False,
-    )
+    _inherits_sudo_fields = ("l10n_no_bronnoysund_number",)

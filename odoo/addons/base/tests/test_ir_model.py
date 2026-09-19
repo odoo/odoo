@@ -587,22 +587,22 @@ class TestIrModelEdition(TransactionCase):
         from odoo.addons.base.models.ir_model_common import upsert_en
 
         IrModel = self.env["ir.model"]
-        company = IrModel._get("res.company")
         partner = IrModel._get("res.partner")
-        partner_field = self.env["ir.model.fields"]._get("res.company", "partner_id")
+        country = IrModel._get("res.country")
+        country_field = self.env["ir.model.fields"]._get("res.partner", "country_id")
         Inherit = self.env["ir.model.inherit"]
         self.assertFalse(
             Inherit.search(
-                [("model_id", "=", company.id), ("parent_id", "=", partner.id)]
+                [("model_id", "=", partner.id), ("parent_id", "=", country.id)]
             )
         )
         [inherit_id] = upsert_en(
             Inherit,
             ["model_id", "parent_id", "parent_field_id"],
-            [(company.id, partner.id, partner_field.id)],
+            [(partner.id, country.id, country_field.id)],
             conflict=["model_id", "parent_id"],
         )
-        self.assertEqual(Inherit.browse(inherit_id).parent_field_id, partner_field)
+        self.assertEqual(Inherit.browse(inherit_id).parent_field_id, country_field)
 
     def test_make_compute_filters_blank_dependencies(self):
         from odoo.addons.base.models.ir_model_common import prepare_compute

@@ -30,12 +30,12 @@
                                     <table
                                         style="width: 100%; height: 100%; text-align: center;"
                                         class="table-borderless">
-                                        <t t-if="employee.company_id.logo">
+                                        <t t-if="employee.company_id.image_1920">
                                             <tr
                                                 style="height:30%; padding-top: 4pt; padding-bottom: 2pt">
                                                 <td>
                                                     <img
-                                                        t-att-src="image_data_uri(employee.company_id.logo)"
+                                                        t-att-src="image_data_uri(employee.company_id.image_1920)"
                                                         style="max-height: 40pt; max-width: 100%;"
                                                         alt="Company Logo" />
                                                 </td>

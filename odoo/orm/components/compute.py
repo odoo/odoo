@@ -56,22 +56,28 @@ class ComputeEngine[F: FieldKey = FieldKey]:
     def pending(self) -> defaultdict[F, set[Any]]:
         return self._pending
 
+    @staticmethod
+    def _keys(field: F) -> tuple[F, ...]:
+        # a pending or protected value is a fact of the row, which every
+        # model of a table-inheritance tree reads through its own field
+        return (field, *getattr(field, "tree_siblings", ()))
+
     def schedule(self, field: F, ids: Iterable[Any]) -> None:
-        existing = self._pending.get(field)
-        if existing is None:
-            ids = list(ids)
-            if not ids:
-                return
-            existing = self._pending[field]
-        existing.update(ids)
+        ids = list(ids)
+        if not ids:
+            return
+        for key in self._keys(field):
+            self._pending[key].update(ids)
 
     def mark_done(self, field: F, ids: Iterable[Any]) -> None:
-        pending = self._pending.get(field)
-        if pending is None:
-            return
-        pending.difference_update(ids)
-        if not pending:
-            del self._pending[field]
+        ids = list(ids)
+        for key in self._keys(field):
+            pending = self._pending.get(key)
+            if pending is None:
+                continue
+            pending.difference_update(ids)
+            if not pending:
+                del self._pending[key]
 
     def is_pending(self, field: F, record_id: Any) -> bool:
         return record_id in self._pending.get(field, ())
@@ -116,8 +122,9 @@ class ComputeEngine[F: FieldKey = FieldKey]:
         return self._protected.pop_map()
 
     def protect(self, field: F, ids: frozenset[Any]) -> None:
-        existing = self._protected.get(field)
-        self._protected[field] = existing.union(ids) if existing else ids
+        for key in self._keys(field):
+            existing = self._protected.get(key)
+            self._protected[key] = existing.union(ids) if existing else ids
 
     def clear(self) -> None:
         if _debug.lifecycle.enabled and self._pending:

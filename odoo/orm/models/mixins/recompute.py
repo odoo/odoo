@@ -545,15 +545,23 @@ class RecomputeMixin(_ModelStubs):
         prof.stop("flush")
         prof.report(_orm_cache, "flush_model %s", self._name)
 
-    def _flush_table_inheritance_siblings(self, fnames: Collection[str] | None) -> None:
+    def _flush_table_inheritance_siblings(
+        self, fnames: Collection[str] | None, ids: Sequence[IdType] | None = None
+    ) -> None:
         for name in self.env._table_inheritance_tree(self._name):
             sibling = self.env[name]
             if fnames is None:
                 sibling._flush_model_own(None)
                 continue
             shared = [fname for fname in fnames if fname in sibling._fields]
-            if shared:
+            if not shared:
+                continue
+            if ids is None:
                 sibling._flush_model_own(shared)
+            else:
+                # a fetch of these rows: the sibling's dirty values must reach
+                # the table, its pending computes stay pending
+                sibling._flush()
 
     @api.private
     def flush_recordset(self, fnames: Collection[str] | None = None) -> None:

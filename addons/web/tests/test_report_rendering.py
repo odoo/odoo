@@ -465,7 +465,7 @@ class TestReportsRenderingCommon(odoo.tests.HttpCase):
     ):
         if header_content is None:
             header_content = """
-                <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
+                <img t-if="company.image_1920" t-att-src="image_data_uri(company.image_1920)" style="max-height: 45px;" alt="Logo"/>
                 <span>Some header Text</span>
             """
 

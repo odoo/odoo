@@ -454,6 +454,9 @@ class ReadMixin(_ModelStubs):
         if not self._is_table_inheritance_root():
             return
         for model_name in self.env._table_inheritance_tree(self._name):
+            # the tree shares one table: a sibling's dirty value for these rows
+            # must reach the table before this SELECT; a pending compute is
+            # not this fetch's business
             other = self.env[model_name]
             names = [
                 field.name for field in fields_to_fetch if field.name in other._fields
@@ -465,7 +468,7 @@ class ReadMixin(_ModelStubs):
                     sibling=model_name,
                     fields=len(names),
                 )
-                other.flush_model(names)
+                other._flush()
 
     def _readable_prefetch_fields(self, prefetch: typing.Any) -> tuple[Field, ...]:
         fields = self.pool.prefetch_fields(self._name, prefetch)
@@ -510,7 +513,7 @@ class ReadMixin(_ModelStubs):
             if ignore_when_in_cache and not any(field._iter_cache_missing_ids(self)):
                 cached += 1  # debuglog
                 continue
-            if field.store:
+            if field.fetched_with_row:
                 fields_to_fetch.append(field)
             else:
                 expanded += 1  # debuglog
@@ -540,7 +543,7 @@ class ReadMixin(_ModelStubs):
         for field in fields:
             if field.name == "id":
                 continue
-            if not field.store:
+            if not field.fetched_with_row:
                 raise RuntimeError(f"_fetch_query expects stored fields, got {field}")
             (column_fields if field.column_type else other_fields).add(field)
 
@@ -555,7 +558,7 @@ class ReadMixin(_ModelStubs):
             # a cache miss here says nothing about the other models of the
             # tree, whose dirty values land in the rows this SELECT reads
             self._flush_table_inheritance_siblings(
-                [field.name for field in column_fields]
+                [field.name for field in column_fields], self._ids
             )
         return self.env.backend.fetch(self, query, column_fields, other_fields)
 

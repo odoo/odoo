@@ -27,6 +27,7 @@ class ResCompany(models.Model):
         "mixin.format.vat.label",
         "mixin.hierarchy",
     ]
+    _inherits = {"res.partner": "partner_id"}
     _order = "sequence, name"
     _rec_names_search = ["code", "name"]
     # display_name is `code or name`; _search_display_name only narrows the
@@ -34,88 +35,45 @@ class ResCompany(models.Model):
     _display_name_column = ("code", "name")
     _display_name_context_keys = ("user_preference",)
     _display_name_search_default = True
+    # a tenant's row is governed by the tenant's rules, and its identity is
+    # readable by whoever may read the tenant; the party's rules govern the
+    # party's other fields
+    _inherits_rules = False
+    _inherits_sudo_fields = (
+        "name",
+        "email",
+        "phone_ids",
+        "website",
+        "vat",
+        "company_registry",
+        "company_registry_placeholder",
+        "bank_ids",
+        "street",
+        "street2",
+        "zip",
+        "city",
+        "state_id",
+        "country_id",
+        "country_code",
+        "image_1920",
+        "image_1024",
+        "image_512",
+        "image_256",
+        "image_128",
+        "avatar_1920",
+        "avatar_1024",
+        "avatar_512",
+        "avatar_256",
+        "avatar_128",
+    )
 
     partner_id = fields.Many2one(
         comodel_name="res.partner",
+        string="Party",
         index=True,
         required=True,
+        ondelete="restrict",
     )
-    name = fields.Char(  # noqa: E8529  UNIQUE res_company_name_uniq
-        related="partner_id.name",
-        string="Company Name",
-        store=True,
-        readonly=False,
-        required=True,
-    )
-    email = fields.Char(
-        related="partner_id.email",
-        readonly=False,
-    )
-    phone_ids = fields.Many2many(
-        related="partner_id.phone_ids",
-        readonly=False,
-    )
-    website = fields.Char(
-        related="partner_id.website",
-        readonly=False,
-    )
-    vat = fields.Char(
-        related="partner_id.vat",
-        string="Tax ID",
-        readonly=False,
-    )
-    company_registry = fields.Char(
-        related="partner_id.company_registry",
-        string="Company ID",
-        readonly=False,
-    )
-    company_registry_placeholder = fields.Char(
-        related="partner_id.company_registry_placeholder"
-    )
-    logo = fields.Binary(
-        related="partner_id.image_1920",
-        string="Company Logo",
-        default=lambda self: self._default_logo(),
-        readonly=False,
-    )
-    bank_ids = fields.One2many(
-        related="partner_id.bank_ids",
-        readonly=False,
-    )
-    street = fields.Char(
-        related="partner_id.street",
-        readonly=False,
-    )
-    street2 = fields.Char(
-        related="partner_id.street2",
-        readonly=False,
-    )
-    zip = fields.Char(
-        related="partner_id.zip",
-        readonly=False,
-    )
-    city = fields.Char(
-        related="partner_id.city",
-        readonly=False,
-    )
-    state_id = fields.Many2one(
-        comodel_name="res.country.state",
-        related="partner_id.state_id",
-        string="Fed. State",
-        readonly=False,
-        domain="[('country_id', '=?', country_id)]",
-    )
-    country_id = fields.Many2one(
-        comodel_name="res.country",
-        related="partner_id.country_id",
-        string="Country",
-        readonly=False,
-    )
-    country_code = fields.Char(
-        related="country_id.code",
-        depends=["country_id"],
-    )
-
     code = fields.Char(
         string="Short Code",
         size=6,
@@ -206,11 +164,6 @@ class ResCompany(models.Model):
             raise_if_not_found=False,
         ),
     )
-    color = fields.Integer(
-        compute="_compute_color",
-        inverse="_inverse_color",
-        recursive=True,
-    )
     uninstalled_l10n_module_ids = fields.Many2many(
         comodel_name="ir.module.module",
         compute="_compute_uninstalled_l10n_module_ids",
@@ -227,10 +180,6 @@ class ResCompany(models.Model):
                 companies_without.write({"paperformat_id": paperformat_euro.id})
         super().init()
 
-    _name_uniq = models.Constraint(
-        "unique (name)",
-        "The company name must be unique!",
-    )
     _code_uniq = models.Constraint(
         "unique (code)",
         "The company short code must be unique!",
@@ -273,6 +222,18 @@ class ResCompany(models.Model):
                 )
             )
 
+    @api.constrains("partner_id")
+    def _check_party_name_unique(self) -> None:
+        names = self.mapped("name")
+        twins = (
+            self.sudo()
+            .with_context(active_test=False)
+            .search_count([("name", "in", names), ("id", "not in", self.ids)])
+        )
+        if twins or len(names) != len(set(names)):
+            _debug.logic("company_name_duplicate", companies=self.ids)
+            raise ValidationError(self.env._("The company name must be unique!"))
+
     @api.constrains(
         lambda self: self._get_field_names_delegated_to_root() + ["parent_id"]
     )
@@ -311,41 +272,18 @@ class ResCompany(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
+        context_parent_id = self.env.context.get("default_parent_id")
+        self = self.with_context(
+            {k: v for k, v in self.env.context.items() if k != "default_parent_id"}
+        )
         vals_list = [dict(self._normalize_vals(vals)) for vals in vals_list]
-
-        no_partner_vals_list = [
-            vals
-            for vals in vals_list
-            if vals.get("name") and not vals.get("partner_id")
-        ]
-        if no_partner_vals_list:
-            partners = (
-                self.env["res.partner"]
-                .with_context(default_parent_id=False)
-                .create(
-                    [
-                        {
-                            "name": vals["name"],
-                            "is_company": True,
-                            "image_1920": vals.get("logo"),
-                            "email": vals.get("email"),
-                            "phone_ids": vals.get("phone_ids"),
-                            "website": vals.get("website"),
-                            "vat": vals.get("vat"),
-                            "country_id": vals.get("country_id"),
-                        }
-                        for vals in no_partner_vals_list
-                    ]
-                )
-            )
-            partners.flush_model()
-            _debug.pipeline(
-                "partners_created_for_companies",
-                partners=partners.ids,
-                companies=len(vals_list),
-            )
-            for vals, partner in zip(no_partner_vals_list, partners, strict=True):
-                vals["partner_id"] = partner.id
+        default_logo = self._default_logo()
+        for vals in vals_list:
+            if context_parent_id and "parent_id" not in vals:
+                vals["parent_id"] = context_parent_id
+            if not vals.get("partner_id"):
+                vals.setdefault("is_company", True)
+                vals.setdefault("image_1920", default_logo)
 
         for vals in vals_list:
             if parent := self.browse(vals.get("parent_id")):
@@ -363,10 +301,10 @@ class ResCompany(models.Model):
         self.env.registry.clear_cache()
         _debug.lifecycle("registry_cache_cleared", by="create")
         companies = super().create(vals_list)
+        self.env.registry.clear_cache()
         _debug.lifecycle(
             "create",
             count=len(companies),
-            partners_created=len(no_partner_vals_list),
             branches=sum(1 for vals in vals_list if vals.get("parent_id")),
         )
 
@@ -496,29 +434,24 @@ class ResCompany(models.Model):
             company.root_id = company.parent_ids[0]
         _debug.perf.count("hierarchy_computed", companies=len(self))
 
-    @api.depends("partner_id.image_1920")
+    @api.depends("image_1920")
     def _compute_logo_web(self) -> None:
         with _debug.perf("logo_web_computed", companies=len(self)) as span:
             resized = 0  # debuglog
             for company in self:
-                img = company.partner_id.image_1920
+                img = company.image_1920
                 resized += bool(img)  # debuglog
                 company.logo_web = img and base64.b64encode(
                     image_process(base64.b64decode(img), size=(180, 0))
                 )
             span.set(resized=resized)
 
-    @api.depends("partner_id.image_1920")
+    @api.depends("image_1920")
     def _compute_uses_default_logo(self) -> None:
         default_logo = _get_default_logo()
         for company in self:
-            company.uses_default_logo = not company.logo or company.logo == default_logo
-
-    @api.depends("root_id", "parent_id.color", "partner_id.color")
-    def _compute_color(self) -> None:
-        for company in self:
-            company.color = company.root_id.partner_id.color or (
-                company.root_id._origin.id % 12
+            company.uses_default_logo = (
+                not company.image_1920 or company.image_1920 == default_logo
             )
 
     @api.depends("country_id")
@@ -534,29 +467,31 @@ class ResCompany(models.Model):
         self.env["ir.module.module.dependency"].flush_model()
         self.env.cr.execute(
             """
-            SELECT country.id,
-                   ARRAY_AGG(module.id)
-              FROM ir_module_module module,
-                   res_country country
-             WHERE module.auto_install
-               AND state != ALL(%(install_states)s)
-               AND NOT EXISTS (
-                       SELECT 1
-                         FROM ir_module_module_dependency d
-                         JOIN ir_module_module mdep ON (d.name = mdep.name)
-                        WHERE d.module_id = module.id
-                          AND d.auto_install_required
-                          AND mdep.state != ALL(%(install_states)s)
-                   )
-               AND EXISTS (
-                       SELECT 1
-                         FROM module_country mc
-                        WHERE mc.module_id = module.id
-                          AND mc.country_id = country.id
-                   )
+            SELECT
+                country.id,
+                ARRAY_AGG(module.id)
+            FROM
+                ir_module_module module,
+                res_country country
+            WHERE module.auto_install
+                AND state != ALL(%(install_states)s)
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM ir_module_module_dependency d
+                    JOIN ir_module_module mdep ON (d.name = mdep.name)
+                    WHERE d.module_id = module.id
+                        AND d.auto_install_required
+                        AND mdep.state != ALL(%(install_states)s)
+                )
+                AND EXISTS (
+                    SELECT 1
+                    FROM module_country mc
+                    WHERE mc.module_id = module.id
+                        AND mc.country_id = country.id
+                )
                AND country.id = ANY(%(country_ids)s)
-          GROUP BY country.id
-        """,
+            GROUP BY country.id
+            """,
             {
                 "country_ids": self.country_id.ids,
                 "install_states": ["installed", "to install", "to upgrade"],
@@ -592,15 +527,6 @@ class ResCompany(models.Model):
             record.is_company_details_empty = not html2plaintext(
                 record.company_details or ""
             )
-
-    def _inverse_color(self) -> None:
-        for company in self:
-            company.root_id.partner_id.color = company.color
-
-    @api.onchange("state_id")
-    def _onchange_state_id(self) -> None:
-        if self.state_id.country_id:
-            self.country_id = self.state_id.country_id
 
     @api.onchange("country_id")
     def _onchange_country_id(self) -> None:

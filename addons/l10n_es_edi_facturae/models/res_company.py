@@ -3,11 +3,8 @@ from odoo import _, fields, models
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _inherits_sudo_fields = ("l10n_es_edi_facturae_residence_type",)
 
-    l10n_es_edi_facturae_residence_type = fields.Char(
-        related="partner_id.l10n_es_edi_facturae_residence_type",
-        string="Facturae EDI Residency Type Code",
-    )
     l10n_es_edi_facturae_certificate_ids = fields.One2many(
         comodel_name="certificate.certificate",
         inverse_name="company_id",
@@ -26,7 +23,9 @@ class ResCompany(models.Model):
         for key, check in checks.items():
             for fields_tuple in check.pop("fields"):
                 if invalid_records := self.filtered(
-                    lambda record: not any(record[field] for field in fields_tuple)
+                    lambda record, fields_tuple=fields_tuple: (
+                        not any(record[field] for field in fields_tuple)
+                    )
                 ):
                     errors[f"l10n_es_edi_facturae_{key}"] = {
                         "level": "danger",

@@ -16,16 +16,13 @@ from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import (
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _inherits_sudo_fields = ("l10n_hu_group_vat",)
     _CREDENTIAL_FIELDS = {
         "l10n_hu_edi_password": "l10n_hu_edi_password",
         "l10n_hu_edi_signature_key": "l10n_hu_edi_signature_key",
         "l10n_hu_edi_replacement_key": "l10n_hu_edi_replacement_key",
     }
 
-    l10n_hu_group_vat = fields.Char(
-        related="partner_id.l10n_hu_group_vat",
-        readonly=False,
-    )
     l10n_hu_tax_regime = fields.Selection(
         selection=[
             ("ie", "Individual Exemption"),
@@ -240,7 +237,7 @@ class ResCompany(models.Model):
                     )
 
                     matched_invoice = invoices_to_check.filtered(
-                        lambda m: (
+                        lambda m, invoice_name=invoice_name, canonicalized_attachment=canonicalized_attachment, annulment_invoice_name=annulment_invoice_name, transaction=transaction, processing_result=processing_result: (
                             (
                                 # 1. Match invoice if the entire XML matches.
                                 # For performance, we first check the invoice name before trying to match the whole XML.
@@ -306,7 +303,7 @@ class ResCompany(models.Model):
 
             # Any invoices still in a 'timeout' state that are more than 6 minutes old and could not be matched should be considered not received.
             invoices_to_check.filtered(
-                lambda m: (
+                lambda m, recovery_close_time=recovery_close_time: (
                     m.l10n_hu_edi_state == "send_timeout"
                     and m.l10n_hu_edi_send_time < recovery_close_time
                 )
@@ -318,7 +315,7 @@ class ResCompany(models.Model):
             )
 
             invoices_to_check.filtered(
-                lambda m: (
+                lambda m, recovery_close_time=recovery_close_time: (
                     m.l10n_hu_edi_state == "cancel_timeout"
                     and m.l10n_hu_edi_send_time < recovery_close_time
                 )
@@ -327,3 +324,4 @@ class ResCompany(models.Model):
                     "l10n_hu_edi_state": "confirmed_warning",
                 }
             )
+        return None

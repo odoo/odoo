@@ -44,11 +44,12 @@ class AccountReconcileModel(models.Model):
     @api.model
     def _get_match_text_sql(self, st_line="st_line"):
         st_line = SQL.identifier(st_line)
+        narration = self.env["account.move"]._field_to_sql("move", "narration")
         return SQL(
             """(
                      SELECT %(st_line)s.payment_ref AS txt
                       UNION ALL
-                     SELECT move.narration
+                     SELECT %(narration)s
                        FROM account_move move
                       WHERE move.id = %(st_line)s.move_id
                       UNION ALL
@@ -59,6 +60,7 @@ class AccountReconcileModel(models.Model):
                             ) AS leaf
                    )""",
             st_line=st_line,
+            narration=narration,
         )
 
     @api.model

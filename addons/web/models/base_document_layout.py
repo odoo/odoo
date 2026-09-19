@@ -63,12 +63,12 @@ class BaseDocumentLayout(models.TransientModel):
         default=lambda self: self.env.company,
         required=True,
     )
-    logo = fields.Binary(
-        related="company_id.logo",
+    image_1920 = fields.Binary(
+        related="company_id.image_1920",
         readonly=False,
     )
     preview_logo = fields.Binary(
-        related="logo",
+        related="image_1920",
         string="Preview logo",
     )
     report_header = fields.Html(
@@ -171,7 +171,7 @@ class BaseDocumentLayout(models.TransientModel):
             logo_primary = wizard.logo_primary_color or ""
             logo_secondary = wizard.logo_secondary_color or ""
             wizard.custom_colors = (
-                wizard.logo
+                wizard.image_1920
                 and wizard.primary_color
                 and wizard.secondary_color
                 and not (
@@ -180,7 +180,7 @@ class BaseDocumentLayout(models.TransientModel):
                 )
             )
 
-    @api.depends("logo")
+    @api.depends("image_1920")
     def _compute_logo_colors(self) -> None:
         for wizard in self:
             if wizard.env.context.get("bin_size"):
@@ -188,13 +188,13 @@ class BaseDocumentLayout(models.TransientModel):
             else:
                 wizard_for_image = wizard
             wizard.logo_primary_color, wizard.logo_secondary_color = (
-                wizard.extract_image_primary_secondary_colors(wizard_for_image.logo)
+                wizard.extract_image_primary_secondary_colors(wizard_for_image.image_1920)
             )
 
     @api.depends(
         "report_layout_id",
         "report_theme_id",
-        "logo",
+        "image_1920",
         "font",
         "primary_color",
         "secondary_color",
@@ -233,7 +233,7 @@ class BaseDocumentLayout(models.TransientModel):
     @api.onchange("company_id")
     def _onchange_company_id(self) -> None:
         for wizard in self:
-            wizard.logo = wizard.company_id.logo
+            wizard.image_1920 = wizard.company_id.image_1920
             wizard.report_header = wizard.company_id.report_header
             wizard.report_footer = (
                 wizard.company_id.report_footer
@@ -273,7 +273,7 @@ class BaseDocumentLayout(models.TransientModel):
     @api.onchange("custom_colors")
     def _onchange_custom_colors(self) -> None:
         for wizard in self:
-            if wizard.logo and not wizard.custom_colors:
+            if wizard.image_1920 and not wizard.custom_colors:
                 wizard.primary_color = wizard.logo_primary_color or DEFAULT_PRIMARY
                 wizard.secondary_color = (
                     wizard.logo_secondary_color or DEFAULT_SECONDARY
@@ -284,12 +284,12 @@ class BaseDocumentLayout(models.TransientModel):
         for wizard in self:
             wizard.external_report_layout_id = wizard.report_layout_id.view_id
 
-    @api.onchange("logo")
+    @api.onchange("image_1920")
     def _onchange_logo(self) -> None:
         for wizard in self:
             company = wizard.company_id
             if (
-                wizard.logo == company.logo
+                wizard.image_1920 == company.image_1920
                 and company.primary_color
                 and company.secondary_color
             ):

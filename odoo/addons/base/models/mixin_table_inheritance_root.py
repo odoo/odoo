@@ -117,6 +117,9 @@ class MixinTableInheritanceRoot(models.AbstractModel):
         super().init()
         self._check_table_inheritance()
         self._constrain_type_to_table()
+
+    def _register_hook(self) -> None:
+        super()._register_hook()
         self._drop_set_aside_member_columns()
 
     def _drop_set_aside_member_columns(self) -> None:
@@ -124,8 +127,10 @@ class MixinTableInheritanceRoot(models.AbstractModel):
         `legacy_<name>` and drops it; a member table created with its columns
         spelled out keeps its own copy of the set-aside column after the root
         drops it (`attislocal`). Such a copy is nobody's field: it goes, with
-        the SQL views that read it, which their modules recreate."""
-        if not self._is_table_inheritance_root():
+        the SQL views that read it, which their modules recreate. This runs
+        once the registry is loaded, after every module's migrations, never
+        between a module's schema pass and its post-migrate."""
+        if not self._is_table_inheritance_root() or self.env.cr.readonly:
             return
         cr = self.env.cr
         cr.execute(

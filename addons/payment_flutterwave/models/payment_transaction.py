@@ -14,7 +14,9 @@ class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
     @api.model
-    def _get_unique_reference(self, provider_code, prefix=None, separator="-", **kwargs):
+    def _get_unique_reference(
+        self, provider_code, prefix=None, separator="-", **kwargs
+    ):
         """Override of `payment` to satisfy Flutterwave requirements for references.
 
         Flutterwave requirements for references are as follows:
@@ -36,9 +38,7 @@ class PaymentTransaction(models.Model):
                 # empty. We call it manually here because singularizing the prefix would generate a
                 # default value if it was empty, hence preventing the method from ever being called
                 # and the transaction from received a reference named after the related document.
-                prefix = (
-                    self.sudo()._get_reference_prefix(separator, **kwargs) or None
-                )
+                prefix = self.sudo()._get_reference_prefix(separator, **kwargs) or None
             prefix = payment_utils.singularize_reference_prefix(
                 prefix=prefix, separator=separator
             )
@@ -92,7 +92,7 @@ class PaymentTransaction(models.Model):
             "customizations": {
                 "title": self.company_id.name,
                 "logo": urls.urljoin(
-                    base_url, f"web/image/res.company/{self.company_id.id}/logo"
+                    base_url, f"web/image/res.company/{self.company_id.id}/image_1920"
                 ),
             },
             "payment_options": const.PAYMENT_METHODS_MAPPING.get(

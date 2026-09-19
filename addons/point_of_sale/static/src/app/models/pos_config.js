@@ -95,7 +95,7 @@ export class PosConfig extends Base {
     }
 
     get receiptCompanyLogoUrl() {
-        return imageUrl("res.company", this.company_id.id, "logo", {
+        return imageUrl("res.company", this.company_id.id, "image_1920", {
             width: 256,
             height: 256,
         });

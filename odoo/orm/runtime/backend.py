@@ -994,7 +994,21 @@ class PostgresBackend:
                     sql = _get_fetch_term(model, field, query)
                 sql_terms.append(sql)
 
-            rows = env.execute_query(query.select(*sql_terms))
+            # this SELECT reads these rows and no other: their dirty values
+            # are written here, and the query then flushes only what else it
+            # reads. A pending compute is not flushed by a fetch: the row's
+            # value stays pending and is computed when it is read
+            select = query.select(*sql_terms)
+            if model._ids:
+                # a fetch of known rows: their dirty values are written here,
+                # and the query then flushes only what else it reads. A
+                # search_fetch keeps its flush: the WHERE reads every row
+                model._flush()
+                fetched_columns = set(column_fields)
+                select = select.with_to_flush(
+                    [f for f in select.to_flush if f not in fetched_columns]
+                )
+            rows = env.execute_query(select)
             prof.mark("sql")
 
             if not rows:
@@ -1009,9 +1023,25 @@ class PostgresBackend:
             ids = next(column_values)
             fetched = model.browse(ids)
 
+            core = env.core
             for field, values in zip(column_fields, column_values, strict=True):
                 if field.is_stored_computed:
                     field._clear_dead_pending(fetched)
+                    # a row whose compute is pending keeps it: the table holds
+                    # the value before the change, not after it
+                    pending = core.get_pending_ids(field)
+                    if pending:
+                        keep = [
+                            i
+                            for i, id_ in enumerate(fetched._ids)
+                            if id_ not in pending
+                        ]
+                        if len(keep) != len(fetched):
+                            field._insert_cache(
+                                fetched.browse([fetched._ids[i] for i in keep]),
+                                [values[i] for i in keep],
+                            )
+                            continue
                 field._insert_cache(fetched, values)
             prof.mark("cache")
         else:

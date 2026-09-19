@@ -154,6 +154,24 @@ The question to ask of any change: *if these disagreed, which one wins?*
 | Whether a cached value is stale | `orm_signaling_*_id_seq` last value | process uptime |
 | An attachment's bytes | `store_fname` **xor** `db_datas` | either alone |
 | The identity of a record across upgrades | `ir_model_data` XML id | the numeric `id` |
+| A company's name, address, identifiers and image | `res_partner`, through `res_company.partner_id` (`_inherits`) | a column on `res_company` — there is none |
+
+### The tenant and its party
+
+`res.company` is the tenant: the row that `env.company`, the access scope, `company_dependent`
+storage and every `company_id` foreign key are keyed on. It `_inherits` `res.partner`, its party,
+exactly as `res.users` does, so identity is read and written through the delegation and never
+copied. What `res_company` stores is tenant fact only: `code`, `sequence`, `active`, `currency_id`,
+the branch hierarchy (`parent_id` shadows the contact hierarchy of the party), `user_ids`, and the
+derived `logo_web` / `uses_default_logo`. The party behind a tenant has no contact parent and its
+name is unique among tenants (`res.partner._check_company_party_name_unique`). Two model
+attributes say who may read what through a delegation: `_inherits_rules = False` keeps the
+party's record rules off the tenant's rows (a portal user reads the tenant it belongs to even
+though its party is outside the user's partner rules), and `_inherits_sudo_fields` names the
+party fields that are the tenant's public identity, read under the tenant's access; every other
+delegated field is read under the party's rules. Configuration that an
+application keys on the company is the application's, not the tenant's — see
+`agromarin-knowledge/plans/2026-09-19-company-tenant-party-architecture.md`.
 
 ## Lifecycle and the operations that cross stores
 

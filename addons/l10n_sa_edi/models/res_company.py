@@ -6,6 +6,12 @@ from odoo.exceptions import UserError
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _inherits_sudo_fields = (
+        "l10n_sa_edi_building_number",
+        "l10n_sa_edi_plot_identification",
+        "l10n_sa_edi_additional_identification_scheme",
+        "l10n_sa_edi_additional_identification_number",
+    )
 
     l10n_sa_private_key_id = fields.Many2one(
         comodel_name="certificate.key",
@@ -25,24 +31,6 @@ class ResCompany(models.Model):
         copy=False,
         required=True,
         help="Specifies which API the system should use",
-    )
-
-    l10n_sa_edi_building_number = fields.Char(
-        related="partner_id.l10n_sa_edi_building_number",
-        readonly=False,
-    )
-    l10n_sa_edi_plot_identification = fields.Char(
-        related="partner_id.l10n_sa_edi_plot_identification",
-        readonly=False,
-    )
-
-    l10n_sa_edi_additional_identification_scheme = fields.Selection(
-        related="partner_id.l10n_sa_edi_additional_identification_scheme",
-        readonly=False,
-    )
-    l10n_sa_edi_additional_identification_number = fields.Char(
-        related="partner_id.l10n_sa_edi_additional_identification_number",
-        readonly=False,
     )
 
     l10n_sa_edi_is_production = fields.Boolean(

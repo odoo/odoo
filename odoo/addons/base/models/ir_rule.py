@@ -247,7 +247,7 @@ class IrRule(models.Model):
 
         global_domains: list[Domain] = []
         for parent_model_name, parent_field_name in model._inherits.items():
-            if not model._fields[parent_field_name].store:
+            if not model._inherits_rules or not model._fields[parent_field_name].store:
                 continue
             if domain := self._get_domain_accessible_records(parent_model_name, mode):
                 _debug.logic(

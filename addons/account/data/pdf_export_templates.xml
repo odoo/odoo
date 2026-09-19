@@ -95,9 +95,9 @@
 
     <template id="company_information">
         <img
-            t-if="env.company.logo"
+            t-if="env.company.image_1920"
             class="o_company_logo"
-            t-att-src="image_data_uri(env.company.logo)"
+            t-att-src="image_data_uri(env.company.image_1920)"
             alt="Logo" />
         <t
             t-set="company_names"

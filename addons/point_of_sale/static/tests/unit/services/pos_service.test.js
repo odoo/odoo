@@ -630,7 +630,7 @@ describe("pos_store.js", () => {
 
     describe("cacheReceiptLogo", () => {
         function getCompanyLogo256Url(companyId) {
-            const fullUrl = imageUrl("res.company", companyId, "logo", {
+            const fullUrl = imageUrl("res.company", companyId, "image_1920", {
                 width: 256,
                 height: 256,
             });

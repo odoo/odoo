@@ -130,6 +130,9 @@ class SQL:
     def to_flush(self) -> Iterable[Field]:
         return self.__to_flush
 
+    def with_to_flush(self, to_flush: Iterable[Field]) -> SQL:
+        return SQL("%s", self, to_flush=to_flush)
+
     def render(self) -> str:
         if not self.__params:
             return self.__code

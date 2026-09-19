@@ -2562,7 +2562,8 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id"
             ON ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
+            LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
+            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         """
             ]
@@ -2594,10 +2595,11 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id"
             ON ("res_partner"."company_id" = "res_partner__company_id"."id")
+            LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
             LEFT JOIN "res_country" AS "res_partner__country_id"
             ON ("res_partner"."country_id" = "res_partner__country_id"."id")
             WHERE (
-                ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
+                ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
                 OR ("res_partner"."country_id" IS NOT NULL AND "res_partner__country_id"."code" LIKE %s)
             )
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
@@ -2622,7 +2624,8 @@ class TestMany2one(TransactionCase):
             WHERE ("res_partner"."company_id" IS NULL OR "res_partner"."company_id" NOT IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE "res_company"."name" LIKE %s
+                LEFT JOIN "res_partner" AS "res_company__partner_id" ON ("res_company"."partner_id" = "res_company__partner_id"."id")
+                WHERE "res_company__partner_id"."name" LIKE %s
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         """
@@ -2641,7 +2644,8 @@ class TestMany2one(TransactionCase):
             WHERE "res_partner"."company_id" IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE ("res_company"."active" IS TRUE AND "res_company"."name" LIKE %s)
+                LEFT JOIN "res_partner" AS "res_company__partner_id" ON ("res_company"."partner_id" = "res_company__partner_id"."id")
+                WHERE ("res_company"."active" IS TRUE AND "res_company__partner_id"."name" LIKE %s)
             )
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         """
@@ -2660,7 +2664,8 @@ class TestMany2one(TransactionCase):
             WHERE "res_partner"."company_id" IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE ("res_company"."active" IS TRUE AND "res_company"."name" LIKE %s)
+                LEFT JOIN "res_partner" AS "res_company__partner_id" ON ("res_company"."partner_id" = "res_company__partner_id"."id")
+                WHERE ("res_company"."active" IS TRUE AND "res_company__partner_id"."name" LIKE %s)
                 ORDER BY "res_company"."id"
                 LIMIT %s
             )
@@ -2678,7 +2683,8 @@ class TestMany2one(TransactionCase):
                 """
             SELECT "res_company"."id"
             FROM "res_company"
-            WHERE ("res_company"."active" IS TRUE AND "res_company"."name" LIKE %s)
+            LEFT JOIN "res_partner" AS "res_company__partner_id" ON ("res_company"."partner_id" = "res_company__partner_id"."id")
+            WHERE ("res_company"."active" IS TRUE AND "res_company__partner_id"."name" LIKE %s)
             ORDER BY "res_company"."id"
         """,
                 """
@@ -2700,7 +2706,8 @@ class TestMany2one(TransactionCase):
                 """
             SELECT "res_company"."id"
             FROM "res_company"
-            WHERE ("res_company"."active" IS TRUE AND "res_company"."name" LIKE %s)
+            LEFT JOIN "res_partner" AS "res_company__partner_id" ON ("res_company"."partner_id" = "res_company__partner_id"."id")
+            WHERE ("res_company"."active" IS TRUE AND "res_company__partner_id"."name" LIKE %s)
             ORDER BY "res_company"."id"
         """,
                 """
@@ -2725,7 +2732,8 @@ class TestMany2one(TransactionCase):
             WHERE "res_partner"."company_id" IN ((
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE ("res_company"."active" IS TRUE AND "res_company"."name" LIKE %s)
+                LEFT JOIN "res_partner" AS "res_company__partner_id" ON ("res_company"."partner_id" = "res_company__partner_id"."id")
+                WHERE ("res_company"."active" IS TRUE AND "res_company__partner_id"."name" LIKE %s)
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         """
@@ -2748,7 +2756,8 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id" ON
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
+            LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
+            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         """
             ]
@@ -2848,10 +2857,11 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id" ON
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
+            LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
             LEFT JOIN "res_country" AS "res_partner__country_id" ON
                 ("res_partner"."country_id" = "res_partner__country_id"."id")
             WHERE (
-                ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
+                ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
                 OR ("res_partner"."country_id" IS NOT NULL AND "res_partner__country_id"."code" LIKE %s)
             )
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
@@ -2876,7 +2886,8 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id"
             ON ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND ("res_partner__company_id"."code" LIKE %s OR "res_partner__company_id"."name" LIKE %s))
+            LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
+            WHERE ("res_partner"."company_id" IS NOT NULL AND ("res_partner__company_id"."code" LIKE %s OR "res_partner__company_id__partner_id"."name" LIKE %s))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         """
             ]
@@ -2891,7 +2902,8 @@ class TestMany2one(TransactionCase):
             WHERE ("res_partner"."company_id" IS NULL OR "res_partner"."company_id" NOT IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE ("res_company"."code" LIKE %s OR "res_company"."name" LIKE %s)
+                LEFT JOIN "res_partner" AS "res_company__partner_id" ON ("res_company"."partner_id" = "res_company__partner_id"."id")
+                WHERE ("res_company"."code" LIKE %s OR "res_company__partner_id"."name" LIKE %s)
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         """
@@ -3414,7 +3426,8 @@ class TestMany2many(TransactionCase):
                 AND "res_users__company_ids"."cid" IN (
                     SELECT "res_company"."id"
                     FROM "res_company"
-                    WHERE ("res_company"."code" LIKE %s OR "res_company"."name" LIKE %s)
+                    LEFT JOIN "res_partner" AS "res_company__partner_id" ON ("res_company"."partner_id" = "res_company__partner_id"."id")
+                    WHERE ("res_company"."code" LIKE %s OR "res_company__partner_id"."name" LIKE %s)
                 )
             )
             ORDER BY "res_users"."id"

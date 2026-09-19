@@ -1,11 +1,14 @@
-from stdnum.in_ import gstin, pan
-
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import RedirectWarning
 
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _inherits_sudo_fields = (
+        "l10n_in_pan_entity_id",
+        "l10n_in_tan",
+        "l10n_in_gst_state_warning",
+    )
 
     l10n_in_upi_id = fields.Char(string="UPI Id")
     l10n_in_hsn_code_digit = fields.Selection(
@@ -25,26 +28,9 @@ class ResCompany(models.Model):
         groups="base.group_system",
         help="Enable the use of production credentials",
     )
-    l10n_in_pan_entity_id = fields.Many2one(
-        related="partner_id.l10n_in_pan_entity_id",
-        string="PAN",
-        readonly=False,
-        help="PAN enables the department to link all transactions of the person with the department.\n"
-        "These transactions include taxpayments, TDS/TCS credits, returns of income/wealth/gift/FBT,"
-        "specified transactions, correspondence, and so on.\n"
-        "Thus, PAN acts as an identifier for the person with the tax department.",
-    )
     l10n_in_pan_type = fields.Selection(
         related="l10n_in_pan_entity_id.type",
         string="PAN Type",
-    )
-    l10n_in_tan = fields.Char(
-        related="partner_id.l10n_in_tan",
-        string="TAN",
-        readonly=False,
-    )
-    l10n_in_gst_state_warning = fields.Char(
-        related="partner_id.l10n_in_gst_state_warning"
     )
 
     # TDS/TCS settings
@@ -235,3 +221,4 @@ class ResCompany(models.Model):
             )
             action = self.env.ref("account.action_account_config")
             raise RedirectWarning(msg, action.id, _("Go to configuration"))
+        return None

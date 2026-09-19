@@ -193,10 +193,12 @@ class AccountAccount(models.Model):
                                 rel.res_company_id AS company_id,
                                 SPLIT_PART(res_company.parent_path, '/', 1)
                                     AS root_company_id,
-                                res_company.name AS company_name
+                                res_partner.name AS company_name
                             FROM account_account_res_company_rel rel
                             JOIN res_company
                                 ON res_company.id = rel.res_company_id
+                            JOIN res_partner
+                                ON res_partner.id = res_company.partner_id
                             WHERE rel.res_company_id
                                 IN %(authorized_company_ids)s
                         ORDER BY rel.account_account_id, company_id

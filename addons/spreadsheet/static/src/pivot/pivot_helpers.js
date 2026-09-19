@@ -2,9 +2,8 @@
 // @ts-check
 
 import { EvaluationError, helpers } from "@odoo/o-spreadsheet";
+import { NO_RECORD_AT_THIS_POSITION } from "@spreadsheet/pivot/pivot_model";
 import { _t } from "@web/core/translation";
-
-import { NO_RECORD_AT_THIS_POSITION } from "./pivot_model.js";
 
 const { isDateOrDatetimeField } = helpers;
 

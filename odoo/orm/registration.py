@@ -510,6 +510,9 @@ def _add_inherited_fields(model_cls: type[BaseModel]):
     if model_cls._abstract or not model_cls._inherits:
         return
 
+    sudo_names: set[str] = set()
+    for cls in model_cls.__mro__:
+        sudo_names.update(getattr(cls, "_inherits_sudo_fields", ()))
     to_inherit: dict[str, tuple[str, Field]] = {}
     for parent_model_name, parent_fname in model_cls._inherits.items():
         for name, field in get_registry_of_model(model_cls)[
@@ -544,7 +547,7 @@ def _add_inherited_fields(model_cls: type[BaseModel]):
                 inherited=True,
                 inherited_field=field,
                 related=f"{parent_fname}.{name}",
-                related_sudo=False,
+                related_sudo=name in sudo_names,
                 copy=field.copy,
                 readonly=field.readonly,
                 export_string_translation=field.export_string_translation,

@@ -154,7 +154,7 @@ class PoSOrder(models.Model):
                 "pos_barcode": response_data.get("PosBarCode"),
                 "qrcode_left": response_data.get("QRCode_Left"),
                 "qrcode_right": response_data.get("QRCode_Right"),
-                "company_logo_exist": bool(self.company_id.logo),
+                "company_logo_exist": bool(self.company_id.image_1920),
             }
         )
         return json_response

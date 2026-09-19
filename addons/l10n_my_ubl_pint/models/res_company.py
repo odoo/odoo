@@ -3,14 +3,9 @@ from odoo import fields, models
 
 class ResCompany(models.Model):
     _inherit = "res.company"
-
-    sst_registration_number = fields.Char(
-        related="partner_id.sst_registration_number",
-        readonly=False,
-    )
-    ttx_registration_number = fields.Char(
-        related="partner_id.ttx_registration_number",
-        readonly=False,
+    _inherits_sudo_fields = (
+        "sst_registration_number",
+        "ttx_registration_number",
     )
 
 

@@ -65,6 +65,8 @@ class _ModelStubs:
         _display_name_context_keys: tuple[str, ...]
         _display_name_search_default: bool
         _display_name_search_exact: tuple[str, ...]
+        _inherits_sudo_fields: tuple[str, ...]
+        _inherits_rules: bool
         _table_objects: dict
         _table_inheritance_root: str
         _check_company_auto: bool
@@ -75,7 +77,9 @@ class _ModelStubs:
             self, fnames: Collection[str]
         ) -> None: ...
         def _flush_table_inheritance_siblings(
-            self, fnames: Collection[str] | None
+            self,
+            fnames: Collection[str] | None,
+            ids: typing.Sequence[IdType] | None = None,
         ) -> None: ...
 
         def browse(self, ids: int | typing.Iterable[IdType] = ()) -> Self: ...

@@ -194,6 +194,25 @@ class IrActionsActions(models.Model):
                 continue
             cr.execute(
                 SQL(
+                    "DELETE FROM ONLY %(root)s WHERE type = %(type)s"
+                    " AND id IN (SELECT id FROM %(table)s) RETURNING id",
+                    root=SQL.identifier(self._table),
+                    table=SQL.identifier(table),
+                    type=model_name,
+                )
+            )
+            if duplicates := [row[0] for row in cr.fetchall()]:
+                _logger.warning(
+                    "%d %s row(s) sat in %s beside their row in %s and were dropped "
+                    "from the root; the subtype row is the one every model reads: %s",
+                    len(duplicates),
+                    model_name,
+                    self._table,
+                    table,
+                    duplicates,
+                )
+            cr.execute(
+                SQL(
                     "WITH moved AS ("
                     " DELETE FROM ONLY %(root)s WHERE type = %(type)s RETURNING *)"
                     " INSERT INTO %(table)s (%(columns)s)"

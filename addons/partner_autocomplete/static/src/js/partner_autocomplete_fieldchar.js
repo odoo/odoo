@@ -49,9 +49,7 @@ export class PartnerAutoCompleteCharField extends CharField {
             // base64 image bytes. Writing it under the target field's own
             // name here means the server will reject it loudly if the
             // record is ever saved with no further processing in between.
-            const logoUrlField =
-                this.props.record.resModel === "res.partner" ? "image_1920" : "logo";
-            data.company[logoUrlField] = data.logo;
+            data.company.image_1920 = data.logo;
         }
 
         const additionalData = {

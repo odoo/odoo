@@ -1,8 +1,3 @@
-"""What a login is made of, apart from the user record: the password hashing
-policy read from the settings, the check and rotation of a stored hash, and the
-session token derived from a user's identifying values. The res.users methods
-the auth addons override keep their names and delegate here."""
-
 from __future__ import annotations
 
 import hmac

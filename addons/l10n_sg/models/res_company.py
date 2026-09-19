@@ -1,16 +1,11 @@
-from odoo import fields, models
+from odoo import models
 
 
 class ResCompany(models.Model):
     _name = "res.company"
     _description = "Companies"
     _inherit = ["res.company"]
-
-    l10n_sg_unique_entity_number = fields.Char(
-        related="partner_id.l10n_sg_unique_entity_number",
-        string="UEN",
-        readonly=False,
-    )
+    _inherits_sudo_fields = ("l10n_sg_unique_entity_number",)
 
     def _get_view(self, view_id=None, view_type="form", **options):
         arch, view = super()._get_view(view_id, view_type, **options)

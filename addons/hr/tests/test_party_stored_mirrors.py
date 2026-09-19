@@ -104,6 +104,7 @@ class TestPartyStoredMirrors(TransactionCase):
         """A gate that measures nothing passes for the wrong reason."""
         mirrors = self._mirrors()
         self.assertEqual(mirrors.get(("hr.employee", "name")), "related")
-        self.assertEqual(mirrors.get(("res.company", "name")), "related")
+        # the company delegates its name to its party: no mirror to see
+        self.assertIsNone(mirrors.get(("res.company", "name")))
         self.assertEqual(mirrors.get(("resource.resource", "name")), "two-way")
         self.assertGreater(len(mirrors), 10)

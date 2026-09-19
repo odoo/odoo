@@ -3,6 +3,11 @@ from odoo import api, fields, models
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _inherits_sudo_fields = (
+        "l10n_my_identification_type",
+        "l10n_my_identification_number",
+        "l10n_my_edi_industrial_classification",
+    )
 
     # ------------------
     # Fields declaration
@@ -12,20 +17,8 @@ class ResCompany(models.Model):
         comodel_name="account_edi_proxy_client.user",
         compute="_compute_l10n_my_edi_proxy_user_id",
     )
-    l10n_my_identification_type = fields.Selection(
-        related="partner_id.l10n_my_identification_type",
-        readonly=False,
-    )
-    l10n_my_identification_number = fields.Char(
-        related="partner_id.l10n_my_identification_number",
-        readonly=False,
-    )
     l10n_my_identification_number_placeholder = fields.Char(
         compute="_compute_l10n_my_identification_number_placeholder"
-    )
-    l10n_my_edi_industrial_classification = fields.Many2one(
-        related="partner_id.l10n_my_edi_industrial_classification",
-        readonly=False,
     )
     l10n_my_edi_mode = fields.Selection(
         selection=[
@@ -55,7 +48,7 @@ class ResCompany(models.Model):
         for company in self:
             company.l10n_my_edi_proxy_user_id = (
                 company.account_edi_proxy_client_ids.filtered(
-                    lambda u: (
+                    lambda u, company=company: (
                         u.proxy_type == "l10n_my_edi"
                         and u.edi_mode == company.l10n_my_edi_mode
                     )

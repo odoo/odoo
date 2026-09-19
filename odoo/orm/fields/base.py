@@ -199,6 +199,8 @@ class Field[T](
     _toplevel: bool = False
 
     inherited: bool = False
+    # the same-named fields of the other models sharing this model's table
+    tree_siblings: tuple[Field, ...] = ()
     inherited_field: typing.Any = None
 
     comodel_name: str | None = None
@@ -343,7 +345,7 @@ class Field[T](
 
         self.__dict__.update(attrs)
 
-        if not self.store or not self.column_type or self.manual:
+        if not self.column_type or not self.fetched_with_row or self.manual:
             self.prefetch = False
         if _debug.logic.enabled and extra_keys:
             _debug.logic(
@@ -477,6 +479,23 @@ class Field[T](
     @functools.cached_property
     def is_stored_computed(self) -> bool:
         return bool(self.compute and self.store)
+
+    @property
+    def fetched_with_row(self) -> bool:
+        # a stored column, or a delegated field read under this model's own
+        # access, which the row's SELECT reaches through the delegation join
+        if self.store:
+            return True
+        if not (self.inherited and self.compute_sudo):
+            return False
+        target = self.related_field
+        return (
+            target is not None
+            and bool(target.store)
+            and bool(target.column_type)
+            and not target.is_x2many
+            and not target.is_binary
+        )
 
     @property
     def base_field(self) -> Self:

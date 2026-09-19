@@ -290,7 +290,7 @@ class Website(models.Model):
         ]
         r["logo"] = False
         if not company.uses_default_logo:
-            r["logo"] = company.logo.decode("utf-8")
+            r["logo"] = company.image_1920.decode("utf-8")
         r["configurator_done"] = current_website.configurator_done
         try:
             result = self._website_api_rpc(
@@ -545,7 +545,7 @@ class Website(models.Model):
                 }
             )
         elif not company.uses_default_logo:
-            website.logo = company.logo.decode("utf-8")
+            website.logo = company.image_1920.decode("utf-8")
         _debug.lifecycle(
             "configurator_logo",
             website=website.id,

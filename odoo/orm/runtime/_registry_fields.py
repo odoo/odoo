@@ -252,6 +252,7 @@ class _RegistryFieldsMixin(_RegistryStubs):
             graph = self.model_graph
             start_epoch = graph.trigger_epoch
             new_triggers: defaultdict = defaultdict(lambda: defaultdict(list))
+            self._link_tree_siblings()
             for Model in self.models.values():
                 if Model._abstract:
                     continue
@@ -299,6 +300,17 @@ class _RegistryFieldsMixin(_RegistryStubs):
 
             span.set(published=True)
             return graph.published_triggers
+
+    def _link_tree_siblings(self) -> None:
+        for names in self.model_names_by_inheritance_root.values():
+            models = [self.models[name] for name in names]
+            for model_cls in models:
+                for fname, field in model_cls._fields.items():
+                    field.tree_siblings = tuple(
+                        other._fields[fname]
+                        for other in models
+                        if other is not model_cls and fname in other._fields
+                    )
 
     def _trigger_fact_of(self, field: Field) -> Field | tuple[str, str]:
         model_cls = self.models.get(field.model_name)

@@ -55,6 +55,10 @@ TIMEOUT = 10
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _inherits_sudo_fields = (
+        "peppol_eas",
+        "peppol_endpoint",
+    )
     _CREDENTIAL_FIELDS = {
         "account_peppol_migration_key": "account_peppol_migration_key",
     }
@@ -95,14 +99,6 @@ class ResCompany(models.Model):
     account_peppol_edi_user = fields.Many2one(
         comodel_name="account_edi_proxy_client.user",
         compute="_compute_account_peppol_edi_user",
-    )
-    peppol_eas = fields.Selection(
-        related="partner_id.peppol_eas",
-        readonly=False,
-    )
-    peppol_endpoint = fields.Char(
-        related="partner_id.peppol_endpoint",
-        readonly=False,
     )
     peppol_purchase_journal_id = fields.Many2one(
         comodel_name="account.journal",
@@ -216,8 +212,8 @@ class ResCompany(models.Model):
 
         try:
             phone_nbr = phonenumbers.parse(phone_number)
-        except phonenumbers.phonenumberutil.NumberParseException:
-            raise ValidationError(error_message)
+        except phonenumbers.phonenumberutil.NumberParseException as e:
+            raise ValidationError(error_message) from e
 
         country_code = phonenumbers.phonenumberutil.region_code_for_number(phone_nbr)
         if country_code not in PEPPOL_LIST or not phonenumbers.is_valid_number(
@@ -458,7 +454,7 @@ class ResCompany(models.Model):
         """Returns a flattened dictionary of all supported document types."""
         return {
             identifier: document_name
-            for module, identifiers in self._peppol_modules_document_types().items()
+            for identifiers in self._peppol_modules_document_types().values()
             for identifier, document_name in identifiers.items()
         }
 

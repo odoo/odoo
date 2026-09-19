@@ -56,6 +56,10 @@ def setup_related(field: Field, model: BaseModel) -> None:
         )
 
     field.related_field = related_field
+    if field.inherited and field.fetched_with_row and not field.manual:
+        # decided before the target was known: a delegated column travels
+        # with the row like a stored one
+        field.prefetch = True
 
     model.pool.field_setup_dependents.add(related_field, field)
 

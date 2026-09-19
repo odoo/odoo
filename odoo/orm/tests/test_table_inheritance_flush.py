@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.libs.sql import SQL
 from odoo.orm.domain import Domain
 from odoo.orm.model_test_env import model_test_env
@@ -135,3 +135,97 @@ def test_an_unlink_through_one_model_drops_what_the_others_cached():
         assert root.kind == "old" and leaf.kind == "old"
         leaf.unlink()
         assert "kind" not in root._cache, "the root must not answer for a deleted row"
+
+
+class CountedRoot(models.Model):
+    _name = "counted.root"
+    _module = _MOD
+    _description = "root whose leaf computes a stored field"
+    _table = "counted_root"
+    _table_inheritance_root = "counted_root"
+    _log_access = False
+
+    name = fields.Char()
+    loud = fields.Char(compute="_compute_loud", store=True, recursive=True)
+
+    computed_ids: list = []
+
+    @api.depends("name")
+    def _compute_loud(self):
+        for record in self:
+            type(self).computed_ids.append(record.id)
+            record.loud = (record.name or "").upper()
+
+
+class CountedLeaf(models.Model):
+    _name = "counted.leaf"
+    _module = _MOD
+    _description = "leaf sharing the counted root's table"
+    _inherit = ["counted.root"]
+    _table = "counted_leaf"
+    _table_inheritance_root = "counted_root"
+
+
+def test_a_fetch_flushes_only_the_fetched_rows_of_the_siblings():
+    # a compute pending on another row of the tree is not this fetch's
+    # business: recomputing every pending sibling row on each fetch turned a
+    # recursive compute over a chain of rows into a recursion over the whole
+    # pending set, which is what took the production copy down
+    with model_test_env(CountedRoot, CountedLeaf) as env:
+        CountedRoot.computed_ids = []
+        one = env["counted.leaf"].create({"name": "one"})
+        other = env["counted.leaf"].create({"name": "other"})
+        env.flush_all()
+        one.name = "uno"
+        other.name = "otro"
+        leaf_loud = env["counted.leaf"]._fields["loud"]
+        assert set(env.core.get_pending_ids(leaf_loud)) == {one.id, other.id}
+        CountedRoot.computed_ids = []
+        # inside a compute (something is protected) a recompute must not
+        # expand to the pending set, and the fetch's tree flush must not either
+        with env.protecting([leaf_loud], other):
+            env["counted.root"].browse(one.id).fetch(["loud"])
+        # a fetch computes nothing: a pending row keeps its mark and is
+        # computed when it is read, so the compute of a batch never nests a
+        # fetch that recomputes the batch
+        assert CountedRoot.computed_ids == []
+        assert one.id in env.core.get_pending_ids(leaf_loud)
+        assert other.id in env.core.get_pending_ids(leaf_loud)
+        assert env["counted.leaf"].browse(one.id).loud == "UNO"
+        assert one.id not in env.core.get_pending_ids(leaf_loud)
+
+
+def test_a_compute_done_through_one_model_is_done_for_its_siblings():
+    # the row is one, so once the root computed it the leaf must not compute
+    # it again on its own pending mark: with nine subtypes that repetition
+    # nested one tree flush per sibling per row
+    with model_test_env(CountedRoot, CountedLeaf) as env:
+        root = env["counted.root"].create({"name": "one"})
+        leaf = env["counted.leaf"].create({"name": "one"})
+        env.flush_all()
+        assert root.id == leaf.id
+        CountedRoot.computed_ids = []
+        root_loud = env["counted.root"]._fields["loud"]
+        leaf_loud = env["counted.leaf"]._fields["loud"]
+        env.add_to_compute(root_loud, root)
+        env.add_to_compute(leaf_loud, leaf)
+        leaf.invalidate_recordset(["loud"])
+        assert leaf.loud == "ONE"
+        assert leaf.id not in env.core.get_pending_ids(leaf_loud)
+        assert root.id not in env.core.get_pending_ids(root_loud)
+        assert CountedRoot.computed_ids == [leaf.id]
+
+
+def test_a_protection_through_one_model_covers_its_siblings():
+    # while the leaf computes a row, the root's read of the same row must see
+    # the value as in progress, not go to storage for a stale one
+    with model_test_env(CountedRoot, CountedLeaf) as env:
+        root = env["counted.root"].create({"name": "one"})
+        leaf = env["counted.leaf"].create({"name": "one"})
+        env.flush_all()
+        root_loud = env["counted.root"]._fields["loud"]
+        leaf_loud = env["counted.leaf"]._fields["loud"]
+        assert root_loud.tree_siblings == (leaf_loud,)
+        with env.protecting([leaf_loud], leaf):
+            assert env.is_protected(root_loud, root)
+        assert not env.is_protected(root_loud, root)

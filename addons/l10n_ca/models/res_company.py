@@ -3,13 +3,7 @@ from odoo import fields, models
 
 class ResCompany(models.Model):
     _inherit = "res.company"
-
-    l10n_ca_pst = fields.Char(
-        related="partner_id.l10n_ca_pst",
-        string="PST Number",
-        store=False,
-        readonly=False,
-    )
+    _inherits_sudo_fields = ("l10n_ca_pst",)
 
 
 class BaseDocumentLayout(models.TransientModel):

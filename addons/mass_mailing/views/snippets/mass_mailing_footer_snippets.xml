@@ -12,7 +12,7 @@
                         <div class="o_not_editable">
                             <a t-att-href="company_id.website or '#'" target="_blank">
                                 <img
-                                    t-if="company_id.logo or user_id.company_id.logo"
+                                    t-if="company_id.image_1920 or user_id.company_id.image_1920"
                                     class="img img-fluid o_editable_media mx-auto"
                                     style="width: 25% !important;"
                                     t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
@@ -93,7 +93,7 @@
                         <div class="o_not_editable">
                             <a t-att-href="company_id.website or '#'" target="_blank">
                                 <img
-                                    t-if="company_id.logo or user_id.company_id.logo"
+                                    t-if="company_id.image_1920 or user_id.company_id.image_1920"
                                     class="img img-fluid o_editable_media"
                                     style="width: 80% !important"
                                     t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"

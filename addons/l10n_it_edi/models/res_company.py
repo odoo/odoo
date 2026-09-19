@@ -40,14 +40,8 @@ TAX_SYSTEM = [
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _inherits_sudo_fields = ("l10n_it_codice_fiscale",)
 
-    l10n_it_codice_fiscale = fields.Char(
-        related="partner_id.l10n_it_codice_fiscale",
-        string="Codice Fiscale",
-        size=16,
-        readonly=False,
-        help="Fiscal code of your company",
-    )
     l10n_it_tax_system = fields.Selection(
         selection=TAX_SYSTEM,
         string="Tax System",
@@ -267,7 +261,9 @@ class ResCompany(models.Model):
         for key, check in checks.items():
             for fields_tuple in check.pop("fields"):
                 if invalid_records := self.filtered(
-                    lambda record: not any(record[field] for field in fields_tuple)
+                    lambda record, fields_tuple=fields_tuple: (
+                        not any(record[field] for field in fields_tuple)
+                    )
                 ):
                     errors[f"l10n_it_edi_{key}"] = {
                         "message": check["message"],

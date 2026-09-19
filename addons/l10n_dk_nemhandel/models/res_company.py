@@ -13,6 +13,10 @@ except ImportError:
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _inherits_sudo_fields = (
+        "nemhandel_identifier_type",
+        "nemhandel_identifier_value",
+    )
 
     nemhandel_contact_email = fields.Char(
         string="Nemhandel Contact email",
@@ -38,14 +42,6 @@ class ResCompany(models.Model):
         string="Nemhandel status",
         default="not_registered",
         required=True,
-    )
-    nemhandel_identifier_type = fields.Selection(
-        related="partner_id.nemhandel_identifier_type",
-        readonly=False,
-    )
-    nemhandel_identifier_value = fields.Char(
-        related="partner_id.nemhandel_identifier_value",
-        readonly=False,
     )
     nemhandel_purchase_journal_id = fields.Many2one(
         comodel_name="account.journal",
@@ -88,8 +84,8 @@ class ResCompany(models.Model):
 
         try:
             phone_nbr = phonenumbers.parse(phone_number)
-        except phonenumbers.phonenumberutil.NumberParseException:
-            raise ValidationError(error_message)
+        except phonenumbers.phonenumberutil.NumberParseException as e:
+            raise ValidationError(error_message) from e
 
         country_code = phonenumbers.phonenumberutil.region_code_for_number(phone_nbr)
         if country_code not in PEPPOL_LIST or not phonenumbers.is_valid_number(

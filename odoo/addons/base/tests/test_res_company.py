@@ -1,6 +1,6 @@
 from psycopg import IntegrityError
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Command
 from odoo.tests.common import TransactionCase, new_test_user, tagged
 from odoo.tools import mute_logger
@@ -120,7 +120,7 @@ class TestCompany(TransactionCase):
     def test_logo_check(self):
         company = self.env["res.company"].create({"name": "foo"})
 
-        self.assertTrue(company.logo, "Should have a default logo")
+        self.assertTrue(company.image_1920, "Should have a default logo")
         self.assertTrue(company.uses_default_logo)
         company.partner_id.image_1920 = False
         self.assertTrue(company.uses_default_logo)
@@ -137,21 +137,12 @@ class TestCompany(TransactionCase):
         )
         self.assertFalse(branch.partner_id.parent_id)
 
-    def test_color_follows_root_partner_color(self):
-        root = self.env["res.company"].create({"name": "color root"})
-        branch = self.env["res.company"].create(
-            {"name": "color branch", "parent_id": root.id}
-        )
-        self.assertEqual(root.color, branch.color)
-        for color in (5, 7):
-            root.partner_id.color = color
-            self.assertEqual(root.color, color)
-            self.assertEqual(
-                branch.color,
-                color,
-                "Cached branch color must not go stale when the root partner's"
-                " color changes",
-            )
+    def test_color_is_the_party_color(self):
+        company = self.env["res.company"].create({"name": "color root"})
+        company.partner_id.color = 5
+        self.assertEqual(company.color, 5)
+        company.color = 7
+        self.assertEqual(company.partner_id.color, 7)
 
     def test_company_partner_ids_cache_invalidation(self):
         Company = self.env["res.company"]
@@ -230,6 +221,66 @@ class TestCompany(TransactionCase):
         self.env.registry.clear_cache()
         self.assertFalse(self.env.ref("base.main_company", raise_if_not_found=False))
         self.assertEqual(self.env["res.company"]._get_main_company(), main)
+
+    def test_company_name_is_unique_through_the_party(self):
+        company = self.env["res.company"].create({"name": "unique co"})
+        with self.assertRaises(ValidationError):
+            self.env["res.company"].create({"name": "unique co"})
+        with self.assertRaises(ValidationError):
+            self.env["res.company"].create(
+                {"name": "twin co"}
+            ).partner_id.name = "unique co"
+        other = self.env["res.partner"].create({"name": "unique co"})
+        self.assertTrue(other, "a plain contact may share a company's name")
+        company.name = "renamed co"
+        self.assertEqual(company.partner_id.name, "renamed co")
+
+    def test_identity_is_readable_by_whoever_reads_the_company(self):
+        company = self.env["res.company"].create(
+            {"name": "public identity co", "email": "co@example.com"}
+        )
+        company.partner_id.comment = "private note"
+        portal = new_test_user(
+            self.env,
+            login="af_portal",
+            groups="base.group_portal",
+            company_ids=[Command.set([self.env.company.id, company.id])],
+        )
+        as_portal = company.with_user(portal).with_context(
+            allowed_company_ids=company.ids
+        )
+        with self.assertRaises(AccessError):
+            company.partner_id.with_user(portal).name
+        self.assertIn(
+            company,
+            self.env["res.company"]
+            .with_user(portal)
+            .with_context(allowed_company_ids=company.ids)
+            .search([("id", "=", company.id)]),
+        )
+        self.assertEqual(as_portal.name, "public identity co")
+        self.assertEqual(as_portal.email, "co@example.com")
+        self.assertTrue(as_portal.image_1920)
+        with self.assertRaises(AccessError):
+            as_portal.comment
+
+    def test_identity_comes_with_the_company_row(self):
+        company = self.env["res.company"].create({"name": "one row co"})
+        self.env.flush_all()
+        self.env.invalidate_all()
+        with self.assertQueryCount(1):
+            self.assertEqual(company.name, "one row co")
+            self.assertEqual(company.email, False)
+
+    def test_company_partner_has_no_contact_parent(self):
+        company = (
+            self.env["res.company"]
+            .with_context(default_parent_id=self.env.company.id)
+            .create({"name": "branch via context"})
+        )
+        self.assertEqual(company.parent_id, self.env.company)
+        self.assertFalse(company.partner_id.parent_id)
+        self.assertTrue(company.partner_id.is_company)
 
 
 @tagged("post_install", "-at_install")
