@@ -16,11 +16,24 @@ import { PublicDashboard } from "../../src/public/public_dashboard";
 defineSpreadsheetModels();
 
 /**
+ * FIXME: This function is here only to remove the spreadsheet store from the env
+ * created by createModelWithDataSource. Because the store will be recreated
+ * from the Spreadsheet component (called by the PublicSpreadsheet), but with
+ * a different model.
+ * Hopefully this will be fixed when spreadsheet store will be converted to owl
+ * plugins.
+ */
+function cleanupEnv(env) {
+    delete env.__spreadsheet_stores__;
+}
+
+/**
  * Mount public dashboard component with the given data
  * @returns {Promise<HTMLElement>}
  */
 async function mountPublicDashboard(dataUrl) {
     const env = getMockEnv();
+    cleanupEnv(env);
     env.isFrozenSpreadsheet = () => true;
     const component = await mountWithCleanup(PublicDashboard, {
         props: {
