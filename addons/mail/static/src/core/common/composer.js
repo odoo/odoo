@@ -384,6 +384,9 @@ export class Composer extends Component {
                     return;
                 }
                 setElementContent(this.editor.editable, composerHtml);
+                // `composerHtml` was not produced by this editor: it can come
+                // from a mail template, a restored draft or the full composer.
+                this.editor.processThrough("html_compatibility_processors", this.editor.editable);
                 this.setEditorCursorEnd();
                 this.editor.shared.history.commit();
             })
