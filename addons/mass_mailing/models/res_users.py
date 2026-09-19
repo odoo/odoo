@@ -5,13 +5,10 @@ class ResUsers(models.Model):
     _inherit = "res.users"
 
     @api.model
-    def _get_activity_groups(self):
-        """Update systray name of mailing.mailing from "Mass Mailing"
-        to "Email Marketing".
-        """
-        activities = super()._get_activity_groups()
-        for activity in activities:
-            if activity.get("model") == "mailing.mailing":
-                activity["name"] = _("Email Marketing")
-                break
-        return activities
+    def _apply_activity_bucket_subkey(self, group, model_name, subkey, res_ids):
+        group = super()._apply_activity_bucket_subkey(
+            group, model_name, subkey, res_ids
+        )
+        if model_name == "mailing.mailing":
+            group["name"] = _("Email Marketing")
+        return group

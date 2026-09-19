@@ -799,6 +799,7 @@ class ResUsers(models.Model):
                 "id": model.id,
                 "name": _("Other activities") if is_orphan_bucket else model.name,
                 "model": model_name,
+                "subkey": subkey,
                 "type": "activity",
                 "icon": module and modules.module.get_module_icon_path(module),
                 "domain": []
