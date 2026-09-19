@@ -20,9 +20,9 @@ class ApprovalCategoryStep(models.Model):
     company_id = fields.Many2one(
         related="category_id.company_id",
         # mixin.approval.threshold declares it stored, indexed and precomputed
+        precompute=False,
         store=False,
         index=False,
-        precompute=False,
         readonly=True,
     )
     sequence = fields.Integer(default=10)
