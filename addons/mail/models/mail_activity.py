@@ -134,6 +134,7 @@ class MailActivity(models.Model):
         ('done', 'Done')], 'State',
         compute='_compute_state')
     mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids', readonly=True)
+    call_history_ids = fields.One2many('discuss.call.history', 'activity_id')
     # access
     can_write = fields.Boolean(compute='_compute_can_write') # used to hide buttons if the current user has no access
     active = fields.Boolean(default=True)
@@ -727,6 +728,11 @@ class MailActivity(models.Model):
                     activity_message = self.env['mail.message']
                     activities_to_remove += activity
 
+                if activity_message:
+                    # sudo: discuss.call.history: whoever marks the activity done may
+                    # report it on the call it closes.
+                    activity.sudo().call_history_ids.activity_done_message_id = activity_message
+
                 message_attachments = activity_attachments.get(activity.id) or self.env['ir.attachment']
                 attachment_ids = (attachment_ids or []) + message_attachments.ids
                 if attachment_ids:
@@ -1028,4 +1034,4 @@ class MailActivity(models.Model):
 
     def _get_activity_done_message_extra_values(self, activity):
         """To ease passing new values to the mail.message_activity_done chatter template."""
-        return {}
+        return {'call_history': activity.call_history_ids[:1], 'call_summary': activity.summary}
