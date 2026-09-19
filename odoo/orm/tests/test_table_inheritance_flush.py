@@ -249,3 +249,20 @@ def test_a_read_through_a_sibling_computes_where_the_row_is_scheduled():
         leaf.loud
         assert CountedRoot.computed_ids == [root.id]
         assert not env.core.is_pending(root_loud, root.id)
+
+
+def test_a_compute_through_one_model_evicts_the_value_the_others_cached():
+    # the root recomputed the row: the leaf's cached copy of that stored
+    # value is stale and must be re-read, as after a write through the root
+    with model_test_env(CountedRoot, CountedLeaf) as env:
+        root = env["counted.root"].create({"name": "one"})
+        leaf = env["counted.leaf"].create({"name": "one"})
+        env.flush_all()
+        leaf.invalidate_recordset(["loud"])
+        leaf.loud
+        assert "loud" in leaf._cache
+        root_loud = env["counted.root"]._fields["loud"]
+        root.name = "uno"
+        env.add_to_compute(root_loud, root)
+        assert root.loud == "UNO"
+        assert "loud" not in leaf._cache, "the leaf must re-read what the root computed"

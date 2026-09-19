@@ -774,9 +774,13 @@ class Field[T](
             field_cache.update(dict.fromkeys(ids, cache_value))
 
         if self.is_column and dirty:
-            env.core.mark_dirty(self, (id_ for id_ in records._ids if id_))
+            real_ids = [id_ for id_ in records._ids if id_]
+            env.core.mark_dirty(self, real_ids)
             for many2one in env.registry.order_key_inverses.get(self, ()):
                 many2one._resort_inverses(records)
+            # the row is one: a sibling model's cached copy of it is stale now
+            for sibling in self.tree_siblings:
+                sibling._invalidate_cache(env, real_ids, keep_dirty=True)
 
     if typing.TYPE_CHECKING:
 
