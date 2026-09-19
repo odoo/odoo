@@ -72,11 +72,10 @@ class DeliveryCarrier(models.Model):
         string="Debug logging",
         help="Log requests in order to ease debugging",
     )
-    company_id = fields.Many2one(  # noqa: E8528  fires _check_warehouses_have_same_company
+    company_id = fields.Many2one(
         comodel_name="res.company",
         related="product_id.company_id",
         string="Company",
-        store=True,
         readonly=False,
     )
     product_id = fields.Many2one(
