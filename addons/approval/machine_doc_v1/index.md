@@ -14,7 +14,7 @@ dashboards.
 | Key | Value |
 |-----|-------|
 | Technical name | `approval` |
-| Version | 19.0.2.10.0 (matches `__manifest__.py`) |
+| Version | 19.0.2.10.1 (matches `__manifest__.py`) |
 | Category | Human Resources/Approvals |
 | Dependencies | `mail`, and nothing else. `approval_automation` (which needs `automation`) and `approval_analytics` (which needs `mixin_report_sql`) were split out at 19.0.2.0.0 so that adopting `mixin.approval` costs one manifest row rather than nineteen prerequisites; both auto-install |
 | Conflicts | `approvals` (upstream module — the two cannot coexist, and NOTHING enforces it: this fork's loader reads no `excludes` manifest key, so the one that used to sit here was inert) |
@@ -229,7 +229,7 @@ approval/
 |   +-- approval_delegate_wizard.py   # Delegation setup
 +-- reports/
 |   +-- approval_request_report.xml   # QWeb PDF report action
-+-- migrations/                       # 29 script directories (1.0.1 .. 2.9)
++-- migrations/                       # 30 script directories (1.0.1 .. 2.10.1)
 +-- tests/                            # 44 test modules + common.py
 +-- views/                            # 10 XML view files
 +-- data/                             # 6 XML data files
@@ -254,7 +254,7 @@ approval/
 | Transient models | 2 |
 | Test-only models | 3 |
 | Cron jobs | 4 |
-| Migration script directories | 29 |
+| Migration script directories | 30 |
 
 Re-measure rather than trusting these: `find . -name '*.py' -not -path './tests/*'
 -not -path './migrations/*' -not -path '*__pycache__*' -not -path './machine_doc_v1/*'

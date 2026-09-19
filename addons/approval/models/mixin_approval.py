@@ -31,7 +31,6 @@ class MixinApproval(models.AbstractModel):
     approval_state = fields.Selection(
         related="approval_request_id.state",
         string="Approval Status",
-        store=True,
         help="""Current approval status:
         • new: Approval created but not submitted
         • pending: Waiting for approvers
@@ -42,7 +41,6 @@ class MixinApproval(models.AbstractModel):
     date_approval_granted = fields.Datetime(
         related="approval_request_id.date_approval_granted",
         string="Approval Granted Date",
-        store=True,
         copy=False,
         readonly=True,
         tracking=True,
@@ -60,7 +58,6 @@ class MixinApproval(models.AbstractModel):
     date_approval_requested = fields.Datetime(
         related="approval_request_id.date_confirmed",
         string="Approval Requested Date",
-        store=True,
         copy=False,
         readonly=True,
         tracking=True,
