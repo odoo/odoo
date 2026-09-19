@@ -801,7 +801,9 @@ export class ProductPage extends Interaction {
             }
         });
 
-        this._updateMinimumQuantity(parent, combination);
+        if (parent.querySelector('input[name="add_qty"]')) {
+            this._updateMinimumQuantity(parent, combination);
+        }
         this._toggleDisable(parent, isCombinationPossible && this.el.dataset.hasAvailableUoms);
 
         // Only update the images, tags and packaging selector if the product has changed.
