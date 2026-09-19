@@ -50,7 +50,6 @@ class AccountAnalyticLine(models.Model):
         related="company_id.currency_id",
         string="Currency",
         compute_sudo=True,
-        store=True,
         readonly=True,
     )
     category = fields.Selection(

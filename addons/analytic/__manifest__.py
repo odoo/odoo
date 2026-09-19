@@ -1,6 +1,6 @@
 {
     "name": "Analytic Accounting",
-    "version": "1.4",
+    "version": "1.5",
     "category": "Accounting/Accounting",
     "description": """
 Module for defining analytic accounting object.
