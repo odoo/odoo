@@ -383,21 +383,23 @@ patch(PosStore.prototype, {
                     .filter((p) => ["gift_card", "ewallet"].includes(p.program_type))
             ),
         ];
-        let selectedProgram = null;
-        if (linkedPrograms.length > 1) {
-            selectedProgram = await makeAwaitable(this.dialog, SelectionPopup, {
-                title: _t("Select program"),
-                list: linkedPrograms.map((program) => ({
-                    id: program.id,
-                    item: program,
-                    label: program.name,
-                })),
-            });
-            if (!selectedProgram) {
-                return;
+        let selectedProgram = opt.eWalletGiftCardProgram || null;
+        if (!selectedProgram) {
+            if (linkedPrograms.length > 1) {
+                selectedProgram = await makeAwaitable(this.dialog, SelectionPopup, {
+                    title: _t("Select program"),
+                    list: linkedPrograms.map((program) => ({
+                        id: program.id,
+                        item: program,
+                        label: program.name,
+                    })),
+                });
+                if (!selectedProgram) {
+                    return;
+                }
+            } else if (linkedPrograms.length === 1) {
+                selectedProgram = linkedPrograms[0];
             }
-        } else if (linkedPrograms.length === 1) {
-            selectedProgram = linkedPrograms[0];
         }
 
         if (selectedProgram) {
