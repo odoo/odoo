@@ -76,7 +76,6 @@ class DeliveryCarrier(models.Model):
         comodel_name="res.company",
         related="product_id.company_id",
         string="Company",
-        store=True,
         readonly=False,
     )
     product_id = fields.Many2one(
