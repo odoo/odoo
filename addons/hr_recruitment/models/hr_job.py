@@ -101,7 +101,6 @@ class HrJob(models.Model):
         comodel_name="hr.employee",
         related="department_id.manager_id",
         string="Department Manager",
-        store=True,
         readonly=True,
         groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user",
     )
