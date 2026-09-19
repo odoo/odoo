@@ -50,8 +50,6 @@ class ResPartnerIdentifier(models.Model):
     )
     company_id = fields.Many2one(
         related="partner_id.company_id",
-        store=True,
-        index="btree_not_null",
     )
 
     _type_value_index = models.Index("(type_id, normalized_value)")
