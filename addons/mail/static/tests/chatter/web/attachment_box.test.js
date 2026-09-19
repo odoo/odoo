@@ -533,3 +533,34 @@ test("attachment should be uploaded on the correct record when using the pager n
     await contains(".o-mail-AttachmentCard", { text: "A.jpeg" });
     await contains(".o-mail-AttachmentCard", { text: "B.jpeg" });
 });
+
+test("show attachment in conversation from attachment box", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner" });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        mimetype: "image/png",
+        name: "Elijah.png",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        body: "Here is my dog!",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId, {
+        arch: `
+            <form>
+                <sheet></sheet>
+                <chatter open_attachments="True"/>
+            </form>`,
+    });
+    await contains(".o-mail-AttachmentBox");
+    await click(
+        ".o-mail-AttachmentBox .o-mail-AttachmentButtons button[title='Show in Conversation']"
+    );
+    await contains(".o-mail-Message.o-highlighted:contains('Here is my dog!')");
+});
