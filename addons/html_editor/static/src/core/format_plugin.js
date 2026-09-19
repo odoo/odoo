@@ -56,7 +56,7 @@ function isFormatted(formatPlugin, format) {
  * }) => void | boolean)[]} format_selection_handlers
  * @typedef {(() => void)[]} remove_all_formats_handlers
  *
- * @typedef {((className: string) => boolean)[]} format_class_predicates
+ * @typedef {((className: string, targetClassName?: string) => boolean)[]} format_class_predicates
  * @typedef {((node: Node) => boolean)[]} has_format_predicates
  */
 
@@ -396,7 +396,9 @@ export class FormatPlugin extends Plugin {
             // with a class that is not indicated as splittable.
             const isClassListSplittable = (classList) =>
                 [...classList].every((className) =>
-                    this.getResource("format_class_predicates").some((cb) => cb(className))
+                    this.getResource("format_class_predicates").some((cb) =>
+                        cb(className, formatProps?.className)
+                    )
                 );
 
             // Special case: if the parent node is unsplittable and fully selected,
