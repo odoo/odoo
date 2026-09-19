@@ -26,7 +26,6 @@ class EventQuiz(models.Model):
     event_id = fields.Many2one(
         comodel_name="event.event",
         related="event_track_id.event_id",
-        store=True,
         readonly=True,
     )
     repeatable = fields.Boolean(
