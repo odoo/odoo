@@ -27,20 +27,17 @@ class ResPartnerRelation(models.Model):
     type_id = fields.Many2one(
         comodel_name="res.partner.relation.type",
         string="Relationship",
+        index=True,
         required=True,
     )
     category = fields.Selection(
         related="type_id.category",
-        store=True,
-        index=True,
     )
     degree = fields.Integer(
         related="type_id.degree",
-        store=True,
     )
     weight_risk = fields.Float(
         related="type_id.weight_risk",
-        store=True,
     )
 
     label = fields.Char(compute="_compute_labels")

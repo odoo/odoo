@@ -1,6 +1,6 @@
 {
     "name": "Partner Relationships",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "category": "Sales/CRM",
     "summary": "Family, ritual and commercial ties between contacts, drawn as a network",
     "description": """
