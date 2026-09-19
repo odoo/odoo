@@ -36,6 +36,50 @@ class TestAssetTableInheritanceRoot(TransactionCase):
         )
         self.assertEqual(self.env.cr.fetchall(), [])
 
+    def test_what_the_root_grants_the_subtype_grants(self):
+        # account_depreciation grants accountants the root; creating a vehicle
+        # through the root dispatches to the subtype and must not refuse them.
+        group = self.env.ref("base.group_user")
+        user = self.env["res.users"].create(
+            {"name": "Root Only", "login": "root_only", "group_ids": [(4, group.id)]}
+        )
+        self.env["ir.model.access"].create(
+            {
+                "name": "root only",
+                "model_id": self.env["ir.model"]._get_id("resource.asset"),
+                "group_id": group.id,
+                "perm_read": True,
+                "perm_write": True,
+                "perm_create": True,
+            }
+        )
+        van = self.Asset.with_user(user).create(
+            {"name": "Van", "kind_id": self.vehicle.id}
+        )
+        self.assertEqual(van._get_concrete()._name, "resource.asset.vehicle")
+
+    def test_no_shared_relation_table_points_at_a_subtype_table(self):
+        # The vehicle's copy of an inherited many2many keeps the root's
+        # relation table, so a key against `resource_asset_vehicle` would
+        # refuse every link of an asset that is not a vehicle.
+        self.env.cr.execute(
+            """
+            SELECT c.conrelid::regclass::text, c.conname
+              FROM pg_constraint c JOIN pg_class t ON t.oid = c.confrelid
+             WHERE c.contype = 'f' AND t.relname = 'resource_asset_vehicle'
+            """
+        )
+        offenders = [
+            (table, name)
+            for table, name in self.env.cr.fetchall()
+            if any(
+                field.relation == table
+                for field in self.Asset._fields.values()
+                if field.type == "many2many" and field.store
+            )
+        ]
+        self.assertEqual(offenders, [])
+
     def test_the_scan_finds_the_relations_the_database_no_longer_holds(self):
         found = {
             (model, field): ondelete

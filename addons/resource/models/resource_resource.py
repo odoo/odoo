@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
 from odoo.libs.intervals import Intervals
@@ -17,7 +17,14 @@ from odoo.tools.date_utils import (
     to_timezone,
 )
 
-from .utils import ResourceSchedule
+from .utils import (
+    CUSTODY_ROLE_BY_FIELD,
+    CUSTODY_SYNC,
+    DEFAULT_HANDOVER_DELAY,
+    MANAGER_ROLE,
+    OPERATOR_ROLE,
+    ResourceSchedule,
+)
 from odoo.addons.base.models.res_partner import _selection_timezones
 
 if TYPE_CHECKING:
@@ -61,7 +68,9 @@ class ResourceResource(models.Model):
         ondelete="restrict",
         help="The person this resource is. A material resource has none.",
     )
-    phone_ids = fields.Many2many(related="partner_id.phone_ids")
+    phone_ids = fields.Many2many(
+        related="partner_id.phone_ids",
+    )
     user_id = fields.Many2one(
         comodel_name="res.users",
         compute="_compute_user_id",
@@ -103,23 +112,6 @@ class ResourceResource(models.Model):
         required=True,
         help="This field is used to calculate the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.",
     )
-
-    assignment_ids = fields.One2many(
-        comodel_name="resource.assignment",
-        inverse_name="resource_id",
-        string="Assignments",
-    )
-    reservation_ids = fields.One2many(
-        comodel_name="resource.reservation",
-        inverse_name="resource_id",
-        string="Reservations",
-    )
-    holder_id = fields.Many2one(
-        comodel_name="resource.resource",
-        string="Current Holder",
-        compute="_compute_holder_id",
-        search="_search_holder_id",
-    )
     capacity = fields.Integer(
         default=1,
         required=True,
@@ -142,6 +134,57 @@ class ResourceResource(models.Model):
         help="Preferred role when assigning this resource. The default is always included in its roles.",
     )
 
+    assignment_ids = fields.One2many(
+        comodel_name="resource.assignment",
+        inverse_name="resource_id",
+        string="Assignments",
+    )
+    holder_id = fields.Many2one(
+        comodel_name="resource.resource",
+        string="Current Holder",
+        compute="_compute_holder_id",
+        search="_search_holder_id",
+    )
+    operator_id = fields.Many2one(
+        comodel_name="resource.resource",
+        string="Operator",
+        compute="_compute_custody",
+        inverse="_inverse_operator_id",
+        search="_search_operator_id",
+        domain="[('resource_type', '=', 'user'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        help="Who operates the resource now: the live operator assignment.",
+    )
+    manager_id = fields.Many2one(
+        comodel_name="resource.resource",
+        string="Manager",
+        compute="_compute_custody",
+        inverse="_inverse_manager_id",
+        search="_search_manager_id",
+        domain="[('resource_type', '=', 'user'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        help="Who answers for the resource: the live manager assignment.",
+    )
+    future_operator_id = fields.Many2one(
+        comodel_name="resource.resource",
+        string="Future Operator",
+        compute="_compute_future_operator",
+        inverse="_inverse_future_operator",
+        search="_search_future_operator_id",
+        domain="[('resource_type', '=', 'user'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        help="Who takes the resource over next: the planned operator assignment.",
+    )
+    date_future_operator = fields.Datetime(
+        string="Hand-over Date",
+        compute="_compute_future_operator",
+        inverse="_inverse_future_operator",
+        help="When the next operator takes over. A hand-over without a date takes effect in a week unless accepted before.",
+    )
+
+    reservation_ids = fields.One2many(
+        comodel_name="resource.reservation",
+        inverse_name="resource_id",
+        string="Reservations",
+    )
+
     booking_limit_percentage = fields.Float(
         string="Booking Ceiling %",
         default=100.0,
@@ -152,20 +195,15 @@ class ResourceResource(models.Model):
         string="Enforce Booking Ceiling",
         help="Reject any reservation that exceeds this resource's booking ceiling, including manual meetings and shifts. Individual bookings may enforce the ceiling even when this option is disabled.",
     )
+
+    _party_company_uniq = models.UniqueIndex(
+        "(partner_id, company_id) NULLS NOT DISTINCT WHERE resource_type = 'user'",
+        "A person is one human resource per company.",
+    )
     _check_booking_limit = models.Constraint(
         "CHECK(booking_limit_percentage >= 0 AND booking_limit_percentage < 'Infinity'::float8)",
         "The booking ceiling must be finite and nonnegative.",
     )
-
-    @api.constrains("booking_limit_percentage", "enforce_booking_limit")
-    def _check_booking_limit_reservations(self):
-        self._lock_for_scheduling()
-        self.env["resource.reservation"].sudo().search(
-            [
-                ("resource_id", "in", self.ids),
-            ]
-        )._check_hard_overlap()
-
     _check_time_efficiency = models.Constraint(
         "CHECK(time_efficiency>0)",
         "Time efficiency must be strictly positive",
@@ -178,10 +216,15 @@ class ResourceResource(models.Model):
         "CHECK(resource_type != 'user' OR partner_id IS NOT NULL)",
         "A human resource is a person: it needs a party.",
     )
-    _party_company_uniq = models.UniqueIndex(
-        "(partner_id, company_id) NULLS NOT DISTINCT WHERE resource_type = 'user'",
-        "A person is one human resource per company.",
-    )
+
+    @api.constrains("booking_limit_percentage", "enforce_booking_limit")
+    def _check_booking_limit_reservations(self):
+        self._lock_for_scheduling()
+        self.env["resource.reservation"].sudo().search(
+            [
+                ("resource_id", "in", self.ids),
+            ]
+        )._check_hard_overlap()
 
     @api.constrains("tz")
     def _check_tz(self):
@@ -293,6 +336,43 @@ class ResourceResource(models.Model):
         for resource in self:
             resource.holder_id = assignment_model._get_holder(resource)
 
+    @api.depends(
+        "assignment_ids.assignee_id",
+        "assignment_ids.custody_role",
+        "assignment_ids.date_start",
+        "assignment_ids.date_end",
+        "assignment_ids.active",
+    )
+    def _compute_custody(self):
+        Assignment = self.env["resource.assignment"]
+        for field_name, role in CUSTODY_ROLE_BY_FIELD.items():
+            live = Assignment._search_custody(self, roles=(role,))
+            first = live._get_first_by_resource(reverse=True)
+            for resource in self:
+                assignment = first.get(resource.id)
+                resource[field_name] = assignment.assignee_id if assignment else False
+
+    @api.depends(
+        "assignment_ids.assignee_id",
+        "assignment_ids.custody_role",
+        "assignment_ids.date_start",
+        "assignment_ids.date_end",
+        "assignment_ids.active",
+    )
+    def _compute_future_operator(self):
+        planned = self.env["resource.assignment"]._search_custody(
+            self, roles=(OPERATOR_ROLE,), when="planned"
+        )
+        first = planned._get_first_by_resource(reverse=False)
+        for resource in self:
+            assignment = first.get(resource.id)
+            resource.future_operator_id = (
+                assignment.assignee_id if assignment else False
+            )
+            resource.date_future_operator = (
+                assignment.date_start if assignment else False
+            )
+
     @api.depends("partner_id.name")
     def _compute_name(self):
         for resource in self:
@@ -325,6 +405,66 @@ class ResourceResource(models.Model):
                 resource.partner_id.avatar_128 or resource.user_id.avatar_128
             )
 
+    def _inverse_operator_id(self):
+        self._sync_custody("operator_id")
+
+    def _inverse_manager_id(self):
+        self._sync_custody("manager_id")
+
+    def _inverse_future_operator(self):
+        now = fields.Datetime.now()
+        Assignment = self.env["resource.assignment"]
+        planned = Assignment._search_custody(
+            self, roles=(OPERATOR_ROLE,), when="planned"
+        )
+        planned_by_resource = defaultdict(planned.browse)
+        for assignment in planned:
+            planned_by_resource[assignment.resource_id.id] |= assignment
+        holder_field = self._fields["future_operator_id"]
+        date_field = self._fields["date_future_operator"]
+        cache = self.env.cache
+        new_vals_list = []
+        changes = {}
+        for resource in self:
+            current = planned_by_resource[resource.id].sorted("date_start")[:1]
+            holder = (
+                resource.future_operator_id
+                if cache.contains(resource, holder_field)
+                else current.assignee_id
+            )
+            date_start = (
+                resource.date_future_operator
+                if cache.contains(resource, date_field)
+                else current.date_start
+            ) or now + DEFAULT_HANDOVER_DELAY
+            if (
+                holder
+                and current.assignee_id == holder
+                and current.date_start == date_start
+            ):
+                continue
+            planned_by_resource[resource.id]._end(now)
+            if holder:
+                if date_start <= now:
+                    raise UserError(
+                        self.env._("A scheduled hand-over must start in the future.")
+                    )
+                new_vals_list.append(
+                    {
+                        "resource_id": resource.id,
+                        "assignee_id": holder.id,
+                        "custody_role": OPERATOR_ROLE,
+                        "date_start": date_start,
+                    }
+                )
+            changes[resource.id] = (current.assignee_id[:1], holder)
+            if holder:
+                resource.future_operator_id = holder
+                resource.date_future_operator = date_start
+        if new_vals_list:
+            Assignment.sudo().create(new_vals_list)
+        self.browse(changes)._on_custody_changed(OPERATOR_ROLE, changes, planned=True)
+
     def _inverse_default_role_id(self):
         for resource in self:
             if resource.default_role_id:
@@ -343,6 +483,35 @@ class ResourceResource(models.Model):
             party = resource.partner_id.sudo()
             if party.name != resource.name:
                 party.name = resource.name
+
+    def _search_custody(self, role, operator, value, when="live"):
+        live = Domain("custody_role", "=", role) & self.env[
+            "resource.assignment"
+        ]._get_custody_domain(when=when)
+        if operator in ("in", "not in"):
+            ids = [value] if isinstance(value, (int, bool)) else list(value)
+            resource_ids = [i for i in ids if i]
+            wants_empty = len(resource_ids) < len(ids)
+        elif operator in ("any", "not any"):
+            resource_ids = self.with_context(active_test=False)._search(value)
+            wants_empty = False
+        else:
+            return NotImplemented
+        domain = Domain(
+            "assignment_ids", "any", live & Domain("assignee_id", "in", resource_ids)
+        )
+        if wants_empty:
+            domain |= ~Domain("assignment_ids", "any", live)
+        return ~domain if operator.startswith("not") else domain
+
+    def _search_operator_id(self, operator, value):
+        return self._search_custody(OPERATOR_ROLE, operator, value)
+
+    def _search_manager_id(self, operator, value):
+        return self._search_custody(MANAGER_ROLE, operator, value)
+
+    def _search_future_operator_id(self, operator, value):
+        return self._search_custody(OPERATOR_ROLE, operator, value, when="planned")
 
     def _search_email(self, operator, value):
         return Domain("partner_id.email", operator, value)
@@ -380,6 +549,50 @@ class ResourceResource(models.Model):
     def _onchange_company_id(self):
         if self.company_id:
             self.calendar_id = self.company_id.resource_calendar_id.id
+
+    def _on_custody_changed(self, role, changes, planned=False):
+        pass
+
+    def _end_custody(self, at=None):
+        # What it held, whoever held it, ends: archiving and disposal call this.
+        self.env["resource.assignment"]._search_custody(
+            self, when="open", archived=True
+        )._end(at)
+
+    def _sync_custody(self, field_name):
+        role = CUSTODY_ROLE_BY_FIELD[field_name]
+        now = fields.Datetime.now()
+        Assignment = self.env["resource.assignment"]
+        live = Assignment._search_custody(self, roles=(role,), archived=True)
+        live_by_resource = defaultdict(live.browse)
+        for assignment in live:
+            live_by_resource[assignment.resource_id.id] |= assignment
+        new_vals_list = []
+        changes = {}
+        for resource in self:
+            current = live_by_resource[resource.id]
+            holder = resource[field_name]
+            if holder and current.assignee_id == holder:
+                continue
+            if not holder and not current:
+                continue
+            changes[resource.id] = (current.assignee_id[:1], holder)
+            current._end(now)
+            if holder:
+                new_vals_list.append(
+                    {
+                        "resource_id": resource.id,
+                        "assignee_id": holder.id,
+                        "custody_role": role,
+                        "date_start": now,
+                    }
+                )
+        if new_vals_list:
+            # The rivals are ended above; the create hook has nothing to supersede.
+            Assignment.sudo().with_context(**{CUSTODY_SYNC: True}).create(new_vals_list)
+        changed = self.browse(changes)
+        changed._on_custody_changed(role, changes)
+        return changed
 
     def _update_party_vals(self, vals_list: list[ValuesType]) -> None:
         default_type = self.default_get(["resource_type"]).get("resource_type")
@@ -903,12 +1116,6 @@ class ResourceResource(models.Model):
         return resource_work_intervals, resource_hours_per_day, resource_hours_per_week
 
     def _get_flexible_booking_hours_per_day(self, bookings_by_resource, start, end):
-        """Distribute weighted booking effort over flexible working days.
-
-        Booking loads use percentages; their wall-clock span is intersected with
-        working time and capped by the same day/week rules used for shifts.
-        Fully flexible resources have no day/week budget to consume.
-        """
         resources = self.filtered(
             lambda resource: (
                 bookings_by_resource.get(resource.id)

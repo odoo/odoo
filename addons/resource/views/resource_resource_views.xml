@@ -89,6 +89,17 @@
                                 name="capacity"
                                 invisible="resource_type != 'material'" />
                         </group>
+                        <group
+                            name="custody"
+                            string="Custody"
+                            invisible="resource_type != 'material'">
+                            <field name="operator_id" />
+                            <field name="future_operator_id" />
+                            <field
+                                name="date_future_operator"
+                                invisible="not future_operator_id" />
+                            <field name="manager_id" />
+                        </group>
                     </group>
                 </sheet>
             </form>

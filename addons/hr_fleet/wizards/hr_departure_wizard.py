@@ -32,4 +32,4 @@ class HrDepartureWizard(models.TransientModel):
                 ]
             )
         )
-        self.env["resource.asset"]._end_custody(assignments, departure)
+        assignments._end(departure)

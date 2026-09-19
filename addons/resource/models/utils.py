@@ -1,6 +1,7 @@
 from collections import defaultdict
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from datetime import timedelta
 from typing import TYPE_CHECKING, Any
 
 from odoo.fields import Domain
@@ -9,6 +10,13 @@ from odoo.tools.date_utils import get_intervals_hours
 
 if TYPE_CHECKING:
     from .resource_resource import ResourceResource
+
+CUSTODY_SYNC = "custody_sync"
+OPERATOR_ROLE = "operator"
+MANAGER_ROLE = "manager"
+EXCLUSIVE_CUSTODY_ROLES = (OPERATOR_ROLE, MANAGER_ROLE)
+CUSTODY_ROLE_BY_FIELD = {"operator_id": OPERATOR_ROLE, "manager_id": MANAGER_ROLE}
+DEFAULT_HANDOVER_DELAY = timedelta(days=7)
 
 HOURS_PER_DAY = 8
 

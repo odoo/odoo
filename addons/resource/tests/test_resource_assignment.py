@@ -152,14 +152,91 @@ class TestResourceAssignment(TransactionCase):
         self._assign(custody_role="manager", assignee=self.other_driver)
         self._assign(custody_role="operator")
         self.assertEqual(
-            self.Assignment._get_holder(self.truck, custody_role="manager"), self.other_driver
+            self.Assignment._get_holder(self.truck, custody_role="manager"),
+            self.other_driver,
         )
         self.assertEqual(
-            self.Assignment._get_holder(self.truck, custody_role="operator"), self.driver
+            self.Assignment._get_holder(self.truck, custody_role="operator"),
+            self.driver,
         )
         self.assertFalse(
             self.Assignment._get_holder(self.truck, at=self.now - timedelta(days=5))
         )
+
+    def test_the_operator_and_manager_are_fields_of_the_resource(self):
+        self.truck.operator_id = self.driver
+        self.truck.manager_id = self.other_driver
+        live = self.Assignment._search_custody(self.truck)
+        self.assertEqual(len(live), 2)
+        self.assertEqual(
+            {(a.custody_role, a.assignee_id) for a in live},
+            {("operator", self.driver), ("manager", self.other_driver)},
+        )
+        self.truck.invalidate_recordset()
+        self.assertEqual(self.truck.operator_id, self.driver)
+        self.assertEqual(self.truck.manager_id, self.other_driver)
+        self.assertIn(
+            self.truck,
+            self.truck.search([("operator_id", "=", self.driver.id)]),
+        )
+        self.assertIn(self.truck, self.truck.search([("manager_id", "ilike", "Bo")]))
+
+    def test_a_new_operator_supersedes_the_live_one(self):
+        first = self._assign()
+        second = self._assign(assignee=self.other_driver, date_start=self.now)
+        self.assertEqual(first.state, "ended")
+        self.assertEqual(second.state, "active")
+        self.truck.invalidate_recordset()
+        self.assertEqual(self.truck.operator_id, self.other_driver)
+
+    def test_a_technician_does_not_supersede_another(self):
+        first = self._assign(custody_role="technician")
+        self._assign(
+            custody_role="technician", assignee=self.other_driver, date_start=self.now
+        )
+        self.assertEqual(first.state, "active")
+
+    def test_clearing_the_operator_ends_custody_without_a_successor(self):
+        assignment = self._assign()
+        self.truck.operator_id = False
+        self.assertEqual(assignment.state, "ended")
+        self.assertFalse(self.Assignment._search_custody(self.truck))
+
+    def test_a_future_operator_is_a_planned_assignment(self):
+        self.truck.write(
+            {
+                "future_operator_id": self.other_driver.id,
+                "date_future_operator": self.now + timedelta(days=3),
+            }
+        )
+        planned = self.Assignment._search_custody(self.truck, when="planned")
+        self.assertEqual(planned.assignee_id, self.other_driver)
+        self.assertEqual(planned.state, "planned")
+        self.truck.invalidate_recordset()
+        self.assertEqual(self.truck.future_operator_id, self.other_driver)
+        self.assertEqual(self.truck.date_future_operator, self.now + timedelta(days=3))
+        self.assertIn(
+            self.truck,
+            self.truck.search([("future_operator_id", "=", self.other_driver.id)]),
+        )
+        with self.assertRaises(UserError):
+            self.truck.write(
+                {
+                    "future_operator_id": self.driver.id,
+                    "date_future_operator": self.now - timedelta(days=1),
+                }
+            )
+
+    def test_ending_custody_ends_the_live_and_voids_the_planned(self):
+        live = self._assign()
+        planned = self._assign(
+            assignee=self.other_driver, date_start=self.now + timedelta(days=3)
+        )
+        self.truck._end_custody(self.now)
+        self.assertEqual(live.date_end, self.now)
+        self.assertEqual(planned.date_end, planned.date_start)
+        self.assertFalse(self.Assignment._search_custody(self.truck))
+        self.assertFalse(self.Assignment._search_custody(self.truck, when="planned"))
 
     def test_open_ended_custody_books_nothing(self):
         assignment = self._assign()

@@ -22,5 +22,5 @@ class HrDepartureWizard(models.TransientModel):
                 employees=self.employee_ids,
                 assignments=assignments,
             )
-            self.env["resource.asset"]._end_custody(assignments)
+            assignments._end()
         return action

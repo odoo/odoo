@@ -123,8 +123,8 @@ class ResourceAsset(models.Model):
         assets._generate_l10n_mx_emission_inspections()
         return assets
 
-    def write(self, vals):
-        result = super().write(vals)
+    def _write_concrete(self, vals):
+        result = super()._write_concrete(vals)
         if "license_plate" in vals or "product_id" in vals:
             self._generate_l10n_mx_emission_inspections()
         return result

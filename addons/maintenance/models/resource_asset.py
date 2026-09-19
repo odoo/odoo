@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import fields, models
 
 KIND_DEFAULTS = ("technician_user_id", "maintenance_team_id")
 
@@ -40,21 +40,10 @@ class ResourceAsset(models.Model):
     date_next_failure = fields.Date(related="resource_id.date_next_failure")
     date_last_failure = fields.Date(related="resource_id.date_last_failure")
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        given = [dict(vals) for vals in vals_list]
-        assets = super().create(vals_list)
-        for asset, vals in zip(assets, given, strict=True):
+    def _on_kind_changed(self, vals):
+        super()._on_kind_changed(vals)
+        for asset in self:
             asset._take_kind_defaults(vals)
-        return assets
-
-    def write(self, vals):
-        given = dict(vals)
-        res = super().write(vals)
-        if "kind_id" in given:
-            for asset in self:
-                asset._take_kind_defaults(given)
-        return res
 
     def _take_kind_defaults(self, given):
         self.check_singleton()
@@ -100,7 +89,7 @@ class ResourceAsset(models.Model):
         assets = self.sudo()
         assets.filtered(
             lambda asset: asset.resource_id in busy and asset.state == "in_service"
-        ).write({"state": "maintenance"})
+        )._transition("maintenance")
         assets.filtered(
             lambda asset: asset.resource_id not in busy and asset.state == "maintenance"
-        ).write({"state": "in_service"})
+        )._transition("in_service")

@@ -4,6 +4,8 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
+from .utils import CUSTODY_SYNC, EXCLUSIVE_CUSTODY_ROLES
+
 
 class ResourceAssignment(models.Model):
     _name = "resource.assignment"
@@ -71,11 +73,11 @@ class ResourceAssignment(models.Model):
     )
     note = fields.Text()
 
+    _resource_period_idx = models.Index("(resource_id, date_start, date_end)")
     _check_dates = models.Constraint(
         "CHECK(date_end IS NULL OR date_end >= date_start)",
         "An assignment cannot end before it starts.",
     )
-    _resource_period_idx = models.Index("(resource_id, date_start, date_end)")
 
     @api.constrains("resource_id", "assignee_id")
     def _check_parties(self):
@@ -104,7 +106,10 @@ class ResourceAssignment(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         self._update_assignee_vals(vals_list)
-        return super().create(vals_list)
+        assignments = super().create(vals_list)
+        if not self.env.context.get(CUSTODY_SYNC):
+            assignments._supersede_rivals()
+        return assignments
 
     def write(self, vals):
         if "assignee_partner_id" not in vals:
@@ -150,24 +155,34 @@ class ResourceAssignment(models.Model):
             else:
                 record.state = "active"
 
-    def _search_state(self, operator, value):
-        if operator not in ("=", "!=", "in", "not in"):
-            return NotImplemented
-        values = {value} if isinstance(value, str) else set(value or ())
-        now = fields.Datetime.now()
-        by_state = {
-            "planned": Domain("date_start", ">", now),
-            "ended": Domain("date_end", "!=", False) & Domain("date_end", "<=", now),
-        }
-        by_state["active"] = ~(by_state["planned"] | by_state["ended"])
-        domain = (
-            Domain.OR(by_state[v] for v in values if v in by_state)
-            if values
-            else Domain.FALSE
-        )
-        if operator in ("!=", "not in"):
-            domain = ~domain
-        return domain
+    def _end(self, at=None):
+        at = at or fields.Datetime.now()
+        started = self.filtered(lambda a: a.date_start <= at)
+        started.write({"date_end": at})
+        for planned in self - started:
+            planned.date_end = planned.date_start
+
+    @api.model
+    def _get_exclusive_custody_roles(self) -> tuple[str, ...]:
+        return EXCLUSIVE_CUSTODY_ROLES
+
+    @api.model
+    def _get_custody_domain(self, at=None, when="live"):
+        at = at or fields.Datetime.now()
+        not_ended = Domain("date_end", "=", False) | Domain("date_end", ">", at)
+        if when == "live":
+            return Domain("date_start", "<=", at) & not_ended
+        if when == "planned":
+            return Domain("date_start", ">", at) & Domain("date_end", "=", False)
+        if when == "open":
+            return not_ended
+        raise ValueError(when)
+
+    def _get_first_by_resource(self, reverse=True):
+        first = {}
+        for assignment in self.sorted("date_start", reverse=reverse):
+            first.setdefault(assignment.resource_id.id, assignment)
+        return first
 
     def _get_holder_name(self):
         self.check_singleton()
@@ -191,10 +206,24 @@ class ResourceAssignment(models.Model):
             domain &= Domain("custody_role", "=", custody_role)
         return self.search(domain, order="date_start desc", limit=1).assignee_id
 
+    @api.model
+    def _search_custody(
+        self, resources, roles=None, at=None, when="live", archived=False
+    ):
+        if not resources:
+            return self.browse()
+        domain = Domain("resource_id", "in", resources.ids) & self._get_custody_domain(
+            at, when
+        )
+        if roles:
+            domain &= Domain("custody_role", "in", list(roles))
+        assignments = self.sudo()
+        if archived:
+            assignments = assignments.with_context(active_test=False)
+        return assignments.search(domain)
+
     def _prepare_reservation_vals_list(self):
         self.check_singleton()
-        # An open-ended custody is a fact about who answers for the thing, not
-        # a claim on its time; only a bounded assignment books the resource.
         if not self.date_start or not self.date_end or not self.resource_id:
             return []
         return [
@@ -207,6 +236,43 @@ class ResourceAssignment(models.Model):
                 "enforcement_mode": "soft",
             }
         ]
+
+    def _supersede_rivals(self, at=None):
+        at = at or fields.Datetime.now()
+        exclusive = self._get_exclusive_custody_roles()
+        started = self.filtered(
+            lambda assignment: (
+                assignment.custody_role in exclusive
+                and assignment.date_start <= at
+                and (not assignment.date_end or assignment.date_end > at)
+            )
+        )
+        if not started:
+            return
+        keys = {(a.resource_id.id, a.custody_role) for a in started}
+        rivals = (
+            self._search_custody(started.resource_id, roles=exclusive, at=at) - self
+        ).filtered(lambda rival: (rival.resource_id.id, rival.custody_role) in keys)
+        rivals._end(at)
+
+    def _search_state(self, operator, value):
+        if operator not in ("=", "!=", "in", "not in"):
+            return NotImplemented
+        values = {value} if isinstance(value, str) else set(value or ())
+        now = fields.Datetime.now()
+        by_state = {
+            "planned": Domain("date_start", ">", now),
+            "ended": Domain("date_end", "!=", False) & Domain("date_end", "<=", now),
+        }
+        by_state["active"] = ~(by_state["planned"] | by_state["ended"])
+        domain = (
+            Domain.OR(by_state[v] for v in values if v in by_state)
+            if values
+            else Domain.FALSE
+        )
+        if operator in ("!=", "not in"):
+            domain = ~domain
+        return domain
 
     def _update_assignee_vals(self, vals_list):
         default_resource_id = self.env.context.get("default_resource_id")

@@ -324,21 +324,33 @@ def update_db_relation_table(field: Many2many, model: ModelLike) -> bool:
     return False
 
 
+def _relation_is_shared_with_tree(field: Many2many, model: BaseModel) -> bool:
+    if not model._table_inheritance_root:
+        return False
+    if model._is_table_inheritance_root():
+        return True
+    root = model.env[model._get_root_model_name()]
+    root_field = root._fields.get(field.name)
+    return root_field is not None and root_field.relation == field.relation
+
+
 def update_db_foreign_keys(field: Many2many, model: BaseModel) -> None:
     comodel = model.env[field.comodel_name]
     relation, column1, column2 = field._get_relation_triple()
+    model_side = model._is_an_ordinary_table() and not _relation_is_shared_with_tree(
+        field, model
+    )
     _debug.pipeline(
         "field.ddl.m2m_foreign_keys",
         model=model._name,
         field=field.name,
         relation=relation,
-        model_side=model._is_an_ordinary_table()
-        and not model._is_table_inheritance_root(),
+        model_side=model_side,
         comodel_side=comodel._is_an_ordinary_table()
         and not comodel._is_table_inheritance_root(),
         ondelete=field.ondelete or "cascade",
     )
-    if model._is_an_ordinary_table() and not model._is_table_inheritance_root():
+    if model_side:
         model.pool.add_foreign_key(
             relation,
             column1,

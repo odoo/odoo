@@ -187,7 +187,11 @@ class IrModelAccess(models.Model):
             _logger.warning("Missing model %s", model)
             return False
 
-        has_access = model in self._get_models_allowed(mode)
+        allowed = self._get_models_allowed(mode)
+        has_access = any(
+            name in allowed
+            for name in self.env["ir.rule"]._get_model_names_bound_by_rules(model)
+        )
         if _debug.logic.enabled and not has_access:
             _debug.logic(
                 "acl_denied",

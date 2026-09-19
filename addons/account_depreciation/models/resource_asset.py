@@ -320,6 +320,198 @@ class ResourceAsset(models.Model):
         groups="account.group_account_readonly,account.group_account_invoice",
     )
 
+    PROPAGATED_TO_MOVES = frozenset(
+        {
+            "analytic_distribution",
+            "account_depreciation_id",
+            "account_depreciation_expense_id",
+            "depreciation_journal_id",
+        }
+    )
+
+    FISCALYEAR_MEMO_KEY = "account_depreciation.fiscalyear_dates"
+
+    CREATION_TRACKED_FNAMES = (
+        "depreciation_method",
+        "depreciation_duration",
+        "depreciation_period",
+        "depreciation_factor",
+        "value_salvage",
+        "original_move_line_ids",
+    )
+
+    @api.constrains("depreciation_move_ids")
+    def _check_depreciations(self):
+        for asset in self:
+            if (
+                asset.depreciation_state == "open"
+                and asset.depreciation_move_ids
+                and not asset.currency_id.is_zero(
+                    asset.depreciation_move_ids._sorted_by_date()[
+                        -1
+                    ].asset_remaining_value
+                )
+            ):
+                raise UserError(
+                    _("The remaining value on the last depreciation line must be 0")
+                )
+
+    @api.constrains("depreciation_state", "company_id", "date_prorata")
+    def _check_board_has_company_and_start(self):
+        for asset in self.filtered("depreciation_state"):
+            if not asset.company_id:
+                raise ValidationError(
+                    _("%(asset)s depreciates, so it needs a company.", asset=asset.name)
+                )
+            if not asset.date_prorata:
+                raise ValidationError(
+                    _(
+                        "%(asset)s depreciates, so it needs a prorata date.",
+                        asset=asset.name,
+                    )
+                )
+
+    @api.constrains("original_move_line_ids")
+    def _check_single_source_account(self):
+        for asset in self:
+            if len(asset.original_move_line_ids.account_id) > 1:
+                raise ValidationError(
+                    _("All the lines should be from the same account")
+                )
+
+    @api.constrains("original_move_line_ids")
+    def _check_related_purchase(self):
+        for asset in self:
+            if asset.original_move_line_ids and asset.value_purchase == 0:
+                raise UserError(
+                    _(
+                        "You cannot create an asset from lines containing credit and debit on the account or with a null amount"
+                    )
+                )
+            if asset.depreciation_state not in (False, "draft"):
+                raise UserError(
+                    _(
+                        "You cannot add or remove bills when the asset is already running or closed."
+                    )
+                )
+
+    @api.constrains("active", "depreciation_state")
+    def _check_active(self):
+        for record in self:
+            if (
+                not record.active
+                and record.depreciation_state
+                and record.depreciation_state != "close"
+            ):
+                raise UserError(_("You cannot archive a record that is not closed"))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        vals_list = [dict(vals) for vals in vals_list]
+        board_context = self.env.context.get("default_depreciation_state")
+        fallback_kind = None
+        for vals in vals_list:
+            if not (board_context or any(vals.get(field) for field in BOARD_FIELDS)):
+                continue
+            state = vals.get("depreciation_state")
+            if state and state != "draft":
+                raise UserError(
+                    _(
+                        "An asset is created in draft and confirmed afterwards; it cannot "
+                        "be created directly in the %(state)s state.",
+                        state=state,
+                    )
+                )
+            if not vals.get("name"):
+                vals["name"] = self._get_name_from_lines(vals)
+            if not vals.get("name"):
+                raise UserError(_("An asset needs a name."))
+            vals["depreciation_state"] = "draft"
+            if not vals.get("kind_id"):
+                profile = self.env["account.depreciation.profile"].browse(
+                    vals.get("depreciation_profile_id")
+                )
+                if not profile.kind_id and fallback_kind is None:
+                    fallback_kind = self.env.ref(
+                        "account_depreciation.kind_fixed_asset"
+                    )
+                vals["kind_id"] = (profile.kind_id or fallback_kind).id
+        new_recs = super(
+            ResourceAsset, self.with_context(mail_create_nolog=True)
+        ).create(vals_list)
+        for record, vals in zip(new_recs, vals_list, strict=True):
+            requested = vals.get("value_original")
+            if requested is not None and record.currency_id.compare_amounts(
+                record.value_original, requested
+            ):
+                record.value_original = requested
+        return new_recs
+
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default)
+        for asset, vals in zip(self, vals_list, strict=True):
+            if not asset.depreciation_state:
+                continue
+            vals["name"] = _("%s (copy)", asset.name)
+            vals["account_asset_id"] = asset.account_asset_id.id
+            vals["value_original"] = asset.value_original
+        return vals_list
+
+    def unlink(self):
+        bodies = {}
+        orphaned_moves = self.env["account.move"]
+        for asset in self:
+            for line in asset.original_move_line_ids:
+                if line.name:
+                    body = _(
+                        "A document linked to %(move_line_name)s has been deleted: %(link)s",
+                        move_line_name=line.name,
+                        link=asset._get_html_link(),
+                    )
+                else:
+                    body = _(
+                        "A document linked to this move has been deleted: %s",
+                        asset._get_html_link(),
+                    )
+                bodies[line.move_id.id] = (
+                    bodies[line.move_id.id] + Markup("<br>") + body
+                    if line.move_id.id in bodies
+                    else body
+                )
+                if not (line.move_id.capitalised_asset_ids - self):
+                    orphaned_moves |= line.move_id
+        if bodies:
+            self.env["account.move"].browse(bodies)._message_log_batch(bodies=bodies)
+        orphaned_moves.asset_move_type = False
+        return super().unlink()
+
+    @api.ondelete(at_uninstall=True)
+    def _unlink_if_model_or_draft(self):
+        for asset in self:
+            if asset.depreciation_state in ["open", "paused", "close"]:
+                raise UserError(
+                    _(
+                        "You cannot delete a document that is in %s state.",
+                        dict(
+                            self._fields["depreciation_state"]._description_selection(
+                                self.env
+                            )
+                        ).get(asset.depreciation_state),
+                    )
+                )
+
+            posted_amount = len(
+                asset.depreciation_move_ids.filtered(lambda x: x.state == "posted")
+            )
+            if posted_amount > 0:
+                raise UserError(
+                    _(
+                        "You cannot delete an asset linked to posted entries."
+                        "\nYou should either confirm the asset, then, sell or dispose of it,"
+                        " or cancel the linked journal entries."
+                    )
+                )
+
     @api.depends("company_id")
     def _compute_depreciation_journal_id(self):
         AccountJournal = self.env["account.journal"]
@@ -709,177 +901,735 @@ class ResourceAsset(models.Model):
     def _onchange_consistent_board(self):
         self.write({"depreciation_move_ids": [Command.set([])]})
 
-    @api.constrains("active", "depreciation_state")
-    def _check_active(self):
-        for record in self:
-            if (
-                not record.active
-                and record.depreciation_state
-                and record.depreciation_state != "close"
-            ):
-                raise UserError(_("You cannot archive a record that is not closed"))
+    def action_view_linked_assets(self):
+        return self.linked_assets_ids.open_asset(["list", "form"])
 
-    @api.constrains("depreciation_move_ids")
-    def _check_depreciations(self):
-        for asset in self:
-            if (
-                asset.depreciation_state == "open"
-                and asset.depreciation_move_ids
-                and not asset.currency_id.is_zero(
-                    asset.depreciation_move_ids._sorted_by_date()[
-                        -1
-                    ].asset_remaining_value
-                )
-            ):
-                raise UserError(
-                    _("The remaining value on the last depreciation line must be 0")
-                )
+    def action_asset_modify(self):
+        self.check_singleton()
+        new_wizard = self.env["asset.modify"].create(
+            {
+                "asset_id": self.id,
+                "modify_action": "resume"
+                if self.env.context.get("resume_after_pause")
+                else "dispose",
+            }
+        )
+        return {
+            "name": _("Modify Asset"),
+            "view_mode": "form",
+            "res_model": "asset.modify",
+            "type": "ir.actions.act_window",
+            "target": "new",
+            "res_id": new_wizard.id,
+            "context": self.env.context,
+        }
 
-    @api.constrains("depreciation_state", "company_id", "date_prorata")
-    def _check_board_has_company_and_start(self):
-        for asset in self.filtered("depreciation_state"):
-            if not asset.company_id:
-                raise ValidationError(
-                    _("%(asset)s depreciates, so it needs a company.", asset=asset.name)
-                )
-            if not asset.date_prorata:
-                raise ValidationError(
-                    _(
-                        "%(asset)s depreciates, so it needs a prorata date.",
-                        asset=asset.name,
-                    )
-                )
+    def action_save_profile(self):
+        self.check_singleton()
+        profile = self.env["account.depreciation.profile"].create(
+            self._get_profile_values()
+        )
+        self.depreciation_profile_id = profile
+        return {
+            "name": _("Depreciation Profile"),
+            "type": "ir.actions.act_window",
+            "res_model": "account.depreciation.profile",
+            "res_id": profile.id,
+            "views": [(False, "form")],
+        }
 
-    @api.constrains("original_move_line_ids")
-    def _check_single_source_account(self):
-        for asset in self:
-            if len(asset.original_move_line_ids.account_id) > 1:
-                raise ValidationError(
-                    _("All the lines should be from the same account")
-                )
-
-    @api.constrains("original_move_line_ids")
-    def _check_related_purchase(self):
-        for asset in self:
-            if asset.original_move_line_ids and asset.value_purchase == 0:
-                raise UserError(
-                    _(
-                        "You cannot create an asset from lines containing credit and debit on the account or with a null amount"
-                    )
-                )
-            if asset.depreciation_state not in (False, "draft"):
-                raise UserError(
-                    _(
-                        "You cannot add or remove bills when the asset is already running or closed."
-                    )
-                )
-
-    @api.ondelete(at_uninstall=True)
-    def _unlink_if_model_or_draft(self):
-        for asset in self:
-            if asset.depreciation_state in ["open", "paused", "close"]:
-                raise UserError(
-                    _(
-                        "You cannot delete a document that is in %s state.",
-                        dict(
-                            self._fields["depreciation_state"]._description_selection(
-                                self.env
-                            )
-                        ).get(asset.depreciation_state),
-                    )
-                )
-
-            posted_amount = len(
-                asset.depreciation_move_ids.filtered(lambda x: x.state == "posted")
+    def action_dispose(self):
+        running = self.filtered(lambda asset: asset.depreciation_state in RUNNING_BOARD)
+        if not running:
+            return super().action_dispose()
+        if len(self) == 1:
+            return self.action_asset_modify()
+        raise UserError(
+            _(
+                "%(assets)s: a running depreciation board is disposed one asset at a time, through its Dispose or Sell action.",
+                assets=", ".join(running.mapped("display_name")),
             )
-            if posted_amount > 0:
-                raise UserError(
-                    _(
-                        "You cannot delete an asset linked to posted entries."
-                        "\nYou should either confirm the asset, then, sell or dispose of it,"
-                        " or cancel the linked journal entries."
-                    )
-                )
+        )
 
-    def unlink(self):
-        bodies = {}
-        orphaned_moves = self.env["account.move"]
+    def action_compute_depreciation(self):
+        return self._create_depreciation_entries()
+
+    def action_confirm(self):
+        self.write({"depreciation_state": "open"})
+        self.filtered(lambda asset: asset.state == "draft")._transition("in_service")
+        self._log_asset_created()
+        try:
+            with self.env.cr.savepoint():
+                boardless = self.filtered(lambda asset: not asset.depreciation_move_ids)
+                if boardless:
+                    boardless._create_depreciation_entries()
+                self._check_depreciations()
+                unposted = self.depreciation_move_ids.filtered(
+                    lambda move: move.state != "posted"
+                )
+                if unposted:
+                    unposted._post()
+        except psycopg.errors.CheckViolation:
+            raise ValidationError(
+                _(
+                    "At least one asset (%s) couldn't be set as running because it lacks any required information",
+                    ", ".join(self.mapped("name")),
+                )
+            ) from None
+
+        for asset in self.filtered(
+            lambda asset: asset.account_asset_id.create_asset == "no"
+        ):
+            asset._post_non_deductible_tax_value()
+
+    def action_cancel(self):
         for asset in self:
-            for line in asset.original_move_line_ids:
-                if line.name:
-                    body = _(
-                        "A document linked to %(move_line_name)s has been deleted: %(link)s",
-                        move_line_name=line.name,
-                        link=asset._get_html_link(),
+            posted_moves = asset.depreciation_move_ids.filtered(
+                lambda m: m._is_effective_depreciation()
+            )
+            if posted_moves:
+                depreciation_change = sum(
+                    posted_moves.line_ids.mapped(
+                        lambda l: (
+                            l.debit
+                            if l.account_id == asset.account_depreciation_expense_id  # noqa: B023  the lambda runs inside this iteration
+                            else 0.0
+                        )
                     )
-                else:
-                    body = _(
-                        "A document linked to this move has been deleted: %s",
-                        asset._get_html_link(),
-                    )
-                bodies[line.move_id.id] = (
-                    bodies[line.move_id.id] + Markup("<br>") + body
-                    if line.move_id.id in bodies
-                    else body
                 )
-                if not (line.move_id.capitalised_asset_ids - self):
-                    orphaned_moves |= line.move_id
-        if bodies:
-            self.env["account.move"].browse(bodies)._message_log_batch(bodies=bodies)
-        orphaned_moves.asset_move_type = False
-        return super().unlink()
+                acc_depreciation_change = sum(
+                    posted_moves.line_ids.mapped(
+                        lambda l: (
+                            l.credit
+                            if l.account_id == asset.account_depreciation_id  # noqa: B023  the lambda runs inside this iteration
+                            else 0.0
+                        )
+                    )
+                )
+                entries = Markup("<br>").join(
+                    posted_moves._sorted_by_date().mapped(
+                        lambda m: (
+                            f"{m.ref} - {m.date} - "
+                            f"{formatLang(self.env, m.depreciation_value, currency_obj=m.currency_id)} - "
+                            f"{m.name}"
+                        )
+                    )
+                )
+                asset._cancel_future_moves(datetime.date.min)
+                msg = (
+                    _("Asset Cancelled")
+                    + Markup("<br>")
+                    + _(
+                        "The account %(exp_acc)s has been credited by %(exp_delta)s, "
+                        "while the account %(dep_acc)s has been debited by %(dep_delta)s. "
+                        "This corresponds to %(move_count)s cancelled %(word)s:",
+                        exp_acc=asset.account_depreciation_expense_id.display_name,
+                        exp_delta=formatLang(
+                            self.env,
+                            depreciation_change,
+                            currency_obj=asset.currency_id,
+                        ),
+                        dep_acc=asset.account_depreciation_id.display_name,
+                        dep_delta=formatLang(
+                            self.env,
+                            acc_depreciation_change,
+                            currency_obj=asset.currency_id,
+                        ),
+                        move_count=len(posted_moves),
+                        word=_("entries") if len(posted_moves) > 1 else _("entry"),
+                    )
+                    + Markup("<br>")
+                    + entries
+                )
+                asset._message_log(body=msg)
+            else:
+                asset._message_log(body=_("Asset Cancelled"))
+            asset.depreciation_move_ids.filtered(
+                lambda m: m.state == "draft"
+            ).with_context(force_delete=True).unlink()
+            asset.depreciation_paused_days = 0
+            asset.write({"depreciation_state": "cancelled"})
 
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default)
-        for asset, vals in zip(self, vals_list, strict=True):
-            if not asset.depreciation_state:
-                continue
-            vals["name"] = _("%s (copy)", asset.name)
-            vals["account_asset_id"] = asset.account_asset_id.id
-            vals["value_original"] = asset.value_original
-        return vals_list
+    def action_reset_to_draft(self):
+        self.write({"depreciation_state": "draft"})
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        vals_list = [dict(vals) for vals in vals_list]
-        board_context = self.env.context.get("default_depreciation_state")
-        fallback_kind = None
-        for vals in vals_list:
-            if not (board_context or any(vals.get(field) for field in BOARD_FIELDS)):
-                continue
-            state = vals.get("depreciation_state")
-            if state and state != "draft":
-                raise UserError(
-                    _(
-                        "An asset is created in draft and confirmed afterwards; it cannot "
-                        "be created directly in the %(state)s state.",
-                        state=state,
+    def action_reopen(self):
+        self.check_singleton()
+        if self.depreciation_move_ids and not self.currency_id.is_zero(
+            self.depreciation_move_ids._sorted_by_date()[-1].asset_remaining_value
+        ):
+            self.env["asset.modify"].create(
+                {"asset_id": self.id, "name": _("Reset to running")}
+            ).action_modify()
+        vals = {"depreciation_state": "open", "value_gain_on_sale": 0}
+        if self.state == "disposed":
+            vals.update(state="in_service", date_disposal=False, active=True)
+        self.with_context(board_lifecycle=True).write(vals)
+
+    def action_resume(self):
+        self.check_singleton()
+        return self.with_context(resume_after_pause=True).action_asset_modify()
+
+    def action_open_depreciation(self):
+        self.check_singleton()
+        return self.open_asset(["form"])
+
+    def _create_depreciation_entries(self, date=False):
+        self.depreciation_move_ids.filtered(
+            lambda mv: mv.state == "draft" and (mv.date >= date if date else True)
+        ).unlink()
+
+        new_depreciation_moves_data = []
+        with self._shared_fiscalyear_dates():
+            for asset in self:
+                new_depreciation_moves_data.extend(asset._recompute_board(date))
+
+        new_depreciation_moves = self.env["account.move"].create(
+            new_depreciation_moves_data
+        )
+        new_depreciation_moves_to_post = new_depreciation_moves.filtered(
+            lambda move: move.depreciation_asset_id.depreciation_state == "open"
+        )
+        new_depreciation_moves_to_post._post()
+
+    @contextmanager
+    def _shared_fiscalyear_dates(self):
+        cache = self.env.cr.cache
+        if self.FISCALYEAR_MEMO_KEY in cache:
+            yield
+            return
+        cache[self.FISCALYEAR_MEMO_KEY] = {}
+        try:
+            yield
+        finally:
+            cache.pop(self.FISCALYEAR_MEMO_KEY, None)
+
+    def _add_depreciation_line(
+        self, amount, beginning_depreciation_date, depreciation_date, days_depreciated
+    ):
+        self.check_singleton()
+        AccountMove = self.env["account.move"]
+
+        return AccountMove.create(
+            AccountMove._prepare_move_for_asset_depreciation(
+                {
+                    "amount": amount,
+                    "asset_id": self,
+                    "depreciation_beginning_date": beginning_depreciation_date,
+                    "date": depreciation_date,
+                    "asset_number_days": days_depreciated,
+                }
+            )
+        )
+
+    @api.model
+    def _create_from_plans(self, plans):
+        # A plan's board lands on the asset the bill line names, on a component of
+        # it, or on a new asset; every further board of the same line is a
+        # component of the one that landed first.
+        Asset = self.with_context(clean_context(self.env.context))
+        landed = {}
+        assets = self.browse()
+        for plan in plans:
+            named = plan["named_asset"]
+            vals = dict(plan["vals"])
+            root = landed.get(plan["unit"])
+            if plan["component_of_unit"] and root:
+                vals["parent_id"] = root.id
+                vals["name"] = self._component_name(root, plan["profile"])
+                asset = Asset.create(vals)
+            elif named and not named.depreciation_state:
+                named.write({**vals, "depreciation_state": "draft"})
+                asset = named
+            elif named:
+                vals["parent_id"] = named.id
+                vals["name"] = self._component_name(named, plan["profile"])
+                asset = Asset.create(vals)
+            else:
+                asset = Asset.create(vals)
+            landed.setdefault(plan["unit"], asset)
+            assets |= asset
+            plan["asset"] = asset
+        to_validate = self.browse()
+        for plan in plans:
+            asset = plan["asset"]
+            if plan["profile"] and plan["validate"]:
+                to_validate |= asset
+            if plan["move"]:
+                asset.message_post(
+                    body=_(
+                        "Asset created from invoice: %s", plan["move"]._get_html_link()
                     )
                 )
-            if not vals.get("name"):
-                vals["name"] = self._get_name_from_lines(vals)
-            if not vals.get("name"):
-                raise UserError(_("An asset needs a name."))
-            vals["depreciation_state"] = "draft"
-            if not vals.get("kind_id"):
-                profile = self.env["account.depreciation.profile"].browse(
-                    vals.get("depreciation_profile_id")
+                asset._post_non_deductible_tax_value()
+        to_validate.action_confirm()
+        return assets
+
+    def _create_move_before_date(self, date):
+        all_move_dates_before_date = self.depreciation_move_ids.filtered(
+            lambda x: x.date <= date and x._is_effective_depreciation()
+        ).mapped("date")
+
+        beginning_fiscal_year = (
+            self._get_fiscalyear_dates(date).get("date_from")
+            if self.depreciation_method != "linear"
+            else False
+        )
+        if beginning_fiscal_year:
+            beginning_fiscal_year = max(beginning_fiscal_year, self.date_prorata_paused)
+        first_fiscalyear_move = self.env["account.move"]
+        if all_move_dates_before_date:
+            last_move_date_not_reversed = max(all_move_dates_before_date)
+            future_moves_beginning_date = self.depreciation_move_ids.filtered(
+                lambda m: (
+                    m.date > last_move_date_not_reversed
+                    and (m._is_effective_depreciation() or m.state == "draft")
                 )
-                if not profile.kind_id and fallback_kind is None:
-                    fallback_kind = self.env.ref(
-                        "account_depreciation.kind_fixed_asset"
+            ).mapped("asset_depreciation_beginning_date")
+            beginning_depreciation_date = (
+                min(future_moves_beginning_date)
+                if future_moves_beginning_date
+                else self.date_prorata_paused
+            )
+
+            if self.depreciation_method != "linear":
+                first_moves = self.depreciation_move_ids.filtered(
+                    lambda m: (
+                        m.asset_depreciation_beginning_date >= beginning_fiscal_year
+                        and (m._is_effective_depreciation() or m.state == "draft")
                     )
-                vals["kind_id"] = (profile.kind_id or fallback_kind).id
-        new_recs = super(
-            ResourceAsset, self.with_context(mail_create_nolog=True)
-        ).create(vals_list)
-        for record, vals in zip(new_recs, vals_list, strict=True):
-            requested = vals.get("value_original")
-            if requested is not None and record.currency_id.compare_amounts(
-                record.value_original, requested
+                ).sorted(lambda m: (m.asset_depreciation_beginning_date, m.id))
+                first_fiscalyear_move = next(iter(first_moves), first_fiscalyear_move)
+        else:
+            beginning_depreciation_date = self.date_prorata_paused
+
+        residual_declining = (
+            first_fiscalyear_move.asset_remaining_value
+            + first_fiscalyear_move.depreciation_value
+        )
+        self._cancel_future_moves(date)
+
+        imported_amount = (
+            self.value_depreciated_import if not all_move_dates_before_date else 0
+        )
+        value_depreciable_residual = (
+            self.value_depreciable_residual + self.value_depreciated_import
+            if not all_move_dates_before_date
+            else self.value_depreciable_residual
+        )
+        residual_declining = residual_declining or value_depreciable_residual
+
+        last_day_asset = self._get_last_day_asset()
+        lifetime_left = self._get_delta_days(
+            beginning_depreciation_date, last_day_asset
+        )
+        days_depreciated, amount = self._get_board_amount(
+            self.value_depreciable_residual,
+            beginning_depreciation_date,
+            date,
+            lifetime_left,
+            residual_declining,
+            beginning_fiscal_year,
+            LinearRecompute(
+                start_date=beginning_depreciation_date,
+                residual=value_depreciable_residual,
+                lifetime_left=lifetime_left,
+            ),
+        )
+
+        if abs(imported_amount) <= abs(amount):
+            amount -= imported_amount
+        if not float_is_zero(amount, precision_rounding=self.currency_id.rounding):
+            new_line = self._add_depreciation_line(
+                amount, beginning_depreciation_date, date, days_depreciated
+            )
+            new_line._post()
+
+    def _cancel_future_moves(self, date):
+        for asset in self:
+            obsolete_moves = asset.depreciation_move_ids.filtered(
+                lambda m: (
+                    m.state == "draft"
+                    or (m._is_effective_depreciation() and m.date > date)
+                )
+            )
+            obsolete_moves._unlink_or_reverse()
+
+    @api.model
+    def _component_name(self, parent, profile):
+        if not profile:
+            return parent.name
+        return f"{parent.name} — {profile.name}"
+
+    def _clamp_to_original_sign(self, value):
+        self.check_singleton()
+        if self.currency_id.compare_amounts(self.value_original, 0) > 0:
+            return max(value, 0)
+        return min(value, 0)
+
+    def _close(self, invoice_line_ids, date=None, message=None):
+        self.check_singleton()
+        date_disposal = date or fields.Date.today()
+        if date_disposal <= self.company_id._get_user_fiscal_lock_date(
+            self.depreciation_journal_id
+        ):
+            raise UserError(_("You cannot dispose of an asset before the lock date."))
+        if invoice_line_ids and self.increase_ids.filtered(
+            lambda a: (
+                a.depreciation_state in ("draft", "open")
+                or a.value_depreciable_residual > 0
+            )
+        ):
+            raise UserError(
+                _(
+                    "You cannot automate the journal entry for an asset that has a running gross increase. Please use 'Dispose' on the increase(s)."
+                )
+            )
+        full_asset = (self + self.increase_ids).filtered(
+            lambda asset: asset.depreciation_state not in ("close", "cancelled")
+        )
+        full_asset.depreciation_state = "close"
+        move_ids = full_asset._get_disposal_moves(
+            [
+                invoice_line_ids if asset == self else self.env["account.move.line"]
+                for asset in full_asset
+            ],
+            date_disposal,
+        )
+        if invoice_line_ids:
+            invoice_moves = invoice_line_ids.move_id
+            invoice_links = Markup(", ").join(
+                move._get_html_link() for move in invoice_moves
+            )
+            asset_body = self.env._(
+                "Asset sold. %(message)s See %(invoice_links)s",
+                message=message or "",
+                invoice_links=invoice_links,
+            )
+            invoice_body = self.env._("Asset sold: %s", self._get_html_link())
+            invoice_moves._message_log_batch(
+                bodies={invoice.id: invoice_body for invoice in invoice_moves}
+            )
+        else:
+            asset_body = self.env._(
+                "Asset disposed. %(message)s",
+                message=message or "",
+            )
+
+        full_asset._message_log_batch(
+            bodies={asset.id: asset_body for asset in full_asset}
+        )
+        full_asset.with_context(board_lifecycle=True).write(
+            {"state": "disposed", "active": False}
+        )
+
+        selling_price = abs(
+            sum(invoice_line.balance for invoice_line in invoice_line_ids)
+        )
+        self.value_gain_on_sale = self.currency_id.round(
+            selling_price - self.value_book
+        )
+
+        if move_ids:
+            name = _("Disposal Move")
+            view_mode = "form"
+            if len(move_ids) > 1:
+                name = _("Disposal Moves")
+                view_mode = "list,form"
+            return {
+                "name": name,
+                "view_mode": view_mode,
+                "res_model": "account.move",
+                "type": "ir.actions.act_window",
+                "target": "current",
+                "res_id": move_ids[0],
+                "domain": [("id", "in", move_ids)],
+            }
+        return None
+
+    def _dispose(self, date=None):
+        running = self.filtered(lambda asset: asset.depreciation_state in RUNNING_BOARD)
+        for asset in running:
+            asset._check_disposal_accounts()
+            asset._close(self.env["account.move.line"], date)
+        return super(ResourceAsset, self - running)._dispose(date)
+
+    def _log_asset_created(self):
+        tracked_fnames = list(self.CREATION_TRACKED_FNAMES)
+        ref_tracked_fields = self.fields_get(tracked_fnames)
+        for asset in self:
+            tracked_fields = ref_tracked_fields.copy()
+            if asset.depreciation_method == "linear":
+                del tracked_fields["depreciation_factor"]
+            _dummy, tracking_value_ids = asset._mail_track(
+                tracked_fields, dict.fromkeys(tracked_fnames)
+            )
+            asset.message_post(
+                body=_("Asset created"), tracking_value_ids=tracking_value_ids
+            )
+            move_body = _("An asset has been created for this move: %s") % (
+                asset._get_html_link()
+            )
+            for move_id in asset.original_move_line_ids.mapped("move_id"):
+                move_id.message_post(body=move_body)
+
+    def open_asset(self, view_mode):
+        if len(self) == 1:
+            view_mode = ["form"]
+        views = [v for v in self._get_depreciation_views() if v[1] in view_mode]
+        ctx = dict(self.env.context)
+        ctx.pop("default_move_type", None)
+        return {
+            "name": _("Asset"),
+            "view_mode": ",".join(view_mode),
+            "type": "ir.actions.act_window",
+            "res_id": self.id if len(self) == 1 else False,
+            "res_model": "resource.asset",
+            "views": views,
+            "domain": [("id", "in", self.ids)],
+            "context": ctx,
+        }
+
+    def open_entries(self):
+        return {
+            "name": _("Journal Entries"),
+            "view_mode": "list,form",
+            "res_model": "account.move",
+            "search_view_id": [
+                self.env.ref("account.view_account_move_filter").id,
+                "search",
+            ],
+            "views": [
+                (self.env.ref("account.view_move_tree").id, "list"),
+                (False, "form"),
+            ],
+            "type": "ir.actions.act_window",
+            "domain": [("id", "in", self.depreciation_move_ids.ids)],
+            "context": dict(self.env.context, create=False),
+        }
+
+    def open_related_entries(self):
+        return {
+            "name": _("Journal Items"),
+            "view_mode": "list,form",
+            "res_model": "account.move.line",
+            "view_id": False,
+            "type": "ir.actions.act_window",
+            "domain": [("id", "in", self.original_move_line_ids.ids)],
+        }
+
+    def open_increase(self):
+        result = {
+            "name": _("Gross Increase"),
+            "view_mode": "list,form",
+            "res_model": "resource.asset",
+            "context": {**self.env.context, "create": False},
+            "view_id": False,
+            "type": "ir.actions.act_window",
+            "domain": [("id", "in", self.increase_ids.ids)],
+            "views": self._get_depreciation_views(),
+        }
+        if len(self.increase_ids) == 1:
+            result["views"] = self._get_depreciation_views()[1:]
+            result["res_id"] = self.increase_ids.id
+        return result
+
+    def open_increased_asset(self):
+        return {
+            "name": _("Parent Asset"),
+            "view_mode": "form",
+            "res_model": "resource.asset",
+            "type": "ir.actions.act_window",
+            "res_id": self.increased_asset_id.id,
+            "views": self._get_depreciation_views()[1:],
+        }
+
+    def _pause(self, date, message=None):
+        self.check_singleton()
+        self._create_move_before_date(date)
+        self.write({"depreciation_state": "paused"})
+        self.message_post(body=_("Asset paused. %s", message or ""))
+
+    def _recompute_board(self, start_depreciation_date=False):
+        self.check_singleton()
+        posted_depreciation_move_ids = self.depreciation_move_ids.filtered(
+            lambda mv: mv.state == "posted" and not mv.asset_value_change
+        )._sorted_by_date()
+
+        imported_amount = self.value_depreciated_import
+        residual_amount = self.value_depreciable_residual - sum(
+            self.depreciation_move_ids.filtered(lambda mv: mv.state == "draft").mapped(
+                "depreciation_value"
+            )
+        )
+        if not posted_depreciation_move_ids:
+            residual_amount += imported_amount
+        residual_declining = residual_amount
+        start_depreciation_date = start_yearly_period = (
+            start_depreciation_date or self.date_prorata_paused
+        )
+
+        last_day_asset = self._get_last_day_asset()
+        final_depreciation_date = self._get_end_period_date(last_day_asset)
+        linear_recompute = LinearRecompute(
+            start_date=start_depreciation_date,
+            residual=residual_amount,
+            lifetime_left=self._get_delta_days(start_depreciation_date, last_day_asset),
+        )
+
+        depreciation_move_values = []
+        if not float_is_zero(
+            self.value_depreciable_residual,
+            precision_rounding=self.currency_id.rounding,
+        ):
+            while (
+                not self.currency_id.is_zero(residual_amount)
+                and start_depreciation_date < final_depreciation_date
             ):
-                record.value_original = requested
-        return new_recs
+                period_end_depreciation_date = self._get_end_period_date(
+                    start_depreciation_date
+                )
+                period_end_fiscalyear_date = self._get_fiscalyear_dates(
+                    period_end_depreciation_date
+                ).get("date_to")
+                lifetime_left = self._get_delta_days(
+                    start_depreciation_date, last_day_asset
+                )
+
+                days, amount = self._get_board_amount(
+                    residual_amount,
+                    start_depreciation_date,
+                    period_end_depreciation_date,
+                    lifetime_left,
+                    residual_declining,
+                    start_yearly_period,
+                    linear_recompute,
+                )
+                residual_amount -= amount
+
+                if not posted_depreciation_move_ids:
+                    if abs(imported_amount) <= abs(amount):
+                        amount -= imported_amount
+                        imported_amount = 0
+                    else:
+                        imported_amount -= amount
+                        amount = 0
+
+                if (
+                    self.depreciation_method == "degressive_then_linear"
+                    and final_depreciation_date < period_end_depreciation_date
+                ):
+                    period_end_depreciation_date = final_depreciation_date
+
+                if not float_is_zero(
+                    amount, precision_rounding=self.currency_id.rounding
+                ):
+                    depreciation_move_values.append(
+                        self.env["account.move"]._prepare_move_for_asset_depreciation(
+                            {
+                                "amount": amount,
+                                "asset_id": self,
+                                "depreciation_beginning_date": start_depreciation_date,
+                                "date": period_end_depreciation_date,
+                                "asset_number_days": days,
+                            }
+                        )
+                    )
+
+                if period_end_depreciation_date == period_end_fiscalyear_date:
+                    start_yearly_period = self._get_fiscalyear_dates(
+                        period_end_depreciation_date + relativedelta(days=1)
+                    ).get("date_from")
+                    residual_declining = residual_amount
+
+                start_depreciation_date = period_end_depreciation_date + relativedelta(
+                    days=1
+                )
+
+        return depreciation_move_values
+
+    @api.model
+    def _get_depreciation_views(self):
+        return [
+            (self.env.ref("account_depreciation.view_account_asset_tree").id, "list"),
+            (self.env.ref("account_depreciation.view_account_asset_form").id, "form"),
+        ]
+
+    def _get_fiscalyear_dates(self, date):
+        self.check_singleton()
+        memo = self.env.cr.cache.get(self.FISCALYEAR_MEMO_KEY)
+        if memo is None:
+            return self.company_id.compute_fiscalyear_dates(date)
+        key = (self.company_id.id, date)
+        if key not in memo:
+            memo[key] = self.company_id.compute_fiscalyear_dates(date)
+        return dict(memo[key])
+
+    def _get_end_period_date(self, start_depreciation_date):
+        self.check_singleton()
+        fiscalyear_date = self._get_fiscalyear_dates(start_depreciation_date).get(
+            "date_to"
+        )
+        period_end_depreciation_date = (
+            fiscalyear_date
+            if start_depreciation_date <= fiscalyear_date
+            else fiscalyear_date + relativedelta(years=1)
+        )
+
+        if self.depreciation_period == "1":
+            max_day_in_month = end_of(
+                datetime.date(
+                    start_depreciation_date.year, start_depreciation_date.month, 1
+                ),
+                "month",
+            ).day
+            period_end_depreciation_date = min(
+                start_depreciation_date.replace(day=max_day_in_month),
+                period_end_depreciation_date,
+            )
+        return period_end_depreciation_date
+
+    def _get_delta_days(self, start_date, end_date):
+        self.check_singleton()
+        if self.depreciation_prorata == "daily_computation":
+            return (end_date - start_date).days + 1
+        else:
+            start_date_days_month = end_of(start_date, "month").day
+            start_prorata = (
+                start_date_days_month - start_date.day + 1
+            ) / start_date_days_month
+            end_prorata = end_date.day / end_of(end_date, "month").day
+            return sum(
+                (
+                    start_prorata * DAYS_PER_MONTH,
+                    end_prorata * DAYS_PER_MONTH,
+                    (end_date.year - start_date.year) * DAYS_PER_YEAR,
+                    (end_date.month - start_date.month - 1) * DAYS_PER_MONTH,
+                )
+            )
+
+    def _get_last_day_asset(self):
+        this = self.increased_asset_id or self
+        return this.date_prorata_paused + relativedelta(
+            months=int(this.depreciation_period) * this.depreciation_duration, days=-1
+        )
+
+    def _get_profile_values(self):
+        self.check_singleton()
+        return {
+            "name": self.name,
+            "company_id": self.company_id.id,
+            "depreciation_method": self.depreciation_method,
+            "depreciation_duration": self.depreciation_duration,
+            "depreciation_period": self.depreciation_period,
+            "depreciation_factor": self.depreciation_factor,
+            "depreciation_prorata": self.depreciation_prorata,
+            "analytic_distribution": self.analytic_distribution,
+            "account_asset_id": self.account_asset_id.id,
+            "account_depreciation_id": self.account_depreciation_id.id,
+            "account_depreciation_expense_id": self.account_depreciation_expense_id.id,
+            "depreciation_journal_id": self.depreciation_journal_id.id,
+        }
 
     @api.model
     def _get_name_from_lines(self, vals):
@@ -891,66 +1641,6 @@ class ResourceAsset(models.Model):
                 line_ids.append(command[1])
         lines = self.env["account.move.line"].browse(line_ids)
         return lines[:1].name or ""
-
-    PROPAGATED_TO_MOVES = frozenset(
-        {
-            "analytic_distribution",
-            "account_depreciation_id",
-            "account_depreciation_expense_id",
-            "depreciation_journal_id",
-        }
-    )
-
-    def write(self, vals):
-        if not self.env.context.get("board_lifecycle"):
-            self._check_lifecycle_write(vals)
-        propagated = self.PROPAGATED_TO_MOVES & vals.keys()
-        if not propagated:
-            return super().write(vals)
-        previous_accounts = {
-            asset.id: (
-                asset.account_depreciation_id,
-                asset.account_depreciation_expense_id,
-            )
-            for asset in self
-        }
-        result = super().write(vals)
-
-        AccountMoveLine = self.env["account.move.line"]
-        analytic_lines = AccountMoveLine
-        depreciation_lines = AccountMoveLine
-        expense_lines = AccountMoveLine
-        rejournaled_moves = self.env["account.move"]
-        for asset in self:
-            lock_date = asset.company_id._get_user_fiscal_lock_date(
-                asset.depreciation_journal_id
-            )
-            depreciation_account, expense_account = previous_accounts[asset.id]
-            for move in asset.depreciation_move_ids:
-                if move.state == "draft" and "analytic_distribution" in propagated:
-                    analytic_lines |= move.line_ids
-                if move.date <= lock_date:
-                    continue
-                if "account_depreciation_id" in propagated:
-                    depreciation_lines |= move.line_ids.filtered(
-                        lambda line: line.account_id == depreciation_account  # noqa: B023  the lambda runs inside this iteration
-                    )
-                if "account_depreciation_expense_id" in propagated:
-                    expense_lines |= move.line_ids.filtered(
-                        lambda line: line.account_id == expense_account  # noqa: B023  the lambda runs inside this iteration
-                    )
-                if "depreciation_journal_id" in propagated:
-                    rejournaled_moves |= move
-
-        if analytic_lines:
-            analytic_lines.analytic_distribution = vals["analytic_distribution"]
-        if depreciation_lines:
-            depreciation_lines.account_id = vals["account_depreciation_id"]
-        if expense_lines:
-            expense_lines.account_id = vals["account_depreciation_expense_id"]
-        if rejournaled_moves:
-            rejournaled_moves.journal_id = vals["depreciation_journal_id"]
-        return result
 
     def _get_linear_amount(
         self, days_before_period, days_until_period_end, value_depreciable
@@ -1116,795 +1806,6 @@ class ResourceAsset(models.Model):
 
         return number_days, self.currency_id.round(amount)
 
-    def _create_depreciation_entries(self, date=False):
-        self.depreciation_move_ids.filtered(
-            lambda mv: mv.state == "draft" and (mv.date >= date if date else True)
-        ).unlink()
-
-        new_depreciation_moves_data = []
-        with self._shared_fiscalyear_dates():
-            for asset in self:
-                new_depreciation_moves_data.extend(asset._recompute_board(date))
-
-        new_depreciation_moves = self.env["account.move"].create(
-            new_depreciation_moves_data
-        )
-        new_depreciation_moves_to_post = new_depreciation_moves.filtered(
-            lambda move: move.depreciation_asset_id.depreciation_state == "open"
-        )
-        new_depreciation_moves_to_post._post()
-
-    def _recompute_board(self, start_depreciation_date=False):
-        self.check_singleton()
-        posted_depreciation_move_ids = self.depreciation_move_ids.filtered(
-            lambda mv: mv.state == "posted" and not mv.asset_value_change
-        )._sorted_by_date()
-
-        imported_amount = self.value_depreciated_import
-        residual_amount = self.value_depreciable_residual - sum(
-            self.depreciation_move_ids.filtered(lambda mv: mv.state == "draft").mapped(
-                "depreciation_value"
-            )
-        )
-        if not posted_depreciation_move_ids:
-            residual_amount += imported_amount
-        residual_declining = residual_amount
-        start_depreciation_date = start_yearly_period = (
-            start_depreciation_date or self.date_prorata_paused
-        )
-
-        last_day_asset = self._get_last_day_asset()
-        final_depreciation_date = self._get_end_period_date(last_day_asset)
-        linear_recompute = LinearRecompute(
-            start_date=start_depreciation_date,
-            residual=residual_amount,
-            lifetime_left=self._get_delta_days(start_depreciation_date, last_day_asset),
-        )
-
-        depreciation_move_values = []
-        if not float_is_zero(
-            self.value_depreciable_residual,
-            precision_rounding=self.currency_id.rounding,
-        ):
-            while (
-                not self.currency_id.is_zero(residual_amount)
-                and start_depreciation_date < final_depreciation_date
-            ):
-                period_end_depreciation_date = self._get_end_period_date(
-                    start_depreciation_date
-                )
-                period_end_fiscalyear_date = self._get_fiscalyear_dates(
-                    period_end_depreciation_date
-                ).get("date_to")
-                lifetime_left = self._get_delta_days(
-                    start_depreciation_date, last_day_asset
-                )
-
-                days, amount = self._get_board_amount(
-                    residual_amount,
-                    start_depreciation_date,
-                    period_end_depreciation_date,
-                    lifetime_left,
-                    residual_declining,
-                    start_yearly_period,
-                    linear_recompute,
-                )
-                residual_amount -= amount
-
-                if not posted_depreciation_move_ids:
-                    if abs(imported_amount) <= abs(amount):
-                        amount -= imported_amount
-                        imported_amount = 0
-                    else:
-                        imported_amount -= amount
-                        amount = 0
-
-                if (
-                    self.depreciation_method == "degressive_then_linear"
-                    and final_depreciation_date < period_end_depreciation_date
-                ):
-                    period_end_depreciation_date = final_depreciation_date
-
-                if not float_is_zero(
-                    amount, precision_rounding=self.currency_id.rounding
-                ):
-                    depreciation_move_values.append(
-                        self.env["account.move"]._prepare_move_for_asset_depreciation(
-                            {
-                                "amount": amount,
-                                "asset_id": self,
-                                "depreciation_beginning_date": start_depreciation_date,
-                                "date": period_end_depreciation_date,
-                                "asset_number_days": days,
-                            }
-                        )
-                    )
-
-                if period_end_depreciation_date == period_end_fiscalyear_date:
-                    start_yearly_period = self._get_fiscalyear_dates(
-                        period_end_depreciation_date + relativedelta(days=1)
-                    ).get("date_from")
-                    residual_declining = residual_amount
-
-                start_depreciation_date = period_end_depreciation_date + relativedelta(
-                    days=1
-                )
-
-        return depreciation_move_values
-
-    FISCALYEAR_MEMO_KEY = "account_depreciation.fiscalyear_dates"
-
-    @contextmanager
-    def _shared_fiscalyear_dates(self):
-        cache = self.env.cr.cache
-        if self.FISCALYEAR_MEMO_KEY in cache:
-            yield
-            return
-        cache[self.FISCALYEAR_MEMO_KEY] = {}
-        try:
-            yield
-        finally:
-            cache.pop(self.FISCALYEAR_MEMO_KEY, None)
-
-    def _get_fiscalyear_dates(self, date):
-        self.check_singleton()
-        memo = self.env.cr.cache.get(self.FISCALYEAR_MEMO_KEY)
-        if memo is None:
-            return self.company_id.compute_fiscalyear_dates(date)
-        key = (self.company_id.id, date)
-        if key not in memo:
-            memo[key] = self.company_id.compute_fiscalyear_dates(date)
-        return dict(memo[key])
-
-    def _get_end_period_date(self, start_depreciation_date):
-        self.check_singleton()
-        fiscalyear_date = self._get_fiscalyear_dates(start_depreciation_date).get(
-            "date_to"
-        )
-        period_end_depreciation_date = (
-            fiscalyear_date
-            if start_depreciation_date <= fiscalyear_date
-            else fiscalyear_date + relativedelta(years=1)
-        )
-
-        if self.depreciation_period == "1":
-            max_day_in_month = end_of(
-                datetime.date(
-                    start_depreciation_date.year, start_depreciation_date.month, 1
-                ),
-                "month",
-            ).day
-            period_end_depreciation_date = min(
-                start_depreciation_date.replace(day=max_day_in_month),
-                period_end_depreciation_date,
-            )
-        return period_end_depreciation_date
-
-    def _get_delta_days(self, start_date, end_date):
-        self.check_singleton()
-        if self.depreciation_prorata == "daily_computation":
-            return (end_date - start_date).days + 1
-        else:
-            start_date_days_month = end_of(start_date, "month").day
-            start_prorata = (
-                start_date_days_month - start_date.day + 1
-            ) / start_date_days_month
-            end_prorata = end_date.day / end_of(end_date, "month").day
-            return sum(
-                (
-                    start_prorata * DAYS_PER_MONTH,
-                    end_prorata * DAYS_PER_MONTH,
-                    (end_date.year - start_date.year) * DAYS_PER_YEAR,
-                    (end_date.month - start_date.month - 1) * DAYS_PER_MONTH,
-                )
-            )
-
-    def _get_last_day_asset(self):
-        this = self.increased_asset_id or self
-        return this.date_prorata_paused + relativedelta(
-            months=int(this.depreciation_period) * this.depreciation_duration, days=-1
-        )
-
-    def action_view_linked_assets(self):
-        return self.linked_assets_ids.open_asset(["list", "form"])
-
-    def action_asset_modify(self):
-        self.check_singleton()
-        new_wizard = self.env["asset.modify"].create(
-            {
-                "asset_id": self.id,
-                "modify_action": "resume"
-                if self.env.context.get("resume_after_pause")
-                else "dispose",
-            }
-        )
-        return {
-            "name": _("Modify Asset"),
-            "view_mode": "form",
-            "res_model": "asset.modify",
-            "type": "ir.actions.act_window",
-            "target": "new",
-            "res_id": new_wizard.id,
-            "context": self.env.context,
-        }
-
-    def action_save_profile(self):
-        self.check_singleton()
-        profile = self.env["account.depreciation.profile"].create(
-            self._get_profile_values()
-        )
-        self.depreciation_profile_id = profile
-        return {
-            "name": _("Depreciation Profile"),
-            "type": "ir.actions.act_window",
-            "res_model": "account.depreciation.profile",
-            "res_id": profile.id,
-            "views": [(False, "form")],
-        }
-
-    def open_entries(self):
-        return {
-            "name": _("Journal Entries"),
-            "view_mode": "list,form",
-            "res_model": "account.move",
-            "search_view_id": [
-                self.env.ref("account.view_account_move_filter").id,
-                "search",
-            ],
-            "views": [
-                (self.env.ref("account.view_move_tree").id, "list"),
-                (False, "form"),
-            ],
-            "type": "ir.actions.act_window",
-            "domain": [("id", "in", self.depreciation_move_ids.ids)],
-            "context": dict(self.env.context, create=False),
-        }
-
-    def open_related_entries(self):
-        return {
-            "name": _("Journal Items"),
-            "view_mode": "list,form",
-            "res_model": "account.move.line",
-            "view_id": False,
-            "type": "ir.actions.act_window",
-            "domain": [("id", "in", self.original_move_line_ids.ids)],
-        }
-
-    def open_increase(self):
-        result = {
-            "name": _("Gross Increase"),
-            "view_mode": "list,form",
-            "res_model": "resource.asset",
-            "context": {**self.env.context, "create": False},
-            "view_id": False,
-            "type": "ir.actions.act_window",
-            "domain": [("id", "in", self.increase_ids.ids)],
-            "views": self._get_depreciation_views(),
-        }
-        if len(self.increase_ids) == 1:
-            result["views"] = self._get_depreciation_views()[1:]
-            result["res_id"] = self.increase_ids.id
-        return result
-
-    def open_increased_asset(self):
-        return {
-            "name": _("Parent Asset"),
-            "view_mode": "form",
-            "res_model": "resource.asset",
-            "type": "ir.actions.act_window",
-            "res_id": self.increased_asset_id.id,
-            "views": self._get_depreciation_views()[1:],
-        }
-
-    CREATION_TRACKED_FNAMES = (
-        "depreciation_method",
-        "depreciation_duration",
-        "depreciation_period",
-        "depreciation_factor",
-        "value_salvage",
-        "original_move_line_ids",
-    )
-
-    def _log_asset_created(self):
-        tracked_fnames = list(self.CREATION_TRACKED_FNAMES)
-        ref_tracked_fields = self.fields_get(tracked_fnames)
-        for asset in self:
-            tracked_fields = ref_tracked_fields.copy()
-            if asset.depreciation_method == "linear":
-                del tracked_fields["depreciation_factor"]
-            _dummy, tracking_value_ids = asset._mail_track(
-                tracked_fields, dict.fromkeys(tracked_fnames)
-            )
-            asset.message_post(
-                body=_("Asset created"), tracking_value_ids=tracking_value_ids
-            )
-            move_body = _("An asset has been created for this move: %s") % (
-                asset._get_html_link()
-            )
-            for move_id in asset.original_move_line_ids.mapped("move_id"):
-                move_id.message_post(body=move_body)
-
-    def _check_lifecycle_write(self, vals):
-        if vals.get("state") == "disposed":
-            running = self.filtered(
-                lambda asset: asset.depreciation_state in RUNNING_BOARD
-            )
-            if running:
-                raise UserError(
-                    _(
-                        "%(assets)s: a running depreciation board is disposed through its Dispose or Sell action, which books the disposal entry.",
-                        assets=", ".join(running.mapped("display_name")),
-                    )
-                )
-        if vals.get("active"):
-            closed = self.filtered(
-                lambda asset: (
-                    asset.state == "disposed" and asset.depreciation_state == "close"
-                )
-            )
-            if closed:
-                raise UserError(
-                    _(
-                        "%(assets)s: the depreciation board is closed, so the asset stays disposed. Set the board running again to restore it.",
-                        assets=", ".join(closed.mapped("display_name")),
-                    )
-                )
-
-    def action_dispose(self):
-        running = self.filtered(lambda asset: asset.depreciation_state in RUNNING_BOARD)
-        if not running:
-            return super().action_dispose()
-        if len(self) == 1:
-            return self.action_asset_modify()
-        raise UserError(
-            _(
-                "%(assets)s: a running depreciation board is disposed one asset at a time, through its Dispose or Sell action.",
-                assets=", ".join(running.mapped("display_name")),
-            )
-        )
-
-    def _dispose(self, date=None):
-        running = self.filtered(lambda asset: asset.depreciation_state in RUNNING_BOARD)
-        for asset in running:
-            asset._check_disposal_accounts()
-            asset._close(self.env["account.move.line"], date)
-        return super(ResourceAsset, self - running)._dispose(date)
-
-    def _check_disposal_accounts(self):
-        company = self.company_id.sudo()
-        if not (company.gain_account_id and company.loss_account_id):
-            raise UserError(
-                _(
-                    "%(asset)s depreciates, so disposing of it books an entry. Set the gain and loss accounts of %(company)s first.",
-                    asset=self.display_name,
-                    company=self.company_id.display_name,
-                )
-            )
-
-    @api.model
-    def _create_from_plans(self, plans):
-        # A plan's board lands on the asset the bill line names, on a component of
-        # it, or on a new asset; every further board of the same line is a
-        # component of the one that landed first.
-        Asset = self.with_context(clean_context(self.env.context))
-        landed = {}
-        assets = self.browse()
-        for plan in plans:
-            named = plan["named_asset"]
-            vals = dict(plan["vals"])
-            root = landed.get(plan["unit"])
-            if plan["component_of_unit"] and root:
-                vals["parent_id"] = root.id
-                vals["name"] = self._component_name(root, plan["profile"])
-                asset = Asset.create(vals)
-            elif named and not named.depreciation_state:
-                named.write({**vals, "depreciation_state": "draft"})
-                asset = named
-            elif named:
-                vals["parent_id"] = named.id
-                vals["name"] = self._component_name(named, plan["profile"])
-                asset = Asset.create(vals)
-            else:
-                asset = Asset.create(vals)
-            landed.setdefault(plan["unit"], asset)
-            assets |= asset
-            plan["asset"] = asset
-        to_validate = self.browse()
-        for plan in plans:
-            asset = plan["asset"]
-            if plan["profile"] and plan["validate"]:
-                to_validate |= asset
-            if plan["move"]:
-                asset.message_post(
-                    body=_(
-                        "Asset created from invoice: %s", plan["move"]._get_html_link()
-                    )
-                )
-                asset._post_non_deductible_tax_value()
-        to_validate.action_confirm()
-        return assets
-
-    @api.model
-    def _component_name(self, parent, profile):
-        if not profile:
-            return parent.name
-        return f"{parent.name} — {profile.name}"
-
-    def action_compute_depreciation(self):
-        return self._create_depreciation_entries()
-
-    def action_confirm(self):
-        self.write({"depreciation_state": "open"})
-        self.filtered(lambda asset: asset.state == "draft").write(
-            {"state": "in_service"}
-        )
-        self._log_asset_created()
-        try:
-            with self.env.cr.savepoint():
-                boardless = self.filtered(lambda asset: not asset.depreciation_move_ids)
-                if boardless:
-                    boardless._create_depreciation_entries()
-                self._check_depreciations()
-                unposted = self.depreciation_move_ids.filtered(
-                    lambda move: move.state != "posted"
-                )
-                if unposted:
-                    unposted._post()
-        except psycopg.errors.CheckViolation:
-            raise ValidationError(
-                _(
-                    "At least one asset (%s) couldn't be set as running because it lacks any required information",
-                    ", ".join(self.mapped("name")),
-                )
-            ) from None
-
-        for asset in self.filtered(
-            lambda asset: asset.account_asset_id.create_asset == "no"
-        ):
-            asset._post_non_deductible_tax_value()
-
-    def _close(self, invoice_line_ids, date=None, message=None):
-        self.check_singleton()
-        date_disposal = date or fields.Date.today()
-        if date_disposal <= self.company_id._get_user_fiscal_lock_date(
-            self.depreciation_journal_id
-        ):
-            raise UserError(_("You cannot dispose of an asset before the lock date."))
-        if invoice_line_ids and self.increase_ids.filtered(
-            lambda a: (
-                a.depreciation_state in ("draft", "open")
-                or a.value_depreciable_residual > 0
-            )
-        ):
-            raise UserError(
-                _(
-                    "You cannot automate the journal entry for an asset that has a running gross increase. Please use 'Dispose' on the increase(s)."
-                )
-            )
-        full_asset = (self + self.increase_ids).filtered(
-            lambda asset: asset.depreciation_state not in ("close", "cancelled")
-        )
-        full_asset.depreciation_state = "close"
-        move_ids = full_asset._get_disposal_moves(
-            [
-                invoice_line_ids if asset == self else self.env["account.move.line"]
-                for asset in full_asset
-            ],
-            date_disposal,
-        )
-        if invoice_line_ids:
-            invoice_moves = invoice_line_ids.move_id
-            invoice_links = Markup(", ").join(
-                move._get_html_link() for move in invoice_moves
-            )
-            asset_body = self.env._(
-                "Asset sold. %(message)s See %(invoice_links)s",
-                message=message or "",
-                invoice_links=invoice_links,
-            )
-            invoice_body = self.env._("Asset sold: %s", self._get_html_link())
-            invoice_moves._message_log_batch(
-                bodies={invoice.id: invoice_body for invoice in invoice_moves}
-            )
-        else:
-            asset_body = self.env._(
-                "Asset disposed. %(message)s",
-                message=message or "",
-            )
-
-        full_asset._message_log_batch(
-            bodies={asset.id: asset_body for asset in full_asset}
-        )
-        full_asset.with_context(board_lifecycle=True).write(
-            {"state": "disposed", "active": False}
-        )
-
-        selling_price = abs(
-            sum(invoice_line.balance for invoice_line in invoice_line_ids)
-        )
-        self.value_gain_on_sale = self.currency_id.round(
-            selling_price - self.value_book
-        )
-
-        if move_ids:
-            name = _("Disposal Move")
-            view_mode = "form"
-            if len(move_ids) > 1:
-                name = _("Disposal Moves")
-                view_mode = "list,form"
-            return {
-                "name": name,
-                "view_mode": view_mode,
-                "res_model": "account.move",
-                "type": "ir.actions.act_window",
-                "target": "current",
-                "res_id": move_ids[0],
-                "domain": [("id", "in", move_ids)],
-            }
-        return None
-
-    def action_cancel(self):
-        for asset in self:
-            posted_moves = asset.depreciation_move_ids.filtered(
-                lambda m: m._is_effective_depreciation()
-            )
-            if posted_moves:
-                depreciation_change = sum(
-                    posted_moves.line_ids.mapped(
-                        lambda l: (
-                            l.debit
-                            if l.account_id == asset.account_depreciation_expense_id  # noqa: B023  the lambda runs inside this iteration
-                            else 0.0
-                        )
-                    )
-                )
-                acc_depreciation_change = sum(
-                    posted_moves.line_ids.mapped(
-                        lambda l: (
-                            l.credit
-                            if l.account_id == asset.account_depreciation_id  # noqa: B023  the lambda runs inside this iteration
-                            else 0.0
-                        )
-                    )
-                )
-                entries = Markup("<br>").join(
-                    posted_moves._sorted_by_date().mapped(
-                        lambda m: (
-                            f"{m.ref} - {m.date} - "
-                            f"{formatLang(self.env, m.depreciation_value, currency_obj=m.currency_id)} - "
-                            f"{m.name}"
-                        )
-                    )
-                )
-                asset._cancel_future_moves(datetime.date.min)
-                msg = (
-                    _("Asset Cancelled")
-                    + Markup("<br>")
-                    + _(
-                        "The account %(exp_acc)s has been credited by %(exp_delta)s, "
-                        "while the account %(dep_acc)s has been debited by %(dep_delta)s. "
-                        "This corresponds to %(move_count)s cancelled %(word)s:",
-                        exp_acc=asset.account_depreciation_expense_id.display_name,
-                        exp_delta=formatLang(
-                            self.env,
-                            depreciation_change,
-                            currency_obj=asset.currency_id,
-                        ),
-                        dep_acc=asset.account_depreciation_id.display_name,
-                        dep_delta=formatLang(
-                            self.env,
-                            acc_depreciation_change,
-                            currency_obj=asset.currency_id,
-                        ),
-                        move_count=len(posted_moves),
-                        word=_("entries") if len(posted_moves) > 1 else _("entry"),
-                    )
-                    + Markup("<br>")
-                    + entries
-                )
-                asset._message_log(body=msg)
-            else:
-                asset._message_log(body=_("Asset Cancelled"))
-            asset.depreciation_move_ids.filtered(
-                lambda m: m.state == "draft"
-            ).with_context(force_delete=True).unlink()
-            asset.depreciation_paused_days = 0
-            asset.write({"depreciation_state": "cancelled"})
-
-    def action_reset_to_draft(self):
-        self.write({"depreciation_state": "draft"})
-
-    def action_reopen(self):
-        self.check_singleton()
-        if self.depreciation_move_ids and not self.currency_id.is_zero(
-            self.depreciation_move_ids._sorted_by_date()[-1].asset_remaining_value
-        ):
-            self.env["asset.modify"].create(
-                {"asset_id": self.id, "name": _("Reset to running")}
-            ).action_modify()
-        vals = {"depreciation_state": "open", "value_gain_on_sale": 0}
-        if self.state == "disposed":
-            vals.update(state="in_service", date_disposal=False, active=True)
-        self.with_context(board_lifecycle=True).write(vals)
-
-    def action_resume(self):
-        self.check_singleton()
-        return self.with_context(resume_after_pause=True).action_asset_modify()
-
-    def _pause(self, date, message=None):
-        self.check_singleton()
-        self._create_move_before_date(date)
-        self.write({"depreciation_state": "paused"})
-        self.message_post(body=_("Asset paused. %s", message or ""))
-
-    @api.model
-    def _get_depreciation_views(self):
-        return [
-            (self.env.ref("account_depreciation.view_account_asset_tree").id, "list"),
-            (self.env.ref("account_depreciation.view_account_asset_form").id, "form"),
-        ]
-
-    def action_open_depreciation(self):
-        self.check_singleton()
-        return self.open_asset(["form"])
-
-    def open_asset(self, view_mode):
-        if len(self) == 1:
-            view_mode = ["form"]
-        views = [v for v in self._get_depreciation_views() if v[1] in view_mode]
-        ctx = dict(self.env.context)
-        ctx.pop("default_move_type", None)
-        return {
-            "name": _("Asset"),
-            "view_mode": ",".join(view_mode),
-            "type": "ir.actions.act_window",
-            "res_id": self.id if len(self) == 1 else False,
-            "res_model": "resource.asset",
-            "views": views,
-            "domain": [("id", "in", self.ids)],
-            "context": ctx,
-        }
-
-    def _add_depreciation_line(
-        self, amount, beginning_depreciation_date, depreciation_date, days_depreciated
-    ):
-        self.check_singleton()
-        AccountMove = self.env["account.move"]
-
-        return AccountMove.create(
-            AccountMove._prepare_move_for_asset_depreciation(
-                {
-                    "amount": amount,
-                    "asset_id": self,
-                    "depreciation_beginning_date": beginning_depreciation_date,
-                    "date": depreciation_date,
-                    "asset_number_days": days_depreciated,
-                }
-            )
-        )
-
-    def _get_profile_values(self):
-        self.check_singleton()
-        return {
-            "name": self.name,
-            "company_id": self.company_id.id,
-            "depreciation_method": self.depreciation_method,
-            "depreciation_duration": self.depreciation_duration,
-            "depreciation_period": self.depreciation_period,
-            "depreciation_factor": self.depreciation_factor,
-            "depreciation_prorata": self.depreciation_prorata,
-            "analytic_distribution": self.analytic_distribution,
-            "account_asset_id": self.account_asset_id.id,
-            "account_depreciation_id": self.account_depreciation_id.id,
-            "account_depreciation_expense_id": self.account_depreciation_expense_id.id,
-            "depreciation_journal_id": self.depreciation_journal_id.id,
-        }
-
-    def _post_non_deductible_tax_value(self):
-        if self.value_non_deductible_tax:
-            currency = self.env.company.currency_id
-            msg = _(
-                "A non deductible tax value of %(tax_value)s was added to %(name)s's initial value of %(purchase_value)s",
-                tax_value=formatLang(
-                    self.env, self.value_non_deductible_tax, currency_obj=currency
-                ),
-                name=self.name,
-                purchase_value=formatLang(
-                    self.env, self.value_purchase, currency_obj=currency
-                ),
-            )
-            self.message_post(body=msg)
-
-    def _create_move_before_date(self, date):
-        all_move_dates_before_date = self.depreciation_move_ids.filtered(
-            lambda x: x.date <= date and x._is_effective_depreciation()
-        ).mapped("date")
-
-        beginning_fiscal_year = (
-            self._get_fiscalyear_dates(date).get("date_from")
-            if self.depreciation_method != "linear"
-            else False
-        )
-        if beginning_fiscal_year:
-            beginning_fiscal_year = max(beginning_fiscal_year, self.date_prorata_paused)
-        first_fiscalyear_move = self.env["account.move"]
-        if all_move_dates_before_date:
-            last_move_date_not_reversed = max(all_move_dates_before_date)
-            future_moves_beginning_date = self.depreciation_move_ids.filtered(
-                lambda m: (
-                    m.date > last_move_date_not_reversed
-                    and (m._is_effective_depreciation() or m.state == "draft")
-                )
-            ).mapped("asset_depreciation_beginning_date")
-            beginning_depreciation_date = (
-                min(future_moves_beginning_date)
-                if future_moves_beginning_date
-                else self.date_prorata_paused
-            )
-
-            if self.depreciation_method != "linear":
-                first_moves = self.depreciation_move_ids.filtered(
-                    lambda m: (
-                        m.asset_depreciation_beginning_date >= beginning_fiscal_year
-                        and (m._is_effective_depreciation() or m.state == "draft")
-                    )
-                ).sorted(lambda m: (m.asset_depreciation_beginning_date, m.id))
-                first_fiscalyear_move = next(iter(first_moves), first_fiscalyear_move)
-        else:
-            beginning_depreciation_date = self.date_prorata_paused
-
-        residual_declining = (
-            first_fiscalyear_move.asset_remaining_value
-            + first_fiscalyear_move.depreciation_value
-        )
-        self._cancel_future_moves(date)
-
-        imported_amount = (
-            self.value_depreciated_import if not all_move_dates_before_date else 0
-        )
-        value_depreciable_residual = (
-            self.value_depreciable_residual + self.value_depreciated_import
-            if not all_move_dates_before_date
-            else self.value_depreciable_residual
-        )
-        residual_declining = residual_declining or value_depreciable_residual
-
-        last_day_asset = self._get_last_day_asset()
-        lifetime_left = self._get_delta_days(
-            beginning_depreciation_date, last_day_asset
-        )
-        days_depreciated, amount = self._get_board_amount(
-            self.value_depreciable_residual,
-            beginning_depreciation_date,
-            date,
-            lifetime_left,
-            residual_declining,
-            beginning_fiscal_year,
-            LinearRecompute(
-                start_date=beginning_depreciation_date,
-                residual=value_depreciable_residual,
-                lifetime_left=lifetime_left,
-            ),
-        )
-
-        if abs(imported_amount) <= abs(amount):
-            amount -= imported_amount
-        if not float_is_zero(amount, precision_rounding=self.currency_id.rounding):
-            new_line = self._add_depreciation_line(
-                amount, beginning_depreciation_date, date, days_depreciated
-            )
-            new_line._post()
-
-    def _cancel_future_moves(self, date):
-        for asset in self:
-            obsolete_moves = asset.depreciation_move_ids.filtered(
-                lambda m: (
-                    m.state == "draft"
-                    or (m._is_effective_depreciation() and m.date > date)
-                )
-            )
-            obsolete_moves._unlink_or_reverse()
-
     def _get_disposal_moves(self, invoice_lines_list, date_disposal):
 
         def get_line(name, asset, amount, account, is_sale):
@@ -2067,8 +1968,107 @@ class ResourceAsset(models.Model):
         )
         return self._clamp_to_original_sign(residual_value_at_date)
 
-    def _clamp_to_original_sign(self, value):
-        self.check_singleton()
-        if self.currency_id.compare_amounts(self.value_original, 0) > 0:
-            return max(value, 0)
-        return min(value, 0)
+    def _post_non_deductible_tax_value(self):
+        if self.value_non_deductible_tax:
+            currency = self.env.company.currency_id
+            msg = _(
+                "A non deductible tax value of %(tax_value)s was added to %(name)s's initial value of %(purchase_value)s",
+                tax_value=formatLang(
+                    self.env, self.value_non_deductible_tax, currency_obj=currency
+                ),
+                name=self.name,
+                purchase_value=formatLang(
+                    self.env, self.value_purchase, currency_obj=currency
+                ),
+            )
+            self.message_post(body=msg)
+
+    def _write_concrete(self, vals):
+        propagated = self.PROPAGATED_TO_MOVES & vals.keys()
+        if not propagated:
+            return super()._write_concrete(vals)
+        previous_accounts = {
+            asset.id: (
+                asset.account_depreciation_id,
+                asset.account_depreciation_expense_id,
+            )
+            for asset in self
+        }
+        result = super()._write_concrete(vals)
+
+        AccountMoveLine = self.env["account.move.line"]
+        analytic_lines = AccountMoveLine
+        depreciation_lines = AccountMoveLine
+        expense_lines = AccountMoveLine
+        rejournaled_moves = self.env["account.move"]
+        for asset in self:
+            lock_date = asset.company_id._get_user_fiscal_lock_date(
+                asset.depreciation_journal_id
+            )
+            depreciation_account, expense_account = previous_accounts[asset.id]
+            for move in asset.depreciation_move_ids:
+                if move.state == "draft" and "analytic_distribution" in propagated:
+                    analytic_lines |= move.line_ids
+                if move.date <= lock_date:
+                    continue
+                if "account_depreciation_id" in propagated:
+                    depreciation_lines |= move.line_ids.filtered(
+                        lambda line: line.account_id == depreciation_account  # noqa: B023  the lambda runs inside this iteration
+                    )
+                if "account_depreciation_expense_id" in propagated:
+                    expense_lines |= move.line_ids.filtered(
+                        lambda line: line.account_id == expense_account  # noqa: B023  the lambda runs inside this iteration
+                    )
+                if "depreciation_journal_id" in propagated:
+                    rejournaled_moves |= move
+
+        if analytic_lines:
+            analytic_lines.analytic_distribution = vals["analytic_distribution"]
+        if depreciation_lines:
+            depreciation_lines.account_id = vals["account_depreciation_id"]
+        if expense_lines:
+            expense_lines.account_id = vals["account_depreciation_expense_id"]
+        if rejournaled_moves:
+            rejournaled_moves.journal_id = vals["depreciation_journal_id"]
+        return result
+
+    def _check_transition(self, state):
+        super()._check_transition(state)
+        if state == "disposed" and not self.env.context.get("board_lifecycle"):
+            running = self.filtered(
+                lambda asset: asset.depreciation_state in RUNNING_BOARD
+            )
+            if running:
+                raise UserError(
+                    _(
+                        "%(assets)s: a running depreciation board is disposed through its Dispose or Sell action, which books the disposal entry.",
+                        assets=", ".join(running.mapped("display_name")),
+                    )
+                )
+
+    def _check_reactivation(self):
+        super()._check_reactivation()
+        if not self.env.context.get("board_lifecycle"):
+            closed = self.filtered(
+                lambda asset: (
+                    asset.state == "disposed" and asset.depreciation_state == "close"
+                )
+            )
+            if closed:
+                raise UserError(
+                    _(
+                        "%(assets)s: the depreciation board is closed, so the asset stays disposed. Set the board running again to restore it.",
+                        assets=", ".join(closed.mapped("display_name")),
+                    )
+                )
+
+    def _check_disposal_accounts(self):
+        company = self.company_id.sudo()
+        if not (company.gain_account_id and company.loss_account_id):
+            raise UserError(
+                _(
+                    "%(asset)s depreciates, so disposing of it books an entry. Set the gain and loss accounts of %(company)s first.",
+                    asset=self.display_name,
+                    company=self.company_id.display_name,
+                )
+            )

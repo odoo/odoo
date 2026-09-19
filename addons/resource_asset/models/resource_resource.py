@@ -20,3 +20,9 @@ class ResourceResource(models.Model):
     def _compute_asset_id(self):
         for resource in self.with_context(active_test=False):
             resource.asset_id = resource.asset_ids[:1]
+
+    def _on_custody_changed(self, role, changes, planned=False):
+        super()._on_custody_changed(role, changes, planned=planned)
+        self.with_context(active_test=False).asset_id._on_custody_changed(
+            role, changes, planned=planned
+        )

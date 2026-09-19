@@ -46,16 +46,12 @@ class ResourceAsset(models.Model):
             if asset.kind_id.code == ROOM_KIND and asset.name and asset.address_id:
                 asset.display_name = f"{asset.address_id.name} - {asset.name}"
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        assets = super().create(vals_list)
-        assets._make_rooms_bookable()
-        return assets
+    def _on_kind_changed(self, vals):
+        super()._on_kind_changed(vals)
+        self._make_rooms_bookable()
 
-    def write(self, vals):
-        res = super().write(vals)
-        if "kind_id" in vals:
-            self._make_rooms_bookable()
+    def _write_concrete(self, vals):
+        res = super()._write_concrete(vals)
         if {"name", "description", "active"} & vals.keys():
             for room in self.resource_id.filtered("access_token"):
                 room._notify_booking_view("reload")

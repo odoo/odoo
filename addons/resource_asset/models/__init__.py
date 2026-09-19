@@ -4,5 +4,4 @@ from . import resource_asset_identifier
 from . import resource_asset_meter
 from . import resource_asset_meter_reading
 from . import resource_asset
-from . import resource_assignment
 from . import resource_resource
