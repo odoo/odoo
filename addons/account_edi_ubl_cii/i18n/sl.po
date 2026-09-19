@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-07 17:37+0000\n"
-"PO-Revision-Date: 2026-08-08 03:02+0000\n"
+"PO-Revision-Date: 2026-09-13 14:32+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-17/"
 "account_edi_ubl_cii/sl/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -42,7 +42,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
 msgid "(Un)Group lines by tax"
-msgstr ""
+msgstr "(Raz)grupiraj postavke po davku"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0002
@@ -487,7 +487,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -580,7 +580,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Cannot find the origin file, try by importing it again"
-msgstr ""
+msgstr "Izvorne datoteke ni bilo mogoče najti, poskusite jo ponovno uvoziti"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__checkbox_ubl_cii_label
@@ -704,7 +704,7 @@ msgstr "Vsaka vrstica računa mora imeti vsaj en davek."
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
 msgid "Electronic Invoicing"
-msgstr ""
+msgstr "Elektronsko izdajanje računov"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__enable_ubl_cii_xml
@@ -784,7 +784,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Grouped lines by tax"
-msgstr ""
+msgstr "Postavke združene po davku"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__hide_peppol_fields
@@ -899,6 +899,10 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
+"Obrnjena davčna obveznost: Če kupec v enem mesecu od prejema računa ne vloži "
+"pisnega ugovora, se šteje, da priznava, da je davčni zavezanec, ki mora "
+"predložiti periodične obračune. Če ta pogoj ni izpolnjen, je kupec odgovoren "
+"za plačilo davka, pripadajočih obresti in kazni v zvezi s tem pogojem."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -973,7 +977,7 @@ msgstr "DDV od %s mora imeti predpono kodo države."
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The bank account couldn't be fetched: %s"
-msgstr ""
+msgstr "Bančnega računa ni bilo mogoče pridobiti: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1067,7 +1071,7 @@ msgstr "UBL/CII datoteka"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Ungrouped lines from %s"
-msgstr ""
+msgstr "Nezdružene vrstice iz %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -1084,14 +1088,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Unknown partner"
-msgstr ""
+msgstr "Neznan partner"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid "Unsupported file type via %s"
-msgstr ""
+msgstr "Nepodprta vrsta datoteke prek %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1121,7 +1125,7 @@ msgstr "XRačun CIUS"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "You can only (un)group lines of a draft invoice"
-msgstr ""
+msgstr "Vrstice lahko (raz)združujete samo na osnutku računa."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1136,7 +1140,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "You can only group lines of an invoice"
-msgstr ""
+msgstr "Lahko združujete le postavke računa"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
