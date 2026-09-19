@@ -5,7 +5,9 @@ import { registry } from "@web/core/registry";
 import { useProps, t } from "@odoo/owl";
 
 export const animateOptionProps = {
+    allowBlockHover: t.boolean().optional(false),
     dropdownClass: t.string().optional("o-hb-select-dropdown"),
+    hoverApplyTo: t.string().optional(),
     requireAnimation: t.boolean().optional(false),
     slots: t.object().optional(),
 };
@@ -22,11 +24,19 @@ export class AnimateOption extends BaseOptionComponent {
             const hasAnimateClass = editingElement.classList.contains("o_animate");
             this.getDirectionsItems = this.dependencies.animateOption.getDirectionsItems;
             const { getEffectsItems } = this.dependencies.animateOption;
+            const hoverElement = this.getHoverElement(editingElement);
+            const isImageEl = hoverElement?.tagName === "IMG";
 
             return {
                 isOptionActive: this.isOptionActive(editingElement),
                 hasAnimateClass: hasAnimateClass,
-                canHover: await this.dependencies.animateOption.canHaveHoverEffect(editingElement),
+                canHover:
+                    !!hoverElement &&
+                    (await this.dependencies.animateOption.canHaveHoverEffect(
+                        hoverElement,
+                        this.props.allowBlockHover
+                    )),
+                isImageEl: isImageEl,
                 canHaveScrollEffect:
                     this.dependencies.animateOption.canHaveScrollEffect(editingElement),
                 isLimitedEffect: this.limitedEffects.some((className) =>
@@ -41,6 +51,12 @@ export class AnimateOption extends BaseOptionComponent {
                 hasSharedTiming: editingElement.matches(".s_animated_number"),
             };
         });
+    }
+
+    getHoverElement(editingElement) {
+        return this.props.hoverApplyTo
+            ? editingElement.querySelector(this.props.hoverApplyTo)
+            : editingElement;
     }
     get limitedEffects() {
         // Animations for which the "On Scroll" and "Direction" options are not
