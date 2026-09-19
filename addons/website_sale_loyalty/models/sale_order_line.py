@@ -8,14 +8,7 @@ from odoo import models
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    def _get_line_header(self):
-        if self.is_reward_line:
-            return self.name
-        return super()._get_line_header()
-
-    def _is_reorder_allowed(self):
-        # Hide all types of rewards from reorder
-        return not self.reward_id and super()._is_reorder_allowed()
+    # === CRUD METHODS === #
 
     def unlink(self):
         if self.env.context.get("website_sale_loyalty_delete", False):
@@ -26,6 +19,17 @@ class SaleOrderLine(models.Model):
             for order, rewards in disabled_rewards_per_order.items():
                 order.disabled_auto_rewards += rewards
         return super().unlink()
+
+    # === BUSINESS METHODS === #
+
+    def _get_line_header(self):
+        if self.is_reward_line:
+            return self.name
+        return super()._get_line_header()
+
+    def _is_reorder_allowed(self):
+        # Hide all types of rewards from reorder
+        return not self.reward_id and super()._is_reorder_allowed()
 
     def _should_show_strikethrough_price(self):
         """Override of `website_sale` to hide the strikethrough price for rewards."""
@@ -40,3 +44,7 @@ class SaleOrderLine(models.Model):
         return super()._is_sellable() and (
             not self.is_reward_line or self.reward_id.reward_type == "product"
         )
+
+    def _is_invalid_line(self):
+        """Override of `website_sale` to keep reward lines, whose products aren't published."""
+        return super()._is_invalid_line() and not self.is_reward_line
