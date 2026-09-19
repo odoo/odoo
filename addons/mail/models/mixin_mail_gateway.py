@@ -229,7 +229,7 @@ class MixinMailGateway(models.AbstractModel):
         _debug.pipeline(
             "bounce_incremented",
             email=bounced_email,
-            partner=bounced_partner.id or None,
+            partner=bounced_partner.ids,
             record=bounced_record.id if bounced_record else None,
             counted=bool(counted_bounced_record),
         )
@@ -265,7 +265,7 @@ class MixinMailGateway(models.AbstractModel):
             "notifications_bounced",
             message=bounced_message.id,
             email=bounced_email,
-            partner=bounced_partner.id or None,
+            partner=bounced_partner.ids,
             count=len(notifications),
         )
         notifications.write(
@@ -314,7 +314,7 @@ class MixinMailGateway(models.AbstractModel):
             "bounce_handled",
             message_id=message_dict["message_id"],
             email=bounced_email or None,
-            partner=bounced_partner.id or None,
+            partner=bounced_partner.ids,
             message=bounced_message.id or None,
             record=bounced_record.id if bounced_record else None,
         )
@@ -1841,7 +1841,7 @@ class MixinMailGateway(models.AbstractModel):
             has_email_part=email_part is not None,
             has_dsn=dsn_part is not None,
             email=bounced_email or None,
-            partner=bounced_partner.id or None,
+            partner=bounced_partner.ids,
             message=bounced_message.id or None,
         )
         return {
