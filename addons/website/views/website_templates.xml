@@ -2896,12 +2896,21 @@
         <meta name="robots" content="noindex, nofollow"/>
     </t>
     <t t-call="website.layout" head="head">
-        <div id="wrap" class="o_website_info"/>
+        <div id="wrap" class="o_website_info">
+            <section class="container">
+                <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_restricted_editor" role="status">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <p>
+                        Note: To view the website information, enable it from the Style tab in edit mode.
+                    </p>
+                </div>
+            </section>
+        </div>
     </t>
 </template>
 
-<template id="show_website_info" inherit_id="website.website_info" name="Show Odoo Information">
-    <xpath expr="//div[@id='wrap']" position="inside">
+<template id="show_website_info" inherit_id="website.website_info" name="Show Odoo Information" active="False">
+    <xpath expr="//div[@id='wrap']/section[hasclass('container')]" position="replace">
         <div class="oe_structure">
             <section class="container">
                 <h1><t t-out="res_company.name"/>
