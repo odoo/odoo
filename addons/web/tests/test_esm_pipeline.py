@@ -2450,11 +2450,19 @@ class TestSecondaryBundleSingletons(TransactionCase):
         self.assertEqual(shared, {spec})
         self.assertEqual(inlined, set())
 
-    def _shared(self):
-        return self.env["ir.qweb"]._get_secondary_shared_specs("web.assets_tests", None)
+    # A declared parent may be a page carrying five modules (room's booking
+    # tablet) or one half of a split page (web.assets_frontend_minimal), so the
+    # scope-less safe set, the intersection over every declared parent, is
+    # allowed to be empty. The singletons are shared on a page that has them.
+    FULL_PAGE = ("web.assets_web",)
+
+    def _shared(self, page_scope=()):
+        return self.env["ir.qweb"]._get_secondary_shared_specs(
+            "web.assets_tests", None, page_scope
+        )
 
     def test_safe_set_contains_core_singletons(self):
-        shared = self._shared()
+        shared = self._shared(self.FULL_PAGE)
         for spec in ("@web/core/browser/browser", "@web/env"):
             self.assertIn(
                 spec,
@@ -2467,7 +2475,6 @@ class TestSecondaryBundleSingletons(TransactionCase):
 
         IrQweb = self.env["ir.qweb"]
         shared = self._shared()
-        self.assertTrue(shared, "expected a non-empty shared set for web.assets_tests")
         parents = esm_registry().secondary_parents.get("web.assets_tests", ())
         checked = 0
         for parent in parents:
@@ -2497,7 +2504,7 @@ class TestSecondaryBundleSingletons(TransactionCase):
 
     def test_stub_sources_read_the_loader(self):
         stubs = self.env["ir.qweb"]._get_secondary_parent_stubs(
-            "web.assets_tests", None
+            "web.assets_tests", None, self.FULL_PAGE
         )
         self.assertIn("@web/core/browser/browser", stubs)
         browser_stub = stubs["@web/core/browser/browser"]
@@ -2534,7 +2541,9 @@ class TestSecondaryBundleSingletonsBuild(TransactionCase):
             debug_assets=False,
             assets_params=None,
         )
-        stubs = IrQweb._get_secondary_parent_stubs("web.assets_tests", None)
+        stubs = IrQweb._get_secondary_parent_stubs(
+            "web.assets_tests", None, ("web.assets_web",)
+        )
         self.assertTrue(stubs, "web.assets_tests should have shared-specifier stubs")
 
         inlined = ab.esbuild_native_bundle().code
@@ -2557,6 +2566,8 @@ class TestSecondaryBundleSingletonsBuild(TransactionCase):
 @tagged("web_unit", "web_assets")
 class TestSecondaryBundlePageScopeKey(TransactionCase):
     BUNDLE = "web.assets_tests"
+    # rendered beside the parents, never declared as one
+    SIBLING = "web.assets_backend"
 
     def _scope(self, rendered):
         req = SimpleNamespace(_esm_page_bundles=rendered)
@@ -2566,8 +2577,9 @@ class TestSecondaryBundlePageScopeKey(TransactionCase):
     def test_only_declared_parents_key_the_variant(self):
         parents = esm_registry().secondary_parents[self.BUNDLE]
         self.assertIn("web.assets_frontend_lazy", parents)
+        self.assertNotIn(self.SIBLING, parents)
         self.assertEqual(
-            self._scope(("web.assets_frontend_lazy", "web.assets_frontend_minimal")),
+            self._scope(("web.assets_frontend_lazy", self.SIBLING)),
             ("web.assets_frontend_lazy",),
             msg="a sibling bundle on the page is not a provider the secondary "
             "bundle was declared against; keying on it splits one variant "
@@ -2583,7 +2595,7 @@ class TestSecondaryBundlePageScopeKey(TransactionCase):
         self.assertEqual(self._scope(parents), parents)
 
     def test_no_declared_parent_on_the_page_is_the_scope_less_variant(self):
-        self.assertEqual(self._scope(("web.assets_frontend_minimal",)), ())
+        self.assertEqual(self._scope((self.SIBLING,)), ())
 
 
 @tagged("web_unit", "web_assets")

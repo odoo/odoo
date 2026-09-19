@@ -955,6 +955,8 @@ class ResourceAsset(models.Model):
         return self._create_depreciation_entries()
 
     def action_confirm(self):
+        if not self:
+            return
         self.write({"depreciation_state": "open"})
         self.filtered(lambda asset: asset.state == "draft")._transition("in_service")
         self._log_asset_created()

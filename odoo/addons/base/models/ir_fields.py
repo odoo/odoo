@@ -1220,16 +1220,19 @@ class IrFieldsConverter(models.AbstractModel):
         ]
         if not fnames:
             return
+        to_fetch = list(dict.fromkeys(fname.split(".", 1)[0] for fname in fnames))
         try:
             found = comodel.search_fetch(
-                Domain("display_name", "in", list(names)), fnames
+                Domain("display_name", "in", list(names)), to_fetch
             )
             matches: dict[str, list[int]] = defaultdict(list)
             for record in found:
                 for fname in fnames:
-                    value = record[fname]
+                    value = record.mapped(fname) if "." in fname else record[fname]
                     if isinstance(value, models.BaseModel):
                         tokens = value.mapped("display_name")
+                    elif isinstance(value, list):
+                        tokens = [*value, *map(str, value)]
                     else:
                         tokens = [value, str(value)]
                     for token in tokens:
