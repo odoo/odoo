@@ -40,9 +40,36 @@
 .o_spreadsheet_dashboard_action {
     .o_renderer {
         height: 100%;
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0 var(--os-scrollbar-width) auto 0;
+            height: 12px;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.15s ease-in-out, visibility 0.15s;
+            background:
+                linear-gradient(to right, transparent 0%, $border-color 50%, transparent 100%)
+                    bottom / 100% $border-width no-repeat,
+                linear-gradient(to bottom, $o-gray-100 0%, rgba($o-gray-100, 0.65) 45%, rgba($o-gray-100, 0.6) 100%);
+            backdrop-filter: var(--o-backdrop-blur-sm);
+        }
+
+        &.o-scrolled::before {
+            opacity: 1;
+            visibility: visible;
+        }
 
         .o-spreadsheet {
             height: 100%;
+
+            .o-scrollbar { 
+                background-color: transparent;
+            }
 
             canvas {
                 border-top: 0px;
