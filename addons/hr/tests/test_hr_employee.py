@@ -28,7 +28,8 @@ class TestHrEmployee(TestHrCommon):
         })
         self.employee_without_image = self.env['hr.employee'].create({
             'user_id': self.user_without_image.id,
-            'image_1920': False
+            'image_1920': False,
+            'work_location_id': self.work_location.id,
         })
 
     def test_employee_must_have_active_version(self):
@@ -86,6 +87,7 @@ class TestHrEmployee(TestHrCommon):
         employee_form = Form(Employee)
         employee_form.name = 'Raoul Grosbedon'
         employee_form.work_email = 'raoul@example.com'
+        employee_form.work_location_id = self.work_location
         employee = employee_form.save()
         self.assertEqual(employee.tz, 'Europe/Brussels')
 
@@ -109,6 +111,7 @@ class TestHrEmployee(TestHrCommon):
         employee_form.user_id = self.res_users_hr_officer
         employee_form.name = 'Youssef Ahmed'
         employee_form.work_email = 'yoahm@example.com'
+        employee_form.work_location_id = self.work_location
         employee = employee_form.save()
 
         # validate timezone sync between employee & user
@@ -140,6 +143,7 @@ class TestHrEmployee(TestHrCommon):
         employee_form.name = 'Raoul Grosbedon'
         employee_form.work_email = 'raoul@example.com'
         employee_form.user_id = self.res_users_hr_officer
+        employee_form.work_location_id = self.work_location
         employee = employee_form.save()
         self.assertEqual(employee.name, 'Raoul Grosbedon')
         self.assertEqual(employee.work_email, self.res_users_hr_officer.email)
@@ -153,6 +157,7 @@ class TestHrEmployee(TestHrCommon):
         employee_form.user_id = self.res_users_hr_officer
         self.assertEqual(employee_form.name, 'Raoul Grosbedon')
         self.assertEqual(employee_form.work_email, 'raoul@example.com')
+        employee_form.work_location_id = self.work_location
         employee = employee_form.save()
         self.assertEqual(employee.name, 'Raoul Grosbedon')
         self.assertEqual(employee.work_email, 'raoul@example.com')
@@ -166,6 +171,7 @@ class TestHrEmployee(TestHrCommon):
         employee_form.work_email = 'raoul@example.com'
         employee_form.tz = _tz
         employee_form.user_id = self.res_users_hr_manager
+        employee_form.work_location_id = self.work_location
         employee = employee_form.save()
         self.assertEqual(employee.name, 'Raoul Grosbedon')
         self.assertEqual(employee.work_email, self.res_users_hr_manager.email)
@@ -503,6 +509,7 @@ class TestHrEmployee(TestHrCommon):
         # check employee's barcode should be a sequence of digits and alphabets
         employee = self.env['hr.employee'].create({
             'name': 'Badge Employee',
+            'work_location_id': self.work_location.id,
         })
 
         employee_form = Form(employee)
