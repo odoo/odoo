@@ -10,7 +10,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 from odoo.tools.image import image_data_uri
 
-from odoo.addons.base.models.res_bank import sanitize_account_number
+from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 
 _debug = DebugLog(__name__)
 

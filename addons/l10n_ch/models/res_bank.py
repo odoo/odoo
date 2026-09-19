@@ -13,7 +13,7 @@ from odoo.addons.account_iban.models.res_partner_bank import (
     normalize_iban,
     pretty_iban,
 )
-from odoo.addons.base.models.res_bank import sanitize_account_number
+from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 
 _lt = LazyTranslate(__name__)
 
