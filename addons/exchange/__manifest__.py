@@ -1,6 +1,6 @@
 {
     "name": "Exchange",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "category": "Hidden",
     "sequence": 6,
     "summary": "Channels, transmissions and protocols for document exchange with an outside party",

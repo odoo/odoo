@@ -42,8 +42,6 @@ class ExchangeTransmission(models.Model):
     )
     protocol = fields.Selection(
         related="channel_id.protocol",
-        store=True,
-        index=True,
     )
 
     # Lifecycle block
