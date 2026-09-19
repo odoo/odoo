@@ -12,7 +12,7 @@ class BaseDocumentLayout(models.TransientModel):
     @api.model
     def _default_report_footer(self):
         # OVERRIDE web/models/base_document_layout
-        if self.env.company.external_report_layout_id == self.env.ref(
+        if self.env.company.report_config_id.external_report_layout_id == self.env.ref(
             "l10n_din5008.external_layout_din5008"
         ):
             company = self.env.company
@@ -33,7 +33,7 @@ class BaseDocumentLayout(models.TransientModel):
     def _default_company_details(self):
         # OVERRIDE web/models/base_document_layout
         default_company_details = super()._default_company_details()
-        if self.env.company.external_report_layout_id == self.env.ref(
+        if self.env.company.report_config_id.external_report_layout_id == self.env.ref(
             "l10n_din5008.external_layout_din5008"
         ):
             # In order to respect the strict formatting of DIN5008, we need to remove empty lines from the address

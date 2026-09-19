@@ -217,7 +217,7 @@
                                         </t>
                                         <t
                                             t-set="table_style"
-                                            t-value="'border: 1px solid %s;' % (product.env.company.primary_color or 'black')" />
+                                            t-value="'border: 1px solid %s;' % (product.env.company.report_config_id.primary_color or 'black')" />
                                         <!-- IMPORTANT: explictly call templates in place of {{template}} otherwise studio won't load report correctly -->
                                         <t t-if="report_to_call == '2x7'">
                                             <t

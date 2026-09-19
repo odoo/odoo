@@ -37,10 +37,10 @@ class TestUi(AccountTestInvoicingHttpCommon):
                 "country_id": None,
                 "account_sale_tax_id": None,
                 "account_purchase_tax_id": None,
-                "external_report_layout_id": self.env.ref(
-                    "web.external_layout_standard"
-                ).id,
             }
+        )
+        self.env.company.report_config_id.external_report_layout_id = self.env.ref(
+            "web.external_layout_standard"
         )
 
         account_with_taxes = self.env["account.account"].search(

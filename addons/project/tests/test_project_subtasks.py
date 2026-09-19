@@ -506,17 +506,14 @@ class TestProjectSubtasks(TestProjectCommon):
             "The task is copied from project.copy(). Its name should be the same.",
         )
         self.assertEqual(
-            parent_task.child_ids[0].name,
-            "Subtask A 1",
-            "The task is copied from project.copy(). Its name should be the same.",
+            parent_task.child_ids.mapped("name"),
+            task_A.child_ids.mapped("name"),
+            "The subtasks are copied in their order. Their names should be the same.",
         )
         self.assertEqual(
-            parent_task.child_ids[1].name,
-            "Subtask A 2",
-            "The task is copied from project.copy(). Its name should be the same.",
-        )
-        self.assertEqual(
-            parent_task.child_ids[0].child_ids.name,
+            parent_task.child_ids.filtered(
+                lambda t: t.name == "Subtask A 1"
+            ).child_ids.name,
             "Sub Subtask A 1",
             "The task is copied from project.copy(). Its name should be the same.",
         )
@@ -527,17 +524,14 @@ class TestProjectSubtasks(TestProjectCommon):
             "The task is copied from task.copy(). Its name should contain the extra (copy).",
         )
         self.assertEqual(
-            copied_task.child_ids[0].name,
-            "Subtask A 1 (copy)",
+            copied_task.child_ids.mapped("name"),
+            [f"{name} (copy)" for name in task_A.child_ids.mapped("name")],
             "The task is copied from task.copy(). Its name should contain the extra (copy).",
         )
         self.assertEqual(
-            copied_task.child_ids[1].name,
-            "Subtask A 2 (copy)",
-            "The task is copied from task.copy(). Its name should contain the extra (copy).",
-        )
-        self.assertEqual(
-            copied_task.child_ids[0].child_ids.name,
+            copied_task.child_ids.filtered(
+                lambda t: t.name == "Subtask A 1 (copy)"
+            ).child_ids.name,
             "Sub Subtask A 1 (copy)",
             "The task is copied from task.copy(). Its name should contain the extra (copy).",
         )

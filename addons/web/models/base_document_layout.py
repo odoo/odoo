@@ -67,21 +67,22 @@ class BaseDocumentLayout(models.TransientModel):
         related="company_id.image_1920",
         readonly=False,
     )
+    report_config_id = fields.Many2one(related="company_id.report_config_id")
     preview_logo = fields.Binary(
         related="image_1920",
         string="Preview logo",
     )
     report_header = fields.Html(
-        related="company_id.report_header",
+        related="company_id.report_config_id.report_header",
         readonly=False,
     )
     report_footer = fields.Html(
-        related="company_id.report_footer",
+        related="company_id.report_config_id.report_footer",
         default=_default_report_footer,
         readonly=False,
     )
     company_details = fields.Html(
-        related="company_id.company_details",
+        related="company_id.report_config_id.company_details",
         default=_default_company_details,
         readonly=False,
     )
@@ -89,23 +90,23 @@ class BaseDocumentLayout(models.TransientModel):
         compute="_compute_is_company_details_empty"
     )
     paperformat_id = fields.Many2one(
-        related="company_id.paperformat_id",
+        related="company_id.report_config_id.paperformat_id",
         readonly=False,
     )
     external_report_layout_id = fields.Many2one(
-        related="company_id.external_report_layout_id",
+        related="company_id.report_config_id.external_report_layout_id",
         readonly=False,
     )
     font = fields.Selection(
-        related="company_id.font",
+        related="company_id.report_config_id.font",
         readonly=False,
     )
     primary_color = fields.Char(
-        related="company_id.primary_color",
+        related="company_id.report_config_id.primary_color",
         readonly=False,
     )
     secondary_color = fields.Char(
-        related="company_id.secondary_color",
+        related="company_id.report_config_id.secondary_color",
         readonly=False,
     )
     custom_colors = fields.Boolean(
@@ -115,16 +116,16 @@ class BaseDocumentLayout(models.TransientModel):
     logo_primary_color = fields.Char(compute="_compute_logo_colors")
     logo_secondary_color = fields.Char(compute="_compute_logo_colors")
     layout_background = fields.Selection(
-        related="company_id.layout_background",
+        related="company_id.report_config_id.layout_background",
         readonly=False,
     )
     layout_background_image = fields.Binary(
-        related="company_id.layout_background_image",
+        related="company_id.report_config_id.layout_background_image",
         readonly=False,
     )
     report_layout_id = fields.Many2one(comodel_name="report.layout")
     report_theme_id = fields.Many2one(
-        related="company_id.report_theme_id",
+        related="company_id.report_config_id.report_theme_id",
         readonly=False,
     )
     preview = fields.Html(
@@ -188,7 +189,9 @@ class BaseDocumentLayout(models.TransientModel):
             else:
                 wizard_for_image = wizard
             wizard.logo_primary_color, wizard.logo_secondary_color = (
-                wizard.extract_image_primary_secondary_colors(wizard_for_image.image_1920)
+                wizard.extract_image_primary_secondary_colors(
+                    wizard_for_image.image_1920
+                )
             )
 
     @api.depends(
@@ -226,6 +229,7 @@ class BaseDocumentLayout(models.TransientModel):
         preview_css = self._get_css_for_preview(styles)
         return {
             "company": self,
+            "layout": self,
             "preview_css": preview_css,
             "is_html_empty": is_html_empty,
         }
@@ -234,30 +238,30 @@ class BaseDocumentLayout(models.TransientModel):
     def _onchange_company_id(self) -> None:
         for wizard in self:
             wizard.image_1920 = wizard.company_id.image_1920
-            wizard.report_header = wizard.company_id.report_header
+            wizard.report_header = wizard.company_id.report_config_id.report_header
             wizard.report_footer = (
-                wizard.company_id.report_footer
-                if isinstance(wizard.company_id.report_footer, str)
+                wizard.company_id.report_config_id.report_footer
+                if isinstance(wizard.company_id.report_config_id.report_footer, str)
                 else wizard.report_footer
             )
             wizard.company_details = (
-                wizard.company_id.company_details
-                if isinstance(wizard.company_id.company_details, str)
+                wizard.company_id.report_config_id.company_details
+                if isinstance(wizard.company_id.report_config_id.company_details, str)
                 else wizard.company_details
             )
-            wizard.paperformat_id = wizard.company_id.paperformat_id
+            wizard.paperformat_id = wizard.company_id.report_config_id.paperformat_id
             wizard.external_report_layout_id = (
-                wizard.company_id.external_report_layout_id
+                wizard.company_id.report_config_id.external_report_layout_id
             )
-            wizard.font = wizard.company_id.font
-            wizard.primary_color = wizard.company_id.primary_color
-            wizard.secondary_color = wizard.company_id.secondary_color
+            wizard.font = wizard.company_id.report_config_id.font
+            wizard.primary_color = wizard.company_id.report_config_id.primary_color
+            wizard.secondary_color = wizard.company_id.report_config_id.secondary_color
             wizard_layout = wizard.env["report.layout"].search(  # noqa: E8507 - a transient wizard: one record
                 [
                     (
                         "view_id.key",
                         "=",
-                        wizard.company_id.external_report_layout_id.key,
+                        wizard.company_id.report_config_id.external_report_layout_id.key,
                     )
                 ]
             )
@@ -290,8 +294,8 @@ class BaseDocumentLayout(models.TransientModel):
             company = wizard.company_id
             if (
                 wizard.image_1920 == company.image_1920
-                and company.primary_color
-                and company.secondary_color
+                and company.report_config_id.primary_color
+                and company.report_config_id.secondary_color
             ):
                 continue
 

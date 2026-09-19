@@ -13,6 +13,7 @@ from . import record_snapshot
 from . import report_layout
 from . import report_theme
 from . import res_company
+from . import report_config
 from . import res_config_settings
 from . import res_partner
 from . import res_users

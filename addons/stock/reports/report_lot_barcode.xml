@@ -27,7 +27,7 @@
                                 <td
                                     t-att-style="barcode_index &gt;= len(page_docs) and 'visibility:hidden'">
                                     <div
-                                        t-att-style="'position:relative; width:43mm; height:19mm; border: 1px solid %s;' % (o.env.user.company_id.primary_color or 'black')">
+                                        t-att-style="'position:relative; width:43mm; height:19mm; border: 1px solid %s;' % (o.env.user.company_id.report_config_id.primary_color or 'black')">
                                         <t t-set="final_barcode" t-value="''" />
                                         <t
                                             t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">

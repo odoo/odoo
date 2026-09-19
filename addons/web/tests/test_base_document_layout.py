@@ -21,7 +21,20 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
         self._set_templates_and_layouts()
         self._set_images()
 
+    def _write_layout(self, vals):
+        config_fields = self.company.report_config_id._fields
+        config_vals = {
+            k: v for k, v in vals.items() if k in config_fields and k != "company_id"
+        }
+        company_vals = {k: v for k, v in vals.items() if k not in config_vals}
+        if company_vals:
+            self.company.write(company_vals)
+        if config_vals:
+            self.company.report_config_id.write(config_vals)
+
     def assertColors(self, checked_obj, expected):
+        if getattr(expected, "_name", None) == "res.company":
+            expected = expected.report_config_id
         _expected_getter = (
             expected.get if isinstance(expected, dict) else partial(getattr, expected)
         )
@@ -121,7 +134,7 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
 @tagged("document_layout", "post_install", "-at_install", "web_unit", "web_layout")
 class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
     def test_company_no_color_change_logo(self):
-        self.company.write(
+        self._write_layout(
             {
                 "primary_color": False,
                 "secondary_color": False,
@@ -143,7 +156,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             self.assertEqual(doc_layout.image_1920, "")
 
     def test_company_no_color_but_logo_change_logo(self):
-        self.company.write(
+        self._write_layout(
             {
                 "primary_color": "#ff0080",
                 "secondary_color": "#00ff00",
@@ -158,7 +171,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             self.assertColors(doc_layout, self.company_imgs["odoo"]["colors"])
 
     def test_company_colors_change_logo(self):
-        self.company.write(
+        self._write_layout(
             {
                 "primary_color": "#ff0080",
                 "secondary_color": "#00ff00",
@@ -173,7 +186,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             self.assertColors(doc_layout, self.company_imgs["odoo"]["colors"])
 
     def test_company_colors_and_logo_change_logo(self):
-        self.company.write(
+        self._write_layout(
             {
                 "primary_color": "#ff0080",
                 "secondary_color": "#00ff00",
@@ -188,7 +201,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             self.assertColors(doc_layout, self.company_imgs["odoo"]["colors"])
 
     def test_company_colors_reset_colors(self):
-        self.company.write(
+        self._write_layout(
             {
                 "primary_color": "#ff0080",
                 "secondary_color": "#00ff00",
@@ -204,7 +217,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             self.assertColors(doc_layout, self.company_imgs["sweden"]["colors"])
 
     def test_parse_company_colors_grayscale(self):
-        self.company.write(
+        self._write_layout(
             {
                 "primary_color": "#ff0080",
                 "secondary_color": "#00ff00",
@@ -223,7 +236,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
         )
         self.assertNotIn("\n<br>\n", doc_layout_1.company_details)
 
-        self.company.write({"street2": "street_2_detail"})
+        self._write_layout({"street2": "street_2_detail"})
         doc_layout_2 = self.env["base.document.layout"].create(
             {"company_id": self.company.id}
         )

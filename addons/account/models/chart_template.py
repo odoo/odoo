@@ -857,6 +857,24 @@ class AccountChartTemplate(models.AbstractModel):
             )
         return vals
 
+    def _pre_load_report_config_vals(self, company, template_data):
+        # a template's report layout and paper format are the company's
+        # report configuration, not the company
+        config = company.report_config_id
+        vals = {}
+        for key, value in template_data.items():
+            field = config._fields.get(key)
+            if field is None or key in company._fields or key == "company_id":
+                continue
+            if field.is_many2one and isinstance(value, str):
+                value = self.ref(value).id
+            vals[key] = value
+        if vals:
+            _debug.logic(
+                "report_config_loaded", company=company.id, fields=sorted(vals)
+            )
+            config.write(vals)
+
     def _pre_load_drop_unknown_fields(self, data):
         for model_name, records in data.items():
             model_fields = self.env[model_name]._fields
@@ -905,6 +923,7 @@ class AccountChartTemplate(models.AbstractModel):
         company.write(
             self._pre_load_company_vals(company, template_data, fiscal_country)
         )
+        self._pre_load_report_config_vals(company, template_data)
 
         code_digits = int(template_data.get("code_digits", 6))
         for account_data in data.get("account.account", {}).values():

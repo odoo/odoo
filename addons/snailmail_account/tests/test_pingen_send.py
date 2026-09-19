@@ -71,8 +71,8 @@ class TestPingenSend(HttpCase):
         return invoice
 
     def render_and_send(self, report_name):
-        self.sample_invoice.company_id.external_report_layout_id = self.env.ref(
-            "web." + report_name
+        self.sample_invoice.company_id.report_config_id.external_report_layout_id = (
+            self.env.ref("web." + report_name)
         )
         self.letter.attachment_id = False
         attachment_id = self.letter.with_context(
@@ -98,7 +98,7 @@ class TestPingenSend(HttpCase):
             }
             if response.status_code <= 499 or response.json()["error"]:
                 raise requests.HTTPError(msg % "Client")
-            _logger.warning(msg % "Server")
+            _logger.warning(msg, "Server")
 
     def test_pingen_send_invoice(self):
         self.render_and_send("external_layout_standard")

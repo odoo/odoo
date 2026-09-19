@@ -244,9 +244,9 @@ class IrActionsReport(models.Model):
         if self.paperformat_id:
             _debug.logic("paperformat", report=self.id, source="report")
             return self.paperformat_id
-        if self.env.company.paperformat_id:
+        if self.env.company.report_config_id.paperformat_id:
             _debug.logic("paperformat", report=self.id, source="company")
-            return self.env.company.paperformat_id
+            return self.env.company.report_config_id.paperformat_id
         _debug.logic("paperformat", report=self.id, source="default")
         return self.env.ref("base.paperformat_euro", raise_if_not_found=False)
 
@@ -254,7 +254,7 @@ class IrActionsReport(models.Model):
         return (
             self.env.ref(xml_id).get_paperformat()
             if xml_id
-            else self.env.company.paperformat_id
+            else self.env.company.report_config_id.paperformat_id
         )
 
     @api.model

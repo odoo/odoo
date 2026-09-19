@@ -45,27 +45,27 @@ class TestReportTheme(TransactionCase):
     def test_default_theme_backfill_is_idempotent(self):
         modern = self.env.ref("web.report_theme_modern")
         ledger = self.env.ref("web.report_theme_ledger")
-        company = self.env["res.company"].create(
-            {"name": "Backfill Co", "report_theme_id": False}
-        )
-        chosen = self.env["res.company"].create(
-            {"name": "Chosen Co", "report_theme_id": ledger.id}
-        )
-        self.env["res.company"]._update_report_theme_default()
-        self.assertEqual(company.report_theme_id, modern)
-        self.assertEqual(chosen.report_theme_id, ledger)
+        company = self.env["res.company"].create({"name": "Backfill Co"})
+        company.report_config_id.report_theme_id = False
+        chosen = self.env["res.company"].create({"name": "Chosen Co"})
+        chosen.report_config_id.report_theme_id = ledger
+        self.env["report.config"]._update_report_theme_default()
+        self.assertEqual(company.report_config_id.report_theme_id, modern)
+        self.assertEqual(chosen.report_config_id.report_theme_id, ledger)
 
     def test_theme_change_regenerates_company_stylesheet(self):
         attachment = self.env.ref("web.asset_styles_company_report")
         before = attachment.datas
-        self.env.company.report_theme_id = self.env.ref("web.report_theme_editorial")
+        self.env.company.report_config_id.report_theme_id = self.env.ref(
+            "web.report_theme_editorial"
+        )
         after = self.env.ref("web.asset_styles_company_report").datas
         self.assertNotEqual(before, after)
         self.assertIn("Georgia", base64.b64decode(after).decode())
 
     def test_editing_theme_token_regenerates_company_stylesheet(self):
         theme = self.env.ref("web.report_theme_modern")
-        self.env.company.report_theme_id = theme
+        self.env.company.report_config_id.report_theme_id = theme
         before = self.env.ref("web.asset_styles_company_report").datas
         theme.row_padding = "2.5rem"
         after = self.env.ref("web.asset_styles_company_report").datas
@@ -74,7 +74,7 @@ class TestReportTheme(TransactionCase):
 
     def test_editing_theme_non_token_field_skips_regeneration(self):
         theme = self.env.ref("web.report_theme_modern")
-        self.env.company.report_theme_id = theme
+        self.env.company.report_config_id.report_theme_id = theme
         before = self.env.ref("web.asset_styles_company_report").datas
         theme.sequence += 5
         after = self.env.ref("web.asset_styles_company_report").datas

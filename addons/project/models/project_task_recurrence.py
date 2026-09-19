@@ -207,8 +207,8 @@ class ProjectTaskRecurrence(models.Model):
                 "child_ids": [
                     Command.create(vals)
                     for vals in self._prepare_next_occurrence_vals_list(
-                        dict.fromkeys(task.child_ids, recurrence),
-                        dict.fromkeys(task.child_ids, shift),
+                        dict.fromkeys(task.child_ids.sorted("id"), recurrence),
+                        dict.fromkeys(task.child_ids.sorted("id"), shift),
                     )
                 ],
             }

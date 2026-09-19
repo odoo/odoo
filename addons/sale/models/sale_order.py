@@ -966,7 +966,7 @@ class SaleOrder(models.Model):
             self.env.context.get("check_document_layout")
             and not self.env.context.get("discard_logo_check")
             and self.env.is_admin()
-            and not self.env.company.external_report_layout_id
+            and not self.env.company.report_config_id.external_report_layout_id
         ):
             _debug.logic("layout_configurator_shown", order=self)
             layout_action = self.env[

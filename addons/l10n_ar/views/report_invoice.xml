@@ -15,7 +15,7 @@
                 <div
                     name="center-upper"
                     class="col-2 text-center"
-                    t-att-style="'color: %s;' % o.company_id.primary_color">
+                    t-att-style="'color: %s;' % o.company_id.report_config_id.primary_color">
                     <span
                         id="withholding_legend"
                         style="display: inline-block; text-align: center; line-height: 8px;">
@@ -34,7 +34,7 @@
                     t-if="not pre_printed_report">
 
                     <!-- (6) Titulo de Documento -->
-                    <h4 t-att-style="'color: %s;' % o.company_id.primary_color"><strong>
+                    <h4 t-att-style="'color: %s;' % o.company_id.report_config_id.primary_color"><strong>
                         <span t-out="report_name" />
                     </strong></h4>
 
@@ -54,7 +54,7 @@
                         <t t-out="' - '.join([item for item in [                             ', '.join([item for item in [header_address.street, header_address.street2] if item]),                             header_address.city,                             header_address.state_id and header_address.state_id.name,                             header_address.zip,                             header_address.country_id and header_address.country_id.name] if item])" /><t t-set="header_phone" t-value="header_address._phone_get_number().number" /><span t-if="header_phone"> - </span><span t-if="header_phone" style="white-space: nowrap;" t-out="'Tel: ' + header_phone" />
                         <br />
                         <span
-                            t-att-style="'color: %s;' % o.company_id.primary_color"
+                            t-att-style="'color: %s;' % o.company_id.report_config_id.primary_color"
                             t-out="' - '.join([item for item in [(header_address.website or '').replace('https://', '').replace('http://', ''), header_address.email] if item])" />
                     </t>
                 </div>
@@ -65,22 +65,22 @@
 
                     <t t-if="not pre_printed_report">
                         <!-- (7) Numero punto venta - (8) numero de documento -->
-                        <span t-att-style="'color: %s;' % o.company_id.secondary_color">Nro: </span><span t-out="report_number" />
+                        <span t-att-style="'color: %s;' % o.company_id.report_config_id.secondary_color">Nro: </span><span t-out="report_number" />
                     </t>
                     <br />
 
                     <!-- (9) Fecha -->
-                    <span t-att-style="'color: %s;' % o.company_id.secondary_color">Date: </span><span t-out="report_date" t-options="{&quot;widget&quot;: &quot;date&quot;}" />
+                    <span t-att-style="'color: %s;' % o.company_id.report_config_id.secondary_color">Date: </span><span t-out="report_date" t-options="{&quot;widget&quot;: &quot;date&quot;}" />
 
                     <t t-if="not pre_printed_report">
                         <!-- (5) Condicion de IVA / Responsabilidad -->
                         <!-- (10) CUIT -->
                         <br />
-                        <span t-field="o.company_id.l10n_ar_afip_responsibility_type_id" /><span t-att-style="'color: %s;' % o.company_id.secondary_color"> - CUIT: </span><span t-field="o.company_id.partner_id.l10n_ar_formatted_vat" />
+                        <span t-field="o.company_id.l10n_ar_afip_responsibility_type_id" /><span t-att-style="'color: %s;' % o.company_id.report_config_id.secondary_color"> - CUIT: </span><span t-field="o.company_id.partner_id.l10n_ar_formatted_vat" />
 
                         <!-- (11) IIBB: -->
                         <!-- (12) Inicio de actividades -->
-                        <br /><span t-att-style="'color: %s;' % o.company_id.secondary_color">IIBB: </span><span t-out="o.company_id.l10n_ar_gross_income_type == 'exempt' and 'Exento' or o.company_id.l10n_ar_gross_income_number" /><span t-att-style="'color: %s;' % o.company_id.secondary_color"> - Activities Start: </span><span t-field="o.company_id.l10n_ar_afip_start_date" />
+                        <br /><span t-att-style="'color: %s;' % o.company_id.report_config_id.secondary_color">IIBB: </span><span t-out="o.company_id.l10n_ar_gross_income_type == 'exempt' and 'Exento' or o.company_id.l10n_ar_gross_income_number" /><span t-att-style="'color: %s;' % o.company_id.report_config_id.secondary_color"> - Activities Start: </span><span t-field="o.company_id.l10n_ar_afip_start_date" />
                     </t>
 
                 </div>

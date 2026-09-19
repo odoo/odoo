@@ -29,7 +29,7 @@ class TestOrderSharedFeatures(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.company.external_report_layout_id = cls.env.ref(
+        cls.env.company.report_config_id.external_report_layout_id = cls.env.ref(
             "web.external_layout_standard",
         )
         cls.partner = cls.env["res.partner"].create({"name": "Counterparty"})

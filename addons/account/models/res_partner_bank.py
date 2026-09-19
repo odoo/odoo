@@ -94,9 +94,10 @@ class ResPartnerBank(models.Model):
                     )
                 )
 
-    @api.depends("acc_number")
+    @api.depends("acc_number", "active", "company_id", "partner_id")
     @_debug.perf.timed
     def _compute_duplicate_bank_partner_ids(self):
+        self.flush_model(["acc_number", "active", "company_id", "partner_id"])
         id2duplicates = dict(
             self.env.execute_query(
                 SQL(

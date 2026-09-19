@@ -203,7 +203,7 @@
                                     <div
                                         t-if="move_line"
                                         t-translation="off"
-                                        t-att-style="'position:relative; width:43mm; height:19mm; border: 1px solid %s;' % (move_line.env.user.company_id.primary_color or 'black')">
+                                        t-att-style="'position:relative; width:43mm; height:19mm; border: 1px solid %s;' % (move_line.env.user.company_id.report_config_id.primary_color or 'black')">
                                         <div class="o_label_name o_label_4x12 fw-bold">
                                             <span t-out="move_line.product_id.display_name">Product</span>
                                             <div><span>Quantity: </span>

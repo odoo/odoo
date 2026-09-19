@@ -17,6 +17,10 @@
     <record id="demo_company_us" model="res.company">
         <field name="name">My US Company</field>
         <field name="partner_id" ref="partner_demo_company_us" />
+    </record>
+
+    <record id="report_config_demo_company_us" model="report.config">
+        <field name="company_id" ref="demo_company_us" />
         <field name="paperformat_id" ref="base.paperformat_us" />
     </record>
 

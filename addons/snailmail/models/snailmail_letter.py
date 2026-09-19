@@ -169,19 +169,18 @@ class SnailmailLetter(models.Model):
             )
         letters = super().create(vals_list)
 
-        notification_vals = []
-        for letter in letters:
-            notification_vals.append(
-                {
-                    "author_id": letter.message_id.author_id.id,
-                    "mail_message_id": letter.message_id.id,
-                    "res_partner_id": letter.partner_id.id,
-                    "notification_type": "snail",
-                    "letter_id": letter.id,
-                    "is_read": True,  # discard Inbox notification
-                    "notification_status": "ready",
-                }
-            )
+        notification_vals = [
+            {
+                "author_id": letter.message_id.author_id.id,
+                "mail_message_id": letter.message_id.id,
+                "res_partner_id": letter.partner_id.id,
+                "notification_type": "snail",
+                "letter_id": letter.id,
+                "is_read": True,  # discard Inbox notification
+                "notification_status": "ready",
+            }
+            for letter in letters
+        ]
 
         self.env["mail.notification"].sudo().create(notification_vals)
 
@@ -235,16 +234,16 @@ class SnailmailLetter(models.Model):
             ) or paperformat.format != "A4":
                 raise UserError(_("Please use an A4 Paper format."))
             # The external_report_layout_id is changed just for the snailmail pdf generation if the layout is not supported
-            prev = self.company_id.external_report_layout_id
+            prev = self.company_id.report_config_id.external_report_layout_id
             if prev in {
                 self.env.ref(f"web.external_layout_{layout}")
                 for layout in ("bubble", "wave", "folder")
             }:
-                self.company_id.external_report_layout_id = self.env.ref(
-                    "web.external_layout_standard"
+                self.company_id.report_config_id.external_report_layout_id = (
+                    self.env.ref("web.external_layout_standard")
                 )
             filename, pdf_bin = self._generate_report_pdf(report)
-            self.company_id.external_report_layout_id = prev
+            self.company_id.report_config_id.external_report_layout_id = prev
 
             pdf_bin = self._overwrite_margins(pdf_bin)
             if self.cover:
@@ -396,8 +395,9 @@ class SnailmailLetter(models.Model):
                         }
                     )
                     continue
-                if letter.company_id.external_report_layout_id == self.env.ref(
-                    "l10n_de.external_layout_din5008", False
+                if (
+                    letter.company_id.report_config_id.external_report_layout_id
+                    == self.env.ref("l10n_de.external_layout_din5008", False)
                 ):
                     document.update(
                         {
@@ -516,12 +516,12 @@ class SnailmailLetter(models.Model):
             response = iap_tools.iap_jsonrpc(
                 endpoint + PRINT_ENDPOINT, params=params, timeout=timeout, env=self.env
             )
-        except AccessError as ae:
+        except AccessError:
             for doc in params["documents"]:
                 letter = self.browse(doc["letter_id"])
                 letter.state = "error"
                 letter.error_code = "UNKNOWN_ERROR"
-            raise ae
+            raise
         for doc in response["request"]["documents"]:
             if doc.get("sent") and response["request_code"] == 200:
                 self.env["iap.account"]._send_success_notification(

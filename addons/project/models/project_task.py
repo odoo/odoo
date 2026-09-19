@@ -2024,7 +2024,7 @@ class ProjectTask(models.Model):
                 current_task = task
                 if self.env.context.get("copy_from_template"):
                     current_task = current_task.with_context(active_test=True)
-                child_ids = current_task.child_ids
+                child_ids = current_task.child_ids.sorted("id")
                 dbg.pipeline.debug(
                     "[task:%s] copy_data -> copying %d subtasks",
                     dbg.rec(task),
@@ -2050,6 +2050,8 @@ class ProjectTask(models.Model):
         self, copied_tasks: Self
     ) -> tuple[dict, dict]:
         task_mapping, task_dependencies = {}, {}
+        # copies are created in the copied recordset's order, so their ids
+        # ascend along self; children were copied by id (copy_data)
         copied_tasks = copied_tasks.sorted("id")
         for original_task, copied_task in zip(self, copied_tasks, strict=True):
             task_mapping[original_task.id] = copied_task
@@ -2060,7 +2062,7 @@ class ProjectTask(models.Model):
                     original_task.predecessor_ids.ids,
                     original_task.successor_ids.ids,
                 ]
-            active_children = original_task.child_ids.filtered("active")
+            active_children = original_task.child_ids.filtered("active").sorted("id")
             if active_children:
                 children_mapping, children_dependencies = (
                     active_children._get_task_mapping_and_dependencies(

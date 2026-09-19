@@ -50,7 +50,7 @@ class OnboardingOnboardingStep(models.Model):
             "account.onboarding_onboarding_step_base_document_layout",
             raise_if_not_found=False,
         )
-        if not step or not self.env.company.external_report_layout_id:
+        if not step or not self.env.company.report_config_id.external_report_layout_id:
             return False
         return self.action_validate_step(
             "account.onboarding_onboarding_step_base_document_layout"

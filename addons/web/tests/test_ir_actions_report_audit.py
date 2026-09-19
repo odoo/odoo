@@ -564,7 +564,7 @@ class TestLayoutConfiguratorAction(TransactionCase):
     def setUp(self):
         super().setUp()
         self.report = self.env["ir.actions.report"].search([], limit=1)
-        self.env.company.external_report_layout_id = False
+        self.env.company.report_config_id.external_report_layout_id = False
 
     def test_a_company_without_a_layout_gets_the_configurator_first(self):
         action = self.report.report_action([])
@@ -828,7 +828,7 @@ class TestReportPaperformatFallback(TransactionCase):
                 "report_name": "base.no_paperformat_probe",
             }
         )
-        self.env.company.paperformat_id = False
+        self.env.company.report_config_id.paperformat_id = False
         self.assertFalse(report.paperformat_id)
 
         paperformat = report.get_paperformat()
@@ -1071,7 +1071,7 @@ class TestLayoutCssMargins(MultiArticleReportCase):
 
     def test_a_report_without_xmlid_gets_its_own_paperformat_margins(self):
         Paperformat = self.env["report.paperformat"]
-        self.env.company.paperformat_id = Paperformat.create(
+        self.env.company.report_config_id.paperformat_id = Paperformat.create(
             {"name": "audit company", "css_margins": False}
         )
         self.report.paperformat_id = Paperformat.create(
@@ -1090,9 +1090,9 @@ class TestLayoutCssMargins(MultiArticleReportCase):
             self.assertNotIn("o_css_margins", body)
 
     def test_a_direct_layout_render_still_falls_back_to_the_company(self):
-        self.env.company.paperformat_id = self.env["report.paperformat"].create(
-            {"name": "audit company", "css_margins": True}
-        )
+        self.env.company.report_config_id.paperformat_id = self.env[
+            "report.paperformat"
+        ].create({"name": "audit company", "css_margins": True})
         html = self.env["ir.actions.report"]._render_template(
             "web.minimal_layout", {"subst": True, "body": "audit"}
         )

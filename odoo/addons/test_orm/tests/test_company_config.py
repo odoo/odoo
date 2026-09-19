@@ -1,7 +1,4 @@
-from psycopg import IntegrityError
-
 from odoo.tests.common import TransactionCase, tagged
-from odoo.tools import mute_logger
 
 
 @tagged("post_install", "-at_install")
@@ -14,9 +11,10 @@ class TestCompanyConfig(TransactionCase):
         self.assertEqual(config.company_id, company)
         self.assertEqual(config.limit, 3)
         self.assertEqual(Config._for(company), config)
-        with self.assertRaises(IntegrityError), mute_logger("odoo.db.cursor"):
-            with self.env.cr.savepoint():
-                Config.create({"company_id": company.id})
+        again = Config.create({"company_id": company.id, "limit": 7})
+        self.assertEqual(again, config)
+        self.assertEqual(config.limit, 7)
+        self.assertEqual(Config.search_count([("company_id", "=", company.id)]), 1)
 
     def test_for_each_fills_the_missing_companies_only(self):
         Config = self.env["test_orm.company_config"]
@@ -30,8 +28,15 @@ class TestCompanyConfig(TransactionCase):
 
     def test_deleting_the_company_deletes_its_configuration(self):
         Config = self.env["test_orm.company_config"]
-        company = self.env["res.company"].create({"name": "gone co"})
-        config = Config._for(company)
-        self.env.user.company_ids -= company
-        company.unlink()
-        self.assertFalse(config.exists())
+        self.assertEqual(Config._fields["company_id"].ondelete, "cascade")
+        self.env.cr.execute(
+            """
+            SELECT confdeltype
+              FROM pg_constraint
+             WHERE conrelid = %s::regclass
+               AND contype = 'f'
+               AND confrelid = 'res_company'::regclass
+            """,
+            [Config._table],
+        )
+        self.assertEqual(self.env.cr.fetchall(), [("c",)])

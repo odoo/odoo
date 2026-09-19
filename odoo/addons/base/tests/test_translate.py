@@ -2187,18 +2187,17 @@ class TestHTMLTranslation(TransactionCase):
 <h1>My First Heading</h1>
 <p>My first paragraph.</p>
 """
-        company = self.env["res.company"].browse(9999)
-        company.report_footer = html
-        self.assertHTMLEqual(company.report_footer, html)
-        company.flush_recordset()
+        config = self.env["report.config"].browse(9999)
+        config.report_footer = html
+        self.assertHTMLEqual(config.report_footer, html)
+        config.flush_recordset()
 
     def test_delay_translations_no_term(self):
         self.env["res.lang"]._activate_lang("fr_FR")
         self.env["res.lang"]._activate_lang("nl_NL")
         Company = self.env["res.company"]
-        company0 = Company.create(
-            {"name": "company_1", "report_footer": "<h1>Knife</h1>"}
-        )
+        company0 = Company.create({"name": "company_1"}).report_config_id
+        company0.report_footer = "<h1>Knife</h1>"
         company0.update_field_translations(
             "report_footer", {"fr_FR": {"Knife": "Couteau"}}
         )

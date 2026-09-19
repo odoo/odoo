@@ -20,7 +20,7 @@
         id="l10n_ph.external_layout_bubble"
         inherit_id="web.external_layout_bubble">
         <xpath
-            expr="//div[hasclass('border-top')][@t-field='company.report_footer']"
+            expr="//div[hasclass('border-top')][@t-field='layout.report_footer']"
             position="before">
             <t t-if="is_l10n_ph_disbursement_voucher">
                 <t t-call="l10n_ph.report_disbursement_voucher_document_footer" />
@@ -29,7 +29,7 @@
     </template>
 
     <template id="l10n_ph.external_layout_wave" inherit_id="web.external_layout_wave">
-        <xpath expr="//div[@t-field='company.report_footer']" position="before">
+        <xpath expr="//div[@t-field='layout.report_footer']" position="before">
             <t t-if="is_l10n_ph_disbursement_voucher">
                 <t t-call="l10n_ph.report_disbursement_voucher_document_footer" />
             </t>

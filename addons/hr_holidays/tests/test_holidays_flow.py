@@ -275,7 +275,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
 
     def test_10_leave_summary_reports(self):
         admin_emp = self.env.ref("hr.employee_admin")
-        self.env.company.external_report_layout_id = self.env.ref(
+        self.env.company.report_config_id.external_report_layout_id = self.env.ref(
             "web.external_layout_standard"
         ).id
 

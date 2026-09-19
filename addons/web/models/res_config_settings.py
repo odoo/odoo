@@ -31,13 +31,13 @@ class ResConfigSettings(models.TransientModel):
         compute="_compute_company_count",
     )
     report_footer = fields.Html(
-        related="company_id.report_footer",
+        related="company_id.report_config_id.report_footer",
         string="Custom Report Footer",
         readonly=False,
         help="Footer text displayed at the bottom of all reports.",
     )
     external_report_layout_id = fields.Many2one(
-        related="company_id.external_report_layout_id"
+        related="company_id.report_config_id.external_report_layout_id"
     )
 
     active_user_count = fields.Integer(

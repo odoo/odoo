@@ -325,7 +325,7 @@
 
     <template id="company_address_block">
         <ul class="list-unstyled" name="company_address_list">
-            <li t-if="company.is_company_details_empty">
+            <li t-if="layout.is_company_details_empty">
                 <span
                     t-field="company.partner_id"
                     t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}">
@@ -337,7 +337,7 @@
                 </span>
             </li>
             <li t-else="">
-                <span t-field="company.company_details">
+                <span t-field="layout.company_details">
                     <div
                         class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
                         <strong>Company details block</strong>
@@ -366,10 +366,10 @@
                 <div
                     t-attf-class="{{report_type != 'pdf' and 'flex-grow-1 text-start me-2' or ''}}"
                     name="footer_text">
-                    <span t-field="company.report_footer" />
+                    <span t-field="layout.report_footer" />
                 </div>
                 <div class="text-end text-muted" name="page_counter">
-                    <strong t-if="footer_show_tagline and not is_html_empty(company.report_header)" t-field="company.report_header" class="o_company_tagline" name="company_tagline">Company tagline</strong>
+                    <strong t-if="footer_show_tagline and not is_html_empty(layout.report_header)" t-field="layout.report_header" class="o_company_tagline" name="company_tagline">Company tagline</strong>
                     <div t-if="report_type == 'pdf' and display_name_in_footer" t-out="o.name">(document
                         name)</div>
                     <div t-if="report_type == 'pdf'" class="text-nowrap">Page <span class="page" />
@@ -391,7 +391,7 @@
                         name="company_logo"
                         t-att-src="image_data_uri(company.image_1920)"
                         alt="Logo" />
-                    <div t-if="company.report_header" t-field="company.report_header" name="company_tagline" class="o_company_tagline fw-bold mt-2">Company
+                    <div t-if="layout.report_header" t-field="layout.report_header" name="company_tagline" class="o_company_tagline fw-bold mt-2">Company
                         tagline</div>
                 </div>
                 <div class="w-50 ms-3" name="company_address">
@@ -401,7 +401,7 @@
         </div>
 
         <div
-            t-attf-class="article o_company_#{company.id}_layout o_report_layout o_report_layout_striped o_table_striped o_snail_mail {{company.layout_background != 'Blank' and 'o_report_layout_background' or ''}}"
+            t-attf-class="article o_company_#{company.id}_layout o_report_layout o_report_layout_striped o_table_striped o_snail_mail {{layout.layout_background != 'Blank' and 'o_report_layout_background' or ''}}"
             name="report_body"
             t-attf-style="{{f'background-image: url({layout_background_url});' if layout_background_url else ''}}"
             t-att-data-oe-model="o and o._name"
@@ -440,7 +440,7 @@
         </div>
 
         <div
-            t-attf-class="article o_company_#{company.id}_layout o_report_layout o_report_layout_boxed o_table_boxed o_snail_mail {{company.layout_background != 'Blank' and 'o_report_layout_background' or ''}}"
+            t-attf-class="article o_company_#{company.id}_layout o_report_layout o_report_layout_boxed o_table_boxed o_snail_mail {{layout.layout_background != 'Blank' and 'o_report_layout_background' or ''}}"
             name="report_body"
             t-attf-style="{{f'background-image: url({layout_background_url});' if layout_background_url else ''}}"
             t-att-data-oe-model="o and o._name"
@@ -479,7 +479,7 @@
         </div>
 
         <div
-            t-attf-class="article o_company_#{company.id}_layout o_report_layout o_report_layout_bold o_table_bold o_snail_mail {{company.layout_background != 'Blank' and 'o_report_layout_background' or ''}}"
+            t-attf-class="article o_company_#{company.id}_layout o_report_layout o_report_layout_bold o_table_bold o_snail_mail {{layout.layout_background != 'Blank' and 'o_report_layout_background' or ''}}"
             name="report_body"
             t-attf-style="{{f'background-image: url({layout_background_url});' if layout_background_url else ''}}"
             t-att-data-oe-model="o and o._name"
@@ -506,7 +506,7 @@
                     name="company_logo"
                     t-att-src="image_data_uri(company.image_1920)"
                     alt="Logo" />
-                <div t-if="company.report_header" t-field="company.report_header" name="company_tagline" class="o_company_tagline mw-50 fw-bold">Company tagline</div>
+                <div t-if="layout.report_header" t-field="layout.report_header" name="company_tagline" class="o_company_tagline mw-50 fw-bold">Company tagline</div>
             </div>
             <div name="company_address" style="max-width: 50%;">
                 <t t-call="web.company_address_block" />
@@ -514,7 +514,7 @@
         </div>
 
         <div
-            t-attf-class="article o_company_#{company.id}_layout o_report_layout o_report_layout_standard o_table_standard o_snail_mail {{company.layout_background != 'Blank' and 'o_report_layout_background' or ''}}"
+            t-attf-class="article o_company_#{company.id}_layout o_report_layout o_report_layout_standard o_table_standard o_snail_mail {{layout.layout_background != 'Blank' and 'o_report_layout_background' or ''}}"
             name="report_body"
             t-attf-style="{{f'background-image: url({layout_background_url});' if layout_background_url else ''}}"
             t-att-data-oe-model="o and o._name"
@@ -587,7 +587,7 @@
                         name="company_logo"
                         t-att-src="image_data_uri(company.image_1920)"
                         alt="Logo" />
-                    <div t-if="company.report_header" t-field="company.report_header" name="company_tagline" class="o_company_tagline fw-bold">Company tagline</div>
+                    <div t-if="layout.report_header" t-field="layout.report_header" name="company_tagline" class="o_company_tagline fw-bold">Company tagline</div>
                 </div>
                 <div name="company_address" class="w-50 text-end">
                     <t t-call="web.company_address_block" />
@@ -596,7 +596,7 @@
         </div>
 
         <div
-            t-attf-class="article o_company_#{company.id}_layout o_report_layout o_report_layout_folder o_table_striped {{company.layout_background != 'Blank' and 'o_report_layout_background' or ''}}"
+            t-attf-class="article o_company_#{company.id}_layout o_report_layout o_report_layout_folder o_table_striped {{layout.layout_background != 'Blank' and 'o_report_layout_background' or ''}}"
             name="report_body"
             t-attf-style="{{f'margin-top: {header_shape_height}px;' if report_type != 'pdf' else ''}}                 {{f'background-image: url({layout_background_url});' if layout_background_url else ''}}"
             t-att-data-oe-model="o and o._name"
@@ -634,7 +634,7 @@
                 fill="none">
                 <path
                     d="M1000 230.734C937.384 240.621 803.83 250.266 562.185 220.602C311.343 189.809 104.626 201.375 0 211.598V0.5H1000V230.734Z"
-                    t-att-fill="company.primary_color"
+                    t-att-fill="layout.primary_color"
                     fill-opacity=".1" />
             </svg>
 
@@ -646,7 +646,7 @@
                         name="company_logo"
                         t-att-src="image_data_uri(company.image_1920)"
                         alt="Logo" />
-                    <div t-if="company.report_header" t-field="company.report_header" name="company_tagline" class="o_company_tagline fw-bold">Company tagline</div>
+                    <div t-if="layout.report_header" t-field="layout.report_header" name="company_tagline" class="o_company_tagline fw-bold">Company tagline</div>
                 </div>
                 <div name="company_address" class="w-50 text-end">
                     <t t-call="web.company_address_block" />
@@ -655,7 +655,7 @@
         </div>
 
         <div
-            t-attf-class="article o_company_#{company.id}_layout o_report_layout o_report_layout_wave o_table_striped {{company.layout_background != 'Blank' and 'o_report_layout_background' or ''}}"
+            t-attf-class="article o_company_#{company.id}_layout o_report_layout o_report_layout_wave o_table_striped {{layout.layout_background != 'Blank' and 'o_report_layout_background' or ''}}"
             name="report_body"
             t-attf-style="{{f'margin-top: {header_shape_height}px;' if report_type != 'pdf' else ''}}                 {{f'background-image: url({layout_background_url});' if layout_background_url else ''}}"
             t-att-data-oe-model="o and o._name"
@@ -679,13 +679,13 @@
                 fill="none">
                 <path
                     d="M427.731 19.757C686.904 51.3469 898.971 38.039 1000 27.6922V180H0V8.20934C66.363 -0.991089 198.347 -8.20218 427.731 19.757Z"
-                    t-att-fill="company.secondary_color"
+                    t-att-fill="layout.secondary_color"
                     fill-opacity=".1" />
             </svg>
             <div
                 t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-5 text-center"
                 name="footer_content">
-                <div t-field="company.report_footer" name="footer_text" />
+                <div t-field="layout.report_footer" name="footer_text" />
                 <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
                 <span t-if="report_type == 'pdf'" class="text-muted text-nowrap" name="page_counter">Page <span class="page" /> / <span class="topage" /></span>
             </div>
@@ -705,17 +705,17 @@
                     cx="550"
                     cy="550"
                     r="550"
-                    t-att-fill="company.primary_color"
+                    t-att-fill="layout.primary_color"
                     fill-opacity=".1" />
             </svg>
             <table class="o_ignore_layout_styling table table-borderless mb-0">
                 <tbody>
                     <tr>
                         <td
-                            t-if="company.report_header"
+                            t-if="layout.report_header"
                             class="o_company_tagline fw-bold p-0 pe-2"
                             name="company_tagline">
-                            <span t-field="company.report_header">
+                            <span t-field="layout.report_header">
                                 Company tagline
                             </span>
                         </td>
@@ -736,7 +736,7 @@
         </div>
 
         <div
-            t-attf-class="article o_company_#{company.id}_layout o_report_layout o_report_layout_bubble o_table_boxed-rounded {{company.layout_background != 'Blank' and 'o_report_layout_background' or ''}}"
+            t-attf-class="article o_company_#{company.id}_layout o_report_layout o_report_layout_bubble o_table_boxed-rounded {{layout.layout_background != 'Blank' and 'o_report_layout_background' or ''}}"
             name="report_body"
             t-attf-style="{{f'background-image: url({layout_background_url});' if layout_background_url else ''}}"
             t-att-data-oe-model="o and o._name"
@@ -781,7 +781,7 @@
                 fill="none">
                 <path
                     d="M500 228H0V6.52743C26.3323 2.23278 53.3561 0 80.9008 0C256.522 0 410.969 90.7656 500 228Z"
-                    t-att-fill="company.secondary_color"
+                    t-att-fill="layout.secondary_color"
                     fill-opacity=".1" />
             </svg>
             <div
@@ -789,7 +789,7 @@
                 name="footer_content">
                 <div
                     class="border-top pt-2"
-                    t-field="company.report_footer"
+                    t-field="layout.report_footer"
                     name="footer_text" />
                 <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
                 <span t-if="report_type == 'pdf'" class="text-muted text-nowrap" name="page_counter">Page <span class="page" /> / <span class="topage" /></span>
@@ -812,13 +812,14 @@
             </t>
         </t>
 
+        <t t-set="layout" t-value="layout or company.report_config_id" />
         <t
             t-set="layout_background_url"
-            t-value="f'data:image/png;base64,{company.layout_background_image.decode('utf-8')}' if company.layout_background_image and company.layout_background == 'Custom' else                 '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''" />
+            t-value="f'data:image/png;base64,{layout.layout_background_image.decode('utf-8')}' if layout.layout_background_image and layout.layout_background == 'Custom' else                 '/base/static/img/demo_logo_report.png' if layout.layout_background == 'Demo logo' else ''" />
 
         <t
-            t-if="company.external_report_layout_id"
-            t-call="{{company.external_report_layout_id.sudo().key}}">
+            t-if="layout.external_report_layout_id"
+            t-call="{{layout.external_report_layout_id.sudo().key}}">
             <t t-out="0" />
         </t>
         <t t-else="else" t-call="web.external_layout_standard">
@@ -914,15 +915,19 @@
         text on $background. TODO: Replace with native CSS color-contrast() once WeasyPrint gains
         support. */ @function co-color-contrast($background) { @if (lightness($background) &gt; 50) {
         @return black; } @else { @return white; } } <t t-foreach="company_ids" t-as="company" t-translation="off">
-            <t t-set="primary" t-value="company.primary_color or '#212529'" />
-            <t t-set="secondary" t-value="company.secondary_color or '#212529'" />
+            <t
+                t-set="primary"
+                t-value="company.report_config_id.primary_color or '#212529'" />
+            <t
+                t-set="secondary"
+                t-value="company.report_config_id.secondary_color or '#212529'" />
             <t
                 t-set="layout"
-                t-value="company.external_report_layout_id.key or 'web.external_layout_standard'" />
+                t-value="company.report_config_id.external_report_layout_id.key or 'web.external_layout_standard'" />
         .o_company_<t t-out="company.id" />_layout { --co-primary: <t t-out="primary" />;
-        --co-secondary: <t t-out="secondary" />; --co-font: <t t-out="company.font or 'Lato'" />; /*
+        --co-secondary: <t t-out="secondary" />; --co-font: <t t-out="company.report_config_id.font or 'Lato'" />; /*
         Report design tokens (skin). Colors track the company brand; typography/density/shape come
-        from the report.theme. */ <t t-out="company.report_theme_id._get_css_vars(primary, secondary, company.font or 'Lato')" />
+        from the report.theme. */ <t t-out="company.report_config_id.report_theme_id._get_css_vars(primary, secondary, company.report_config_id.font or 'Lato')" />
             <t t-if="layout == 'web.external_layout_boxed'"> /* Boxed: total row uses primary as
         background; text must contrast. */ &amp;.o_report_layout_boxed #total .o_total td strong {
         color: co-color-contrast(<t t-out="primary" />); } </t>

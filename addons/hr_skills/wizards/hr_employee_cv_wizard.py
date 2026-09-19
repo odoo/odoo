@@ -15,12 +15,16 @@ class HrEmployeeCvWizard(models.TransientModel):
 
     color_primary = fields.Char(
         string="Primary Color",
-        default=lambda self: self.env.company.primary_color or "#666666",
+        default=lambda self: (
+            self.env.company.report_config_id.primary_color or "#666666"
+        ),
         required=True,
     )
     color_secondary = fields.Char(
         string="Secondary Color",
-        default=lambda self: self.env.company.secondary_color or "#666666",
+        default=lambda self: (
+            self.env.company.report_config_id.secondary_color or "#666666"
+        ),
         required=True,
     )
 

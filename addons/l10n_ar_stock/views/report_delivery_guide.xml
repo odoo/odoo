@@ -4,9 +4,9 @@
     <data>
         <template id="custom_header" inherit_id="l10n_ar.custom_header" primary="True">
             <xpath expr="//div[@id='l10n_ar_header_right']//span" position="replace">
-                <span t-att-style="'color: %s;' % o.company_id.secondary_color"><strong>DOCUMENT NOT VALID AS AN INVOICE</strong></span>
+                <span t-att-style="'color: %s;' % o.company_id.report_config_id.secondary_color"><strong>DOCUMENT NOT VALID AS AN INVOICE</strong></span>
                 <br />
-                <span t-att-style="'color: %s;' % o.company_id.secondary_color">Delivery Guide No: </span>
+                <span t-att-style="'color: %s;' % o.company_id.report_config_id.secondary_color">Delivery Guide No: </span>
                 <span t-out="o.l10n_ar_delivery_guide_number" />
             </xpath>
         </template>

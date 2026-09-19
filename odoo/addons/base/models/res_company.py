@@ -7,7 +7,7 @@ from odoo.api import SUPERUSER_ID, ValuesType
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import file_open, html2plaintext, ormcache
+from odoo.tools import file_open, ormcache
 from odoo.tools.image import image_process
 
 _debug = DebugLog(__name__)
@@ -140,45 +140,14 @@ class ResCompany(models.Model):
         compute="_compute_uses_default_logo",
         store=True,
     )
-    report_header = fields.Html(
-        string="Company Tagline",
-        translate=True,
-        help="Company tagline, which is included in a printed document's header or footer (depending on the selected layout).",
-    )
-    report_footer = fields.Html(
-        translate=True,
-        help="Footer text displayed at the bottom of all reports.",
-    )
-    company_details = fields.Html(
-        translate=True,
-        help="Header text displayed at the top of all reports.",
-    )
-    is_company_details_empty = fields.Boolean(
-        compute="_compute_is_company_details_empty"
-    )
-    paperformat_id = fields.Many2one(
-        comodel_name="report.paperformat",
-        string="Paper format",
-        default=lambda self: self.env.ref(
-            "base.paperformat_euro",
-            raise_if_not_found=False,
-        ),
+    report_config_id = fields.Many2one(
+        comodel_name="report.config",
+        compute="_compute_report_config_id",
     )
     uninstalled_l10n_module_ids = fields.Many2many(
         comodel_name="ir.module.module",
         compute="_compute_uninstalled_l10n_module_ids",
     )
-
-    def init(self) -> None:
-        paperformat_euro = self.env.ref("base.paperformat_euro", False)
-        if paperformat_euro:
-            companies_without = self.search([("paperformat_id", "=", False)])
-            if companies_without:
-                _debug.lifecycle(
-                    "init_paperformat_set", companies=companies_without.ids
-                )
-                companies_without.write({"paperformat_id": paperformat_euro.id})
-        super().init()
 
     _code_uniq = models.Constraint(
         "unique (code)",
@@ -302,6 +271,7 @@ class ResCompany(models.Model):
         _debug.lifecycle("registry_cache_cleared", by="create")
         companies = super().create(vals_list)
         self.env.registry.clear_cache()
+        self.env["report.config"]._for_each(companies)
         _debug.lifecycle(
             "create",
             count=len(companies),
@@ -521,12 +491,11 @@ class ResCompany(models.Model):
         for company in self:
             company.display_name = company.code or company.name
 
-    @api.depends("company_details")
-    def _compute_is_company_details_empty(self) -> None:
-        for record in self:
-            record.is_company_details_empty = not html2plaintext(
-                record.company_details or ""
-            )
+    def _compute_report_config_id(self) -> None:
+        configs = self.env["report.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.report_config_id = by_company.get(company.id)
 
     @api.onchange("country_id")
     def _onchange_country_id(self) -> None:

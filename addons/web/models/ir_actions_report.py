@@ -1972,7 +1972,7 @@ class IrActionsReport(models.Model):
         if (
             config
             and self.env.is_admin()
-            and not self.env.company.external_report_layout_id
+            and not self.env.company.report_config_id.external_report_layout_id
             and not self.env.context.get("discard_logo_check")
         ):
             return self._prepare_layout_configurator_action(report_action)

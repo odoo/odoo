@@ -55,7 +55,7 @@ class ReportTheme(models.Model):
 
     def unlink(self):
         in_use = bool(
-            self.env["res.company"]
+            self.env["report.config"]
             .sudo()
             .search_count([("report_theme_id", "in", self.ids)], limit=1)
         )
