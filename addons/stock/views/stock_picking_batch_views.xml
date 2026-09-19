@@ -72,7 +72,7 @@
                             <field name="allowed_picking_ids" invisible="1"/>
                             <field name="picking_type_id" invisible="1"/>
                             <field name="picking_type_code" invisible="1"/>
-                            <field name="picking_ids" widget="many2many" mode="list,kanban" invisible="not is_wave"
+                            <field name="picking_ids" widget="stock_picking_many2many" mode="list,kanban" invisible="not is_wave"
                                 context="{
                                     'form_view_ref': 'stock.stock_picking_view_form_from_batch',
                                     'list_view_ref': 'stock.stock_picking_view_batch_tree_ref',
