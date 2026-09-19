@@ -1196,6 +1196,30 @@ test("record.delete() should clear relation (inverse + computed)", async () => {
     expect(thread.onlineMembers.length).toBe(0);
 });
 
+test("record.delete() should clear 'one' relation towards record deleted in same update", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        members = Record.many("Member", {
+            inverse: "thread",
+            onDelete: (member) => member?.delete(),
+        });
+        correspondent = Record.one("Member");
+    }).register(localRegistry);
+    (class Member extends Record {
+        static id = "name";
+        name;
+        thread = Record.one("Thread", { inverse: "members" });
+    }).register(localRegistry);
+    const store = await start();
+    const john = store.Member.insert({ name: "john" });
+    const thread = store.Thread.insert({ name: "general", members: [john], correspondent: john });
+    expect(thread.correspondent).toBe(john);
+    thread.delete();
+    expect(john.exists()).toBe(false);
+    expect(thread.correspondent).toBe(undefined);
+});
+
 test("Delete record with side-effect compute to insert it should have resulting record with only insert data (old data is removed)'", async () => {
     /**
      * Record has a 2-step record deletion:
