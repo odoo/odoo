@@ -6,6 +6,23 @@ ROOM_KIND = "room"
 class ResourceAsset(models.Model):
     _inherit = "resource.asset"
 
+    # A root-typed recordset runs the root's computes, so a room read through
+    # the root (a booking line's asset, a search on every asset) is still named
+    # by its office here, keyed on the kind.
+    @api.depends("kind_id", "address_id.name")
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        for asset in self:
+            if asset.kind_code == ROOM_KIND and asset.name and asset.address_id:
+                asset.display_name = f"{asset.address_id.name} - {asset.name}"
+
+
+class ResourceAssetRoom(models.Model):
+    _name = "resource.asset.room"
+    _description = "Room"
+    _inherit = ["resource.asset"]
+    _table = "resource_asset_room"
+
     room_short_code = fields.Char(
         related="resource_id.short_code",
         string="Short Code",
@@ -39,13 +56,6 @@ class ResourceAsset(models.Model):
         string="Next Booking Start",
     )
 
-    @api.depends("kind_id", "address_id.name")
-    def _compute_display_name(self):
-        super()._compute_display_name()
-        for asset in self:
-            if asset.kind_id.code == ROOM_KIND and asset.name and asset.address_id:
-                asset.display_name = f"{asset.address_id.name} - {asset.name}"
-
     def _on_kind_changed(self, vals):
         super()._on_kind_changed(vals)
         self._make_rooms_bookable()
@@ -58,9 +68,8 @@ class ResourceAsset(models.Model):
         return res
 
     def _make_rooms_bookable(self):
-        rooms = self.filtered(lambda asset: asset.kind_id.code == ROOM_KIND)
-        if rooms:
-            rooms.sudo().resource_id._setup_room_kiosk()
+        if self:
+            self.sudo().resource_id._setup_room_kiosk()
 
     def action_view_room_booking_view(self):
         self.check_singleton()

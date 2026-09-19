@@ -3,7 +3,7 @@
 
     <record id="resource_asset_view_search_room" model="ir.ui.view">
         <field name="name">resource.asset.search.room</field>
-        <field name="model">resource.asset</field>
+        <field name="model">resource.asset.room</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <search string="Room">
@@ -38,7 +38,7 @@
 
     <record id="resource_asset_view_kanban_room" model="ir.ui.view">
         <field name="name">resource.asset.kanban.room</field>
-        <field name="model">resource.asset</field>
+        <field name="model">resource.asset.room</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <kanban sample="1">
@@ -88,7 +88,7 @@
 
     <record id="resource_asset_view_list_room" model="ir.ui.view">
         <field name="name">resource.asset.list.room</field>
-        <field name="model">resource.asset</field>
+        <field name="model">resource.asset.room</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <list sample="1">
@@ -103,21 +103,19 @@
 
     <record id="resource_asset_view_form_room" model="ir.ui.view">
         <field name="name">resource.asset.form.room</field>
-        <field name="model">resource.asset</field>
+        <field name="model">resource.asset.room</field>
         <field name="inherit_id" ref="resource_asset.resource_asset_view_form" />
+        <field name="mode">primary</field>
         <field name="arch" type="xml">
             <field name="state" position="before">
                 <button
                     name="action_view_room_booking_view"
                     type="object"
                     string="Open Room Display"
-                    invisible="kind_code != 'room' or not active or not room_short_code" />
+                    invisible="not active or not room_short_code" />
             </field>
             <notebook position="inside">
-                <page
-                    name="room"
-                    string="Room"
-                    invisible="kind_code != 'room' or not id">
+                <page name="room" string="Room" invisible="not id">
                     <group>
                         <group>
                             <field name="room_short_code" />
@@ -147,11 +145,10 @@
 
     <record id="room_room_action" model="ir.actions.act_window">
         <field name="name">Rooms</field>
-        <field name="res_model">resource.asset</field>
+        <field name="res_model">resource.asset.room</field>
         <field name="path">meeting-rooms</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="resource_asset_view_search_room" />
-        <field name="domain">[('kind_id.code', '=', 'room')]</field>
         <field
             name="context"
             eval="{'default_kind_id': ref('room.kind_room'), 'default_state': 'in_service'}" />

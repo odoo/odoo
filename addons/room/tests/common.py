@@ -12,7 +12,7 @@ class RoomCommon(TransactionCase):
         cls.office = cls.env["res.partner"].create(
             {"name": "Office 1", "type": "other"}
         )
-        cls.rooms = cls.env["resource.asset"].create(
+        cls.rooms = cls.env["resource.asset.room"].create(
             [
                 {
                     "name": "Room 1",
@@ -46,8 +46,6 @@ class RoomCommon(TransactionCase):
             "stop": datetime(2023, 5, day, stop_hour, 0),
             "appointment_type_id": cls.room_type.id,
             "booking_line_ids": [
-                Command.create(
-                    {"resource_id": resource.id, "capacity_reserved": 1}
-                )
+                Command.create({"resource_id": resource.id, "capacity_reserved": 1})
             ],
         }

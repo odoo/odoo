@@ -83,7 +83,7 @@ class TestRoomSecurity(RoomCommon, MailCase):
     def test_a_room_manager_manages_rooms_and_not_other_assets(self):
         self.rooms[0].with_env(self.env).write({"name": "Room 2"})
         new_room = (
-            self.env["resource.asset"]
+            self.env["resource.asset.room"]
             .with_env(self.env)
             .create(
                 {

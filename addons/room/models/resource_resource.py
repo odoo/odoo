@@ -3,7 +3,7 @@ from uuid import uuid4
 from odoo import _, api, fields, models
 from odoo.fields import Domain
 
-from .resource_asset import ROOM_KIND
+from .resource_asset_room import ROOM_KIND
 
 BOOKABLE_BACKGROUND_COLOR = "#83c5be"
 BOOKED_BACKGROUND_COLOR = "#dd2d4a"
@@ -43,8 +43,7 @@ class ResourceResource(models.Model):
     def _compute_room_booking_url(self):
         for room in self:
             room.room_booking_url = (
-                room.short_code
-                and f"{room.get_base_url()}/room/{room.short_code}/book"
+                room.short_code and f"{room.get_base_url()}/room/{room.short_code}/book"
             )
 
     @api.depends(

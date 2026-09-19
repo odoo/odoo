@@ -39,6 +39,8 @@ class TestAssetTableInheritanceRoot(TransactionCase):
     def test_what_the_root_grants_the_subtype_grants(self):
         # account_depreciation grants accountants the root; creating a property
         # through the root dispatches to the subtype and must not refuse them.
+        if "resource.asset.vehicle" not in self.env:
+            self.skipTest("fleet, which ships the vehicle subtype, is not installed")
         group = self.env.ref("base.group_user")
         user = self.env["res.users"].create(
             {"name": "Root Only", "login": "root_only", "group_ids": [(4, group.id)]}
@@ -58,11 +60,24 @@ class TestAssetTableInheritanceRoot(TransactionCase):
         self.assertEqual(plot._get_concrete()._name, "resource.asset.property")
 
     def test_the_shipped_kinds_with_a_model_land_in_it(self):
-        for code in ("property", "telecom", "device"):
+        for code in (
+            "property",
+            "telecom",
+            "device",
+            "machinery",
+            "equipment",
+            "it",
+            "furniture",
+        ):
             with self.subTest(kind=code):
                 kind = self.env.ref(f"resource_asset.kind_{code}")
                 asset = self.Asset.create({"name": f"A {code}", "kind_id": kind.id})
                 self.assertEqual(asset._get_concrete()._name, f"resource.asset.{code}")
+
+    def test_a_tool_is_a_root_row(self):
+        kind = self.env.ref("resource_asset.kind_tool")
+        tool = self.Asset.create({"name": "Hammer", "kind_id": kind.id})
+        self.assertEqual(tool._get_concrete()._name, "resource.asset")
 
     def test_a_subtype_column_is_an_identifier_row(self):
         kind = self.env.ref("resource_asset.kind_property")

@@ -32,7 +32,56 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <field name="model_year" position="after">
+                <field name="serial_number" />
                 <field name="imei" />
+            </field>
+        </field>
+    </record>
+
+    <record id="resource_asset_machinery_view_form" model="ir.ui.view">
+        <field name="name">resource.asset.machinery.form</field>
+        <field name="model">resource.asset.machinery</field>
+        <field name="inherit_id" ref="resource_asset_view_form" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="model_year" position="after">
+                <field name="serial_number" />
+            </field>
+        </field>
+    </record>
+
+    <record id="resource_asset_equipment_view_form" model="ir.ui.view">
+        <field name="name">resource.asset.equipment.form</field>
+        <field name="model">resource.asset.equipment</field>
+        <field name="inherit_id" ref="resource_asset_view_form" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="model_year" position="after">
+                <field name="serial_number" />
+            </field>
+        </field>
+    </record>
+
+    <record id="resource_asset_it_view_form" model="ir.ui.view">
+        <field name="name">resource.asset.it.form</field>
+        <field name="model">resource.asset.it</field>
+        <field name="inherit_id" ref="resource_asset_view_form" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="model_year" position="after">
+                <field name="serial_number" />
+            </field>
+        </field>
+    </record>
+
+    <record id="resource_asset_furniture_view_form" model="ir.ui.view">
+        <field name="name">resource.asset.furniture.form</field>
+        <field name="model">resource.asset.furniture</field>
+        <field name="inherit_id" ref="resource_asset_view_form" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="model_year" position="after">
+                <field name="inventory_tag" />
             </field>
         </field>
     </record>

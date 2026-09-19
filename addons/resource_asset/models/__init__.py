@@ -8,3 +8,7 @@ from . import resource_resource
 from . import resource_asset_property
 from . import resource_asset_telecom
 from . import resource_asset_device
+from . import resource_asset_machinery
+from . import resource_asset_equipment
+from . import resource_asset_it
+from . import resource_asset_furniture

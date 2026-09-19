@@ -1,6 +1,6 @@
 {
     "name": "Meeting Rooms",
-    "version": "2.1",
+    "version": "2.2",
     "category": "Productivity/Room",
     "summary": "Book meeting rooms from a tablet or the back-end",
     "description": "A meeting room is an asset booked through the calendar, with a real-time availability display for the tablet at its door.",

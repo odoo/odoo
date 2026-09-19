@@ -21,17 +21,28 @@ class TestRoomBooking(RoomCommon):
         self.assertTrue(room.resource_id.enforce_booking_limit)
         self.assertEqual(room.display_name, "Office 1 - Room 1")
 
-    def test_an_asset_that_becomes_a_room_gets_its_kiosk(self):
+    def test_an_asset_created_as_a_room_gets_its_kiosk(self):
         asset = self.env["resource.asset"].create(
             {
                 "name": "Board room",
+                "kind_id": self.env.ref("room.kind_room").id,
+                "state": "in_service",
+            }
+        )
+        self.assertEqual(asset._get_concrete()._name, "resource.asset.room")
+        self.assertTrue(asset.resource_id.access_token)
+
+    def test_an_asset_of_another_kind_cannot_become_a_room(self):
+        # A room is a model of its own, and no row moves between tables.
+        asset = self.env["resource.asset"].create(
+            {
+                "name": "Parcel",
                 "kind_id": self.env.ref("resource_asset.kind_property").id,
                 "state": "in_service",
             }
         )
-        self.assertFalse(asset.resource_id.access_token)
-        asset.kind_id = self.env.ref("room.kind_room")
-        self.assertTrue(asset.resource_id.access_token)
+        with self.assertRaises(ValidationError):
+            asset.kind_id = self.env.ref("room.kind_room")
 
     def test_a_booking_holds_the_whole_room(self):
         reservation = self.bookings[0].reservation_ids
@@ -112,20 +123,18 @@ class TestRoomBooking(RoomCommon):
         self.assertIn(f"{left}delete", sent)
         self.assertIn(f"room#{self.resources[1].id}/booking/create", sent)
 
-    def test_an_asset_already_offered_gets_its_kiosk_when_it_becomes_a_room(self):
+    def test_a_room_keeps_an_offer_it_is_given_beside_its_own(self):
         asset = self.env["resource.asset"].create(
             {
-                "name": "Projector",
-                "kind_id": self.env.ref("resource_asset.kind_equipment").id,
+                "name": "Projector room",
+                "kind_id": self.env.ref("room.kind_room").id,
                 "state": "in_service",
             }
         )
         offer = self.env["appointment.type"].create(
             {"name": "Equipment booking", "schedule_based_on": "resources"}
         )
-        asset.resource_id.appointment_type_ids = offer
-        self.assertFalse(asset.resource_id.access_token)
-        asset.kind_id = self.env.ref("room.kind_room")
+        asset.resource_id.appointment_type_ids |= offer
         self.assertTrue(asset.resource_id.access_token)
         self.assertTrue(asset.resource_id.short_code)
         self.assertIn(self.room_type, asset.resource_id.appointment_type_ids)
