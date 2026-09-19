@@ -39,9 +39,8 @@ def _flush(registry, pending: Counter) -> None:
                 cr.execute(
                     """
                     INSERT INTO credential_use
-                           (credential_id, company_id, purpose, day, use_count,
-                            last_used_at)
-                    SELECT id, company_id, %s, %s, %s, now() AT TIME ZONE 'UTC'
+                           (credential_id, purpose, day, use_count, last_used_at)
+                    SELECT id, %s, %s, %s, now() AT TIME ZONE 'UTC'
                       FROM credential_credential
                      WHERE id = %s
                         ON CONFLICT (credential_id, purpose, day) DO UPDATE
@@ -88,8 +87,6 @@ class CredentialUse(models.Model):
     last_used_at = fields.Datetime(readonly=True)
     company_id = fields.Many2one(
         related="credential_id.company_id",
-        store=True,
-        index=True,
     )
 
     _credential_purpose_day_uniq = models.Constraint(

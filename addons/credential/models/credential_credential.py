@@ -45,8 +45,6 @@ class CredentialCredential(models.Model):
     )
     category_code = fields.Char(
         related="category_id.code",
-        store=True,
-        index=True,
         help="Technical code of the category for programmatic access",
     )
     category_description = fields.Text(
