@@ -3,6 +3,7 @@
 
 from markupsafe import Markup
 
+import lxml.html
 import re
 
 from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
@@ -170,6 +171,120 @@ class TestSanitizer(BaseCase):
             left_part = not_email.split('>')[0]  # take only left part, as the sanitizer could add data information on node
             self.assertNotIn(misc.html_escape(not_email), sanitized, 'html_sanitize stripped emails of original html')
             self.assertIn(left_part, sanitized)
+
+    def test_sanitize_attributes(self, tag='div', sanitize_form=True, always_reject_disallowed=False):
+        """ Test sanitization of html attributes with different sanitization options """
+        def attributes(content):
+            return set(lxml.html.fragment_fromstring(content).attrib.keys())
+        # https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes
+        # https://html.spec.whatwg.org/multipage/indices.html#attributes-3
+        # https://github.com/cure53/DOMPurify/blob/main/src/attrs.ts
+        allowed_attributes = {
+            'abbr', 'accept', 'accept-charset', 'accesskey', 'action', 'align', 'alt', 'border', 'cellpadding', 'cellspacing', 'charset',
+            'checked', 'cite', 'class', 'clear', 'color', 'cols', 'colspan', 'coords', 'data-class', 'datetime', 'dir', 'disabled',
+            'enctype', 'for', 'headers', 'height', 'href', 'hreflang', 'id', 'ismap', 'label', 'lang', 'maxlength', 'media', 'method',
+            'multiple', 'name', 'noshade', 'nowrap', 'readonly', 'rel', 'rev', 'rows', 'rowspan', 'scope', 'selected', 'shape', 'size',
+            'span', 'src', 'start', 'style', 'summary', 'tabindex', 'target', 'title', 'type', 'usemap', 'valign', 'value', 'width',
+        }
+        disallowed_attributes = {
+            "allow", "allowfullscreen", "alpha", "aria-autocomplete", "aria-dummy", "as", "async", "autocapitalize", "autocomplete",
+            "autocorrect", "autofocus", "autopictureinpicture", "autoplay", "background", "bgcolor", "blocking", "capture", "closedby",
+            "colorspace", "command", "commandfor", "content", "contenteditable", "controls", "controlslist", "crossorigin", "csp", "data",
+            "data-dummy", "decoding", "default", "defer", "dirname", "disablepictureinpicture", "disableremoteplayback", "download",
+            "draggable", "elementtiming", "enterkeyhint", "exportparts", "face", "fetchpriority", "form", "formaction", "formenctype",
+            "formmethod", "formnovalidate", "formtarget", "headingoffset", "headingreset", "hidden", "high", "http-equiv", "imagesizes",
+            "imagesrcset", "inert", "inputmode", "integrity", "is", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "kind",
+            "language", "list", "loading", "loop", "low", "max", "min", "minlength", "muted", "nomodule", "nonce", "novalidate", "open",
+            "optimum", "part", "pattern", "ping", "placeholder", "playsinline", "popover", "popovertarget", "popovertargetaction", "poster",
+            "preload", "pubdate", "radiogroup", "referrerpolicy", "required", "reversed", "role", "sandbox", "shadowrootclonable",
+            "shadowrootcustomelementregistry", "shadowrootdelegatesfocus", "shadowrootmode", "shadowrootserializable",
+            "shadowrootslotassignment", "sizes", "slot", "spellcheck", "srcdoc", "srclang", "srcset", "step", "translate", "wrap",
+            "writingsuggestions", "xmlns",
+        }
+        event_attributes = {
+            "onafterprint", "onauxclick", "onbeforeinput", "onbeforematch", "onbeforeprint", "onbeforetoggle", "onbeforeunload", "onblur",
+            "oncancel", "oncanplay", "oncanplaythrough", "onchange", "onclick", "onclose", "oncommand", "oncontextlost", "oncontextmenu",
+            "oncontextrestored", "oncopy", "oncuechange", "oncut", "ondblclick", "ondrag", "ondragend", "ondragenter", "ondragleave",
+            "ondragover", "ondragstart", "ondrop", "ondurationchange", "onemptied", "onended", "onerror", "onfocus", "onformdata",
+            "onhashchange", "oninput", "oninvalid", "onkeydown", "onkeypress", "onkeyup", "onlanguagechange", "onload", "onloadeddata",
+            "onloadedmetadata", "onloadstart", "onmessage", "onmessageerror", "onmousedown", "onmouseenter", "onmouseleave", "onmousemove",
+            "onmouseout", "onmouseover", "onmouseup", "onoffline", "ononline", "onpagehide", "onpagereveal", "onpageshow", "onpageswap",
+            "onpaste", "onpause", "onplay", "onplaying", "onpopstate", "onprogress", "onratechange", "onrejectionhandled", "onreset",
+            "onresize", "onscroll", "onscrollend", "onsecuritypolicyviolation", "onseeked", "onseeking", "onselect", "onslotchange",
+            "onstalled", "onstorage", "onsubmit", "onsuspend", "ontimeupdate", "ontoggle", "onunhandledrejection", "onunload",
+            "onvolumechange", "onwaiting", "onwheel",
+        }
+        all_attributes = allowed_attributes | disallowed_attributes | event_attributes
+        attribute_list_string = " ".join(f'{attr}="{attr}"' for attr in all_attributes)
+        original = f'<{tag} {attribute_list_string}></{tag}>'
+        if always_reject_disallowed:
+            no_sanitization_attributes = allowed_attributes
+        else:
+            no_sanitization_attributes = allowed_attributes | disallowed_attributes
+        # Test sanitization if we don't sanitize attributes
+        sanitized = html_sanitize(original, sanitize_form=sanitize_form, sanitize_attributes=False)
+        self.assertEqual(attributes(sanitized), no_sanitization_attributes)
+        sanitized = html_sanitize(original, sanitize_form=sanitize_form, sanitize_attributes=False, strip_style=True)
+        self.assertEqual(attributes(sanitized), no_sanitization_attributes - {'style'})
+        sanitized = html_sanitize(original, sanitize_form=sanitize_form, sanitize_attributes=False, strip_classes=True)
+        self.assertEqual(attributes(sanitized), no_sanitization_attributes - {'class'})
+        # Test sanitization if we sanitize attributes
+        sanitized = html_sanitize(original, sanitize_form=sanitize_form, sanitize_attributes=True)
+        self.assertEqual(attributes(sanitized), allowed_attributes)
+        sanitized = html_sanitize(original, sanitize_form=sanitize_form, sanitize_attributes=True, strip_style=True)
+        self.assertEqual(attributes(sanitized), allowed_attributes - {'style'})
+        sanitized = html_sanitize(original, sanitize_form=sanitize_form, sanitize_attributes=True, strip_classes=True)
+        self.assertEqual(attributes(sanitized), allowed_attributes - {'class'})
+
+    def test_sanitize_attributes_without_form(self):
+        # attribute sanitization do not change with sanitize_form=False
+        self.test_sanitize_attributes(sanitize_form=False)
+
+    def test_sanitize_attributes_button(self):
+        # button are allowed, but we always reject disallowed attribute
+        self.test_sanitize_attributes(tag='button', always_reject_disallowed=True)
+        # if forms are allowed, button attributes are not always rejected
+        self.test_sanitize_attributes(tag='button', sanitize_form=False, always_reject_disallowed=False)
+
+    def test_sanitize_tags(self):
+        """ Test sanitization of html tags with different sanitization options """
+        def elements(content):
+            return {el.tag for el in lxml.html.fragment_fromstring(f'<div>{content}</div>').iterdescendants()}
+        # https://developer.mozilla.org/docs/Web/HTML/Reference/Elements
+        # https://html.spec.whatwg.org/multipage/indices.html#elements-3
+        # https://github.com/cure53/DOMPurify/blob/main/src/tags.ts
+        allowed_tags = {
+            "a", "abbr", "acronym", "address", "area", "article", "aside", "audio", "b", "bdi", "bdo", "big", "blockquote", "br", "button",
+            "canvas", "caption", "center", "cite", "code", "col", "colgroup", "datalist", "dd", "del", "details", "dfn", "dir", "div", "dl",
+            "dt", "em", "fieldset", "figcaption", "figure", "font", "footer", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hgroup", "hr",
+            "i", "img", "ins", "kbd", "label", "legend", "li", "main", "map", "mark", "math", "menu", "meter", "nav", "ol", "optgroup",
+            "option", "output", "p", "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "section", "small", "source", "span",
+            "strike", "strong", "sub", "summary", "sup", "svg", "table", "tbody", "td", "tfoot", "th", "thead", "time", "tr", "track", "tt",
+            "u", "ul", "var", "video", "wbr",
+        }
+        disallowed_tags = {
+            "base", "content", "data", "decorator", "dialog", "element", "fencedframe", "geolocation", "menuitem", "nobr", "noembed",
+            "noscript", "picture", "rb", "rtc", "search", "selectedcontent", "shadow", "slot", "spacer", "style", "template", "xmp",
+        }
+        form_tags = {
+            "form", "input", "select", "textarea",
+        }
+        never_allowed_tags = {
+            "applet", "blink", "body", "embed", "frame", "frameset", "head", "html", "iframe", "image", "link", "marquee", "meta",
+            "noframes", "object", "param", "title", "script",
+        }
+        all_tags = allowed_tags | disallowed_tags | form_tags | never_allowed_tags
+        original = "".join(f'<{tag}></{tag}>' for tag in all_tags)
+        sanitized = html_sanitize(original, sanitize_tags=False, sanitize_form=False)
+        self.assertEqual(elements(sanitized), allowed_tags | disallowed_tags | form_tags)
+        sanitized = html_sanitize(original, sanitize_tags=False, sanitize_form=True)
+        self.assertEqual(elements(sanitized), allowed_tags | disallowed_tags)
+        sanitized = html_sanitize(original, sanitize_tags=True, sanitize_form=False)
+        self.assertEqual(elements(sanitized), allowed_tags | form_tags)
+        sanitized = html_sanitize(original, sanitize_tags=True, sanitize_form=True)
+        self.assertEqual(elements(sanitized), allowed_tags)
+        sanitized = html_sanitize(original, sanitize_tags=False, sanitize_form=False, strip_style=True)
+        self.assertEqual(elements(sanitized), (allowed_tags | disallowed_tags | form_tags) - {'style'})
 
     def test_style_parsing(self):
         test_data = [
