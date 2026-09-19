@@ -322,11 +322,7 @@ class HrLeave(models.Model):
     def _compute_allowed_work_entry_type_ids(self):
         for leave in self:
             country = leave.company_id.country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
-                domain = [('country_id', '=', False)]
-            else:
-                domain = [('country_id', '=', country.id)]
-            leave.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
+            leave.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search([('country_id', '=', country.id)])
 
     @api.onchange('request_hour_from', 'request_hour_to')
     def _onchange_hours(self):
@@ -810,7 +806,7 @@ class HrLeave(models.Model):
                 local_work_entry_types = self.env['hr.work.entry.type'].with_context(
                     default_date_from=holiday.request_date_from,
                     default_date_to=holiday.request_date_to,
-                ).search([('country_id', 'in', [holiday.employee_id.country_id.id or holiday.employee_id.company_id.country_id.id] + [False])])
+                ).search([('country_id', 'in', [holiday.employee_id.country_id.id or holiday.employee_id.company_id.country_id.id])])
                 all_valid_work_entry_types = local_work_entry_types.with_context(
                     default_date_from=holiday.request_date_from,
                     default_date_to=holiday.request_date_to,

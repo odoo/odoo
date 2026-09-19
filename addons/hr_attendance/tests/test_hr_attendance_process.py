@@ -15,6 +15,7 @@ class TestHrAttendance(HttpCase, TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestHrAttendance, cls).setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us')
         cls.user = new_test_user(cls.env, login='fru', groups='base.group_user')
         cls.user_no_pin = new_test_user(cls.env, login='gru', groups='base.group_user')
         cls.test_employee = cls.env['hr.employee'].create({
@@ -276,7 +277,8 @@ class TestHrAttendance(HttpCase, TransactionCase):
         self.assertTrue(first_company)
 
         other_company = self.env["res.company"].create({
-            "name": "Test"
+            "name": "Test",
+            "country_id": self.env.ref("base.us").id,
         })
         other_employee = self.env["hr.employee"].create({
             "name": self.user.name,
@@ -410,6 +412,7 @@ class TestAbsenceDetectionCron(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us')
         cls.env.company.absence_management = True
         cls.env.company.tz = 'UTC'
         cls.env.company.resource_calendar_id = cls.env['resource.calendar'].create({
