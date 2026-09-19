@@ -3,6 +3,7 @@
 import pytz
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 from uuid import uuid4
 
 from odoo import api, fields, models, tools, _
@@ -347,6 +348,10 @@ class CalendarEvent(models.Model):
                 'useDefault': False,
             }
         }
+        if self.videocall_location and self.DISCUSS_ROUTE in self.videocall_location and self.videocall_location not in (values['description'] or ''):
+            # Surface the Discuss join link in the description exactly once, even across two-way sync.
+            join_link = Markup('<a href="%s">%s</a>') % (self.videocall_location, _("Join with Odoo Discuss"))
+            values['description'] = Markup('%s<br>%s') % (values['description'], join_link) if values['description'] else join_link
         if not self.google_id and not self.videocall_location and not self.location:
             values['conferenceData'] = {'createRequest': {'requestId': uuid4().hex}}
         if self.google_id and not self.videocall_location:
