@@ -53,15 +53,11 @@ class AccountPartialReconcile(models.Model):
         comodel_name="res.currency",
         related="debit_move_id.currency_id",
         string="Currency of the debit journal item.",
-        precompute=True,
-        store=True,
     )
     credit_currency_id = fields.Many2one(
         comodel_name="res.currency",
         related="credit_move_id.currency_id",
         string="Currency of the credit journal item.",
-        precompute=True,
-        store=True,
     )
 
     amount = fields.Monetary(

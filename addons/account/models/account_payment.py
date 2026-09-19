@@ -194,7 +194,6 @@ class AccountPayment(models.Model):
     payment_method_id = fields.Many2one(
         related="payment_channel_id.payment_method_id",
         string="Method",
-        store=True,
         tracking=True,
     )
     available_journal_ids = fields.Many2many(

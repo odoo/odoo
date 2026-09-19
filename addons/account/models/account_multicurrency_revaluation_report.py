@@ -437,7 +437,7 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
                                       account_move_line.currency_id AS currency_id,
                                       account_move_line.id AS aml_id
                                  FROM account_partial_reconcile part
-                                 JOIN res_currency curr ON curr.id = part.debit_currency_id
+                                 JOIN res_currency curr ON curr.id = account_move_line.currency_id
                                 WHERE account_move_line.id = part.debit_move_id
                                   AND part.max_date <= %(date_to)s
                              GROUP BY aml_id,
@@ -454,7 +454,7 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
                                       account_move_line.currency_id AS currency_id,
                                       account_move_line.id AS aml_id
                                  FROM account_partial_reconcile part
-                                 JOIN res_currency curr ON curr.id = part.credit_currency_id
+                                 JOIN res_currency curr ON curr.id = account_move_line.currency_id
                                 WHERE account_move_line.id = part.credit_move_id
                                   AND part.max_date <= %(date_to)s
                              GROUP BY aml_id,
