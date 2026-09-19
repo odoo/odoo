@@ -38,8 +38,6 @@ class LoyaltyCard(models.Model):
     # TODO probably isn't useful to store this company_id anymore
     company_id = fields.Many2one(
         related="program_id.company_id",
-        precompute=True,
-        store=True,
     )
     currency_id = fields.Many2one(related="program_id.currency_id")
     # Reserved for this partner if non-empty

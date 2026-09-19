@@ -62,7 +62,6 @@ class LoyaltyReward(models.Model):
     # Stored for security rules
     company_id = fields.Many2one(
         related="program_id.company_id",
-        store=True,
     )
     currency_id = fields.Many2one(related="program_id.currency_id")
 

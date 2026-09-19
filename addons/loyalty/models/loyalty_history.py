@@ -16,8 +16,6 @@ class LoyaltyHistory(models.Model):
     # turns every evaluation of that rule into a LEFT JOIN on loyalty_card.
     company_id = fields.Many2one(
         related="card_id.company_id",
-        precompute=True,
-        store=True,
     )
 
     description = fields.Text(required=True)

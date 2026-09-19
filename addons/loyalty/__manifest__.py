@@ -1,6 +1,6 @@
 {
     "name": "Coupons & Loyalty",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Sales/Sales",
     "summary": "Use discounts, gift card, eWallets and loyalty programs in different sales channels",
     "author": "Odoo S.A.",
