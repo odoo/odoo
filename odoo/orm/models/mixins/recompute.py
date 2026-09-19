@@ -33,6 +33,12 @@ if typing.TYPE_CHECKING:
     from ...runtime import TriggerTree
 
 
+def _fires_constraints(env, field) -> bool:
+    if field.store or not field.related:
+        return False
+    return field.name in env[field.model_name]._constrained_field_names
+
+
 class RecomputeMixin(_ModelStubs):
     __slots__ = ()
 
@@ -72,7 +78,17 @@ class RecomputeMixin(_ModelStubs):
                 fields=len(fnames),
                 create=create,
             )
-            self._modified_trigger_loop(fnames, create, scheduler)
+            to_validate: dict = {}
+            self._modified_trigger_loop(fnames, create, scheduler, to_validate)
+            for field, ids in to_validate.items():
+                records = self.env[field.model_name].browse(ids).exists()
+                _debug.pipeline(
+                    "recompute.projection_constraints",
+                    model=field.model_name,
+                    field=field.name,
+                    records=len(records),
+                )
+                records._check_fields([field.name])
 
     def _invalidate_inheritance_tree(self, fnames: Collection[str]) -> None:
         tree = self.env._table_inheritance_tree(self._name) or (
@@ -106,11 +122,21 @@ class RecomputeMixin(_ModelStubs):
     def _modified_before(self, fnames: Collection[str]) -> None:
         return self.modified(fnames, before=True)
 
-    def _modified_traverse(self, todo: list, scheduler, debug: bool) -> tuple[int, int]:
+    def _modified_traverse(
+        self,
+        todo: list,
+        scheduler,
+        debug: bool,
+        to_validate: dict | None = None,
+    ) -> tuple[int, int]:
         _mark_count = 0
         _invalidate_count = 0
         env = self.env
         for field, records, entry_create in itertools.chain.from_iterable(todo):
+            if to_validate is not None and _fires_constraints(env, field):
+                to_validate.setdefault(field, OrderedSet()).update(
+                    id_ for id_ in records._ids if id_
+                )
             cached_ids = None
             if field.recursive and not field.is_stored_computed:
                 cached_ids = field._get_all_cache_ids(env).keys()
@@ -144,6 +170,7 @@ class RecomputeMixin(_ModelStubs):
         fnames: Collection[str],
         create: bool,
         scheduler: RecomputeScheduler,
+        to_validate: dict | None = None,
     ) -> None:
         prof = _OrmProfile(_orm_compute)
         _fnames_list: typing.Any = ()
@@ -184,7 +211,7 @@ class RecomputeMixin(_ModelStubs):
         prof.mark("tree")
 
         _mark_count, _invalidate_count = self._modified_traverse(
-            todo, scheduler, prof.debug
+            todo, scheduler, prof.debug, to_validate
         )
 
         _debug.pipeline(
@@ -220,7 +247,7 @@ class RecomputeMixin(_ModelStubs):
         core = env.core
 
         def select(field):
-            if field.is_stored_computed:
+            if field.is_stored_computed or _fires_constraints(env, field):
                 return True
             if field._is_context_dependent(env):
                 return core.has_any_context_cached(field)
@@ -293,9 +320,6 @@ class RecomputeMixin(_ModelStubs):
                     records=len(real_ids),
                 )
                 if real_ids:
-                    # the search method of the field often names the records
-                    # outright (an `id in` set): those are browsed without the
-                    # query a search would spend confirming them
                     domain = Domain(field.name, "in", real_ids).optimize_full(model)
                     ids = ids_selected_without_query(domain)
                     if ids is None:
@@ -317,7 +341,10 @@ class RecomputeMixin(_ModelStubs):
     def _invalidates_from_cache(self, field: Field, subtree: TriggerTree) -> bool:
         if len(subtree) or field.is_many2one_reference:
             return False
-        if any(f.is_stored_computed or f.recursive for f in subtree.root):
+        if any(
+            f.is_stored_computed or f.recursive or _fires_constraints(self.env, f)
+            for f in subtree.root
+        ):
             return False
         inverses = self.env[field.model_name].pool.field_inverses[field]
         return any(invf.is_x2many and not invf.domain for invf in inverses)

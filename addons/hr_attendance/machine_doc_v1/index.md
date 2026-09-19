@@ -15,7 +15,7 @@ against this document. None of them is typed by hand here or there.
 
 | | |
 |---|---|
-| Version | 2.3 |
+| Version | 2.4 |
 | Application | yes |
 | License | LGPL-3 |
 | Dependencies | `hr`, `barcodes`, `geocoding` |
@@ -27,7 +27,7 @@ against this document. None of them is typed by hand here or there.
 | Cron jobs | 2 |
 | Security groups | 5 |
 | JavaScript source files | 14 |
-| Migration script directories | 3 |
+| Migration script directories | 4 |
 
 ## What it owns
 
@@ -96,6 +96,7 @@ overtime deferral; the absence one deliberately does not, for a reason
 | `2.1` | back-fills `hr.attendance.overtime.line.attendance_id`, the column that made the line-to-attendance join real instead of a `(employee_id, check_in)` match |
 | `2.2` | reports any company that had set one of the removed overtime thresholds, before the ORM drops the columns |
 | `2.3` | fills a kiosk key for any company that had none, before the column becomes `required` and unique |
+| `2.4` | drops `hr_employee.last_check_in` and `last_check_out`: both are read off `last_attendance_id` now, and the ORM never drops the column of a field that stops being stored |
 
 Neither drops a column it did not create. `ir.model.fields._drop_columns()`
 removes the column of a field a module stopped declaring, during the upgrade

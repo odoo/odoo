@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.55
+:Version: 6.56
 :Date: 2026-09-16
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -1034,6 +1034,17 @@ it with a column of the model's own, where a measured plan says the join
 loses. ``Binary`` and ``Image`` are exempt: a stored ``image_128`` is a resize,
 not a copy. The existing copies are floored (``lint_stored_related``) and
 converted module by module.
+
+**An ``@api.constrains`` naming a related field fires when the source changes,
+stored or not** ``[review]``. A stored copy made that happen by accident -- the
+recompute is a write on the child, and a write runs its constraints. The ORM now
+does it on purpose: ``modified()`` selects a projected field that a constraint of
+its model names, finds the records through the trigger tree like any dependent,
+and runs those constraints (``recompute._fires_constraints``). So
+``@api.constrains("company_id")`` on a line keeps guarding the line when the
+*order's* company moves, and keeping ``store=True`` for the sake of a constraint
+is not a reason. What still needs the column: a One2many's ``inverse_name``, and
+the foreign key behind ``ondelete=``.
 
 2.4 Method naming
 -----------------
@@ -8735,6 +8746,10 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.56
+     - 2026-09-19
+     - §2.3: an ``@api.constrains`` naming a related field fires when its source
+       changes, with or without a column; a constraint is no reason to store one.
    * - 6.55
      - 2026-09-18
      - §2.3: a related field is not stored to make it groupable (``E8528``,

@@ -3121,3 +3121,62 @@ class TestOrmPropertiesSource(models.Model):
     attributes = fields.Properties(
         string="Source Properties", definition="holder_id.definition"
     )
+
+
+class TestOrmProjectionParent(models.Model):
+    _name = "test_orm.projection.parent"
+    _description = "test_orm.projection.parent"
+
+    name = fields.Char()
+    state = fields.Selection(
+        selection=[("open", "Open"), ("closed", "Closed")],
+        default="open",
+    )
+    child_ids = fields.One2many(
+        comodel_name="test_orm.projection.child",
+        inverse_name="parent_id",
+    )
+
+
+class TestOrmProjectionChild(models.Model):
+    _name = "test_orm.projection.child"
+    _description = "test_orm.projection.child"
+
+    name = fields.Char()
+    quantity = fields.Integer()
+    parent_id = fields.Many2one(
+        comodel_name="test_orm.projection.parent",
+    )
+    parent_state = fields.Selection(
+        related="parent_id.state",
+    )
+
+    @api.constrains("parent_state", "quantity")
+    def _check_closed_parent_holds_nothing(self):
+        for child in self:
+            if child.parent_state == "closed" and child.quantity:
+                raise ValidationError(
+                    f"{child.name}: a closed parent holds no quantity"
+                )
+
+
+class TestOrmProjectionGrandchild(models.Model):
+    _name = "test_orm.projection.grandchild"
+    _description = "test_orm.projection.grandchild"
+
+    name = fields.Char()
+    quantity = fields.Integer()
+    child_id = fields.Many2one(
+        comodel_name="test_orm.projection.child",
+    )
+    parent_state = fields.Selection(
+        related="child_id.parent_id.state",
+    )
+
+    @api.constrains("parent_state")
+    def _check_closed_grandparent_holds_nothing(self):
+        for grandchild in self:
+            if grandchild.parent_state == "closed" and grandchild.quantity:
+                raise ValidationError(
+                    f"{grandchild.name}: a closed grandparent holds no quantity"
+                )

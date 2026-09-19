@@ -31,6 +31,7 @@ def get_fields_by_name(model: ModelLike, fnames: Iterable[str]) -> list[Field]:
 
 ORM_CLASS_MEMOS: tuple[str, ...] = (
     "_check_coupled_fields__",
+    "_constrained_field_names__",
     "_constraint_methods__",
     "_onchange_methods__",
     "_ondelete_methods__",

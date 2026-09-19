@@ -60,7 +60,9 @@ class _ConstraintsMixin(_ModelStubs):
                             field=name,
                             reason="not_a_field",
                         )
-                    elif not (field.store or field.inverse or field.inherited):
+                    elif not (
+                        field.store or field.inverse or field.inherited or field.related
+                    ):
                         _logger.warning(
                             "method %s.%s: @constrains parameter %r is not writeable",
                             cls._name,
@@ -82,6 +84,17 @@ class _ConstraintsMixin(_ModelStubs):
 
         return get_or_create_class_memo(
             cls, "_constraint_methods__", get_constraint_methods
+        )
+
+    @property
+    def _constrained_field_names(self) -> frozenset[str]:
+        cls = self.env.registry[self._name]
+        return get_or_create_class_memo(
+            cls,
+            "_constrained_field_names__",
+            lambda: frozenset(
+                name for check in self._constraint_methods for name in check._constrains
+            ),
         )
 
     def _check_fields(
