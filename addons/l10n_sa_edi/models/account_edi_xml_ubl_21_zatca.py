@@ -3,6 +3,7 @@ from hashlib import sha256
 from base64 import b64encode
 from lxml import etree
 from odoo import models, fields
+from odoo.tools.float_utils import float_is_zero
 from odoo.tools.misc import file_path
 import re
 
@@ -458,7 +459,11 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             'tax_subtotal_vals': [{
                 'currency': invoice.currency_id,
                 'currency_dp': invoice.currency_id.decimal_places,
-                'taxable_amount': vals['base_amount_currency'] if vals['tax_amount'] == 0 else abs(vals['base_amount_currency']),
+                'taxable_amount': (
+                    vals['base_amount_currency']
+                    if float_is_zero(vals['tax_amount'], precision_digits=2) and not self.env.context.get('is_downpayment')
+                    else abs(vals['base_amount_currency'])
+                ),
                 'tax_amount': abs(vals['tax_amount_currency']),
                 'percent': vals['_tax_category_vals_']['percent'],
                 'tax_category_vals': vals['_tax_category_vals_'],
