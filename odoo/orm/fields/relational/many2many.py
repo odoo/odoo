@@ -184,7 +184,24 @@ class Many2many(_RelationalMulti):
         _ddl.update_db_foreign_keys(self, model)
 
     @override
+    def _relation_siblings(self, records: BaseModel) -> list[str]:
+        # every many2many of the model that reads the same relation table:
+        # a link written through one of them is read through the others
+        if not self.store or not self.relation:
+            return [self.name]
+        return [
+            name
+            for name, field in records._fields.items()
+            if field.is_many2many
+            and field.store
+            and (field.relation, field.column1, field.column2)
+            == (self.relation, self.column1, self.column2)
+        ]
+
     def read(self, records: BaseModel) -> None:
+        siblings = self._relation_siblings(records)
+        if len(siblings) > 1:
+            records.flush_recordset(siblings)
         comodel = records.env[self.comodel_name].with_context(
             **self._prepare_read_context()
         )
@@ -292,6 +309,12 @@ class Many2many(_RelationalMulti):
                         ids=len(ids),
                     )
             self._update_cache(record, ids, created=created)
+        # a sibling reading the same relation table answers from the table
+        siblings = [
+            name for name in self._relation_siblings(records) if name != self.name
+        ]
+        if siblings:
+            records.invalidate_recordset(siblings)
 
         if store:
             self._invalidate_relation_siblings(records)
