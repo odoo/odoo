@@ -1170,7 +1170,7 @@ class TestHrAttendanceOvertime(HttpCase):
                 self.env["resource.schedule.exception"].with_company(company_be)
             ) as holiday_form:
                 holiday_form.name = "Armistice Day"
-                holiday_form.date_from = datetime(2025, 11, 11, 0, 0)
+                holiday_form.local_date_from = date(2025, 11, 11)
                 holiday_form.save()
 
             ruleset_be = (
