@@ -52,8 +52,16 @@ registry.category("web_tour.tours").add("test_catalog_vendor_uom", {
         }),
 
         // Open the PO for the vendor selling product as liter.
+<<<<<<< 423770de9c5da4ca862e9e972c0caf8fa3f1a886
         { trigger: "a[href='/odoo/purchase']", run: "click" },
         { trigger: ".o_data_cell:text(PO/TEST/00001)", run: "click" },
+||||||| cd826c81964566d831d200059e62bb7dfe88d088
+        { trigger: "a[href='/odoo/purchase']", run: "click" },
+        { trigger: "td[data-tooltip='PO/TEST/00001']", run: "click" },
+=======
+        { trigger: "li.o_back_button:first-child", run: "click" },
+        { trigger: "td[data-tooltip='PO/TEST/00001']", run: "click" },
+>>>>>>> b21be1b717fb6c929961e09cfd18e3c3545124d4
         ...purchaseForm.openCatalog(),
         ...productCatalog.checkProductPrice("Crab Juice", "$ 1.55"),
         ...productCatalog.addProduct("Crab Juice"),
