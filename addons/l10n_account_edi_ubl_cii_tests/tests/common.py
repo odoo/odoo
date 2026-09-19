@@ -186,6 +186,15 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         expected_file_full_path = misc.file_path(f'{self.test_module}/tests/test_files/{expected_file_path}')
         expected_etree = etree.parse(expected_file_full_path).getroot()
 
+        if self.country_code == 'FR' and self.env['ir.module.module']._get('l10n_fr_pdp').state != 'installed':
+            # l10n_fr_pdp now generates the late payment penalty/fee notes (PMT/PMD/AAB); strip them
+            # from the expected tree when it's not installed.
+            ns = {'ram': 'urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100'}
+            for note in expected_etree.findall('.//ram:IncludedNote', namespaces=ns):
+                subject_code = note.findtext('ram:SubjectCode', namespaces=ns)
+                if subject_code in ('PMT', 'PMD', 'AAB'):
+                    note.getparent().remove(note)
+
         modified_etree = self.with_applied_xpath(
             expected_etree,
             xpaths
