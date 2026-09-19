@@ -1,4 +1,5 @@
 import io
+import typing
 from collections.abc import Callable
 from typing import Any
 from unittest import mock
@@ -245,5 +246,5 @@ def test_the_request_stays_open_until_the_response_iterable_is_consumed():
         iterable = app(_environ(), lambda *a, **kw: None)
     assert not closed, "the request must stay open while the body streams"
     assert b"".join(iterable) == b"body"
-    iterable.close()
+    typing.cast("typing.Any", iterable).close()
     assert closed, "closing the iterable closes the request"

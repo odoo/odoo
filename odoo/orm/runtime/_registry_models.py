@@ -81,7 +81,7 @@ class _RegistryModelsMixin(_RegistryStubs):
     def cascades_into_inheritance_trees(self) -> dict[str, tuple[tuple[str, str], ...]]:
         referrers: dict[str, list[tuple[str, str]]] = {}
         for root_table, names in self.model_names_by_inheritance_root.items():
-            root_fields = next(
+            root_fields: Mapping[str, Field] = next(
                 (
                     self.models[name]._fields
                     for name in names
@@ -97,6 +97,7 @@ class _RegistryModelsMixin(_RegistryStubs):
                         and field.store
                         and field.column_type
                         and field.ondelete == "cascade"
+                        and field.comodel_name
                         and (
                             model_cls._table == root_table
                             or field.name not in root_fields
@@ -116,7 +117,7 @@ class _RegistryModelsMixin(_RegistryStubs):
             for names in self.model_names_by_inheritance_root.values()
             for name in names
         }
-        frontier = [
+        frontier: list[tuple[str, str, str, tuple[str, ...]]] = [
             (comodel, leaf, path, (comodel,))
             for comodel, pairs in referrers.items()
             for leaf, path in pairs
@@ -137,6 +138,7 @@ class _RegistryModelsMixin(_RegistryStubs):
                     and field.store
                     and field.column_type
                     and field.ondelete == "cascade"
+                    and field.comodel_name
                     and field.comodel_name not in trail
                 ):
                     longer = f"{path}.{field.name}"

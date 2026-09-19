@@ -101,7 +101,7 @@ class TestOpenReadWriteCursorRefusal(unittest.TestCase):
             _require_env = _serve._RequestServeMixin._require_env
             _open_read_write_cursor = _serve._RequestServeMixin._open_read_write_cursor
 
-        host = _Host()
+        host: typing.Any = _Host()
         host.env = SimpleNamespace(
             registry=SimpleNamespace(
                 db_name="testdb", cursor=lambda pin_key=None: fresh

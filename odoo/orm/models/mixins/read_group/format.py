@@ -31,6 +31,8 @@ if typing.TYPE_CHECKING:
 
     from odoo.libs.datetime import Granularity
 
+    from ...base import BaseModel
+
 _debug = DebugLog(__name__)
 
 
@@ -87,7 +89,11 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
 
         fname, __, func = parse_read_group_spec(aggregate_spec)
         field = self._fields.get(fname)
-        if field is not None and self._aggregates_through_records(field, func):
+        if (
+            field is not None
+            and func is not None
+            and self._aggregates_through_records(field, func)
+        ):
             return self._read_group_fold_through_records(
                 field, func, raw_values, empty_value
             )
@@ -129,12 +135,6 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
     def _read_group_fold_through_records(
         self, field, func: str, raw_values: Sequence, empty_value
     ) -> Generator:
-        """Fold a non-stored compute over each group's records: the ids the
-        SELECT carried instead of a column (`_aggregates_through_records`),
-        browsed with one prefetch set so the field computes once for all
-        groups, then folded as the SQL aggregate would have folded a column.
-        A `False` value is the compute's NULL and is skipped as SQL skips
-        NULL, except by the array aggregates, which keep it as None."""
         Model = self.env.registry[self._name]
         prefetch_ids = tuple(
             unique(id_ for ids in raw_values if ids for id_ in ids if id_)
@@ -143,7 +143,7 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
         if func == "sum_currency":
             currency_field = self._fields[field.get_currency_field(self)]
             to_currency = self.env.company.currency_id
-            today = fields.Date.context_today(self)
+            today = fields.Date.context_today(typing.cast("BaseModel", self))
 
         def value_of(record):
             value = record[field.name]
