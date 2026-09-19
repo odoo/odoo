@@ -883,21 +883,17 @@ def add_html_content(
 
 
 def prepend_html_content(html_body: str, html_content: str | markupsafe.Markup) -> str:
-    replacement = _DOCUMENT_SHELL_RE.sub("", html_content)
-    html_content = replacement.strip()
+    stripped = _DOCUMENT_SHELL_RE.sub("", html_content).strip()
 
     body_match = re.search(r"<body[^>]*>", html_body) or re.search(
         r"<html[^>]*>", html_body
     )
     insert_index = body_match.end() if body_match else 0
 
-    return "".join(
-        (
-            str(html_body[:insert_index]),
-            str(html_content),
-            str(html_body[insert_index:]),
-        )
-    )
+    if isinstance(html_body, markupsafe.Markup):
+        html_content = type(html_content)(stripped)
+        return html_body[:insert_index] + html_content + html_body[insert_index:]
+    return f"{html_body[:insert_index]}{stripped}{html_body[insert_index:]}"
 
 
 LOCAL_LINK_PATTERNS = (

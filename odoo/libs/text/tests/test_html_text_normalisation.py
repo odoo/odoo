@@ -75,6 +75,15 @@ class TestPrependHtmlContent(unittest.TestCase):
         self.assertNotIsInstance(result, Markup)
         self.assertEqual(result, "<body><p>c</p>5 < 6</body>")
 
+    def test_a_markup_body_stays_markup_and_escapes_untrusted_content(self):
+        body = Markup("<body><p>b</p></body>")
+        trusted = prepend_html_content(body, Markup("<p>c</p>"))
+        self.assertIsInstance(trusted, Markup)
+        self.assertEqual(trusted, "<body><p>c</p><p>b</p></body>")
+        untrusted = prepend_html_content(body, "<p>c</p>")
+        self.assertIsInstance(untrusted, Markup)
+        self.assertEqual(untrusted, "<body>&lt;p&gt;c&lt;/p&gt;<p>b</p></body>")
+
     def test_content_is_inserted_after_the_body_tag(self):
         self.assertEqual(
             prepend_html_content("<body><p>b</p></body>", "<p>c</p>"),
