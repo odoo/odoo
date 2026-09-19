@@ -501,13 +501,10 @@
                                     <label for="pos_customer_display_bg_img" />
                                     <field name="pos_customer_display_bg_img" class="w-100" filename="pos_customer_display_bg_img_name"/>
                                 </setting>
-                                <setting string="Receipt Printers" help="Connect printers to your PoS" id="pos_other_devices">
-                                    <field name="pos_other_devices"/>
-                                    <div class="content-group" invisible="not pos_other_devices">
-                                        <div class="mt16 mb-1">
-                                            <label string="Printers" for="pos_receipt_printer_ids" class="o_light_label me-2"/>
-                                            <field name="pos_receipt_printer_ids" widget="many2many_tags" context="{'default_use_type': 'receipt'}" options="{'no_quick_create': True}"/>
-                                        </div>
+                                <setting string="Receipt Printers" help="Connect printers to your PoS" id="receipt_printers">
+                                    <div class="mt16 mb-1">
+                                        <label string="Printers" for="pos_receipt_printer_ids" class="o_light_label me-2"/>
+                                        <field name="pos_receipt_printer_ids" widget="many2many_tags" placeholder="None" context="{'default_use_type': 'receipt'}" options="{'no_quick_create': True}"/>
                                     </div>
                                 </setting>
                                 <setting string="USB Scale" help="Connect a compatible scale directly via USB to this device">
@@ -527,30 +524,28 @@
                                     </div>
                                 </setting>
                                 <setting string="Preparation Printers" help="Connect preparation printers to your PoS">
-                                    <field name="pos_preparation_devices"/>
-                                    <div class="content-group" invisible="not pos_preparation_devices">
-                                        <div class="row mb-2">
-                                            <div class="col-lg-2 o_light_label">
-                                                <label string="Available" for="pos_preparation_printer_ids"/>
-                                            </div>
-                                            <div class="col-lg-5">
-                                                <field name="pos_preparation_printer_ids"
-                                                    class="w-100 pt-1"
-                                                    widget="many2many_tags"
-                                                    context="{'default_use_type': 'preparation'}"
-                                                    options="{'no_quick_create': True}"/>
-                                            </div>
-                                            <div>
-                                                <button name="action_pos_printer_dialog"
-                                                    context="{'default_pos_config_ids': [pos_config_id]}"
-                                                    icon="east"
-                                                    type="object"
-                                                    string="Add Printer"
-                                                    class="btn-link"/>
-                                            </div>
-                                            <div>
-                                                <button name="%(point_of_sale.action_pos_printer_form)d" icon="east" type="action" string="Manage Printers" class="btn-link"/>
-                                            </div>
+                                    <div class="row mb-2">
+                                        <div class="col-lg-2 o_light_label">
+                                            <label string="Available" for="pos_preparation_printer_ids"/>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <field name="pos_preparation_printer_ids"
+                                                class="w-100 pt-1"
+                                                widget="many2many_tags"
+                                                placeholder="None"
+                                                context="{'default_use_type': 'preparation'}"
+                                                options="{'no_quick_create': True}"/>
+                                        </div>
+                                        <div>
+                                            <button name="action_pos_printer_dialog"
+                                                context="{'default_pos_config_ids': [pos_config_id]}"
+                                                icon="east"
+                                                type="object"
+                                                string="Add Printer"
+                                                class="btn-link"/>
+                                        </div>
+                                        <div>
+                                            <button name="%(point_of_sale.action_pos_printer_form)d" icon="east" type="action" string="Manage Printers" class="btn-link"/>
                                         </div>
                                     </div>
                                 </setting>
