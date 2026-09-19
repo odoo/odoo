@@ -98,7 +98,7 @@
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
                 class="list-inline-item me-2">
                 <t t-set="img_style" t-value="ptav.image ? 'background:url(/web/image/product.template.attribute.value/'+ptav.id+'/image); background-size:cover;' : ''"/>
-                <t t-set="color_style" t-value="ptav.is_custom ? '' : 'background-color:' + ptav.html_color"/>
+                <t t-set="color_style" t-value="ptav.is_custom ? '' : 'background-color:' + (ptav.html_color || ptav.name)"/>
                 <label
                     class="position-relative d-inline-block rounded-pill text-center"
                     t-att-title="ptav.name"
@@ -106,7 +106,7 @@
                     t-att-class="{'o_sale_product_configurator_ptav_color': true,
                                   'active': this.props.selected_attribute_value_ids.includes(ptav.id),
                                   'custom_value': ptav.is_custom,
-                                  'transparent': !ptav.is_custom and !ptav.html_color,
+                                  'transparent': !ptav.is_custom and !ptav.html_color and !ptav.name,
                                   'css_not_available': ptav.excluded }">
                     <input
                         type="radio"
