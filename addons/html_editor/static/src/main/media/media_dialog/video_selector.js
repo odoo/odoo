@@ -287,6 +287,11 @@ export class VideoSelector extends Component {
         }
         const forcedOptions = {};
         const platformClass = PLATFORMS[this.state.platform];
+        const urlMatch = platformClass.isValidVideoUrl(this.state.urlInput);
+        if (!urlMatch) {
+            // The url may have changed platform since this refresh was scheduled.
+            return;
+        }
         if (this.props.isForBgVideo) {
             forcedOptions.hideControls = true;
             forcedOptions.hideFullscreen = true;
@@ -309,11 +314,7 @@ export class VideoSelector extends Component {
             }
         }
 
-        const videoData = platformClass.getVideoUrlData(
-            platformClass.isValidVideoUrl(this.state.urlInput),
-            forcedOptions
-        );
-        this.updateVideoPreview(videoData);
+        this.updateVideoPreview(platformClass.getVideoUrlData(urlMatch, forcedOptions));
     }
 
     async updateVideoPreview(videoData) {
