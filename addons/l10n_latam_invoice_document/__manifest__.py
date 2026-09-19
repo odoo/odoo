@@ -1,6 +1,6 @@
 {
     "name": "LATAM Document",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Accounting/Localizations",
     "summary": "LATAM Document Types",
     "description": """
