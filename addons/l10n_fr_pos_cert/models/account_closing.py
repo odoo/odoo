@@ -79,7 +79,6 @@ class AccountSaleClosing(models.Model):
         comodel_name="res.currency",
         related="company_id.currency_id",
         string="Currency",
-        store=True,
         readonly=True,
         help="The company's currency",
     )
