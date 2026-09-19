@@ -25,7 +25,16 @@ import {
     tick,
     waitFor,
     waitForNone,
+<<<<<<< fe8c7da4bec45f3d3a7aad22627392dfb9e1ae20
 } from "@odoo/hoot";
+||||||| fd06c4df5889e23cfb701c12d743b5652141a111
+} from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
+=======
+    waitUntil,
+} from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
+>>>>>>> 5cae293aa577de845a7bc9dcd0ea5c5bbf1b76a2
 import {
     contains,
     defineModels,
@@ -489,6 +498,72 @@ test("toolbar works: change font size correctly when closest block element has a
         `<h2 class="h3-fs">abc <strong>def </strong><span class="h1-fs"><strong>[ghi]</strong></span></h2>`
     );
     expect(inputEl).toHaveValue(h1Size);
+});
+
+test("toolbar font size selector reflects heading size after remove format", async () => {
+    const { el } = await setupEditor(`<h2 class="display-3-fs">[heading 2]</h2>`);
+    await expandToolbar();
+    const style = getHtmlStyle(document);
+    const getFontSizeFromVar = (cssVar) => {
+        const strValue = getCSSVariableValue(cssVar, style);
+        const remValue = parseFloat(strValue);
+        const pxValue = convertNumericToUnit(remValue, "rem", "px", style);
+        return Math.round(pxValue);
+    };
+    await waitFor(".o-we-toolbar");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
+    const inputEl = await waitUntil(() => {
+        const input = iframeEl.contentWindow.document?.querySelector("input[name='font-size-input']");
+        return input?.value && input;
+    });
+    expect(inputEl).toHaveValue(getFontSizeFromVar("display-3-font-size").toString());
+
+    await click(".btn[name='remove_format']");
+    await animationFrame();
+
+    expect(getContent(el)).toBe(`<h2>[heading 2]</h2>`);
+    expect(inputEl).toHaveValue(getFontSizeFromVar("h2-font-size").toString());
+});
+
+test("toolbar font size selector reflects default size with o_default_font_size class", async () => {
+    await setupEditor(
+        '<p class="display-3-fs">abc <span class="o_default_font_size">[def]</span> ghi</p>'
+    );
+    await expandToolbar();
+    const style = getHtmlStyle(document);
+    const getFontSizeFromVar = (cssVar) => {
+        const strValue = getCSSVariableValue(cssVar, style);
+        const remValue = parseFloat(strValue);
+        const pxValue = convertNumericToUnit(remValue, "rem", "px", style);
+        return Math.round(pxValue);
+    };
+    await waitFor(".o-we-toolbar");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
+    const inputEl = await waitUntil(() => {
+        const input = iframeEl.contentWindow.document?.querySelector("input[name='font-size-input']");
+        return input?.value && input;
+    });
+    expect(inputEl).toHaveValue(getFontSizeFromVar("font-size-base").toString());
+});
+
+test("toolbar works: apply custom font size on a selection inside block default class", async () => {
+    const { el } = await setupEditor(
+        '<h2 class="display-3-fs">abc <span class="h2">d[e]f</span> ghi</h2>'
+    );
+    await expandToolbar();
+    await contains(".o-we-toolbar [name='font_size_selector'].dropdown-toggle").click();
+    const style = getHtmlStyle(document);
+    const getFontSizeFromVar = (cssVar) => {
+        const strValue = getCSSVariableValue(cssVar, style);
+        const remValue = parseFloat(strValue);
+        const pxValue = convertNumericToUnit(remValue, "rem", "px", style);
+        return Math.round(pxValue);
+    };
+    const h1Size = getFontSizeFromVar("h1-font-size").toString();
+    await contains(`.o_font_size_selector_menu .dropdown-item:contains('${h1Size}')`).click();
+    expect(getContent(el)).toBe(
+        '<h2 class="display-3-fs">abc <span class="h2">d<span class="h1-fs">[e]</span>f</span> ghi</h2>'
+    );
 });
 
 test("toolbar works: show the correct text alignment", async () => {
