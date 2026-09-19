@@ -240,7 +240,10 @@ class MailActivityMixin(models.AbstractModel):
             self.env['mail.activity'].sudo().search(
                 [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
             ).unlink()
-        return super(MailActivityMixin, self).write(vals)
+        result = super().write(vals)
+        if self._rec_name in vals:
+            self.sudo().with_context(active_test=False).activity_ids._compute_res_name()
+        return result
 
     def unlink(self):
         """ Override unlink to delete records activities through (res_model, res_id). """

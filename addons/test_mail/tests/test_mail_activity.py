@@ -867,6 +867,20 @@ class TestActivityMixin(TestActivityCommon):
             self.assertFalse(record, "Should not find record if the only late activity is done")
 
     @users('employee')
+    def test_record_rename(self):
+        records = (self.test_record + self.test_record_2).with_user(self.env.user)
+        activities = records.activity_schedule(user_id=self.env.uid)
+        activities += records.activity_schedule(active=False, user_id=self.env.uid)
+        self.assertEqual(activities.mapped('res_name'), ['Test', 'Test_2', 'Test', 'Test_2'])
+
+        records.write({'name': 'Renamed'})
+        self.env.invalidate_all()
+        self.assertEqual(activities.mapped('res_name'), ['Renamed'] * 4)
+        self.assertEqual(self.env['mail.activity'].with_context(active_test=False).search([
+            ('id', 'in', activities.ids), ('res_name', '=', 'Renamed'),
+        ]), activities)
+
+    @users('employee')
     def test_record_unlink(self):
         test_record = self.test_record.with_user(self.env.user)
         act1 = test_record.activity_schedule(summary='Active')
