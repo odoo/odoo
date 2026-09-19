@@ -1386,3 +1386,31 @@ class TestSaleToInvoice(TestSaleCommon):
         invoice = sale_order._create_invoices()
         invoice.line_ids[0].account_id = self.cash_rounding_a.profit_account_id
         self.assertEqual(invoice.line_ids[0].analytic_distribution, analytic_distribution_manual)
+
+    def test_invoice_line_name_partner_specific_code_not_duplicated(self):
+        """When a customer has their own product code (product.supplierinfo),
+        the sale order line description uses it (e.g. "[CUSTOM-CODE] Product").
+        Invoicing must not re-resolve the product's display_name without that
+        customer in context, or it would find a different string ("[DEFAULT-CODE]
+        Product") and prepend it, duplicating the product name on the invoice.
+        """
+        product = self.company_data['product_order_no']
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_code': 'CUSTOM-CODE',
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': product.id, 'product_uom_qty': 1})],
+        })
+        # Mimic the description the web client computes once the customer is
+        # known (product_template_id's view context carries partner_id).
+        so.order_line.name = product.with_context(partner_id=self.partner_a.id).display_name
+        so.action_confirm()
+        invoice = so._create_invoices()
+        self.assertEqual(
+            invoice.invoice_line_ids.name, so.order_line.name,
+            "Invoicing shouldn't duplicate the product name when the order line "
+            "already used a partner-specific product code",
+        )
