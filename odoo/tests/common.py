@@ -290,13 +290,22 @@ def warmup(func: Callable, /) -> Callable:
         self.env.flush_all()
         self.env.invalidate_all()
         self.warm = False
-        with (
-            _debug.perf("test.warmup.cold", cr=self.cr, func=func.__qualname__),
-            contextlib.closing(self.cr.savepoint(flush=False)),
-        ):
-            func(self, *args, **kwargs)
-            self.env.flush_all()
-        self.env.invalidate_all()
+        # Two cold passes. Recomputing an ormcached method loads records as a side
+        # effect, so the pass that fills the ormcache does not take the path the
+        # steady state takes: it finds in the record cache what a later run has to
+        # fetch, and never caches what that fetch needs (the rule domain of the
+        # model, say). Whether the first pass recomputes depends on what ran
+        # before the test, which made a pinned count read one higher inside a
+        # suite than alone. The second pass starts from a full ormcache and an
+        # empty record cache, like the measured one.
+        for _cold_pass in range(2):
+            with (
+                _debug.perf("test.warmup.cold", cr=self.cr, func=func.__qualname__),
+                contextlib.closing(self.cr.savepoint(flush=False)),
+            ):
+                func(self, *args, **kwargs)
+                self.env.flush_all()
+            self.env.invalidate_all()
         self.warm = True
         with _debug.perf("test.warmup.warm", cr=self.cr, func=func.__qualname__):
             func(self, *args, **kwargs)
