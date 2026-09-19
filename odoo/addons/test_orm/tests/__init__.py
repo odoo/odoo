@@ -48,3 +48,4 @@ from . import (
 from . import test_translation_write_propagation
 from . import test_unlink_invalidation
 from . import test_projection_constraints
+from . import test_hierarchy_flush

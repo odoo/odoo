@@ -1090,7 +1090,10 @@ class PostgresBackend:
                 SELECT id, parent_id FROM ancestry
                 """,
                 table=SQL.identifier(model._table),
-                parent=SQL.identifier(parent_field),
+                # the closure reads the column: a pending write has to reach it
+                parent=SQL.identifier(
+                    parent_field, to_flush=model._fields[parent_field]
+                ),
                 ids=tuple(ids),
             )
         )
@@ -1134,7 +1137,10 @@ class PostgresBackend:
             table=table,
             roots=list(root_ids),
             base_where=SQL(" AND (%s)", base_where) if base_where else SQL(),
-            parent=SQL.identifier(model._table, parent_field),
+            # the closure reads the column: a pending write has to reach it
+            parent=SQL.identifier(
+                model._table, parent_field, to_flush=model._fields[parent_field]
+            ),
             step_where=SQL(" AND (%s)", step_where) if step_where else SQL(),
             same=same,
         )
