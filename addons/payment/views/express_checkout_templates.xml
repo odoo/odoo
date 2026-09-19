@@ -10,8 +10,6 @@
             - express_checkout_provider_sudo: The available provider, as a sudoed `payment.provider`
                                               record.
             - merchant_name: The merchant name.
-            - payment_method_unknown_id: The ID of the "Unknown" payment method record, to use as
-                                         the generic express checkout method.
             - payment_access_token: The access token used to authenticate the partner. Since this
                                     template is loaded in the shopping cart, this parameter is
                                     called `payment_access_token` to prevent mixing up with the
@@ -39,7 +37,6 @@
             t-att-data-currency-name="currency.name.lower()"
             t-att-data-merchant-name="merchant_name"
             t-att-data-partner-id="partner_id"
-            t-att-data-payment-method-unknown-id="payment_method_unknown_id"
             t-att-data-access-token="payment_access_token"
             t-att-data-shipping-info-required="shipping_info_required"
             t-att-data-transaction-route="transaction_route"
