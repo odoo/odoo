@@ -12,6 +12,9 @@
     </t>
 
     <t t-name="hr_expense.DashboardKanbanRenderer" t-inherit="hr_expense.KanbanRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="attributes">
+            <attribute name="class" add="pt-md-3" separator=" "/>
+        </xpath>
         <xpath expr="//div[hasclass('o_kanban_renderer')]" position="before">
             <ExpenseDashboard/>
         </xpath>
