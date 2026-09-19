@@ -15,6 +15,9 @@
             'pos_online_payment_self_order/static/src/app/**/*',
             'point_of_sale/static/lib/qrcode.js',
         ],
+        'point_of_sale._assets_pos': [
+            'pos_online_payment_self_order/static/src/overrides/**/*',
+        ],
         'web.assets_frontend': [
             'pos_online_payment_self_order/static/src/portal/**/*',
         ],

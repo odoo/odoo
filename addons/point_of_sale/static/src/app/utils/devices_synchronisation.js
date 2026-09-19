@@ -135,6 +135,7 @@ export default class DevicesSynchronisation {
                     order.config_id = config;
                     order.session_id = session;
                 }
+                this.pos._checkForSelfOrderNotifications(res["pos.order"]);
             }
         }
 
