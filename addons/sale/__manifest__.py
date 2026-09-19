@@ -1,6 +1,6 @@
 {
     "name": "Sales",
-    "version": "1.8",
+    "version": "1.9",
     "category": "Sales/Sales",
     "sequence": 5,
     "summary": "From quotations to invoices",

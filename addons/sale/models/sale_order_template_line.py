@@ -30,8 +30,6 @@ class SaleOrderTemplateLine(models.Model):
 
     company_id = fields.Many2one(
         related="sale_order_template_id.company_id",
-        store=True,
-        index=True,
     )
 
     product_id = fields.Many2one(
