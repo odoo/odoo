@@ -1,6 +1,6 @@
 {
     "name": "Delivery Costs",
-    "version": "1.2",
+    "version": "1.1",
     "category": "Sales/Delivery",
     "description": """
 Allows you to add delivery methods in sale orders.

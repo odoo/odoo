@@ -20,9 +20,12 @@ class AppointmentBookingLine(models.Model):
         string="Appointment User",
         readonly=False,
     )
-    appointment_type_id = fields.Many2one(
+    appointment_type_id = fields.Many2one(  # noqa: E8528  fires _check_user_or_resource_set
         comodel_name="appointment.type",
         related="calendar_event_id.appointment_type_id",
+        precompute=True,
+        store=True,
+        index=True,
         readonly=True,
         ondelete="cascade",
     )
