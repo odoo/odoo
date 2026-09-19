@@ -18,40 +18,6 @@ import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
-/**
- * The ids of the thread actions mail registers. A module registering an action of its own names
- * its id where it registers it.
- */
-export const THREAD_ACTION_IDS = {
-    ADD_TO_FAVORITES: "add-to-favorites",
-    ADVANCED_SETTINGS: "advanced-settings",
-    ATTACHMENTS: "attachments",
-    CALL: "call",
-    CALL_SETTINGS: "call-settings",
-    CAMERA_CALL: "camera-call",
-    CLOSE: "close",
-    COPY_INVITE_LINK: "copy-invite-link",
-    DELETE_THREAD: "delete-thread",
-    DISCONNECT: "disconnect",
-    EXPAND_DISCUSS: "expand-discuss",
-    FOLD_CHAT_WINDOW: "fold-chat-window",
-    HIDE: "hide",
-    INVITE_PEOPLE: "invite-people",
-    JOIN_CHANNEL: "join-channel",
-    LEAVE: "leave",
-    MARK_READ: "mark-read",
-    MEETING_CHAT: "meeting-chat",
-    MEETING_TO_CHAT: "meeting-to-chat",
-    MEMBER_LIST: "member-list",
-    NOTIFICATION_SETTINGS: "notification-settings",
-    PINNED_MESSAGES: "pinned-messages",
-    REMOVE_FROM_FAVORITES: "remove-from-favorites",
-    RENAME_THREAD: "rename-thread",
-    SEARCH_MESSAGES: "search-messages",
-    SHOW_THREADS: "show-threads",
-    VIEW_RECORDINGS: "view-recordings",
-};
-
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("models").Thread} Thread */
 /**
@@ -81,7 +47,7 @@ export function describeThreadActionGroup(id, definition) {
     );
 }
 
-registerThreadAction(THREAD_ACTION_IDS.FOLD_CHAT_WINDOW, {
+registerThreadAction("fold-chat-window", {
     btnAttrs: { "data-available-offline": true },
     condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
     icon: "remove",
@@ -91,7 +57,7 @@ registerThreadAction(THREAD_ACTION_IDS.FOLD_CHAT_WINDOW, {
     sequence: 99,
     sequenceQuick: 20,
 });
-registerThreadAction(THREAD_ACTION_IDS.RENAME_THREAD, {
+registerThreadAction("rename-thread", {
     condition: ({ action, channel }) => channel && channel.isAllowedToRename && action.editingName,
     icon: "edit",
     name: _t("Rename Thread"),
@@ -100,7 +66,7 @@ registerThreadAction(THREAD_ACTION_IDS.RENAME_THREAD, {
     sequenceGroup: 20,
     setup: ({ action }) => (action.editingName = useMaybePlugin(RenameThreadPlugin)?.editingName),
 });
-registerThreadAction(THREAD_ACTION_IDS.CLOSE, {
+registerThreadAction("close", {
     btnAttrs: { "data-available-offline": true },
     condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
     icon: "close_small",
@@ -109,7 +75,7 @@ registerThreadAction(THREAD_ACTION_IDS.CLOSE, {
     sequence: 100,
     sequenceQuick: 10,
 });
-registerThreadAction(THREAD_ACTION_IDS.SEARCH_MESSAGES, {
+registerThreadAction("search-messages", {
     actionPanelComponent: SearchMessagesPanel,
     actionPanelComponentProps: ({ thread }) => ({ thread }),
     actionPanelOuterClass: "o-mail-SearchMessagesPanel bg-inherit",
@@ -134,7 +100,7 @@ registerThreadAction(THREAD_ACTION_IDS.SEARCH_MESSAGES, {
             },
         }),
 });
-registerThreadAction(THREAD_ACTION_IDS.MEETING_CHAT, {
+registerThreadAction("meeting-chat", {
     actionPanelComponent: MeetingChat,
     actionPanelOuterClass: "bg-100 border",
     badge: ({ thread }) => thread.isUnread,

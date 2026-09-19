@@ -1,18 +1,22 @@
 /**
- * A card, plus where the layout wants it: what a surface is handed on every reconcile.
+ * What the manager needs of a desired surface: an identity to keep it alive by, and where the
+ * layout wants it. Whatever else the caller renders from rides along, untouched.
  *
- * @typedef {import("@mail/discuss/call/common/call").CardData & {placement: string}} SurfaceDescriptor
+ * @typedef SurfaceDescriptor
+ * @property {string} key stable identity, never index based
+ * @property {string} placement where the layout wants this surface
  */
 
 /**
- * The stable rendering identity of a participant media entry (camera, screen or invitation). The
- * key lives as long as the entry is desired, so a layout change moves the surface instead of
- * recreating it.
+ * The stable rendering identity of one entry of a stage. The key lives as long as the entry is
+ * desired, so a layout change moves the surface instead of recreating it.
+ *
+ * @template {SurfaceDescriptor} T the descriptor the caller reconciles with
  */
 export class Surface {
     /** @type {string} session/member based, never index based */
     key;
-    /** @type {SurfaceDescriptor|undefined} replaced — never mutated — on every reconcile */
+    /** @type {T|undefined} replaced — never mutated — on every reconcile */
     data;
 
     /**
@@ -23,16 +27,21 @@ export class Surface {
     }
 }
 
-/** Keeps the {@link Surface} of a stage alive across layout changes. */
+/**
+ * Keeps the {@link Surface} of a stage alive across layout changes.
+ *
+ * @template {SurfaceDescriptor} T the descriptor this manager reconciles with
+ */
 export class SurfaceManager {
-    /** @type {Map<string, Surface>} */
+    /** @type {Map<string, Surface<T>>} */
     _surfaces = new Map();
 
     /**
      * Duplicate keys are ignored. Pass a fresh descriptor per reconcile and render `surface.data`:
      * that new object is what tells the card its media changed.
      *
-     * @param {SurfaceDescriptor[]} descriptors desired surfaces in render order
+     * @param {T[]} descriptors desired surfaces in render order
+     * @returns {Surface<T>[]}
      */
     reconcile(descriptors) {
         const next = new Map();
@@ -52,6 +61,7 @@ export class SurfaceManager {
 
     /**
      * @param {string} key
+     * @returns {Surface<T>|undefined}
      */
     get(key) {
         return this._surfaces.get(key);

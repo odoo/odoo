@@ -35,12 +35,21 @@ import { INSET_MARGIN } from "@mail/discuss/call/common/stage/layout_engine";
  * (pin/unpin, layout switch, sidebar focus swap, reorder, resize).
  */
 
+/**
+ * The stage every test below measures against. Cards are laid out from the measured box, so the
+ * assertions on their geometry only mean something at a known size: left to the runner's window,
+ * a short viewport makes the 16:9 main card fill the width and the stage-versus-card assertions
+ * flip. Landscape and roomy, like the desktop this view is for.
+ */
+const STAGE_SIZE = { width: 1280, height: 720 };
+
 describe.current.tags("desktop");
 defineMailModels();
-beforeEach(() => {
+beforeEach(async () => {
     mockGetMedia();
     // Mocked frames do not drive the Web Animations API: a measured card would be mid-flight.
     disableAnimations();
+    await resize(STAGE_SIZE);
 });
 
 /**
@@ -411,7 +420,8 @@ test("resize keeps every video element and only changes geometry", async () => {
     const aliceCard = queryFirst(".o-discuss-CallParticipantCard[aria-label='Alice']");
     expect(aliceVideo).toBeInstanceOf(HTMLVideoElement);
 
-    await resize({ width: 1280, height: 720 });
+    // Narrower than the baseline stage, so the layout really has to move the cards.
+    await resize({ width: STAGE_SIZE.width - 280, height: STAGE_SIZE.height });
     await animationFrame();
     await contains(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']");
     await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']");
