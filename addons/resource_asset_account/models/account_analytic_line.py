@@ -8,6 +8,5 @@ class AccountAnalyticLine(models.Model):
         comodel_name="resource.asset",
         related="move_line_id.asset_id",
         string="Asset",
-        store=True,
         help="Asset associated with this analytic entry, inherited from the accounting move line",
     )
