@@ -110,10 +110,8 @@ class ResCompany(models.Model):
 
     def _inverse_l10n_in_gst_registration_type(self):
         for company in self:
-            gst_group_refs = self._get_gst_group_refs()
-            self._activate_l10n_in_taxes(gst_group_refs, company, False)
+            self._update_l10n_in_gst_taxes(company)
             if company.l10n_in_gst_registration_type:
-                self._activate_l10n_in_taxes(gst_group_refs, company, True)
                 # Set sale and purchase tax accounts when user registered under GST.
                 ChartTemplate = self.env['account.chart.template'].with_company(company)
                 if company.l10n_in_gst_registration_type == 'regular':
@@ -142,36 +140,12 @@ class ResCompany(models.Model):
                 company.l10n_in_gst_registration_type = company.parent_id.l10n_in_gst_registration_type
 
     def _activate_l10n_in_taxes(self, group_refs, company, active=True):
-        ChartTemplate = self.env['account.chart.template'].with_company(company)
-        tax_group_ids = [
-            tax_group.id
-            for group_ref in group_refs
-            if (tax_group := ChartTemplate.ref(group_ref, raise_if_not_found=False))
-        ]
-
+        tax_group_ids = self._get_l10n_in_tax_group_ids(group_refs, company)
         if tax_group_ids:
-            domain = [
+            taxes = self.env['account.tax'].with_company(company).with_context(active_test=False).search([
                 ('tax_group_id', 'in', tax_group_ids),
                 ('active', '!=', active),
-            ]
-            is_gst_group = bool(set(self._get_gst_group_refs()).intersection(group_refs))
-            if active and company.l10n_in_gst_registration_type and is_gst_group:
-                composition_tax_ids = self.env['ir.model.data'].search([
-                    ('model', '=', 'account.tax'),
-                    ('module', '=', 'account'),
-                    ('name', '=like', f'{company.id}_%_purchase_%_composition'),
-                ]).mapped('res_id')
-                if company.l10n_in_gst_registration_type == 'regular':
-                    domain += [('id', 'not in', composition_tax_ids)]
-                elif company.l10n_in_gst_registration_type == 'composition':
-                    domain += [
-                        '|', '|', '&',
-                        ('type_tax_use', '=', 'purchase'),
-                        ('l10n_in_reverse_charge', '=', True),
-                        ('id', 'in', composition_tax_ids),
-                        ('l10n_in_tax_type', 'in', ['nil_rated', 'exempt', 'non_gst']),
-                    ]
-            taxes = self.env['account.tax'].with_company(company).with_context(active_test=False).search(domain)
+            ])
             taxes.write({'active': active})
 
     @api.depends('has_vat')
@@ -221,3 +195,51 @@ class ResCompany(models.Model):
     def action_update_state_as_per_gstin(self):
         self.ensure_one()
         self.partner_id.action_update_state_as_per_gstin()
+
+    def _get_l10n_in_tax_group_ids(self, group_refs, company):
+        ChartTemplate = self.env['account.chart.template'].with_company(company)
+        return [
+            tax_group.id
+            for group_ref in group_refs
+            if (tax_group := ChartTemplate.ref(group_ref, raise_if_not_found=False))
+        ]
+
+    def _update_l10n_in_gst_taxes(self, company):
+        """Activate the GST taxes that match the company's registration type and deactivate the rest:
+
+        - regular:      standard GST and 0% taxes on, composition (No ITC) taxes off
+        - composition:  composition (No ITC) + purchase reverse charge + 0% taxes on, standard GST taxes off
+        - unregistered: composition (No ITC) + purchase-side 0% taxes on, standard GST and sale 0% taxes off
+        """
+        tax_group_ids = self._get_l10n_in_tax_group_ids(self._get_gst_group_refs(), company)
+        if tax_group_ids:
+            taxes = self.env['account.tax'].with_company(company).with_context(active_test=False).search([
+                ('tax_group_id', 'in', tax_group_ids),
+            ])
+            composition_tax_ids = self.env['ir.model.data'].search([
+                ('model', '=', 'account.tax'),
+                ('module', '=', 'account'),
+                ('name', '=like', f'{company.id}_%_purchase_%_composition'),
+            ]).mapped('res_id')
+            activate_domain = []
+            if company.l10n_in_gst_registration_type == 'regular':
+                activate_domain = [('id', 'not in', composition_tax_ids)]
+            elif company.l10n_in_gst_registration_type == 'composition':
+                activate_domain = [
+                    '|', '|', '&',
+                    ('type_tax_use', '=', 'purchase'),
+                    ('l10n_in_reverse_charge', '=', True),
+                    ('id', 'in', composition_tax_ids),
+                    ('l10n_in_tax_type', 'in', ['nil_rated', 'exempt', 'non_gst']),
+                ]
+            else:
+                activate_domain = [
+                    '|',
+                    ('id', 'in', composition_tax_ids),
+                    '&',
+                    ('type_tax_use', '=', 'purchase'),
+                    ('l10n_in_tax_type', 'in', ['nil_rated', 'exempt', 'non_gst']),
+                ]
+            taxes_to_activate = taxes.filtered_domain(activate_domain)
+            taxes_to_activate.active = True
+            (taxes - taxes_to_activate).active = False
