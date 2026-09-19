@@ -192,7 +192,7 @@ class AccountMove(models.Model):
 
     @api.depends("line_ids.matching_number", "payment_state", "matched_payment_ids")
     def _compute_l10n_it_payment_method(self):
-        if self.env.company.account_fiscal_country_id.code != "IT":
+        if self.env.company.account_config_id.account_fiscal_country_id.code != "IT":
             return
 
         move_lines_per_matching_number = (
@@ -562,7 +562,7 @@ class AccountMove(models.Model):
         self.check_singleton()
         return (
             self.state == "posted"
-            and self.company_id.account_fiscal_country_id.code == "IT"
+            and self.company_id.account_config_id.account_fiscal_country_id.code == "IT"
             and self.journal_id.type == "sale"
             and self.l10n_it_edi_state in (False, "rejected")
         )

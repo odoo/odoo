@@ -193,11 +193,14 @@ class AccountChartTemplate(models.AbstractModel):
             company=company,
             demo=install_demo,
             force_create=force_create,
-            current=company.chart_template,
+            current=company.account_config_id.chart_template,
         )
 
         mapping = self._get_chart_template_mapping(get_all=True).get(template_code, {})
-        if not mapping.get("visible", True) and template_code != company.chart_template:
+        if (
+            not mapping.get("visible", True)
+            and template_code != company.account_config_id.chart_template
+        ):
             raise UserError(
                 _(
                     "The %s chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country.",
@@ -273,8 +276,8 @@ class AccountChartTemplate(models.AbstractModel):
         )
         company = self.env["res.company"].browse(company.id)
 
-        reload_template = template_code == company.chart_template
-        company.chart_template = template_code
+        reload_template = template_code == company.account_config_id.chart_template
+        company.account_config_id.chart_template = template_code
 
         if (
             not reload_template
@@ -296,9 +299,11 @@ class AccountChartTemplate(models.AbstractModel):
 
         data = self._prepare_chart_template_data(template_code)
         template_data = data.pop("template_data")
+        self._split_company_config_data(company, data)
         if company.parent_id:
             data = {
                 "res.company": data["res.company"],
+                "account.config": data["account.config"],
             }
 
         if reload_template:
@@ -421,13 +426,22 @@ class AccountChartTemplate(models.AbstractModel):
             if is_set:
                 template_data.pop(prop, None)
         data.pop("account.reconcile.model", None)
-        if "res.company" in data:
-            company_vals = data["res.company"][company.id]
-            for fname in list(company_vals):
-                field = company._fields.get(fname)
-                if not field or field.type != "many2one" or company[fname]:
-                    del company_vals[fname]
-            company_vals["anglo_saxon_accounting"] = company.anglo_saxon_accounting
+        config = company.account_config_id
+        for record, model_data in (
+            (company, data.get("res.company", {})),
+            (config, data.get("account.config", {})),
+        ):
+            if record.id not in model_data:
+                continue
+            record_vals = model_data[record.id]
+            for fname in list(record_vals):
+                field = record._fields.get(fname)
+                if not field or field.type != "many2one" or record[fname]:
+                    del record_vals[fname]
+        if config.id in data.get("account.config", {}):
+            data["account.config"][config.id]["anglo_saxon_accounting"] = (
+                config.anglo_saxon_accounting
+            )
         self._pre_reload_journals(company, data)
         if self.env["account.group"].search_count(
             [] if company.parent_id else [("company_id", "=", company.id)],
@@ -509,7 +523,7 @@ class AccountChartTemplate(models.AbstractModel):
     @_debug.perf.timed
     def _pre_reload_journals(self, company, data):
         lang = self._get_untranslatable_fields_target_language(
-            company.chart_template, company
+            company.account_config_id.chart_template, company
         )
         Journal = self.env["account.journal"].with_context(active_test=False)
         company_domain = self.env["account.journal"]._check_company_domain(company)
@@ -831,6 +845,41 @@ class AccountChartTemplate(models.AbstractModel):
         )
         return True
 
+    def _split_company_config_data(self, company, data):
+        # a template describes a company's accounting as one dict; the
+        # keys the company does not carry are its account.config's
+        config = company.account_config_id
+        company_data = data.get("res.company", {}).get(company.id, {})
+        if "account.config" not in data:
+            # loaded right after the company, before the journals and taxes
+            # that read its prefixes and fiscal country
+            ordered = {}
+            for model, records in data.items():
+                ordered[model] = records
+                if model == "res.company":
+                    ordered["account.config"] = {}
+            if "account.config" not in ordered:
+                ordered["account.config"] = {}
+            data.clear()
+            data.update(ordered)
+        config_data = data["account.config"].setdefault(config.id, {})
+        for key in list(company_data):
+            base_key = key.split("@")[0]
+            if base_key in company._fields or base_key == "__translation_module__":
+                continue
+            if base_key in config._fields:
+                config_data[key] = company_data.pop(key)
+
+    def _pre_load_account_config_vals(self, company, template_data):
+        config = company.account_config_id
+        vals = {
+            key: val
+            for key, val in template_data.items()
+            if key in config._fields and key not in company._fields
+        }
+        vals.setdefault("anglo_saxon_accounting", False)
+        return vals
+
     def _pre_load_company_vals(self, company, template_data, fiscal_country):
         property_accounts = self._get_property_accounts()
         vals = {
@@ -846,7 +895,6 @@ class AccountChartTemplate(models.AbstractModel):
             )
         if not company.country_id:
             vals["country_id"] = fiscal_country.id
-        vals.setdefault("anglo_saxon_accounting", False)
         if _debug.logic.enabled:
             _debug.logic(
                 "company_vals_prepared",
@@ -914,15 +962,17 @@ class AccountChartTemplate(models.AbstractModel):
     @_debug.perf.timed
     def _pre_load_data(self, template_code, company, template_data, data):
         _debug.lifecycle("_pre_load_data", records=self)
-        company_data = data.get("res.company", {}).get(company.id, {})
+        config = company.account_config_id
+        config_data = data.get("account.config", {}).get(config.id, {})
         fiscal_country = (
-            self.ref(company_data["account_fiscal_country_id"])
-            if "account_fiscal_country_id" in company_data
-            else company.account_fiscal_country_id
+            self.ref(config_data["account_fiscal_country_id"])
+            if "account_fiscal_country_id" in config_data
+            else config.account_fiscal_country_id
         )
         company.write(
             self._pre_load_company_vals(company, template_data, fiscal_country)
         )
+        config.write(self._pre_load_account_config_vals(company, template_data))
         self._pre_load_report_config_vals(company, template_data)
 
         code_digits = int(template_data.get("code_digits", 6))
@@ -976,12 +1026,16 @@ class AccountChartTemplate(models.AbstractModel):
                 "many2one_ref_unresolved",
                 field=fname,
                 ref=value,
-                company_fallback=model._name == "res.company",
+                company_fallback=model._name in ("res.company", "account.config"),
             )
-            if model._name == "res.company":
-                values[fname] = (
-                    self.env.company[fname] or self.env.company.root_id[fname] or False
-                )
+            if model._name in ("res.company", "account.config"):
+                current = self.env.company
+                if model._name == "account.config":
+                    current = current.account_config_id
+                    root = self.env.company.root_id.account_config_id
+                else:
+                    root = self.env.company.root_id
+                values[fname] = current[fname] or root[fname] or False
             else:
                 _logger.warning(
                     "Failed when trying to recover %s for field=%s", value, field
@@ -1141,6 +1195,10 @@ class AccountChartTemplate(models.AbstractModel):
     def _load_data(self, data):
         _debug.lifecycle("_load_data", records=self)
         created_records = {}
+        for company_id in list(data.get("res.company", {})):
+            self._split_company_config_data(
+                self.env["res.company"].browse(company_id), data
+            )
         for model, model_data in self._load_in_dependency_order(
             list(deepcopy(data).items())
         ):
@@ -1172,15 +1230,15 @@ class AccountChartTemplate(models.AbstractModel):
         ):
             journal.suspense_account_id = (
                 journal.suspense_account_id
-                or company.account_journal_suspense_account_id
+                or company.account_config_id.account_journal_suspense_account_id
             )
             journal.profit_account_id = (
                 journal.profit_account_id
-                or company.default_cash_difference_income_account_id
+                or company.account_config_id.default_cash_difference_income_account_id
             )
             journal.loss_account_id = (
                 journal.loss_account_id
-                or company.default_cash_difference_expense_account_id
+                or company.account_config_id.default_cash_difference_expense_account_id
             )
             if _debug.logic.enabled:
                 _debug.logic(
@@ -1192,31 +1250,35 @@ class AccountChartTemplate(models.AbstractModel):
                     loss=journal.loss_account_id,
                 )
 
-        if not company.tax_cash_basis_journal_id:
-            company.tax_cash_basis_journal_id = self.ref(
+        if not company.account_config_id.tax_cash_basis_journal_id:
+            company.account_config_id.tax_cash_basis_journal_id = self.ref(
                 "caba", raise_if_not_found=False
             )
-        if not company.currency_exchange_journal_id:
-            company.currency_exchange_journal_id = self.ref(
+        if not company.account_config_id.currency_exchange_journal_id:
+            company.account_config_id.currency_exchange_journal_id = self.ref(
                 "exch", raise_if_not_found=False
             )
 
         sale_journal = self.ref("sale", raise_if_not_found=False)
-        if sale_journal and company.income_account_id:
-            sale_journal.default_account_id = company.income_account_id
+        if sale_journal and company.account_config_id.income_account_id:
+            sale_journal.default_account_id = (
+                company.account_config_id.income_account_id
+            )
         purchase_journal = self.ref("purchase", raise_if_not_found=False)
-        if purchase_journal and company.expense_account_id:
-            purchase_journal.default_account_id = company.expense_account_id
+        if purchase_journal and company.account_config_id.expense_account_id:
+            purchase_journal.default_account_id = (
+                company.account_config_id.expense_account_id
+            )
         if _debug.logic.enabled:
             _debug.logic(
                 "company_journals_defaulted",
                 company=company,
-                caba_journal=company.tax_cash_basis_journal_id,
-                exch_journal=company.currency_exchange_journal_id,
+                caba_journal=company.account_config_id.tax_cash_basis_journal_id,
+                exch_journal=company.account_config_id.currency_exchange_journal_id,
                 sale_journal=sale_journal,
-                sale_account=company.income_account_id,
+                sale_account=company.account_config_id.income_account_id,
                 purchase_journal=purchase_journal,
-                purchase_account=company.expense_account_id,
+                purchase_account=company.account_config_id.expense_account_id,
             )
 
     def _default_tax_for(self, company, type_tax_use):
@@ -1253,20 +1315,20 @@ class AccountChartTemplate(models.AbstractModel):
     @_debug.perf.timed
     def _post_load_default_taxes(self, company):
         _debug.lifecycle("_post_load_default_taxes", records=self)
-        if not company.account_sale_tax_id:
-            company.account_sale_tax_id = self._default_tax_for(
+        if not company.account_config_id.account_sale_tax_id:
+            company.account_config_id.account_sale_tax_id = self._default_tax_for(
                 company, ("sale", "all")
             )
-        if not company.account_purchase_tax_id:
-            company.account_purchase_tax_id = self._default_tax_for(
+        if not company.account_config_id.account_purchase_tax_id:
+            company.account_config_id.account_purchase_tax_id = self._default_tax_for(
                 company, ("purchase", "all")
             )
 
-        if company.account_sale_tax_id:
+        if company.account_config_id.account_sale_tax_id:
             self._force_company_default_tax_on_products(
                 company, "account_sale_tax_id", "taxes_id"
             )
-        if company.account_purchase_tax_id:
+        if company.account_config_id.account_purchase_tax_id:
             self._force_company_default_tax_on_products(
                 company, "account_purchase_tax_id", "supplier_taxes_id"
             )
@@ -1278,14 +1340,14 @@ class AccountChartTemplate(models.AbstractModel):
             ],
             limit=1,
         ):
-            company.tax_exigibility = True
+            company.account_config_id.tax_exigibility = True
         if _debug.logic.enabled:
             _debug.logic(
                 "default_taxes_resolved",
                 company=company,
-                sale_tax=company.account_sale_tax_id,
-                purchase_tax=company.account_purchase_tax_id,
-                tax_exigibility=company.tax_exigibility,
+                sale_tax=company.account_config_id.account_sale_tax_id,
+                purchase_tax=company.account_config_id.account_purchase_tax_id,
+                tax_exigibility=company.account_config_id.tax_exigibility,
             )
 
     @_debug.perf.timed
@@ -1303,14 +1365,23 @@ class AccountChartTemplate(models.AbstractModel):
                 ref=value,
             )
             if model == "res.company":
-                company[field] = self.ref(value)
+                owner = (
+                    company if field in company._fields else company.account_config_id
+                )
+                owner[field] = self.ref(value)
             else:
                 self.env["ir.default"].set(
                     model, field, self.ref(value).id, company_id=company.id
                 )
         for field, account in (
-            ("property_account_income_categ_id", company.income_account_id),
-            ("property_account_expense_categ_id", company.expense_account_id),
+            (
+                "property_account_income_categ_id",
+                company.account_config_id.income_account_id,
+            ),
+            (
+                "property_account_expense_categ_id",
+                company.account_config_id.expense_account_id,
+            ),
         ):
             self.env["ir.default"].set(
                 "product.category", field, account.id, company_id=company.id
@@ -1321,7 +1392,9 @@ class AccountChartTemplate(models.AbstractModel):
         _debug.lifecycle("_post_load_reconcile_models", records=self)
         reco = self.ref("internal_transfer_reco", raise_if_not_found=False)
         if reco:
-            reco.line_ids.sudo().write({"account_id": company.transfer_account_id.id})
+            reco.line_ids.sudo().write(
+                {"account_id": company.account_config_id.transfer_account_id.id}
+            )
         bank_fees = self.ref("bank_fees_reco", raise_if_not_found=False)
         if bank_fees:
             bank_fees.line_ids.sudo().write(
@@ -1415,7 +1488,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _prepare_utility_account_vals(
         self, company, template_data, bank_prefix="", code_digits=0
     ):
-        bank_prefix = bank_prefix or company.bank_account_code_prefix
+        bank_prefix = bank_prefix or company.account_config_id.bank_account_code_prefix
         code_digits = code_digits or int(template_data.get("code_digits", 6))
         _debug.logic(
             "utility_account_codes",
@@ -1456,7 +1529,7 @@ class AccountChartTemplate(models.AbstractModel):
             },
             "transfer_account_id": {
                 "name": _("Liquidity Transfer"),
-                "prefix": company.transfer_account_code_prefix,
+                "prefix": company.account_config_id.transfer_account_code_prefix,
                 "code_digits": code_digits,
                 "account_type": "asset_current",
                 "reconcile": True,
@@ -1464,11 +1537,12 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     def _setup_utility_bank_accounts(self, template_code, company, template_data):
-        bank_prefix = company.bank_account_code_prefix
+        bank_prefix = company.account_config_id.bank_account_code_prefix
         code_digits = int(template_data.get("code_digits", 6))
         accounts_data = self._prepare_utility_account_vals(company, template_data)
+        config = company.account_config_id
         for fname in list(accounts_data):
-            if company[fname]:
+            if config[fname]:
                 del accounts_data[fname]
         _debug.logic(
             "utility_accounts_source",
@@ -1479,7 +1553,9 @@ class AccountChartTemplate(models.AbstractModel):
         )
         if company.parent_id:
             for company_attr_name in accounts_data:
-                company[company_attr_name] = company.root_id[company_attr_name]
+                config[company_attr_name] = company.root_id.account_config_id[
+                    company_attr_name
+                ]
         else:
             accounts = self.env["account.account"]._load_records(
                 [
@@ -1492,7 +1568,7 @@ class AccountChartTemplate(models.AbstractModel):
                 ]
             )
             for company_attr_name, account in zip(accounts_data, accounts, strict=True):
-                company[company_attr_name] = account
+                config[company_attr_name] = account
 
             self._create_outstanding_accounts(company, bank_prefix, code_digits)
 
@@ -1569,7 +1645,11 @@ class AccountChartTemplate(models.AbstractModel):
             field: self.env["account.tax.group"].search(
                 [
                     *self.env["account.tax.group"]._check_company_domain(company),
-                    ("country_id", "=", company.account_fiscal_country_id.id),
+                    (
+                        "country_id",
+                        "=",
+                        company.account_config_id.account_fiscal_country_id.id,
+                    ),
                     (field, "!=", False),
                 ],
                 limit=1,
@@ -1611,7 +1691,11 @@ class AccountChartTemplate(models.AbstractModel):
         ]
         additional_domain = [
             ("tax_id.type_tax_use", "=", type_tax_use),
-            ("tax_id.country_id", "=", company.account_fiscal_country_id.id),
+            (
+                "tax_id.country_id",
+                "=",
+                company.account_config_id.account_fiscal_country_id.id,
+            ),
             ("tax_id", "in", default_company_taxes.ids),
         ]
         while additional_domain:
@@ -1666,7 +1750,11 @@ class AccountChartTemplate(models.AbstractModel):
         local_cash_basis_tax = self.env["account.tax"].search(
             [
                 *self.env["account.tax"]._check_company_domain(company),
-                ("country_id", "=", company.account_fiscal_country_id.id),
+                (
+                    "country_id",
+                    "=",
+                    company.account_config_id.account_fiscal_country_id.id,
+                ),
                 ("tax_exigibility", "=", "on_payment"),
                 ("cash_basis_transition_account_id", "!=", False),
             ],
@@ -1801,7 +1889,8 @@ class AccountChartTemplate(models.AbstractModel):
 
         existing_accounts = {"": None, None: None}
         default_company_taxes = (
-            company.account_sale_tax_id + company.account_purchase_tax_id
+            company.account_config_id.account_sale_tax_id
+            + company.account_config_id.account_purchase_tax_id
         )
         chart_template_code = self._guess_chart_template(country=country)
         chart_template_data = self._prepare_chart_template_data(chart_template_code)
@@ -1826,7 +1915,7 @@ class AccountChartTemplate(models.AbstractModel):
         if self._foreign_tax_map_cash_basis_accounts(
             company, tax_data, existing_accounts
         ):
-            company.tax_exigibility = True
+            company.account_config_id.tax_exigibility = True
 
         self._foreign_tax_apply_account_map(
             country, chart_template_code, tax_group_data, tax_data, existing_accounts
@@ -2293,12 +2382,14 @@ class AccountChartTemplate(models.AbstractModel):
                 "account.chart.template"
             ].with_context(ignore_missing_tags=True).with_company(
                 company
-            ).sudo()._prepare_chart_template_data(company.chart_template)
+            ).sudo()._prepare_chart_template_data(
+                company.account_config_id.chart_template
+            )
             if _debug.pipeline.enabled:
                 _debug.pipeline(
                     "template_translations_collecting",
                     company=company,
-                    chart=company.chart_template,
+                    chart=company.account_config_id.chart_template,
                     reused_template_data=bool(template_data),
                     langs=len(langs),
                     models=len(chart_template_data),
@@ -2383,8 +2474,10 @@ class AccountChartTemplate(models.AbstractModel):
     def _load_translations(self, langs=None, companies=None, template_data=None):
         langs = langs or [code for code, _name in self.env["res.lang"].get_installed()]
         available_template_codes = list(self._get_chart_template_mapping(get_all=True))
-        companies = companies or self.env["res.company"].search(
-            [("chart_template", "in", available_template_codes)]
+        companies = companies or (
+            self.env["account.config"]
+            .search([("chart_template", "in", available_template_codes)])
+            .company_id
         )
 
         translation_importer = TranslationImporter(self.env.cr, verbose=False)

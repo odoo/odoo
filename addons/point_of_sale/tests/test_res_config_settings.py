@@ -36,7 +36,7 @@ class TestConfigureShops(TestPoSCommon):
                     Command.create(
                         {
                             "name": "Bank 1",
-                            "receivable_account_id": self.env.company.account_default_pos_receivable_account_id.id,
+                            "receivable_account_id": self.env.company.account_config_id.account_default_pos_receivable_account_id.id,
                             "is_cash_count": False,
                             "split_transactions": False,
                             "company_id": self.env.company.id,
@@ -45,7 +45,7 @@ class TestConfigureShops(TestPoSCommon):
                     Command.create(
                         {
                             "name": "Bank 2",
-                            "receivable_account_id": self.env.company.account_default_pos_receivable_account_id.id,
+                            "receivable_account_id": self.env.company.account_config_id.account_default_pos_receivable_account_id.id,
                             "is_cash_count": False,
                             "split_transactions": False,
                             "company_id": self.env.company.id,
@@ -54,7 +54,7 @@ class TestConfigureShops(TestPoSCommon):
                     Command.create(
                         {
                             "name": "Cash",
-                            "receivable_account_id": self.env.company.account_default_pos_receivable_account_id.id,
+                            "receivable_account_id": self.env.company.account_config_id.account_default_pos_receivable_account_id.id,
                             "is_cash_count": True,
                             "company_id": self.env.company.id,
                         }

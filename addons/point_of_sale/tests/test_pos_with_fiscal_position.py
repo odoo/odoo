@@ -11,7 +11,7 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
         super().setUpClass()
 
         cls.config = cls.basic_config
-        cls.company.tax_calculation_rounding_method = "round_per_line"
+        cls.company.account_config_id.tax_calculation_rounding_method = "round_per_line"
 
         cls.new_tax_17 = cls.env["account.tax"].create(
             {"name": "New Tax 17%", "amount": 17}

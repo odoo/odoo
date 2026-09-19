@@ -144,8 +144,8 @@ class OnboardingOnboardingStep(models.Model):
         return {
             "type": "ir.actions.act_window",
             "name": _("Sales tax"),
-            "res_id": self.env.company.id,
-            "res_model": "res.company",
+            "res_id": self.env.company.account_config_id.id,
+            "res_model": "account.config",
             "target": "new",
             "view_mode": "form",
             "views": [[view_id, "form"]],

@@ -53,7 +53,7 @@ class TestKpiProvider(TestAccountReportsCommon):
             "_generate_all_returns",
             generate_all_returns,
         ):
-            cls.env.company.account_opening_date = "2024-01-01"
+            cls.env.company.account_config_id.account_opening_date = "2024-01-01"
 
     def test_kpi_summary(self):
         self.assertCountEqual(

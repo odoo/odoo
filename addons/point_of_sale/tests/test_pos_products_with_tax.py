@@ -697,7 +697,9 @@ class TestPoSProductsWithTax(TestPoSCommon):
 
     def test_pos_create_account_move_round_globally(self):
         tax_21_incl = self.taxes["tax21"]
-        self.env.company.tax_calculation_rounding_method = "round_globally"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
 
         product1 = self.create_product(
             name="Product 1",
@@ -774,7 +776,9 @@ class TestPoSProductsWithTax(TestPoSCommon):
 
     def test_pos_create_correct_account_move_round_globally_discount(self):
         tax_21_incl = self.taxes["tax21"]
-        self.env.company.tax_calculation_rounding_method = "round_globally"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
 
         product1 = self.create_product(
             name="Product 1",
@@ -854,7 +858,9 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self,
     ):
         tax_21_incl = self.taxes["tax21"]
-        self.env.company.tax_calculation_rounding_method = "round_globally"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
 
         product1 = self.create_product(
             name="Product 1",

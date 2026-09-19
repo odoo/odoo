@@ -2225,7 +2225,7 @@ class TestSaleToInvoice(TestSaleCommon):
             ],
         )
 
-        self.env.company.account_storno = True
+        self.env.company.account_config_id.account_storno = True
         sale_order_storno = create_so_with_downpayments()
         invoice_storno = sale_order_storno.invoice_ids.sorted(key=lambda x: x.id)[-1]
         self.assertEqual(
@@ -2370,7 +2370,7 @@ class TestSaleToInvoice(TestSaleCommon):
             ],
         )
 
-        self.env.company.account_storno = True
+        self.env.company.account_config_id.account_storno = True
         sale_order_storno = create_sale_order_with_negative_amount()
         invoice_storno = sale_order_storno.invoice_ids
         self.assertEqual(

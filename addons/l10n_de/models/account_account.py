@@ -8,7 +8,8 @@ class AccountAccount(models.Model):
     def write(self, vals):
         if (
             "code" in vals
-            and self.env.company.account_fiscal_country_id.code == "DE"
+            and self.env.company.account_config_id.account_fiscal_country_id.code
+            == "DE"
             and any(
                 self.env.company in a.company_ids and a.code != vals["code"]
                 for a in self

@@ -17,7 +17,7 @@ class TestPosLoadScoping(TestPoSCommon):
     def _company_country_ids(self):
         return {
             self.company.country_id.id,
-            self.company.account_fiscal_country_id.id,
+            self.company.account_config_id.account_fiscal_country_id.id,
         } - {False}
 
     def test_countries_scoped_to_loaded_partners_and_company(self):

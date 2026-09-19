@@ -64,7 +64,7 @@ _SEEK_FOR_LINES_DEPENDS = (
     "journal_id.default_account_id",
     "journal_id.inbound_payment_channel_ids.payment_account_id",
     "journal_id.outbound_payment_channel_ids.payment_account_id",
-    "company_id.transfer_account_id",
+    "company_id.account_config_id.transfer_account_id",
 )
 
 
@@ -322,7 +322,9 @@ class AccountPayment(models.Model):
     require_partner_bank_account = fields.Boolean(
         compute="_compute_show_require_partner_bank"
     )
-    country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
+    country_code = fields.Char(
+        related="company_id.account_config_id.account_fiscal_country_id.code"
+    )
     amount_signed = fields.Monetary(
         currency_field="currency_id",
         compute="_compute_amount_signed",
@@ -369,7 +371,8 @@ class AccountPayment(models.Model):
                 liquidity_ids.append(line.id)
             elif (
                 line.account_id.account_type in valid_account_types
-                or line.account_id == line.company_id.transfer_account_id
+                or line.account_id
+                == line.company_id.account_config_id.transfer_account_id
             ):
                 counterpart_ids.append(line.id)
             else:
@@ -1296,7 +1299,7 @@ class AccountPayment(models.Model):
         ).env["account.chart.template"]
         outstanding_account = (
             chart_template.ref(account_ref, raise_if_not_found=False)
-            or self.company_id.transfer_account_id
+            or self.company_id.account_config_id.transfer_account_id
         )
         if not outstanding_account:
             raise UserError(

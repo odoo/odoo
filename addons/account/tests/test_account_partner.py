@@ -164,8 +164,8 @@ class TestAccountPartner(AccountTestInvoicingCommon):
             lambda l: l.display_type == "payment_term"
         )
 
-        move.company_id.fiscalyear_lock_date = "9999-12-31"
-        move.company_id.tax_lock_date = "9999-12-31"
+        move.company_id.account_config_id.fiscalyear_lock_date = "9999-12-31"
+        move.company_id.account_config_id.tax_lock_date = "9999-12-31"
 
         self.assertEqual(move.commercial_partner_id, self.partner_a)
         self.assertEqual(receivable_lines.mapped("reconciled"), [True, True])
@@ -640,7 +640,7 @@ class TestAccountPartner(AccountTestInvoicingCommon):
 
         belgium = self.env["res.country"].search([("code", "=", "BE")], limit=1)
         company.partner_id.country_id = belgium
-        company.account_fiscal_country_id = japan
+        company.account_config_id.account_fiscal_country_id = japan
         self.env.invalidate_all()
         self.assertEqual(
             company.company_registry_placeholder,
@@ -664,11 +664,13 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         ):
             self.assertTrue(expected, "account_vat installed: the seam answers")
             self.assertIn(expected, partner.partner_vat_placeholder)
-            self.assertIn(expected, company.company_vat_placeholder)
+            self.assertIn(expected, company.account_config_id.company_vat_placeholder)
         else:
             self.assertEqual(expected, "")
             self.assertNotIn("7000012050002", partner.partner_vat_placeholder)
-            self.assertNotIn("7000012050002", company.company_vat_placeholder)
+            self.assertNotIn(
+                "7000012050002", company.account_config_id.company_vat_placeholder
+            )
 
         for module in ("res_partner", "res_company"):
             source = file_open(

@@ -929,7 +929,9 @@ class AccountReport(models.Model):
             )
         return {
             "caret_options": self._get_caret_options(),
-            "column_headers_render_data": self._prepare_column_headers_render_data(options),
+            "column_headers_render_data": self._prepare_column_headers_render_data(
+                options
+            ),
             "column_groups_totals": json_friendly_column_group_totals,
             "context": self.env.context,
             "annotations": self.get_annotations(options, lines),
@@ -967,7 +969,7 @@ class AccountReport(models.Model):
             lambda r: r.availability_condition == "country"
         )
         if reports_by_country:
-            company_countries = companies.account_fiscal_country_id
+            company_countries = companies.account_config_id.account_fiscal_country_id
 
             reports_foreign_vat = reports_by_country.filtered("allow_foreign_vat")
             reports_no_foreign_vat = reports_by_country - reports_foreign_vat
@@ -995,7 +997,7 @@ class AccountReport(models.Model):
         reports_by_coa = self.filtered(lambda r: r.availability_condition == "coa")
         if reports_by_coa:
             # When restricting to 'coa', the report is only available if all the companies have the same CoA as the report
-            chart_templates = set(companies.mapped("chart_template"))
+            chart_templates = set(companies.account_config_id.mapped("chart_template"))
             reports += reports_by_coa.filtered(
                 lambda r: r.chart_template in chart_templates
             )
@@ -1632,8 +1634,8 @@ class AccountReport(models.Model):
 
             period_date_from, _ = date_utils.get_fiscal_year(
                 datetime.datetime.strptime(options["date"]["date_to"], "%Y-%m-%d"),
-                day=self.env.company.fiscalyear_last_day,
-                month=int(self.env.company.fiscalyear_last_month),
+                day=self.env.company.account_config_id.fiscalyear_last_day,
+                month=int(self.env.company.account_config_id.fiscalyear_last_month),
             )
             _debug.logic(
                 "date_from_company_fiscal",

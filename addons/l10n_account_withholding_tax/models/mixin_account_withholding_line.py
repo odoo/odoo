@@ -317,7 +317,8 @@ class MixinAccountWithholdingLine(models.AbstractModel):
         for line in self:
             if (
                 line.account_id in line._get_valid_liquidity_accounts()
-                or line.account_id == line.company_id.transfer_account_id
+                or line.account_id
+                == line.company_id.account_config_id.transfer_account_id
             ):
                 raise UserError(
                     line.env._(

@@ -11,7 +11,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.env.company.account_use_credit_limit = True
+        cls.env.company.account_config_id.account_use_credit_limit = True
 
         buck_currency = cls.env["res.currency"].create(
             {
@@ -54,7 +54,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
     def test_credit_limit_multi_company(self):
         company2 = self.company_data_2["company"]
 
-        company2.account_use_credit_limit = True
+        company2.account_config_id.account_use_credit_limit = True
 
         sale_order = company2.env["sale.order"].create(
             {
@@ -87,7 +87,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         self.assertEqual(self.partner_a.credit_to_invoice, 0.0)
 
     def test_warning_on_invoice_with_downpayment(self):
-        self.env.company.account_use_credit_limit = True
+        self.env.company.account_config_id.account_use_credit_limit = True
         self.partner_a.credit_limit = 1000.0
 
         sale_order = self.empty_order
@@ -243,7 +243,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         )
 
     def test_invoice_independent_of_credit_to_invoice(self):
-        self.env.company.account_use_credit_limit = True
+        self.env.company.account_config_id.account_use_credit_limit = True
         self.partner_a.credit_limit = 1000.0
 
         sale_order = self.empty_order
@@ -336,7 +336,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         )
 
     def test_credit_limit_and_warning_overinvoiced_sales_order(self):
-        self.env.company.account_use_credit_limit = True
+        self.env.company.account_config_id.account_use_credit_limit = True
         self.partner_a.credit_limit = 1000.0
 
         self.empty_order.write(

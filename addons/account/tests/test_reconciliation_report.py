@@ -278,9 +278,7 @@ class TestReconciliationReport(TestAccountReportsCommon):
 
         # Partially reconcile the suspense amount associated with each bank statement line
         suspense_account = bank_journal.suspense_account_id
-        other_account = (
-            bank_journal.company_id.default_cash_difference_income_account_id
-        )
+        other_account = bank_journal.company_id.account_config_id.default_cash_difference_income_account_id
 
         # the first is in company currency
         lines_by_ref = {line.payment_ref: line for line in bank_statement.line_ids}
@@ -1111,7 +1109,9 @@ class TestReconciliationReport(TestAccountReportsCommon):
         """Tests that misc entries reported in the exchange journal do not figure in the report."""
 
         bank_journal = self.company_data["default_journal_bank"]
-        exchange_journal = self.env.company.currency_exchange_journal_id
+        exchange_journal = (
+            self.env.company.account_config_id.currency_exchange_journal_id
+        )
 
         move_a = self.env["account.move"].create(
             {

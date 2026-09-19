@@ -7,7 +7,7 @@ from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import new_test_user, tagged
 
-from odoo.addons.account.models.res_company import SOFT_LOCK_DATE_FIELDS
+from odoo.addons.account.models.account_config import SOFT_LOCK_DATE_FIELDS
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
@@ -53,7 +53,9 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     taxes=self.tax_sale_a,
                 )
 
-                self.company[lock_date_field] = fields.Date.to_date("2020-01-01")
+                self.company.account_config_id[lock_date_field] = fields.Date.to_date(
+                    "2020-01-01"
+                )
                 with self.assertRaises(UserError):
                     move.action_draft()
 
@@ -86,7 +88,9 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     taxes=self.tax_sale_a,
                 )
 
-                self.company[lock_date_field] = fields.Date.to_date("2020-01-01")
+                self.company.account_config_id[lock_date_field] = fields.Date.to_date(
+                    "2020-01-01"
+                )
                 with self.assertRaises(UserError):
                     move.action_draft()
 
@@ -134,7 +138,9 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     company=root_company,
                 )
 
-                branch[lock_date_field] = fields.Date.to_date("2020-01-01")
+                branch.account_config_id[lock_date_field] = fields.Date.to_date(
+                    "2020-01-01"
+                )
 
                 with self.assertRaises(UserError):
                     branch_move.action_draft()
@@ -153,7 +159,9 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                 branch_move.action_draft()
                 branch_move.action_post()
 
-                root_company[lock_date_field] = fields.Date.to_date("2020-01-01")
+                root_company.account_config_id[lock_date_field] = fields.Date.to_date(
+                    "2020-01-01"
+                )
 
                 for move in [branch_move, root_move]:
                     with self.assertRaises(UserError):
@@ -185,7 +193,9 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     amounts=[1000.0],
                     taxes=self.tax_sale_a,
                 )
-                self.company[lock_date_field] = fields.Date.to_date("2020-01-01")
+                self.company.account_config_id[lock_date_field] = fields.Date.to_date(
+                    "2020-01-01"
+                )
                 with self.assertRaises(UserError):
                     move.action_draft()
 
@@ -216,7 +226,9 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     taxes=self.tax_sale_a,
                 )
 
-                self.company[lock_date_field] = fields.Date.to_date("2020-01-01")
+                self.company.account_config_id[lock_date_field] = fields.Date.to_date(
+                    "2020-01-01"
+                )
                 with self.assertRaises(UserError):
                     move.action_draft()
 
@@ -247,7 +259,9 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     taxes=self.tax_sale_a,
                 )
 
-                self.company[lock_date_field] = fields.Date.to_date("2020-01-01")
+                self.company.account_config_id[lock_date_field] = fields.Date.to_date(
+                    "2020-01-01"
+                )
                 with self.assertRaises(UserError):
                     move.action_draft()
 
@@ -278,7 +292,9 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     taxes=self.tax_sale_a,
                 )
 
-                self.company[lock_date_field] = fields.Date.to_date("2020-01-01")
+                self.company.account_config_id[lock_date_field] = fields.Date.to_date(
+                    "2020-01-01"
+                )
                 with self.assertRaises(UserError):
                     move.action_draft()
 
@@ -317,7 +333,9 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     amounts=[1000.0],
                     taxes=self.tax_sale_a,
                 )
-                self.company[lock_date_field] = fields.Date.to_date("2020-01-01")
+                self.company.account_config_id[lock_date_field] = fields.Date.to_date(
+                    "2020-01-01"
+                )
                 with self.assertRaises(UserError):
                     move.action_draft()
 
@@ -350,13 +368,17 @@ class TestAccountLockException(AccountTestInvoicingCommon):
             taxes=self.tax_sale_a,
         )
 
-        self.company.hard_lock_date = fields.Date.to_date("2020-01-01")
+        self.company.account_config_id.hard_lock_date = fields.Date.to_date(
+            "2020-01-01"
+        )
 
         with self.assertRaises(UserError):
-            self.company.hard_lock_date = False
+            self.company.account_config_id.hard_lock_date = False
 
         with self.assertRaises(UserError):
-            self.company.hard_lock_date = fields.Date.to_date("2019-01-01")
+            self.company.account_config_id.hard_lock_date = fields.Date.to_date(
+                "2019-01-01"
+            )
 
         self.env["account.lock_exception"].create(
             [
@@ -382,7 +404,9 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                 self.subTest(lock_date_field=lock_date_field, move_type=move_type),
                 closing(self.cr.savepoint()),
             ):
-                self.company[lock_date_field] = fields.Date.to_date("2020-01-01")
+                self.company.account_config_id[lock_date_field] = fields.Date.to_date(
+                    "2020-01-01"
+                )
 
                 revoked_exception = self.env["account.lock_exception"].create(
                     {
@@ -413,7 +437,9 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     fields.Date.to_date("2020-01-01"),
                 )
 
-                self.company[lock_date_field] = fields.Date.to_date("2021-01-01")
+                self.company.account_config_id[lock_date_field] = fields.Date.to_date(
+                    "2021-01-01"
+                )
 
                 self.assertEqual(
                     revoked_exception.company_lock_date,
@@ -457,7 +483,9 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     taxes=self.tax_sale_a,
                 )
 
-                self.company[lock_date_field] = fields.Date.to_date("2020-01-01")
+                self.company.account_config_id[lock_date_field] = fields.Date.to_date(
+                    "2020-01-01"
+                )
                 with self.assertRaises(UserError):
                     move.action_draft()
 

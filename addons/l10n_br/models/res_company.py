@@ -16,7 +16,13 @@ class ResCompany(models.Model):
 
     def _localization_use_documents(self):
         self.check_singleton()
-        return self.chart_template == "br" or super()._localization_use_documents()
+        return (
+            self.account_config_id.chart_template == "br"
+            or super()._localization_use_documents()
+        )
 
     def _is_latam(self):
-        return super()._is_latam() or self.account_fiscal_country_id.code == "BR"
+        return (
+            super()._is_latam()
+            or self.account_config_id.account_fiscal_country_id.code == "BR"
+        )

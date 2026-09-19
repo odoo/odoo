@@ -57,7 +57,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                     0,
                     [
                         cls.withholding_sale_tax.id,
-                        cls.company.account_sale_tax_id.id,
+                        cls.company.account_config_id.account_sale_tax_id.id,
                     ],
                 )
             ],
@@ -73,7 +73,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                     [
                         cls.withholding_sale_tax.id,
                         cls.pension_fund_sale_tax.id,
-                        cls.company.account_sale_tax_id.id,
+                        cls.company.account_config_id.account_sale_tax_id.id,
                     ],
                 )
             ],
@@ -89,7 +89,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                     [
                         cls.enasarco_sale_tax.id,
                         cls.withholding_sale_tax_23_base50.id,
-                        cls.company.account_sale_tax_id.id,
+                        cls.company.account_config_id.account_sale_tax_id.id,
                     ],
                 )
             ],
@@ -102,7 +102,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                 Command.set(
                     [
                         cls.withholding_sale_tax_23_base50.id,
-                        cls.company.account_sale_tax_id.id,
+                        cls.company.account_config_id.account_sale_tax_id.id,
                     ]
                 )
             ],
@@ -115,7 +115,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                 Command.set(
                     [
                         cls.withholding_sale_tax_23_base20.id,
-                        cls.company.account_sale_tax_id.id,
+                        cls.company.account_config_id.account_sale_tax_id.id,
                     ]
                 )
             ],
@@ -340,7 +340,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
         with self.assertRaises(ValidationError):
             self.withholding_sale_tax.l10n_it_withholding_reason = False
         with self.assertRaises(ValidationError):
-            self.company.account_sale_tax_id.l10n_it_withholding_type = "RT02"
+            self.company.account_config_id.account_sale_tax_id.l10n_it_withholding_type = "RT02"
 
     ####################################################
     # WITHHOLDING TAX
@@ -449,7 +449,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                 (
                     self.inps_purchase_tax
                     | self.withholding_purchase_tax
-                    | self.company.account_purchase_tax_id
+                    | self.company.account_config_id.account_purchase_tax_id
                 ),
             )
 
@@ -476,7 +476,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                 (
                     self.inps_purchase_tax
                     | self.withholding_purchase_tax
-                    | self.company.account_purchase_tax_id
+                    | self.company.account_config_id.account_purchase_tax_id
                 ),
             )
 

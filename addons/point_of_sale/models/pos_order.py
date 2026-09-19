@@ -100,7 +100,9 @@ class PosOrder(models.Model):
         readonly=True,
         required=True,
     )
-    country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
+    country_code = fields.Char(
+        related="company_id.account_config_id.account_fiscal_country_id.code"
+    )
     pricelist_id = fields.Many2one(comodel_name="product.pricelist")
     partner_id = fields.Many2one(
         comodel_name="res.partner",
@@ -1978,7 +1980,7 @@ class PosOrder(models.Model):
             else:
                 reversed_move_receivable_account_id = (
                     payment_id.payment_method_id.receivable_account_id
-                    or self.company_id.account_default_pos_receivable_account_id
+                    or self.company_id.account_config_id.account_default_pos_receivable_account_id
                 )
 
             aml_vals_entry_found = [
@@ -2054,7 +2056,7 @@ class PosOrder(models.Model):
 
         partner = self.partner_id.commercial_partner_id
         accounts = (
-            self.company_id.account_default_pos_receivable_account_id
+            self.company_id.account_config_id.account_default_pos_receivable_account_id
             | self.payment_ids.mapped("payment_method_id.receivable_account_id")
             | partner.property_account_receivable_id
         )
@@ -2442,7 +2444,9 @@ class PosOrder(models.Model):
         )
 
     def _is_real_time_picking_forced(self):
-        return self.company_id.anglo_saxon_accounting and self.to_invoice
+        return (
+            self.company_id.account_config_id.anglo_saxon_accounting and self.to_invoice
+        )
 
     @dbg.timed
     def _create_order_picking(self):

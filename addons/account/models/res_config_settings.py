@@ -20,7 +20,7 @@ class ResConfigSettings(models.TransientModel):
     )
     currency_exchange_journal_id = fields.Many2one(
         comodel_name="account.journal",
-        related="company_id.currency_exchange_journal_id",
+        related="company_id.account_config_id.currency_exchange_journal_id",
         string="Currency Exchange Journal",
         readonly=False,
         domain="[('type', '=', 'general')]",
@@ -29,7 +29,7 @@ class ResConfigSettings(models.TransientModel):
     )
     income_currency_exchange_account_id = fields.Many2one(
         comodel_name="account.account",
-        related="company_id.income_currency_exchange_account_id",
+        related="company_id.account_config_id.income_currency_exchange_account_id",
         string="Gain Exchange Rate Account",
         readonly=False,
         domain="[('internal_group', '=', 'income')]",
@@ -37,7 +37,7 @@ class ResConfigSettings(models.TransientModel):
     )
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name="account.account",
-        related="company_id.expense_currency_exchange_account_id",
+        related="company_id.account_config_id.expense_currency_exchange_account_id",
         string="Loss Exchange Rate Account",
         readonly=False,
         domain="[('account_type', 'in', ('expense', 'expense_other'))]",
@@ -49,24 +49,24 @@ class ResConfigSettings(models.TransientModel):
     )
     chart_template = fields.Selection(
         selection=lambda self: self.env.company._selection_chart_templates(),
-        default=lambda self: self.env.company.chart_template,
+        default=lambda self: self.env.company.account_config_id.chart_template,
     )
     sale_tax_id = fields.Many2one(
         comodel_name="account.tax",
-        related="company_id.account_sale_tax_id",
+        related="company_id.account_config_id.account_sale_tax_id",
         string="Default Sale Tax",
         readonly=False,
         check_company=True,
     )
     purchase_tax_id = fields.Many2one(
         comodel_name="account.tax",
-        related="company_id.account_purchase_tax_id",
+        related="company_id.account_config_id.account_purchase_tax_id",
         string="Default Purchase Tax",
         readonly=False,
         check_company=True,
     )
     account_price_include = fields.Selection(
-        related="company_id.account_price_include",
+        related="company_id.account_config_id.account_price_include",
         string="Default Sales Price Include",
         readonly=False,
         required=True,
@@ -74,13 +74,13 @@ class ResConfigSettings(models.TransientModel):
     )
 
     tax_calculation_rounding_method = fields.Selection(
-        related="company_id.tax_calculation_rounding_method",
+        related="company_id.account_config_id.tax_calculation_rounding_method",
         string="Tax calculation rounding method",
         readonly=False,
     )
     account_journal_suspense_account_id = fields.Many2one(
         comodel_name="account.account",
-        related="company_id.account_journal_suspense_account_id",
+        related="company_id.account_config_id.account_journal_suspense_account_id",
         string="Bank Suspense",
         readonly=False,
         domain="[('account_type', 'in', ('asset_current', 'liability_current'))]",
@@ -91,7 +91,7 @@ class ResConfigSettings(models.TransientModel):
     )
     transfer_account_id = fields.Many2one(
         comodel_name="account.account",
-        related="company_id.transfer_account_id",
+        related="company_id.account_config_id.transfer_account_id",
         string="Internal Transfer",
         readonly=False,
         domain=[
@@ -135,69 +135,69 @@ class ResConfigSettings(models.TransientModel):
     module_snailmail_account = fields.Boolean(string="Snailmail")
     module_account_peppol = fields.Boolean(string="PEPPOL Invoicing")
     tax_exigibility = fields.Boolean(
-        related="company_id.tax_exigibility",
+        related="company_id.account_config_id.tax_exigibility",
         string="Cash Basis",
         readonly=False,
     )
     tax_cash_basis_journal_id = fields.Many2one(
         comodel_name="account.journal",
-        related="company_id.tax_cash_basis_journal_id",
+        related="company_id.account_config_id.tax_cash_basis_journal_id",
         string="Tax Cash Basis Journal",
         readonly=False,
         check_company=True,
     )
     account_cash_basis_base_account_id = fields.Many2one(
         comodel_name="account.account",
-        related="company_id.account_cash_basis_base_account_id",
+        related="company_id.account_config_id.account_cash_basis_base_account_id",
         string="Base Tax Received Account",
         readonly=False,
         check_company=True,
     )
     account_fiscal_country_id = fields.Many2one(
-        related="company_id.account_fiscal_country_id",
+        related="company_id.account_config_id.account_fiscal_country_id",
         string="Fiscal Country Code",
         store=False,
         readonly=False,
     )
 
     qr_code = fields.Boolean(
-        related="company_id.qr_code",
+        related="company_id.account_config_id.qr_code",
         string="Display SEPA QR-code",
         readonly=False,
     )
     link_qr_code = fields.Boolean(
-        related="company_id.link_qr_code",
+        related="company_id.account_config_id.link_qr_code",
         string="Display Link QR-code",
         readonly=False,
     )
     incoterm_id = fields.Many2one(
         comodel_name="account.incoterms",
-        related="company_id.incoterm_id",
+        related="company_id.account_config_id.incoterm_id",
         string="Default incoterm",
         readonly=False,
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.",
     )
     invoice_terms = fields.Html(
-        related="company_id.invoice_terms",
+        related="company_id.account_config_id.invoice_terms",
         string="Terms & Conditions",
         readonly=False,
     )
     invoice_terms_html = fields.Html(
-        related="company_id.invoice_terms_html",
+        related="company_id.account_config_id.invoice_terms_html",
         string="Terms & Conditions as a Web page",
         readonly=False,
     )
     terms_type = fields.Selection(
-        related="company_id.terms_type",
+        related="company_id.account_config_id.terms_type",
         readonly=False,
     )
     display_invoice_amount_total_words = fields.Boolean(
-        related="company_id.display_invoice_amount_total_words",
+        related="company_id.account_config_id.display_invoice_amount_total_words",
         string="Total amount of invoice in letters",
         readonly=False,
     )
     display_invoice_tax_company_currency = fields.Boolean(
-        related="company_id.display_invoice_tax_company_currency",
+        related="company_id.account_config_id.display_invoice_tax_company_currency",
         string="Taxes in company currency",
         readonly=False,
     )
@@ -211,7 +211,7 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="account.use_invoice_terms",
     )
     account_use_credit_limit = fields.Boolean(
-        related="company_id.account_use_credit_limit",
+        related="company_id.account_config_id.account_use_credit_limit",
         string="Sales Credit Limit",
         readonly=False,
         help="Enable the use of credit limit on partners.",
@@ -225,16 +225,18 @@ class ResConfigSettings(models.TransientModel):
     )
 
     country_code = fields.Char(
-        related="company_id.account_fiscal_country_id.code",
+        related="company_id.account_config_id.account_fiscal_country_id.code",
         readonly=True,
     )
 
     account_storno = fields.Boolean(
-        related="company_id.account_storno",
+        related="company_id.account_config_id.account_storno",
         string="Storno accounting",
         readonly=False,
     )
-    display_account_storno = fields.Boolean(related="company_id.display_account_storno")
+    display_account_storno = fields.Boolean(
+        related="company_id.account_config_id.display_account_storno"
+    )
 
     group_sale_delivery_address = fields.Boolean(
         string="Customer Addresses",
@@ -242,14 +244,14 @@ class ResConfigSettings(models.TransientModel):
     )
 
     quick_edit_mode = fields.Selection(
-        related="company_id.quick_edit_mode",
+        related="company_id.account_config_id.quick_edit_mode",
         string="Quick encoding",
         readonly=False,
     )
 
     account_journal_early_pay_discount_loss_account_id = fields.Many2one(
         comodel_name="account.account",
-        related="company_id.account_journal_early_pay_discount_loss_account_id",
+        related="company_id.account_config_id.account_journal_early_pay_discount_loss_account_id",
         string="Early Discount Loss",
         readonly=False,
         domain="[('account_type', 'in', ('expense', 'expense_other', 'income', 'income_other'))]",
@@ -258,7 +260,7 @@ class ResConfigSettings(models.TransientModel):
     )
     account_journal_early_pay_discount_gain_account_id = fields.Many2one(
         comodel_name="account.account",
-        related="company_id.account_journal_early_pay_discount_gain_account_id",
+        related="company_id.account_config_id.account_journal_early_pay_discount_gain_account_id",
         string="Early Discount Gain",
         readonly=False,
         domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
@@ -268,14 +270,14 @@ class ResConfigSettings(models.TransientModel):
 
     account_discount_income_allocation_id = fields.Many2one(
         comodel_name="account.account",
-        related="company_id.account_discount_income_allocation_id",
+        related="company_id.account_config_id.account_discount_income_allocation_id",
         string="Vendor Bills Discounts Account",
         readonly=False,
         domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
     )
     account_discount_expense_allocation_id = fields.Many2one(
         comodel_name="account.account",
-        related="company_id.account_discount_expense_allocation_id",
+        related="company_id.account_config_id.account_discount_expense_allocation_id",
         string="Customer Invoices Discounts Account",
         readonly=False,
         domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
@@ -287,27 +289,27 @@ class ResConfigSettings(models.TransientModel):
     )
 
     restrictive_audit_trail = fields.Boolean(
-        related="company_id.restrictive_audit_trail",
+        related="company_id.account_config_id.restrictive_audit_trail",
         string="Restricted Audit Trail",
         readonly=False,
     )
     force_restrictive_audit_trail = fields.Boolean(
-        related="company_id.force_restrictive_audit_trail",
+        related="company_id.account_config_id.force_restrictive_audit_trail",
         string="Forced Audit Trail",
         readonly=False,
     )
 
     autopost_bills = fields.Boolean(
-        related="company_id.autopost_bills",
+        related="company_id.account_config_id.autopost_bills",
         readonly=False,
     )
     income_account_id = fields.Many2one(
-        related="company_id.income_account_id",
+        related="company_id.account_config_id.income_account_id",
         readonly=False,
         check_company=True,
     )
     expense_account_id = fields.Many2one(
-        related="company_id.expense_account_id",
+        related="company_id.account_config_id.expense_account_id",
         readonly=False,
         check_company=True,
     )
@@ -322,7 +324,7 @@ class ResConfigSettings(models.TransientModel):
         if (
             self.env.company == self.company_id
             and self.chart_template
-            and self.chart_template != self.company_id.chart_template
+            and self.chart_template != self.company_id.account_config_id.chart_template
         ):
             self.env["account.chart.template"].try_loading(
                 self.chart_template, company=self.company_id
@@ -331,7 +333,7 @@ class ResConfigSettings(models.TransientModel):
 
     def reload_template(self):
         self.env["account.chart.template"].try_loading(
-            self.company_id.chart_template, company=self.company_id
+            self.company_id.account_config_id.chart_template, company=self.company_id
         )
 
     @api.depends("company_id")
@@ -353,7 +355,9 @@ class ResConfigSettings(models.TransientModel):
 
     @api.depends("company_id")
     def _compute_accounting_presence(self):
-        self.has_chart_of_accounts = bool(self.company_id.chart_template)
+        self.has_chart_of_accounts = bool(
+            self.company_id.account_config_id.chart_template
+        )
         self.has_accounting_entries = self.company_id.root_id._existing_accounting()
 
     @api.onchange("module_account_budget")
@@ -386,7 +390,8 @@ class ResConfigSettings(models.TransientModel):
     def _compute_preview_ready(self):
         for setting in self:
             setting.preview_ready = (
-                self.env.company.terms_type == "html" and setting.terms_type == "html"
+                self.env.company.account_config_id.terms_type == "html"
+                and setting.terms_type == "html"
             )
 
     @_debug.perf.timed
@@ -401,10 +406,10 @@ class ResConfigSettings(models.TransientModel):
             "name": _("Update Terms & Conditions"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
-            "res_model": "res.company",
+            "res_model": "account.config",
             "view_id": self.env.ref("account.res_company_view_form_terms", False).id,
             "target": "new",
-            "res_id": self.company_id.id,
+            "res_id": self.company_id.account_config_id.id,
         }
 
     @_debug.perf.timed

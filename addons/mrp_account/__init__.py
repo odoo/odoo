@@ -5,10 +5,10 @@ from . import wizards
 
 def _configure_journals(env):
     for company in env["res.company"].search(
-        [("chart_template", "!=", False)], order="parent_path"
+        [("account_config_id.chart_template", "!=", False)], order="parent_path"
     ):
         ChartTemplate = env["account.chart.template"].with_company(company)
-        template_code = company.chart_template
+        template_code = company.account_config_id.chart_template
         template_data = ChartTemplate._prepare_chart_template_data(template_code)[
             "template_data"
         ]

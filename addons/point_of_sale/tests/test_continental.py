@@ -7,7 +7,7 @@ class TestContinentalCommon(TestAngloSaxonCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.company.anglo_saxon_accounting = False
+        cls.env.company.account_config_id.anglo_saxon_accounting = False
 
 
 @tagged("post_install", "-at_install")

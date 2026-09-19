@@ -197,7 +197,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
         exch_code = (
             self.env["res.company"]
             .browse(company_ids)
-            .mapped("currency_exchange_journal_id")
+            .mapped("account_config_id.currency_exchange_journal_id")
         )
         if exch_code:
             domain += [

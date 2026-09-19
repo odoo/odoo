@@ -19,7 +19,10 @@ class PosConfig(models.Model):
             "l10n_tw_edi_ecpay_pos.ecpay_default_walk_in_customer",
             raise_if_not_found=False,
         )
-        if self.company_id.account_fiscal_country_id.code == "TW" and walk_in_customer:
+        if (
+            self.company_id.account_config_id.account_fiscal_country_id.code == "TW"
+            and walk_in_customer
+        ):
             walk_in_customer_id_tuple = (walk_in_customer.id,)
             if walk_in_customer_id_tuple not in partner_ids:
                 partner_ids.append(walk_in_customer_id_tuple)
@@ -28,7 +31,11 @@ class PosConfig(models.Model):
     @api.model
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
-        if read_records and config.company_id.account_fiscal_country_id.code == "TW":
+        if (
+            read_records
+            and config.company_id.account_config_id.account_fiscal_country_id.code
+            == "TW"
+        ):
             walk_in_customer = self.env.ref(
                 "l10n_tw_edi_ecpay_pos.ecpay_default_walk_in_customer",
                 raise_if_not_found=False,

@@ -31,7 +31,9 @@
             <field name="name">Office Furniture</field>
         </record>
         <function model="account.chart.template" name="_install_demo">
-            <value model="res.company" search="[('chart_template', '!=', False)]" />
+            <value
+                model="res.company"
+                search="[('account_config_id.chart_template', '!=', False)]" />
         </function>
         <function model="account.chart.template" name="try_loading">
             <value eval="[]" />

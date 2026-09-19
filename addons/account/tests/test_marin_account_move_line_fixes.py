@@ -38,7 +38,7 @@ class TestMarinAccountMoveLineFixes(AccountTestInvoicingCommon):
         discount_account = self.company_data["default_account_expense"].copy()
         self.company_data[
             "company"
-        ].account_discount_expense_allocation_id = discount_account
+        ].account_config_id.account_discount_expense_allocation_id = discount_account
 
         distribution = {str(self.aa_1.id): 60.0, str(self.aa_2.id): 40.0}
         invoice = self.env["account.move"].create(
@@ -356,7 +356,7 @@ class TestMarinAccountMoveLineFixes(AccountTestInvoicingCommon):
         discount_account = self.company_data["default_account_expense"].copy()
         self.company_data[
             "company"
-        ].account_discount_expense_allocation_id = discount_account
+        ].account_config_id.account_discount_expense_allocation_id = discount_account
         invoice = self.env["account.move"].create(
             {
                 "move_type": "out_invoice",
@@ -453,7 +453,7 @@ class TestMarinAccountMoveLineFixes(AccountTestInvoicingCommon):
             "EUR", rates=[("2024-01-01", 2.0), ("2024-06-01", 4.0)]
         )
         journal = self.company_data["default_journal_misc"]
-        company.currency_exchange_journal_id = journal
+        company.account_config_id.currency_exchange_journal_id = journal
         account = self.company_data["default_account_receivable"]
         account.reconcile = True
         counterpart = self.company_data["default_account_expense"]
@@ -764,7 +764,7 @@ class TestMarinAccountMoveLineFixes(AccountTestInvoicingCommon):
         company = self.company_data["company"]
         currency = self.setup_other_currency("EUR", rates=[("2024-01-01", 0.8)])
         journal = self.company_data["default_journal_misc"]
-        company.currency_exchange_journal_id = journal
+        company.account_config_id.currency_exchange_journal_id = journal
         account = self.company_data["default_account_receivable"]
         account.reconcile = True
         counterpart = self.company_data["default_account_expense"]

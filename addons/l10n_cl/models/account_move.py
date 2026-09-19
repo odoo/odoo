@@ -22,7 +22,7 @@ class AccountMove(models.Model):
     def _get_domain_l10n_latam_documents(self):
         self.check_singleton()
         if (
-            self.journal_id.company_id.account_fiscal_country_id
+            self.journal_id.company_id.account_config_id.account_fiscal_country_id
             != self.env.ref("base.cl")
             or not self.l10n_latam_use_documents
         ):
@@ -78,7 +78,7 @@ class AccountMove(models.Model):
     def _check_document_types_post(self):
         for rec in self.filtered(
             lambda r: (
-                r.company_id.account_fiscal_country_id.code == "CL"
+                r.company_id.account_config_id.account_fiscal_country_id.code == "CL"
                 and r.journal_id.type in ["sale", "purchase"]
             )
         ):
@@ -200,7 +200,7 @@ class AccountMove(models.Model):
         journal document number with a 6 padding number"""
         if (
             self.l10n_latam_use_documents
-            and self.company_id.account_fiscal_country_id.code == "CL"
+            and self.company_id.account_config_id.account_fiscal_country_id.code == "CL"
         ):
             if self.l10n_latam_document_type_id:
                 return self._l10n_cl_get_formatted_sequence()
@@ -208,7 +208,7 @@ class AccountMove(models.Model):
 
     def _uses_cl_documents(self):
         return (
-            self.company_id.account_fiscal_country_id.code == "CL"
+            self.company_id.account_config_id.account_fiscal_country_id.code == "CL"
             and self.l10n_latam_use_documents
         )
 
@@ -241,7 +241,7 @@ class AccountMove(models.Model):
         self.check_singleton()
         if (
             self.l10n_latam_use_documents
-            and self.company_id.account_fiscal_country_id.code == "CL"
+            and self.company_id.account_config_id.account_fiscal_country_id.code == "CL"
             and (
                 self.move_type in {"out_invoice", "out_refund"}
                 or self.l10n_latam_document_type_id.code == "46"

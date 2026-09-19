@@ -50,7 +50,9 @@ class TestGSTStatusFeature(TransactionCase):
             },
         }
         self.env.company.l10n_in_gstin_status_feature = True
-        self.env.company.account_fiscal_country_id = self.env.ref("base.in")
+        self.env.company.account_config_id.account_fiscal_country_id = self.env.ref(
+            "base.in"
+        )
 
     @freeze_time("2024-05-20")
     @mute_logger("odoo.addons.l10n_in.models.res_partner")

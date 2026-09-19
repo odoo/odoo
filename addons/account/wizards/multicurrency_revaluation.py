@@ -142,27 +142,23 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
     @api.depends("company_id")
     def _compute_accounting_values(self):
         for record in self:
-            record.journal_id = record.company_id.account_revaluation_journal_id
-            record.expense_provision_account_id = (
-                record.company_id.account_revaluation_expense_provision_account_id
+            record.journal_id = (
+                record.company_id.account_config_id.account_revaluation_journal_id
             )
-            record.income_provision_account_id = (
-                record.company_id.account_revaluation_income_provision_account_id
-            )
+            record.expense_provision_account_id = record.company_id.account_config_id.account_revaluation_expense_provision_account_id
+            record.income_provision_account_id = record.company_id.account_config_id.account_revaluation_income_provision_account_id
 
     def _inverse_journal_id(self):
         for record in self:
-            record.company_id.sudo().account_revaluation_journal_id = record.journal_id
+            record.company_id.sudo().account_config_id.account_revaluation_journal_id = record.journal_id
 
     def _inverse_expense_provision_account_id(self):
         for record in self:
-            record.company_id.sudo().account_revaluation_expense_provision_account_id = record.expense_provision_account_id
+            record.company_id.sudo().account_config_id.account_revaluation_expense_provision_account_id = record.expense_provision_account_id
 
     def _inverse_income_provision_account_id(self):
         for record in self:
-            record.company_id.sudo().account_revaluation_income_provision_account_id = (
-                record.income_provision_account_id
-            )
+            record.company_id.sudo().account_config_id.account_revaluation_income_provision_account_id = record.income_provision_account_id
 
     @api.model
     @_debug.perf.timed

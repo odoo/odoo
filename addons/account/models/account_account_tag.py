@@ -60,7 +60,7 @@ class AccountAccountTag(models.Model):
     @api.depends_context("company")
     @_debug.perf.timed
     def _compute_display_name(self):
-        if not self.env.company.multi_vat_foreign_country_ids:
+        if not self.env.company.account_config_id.multi_vat_foreign_country_ids:
             return super()._compute_display_name()
 
         for tag in self:
@@ -68,7 +68,8 @@ class AccountAccountTag(models.Model):
             if (
                 tag.applicability == "taxes"
                 and tag.country_id
-                and tag.country_id != self.env.company.account_fiscal_country_id
+                and tag.country_id
+                != self.env.company.account_config_id.account_fiscal_country_id
             ):
                 name = _(
                     "%(tag)s (%(country_code)s)",

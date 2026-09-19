@@ -27,7 +27,9 @@ def _prepare_chart_template_data_with_downpayment(self, template_code):
 class TestSaleChartTemplate(AccountTestInvoicingCommon):
     def _template_downpayment_account(self, company):
         ChartTemplate = self.env["account.chart.template"].with_company(company)
-        template_data = ChartTemplate._prepare_chart_template_data(company.chart_template)
+        template_data = ChartTemplate._prepare_chart_template_data(
+            company.account_config_id.chart_template
+        )
         return ChartTemplate.ref(
             template_data["template_data"]["downpayment_account_id"]
         )
@@ -56,7 +58,9 @@ class TestSaleChartTemplate(AccountTestInvoicingCommon):
         company.downpayment_account_id = chosen
 
         self.env["account.chart.template"].try_loading(
-            company.chart_template, company=company, install_demo=False
+            company.account_config_id.chart_template,
+            company=company,
+            install_demo=False,
         )
 
         self.assertEqual(company.downpayment_account_id, chosen)

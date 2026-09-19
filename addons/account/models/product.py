@@ -30,8 +30,8 @@ class ProductTemplate(models.Model):
         column2="tax_id",
         string="Sales Taxes",
         default=lambda self: (
-            self.env.companies.account_sale_tax_id
-            or self.env.companies.root_id.sudo().account_sale_tax_id
+            self.env.companies.account_config_id.account_sale_tax_id
+            or self.env.companies.root_id.sudo().account_config_id.account_sale_tax_id
         ),
         domain=[("type_tax_use", "=", "sale")],
         help="Default taxes used when selling the product",
@@ -44,8 +44,8 @@ class ProductTemplate(models.Model):
         column2="tax_id",
         string="Purchase Taxes",
         default=lambda self: (
-            self.env.companies.account_purchase_tax_id
-            or self.env.companies.root_id.sudo().account_purchase_tax_id
+            self.env.companies.account_config_id.account_purchase_tax_id
+            or self.env.companies.root_id.sudo().account_config_id.account_purchase_tax_id
         ),
         domain=[("type_tax_use", "=", "purchase")],
         help="Default taxes used when buying the product",
@@ -80,12 +80,12 @@ class ProductTemplate(models.Model):
             "income": (
                 self.property_account_income_id
                 or self._get_category_account("property_account_income_categ_id")
-                or company.income_account_id
+                or company.account_config_id.income_account_id
             ),
             "expense": (
                 self.property_account_expense_id
                 or self._get_category_account("property_account_expense_categ_id")
-                or company.expense_account_id
+                or company.account_config_id.expense_account_id
             ),
         }
         return self._map_product_accounts(accounts, fiscal_pos)
@@ -195,7 +195,7 @@ class ProductTemplate(models.Model):
             )
 
     def _force_default_tax_field(self, companies, company_tax_field, product_tax_field):
-        default_taxes = companies.mapped(company_tax_field)
+        default_taxes = companies.account_config_id.mapped(company_tax_field)
         if not default_taxes:
             return
         links = [Command.link(t.id) for t in default_taxes]

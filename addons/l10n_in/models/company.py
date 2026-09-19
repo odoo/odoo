@@ -94,12 +94,12 @@ class ResCompany(models.Model):
                 ]
                 self._activate_l10n_in_taxes(gst_group_refs, company)
                 # Set sale and purchase tax accounts when user registered under GST.
-                company.account_sale_tax_id = (
+                company.account_config_id.account_sale_tax_id = (
                     self.env["account.chart.template"]
                     .with_company(company)
                     .ref("sgst_sale_5", raise_if_not_found=False)
                 )
-                company.account_purchase_tax_id = (
+                company.account_config_id.account_purchase_tax_id = (
                     self.env["account.chart.template"]
                     .with_company(company)
                     .ref("sgst_purchase_5", raise_if_not_found=False)
@@ -173,7 +173,7 @@ class ResCompany(models.Model):
 
     def _update_l10n_in_fiscal_position(self):
         companies_need_update_fp = self.filtered(
-            lambda c: c.parent_ids[0].chart_template == "in"
+            lambda c: c.parent_ids[0].account_config_id.chart_template == "in"
         )
         for company in companies_need_update_fp:
             ChartTemplate = self.env["account.chart.template"].with_company(company)

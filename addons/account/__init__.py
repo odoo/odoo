@@ -1,16 +1,18 @@
 def _set_fiscal_country(env):
-    env["res.company"].search([])._compute_account_fiscal_country_id()
+    env["account.config"]._for_each(
+        env["res.company"].search([])
+    )._compute_account_fiscal_country_id()
 
 
 def _load_deferred_accounts(env):
     for company in env["res.company"].search([], order="parent_path"):
-        if not company.chart_template:
+        if not company.account_config_id.chart_template:
             continue
         ChartTemplate = env["account.chart.template"].with_company(company)
         ChartTemplate._load_data(
             {
                 "res.company": ChartTemplate._get_account_reconcile_res_company(
-                    company.chart_template
+                    company.account_config_id.chart_template
                 ),
             }
         )
@@ -39,17 +41,17 @@ def _load_account_return_data(env):
     )
 
     for company in env["res.company"].search(
-        [("chart_template", "!=", False)], order="parent_path"
+        [("account_config_id.chart_template", "!=", False)], order="parent_path"
     ):
         ChartTemplate = env["account.chart.template"].with_company(company)
         # Set up the tax returns journal after the CoA was already installed.
         ChartTemplate._load_data(
             {
                 "account.journal": ChartTemplate._get_account_reports_journal(
-                    company.chart_template
+                    company.account_config_id.chart_template
                 ),
                 "res.company": ChartTemplate._get_account_reports_res_company(
-                    company.chart_template
+                    company.account_config_id.chart_template
                 ),
             }
         )

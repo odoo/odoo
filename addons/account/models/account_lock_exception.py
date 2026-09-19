@@ -6,7 +6,7 @@ from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import format_datetime
 
-from odoo.addons.account.models.res_company import SOFT_LOCK_DATE_FIELDS
+from odoo.addons.account.models.account_config import SOFT_LOCK_DATE_FIELDS
 
 _debug = DebugLog(__name__)
 
@@ -159,7 +159,7 @@ class AccountLock_Exception(models.Model):
 
     def _invalidate_affected_user_lock_dates(self):
         affected_lock_date_fields = {exception.lock_date_field for exception in self}
-        self.env["res.company"].invalidate_model(
+        self.env["account.config"].invalidate_model(
             fnames=[f"user_{field}" for field in list(affected_lock_date_fields)],
         )
 
@@ -196,7 +196,9 @@ class AccountLock_Exception(models.Model):
                 from_company="company_lock_date" not in vals,
             )
             if "company_lock_date" not in vals:
-                vals["company_lock_date"] = company[vals["lock_date_field"]]
+                vals["company_lock_date"] = company.account_config_id[
+                    vals["lock_date_field"]
+                ]
 
         exceptions = super().create(vals_list)
         if _debug.lifecycle.enabled:
@@ -216,7 +218,7 @@ class AccountLock_Exception(models.Model):
             value = exception.lock_date
             field_info = exception.fields_get([field])[field]
             tracking_values = self.env["mail.tracking.value"]._prepare_tracking_values(
-                company[field],
+                company.account_config_id[field],
                 value,
                 field,
                 field_info,
@@ -294,9 +296,9 @@ class AccountLock_Exception(models.Model):
     def _get_domain_active_exceptions(self, company, soft_lock_date_fields):
         return (
             Domain.OR(
-                Domain(field, "<", company[field])
+                Domain(field, "<", company.account_config_id[field])
                 for field in soft_lock_date_fields
-                if company[field]
+                if company.account_config_id[field]
             )
             & Domain("company_id", "=", company.id)
             & Domain("state", "=", "active")

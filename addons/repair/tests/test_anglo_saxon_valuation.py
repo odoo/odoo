@@ -15,7 +15,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.env.user.company_id.anglo_saxon_accounting = True
+        cls.env.user.company_id.account_config_id.anglo_saxon_accounting = True
 
         cls.fifo_product = cls.env["product.product"].create(
             {

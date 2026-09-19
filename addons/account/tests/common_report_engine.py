@@ -404,7 +404,9 @@ class TestAccountReportsCommon(AccountTestInvoicingCommon):
                         (
                             "country_id.code",
                             "=",
-                            (company or cls.env.company).account_fiscal_country_id.code,
+                            (
+                                company or cls.env.company
+                            ).account_config_id.account_fiscal_country_id.code,
                         ),
                         (
                             "name",

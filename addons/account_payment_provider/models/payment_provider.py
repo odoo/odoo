@@ -99,7 +99,7 @@ class PaymentProvider(models.Model):
         ).env["account.chart.template"]
         return (
             chart_template.ref(account_ref, raise_if_not_found=False)
-            or self.company_id.transfer_account_id
+            or self.company_id.account_config_id.transfer_account_id
         ).id
 
     @api.depends("code", "state", "company_id")

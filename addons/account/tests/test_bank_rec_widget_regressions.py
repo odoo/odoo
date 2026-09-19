@@ -213,9 +213,9 @@ class TestMatchingChatterNotes(TestBankRecWidgetCommon):
 class TestDeferredEntriesCompany(TestBankRecWidgetCommon):
     def test_deferral_uses_the_move_company_not_the_reader(self):
         company = self.company_data["company"]
-        company.deferred_expense_amount_computation_method = "month"
+        company.account_config_id.deferred_expense_amount_computation_method = "month"
         other = self.env["res.company"].create({"name": "Deferral Reader"})
-        other.deferred_expense_amount_computation_method = "day"
+        other.account_config_id.deferred_expense_amount_computation_method = "day"
 
         line = {
             "deferred_start_date": "2019-01-15",

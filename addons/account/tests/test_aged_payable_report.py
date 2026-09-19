@@ -628,7 +628,7 @@ class TestAgedPayableReport(TestAccountReportsCommon):
             fields.Date.from_string("2017-03-01"),
             fields.Date.from_string("2017-04-01"),
         )
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.totals_below_sections = False
 
         self.assertLinesValues(
             # pylint: disable=C0326
@@ -652,7 +652,7 @@ class TestAgedPayableReport(TestAccountReportsCommon):
             fields.Date.from_string("2017-02-01"),
         )
         options["partner_ids"] = self.partner_a.ids
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.totals_below_sections = False
 
         self.assertLinesValues(
             # pylint: disable=C0326
@@ -674,7 +674,7 @@ class TestAgedPayableReport(TestAccountReportsCommon):
             fields.Date.from_string("2017-02-01"),
         )
         options["partner_categories"] = self.partner_category_a.ids
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.totals_below_sections = False
 
         self.assertLinesValues(
             # pylint: disable=C0326
@@ -696,7 +696,7 @@ class TestAgedPayableReport(TestAccountReportsCommon):
             fields.Date.from_string("2016-10-31"),
             fields.Date.from_string("2016-10-31"),
         )
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.totals_below_sections = False
 
         self.assertLinesValues(
             # pylint: disable=C0326
@@ -1250,7 +1250,7 @@ class TestAgedPayableReport(TestAccountReportsCommon):
         )
 
     def test_storno_refund_account_payable(self):
-        self.env.company.account_storno = True
+        self.env.company.account_config_id.account_storno = True
 
         great_partner = self.env["res.partner"].create({"name": "Great Partner"})
         refund = self.env["account.move"].create(
@@ -1282,7 +1282,7 @@ class TestAgedPayableReport(TestAccountReportsCommon):
         )._create_payments()
 
         options = self._generate_options(self.report, "2010-02-01", "2010-02-01")
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.totals_below_sections = False
 
         self.assertLinesValues(
             # pylint: disable=C0326

@@ -111,8 +111,8 @@ class AccountMove(models.Model):
             if (
                 "expense" in move_types
                 and "income" in move_types
-                and self.company_id.generate_deferred_expense_entries_method
-                != self.company_id.generate_deferred_revenue_entries_method
+                and self.company_id.account_config_id.generate_deferred_expense_entries_method
+                != self.company_id.account_config_id.generate_deferred_revenue_entries_method
             ):
                 _debug.logic(
                     "deferred_methods_conflict",
@@ -133,9 +133,9 @@ class AccountMove(models.Model):
                 expense="expense" in move_types,
             )
             if "expense" in move_types:
-                return self.company_id.generate_deferred_expense_entries_method
+                return self.company_id.account_config_id.generate_deferred_expense_entries_method
             else:
-                return self.company_id.generate_deferred_revenue_entries_method
+                return self.company_id.account_config_id.generate_deferred_revenue_entries_method
         if self.is_purchase_document():
             _debug.logic(
                 "deferred_method_side",
@@ -143,8 +143,8 @@ class AccountMove(models.Model):
                 source="purchase_document",
                 expense=True,
             )
-            return self.company_id.generate_deferred_expense_entries_method
-        return self.company_id.generate_deferred_revenue_entries_method
+            return self.company_id.account_config_id.generate_deferred_expense_entries_method
+        return self.company_id.account_config_id.generate_deferred_revenue_entries_method
 
     @api.depends("deferred_original_move_ids")
     def _compute_deferred_entry_type(self):
@@ -202,9 +202,9 @@ class AccountMove(models.Model):
     ):
         company = company or self.company_id[:1] or self.env.company
         method = (
-            company.deferred_expense_amount_computation_method
+            company.account_config_id.deferred_expense_amount_computation_method
             if deferred_type == "expense"
-            else company.deferred_revenue_amount_computation_method
+            else company.account_config_id.deferred_revenue_amount_computation_method
         )
         _debug.pipeline(
             "deferred_amounts_computing",
@@ -252,19 +252,19 @@ class AccountMove(models.Model):
         company = self.company_id
         is_expense = deferred_type == "expense"
         deferred_account = (
-            company.deferred_expense_account_id
+            company.account_config_id.deferred_expense_account_id
             if is_expense
-            else company.deferred_revenue_account_id
+            else company.account_config_id.deferred_revenue_account_id
         )
         deferred_journal = (
-            company.deferred_expense_journal_id
+            company.account_config_id.deferred_expense_journal_id
             if is_expense
-            else company.deferred_revenue_journal_id
+            else company.account_config_id.deferred_revenue_journal_id
         )
         deferred_method = (
-            company.deferred_expense_amount_computation_method
+            company.account_config_id.deferred_expense_amount_computation_method
             if is_expense
-            else company.deferred_revenue_amount_computation_method
+            else company.account_config_id.deferred_revenue_amount_computation_method
         )
         if not deferred_journal:
             _debug.logic(
@@ -425,7 +425,9 @@ class AccountMove(models.Model):
                 lines_vals_to_create.append(
                     [
                         {
-                            **self.env["account.move.line"]._prepare_deferred_lines_values(
+                            **self.env[
+                                "account.move.line"
+                            ]._prepare_deferred_lines_values(
                                 account.id,
                                 coeff * line.balance,
                                 ref,

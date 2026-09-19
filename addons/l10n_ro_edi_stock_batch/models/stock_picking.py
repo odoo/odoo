@@ -23,6 +23,7 @@ class Picking(models.Model):
             "l10n_ro_edi_stock_validate_carrier", False
         )
 
-        return picking.company_id.account_fiscal_country_id.code == "RO" and (
-            picking.l10n_ro_edi_stock_enable or validate_carrier
+        return (
+            picking.company_id.account_config_id.account_fiscal_country_id.code == "RO"
+            and (picking.l10n_ro_edi_stock_enable or validate_carrier)
         )

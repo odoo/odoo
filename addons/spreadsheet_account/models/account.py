@@ -22,8 +22,8 @@ class AccountAccount(models.Model):
         quarter = date_period.get("quarter")
         day = date_period.get("day")
         if period_type == "year":
-            fiscal_day = company.fiscalyear_last_day
-            fiscal_month = int(company.fiscalyear_last_month)
+            fiscal_day = company.account_config_id.fiscalyear_last_day
+            fiscal_month = int(company.account_config_id.fiscalyear_last_month)
             if not (fiscal_day == 31 and fiscal_month == 12):
                 year += 1
             max_day = calendar.monthrange(year, fiscal_month)[1]
@@ -37,8 +37,8 @@ class AccountAccount(models.Model):
             start = date(year, first_month, 1)
             end = start + relativedelta(months=3, days=-1)
         elif period_type == "day":
-            fiscal_day = company.fiscalyear_last_day
-            fiscal_month = int(company.fiscalyear_last_month)
+            fiscal_day = company.account_config_id.fiscalyear_last_day
+            fiscal_month = int(company.account_config_id.fiscalyear_last_month)
             end = date(year, month, day)
             start, _ = date_utils.get_fiscal_year(end, fiscal_day, fiscal_month)
         _debug.logic(

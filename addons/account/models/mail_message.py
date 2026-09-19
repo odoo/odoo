@@ -20,24 +20,27 @@ DOMAINS = {
     "res.company": lambda rec, operator, value: _subselect_domain(
         rec.env["account.move.line"],
         "company_id",
-        Domain("company_id.restrictive_audit_trail", operator, value),
+        Domain("company_id.account_config_id.restrictive_audit_trail", operator, value),
     ),
+    "account.config": lambda rec, operator, value: [
+        ("restrictive_audit_trail", operator, value)
+    ],
     "account.move": lambda rec, operator, value: [
-        ("company_id.restrictive_audit_trail", operator, value)
+        ("company_id.account_config_id.restrictive_audit_trail", operator, value)
     ],
     "account.account": lambda rec, operator, value: [
         ("used", operator, value),
-        ("company_ids.restrictive_audit_trail", operator, value),
+        ("company_ids.account_config_id.restrictive_audit_trail", operator, value),
     ],
     "account.tax": lambda rec, operator, value: _subselect_domain(
         rec.env["account.move.line"],
         "tax_line_id",
-        Domain("company_id.restrictive_audit_trail", operator, value),
+        Domain("company_id.account_config_id.restrictive_audit_trail", operator, value),
     ),
     "res.partner": lambda rec, operator, value: _subselect_domain(
         rec.env["account.move.line"],
         "partner_id",
-        Domain("company_id.restrictive_audit_trail", operator, value),
+        Domain("company_id.account_config_id.restrictive_audit_trail", operator, value),
     ),
 }
 
@@ -163,13 +166,34 @@ class MailMessage(models.Model):
         return self._search_audit_log_related_record_id("account.tax", operator, value)
 
     def _compute_account_audit_log_company_id(self):
+        # a company's configuration tracks on its own chatter; its messages
+        # are the company's in the audit trail
         self._compute_audit_log_related_record_id(
             "res.company", "account_audit_log_company_id"
         )
+        config_messages = self.filtered(
+            lambda m: m.model == "account.config" and m.res_id
+        )
+        if config_messages:
+            configs = self.env["account.config"].browse(
+                config_messages.mapped("res_id")
+            )
+            company_by_config = {config.id: config.company_id for config in configs}
+            for message in config_messages:
+                message.account_audit_log_company_id = company_by_config.get(
+                    message.res_id, False
+                )
 
     @_debug.perf.timed
     def _search_account_audit_log_company_id(self, operator, value):
-        return self._search_audit_log_related_record_id("res.company", operator, value)
+        company_domain = Domain(
+            self._search_audit_log_related_record_id("res.company", operator, value)
+        )
+        companies = self.env["res.company"].search([("id", operator, value)])
+        config_domain = Domain("model", "=", "account.config") & Domain(
+            "res_id", "in", self.env["account.config"].sudo()._for_each(companies).ids
+        )
+        return company_domain | config_domain
 
     def _compute_account_audit_log_partner_id(self):
         self._compute_audit_log_related_record_id(

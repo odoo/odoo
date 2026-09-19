@@ -441,7 +441,7 @@ class AccountReportLines(models.Model):
                     continue
                 # In case total below section, some line don't have the value displayed
                 if (
-                    self.env.company.totals_below_sections
+                    self.env.company.account_config_id.totals_below_sections
                     and not options.get("ignore_totals_below_sections")
                     and line_dict["unfolded"]
                 ):
@@ -1650,11 +1650,11 @@ class AccountReportLines(models.Model):
             _debug.logic(
                 "totals_below_sections_checked",
                 report=self,
-                company_setting=self.env.company.totals_below_sections,
+                company_setting=self.env.company.account_config_id.totals_below_sections,
                 ignored=bool(options.get("ignore_totals_below_sections")),
                 lines=len(lines),
             )
-        if not self.env.company.totals_below_sections or options.get(
+        if not self.env.company.account_config_id.totals_below_sections or options.get(
             "ignore_totals_below_sections"
         ):
             return lines

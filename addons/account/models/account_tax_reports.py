@@ -59,7 +59,7 @@ class AccountTaxUnit(models.Model):
                         Command.create(
                             {
                                 "field_name": "company_id",
-                                "domain": f"[('account_tax_unit_ids', 'in', {tax_unit.id})]",
+                                "domain": f"[('account_config_id.account_tax_unit_ids', 'in', {tax_unit.id})]",
                             }
                         ),
                     ],
@@ -227,7 +227,7 @@ class AccountTaxUnit(models.Model):
 
                 if any(
                     unit != record and unit.country_id == record.country_id
-                    for unit in company.account_tax_unit_ids
+                    for unit in company.account_config_id.account_tax_unit_ids
                 ):
                     _debug.logic(
                         "tax_unit_company_conflict",

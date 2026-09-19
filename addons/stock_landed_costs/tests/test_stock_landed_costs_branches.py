@@ -21,7 +21,9 @@ class TestStockLandedCostsBranches(TestStockValuationLCCommon):
             }
         )
         cls.env["account.chart.template"].try_loading(
-            cls.company.chart_template, company=cls.branch, install_demo=False
+            cls.company.account_config_id.chart_template,
+            company=cls.branch,
+            install_demo=False,
         )
         cls.env.user.company_id = cls.branch
 

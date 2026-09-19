@@ -57,7 +57,8 @@ class TestArManual(common.TestAr):
         # ADHOC SA > IVA Responsable Inscripto > Domestic
         invoice = self._create_invoice_ar(partner_id=self.partner)
         self.assertEqual(
-            invoice.fiscal_position_id, self.env.company.domestic_fiscal_position_id
+            invoice.fiscal_position_id,
+            self.env.company.account_config_id.domestic_fiscal_position_id,
         )
 
         # Consumidor Final > IVA Responsable Inscripto > Without Fiscal Positon
@@ -562,7 +563,9 @@ class TestArManual(common.TestAr):
 
     @skip("TODO: failing test. 'Fix' the rounding error")
     def test_l10n_ar_rounding_01(self):
-        self.env.company.tax_calculation_rounding_method = "round_globally"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
         currency_usd = self.env.ref("base.USD")
         currency_usd.active = True
 
@@ -598,7 +601,9 @@ class TestArManual(common.TestAr):
                 x.tax_repartition_line_id.id,
             )
         )
-        self.env.company.tax_calculation_rounding_method = "round_per_line"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_per_line"
+        )
         invoice_b = self._create_invoice_ar(
             invoice_date="2025-04-02",
             currency_id=currency_usd,

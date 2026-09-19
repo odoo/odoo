@@ -16,7 +16,7 @@
         <xpath expr="//div[@name='footer_content']" position="after">
             <div
                 class="o_footer_content border-top pt-2"
-                t-if="custom_footer and company.account_fiscal_country_id.code == 'HU'">
+                t-if="custom_footer and company.account_config_id.account_fiscal_country_id.code == 'HU'">
                 <t t-out="custom_footer" />
             </div>
         </xpath>
@@ -30,7 +30,7 @@
         <xpath expr="//img/../.." position="after">
             <div
                 t-attf-class="header o_company_#{company.id}_layout"
-                t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
+                t-if="custom_header and company.account_config_id.account_fiscal_country_id.code == 'HU'">
                 <t t-call="#{custom_header}" />
             </div>
         </xpath>
@@ -43,7 +43,7 @@
 
         <xpath expr="//img/../.." position="after">
             <div
-                t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
+                t-if="custom_header and company.account_config_id.account_fiscal_country_id.code == 'HU'">
                 <t t-call="#{custom_header}" />
             </div>
         </xpath>
@@ -56,7 +56,7 @@
 
         <xpath expr="//img/../.." position="after">
             <div
-                t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
+                t-if="custom_header and company.account_config_id.account_fiscal_country_id.code == 'HU'">
                 <t t-call="#{custom_header}" />
             </div>
         </xpath>
@@ -69,7 +69,7 @@
 
         <xpath expr="//img/../.." position="after">
             <div
-                t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
+                t-if="custom_header and company.account_config_id.account_fiscal_country_id.code == 'HU'">
                 <t t-call="#{custom_header}" />
             </div>
         </xpath>
@@ -82,7 +82,7 @@
 
         <xpath expr="//img/../.." position="after">
             <div
-                t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
+                t-if="custom_header and company.account_config_id.account_fiscal_country_id.code == 'HU'">
                 <t t-call="#{custom_header}" />
             </div>
         </xpath>
@@ -98,7 +98,7 @@
             position="after">
             <div
                 t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-4 text-center"
-                t-if="custom_footer and company.account_fiscal_country_id.code == 'HU'">
+                t-if="custom_footer and company.account_config_id.account_fiscal_country_id.code == 'HU'">
                 <t t-out="custom_footer" />
             </div>
         </div>
@@ -112,7 +112,7 @@
 
         <xpath expr="//img/../.." position="after">
             <div
-                t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
+                t-if="custom_header and company.account_config_id.account_fiscal_country_id.code == 'HU'">
                 <t t-call="#{custom_header}" />
             </div>
         </xpath>
@@ -128,7 +128,7 @@
             position="after">
             <div
                 t-attf-class="o_footer_content {{report_type != 'pdf' and 'mx-5'}} pt-5 text-center"
-                t-if="custom_footer and company.account_fiscal_country_id.code == 'HU'">
+                t-if="custom_footer and company.account_config_id.account_fiscal_country_id.code == 'HU'">
                 <t t-out="custom_footer" />
             </div>
         </xpath>
@@ -142,7 +142,7 @@
 
         <xpath expr="//img/../.." position="after">
             <div
-                t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
+                t-if="custom_header and company.account_config_id.account_fiscal_country_id.code == 'HU'">
                 <t t-call="#{custom_header}" />
             </div>
         </xpath>

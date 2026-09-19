@@ -32,7 +32,9 @@ class MixinOrderLineFields(models.AbstractModel):
         related="order_id.company_id",
         string="Company",
     )
-    company_price_include = fields.Selection(related="company_id.account_price_include")
+    company_price_include = fields.Selection(
+        related="company_id.account_config_id.account_price_include"
+    )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
         related="order_id.currency_id",

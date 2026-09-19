@@ -118,7 +118,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         )
 
     def test_00_landed_costs_on_incoming_shipment_without_real_time(self):
-        if self.env.company.chart_template != "generic_coa":
+        if self.env.company.account_config_id.chart_template != "generic_coa":
             raise unittest.SkipTest(
                 "Skip this test as it works only with `generic_coa`"
             )
@@ -285,7 +285,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             {"name": "equal split - Refrigerator", "debit": 2.5, "credit": 0.0},
             {"name": "equal split - Refrigerator", "debit": 0.0, "credit": 2.5},
         ]
-        if stock_negative_landed_cost.account_move_id.company_id.anglo_saxon_accounting:
+        if stock_negative_landed_cost.account_move_id.company_id.account_config_id.anglo_saxon_accounting:
             move_lines += [
                 {
                     "name": "split by volume - Refrigerator: 2.0 already out",
@@ -456,7 +456,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
 @tagged("post_install", "-at_install")
 class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
     def test_invoice_after_lc(self):
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = "fifo"
         self.product1.product_tmpl_id.categ_id.property_valuation = "real_time"
         stock_valuation_account = self.company_data["default_account_stock_valuation"]
@@ -535,7 +535,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         )
 
     def test_lc_with_avco_ordered_qty_backorder(self):
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
         self.landed_cost.split_method_landed_cost = "by_quantity"
         product2 = self.env["product.product"].create(
             {
@@ -620,7 +620,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         self.assertEqual(product2.standard_price, 3.5)
 
     def test_invoice_after_lc_amls(self):
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
         self.landed_cost.landed_cost_ok = True
         self.landed_cost.categ_id.property_cost_method = "fifo"
         self.landed_cost.categ_id.property_valuation = "real_time"
@@ -706,7 +706,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         self.assertTrue(landed_cost_aml.reconciled)
 
     def test_lc_with_avco_ordered_qty_invoice_receipt_order(self):
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
         self.product1.bill_policy = "ordered"
         self.product1.categ_id.write(
             {
@@ -777,7 +777,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
 
     def test_landed_costs_avco_invoice_before_receipt(self):
 
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
         self.product1.bill_policy = "ordered"
         self.product1.categ_id.write(
             {
@@ -837,7 +837,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         self.assertEqual(product.standard_price, 35)
 
     def test_refund_landed_cost_creates_negative_valuation(self):
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
         product = self.env["product.product"].create(
             {
                 "name": "product",
@@ -935,7 +935,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         decimal_product_uom = self.env.ref("uom.decimal_product_uom")
         decimal_product_uom.digits = 5
 
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
         self.product1.bill_policy = "ordered"
         self.product1.categ_id.write(
             {

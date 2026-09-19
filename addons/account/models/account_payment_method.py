@@ -80,7 +80,11 @@ class AccountPaymentMethod(models.Model):
             ) | Domain("currency_id", "in", currency_ids)
 
         if with_country and (country_id := information.get("country_id")):
-            domain &= Domain("company_id.account_fiscal_country_id", "=", country_id)
+            domain &= Domain(
+                "company_id.account_config_id.account_fiscal_country_id",
+                "=",
+                country_id,
+            )
 
         _debug.logic(
             "payment_method_domain_built",

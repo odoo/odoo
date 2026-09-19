@@ -26,7 +26,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
             )
             .env
         )
-        cls.env.company.restrictive_audit_trail = False
+        cls.env.company.account_config_id.restrictive_audit_trail = False
         cls.move = cls.create_move()
 
     @classmethod
@@ -70,11 +70,11 @@ class TestAuditTrail(AccountTestInvoicingCommon):
             self.assertIn(expected_needle, message.account_audit_log_preview)
 
     def test_can_unlink_draft(self):
-        self.env.company.restrictive_audit_trail = True
+        self.env.company.account_config_id.restrictive_audit_trail = True
         self.move.unlink()
 
     def test_cant_unlink_posted(self):
-        self.env.company.restrictive_audit_trail = True
+        self.env.company.account_config_id.restrictive_audit_trail = True
         self.move.action_post()
         self.move.action_draft()
         with self.assertRaisesRegex(
@@ -83,7 +83,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
             self.move.unlink()
 
     def test_cant_unlink_message(self):
-        self.env.company.restrictive_audit_trail = True
+        self.env.company.account_config_id.restrictive_audit_trail = True
         self.move.action_post()
         self.env.cr.flush()
         audit_trail = self.get_trail(self.move)
@@ -93,7 +93,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
             audit_trail.unlink()
 
     def test_cant_unown_message(self):
-        self.env.company.restrictive_audit_trail = True
+        self.env.company.account_config_id.restrictive_audit_trail = True
         self.move.action_post()
         self.env.cr.flush()
         audit_trail = self.get_trail(self.move)
@@ -103,7 +103,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
             audit_trail.res_id = 0
 
     def test_cant_unlink_tracking_value(self):
-        self.env.company.restrictive_audit_trail = True
+        self.env.company.account_config_id.restrictive_audit_trail = True
         self.move.action_post()
         self.env.cr.precommit.run()
         self.move.name = "track this!"
@@ -152,9 +152,11 @@ class TestAuditTrail(AccountTestInvoicingCommon):
         )
         self.assertTrail(self.get_trail(self.move), messages)
 
-        self.move.line_ids[0].tax_ids = self.env.company.account_purchase_tax_id
+        self.move.line_ids[
+            0
+        ].tax_ids = self.env.company.account_config_id.account_purchase_tax_id
         suspense_account_code = (
-            self.env.company.account_journal_suspense_account_id.code
+            self.env.company.account_config_id.account_journal_suspense_account_id.code
         )
         messages.extend(
             [
@@ -176,9 +178,11 @@ class TestAuditTrail(AccountTestInvoicingCommon):
         )
         self.assertTrail(self.get_trail(self.move), messages)
 
-        self.env.company.restrictive_audit_trail = True
+        self.env.company.account_config_id.restrictive_audit_trail = True
         messages_company = ["Updated\nFalse ⇨ True (Restrictive Audit Trail)"]
-        self.assertTrail(self.get_trail(self.company), messages_company)
+        self.assertTrail(
+            self.get_trail(self.company.account_config_id), messages_company
+        )
 
     def test_partner_notif(self):
         user = new_test_user(
@@ -206,7 +210,7 @@ class TestAuditTrailAttachment(AccountTestInvoicingHttpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.company.restrictive_audit_trail = True
+        cls.env.company.account_config_id.restrictive_audit_trail = True
         cls.document_installed = (
             "documents_account"
             in cls.env["ir.module.module"]._get_installed_module_ids()

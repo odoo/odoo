@@ -10,9 +10,7 @@ class TestBaseTaxComputation(BaseTaxCommon):
         if self.account_installed:
             self.skipTest("account installed: standalone fallbacks not exercised")
         company_fields = self.env["res.company"]._fields
-        self.assertNotIn("tax_calculation_rounding_method", company_fields)
-        self.assertNotIn("account_price_include", company_fields)
-        self.assertNotIn("account_fiscal_country_id", company_fields)
+        self.assertNotIn("account_config_id", company_fields)
         tax = self._tax(21.0)
         self.assertFalse(tax.company_price_include)
         self.assertFalse(tax.price_include)

@@ -25,7 +25,7 @@
                             <field
                                 name="company_ids"
                                 widget="many2many_tags"
-                                domain="[('chart_template', '!=', False), ('account_tax_unit_ids', '=', False)]"
+                                domain="[('account_config_id.chart_template', '!=', False), ('account_config_id.account_tax_unit_ids', '=', False)]"
                                 options="{'no_create': True}" />
                             <field
                                 name="main_company_id"

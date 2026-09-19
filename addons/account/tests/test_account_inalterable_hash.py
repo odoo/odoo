@@ -867,8 +867,8 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
                 for move in (move1, move2, move3, move4, move5):
                     self.assertFalse(move.inalterable_hash)
 
-                self.company_data["company"][lock_date_field] = fields.Date.to_date(
-                    "2024-01-31"
+                self.company_data["company"].account_config_id[lock_date_field] = (
+                    fields.Date.to_date("2024-01-31")
                 )
 
                 if lock_date_field == "hard_lock_date":
@@ -877,16 +877,20 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
                         pass
 
                     with patch(
-                        "odoo.addons.account.models.res_company.ResCompany._check_locks",
+                        "odoo.addons.account.models.account_config.AccountConfig._check_locks",
                         new=_check_locks,
                     ):
-                        self.company_data["company"][lock_date_field] = False
+                        self.company_data["company"].account_config_id[
+                            lock_date_field
+                        ] = False
                 else:
-                    self.company_data["company"][lock_date_field] = False
+                    self.company_data["company"].account_config_id[lock_date_field] = (
+                        False
+                    )
                 move1.button_hash()
 
-                self.company_data["company"][lock_date_field] = fields.Date.to_date(
-                    "2024-01-31"
+                self.company_data["company"].account_config_id[lock_date_field] = (
+                    fields.Date.to_date("2024-01-31")
                 )
 
                 for move in (move2, move3, move4, move5):
@@ -1005,9 +1009,9 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         with self._skip_hash_moves():
             moves_v3_pre_restrict_mode[2].action_post()
 
-        self.company_data["company"].fiscalyear_lock_date = fields.Date.to_date(
-            "2024-01-31"
-        )
+        self.company_data[
+            "company"
+        ].account_config_id.fiscalyear_lock_date = fields.Date.to_date("2024-01-31")
 
         for move in moves_v3_pre_restrict_mode:
             self.assertFalse(move.inalterable_hash)
@@ -1199,7 +1203,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
             ]
         )
         moves.action_post()
-        self.company_data["company"].hard_lock_date = "2023-01-02"
+        self.company_data["company"].account_config_id.hard_lock_date = "2023-01-02"
         wizard = self.env["account.secure.entries.wizard"].create(
             {"hash_date": "2023-01-02"}
         )
@@ -1328,7 +1332,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
                 self.assertNotEqual(move.inalterable_hash, False)
 
         self.assertEqual(wizard.max_hash_date, fields.Date.from_string("2023-12-31"))
-        self.company_data["company"].hard_lock_date = "2024-01-01"
+        self.company_data["company"].account_config_id.hard_lock_date = "2024-01-01"
         wizard = self.env["account.secure.entries.wizard"].create(
             {"hash_date": "2024-01-03"}
         )

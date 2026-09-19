@@ -226,19 +226,6 @@ class ResCompany(models.Model):
                             )
                         )
 
-    def _default_logo(self) -> bytes:
-        return _get_default_logo()
-
-    def _default_currency_id(self) -> models.Model:
-        return self.env.user.company_id.currency_id
-
-    def _normalize_vals(self, vals: dict[str, Any]) -> dict[str, Any]:
-        if "code" not in vals:
-            return vals
-        code = (vals["code"] or "").strip().upper()
-        _debug.logic("code_sanitized", code=code or False, changed=code != vals["code"])
-        return {**vals, "code": code or False}
-
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
         context_parent_id = self.env.context.get("default_parent_id")
@@ -269,6 +256,7 @@ class ResCompany(models.Model):
 
         self.env.registry.clear_cache()
         _debug.lifecycle("registry_cache_cleared", by="create")
+        config_vals_list = [self._split_config_vals(vals) for vals in vals_list]
         companies = super().create(vals_list)
         self.env.registry.clear_cache()
         self.env["report.config"]._for_each(companies)
@@ -284,6 +272,11 @@ class ResCompany(models.Model):
                     "company_ids": [Command.link(company.id) for company in companies],
                 }
             )
+        # the creating user is a member of the new company before its
+        # configuration is written: what the write triggers may work in it
+        for company, config_vals in zip(companies, config_vals_list, strict=True):
+            for link, vals in config_vals.items():
+                company[link].write(vals)
 
         inactive_currencies = companies.currency_id.sudo().filtered(
             lambda c: not c.active
@@ -305,6 +298,8 @@ class ResCompany(models.Model):
 
     def write(self, vals: dict[str, Any]) -> bool:
         vals = self._normalize_vals(vals)
+        for link, link_vals in self._split_config_vals(vals).items():
+            self[link].write(link_vals)
         if "parent_id" in vals and any(
             c.parent_id.id != vals["parent_id"] for c in self
         ):
@@ -383,17 +378,11 @@ class ResCompany(models.Model):
         self.env.registry.clear_cache()
         return res
 
-    def _search_root_id(self, operator: str, value: Any) -> Domain:
-        if operator not in ("in", "not in"):
-            return NotImplemented
-        roots = (
-            self.sudo()
-            .with_context(active_test=False)
-            .browse(value)
-            .filtered(lambda company: not company.parent_id)
-        )
-        domain = Domain("id", "child_of", roots.ids) if roots else Domain.FALSE
-        return ~domain if operator == "not in" else domain
+    def _default_logo(self) -> bytes:
+        return _get_default_logo()
+
+    def _default_currency_id(self) -> models.Model:
+        return self.env.user.company_id.currency_id
 
     @api.depends("parent_path")
     def _compute_hierarchy(self) -> None:
@@ -514,57 +503,6 @@ class ResCompany(models.Model):
                 "onchange_parent_delegated", parent=self.parent_id.id, synced=synced
             )
 
-    def install_l10n_modules(self) -> Any:
-        uninstalled_modules = self.uninstalled_l10n_module_ids
-        is_ready_and_not_test = (
-            not tools.config["test_enable"]
-            and self.env.registry.ready
-            and not modules.module.current_test
-            and not self.env.context.get("install_mode")
-            and not self.env.context.get("import_file")
-        )
-        _debug.logic(
-            "install_l10n_modules",
-            companies=self.ids,
-            modules=uninstalled_modules.mapped("name"),
-            ready=is_ready_and_not_test,
-        )
-        if uninstalled_modules and is_ready_and_not_test:
-            with _debug.perf(
-                "l10n_modules_installed",
-                cr=self.env.cr,
-                modules=len(uninstalled_modules),
-            ):
-                return uninstalled_modules.button_immediate_install()
-        return is_ready_and_not_test
-
-    @api.model
-    def _search_display_name(self, operator: str, value: str) -> Domain:
-        context = dict(self.env.context)
-        newself = self
-        constraint = Domain.TRUE
-        if context.pop("user_preference", None):
-            companies = self.env.user.company_ids
-            constraint = Domain("id", "in", companies.ids)
-            newself = newself.sudo()
-            _debug.logic(
-                "display_name_search_user_preference",
-                uid=self.env.uid,
-                companies=len(companies),
-                operator=operator,
-            )
-        newself = newself.with_context(context)
-        domain = super(ResCompany, newself)._search_display_name(operator, value)
-        return domain & constraint
-
-    def _get_cache_invalidation_fields(self) -> set[str]:
-        return {
-            "active",
-            "sequence",
-            "partner_id",
-            "user_ids",
-        }
-
     def action_all_company_branches(self) -> dict[str, Any]:
         self.check_singleton()
         return {
@@ -577,6 +515,24 @@ class ResCompany(models.Model):
                 "default_parent_id": self.id,
             },
             "views": [[False, "list"], [False, "kanban"], [False, "form"]],
+        }
+
+    @api.model
+    def _config_link_fields(self) -> dict[str, fields.Field]:
+        return {
+            name: field
+            for name, field in self._fields.items()
+            if name.endswith("_config_id")
+            and field.is_many2one
+            and getattr(self.env[field.comodel_name], "_company_config", False)
+        }
+
+    def _get_cache_invalidation_fields(self) -> set[str]:
+        return {
+            "active",
+            "sequence",
+            "partner_id",
+            "user_ids",
         }
 
     @ormcache("tuple(self.env.companies.ids)", "self.id", "self.env.uid")
@@ -679,6 +635,91 @@ class ResCompany(models.Model):
                 marked += 1  # debuglog
         _debug.logic("delegated_fields_readonly", view_type=view_type, fields=marked)
         return arch, view
+
+    def install_l10n_modules(self) -> Any:
+        uninstalled_modules = self.uninstalled_l10n_module_ids
+        is_ready_and_not_test = (
+            not tools.config["test_enable"]
+            and self.env.registry.ready
+            and not modules.module.current_test
+            and not self.env.context.get("install_mode")
+            and not self.env.context.get("import_file")
+        )
+        _debug.logic(
+            "install_l10n_modules",
+            companies=self.ids,
+            modules=uninstalled_modules.mapped("name"),
+            ready=is_ready_and_not_test,
+        )
+        if uninstalled_modules and is_ready_and_not_test:
+            with _debug.perf(
+                "l10n_modules_installed",
+                cr=self.env.cr,
+                modules=len(uninstalled_modules),
+            ):
+                return uninstalled_modules.button_immediate_install()
+        return is_ready_and_not_test
+
+    def _normalize_vals(self, vals: dict[str, Any]) -> dict[str, Any]:
+        if "code" not in vals:
+            return vals
+        code = (vals["code"] or "").strip().upper()
+        _debug.logic("code_sanitized", code=code or False, changed=code != vals["code"])
+        return {**vals, "code": code or False}
+
+    @api.model
+    def _search_display_name(self, operator: str, value: str) -> Domain:
+        context = dict(self.env.context)
+        newself = self
+        constraint = Domain.TRUE
+        if context.pop("user_preference", None):
+            companies = self.env.user.company_ids
+            constraint = Domain("id", "in", companies.ids)
+            newself = newself.sudo()
+            _debug.logic(
+                "display_name_search_user_preference",
+                uid=self.env.uid,
+                companies=len(companies),
+                operator=operator,
+            )
+        newself = newself.with_context(context)
+        domain = super(ResCompany, newself)._search_display_name(operator, value)
+        return domain & constraint
+
+    def _search_root_id(self, operator: str, value: Any) -> Domain:
+        if operator not in ("in", "not in"):
+            return NotImplemented
+        roots = (
+            self.sudo()
+            .with_context(active_test=False)
+            .browse(value)
+            .filtered(lambda company: not company.parent_id)
+        )
+        domain = Domain("id", "child_of", roots.ids) if roots else Domain.FALSE
+        return ~domain if operator == "not in" else domain
+
+    @api.model
+    def _search_config_link(
+        self, comodel_name: str, operator: str, value: Any
+    ) -> list[tuple[str, str, Any]]:
+        configs = self.env[comodel_name].sudo().search([("id", operator, value)])
+        return [("id", "in", configs.company_id.ids)]
+
+    def _split_config_vals(self, vals: dict[str, Any]) -> dict[str, dict[str, Any]]:
+        config_vals: dict[str, dict[str, Any]] = {}
+        for link, field in self._config_link_fields().items():
+            config_fields = self.env[field.comodel_name]._fields
+            keys = [
+                key
+                for key in vals
+                if key not in self._fields
+                and key in config_fields
+                and key != "company_id"
+            ]
+            if keys:
+                config_vals[link] = {key: vals.pop(key) for key in keys}
+                _debug.logic("config_vals_routed", link=link, fields=keys)
+        return config_vals
 
     def _is_every_branch_selected(self) -> bool:
         every = self == self.sudo().search([("id", "child_of", self.root_id.ids)])

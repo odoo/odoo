@@ -293,7 +293,7 @@ class ResPartner(models.Model):
                 {
                     code
                     for company in allowed_companies
-                    for code in company.account_fiscal_country_group_codes
+                    for code in company.account_config_id.account_fiscal_country_group_codes
                 }
             )
 
@@ -600,7 +600,9 @@ class ResPartner(models.Model):
 
     @api.depends_context("company")
     def _compute_show_credit_limit(self):
-        self.show_credit_limit = self.env.company.account_use_credit_limit
+        self.show_credit_limit = (
+            self.env.company.account_config_id.account_use_credit_limit
+        )
 
     @api.depends_context("uid")
     def _get_application_statistics(self):
@@ -1255,12 +1257,12 @@ class ResPartner(models.Model):
                 else _("not applicable")
             )
 
-    @api.depends("country_id.code", "ref_company_ids.account_fiscal_country_id.code")
+    @api.depends("country_id.code", "ref_company_ids.account_config_id.account_fiscal_country_id.code")
     def _compute_company_registry_placeholder(self):
         super()._compute_company_registry_placeholder()
         for partner in self:
             country = (
-                partner.ref_company_ids[:1].account_fiscal_country_id
+                partner.ref_company_ids[:1].account_config_id.account_fiscal_country_id
                 or partner.country_id
             )
             partner.company_registry_placeholder = _ref_company_registry.get(

@@ -128,7 +128,7 @@ class TestAutoPostBills(AccountTestInvoicingCommon):
 
         # Deactivate the feature fully from the settings
         # => Should never show popup, nor autopost (even if partner is on 'always')
-        move.company_id.autopost_bills = False
+        move.company_id.account_config_id.autopost_bills = False
         move.partner_id.autopost_bills = "always"
         move = self.import_facturx()
         self.assertEqual(move.state, "draft")
@@ -136,7 +136,7 @@ class TestAutoPostBills(AccountTestInvoicingCommon):
         self.assertFalse(autopost_bills_wizard)
 
         # Reset
-        move.company_id.autopost_bills = True
+        move.company_id.account_config_id.autopost_bills = True
         move.partner_id.autopost_bills = "always"
 
         # If the bill has a duplicate, don't autopost it

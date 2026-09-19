@@ -12,7 +12,7 @@ class BaseDocumentLayout(models.TransientModel):
     _inherit = "base.document.layout"
 
     account_fiscal_country_id = fields.Many2one(
-        related="company_id.account_fiscal_country_id"
+        related="company_id.account_config_id.account_fiscal_country_id"
     )
     company_registry = fields.Char(related="company_id.company_registry")
     income_tax_id = fields.Char(related="company_id.income_tax_id")

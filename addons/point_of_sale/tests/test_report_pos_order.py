@@ -327,7 +327,7 @@ class TestReportPoSOrder(TestPoSCommon):
                 "partner_id": self.partner_a.id,
             }
         )
-        invoice.company_id.qr_code = True
+        invoice.company_id.account_config_id.qr_code = True
         orders = self._create_report_order(account_move=invoice.id)
         orders |= self._create_report_order(account_move=invoice.id)
         report = self.env["report.point_of_sale.report_invoice"]
@@ -370,7 +370,7 @@ class TestReportPoSOrder(TestPoSCommon):
                 "partner_id": self.partner_a.id,
             }
         )
-        invoice.company_id.qr_code = False
+        invoice.company_id.account_config_id.qr_code = False
         order = self._create_report_order(account_move=invoice.id)
         user = new_test_user(
             self.env, login="report_cashier", groups="point_of_sale.group_pos_user"
@@ -391,7 +391,7 @@ class TestReportPoSOrder(TestPoSCommon):
                 "partner_id": self.partner_a.id,
             }
         )
-        invoice.company_id.qr_code = False
+        invoice.company_id.account_config_id.qr_code = False
         order = self._create_report_order(account_move=invoice.id)
         user = new_test_user(
             self.env,
@@ -431,7 +431,7 @@ class TestReportPoSOrder(TestPoSCommon):
                 ],
             }
         )
-        invoice.company_id.qr_code = True
+        invoice.company_id.account_config_id.qr_code = True
         orders = self._create_report_order(account_move=invoice.id)
         orders |= self._create_report_order(account_move=invoice.id)
         user = new_test_user(
@@ -460,7 +460,7 @@ class TestReportPoSOrder(TestPoSCommon):
 
         for qr_enabled in (False, True):
             with self.subTest(qr_enabled=qr_enabled):
-                invoice.company_id.qr_code = qr_enabled
+                invoice.company_id.account_config_id.qr_code = qr_enabled
                 html, _ = (
                     self.env["ir.actions.report"]
                     .with_user(user)

@@ -138,7 +138,7 @@ class AccountReturnCreationWizard(models.TransientModel):
         for wizard in self:
             # For the company country, takes all the return types
             wizard_country_return_types = country_return_type_map[
-                wizard.company_id.account_fiscal_country_id
+                wizard.company_id.account_config_id.account_fiscal_country_id
             ][wizard.category]
 
             # For the foreign fiscal positions, takes only the VAT return types

@@ -8,7 +8,7 @@ class StockPickingType(models.Model):
     @api.onchange("sequence_code")
     def _onchange_sequence_code(self):
         if (
-            self.company_id.account_fiscal_country_id.code == "TR"
+            self.company_id.account_config_id.account_fiscal_country_id.code == "TR"
             and self.code == "outgoing"
             and self.sequence_code
             and len(self.sequence_code) != 3

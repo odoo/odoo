@@ -28,8 +28,8 @@ class TestTaxReportCarryover(TestAccountReportsCommon):
         cls.company_2 = cls.company_data_2["company"]
 
         cls.company_2.currency_id = cls.company_1.currency_id
-        cls.company_1.account_return_periodicity = (
-            cls.company_2.account_return_periodicity
+        cls.company_1.account_config_id.account_return_periodicity = (
+            cls.company_2.account_config_id.account_return_periodicity
         ) = "year"
 
         cls.company_1.write(
@@ -54,7 +54,7 @@ class TestTaxReportCarryover(TestAccountReportsCommon):
         cls.report = cls.env["account.report"].create(
             {
                 "name": "Test report",
-                "country_id": cls.company_1.account_fiscal_country_id.id,
+                "country_id": cls.company_1.account_config_id.account_fiscal_country_id.id,
                 "root_report_id": cls.env.ref("account.generic_tax_report").id,
                 "column_ids": [
                     Command.create(
@@ -221,7 +221,7 @@ class TestTaxReportCarryover(TestAccountReportsCommon):
         tax_unit = self.env["account.tax.unit"].create(
             {
                 "name": "Test tax unit",
-                "country_id": self.company_1.account_fiscal_country_id.id,
+                "country_id": self.company_1.account_config_id.account_fiscal_country_id.id,
                 "vat": "DW1234567890",
                 "company_ids": [Command.set([self.company_1.id, self.company_2.id])],
                 "main_company_id": self.company_1.id,

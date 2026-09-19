@@ -302,15 +302,17 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
                 "code": "TWTR",
                 "type": "sale",
                 "company_id": company.id,
-                "default_account_id": company.income_account_id.id,
+                "default_account_id": company.account_config_id.income_account_id.id,
             }
         )
-        self.assertEqual(journal.default_account_id, company.income_account_id)
+        self.assertEqual(
+            journal.default_account_id, company.account_config_id.income_account_id
+        )
 
         journal.write({"type": "purchase"})
         self.assertEqual(
             journal.default_account_id,
-            company.expense_account_id,
+            company.account_config_id.expense_account_id,
             "the stale sale-type account must be reset when type changes via write()",
         )
 
@@ -1179,12 +1181,12 @@ class TestAccountJournalTypeDefaults(AccountTestInvoicingCommon):
         self.env.registry.clear_cache()
         self.assertEqual(
             self._create("sale", "TDC1").default_account_id,
-            self.env.company.income_account_id,
+            self.env.company.account_config_id.income_account_id,
             "a product-category default must not outrank the company's income account",
         )
 
     def test_an_archived_account_is_never_defaulted_onto_a_journal(self):
-        self.env.company.income_account_id.active = False
+        self.env.company.account_config_id.income_account_id.active = False
         self.env.flush_all()
         self.env.registry.clear_cache()
         self.assertFalse(self._create("sale", "TDD1").default_account_id)
@@ -1223,7 +1225,7 @@ class TestAccountJournalTypeDefaults(AccountTestInvoicingCommon):
 
     def test_an_explicit_account_survives_a_type_change(self):
         journal = self._create("sale", "TDG1")
-        expense = self.env.company.expense_account_id
+        expense = self.env.company.account_config_id.expense_account_id
         journal.write({"type": "purchase", "default_account_id": expense.id})
         self.assertEqual(journal.default_account_id, expense)
 
@@ -1530,7 +1532,9 @@ class TestAccountJournalInvalidation(AccountTestInvoicingCommon):
         journal = self.company_data["default_journal_misc"]
         move_date = fields.Date.to_date("2026-03-15")
         before = journal.with_context(move_date=move_date).accounting_date
-        self.env.company.fiscalyear_lock_date = fields.Date.to_date("2026-06-30")
+        self.env.company.account_config_id.fiscalyear_lock_date = fields.Date.to_date(
+            "2026-06-30"
+        )
         self.env.flush_all()
         self.assertNotEqual(
             journal.with_context(move_date=move_date).accounting_date,

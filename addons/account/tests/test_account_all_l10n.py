@@ -144,25 +144,30 @@ def test_all_l10n(env):
                 l10n_check_fields_complete=True
             ).try_loading(template_code, company, install_demo=True)
             env.cr.commit()
-            if company.fiscal_position_ids and not company.domestic_fiscal_position_id:
+            if (
+                company.account_config_id.fiscal_position_ids
+                and not company.account_config_id.domestic_fiscal_position_id
+            ):
                 _logger.warning(
                     "No domestic fiscal position found in fiscal data for %s %s.",
                     company.country_id.name,
                     template_code,
                 )
-            elif company.fiscal_position_ids:
-                potential_domestic_fps = company.fiscal_position_ids.filtered_domain(
-                    Domain("country_id", "=", company.country_id.id)
-                    | Domain(
-                        [
-                            ("country_id", "=", False),
-                            (
-                                "country_group_id",
-                                "in",
-                                company.country_id.country_group_ids.ids,
-                            ),
-                        ]
-                    ),
+            elif company.account_config_id.fiscal_position_ids:
+                potential_domestic_fps = (
+                    company.account_config_id.fiscal_position_ids.filtered_domain(
+                        Domain("country_id", "=", company.country_id.id)
+                        | Domain(
+                            [
+                                ("country_id", "=", False),
+                                (
+                                    "country_group_id",
+                                    "in",
+                                    company.country_id.country_group_ids.ids,
+                                ),
+                            ]
+                        ),
+                    )
                 )
                 if len(potential_domestic_fps) > 1:
                     potential_domestic_fps.sorted(

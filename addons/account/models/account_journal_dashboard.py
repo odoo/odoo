@@ -540,7 +540,7 @@ class AccountJournal(models.Model):
     def _get_misc_operations_date_limits(self):
         return {
             journal.id: journal.last_statement_id.date
-            or journal.company_id.fiscalyear_lock_date
+            or journal.company_id.account_config_id.fiscalyear_lock_date
             for journal in self
         }
 
@@ -658,10 +658,13 @@ class AccountJournal(models.Model):
                 else "/web/static/img/rfq.svg",
                 "text": _("Drop to import transactions"),
             }
-            last_statement_visible = not journal.company_id.fiscalyear_lock_date or (
-                journal.last_statement_id.date
-                and journal.company_id.fiscalyear_lock_date
-                < journal.last_statement_id.date
+            last_statement_visible = (
+                not journal.company_id.account_config_id.fiscalyear_lock_date
+                or (
+                    journal.last_statement_id.date
+                    and journal.company_id.account_config_id.fiscalyear_lock_date
+                    < journal.last_statement_id.date
+                )
             )
             _debug.logic(
                 "bank_cash_card_flags",
@@ -1359,7 +1362,10 @@ class AccountJournal(models.Model):
             "search_default_no_st_line_id": True,
             "search_default_posted": False,
         }
-        date_from = self.last_statement_id.date or self.company_id.fiscalyear_lock_date
+        date_from = (
+            self.last_statement_id.date
+            or self.company_id.account_config_id.fiscalyear_lock_date
+        )
         if date_from:
             action["context"] |= {
                 "date_from": date_from,

@@ -108,8 +108,8 @@ class TestAccountMove(TestStockValuationCommon):
         self._use_multi_currencies([("2017-01-01", 2.0)])
 
         product = self.product_standard_auto
-        self.env.company.account_storno = True
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.account_storno = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
 
         move = self.env["account.move"].create(
             {
@@ -143,8 +143,12 @@ class TestAccountMove(TestStockValuationCommon):
             self.env["account.move"].with_context(default_move_type="out_invoice")
         )
         move_form.partner_id = self.partner
-        self.company.income_account_id.write(
-            {"tax_ids": [(6, 0, [self.env.company.account_sale_tax_id.id])]}
+        self.company.account_config_id.income_account_id.write(
+            {
+                "tax_ids": [
+                    (6, 0, [self.env.company.account_config_id.account_sale_tax_id.id])
+                ]
+            }
         )
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = product
@@ -351,7 +355,7 @@ class TestAccountMove(TestStockValuationCommon):
         )
         receipts.action_confirm()
         receipt_done.button_validate()
-        self.env.company.write(
+        self.env.company.account_config_id.write(
             {
                 "sale_lock_date": lock_date,
                 "purchase_lock_date": lock_date,
@@ -361,7 +365,7 @@ class TestAccountMove(TestStockValuationCommon):
         receipt.date_planned = prior_to_lock_date
         receipt_done.date_done = prior_to_lock_date
 
-        self.env.company.write(
+        self.env.company.account_config_id.write(
             {
                 "sale_lock_date": False,
                 "purchase_lock_date": False,
@@ -375,7 +379,7 @@ class TestAccountMove(TestStockValuationCommon):
         with self.assertRaises(UserError):
             receipt_done.date_done = prior_to_lock_date
 
-        self.env.company.write(
+        self.env.company.account_config_id.write(
             {
                 "fiscalyear_lock_date": False,
                 "hard_lock_date": lock_date,

@@ -23,7 +23,7 @@ class AccountAccount(models.Model):
 
         grouped_counts = self.read_group(
             domain=[
-                ("company_ids.account_fiscal_country_id.code", "=", "DK"),
+                ("company_ids.account_config_id.account_fiscal_country_id.code", "=", "DK"),
                 ("account_type", "=", "asset_cash"),
             ],
             fields=["company_ids", "id:count"],

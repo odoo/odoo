@@ -12,7 +12,7 @@
             <field
                 name="journal_id"
                 model="account.journal"
-                search="[                 ('type', '=', 'general'),                 ('company_id', '=', ref('base.main_company')),                 ('id', '!=', obj().env.user.company_id.currency_exchange_journal_id.id)]" />
+                search="[                 ('type', '=', 'general'),                 ('company_id', '=', ref('base.main_company')),                 ('id', '!=', obj().env.user.company_id.account_config_id.currency_exchange_journal_id.id)]" />
             <field
                 name="account_asset_id"
                 model="account.account"

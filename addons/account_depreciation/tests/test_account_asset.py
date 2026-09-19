@@ -1129,7 +1129,9 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         )
         Locked_car.action_confirm()
-        Locked_car.company_id.fiscalyear_lock_date = today + relativedelta(years=-1)
+        Locked_car.company_id.account_config_id.fiscalyear_lock_date = (
+            today + relativedelta(years=-1)
+        )
 
         self.assertEqual(len(Locked_car.depreciation_move_ids), 10)
         Locked_car.action_cancel()
@@ -3126,7 +3128,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         report = self.env.ref("account_depreciation.assets_report")
         options = self._generate_options(report, "2022-01-01", "2022-12-31")
         options["hierarchy"] = True
-        self.env.company.totals_below_sections = True
+        self.env.company.account_config_id.totals_below_sections = True
 
         lines = [
             {
@@ -3405,7 +3407,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account.ir_cron_auto_post_draft_entry"
             ).method_direct_trigger()
 
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.totals_below_sections = False
         report = self.env.ref("account_depreciation.assets_report")
 
         options = self._generate_options(
@@ -3501,7 +3503,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account.ir_cron_auto_post_draft_entry"
             ).method_direct_trigger()
 
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.totals_below_sections = False
         report = self.env.ref("account_depreciation.assets_report")
         report.filter_analytic_groupby = True
 
@@ -3716,7 +3718,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 "account.ir_cron_auto_post_draft_entry"
             ).method_direct_trigger()
 
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.totals_below_sections = False
         report = self.env.ref("account_depreciation.assets_report")
 
         options = self._generate_options(
@@ -4120,9 +4122,9 @@ class TestAccountAsset(TestAccountReportsCommon):
         self.assertFalse(self.account_asset_model_fixedassets.active)
 
     def test_asset_increase_with_lock_year(self):
-        self.company_data["company"].fiscalyear_lock_date = fields.Date.to_date(
-            "2021-03-01"
-        )
+        self.company_data[
+            "company"
+        ].account_config_id.fiscalyear_lock_date = fields.Date.to_date("2021-03-01")
 
         asset = self.env["resource.asset"].create(
             {
@@ -4210,9 +4212,9 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_asset_decrease_with_lock_year(self):
-        self.company_data["company"].fiscalyear_lock_date = fields.Date.to_date(
-            "2021-03-01"
-        )
+        self.company_data[
+            "company"
+        ].account_config_id.fiscalyear_lock_date = fields.Date.to_date("2021-03-01")
 
         asset = self.env["resource.asset"].create(
             {
@@ -4848,7 +4850,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_account_asset_lock_cancel_storno(self):
-        self.env.company.account_storno = True
+        self.env.company.account_config_id.account_storno = True
         today = fields.Date.today()
 
         locked_car = self.env["resource.asset"].create(
@@ -4865,7 +4867,9 @@ class TestAccountAsset(TestAccountReportsCommon):
         locked_car._onchange_depreciation_profile_id()
         locked_car.action_confirm()
 
-        locked_car.company_id.fiscalyear_lock_date = today + relativedelta(years=-1)
+        locked_car.company_id.account_config_id.fiscalyear_lock_date = (
+            today + relativedelta(years=-1)
+        )
 
         self.assertEqual(len(locked_car.depreciation_move_ids), 3)
         locked_car.action_cancel()
@@ -4885,7 +4889,10 @@ class TestAccountAsset(TestAccountReportsCommon):
         self.assertEqual(
             len(
                 locked_car.depreciation_move_ids.filtered(
-                    lambda m: m.date >= locked_car.company_id.fiscalyear_lock_date
+                    lambda m: (
+                        m.date
+                        >= locked_car.company_id.account_config_id.fiscalyear_lock_date
+                    )
                 )
             ),
             2,
@@ -4896,7 +4903,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             self.assertTrue(
                 depreciation.reversal_move_ids or depreciation.reversed_entry_id
             )
-            if depreciation.date >= locked_car.company_id.fiscalyear_lock_date:
+            if (
+                depreciation.date
+                >= locked_car.company_id.account_config_id.fiscalyear_lock_date
+            ):
                 self.assertEqual(
                     len(depreciation.line_ids), 2, "Reversal move should have 2 lines"
                 )
@@ -4917,7 +4927,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 )
 
     def test_asset_modify_sell_profit_storno(self):
-        self.env.company.account_storno = True
+        self.env.company.account_config_id.account_storno = True
 
         closing_invoice = self.env["account.move"].create(
             {
@@ -4970,7 +4980,7 @@ class TestAccountAsset(TestAccountReportsCommon):
         )
 
     def test_asset_modify_sell_loss_storno(self):
-        self.env.company.account_storno = True
+        self.env.company.account_config_id.account_storno = True
 
         closing_invoice = self.env["account.move"].create(
             {

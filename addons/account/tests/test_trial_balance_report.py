@@ -285,7 +285,7 @@ class TestTrialBalanceReport(TestAccountReportsCommon):
         ).active = False
 
         cls.report = cls.env.ref("account.trial_balance_report")
-        cls.company_data["company"].totals_below_sections = False
+        cls.company_data["company"].account_config_id.totals_below_sections = False
 
     # -------------------------------------------------------------------------
     # Helper functions

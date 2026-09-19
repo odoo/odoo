@@ -67,7 +67,7 @@ class BaseDocumentLayout(models.TransientModel):
         readonly=True,
     )
     account_fiscal_country_id = fields.Many2one(
-        related="company_id.account_fiscal_country_id",
+        related="company_id.account_config_id.account_fiscal_country_id",
         readonly=True,
     )
     l10n_din5008_invoice_date = fields.Date(

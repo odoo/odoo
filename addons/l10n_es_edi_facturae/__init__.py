@@ -9,10 +9,13 @@ def _l10n_es_edi_facturae_post_init_hook(env):
     We need to replace the existing spanish taxes following the template so the new fields are set properly
     """
     for company in env["res.company"].search(
-        [("chart_template", "like", r"es\_%"), ("parent_id", "=", False)]
+        [
+            ("account_config_id.chart_template", "like", r"es\_%"),
+            ("parent_id", "=", False),
+        ]
     ):
         Template = env["account.chart.template"].with_company(company)
-        if company.chart_template.startswith("es_canary"):
+        if company.account_config_id.chart_template.startswith("es_canary"):
             tax_data = Template._get_es_facturae_account_tax_es_canary_common()
         else:
             tax_data = Template._get_es_facturae_account_tax_es_common_mainland()

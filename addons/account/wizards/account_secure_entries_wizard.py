@@ -18,7 +18,9 @@ class AccountSecureEntriesWizard(models.TransientModel):
         readonly=True,
         required=True,
     )
-    country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
+    country_code = fields.Char(
+        related="company_id.account_config_id.account_fiscal_country_id.code"
+    )
     hash_date = fields.Date(
         string="Hash All Entries",
         compute="_compute_hash_date",
@@ -57,7 +59,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
                     self
                 )
 
-    @api.depends("company_id", "company_id.user_hard_lock_date")
+    @api.depends("company_id", "company_id.account_config_id.user_hard_lock_date")
     @_debug.perf.timed
     def _compute_max_hash_date(self):
         today = fields.Date.context_today(self)
@@ -104,7 +106,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
                     lambda move, last_move_hashed=last_move_hashed: (
                         not move.inalterable_hash
                         and move.sequence_number < last_move_hashed.sequence_number
-                        and move.date > company_id.user_hard_lock_date
+                        and move.date > company_id.account_config_id.user_hard_lock_date
                     )
                 )
             else:
@@ -120,7 +122,9 @@ class AccountSecureEntriesWizard(models.TransientModel):
         )
         return res
 
-    @api.depends("company_id", "company_id.user_hard_lock_date", "hash_date")
+    @api.depends(
+        "company_id", "company_id.account_config_id.user_hard_lock_date", "hash_date"
+    )
     @_debug.perf.timed
     def _compute_data(self):
         for wizard in self:

@@ -264,8 +264,8 @@ class TestAccountMove(AccountTestInvoicingCommon):
     def test_misc_fiscalyear_lock_date_1(self):
         self.test_move.action_post()
 
-        self.test_move.company_id.fiscalyear_lock_date = fields.Date.from_string(
-            "2017-01-01"
+        self.test_move.company_id.account_config_id.fiscalyear_lock_date = (
+            fields.Date.from_string("2017-01-01")
         )
 
         self.test_move.ref = "whatever"
@@ -290,7 +290,8 @@ class TestAccountMove(AccountTestInvoicingCommon):
         copy_move = self.test_move.copy({"date": "2017-01-01"})
         self.assertEqual(
             copy_move.date,
-            copy_move.company_id.fiscalyear_lock_date + relativedelta(days=1),
+            copy_move.company_id.account_config_id.fiscalyear_lock_date
+            + relativedelta(days=1),
         )
 
     def test_misc_fiscalyear_lock_date_2(self):
@@ -306,14 +307,16 @@ class TestAccountMove(AccountTestInvoicingCommon):
         )
 
         with self.assertRaises(RedirectWarning):
-            self.test_move.company_id.fiscalyear_lock_date = fields.Date.from_string(
-                "2017-01-01"
+            self.test_move.company_id.account_config_id.fiscalyear_lock_date = (
+                fields.Date.from_string("2017-01-01")
             )
 
     def test_misc_tax_lock_date_1(self):
         self.test_move.action_post()
 
-        self.test_move.company_id.tax_lock_date = fields.Date.from_string("2017-01-01")
+        self.test_move.company_id.account_config_id.tax_lock_date = (
+            fields.Date.from_string("2017-01-01")
+        )
 
         self.test_move.line_ids[0].write(
             {"account_id": self.test_move.line_ids[0].account_id.copy().id}
@@ -606,7 +609,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(move.state, "posted")
 
     def test_entry_reverse_storno(self):
-        self.env.company.account_storno = True
+        self.env.company.account_config_id.account_storno = True
 
         move = self.env["account.move"].create(
             {
@@ -680,7 +683,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
                 "credit": 0.0,
             }
 
-            self.env.company.account_storno = is_storno
+            self.env.company.account_config_id.account_storno = is_storno
             move = self.env["account.move"].create(
                 {
                     "move_type": "entry",
@@ -759,8 +762,10 @@ class TestAccountMove(AccountTestInvoicingCommon):
                 "account_type": "asset_current",
             }
         )
-        self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.account_cash_basis_base_account_id = (
+            tax_base_amount_account
+        )
+        self.env.company.account_config_id.tax_exigibility = True
         tax_tags = defaultdict(dict)
         for line_type, repartition_type in [
             (l, r) for l in ("invoice", "refund") for r in ("base", "tax")

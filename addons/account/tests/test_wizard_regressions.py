@@ -8,7 +8,7 @@ from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.account.models.res_company import SOFT_LOCK_DATE_FIELDS
+from odoo.addons.account.models.account_config import SOFT_LOCK_DATE_FIELDS
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
@@ -77,8 +77,8 @@ class TestChangeLockDateWizardShape(TransactionCase):
 
     def test_the_wizard_locks_the_company_it_names(self):
         other = self.env["res.company"].create({"name": "Elsewhere Ltd"})
-        other.sudo().fiscalyear_lock_date = False
-        self.env.company.sudo().fiscalyear_lock_date = False
+        other.sudo().account_config_id.fiscalyear_lock_date = False
+        self.env.company.sudo().account_config_id.fiscalyear_lock_date = False
 
         wizard = (
             self.env["account.change.lock.date"]
@@ -89,19 +89,21 @@ class TestChangeLockDateWizardShape(TransactionCase):
         wizard.sudo().change_lock_date()
 
         self.assertEqual(
-            other.sudo().fiscalyear_lock_date,
+            other.sudo().account_config_id.fiscalyear_lock_date,
             date(2020, 12, 31),
             "the lock date belongs to the company the wizard names",
         )
         self.assertFalse(
-            self.env.company.sudo().fiscalyear_lock_date,
+            self.env.company.sudo().account_config_id.fiscalyear_lock_date,
             "and must not land on whichever company happened to be active",
         )
 
     def test_the_wizard_shows_the_dates_of_the_company_it_names(self):
         other = self.env["res.company"].create({"name": "Elsewhere Ltd"})
-        other.sudo().fiscalyear_lock_date = date(2019, 6, 30)
-        self.env.company.sudo().fiscalyear_lock_date = date(2021, 1, 31)
+        other.sudo().account_config_id.fiscalyear_lock_date = date(2019, 6, 30)
+        self.env.company.sudo().account_config_id.fiscalyear_lock_date = date(
+            2021, 1, 31
+        )
 
         wizard = (
             self.env["account.change.lock.date"]
@@ -110,7 +112,9 @@ class TestChangeLockDateWizardShape(TransactionCase):
         )
 
         self.assertEqual(wizard.fiscalyear_lock_date, date(2019, 6, 30))
-        self.assertEqual(wizard.current_hard_lock_date, other.hard_lock_date)
+        self.assertEqual(
+            wizard.current_hard_lock_date, other.account_config_id.hard_lock_date
+        )
 
     def test_the_tax_closing_warning_is_scoped_to_one_company(self):
         wizard = self.env["account.change.lock.date"].create(
@@ -241,7 +245,9 @@ class TestSigningUserFollowsTheState(AccountTestInvoicingCommon):
                 "group_ids": [Command.set([self.env.ref("base.group_user").id])],
             }
         )
-        self.env.company.write({"sign_invoice": True, "signing_user": signer.id})
+        self.env.company.account_config_id.write(
+            {"sign_invoice": True, "signing_user": signer.id}
+        )
         invoice = self.init_invoice("out_invoice", products=self.product_a, post=True)
         self.assertEqual(invoice.signing_user, signer, "posting decides the signer")
 

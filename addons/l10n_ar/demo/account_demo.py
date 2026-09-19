@@ -15,7 +15,7 @@ class AccountChartTemplate(models.AbstractModel):
             # Do not load generic demo data on these companies
             return {}
 
-        if company.account_fiscal_country_id.code == "AR":
+        if company.account_config_id.account_fiscal_country_id.code == "AR":
             demo_data = {
                 "res.partner": demo_data.pop("res.partner", {}),
                 **demo_data,
@@ -33,7 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
     @api.model
     def _prepare_demo_data_move(self, company=False):
         data = super()._prepare_demo_data_move(company)
-        if company.account_fiscal_country_id.code == "AR":
+        if company.account_config_id.account_fiscal_country_id.code == "AR":
             data[self.company_xmlid("demo_invoice_8")]["l10n_latam_document_number"] = (
                 "1-1"
             )

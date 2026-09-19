@@ -180,8 +180,8 @@ class AccountMove(models.Model):
         self.check_singleton()
         move_date = self.date or self.invoice_date or fields.Date.context_today(self)
         year_part = "%04d" % move_date.year
-        last_day = int(self.company_id.fiscalyear_last_day)
-        last_month = int(self.company_id.fiscalyear_last_month)
+        last_day = int(self.company_id.account_config_id.fiscalyear_last_day)
+        last_month = int(self.company_id.account_config_id.fiscalyear_last_month)
         is_staggered_year = last_month != 12 or last_day != 31
         if is_staggered_year:
             max_last_day = calendar.monthrange(move_date.year, last_month)[1]
@@ -251,8 +251,10 @@ class AccountMove(models.Model):
         if reset not in ("year_range", "year_range_month"):
             return super()._get_sequence_date_range(reset)
 
-        fiscalyear_last_day = self.company_id.fiscalyear_last_day
-        fiscalyear_last_month = int(self.company_id.fiscalyear_last_month)
+        fiscalyear_last_day = self.company_id.account_config_id.fiscalyear_last_day
+        fiscalyear_last_month = int(
+            self.company_id.account_config_id.fiscalyear_last_month
+        )
         date_start, date_end = date_utils.get_fiscal_year(
             self.date, day=fiscalyear_last_day, month=fiscalyear_last_month
         )

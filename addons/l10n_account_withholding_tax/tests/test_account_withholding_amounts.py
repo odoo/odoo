@@ -39,7 +39,9 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
                 "account_type": "asset_current",
             }
         )
-        cls.company_data["company"].tax_calculation_rounding_method = "round_per_line"
+        cls.company_data[
+            "company"
+        ].account_config_id.tax_calculation_rounding_method = "round_per_line"
 
     def test_case_a(self):
         vat_tax_incl_affecting = self.percent_tax(

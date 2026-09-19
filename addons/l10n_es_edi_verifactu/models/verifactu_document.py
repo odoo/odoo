@@ -1029,7 +1029,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
             .sudo()
             .search_count(
                 [
-                    ("account_fiscal_country_id.code", "=", "ES"),
+                    ("account_config_id.account_fiscal_country_id.code", "=", "ES"),
                 ],
                 limit=2,
             )

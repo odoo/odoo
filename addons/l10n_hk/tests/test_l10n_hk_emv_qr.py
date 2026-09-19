@@ -18,7 +18,7 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
     @AccountTestInvoicingCommon.setup_country("hk")
     def setUpClass(cls):
         super().setUpClass()
-        cls.company_data["company"].qr_code = True
+        cls.company_data["company"].account_config_id.qr_code = True
         cls.company_data["company"].partner_id.city = "HK"
 
         cls.acc_emv_hk = cls.env["res.partner.bank"].create(

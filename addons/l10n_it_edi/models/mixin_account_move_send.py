@@ -10,7 +10,7 @@ class MixinAccountMoveSend(models.AbstractModel):
     def _is_it_edi_applicable(self, move):
         return all(
             [
-                move.company_id.account_fiscal_country_id.code == "IT"
+                move.company_id.account_config_id.account_fiscal_country_id.code == "IT"
                 and move._l10n_it_edi_ready_for_xml_export()
                 and move.l10n_it_edi_state != "rejected"
             ]

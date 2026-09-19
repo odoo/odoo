@@ -103,7 +103,7 @@ class AccountChartTemplate(models.AbstractModel):
         accounts_data = super()._prepare_utility_account_vals(
             company, template_data, bank_prefix=bank_prefix, code_digits=code_digits
         )
-        if company.account_fiscal_country_id.code == "US":
+        if company.account_config_id.account_fiscal_country_id.code == "US":
             accounts_data["transfer_account_id"].update(
                 {
                     "name": self.env._("Funds in Transit"),

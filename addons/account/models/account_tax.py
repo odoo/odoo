@@ -158,12 +158,14 @@ class AccountTax(models.Model):
 
     @api.depends_context("company")
     def _compute_hide_tax_exigibility(self):
-        self.hide_tax_exigibility = self._get_settings_company().tax_exigibility
+        self.hide_tax_exigibility = self._get_settings_company().account_config_id.tax_exigibility
 
     @api.depends_context("company")
     @api.depends("fiscal_position_ids")
     def _compute_is_domestic(self):
-        domestic = self._get_settings_company().domestic_fiscal_position_id
+        domestic = (
+            self._get_settings_company().account_config_id.domestic_fiscal_position_id
+        )
         for tax in self:
             tax.is_domestic = (
                 not tax.fiscal_position_ids or domestic in tax.fiscal_position_ids
@@ -173,7 +175,9 @@ class AccountTax(models.Model):
     def _search_is_domestic(self, operator, value):
         if operator not in ("in", "not in"):
             return NotImplemented
-        domestic = self._get_settings_company().domestic_fiscal_position_id
+        domestic = (
+            self._get_settings_company().account_config_id.domestic_fiscal_position_id
+        )
         matches = Domain("fiscal_position_ids", "=", False) | Domain(
             "fiscal_position_ids", "in", domestic.ids
         )
@@ -183,7 +187,7 @@ class AccountTax(models.Model):
     @api.depends("fiscal_position_ids", "original_tax_ids")
     def _compute_display_alternative_taxes_field(self):
         for tax in self:
-            domestic = tax._get_settings_company().domestic_fiscal_position_id
+            domestic = tax._get_settings_company().account_config_id.domestic_fiscal_position_id
             tax.display_alternative_taxes_field = tax.original_tax_ids or (
                 tax.fiscal_position_ids and tax.fiscal_position_ids._origin != domestic
             )
@@ -642,17 +646,13 @@ class AccountTax(models.Model):
     def _compute_invoice_repartition_line_ids(self):
         for tax in self:
             if not tax.invoice_repartition_line_ids:
-                tax.invoice_repartition_line_ids = tax._get_repartition_lines(
-                    "invoice"
-                )
+                tax.invoice_repartition_line_ids = tax._get_repartition_lines("invoice")
 
     @api.depends("company_ids")
     def _compute_refund_repartition_line_ids(self):
         for tax in self:
             if not tax.refund_repartition_line_ids:
-                tax.refund_repartition_line_ids = tax._get_repartition_lines(
-                    "refund"
-                )
+                tax.refund_repartition_line_ids = tax._get_repartition_lines("refund")
 
     def _unmerge_action_xmlid(self):
         return "account.action_unmerge_taxes"
@@ -740,8 +740,8 @@ class AccountTax(models.Model):
                 continue
             for company in tax.company_ids:
                 allowed = (
-                    company.account_fiscal_country_id
-                    | company.multi_vat_foreign_country_ids
+                    company.account_config_id.account_fiscal_country_id
+                    | company.account_config_id.multi_vat_foreign_country_ids
                 )
                 if tax.country_id not in allowed:
                     _debug.logic(
@@ -1351,8 +1351,8 @@ class AccountTaxRepartitionLine(models.Model):
             company = rep_line.tax_id._get_settings_company()
             allowed_country_ids = (
                 False,
-                company.account_fiscal_country_id.id,
-                *company.multi_vat_foreign_country_ids.ids,
+                company.account_config_id.account_fiscal_country_id.id,
+                *company.account_config_id.multi_vat_foreign_country_ids.ids,
             )
             rep_line.tag_ids_domain = [
                 ("applicability", "=", "taxes"),

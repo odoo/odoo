@@ -7,7 +7,8 @@
         inherit_id="portal.address_form_fields"
         customize_show="True">
         <div id="div_vat" position="after">
-            <t t-if="res_company.account_fiscal_country_id.code == 'IT'">
+            <t
+                t-if="res_company.account_config_id.account_fiscal_country_id.code == 'IT'">
                 <div class="w-100" />
                 <div class="col-lg-6 mb-3" id="div_l10n_it_codice_fiscale">
                     <label class="col-form-label fw-normal label-optional" for="l10n_it_codice_fiscale">Codice Fiscale</label>

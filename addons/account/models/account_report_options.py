@@ -1512,7 +1512,7 @@ class AccountReportOptions(models.Model):
         ):
             options["selected_variant_id"] = previous_opt_report_id
         elif allowed_country_variant_ids:
-            country_id = self.env.company.account_fiscal_country_id.id
+            country_id = self.env.company.account_config_id.account_fiscal_country_id.id
             report_id = (
                 allowed_country_variant_ids.get(country_id)
                 or next(iter(allowed_country_variant_ids.values()))
@@ -1705,7 +1705,7 @@ class AccountReportOptions(models.Model):
             "show_draft": self.filter_show_draft,
             "show_hierarchy": options.get("display_hierarchy_filter", False),
             "show_period_comparison": self.filter_period_comparison,
-            "show_totals": self.env.company.totals_below_sections
+            "show_totals": self.env.company.account_config_id.totals_below_sections
             and not options.get("ignore_totals_below_sections"),
             "show_unreconciled": self.filter_unreconciled,
             "show_hide_0_lines": self.filter_hide_0_lines,
@@ -1953,7 +1953,10 @@ class AccountReportOptions(models.Model):
 
         # Handle foreign VAT
         if self.allow_foreign_vat:
-            if self.country_id == self.env.company.account_fiscal_country_id:
+            if (
+                self.country_id
+                == self.env.company.account_config_id.account_fiscal_country_id
+            ):
                 _debug.logic("foreign_vat_scope", report=self, scope="domestic")
                 # It's a domestic report
                 domains.append(
@@ -2196,8 +2199,8 @@ class AccountReportOptions(models.Model):
             )
 
         if not string:
-            fy_day = self.env.company.fiscalyear_last_day
-            fy_month = int(self.env.company.fiscalyear_last_month)
+            fy_day = self.env.company.account_config_id.fiscalyear_last_day
+            fy_month = int(self.env.company.account_config_id.fiscalyear_last_month)
             if mode == "single":
                 string = _("As of %s", format_date(self.env, date_to))
             elif period_type == "year" or (

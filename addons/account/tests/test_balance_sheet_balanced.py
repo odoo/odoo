@@ -569,10 +569,12 @@ class TestBalanceSheetBalanced(TestAccountReportsCommon):
         )
 
         coa_setup_data = {}
-        if coa in self.existing_companies.mapped("chart_template"):
+        if coa in self.existing_companies.account_config_id.mapped("chart_template"):
             companies = next(
                 iter(
-                    self.existing_companies.filtered(lambda c: c.chart_template == coa)
+                    self.existing_companies.filtered(
+                        lambda c: c.account_config_id.chart_template == coa
+                    )
                 )
             )
             self.env = self.env(

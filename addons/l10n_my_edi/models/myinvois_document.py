@@ -261,8 +261,8 @@ class MyInvoisDocument(models.Model):
             company = self.company_id
             return date_utils.get_fiscal_year(
                 self.myinvois_issuance_date,
-                day=company.fiscalyear_last_day,
-                month=int(company.fiscalyear_last_month),
+                day=company.account_config_id.fiscalyear_last_day,
+                month=int(company.account_config_id.fiscalyear_last_month),
             )
         return super()._get_sequence_date_range(reset)
 

@@ -878,7 +878,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         )
 
     def test_sale_order_postponed_invoicing_storno(self):
-        self.env.company.account_storno = True
+        self.env.company.account_config_id.account_storno = True
 
         tags = self.setup_tags()
         with freeze_time("2020-01-01"):
@@ -990,7 +990,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         )
 
     def test_sale_order_postponed_invoicing_anglosaxon(self):
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
         self.env.company.point_of_sale_update_stock_quantities = "closing"
         order, _ = self.create_backend_pos_order(
             {
@@ -1016,7 +1016,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.pos_config_usd.open_ui()
         current_session = self.pos_config_usd.current_session_id
         account = self.partner_jcb.property_account_receivable_id
-        current_session.company_id.account_default_pos_receivable_account_id = account
+        current_session.company_id.account_config_id.account_default_pos_receivable_account_id = account
 
         order, _ = self.create_backend_pos_order(
             {
@@ -1040,8 +1040,8 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(order.account_move.amount_residual, 0)
 
     def test_journal_entries_category_without_account(self):
-        self.env.company.income_account_id = False
-        self.env.company.expense_account_id = False
+        self.env.company.account_config_id.income_account_id = False
+        self.env.company.account_config_id.expense_account_id = False
         self.twenty_dollars_with_10_incl.write(
             {
                 "property_account_income_id": False,
@@ -1348,7 +1348,7 @@ class TestPointOfSaleFlow(CommonPosTest):
             {
                 "name": "Sub Company",
                 "parent_id": self.env.company.id,
-                "chart_template": self.env.company.chart_template,
+                "chart_template": self.env.company.account_config_id.chart_template,
                 "country_id": self.env.company.country_id.id,
             }
         )
@@ -1440,7 +1440,7 @@ class TestPointOfSaleFlow(CommonPosTest):
             {
                 "name": "Branch 1",
                 "parent_id": self.env.company.id,
-                "chart_template": self.env.company.chart_template,
+                "chart_template": self.env.company.account_config_id.chart_template,
             }
         )
 
@@ -2370,7 +2370,9 @@ class TestPointOfSaleFlow(CommonPosTest):
         )
 
     def test_open_ui_missing_country(self):
-        self.pos_config_usd.company_id.account_fiscal_country_id = False
+        self.pos_config_usd.company_id.account_config_id.account_fiscal_country_id = (
+            False
+        )
         with self.assertRaises(
             ValidationError, msg="The company must have a fiscal country set."
         ):
@@ -2381,7 +2383,7 @@ class TestPointOfSaleFlow(CommonPosTest):
             {
                 "name": "Branch 1",
                 "parent_id": self.env.company.id,
-                "chart_template": self.env.company.chart_template,
+                "chart_template": self.env.company.account_config_id.chart_template,
                 "country_id": self.env.company.country_id.id,
             }
         )

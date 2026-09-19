@@ -7,7 +7,7 @@
         primary="True">
         <xpath expr="//div[@name='shipping_address_block']" position="inside">
             <div
-                t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_is_gst_registered and o.partner_shipping_id.vat">
+                t-if="o.company_id.account_config_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_is_gst_registered and o.partner_shipping_id.vat">
                 GSTIN: <span t-field="o.partner_shipping_id.vat" />
             </div>
         </xpath>
@@ -51,7 +51,7 @@
             expr="//table[@name='invoice_line_table']/thead/tr/th[1]"
             position="after">
             <t
-                t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_is_gst_registered">
+                t-if="o.company_id.account_config_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_is_gst_registered">
                 <th>HSN/SAC</th>
             </t>
         </xpath>
@@ -60,7 +60,7 @@
             expr="//t[@name='account_invoice_line_accountable']/td[1]"
             position="after">
             <td
-                t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_is_gst_registered">
+                t-if="o.company_id.account_config_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_is_gst_registered">
                 <span t-if="line.l10n_in_hsn_code" t-field="line.l10n_in_hsn_code" />
             </td>
         </xpath>
@@ -68,13 +68,13 @@
         <xpath expr="//div[@id='qrcode_info']" position="attributes">
             <attribute
                 name="t-if"
-                add="o.company_id.account_fiscal_country_id.code != 'IN'"
+                add="o.company_id.account_config_id.account_fiscal_country_id.code != 'IN'"
                 separator="and" />
         </xpath>
 
         <xpath expr="//div[@id='qrcode_info']" position="after">
             <t
-                t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_upi_id">
+                t-if="o.company_id.account_config_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_upi_id">
                 <div style="display:-webkit-flex;" class="flex-column">
                     <strong>PAYMENT QR CODE</strong>
                     <div class="mt-1 mb-1">
@@ -114,7 +114,7 @@
 
         <xpath expr="//div[@id='payment_term']" position="after">
             <t
-                t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_is_gst_registered">
+                t-if="o.company_id.account_config_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_is_gst_registered">
                 <t t-set="hsn_summary" t-value="o._l10n_in_get_hsn_summary_table()" />
                 <t t-if="hsn_summary">
                     <div

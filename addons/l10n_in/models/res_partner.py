@@ -180,7 +180,10 @@ class ResPartner(models.Model):
     def action_l10n_in_verify_gstin_status(self):
         self.check_singleton()
         self.check_access("write")
-        if self.env.company.sudo().account_fiscal_country_id.code != "IN":
+        if (
+            self.env.company.sudo().account_config_id.account_fiscal_country_id.code
+            != "IN"
+        ):
             raise UserError(
                 _("You must be logged in an Indian company to use this feature")
             )

@@ -47,7 +47,7 @@ class ResPartner(models.Model):
 
         company = self.env.company
 
-        if not company.account_use_credit_limit:
+        if not company.account_config_id.account_use_credit_limit:
             _debug.logic("credit_to_invoice_skipped", reason="credit_limit_disabled")
             return
 

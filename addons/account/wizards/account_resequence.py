@@ -178,8 +178,8 @@ class AccountResequenceWizard(models.TransientModel):
         company = move.company_id
         date_start, date_end = get_fiscal_year(
             move.date,
-            day=company.fiscalyear_last_day,
-            month=int(company.fiscalyear_last_month),
+            day=company.account_config_id.fiscalyear_last_day,
+            month=int(company.account_config_id.fiscalyear_last_month),
         )
         match sequence_number_reset:
             case "year":

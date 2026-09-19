@@ -9,6 +9,9 @@ class AccountMove(models.Model):
         template = self.env.ref(
             "l10n_nz.report_invoice_document", raise_if_not_found=False
         )
-        if template and self.company_id.account_fiscal_country_id.code == "NZ":
+        if (
+            template
+            and self.company_id.account_config_id.account_fiscal_country_id.code == "NZ"
+        ):
             return "l10n_nz.report_invoice_document"
         return super()._get_name_invoice_report()

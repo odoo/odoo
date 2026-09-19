@@ -46,8 +46,10 @@ class AccountChartTemplate(models.AbstractModel):
             bank_tags = self.env.ref(
                 "l10n_at.account_tag_external_code_2300"
             ) | self.env.ref("l10n_at.account_tag_l10n_at_ABIV")
-            company.account_journal_suspense_account_id.tag_ids = bank_tags
-            company.transfer_account_id.tag_ids = self.env.ref(
+            company.account_config_id.account_journal_suspense_account_id.tag_ids = (
+                bank_tags
+            )
+            company.account_config_id.transfer_account_id.tag_ids = self.env.ref(
                 "l10n_at.account_tag_external_code_2885"
             ) | self.env.ref("l10n_at.account_tag_l10n_at_ABIV")
 

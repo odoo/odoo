@@ -892,7 +892,7 @@ class AccountReportActions(models.Model):
                 .sudo()
                 .search(
                     [
-                        ("account_opening_date", "!=", False),
+                        ("account_config_id.account_opening_date", "!=", False),
                         ("id", "parent_of", self.env.companies.ids),
                     ]
                 )

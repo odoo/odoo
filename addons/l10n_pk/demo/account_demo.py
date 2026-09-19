@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @api.model
     def _prepare_demo_data_move(self, company=False):
         moves = super()._prepare_demo_data_move(company)
-        if company.account_fiscal_country_id.code == "PK":
+        if company.account_config_id.account_fiscal_country_id.code == "PK":
             sale_journal = self.env["account.journal"].search(
                 domain=[
                     *self.env["account.journal"]._check_company_domain(
@@ -279,7 +279,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _post_load_demo_data(self, company=False):
         company = company or self.env.company
-        if company.account_fiscal_country_id.code == "PK":
+        if company.account_config_id.account_fiscal_country_id.code == "PK":
             invoices = (
                 self.ref("l10n_pk_demo_invoice_1")
                 + self.ref("l10n_pk_demo_invoice_2")

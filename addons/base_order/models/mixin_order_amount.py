@@ -130,7 +130,8 @@ class MixinOrderAmount(models.AbstractModel):
             order = order.with_company(order.company_id)
             order.partner_credit_warning = ""
             show_warning = (
-                order.state == "draft" and order.company_id.account_use_credit_limit
+                order.state == "draft"
+                and order.company_id.account_config_id.account_use_credit_limit
             )
             _debug.logic("credit_warning_checked", order=order, show=bool(show_warning))
             if show_warning:

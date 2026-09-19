@@ -75,7 +75,9 @@ class TestBatchETransportParity(TestL10nRoEdiStockCommon):
     def test_the_batch_amend_defect_is_dormant_because_state_is_gated_too(self):
         batch = self._make_batch(self._make_picking())
         self._validated_then_failed("batch_id", batch)
-        batch.company_id.account_fiscal_country_id = self.env.ref("base.be")
+        batch.company_id.account_config_id.account_fiscal_country_id = self.env.ref(
+            "base.be"
+        )
         batch.invalidate_recordset()
         self.assertFalse(batch.l10n_ro_edi_stock_enable)
         self.assertFalse(
@@ -131,7 +133,7 @@ class TestBatchETransportParity(TestL10nRoEdiStockCommon):
     def test_the_bridge_does_not_widen_which_companies_may_file(self):
         picking = self._make_picking()
         company = picking.company_id
-        company.account_fiscal_country_id = self.env.ref("base.be")
+        company.account_config_id.account_fiscal_country_id = self.env.ref("base.be")
         picking.invalidate_recordset()
         self.assertEqual(company.country_id.code, "RO")
         self.assertFalse(

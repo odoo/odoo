@@ -90,7 +90,7 @@ class TestPosSessionAudit(TestPoSCommon):
         session = self._start_pos_session(self.cash_pm1, 0)
         session.start_at = False
         lock_date = fields.Date.today() - timedelta(days=2)
-        session.company_id.fiscalyear_lock_date = lock_date
+        session.company_id.account_config_id.fiscalyear_lock_date = lock_date
 
         with self.assertRaises(ValidationError):
             session.start_at = fields.Datetime.to_datetime(lock_date)

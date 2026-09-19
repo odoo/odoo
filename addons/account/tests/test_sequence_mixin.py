@@ -18,7 +18,7 @@ class TestSequenceMixinCommon(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company_data["company"].write(
+        cls.company_data["company"].account_config_id.write(
             {"fiscalyear_last_day": "31", "fiscalyear_last_month": "3"}
         )
         cls.test_move = cls.create_move()
@@ -100,9 +100,9 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.assertMoveName(self.test_move, "MyMISC/2020/0000001")
 
     def test_sequence_change_date_with_quick_edit_mode(self):
-        self.env.company.quick_edit_mode = "out_and_in_invoices"
-        self.env.company.fiscalyear_last_day = 30
-        self.env.company.fiscalyear_last_month = "12"
+        self.env.company.account_config_id.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.account_config_id.fiscalyear_last_day = 30
+        self.env.company.account_config_id.fiscalyear_last_month = "12"
 
         bill = self.env["account.move"].create(
             {
@@ -161,7 +161,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             self.assertMoveName(invoice_form, "INV/16-17/0001")
 
     def test_sequence_empty_editable_with_quick_edit_mode(self):
-        self.env.company.quick_edit_mode = "in_invoices"
+        self.env.company.account_config_id.quick_edit_mode = "in_invoices"
 
         bill_1 = self.env["account.move"].create(
             {
@@ -694,9 +694,9 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         )
 
     def test_sequence_staggered_year(self):
-        self.env.company.quick_edit_mode = "out_and_in_invoices"
-        self.env.company.fiscalyear_last_day = 15
-        self.env.company.fiscalyear_last_month = "4"
+        self.env.company.account_config_id.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.account_config_id.fiscalyear_last_day = 15
+        self.env.company.account_config_id.fiscalyear_last_month = "4"
 
         bill = self.env["account.move"].create(
             {

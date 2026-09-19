@@ -121,8 +121,8 @@ class TestPosAccountingUnits(TestPoSCommon):
                 "rounding": 0.05,
                 "rounding_method": "HALF-UP",
                 "strategy": "add_invoice_line",
-                "profit_account_id": self.env.company.default_cash_difference_income_account_id.id,
-                "loss_account_id": self.env.company.default_cash_difference_expense_account_id.id,
+                "profit_account_id": self.env.company.account_config_id.default_cash_difference_income_account_id.id,
+                "loss_account_id": self.env.company.account_config_id.default_cash_difference_expense_account_id.id,
             }
         )
         self.config.write(
@@ -163,7 +163,9 @@ class TestPosAccountingUnits(TestPoSCommon):
 
     def test_get_balancing_account_uses_company_pos_receivable(self):
         session = self._start_pos_session(self.cash_pm1, 0)
-        expected = self.env.company.account_default_pos_receivable_account_id
+        expected = (
+            self.env.company.account_config_id.account_default_pos_receivable_account_id
+        )
         self.assertTrue(
             expected, "the company should carry a default POS receivable account"
         )
@@ -222,7 +224,7 @@ class TestPosSessionAmountBuilders(TestPoSCommon):
     def test_credit_and_debit_amounts_sign_split(self):
         session = self._start_pos_session(self.cash_pm1, 0)
         partial = {
-            "account_id": self.env.company.account_default_pos_receivable_account_id.id
+            "account_id": self.env.company.account_config_id.account_default_pos_receivable_account_id.id
         }
 
         credit = session._prepare_credit_line_vals(dict(partial), 50.0, 50.0)

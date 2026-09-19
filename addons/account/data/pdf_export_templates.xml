@@ -113,8 +113,8 @@
 
         <t t-if="options.get('tax_unit', 'company_only') == 'company_only'">
             <t
-                t-if="env.company.account_fiscal_country_id.vat_label"
-                t-out="env.company.account_fiscal_country_id.vat_label+':'" />
+                t-if="env.company.account_config_id.account_fiscal_country_id.vat_label"
+                t-out="env.company.account_config_id.account_fiscal_country_id.vat_label+':'" />
             <t t-else="">Tax ID:</t>
             <t t-out="env.company.vat" />
         </t>
@@ -405,7 +405,7 @@
                 <t t-foreach="line.get('columns')" t-as="cell">
                     <td class="o_cell_td">
                         <t
-                            t-if="not env.company.totals_below_sections or options.get('ignore_totals_below_sections') or not line.get('unfolded')">
+                            t-if="not env.company.account_config_id.totals_below_sections or options.get('ignore_totals_below_sections') or not line.get('unfolded')">
                             <t
                                 t-call="{{custom_templates.get('pdf_export_cell', 'account.pdf_export_cell')}}" />
                         </t>

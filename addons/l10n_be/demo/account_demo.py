@@ -11,7 +11,7 @@ class AccountChartTemplate(models.AbstractModel):
             return [Command.link(tag.id)] if tag else []
 
         demo_data = super()._prepare_demo_data(company)
-        if company.chart_template.startswith("be"):
+        if company.account_config_id.chart_template.startswith("be"):
             cid = company.id
             account_data = demo_data.setdefault("account.account", {})
             account_tag_map = {

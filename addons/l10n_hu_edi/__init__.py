@@ -4,7 +4,7 @@ from . import wizards
 
 def post_init(env):
     for company in env["res.company"].search(
-        [("chart_template", "=", "hu")], order="parent_path"
+        [("account_config_id.chart_template", "=", "hu")], order="parent_path"
     ):
         # Apply default cash rounding configuration
         company._l10n_hu_edi_configure_company()

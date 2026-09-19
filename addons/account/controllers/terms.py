@@ -11,7 +11,7 @@ def sitemap_terms(env, rule, qs):
     use_invoice_terms = (
         env["ir.config_parameter"].sudo().get_param("account.use_invoice_terms")
     )
-    if use_invoice_terms and env.company.terms_type == "html":
+    if use_invoice_terms and env.company.account_config_id.terms_type == "html":
         yield {"loc": "/terms"}
 
 
@@ -26,7 +26,10 @@ class TermsController(http.Controller):
             .sudo()
             .get_param("account.use_invoice_terms")
         )
-        if not (use_invoice_terms and request.env.company.terms_type == "html"):
+        if not (
+            use_invoice_terms
+            and request.env.company.account_config_id.terms_type == "html"
+        ):
             return request.render(
                 "http_routing.http_error",
                 {

@@ -27,13 +27,14 @@ class AccountJournal(models.Model):
 
         for journal in self.filtered(lambda j: j.type == "general"):
             is_return_journal = (
-                journal == journal.company_id.account_tax_return_journal_id
+                journal
+                == journal.company_id.account_config_id.account_tax_return_journal_id
             )
             dashboard_data[journal.id]["is_account_return_journal"] = is_return_journal
             if is_return_journal:
                 dashboard_data[journal.id]["tax_return_button_primary"] = (
                     journal.company_id in companies_with_returns_to_do
-                    or not journal.company_id.account_opening_date
+                    or not journal.company_id.account_config_id.account_opening_date
                 )
 
     @_debug.perf.timed

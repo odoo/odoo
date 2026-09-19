@@ -20,7 +20,7 @@ class AccountMove(models.Model):
         journal document number with a 8 padding number"""
         if (
             self.l10n_latam_use_documents
-            and self.company_id.account_fiscal_country_id.code == "UY"
+            and self.company_id.account_config_id.account_fiscal_country_id.code == "UY"
             and self.l10n_latam_document_type_id
         ):
             return self._l10n_uy_get_formatted_sequence()
@@ -32,7 +32,7 @@ class AccountMove(models.Model):
     def _get_domain_last_sequence(self, relaxed=False):
         domain = super()._get_domain_last_sequence(relaxed)
         if (
-            self.company_id.account_fiscal_country_id.code == "UY"
+            self.company_id.account_config_id.account_fiscal_country_id.code == "UY"
             and self.l10n_latam_use_documents
         ):
             document_type = self.l10n_latam_document_type_id

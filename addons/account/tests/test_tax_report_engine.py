@@ -772,7 +772,7 @@ class TestTaxReport(TestAccountReportsCommon):
         tax_report = self.env["account.report"].create(
             {
                 "name": "Test",
-                "country_id": company.account_fiscal_country_id.id,
+                "country_id": company.account_config_id.account_fiscal_country_id.id,
                 "root_report_id": self.env.ref("account.generic_tax_report").id,
                 "column_ids": [
                     Command.create(
@@ -1240,7 +1240,7 @@ class TestTaxReport(TestAccountReportsCommon):
         today = fields.Date.today()
 
         company = self.company_data["company"]
-        company.tax_exigibility = True
+        company.account_config_id.tax_exigibility = True
         partner = self.env["res.partner"].create({"name": "Char Aznable"})
 
         # Create a tax report
@@ -1476,7 +1476,7 @@ class TestTaxReport(TestAccountReportsCommon):
         """Tests mixing taxes with different tax exigibilities displays correct amounts
         in the generic tax report.
         """
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.tax_exigibility = True
         # Create taxes
         regular_tax = self.env["account.tax"].create(
             {
@@ -1579,7 +1579,7 @@ class TestTaxReport(TestAccountReportsCommon):
         """Tests mixing caba and non-caba taxes with one of them affecting the base
         of the other works properly on invoices for the generic report.
         """
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.tax_exigibility = True
         # Create taxes
         regular_tax = self.env["account.tax"].create(
             {
@@ -1674,7 +1674,7 @@ class TestTaxReport(TestAccountReportsCommon):
         """Tests mixing caba and non-caba taxes with one of them affecting the base
         of the other works properly on invoices for the tax report.
         """
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.tax_exigibility = True
         # Create taxes
         tax_report = self.env["account.report"].create(
             {
@@ -2068,7 +2068,7 @@ class TestTaxReport(TestAccountReportsCommon):
                 # We use default repartition: 1 base line, 1 100% tax line
             }
         )
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.tax_exigibility = True
 
         # Make one invoice of 2 lines for each of our taxes
         invoice_date = fields.Date.from_string("2021-04-01")
@@ -2807,7 +2807,7 @@ class TestTaxReport(TestAccountReportsCommon):
         """Cancelling the reconciliation of an invoice using cash basis taxes should reverse the cash basis move
         in such a way that the original cash basis move lines' impact falls down to 0.
         """
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.tax_exigibility = True
 
         tax_report = self.env["account.report"].create(
             {
@@ -2987,7 +2987,7 @@ class TestTaxReport(TestAccountReportsCommon):
                     "name": "The Local Tax Report",
                     "country_id": self.company_data[
                         "company"
-                    ].account_fiscal_country_id.id,
+                    ].account_config_id.account_fiscal_country_id.id,
                     "root_report_id": self.env.ref("account.generic_tax_report").id,
                     "column_ids": [
                         Command.create(
@@ -3556,7 +3556,7 @@ class TestTaxReport(TestAccountReportsCommon):
 
     def test_caba_negative_lines_with_multiple_accounts(self):
         """One invoice with 2 lines on 2 income accounts, one with a negative total, both with a caba tax."""
-        self.company_data["company"].tax_exigibility = True
+        self.company_data["company"].account_config_id.tax_exigibility = True
         account_1 = self.company_data["default_account_revenue"]
         account_2 = self.company_data["default_account_assets"]
         caba_tax_10 = self.env["account.tax"].create(
@@ -3657,7 +3657,7 @@ class TestTaxReport(TestAccountReportsCommon):
         when it is part of a tax group.
         """
 
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.tax_exigibility = True
 
         regular_tax = self.env["account.tax"].create(
             {

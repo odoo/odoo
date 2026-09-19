@@ -12,7 +12,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _prepare_demo_data(self, company=False):
-        if company.account_fiscal_country_id.code == "UY":
+        if company.account_config_id.account_fiscal_country_id.code == "UY":
             return {
                 "res.partner": self._l10n_uy_prepare_demo_data_res_partner(company),
                 "account.move": self._l10n_uy_prepare_demo_data_move(company),
@@ -24,7 +24,7 @@ class AccountChartTemplate(models.AbstractModel):
             return super()._prepare_demo_data(company)
 
     def _post_load_demo_data(self, company=False):
-        if company.account_fiscal_country_id.code != "UY":
+        if company.account_config_id.account_fiscal_country_id.code != "UY":
             return super()._post_load_demo_data(company)
         invoices = (
             self.ref("demo_invoice_1")

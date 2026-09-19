@@ -71,11 +71,13 @@ class ResPartnerBank(models.Model):
                 )
             elif bank.company_id:
                 bank.l10n_ch_display_qr_bank_options = (
-                    bank.company_id.account_fiscal_country_id.code in ("CH", "LI")
+                    bank.company_id.account_config_id.account_fiscal_country_id.code
+                    in ("CH", "LI")
                 )
             else:
                 bank.l10n_ch_display_qr_bank_options = (
-                    self.env.company.account_fiscal_country_id.code in ("CH", "LI")
+                    self.env.company.account_config_id.account_fiscal_country_id.code
+                    in ("CH", "LI")
                 )
 
     @api.depends("acc_number")

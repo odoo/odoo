@@ -3,7 +3,7 @@ from . import models
 
 def _l10n_it_edi_doi_post_init(env):
     for company in env["res.company"].search(
-        [("chart_template", "=", "it"), ("parent_id", "=", False)]
+        [("account_config_id.chart_template", "=", "it"), ("parent_id", "=", False)]
     ):
         template = env["account.chart.template"].with_company(company)
         template._load_data(

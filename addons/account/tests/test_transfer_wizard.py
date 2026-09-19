@@ -620,7 +620,9 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         )
 
     def test_period_change_lock_date(self):
-        self.company_data["company"].expense_accrual_account_id = self.env[
+        self.company_data[
+            "company"
+        ].account_config_id.expense_accrual_account_id = self.env[
             "account.account"
         ].create(
             {
@@ -630,7 +632,9 @@ class TestTransferWizard(AccountTestInvoicingCommon):
                 "reconcile": True,
             }
         )
-        self.company_data["company"].revenue_accrual_account_id = self.env[
+        self.company_data[
+            "company"
+        ].account_config_id.revenue_accrual_account_id = self.env[
             "account.account"
         ].create(
             {
@@ -662,7 +666,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         )
         move.action_post()
 
-        move.company_id.write(
+        move.company_id.account_config_id.write(
             {
                 "hard_lock_date": "2019-02-28",
                 "fiscalyear_lock_date": "2019-02-28",
@@ -738,7 +742,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         )
         move.action_post()
 
-        move.company_id.write({"tax_lock_date": "2019-02-28"})
+        move.company_id.account_config_id.write({"tax_lock_date": "2019-02-28"})
 
         wizard = (
             self.env["account.automatic.entry.wizard"]
@@ -951,7 +955,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
             groups="account.group_account_user,account.group_account_manager",
             company_id=self.company.id,
         )
-        self.assertFalse(self.company.expense_accrual_account_id)
+        self.assertFalse(self.company.account_config_id.expense_accrual_account_id)
 
         context = {
             "active_model": "account.move.line",
@@ -967,7 +971,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         wizard_as_non_manager.expense_accrual_account = accrual_account
         wizard_as_non_manager._inverse_expense_accrual_account()
         self.assertFalse(
-            self.company.expense_accrual_account_id,
+            self.company.account_config_id.expense_accrual_account_id,
             "a non-manager must not be able to change the company's accrual default",
         )
 
@@ -980,7 +984,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         wizard_as_manager.expense_accrual_account = accrual_account
         wizard_as_manager._inverse_expense_accrual_account()
         self.assertEqual(
-            self.company.expense_accrual_account_id,
+            self.company.account_config_id.expense_accrual_account_id,
             accrual_account,
             "a manager must still be able to set the company's accrual default",
         )

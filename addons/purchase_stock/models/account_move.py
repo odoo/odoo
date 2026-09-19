@@ -50,7 +50,7 @@ class AccountMove(models.Model):
         for move in self:
             if (
                 move.move_type not in ("in_invoice", "in_refund", "in_receipt")
-                or not move.company_id.anglo_saxon_accounting
+                or not move.company_id.account_config_id.anglo_saxon_accounting
             ):
                 continue
 

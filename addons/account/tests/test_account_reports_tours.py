@@ -28,7 +28,7 @@ class TestAccountReportsTours(AccountTestInvoicingHttpCommon):
 
         cls.bank_suspense_account = cls.company_data[
             "company"
-        ].account_journal_suspense_account_id
+        ].account_config_id.account_journal_suspense_account_id
 
         cls.account_101404 = cls.env["account.account"].search(
             [

@@ -770,7 +770,8 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
 
         imported = invoice.journal_id._create_document_from_attachment(attachment.ids)
         self.assertEqual(
-            imported.tax_country_id, self.env.company.account_fiscal_country_id
+            imported.tax_country_id,
+            self.env.company.account_config_id.account_fiscal_country_id,
         )
         self.assertNotEqual(imported.invoice_line_ids.tax_ids, german_tax)
         self.assertEqual(imported.invoice_line_ids.tax_ids, domestic_tax)

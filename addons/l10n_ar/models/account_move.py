@@ -68,7 +68,7 @@ class AccountMove(models.Model):
         """Do not let to create not invoices entries in journals that use documents"""
         not_invoices = self.filtered(
             lambda x: (
-                x.company_id.account_fiscal_country_id.code == "AR"
+                x.company_id.account_config_id.account_fiscal_country_id.code == "AR"
                 and x.journal_id.type in ["sale", "purchase"]
                 and x.l10n_latam_use_documents
                 and not x.is_invoice()
@@ -119,7 +119,7 @@ class AccountMove(models.Model):
     def _compute_l10n_ar_afip_concept(self):
         recs_afip = self.filtered(
             lambda x: (
-                x.company_id.account_fiscal_country_id.code == "AR"
+                x.company_id.account_config_id.account_fiscal_country_id.code == "AR"
                 and x.l10n_latam_use_documents
             )
         )
@@ -182,7 +182,10 @@ class AccountMove(models.Model):
     def _get_domain_l10n_latam_documents(self):
         self.check_singleton()
         domain = super()._get_domain_l10n_latam_documents()
-        if self.journal_id.company_id.account_fiscal_country_id.code == "AR":
+        if (
+            self.journal_id.company_id.account_config_id.account_fiscal_country_id.code
+            == "AR"
+        ):
             letters = self.journal_id._get_journal_letter(
                 counterpart_partner=self.partner_id.commercial_partner_id
             )
@@ -266,7 +269,7 @@ class AccountMove(models.Model):
     @api.onchange("partner_id")
     def _onchange_afip_responsibility(self):
         if (
-            self.company_id.account_fiscal_country_id.code == "AR"
+            self.company_id.account_config_id.account_fiscal_country_id.code == "AR"
             and self.l10n_latam_use_documents
             and self.partner_id
             and not self.partner_id.l10n_ar_afip_responsibility_type_id
@@ -287,7 +290,7 @@ class AccountMove(models.Model):
         expo_journals = ["FEERCEL", "FEEWS", "FEERCELP"]
         for rec in self.filtered(
             lambda x: (
-                x.company_id.account_fiscal_country_id.code == "AR"
+                x.company_id.account_config_id.account_fiscal_country_id.code == "AR"
                 and x.journal_id.type == "sale"
                 and x.l10n_latam_use_documents
                 and x.partner_id.l10n_ar_afip_responsibility_type_id
@@ -338,7 +341,7 @@ class AccountMove(models.Model):
         super()._compute_l10n_latam_document_type_id()
         foreign_vendor_bills = self.filtered(
             lambda x: (
-                x.company_id.account_fiscal_country_id.code == "AR"
+                x.company_id.account_config_id.account_fiscal_country_id.code == "AR"
                 and x.state == "draft"
                 and x.move_type in ["in_invoice", "in_refund"]
                 and x.l10n_latam_document_type_id
@@ -354,7 +357,7 @@ class AccountMove(models.Model):
     def _post_entries(self):
         ar_invoices = self.filtered(
             lambda x: (
-                x.company_id.account_fiscal_country_id.code == "AR"
+                x.company_id.account_config_id.account_fiscal_country_id.code == "AR"
                 and x.l10n_latam_use_documents
             )
         )
@@ -436,7 +439,7 @@ class AccountMove(models.Model):
         journal document number with a 8 padding number"""
         if (
             self.l10n_latam_use_documents
-            and self.company_id.account_fiscal_country_id.code == "AR"
+            and self.company_id.account_config_id.account_fiscal_country_id.code == "AR"
         ):
             if self.l10n_latam_document_type_id:
                 return self._get_formatted_sequence()
@@ -445,7 +448,7 @@ class AccountMove(models.Model):
     def _get_domain_last_sequence(self, relaxed=False):
         domain = super()._get_domain_last_sequence(relaxed)
         if (
-            self.company_id.account_fiscal_country_id.code == "AR"
+            self.company_id.account_config_id.account_fiscal_country_id.code == "AR"
             and self.l10n_latam_use_documents
         ):
             document_type = self.l10n_latam_document_type_id
@@ -648,7 +651,7 @@ class AccountMove(models.Model):
         self.check_singleton()
         if (
             self.l10n_latam_use_documents
-            and self.company_id.account_fiscal_country_id.code == "AR"
+            and self.company_id.account_config_id.account_fiscal_country_id.code == "AR"
         ):
             return "l10n_ar.report_invoice_document"
         return super()._get_name_invoice_report()

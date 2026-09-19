@@ -26,7 +26,7 @@ class AccountChartTemplate(models.AbstractModel):
         company = self.env.company
         return {
             company.id: {
-                "account_tax_return_journal_id": company.account_tax_return_journal_id.id
+                "account_tax_return_journal_id": company.account_config_id.account_tax_return_journal_id.id
                 or "tax_returns",
             },
         }

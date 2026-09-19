@@ -7,7 +7,7 @@
         <t t-call="web.external_layout" position="before">
             <t t-set="uz_company_registry_external_layout">
                 <li
-                    t-if="o.company_id.company_registry and o.company_id.account_fiscal_country_id.code == 'UZ'">
+                    t-if="o.company_id.company_registry and o.company_id.account_config_id.account_fiscal_country_id.code == 'UZ'">
                     VAT Registry (VAT ID): <span t-field="o.company_id.company_registry" />
                 </li>
             </t>
@@ -16,7 +16,7 @@
             <t t-set="address">
                 <t t-out="address" />
                 <t
-                    t-if="o.partner_id.company_registry and o.company_id.account_fiscal_country_id.code == 'UZ'">
+                    t-if="o.partner_id.company_registry and o.company_id.account_config_id.account_fiscal_country_id.code == 'UZ'">
                     VAT Registry (VAT ID): <span t-field="o.partner_id.company_registry" />
                 </t>
             </t>

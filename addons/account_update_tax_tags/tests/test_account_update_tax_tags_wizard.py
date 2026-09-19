@@ -611,7 +611,7 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
 
     def test_update_with_caba_taxes(self):
         """Ensure the CABA (cash basis) moves linked to the invoices are updated too."""
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.tax_exigibility = True
         tax = self._create_tax(
             "caba_tax",
             15,
@@ -671,7 +671,7 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
         )
 
     def test_update_caba_taxes_with_negative_line(self):
-        self.company.tax_exigibility = True
+        self.company.account_config_id.tax_exigibility = True
         tax = self._create_tax(
             "caba_tax",
             15,

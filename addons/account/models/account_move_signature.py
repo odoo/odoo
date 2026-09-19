@@ -17,7 +17,12 @@ class AccountMove(models.Model):
     show_signature_area = fields.Boolean(compute="_compute_signature_area")
     signature = fields.Binary(compute="_compute_signature_area")
 
-    @api.depends("state", "move_type", "invoice_user_id", "company_id.signing_user")
+    @api.depends(
+        "state",
+        "move_type",
+        "invoice_user_id",
+        "company_id.account_config_id.signing_user",
+    )
     @api.depends_context("uid")
     @_debug.perf.timed
     def _compute_signing_user(self):
@@ -30,7 +35,7 @@ class AccountMove(models.Model):
         is_backend_user = self.env.user.has_group("base.group_user")
 
         for invoice in self - unsigned:
-            representative = invoice.company_id.signing_user
+            representative = invoice.company_id.account_config_id.signing_user
             if is_odoobot_user:
                 user_can_sign = (
                     invoice.invoice_user_id
@@ -45,7 +50,10 @@ class AccountMove(models.Model):
                 )
 
     @api.depends(
-        "state", "signing_user", "company_id.sign_invoice", "invoice_pdf_report_id"
+        "state",
+        "signing_user",
+        "company_id.account_config_id.sign_invoice",
+        "invoice_pdf_report_id",
     )
     @api.depends_context("uid")
     @_debug.perf.timed
@@ -53,7 +61,7 @@ class AccountMove(models.Model):
         is_portal_user = self.env.user.has_group("base.group_portal")
         moves_not_to_sign = self.filtered(
             lambda inv: (
-                not inv.company_id.sign_invoice
+                not inv.company_id.account_config_id.sign_invoice
                 or inv.state in {"draft", "cancel"}
                 or not inv.is_sale_document()
                 or (is_portal_user and not inv.invoice_pdf_report_id)

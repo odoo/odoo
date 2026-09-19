@@ -17,8 +17,8 @@ class TestFiscalPositionReconcile(AccountTestInvoicingCommon):
 
     def test_default_fiscal_year(self):
         company = self.env.company
-        company.fiscalyear_last_day = 31
-        company.fiscalyear_last_month = "12"
+        company.account_config_id.fiscalyear_last_day = 31
+        company.account_config_id.fiscalyear_last_month = "12"
 
         self.check_compute_fiscal_year(
             company,
@@ -36,8 +36,8 @@ class TestFiscalPositionReconcile(AccountTestInvoicingCommon):
 
     def test_leap_fiscal_year_1(self):
         company = self.env.company
-        company.fiscalyear_last_day = 29
-        company.fiscalyear_last_month = "2"
+        company.account_config_id.fiscalyear_last_day = 29
+        company.account_config_id.fiscalyear_last_month = "2"
 
         self.check_compute_fiscal_year(
             company,
@@ -55,8 +55,8 @@ class TestFiscalPositionReconcile(AccountTestInvoicingCommon):
 
     def test_leap_fiscal_year_2(self):
         company = self.env.company
-        company.fiscalyear_last_day = 28
-        company.fiscalyear_last_month = "2"
+        company.account_config_id.fiscalyear_last_day = 28
+        company.account_config_id.fiscalyear_last_month = "2"
 
         self.check_compute_fiscal_year(
             company,
@@ -74,8 +74,8 @@ class TestFiscalPositionReconcile(AccountTestInvoicingCommon):
 
     def test_custom_fiscal_year(self):
         company = self.env.company
-        company.fiscalyear_last_day = 31
-        company.fiscalyear_last_month = "12"
+        company.account_config_id.fiscalyear_last_day = 31
+        company.account_config_id.fiscalyear_last_month = "12"
 
         self.env["account.fiscal.year"].create(
             {

@@ -243,7 +243,9 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
         journal, journal_currency, _company_currency = (
             self._get_bank_journal_and_currencies(options)
         )
-        exchange_journal = journal.company_id.currency_exchange_journal_id
+        exchange_journal = (
+            journal.company_id.account_config_id.currency_exchange_journal_id
+        )
 
         bank_miscellaneous_domain = self._get_domain_bank_miscellaneous_move_lines(
             options, journal
@@ -995,16 +997,22 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
         if fiscal_lock_date != date.min:
             domain.append(("date", ">", fiscal_lock_date))
 
-        if journal.company_id.account_opening_move_id:
+        if journal.company_id.account_config_id.account_opening_move_id:
             domain.append(
-                ("move_id", "!=", journal.company_id.account_opening_move_id.id)
+                (
+                    "move_id",
+                    "!=",
+                    journal.company_id.account_config_id.account_opening_move_id.id,
+                )
             )
         _debug.logic(
             "misc_lines_domain_restricted",
             report=report,
             journal=journal,
             after_lock_date=fiscal_lock_date != date.min,
-            opening_move_excluded=bool(journal.company_id.account_opening_move_id),
+            opening_move_excluded=bool(
+                journal.company_id.account_config_id.account_opening_move_id
+            ),
         )
 
         return domain

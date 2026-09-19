@@ -162,7 +162,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             ("2019-03-31", "2019-02-10", "2019-04-30"),
             ("2019-05-31", "2019-06-15", "2019-06-30"),
         ]:
-            self.invoice.company_id.tax_lock_date = tax_date
+            self.invoice.company_id.account_config_id.tax_lock_date = tax_date
             with Form(self.invoice) as move_form:
                 move_form.invoice_date = invoice_date
             self.assertEqual(self.invoice.date, fields.Date.to_date(accounting_date))
@@ -2124,7 +2124,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         )
 
     def test_in_invoice_switch_type_storno(self):
-        self.env.company.account_storno = True
+        self.env.company.account_config_id.account_storno = True
 
         move = self.env["account.move"].create(
             {
@@ -2434,8 +2434,10 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 "account_type": "asset_current",
             }
         )
-        self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.account_cash_basis_base_account_id = (
+            tax_base_amount_account
+        )
+        self.env.company.account_config_id.tax_exigibility = True
         tax_tags = defaultdict(dict)
         for line_type, repartition_type in [
             (l, r) for l in ("invoice", "refund") for r in ("base", "tax")
@@ -2597,7 +2599,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 "account_type": "expense",
             }
         )
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.tax_exigibility = True
         tax_tags = defaultdict(dict)
         for line_type, repartition_type in [
             (l, r) for l in ("invoice", "refund") for r in ("base", "tax")
@@ -2758,7 +2760,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         )
         self.assertFalse(move_form.invoice_date)
 
-        self.env.company.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.account_config_id.quick_edit_mode = "out_and_in_invoices"
 
         self.init_invoice(
             move_type="in_invoice",
@@ -2802,7 +2804,9 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             products=self.product_a,
             post=True,
         )
-        move.company_id.fiscalyear_lock_date = fields.Date.from_string("2022-04-30")
+        move.company_id.account_config_id.fiscalyear_lock_date = (
+            fields.Date.from_string("2022-04-30")
+        )
         move_form = Form(
             self.env["account.move"].with_context(default_move_type="in_invoice")
         )
@@ -3665,9 +3669,9 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_duplicate_invoice_with_separate_discount_acccount(self):
         sale_tax = self.company_data["default_tax_sale"]
-        self.env.company.account_discount_expense_allocation_id = self.company_data[
-            "default_account_expense"
-        ].id
+        self.env.company.account_config_id.account_discount_expense_allocation_id = (
+            self.company_data["default_account_expense"].id
+        )
         great_account = self.company_data["default_account_revenue"].copy()
         great_account.tax_ids = [Command.set(sale_tax.ids)]
         invoice = self.env["account.move"].create(
@@ -3755,9 +3759,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         receipt = self.init_invoice("in_receipt", products=self.product_a)
         moves = invoice + receipt
 
-        self.env.company.account_purchase_receipt_fiscal_position_id = (
-            receipt_fiscal_position
-        )
+        self.env.company.account_config_id.account_purchase_receipt_fiscal_position_id = receipt_fiscal_position
         moves._compute_fiscal_position_id()
         self.product_a.supplier_taxes_id = product_tax
         moves.invoice_line_ids.account_id.tax_ids = account_tax
@@ -3769,7 +3771,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(invoice.invoice_line_ids.tax_ids, product_tax)
         self.assertEqual(receipt.invoice_line_ids.tax_ids, receipt_tax)
 
-        self.env.company.account_purchase_receipt_fiscal_position_id = False
+        self.env.company.account_config_id.account_purchase_receipt_fiscal_position_id = False
         moves._compute_fiscal_position_id()
         self.assertEqual(invoice.fiscal_position_id.id, False)
         self.assertEqual(receipt.fiscal_position_id.id, False)

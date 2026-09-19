@@ -30,7 +30,7 @@ class TestStockValuationWithCOA(PurchaseTestCommon):
         )
 
     def test_anglosaxon_valuation_price_total_diff_discount(self):
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
 
         po_form = Form(self.env["purchase.order"])
         po_form.partner_id = self.vendor
@@ -59,7 +59,7 @@ class TestStockValuationWithCOA(PurchaseTestCommon):
         )
 
     def test_anglosaxon_valuation_discount(self):
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
 
         po_form = Form(self.env["purchase.order"])
         po_form.partner_id = self.vendor
@@ -88,7 +88,7 @@ class TestStockValuationWithCOA(PurchaseTestCommon):
         )
 
     def test_anglosaxon_valuation_price_unit_diff_discount(self):
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
 
         po_form = Form(self.env["purchase.order"])
         po_form.partner_id = self.vendor
@@ -633,10 +633,10 @@ class TestStockValuationWithCOA(PurchaseTestCommon):
         self.assertEqual(avco_prod.standard_price, pre_bill_cost)
 
     def test_manual_non_standard_cost_bill_post(self):
-        self.env.company.anglo_saxon_accounting = False
+        self.env.company.account_config_id.anglo_saxon_accounting = False
         self.product1.categ_id = self.category_avco
         product = self.product1
-        tax = self.company.account_purchase_tax_id
+        tax = self.company.account_config_id.account_purchase_tax_id
         purchase_order = self.env["purchase.order"].create(
             {
                 "partner_id": self.vendor.id,
@@ -703,7 +703,7 @@ class TestStockValuationWithCOA(PurchaseTestCommon):
         self.assertEqual(move.quantity, 2)
 
     def test_standard_valuation_return_credit_note(self):
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
         self.product1.categ_id = self.category_standard_auto
         with freeze_time("2020-01-01"):
             self.product1.standard_price = 100

@@ -731,7 +731,7 @@ class TestAccountPayment(AccountPaymentCommon):
 
     def test_generate_and_send_invoice_with_qr_code(self):
         """Test generating & sending invoices with QR codes enabled."""
-        self.env.company.link_qr_code = True
+        self.env.company.account_config_id.link_qr_code = True
         move = self.env["account.move"].create(
             {
                 "move_type": "out_invoice",

@@ -128,7 +128,9 @@ class AccountBankStatementLine(models.Model):
         compute="_compute_reconciliation",
         store=True,
     )
-    country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
+    country_code = fields.Char(
+        related="company_id.account_config_id.account_fiscal_country_id.code"
+    )
 
     internal_index = fields.Char(
         string="Internal Reference",
@@ -530,7 +532,7 @@ class AccountBankStatementLine(models.Model):
     def unlink(self):
         _debug.lifecycle("unlink", unlink=self)
         tracked_lines = self.filtered(
-            lambda stl: stl.company_id.restrictive_audit_trail
+            lambda stl: stl.company_id.account_config_id.restrictive_audit_trail
         )
         _debug.logic(
             "unlink_statement_lines_cancel_audit",

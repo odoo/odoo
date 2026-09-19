@@ -156,7 +156,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {"name": "HiddenFromIRS", "applicability": "taxes"}
         )
         inv = self.init_invoice("out_invoice", amounts=[10], post=True)
-        inv.company_id.tax_lock_date = inv.date
+        inv.company_id.account_config_id.tax_lock_date = inv.date
         with self.assertRaisesRegex(UserError, "lock date"):
             inv.line_ids.tax_tag_ids = tax_tag.ids
 
@@ -167,7 +167,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             ("2019-03-31", "2019-02-10", "2019-12-31"),
             ("2019-05-31", "2019-06-15", "2019-06-15"),
         ]:
-            self.invoice.company_id.tax_lock_date = tax_date
+            self.invoice.company_id.account_config_id.tax_lock_date = tax_date
             invoice = self.invoice.copy()
             with Form(invoice) as move_form:
                 move_form.invoice_date = invoice_date
@@ -2847,7 +2847,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             }
         )
 
-        move.company_id.tax_lock_date = fields.Date.from_string("2016-12-31")
+        move.company_id.account_config_id.tax_lock_date = fields.Date.from_string(
+            "2016-12-31"
+        )
 
         move.action_post()
 
@@ -4434,8 +4436,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 "account_type": "asset_current",
             }
         )
-        self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.account_cash_basis_base_account_id = (
+            tax_base_amount_account
+        )
+        self.env.company.account_config_id.tax_exigibility = True
         tax_tags = defaultdict(dict)
         for line_type, repartition_type in [
             (l, r) for l in ("invoice", "refund") for r in ("base", "tax")
@@ -4597,7 +4601,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 "account_type": "income",
             }
         )
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.tax_exigibility = True
         tax_tags = defaultdict(dict)
         for line_type, repartition_type in [
             (l, r) for l in ("invoice", "refund") for r in ("base", "tax")
@@ -4747,7 +4751,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertRecordValues(caba_move.line_ids, expected_values)
 
     def test_out_invoice_caba_on_payment(self):
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.tax_exigibility = True
         tax_waiting_account = self.env["account.account"].create(
             {
                 "name": "TAX_WAIT",
@@ -4865,8 +4869,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(invoice.amount_total, 0.0)
         self.assertEqual(len(invoice.invoice_line_ids), 0)
 
-        self.env.company.quick_edit_mode = "out_and_in_invoices"
-        self.env.company.account_sale_tax_id = self.env["account.tax"].create(
+        self.env.company.account_config_id.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.account_config_id.account_sale_tax_id = self.env[
+            "account.tax"
+        ].create(
             {
                 "name": "21%",
                 "amount": 21,
@@ -4903,8 +4909,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         )
         move_form.invoice_date = fields.Date.from_string("2022-01-01")
 
-        self.env.company.quick_edit_mode = "out_and_in_invoices"
-        self.env.company.account_sale_tax_id = self.env["account.tax"].create(
+        self.env.company.account_config_id.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.account_config_id.account_sale_tax_id = self.env[
+            "account.tax"
+        ].create(
             {
                 "name": "21%",
                 "amount": 21,
@@ -4979,8 +4987,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 ],
             }
         )
-        self.env.company.quick_edit_mode = "out_and_in_invoices"
-        self.env.company.account_sale_tax_id = tax
+        self.env.company.account_config_id.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.account_config_id.account_sale_tax_id = tax
 
         move_form = Form(
             self.env["account.move"].with_context(default_move_type="out_invoice")
@@ -5202,7 +5210,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                     }
                 )
 
-                self.env.company.currency_exchange_journal_id = new_exchange_journal
+                self.env.company.account_config_id.currency_exchange_journal_id = (
+                    new_exchange_journal
+                )
 
                 self.env["account.payment.register"].with_context(
                     active_model="account.move", active_ids=invoice.ids
@@ -5380,7 +5390,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         discount_account = self.company_data["default_account_expense"].copy()
         self.company_data[
             "company"
-        ].account_discount_expense_allocation_id = discount_account
+        ].account_config_id.account_discount_expense_allocation_id = discount_account
 
         invoice = self.env["account.move"].create(
             {
@@ -5645,7 +5655,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         )
 
     def test_on_quick_encoding_non_accounting_lines(self):
-        self.env.company.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.account_config_id.quick_edit_mode = "out_and_in_invoices"
         move_form = Form(
             self.env["account.move"].with_context(default_move_type="out_invoice")
         )
@@ -5776,7 +5786,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         discount_account = self.company_data["default_account_expense"].copy()
         self.company_data[
             "company"
-        ].account_discount_expense_allocation_id = discount_account
+        ].account_config_id.account_discount_expense_allocation_id = discount_account
         self.env["res.currency.rate"].create(
             {
                 "name": "2024-01-01",
@@ -6142,7 +6152,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         )
         self.env["res.lang"]._activate_lang("fr_FR")
 
-        self.env.company.terms_type = "html"
+        self.env.company.account_config_id.terms_type = "html"
 
         self.partner_a.lang = "en_US"
 
@@ -6366,7 +6376,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(invoice_not_sent, res)
 
     def test_invoice_currency_rate_round_globally(self):
-        self.env.company.tax_calculation_rounding_method = "round_globally"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
         eur = self.setup_other_currency("EUR")
         invoice = self.env["account.move"].create(
             {

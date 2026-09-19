@@ -30,9 +30,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         return asset
 
     def _disposal_move(self, asset):
-        asset._close(
-            self.env["account.move.line"], date=datetime.date(2026, 6, 30)
-        )
+        asset._close(self.env["account.move.line"], date=datetime.date(2026, 6, 30))
         return asset.depreciation_move_ids.filtered(
             lambda move: move.asset_move_type == "disposal"
         )
@@ -217,7 +215,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
                 "amount_type": "percent",
                 "amount": 20.0,
                 "type_tax_use": "purchase",
-                "country_id": self.company.account_fiscal_country_id.id,
+                "country_id": self.company.account_config_id.account_fiscal_country_id.id,
                 "invoice_repartition_line_ids": [
                     Command.create({"repartition_type": "base"}),
                     Command.create(

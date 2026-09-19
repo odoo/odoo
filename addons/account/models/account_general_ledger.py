@@ -631,7 +631,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                 line["chatter"]["id"] = account_moves[line["chatter"]["id"]]
                 line["chatter"]["model"] = "account.move"
 
-        if self.env.company.totals_below_sections and not options.get(
+        if self.env.company.account_config_id.totals_below_sections and not options.get(
             "ignore_totals_below_sections"
         ):
             _debug.logic(

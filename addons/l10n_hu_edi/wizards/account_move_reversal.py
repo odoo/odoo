@@ -6,7 +6,7 @@ class AccountMoveReversal(models.TransientModel):
 
     def _prepare_default_reversal(self, move):
         res = super()._prepare_default_reversal(move)
-        if move.company_id.account_fiscal_country_id.code == "HU":
+        if move.company_id.account_config_id.account_fiscal_country_id.code == "HU":
             res.update({"delivery_date": move.delivery_date})
         return res
 

@@ -313,7 +313,7 @@ class Website(models.Model):
                     fields.Datetime.now()
                 )
 
-    @api.depends("company_id.account_fiscal_country_id")
+    @api.depends("company_id.account_config_id.account_fiscal_country_id")
     def _compute_show_line_subtotals_tax_selection(self):
         for website in self:
             website.show_line_subtotals_tax_selection = "tax_excluded"

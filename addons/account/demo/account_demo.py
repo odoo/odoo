@@ -50,13 +50,21 @@ class AccountChartTemplate(models.AbstractModel):
             return {}
 
         taxes = {}
-        if company.account_sale_tax_id:
-            taxes.update({"taxes_id": [Command.link(company.account_sale_tax_id.id)]})
-        if company.account_purchase_tax_id:
+        if company.account_config_id.account_sale_tax_id:
+            taxes.update(
+                {
+                    "taxes_id": [
+                        Command.link(company.account_config_id.account_sale_tax_id.id)
+                    ]
+                }
+            )
+        if company.account_config_id.account_purchase_tax_id:
             taxes.update(
                 {
                     "supplier_taxes_id": [
-                        Command.link(company.account_purchase_tax_id.id)
+                        Command.link(
+                            company.account_config_id.account_purchase_tax_id.id
+                        )
                     ]
                 }
             )
@@ -217,7 +225,7 @@ class AccountChartTemplate(models.AbstractModel):
                         "!=",
                         (
                             company or self.env.company
-                        ).account_journal_early_pay_discount_gain_account_id.id,
+                        ).account_config_id.account_journal_early_pay_discount_gain_account_id.id,
                     ),
                 ],
                 limit=1,

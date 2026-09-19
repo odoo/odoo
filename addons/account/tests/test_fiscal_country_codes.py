@@ -9,7 +9,9 @@ class TestFiscalCountryCodes(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.other_company = cls.setup_other_company(name="Fiscal Codes Co")["company"]
-        cls.other_company.account_fiscal_country_id = cls.quick_ref("base.be")
+        cls.other_company.account_config_id.account_fiscal_country_id = cls.quick_ref(
+            "base.be"
+        )
         cls.both_companies = cls.env.company | cls.other_company
 
     def _records_exposing_the_field(self):
@@ -30,14 +32,14 @@ class TestFiscalCountryCodes(AccountTestInvoicingCommon):
 
     def test_control_the_two_companies_have_different_fiscal_countries(self):
         self.assertNotEqual(
-            self.env.company.account_fiscal_country_id,
-            self.other_company.account_fiscal_country_id,
+            self.env.company.account_config_id.account_fiscal_country_id,
+            self.other_company.account_config_id.account_fiscal_country_id,
             "control: the widening below only shows anything if the second"
             " company adds a country the first does not have",
         )
 
     def test_every_model_answers_for_the_active_companies(self):
-        wanted = self.other_company.account_fiscal_country_id.code
+        wanted = self.other_company.account_config_id.account_fiscal_country_id.code
         for model_name, record in self._records_exposing_the_field().items():
             with self.subTest(model=model_name):
                 narrow = record.with_context(
@@ -70,7 +72,7 @@ class TestFiscalCountryCodes(AccountTestInvoicingCommon):
             term.with_context(
                 allowed_company_ids=self.both_companies.ids
             ).fiscal_country_codes,
-            self.other_company.account_fiscal_country_id.code,
+            self.other_company.account_config_id.account_fiscal_country_id.code,
         )
 
     def test_a_company_bound_partner_leaves_out_the_other_companys_country(self):
@@ -86,7 +88,7 @@ class TestFiscalCountryCodes(AccountTestInvoicingCommon):
             partner.with_context(
                 allowed_company_ids=self.both_companies.ids
             ).fiscal_country_codes,
-            self.other_company.account_fiscal_country_id.code,
+            self.other_company.account_config_id.account_fiscal_country_id.code,
         )
 
     def test_a_partner_adds_its_own_country(self):
@@ -95,7 +97,7 @@ class TestFiscalCountryCodes(AccountTestInvoicingCommon):
         )
         self.assertIn("FR", partner.fiscal_country_codes)
         self.assertIn(
-            self.env.company.account_fiscal_country_id.code,
+            self.env.company.account_config_id.account_fiscal_country_id.code,
             partner.fiscal_country_codes,
         )
 

@@ -58,7 +58,7 @@ class ResourceAsset(models.Model):
     )
 
     country_code = fields.Char(
-        related="company_id.account_fiscal_country_id.code",
+        related="company_id.account_config_id.account_fiscal_country_id.code",
         groups="account.group_account_readonly,account.group_account_invoice",
     )
     depreciation_state = fields.Selection(
@@ -1826,7 +1826,7 @@ class ResourceAsset(models.Model):
                         company=asset.company_id,
                         date=date_disposal,
                     ),
-                    "is_storno": asset.company_id.account_storno
+                    "is_storno": asset.company_id.account_config_id.account_storno
                     and is_sale
                     and (
                         account

@@ -2,6 +2,7 @@ from typing import Self
 
 from odoo import api, fields, models
 from odoo.api import ValuesType
+from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -11,6 +12,7 @@ class MixinCompanyConfig(models.AbstractModel):
     _name = "mixin.company.config"
     _description = "Configuration an application keeps per company"
     _check_company_auto = True
+    _company_config = True
 
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -25,10 +27,56 @@ class MixinCompanyConfig(models.AbstractModel):
         "A company has one configuration record per application.",
     )
 
+    @api.model
+    def _get_field_names_delegated_to_root(self) -> list[str]:
+        return []
+
+    @api.constrains(
+        lambda self: self._get_field_names_delegated_to_root() + ["company_id"]
+    )
+    def _check_delegated_fields_match_root(self) -> None:
+        for config in self:
+            parent = config.company_id.parent_id
+            if not parent:
+                continue
+            parent_config = self._for(parent)
+            for fname in self._get_field_names_delegated_to_root():
+                if config[fname] != parent_config[fname]:
+                    description = (
+                        self.env["ir.model.fields"]
+                        ._get(self._name, fname)
+                        .field_description
+                    )
+                    raise ValidationError(
+                        self.env._(
+                            "The %s of a subsidiary must be the same as its root company.",
+                            description,
+                        )
+                    )
+
+    def _inherit_delegated_fields(self, vals_list: list[ValuesType]) -> None:
+        delegated = self._get_field_names_delegated_to_root()
+        if not delegated:
+            return
+        Company = self.env["res.company"]
+        for vals in vals_list:
+            parent = Company.browse(vals.get("company_id")).parent_id
+            if not parent:
+                continue
+            parent_config = self._for(parent)
+            for fname in delegated:
+                vals.setdefault(
+                    fname,
+                    self._fields[fname].convert_to_write(
+                        parent_config[fname], parent_config
+                    ),
+                )
+
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
         # one record per company: data that names a company already
         # configured (the company's create made the record) writes it
+        self._inherit_delegated_fields(vals_list)
         company_ids = [vals.get("company_id") for vals in vals_list]
         existing = {
             config.company_id.id: config
@@ -69,6 +117,8 @@ class MixinCompanyConfig(models.AbstractModel):
 
     @api.model
     def _for_each(self, companies: models.Model) -> Self:
+        # a company not yet saved has no configuration to find or create
+        companies = companies.filtered(lambda company: isinstance(company.id, int))
         existing = self.sudo().search([("company_id", "in", companies.ids)])
         missing = companies - existing.company_id
         if missing:

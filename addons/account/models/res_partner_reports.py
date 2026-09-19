@@ -7,10 +7,21 @@ _debug = DebugLog(__name__)
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    account_represented_company_ids = fields.One2many(
-        comodel_name="res.company",
+    account_represented_config_ids = fields.One2many(
+        comodel_name="account.config",
         inverse_name="account_representative_id",
     )
+    account_represented_company_ids = fields.Many2many(
+        comodel_name="res.company",
+        compute="_compute_account_represented_company_ids",
+    )
+
+    @api.depends("account_represented_config_ids.company_id")
+    def _compute_account_represented_company_ids(self):
+        for partner in self:
+            partner.account_represented_company_ids = (
+                partner.account_represented_config_ids.company_id
+            )
 
     def _get_followup_responsible(self, multiple_responsible=False):
         return self.env.user

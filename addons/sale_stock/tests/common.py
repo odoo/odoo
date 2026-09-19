@@ -23,7 +23,7 @@ class TestSaleStockCommon(TestSaleCommon, ProductVariantsCommon):
         )
         delivery_route_3.rule_ids[1].write({"action": "pull"})
         delivery_route_3.rule_ids[2].write({"action": "pull"})
-        cls.account_income = cls.company.income_account_id
+        cls.account_income = cls.company.account_config_id.income_account_id
 
     def _inv_adj_two_units(self, product):
         self.env["stock.quant"].with_context(inventory_mode=True).create(

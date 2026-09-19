@@ -8,7 +8,7 @@
         </input>
         <input id="o_city" position="after">
             <div
-                t-if="res_company.account_fiscal_country_id.code == 'BR'"
+                t-if="res_company.account_config_id.account_fiscal_country_id.code == 'BR'"
                 class="o_select_city">
                 <!-- will be replaced with SelectMenuWrapper -->
                 <select id="o_city_id" name="city_id" class="form-select">
@@ -30,7 +30,8 @@
             <attribute name="class" separator=" " add="o_standard_address" />
         </div>
         <div id="div_street" position="after">
-            <t t-if="res_company.account_fiscal_country_id.code == 'BR'">
+            <t
+                t-if="res_company.account_config_id.account_fiscal_country_id.code == 'BR'">
                 <div
                     id="div_street_name"
                     t-attf-class="col-lg-8 mb-2 o_extended_address">
@@ -76,7 +77,7 @@
         </label>
         <label for="o_street2" position="after">
             <label
-                t-if="res_company.account_fiscal_country_id.code == 'BR'"
+                t-if="res_company.account_config_id.account_fiscal_country_id.code == 'BR'"
                 class="col-form-label label-optional o_extended_address"
                 for="o_street2">
                 Neighborhood

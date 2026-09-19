@@ -10,7 +10,7 @@ class PosOrder(models.Model):
         res = super()._prepare_product_aml_dict(
             base_line_vals, update_base_line_vals, rate, sign
         )
-        if self.company_id.account_fiscal_country_id.code == "IN":
+        if self.company_id.account_config_id.account_fiscal_country_id.code == "IN":
             res.update(
                 {
                     "l10n_in_hsn_code": base_line_vals["l10n_in_hsn_code"],

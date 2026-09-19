@@ -57,7 +57,6 @@ class ResCompany(models.Model):
             "partner_id",
             "country_id",
             "state_id",
-            "tax_calculation_rounding_method",
             "nomenclature_id",
             "point_of_sale_use_ticket_qr_code",
             "point_of_sale_ticket_unique_code",
@@ -65,18 +64,43 @@ class ResCompany(models.Model):
             "street",
             "city",
             "zip",
-            "account_fiscal_country_id",
         ]
 
+    @api.model
+    def _load_pos_data_config_fields(self, config):
+        # accounting configuration the point of sale reads as if it were
+        # the company's: the record keeps the shape the client expects
+        return ["tax_calculation_rounding_method", "account_fiscal_country_id"]
+
+    @api.model
+    def _load_pos_data_read(self, records, config):
+        rows = super()._load_pos_data_read(records, config)
+        config_fields = self._load_pos_data_config_fields(config)
+        if not rows or not config_fields:
+            return rows
+        companies = self.browse([row["id"] for row in rows])
+        configs = companies.account_config_id.read(config_fields, load=False)
+        by_company = dict(
+            zip(companies.account_config_id.company_id.ids, configs, strict=True)
+        )
+        for row in rows:
+            values = by_company[row["id"]]
+            row.update({fname: values[fname] for fname in config_fields})
+        return rows
+
     @api.constrains(
-        "fiscalyear_lock_date", "tax_lock_date", "sale_lock_date", "hard_lock_date"
+        "account_config_id.fiscalyear_lock_date",
+        "account_config_id.tax_lock_date",
+        "account_config_id.sale_lock_date",
+        "account_config_id.hard_lock_date",
     )
     def check_lock_dates(self):
         pos_session_model = self.env["pos.session"].sudo()
         for record in self:
             record = record.with_context(ignore_exceptions=True)
             fiscal_lock_date = max(
-                record.user_fiscalyear_lock_date, record.user_hard_lock_date
+                record.account_config_id.user_fiscalyear_lock_date,
+                record.account_config_id.user_hard_lock_date,
             )
             sessions_in_period = pos_session_model.search(
                 Domain("company_id", "child_of", record.id)
@@ -84,9 +108,17 @@ class ResCompany(models.Model):
                 & Domain.OR(
                     (
                         Domain("start_at", "<=", fiscal_lock_date),
-                        Domain("start_at", "<=", record.user_tax_lock_date),
+                        Domain(
+                            "start_at",
+                            "<=",
+                            record.account_config_id.user_tax_lock_date,
+                        ),
                         Domain("config_id.journal_id.type", "=", "sale")
-                        & Domain("start_at", "<=", record.user_sale_lock_date),
+                        & Domain(
+                            "start_at",
+                            "<=",
+                            record.account_config_id.user_sale_lock_date,
+                        ),
                     )
                 )
             )

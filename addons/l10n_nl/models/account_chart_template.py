@@ -10,5 +10,5 @@ class AccountChartTemplate(models.AbstractModel):
             if cash_tag := self.env.ref(
                 "l10n_nl.account_tag_25", raise_if_not_found=False
             ):
-                company.account_journal_suspense_account_id.tag_ids += cash_tag
-                company.transfer_account_id.tag_ids += cash_tag
+                company.account_config_id.account_journal_suspense_account_id.tag_ids += cash_tag
+                company.account_config_id.transfer_account_id.tag_ids += cash_tag

@@ -15,6 +15,7 @@ from . import test_account_move_date_algorithm
 from . import test_account_inalterable_hash
 from . import test_account_journal
 from . import test_account_account
+from . import test_account_config
 from . import test_account_tax
 from . import test_account_tax_settings_company
 from . import test_account_tax_merge_wizard

@@ -1012,9 +1012,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         st_line = self._create_st_line(
             90.0, date="2017-01-10", update_create_date=False
         )
-        early_pay_acc = (
-            self.env.company.account_journal_early_pay_discount_loss_account_id
-        )
+        early_pay_acc = self.env.company.account_config_id.account_journal_early_pay_discount_loss_account_id
         inv_line_with_epd = self._create_invoice_line(
             "out_invoice",
             date="2017-01-04",
@@ -1081,9 +1079,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         )
 
     def test_early_payment_discount_basic_case_smaller_amount(self):
-        early_pay_acc = (
-            self.env.company.account_journal_early_pay_discount_loss_account_id
-        )
+        early_pay_acc = self.env.company.account_config_id.account_journal_early_pay_discount_loss_account_id
         st_line = self._create_st_line(
             100.0, date="2017-01-10", update_create_date=False
         )
@@ -2037,7 +2033,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
                     "reconciled": True,
                 },
                 {
-                    "account_id": self.env.company.income_currency_exchange_account_id.id,
+                    "account_id": self.env.company.account_config_id.income_currency_exchange_account_id.id,
                     "amount_currency": 0.0,
                     "currency_id": self.other_currency.id,
                     "balance": -20.0,
@@ -2085,7 +2081,9 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         self.assertEqual(exchange_move.state, "posted")
 
     def test_validation_expense_exchange_difference(self):
-        expense_exchange_account = self.env.company.expense_currency_exchange_account_id
+        expense_exchange_account = (
+            self.env.company.account_config_id.expense_currency_exchange_account_id
+        )
 
         st_line = self._create_st_line(
             1200.0,
@@ -2144,7 +2142,9 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         )
 
     def test_validation_income_exchange_difference(self):
-        income_exchange_account = self.env.company.income_currency_exchange_account_id
+        income_exchange_account = (
+            self.env.company.account_config_id.income_currency_exchange_account_id
+        )
 
         st_line = self._create_st_line(
             1800.0,
@@ -2203,7 +2203,9 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         )
 
     def test_validation_exchange_diff_multiple(self):
-        income_exchange_account = self.env.company.income_currency_exchange_account_id
+        income_exchange_account = (
+            self.env.company.account_config_id.income_currency_exchange_account_id
+        )
         foreign_currency = self.setup_other_currency(
             "AED", rates=[("2016-01-01", 6.0), ("2017-01-01", 5.0)]
         )
@@ -2314,7 +2316,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
                 {
                     "name": f"tax_tag_{i}",
                     "applicability": "taxes",
-                    "country_id": self.env.company.account_fiscal_country_id.id,
+                    "country_id": self.env.company.account_config_id.account_fiscal_country_id.id,
                 }
                 for i in range(6)
             ]
@@ -3809,7 +3811,9 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         self.assertEqual(receivable_line.balance, 26.49)
         st_line = self._create_st_line(amount=26.05)
         st_line.set_line_bank_statement_line(receivable_line.ids)
-        exchange_diff_account = self.env.company.income_currency_exchange_account_id
+        exchange_diff_account = (
+            self.env.company.account_config_id.income_currency_exchange_account_id
+        )
         st_line.set_account_bank_statement_line(
             st_line.line_ids[-1].id, exchange_diff_account.id
         )
@@ -3942,7 +3946,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         counterpart_line_id = statement_line.line_ids[-1].id
         statement_line.set_account_bank_statement_line(
             counterpart_line_id,
-            self.env.company.account_journal_suspense_account_id.id,
+            self.env.company.account_config_id.account_journal_suspense_account_id.id,
         )
         invoice.invalidate_recordset(["invoice_outstanding_credits_debits_widget"])
         self.assertTrue(
@@ -4408,7 +4412,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
 
         cash_discount_account = self.company_data[
             "company"
-        ].account_journal_early_pay_discount_loss_account_id
+        ].account_config_id.account_journal_early_pay_discount_loss_account_id
         self.env["account.analytic.distribution.model"].create(
             {
                 "account_prefix": cash_discount_account.code,
@@ -6255,9 +6259,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         st_line = self._create_st_line(
             -200.0, date="2017-01-10", update_create_date=False
         )
-        early_pay_acc = (
-            self.env.company.account_journal_early_pay_discount_gain_account_id
-        )
+        early_pay_acc = self.env.company.account_config_id.account_journal_early_pay_discount_gain_account_id
         bill_line_with_epd = self._create_invoice_line(
             "in_invoice",
             date="2017-01-04",
@@ -6662,9 +6664,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
             }
         )
         suspense_account = self.company_data["default_journal_bank"].suspense_account_id
-        early_pay_acc = (
-            self.env.company.account_journal_early_pay_discount_loss_account_id
-        )
+        early_pay_acc = self.env.company.account_config_id.account_journal_early_pay_discount_loss_account_id
 
         statement_line = self._create_st_line(
             amount=200, date="2017-01-10", update_create_date=False
@@ -6842,7 +6842,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         self.assertEqual(payment.state, "paid")
 
     def test_credit_warning_excludes_unreconciled_bank_statement_line(self):
-        self.env.company.account_use_credit_limit = True
+        self.env.company.account_config_id.account_use_credit_limit = True
         self.partner_a.credit_limit = 1000.0
         inv_line = self._create_invoice_line(
             "out_invoice",
@@ -6861,7 +6861,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         self.assertFalse(invoice.partner_credit_warning)
 
     def test_credit_warning_excludes_reconciled_bank_statement_line(self):
-        self.env.company.account_use_credit_limit = True
+        self.env.company.account_config_id.account_use_credit_limit = True
         self.partner_a.credit_limit = 1000.0
         inv_line = self._create_invoice_line(
             "out_invoice",

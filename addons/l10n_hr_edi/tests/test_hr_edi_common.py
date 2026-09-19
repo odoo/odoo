@@ -7,7 +7,9 @@ class TestL10nHrEdiCommon(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.company.tax_calculation_rounding_method = "round_globally"
+        cls.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
         cls.partner_a.invoice_edi_format = "ubl_hr"
         cls.product_a.product_tmpl_id.l10n_hr_kpd_category_id = cls.env[
             "l10n_hr.kpd.category"

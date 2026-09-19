@@ -8,7 +8,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _prepare_demo_data_move(self, company=False):
         """Set the l10n_latam_document_number on demo invoices"""
         move_data = super()._prepare_demo_data_move(company)
-        if company.account_fiscal_country_id.code == "BR":
+        if company.account_config_id.account_fiscal_country_id.code == "BR":
             number = 0
             for move in move_data.values():
                 # vendor bills and refund must be manually numbered (l10n_br uses the standard AccountMove._is_manual_document_number())

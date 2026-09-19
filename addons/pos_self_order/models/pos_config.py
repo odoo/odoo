@@ -545,7 +545,7 @@ class PosConfig(models.Model):
 
     @api.model
     def load_onboarding_kiosk_scenario(self):
-        if not bool(self.env.company.chart_template):
+        if not bool(self.env.company.account_config_id.chart_template):
             return False
 
         journal, payment_methods_ids = self._create_journal_and_payment_methods()

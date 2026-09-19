@@ -18,7 +18,9 @@ class TestStringToHash(TestPoSCommon):
                 "currency_id": cls.company_data["company"].currency_id.id,
             }
         )
-        cls.company.country_id = cls.env.company.account_fiscal_country_id.id
+        cls.company.country_id = (
+            cls.env.company.account_config_id.account_fiscal_country_id.id
+        )
 
     def _compute_string_to_hash_original(self, orders):
         def _getattrstring(obj, field_str):

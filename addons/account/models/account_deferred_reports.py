@@ -366,10 +366,10 @@ class AccountDeferredReportHandler(models.AbstractModel):
         )
         if (
             self._get_deferred_report_type() == "expense"
-            and self.env.company.generate_deferred_expense_entries_method == "manual"
+            and self.env.company.account_config_id.generate_deferred_expense_entries_method == "manual"
         ) or (
             self._get_deferred_report_type() == "revenue"
-            and self.env.company.generate_deferred_revenue_entries_method == "manual"
+            and self.env.company.account_config_id.generate_deferred_revenue_entries_method == "manual"
         ):
             options["buttons"].append(
                 {
@@ -564,10 +564,10 @@ class AccountDeferredReportHandler(models.AbstractModel):
     ):
         if (
             self._get_deferred_report_type() == "expense"
-            and self.env.company.generate_deferred_expense_entries_method == "manual"
+            and self.env.company.account_config_id.generate_deferred_expense_entries_method == "manual"
         ) or (
             self._get_deferred_report_type() == "revenue"
-            and self.env.company.generate_deferred_revenue_entries_method == "manual"
+            and self.env.company.account_config_id.generate_deferred_revenue_entries_method == "manual"
         ):
             already_generated = self.env["account.move"].search_count(
                 report._get_domain_generated_deferral_entries(options)
@@ -781,9 +781,9 @@ class AccountDeferredReportHandler(models.AbstractModel):
             "Reversal of Grouped Deferral Entry of %s", deferral_entry_period["string"]
         )
         deferred_account = (
-            self.env.company.deferred_expense_account_id
+            self.env.company.account_config_id.deferred_expense_account_id
             if self._get_deferred_report_type() == "expense"
-            else self.env.company.deferred_revenue_account_id
+            else self.env.company.account_config_id.deferred_revenue_account_id
         )
         move_lines, original_move_ids = self._get_deferred_lines(
             lines,
@@ -806,9 +806,9 @@ class AccountDeferredReportHandler(models.AbstractModel):
     @_debug.perf.timed
     def _generate_deferral_entry(self, options):
         journal = (
-            self.env.company.deferred_expense_journal_id
+            self.env.company.account_config_id.deferred_expense_journal_id
             if self._get_deferred_report_type() == "expense"
-            else self.env.company.deferred_revenue_journal_id
+            else self.env.company.account_config_id.deferred_revenue_journal_id
         )
         if not journal:
             raise UserError(
@@ -979,7 +979,9 @@ class AccountDeferredReportHandler(models.AbstractModel):
                     )
                     deferred_lines.append(
                         Command.create(
-                            self.env["account.move.line"]._prepare_deferred_lines_values(
+                            self.env[
+                                "account.move.line"
+                            ]._prepare_deferred_lines_values(
                                 account_id=line["account_id"],
                                 balance=deferred_balance,
                                 ref=ref,

@@ -406,7 +406,7 @@ class AccountAccount(models.Model):
     @api.depends_context("company")
     def _compute_company_fiscal_country_code(self):
         self.company_fiscal_country_code = (
-            self.env.company.account_fiscal_country_id.code
+            self.env.company.account_config_id.account_fiscal_country_id.code
         )
 
     @api.depends_context("company")
@@ -510,7 +510,7 @@ class AccountAccount(models.Model):
         self.opening_debit = 0
         self.opening_credit = 0
         self.opening_balance = 0
-        opening_move = self.env.company.account_opening_move_id
+        opening_move = self.env.company.account_config_id.account_opening_move_id
         _debug.logic(
             "opening_move_source",
             accounts=self,

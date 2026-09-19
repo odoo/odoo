@@ -306,7 +306,7 @@ class TestReportEngines(TestAccountReportsCommon):
     # -------------------------------------------------------------------------
 
     def test_engine_tax_tags(self):
-        self.env.company.account_fiscal_country_id = self.fake_country
+        self.env.company.account_config_id.account_fiscal_country_id = self.fake_country
 
         # Create the report.
         test_line_1 = self._prepare_test_report_line(
@@ -1182,7 +1182,7 @@ class TestReportEngines(TestAccountReportsCommon):
             )
 
     def test_engine_aggregation(self):
-        self.env.company.account_fiscal_country_id = self.fake_country
+        self.env.company.account_config_id.account_fiscal_country_id = self.fake_country
 
         # Test division by zero.
         test1 = self._prepare_test_report_line(
@@ -2653,7 +2653,7 @@ class TestReportEngines(TestAccountReportsCommon):
 
     def test_subformula_rounding(self):
         """Test the round subformula in a variety of settings."""
-        self.env.company.account_fiscal_country_id = self.fake_country
+        self.env.company.account_config_id.account_fiscal_country_id = self.fake_country
 
         # Round to the nearest integer, using the default HALF-DOWN
         test_1 = self._prepare_test_report_line(
@@ -2766,7 +2766,7 @@ class TestReportEngines(TestAccountReportsCommon):
 
     def test_engine_aggregation_if_other_expr_zero(self):
         """Test the correctness of the "if_other_expr_xx" when the bound is zero."""
-        self.env.company.account_fiscal_country_id = self.fake_country
+        self.env.company.account_config_id.account_fiscal_country_id = self.fake_country
 
         # Prepare two simple expressions with 2500 and 0 respectively
         test_1 = self._prepare_test_report_line(

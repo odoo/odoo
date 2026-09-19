@@ -942,8 +942,12 @@ class TestAuditReturnPreviousPeriodScoping(TestAccountReportsCommon):
 
     def test_the_previous_period_is_read_off_the_returns_own_company(self):
         self.assertTrue(self.audit_type, "no audit return type; nothing tested")
-        self.company_a.write({"fiscalyear_last_day": 31, "fiscalyear_last_month": "12"})
-        self.company_b.write({"fiscalyear_last_day": 31, "fiscalyear_last_month": "3"})
+        self.company_a.account_config_id.write(
+            {"fiscalyear_last_day": 31, "fiscalyear_last_month": "12"}
+        )
+        self.company_b.account_config_id.write(
+            {"fiscalyear_last_day": 31, "fiscalyear_last_month": "3"}
+        )
 
         current_from, current_to = self.audit_type._get_period_boundaries(
             self.company_b, fields.Date.to_date("2026-06-30")
@@ -984,7 +988,9 @@ class TestAuditReturnPreviousPeriodScoping(TestAccountReportsCommon):
     def test_the_previous_period_is_not_taken_from_another_company(self):
         self.assertTrue(self.audit_type, "no audit return type; nothing tested")
         for company in (self.company_a, self.company_b):
-            company.write({"fiscalyear_last_day": 31, "fiscalyear_last_month": "12"})
+            company.account_config_id.write(
+                {"fiscalyear_last_day": 31, "fiscalyear_last_month": "12"}
+            )
 
         current_from, current_to = self.audit_type._get_period_boundaries(
             self.company_b, fields.Date.to_date("2026-06-30")

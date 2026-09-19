@@ -12,8 +12,12 @@ class TestTaxableSupplyDateWithLockDates(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         company_id = cls.company_data["company"]
-        company_id.purchase_lock_date = fields.Date.from_string("2025-04-30")
-        company_id.tax_lock_date = fields.Date.from_string("2025-03-31")
+        company_id.account_config_id.purchase_lock_date = fields.Date.from_string(
+            "2025-04-30"
+        )
+        company_id.account_config_id.tax_lock_date = fields.Date.from_string(
+            "2025-03-31"
+        )
 
     def check_invoice_dates(
         self,

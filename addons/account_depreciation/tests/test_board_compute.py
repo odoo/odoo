@@ -4290,8 +4290,8 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
 
     def test_degressive_60_months_from_middle_sync_with_fiscalyear(self):
         company = self.env.company
-        company.fiscalyear_last_day = 30
-        company.fiscalyear_last_month = "6"
+        company.account_config_id.fiscalyear_last_day = 30
+        company.account_config_id.fiscalyear_last_month = "6"
         asset = self.create_asset(
             value=100000,
             periodicity="monthly",
@@ -5951,7 +5951,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         )
 
     def test_change_computation_method_before_lock_date(self):
-        self.car.company_id.fiscalyear_lock_date = "2022-06-30"
+        self.car.company_id.account_config_id.fiscalyear_lock_date = "2022-06-30"
         self.car._create_depreciation_entries()
 
         self.assertEqual(self.car.depreciation_state, "draft")
@@ -6045,7 +6045,7 @@ class TestAccountAssetComputation(TestAccountAssetCommon):
         )
 
     def test_post_moves_after_lock_date(self):
-        self.car.company_id.fiscalyear_lock_date = "2021-06-30"
+        self.car.company_id.account_config_id.fiscalyear_lock_date = "2021-06-30"
         self.car._create_depreciation_entries()
 
         self.assertEqual(self.car.depreciation_state, "draft")

@@ -669,7 +669,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             [("company_id", "=", new_company.id)]
         )
         self.assertEqual(fiscal_position.map_tax(tax_3), tax_2)
-        self.assertEqual(new_company.account_sale_tax_id, tax_3)
+        self.assertEqual(new_company.account_config_id.account_sale_tax_id, tax_3)
 
     def test_update_taxes_update(self):
         def local_get_data(self, template_code):
@@ -1115,7 +1115,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         company = self.env["res.company"].create(
             {"name": "Preset Co", "country_id": self.country_be.id}
         )
-        company.chart_template = "test"
+        company.account_config_id.chart_template = "test"
         self._use_chart_template(company)
 
         ChartTemplate = self.env["account.chart.template"].with_company(company)
@@ -1130,7 +1130,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         )
         self.assertEqual(payable, ChartTemplate.ref("test_account_payable_template").id)
         self.assertEqual(
-            company.income_account_id,
+            company.account_config_id.income_account_id,
             ChartTemplate.ref("test_account_income_template"),
         )
 
@@ -1149,7 +1149,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             other_receivable.id,
             company_id=self.company.id,
         )
-        income_before = self.company.income_account_id
+        income_before = self.company.account_config_id.income_account_id
 
         self._use_chart_template(self.company)
 
@@ -1161,7 +1161,9 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             ),
             other_receivable.id,
         )
-        self.assertEqual(self.company.income_account_id, income_before)
+        self.assertEqual(
+            self.company.account_config_id.income_account_id, income_before
+        )
 
     def test_unknown_company_fields(self):
         def local_get_data(self, template_code):
@@ -1172,7 +1174,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             return data
 
         company = self.company
-        company.chart_template = False
+        company.account_config_id.chart_template = False
 
         with patch.object(
             AccountChartTemplate,
@@ -1209,8 +1211,8 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             self.env["account.chart.template"].try_loading(
                 "test", company=company, install_demo=True
             )
-        self.assertEqual(company.chart_template, "test")
-        self.assertEqual(branch.chart_template, "test")
+        self.assertEqual(company.account_config_id.chart_template, "test")
+        self.assertEqual(branch.account_config_id.chart_template, "test")
 
     def test_change_coa(self):
         def _get_chart_template_mapping(self, get_all=False):
@@ -1224,7 +1226,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
                 }
             }
 
-        self.company.anglo_saxon_accounting = True
+        self.company.account_config_id.anglo_saxon_accounting = True
 
         with (
             patch.object(
@@ -1256,9 +1258,9 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             )
             self.env.cr.precommit.run()
 
-        self.assertEqual(self.company.chart_template, "other_test")
-        self.assertEqual(branch.chart_template, "other_test")
-        self.assertFalse(self.company.anglo_saxon_accounting)
+        self.assertEqual(self.company.account_config_id.chart_template, "other_test")
+        self.assertEqual(branch.account_config_id.chart_template, "other_test")
+        self.assertFalse(self.company.account_config_id.anglo_saxon_accounting)
 
         shared_account = self.env["account.account"].create(
             [
@@ -1289,8 +1291,8 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             self.env["account.chart.template"].try_loading(
                 "test", company=self.company, install_demo=True
             )
-        self.assertEqual(self.company.chart_template, "test")
-        self.assertEqual(branch.chart_template, "test")
+        self.assertEqual(self.company.account_config_id.chart_template, "test")
+        self.assertEqual(branch.account_config_id.chart_template, "test")
 
         self.assertEqual(shared_account.company_ids, other_company)
 
@@ -1719,7 +1721,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             self.env["account.chart.template"].try_loading(
                 "test", company=company, install_demo=False
             )
-        self.assertEqual(company.chart_template, "test")
+        self.assertEqual(company.account_config_id.chart_template, "test")
 
     def test_tax_exigibility_is_scoped_to_the_loading_company(self):
         transition_account = self.env["account.account"].create(
@@ -1744,7 +1746,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         self.env.flush_all()
 
         other_company = self.env["res.company"].create({"name": "Untainted Co"})
-        self.assertFalse(other_company.tax_exigibility)
+        self.assertFalse(other_company.account_config_id.tax_exigibility)
         with patch.object(
             AccountChartTemplate,
             "_prepare_chart_template_data",
@@ -1765,7 +1767,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             "precondition: the loaded company owns no cash-basis tax",
         )
         self.assertFalse(
-            other_company.tax_exigibility,
+            other_company.account_config_id.tax_exigibility,
             "cash basis must not be enabled for a company that owns no caba tax",
         )
 

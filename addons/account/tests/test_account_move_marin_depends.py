@@ -37,7 +37,7 @@ class TestAccountMoveMarinDepends(AccountTestInvoicingCommon):
         )
 
     def test_partner_credit_warning_clears_on_post(self):
-        self.env.company.account_use_credit_limit = True
+        self.env.company.account_config_id.account_use_credit_limit = True
         self.partner_a.credit_limit = 1.0
         invoice = self.init_invoice(
             "out_invoice", partner=self.partner_a, amounts=[1000.0], post=False

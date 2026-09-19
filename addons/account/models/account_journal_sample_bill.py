@@ -45,7 +45,7 @@ class AccountJournal(models.Model):
         context["default_move_type"] = "in_invoice"
         invoice_date = fields.Date.today() - timedelta(days=12)
         company = purchase_journal.company_id
-        default_expense_account = company.expense_account_id
+        default_expense_account = company.account_config_id.expense_account_id
         ref = "DE%s" % invoice_date.strftime("%Y%m")
         bill = (
             self.env["account.move"]

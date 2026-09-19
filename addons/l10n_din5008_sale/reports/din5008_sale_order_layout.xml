@@ -18,8 +18,8 @@
                                 t-if="doc.partner_id.commercial_partner_id == doc.partner_invoice_id and main_addr_id.vat"
                                 id="partner_vat_address_same_as_shipping">
                                 <t
-                                    t-if="doc.company_id.account_fiscal_country_id.vat_label"
-                                    t-out="doc.company_id.account_fiscal_country_id.vat_label"
+                                    t-if="doc.company_id.account_config_id.account_fiscal_country_id.vat_label"
+                                    t-out="doc.company_id.account_config_id.account_fiscal_country_id.vat_label"
                                     id="inv_tax_id_label" />
                                 <t t-else="">Tax ID</t>: <span t-field="main_addr_id.vat" />
                             </div>
@@ -36,8 +36,8 @@
                                 t-if="main_addr_id.vat"
                                 id="partner_vat_address_same_as_shipping">
                                 <t
-                                    t-if="doc.company_id.account_fiscal_country_id.vat_label"
-                                    t-out="doc.company_id.account_fiscal_country_id.vat_label"
+                                    t-if="doc.company_id.account_config_id.account_fiscal_country_id.vat_label"
+                                    t-out="doc.company_id.account_config_id.account_fiscal_country_id.vat_label"
                                     id="inv_tax_id_label" />
                                 <t t-else="">Tax ID</t>: <span t-field="main_addr_id.vat" />
                             </div>

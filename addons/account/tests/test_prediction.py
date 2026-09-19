@@ -10,7 +10,7 @@ class TestBillsPrediction(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.company.predict_bill_product = True
+        cls.company.account_config_id.predict_bill_product = True
 
         cls.test_partners = cls.env["res.partner"].create(
             [{"name": "test partner %s" % i} for i in range(7)]

@@ -457,7 +457,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         currency_grp = self.env.ref("base.group_multi_currency")
         self.env.user.write({"group_ids": [(4, currency_grp.id)]})
 
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
         product_category_all = self.product_category
         product_category_all.property_cost_method = "standard"
         product_category_all.property_valuation = "real_time"

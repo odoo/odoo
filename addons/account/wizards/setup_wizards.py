@@ -17,26 +17,26 @@ class AccountFinancialYearOp(models.TransientModel):
     )
     opening_move_posted = fields.Boolean(compute="_compute_opening_move_posted")
     opening_date = fields.Date(
-        related="company_id.account_opening_date",
+        related="company_id.account_config_id.account_opening_date",
         string="Opening Date",
         readonly=False,
         required=True,
         help="Date from which the accounting is managed in Odoo. It is the date of the opening entry.",
     )
     fiscalyear_last_day = fields.Integer(
-        related="company_id.fiscalyear_last_day",
+        related="company_id.account_config_id.fiscalyear_last_day",
         readonly=False,
         required=True,
         help="The last day of the month will be used if the chosen day doesn't exist.",
     )
     fiscalyear_last_month = fields.Selection(
-        related="company_id.fiscalyear_last_month",
+        related="company_id.account_config_id.fiscalyear_last_month",
         readonly=False,
         required=True,
         help="The last day of the month will be used if the chosen day doesn't exist.",
     )
 
-    @api.depends("company_id.account_opening_move_id")
+    @api.depends("company_id.account_config_id.account_opening_move_id")
     def _compute_opening_move_posted(self):
         for record in self:
             record.opening_move_posted = record.company_id.opening_move_posted()
@@ -71,8 +71,10 @@ class AccountFinancialYearOp(models.TransientModel):
                 if wizard_field in vals
             }
         )
-        opening_date = vals.get("opening_date", company_id.account_opening_date)
-        opening_move = company_id.account_opening_move_id
+        opening_date = vals.get(
+            "opening_date", company_id.account_config_id.account_opening_date
+        )
+        opening_move = company_id.account_config_id.account_opening_move_id
         if opening_date and opening_move.state == "draft":
             opening_move.write(
                 {

@@ -273,10 +273,12 @@
             </xpath>
             <!-- End Arabic & English payment terms -->
             <!-- Arabic & English amount in words -->
-            <p t-if="o.company_id.display_invoice_amount_total_words" position="before">
+            <p
+                t-if="o.company_id.account_config_id.display_invoice_amount_total_words"
+                position="before">
                 <p
                     name="amount_total_words_lang_sec"
-                    t-if="o.company_id.display_invoice_amount_total_words and display_in_lang_sec"
+                    t-if="o.company_id.account_config_id.display_invoice_amount_total_words and display_in_lang_sec"
                     t-att-dir="env['res.lang']._get_data(code=lang_sec).direction or 'ltr'"
                     t-translation="off">
                     <span t-if="display_in_ar">المبلغ الإجمالي كتابةً: <br /></span>

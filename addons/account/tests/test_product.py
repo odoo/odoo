@@ -62,8 +62,8 @@ class TestProduct(AccountTestInvoicingCommon):
             product_without_company.sudo(),
             [
                 {
-                    "taxes_id": companies.account_sale_tax_id.ids,
-                    "supplier_taxes_id": companies.account_purchase_tax_id.ids,
+                    "taxes_id": companies.account_config_id.account_sale_tax_id.ids,
+                    "supplier_taxes_id": companies.account_config_id.account_purchase_tax_id.ids,
                 }
             ],
         )
@@ -71,10 +71,12 @@ class TestProduct(AccountTestInvoicingCommon):
             product_with_company.sudo(),
             [
                 {
-                    "taxes_id": self.company_data["company"].account_sale_tax_id.ids,
+                    "taxes_id": self.company_data[
+                        "company"
+                    ].account_config_id.account_sale_tax_id.ids,
                     "supplier_taxes_id": self.company_data[
                         "company"
-                    ].account_purchase_tax_id.ids,
+                    ].account_config_id.account_purchase_tax_id.ids,
                 }
             ],
         )
@@ -85,7 +87,7 @@ class TestProduct(AccountTestInvoicingCommon):
             {
                 "name": "Branch Company",
                 "parent_id": parent_company.id,
-                "account_sale_tax_id": parent_company.account_sale_tax_id.id,
+                "account_sale_tax_id": parent_company.account_config_id.account_sale_tax_id.id,
             }
         )
 
@@ -377,7 +379,7 @@ class TestProduct(AccountTestInvoicingCommon):
         )
         self.assertEqual(
             product._get_category_account("property_account_income_categ_id"),
-            self.env.company.income_account_id,
+            self.env.company.account_config_id.income_account_id,
             "res_company._set_category_defaults mirrors income_account_id into"
             " ir.default, so an untouched category already answers with it",
         )

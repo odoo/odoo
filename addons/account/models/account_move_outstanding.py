@@ -107,7 +107,7 @@ class AccountMove(models.Model):
                     (
                         "account_id",
                         "=",
-                        self.company_id.account_journal_suspense_account_id.id,
+                        self.company_id.account_config_id.account_journal_suspense_account_id.id,
                     ),
                     ("reconciled", "=", False),
                 ],

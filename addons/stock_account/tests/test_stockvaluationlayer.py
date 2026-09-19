@@ -953,7 +953,7 @@ class TestAngloSaxonAccounting(TestStockValuationCommon):
         self.assertEqual(abs(anglo_lines[1].balance), 10)
 
     def test_return_delivery_storno(self):
-        self.env.company.account_storno = True
+        self.env.company.account_config_id.account_storno = True
         self.product = self.product_fifo
 
         self._make_in_move(self.product, 10, unit_cost=10)

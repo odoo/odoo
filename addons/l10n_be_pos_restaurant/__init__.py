@@ -3,7 +3,10 @@ from . import models
 
 def post_init_hook(env):
     for company in env["res.company"].search(
-        [("chart_template", "=like", "be%"), ("parent_id", "=", False)]
+        [
+            ("account_config_id.chart_template", "=like", "be%"),
+            ("parent_id", "=", False),
+        ]
     ):
         Template = env["account.chart.template"].with_company(company)
         Template._load_data(

@@ -46,6 +46,7 @@ from . import account_journal_sample_bill
 from . import product
 from . import product_category
 from . import mixin_product_catalog
+from . import account_config
 from . import res_company
 from . import res_config_settings
 from . import res_country_group

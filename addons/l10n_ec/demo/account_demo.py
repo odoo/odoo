@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     @api.model
     def _prepare_demo_data_move(self, company=False):
         move_data = super()._prepare_demo_data_move(company)
-        if company.account_fiscal_country_id.code == "EC":
+        if company.account_config_id.account_fiscal_country_id.code == "EC":
             move_data[self.company_xmlid("demo_invoice_1")][
                 "l10n_latam_document_type_id"
             ] = "l10n_ec.ec_dt_01"

@@ -5,7 +5,9 @@ from odoo.exceptions import ValidationError
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
+    country_code = fields.Char(
+        related="company_id.account_config_id.account_fiscal_country_id.code"
+    )
 
     @api.constrains("date_planned", "date_done")
     def _check_backdate_allowed(self):

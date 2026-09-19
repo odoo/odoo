@@ -12,7 +12,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _prepare_demo_data_move(self, company=False):
         ref = self.env.ref
         move_data = super()._prepare_demo_data_move(company)
-        if company.account_fiscal_country_id.code == "CL":
+        if company.account_config_id.account_fiscal_country_id.code == "CL":
             foreign_invoice = ref("l10n_cl.dc_fe_dte").id
             foreign_credit_note = ref("l10n_cl.dc_ncex_dte").id
             self.env["account.journal"].search(

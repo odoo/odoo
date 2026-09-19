@@ -20,7 +20,7 @@ class ResCompany(models.Model):
     def onchange_country(self):
         """Argentinean companies use round_globally as tax_calculation_rounding_method"""
         for rec in self.filtered(lambda x: x.country_id.code == "AR"):
-            rec.tax_calculation_rounding_method = "round_globally"
+            rec.account_config_id.tax_calculation_rounding_method = "round_globally"
 
     @api.depends("l10n_ar_afip_responsibility_type_id")
     def _compute_l10n_ar_company_requires_vat(self):
@@ -35,7 +35,7 @@ class ResCompany(models.Model):
         """Argentinean localization use documents"""
         self.check_singleton()
         return (
-            self.chart_template in {"ar_base", "ar_ex", "ar_ri"}
+            self.account_config_id.chart_template in {"ar_base", "ar_ex", "ar_ri"}
             or super()._localization_use_documents()
         )
 

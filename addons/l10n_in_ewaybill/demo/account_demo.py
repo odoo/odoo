@@ -9,14 +9,14 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     def _post_load_demo_data(self, company=False):
-        if company and company.account_fiscal_country_id.code == "IN":
+        if company and company.account_config_id.account_fiscal_country_id.code == "IN":
             self._update_l10n_in_demo_data(company)
         return super()._post_load_demo_data(company)
 
     @api.model
     def _update_l10n_in_demo_data(self, company=False):
         indian_companies = company or self.env["res.company"].search(
-            [("account_fiscal_country_id.code", "=", "IN")]
+            [("account_config_id.account_fiscal_country_id.code", "=", "IN")]
         )
         invoices = [
             "demo_invoice_b2b_1",

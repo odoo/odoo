@@ -35,7 +35,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.is_downpayment:
                 line.is_storno = (
-                    line.company_id.account_storno
+                    line.company_id.account_config_id.account_storno
                     and line.company_id.currency_id.compare_amounts(line.balance, 0.0)
                     > 0
                 )

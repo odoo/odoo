@@ -16,8 +16,8 @@ class _FakeAccount:
 class TestFiscalCountryGroupCodes(common.TransactionCase):
     def test_a_company_without_a_fiscal_country_still_yields_a_list(self):
         company = self.env["res.company"].create({"name": "No Fiscal Country Co"})
-        self.assertFalse(company.account_fiscal_country_id)
-        codes = company.account_fiscal_country_group_codes
+        self.assertFalse(company.account_config_id.account_fiscal_country_id)
+        codes = company.account_config_id.account_fiscal_country_group_codes
         self.assertIsInstance(
             codes,
             list,
@@ -37,7 +37,7 @@ class TestFiscalCountryGroupCodes(common.TransactionCase):
             {"name": "BE Fiscal Co", "account_fiscal_country_id": belgium.id}
         )
         self.assertEqual(
-            company.account_fiscal_country_group_codes,
+            company.account_config_id.account_fiscal_country_group_codes,
             belgium.country_group_codes,
             "a company with a fiscal country still reports that country's groups",
         )
@@ -172,17 +172,25 @@ class TestResCompanyDomesticFP(common.TransactionCase):
     def test_lowest_sequence_wins_over_specificity(self):
         self._fp("spec-seq5", 5, specific=True)
         group_low = self._fp("group-seq1", 1, specific=False)
-        self.company.invalidate_recordset(["domestic_fiscal_position_id"])
-        self.assertEqual(self.company.domestic_fiscal_position_id, group_low)
+        self.company.account_config_id.invalidate_recordset(
+            ["domestic_fiscal_position_id"]
+        )
+        self.assertEqual(
+            self.company.account_config_id.domestic_fiscal_position_id, group_low
+        )
 
     def test_specific_beats_group_on_sequence_tie(self):
         self._fp("group-seq5", 5, specific=False)
         spec = self._fp("spec-seq5", 5, specific=True)
-        self.company.invalidate_recordset(["domestic_fiscal_position_id"])
-        self.assertEqual(self.company.domestic_fiscal_position_id, spec)
+        self.company.account_config_id.invalidate_recordset(
+            ["domestic_fiscal_position_id"]
+        )
+        self.assertEqual(
+            self.company.account_config_id.domestic_fiscal_position_id, spec
+        )
 
     def test_no_candidate(self):
-        self.assertFalse(self.company.domestic_fiscal_position_id)
+        self.assertFalse(self.company.account_config_id.domestic_fiscal_position_id)
 
 
 @tagged("post_install", "-at_install")
@@ -194,7 +202,7 @@ class TestResCompanyMultiVat(common.TransactionCase):
         company = self.env["res.company"].create(
             {"name": "CC MultiVat", "country_id": us.id}
         )
-        company.account_fiscal_country_id = us
+        company.account_config_id.account_fiscal_country_id = us
         fp = self.env["account.fiscal.position"].create(
             {
                 "name": "BE foreign VAT",
@@ -203,10 +211,10 @@ class TestResCompanyMultiVat(common.TransactionCase):
                 "foreign_vat": "BE0477472701",
             }
         )
-        self.assertEqual(company.multi_vat_foreign_country_ids, be)
+        self.assertEqual(company.account_config_id.multi_vat_foreign_country_ids, be)
 
         fp.write({"country_id": fr.id})
-        self.assertEqual(company.multi_vat_foreign_country_ids, fr)
+        self.assertEqual(company.account_config_id.multi_vat_foreign_country_ids, fr)
 
 
 @tagged("post_install", "-at_install")
@@ -283,7 +291,7 @@ class TestUpdateOpeningMove(AccountTestInvoicingCommon):
         expense = self.company_data["default_account_expense"]
 
         company._update_opening_move({revenue: (1000.0, 0.0), expense: (0.0, 400.0)})
-        move = company.account_opening_move_id
+        move = company.account_config_id.account_opening_move_id
         self.assertTrue(move, "opening move created")
         self.assertEqual(sum(move.line_ids.mapped("balance")), 0.0, "balanced")
         self.assertEqual(

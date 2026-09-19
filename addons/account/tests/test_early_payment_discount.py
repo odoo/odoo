@@ -829,7 +829,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 {
                     "name": f"tax_tag_{i}",
                     "applicability": "taxes",
-                    "country_id": self.env.company.account_fiscal_country_id.id,
+                    "country_id": self.env.company.account_config_id.account_fiscal_country_id.id,
                 }
                 for i in range(6)
             ]
@@ -961,7 +961,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             {
                 "name": "tax_tag",
                 "applicability": "taxes",
-                "country_id": self.env.company.account_fiscal_country_id.id,
+                "country_id": self.env.company.account_config_id.account_fiscal_country_id.id,
             }
         )
 

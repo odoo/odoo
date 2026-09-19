@@ -545,25 +545,25 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.invoice_journal = cls.company_data["default_journal_sale"]
         cls.receivable_account = cls.company_data["default_account_receivable"]
         cls.tax_received_account = cls.company_data["default_account_tax_sale"]
-        cls.company.account_default_pos_receivable_account_id = cls.env[
-            "account.account"
-        ].create(
-            {
-                "code": "X1012.POS",
-                "name": "Debtors - (POS)",
-                "reconcile": True,
-                "account_type": "asset_receivable",
-            }
+        cls.company.account_config_id.account_default_pos_receivable_account_id = (
+            cls.env["account.account"].create(
+                {
+                    "code": "X1012.POS",
+                    "name": "Debtors - (POS)",
+                    "reconcile": True,
+                    "account_type": "asset_receivable",
+                }
+            )
         )
         cls.pos_receivable_account = (
-            cls.company.account_default_pos_receivable_account_id
+            cls.company.account_config_id.account_default_pos_receivable_account_id
         )
         cls.pos_receivable_cash = cls.copy_account(
-            cls.company.account_default_pos_receivable_account_id,
+            cls.company.account_config_id.account_default_pos_receivable_account_id,
             {"name": "POS Receivable Cash"},
         )
         cls.pos_receivable_bank = cls.copy_account(
-            cls.company.account_default_pos_receivable_account_id,
+            cls.company.account_config_id.account_default_pos_receivable_account_id,
             {"name": "POS Receivable Bank"},
         )
         assert hasattr(cls, "inbound_payment_channel"), (
@@ -601,10 +601,10 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.other_currency_config = cls._create_other_currency_config()
 
         cls.categ_basic = cls.env.ref("product.product_category_services")
-        cls.env.company.anglo_saxon_accounting = True
+        cls.env.company.account_config_id.anglo_saxon_accounting = True
         cls.categ_anglo = cls._create_categ_anglo()
 
-        cls.sale_account = cls.company.income_account_id
+        cls.sale_account = cls.company.account_config_id.income_account_id
         cls.other_sale_account = cls.env["account.account"].search(
             [
                 ("company_ids", "=", cls.company.id),
@@ -815,7 +815,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                 {
                     "name": name,
                     "applicability": "taxes",
-                    "country_id": cls.env.company.account_fiscal_country_id.id,
+                    "country_id": cls.env.company.account_config_id.account_fiscal_country_id.id,
                 }
             )
 

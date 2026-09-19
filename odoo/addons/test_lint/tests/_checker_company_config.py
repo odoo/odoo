@@ -16,6 +16,8 @@ class Violation:
 
 
 def _extends_company(class_node: ast.ClassDef) -> bool:
+    # a class that inherits res.company extends it, whether or not it also
+    # restates `_name`; base's own definition names no `_inherit`
     for statement in class_node.body:
         match statement:
             case ast.Assign(targets=[ast.Name(id="_inherit")], value=value):
@@ -27,10 +29,6 @@ def _extends_company(class_node: ast.ClassDef) -> bool:
                             isinstance(elt, ast.Constant) and elt.value == "res.company"
                             for elt in elts
                         )
-            case ast.Assign(
-                targets=[ast.Name(id="_name")], value=ast.Constant(value="res.company")
-            ):
-                return False
     return False
 
 
@@ -41,15 +39,32 @@ def _is_field(value: ast.expr) -> bool:
     return False
 
 
+def _is_related_through_config(value: ast.expr) -> bool:
+    # a related through `<app>_config_id` declares no storage and no logic
+    # on the tenant: it is the configuration read from a company view
+    match value:
+        case ast.Call(keywords=keywords):
+            for keyword in keywords:
+                match keyword:
+                    case ast.keyword(
+                        arg="related", value=ast.Constant(value=str() as path)
+                    ):
+                        head, _sep, _rest = path.partition(".")
+                        return head.endswith("_config_id")
+    return False
+
+
 def check(tree: ast.Module) -> Iterator[Violation]:
     for node in ast.walk(tree):
         if not isinstance(node, ast.ClassDef) or not _extends_company(node):
             continue
         for statement in node.body:
             match statement:
-                case ast.Assign(targets=[ast.Name(id=name)], value=value) if _is_field(
-                    value
-                ) and not name.endswith("_config_id"):
+                case ast.Assign(targets=[ast.Name(id=name)], value=value) if (
+                    _is_field(value)
+                    and not name.endswith("_config_id")
+                    and not _is_related_through_config(value)
+                ):
                     yield Violation(
                         statement.lineno,
                         statement.col_offset,

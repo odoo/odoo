@@ -11,8 +11,8 @@
                     t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}" />
                 <p t-if="doc.partner_id.vat" class="mb-0">
                     <t
-                        t-if="doc.company_id.account_fiscal_country_id.vat_label"
-                        t-out="doc.company_id.account_fiscal_country_id.vat_label" />
+                        t-if="doc.company_id.account_config_id.account_fiscal_country_id.vat_label"
+                        t-out="doc.company_id.account_config_id.account_fiscal_country_id.vat_label" />
                 <t t-else="">Tax
                     ID</t>: <span t-field="doc.partner_id.vat" />
                 </p>
@@ -408,7 +408,7 @@
                 <div>
                     <span
                         t-field="doc.notes"
-                        t-att-class="'justify-text' if doc.company_id.terms_type != 'html' else ''"
+                        t-att-class="'justify-text' if doc.company_id.account_config_id.terms_type != 'html' else ''"
                         name="order_note" />
                     <p t-if="not is_html_empty(doc.payment_term_id.note)">
                         <span t-field="doc.payment_term_id.note">The payment should also be

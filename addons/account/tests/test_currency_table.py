@@ -563,7 +563,7 @@ class TestCurrencyTable(TestAccountReportsCommon):
             sequence=self.company_eur_data["company"].sequence,
         )
 
-        usd_branch_data["company"].totals_below_sections = False
+        usd_branch_data["company"].account_config_id.totals_below_sections = False
 
         # Add equity accounts to branch data
         usd_branch_data["equity_account"] = self.company_usd_data["equity_account"]

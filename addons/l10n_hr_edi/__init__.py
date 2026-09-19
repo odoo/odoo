@@ -5,7 +5,7 @@ from . import wizards
 def post_init(env):
     # Loading new field 'l10n_hr_tax_category_id' for existing Croatian taxes
     for company in env["res.company"].search(
-        [("chart_template", "=", "hr")], order="parent_path"
+        [("account_config_id.chart_template", "=", "hr")], order="parent_path"
     ):
         Template = env["account.chart.template"].with_company(company)
         Template._load_data(

@@ -5,7 +5,9 @@ from odoo.addons.l10n_latam_base.controllers.portal import L10nLatamBasePortalAc
 
 class L10nBRPortalAccount(L10nLatamBasePortalAccount):
     def _is_brazilean_fiscal_country(self):
-        return request.env.company.account_fiscal_country_id.code == "BR"
+        return (
+            request.env.company.account_config_id.account_fiscal_country_id.code == "BR"
+        )
 
     def _prepare_address_form_values(self, partner_sudo, *args, **kwargs):
         rendering_values = super()._prepare_address_form_values(

@@ -86,7 +86,9 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 "reconcile": True,
             }
         )
-        env.company.account_default_pos_receivable_account_id = cls.account_receivable
+        env.company.account_config_id.account_default_pos_receivable_account_id = (
+            cls.account_receivable
+        )
         env["ir.default"].set(
             "res.partner",
             "property_account_receivable_id",
@@ -1180,10 +1182,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(
             lines[0].account_id,
             bank_pm.receivable_account_id
-            or self.env.company.account_default_pos_receivable_account_id,
+            or self.env.company.account_config_id.account_default_pos_receivable_account_id,
         )
         self.assertAlmostEqual(lines[0].balance, -1)
-        self.assertEqual(lines[1].account_id, self.env.company.income_account_id)
+        self.assertEqual(
+            lines[1].account_id, self.env.company.account_config_id.income_account_id
+        )
         self.assertAlmostEqual(lines[1].balance, 0)
         self.assertEqual(lines[2].account_id, tax_received_account)
         self.assertAlmostEqual(lines[2].balance, 1)
@@ -1192,7 +1196,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         bank_pm = self.env["pos.payment.method"].create(
             {
                 "name": "Bank",
-                "receivable_account_id": self.env.company.account_default_pos_receivable_account_id.id,
+                "receivable_account_id": self.env.company.account_config_id.account_default_pos_receivable_account_id.id,
                 "is_cash_count": False,
                 "split_transactions": False,
                 "company_id": self.env.company.id,
@@ -3774,9 +3778,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
 
     def test_pos_ui_round_globally(self):
-        self.main_pos_config.company_id.tax_calculation_rounding_method = (
-            "round_globally"
-        )
+        self.main_pos_config.company_id.account_config_id.tax_calculation_rounding_method = "round_globally"
         tax_16 = self.env["account.tax"].create(
             {
                 "name": "Tax 16%",

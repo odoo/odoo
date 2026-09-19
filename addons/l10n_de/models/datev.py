@@ -19,7 +19,7 @@ class ProductTemplate(models.Model):
         invoicing to not be blocked by the above constraint"""
         result = super()._get_product_accounts(fiscal_pos=fiscal_pos)
         company = self.env.company
-        if company.account_fiscal_country_id.code == "DE":
+        if company.account_config_id.account_fiscal_country_id.code == "DE":
             # Only what is actually replaced goes through the fiscal position:
             # super() has already mapped what it returned, and map_account is not
             # idempotent when a position chains one account onto another.

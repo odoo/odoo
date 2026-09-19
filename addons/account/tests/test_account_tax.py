@@ -511,7 +511,7 @@ class TestAccountTax(AccountTestInvoicingCommon):
 
     def test_compute_all_rounds_per_tax_base_under_round_globally(self):
         company = self.env.company
-        company.tax_calculation_rounding_method = "round_globally"
+        company.account_config_id.tax_calculation_rounding_method = "round_globally"
         currency = company.currency_id
         tax = self.env["account.tax"].create(
             {

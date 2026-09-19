@@ -9,7 +9,7 @@ def _post_init_hook(env):
         env["ir.config_parameter"].set_param("account.use_invoice_terms", True)
     companies = env["res.company"].search([])
     for company in companies:
-        company.terms_type = "html"
+        company.account_config_id.terms_type = "html"
     env["website"].search([]).auth_signup_uninvited = "b2c"
 
     existing_websites = env["website"].search([])

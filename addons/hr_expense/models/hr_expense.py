@@ -789,7 +789,9 @@ class HrExpense(models.Model):
         for _expense in self:
             expense = _expense.with_company(_expense.company_id)
             if not expense.product_id:
-                expense.account_id = _expense.company_id.expense_account_id
+                expense.account_id = (
+                    _expense.company_id.account_config_id.expense_account_id
+                )
                 continue
             account = expense.product_id.product_tmpl_id._get_product_accounts()[
                 "expense"
@@ -2323,7 +2325,7 @@ class HrExpense(models.Model):
             account = self.product_id.product_tmpl_id._get_product_accounts()["expense"]
             source = "product"  # debuglog
         else:
-            account = self.env.company.expense_account_id
+            account = self.env.company.account_config_id.expense_account_id
             source = "company"  # debuglog
 
         if account:
@@ -2403,7 +2405,7 @@ class HrExpense(models.Model):
         ).env["account.chart.template"]
         outstanding_account = chart_template.ref(account_ref, raise_if_not_found=False)
         if not outstanding_account:
-            bank_prefix = self.company_id.bank_account_code_prefix
+            bank_prefix = self.company_id.account_config_id.bank_account_code_prefix
             first_account = self.env["account.account"].search(
                 [("company_ids", "in", self.company_id.id)], limit=1
             )

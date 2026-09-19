@@ -50,9 +50,9 @@ class SaleOrder(models.Model):
     _portal_url_prefix = "orders"
     _product_ok_field = "sale_ok"
 
-    terms_type = fields.Selection(related="company_id.terms_type")
+    terms_type = fields.Selection(related="company_id.account_config_id.terms_type")
     country_code = fields.Char(
-        related="company_id.account_fiscal_country_id.code",
+        related="company_id.account_config_id.account_fiscal_country_id.code",
         string="Country code",
     )
     partner_id = fields.Many2one(string="Customer")
@@ -451,15 +451,18 @@ class SaleOrder(models.Model):
                 continue
             company = order.company_id
             order_company = order.with_company(company)
-            if order_company.terms_type == "html" and company.invoice_terms_html:
+            if (
+                order_company.terms_type == "html"
+                and company.account_config_id.invoice_terms_html
+            ):
                 baseurl = html_keep_url(order_company._get_note_url() + "/terms")
                 order.notes = _("Terms & Conditions: %s", baseurl)
                 _debug.logic("notes_computed", order=order, source="terms_url")
-            elif not is_html_empty(company.invoice_terms):
+            elif not is_html_empty(company.account_config_id.invoice_terms):
                 order_ctx = order_company
                 if order.partner_id.lang:
                     order_ctx = order_company.with_context(lang=order.partner_id.lang)
-                order.notes = order_ctx.env.company.invoice_terms
+                order.notes = order_ctx.env.company.account_config_id.invoice_terms
                 _debug.logic("notes_computed", order=order, source="invoice_terms")
 
     @api.depends("partner_id")

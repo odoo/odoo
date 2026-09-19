@@ -9,7 +9,9 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.env.company.tax_calculation_rounding_method = "round_globally"
+        cls.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
 
     def test_dispatch_delta_on_base_lines(self):
         tax_21 = self.percent_tax(21.0)

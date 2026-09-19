@@ -73,7 +73,7 @@ class ResPartnerBank(models.Model):
 
     def _compute_display_qr_setting(self):
         bank_kh = self.filtered(lambda b: b.country_code == "KH")
-        bank_kh.display_qr_setting = self.env.company.qr_code
+        bank_kh.display_qr_setting = self.env.company.account_config_id.qr_code
         super(ResPartnerBank, self - bank_kh)._compute_display_qr_setting()
 
     @api.depends("country_code")

@@ -15,7 +15,9 @@ class PosOrderLine(models.Model):
     @api.depends("product_id")
     def _compute_l10n_in_hsn_code(self):
         indian_lines = self.filtered(
-            lambda line: line.company_id.account_fiscal_country_id.code == "IN"
+            lambda line: (
+                line.company_id.account_config_id.account_fiscal_country_id.code == "IN"
+            )
         )
         (self - indian_lines).l10n_in_hsn_code = False
         for line in indian_lines:

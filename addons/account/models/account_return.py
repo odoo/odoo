@@ -422,7 +422,7 @@ class AccountReturn(models.Model):
             .sudo()
             .search(
                 [
-                    ("account_opening_date", "!=", False),
+                    ("account_config_id.account_opening_date", "!=", False),
                     ("id", "parent_of", self.env.companies.ids),
                 ]
             )
@@ -435,12 +435,14 @@ class AccountReturn(models.Model):
         self, company, return_type, return_type_external_id, date_from, date_to
     ):
         return_type_delay = return_type.with_company(company).deadline_days_delay
-        delay = return_type_delay or company.account_return_reminder_day
+        delay = (
+            return_type_delay or company.account_config_id.account_return_reminder_day
+        )
         return date_to + relativedelta(days=delay)
 
     @api.depends(
         "date_to",
-        "company_id.account_return_reminder_day",
+        "company_id.account_config_id.account_return_reminder_day",
         "type_id.deadline_days_delay",
         "is_completed",
     )
@@ -773,7 +775,7 @@ class AccountReturn(models.Model):
 
         company._check_tax_return_configuration()
         # Fiscal year is automatically setup with default values as it is a required field
-        if not company.account_opening_date:
+        if not company.account_config_id.account_opening_date:
             _debug.logic("opening_date_missing", company=company)
             if not self.env.user.has_group("account.group_account_manager"):
                 raise UserError(
@@ -983,10 +985,11 @@ class AccountReturn(models.Model):
                 main_company = self.tax_unit_id.main_company_id or self.company_id
                 if (
                     report.country_id
-                    and report.country_id == main_company.account_fiscal_country_id
+                    and report.country_id
+                    == main_company.account_config_id.account_fiscal_country_id
                     and (
-                        not main_company.tax_lock_date
-                        or self.date_to > main_company.tax_lock_date
+                        not main_company.account_config_id.tax_lock_date
+                        or self.date_to > main_company.account_config_id.tax_lock_date
                     )
                 ):
                     for company in self.company_ids:
@@ -995,7 +998,7 @@ class AccountReturn(models.Model):
                         )._create_default_external_values(
                             self.date_from, self.date_to, True, company=company
                         )
-                        company.sudo().tax_lock_date = self.date_to
+                        company.sudo().account_config_id.tax_lock_date = self.date_to
 
                 # Generate the carryover values.
                 payable_accounts, receivable_accounts = (
@@ -1042,7 +1045,7 @@ class AccountReturn(models.Model):
     def _get_tax_closing_payable_and_receivable_accounts(self):
         country = (
             self.type_id.report_id.country_id
-            or self.company_id.account_fiscal_country_id
+            or self.company_id.account_config_id.account_fiscal_country_id
         )
         tax_groups_sudo = (
             self.env["account.tax"]
@@ -1260,7 +1263,8 @@ class AccountReturn(models.Model):
         if report := self.type_id.report_id:
             if (
                 not report.country_id
-                or report.country_id == self.company_id.account_fiscal_country_id
+                or report.country_id
+                == self.company_id.account_config_id.account_fiscal_country_id
             ):
                 # Check for locked return
                 violated_lock_dates = []
@@ -1331,20 +1335,21 @@ class AccountReturn(models.Model):
 
             main_company = self.tax_unit_id.main_company_id or self.company_id
             if (
-                report.country_id == main_company.account_fiscal_country_id
-                and main_company.tax_lock_date
-                and self.date_to <= main_company.tax_lock_date
+                report.country_id
+                == main_company.account_config_id.account_fiscal_country_id
+                and main_company.account_config_id.tax_lock_date
+                and self.date_to <= main_company.account_config_id.tax_lock_date
             ):
                 _debug.logic(
                     "tax_lock_date_rolled_back",
                     tax_return=self,
                     company=main_company,
-                    old_lock_date=main_company.tax_lock_date,
+                    old_lock_date=main_company.account_config_id.tax_lock_date,
                     companies=self.company_ids,
                 )
                 for company in self.company_ids:
-                    company.sudo().tax_lock_date = self.date_from + relativedelta(
-                        days=-1
+                    company.sudo().account_config_id.tax_lock_date = (
+                        self.date_from + relativedelta(days=-1)
                     )
 
             self.total_amount_to_pay = 0
@@ -2134,7 +2139,8 @@ class AccountReturn(models.Model):
         def filter_template(template):
             return template.code not in codes_to_ignore and (
                 not template.country_ids
-                or self.company_id.account_fiscal_country_id in template.country_ids
+                or self.company_id.account_config_id.account_fiscal_country_id
+                in template.country_ids
             )
 
         return_type = self.type_id
@@ -2775,7 +2781,7 @@ class AccountReturn(models.Model):
                         (
                             "partner_id.country_id",
                             "!=",
-                            self.company_id.account_fiscal_country_id.id,
+                            self.company_id.account_config_id.account_fiscal_country_id.id,
                         ),
                         ("partner_id.vies_valid", "=", False),
                         ("company_id", "in", self.company_ids.ids),

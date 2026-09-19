@@ -33,7 +33,7 @@ class PosConfig(models.Model):
 
     def _load_bar_demo_data(self, with_demo_data=True):
         super()._load_bar_demo_data(with_demo_data)
-        if (self.env.company.chart_template or "").startswith("be"):
+        if (self.env.company.account_config_id.chart_template or "").startswith("be"):
             ChartTemplate = self.env["account.chart.template"].with_company(
                 self.env.company
             )
@@ -49,7 +49,7 @@ class PosConfig(models.Model):
     @api.model
     def load_onboarding_restaurant_scenario(self, with_demo_data=True):
         res = super().load_onboarding_restaurant_scenario(with_demo_data)
-        if (self.env.company.chart_template or "").startswith("be"):
+        if (self.env.company.account_config_id.chart_template or "").startswith("be"):
             config = self.env.ref(
                 self._get_suffixed_ref_name(
                     "pos_restaurant.pos_config_main_restaurant"

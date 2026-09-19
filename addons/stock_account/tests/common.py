@@ -433,14 +433,14 @@ class TestStockValuationCommon(BaseCommon):
             name="Branch Company", parent_id=cls.company.id
         )
 
-        cls.account_expense = cls.company.expense_account_id
+        cls.account_expense = cls.company.account_config_id.expense_account_id
         cls.account_stock_valuation = cls.company.account_stock_valuation_id
         cls.account_stock_variation = (
             cls.account_stock_valuation.account_stock_variation_id
         )
         cls.account_payable = cls.company.partner_id.property_account_payable_id
         cls.account_receivable = cls.company.partner_id.property_account_receivable_id
-        cls.account_income = cls.company.income_account_id
+        cls.account_income = cls.company.account_config_id.income_account_id
 
         cls.category_standard = cls.env["product.category"].create(
             {

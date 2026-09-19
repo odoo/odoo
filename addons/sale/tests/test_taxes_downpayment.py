@@ -823,7 +823,9 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
 
     @freeze_time("2018-01-01")
     def test_down_payment_100_first_then_0_final_invoice_round_per_line(self):
-        self.env.company.tax_calculation_rounding_method = "round_per_line"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_per_line"
+        )
         product = self.company_data["product_order_cost"]
         tax_23 = self.percent_tax(23.0)
         other_currency = self.setup_other_currency(
@@ -984,7 +986,9 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
 
     @freeze_time("2018-01-01")
     def test_down_payment_100_first_then_0_final_invoice_round_globally(self):
-        self.env.company.tax_calculation_rounding_method = "round_globally"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
         product = self.company_data["product_order_cost"]
         tax_23 = self.percent_tax(23.0)
         other_currency = self.setup_other_currency(

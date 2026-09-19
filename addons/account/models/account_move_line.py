@@ -476,7 +476,7 @@ class AccountMoveLine(models.Model):
         default=0.0,
     )
     tax_calculation_rounding_method = fields.Selection(
-        related="company_id.tax_calculation_rounding_method",
+        related="company_id.account_config_id.tax_calculation_rounding_method",
         string="Tax calculation rounding method",
         readonly=True,
     )
@@ -915,7 +915,7 @@ class AccountMoveLine(models.Model):
     @api.depends("move_id.is_storno", "move_id.move_type", "price_unit", "quantity")
     def _compute_is_storno(self):
         for line in self:
-            if not line.company_id.account_storno:
+            if not line.company_id.account_config_id.account_storno:
                 continue
             line.is_storno = (
                 line.is_storno or line.move_id.is_storno
@@ -2270,7 +2270,7 @@ class AccountMoveLine(models.Model):
                 vals.get("move_id")
                 and self.env["account.move"]
                 .browse(vals["move_id"])
-                .company_id.account_storno
+                .company_id.account_config_id.account_storno
             ):
                 vals["is_storno"] = vals.get("is_storno", False) or (
                     vals.get("debit", 0) < 0 or vals.get("credit", 0) < 0
@@ -3594,7 +3594,7 @@ class AccountMoveLine(models.Model):
         for plan in plan_list:
             amls = plan["amls"]
             needed = any(
-                amls.company_id.mapped("tax_exigibility")
+                amls.company_id.account_config_id.mapped("tax_exigibility")
             ) and amls.account_id.account_type in (
                 "asset_receivable",
                 "liability_payable",
@@ -3671,12 +3671,12 @@ class AccountMoveLine(models.Model):
         return all_amls
 
     def _get_exchange_journal(self, company):
-        return company.currency_exchange_journal_id
+        return company.account_config_id.currency_exchange_journal_id
 
     def _get_exchange_account(self, company, amount):
         if amount > 0.0:
-            return company.expense_currency_exchange_account_id
-        return company.income_currency_exchange_account_id
+            return company.account_config_id.expense_currency_exchange_account_id
+        return company.account_config_id.income_currency_exchange_account_id
 
     @_debug.perf.timed
     def _prepare_exchange_difference_move_vals(
@@ -3831,14 +3831,14 @@ class AccountMoveLine(models.Model):
 
         journals = self.env["account.journal"].browse(list(journal_ids))
         for journal in journals:
-            if not journal.company_id.expense_currency_exchange_account_id:
+            if not journal.company_id.account_config_id.expense_currency_exchange_account_id:
                 raise UserError(
                     _(
                         "You should configure the 'Loss Exchange Rate Account' in your company settings, to manage"
                         " automatically the booking of accounting entries related to differences between exchange rates."
                     )
                 )
-            if not journal.company_id.income_currency_exchange_account_id.id:
+            if not journal.company_id.account_config_id.income_currency_exchange_account_id.id:
                 raise UserError(
                     _(
                         "You should configure the 'Gain Exchange Rate Account' in your company settings, to manage"

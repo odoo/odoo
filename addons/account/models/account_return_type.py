@@ -245,7 +245,8 @@ class AccountReturnType(models.Model):
         """
         is_foreign_vat = (
             self.report_id
-            and company.account_fiscal_country_id.code != self.report_id.country_id.code
+            and company.account_config_id.account_fiscal_country_id.code
+            != self.report_id.country_id.code
         )
 
         is_tax_unit_main_comp = not tax_unit or tax_unit.main_company_id == company
@@ -273,10 +274,14 @@ class AccountReturnType(models.Model):
             .search(
                 [
                     ("parent_id", "=", False),
-                    ("account_opening_date", "!=", False),
+                    ("account_config_id.account_opening_date", "!=", False),
                     "|",
-                    ("account_last_return_cron_refresh", "=", False),
-                    ("account_last_return_cron_refresh", "<", date_upper_bound),
+                    ("account_config_id.account_last_return_cron_refresh", "=", False),
+                    (
+                        "account_config_id.account_last_return_cron_refresh",
+                        "<",
+                        date_upper_bound,
+                    ),
                 ],
                 limit=2,
             )
@@ -290,7 +295,7 @@ class AccountReturnType(models.Model):
         if root_companies:
             to_treat = root_companies[0]
             self._sync_all_returns(to_treat)
-            to_treat.account_last_return_cron_refresh = now
+            to_treat.account_config_id.account_last_return_cron_refresh = now
 
             if len(root_companies) > 1:
                 cron = self.env.ref("account.ir_cron_generate_account_return")
@@ -338,7 +343,9 @@ class AccountReturnType(models.Model):
 
         :param root_companies: the res.company records to generate returns for
         """
-        root_companies = root_companies.filtered(lambda x: x.account_opening_date)
+        root_companies = root_companies.filtered(
+            lambda x: x.account_config_id.account_opening_date
+        )
         if not root_companies:
             _debug.logic("_sync_all_returns_no_root_company_opening")
             return
@@ -351,7 +358,7 @@ class AccountReturnType(models.Model):
 
         all_domestic_tax_units = self.env["account.tax.unit"]
         for company in root_companies:
-            fiscal_country = company.account_fiscal_country_id
+            fiscal_country = company.account_config_id.account_fiscal_country_id
             domestic_tax_unit = all_tax_units.filtered(
                 lambda x, fiscal_country=fiscal_country, company=company: (
                     x.country_id == fiscal_country and company in x.company_ids
@@ -399,7 +406,7 @@ class AccountReturnType(models.Model):
                     return_to_check.company_id, return_to_check.tax_unit_id
                 )
                 or return_to_check.date_deadline
-                < return_to_check.company_id.account_opening_date
+                < return_to_check.company_id.account_config_id.account_opening_date
             ):
                 returns_to_unlink |= return_to_check
         _debug.pipeline(
@@ -425,7 +432,10 @@ class AccountReturnType(models.Model):
         if self.env.context.get("only_refresh_conditional_types"):
             return
 
-        if main_company.sudo().account_fiscal_country_id.code == country_code:
+        if (
+            main_company.sudo().account_config_id.account_fiscal_country_id.code
+            == country_code
+        ):
             search_domain = Domain.AND(
                 [
                     Domain("auto_generate", "=", True),
@@ -542,8 +552,8 @@ class AccountReturnType(models.Model):
                     if (
                         child_company.vat
                         and child_company.vat != vat_from_parent
-                        and child_company.account_return_periodicity
-                        and child_company.account_return_reminder_day
+                        and child_company.account_config_id.account_return_periodicity
+                        and child_company.account_config_id.account_return_reminder_day
                     ):
                         other_main_companies |= child_company
                     to_treat.append((child_company.vat, child_company))
@@ -555,7 +565,7 @@ class AccountReturnType(models.Model):
                 branch_main_companies=other_main_companies,
             )
             for other_main_company in other_main_companies:
-                if other_main_company.account_opening_date:
+                if other_main_company.account_config_id.account_opening_date:
                     self._try_create_returns_for_fiscal_year(
                         other_main_company, tax_unit
                     )
@@ -582,7 +592,7 @@ class AccountReturnType(models.Model):
                     main_company, self, type_xml_id, period_date_from, period_date_to
                 )
                 if (
-                    main_company.account_opening_date or date.min
+                    main_company.account_config_id.account_opening_date or date.min
                 ) <= deadline_date <= next_year or bypass_period_check:
                     periods.append((period_date_from, period_date_to))
                 date_pointer = period_date_to + relativedelta(days=1)
@@ -799,12 +809,15 @@ class AccountReturnType(models.Model):
         if (
             self.report_id
             and self.report_id.country_id
-            and main_company.account_fiscal_country_id != self.report_id.country_id
+            and main_company.account_config_id.account_fiscal_country_id
+            != self.report_id.country_id
         ):
             if self.report_id and self.report_id.country_id:
                 country_code = f"({self.report_id.country_id.code})"
             else:
-                country_code = f"({main_company.account_fiscal_country_id.code})"
+                country_code = (
+                    f"({main_company.account_config_id.account_fiscal_country_id.code})"
+                )
         _debug.logic(
             "return_name_country_suffix",
             returntype=self,
@@ -942,7 +955,7 @@ class AccountReturnType(models.Model):
     def _get_periodicity(self, company):
         return (
             self.with_company(company).sudo().deadline_periodicity
-            or company.sudo().account_return_periodicity
+            or company.sudo().account_config_id.account_return_periodicity
         )
 
     def _get_start_date(self):

@@ -105,9 +105,9 @@ class AccountMove(models.Model):
                 )
             if not taxes:
                 taxes = (
-                    self.journal_id.company_id.account_sale_tax_id
+                    self.journal_id.company_id.account_config_id.account_sale_tax_id
                     if self.journal_id.type == "sale"
-                    else self.journal_id.company_id.account_purchase_tax_id
+                    else self.journal_id.company_id.account_config_id.account_purchase_tax_id
                 )
             taxes = self.fiscal_position_id.map_tax(taxes)
 

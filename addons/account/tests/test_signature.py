@@ -14,7 +14,7 @@ class TestInvoiceSignature(AccountTestInvoicingCommon):
         if cls.env.ref("base.module_sign").state != "installed":
             cls.skipTest(cls, "`sign` module not installed")
 
-        cls.env.company.sign_invoice = True
+        cls.env.company.account_config_id.sign_invoice = True
 
         cls.signature_fake_1 = base64.b64encode(b"fake_signature_1")
         cls.signature_fake_2 = base64.b64encode(b"fake_signature_2")
@@ -66,7 +66,7 @@ class TestInvoiceSignature(AccountTestInvoicingCommon):
     def test_invoice_from_company_without_signature_settings_shouldnt_have_signature(
         self,
     ):
-        self.env.company.sign_invoice = False
+        self.env.company.account_config_id.sign_invoice = False
         self.invoice.action_post()
         self.assertFalse(
             self.invoice.show_signature_area,
@@ -109,7 +109,7 @@ class TestInvoiceSignature(AccountTestInvoicingCommon):
         )
 
     def test_invoice_signing_user_should_be_reprensative_user_if_there_is_one(self):
-        self.env.company.signing_user = self.user
+        self.env.company.account_config_id.signing_user = self.user
         invoice = self.invoice.with_user(self.another_user)
         invoice.action_post()
         self.assertEqual(
@@ -127,7 +127,7 @@ class TestInvoiceSignature(AccountTestInvoicingCommon):
         self,
     ):
         self.invoice.action_post()
-        self.env.company.signing_user = self.another_user
+        self.env.company.account_config_id.signing_user = self.another_user
         self.assertEqual(
             self.invoice.signing_user,
             self.user,

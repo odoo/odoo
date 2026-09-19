@@ -54,7 +54,7 @@ class TestSaleProjectStockProfitability(
 
     @skip("Temporary to fast merge new valuation")
     def test_report_invoice_items_anglo_saxon_automatic_valuation(self):
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
         self.stock_account_product_categ.write(
             {
                 "property_account_expense_categ_id": self.cogs_account.id,

@@ -67,7 +67,7 @@ class TestBalanceSheetReport(TestAccountReportsCommon):
         )
         options["unfolded_lines"] = [line_id]
         options["hierarchy"] = True
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.totals_below_sections = False
         lines = self.report._get_lines(options)
 
         # The unfolded section holds the 4 accounts and the 2 account groups, nested by code prefix
@@ -162,7 +162,7 @@ class TestBalanceSheetReport(TestAccountReportsCommon):
         """Check that only the wanted total lines exist with the 'unfold_all' option: empty sections have no total line."""
         # Only '_get_lines' is covered here; manual unfolds in the web UI are not exercised by this test.
 
-        self.env.company.totals_below_sections = True
+        self.env.company.account_config_id.totals_below_sections = True
         options = self._generate_options(
             self.report,
             fields.Date.from_string("1990-01-01"),

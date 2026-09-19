@@ -1384,8 +1384,8 @@ class TestGeneralLedgerReport(TestAccountReportsCommon, odoo.tests.HttpCase):
         )
 
     def test_general_ledger_same_date_ordering(self):
-        self.env.company.account_sale_tax_id = None
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.account_sale_tax_id = None
+        self.env.company.account_config_id.totals_below_sections = False
 
         report = self.env.ref("account.general_ledger_report")
         options = self._generate_options(
@@ -1506,7 +1506,7 @@ class TestGeneralLedgerReport(TestAccountReportsCommon, odoo.tests.HttpCase):
         options = self._generate_options(
             report, "2010-01-01", "2010-01-01", default_options={"unfold_all": True}
         )
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.totals_below_sections = False
         self.assertLinesValues(
             report._get_lines(options),
             #   Name                                              Debit       Credit      Balance
@@ -1581,7 +1581,7 @@ class TestGeneralLedgerReport(TestAccountReportsCommon, odoo.tests.HttpCase):
             "2014-01-01",
             default_options={"unfold_all": True},
         )
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.totals_below_sections = False
         self.assertLinesValues(
             self.report._get_lines(options),
             #   Name                          amount_currency           Debit       Credit      Balance
@@ -1603,7 +1603,7 @@ class TestGeneralLedgerReport(TestAccountReportsCommon, odoo.tests.HttpCase):
         """
         Check that the batched version of the report is consistent with the report non batched
         """
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.totals_below_sections = False
         options = self._generate_options(
             self.report,
             "2017-01-01",

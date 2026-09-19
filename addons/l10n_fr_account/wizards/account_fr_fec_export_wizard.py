@@ -117,8 +117,9 @@ class L10n_FrFecExportWizard(models.TransientModel):
         * For non-french companies -> returns the complete vat number
         """
         is_dom_tom = (
-            company.account_fiscal_country_id
-            and "DOM-TOM" in company.account_fiscal_country_id.country_group_codes
+            company.account_config_id.account_fiscal_country_id
+            and "DOM-TOM"
+            in company.account_config_id.account_fiscal_country_id.country_group_codes
         )
         if not company.vat or is_dom_tom:
             return ""
@@ -467,11 +468,13 @@ class L10n_FrFecExportWizard(models.TransientModel):
             suffix = "-NONOFFICIAL"
 
         # Set fiscal year lock date to the end date (not in test)
-        fiscalyear_lock_date = self.env.company.fiscalyear_lock_date
+        fiscalyear_lock_date = self.env.company.account_config_id.fiscalyear_lock_date
         if not self.test_file and (
             not fiscalyear_lock_date or fiscalyear_lock_date < self.date_to
         ):
-            self.env.company.write({"fiscalyear_lock_date": self.date_to})
+            self.env.company.account_config_id.write(
+                {"fiscalyear_lock_date": self.date_to}
+            )
 
         return {
             "file_name": f"{company_legal_data}FEC{end_date}{suffix}.txt",

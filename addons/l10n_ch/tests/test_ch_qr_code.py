@@ -15,7 +15,7 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.company_data["company"].qr_code = True
+        cls.company_data["company"].account_config_id.qr_code = True
 
         cls.swiss_iban = cls.env["res.partner.bank"].create(
             {

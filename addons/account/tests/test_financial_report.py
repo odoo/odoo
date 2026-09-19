@@ -917,7 +917,7 @@ class TestFinancialReport(TestAccountReportsCommon):
 
         self.assertTrue(options["show_horizontal_group_total"])
         # Since we don't calculate the value when totals below section is activated, we disable it
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.totals_below_sections = False
         self.assertHorizontalGroupTotal(
             self.report._get_lines(options),
             [
@@ -1245,7 +1245,7 @@ class TestFinancialReport(TestAccountReportsCommon):
         )
         options["unfolded_lines"] = [line_id]
         options["hierarchy"] = True
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.totals_below_sections = False
         lines = profit_and_loss_report._get_lines(options)
 
         unfolded_lines = profit_and_loss_report._get_unfolded_lines(lines, line_id)
@@ -1298,7 +1298,7 @@ class TestFinancialReport(TestAccountReportsCommon):
         )
         options["unfolded_lines"] = [line_id]
         options["hierarchy"] = True
-        self.env.company.totals_below_sections = False
+        self.env.company.account_config_id.totals_below_sections = False
         lines = profit_and_loss_report._get_lines(options)
         lines_array = [{"name": line["name"], "level": line["level"]} for line in lines]
 

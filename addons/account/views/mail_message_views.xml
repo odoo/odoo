@@ -54,7 +54,7 @@
                 <filter
                     name="res_company"
                     string="Company"
-                    domain="[('model', '=', 'res.company')]" />
+                    domain="[('model', 'in', ('res.company', 'account.config'))]" />
                 <separator />
                 <field
                     name="tracking_value_ids"
@@ -105,7 +105,7 @@
             name="domain">[
             ('message_type', '=', 'notification'),
             ('model', 'in', ('account.move', 'account.account', 'account.tax', 'res.partner',
-            'res.company')),
+            'res.company', 'account.config')),
             ]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">This is the Audit Trail Report</p>

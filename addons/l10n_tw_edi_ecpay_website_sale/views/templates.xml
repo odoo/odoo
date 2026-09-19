@@ -156,7 +156,7 @@
             <div
                 class="row m-0 mb-3 p-0"
                 id="l10n_tw_edi_require_paper_format"
-                t-if="(address_type == 'billing' or use_delivery_as_billing)                     and res_company.account_fiscal_country_id.code == 'TW'                     and not partner_sudo.commercial_partner_id.is_company                     and not partner_sudo.commercial_company_name">
+                t-if="(address_type == 'billing' or use_delivery_as_billing)                     and res_company.account_config_id.account_fiscal_country_id.code == 'TW'                     and not partner_sudo.commercial_partner_id.is_company                     and not partner_sudo.commercial_company_name">
                 <div class="col-xl-6">
                     <label class="col-form-label" for="l10n_tw_edi_require_paper_format">Request a paper copy</label>
                     <select name="l10n_tw_edi_require_paper_format" class="form-select">

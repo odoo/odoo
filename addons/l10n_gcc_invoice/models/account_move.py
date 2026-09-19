@@ -57,15 +57,17 @@ class AccountMove(models.Model):
         ):
             lang = move.partner_id.lang or self.env.user.lang
             if (
-                move.company_id.terms_type == "html"
+                move.company_id.account_config_id.terms_type == "html"
                 or move.narration
-                != move.company_id.with_context(lang=lang).invoice_terms
+                != move.company_id.with_context(
+                    lang=lang
+                ).account_config_id.invoice_terms
             ):
                 continue
             moves_to_fix |= move
         if not moves_to_fix:
             return
-        self.env["res.company"].flush_model(["invoice_terms"])
+        self.env["account.config"].flush_model(["invoice_terms"])
         self.env.cr.execute(
             'SELECT "id","invoice_terms" FROM "res_company" WHERE id = any(%s)',
             [moves_to_fix.company_id.ids],

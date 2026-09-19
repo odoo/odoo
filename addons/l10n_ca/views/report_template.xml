@@ -3,7 +3,7 @@
 
     <template id="pst_external_layout">
         <li
-            t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst">
+            t-if="company.account_config_id.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst">
             PST: <span t-field="company.l10n_ca_pst" />
         </li>
     </template>
@@ -25,7 +25,7 @@
         inherit_id="web.external_layout_folder">
         <xpath expr="//div[hasclass('o_folder_company_info')]" position="after">
             <div
-                t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst">
+                t-if="company.account_config_id.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst">
                 PST: <span t-field="company.l10n_ca_pst" />
             </div>
         </xpath>

@@ -33,10 +33,12 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
     def test_chart_template_loading(self):
         self.assertEqual(self.root_company.currency_id, self.branch_a.currency_id)
         self.assertEqual(
-            self.root_company.fiscalyear_last_day, self.branch_a.fiscalyear_last_day
+            self.root_company.account_config_id.fiscalyear_last_day,
+            self.branch_a.account_config_id.fiscalyear_last_day,
         )
         self.assertEqual(
-            self.root_company.fiscalyear_last_month, self.branch_a.fiscalyear_last_month
+            self.root_company.account_config_id.fiscalyear_last_month,
+            self.branch_a.account_config_id.fiscalyear_last_month,
         )
 
         root_accounts = self.env["account.account"].search(
@@ -324,15 +326,15 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
                     move = self.init_invoice(
                         move_type,
                         amounts=[100],
-                        taxes=self.root_company.account_sale_tax_id,
+                        taxes=self.root_company.account_config_id.account_sale_tax_id,
                         invoice_date=invoice_date,
                         post=True,
                         company=company,
                     )
                     self.assertEqual(move.date, fields.Date.to_date(invoice_date))
                     with freeze_time("4000-01-01"):
-                        self.root_company[lock] = root_lock
-                        self.branch_a[lock] = branch_lock
+                        self.root_company.account_config_id[lock] = root_lock
+                        self.branch_a.account_config_id[lock] = branch_lock
                     with check():
                         move.action_draft()
 
@@ -345,15 +347,15 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         )
 
         with freeze_time("4000-01-01"):
-            parent.fiscalyear_lock_date = date(3025, 12, 31)
-            branch.fiscalyear_lock_date = date(3022, 12, 31)
+            parent.account_config_id.fiscalyear_lock_date = date(3025, 12, 31)
+            branch.account_config_id.fiscalyear_lock_date = date(3022, 12, 31)
 
         parent.active = False
         branch.active = True
         self.assertTrue(branch.active)
         self.assertFalse(parent.active)
 
-        branch.invalidate_recordset(["user_fiscalyear_lock_date"])
+        branch.account_config_id.invalidate_recordset(["user_fiscalyear_lock_date"])
         self.assertEqual(
             branch._get_user_lock_date("fiscalyear_lock_date"),
             date(3025, 12, 31),
@@ -385,7 +387,7 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         tax_lines = [
             Command.create(
                 {
-                    "account_id": self.root_company.account_journal_suspense_account_id.id,
+                    "account_id": self.root_company.account_config_id.account_journal_suspense_account_id.id,
                     "tax_ids": [Command.set(tax.ids)],
                     "name": "name",
                 }
@@ -517,4 +519,4 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
 
     def test_set_fiscalyear_last_day_to_negative_value(self):
         with self.assertRaises(ValidationError):
-            self.root_company.fiscalyear_last_day = -1
+            self.root_company.account_config_id.fiscalyear_last_day = -1

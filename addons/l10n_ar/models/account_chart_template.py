@@ -55,7 +55,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         # If Responsable Monotributista remove the default purchase tax
         if template_code in ("ar_base", "ar_ex"):
-            company.account_purchase_tax_id = self.env["account.tax"]
+            company.account_config_id.account_purchase_tax_id = self.env["account.tax"]
 
         return res
 
@@ -67,7 +67,10 @@ class AccountChartTemplate(models.AbstractModel):
             return None
         if isinstance(company, int):
             company = self.env["res.company"].browse([company])
-        if company.country_code == "AR" and not company.chart_template:
+        if (
+            company.country_code == "AR"
+            and not company.account_config_id.chart_template
+        ):
             match = {
                 self.env.ref("l10n_ar.res_RM"): "ar_base",
                 self.env.ref("l10n_ar.res_IVAE"): "ar_ex",

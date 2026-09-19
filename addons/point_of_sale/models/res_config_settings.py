@@ -26,7 +26,7 @@ class ResConfigSettings(models.TransientModel):
     )
     sale_tax_id = fields.Many2one(
         comodel_name="account.tax",
-        related="company_id.account_sale_tax_id",
+        related="company_id.account_config_id.account_sale_tax_id",
         string="Default Sale Tax",
         readonly=False,
         check_company=True,
@@ -68,7 +68,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     account_default_pos_receivable_account_id = fields.Many2one(
-        related="company_id.account_default_pos_receivable_account_id",
+        related="company_id.account_config_id.account_default_pos_receivable_account_id",
         string="Default Account Receivable (PoS)",
         readonly=False,
         check_company=True,

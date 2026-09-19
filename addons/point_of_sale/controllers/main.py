@@ -328,7 +328,9 @@ class PosController(PortalAccount):
                 ],
             )
 
-        pos_order_country = pos_order.company_id.account_fiscal_country_id
+        pos_order_country = (
+            pos_order.company_id.account_config_id.account_fiscal_country_id
+        )
         additional_partner_fields = request.env[
             "res.partner"
         ].get_partner_localisation_fields_required_to_invoice(pos_order_country)

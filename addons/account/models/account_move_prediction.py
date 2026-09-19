@@ -233,7 +233,7 @@ class AccountMoveLine(models.Model):
             .sudo()
             .get_param("account_predictive_bills.predict_product", "1")
         )
-        if predict_product and move.company_id.predict_bill_product:
+        if predict_product and move.company_id.account_config_id.predict_bill_product:
             query = self._prepare_predictive_query(
                 move_id=move,
                 additional_domain=[

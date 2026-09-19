@@ -13,7 +13,9 @@ class TestTaxesDispatchingBaseLines(TestTaxCommon):
         cls.foreign_currency = cls.setup_other_currency("EUR")
 
     def test_dispatch_return_of_merchandise_lines(self):
-        self.env.company.tax_calculation_rounding_method = "round_globally"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
         AccountTax = self.env["account.tax"]
         tax1 = self.fixed_tax(1, include_base_amount=True)
         tax2 = self.percent_tax(21)
@@ -95,7 +97,9 @@ class TestTaxesDispatchingBaseLines(TestTaxCommon):
         self._assert_tax_totals_summary(tax_totals, expected_values)
 
     def test_dispatch_return_of_merchandise_lines_no_match(self):
-        self.env.company.tax_calculation_rounding_method = "round_globally"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
         AccountTax = self.env["account.tax"]
         tax = self.percent_tax(21)
 
@@ -229,7 +233,9 @@ class TestTaxesDispatchingBaseLines(TestTaxCommon):
     def test_dispatch_return_of_merchandise_lines_partial_match_keeps_the_remainder(
         self,
     ):
-        self.env.company.tax_calculation_rounding_method = "round_globally"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
         AccountTax = self.env["account.tax"]
         tax = self.percent_tax(21)
         quantities = [10, 6, 6, -14, -9]
@@ -274,7 +280,9 @@ class TestTaxesDispatchingBaseLines(TestTaxCommon):
             )
 
     def test_dispatch_global_discount_lines(self):
-        self.env.company.tax_calculation_rounding_method = "round_globally"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
         AccountTax = self.env["account.tax"]
         tax1 = self.fixed_tax(1, include_base_amount=True)
         tax2 = self.percent_tax(21)
@@ -391,7 +399,9 @@ class TestTaxesDispatchingBaseLines(TestTaxCommon):
         self._assert_tax_totals_summary(tax_totals, expected_values)
 
     def test_dispatch_global_discount_lines_no_match(self):
-        self.env.company.tax_calculation_rounding_method = "round_globally"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
         AccountTax = self.env["account.tax"]
         tax = self.percent_tax(21)
 
@@ -451,7 +461,9 @@ class TestTaxesDispatchingBaseLines(TestTaxCommon):
             )
 
         AccountTax = self.env["account.tax"]
-        self.env.company.tax_calculation_rounding_method = "round_globally"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
         tax1 = self.fixed_tax(1, include_base_amount=True)
         tax2 = self.fixed_tax(5)
         tax3 = self.percent_tax(21)

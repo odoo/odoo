@@ -36,7 +36,9 @@ class TestDeferredManagement(AccountTestInvoicingCommon):
             for i in range(3)
         ]
 
-        cls.company.deferred_expense_journal_id = cls.env["account.journal"].create(
+        cls.company.account_config_id.deferred_expense_journal_id = cls.env[
+            "account.journal"
+        ].create(
             {
                 "name": "Deferred Expense Journal",
                 "code": "DEFEXP",
@@ -44,7 +46,9 @@ class TestDeferredManagement(AccountTestInvoicingCommon):
                 "company_id": cls.company.id,
             }
         )
-        cls.company.deferred_revenue_journal_id = cls.env["account.journal"].create(
+        cls.company.account_config_id.deferred_revenue_journal_id = cls.env[
+            "account.journal"
+        ].create(
             {
                 "name": "Deferred Revenue Journal",
                 "code": "DEFREV",
@@ -52,10 +56,10 @@ class TestDeferredManagement(AccountTestInvoicingCommon):
                 "company_id": cls.company.id,
             }
         )
-        cls.company.deferred_expense_account_id = cls.company_data[
+        cls.company.account_config_id.deferred_expense_account_id = cls.company_data[
             "default_account_deferred_expense"
         ].id
-        cls.company.deferred_revenue_account_id = cls.company_data[
+        cls.company.account_config_id.deferred_revenue_account_id = cls.company_data[
             "default_account_deferred_revenue"
         ].id
 
@@ -293,14 +297,18 @@ class TestDeferredManagement(AccountTestInvoicingCommon):
         self.assertFalse(lines[11].has_abnormal_deferred_dates)
 
     def test_deferred_expense_generate_entries_method(self):
-        self.company.generate_deferred_expense_entries_method = "manual"
+        self.company.account_config_id.generate_deferred_expense_entries_method = (
+            "manual"
+        )
         move = self.create_invoice("in_invoice", [self.expense_lines[0]], post=True)
         self.assertEqual(len(move.deferred_move_ids), 0)
 
         move = self.create_invoice("in_refund", [self.expense_lines[0]], post=True)
         self.assertEqual(len(move.deferred_move_ids), 0)
 
-        self.company.generate_deferred_expense_entries_method = "on_validation"
+        self.company.account_config_id.generate_deferred_expense_entries_method = (
+            "on_validation"
+        )
         move = self.create_invoice("in_invoice", [self.expense_lines[0]], post=True)
         self.assertEqual(len(move.deferred_move_ids), 5)
 
@@ -319,7 +327,9 @@ class TestDeferredManagement(AccountTestInvoicingCommon):
 
         move.action_post()
         self.assertEqual(len(move.deferred_move_ids), 5)
-        move.company_id.fiscalyear_lock_date = fields.Date.to_date("2023-02-15")
+        move.company_id.account_config_id.fiscalyear_lock_date = fields.Date.to_date(
+            "2023-02-15"
+        )
         move.action_draft()
         self.assertEqual(len(move.deferred_move_ids), 2)
         self.assertEqual(
@@ -346,7 +356,7 @@ class TestDeferredManagement(AccountTestInvoicingCommon):
         self.assertEqual(len(posted_deferred_entries), 2)
         self.assertEqual(len(draft_deferred_move_ids), 2)
 
-        self.env.company.restrictive_audit_trail = True
+        self.env.company.account_config_id.restrictive_audit_trail = True
         invoice.action_draft()
 
         remaining_draft_moves = self.env["account.move"].search(
@@ -569,7 +579,9 @@ class TestDeferredManagement(AccountTestInvoicingCommon):
         self.assertEqual(len(move.deferred_move_ids), 2)
 
     def test_deferred_expense_single_period_entries(self):
-        self.company.deferred_expense_amount_computation_method = "month"
+        self.company.account_config_id.deferred_expense_amount_computation_method = (
+            "month"
+        )
         move = self.create_invoice(
             "in_invoice", [(self.expense_accounts[0], 1680, "2023-02-01", "2023-02-28")]
         )
@@ -788,7 +800,9 @@ class TestDeferredManagement(AccountTestInvoicingCommon):
         self.assertTrue(move.deferred_move_ids)
 
     def test_deferred_compute_method_full_months(self):
-        self.company.deferred_expense_amount_computation_method = "full_months"
+        self.company.account_config_id.deferred_expense_amount_computation_method = (
+            "full_months"
+        )
 
         dates = (("2024-06-05", "2025-06-04"), ("2024-06-30", "2025-06-29"))
         for date_from, date_to in dates:
@@ -952,7 +966,9 @@ class TestDeferredManagement(AccountTestInvoicingCommon):
         )
 
     def test_deferred_compute_method_full_months_revenue(self):
-        self.company.deferred_revenue_amount_computation_method = "full_months"
+        self.company.account_config_id.deferred_revenue_amount_computation_method = (
+            "full_months"
+        )
 
         dates = (("2024-06-05", "2025-06-04"), ("2024-06-30", "2025-06-29"))
         for date_from, date_to in dates:
@@ -1225,25 +1241,25 @@ class TestDeferredManagement(AccountTestInvoicingCommon):
                     "date": fields.Date.to_date("2025-01-01"),
                     "balance": -300,
                     "account_id": self.expense_accounts[0].id,
-                    "journal_id": self.company.deferred_expense_journal_id.id,
+                    "journal_id": self.company.account_config_id.deferred_expense_journal_id.id,
                 },
                 {
                     "date": fields.Date.to_date("2025-01-01"),
                     "balance": -30,
                     "account_id": self.revenue_accounts[0].id,
-                    "journal_id": self.company.deferred_revenue_journal_id.id,
+                    "journal_id": self.company.account_config_id.deferred_revenue_journal_id.id,
                 },
                 {
                     "date": fields.Date.to_date("2025-01-01"),
                     "balance": 30,
-                    "account_id": self.company.deferred_revenue_account_id.id,
-                    "journal_id": self.company.deferred_revenue_journal_id.id,
+                    "account_id": self.company.account_config_id.deferred_revenue_account_id.id,
+                    "journal_id": self.company.account_config_id.deferred_revenue_journal_id.id,
                 },
                 {
                     "date": fields.Date.to_date("2025-01-01"),
                     "balance": 300,
-                    "account_id": self.company.deferred_expense_account_id.id,
-                    "journal_id": self.company.deferred_expense_journal_id.id,
+                    "account_id": self.company.account_config_id.deferred_expense_account_id.id,
+                    "journal_id": self.company.account_config_id.deferred_expense_journal_id.id,
                 },
             ],
         )
@@ -1254,33 +1270,37 @@ class TestDeferredManagement(AccountTestInvoicingCommon):
                     {
                         "date": fields.Date.to_date(date),
                         "balance": -100,
-                        "account_id": self.company.deferred_expense_account_id.id,
-                        "journal_id": self.company.deferred_expense_journal_id.id,
+                        "account_id": self.company.account_config_id.deferred_expense_account_id.id,
+                        "journal_id": self.company.account_config_id.deferred_expense_journal_id.id,
                     },
                     {
                         "date": fields.Date.to_date(date),
                         "balance": -10,
-                        "account_id": self.company.deferred_revenue_account_id.id,
-                        "journal_id": self.company.deferred_revenue_journal_id.id,
+                        "account_id": self.company.account_config_id.deferred_revenue_account_id.id,
+                        "journal_id": self.company.account_config_id.deferred_revenue_journal_id.id,
                     },
                     {
                         "date": fields.Date.to_date(date),
                         "balance": 10,
                         "account_id": self.revenue_accounts[0].id,
-                        "journal_id": self.company.deferred_revenue_journal_id.id,
+                        "journal_id": self.company.account_config_id.deferred_revenue_journal_id.id,
                     },
                     {
                         "date": fields.Date.to_date(date),
                         "balance": 100,
                         "account_id": self.expense_accounts[0].id,
-                        "journal_id": self.company.deferred_expense_journal_id.id,
+                        "journal_id": self.company.account_config_id.deferred_expense_journal_id.id,
                     },
                 ],
             )
 
     def test_deferred_misc_diff_accounts_diff_methods(self):
-        self.company.generate_deferred_expense_entries_method = "on_validation"
-        self.company.generate_deferred_revenue_entries_method = "manual"
+        self.company.account_config_id.generate_deferred_expense_entries_method = (
+            "on_validation"
+        )
+        self.company.account_config_id.generate_deferred_revenue_entries_method = (
+            "manual"
+        )
         deferred_move = self.create_invoice(
             "entry",
             [
@@ -1297,8 +1317,12 @@ class TestDeferredManagement(AccountTestInvoicingCommon):
             deferred_move.action_post()
 
     def test_misc_entry_no_deferred_dates_with_diff_methods(self):
-        self.company.generate_deferred_expense_entries_method = "on_validation"
-        self.company.generate_deferred_revenue_entries_method = "manual"
+        self.company.account_config_id.generate_deferred_expense_entries_method = (
+            "on_validation"
+        )
+        self.company.account_config_id.generate_deferred_revenue_entries_method = (
+            "manual"
+        )
         move = self.env["account.move"].create(
             {
                 "move_type": "entry",

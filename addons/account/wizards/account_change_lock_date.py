@@ -6,7 +6,7 @@ from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils
 
-from odoo.addons.account.models.res_company import (
+from odoo.addons.account.models.account_config import (
     LOCK_DATE_FIELDS,
     SOFT_LOCK_DATE_FIELDS,
 )
@@ -136,7 +136,7 @@ class AccountChangeLockDate(models.TransientModel):
         "This lock date is irreversible and does not allow any exception.",
     )
     current_hard_lock_date = fields.Date(
-        related="company_id.hard_lock_date",
+        related="company_id.account_config_id.hard_lock_date",
         string="Current Hard Lock",
         readonly=True,
     )
@@ -176,7 +176,7 @@ class AccountChangeLockDate(models.TransientModel):
     def _compute_lock_dates(self):
         for wizard in self:
             for field in LOCK_DATE_FIELDS:
-                wizard[field] = wizard.company_id[field]
+                wizard[field] = wizard.company_id.account_config_id[field]
 
     @api.depends("company_id")
     @api.depends_context("uid", "company")
@@ -308,8 +308,11 @@ class AccountChangeLockDate(models.TransientModel):
         return {
             field: self[field]
             for field in SOFT_LOCK_DATE_FIELDS
-            if self.company_id[field]
-            and (not self[field] or self[field] < self.company_id[field])
+            if self.company_id.account_config_id[field]
+            and (
+                not self[field]
+                or self[field] < self.company_id.account_config_id[field]
+            )
         }
 
     @api.depends(*SOFT_LOCK_DATE_FIELDS)
@@ -321,9 +324,9 @@ class AccountChangeLockDate(models.TransientModel):
     @_debug.perf.timed
     def _prepare_lock_date_values(self, exception_vals_list=None):
         self.check_singleton()
-        if self.company_id.hard_lock_date and (
+        if self.company_id.account_config_id.hard_lock_date and (
             not self.hard_lock_date
-            or self.hard_lock_date < self.company_id.hard_lock_date
+            or self.hard_lock_date < self.company_id.account_config_id.hard_lock_date
         ):
             _debug.logic(
                 "lock_date_change_rejected", wizard=self, reason="hard_lock_decreased"
@@ -335,7 +338,7 @@ class AccountChangeLockDate(models.TransientModel):
         lock_date_values = {
             field: self[field]
             for field in LOCK_DATE_FIELDS
-            if self[field] != self.company_id[field]
+            if self[field] != self.company_id.account_config_id[field]
         }
 
         for lock_date in lock_date_values.values():
@@ -444,7 +447,7 @@ class AccountChangeLockDate(models.TransientModel):
 
     def _get_current_period_dates(self, lock_date_field):
         self.check_singleton()
-        company_lock_date = self.company_id[lock_date_field]
+        company_lock_date = self.company_id.account_config_id[lock_date_field]
         if company_lock_date:
             date_from = company_lock_date + timedelta(days=1)
         else:
@@ -460,7 +463,10 @@ class AccountChangeLockDate(models.TransientModel):
             lock_date_values = self._prepare_lock_date_values()
 
         tax_lock_date = lock_date_values.get("tax_lock_date", None)
-        if tax_lock_date and tax_lock_date != self.company_id["tax_lock_date"]:
+        if (
+            tax_lock_date
+            and tax_lock_date != self.company_id.account_config_id["tax_lock_date"]
+        ):
             self._create_default_report_external_values("tax_lock_date")
 
         fiscalyear_lock_date = lock_date_values.get("fiscalyear_lock_date", None)
@@ -474,8 +480,8 @@ class AccountChangeLockDate(models.TransientModel):
                 key=lambda t: t[0] or date.min,
             )
             company_fiscal_lock_date = max(
-                self.company_id.fiscalyear_lock_date or date.min,
-                self.company_id.hard_lock_date or date.min,
+                self.company_id.account_config_id.fiscalyear_lock_date or date.min,
+                self.company_id.account_config_id.hard_lock_date or date.min,
             )
             if fiscal_lock_date != company_fiscal_lock_date:
                 self._create_default_report_external_values(field)

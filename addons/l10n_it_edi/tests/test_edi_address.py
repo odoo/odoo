@@ -11,7 +11,7 @@ class TestUi(HttpCaseWithUserPortal, TestItEdi):
         it_user_portal = self._create_new_portal_user(name="IT User")
         # If website is installed, the website's company (main_company) should also have country as Italy
         company = self.env.ref("base.main_company")
-        company.account_fiscal_country_id = company.country_id = (
+        company.account_config_id.account_fiscal_country_id = company.country_id = (
             self.env.company.country_id
         )
 

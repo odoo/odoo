@@ -6,7 +6,10 @@ class AccountJournal(models.Model):
 
     def _update_payment_channels(self, payment_type):
         bank_journals = self.filtered(
-            lambda j: j.type == "bank" and j.company_id.chart_template == "in"
+            lambda j: (
+                j.type == "bank"
+                and j.company_id.account_config_id.chart_template == "in"
+            )
         )
         if not bank_journals:
             return

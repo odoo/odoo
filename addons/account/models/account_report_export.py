@@ -351,7 +351,9 @@ class AccountReportExport(models.Model):
                 <div class="d-flex align-items-start">
                 <table class="o_table">
             """),
-            "column_headers_render_data": self._prepare_column_headers_render_data(options),
+            "column_headers_render_data": self._prepare_column_headers_render_data(
+                options
+            ),
             "custom_templates": custom_print_templates,
         }
         if additional_context:
@@ -1295,7 +1297,7 @@ class AccountReportExport(models.Model):
 
         company = self._get_sender_company_for_export(options)
 
-        if company.account_fiscal_country_id != self.country_id:
+        if company.account_config_id.account_fiscal_country_id != self.country_id:
             foreign_vat_fpos = self.env["account.fiscal.position"].search(
                 [
                     *self.env["account.fiscal.position"]._check_company_domain(company),
@@ -1734,11 +1736,13 @@ class AccountReportExport(models.Model):
             report.is_account_coverage_report_available = (
                 (
                     report.availability_condition == "country"
-                    and self.env.company.account_fiscal_country_id == report.country_id
+                    and self.env.company.account_config_id.account_fiscal_country_id
+                    == report.country_id
                 )
                 or (
                     report.availability_condition == "coa"
-                    and self.env.company.chart_template == report.chart_template
+                    and self.env.company.account_config_id.chart_template
+                    == report.chart_template
                 )
                 or report.availability_condition == "always"
             ) and report.root_report_id in (

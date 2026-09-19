@@ -95,7 +95,7 @@ class TestOrderAmounts(BaseOrderTestCase):
 
     def test_a_partner_over_its_credit_limit_warns_on_a_draft_order(self):
         company = self.env.company
-        company.account_use_credit_limit = True
+        company.account_config_id.account_use_credit_limit = True
         self.partner.credit_limit = 1.0
         order = self._make_order()
         self._line(order, qty=1.0, price=500.0)
@@ -104,7 +104,7 @@ class TestOrderAmounts(BaseOrderTestCase):
         self.assertIn(self.partner.name, order.partner_credit_warning)
 
     def test_no_warning_when_the_company_does_not_use_credit_limits(self):
-        self.env.company.account_use_credit_limit = False
+        self.env.company.account_config_id.account_use_credit_limit = False
         self.partner.credit_limit = 1.0
         order = self._make_order()
         self._line(order, qty=1.0, price=500.0)
@@ -113,7 +113,7 @@ class TestOrderAmounts(BaseOrderTestCase):
 
     def test_no_warning_once_the_order_leaves_draft(self):
         """The warning is advice before committing, not a standing flag."""
-        self.env.company.account_use_credit_limit = True
+        self.env.company.account_config_id.account_use_credit_limit = True
         self.partner.credit_limit = 1.0
         order = self._make_order()
         self._line(order, qty=1.0, price=500.0)

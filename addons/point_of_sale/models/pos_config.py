@@ -704,21 +704,24 @@ class PosConfig(models.Model):
                 config.payment_method_ids.filtered("is_cash_count")
             )
 
-    @api.depends("company_id.chart_template", "company_id.root_id.chart_template")
+    @api.depends(
+        "company_id.account_config_id.chart_template",
+        "company_id.root_id.account_config_id.chart_template",
+    )
     def _compute_company_has_template(self):
         for config in self:
             root = config.company_id.root_id.sudo()
             config.company_has_template = bool(
-                config.company_id.chart_template
-                or root.chart_template
+                config.company_id.account_config_id.chart_template
+                or root.account_config_id.chart_template
                 or root._existing_accounting()
             )
             dbg.logic.debug(
                 "[config:%s] chart available=%s company_chart=%s root_chart=%s",
                 config.id,
                 config.company_has_template,
-                config.company_id.chart_template,
-                root.chart_template,
+                config.company_id.account_config_id.chart_template,
+                root.account_config_id.chart_template,
             )
 
     def _compute_is_installed_account_accountant(self):
@@ -1145,7 +1148,7 @@ class PosConfig(models.Model):
 
     def _check_company_has_fiscal_country(self):
         self.check_singleton()
-        if not self.company_id.account_fiscal_country_id:
+        if not self.company_id.account_config_id.account_fiscal_country_id:
             raise ValidationError(_("The company must have a fiscal country set."))
 
     _COMPANY_DEPENDENT_DEFAULTS = (
@@ -1790,7 +1793,8 @@ class PosConfig(models.Model):
             ("loss_account_id", "default_cash_difference_expense_account_id"),
         ):
             account = (
-                company[company_field] | company.root_id[company_field]
+                company.account_config_id[company_field]
+                | company.root_id.account_config_id[company_field]
             ).filtered("active")[:1]
             journal_vals.setdefault(journal_field, account.id)
 
@@ -1908,7 +1912,7 @@ class PosConfig(models.Model):
                 chart_template.ref(
                     "account_journal_payment_debit_account_id", raise_if_not_found=False
                 )
-                or self.env.company.transfer_account_id
+                or self.env.company.account_config_id.transfer_account_id
             )
             bank_pm = self.env["pos.payment.method"].create(
                 {
@@ -1961,7 +1965,7 @@ class PosConfig(models.Model):
                 limit=1,
             )
         )
-        has_chart_template = bool(self.env.company.chart_template)
+        has_chart_template = bool(self.env.company.account_config_id.chart_template)
         main_company = self.env.ref("base.main_company", raise_if_not_found=False)
         return {
             "has_pos_config": has_pos_config,

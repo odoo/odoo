@@ -2531,7 +2531,7 @@ class TestCashFlowReport(TestAccountReportsCommon):
         hierarchy instead of mixing them up together.
         """
         options = self._generate_options(self.report, "2016-01-01", "2016-12-31")
-        self.env.company.totals_below_sections = True
+        self.env.company.account_config_id.totals_below_sections = True
 
         # Create the account groups for the bank and cash accounts
         self.env["account.group"].create(

@@ -276,7 +276,7 @@ class AccountTestInvoicingCommon(ProductCommon):
     @classmethod
     def change_company_country(cls, company, country):
         company.country_id = country
-        company.account_fiscal_country_id = country
+        company.account_config_id.account_fiscal_country_id = country
         for model in ("account.tax", "account.tax.group"):
             cls.env.add_to_compute(
                 cls.env[model]._fields["country_id"],
@@ -393,8 +393,8 @@ class AccountTestInvoicingCommon(ProductCommon):
         cls.env["account.chart.template"].try_loading(
             chart_template_ref, company=company, install_demo=False
         )
-        if not company.account_fiscal_country_id:
-            company.account_fiscal_country_id = cls.env.ref("base.us")
+        if not company.account_config_id.account_fiscal_country_id:
+            company.account_config_id.account_fiscal_country_id = cls.env.ref("base.us")
 
     @classmethod
     def collect_company_accounting_data(cls, company):
@@ -415,7 +415,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                     (
                         "id",
                         "!=",
-                        company.account_journal_early_pay_discount_gain_account_id.id,
+                        company.account_config_id.account_journal_early_pay_discount_gain_account_id.id,
                     ),
                 ],
                 limit=1,
@@ -427,7 +427,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                     (
                         "id",
                         "!=",
-                        company.account_journal_early_pay_discount_loss_account_id.id,
+                        company.account_config_id.account_journal_early_pay_discount_loss_account_id.id,
                     ),
                 ],
                 limit=1,
@@ -441,8 +441,8 @@ class AccountTestInvoicingCommon(ProductCommon):
                 [*account_company_domain, ("account_type", "=", "liability_payable")],
                 limit=1,
             ),
-            "default_tax_account_receivable": company.account_purchase_tax_id.tax_group_id.tax_receivable_account_id,
-            "default_tax_account_payable": company.account_sale_tax_id.tax_group_id.tax_payable_account_id,
+            "default_tax_account_receivable": company.account_config_id.account_purchase_tax_id.tax_group_id.tax_receivable_account_id,
+            "default_tax_account_payable": company.account_config_id.account_sale_tax_id.tax_group_id.tax_payable_account_id,
             "default_account_assets": AccountAccount.search(
                 [*account_company_domain, ("account_type", "=", "asset_fixed")], limit=1
             ),
@@ -454,10 +454,10 @@ class AccountTestInvoicingCommon(ProductCommon):
                 [*account_company_domain, ("account_type", "=", "liability_current")],
                 limit=1,
             ),
-            "default_account_tax_sale": company.account_sale_tax_id.mapped(
+            "default_account_tax_sale": company.account_config_id.account_sale_tax_id.mapped(
                 "invoice_repartition_line_ids.account_id"
             ),
-            "default_account_tax_purchase": company.account_purchase_tax_id.mapped(
+            "default_account_tax_purchase": company.account_config_id.account_purchase_tax_id.mapped(
                 "invoice_repartition_line_ids.account_id"
             ),
             "default_journal_misc": cls.env["account.journal"].search(
@@ -487,8 +487,8 @@ class AccountTestInvoicingCommon(ProductCommon):
                     "company_id": company.id,
                 }
             ),
-            "default_tax_sale": company.account_sale_tax_id,
-            "default_tax_purchase": company.account_purchase_tax_id,
+            "default_tax_sale": company.account_config_id.account_sale_tax_id,
+            "default_tax_purchase": company.account_config_id.account_purchase_tax_id,
             "default_tax_return_journal": cls.env["account.journal"].create(
                 {
                     "name": "Tax Return Journal",
@@ -588,7 +588,9 @@ class AccountTestInvoicingCommon(ProductCommon):
                 "name": "%s (group)" % tax_name,
                 "amount_type": "group",
                 "amount": 0.0,
-                "country_id": company_data["company"].account_fiscal_country_id.id,
+                "country_id": company_data[
+                    "company"
+                ].account_config_id.account_fiscal_country_id.id,
                 "children_tax_ids": [
                     (
                         0,
@@ -600,7 +602,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                             "type_tax_use": type_tax_use,
                             "country_id": company_data[
                                 "company"
-                            ].account_fiscal_country_id.id,
+                            ].account_config_id.account_fiscal_country_id.id,
                             "price_include_override": "tax_included",
                             "include_base_amount": True,
                             "tax_exigibility": "on_invoice",
@@ -672,7 +674,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                             "type_tax_use": type_tax_use,
                             "country_id": company_data[
                                 "company"
-                            ].account_fiscal_country_id.id,
+                            ].account_config_id.account_fiscal_country_id.id,
                             "tax_exigibility": "on_payment"
                             if cash_basis_transition_account
                             else "on_invoice",
@@ -1775,7 +1777,9 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
 
     @contextmanager
     def with_tax_calculation_rounding_method(self, rounding_method):
-        self.env.company.tax_calculation_rounding_method = rounding_method
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            rounding_method
+        )
         yield
 
     def _create_assert_test(
@@ -1899,9 +1903,9 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
     def _jsonify_company(self, company):
         return {
             "id": company.id,
-            "tax_calculation_rounding_method": company.tax_calculation_rounding_method,
+            "tax_calculation_rounding_method": company.account_config_id.tax_calculation_rounding_method,
             "account_fiscal_country_id": self._jsonify_country(
-                company.account_fiscal_country_id
+                company.account_config_id.account_fiscal_country_id
             ),
             "currency_id": self._jsonify_currency(company.currency_id),
         }

@@ -1965,9 +1965,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         )
 
     def test_linear_reevaluation_decrease_then_increase_with_lock_date(self):
-        self.company_data["company"].fiscalyear_lock_date = fields.Date.to_date(
-            "2022-03-01"
-        )
+        self.company_data[
+            "company"
+        ].account_config_id.fiscalyear_lock_date = fields.Date.to_date("2022-03-01")
         asset = self.create_asset(
             value=60000,
             periodicity="monthly",
@@ -1991,9 +1991,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             }
         ).action_modify()
 
-        self.company_data["company"].fiscalyear_lock_date = fields.Date.to_date(
-            "2022-05-01"
-        )
+        self.company_data[
+            "company"
+        ].account_config_id.fiscalyear_lock_date = fields.Date.to_date("2022-05-01")
 
         date_modify_2 = fields.Date.to_date("2022-06-30")
         self.env["asset.modify"].create(
@@ -7360,7 +7360,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         ).action_sell_dispose()
 
     def test_asset_disposal_in_middle_of_fiscal_year(self):
-        self.company_data["company"].fiscalyear_last_month = "3"
+        self.company_data["company"].account_config_id.fiscalyear_last_month = "3"
 
         asset = self.create_asset(
             value=10000,

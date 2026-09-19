@@ -83,7 +83,7 @@ class TestAngloSaxonCommon(AccountTestInvoicingCommon):
                 "is_storable": True,
             }
         )
-        cls.company.anglo_saxon_accounting = True
+        cls.company.account_config_id.anglo_saxon_accounting = True
         cls.company.point_of_sale_update_stock_quantities = "real"
         cls.product.categ_id = cls.category
         cls.product.property_account_expense_id = account_expense

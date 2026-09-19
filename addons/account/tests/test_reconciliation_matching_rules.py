@@ -1782,7 +1782,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         )
 
     def test_move_name_caba_tax_account(self):
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.tax_exigibility = True
         tax_account = self.company_data["default_account_tax_sale"]
         tax_account.reconcile = True
 

@@ -369,7 +369,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         self.assertTrue(journal._query_has_sequence_holes())
 
         moves[2].action_post()
-        self.company_data["company"].write(
+        self.company_data["company"].account_config_id.write(
             {"fiscalyear_lock_date": gap_date + relativedelta(days=1)}
         )
         self.assertFalse(journal._query_has_sequence_holes())

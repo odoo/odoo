@@ -9,18 +9,18 @@ class AccountFinancialYearOp(models.TransientModel):
     _description = "Opening Balance of Financial Year"
 
     account_return_periodicity = fields.Selection(
-        related="company_id.account_return_periodicity",
+        related="company_id.account_config_id.account_return_periodicity",
         string="Periodicity in month",
         readonly=False,
         required=True,
     )
     account_tax_return_journal_id = fields.Many2one(
-        related="company_id.account_tax_return_journal_id",
+        related="company_id.account_config_id.account_tax_return_journal_id",
         string="Journal",
         readonly=False,
     )
     account_return_reminder_day = fields.Integer(
-        related="company_id.account_return_reminder_day",
+        related="company_id.account_config_id.account_return_reminder_day",
         string="Reminder",
         readonly=False,
         required=True,

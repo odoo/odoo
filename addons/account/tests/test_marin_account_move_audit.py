@@ -71,7 +71,7 @@ class TestAlertsAreKeyedByUser(AccountTestInvoicingCommon):
         invoice = self.init_invoice(
             "out_invoice", amounts=[100.0], invoice_date="2020-01-15", post=False
         )
-        invoice.company_id.sudo().fiscalyear_lock_date = "2021-12-31"
+        invoice.company_id.sudo().account_config_id.fiscalyear_lock_date = "2021-12-31"
         invoice.invalidate_recordset()
         self.assertTrue(invoice.tax_lock_date_message)
         return invoice

@@ -331,7 +331,9 @@ class TestFiscalPosition(common.TransactionCase):
                 },
             ]
         )
-        self.assertEqual(self.env.company.domestic_fiscal_position_id, fp_2)
+        self.assertEqual(
+            self.env.company.account_config_id.domestic_fiscal_position_id, fp_2
+        )
 
         (fp_1 + fp_2 + fp_3).write({"sequence": 10})
         fp_1.write(
@@ -341,22 +343,30 @@ class TestFiscalPosition(common.TransactionCase):
             }
         )
         fp_2.write({"country_id": False})
-        self.assertEqual(self.env.company.domestic_fiscal_position_id, fp_1)
+        self.assertEqual(
+            self.env.company.account_config_id.domestic_fiscal_position_id, fp_1
+        )
 
         (fp_1 + fp_2).write({"country_group_id": country_group.id})
         fp_1.write({"country_id": False})
         fp_2.write({"country_id": my_country.id})
         fp_3.write({"country_group_id": a_country_group.id})
-        self.assertEqual(self.env.company.domestic_fiscal_position_id, fp_2)
+        self.assertEqual(
+            self.env.company.account_config_id.domestic_fiscal_position_id, fp_2
+        )
 
         fp_2.write({"sequence": 20})
         fp_3.write({"sequence": 15})
-        self.assertEqual(self.env.company.domestic_fiscal_position_id, fp_1)
+        self.assertEqual(
+            self.env.company.account_config_id.domestic_fiscal_position_id, fp_1
+        )
 
         fp_1.write({"sequence": 30})
         fp_2.write({"country_id": False})
         fp_3.write({"country_group_id": False})
-        self.assertEqual(self.env.company.domestic_fiscal_position_id, fp_2)
+        self.assertEqual(
+            self.env.company.account_config_id.domestic_fiscal_position_id, fp_2
+        )
 
     def test_fiscal_position_constraint(self):
         fiscal_position = self.fp.create(

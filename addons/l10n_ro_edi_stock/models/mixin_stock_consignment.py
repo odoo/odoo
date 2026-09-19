@@ -270,7 +270,7 @@ def _document_depends(model):
     # inverse differs), and stock.picking.batch gets its own only once
     # l10n_ro_edi_stock_batch is loaded, so the dependency is stated where
     # the field exists rather than asserted for every host.
-    depends = ["company_id.account_fiscal_country_id.code"]
+    depends = ["company_id.account_config_id.account_fiscal_country_id.code"]
     if "l10n_ro_edi_stock_document_ids" in model._fields:
         depends.append("l10n_ro_edi_stock_document_ids")
     return depends
@@ -387,10 +387,13 @@ class MixinStockConsignment(models.AbstractModel):
         self.l10n_ro_edi_stock_start_loc_type = "location"
         self.l10n_ro_edi_stock_end_loc_type = "location"
 
-    @api.depends("company_id.account_fiscal_country_id.code")
+    @api.depends("company_id.account_config_id.account_fiscal_country_id.code")
     def _compute_l10n_ro_edi_stock_default_location_type(self):
         for record in self:
-            if record.company_id.account_fiscal_country_id.code == "RO":
+            if (
+                record.company_id.account_config_id.account_fiscal_country_id.code
+                == "RO"
+            ):
                 record.l10n_ro_edi_stock_start_loc_type = (
                     record.l10n_ro_edi_stock_start_loc_type or "location"
                 )
@@ -432,8 +435,10 @@ class MixinStockConsignment(models.AbstractModel):
     @api.depends(_document_depends)
     def _compute_l10n_ro_edi_stock_current_document_state(self):
         for record in self:
-            if record.company_id.account_fiscal_country_id.code == "RO" and (
-                document := record._l10n_ro_edi_stock_get_current_document()
+            if (
+                record.company_id.account_config_id.account_fiscal_country_id.code
+                == "RO"
+                and (document := record._l10n_ro_edi_stock_get_current_document())
             ):
                 record.l10n_ro_edi_stock_state = document.state
             else:
@@ -442,19 +447,22 @@ class MixinStockConsignment(models.AbstractModel):
     @api.depends(_document_depends)
     def _compute_l10n_ro_edi_stock_current_document_uit(self):
         for record in self:
-            if record.company_id.account_fiscal_country_id.code == "RO" and (
-                document := record._l10n_ro_edi_stock_get_current_document()
+            if (
+                record.company_id.account_config_id.account_fiscal_country_id.code
+                == "RO"
+                and (document := record._l10n_ro_edi_stock_get_current_document())
             ):
                 record.l10n_ro_edi_stock_document_uit = document.l10n_ro_edi_stock_uit
             else:
                 record.l10n_ro_edi_stock_document_uit = False
 
-    @api.depends("company_id.account_fiscal_country_id.code")
+    @api.depends("company_id.account_config_id.account_fiscal_country_id.code")
     def _compute_l10n_ro_edi_stock_enable(self):
         _debug.perf.count("etransport_enable_compute", records=self)
         for record in self:
             record.l10n_ro_edi_stock_enable = (
-                record.company_id.account_fiscal_country_id.code == "RO"
+                record.company_id.account_config_id.account_fiscal_country_id.code
+                == "RO"
             )
 
     @api.depends("l10n_ro_edi_stock_enable", "state", "l10n_ro_edi_stock_state")

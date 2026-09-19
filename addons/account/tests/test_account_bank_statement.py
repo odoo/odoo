@@ -850,7 +850,7 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
     def test_zero_amount_statement_line(self):
         self.company_data[
             "company"
-        ].account_journal_suspense_account_id.reconcile = False
+        ].account_config_id.account_journal_suspense_account_id.reconcile = False
 
         statement = (
             self.env["account.bank.statement"]

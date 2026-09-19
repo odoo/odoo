@@ -1224,7 +1224,9 @@ class TestLoyalty(TestSaleCouponCommonWithCode10pc):
             self._apply_promo_code(order, self.ewallet_program.coupon_ids[0].code)
 
     def test_100_percent_discount(self):
-        self.env.company.tax_calculation_rounding_method = "round_globally"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
         loyalty_program = self.env["loyalty.program"].create(
             [
                 {
@@ -1290,7 +1292,9 @@ class TestLoyalty(TestSaleCouponCommonWithCode10pc):
         self.assertEqual(order.amount_total, 0, msg=msg)
 
     def test_discount_on_taxes_with_child_tax(self):
-        self.env.company.tax_calculation_rounding_method = "round_globally"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
         loyalty_program = self.env["loyalty.program"].create(
             [
                 {

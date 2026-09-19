@@ -23,7 +23,7 @@ class AccountPartialReconcile(models.Model):
 
     def _get_cash_basis_journal(self):
         self.check_singleton()
-        journal = self.company_id.tax_cash_basis_journal_id
+        journal = self.company_id.account_config_id.tax_cash_basis_journal_id
         if not journal:
             raise UserError(
                 _(
@@ -178,7 +178,7 @@ class AccountPartialReconcile(models.Model):
     @_debug.perf.timed
     def _prepare_cash_basis_base_line_vals(self, base_line, balance, amount_currency):
         account = (
-            base_line.company_id.account_cash_basis_base_account_id
+            base_line.company_id.account_config_id.account_cash_basis_base_account_id
             or base_line.account_id
         )
         tax_ids = base_line.tax_ids.flatten_taxes_hierarchy().filtered(
@@ -242,7 +242,7 @@ class AccountPartialReconcile(models.Model):
             "tax_ids": [Command.set(tax_ids.ids)],
             "tax_tag_ids": [Command.set(all_tags.ids)],
             "account_id": tax_line.tax_repartition_line_id.account_id.id
-            or tax_line.company_id.account_cash_basis_base_account_id.id
+            or tax_line.company_id.account_config_id.account_cash_basis_base_account_id.id
             or tax_line.account_id.id,
             "amount_currency": amount_currency,
             "currency_id": tax_line.currency_id.id,

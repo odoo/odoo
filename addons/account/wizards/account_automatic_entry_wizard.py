@@ -103,41 +103,37 @@ class AccountAutomaticEntryWizard(models.TransientModel):
     def _compute_expense_accrual_account(self):
         for record in self:
             record.expense_accrual_account = (
-                record.company_id.expense_accrual_account_id
+                record.company_id.account_config_id.expense_accrual_account_id
             )
 
     def _inverse_expense_accrual_account(self):
         for record in self:
             if record.env.user.has_group("account.group_account_manager"):
-                record.company_id.sudo().expense_accrual_account_id = (
-                    record.expense_accrual_account
-                )
+                record.company_id.sudo().account_config_id.expense_accrual_account_id = record.expense_accrual_account
 
     @api.depends("company_id")
     def _compute_revenue_accrual_account(self):
         for record in self:
             record.revenue_accrual_account = (
-                record.company_id.revenue_accrual_account_id
+                record.company_id.account_config_id.revenue_accrual_account_id
             )
 
     def _inverse_revenue_accrual_account(self):
         for record in self:
             if record.env.user.has_group("account.group_account_manager"):
-                record.company_id.sudo().revenue_accrual_account_id = (
-                    record.revenue_accrual_account
-                )
+                record.company_id.sudo().account_config_id.revenue_accrual_account_id = record.revenue_accrual_account
 
     @api.depends("company_id")
     def _compute_journal_id(self):
         for record in self:
-            record.journal_id = record.company_id.automatic_entry_default_journal_id
+            record.journal_id = (
+                record.company_id.account_config_id.automatic_entry_default_journal_id
+            )
 
     def _inverse_journal_id(self):
         for record in self:
             if record.env.user.has_group("account.group_account_manager"):
-                record.company_id.sudo().automatic_entry_default_journal_id = (
-                    record.journal_id
-                )
+                record.company_id.sudo().account_config_id.automatic_entry_default_journal_id = record.journal_id
 
     @api.constrains("percentage", "action")
     @_debug.perf.timed

@@ -112,7 +112,9 @@ class TestReportSections(AccountTestInvoicingHttpCommon):
 
     def test_sections_options_report_selection_variant(self):
         # Set a fictive country on the company ; making sure no variant is available for it, whatever the modules installed.
-        self.env.company.account_fiscal_country_id = self.env["res.country"].create(
+        self.env.company.account_config_id.account_fiscal_country_id = self.env[
+            "res.country"
+        ].create(
             {
                 "name": "Discworld",
                 "code": "YY",

@@ -424,8 +424,8 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
     @freeze_time("2017-12-31")
     def test_filter_date_fiscalyear_range_overlap_years(self):
         """Test the filter_date with 'this_year'/'last_year' in 'range' mode when the fiscal year overlaps 2 years."""
-        self.env.company.fiscalyear_last_day = 30
-        self.env.company.fiscalyear_last_month = "6"
+        self.env.company.account_config_id.fiscalyear_last_day = 30
+        self.env.company.account_config_id.fiscalyear_last_month = "6"
 
         self._assert_filter_date(
             self.date_range_report,
@@ -857,8 +857,8 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
             },
         )
 
-        self.env.company.fiscalyear_last_day = 30
-        self.env.company.fiscalyear_last_month = "6"
+        self.env.company.account_config_id.fiscalyear_last_day = 30
+        self.env.company.account_config_id.fiscalyear_last_month = "6"
         self._assert_filter_date(
             self.date_range_report,
             {
@@ -1210,8 +1210,8 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
     @freeze_time("2017-12-31")
     def test_filter_date_fiscalyear_single_overlap_years(self):
         """Test the filter_date with 'this_year'/'last_year' in 'single' mode when the fiscal year overlaps 2 years."""
-        self.env.company.fiscalyear_last_day = 30
-        self.env.company.fiscalyear_last_month = "6"
+        self.env.company.account_config_id.fiscalyear_last_day = 30
+        self.env.company.account_config_id.fiscalyear_last_month = "6"
 
         self._assert_filter_date(
             self.single_date_report,
@@ -1808,7 +1808,12 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
         )
 
         _check_company_filter(
-            main_company + branch_1_1 + branch_1_2 + branch_2 + other_company + branch_2_1,
+            main_company
+            + branch_1_1
+            + branch_1_2
+            + branch_2
+            + other_company
+            + branch_2_1,
             main_company + branch_1_2,
             "Opening the report with a company selector matching more than the content of the tax unit should not select the tax unit, "
             "but take the accessible branches with the same VAT number as the active company.",
@@ -1959,7 +1964,7 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
             },
         )
 
-        self.env.company.account_return_periodicity = "year"
+        self.env.company.account_config_id.account_return_periodicity = "year"
 
         self._assert_filter_date(
             generic_tax_report,
@@ -1979,8 +1984,8 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
             },
         )
 
-        self.env.company.fiscalyear_last_day = 31
-        self.env.company.fiscalyear_last_month = "5"
+        self.env.company.account_config_id.fiscalyear_last_day = 31
+        self.env.company.account_config_id.fiscalyear_last_month = "5"
 
         self._assert_filter_date(
             generic_tax_report,
@@ -2000,7 +2005,7 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
             },
         )
 
-        self.env.company.fiscalyear_last_month = "12"
+        self.env.company.account_config_id.fiscalyear_last_month = "12"
 
         # Setting a periodicity on the return type should take precedence over the company setting
         return_type.deadline_periodicity = "semester"
@@ -2394,7 +2399,7 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
         options = self._generate_options(root_report, "2024-01-01", "2024-12-31")
         assert_available_variants_match(options, expected_reports)
 
-        self.company_data["company"].chart_template = "us"
+        self.company_data["company"].account_config_id.chart_template = "us"
         options = self._generate_options(root_report, "2024-01-01", "2024-12-31")
         # Multi-company environment with first company with US COA and second with generic COA
         assert_available_variants_match(

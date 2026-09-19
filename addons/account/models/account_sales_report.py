@@ -173,7 +173,8 @@ class AccountEcSalesReportHandler(models.AbstractModel):
             .ids
         )
         other_country_ids = tuple(
-            set(country_ids) - {self.env.company.account_fiscal_country_id.id}
+            set(country_ids)
+            - {self.env.company.account_config_id.account_fiscal_country_id.id}
         )
         options.setdefault("forced_domain", []).extend(
             [
@@ -582,7 +583,7 @@ class AccountEcSalesReportHandler(models.AbstractModel):
         ) < fields.Date.from_string("2021-01-01"):
             rslt.add("GB")
         # Monaco  is treated as part of France for VAT purposes (but should not be displayed within FR context)
-        if self.env.company.account_fiscal_country_id.code != "FR":
+        if self.env.company.account_config_id.account_fiscal_country_id.code != "FR":
             rslt.add("MC")
 
         return rslt

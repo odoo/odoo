@@ -15,7 +15,7 @@ class AccountChartTemplate(models.AbstractModel):
     @api.model
     def _prepare_demo_data(self, company=False):
         demo_data = {}
-        if company.account_fiscal_country_id.code == "IN":
+        if company.account_config_id.account_fiscal_country_id.code == "IN":
             if company.state_id:
                 company.write(
                     {
@@ -69,7 +69,10 @@ class AccountChartTemplate(models.AbstractModel):
     @api.model
     def _prepare_demo_data_partner(self):
         company = self.env.company
-        if company.account_fiscal_country_id.code != "IN" or not company.state_id:
+        if (
+            company.account_config_id.account_fiscal_country_id.code != "IN"
+            or not company.state_id
+        ):
             return super()._prepare_demo_data_partner()
         inter_state_ref = "base.state_in_ts"
         intra_state_ref = "base.state_in_gj"
@@ -169,7 +172,7 @@ class AccountChartTemplate(models.AbstractModel):
             tax = self.env.ref("account.%s_%s" % ((cid), (tax_id)))
             return tax.id
 
-        if company.account_fiscal_country_id.code == "IN":
+        if company.account_config_id.account_fiscal_country_id.code == "IN":
             sale_journal = self.env["account.journal"].search(
                 domain=[
                     *self.env["account.journal"]._check_company_domain(cid),
@@ -685,7 +688,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _prepare_demo_data_attachment(self, company=False):
-        if company.account_fiscal_country_id.code == "IN":
+        if company.account_config_id.account_fiscal_country_id.code == "IN":
             return {
                 "ir_attachment_in_invoice_1": {
                     "type": "binary",
@@ -711,7 +714,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _prepare_demo_data_mail_message(self, company=False):
-        if company.account_fiscal_country_id.code == "IN":
+        if company.account_config_id.account_fiscal_country_id.code == "IN":
             return {
                 "mail_message_in_invoice_1": {
                     "model": "account.move",
@@ -746,7 +749,7 @@ class AccountChartTemplate(models.AbstractModel):
             return super()._prepare_demo_data_mail_message(company)
 
     def _post_load_demo_data(self, company=False):
-        if company.account_fiscal_country_id.code == "IN":
+        if company.account_config_id.account_fiscal_country_id.code == "IN":
             if company.state_id:
                 invoices = (
                     self.ref("demo_invoice_b2b_1")

@@ -2,7 +2,9 @@
 <odoo>
 
     <function model="account.chart.template" name="_account_reconcile_install_demo">
-        <value model="res.company" search="[('chart_template', '!=', False)]" />
+        <value
+            model="res.company"
+            search="[('account_config_id.chart_template', '!=', False)]" />
     </function>
 
 </odoo>

@@ -62,7 +62,7 @@ class AccountFiscalPosition(models.Model):
         help="Apply only if partner has a VAT number.",
     )
     company_country_id = fields.Many2one(
-        related="company_id.account_fiscal_country_id",
+        related="company_id.account_config_id.account_fiscal_country_id",
         string="Company Country",
     )
     fiscal_country_codes = fields.Char(
@@ -142,7 +142,9 @@ class AccountFiscalPosition(models.Model):
                     )
                 )
 
-            fiscal_country = record.company_id.account_fiscal_country_id
+            fiscal_country = (
+                record.company_id.account_config_id.account_fiscal_country_id
+            )
             if (
                 record.country_id == fiscal_country
                 and not record.state_ids
@@ -204,11 +206,25 @@ class AccountFiscalPosition(models.Model):
                 vals["zip_from"], vals["zip_to"] = self._convert_zip_values(
                     zip_from, zip_to
                 )
-        return super().create(vals_list)
+        positions = super().create(vals_list)
+        self._invalidate_company_configs()
+        return positions
 
     @_debug.perf.timed
+    def _invalidate_company_configs(self):
+        # the configuration derives its positions from this model
+        self.env["account.config"].invalidate_model(
+            [
+                "fiscal_position_ids",
+                "domestic_fiscal_position_id",
+                "multi_vat_foreign_country_ids",
+                "account_enabled_tax_country_ids",
+            ]
+        )
+
     def write(self, vals):
         _debug.lifecycle("write", records=self, fields=sorted(vals))
+        self._invalidate_company_configs()
         zip_from = vals.get("zip_from")
         zip_to = vals.get("zip_to")
         _debug.logic(
@@ -240,11 +256,12 @@ class AccountFiscalPosition(models.Model):
             )
         return True
 
-    @api.depends("company_id.domestic_fiscal_position_id")
+    @api.depends("company_id.account_config_id.domestic_fiscal_position_id")
     def _compute_is_domestic(self):
         for position in self:
             position.is_domestic = (
-                position == position.company_id.domestic_fiscal_position_id
+                position
+                == position.company_id.account_config_id.domestic_fiscal_position_id
             )
 
     @api.depends("country_id.state_ids")
@@ -340,7 +357,7 @@ class AccountFiscalPosition(models.Model):
     def _get_tax_country(self, company):
         if self.foreign_vat:
             return self.country_id
-        return company.account_fiscal_country_id
+        return company.account_config_id.account_fiscal_country_id
 
     def map_tax(self, taxes):
         if not self:

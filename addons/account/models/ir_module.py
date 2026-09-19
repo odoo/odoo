@@ -167,7 +167,7 @@ class IrModuleModule(models.Model):
         if (
             not was_installed
             and is_installed
-            and not self.env.company.chart_template
+            and not self.env.company.account_config_id.chart_template
             and self.account_templates
             and (guessed := self._account_template_to_auto_install())
         ):
@@ -215,10 +215,10 @@ class IrModuleModule(models.Model):
         if unlinked_templates:
             companies = self.env["res.company"].search(
                 [
-                    ("chart_template", "in", unlinked_templates),
+                    ("account_config_id.chart_template", "in", unlinked_templates),
                 ]
             )
-            companies.chart_template = False
+            companies.account_config_id.chart_template = False
             companies.flush_recordset()
 
         return super().module_uninstall()

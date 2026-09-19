@@ -44,8 +44,8 @@
         <div class="row">
             <t t-if="options.get('tax_unit', 'company_only') == 'company_only'">
                 <t
-                    t-if="env.company.account_fiscal_country_id.vat_label"
-                    t-out="env.company.account_fiscal_country_id.vat_label+':'" />
+                    t-if="env.company.account_config_id.account_fiscal_country_id.vat_label"
+                    t-out="env.company.account_config_id.account_fiscal_country_id.vat_label+':'" />
                 <t t-else="">
                     <t t-if="env.company.vat">Tax ID:</t>
                 </t>

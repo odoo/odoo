@@ -21,7 +21,7 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         cls.env = cls.env["base"].with_context(**DISABLED_MAIL_CONTEXT).env
         cls.env["product.pricelist"].with_context(active_test=False).search([]).unlink()
         cls.env["loyalty.program"].search([]).active = False
-        cls.env.companies.account_sale_tax_id = False
+        cls.env.companies.account_config_id.account_sale_tax_id = False
 
         cls.user_admin = cls.env.ref("base.user_admin")
         cls.partner_admin = cls.user_admin.partner_id

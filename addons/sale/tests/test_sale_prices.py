@@ -20,7 +20,7 @@ class TestSalePrices(SaleCommon):
         cls.discount = 10
 
         belgium = cls.env.ref("base.be")
-        cls.env.company.account_fiscal_country_id = belgium
+        cls.env.company.account_config_id.account_fiscal_country_id = belgium
         cls.env.add_to_compute(
             cls.env["account.tax"]._fields["country_id"],
             cls.env["account.tax"].search(
@@ -1075,7 +1075,7 @@ class TestSalePrices(SaleCommon):
             {
                 "name": "Branch Co.",
                 "parent_id": self.env.company.id,
-                "account_fiscal_country_id": self.env.company.account_fiscal_country_id.id,
+                "account_fiscal_country_id": self.env.company.account_config_id.account_fiscal_country_id.id,
             }
         )
         order = self.empty_order.with_company(branch_company)

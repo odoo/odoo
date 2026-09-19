@@ -9,6 +9,6 @@ class AccountTax(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         result = super()._load_pos_data_fields(config)
-        if config.company_id.account_fiscal_country_id.code == "TW":
+        if config.company_id.account_config_id.account_fiscal_country_id.code == "TW":
             result += ["l10n_tw_edi_tax_type"]
         return result

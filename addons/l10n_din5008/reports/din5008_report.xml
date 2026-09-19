@@ -130,7 +130,7 @@
                                 <td colspan="2">
                                     <ul class="list-inline">
                                         <t t-set="default_vat_label">Tax ID</t>
-                                        <li t-if="company.vat"><t t-out="company.account_fiscal_country_id.vat_label or default_vat_label" />:
+                                        <li t-if="company.vat"><t t-out="company.account_config_id.account_fiscal_country_id.vat_label or default_vat_label" />:
                                             <span
                                                 t-if="forced_vat"
                                                 t-out="forced_vat" />
@@ -271,8 +271,8 @@
                                         t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}" />
                                     <div t-if="o.commercial_partner_id.vat">
                                         <t
-                                            t-if="o.commercial_partner_id.company_id.account_fiscal_country_id.vat_label"
-                                            t-out="o.commercial_partner_id.company_id.account_fiscal_country_id.vat_label"
+                                            t-if="o.commercial_partner_id.company_id.account_config_id.account_fiscal_country_id.vat_label"
+                                            t-out="o.commercial_partner_id.company_id.account_config_id.account_fiscal_country_id.vat_label"
                                             id="inv_tax_id_label" />
                                         <t t-else="">Tax ID</t>: <span t-field="o.commercial_partner_id.vat" />
                                     </div>

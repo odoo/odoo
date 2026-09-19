@@ -9,7 +9,9 @@ class TestTaxRoundingFromTaxLines(BaseTaxCommon):
     def setUpClass(cls):
         super().setUpClass()
         if cls.account_installed:
-            cls.company.tax_calculation_rounding_method = "round_per_line"
+            cls.company.account_config_id.tax_calculation_rounding_method = (
+                "round_per_line"
+            )
         cls.tax = cls._tax(21.0, price_include_override="tax_included")
         cls.tax_rep = cls.tax.invoice_repartition_line_ids.filtered(
             lambda rep: rep.repartition_type == "tax"
@@ -51,7 +53,9 @@ class TestTaxRoundingFromTaxLines(BaseTaxCommon):
     def test_round_globally_moves_the_total_by_a_cent(self):
         if not self.account_installed:
             self.skipTest("no company rounding-method field without account")
-        self.company.tax_calculation_rounding_method = "round_globally"
+        self.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
         base_lines = self._rounded_lines()
         self.assertAlmostEqual(self._total_tax(base_lines), 7.47, places=2)
 

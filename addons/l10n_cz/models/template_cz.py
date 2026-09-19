@@ -42,7 +42,7 @@ class AccountChartTemplate(models.AbstractModel):
     @api.model
     def _prepare_demo_data_move(self, company=False):
         data = super()._prepare_demo_data_move(company)
-        if company and company.account_fiscal_country_id.code == "CZ":
+        if company and company.account_config_id.account_fiscal_country_id.code == "CZ":
             for key in (
                 "demo_invoice_1",
                 "demo_invoice_2",

@@ -419,7 +419,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         cls.product1.product_tmpl_id.categ_id.property_valuation = "real_time"
 
     def test_vendor_bill_flow_anglo_saxon_1(self):
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
 
         rfq = Form(self.env["purchase.order"])
         rfq.partner_id = self.vendor1
@@ -500,7 +500,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         self.assertEqual(self.product1.value_svl, 150)
 
     def test_vendor_bill_flow_anglo_saxon_2(self):
-        self.env.company.anglo_saxon_accounting = True
+        self.env.company.account_config_id.anglo_saxon_accounting = True
 
         rfq = Form(self.env["purchase.order"])
         rfq.partner_id = self.vendor1
@@ -547,7 +547,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         self.assertTrue(len(lc_input_aml.full_reconcile_id), 1)
 
     def test_vendor_bill_flow_continental_1(self):
-        self.env.company.anglo_saxon_accounting = False
+        self.env.company.account_config_id.anglo_saxon_accounting = False
 
         rfq = Form(self.env["purchase.order"])
         rfq.partner_id = self.vendor1

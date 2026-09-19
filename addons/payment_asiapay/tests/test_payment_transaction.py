@@ -38,7 +38,7 @@ class TestPaymentTransaction(AsiaPayCommon, PaymentHttpCommon):
                 (
                     "id",
                     "!=",
-                    company.account_journal_early_pay_discount_gain_account_id.id,
+                    company.account_config_id.account_journal_early_pay_discount_gain_account_id.id,
                 ),
             ],
             limit=1,

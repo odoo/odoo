@@ -26,7 +26,7 @@ class TestChangeLockDateWizard(AccountTestInvoicingCommon):
                     {lock_date_field: "2010-01-01"}
                 ).change_lock_date()
                 self.assertEqual(
-                    self.env.company[lock_date_field],
+                    self.env.company.account_config_id[lock_date_field],
                     fields.Date.from_string("2010-01-01"),
                 )
 
@@ -34,7 +34,7 @@ class TestChangeLockDateWizard(AccountTestInvoicingCommon):
                     {lock_date_field: "2011-01-01"}
                 ).change_lock_date()
                 self.assertEqual(
-                    self.env.company[lock_date_field],
+                    self.env.company.account_config_id[lock_date_field],
                     fields.Date.from_string("2011-01-01"),
                 )
 
@@ -71,7 +71,7 @@ class TestChangeLockDateWizard(AccountTestInvoicingCommon):
                     {lock_date_field: "2009-01-01"}
                 ).change_lock_date()
                 self.assertEqual(
-                    self.env.company[lock_date_field],
+                    self.env.company.account_config_id[lock_date_field],
                     fields.Date.from_string("2011-01-01"),
                 )
                 exception = self.env["account.lock_exception"].search([])
@@ -104,7 +104,7 @@ class TestChangeLockDateWizard(AccountTestInvoicingCommon):
         wizard.change_lock_date()
 
         self.assertRecordValues(
-            self.env.company,
+            self.env.company.account_config_id,
             [
                 {
                     "fiscalyear_lock_date": fields.Date.from_string("2010-01-01"),
@@ -174,14 +174,16 @@ class TestChangeLockDateWizard(AccountTestInvoicingCommon):
             {"hard_lock_date": "2010-01-01"}
         ).change_lock_date()
         self.assertEqual(
-            self.env.company.hard_lock_date, fields.Date.from_string("2010-01-01")
+            self.env.company.account_config_id.hard_lock_date,
+            fields.Date.from_string("2010-01-01"),
         )
 
         self.env["account.change.lock.date"].create(
             {"hard_lock_date": "2011-01-01"}
         ).change_lock_date()
         self.assertEqual(
-            self.env.company.hard_lock_date, fields.Date.from_string("2011-01-01")
+            self.env.company.account_config_id.hard_lock_date,
+            fields.Date.from_string("2011-01-01"),
         )
 
         wizard = self.env["account.change.lock.date"].create(
@@ -195,7 +197,8 @@ class TestChangeLockDateWizard(AccountTestInvoicingCommon):
         with self.assertRaises(UserError):
             wizard.change_lock_date()
         self.assertEqual(
-            self.env.company.hard_lock_date, fields.Date.from_string("2011-01-01")
+            self.env.company.account_config_id.hard_lock_date,
+            fields.Date.from_string("2011-01-01"),
         )
 
         wizard = self.env["account.change.lock.date"].create(
@@ -209,7 +212,8 @@ class TestChangeLockDateWizard(AccountTestInvoicingCommon):
         with self.assertRaises(UserError):
             wizard.change_lock_date()
         self.assertEqual(
-            self.env.company.hard_lock_date, fields.Date.from_string("2011-01-01")
+            self.env.company.account_config_id.hard_lock_date,
+            fields.Date.from_string("2011-01-01"),
         )
 
         self.assertEqual(self.env["account.lock_exception"].search_count([]), 0)
@@ -226,7 +230,7 @@ class TestChangeLockDateWizard(AccountTestInvoicingCommon):
                     {lock_date_field: "2010-01-01"}
                 ).change_lock_date()
                 self.assertEqual(
-                    self.env.company[lock_date_field],
+                    self.env.company.account_config_id[lock_date_field],
                     fields.Date.from_string("2010-01-01"),
                 )
 
@@ -239,7 +243,7 @@ class TestChangeLockDateWizard(AccountTestInvoicingCommon):
                     }
                 ).change_lock_date()
                 self.assertEqual(
-                    self.env.company[lock_date_field],
+                    self.env.company.account_config_id[lock_date_field],
                     fields.Date.from_string("2009-01-01"),
                 )
 
@@ -251,6 +255,8 @@ class TestChangeLockDateWizard(AccountTestInvoicingCommon):
                         "exception_reason": ":TestChangeLockDateWizard.test_everyone_forever_exception; remove",
                     }
                 ).change_lock_date()
-                self.assertEqual(self.env.company[lock_date_field], False)
+                self.assertEqual(
+                    self.env.company.account_config_id[lock_date_field], False
+                )
 
                 self.assertEqual(self.env["account.lock_exception"].search_count([]), 0)

@@ -20,7 +20,7 @@ class AccountChartTemplate(models.AbstractModel):
         last_month_date = datetime.strptime(
             move_data[self.company_xmlid("demo_invoice_1")]["invoice_date"], "%Y-%m-%d"
         ) - timedelta(days=1)
-        if company.account_fiscal_country_id.code == "PE":
+        if company.account_config_id.account_fiscal_country_id.code == "PE":
             move_data[self.company_xmlid("demo_invoice_1")]["invoice_date"] = (
                 last_month_date
             )

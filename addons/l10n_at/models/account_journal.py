@@ -10,7 +10,7 @@ class AccountJournal(models.Model):
         # OVERRIDE
         account_vals = super()._prepare_liquidity_account_vals(company, code, vals)
 
-        if company.account_fiscal_country_id.code == "AT":
+        if company.account_config_id.account_fiscal_country_id.code == "AT":
             account_vals.setdefault("tag_ids", [])
             account_vals["tag_ids"] += [
                 Command.link(self.env.ref("l10n_at.account_tag_l10n_at_ABIV").id),

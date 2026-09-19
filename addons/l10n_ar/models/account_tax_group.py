@@ -46,7 +46,7 @@ class AccountTaxGroup(models.Model):
         Make sure we don't uninstall a required tax group
         """
         ar_companies = self.company_ids.filtered(
-            lambda c: (c.chart_template or "").startswith("ar_")
+            lambda c: (c.account_config_id.chart_template or "").startswith("ar_")
         )
         profits_tax_group_ids = (
             self.env["ir.model.data"]

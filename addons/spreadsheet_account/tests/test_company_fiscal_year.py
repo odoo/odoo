@@ -5,8 +5,8 @@ from odoo.tests.common import TransactionCase
 
 class SpreadsheetFiscalYearTest(TransactionCase):
     def test_fiscal_year_reference(self):
-        self.env.company.fiscalyear_last_day = 3
-        self.env.company.fiscalyear_last_month = "2"
+        self.env.company.account_config_id.fiscalyear_last_day = 3
+        self.env.company.account_config_id.fiscalyear_last_month = "2"
 
         self.assertEqual(
             self.env["res.company"].get_fiscal_dates(
@@ -18,8 +18,8 @@ class SpreadsheetFiscalYearTest(TransactionCase):
         )
 
     def test_fiscal_year_reference_last_day(self):
-        self.env.company.fiscalyear_last_day = 3
-        self.env.company.fiscalyear_last_month = "2"
+        self.env.company.account_config_id.fiscalyear_last_day = 3
+        self.env.company.account_config_id.fiscalyear_last_month = "2"
 
         self.assertEqual(
             self.env["res.company"].get_fiscal_dates(
@@ -31,8 +31,8 @@ class SpreadsheetFiscalYearTest(TransactionCase):
         )
 
     def test_fiscal_year_reference_first_day(self):
-        self.env.company.fiscalyear_last_day = 3
-        self.env.company.fiscalyear_last_month = "2"
+        self.env.company.account_config_id.fiscalyear_last_day = 3
+        self.env.company.account_config_id.fiscalyear_last_month = "2"
 
         self.assertEqual(
             self.env["res.company"].get_fiscal_dates(
@@ -42,8 +42,8 @@ class SpreadsheetFiscalYearTest(TransactionCase):
         )
 
     def test_fiscal_year_with_company_id(self):
-        self.env.company.fiscalyear_last_day = 7
-        self.env.company.fiscalyear_last_month = "6"
+        self.env.company.account_config_id.fiscalyear_last_day = 7
+        self.env.company.account_config_id.fiscalyear_last_month = "6"
         company = self.env["res.company"].create(
             {
                 "name": "test company",
@@ -84,8 +84,8 @@ class SpreadsheetFiscalYearTest(TransactionCase):
         self.assertEqual(o1_request2, o2_request2)
 
     def test_fiscal_year_with_wrong_company_id(self):
-        self.env.company.fiscalyear_last_day = 7
-        self.env.company.fiscalyear_last_month = "6"
+        self.env.company.account_config_id.fiscalyear_last_day = 7
+        self.env.company.account_config_id.fiscalyear_last_month = "6"
         self.assertEqual(
             self.env["res.company"].get_fiscal_dates(
                 [

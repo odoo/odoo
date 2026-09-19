@@ -13,8 +13,8 @@ class TestAccountTaxMergeWizard(AccountTestInvoicingCommon):
         cls.company_a = cls.env.company
         cls.company_data_2 = cls.setup_other_company(name="tax_merge_company_b")
         cls.company_b = cls.company_data_2["company"]
-        cls.country = cls.company_a.account_fiscal_country_id
-        cls.company_b.account_fiscal_country_id = cls.country
+        cls.country = cls.company_a.account_config_id.account_fiscal_country_id
+        cls.company_b.account_config_id.account_fiscal_country_id = cls.country
         cls.shared_account = cls.company_data["default_account_revenue"].sudo()
         code_in_b = (
             cls.env["account.account"]

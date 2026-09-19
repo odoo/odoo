@@ -303,7 +303,11 @@ class AccountMove(models.Model):
         internal_types += ["all"]
         return [
             ("internal_type", "in", internal_types),
-            ("country_id", "=", self.company_id.account_fiscal_country_id.id),
+            (
+                "country_id",
+                "=",
+                self.company_id.account_config_id.account_fiscal_country_id.id,
+            ),
         ]
 
     @api.depends(

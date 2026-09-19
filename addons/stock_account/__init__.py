@@ -36,10 +36,10 @@ def _create_product_value(env):
 
 def _configure_journals(env):
     for company in env["res.company"].search(
-        [("chart_template", "!=", False)], order="parent_path"
+        [("account_config_id.chart_template", "!=", False)], order="parent_path"
     ):
         ChartTemplate = env["account.chart.template"].with_company(company)
-        template_code = company.chart_template
+        template_code = company.account_config_id.chart_template
         full_data = ChartTemplate._prepare_chart_template_data(template_code)
         data = {
             "template_data": {
@@ -93,10 +93,10 @@ def _configure_journals(env):
 
 def _configure_stock_account_company_data(env):
     for company in env["res.company"].search(
-        [("chart_template", "!=", False)], order="parent_path"
+        [("account_config_id.chart_template", "!=", False)], order="parent_path"
     ):
         ChartTemplate = env["account.chart.template"].with_company(company)
-        template_code = company.chart_template
+        template_code = company.account_config_id.chart_template
         res_company_data = ChartTemplate._get_stock_account_res_company(template_code)
         account_account_data = ChartTemplate._get_stock_account_account(template_code)
         account_templates = ChartTemplate._prepare_chart_template_model_data(

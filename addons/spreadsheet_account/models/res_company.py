@@ -16,7 +16,9 @@ class ResCompany(models.Model):
         )
         existing_companies = companies.exists()
         # prefetch both fields
-        existing_companies.fetch(["fiscalyear_last_day", "fiscalyear_last_month"])
+        existing_companies.account_config_id.fetch(
+            ["fiscalyear_last_day", "fiscalyear_last_month"]
+        )
         results = []
 
         for data, company in zip(payload, companies, strict=True):
@@ -25,8 +27,8 @@ class ResCompany(models.Model):
                 continue
             start, end = date_utils.get_fiscal_year(
                 fields.Date.to_date(data["date"]),
-                day=company.fiscalyear_last_day,
-                month=int(company.fiscalyear_last_month),
+                day=company.account_config_id.fiscalyear_last_day,
+                month=int(company.account_config_id.fiscalyear_last_month),
             )
             results.append({"start": start, "end": end})
         _debug.pipeline(

@@ -170,7 +170,13 @@ party's record rules off the tenant's rows (a portal user reads the tenant it be
 though its party is outside the user's partner rules), and `_inherits_sudo_fields` names the
 party fields that are the tenant's public identity, read under the tenant's access; every other
 delegated field is read under the party's rules. Configuration that an
-application keys on the company is the application's, not the tenant's — see
+application keys on the company is the application's, not the tenant's: it lives on the
+application's `mixin.company.config` model, one row per company (`report.config`,
+`account.config`), reached from the company through one `<app>_config_id` link. The link is
+computed and searchable, so a domain reads `("account_config_id.chart_template", "!=",
+False)`; a company create or write that names a configuration field is routed to that
+configuration (`_split_config_vals`), while a read of the field on the company raises. A branch
+takes its root's delegated configuration at create and is held to it. See
 `agromarin-knowledge/plans/2026-09-19-company-tenant-party-architecture.md`.
 
 ## Lifecycle and the operations that cross stores

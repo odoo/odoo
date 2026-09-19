@@ -239,7 +239,7 @@ class AccountMove(models.Model):
         self.check_singleton()
         return (
             self.journal_id.default_account_id
-            or self.company_id.account_journal_suspense_account_id
+            or self.company_id.account_config_id.account_journal_suspense_account_id
         )
 
     @_debug.perf.timed

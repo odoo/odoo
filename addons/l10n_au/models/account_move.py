@@ -6,7 +6,7 @@ class AccountMove(models.Model):
 
     def _get_name_invoice_report(self):
         if (
-            self.company_id.account_fiscal_country_id.code == "AU"
+            self.company_id.account_config_id.account_fiscal_country_id.code == "AU"
             and self.company_id.l10n_au_is_gst_registered
         ):
             return "l10n_au.report_invoice_document"

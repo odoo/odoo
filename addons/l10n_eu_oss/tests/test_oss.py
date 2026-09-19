@@ -225,7 +225,7 @@ class TestOSSUSA(AccountTestInvoicingCommon):
         foreign_country = self.env.ref("base.be")
         foreign_state = self.env.ref("base.state_be_1")
         self.sub_child_company.country_id = foreign_country
-        self.sub_child_company.account_fiscal_country_id = (
+        self.sub_child_company.account_config_id.account_fiscal_country_id = (
             self.sub_child_company.country_id
         )
         self.sub_child_company.vat = "BE0477472701"

@@ -46,7 +46,7 @@ class TestTaxesCountryConstraint(AccountTestInvoicingCommon):
         domestic_tax = self.company_data["default_tax_sale"]
         self.assertEqual(
             domestic_tax.country_id,
-            self.company_data["company"].account_fiscal_country_id,
+            self.company_data["company"].account_config_id.account_fiscal_country_id,
             "fixture assumption: the default sale tax is domestic",
         )
         move = self.env["account.move"].create(self._invoice_vals(domestic_tax))
@@ -55,7 +55,7 @@ class TestTaxesCountryConstraint(AccountTestInvoicingCommon):
     def test_foreign_tax_without_a_fiscal_position_is_refused(self):
         self.assertNotEqual(
             self.foreign_country,
-            self.company_data["company"].account_fiscal_country_id,
+            self.company_data["company"].account_config_id.account_fiscal_country_id,
             "fixture assumption: the tax's country is not the fiscal country",
         )
         with self.assertRaisesRegex(
@@ -133,7 +133,9 @@ class TestTaxCountryIsPerRecord(AccountTestInvoicingCommon):
     def test_two_moves_in_one_batch_keep_their_own_tax_country(self):
         abroad = self._bill(self.foreign_position)
         at_home = self._bill()
-        home_country = self.company_data["company"].account_fiscal_country_id
+        home_country = self.company_data[
+            "company"
+        ].account_config_id.account_fiscal_country_id
 
         (abroad | at_home)._update_tax_country_id()
 
@@ -147,7 +149,9 @@ class TestTaxCountryIsPerRecord(AccountTestInvoicingCommon):
     def test_the_order_of_the_batch_does_not_decide_the_answer(self):
         abroad = self._bill(self.foreign_position)
         at_home = self._bill()
-        home_country = self.company_data["company"].account_fiscal_country_id
+        home_country = self.company_data[
+            "company"
+        ].account_config_id.account_fiscal_country_id
 
         (at_home | abroad)._update_tax_country_id()
 

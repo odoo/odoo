@@ -72,8 +72,8 @@ class BaseTestUi(AccountTestMockOnlineSyncCommon):
                 "account_type": "asset_cash",
             }
         )
-        self.env.company.expense_account_id = a_expense
-        self.env.company.income_account_id = a_sale
+        self.env.company.account_config_id.expense_account_id = a_expense
+        self.env.company.account_config_id.income_account_id = a_sale
 
         IrDefault = self.env["ir.default"]
         IrDefault.set(

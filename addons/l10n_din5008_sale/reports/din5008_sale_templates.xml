@@ -75,8 +75,8 @@
                                 t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True}" />
                             <div t-if="commercial_partner.vat">
                                 <t
-                                    t-if="commercial_partner.company_id.account_fiscal_country_id.vat_label"
-                                    t-out="commercial_partner.company_id.account_fiscal_country_id.vat_label"
+                                    t-if="commercial_partner.company_id.account_config_id.account_fiscal_country_id.vat_label"
+                                    t-out="commercial_partner.company_id.account_config_id.account_fiscal_country_id.vat_label"
                                     id="inv_tax_id_label" />
                                 <t t-else="">Tax ID</t>: <span t-field="commercial_partner.vat" />
                             </div>

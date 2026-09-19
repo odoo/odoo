@@ -986,7 +986,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         )
 
     def test_out_refund_create_storno(self):
-        self.env.company.account_storno = True
+        self.env.company.account_config_id.account_storno = True
 
         move = self.env["account.move"].create(
             {
@@ -1097,8 +1097,10 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
                 "account_type": "asset_current",
             }
         )
-        self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.account_cash_basis_base_account_id = (
+            tax_base_amount_account
+        )
+        self.env.company.account_config_id.tax_exigibility = True
         tax_tags = defaultdict(dict)
         for line_type, repartition_type in [
             (l, r) for l in ("invoice", "refund") for r in ("base", "tax")
@@ -1260,7 +1262,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
                 "account_type": "income",
             }
         )
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.tax_exigibility = True
         tax_tags = defaultdict(dict)
         for line_type, repartition_type in [
             (l, r) for l in ("invoice", "refund") for r in ("base", "tax")

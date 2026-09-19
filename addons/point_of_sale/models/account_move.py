@@ -140,7 +140,8 @@ class AccountMove(models.Model):
         super()._compute_is_storno()
         for move in self:
             move.is_storno = move.is_storno or (
-                move.company_id.account_storno and move.reversed_pos_order_id
+                move.company_id.account_config_id.account_storno
+                and move.reversed_pos_order_id
             )
 
     def action_view_source_pos_orders(self):

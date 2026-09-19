@@ -92,7 +92,7 @@ class TestAccountReturn(TestAccountReportsCommon):
         cls.startClassPatcher(freeze_time("2024-01-16"))
 
         with cls._patch_returns_generation():
-            cls.env.company.account_opening_date = "2024-01-01"
+            cls.env.company.account_config_id.account_opening_date = "2024-01-01"
 
     @classmethod
     def _patch_returns_generation(cls):
@@ -519,7 +519,7 @@ class TestAccountReturn(TestAccountReportsCommon):
             )
 
         with self._patch_returns_generation():
-            self.env.company.account_opening_date = "2024-01-01"
+            self.env.company.account_config_id.account_opening_date = "2024-01-01"
 
         existing_returns = self.env["account.return"].search(
             [
@@ -614,7 +614,7 @@ class TestAccountReturn(TestAccountReportsCommon):
 
         # Regenerate new returns without overriding posted ones
         with self._patch_returns_generation():
-            self.env.company.account_return_periodicity = "2_months"
+            self.env.company.account_config_id.account_return_periodicity = "2_months"
 
         existing_returns = self.env["account.return"].search(
             [
@@ -638,7 +638,7 @@ class TestAccountReturn(TestAccountReportsCommon):
 
     def test_return_generation_change_periodicity_greater_to_smaller(self):
         with self._patch_returns_generation():
-            self.env.company.account_return_periodicity = "2_months"
+            self.env.company.account_config_id.account_return_periodicity = "2_months"
 
         existing_returns = self.env["account.return"].search(
             [
@@ -666,7 +666,7 @@ class TestAccountReturn(TestAccountReportsCommon):
 
         # Regenerate new returns without overriding posted ones
         with self._patch_returns_generation():
-            self.env.company.account_return_periodicity = "monthly"
+            self.env.company.account_config_id.account_return_periodicity = "monthly"
 
         existing_returns = self.env["account.return"].search(
             [
@@ -697,7 +697,7 @@ class TestAccountReturn(TestAccountReportsCommon):
     def test_return_generation_with_start_date(self):
         with self._patch_returns_generation():
             self.basic_return_type.deadline_start_date = "2024-12-01"
-            self.env.company.account_return_periodicity = "4_months"
+            self.env.company.account_config_id.account_return_periodicity = "4_months"
 
         existing_returns = self.env["account.return"].search(
             [
@@ -728,7 +728,7 @@ class TestAccountReturn(TestAccountReportsCommon):
 
         with self._patch_returns_generation():
             self.basic_return_type.deadline_start_date = "2024-12-01"
-            self.env.company.account_return_periodicity = "4_months"
+            self.env.company.account_config_id.account_return_periodicity = "4_months"
 
         existing_returns = self.env["account.return"].search(
             [
@@ -799,7 +799,7 @@ class TestAccountReturn(TestAccountReportsCommon):
         )
 
         with self._patch_returns_generation():
-            self.env.company.account_return_periodicity = "trimester"
+            self.env.company.account_config_id.account_return_periodicity = "trimester"
 
         existing_returns = self.env["account.return"].search(
             [
@@ -828,8 +828,8 @@ class TestAccountReturn(TestAccountReportsCommon):
 
     def test_return_fiscal_year_periodicity(self):
         with self._patch_returns_generation():
-            self.env.company.fiscalyear_last_day = 31
-            self.env.company.fiscalyear_last_month = "12"
+            self.env.company.account_config_id.fiscalyear_last_day = 31
+            self.env.company.account_config_id.fiscalyear_last_month = "12"
             self.env["account.fiscal.year"].create(
                 [
                     {
@@ -882,7 +882,7 @@ class TestAccountReturn(TestAccountReportsCommon):
             )
 
         # Periodicity only with default start_date
-        self.env.company.account_return_periodicity = "monthly"
+        self.env.company.account_config_id.account_return_periodicity = "monthly"
         assert_period(
             date(2024, 1, 1),
             expected_start=date(2024, 1, 1),
@@ -899,7 +899,7 @@ class TestAccountReturn(TestAccountReportsCommon):
             expected_end=date(2024, 10, 31),
         )
 
-        self.env.company.account_return_periodicity = "trimester"
+        self.env.company.account_config_id.account_return_periodicity = "trimester"
         assert_period(
             date(2024, 1, 1),
             expected_start=date(2024, 1, 1),
@@ -921,7 +921,7 @@ class TestAccountReturn(TestAccountReportsCommon):
             expected_end=date(2024, 12, 31),
         )
 
-        self.env.company.account_return_periodicity = "year"
+        self.env.company.account_config_id.account_return_periodicity = "year"
         assert_period(
             date(2024, 1, 1),
             expected_start=date(2024, 1, 1),
@@ -934,7 +934,7 @@ class TestAccountReturn(TestAccountReportsCommon):
         )
 
         # Basic start dates
-        self.env.company.account_return_periodicity = "trimester"
+        self.env.company.account_config_id.account_return_periodicity = "trimester"
         self.basic_return_type.deadline_start_date = "2024-01-01"
         assert_period(
             date(2024, 1, 1),
@@ -994,7 +994,7 @@ class TestAccountReturn(TestAccountReportsCommon):
             expected_end=date(2025, 1, 31),
         )
 
-        self.env.company.account_return_periodicity = "monthly"
+        self.env.company.account_config_id.account_return_periodicity = "monthly"
         assert_period(
             date(2024, 2, 1),
             expected_start=date(2024, 2, 1),
@@ -1027,7 +1027,7 @@ class TestAccountReturn(TestAccountReportsCommon):
         )
 
         # Complexe start dates
-        self.env.company.account_return_periodicity = "trimester"
+        self.env.company.account_config_id.account_return_periodicity = "trimester"
 
         self.basic_return_type.deadline_start_date = "2024-02-06"
         assert_period(
@@ -1100,7 +1100,7 @@ class TestAccountReturn(TestAccountReportsCommon):
             expected_end=date(2024, 12, 5),
         )
 
-        self.env.company.account_return_periodicity = "monthly"
+        self.env.company.account_config_id.account_return_periodicity = "monthly"
         assert_period(
             date(2024, 3, 5),
             expected_start=date(2024, 2, 6),
@@ -1129,8 +1129,8 @@ class TestAccountReturn(TestAccountReportsCommon):
 
         # Fiscal year
         self.basic_return_type.deadline_periodicity = "fiscalyear"
-        self.env.company.fiscalyear_last_day = 31
-        self.env.company.fiscalyear_last_month = "12"
+        self.env.company.account_config_id.fiscalyear_last_day = 31
+        self.env.company.account_config_id.fiscalyear_last_month = "12"
         self.env["account.fiscal.year"].create(
             [
                 {
@@ -1166,7 +1166,7 @@ class TestAccountReturn(TestAccountReportsCommon):
 
     def test_vat_closing_moves_with_lock_date(self):
         """Checks posting a closing entry after the tax lock date has been manually set is allowed."""
-        self.env.company.tax_lock_date = "2024-12-31"
+        self.env.company.account_config_id.tax_lock_date = "2024-12-31"
 
         first_return = self.env["account.return"].search(
             [
@@ -1279,7 +1279,9 @@ class TestAccountReturn(TestAccountReportsCommon):
             )
 
     def test_multicompany_generation_tax_units(self):
-        fiscal_country = self.company_data["company"].account_fiscal_country_id
+        fiscal_country = self.company_data[
+            "company"
+        ].account_config_id.account_fiscal_country_id
         self.basic_return_type.report_id.country_id = (
             fiscal_country  # To make sure the tax unit is properly detected
         )
@@ -1289,8 +1291,12 @@ class TestAccountReturn(TestAccountReportsCommon):
         unit_companies = self.company_data["company"] + other_company_data["company"]
 
         with self._patch_returns_generation():
-            self.company_data["company"].account_return_periodicity = "2_months"
-            other_company_data["company"].account_return_periodicity = "monthly"
+            self.company_data[
+                "company"
+            ].account_config_id.account_return_periodicity = "2_months"
+            other_company_data[
+                "company"
+            ].account_config_id.account_return_periodicity = "monthly"
 
         self.assert_return_dates_equal(
             self.env["account.return"].search(
@@ -1385,7 +1391,7 @@ class TestAccountReturn(TestAccountReportsCommon):
             first_return.action_validate()
             second_return.action_validate()
 
-        self.company_data["company"].tax_lock_date = (
+        self.company_data["company"].account_config_id.tax_lock_date = (
             first_return.date_from - relativedelta(days=1)
         )
 
@@ -3055,7 +3061,9 @@ class TestAccountReturn(TestAccountReportsCommon):
 
     def test_deadline_by_company(self):
         with self._patch_returns_generation():
-            self.company_data_2["company"].account_opening_date = "2023-01-01"
+            self.company_data_2[
+                "company"
+            ].account_config_id.account_opening_date = "2023-01-01"
 
         first_company_completed_return = self.env["account.return"].search(
             [

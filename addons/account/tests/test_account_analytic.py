@@ -890,7 +890,9 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         self.assertTrue(plans_json)
 
     def test_analytic_distribution_with_discount(self):
-        self.company_data["company"].account_discount_expense_allocation_id = self.env[
+        self.company_data[
+            "company"
+        ].account_config_id.account_discount_expense_allocation_id = self.env[
             "account.account"
         ].create(
             {
@@ -1437,7 +1439,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
                 }
             ]
         )
-        in_invoice.company_id.purchase_lock_date = "2017-01-31"
+        in_invoice.company_id.account_config_id.purchase_lock_date = "2017-01-31"
         in_invoice.action_post()
         self.assertTrue(self.get_analytic_lines(in_invoice))
 

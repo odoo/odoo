@@ -20,12 +20,12 @@ def _sync_crons(env):
 
 def _setup_downpayment_account(env):
     for company in env.companies:
-        if not company.chart_template:
+        if not company.account_config_id.chart_template:
             continue
 
         template_data = (
             env["account.chart.template"]
-            ._prepare_chart_template_data(company.chart_template)
+            ._prepare_chart_template_data(company.account_config_id.chart_template)
             .get("template_data")
         )
         if template_data and template_data.get("downpayment_account_id"):

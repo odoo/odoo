@@ -1508,7 +1508,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
                     "currency_id": self.other_currency.id,
                     "amount": 1998,
                     "payment_difference_handling": "reconcile",
-                    "writeoff_account_id": self.env.company.expense_currency_exchange_account_id.id,
+                    "writeoff_account_id": self.env.company.account_config_id.expense_currency_exchange_account_id.id,
                 }
             )
             ._create_payments()
@@ -1535,15 +1535,15 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
         )
 
     def test_register_foreign_currency_on_invoice_exchange_writeoff_account(self):
-        self.env.company.tax_exigibility = True
-        self.env.company.account_cash_basis_base_account_id = self.env[
-            "account.account"
-        ].create(
-            {
-                "code": "cash.basis.base.account",
-                "name": "cash_basis_base_account",
-                "account_type": "income",
-            }
+        self.env.company.account_config_id.tax_exigibility = True
+        self.env.company.account_config_id.account_cash_basis_base_account_id = (
+            self.env["account.account"].create(
+                {
+                    "code": "cash.basis.base.account",
+                    "name": "cash_basis_base_account",
+                    "account_type": "income",
+                }
+            )
         )
 
         default_tax = self.company_data["default_tax_sale"]
@@ -1588,7 +1588,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
                     "amount": 370.0,
                     "payment_date": "2016-01-01",
                     "payment_difference_handling": "reconcile",
-                    "writeoff_account_id": self.env.company.expense_currency_exchange_account_id.id,
+                    "writeoff_account_id": self.env.company.account_config_id.expense_currency_exchange_account_id.id,
                 }
             )
             ._create_payments()

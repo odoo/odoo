@@ -3,7 +3,7 @@ from . import models, wizards
 
 def _l10n_sa_edi_post_init(env):
     for company in env["res.company"].search(
-        [("chart_template", "=", "sa"), ("parent_id", "=", False)]
+        [("account_config_id.chart_template", "=", "sa"), ("parent_id", "=", False)]
     ):
         Template = env["account.chart.template"].with_company(company)
         tax_data = Template._get_sa_edi_account_tax()

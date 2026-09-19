@@ -30,7 +30,7 @@ class AccountUpdateTaxTagsWizard(models.TransientModel):
     @api.depends("company_id")
     def _compute_date_from(self):
         for wizard in self:
-            tax_lock_date = self.company_id.tax_lock_date
+            tax_lock_date = self.company_id.account_config_id.tax_lock_date
             wizard.date_from = (
                 tax_lock_date + timedelta(days=1)
                 if tax_lock_date
@@ -40,7 +40,7 @@ class AccountUpdateTaxTagsWizard(models.TransientModel):
     @api.depends("date_from")
     def _compute_display_lock_date_warning(self):
         for wizard in self:
-            tax_lock_date = self.company_id.tax_lock_date
+            tax_lock_date = self.company_id.account_config_id.tax_lock_date
             wizard.display_lock_date_warning = (
                 tax_lock_date and wizard.date_from < tax_lock_date
             )

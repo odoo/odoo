@@ -444,12 +444,13 @@ class AccountPayment(models.Model):
                 or payment.partner_id == payment.company_id.partner_id
             ):
                 payment.destination_account_id = (
-                    payment.company_id.transfer_account_id.id
+                    payment.company_id.account_config_id.transfer_account_id.id
                 )
 
     def _is_latam_check_transfer(self):
         self.check_singleton()
         return (
             not self.partner_id
-            and self.destination_account_id == self.company_id.transfer_account_id
+            and self.destination_account_id
+            == self.company_id.account_config_id.transfer_account_id
         )

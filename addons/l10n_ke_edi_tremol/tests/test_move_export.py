@@ -181,7 +181,7 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
                                     [
                                         self.company_data[
                                             "company"
-                                        ].account_sale_tax_id.id
+                                        ].account_config_id.account_sale_tax_id.id
                                     ],
                                 )
                             ],
@@ -202,7 +202,7 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
                                     [
                                         self.company_data[
                                             "company"
-                                        ].account_sale_tax_id.id
+                                        ].account_config_id.account_sale_tax_id.id
                                     ],
                                 )
                             ],
@@ -252,7 +252,7 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
                                     [
                                         self.company_data[
                                             "company"
-                                        ].account_sale_tax_id.id
+                                        ].account_config_id.account_sale_tax_id.id
                                     ],
                                 )
                             ],
@@ -273,7 +273,7 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
                                     [
                                         self.company_data[
                                             "company"
-                                        ].account_sale_tax_id.id
+                                        ].account_config_id.account_sale_tax_id.id
                                     ],
                                 )
                             ],
@@ -323,7 +323,7 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
                                     [
                                         self.company_data[
                                             "company"
-                                        ].account_sale_tax_id.id,
+                                        ].account_config_id.account_sale_tax_id.id,
                                         tourism_levy.id,
                                     ],
                                 ),

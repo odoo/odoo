@@ -1531,7 +1531,7 @@ class PosSession(models.Model):
 
     def _get_balancing_account(self):
         return (
-            self.company_id.account_default_pos_receivable_account_id
+            self.company_id.account_config_id.account_default_pos_receivable_account_id
             or self.env["res.partner"]
             ._fields["property_account_receivable_id"]
             .get_company_dependent_fallback(self.env["res.partner"])
@@ -1617,7 +1617,7 @@ class PosSession(models.Model):
         stock_valuation = defaultdict(prepare_amounts)
         rounding_difference = {"amount": 0.0, "amount_converted": 0.0}
         pos_receivable_account = (
-            self.company_id.account_default_pos_receivable_account_id
+            self.company_id.account_config_id.account_default_pos_receivable_account_id
         )
         closed_orders = self._get_closed_orders()
         for order in closed_orders:
@@ -2360,11 +2360,11 @@ class PosSession(models.Model):
             "[session:%s] invoice receivable reconciliation: default account"
             " reconcilable=%s, %d combined, %d split",
             self.name,
-            self.company_id.account_default_pos_receivable_account_id.reconcile,
+            self.company_id.account_config_id.account_default_pos_receivable_account_id.reconcile,
             len(combine_inv_payment_receivable_lines),
             len(split_inv_payment_receivable_lines),
         )
-        if self.company_id.account_default_pos_receivable_account_id.reconcile:
+        if self.company_id.account_config_id.account_default_pos_receivable_account_id.reconcile:
             for payment_method in combine_inv_payment_receivable_lines:
                 lines = combine_inv_payment_receivable_lines[
                     payment_method
@@ -2440,7 +2440,7 @@ class PosSession(models.Model):
 
     def _prepare_invoice_receivable_vals(self, amount, amount_converted):
         partial_vals = {
-            "account_id": self.company_id.account_default_pos_receivable_account_id.id,
+            "account_id": self.company_id.account_config_id.account_default_pos_receivable_account_id.id,
             "move_id": self.move_id.id,
             "name": _("From invoice payments"),
             "display_type": "payment_term",
@@ -2712,7 +2712,7 @@ class PosSession(models.Model):
     def _get_receivable_account(self, payment_method):
         return (
             payment_method.receivable_account_id
-            or self.company_id.account_default_pos_receivable_account_id
+            or self.company_id.account_config_id.account_default_pos_receivable_account_id
         )
 
     def action_show_payments_list(self):

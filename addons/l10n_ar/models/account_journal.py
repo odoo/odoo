@@ -273,7 +273,8 @@ class AccountJournal(models.Model):
 
             for journal in self:
                 if (
-                    journal.company_id.account_fiscal_country_id.code != "AR"
+                    journal.company_id.account_config_id.account_fiscal_country_id.code
+                    != "AR"
                     or journal.type not in ["sale", "purchase"]
                     or journal.id not in journal_with_entry_ids
                 ):

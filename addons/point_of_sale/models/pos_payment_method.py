@@ -98,7 +98,7 @@ class PosPaymentMethod(models.Model):
         default=lambda self: self.env.company,
     )
     default_pos_receivable_account_name = fields.Char(
-        related="company_id.account_default_pos_receivable_account_id.display_name",
+        related="company_id.account_config_id.account_default_pos_receivable_account_id.display_name",
         string="Default Receivable Account Name",
     )
     use_payment_terminal = fields.Selection(
@@ -248,7 +248,7 @@ class PosPaymentMethod(models.Model):
                         "account_journal_payment_debit_account_id",
                         raise_if_not_found=False,
                     )
-                    or self.company_id.transfer_account_id
+                    or self.company_id.account_config_id.transfer_account_id
                 )
         if self.is_cash_count:
             self.use_payment_terminal = False

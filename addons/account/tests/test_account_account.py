@@ -926,12 +926,12 @@ class TestAccountAccount(TestAccountMergeCommon):
         account = self.company_data["default_account_revenue"]
         balancing_account = company.get_unaffected_earnings_account()
 
-        self.assertFalse(company.account_opening_move_id)
+        self.assertFalse(company.account_config_id.account_opening_move_id)
 
         account.opening_debit = 300
         self.cr.precommit.run()
         self.assertRecordValues(
-            company.account_opening_move_id.line_ids.sorted(),
+            company.account_config_id.account_opening_move_id.line_ids.sorted(),
             [
                 {"account_id": account.id, "balance": 300.0},
                 {"account_id": balancing_account.id, "balance": -300.0},
@@ -941,7 +941,7 @@ class TestAccountAccount(TestAccountMergeCommon):
         account.opening_credit = 500
         self.cr.precommit.run()
         self.assertRecordValues(
-            company.account_opening_move_id.line_ids.sorted(),
+            company.account_config_id.account_opening_move_id.line_ids.sorted(),
             [
                 {"account_id": account.id, "balance": 300.0},
                 {"account_id": account.id, "balance": -500.0},
@@ -951,13 +951,13 @@ class TestAccountAccount(TestAccountMergeCommon):
 
         account.opening_balance = 0
         self.cr.precommit.run()
-        self.assertFalse(company.account_opening_move_id.line_ids)
+        self.assertFalse(company.account_config_id.account_opening_move_id.line_ids)
 
         account.currency_id = self.other_currency
         account.opening_debit = 100
         self.cr.precommit.run()
         self.assertRecordValues(
-            company.account_opening_move_id.line_ids.sorted(),
+            company.account_config_id.account_opening_move_id.line_ids.sorted(),
             [
                 {"account_id": account.id, "balance": 100.0, "amount_currency": 200.0},
                 {
@@ -968,7 +968,7 @@ class TestAccountAccount(TestAccountMergeCommon):
             ],
         )
 
-        company.account_opening_move_id.write(
+        company.account_config_id.account_opening_move_id.write(
             {
                 "line_ids": [
                     Command.create(
@@ -989,7 +989,7 @@ class TestAccountAccount(TestAccountMergeCommon):
             }
         )
         self.assertRecordValues(
-            company.account_opening_move_id.line_ids.sorted(),
+            company.account_config_id.account_opening_move_id.line_ids.sorted(),
             [
                 {"account_id": account.id, "balance": 100.0, "amount_currency": 200.0},
                 {
@@ -1009,7 +1009,7 @@ class TestAccountAccount(TestAccountMergeCommon):
         account.opening_credit = 1000
         self.cr.precommit.run()
         self.assertRecordValues(
-            company.account_opening_move_id.line_ids.sorted(),
+            company.account_config_id.account_opening_move_id.line_ids.sorted(),
             [
                 {"account_id": account.id, "balance": 100.0, "amount_currency": 200.0},
                 {"account_id": account.id, "balance": 100.0, "amount_currency": 200.0},
@@ -1029,7 +1029,7 @@ class TestAccountAccount(TestAccountMergeCommon):
         account.opening_debit = 1000
         self.cr.precommit.run()
         self.assertRecordValues(
-            company.account_opening_move_id.line_ids.sorted(),
+            company.account_config_id.account_opening_move_id.line_ids.sorted(),
             [
                 {
                     "account_id": account.id,

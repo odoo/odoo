@@ -883,7 +883,9 @@ class TestAccountReconcileWizard(AccountTestInvoicingCommon):
 
     def test_raise_lock_date_violation(self):
         company_id = self.company_data["company"]
-        company_id.fiscalyear_lock_date = fields.Date.from_string("2016-12-01")
+        company_id.account_config_id.fiscalyear_lock_date = fields.Date.from_string(
+            "2016-12-01"
+        )
         line_1 = self.create_line_for_reconciliation(
             1000.0, 1000.0, self.company_currency, "2016-06-01"
         )
@@ -960,7 +962,7 @@ class TestAccountReconcileWizard(AccountTestInvoicingCommon):
     def test_reconcile_exchange_diff_foreign_currency(self):
         exchange_gain_account = self.company_data[
             "company"
-        ].income_currency_exchange_account_id
+        ].account_config_id.income_currency_exchange_account_id
         exchange_gain_account.reconcile = True
         line_1 = self.create_line_for_reconciliation(
             150.0, 0.0, self.foreign_currency, "2016-01-01"
@@ -1051,7 +1053,7 @@ class TestAccountReconcileWizard(AccountTestInvoicingCommon):
     def test_reconcile_exchange_diff_foreign_currency_full(self):
         exchange_gain_account = self.company_data[
             "company"
-        ].income_currency_exchange_account_id
+        ].account_config_id.income_currency_exchange_account_id
         exchange_gain_account.reconcile = True
         line_1 = self.create_line_for_reconciliation(
             100.0, 0.0, self.foreign_currency, "2016-01-01"
@@ -1472,7 +1474,7 @@ class TestAccountReconcileWizard(AccountTestInvoicingCommon):
     def test_reconcile_same_side_exch_diff(self):
         exchange_gain_account = self.company_data[
             "company"
-        ].income_currency_exchange_account_id
+        ].account_config_id.income_currency_exchange_account_id
         exchange_gain_account.reconcile = True
         line_1 = self.create_line_for_reconciliation(
             150.0, 150.0, self.company_currency, "2016-01-01"

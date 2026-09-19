@@ -42,18 +42,16 @@ class AccountChartTemplate(models.AbstractModel):
         super()._setup_utility_bank_accounts(template_code, company, template_data)
         if template_code == "lt":
             bank_tags = self.env.ref("l10n_lt.account_account_tag_b_4")
-            company.account_journal_suspense_account_id.tag_ids |= bank_tags
-            company.transfer_account_id.tag_ids |= bank_tags
+            company.account_config_id.account_journal_suspense_account_id.tag_ids |= (
+                bank_tags
+            )
+            company.account_config_id.transfer_account_id.tag_ids |= bank_tags
 
             other_operating_results_tags = self.env.ref(
                 "l10n_lt.account_account_tag_6_other_operating_results"
             )
-            company.default_cash_difference_income_account_id.tag_ids |= (
-                other_operating_results_tags
-            )
-            company.default_cash_difference_expense_account_id.tag_ids |= (
-                other_operating_results_tags
-            )
+            company.account_config_id.default_cash_difference_income_account_id.tag_ids |= other_operating_results_tags
+            company.account_config_id.default_cash_difference_expense_account_id.tag_ids |= other_operating_results_tags
 
     @template("lt", "account.account")
     def _get_lt_account_account(self):

@@ -911,12 +911,12 @@ class TestPoSBasicConfig(TestPoSCommon):
                 "name": "add_invoice_line",
                 "rounding": 0.05,
                 "strategy": "add_invoice_line",
-                "profit_account_id": self.company[
+                "profit_account_id": self.company.account_config_id[
                     "default_cash_difference_income_account_id"
                 ]
                 .copy()
                 .id,
-                "loss_account_id": self.company[
+                "loss_account_id": self.company.account_config_id[
                     "default_cash_difference_expense_account_id"
                 ]
                 .copy()

@@ -281,12 +281,10 @@ class PosPayment(models.Model):
             elif is_reverse:
                 reversed_move_receivable_account_id = (
                     payment.payment_method_id.receivable_account_id.id
-                    or order.company_id.account_default_pos_receivable_account_id.id
+                    or order.company_id.account_config_id.account_default_pos_receivable_account_id.id
                 )
             else:
-                reversed_move_receivable_account_id = (
-                    order.company_id.account_default_pos_receivable_account_id.id
-                )
+                reversed_move_receivable_account_id = order.company_id.account_config_id.account_default_pos_receivable_account_id.id
             debit_line_vals = pos_session._prepare_debit_line_vals(
                 {
                     "account_id": reversed_move_receivable_account_id,

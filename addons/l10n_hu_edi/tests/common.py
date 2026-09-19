@@ -122,7 +122,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
                 "name": "Excise tax",
                 "amount_type": "percent",
                 "amount": 30.0,
-                "country_id": company.account_fiscal_country_id.id,
+                "country_id": company.account_config_id.account_fiscal_country_id.id,
                 "tax_exigibility": "on_invoice",
                 "price_include_override": "tax_included",
                 "include_base_amount": True,

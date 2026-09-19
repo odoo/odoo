@@ -11,10 +11,13 @@ def _l10n_ar_wth_post_init(env):
     """Existing companies that have the Argentinean Chart of Accounts set"""
     template_codes = ["ar_ri", "ar_ex", "ar_base"]
     ar_companies = env["res.company"].search(
-        [("chart_template", "in", template_codes), ("parent_id", "=", False)]
+        [
+            ("account_config_id.chart_template", "in", template_codes),
+            ("parent_id", "=", False),
+        ]
     )
     for company in ar_companies:
-        template_code = company.chart_template
+        template_code = company.account_config_id.chart_template
         ChartTemplate = env["account.chart.template"].with_company(company)
         data = {
             model: ChartTemplate._prepare_csv_vals(

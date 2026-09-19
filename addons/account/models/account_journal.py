@@ -304,11 +304,11 @@ class AccountJournal(models.Model):
         help="Company related to this journal",
     )
     country_code = fields.Char(
-        related="company_id.account_fiscal_country_id.code",
+        related="company_id.account_config_id.account_fiscal_country_id.code",
         readonly=True,
     )
     account_fiscal_country_group_codes = fields.Json(
-        related="company_id.account_fiscal_country_group_codes"
+        related="company_id.account_config_id.account_fiscal_country_group_codes"
     )
 
     refund_sequence = fields.Boolean(
@@ -807,16 +807,17 @@ class AccountJournal(models.Model):
                 journal.suspense_account_id = False
             elif not journal.suspense_account_id:
                 journal.suspense_account_id = (
-                    journal.company_id.account_journal_suspense_account_id or False
+                    journal.company_id.account_config_id.account_journal_suspense_account_id
+                    or False
                 )
 
     @api.depends(
         "type",
-        "company_id.fiscalyear_lock_date",
-        "company_id.tax_lock_date",
-        "company_id.sale_lock_date",
-        "company_id.purchase_lock_date",
-        "company_id.hard_lock_date",
+        "company_id.account_config_id.fiscalyear_lock_date",
+        "company_id.account_config_id.tax_lock_date",
+        "company_id.account_config_id.sale_lock_date",
+        "company_id.account_config_id.purchase_lock_date",
+        "company_id.account_config_id.hard_lock_date",
     )
     @api.depends_context("move_date", "has_tax")
     def _compute_accounting_date(self):
@@ -848,18 +849,28 @@ class AccountJournal(models.Model):
             "profit_account_id": False,
             "loss_account_id": False,
         }
-        if journal_type == "sale" and company.income_account_id.active:
-            defaults["default_account_id"] = company.income_account_id.id
-        elif journal_type == "purchase" and company.expense_account_id.active:
-            defaults["default_account_id"] = company.expense_account_id.id
+        if (
+            journal_type == "sale"
+            and company.account_config_id.income_account_id.active
+        ):
+            defaults["default_account_id"] = (
+                company.account_config_id.income_account_id.id
+            )
+        elif (
+            journal_type == "purchase"
+            and company.account_config_id.expense_account_id.active
+        ):
+            defaults["default_account_id"] = (
+                company.account_config_id.expense_account_id.id
+            )
         elif journal_type in CASH_DIFFERENCE_TYPES:
-            if company.default_cash_difference_income_account_id.active:
+            if company.account_config_id.default_cash_difference_income_account_id.active:
                 defaults["profit_account_id"] = (
-                    company.default_cash_difference_income_account_id.id
+                    company.account_config_id.default_cash_difference_income_account_id.id
                 )
-            if company.default_cash_difference_expense_account_id.active:
+            if company.account_config_id.default_cash_difference_expense_account_id.active:
                 defaults["loss_account_id"] = (
-                    company.default_cash_difference_expense_account_id.id
+                    company.account_config_id.default_cash_difference_expense_account_id.id
                 )
         _debug.logic(
             "type_defaults_resolved",
@@ -886,7 +897,9 @@ class AccountJournal(models.Model):
         for journal in self:
             if self._is_generated_code(journal.code):
                 journal.code = False
-            journal.update(self._prepare_type_defaults(journal.type, journal.company_id))
+            journal.update(
+                self._prepare_type_defaults(journal.type, journal.company_id)
+            )
 
         self.env.add_to_compute(self._fields["code"], self)
 
@@ -1641,12 +1654,12 @@ class AccountJournal(models.Model):
 
         if journal_type == "cash":
             account_prefix = (
-                company.cash_account_code_prefix
-                or company.bank_account_code_prefix
+                company.account_config_id.cash_account_code_prefix
+                or company.account_config_id.bank_account_code_prefix
                 or ""
             )
         else:
-            account_prefix = company.bank_account_code_prefix or ""
+            account_prefix = company.account_config_id.bank_account_code_prefix or ""
 
         start_code = account_prefix.ljust(digits, "0")
         default_account_code = (

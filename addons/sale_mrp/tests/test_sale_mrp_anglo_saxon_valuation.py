@@ -13,7 +13,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.env.user.company_id.anglo_saxon_accounting = True
+        cls.env.user.company_id.account_config_id.anglo_saxon_accounting = True
 
     @classmethod
     def _create_product(cls, **create_vals):

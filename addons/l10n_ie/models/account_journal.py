@@ -9,7 +9,7 @@ class AccountJournal(models.Model):
         # OVERRIDE
         account_vals = super()._prepare_liquidity_account_vals(company, code, vals)
 
-        if company.account_fiscal_country_id.code == "IE":
+        if company.account_config_id.account_fiscal_country_id.code == "IE":
             # Ensure the newly created liquidity accounts have the right account tag in order to be part
             # of the Irish BS and PL tags reports.
             account_vals.setdefault("tag_ids", [])

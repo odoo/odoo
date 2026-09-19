@@ -12,9 +12,9 @@ class StockMove(models.Model):
         domain = super()._get_domain_valid_moves()
         _debug.logic(
             "valid_moves_domain",
-            anglo_saxon=self.env.user.company_id.anglo_saxon_accounting,
+            anglo_saxon=self.env.user.company_id.account_config_id.anglo_saxon_accounting,
         )
-        if self.env.user.company_id.anglo_saxon_accounting:
+        if self.env.user.company_id.account_config_id.anglo_saxon_accounting:
             domain = Domain.AND(
                 [
                     domain,

@@ -17,7 +17,7 @@ class TestQris(AccountTestInvoicingCommon):
     @AccountTestInvoicingCommon.setup_chart_template("id")
     def setUpClass(cls):
         super().setUpClass()
-        cls.company_data["company"].qr_code = True
+        cls.company_data["company"].account_config_id.qr_code = True
         cls.company_data["company"].partner_id.update(
             {
                 "country_id": cls.env.ref("base.id").id,

@@ -26,7 +26,8 @@ class AccountMove(models.Model):
                 and not error_messages
                 and (
                     # QR codes must be printed on all Swiss transactions
-                    move.company_id.account_fiscal_country_id.code == "CH"
+                    move.company_id.account_config_id.account_fiscal_country_id.code
+                    == "CH"
                     or (
                         # QR code is also printed if the fiscal country is not Switzerland but the receivale account is eligible
                         move.partner_bank_id.acc_type == "iban"

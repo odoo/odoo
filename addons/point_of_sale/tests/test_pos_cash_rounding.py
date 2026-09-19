@@ -16,8 +16,8 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
                 "rounding": 0.05,
                 "rounding_method": "HALF-UP",
                 "strategy": "add_invoice_line",
-                "profit_account_id": cls.env.company.default_cash_difference_income_account_id.id,
-                "loss_account_id": cls.env.company.default_cash_difference_expense_account_id.id,
+                "profit_account_id": cls.env.company.account_config_id.default_cash_difference_income_account_id.id,
+                "loss_account_id": cls.env.company.account_config_id.default_cash_difference_expense_account_id.id,
             }
         )
         cls.cash_rounding_biggest_tax = cls.env["account.cash.rounding"].create(
@@ -26,8 +26,8 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
                 "rounding": 0.05,
                 "rounding_method": "HALF-UP",
                 "strategy": "biggest_tax",
-                "profit_account_id": cls.env.company.default_cash_difference_income_account_id.id,
-                "loss_account_id": cls.env.company.default_cash_difference_expense_account_id.id,
+                "profit_account_id": cls.env.company.account_config_id.default_cash_difference_income_account_id.id,
+                "loss_account_id": cls.env.company.account_config_id.default_cash_difference_expense_account_id.id,
             }
         )
 

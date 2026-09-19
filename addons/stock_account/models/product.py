@@ -1081,7 +1081,9 @@ class ProductCategory(models.Model):
 
     @api.depends_context("company")
     def _compute_anglo_saxon_accounting(self):
-        self.anglo_saxon_accounting = self.env.company.anglo_saxon_accounting
+        self.anglo_saxon_accounting = (
+            self.env.company.account_config_id.anglo_saxon_accounting
+        )
 
     def write(self, vals):
         products_to_update = self.env["product.product"]

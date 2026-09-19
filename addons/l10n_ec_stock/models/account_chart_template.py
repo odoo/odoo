@@ -25,7 +25,7 @@ class AccountChartTemplate(models.AbstractModel):
         for company in companies:
             # get template data
             Template = self.env["account.chart.template"].with_company(company)
-            template_code = company.chart_template
+            template_code = company.account_config_id.chart_template
             full_data = Template._prepare_chart_template_data(template_code)
             template_data = full_data.pop("template_data")
 

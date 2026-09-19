@@ -246,12 +246,12 @@ class TestSaleOrder(SaleCommon):
             "account.use_invoice_terms", True
         )
 
-        self.env.company.terms_type = "plain"
-        self.env.company.invoice_terms = "Coin coin"
+        self.env.company.account_config_id.terms_type = "plain"
+        self.env.company.account_config_id.invoice_terms = "Coin coin"
         sale_order = self._create_sale_order()
         self.assertEqual(sale_order.notes, "<p>Coin coin</p>")
 
-        self.env.company.terms_type = "html"
+        self.env.company.account_config_id.terms_type = "html"
         sale_order = self._create_sale_order()
         self.assertIn("Terms &amp; Conditions: ", sale_order.notes)
 
@@ -434,7 +434,9 @@ class TestSaleOrder(SaleCommon):
             }
         )
 
-        self.env.company.tax_calculation_rounding_method = "round_per_line"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_per_line"
+        )
         sale_order = self.env["sale.order"].create(
             {
                 "partner_id": self.partner.id,
@@ -462,7 +464,9 @@ class TestSaleOrder(SaleCommon):
         )
         self.assertEqual(sale_order.amount_total, 15.42, "")
 
-        self.env.company.tax_calculation_rounding_method = "round_globally"
+        self.env.company.account_config_id.tax_calculation_rounding_method = (
+            "round_globally"
+        )
         sale_order = self.env["sale.order"].create(
             {
                 "partner_id": self.partner.id,
@@ -1480,7 +1484,7 @@ class TestAccountMoveComputeDepends(SaleCommon):
         AccountMoveLine = self.env["account.move.line"]
         depends = self.env.registry.field_depends[AccountMoveLine._fields["is_storno"]]
         self.assertIn("is_downpayment", depends)
-        self.assertNotIn("company_id.account_storno", depends)
+        self.assertNotIn("company_id.account_config_id.account_storno", depends)
 
     def test_invoiced_amount_excludes_subsection_lines(self):
         AccountMove = self.env["account.move"]

@@ -13,7 +13,7 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
     @AccountTestInvoicingCommon.setup_country("vn")
     def setUpClass(cls):
         super().setUpClass()
-        cls.company_data["company"].qr_code = True
+        cls.company_data["company"].account_config_id.qr_code = True
         cls.company_data["company"].partner_id.update(
             {
                 "country_id": cls.env.ref("base.vn").id,

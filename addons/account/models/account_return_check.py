@@ -306,13 +306,13 @@ class AccountReturnCheck(models.Model):
                 fields.Date.start_of(self.return_id.date_to, "month")
             ),
             "ref": lambda xml_id: self.env.ref(xml_id).id,
-            "internal_transfer_account_id": company.transfer_account_id.id,
+            "internal_transfer_account_id": company.account_config_id.transfer_account_id.id,
             "currency_exhange_difference_account_ids": (
-                company.income_currency_exchange_account_id.id,
-                company.expense_currency_exchange_account_id.id,
+                company.account_config_id.income_currency_exchange_account_id.id,
+                company.account_config_id.expense_currency_exchange_account_id.id,
             ),
             "company_currency_id": company.currency_id.id,
-            "company_country_code": company.account_fiscal_country_id.code,
+            "company_country_code": company.account_config_id.account_fiscal_country_id.code,
             "company_id": company.id,
             "cash_journal_options": generate_journals_options(),
         }

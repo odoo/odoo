@@ -19,13 +19,13 @@ class AccountChartTemplate(models.AbstractModel):
 
         return {
             company.id: {
-                "deferred_expense_journal_id": company.deferred_expense_journal_id.id
+                "deferred_expense_journal_id": company.account_config_id.deferred_expense_journal_id.id
                 or company_data.get("deferred_expense_journal_id"),
-                "deferred_revenue_journal_id": company.deferred_revenue_journal_id.id
+                "deferred_revenue_journal_id": company.account_config_id.deferred_revenue_journal_id.id
                 or company_data.get("deferred_revenue_journal_id"),
-                "deferred_expense_account_id": company.deferred_expense_account_id.id
+                "deferred_expense_account_id": company.account_config_id.deferred_expense_account_id.id
                 or company_data.get("deferred_expense_account_id"),
-                "deferred_revenue_account_id": company.deferred_revenue_account_id.id
+                "deferred_revenue_account_id": company.account_config_id.deferred_revenue_account_id.id
                 or company_data.get("deferred_revenue_account_id"),
             }
         }

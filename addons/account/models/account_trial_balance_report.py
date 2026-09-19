@@ -593,7 +593,7 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
         else:
             unaffected_earning_lines = []
 
-        if self.env.company.totals_below_sections:
+        if self.env.company.account_config_id.totals_below_sections:
             total_line_id = lines[-1]["id"]
         else:
             total_line_id = lines[0]["id"]
@@ -602,7 +602,7 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
             report=report,
             lines=len(lines),
             unaffected_earning_lines=len(unaffected_earning_lines),
-            totals_below_sections=self.env.company.totals_below_sections,
+            totals_below_sections=self.env.company.account_config_id.totals_below_sections,
         )
 
         unaffected_earning_values = defaultdict(
@@ -679,7 +679,9 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
         ):  # should not affect when unfolding lines
             # The same behavior is expected with or without totals_below_sections activated
             # Only the total line should be displayed at the bottom, in bold
-            if self.env.company.totals_below_sections:  # total line already exists
+            if (
+                self.env.company.account_config_id.totals_below_sections
+            ):  # total line already exists
                 lines.pop(0)
                 if unaffected_earning_lines:
                     total_line = lines.pop(-1)

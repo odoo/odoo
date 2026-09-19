@@ -47,7 +47,11 @@ class IrAttachment(models.Model):
         )
         for attachment in audit_trail_attachments:
             move = id2move.get(attachment.res_id)
-            if move and move.posted_before and move.company_id.restrictive_audit_trail:
+            if (
+                move
+                and move.posted_before
+                and move.company_id.account_config_id.restrictive_audit_trail
+            ):
                 ue = UserError(
                     _("You cannot remove parts of a restricted audit trail.")
                 )
@@ -91,7 +95,7 @@ class IrAttachment(models.Model):
                 and attachment.res_id
                 and attachment.res_field
                 in ("invoice_pdf_report_file", "ubl_cii_xml_file")
-                and attachment.company_id.restrictive_audit_trail
+                and attachment.company_id.account_config_id.restrictive_audit_trail
             )
         )
         _debug.logic(

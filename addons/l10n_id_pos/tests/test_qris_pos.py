@@ -16,7 +16,7 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
     @AccountTestInvoicingHttpCommon.setup_chart_template("id")
     def setUpClass(cls):
         super().setUpClass()
-        cls.company_data["company"].qr_code = True
+        cls.company_data["company"].account_config_id.qr_code = True
         cls.company_data["company"].partner_id.update(
             {
                 "country_id": cls.env.ref("base.id").id,
@@ -61,7 +61,7 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
 
         cls.company = cls.company_data["company"]
         cls.pos_receivable_bank = cls.copy_account(
-            cls.company.account_default_pos_receivable_account_id,
+            cls.company.account_config_id.account_default_pos_receivable_account_id,
             {"name": "POS Receivable Bank"},
         )
         cls.outstanding_bank = cls.copy_account(

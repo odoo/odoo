@@ -388,8 +388,8 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
         )
 
     def test_shifted_fiscal_year_date_period(self):
-        self.company_data["company"].fiscalyear_last_day = 3
-        self.company_data["company"].fiscalyear_last_month = "2"
+        self.company_data["company"].account_config_id.fiscalyear_last_day = 3
+        self.company_data["company"].account_config_id.fiscalyear_last_month = "2"
         self.env["account.move"].create(
             {
                 "company_id": self.company_data["company"].id,
@@ -554,8 +554,8 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
         )
 
     def test_first_fiscal_day_date_period(self):
-        self.company_data["company"].fiscalyear_last_day = 3
-        self.company_data["company"].fiscalyear_last_month = "2"
+        self.company_data["company"].account_config_id.fiscalyear_last_day = 3
+        self.company_data["company"].account_config_id.fiscalyear_last_month = "2"
         self.env["account.move"].create(
             {
                 "company_id": self.company_data["company"].id,

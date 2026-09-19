@@ -30,8 +30,8 @@
                                     t-if="o.partner_id.vat"
                                     id="partner_vat_address_not_same_as_shipping">
                                     <t
-                                        t-if="o.company_id.account_fiscal_country_id.vat_label"
-                                        t-out="o.company_id.account_fiscal_country_id.vat_label"
+                                        t-if="o.company_id.account_config_id.account_fiscal_country_id.vat_label"
+                                        t-out="o.company_id.account_config_id.account_fiscal_country_id.vat_label"
                                         id="inv_tax_id_label" />
                                     <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat" />
                                 </div>
@@ -54,8 +54,8 @@
                                     t-if="o.partner_id.vat"
                                     id="partner_vat_address_same_as_shipping">
                                     <t
-                                        t-if="o.company_id.account_fiscal_country_id.vat_label"
-                                        t-out="o.company_id.account_fiscal_country_id.vat_label"
+                                        t-if="o.company_id.account_config_id.account_fiscal_country_id.vat_label"
+                                        t-out="o.company_id.account_config_id.account_fiscal_country_id.vat_label"
                                         id="inv_tax_id_label" />
                                     <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat" />
                                 </div>
@@ -77,8 +77,8 @@
                                     t-if="o.partner_id.vat"
                                     id="partner_vat_no_shipping">
                                     <t
-                                        t-if="o.company_id.account_fiscal_country_id.vat_label"
-                                        t-out="o.company_id.account_fiscal_country_id.vat_label"
+                                        t-if="o.company_id.account_config_id.account_fiscal_country_id.vat_label"
+                                        t-out="o.company_id.account_config_id.account_fiscal_country_id.vat_label"
                                         id="inv_tax_id_label" />
                                     <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat" />
                                 </div>
@@ -574,7 +574,7 @@
                                 <div class="mb-2">
                                     <p
                                         class="text-end lh-sm"
-                                        t-if="o.company_id.display_invoice_amount_total_words">
+                                        t-if="o.company_id.account_config_id.display_invoice_amount_total_words">
                                         Total amount in words: <br />
                                         <small class="text-muted lh-sm"><span t-field="o.amount_total_words">Thirty one dollar and Five cents</span></small>
                                     </p>
@@ -719,7 +719,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    t-attf-class="text-muted mb-3 {{ 'justify-text' if o.company_id.terms_type != 'html' else '' }}"
+                                    t-attf-class="text-muted mb-3 {{ 'justify-text' if o.company_id.account_config_id.terms_type != 'html' else '' }}"
                                     t-if="not is_html_empty(o.narration)"
                                     name="comment">
                                     <span t-field="o.narration" />

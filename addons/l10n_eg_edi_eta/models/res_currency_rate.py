@@ -9,7 +9,7 @@ class ResCurrencyRate(models.Model):
     def _onchange_company_rate(self):
         # We send the ETA a rate that is 5 decimal accuracy, so to ensure consistency, Odoo should also operate with 5 decimal accuracy rate
         if (
-            self.company_id.account_fiscal_country_id.code == "EG"
+            self.company_id.account_config_id.account_fiscal_country_id.code == "EG"
             and float_compare(
                 self.inverse_company_rate,
                 round(self.inverse_company_rate, 5),

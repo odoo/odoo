@@ -51,7 +51,9 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
         return payment
 
     def _set_lock_date(self, lock_date):
-        self.env.company.fiscalyear_lock_date = fields.Date.from_string(lock_date)
+        self.env.company.account_config_id.fiscalyear_lock_date = (
+            fields.Date.from_string(lock_date)
+        )
 
     def _reverse_invoice(self, invoice):
         move_reversal = (
@@ -248,7 +250,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
         )
 
     def test_caba_with_lock_date(self):
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.tax_exigibility = True
 
         tax_waiting_account = self.env["account.account"].create(
             {
@@ -321,7 +323,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
         )
 
     def test_caba_with_tax_lock_date(self):
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.tax_exigibility = True
         tax = self.percent_tax(
             10.0,
             tax_exigibility="on_payment",
@@ -343,7 +345,9 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
         )
         payment = self._create_payment("2025-02-01", amount=invoice.amount_total)
         invoice.action_post()
-        self.env.company.tax_lock_date = fields.Date.to_date("2025-02-28")
+        self.env.company.account_config_id.tax_lock_date = fields.Date.to_date(
+            "2025-02-28"
+        )
 
         (invoice + payment.move_id).line_ids.filtered(
             lambda line: line.account_id.account_type == "asset_receivable"
@@ -356,7 +360,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
     @freezegun.freeze_time("2023-05-01")
     def test_caba_with_different_lock_dates(self):
-        self.env.company.tax_exigibility = True
+        self.env.company.account_config_id.tax_exigibility = True
 
         tax_waiting_account = self.env["account.account"].create(
             {
@@ -394,15 +398,15 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
                     "2023-01-30", amount=invoice.amount_total
                 )
 
-                self.env.company.sudo().sale_lock_date = fields.Date.to_date(
-                    "2023-02-01"
+                self.env.company.sudo().account_config_id.sale_lock_date = (
+                    fields.Date.to_date("2023-02-01")
                 )
                 invoice.action_post()
                 self.assertEqual(invoice.date.isoformat(), "2023-02-28")
                 self.assertEqual(payment.move_id.date.isoformat(), "2023-01-30")
 
-                self.env.company.sudo().sale_lock_date = fields.Date.to_date(
-                    "2023-03-01"
+                self.env.company.sudo().account_config_id.sale_lock_date = (
+                    fields.Date.to_date("2023-03-01")
                 )
                 (invoice + payment.move_id).line_ids.filtered(
                     lambda x: x.account_id.account_type == "asset_receivable"
@@ -424,7 +428,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
             ("purchase_lock_date", "in_invoice"),
         ]:
             with self.subTest(lock_date_field=lock_date_field, move_type=move_type):
-                self.env.company[lock_date_field] = "2024-07-31"
+                self.env.company.account_config_id[lock_date_field] = "2024-07-31"
                 self.env["account.lock_exception"].create(
                     {
                         lock_date_field: fields.Date.to_date("2024-01-01"),
@@ -434,7 +438,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
                 move = self.init_invoice(
                     move_type,
                     amounts=[100],
-                    taxes=self.env.company.account_sale_tax_id,
+                    taxes=self.env.company.account_config_id.account_sale_tax_id,
                     invoice_date="2024-07-01",
                     post=True,
                 )

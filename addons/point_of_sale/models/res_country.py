@@ -9,7 +9,9 @@ class ResCountry(models.Model):
     def _get_referenced_country_ids(self, data, config):
         country_ids = self._get_referenced_ids(data, "res.partner", "country_id")
         country_ids.add(config.company_id.country_id.id)
-        country_ids.add(config.company_id.account_fiscal_country_id.id)
+        country_ids.add(
+            config.company_id.account_config_id.account_fiscal_country_id.id
+        )
         states = self.env["res.country.state"]
         state_ids = states._get_referenced_state_ids(data, config)
         country_ids.update(

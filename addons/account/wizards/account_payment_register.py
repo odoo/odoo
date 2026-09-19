@@ -240,7 +240,7 @@ class AccountPaymentRegister(models.TransientModel):
         compute="_compute_show_require_partner_bank"
     )
     country_code = fields.Char(
-        related="company_id.account_fiscal_country_id.code",
+        related="company_id.account_config_id.account_fiscal_country_id.code",
         readonly=True,
     )
     duplicate_payment_ids = fields.Many2many(
@@ -1271,8 +1271,8 @@ class AccountPaymentRegister(models.TransientModel):
                     wizard.writeoff_account_id,
                     wizard.writeoff_account_id
                     in (
-                        wizard.company_id.expense_currency_exchange_account_id,
-                        wizard.company_id.income_currency_exchange_account_id,
+                        wizard.company_id.account_config_id.expense_currency_exchange_account_id,
+                        wizard.company_id.account_config_id.income_currency_exchange_account_id,
                     ),
                 )
             )

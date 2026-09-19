@@ -363,7 +363,7 @@ class TestMultiVAT(AccountTestInvoicingCommon):
             self.assertEqual(tax.cash_basis_transition_account_id.code, "411005")
 
         self.assertTrue(
-            self.env.company.tax_exigibility,
+            self.env.company.account_config_id.tax_exigibility,
             "Creating foreign cash basis taxes should enable the cash basis setting on the company.",
         )
 

@@ -13,7 +13,7 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.company_data["company"].qr_code = True
+        cls.company_data["company"].account_config_id.qr_code = True
         cls.acc_sepa_iban = cls.env["res.partner.bank"].create(
             {
                 "acc_number": "BE15001559627230",

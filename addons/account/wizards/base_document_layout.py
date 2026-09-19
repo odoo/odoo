@@ -9,7 +9,7 @@ class BaseDocumentLayout(models.TransientModel):
 
     from_invoice = fields.Boolean()
     qr_code = fields.Boolean(
-        related="company_id.qr_code",
+        related="company_id.account_config_id.qr_code",
         readonly=False,
     )
     vat = fields.Char(

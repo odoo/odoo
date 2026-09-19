@@ -3,11 +3,11 @@
 
     <template id="sst_ttx_registration_number_external_layout">
         <li
-            t-if="company.sst_registration_number and company.account_fiscal_country_id.code == 'MY'">
+            t-if="company.sst_registration_number and company.account_config_id.account_fiscal_country_id.code == 'MY'">
             SST: <span t-field="company.sst_registration_number" />
         </li>
         <li
-            t-if="company.ttx_registration_number and company.account_fiscal_country_id.code == 'MY'">
+            t-if="company.ttx_registration_number and company.account_config_id.account_fiscal_country_id.code == 'MY'">
             TTx: <span t-field="company.ttx_registration_number" />
         </li>
     </template>
@@ -18,11 +18,11 @@
         inherit_id="web.external_layout_folder">
         <xpath expr="//div[hasclass('o_folder_company_info')]" position="after">
             <div
-                t-if="company.sst_registration_number and company.account_fiscal_country_id.code == 'MY'">
+                t-if="company.sst_registration_number and company.account_config_id.account_fiscal_country_id.code == 'MY'">
                 SST: <span t-field="company.sst_registration_number" />
             </div>
             <div
-                t-if="company.ttx_registration_number and company.account_fiscal_country_id.code == 'MY'">
+                t-if="company.ttx_registration_number and company.account_config_id.account_fiscal_country_id.code == 'MY'">
                 TTx: <span t-field="company.ttx_registration_number" />
             </div>
         </xpath>

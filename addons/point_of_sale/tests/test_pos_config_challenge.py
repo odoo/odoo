@@ -634,7 +634,7 @@ class TestPosConfigChallenge(TestPoSCommon):
         self.env["account.chart.template"].try_loading(
             "generic_coa", company=parent, install_demo=False
         )
-        self.assertEqual(parent.chart_template, "generic_coa")
+        self.assertEqual(parent.account_config_id.chart_template, "generic_coa")
         self.env["pos.config"].with_company(
             parent
         )._create_journal_and_payment_methods()
