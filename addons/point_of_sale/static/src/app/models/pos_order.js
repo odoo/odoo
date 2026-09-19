@@ -7,6 +7,7 @@ import { parseUTCString, qrCodeSrc, random5Chars, uuidv4, gte, lt } from "@point
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { formatCurrency, roundCurrency } from "@point_of_sale/app/models/utils/currency";
 import { computeComboItems } from "./utils/compute_combo_items";
+import { getTaxDetailsOfLines } from "@point_of_sale/app/models/utils/tax_details";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { toRaw } from "@odoo/owl";
 
@@ -834,22 +835,7 @@ export class PosOrder extends Base {
     }
 
     get_tax_details_of_lines(lines) {
-        const taxDetails = {};
-        for (const line of lines) {
-            for (const taxData of line.get_all_prices().taxesData) {
-                const taxId = taxData.id;
-                if (!taxDetails[taxId]) {
-                    taxDetails[taxId] = Object.assign({}, taxData, {
-                        amount: 0.0,
-                        base: 0.0,
-                        tax_percentage: taxData.tax.amount,
-                    });
-                }
-                taxDetails[taxId].base += taxData.base_amount_currency;
-                taxDetails[taxId].amount += taxData.tax_amount_currency;
-            }
-        }
-        return Object.values(taxDetails);
+        return getTaxDetailsOfLines(lines);
     }
 
     // TODO: deprecated. Remove it and fix l10n_de_pos_cert accordingly.
