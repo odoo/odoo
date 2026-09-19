@@ -474,9 +474,7 @@ class ProductTemplate(models.Model):
             if template.product_template_image_ids:
                 first_product_image = template.product_template_image_ids.sorted("sequence")[0]
                 if first_product_image.video_url:
-                    raise ValidationError(
-                        template.env._("You can't use a video as the template's main image.")
-                    )
+                    continue
                 if template.image_1920.content == first_product_image.image_1920.content:
                     continue
                 template.with_context(
@@ -1418,12 +1416,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_website_sale_search_fields(self, search_in_description=True):
-        search_fields = [
-            "name",
-            "variants_default_code",
-            "barcode",
-            "product_variant_ids.barcode",
-        ]
+        search_fields = ["name", "variants_default_code", "barcode", "product_variant_ids.barcode"]
         if search_in_description:
             search_fields.append("description_ecommerce")
         search_fields.extend((
