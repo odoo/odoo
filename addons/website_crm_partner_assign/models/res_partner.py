@@ -32,7 +32,6 @@ class ResPartner(models.Model):
     )
     grade_sequence = fields.Integer(
         related="grade_id.sequence",
-        store=True,
         readonly=True,
     )
     activation = fields.Many2one(

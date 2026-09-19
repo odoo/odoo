@@ -1,6 +1,6 @@
 {
     "name": "Resellers",
-    "version": "1.2",
+    "version": "1.3",
     "category": "Website/Website",
     "summary": "Publish your resellers/partners and forward leads to them",
     "description": """
