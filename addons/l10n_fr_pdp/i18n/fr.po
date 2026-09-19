@@ -6,13 +6,14 @@
 # "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 # Guillaume Hecht <guhec@odoo.com>, 2026.
 # Camille Dantinne <cmd@odoo.com>, 2026.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:59+0000\n"
-"PO-Revision-Date: 2026-09-10 14:11+0000\n"
-"Last-Translator: Camille Dantinne <cmd@odoo.com>\n"
+"POT-Creation-Date: 2026-09-18 18:05+0000\n"
+"PO-Revision-Date: 2026-09-19 09:33+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-17-l10n/"
 "l10n_fr_pdp/fr/>\n"
 "Language: fr\n"
@@ -75,14 +76,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
 msgid ""
 "<span class=\"text-muted\">\n"
-"                                    Enable e-reporting\n"
+"                                    Enable e-reporting &amp; sending of "
+"invoices to the PPF\n"
 "                                </span>\n"
 "                                <br/>"
 msgstr ""
 "<span class=\"text-muted\">\n"
-"Activer l'e-reporting\n"
-"</span>\n"
-"<br/>"
+"                                    Activer l’e-reporting et l’envoi des "
+"factures au PPF\n"
+"                                </span>\n"
+"                                <br/>"
 
 #. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
@@ -123,8 +126,8 @@ msgstr ""
 "invisible=\"'company_pdp_annuaire_warning' in warnings\">Valider "
 "l'enregistrement<span invisible=\"'company_pdp_annuaire_warning' not in "
 "warnings\">Migrer vers Odoo</span></span><span invisible=\"edi_mode != "
-"'test'\"><span invisible=\"'company_pdp_annuaire_warning' in warnings\">"
-"Valider l'enregistrement (Test)</span><span "
+"'test'\"><span invisible=\"'company_pdp_annuaire_warning' in "
+"warnings\">Valider l'enregistrement (Test)</span><span "
 "invisible=\"'company_pdp_annuaire_warning' not in warnings\">Migrer vers "
 "Odoo (Test)</span></span><span invisible=\"edi_mode != 'demo'\"><span "
 "invisible=\"'company_pdp_annuaire_warning' in warnings\">Valider "
@@ -140,8 +143,8 @@ msgid ""
 "A French e-invoicing response with Response Code '%(status)s' was sent to "
 "the Approved Platform."
 msgstr ""
-"Une réponse de facturation électronique française avec le code de réponse '%"
-"(status)s' a été envoyée à la Plateforme Agréée."
+"Une réponse de facturation électronique française avec le code de réponse "
+"'%(status)s' a été envoyée à la Plateforme Agréée."
 
 #. module: l10n_fr_pdp
 #. odoo-python
@@ -208,12 +211,34 @@ msgstr "Icône du type d’activité"
 #. module: l10n_fr_pdp
 #: model:ir.model.fields,help:l10n_fr_pdp.field_l10n_fr_pdp_reports_flow__transport_message
 msgid "Additional message or error returned by the PDP transport API."
-msgstr "Message ou erreur supplémentaire renvoyé(e) par l’API de transport PDP."
+msgstr ""
+"Message ou erreur supplémentaire renvoyé(e) par l’API de transport PDP."
 
 #. module: l10n_fr_pdp
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_response_wizard__note
 msgid "Additional note"
 msgstr "Note complémentaire"
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+#, python-format
+msgid "Address country code must contain two letters%s."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+#, python-format
+msgid "Address zip code must not exceed 10 characters%s."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+#, python-format
+msgid "Admissible"
+msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
@@ -572,6 +597,13 @@ msgstr "Démo"
 #. odoo-python
 #: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
 #, python-format
+msgid "Deposited"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+#, python-format
 msgid "Details:"
 msgstr "Détails:"
 
@@ -742,6 +774,11 @@ msgid "EDI user"
 msgstr "Utilisateur EDI"
 
 #. module: l10n_fr_pdp
+#: model:ir.model,name:l10n_fr_pdp.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr "Mixin des codes fiscaux ETA"
+
+#. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.pdp_registration_form
 msgid "Email"
 msgstr "E-mail"
@@ -794,6 +831,13 @@ msgstr "Erreurs de %(error_source)s:"
 #, python-format
 msgid "Errors:"
 msgstr "Erreurs :"
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/pdp_flow_xml_builder.py:0
+#, python-format
+msgid "Exempt from tax"
+msgstr "Exonéré de taxe"
 
 #. module: l10n_fr_pdp
 #. odoo-python
@@ -922,8 +966,8 @@ msgid ""
 "For French regulated invoices, only the format '%(format_name)s' is "
 "supported.Please check the following partners: %(partner_names)s"
 msgstr ""
-"Pour les factures conformes à la réglementation française, seul le format %"
-"(format_name)s est supporté. Veuillez consulter la liste des partenaires "
+"Pour les factures conformes à la réglementation française, seul le format "
+"%(format_name)s est supporté. Veuillez consulter la liste des partenaires "
 "suivante :%(partner_names)s"
 
 #. module: l10n_fr_pdp
@@ -1087,6 +1131,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__res_config_settings__l10n_fr_pdp_peppol_proxy_display_state__in_verification
 msgid "In verification"
 msgstr "En cours de vérification"
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+#, python-format
+msgid "Inadmissible"
+msgstr ""
 
 #. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
@@ -1589,6 +1640,13 @@ msgstr "Statut PEPPOL"
 #. odoo-python
 #: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
 #, python-format
+msgid "PPF Flow 10 response: %(status)s (%(status_code)s)."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+#, python-format
 msgid "PPF Invoice"
 msgstr "Facture PPF"
 
@@ -1646,6 +1704,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__res_partner__pdp_verification_display_state__peppol_not_valid_format
 msgid "Partner cannot receive format"
 msgstr "Le partenaire ne peut pas recevoir ce format"
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+#, python-format
+msgid "Partner country code must contain two letters%s."
+msgstr ""
 
 #. module: l10n_fr_pdp
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__res_partner__pdp_verification_display_state__pdp_valid
@@ -1947,12 +2012,20 @@ msgstr "Refusée"
 
 #. module: l10n_fr_pdp
 #. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
 #: code:addons/l10n_fr_pdp/models/account_peppol_response.py:0
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_peppol_response__pdp_ref_response_code__re
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__res_config_settings__l10n_fr_pdp_peppol_proxy_display_state__rejected
 #, python-format
 msgid "Rejected"
 msgstr "Rejeté"
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/pdp_flow.py:0
+#, python-format
+msgid "Rejected flows are rebuilt when resent."
+msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
@@ -2237,6 +2310,13 @@ msgid "Suspended"
 msgstr "Suspendu"
 
 #. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+#, python-format
+msgid "Tax %(tax)s is not supported by French e-reporting%(ref_move)s."
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_peppol_response__pdp_flow_number__1
 msgid "Tax Extract"
 msgstr "Extrait fiscal"
@@ -2324,6 +2404,13 @@ msgstr ""
 #, python-format
 msgid "The SIREN of the company could not be determined."
 msgstr "Le SIREN de la société n’a pas pu être déterminé."
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+#, python-format
+msgid "The company SIREN is missing or invalid."
+msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
@@ -2574,6 +2661,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
 #, python-format
+msgid "Unknown"
+msgstr "Inconnu"
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+#, python-format
 msgid "Unknown error"
 msgstr "Erreur inconnue"
 
@@ -2593,6 +2687,13 @@ msgstr "Transaction inconnue"
 #, python-format
 msgid "Unsupported response status: '%s'."
 msgstr "Statut de réponse non pris en charge : ' %s'."
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_move.py:0
+#, python-format
+msgid "VAT number for %s must not exceed 18 characters."
+msgstr ""
 
 #. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_reports_view_flow_form
@@ -2695,7 +2796,7 @@ msgstr "Votre ID Peppol"
 #. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
 msgid "Your french e-invoicing ID"
-msgstr "Votre ID de facturation électronique française"
+msgstr "L'identifiant de facturation électronique FR"
 
 #. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
@@ -2728,18 +2829,23 @@ msgstr "[Flux %(flow_number)s] %(main_message)s"
 msgid "received"
 msgstr "reçu"
 
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
+#, python-format
+msgid "unknown"
+msgstr "inconnu"
+
 #~ msgid ""
 #~ "<span class=\"text-muted\">\n"
-#~ "                                    Enable e-reporting &amp; sending of "
-#~ "invoices to the PPF\n"
+#~ "                                    Enable e-reporting\n"
 #~ "                                </span>\n"
 #~ "                                <br/>"
 #~ msgstr ""
 #~ "<span class=\"text-muted\">\n"
-#~ "                                    Activer l’e-reporting et l’envoi des "
-#~ "factures au PPF\n"
-#~ "                                </span>\n"
-#~ "                                <br/>"
+#~ "Activer l'e-reporting\n"
+#~ "</span>\n"
+#~ "<br/>"
 
 #~ msgid ""
 #~ "<span class=\"text-muted\">\n"

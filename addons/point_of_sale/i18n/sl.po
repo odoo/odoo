@@ -25,9 +25,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:37+0000\n"
-"PO-Revision-Date: 2026-08-07 01:08+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-09-18 17:37+0000\n"
+"PO-Revision-Date: 2026-09-19 11:33+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-17/"
 "point_of_sale/sl/>\n"
 "Language: sl\n"
@@ -36,7 +36,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -49,6 +49,10 @@ msgid ""
 "method to ensure that even the smallest quantity in the original unit does "
 "not round down to zero in the target unit."
 msgstr ""
+"Do te težave pride, ker količina po zaokroževanju med pretvorbo postane nič. "
+"To odpravite tako, da prilagodite pretvorbene faktorje ali način "
+"zaokroževanja, da se tudi najmanjša količina v izvirni enoti pri "
+"zaokroževanju v ciljno enoto ne zaokroži navzdol na nič.\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -186,13 +190,15 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "2-03-2000 9:00 AM"
-msgstr ""
+msgstr "2-03-2000 9:00 dop."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__ticket_code
 msgid ""
 "5 digits alphanumeric code to be used by portal user to request an invoice"
 msgstr ""
+"5-mestna alfanumerična koda, ki jo uporabnik portala uporabi za zahtevo po "
+"računu"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_pos_kanban
@@ -260,7 +266,7 @@ msgstr "<span class=\"o_stat_text\">Denarna blagajna</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Postavke dnevnika</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -316,7 +322,7 @@ msgstr "<strong>V višini:</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "<strong>Config names</strong>"
-msgstr ""
+msgstr "<strong>Imena konfiguracij</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -363,6 +369,8 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
 msgstr ""
+"Globalno enolični identifikator te konfiguracije POS, ki se uporablja za "
+"preprečevanje konfliktov v podatkih, ustvarjenih v odjemalcu."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number
@@ -505,6 +513,8 @@ msgstr "Premik računa"
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__bank_payment_ids
 msgid "Account payments representing aggregated and bank split payments."
 msgstr ""
+"Knjigovodska plačila, ki predstavljajo združena in po bankah razdeljena "
+"plačila."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -526,6 +536,8 @@ msgid ""
 "Accounting journal used to post POS session journal entries and POS invoice "
 "payments."
 msgstr ""
+"Računovodski dnevnik, ki se uporablja za knjiženje dnevniških vnosov sej POS "
+"in plačil računov POS."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_needaction
@@ -589,6 +601,8 @@ msgid ""
 "Add a 5-digit code on the receipt to allow the user to request the invoice "
 "for an order on the portal."
 msgstr ""
+"Na računu dodajte 5-mestno kodo, da lahko uporabnik na portalu zahteva račun "
+"za naročilo."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
@@ -675,7 +689,7 @@ msgstr "Naslov"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Adds a button to set a global discount"
-msgstr ""
+msgstr "Doda gumb za nastavitev globalnega popusta"
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
@@ -726,6 +740,8 @@ msgid ""
 "All payment methods must be in the same currency as the Sales Journal or the "
 "company currency if that is not set."
 msgstr ""
+"Vse plačilne metode morajo biti v isti valuti kot prodajni dnevnik oziroma v "
+"valuti podjetja, če valuta prodajnega dnevnika ni nastavljena."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
@@ -745,7 +761,7 @@ msgstr "Omogočanje blagajnikom, da nastavijo popust na vrstico"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Allow to access each other's active orders"
-msgstr ""
+msgstr "Dovoli dostop do aktivnih naročil drugih"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -764,11 +780,13 @@ msgid ""
 "Allows to know if all the total cost of the order lines have already been "
 "computed"
 msgstr ""
+"Omogoča ugotavljanje, ali so bili vsi skupni stroški postavk naročila že "
+"izračunani"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__is_total_cost_computed
 msgid "Allows to know if the total cost has already been computed or not"
-msgstr ""
+msgstr "Omogoča ugotavljanje, ali je bil skupni strošek že izračunan ali ne"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -788,7 +806,7 @@ msgstr "Znesek dovoljene razlike"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
 msgid "Amount to balance"
-msgstr ""
+msgstr "Znesek za izravnavo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
@@ -823,6 +841,8 @@ msgstr ""
 #, python-format
 msgid "An error occurred while loading the Point of Sale: \n"
 msgstr ""
+"Pri nalaganju prodajnega mesta je prišlo do napake: \n"
+"\n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -899,12 +919,12 @@ msgstr "Dovoljena razlika"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__auto_validate_terminal_payment
 msgid "Auto Validate Terminal Payment"
-msgstr ""
+msgstr "Samodejno potrdi plačilo prek terminala"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__rescue
 msgid "Auto-generated session for orphan orders, ignored in constraints"
-msgstr ""
+msgstr "Samodejno ustvarjena seja za osirotela naročila, prezrta pri omejitvah"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_auto
@@ -1081,7 +1101,7 @@ msgstr "Računi"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Bills & Receipts"
-msgstr ""
+msgstr "Računi in potrdila"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1206,7 +1226,7 @@ msgstr "Gotovina"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "Cash %s"
-msgstr ""
+msgstr "Gotovina %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1235,7 +1255,7 @@ msgstr "Gotovinske postavke"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Cash Move 1"
-msgstr ""
+msgstr "Premik gotovine 1"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1265,7 +1285,7 @@ msgstr "Gotovinsko zaokroževanje (POS)"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Cash Rounding:"
-msgstr ""
+msgstr "Gotovinsko zaokroževanje"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1405,6 +1425,8 @@ msgstr "Vračilo:"
 msgid ""
 "Check if the product should be weighted using the hardware scale integration."
 msgstr ""
+"Preverite, ali je treba izdelek stehtati z uporabo integracije strojne "
+"tehtnice."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__available_in_pos
@@ -1447,6 +1469,8 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
+"Izberite specifični davčni položaj na naročilu glede na vrsto kupca (davčno "
+"oproščen, uživanje na lokaciji oziroma prevzem s seboj itd.)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1596,7 +1620,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_parent_id
 msgid "Combo Parent"
-msgstr ""
+msgstr "Nadrejena kombinacija"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1715,14 +1739,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/navbar/proxy_status/proxy_status.xml:0
 #, python-format
 msgid "Connecting to Proxy"
-msgstr ""
+msgstr "Povezovanje s posrednikom"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #, python-format
 msgid "Connection error"
-msgstr ""
+msgstr "Napaka pri povezavi"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1736,7 +1760,7 @@ msgstr "Povezava z IoT Boxom ni uspela"
 #: code:addons/point_of_sale/static/src/app/printer/base_printer.js:0
 #, python-format
 msgid "Connection to the printer failed"
-msgstr ""
+msgstr "Povezava s tiskalnikom ni uspela"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1774,6 +1798,9 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero "
 "quantity due to rounding:"
 msgstr ""
+"Napaka pri pretvorbi: Naslednje pretvorbe merskih enot zaradi zaokroževanja "
+"povzročijo količino nič: Lokacija: code:addons/point_of_sale/models/"
+"stock_picking.py:0"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -1783,7 +1810,7 @@ msgstr "Stopnja konverzije"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion rate from company currency to order currency."
-msgstr ""
+msgstr "Pretvorbeni tečaj iz valute podjetja v valuto naročila."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1830,7 +1857,7 @@ msgstr "Ustvarite novo POS naročilo"
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_tree
 msgid "Create a new PoS"
-msgstr ""
+msgstr "Ustvari nov PoS"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -1915,7 +1942,7 @@ msgstr "Prilagojeno"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_header_or_footer
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_header_or_footer
 msgid "Custom Header & Footer"
-msgstr ""
+msgstr "Glava in noga po meri"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__custom_attribute_value_ids
@@ -2084,7 +2111,7 @@ msgstr "Datum"
 #: code:addons/point_of_sale/static/src/app/utils/date_picker_popup/date_picker_popup.js:0
 #, python-format
 msgid "DatePicker"
-msgstr ""
+msgstr "Izbirnik datuma"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2109,7 +2136,7 @@ msgstr "Privzeto"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__account_default_pos_receivable_account_id
 msgid "Default Account Receivable (PoS)"
-msgstr ""
+msgstr "Privzete terjatve (PoS)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_fiscal_position_id
@@ -2120,7 +2147,7 @@ msgstr "Privzeta fiskalna politika"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default Journals"
-msgstr ""
+msgstr "Privzeti dnevniki"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2158,7 +2185,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default journals for orders and invoices"
-msgstr ""
+msgstr "Privzeti dnevniki za naročila in račune"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2234,12 +2261,12 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Demo 3-03-2000 5:00 PM"
-msgstr ""
+msgstr "Predstavitev 3. 3. 2000 ob 17:00"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Demo Name"
-msgstr ""
+msgstr "Ime predstavitve"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2251,12 +2278,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.desk_organizer_product_template
 msgid "Desk Organizer"
-msgstr ""
+msgstr "Namizni organizator"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.desk_pad_product_template
 msgid "Desk Pad"
-msgstr ""
+msgstr "Namizna podloga"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_desks
@@ -2266,12 +2293,12 @@ msgstr "Mize"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_id
 msgid "Destination account"
-msgstr ""
+msgstr "Ciljni konto"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_readonly
 msgid "Destination account is readonly"
-msgstr ""
+msgstr "Ciljni konto je samo za branje"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2286,7 +2313,7 @@ msgstr "Razlika"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Difference at closing PoS session"
-msgstr ""
+msgstr "Razlika pri zapiranju seje POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
@@ -2333,7 +2360,7 @@ msgstr "Opusti"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.js:0
 #, python-format
 msgid "Disconnected"
-msgstr ""
+msgstr "Disconnected"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2588,7 +2615,7 @@ msgstr "Napaka! Reukrzivne kategorije niso mogoče."
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Error: no internet connection."
-msgstr ""
+msgstr "Napaka: ni internetne povezave."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2641,7 +2668,7 @@ msgstr "Dodatne informacije"
 #. module: point_of_sale
 #: model:product.attribute,name:point_of_sale.fabric_attribute
 msgid "Fabric"
-msgstr ""
+msgstr "Tkanina"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__failed_pickings
@@ -2724,7 +2751,7 @@ msgstr "Noga"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_big_scrollbars
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_big_scrollbars
 msgid "For imprecise industrial touchscreens."
-msgstr ""
+msgstr "Za manj natančne industrijske zaslone na dotik."
 
 #. module: point_of_sale
 #. odoo-python
@@ -2739,19 +2766,19 @@ msgstr "Prisilno zapiranje seje"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #, python-format
 msgid "Force Done"
-msgstr ""
+msgstr "Prisilno dokončaj"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #, python-format
 msgid "Force done"
-msgstr ""
+msgstr "Prisilno dokončaj"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__force_outstanding_account_id
 msgid "Forced Outstanding Account"
-msgstr ""
+msgstr "Prisilen neporavnani račun"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__split_transactions
@@ -2759,6 +2786,8 @@ msgid ""
 "Forces to set a customer when using this payment method and splits the "
 "journal entries for each customer. It could slow down the closing process."
 msgstr ""
+"Zahteva nastavitev stranke pri uporabi tega plačilnega sredstva in razdeli "
+"vnose v dnevnik za vsako stranko. To lahko upočasni postopek zaključevanja."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2772,7 +2801,7 @@ msgstr "Prosto"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "From invoice payments"
-msgstr ""
+msgstr "Iz plačil računov"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__full_product_name
@@ -2783,7 +2812,7 @@ msgstr "Polno ime artikla"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_ticket_unique_code
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__point_of_sale_ticket_unique_code
 msgid "Generate a code on ticket"
-msgstr ""
+msgstr "Ustvari kodo na računu"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2793,7 +2822,7 @@ msgstr "Ustvarjanje sklicev naročil"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Get my invoice"
-msgstr ""
+msgstr "Pridobi moj račun"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__sequence
@@ -2838,14 +2867,14 @@ msgstr "Združi po"
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_category__is_pos_groupable
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__is_pos_groupable
 msgid "Group Products in POS"
-msgstr ""
+msgstr "Združi izdelke v POS-u"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 #, python-format
 msgid "HTTPS connection to IoT Box failed"
-msgstr ""
+msgstr "Povezava HTTPS z IoT Boxom ni uspela"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2865,7 +2894,7 @@ msgstr "Status strojne opreme"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__has_active_session
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_has_active_session
 msgid "Has Active Session"
-msgstr ""
+msgstr "Ima aktivno sejo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_control
@@ -2885,7 +2914,7 @@ msgstr "Ima sporočilo"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__has_refundable_lines
 msgid "Has Refundable Lines"
-msgstr ""
+msgstr "Ima postavke za vračilo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2909,7 +2938,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
 msgid "Hide Use Payment Terminal"
-msgstr ""
+msgstr "Skrij uporabo plačilnega terminala"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
@@ -2958,7 +2987,7 @@ msgstr "Ikona za označevanje izjemne aktivnosti."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
 msgid "Identify Customer"
-msgstr ""
+msgstr "Določite stranko"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction
@@ -2977,6 +3006,8 @@ msgid ""
 "If this orderline is a refund, then the refunded orderline is specified in "
 "this field."
 msgstr ""
+"Če je ta vrstica naročila vračilo, je v tem polju navedena vrnjena vrstica "
+"naročila."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__picking_policy
@@ -2986,6 +3017,9 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
+"Če dostavite vse izdelke hkrati, bo dobavnica načrtovana na podlagi "
+"najdaljšega dobavnega roka za izdelek. V nasprotnem primeru bo temeljila na "
+"najkrajšem."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_customer_facing_display
@@ -3046,7 +3080,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__message
 msgid "Information message"
-msgstr ""
+msgstr "Informativno sporočilo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_start_categ_id
@@ -3061,6 +3095,10 @@ msgid ""
 "                Invocing/Accounting app will create Bank and Cash payment\n"
 "                methods automatically."
 msgstr ""
+"Namestitev kontnega načrta v Splošnih nastavitvah aplikacije\n"
+"                Fakturiranje/Računovodstvo bo samodejno ustvarila načina "
+"plačila\n"
+"                Banka in Gotovina."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_mercury
@@ -3070,12 +3108,12 @@ msgstr "Integrirana plačila s karticami"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__receivable_account_id
 msgid "Intermediary Account"
-msgstr ""
+msgstr "Vmesni račun"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Intermediary account used for unidentified customers."
-msgstr ""
+msgstr "Vmesni konto, ki se uporablja za neidentificirane stranke."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_category_action
@@ -3133,12 +3171,12 @@ msgstr "Dnevnik računov"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Invoice Name"
-msgstr ""
+msgstr "Ime računa"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "Invoice Request"
-msgstr ""
+msgstr "Zahteva za račun"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3168,7 +3206,7 @@ msgstr "Računi"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Invoicing confirmation"
-msgstr ""
+msgstr "Potrditev izstavitve računa"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3180,7 +3218,7 @@ msgstr "IoT Box"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "IoT Box IP Address"
-msgstr ""
+msgstr "IP-naslov IoT Boxa"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_is_follower
@@ -3190,12 +3228,12 @@ msgstr "Je sledilec"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_invoiced
 msgid "Is Invoiced"
-msgstr ""
+msgstr "Je zaračunano"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__is_kiosk_mode
 msgid "Is Kiosk Mode"
-msgstr ""
+msgstr "Je terminals­ki način"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_refunded
@@ -3206,12 +3244,12 @@ msgstr "Je povrnjen"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_total_cost_computed
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__is_total_cost_computed
 msgid "Is Total Cost Computed"
-msgstr ""
+msgstr "Ali je skupni strošek izračunan"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__is_in_company_currency
 msgid "Is Using Company Currency"
-msgstr ""
+msgstr "Uporablja valuto podjetja"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_restaurant
@@ -3222,17 +3260,17 @@ msgstr "Je Bar/Restavracija"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_installed_account_accountant
 msgid "Is the Full Accounting Installed"
-msgstr ""
+msgstr "Ali je nameščeno polno računovodstvo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_tipped
 msgid "Is this already tipped?"
-msgstr ""
+msgstr "Ali je bila napitnina že dodana?"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__is_change
 msgid "Is this payment change?"
-msgstr ""
+msgstr "Ali je to vračilo?"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3257,7 +3295,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/printer/pos_printer_service.js:0
 #, python-format
 msgid "It is possible to print your tickets by making use of an IoT Box."
-msgstr ""
+msgstr "Svoje vstopnice lahko natisnete z uporabo IoT Boxa."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3295,17 +3333,17 @@ msgstr "Postavke"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
 msgid "Kpi Pos Total Value"
-msgstr ""
+msgstr "Skupna vrednost POS"
 
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.size_attribute_l
 msgid "L"
-msgstr ""
+msgstr "L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.led_lamp_product_template
 msgid "LED Lamp"
-msgstr ""
+msgstr "LED svetilka"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
@@ -3322,7 +3360,7 @@ msgstr "Jezik"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Laptop model x"
-msgstr ""
+msgstr "Model prenosnega računalnika x"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_big_scrollbars
@@ -3333,7 +3371,7 @@ msgstr "Široki drsniki"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cash
 msgid "Last Session Closing Cash"
-msgstr ""
+msgstr "Gotovina ob zaključku zadnje seje"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_date
@@ -3383,12 +3421,12 @@ msgstr "Zadnjič posodobljeno"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__last_order_preparation_change
 msgid "Last preparation change"
-msgstr ""
+msgstr "Zadnja sprememba priprave"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__last_order_preparation_change
 msgid "Last printed state of the order"
-msgstr ""
+msgstr "Zadnje natisnjeno stanje naročila"
 
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.fabric_attribute_leather
@@ -3400,7 +3438,7 @@ msgstr "Usnje"
 #: code:addons/point_of_sale/static/src/app/navbar/cash_move_popup/cash_move_popup.xml:0
 #, python-format
 msgid "Leave a reason here"
-msgstr ""
+msgstr "Tukaj navedite razlog"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -3422,11 +3460,13 @@ msgid ""
 "Overrides the company's receivable account (for Point of Sale) used in the "
 "journal entries."
 msgstr ""
+"Pustite prazno, da uporabite privzeti račun iz nastavitev podjetja.\n"
+"Preglasi konto terjatev podjetja (za prodajno mesto), uporabljen v knjižbah."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Leave empty to use the receivable account of customer"
-msgstr ""
+msgstr "Pustite prazno, če želite uporabiti konto terjatev stranke"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__journal_id
@@ -3440,17 +3480,25 @@ msgid ""
 "payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
+"Pustite prazno, da uporabite terjatveni konto stranke.\n"
+"Določa dnevnik, v katerega se po zaprtju seje knjižijo akumulirana plačila "
+"(ali posamezno plačilo, če je možnost Prepoznaj stranko omogočena).\n"
+"Pri blagajniškem dnevniku neposredno knjižimo na privzeti konto v dnevniku "
+"prek vrstic izpiska.\n"
+"Pri bančnem dnevniku knjižimo na konto neporavnanih postavk, določen v tem "
+"načinu plačila.\n"
+"Dovoljena sta samo blagajniški in bančni dnevnik."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.letter_tray_product_template
 msgid "Letter Tray"
-msgstr ""
+msgstr "Pladenj za pisma"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__manual_discount
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_manual_discount
 msgid "Line Discounts"
-msgstr ""
+msgstr "Popusti na postavkah"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__name
@@ -3467,14 +3515,14 @@ msgstr "Naloži naročilo"
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_product_menu
 msgid "Load Product Menu"
-msgstr ""
+msgstr "Naloži meni izdelkov"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
 #, python-format
 msgid "Loading Image Error"
-msgstr ""
+msgstr "Napaka pri nalaganju slike"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3506,7 +3554,7 @@ msgstr "Logotip"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__lot_name
 msgid "Lot Name"
-msgstr ""
+msgstr "Ime serije"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3530,12 +3578,12 @@ msgstr "Lot/serijska številka"
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.size_attribute_m
 msgid "M"
-msgstr ""
+msgstr "M"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.magnetic_board_product_template
 msgid "Magnetic Board"
-msgstr ""
+msgstr "Magnetna tabla"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
@@ -3550,6 +3598,10 @@ msgid ""
 "be valid, this pricelist must be listed here as an available pricelist. "
 "Otherwise the default pricelist will apply."
 msgstr ""
+"Omogočite uporabo več cenikov v prodajnem mestu. Cenik lahko uporabite tudi "
+"za določene stranke v njihovem obrazcu stika (na zavihku Prodaja). Da bo ta "
+"cenik veljaven, mora biti tukaj naveden kot cenik, ki je na voljo. V "
+"nasprotnem primeru bo uporabljen privzeti cenik."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3559,11 +3611,13 @@ msgid ""
 "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
 "the certificate of your IoT Box."
 msgstr ""
+"Prepričajte se, da uporabljate IoT Box v18.12 ali novejšo različico. Pojdite "
+"na %s, da sprejmete potrdilo svojega IoT Boxa."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Manage promotion that will grant customers discounts or gifts"
-msgstr ""
+msgstr "Upravljajte promocijo, ki bo strankam podelila popuste ali darila"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
@@ -3595,21 +3649,21 @@ msgstr "Razlika v ceni:"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_margins_costs_accessible_to_every_user
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Margins & Costs"
-msgstr ""
+msgstr "Marže in stroški"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 #, python-format
 msgid "Maximum Exceeded"
-msgstr ""
+msgstr "Največja dovoljena vrednost je presežena"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Maximum value reached"
-msgstr ""
+msgstr "Dosežena je največja vrednost"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3638,7 +3692,7 @@ msgstr "Metoda"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
 msgid "Method Name"
-msgstr ""
+msgstr "Ime metode"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_miscellaneous
@@ -3656,7 +3710,7 @@ msgstr "Mobilni telefon"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Module Pos Hr"
-msgstr ""
+msgstr "Modul POS HR"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.monitor_stand_product_template
@@ -3736,7 +3790,7 @@ msgstr "Naziv"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/invoice_button/invoice_button.js:0
 #, python-format
 msgid "Need customer to invoice"
-msgstr ""
+msgstr "Za izdajo računa je potrebna stranka"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3745,6 +3799,8 @@ msgstr ""
 msgid ""
 "Need loss account for the following journals to post the lost amount: %s\n"
 msgstr ""
+"Za knjiženje izgubljenega zneska potrebujete konto izgube za naslednje "
+"dnevnike: %s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3753,6 +3809,8 @@ msgstr ""
 msgid ""
 "Need profit account for the following journals to post the gained amount: %s"
 msgstr ""
+"Za knjiženje pridobljenega zneska potrebujete konto dobička za naslednje "
+"dnevnike: %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3786,12 +3844,12 @@ msgstr "Nova seja"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 #, python-format
 msgid "New amount"
-msgstr ""
+msgstr "Nov znesek"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
-msgstr ""
+msgstr "Stojalo za časopise"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
@@ -3818,7 +3876,7 @@ msgstr "Tip naslednje aktivnosti"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #, python-format
 msgid "Next Order List"
-msgstr ""
+msgstr "Seznam naslednjih naročil"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3830,14 +3888,14 @@ msgstr "Ne"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "No Point of Sale selected"
-msgstr ""
+msgstr "Ni izbranega prodajnega mesta"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/report_sale_details.py:0
 #, python-format
 msgid "No Taxes"
-msgstr ""
+msgstr "Brez davkov"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3847,6 +3905,8 @@ msgid ""
 "No barcode nomenclature has been configured. This can be changed in the "
 "configuration settings."
 msgstr ""
+"Nobena nomenklatura črtnih kod ni bila konfigurirana. To lahko spremenite v "
+"nastavitvah konfiguracije."
 
 #. module: point_of_sale
 #. odoo-python
@@ -3866,6 +3926,8 @@ msgid ""
 "No chart of account configured, go to the \"configuration / settings\" menu, "
 "and install one from the Invoicing tab."
 msgstr ""
+"Kontni načrt ni konfiguriran, pojdite v meni \"konfiguracija / nastavitve\" "
+"in ga namestite na zavihku Fakturiranje."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
@@ -3879,14 +3941,14 @@ msgstr "Podatkov še ni!"
 #: code:addons/point_of_sale/report/pos_invoice.py:0
 #, python-format
 msgid "No link to an invoice for %s."
-msgstr ""
+msgstr "Ni povezave do računa za %s."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.js:0
 #, python-format
 msgid "No more customer found for \"%s\"."
-msgstr ""
+msgstr "Za \"%s\" ni bilo najdenih več strank."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3918,20 +3980,20 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "No products found for"
-msgstr ""
+msgstr "Ni najdenih izdelkov za"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/controllers/main.py:0
 #, python-format
 msgid "No sale order found."
-msgstr ""
+msgstr "Naročilo prodaje ni bilo najdeno."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session_filtered
 msgid "No sessions found"
-msgstr ""
+msgstr "Sej ni mogoče najti"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__barcode_nomenclature_id
@@ -3983,12 +4045,12 @@ msgstr "Številka izpisa"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refund_orders_count
 msgid "Number of Refund Orders"
-msgstr ""
+msgstr "Število naročil za vračilo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__number_of_rescue_session
 msgid "Number of Rescue Session"
-msgstr ""
+msgstr "Število obnovitvenih sej"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error_counter
@@ -3998,7 +4060,7 @@ msgstr "Število napak"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refunded_qty
 msgid "Number of items refunded in this orderline."
-msgstr ""
+msgstr "Število vrnjenih artiklov v tej vrstici naročila."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction_counter
@@ -4055,6 +4117,13 @@ msgid "Ongoing"
 msgstr "V teku"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Only Point of Sale managers can modify a Point of Sale configuration."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/models.js:0
 #, python-format
@@ -4076,7 +4145,7 @@ msgstr "Samo administratorji lahko urejajo glave in noge računov"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_only_round_cash_method
 msgid "Only apply rounding on cash"
-msgstr ""
+msgstr "Zaokroževanje uporabi samo pri gotovini"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4091,7 +4160,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Only on cash methods"
-msgstr ""
+msgstr "Samo pri gotovinskih načinih"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
@@ -4101,6 +4170,8 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
+"Samo uporabniki z upravljavskimi pravicami dostopa do aplikacije PoS lahko "
+"spreminjajo cene izdelkov na naročilih."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4108,6 +4179,8 @@ msgstr ""
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported."
 msgstr ""
+"Podprti so samo s spletom združljivi slikovni formati, kot sta .png ali "
+".jpeg."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4140,7 +4213,7 @@ msgstr "Odpri sejo"
 #: code:addons/point_of_sale/static/src/app/store/cash_opening_popup/cash_opening_popup.xml:0
 #, python-format
 msgid "Open the money details popup"
-msgstr ""
+msgstr "Odpri pojavno okno s podrobnostmi o denarju"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
@@ -4187,14 +4260,14 @@ msgstr "Opombe pri odpiranju"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Opening balance summed to all cash transactions."
-msgstr ""
+msgstr "Otvoritveno stanje, sešteto z vsemi gotovinskimi transakcijami."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/cash_opening_popup/cash_opening_popup.xml:0
 #, python-format
 msgid "Opening cash"
-msgstr ""
+msgstr "Začetna gotovina"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4342,6 +4415,7 @@ msgstr "Naročilo shranjeno za pozneje"
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refund_orderline_ids
 msgid "Orderlines in this field are the lines that refunded this orderline."
 msgstr ""
+"Vrstice naročila v tem polju so vrstice, ki so povrnile to vrstico naročila."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4373,7 +4447,7 @@ msgstr "Analiza naročil"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_combo_line__lst_price
 msgid "Original Price"
-msgstr ""
+msgstr "Originalna cena"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__other_devices
@@ -4556,12 +4630,12 @@ msgstr "Načini plačila"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Payment Name Demo"
-msgstr ""
+msgstr "Ime plačila Demo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
 msgid "Payment Receipt Info"
-msgstr ""
+msgstr "Informacije o potrdilu o plačilu"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_name
@@ -4584,12 +4658,12 @@ msgstr "Plačilo je bilo uspešno izvedeno"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Payment Terminals"
-msgstr ""
+msgstr "Plačilni terminali"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__transaction_id
 msgid "Payment Transaction ID"
-msgstr ""
+msgstr "ID plačilne transakcije"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4608,7 +4682,7 @@ msgstr "Razpoložljivi načini plačila"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #, python-format
 msgid "Payment request pending"
-msgstr ""
+msgstr "Zahteva za plačilo čaka"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4639,7 +4713,7 @@ msgstr "Plačila"
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js:0
 #, python-format
 msgid "Payments Difference"
-msgstr ""
+msgstr "Razlika plačil"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_payment_methods_tree
@@ -4651,7 +4725,7 @@ msgstr "Načini plačila"
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 #, python-format
 msgid "Payments in"
-msgstr ""
+msgstr "Plačila v"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4723,7 +4797,7 @@ msgstr "Slika"
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.fabric_attribute_plastic
 msgid "Plastic"
-msgstr ""
+msgstr "Plastika"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4778,6 +4852,9 @@ msgid ""
 "this payment method.\n"
 "Open sessions: %s"
 msgstr ""
+"Pred spreminjanjem tega načina plačila zaprite in potrdite naslednje odprte "
+"seje PoS.\n"
+"Odprte seje: %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4791,6 +4868,8 @@ msgstr "V POS blagajni nastavite način plačila."
 msgid ""
 "Please create/select a Point of Sale above to show the configuration options."
 msgstr ""
+"Prosimo, ustvarite/izberite prodajno mesto zgoraj, da prikažete možnosti "
+"konfiguracije."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4811,13 +4890,15 @@ msgstr "Prosim določite konto prihodkov za ta produkt \"%s\" (id:%d)."
 msgid ""
 "Please enter your billing information <small class=\"text-muted\">or</small>"
 msgstr ""
+"Vnesite svoje podatke za izstavitev računa <small class=\"text-muted\">ali</"
+"small>"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/controllers/main.py:0
 #, python-format
 msgid "Please fill all the required fields."
-msgstr ""
+msgstr "Prosimo, izpolnite vsa obvezna polja."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4827,6 +4908,8 @@ msgid ""
 "Please go on the %s journal and define a Loss Account. This account will be "
 "used to record cash difference."
 msgstr ""
+"Pojdite v dnevnik %s in določite konto izgube. Ta konto bo uporabljen za "
+"evidentiranje razlike v gotovini."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4836,13 +4919,15 @@ msgid ""
 "Please go on the %s journal and define a Profit Account. This account will "
 "be used to record cash difference."
 msgstr ""
+"Pojdite v dnevnik %s in določite konto dobička. Ta konto bo uporabljen za "
+"evidentiranje razlike v gotovini."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/hooks.js:0
 #, python-format
 msgid "Please print the invoice from the backend"
-msgstr ""
+msgstr "Prosimo, natisnite račun iz zaledja"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4868,12 +4953,12 @@ msgstr "Izberite stranko"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "PoS Interface"
-msgstr ""
+msgstr "Vmesnik POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
 msgid "PoS Order Line"
-msgstr ""
+msgstr "Postavka POS naročila"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4967,7 +5052,7 @@ msgstr "Nastavitve POS-blagajne"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_daily_sales_reports_wizard
 msgid "Point of Sale Daily Report"
-msgstr ""
+msgstr "Dnevno poročilo prodajnega mesta"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
@@ -4977,43 +5062,43 @@ msgstr "Podrobnosti o prodajni točki"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details_wizard
 msgid "Point of Sale Details Report"
-msgstr ""
+msgstr "Poročilo s podrobnostmi prodajnega mesta"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_invoice
 msgid "Point of Sale Invoice Report"
-msgstr ""
+msgstr "Poročilo računa prodajnega mesta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__journal_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_journal_id
 msgid "Point of Sale Journal"
-msgstr ""
+msgstr "Dnevnik prodajnega mesta"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_tree
 msgid "Point of Sale List"
-msgstr ""
+msgstr "Seznam prodajnih točk"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Make Payment Wizard"
-msgstr ""
+msgstr "Čarovnik za plačilo na prodajnem mestu"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
 msgid "Point of Sale Manager Group"
-msgstr ""
+msgstr "Skupina upraviteljev prodajnega mesta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__pos_type_id
 msgid "Point of Sale Operation Type"
-msgstr ""
+msgstr "Vrsta operacije prodajnega mesta"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr ""
+msgstr "Postavke naročila prodajnega mesta"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order
@@ -5025,18 +5110,18 @@ msgstr "Naročila POS"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Report"
-msgstr ""
+msgstr "Poročilo naročil prodajnega mesta"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment_method
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__pos_payment_method_ids
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Načini plačila prodajne točke"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "Plačila na prodajnem mestu"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_printer
@@ -5059,7 +5144,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_user_id
 msgid "Point of Sale User Group"
-msgstr ""
+msgstr "Uporabniška skupina prodajnega mesta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__pos_config_ids
@@ -5081,12 +5166,12 @@ msgstr "Dovoljeni ceniki na POS-u"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__pos_config_ids
 msgid "Pos Config"
-msgstr ""
+msgstr "Konfiguracija POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_order_printer
 msgid "Pos Is Order Printer"
-msgstr ""
+msgstr "POS je tiskalnik naročil"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_order_ids
@@ -5102,13 +5187,13 @@ msgstr "Pos Naročila"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_count
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_count
 msgid "Pos Order Count"
-msgstr ""
+msgstr "Število POS naročil"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_tax__pos_order_line_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
-msgstr ""
+msgstr "Postavka POS-naročila"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_payment_ids
@@ -5127,12 +5212,12 @@ msgstr "POS kategorije proizvodov"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_refunded_invoice_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_refunded_invoice_ids
 msgid "Pos Refunded Invoice"
-msgstr ""
+msgstr "Povrnjeni račun POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_selectable_categ_ids
 msgid "Pos Selectable Categ"
-msgstr ""
+msgstr "Izbirne kategorije POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__pos_session_id
@@ -5143,22 +5228,22 @@ msgstr "Pos Seja"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
 msgid "Pos Session Duration"
-msgstr ""
+msgstr "Trajanje seje POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_state
 msgid "Pos Session State"
-msgstr ""
+msgstr "Stanje seje POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_username
 msgid "Pos Session Username"
-msgstr ""
+msgstr "Uporabniško ime seje POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Pos Sessions"
-msgstr ""
+msgstr "Pos Seje"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_daily_sales_reports_wizard
@@ -5169,14 +5254,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_posbox
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_posbox
 msgid "PosBox"
-msgstr ""
+msgstr "PosBox"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/models.js:0
 #, python-format
 msgid "Positive quantity not allowed"
-msgstr ""
+msgstr "Pozitivna količina ni dovoljena"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__done
@@ -5203,7 +5288,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
-msgstr ""
+msgstr "Pripravljalni zaslon"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_printer_form
@@ -5256,7 +5341,7 @@ msgstr "Cena brez davka:"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_extra
 msgid "Price extra"
-msgstr ""
+msgstr "Dodatna cena"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5360,7 +5445,7 @@ msgstr "Naziv tiskalnika"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__printer_type
 msgid "Printer Type"
-msgstr ""
+msgstr "Vrsta tiskalnika"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5525,7 +5610,7 @@ msgstr "Cena izdelka na prejemku"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tipproduct
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_tipproduct
 msgid "Product tips"
-msgstr ""
+msgstr "Napitnine za izdelke"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_template_action_pos_product
@@ -5556,14 +5641,14 @@ msgstr "Promocije, kuponi, darilne kartice in program zvestobe"
 #: code:addons/point_of_sale/static/src/app/navbar/proxy_status/proxy_status.xml:0
 #, python-format
 msgid "Proxy Connected"
-msgstr ""
+msgstr "Proxy je povezan"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/proxy_status/proxy_status.xml:0
 #, python-format
 msgid "Proxy Disconnected"
-msgstr ""
+msgstr "Proxy je prekinjen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__proxy_ip
@@ -5575,7 +5660,7 @@ msgstr "IP naslov Proxy strežnika"
 #: code:addons/point_of_sale/static/src/app/navbar/proxy_status/proxy_status.xml:0
 #, python-format
 msgid "Proxy Warning"
-msgstr ""
+msgstr "Opozorilo proxyja"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5606,7 +5691,7 @@ msgstr "RAZLOG"
 #: code:addons/point_of_sale/static/src/app/navbar/sale_details_button/sales_detail_report.xml:0
 #, python-format
 msgid "REFUNDED:"
-msgstr ""
+msgstr "VRAČILO:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
@@ -5678,12 +5763,12 @@ msgstr "Tiskalnik računov"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__use_payment_terminal
 msgid "Record payments with a terminal on this journal."
-msgstr ""
+msgstr "Evidentirajte plačila s terminalom v tem dnevniku."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rescue
 msgid "Recovery Session"
-msgstr ""
+msgstr "Seja za obnovitev"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -5710,14 +5795,14 @@ msgstr "Dobropis"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refund_orderline_ids
 msgid "Refund Order Lines"
-msgstr ""
+msgstr "Vrstice naročila za vračilo"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Refund Orders"
-msgstr ""
+msgstr "Naročila za vračilo"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5736,12 +5821,12 @@ msgstr "- že vrnjeno"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refunded_order_ids
 msgid "Refunded Order"
-msgstr ""
+msgstr "Vračilno naročilo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refunded_orderline_id
 msgid "Refunded Order Line"
-msgstr ""
+msgstr "Vrstica vračilnega naročila"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5749,7 +5834,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Refunded Orders"
-msgstr ""
+msgstr "Vračilna naročila"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refunded_orders_count
@@ -5766,7 +5851,7 @@ msgstr "Vrnjena količina"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #, python-format
 msgid "Refunding"
-msgstr ""
+msgstr "Vračilo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -5777,7 +5862,7 @@ msgstr "Dobropisi"
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Reload POS Menu"
-msgstr ""
+msgstr "Ponovno naloži meni POS"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5829,14 +5914,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #, python-format
 msgid "Request sent"
-msgstr ""
+msgstr "Zahteva poslana"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "Rescue Sessions"
-msgstr ""
+msgstr "Seje za reševanje"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5864,7 +5949,7 @@ msgstr "Način restavracije"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limit_categories
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_limit_categories
 msgid "Restrict Categories"
-msgstr ""
+msgstr "Omeji kategorije"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__restrict_price_control
@@ -5902,7 +5987,7 @@ msgstr "Vrni izdelke"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_return
 msgid "Returned"
-msgstr ""
+msgstr "Vrnjeno"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5923,7 +6008,7 @@ msgstr "Obrnjen od: %s"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
-msgstr ""
+msgstr "Zahteva za razveljavitev poslana terminalu"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5937,7 +6022,7 @@ msgstr "Obrnjen"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #, python-format
 msgid "Reverse Payment"
-msgstr ""
+msgstr "Razveljavi plačilo"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5964,7 +6049,7 @@ msgstr "Metoda zaokroževanja"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Rounding error in payment lines"
-msgstr ""
+msgstr "Napaka pri zaokroževanju v plačilnih vrsticah"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5976,7 +6061,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.size_attribute_s
 msgid "S"
-msgstr ""
+msgstr "S"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
@@ -5996,12 +6081,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/navbar/sale_details_button/sales_detail_report.xml:0
 #, python-format
 msgid "SOLD:"
-msgstr ""
+msgstr "PRODANO:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
 msgid "Sale Line Count"
-msgstr ""
+msgstr "Število prodajnih vrstic"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
@@ -6036,17 +6121,17 @@ msgstr "Prodajni dnevnik"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Sample Closing Note"
-msgstr ""
+msgstr "Vzorec zaključne opombe"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Sample Config Name"
-msgstr ""
+msgstr "Primer imena konfiguracije"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Sample Opening Note"
-msgstr ""
+msgstr "Vzorčna uvodna opomba"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6154,7 +6239,7 @@ msgstr "Izberi davčno območje"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Select PoS to start sharing orders"
-msgstr ""
+msgstr "Izberite PoS, da začnete deliti naročila"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6182,12 +6267,12 @@ msgstr "Izberite izdelek(-e) za vračilo in nastavite količino."
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Select the shipping date"
-msgstr ""
+msgstr "Izberite datum odpreme"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__attribute_value_ids
 msgid "Selected Attributes"
-msgstr ""
+msgstr "Izbrani atributi"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6206,7 +6291,7 @@ msgstr "Pošlji"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #, python-format
 msgid "Send Payment Request"
-msgstr ""
+msgstr "Pošlji zahtevo za plačilo"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6246,7 +6331,7 @@ msgstr "Zaporedna številka"
 #: code:addons/point_of_sale/static/src/app/store/select_lot_popup/edit_list_input/edit_list_input.xml:0
 #, python-format
 msgid "Serial/Lot Number"
-msgstr ""
+msgstr "Serijska/lot številka"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6293,7 +6378,7 @@ msgstr "ID seje:"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_move_id
 msgid "Session Journal Entry"
-msgstr ""
+msgstr "Dnevniški vnos seje"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_daily_sales_reports
@@ -6311,7 +6396,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
 msgid "Session open over 7 days"
-msgstr ""
+msgstr "Seja odprta več kot 7 dni"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session
@@ -6359,7 +6444,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/fiscal_position_button/fiscal_position_button.xml:0
 #, python-format
 msgid "Set fiscal position"
-msgstr ""
+msgstr "Nastavite davčno območje"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6371,7 +6456,7 @@ msgstr "Nastavi več različnih cen za vsak proizvod, samodejni popusti, ipd."
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Set the new discount"
-msgstr ""
+msgstr "Nastavi nov popust"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6394,7 +6479,7 @@ msgstr "Nastavitve na tej strani veljajo za to prodajno točko."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Share Open Orders"
-msgstr ""
+msgstr "Deli odprta naročila"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6403,12 +6488,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_ship_later
 #, python-format
 msgid "Ship Later"
-msgstr ""
+msgstr "Pošlji pozneje"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__shipping_date
 msgid "Shipping Date"
-msgstr ""
+msgstr "Datum odpreme"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_policy
@@ -6435,14 +6520,14 @@ msgstr "Košarica"
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 #, python-format
 msgid "Show Category Images"
-msgstr ""
+msgstr "Prikaži slike kategorij"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 #, python-format
 msgid "Show Product Images"
-msgstr ""
+msgstr "Prikaži slike izdelka"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6469,7 +6554,7 @@ msgstr "Prikaži zaslon za prijavo zaposlenih"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show margins & costs on product information"
-msgstr ""
+msgstr "Prikaži marže in stroške v informacijah o izdelku"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_preparation_display
@@ -6510,14 +6595,14 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
-msgstr ""
+msgstr "Majhna polica"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/models.js:0
 #, python-format
 msgid "Some Serial/Lot Numbers are missing"
-msgstr ""
+msgstr "Nekatere serijske/lot številke manjkajo"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6551,6 +6636,7 @@ msgstr ""
 #, python-format
 msgid "Some, if not all, post-processing after syncing order failed."
 msgstr ""
+"Nekatera, če ne vsa, naknadna obdelava po sinhronizaciji naročila ni uspela."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6560,7 +6646,7 @@ msgstr "Specifična proga"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr ""
+msgstr "Določite lot/serijsko številko izdelka v postavki naročila POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__route_id
@@ -6662,7 +6748,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
-msgstr ""
+msgstr "Zalogo je treba posodobiti ob zaprtju"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6679,7 +6765,7 @@ msgstr "Stripe"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
-msgstr ""
+msgstr "Plačilni terminal Stripe"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
@@ -6694,7 +6780,7 @@ msgstr "Skupaj DDV"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_sub_total
 msgid "Subtotal w/o discount"
-msgstr ""
+msgstr "Vmesni seštevek brez popusta"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6708,7 +6794,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/navbar/cash_move_popup/cash_move_popup.js:0
 #, python-format
 msgid "Successfully made a cash %s of %s."
-msgstr ""
+msgstr "Uspešno izveden denarni %s v znesku %s."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
@@ -6796,7 +6882,7 @@ msgstr "ID za DDV"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
 #, python-format
 msgid "Tax ID: %(vatId)s"
-msgstr ""
+msgstr "Davčna številka: %(vatId)s"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -6807,7 +6893,7 @@ msgstr "Naziv davka"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime_selection
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_tax_regime_selection
 msgid "Tax Regime Selection value"
-msgstr ""
+msgstr "Vrednost izbire davčnega režima"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__iface_tax_included__subtotal
@@ -6854,12 +6940,12 @@ msgstr "Davki:"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Technical Stuff"
-msgstr ""
+msgstr "Tehnične stvari"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Technical Stuffs"
-msgstr ""
+msgstr "Tehnične stvari"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6913,6 +6999,8 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
+"Prodajno mesto podpira samo strategijo zaokroževanja \"dodaj vrstico "
+"zaokroževanja\"."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6941,6 +7029,8 @@ msgid ""
 "The amount cannot be higher than the due amount if you don't have a cash "
 "payment method configured."
 msgstr ""
+"Znesek ne sme biti višji od zapadlega zneska, če nimate konfiguriranega "
+"načina gotovinskega plačila."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6968,7 +7058,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "The default pricelist must be included in the available pricelists."
-msgstr ""
+msgstr "Privzeti cenik mora biti vključen med razpoložljive cenike."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6978,6 +7068,8 @@ msgid ""
 "The default pricelist must belong to no company or the company of the point "
 "of sale."
 msgstr ""
+"Privzeti cenik mora pripadati bodisi nobenemu podjetju bodisi podjetju "
+"prodajnega mesta."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6987,6 +7079,8 @@ msgid ""
 "The default tip product is missing. Please manually specify the tip product. "
 "(See Tips field.)"
 msgstr ""
+"Privzeti izdelek za napitnino manjka. Prosimo, ročno določite izdelek za "
+"napitnino. (Glejte polje Napitnine.)"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.desk_organizer_product_template
@@ -6995,6 +7089,9 @@ msgid ""
 "since the 5 boxes are loose, you can move and place them in the way that "
 "suits you and your things best."
 msgstr ""
+"Namizni organizator je popoln za shranjevanje vseh vrst majhnih predmetov, "
+"ker je 5 škatel ločenih, pa jih lahko premikate in postavite tako, kot "
+"najbolj ustreza vam in vašim stvarem."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7004,6 +7101,8 @@ msgid ""
 "The fiscal position used in the original order is not loaded. Make sure it "
 "is loaded by adding it in the pos configuration."
 msgstr ""
+"Davčni položaj, uporabljen v izvirnem naročilu, ni naložen. Prepričajte se, "
+"da je naložen, tako da ga dodate v konfiguracijo POS."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7018,6 +7117,8 @@ msgid ""
 "The hostname or ip address of the hardware proxy, Will be autodetected if "
 "left empty."
 msgstr ""
+"Ime gostitelja ali naslov IP strojnega posrednika. Samodejno bo zaznan, če "
+"ostane prazno."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7027,6 +7128,8 @@ msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the "
 "company currency if that is not set."
 msgstr ""
+"Dnevnik računov mora biti v isti valuti kot prodajni dnevnik ali v valuti "
+"podjetja, če ta ni nastavljena."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7055,14 +7158,14 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__pos_order_count
 #: model:ir.model.fields,help:point_of_sale.field_res_users__pos_order_count
 msgid "The number of point of sales orders related to this customer"
-msgstr ""
+msgstr "Število naročil prodajnih mest, povezanih s to stranko"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/hooks.js:0
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
-msgstr ""
+msgstr "Naročila zaradi neznane napake ni bilo mogoče poslati strežniku"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7079,6 +7182,8 @@ msgid ""
 "The order has been synchronized earlier. Please make the invoice from the "
 "backend for the order: "
 msgstr ""
+"Naročilo je bilo sinhronizirano že prej. Račun za naročilo ustvarite v "
+"zalednem sistemu:"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7086,7 +7191,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The payment method selected is not allowed in the config of the POS session."
-msgstr ""
+msgstr "Izbrani način plačila ni dovoljen v konfiguraciji seje POS."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7095,6 +7200,7 @@ msgstr ""
 msgid ""
 "The payment methods for the point of sale %s must belong to its company."
 msgstr ""
+"Plačilni načini za prodajno mesto %s morajo pripadati njegovemu podjetju."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_start_categ_id
@@ -7110,6 +7216,9 @@ msgid ""
 "selected category trees. If no category is specified, all available products "
 "will be shown"
 msgstr ""
+"Prodajno mesto bo prikazovalo samo izdelke, ki so v enem od izbranih dreves "
+"kategorij. Če kategorija ni določena, bodo prikazani vsi razpoložljivi "
+"izdelki"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
@@ -7117,13 +7226,15 @@ msgid ""
 "The pricelist used if no customer is selected or if the customer has no Sale "
 "Pricelist configured if any."
 msgstr ""
+"Cenik, ki se uporabi, če ni izbrana nobena stranka ali če stranka nima "
+"konfiguriranega prodajnega cenika, če ta obstaja."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__currency_rate
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
-msgstr ""
+msgstr "Tečaj valute glede na valuto tečaja, ki velja na datum naročila"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_skip_screen
@@ -7131,13 +7242,13 @@ msgstr ""
 msgid ""
 "The receipt screen will be skipped if the receipt can be printed "
 "automatically."
-msgstr ""
+msgstr "Zaslon računa bo preskočen, če je račun mogoče samodejno natisniti."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_auto
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
-msgstr ""
+msgstr "Račun bo samodejno natisnjen ob zaključku vsakega naročila."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7147,6 +7258,8 @@ msgid ""
 "The requested quantity to be refunded is higher than the ordered quantity. "
 "%s is requested while only %s can be refunded."
 msgstr ""
+"Zahtevana količina za vračilo je večja od naročene količine. Zahtevanih je "
+"%s, medtem ko je mogoče vrniti le %s."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7181,13 +7294,15 @@ msgid ""
 "The selected pricelists must belong to no company or the company of the "
 "point of sale."
 msgstr ""
+"Izbrani ceniki morajo pripadati bodisi nobenemu podjetju bodisi podjetju "
+"prodajnega mesta."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/hooks.js:0
 #, python-format
 msgid "The server encountered an error while receiving your order."
-msgstr ""
+msgstr "Strežnik je pri prejemanju vašega naročila naletel na napako."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7198,6 +7313,9 @@ msgid ""
 "the meantime have been saved in a Rescue Session, which can be reviewed "
 "anytime and posted to Accounting from Point of Sale's dashboard."
 msgstr ""
+"Drug uporabnik je sejo že zaprl. Vsa prodaja, zaključena v tem času, je bila "
+"shranjena v reševalni seji, ki jo je mogoče kadar koli pregledati in "
+"knjižiti v računovodstvo z nadzorne plošče prodajnega mesta."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -7213,6 +7331,8 @@ msgid ""
 "The transactions are processed by Adyen. Set your Adyen credentials on the "
 "related payment method."
 msgstr ""
+"Transakcije obdeluje Adyen. Nastavite poverilnice za Adyen na povezani "
+"metodi plačila."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_paytm
@@ -7237,6 +7357,8 @@ msgid ""
 "The transactions are processed by Stripe. Set your Stripe credentials on the "
 "related payment method."
 msgstr ""
+"Transakcije obdeluje Stripe. Nastavite poverilnice za Stripe na povezani "
+"metodi plačila."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercury
@@ -7295,13 +7417,15 @@ msgid ""
 "There is a difference between the amounts to post and the amounts of the "
 "orders, it is probably caused by taxes or accounting configurations changes."
 msgstr ""
+"Obstaja razlika med zneski za knjiženje in zneski naročil, verjetno jo "
+"povzročajo spremembe davkov ali računovodskih nastavitev."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "There is already an electronic payment in progress."
-msgstr ""
+msgstr "Elektronsko plačilo je že v teku."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -7310,6 +7434,8 @@ msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
 msgstr ""
+"Na podjetju ni konfiguriranega kontnega načrta. Pojdite v nastavitve "
+"fakturiranja, da namestite kontni načrt."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7339,7 +7465,7 @@ msgstr "Ta POS seja ne vsebuje način plačila z gotovino."
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "There is no cash register in this session."
-msgstr ""
+msgstr "V tej seji ni blagajne."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7349,6 +7475,8 @@ msgid ""
 "There must be at least one product in your order before it can be validated "
 "and invoiced."
 msgstr ""
+"Pred potrditvijo in izdajo računa mora vaše naročilo vsebovati vsaj en "
+"izdelek."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7358,6 +7486,8 @@ msgid ""
 "This cash payment method is already used in another Point of Sale.\n"
 "A new cash payment method should be created for this Point of Sale."
 msgstr ""
+"Ta način gotovinskega plačila se že uporablja na drugem prodajnem mestu.\n"
+"Za to prodajno mesto je treba ustvariti nov način gotovinskega plačila."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -7368,6 +7498,11 @@ msgid ""
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
 msgstr ""
+"To polje določa največje dovoljeno odstopanje med končnim stanjem in "
+"teoretičnim stanjem gotovine ob zaključku seje za uporabnike, ki niso "
+"upravitelji POS. Če je ta največja vrednost dosežena, bo uporabnik ob "
+"zaključku svoje seje prejel sporočilo o napaki, da se mora obrniti na "
+"svojega upravitelja."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id
@@ -7375,6 +7510,8 @@ msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
 msgstr ""
+"To polje je namenjeno posredovanju ID-ja skupine upraviteljev prodajnega "
+"mesta odjemalcu prodajnega mesta."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_user_id
@@ -7382,6 +7519,8 @@ msgid ""
 "This field is there to pass the id of the pos user group to the point of "
 "sale client."
 msgstr ""
+"To polje je namenjeno posredovanju ID-ja skupine uporabnikov prodajnega "
+"mesta odjemalcu prodajnega mesta."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7396,6 +7535,8 @@ msgid ""
 "This is useful for restaurants with onsite and take-away services that imply "
 "specific tax rates."
 msgstr ""
+"To je uporabno za restavracije s storitvami na lokaciji in za s seboj, ki "
+"vključujejo posebne davčne stopnje."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7404,6 +7545,7 @@ msgstr ""
 msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr ""
+"Ta dnevnik je povezan z načinom plačila. Njegove vrste ne morete spremeniti"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7446,6 +7588,8 @@ msgid ""
 "This order already has refund lines for %s. We can't change the customer "
 "associated to it. Create a new order for the new customer."
 msgstr ""
+"To naročilo že vsebuje vrstice vračila za %s. Stranke, povezane s tem "
+"naročilom, ni mogoče spremeniti. Ustvarite novo naročilo za novo stranko."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7503,29 +7647,29 @@ msgstr "Ta davek bo apliciran na nove artikle ustvarjene v tem katalogu."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Those settings are common to all PoS."
-msgstr ""
+msgstr "Te nastavitve so skupne vsem POS."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__ticket_code
 msgid "Ticket Code"
-msgstr ""
+msgstr "Koda zahtevka"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "Ticket Nr"
-msgstr ""
+msgstr "Zahtevek št."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #, python-format
 msgid "Tip"
-msgstr ""
+msgstr "Napojnica"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__tip_amount
 msgid "Tip Amount"
-msgstr ""
+msgstr "Znesek napitnine"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tip_product_id
@@ -7581,6 +7725,14 @@ msgid ""
 "a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and "
 "mayo go flying everywhere!"
 msgstr ""
+"Če želite izbrisati izdelek, poskrbite, da so vse seje prodajnih mest "
+"zaprte.\n"
+"\n"
+"Brisanje izdelka, ki je na voljo v seji, bi bilo podobno poskusu, da stranki "
+"sredi ugriza iztrgate hamburger iz roke; nastal bo kaos, saj bosta kečap in "
+"majoneza letela vsepovsod!\n"
+"Location: code:addons/point_of_sale/models/product_product.py:0, code:addons/"
+"point_of_sale/models/product_template.py:0."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -7591,7 +7743,7 @@ msgstr "Za obračun"
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
 msgid "To record new orders, start a new session."
-msgstr ""
+msgstr "Za beleženje novih naročil začnite novo sejo."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7715,13 +7867,13 @@ msgstr "Prenos"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Trusted POS"
-msgstr ""
+msgstr "Zaupanja vreden POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__trusted_config_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_trusted_config_ids
 msgid "Trusted Point of Sale Configurations"
-msgstr ""
+msgstr "Zaupanja vredne konfiguracije prodajnega mesta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
@@ -7734,7 +7886,7 @@ msgstr "Tip"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_type
 msgid "Type of card used"
-msgstr ""
+msgstr "Vrsta uporabljene kartice"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_decoration
@@ -7746,7 +7898,7 @@ msgstr "Vrsta dejavnosti izjeme na zapisu. "
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 #, python-format
 msgid "UNSELECT"
-msgstr ""
+msgstr "PREKLIČI IZBIRO"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7758,6 +7910,10 @@ msgid ""
 "following taxes: \n"
 "%s"
 msgstr ""
+"Seje ni mogoče zapreti in potrditi.\n"
+"V vsaki razdelitveni vrstici naslednjih davkov nastavite ustrezen davčni "
+"konto: \n"
+"%s\n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7774,20 +7930,22 @@ msgid ""
 "Unable to modify this PoS Configuration because you can't modify %s while a "
 "session is open."
 msgstr ""
+"Te konfiguracije POS ni mogoče spreminjati, ker med odprto sejo ne morete "
+"spreminjati %s."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/barcode/barcode_reader_service.js:0
 #, python-format
 msgid "Unable to parse barcode"
-msgstr ""
+msgstr "Črtne kode ni mogoče razčleniti"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/errors/error_handlers.js:0
 #, python-format
 msgid "Unable to show information about this error."
-msgstr ""
+msgstr "Ni mogoče prikazati informacij o tej napaki."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7806,7 +7964,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "Unique code"
-msgstr ""
+msgstr "Edinstvena koda"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -7906,6 +8064,8 @@ msgid ""
 "Used to record product pickings. Products are consumed from its default "
 "source location."
 msgstr ""
+"Uporablja se za evidentiranje premikov izdelkov. Izdelki se porabijo z "
+"njegove privzete izvorne lokacije."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__user_id
@@ -7925,7 +8085,7 @@ msgstr "Uporabniške oznake"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__uuid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__uuid
 msgid "Uuid"
-msgstr ""
+msgstr "UUID"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7954,7 +8114,7 @@ msgstr "Čakam na kartico"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.wall_shelf_product_template
 msgid "Wall Shelf Unit"
-msgstr ""
+msgstr "Stenska polica"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse
@@ -8002,6 +8162,8 @@ msgid ""
 "When disabled, only PoS manager can view the margin and cost of product "
 "among the Product info."
 msgstr ""
+"Ko je onemogočeno, lahko samo upravitelj PoS vidi maržo in strošek izdelka "
+"med informacijami o izdelku.\n"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8010,6 +8172,9 @@ msgid ""
 "accounting journal for all the orders not invoiced. Invoices are recorded in "
 "accounting separately."
 msgstr ""
+"Vsakič, ko zaprete sejo, se v naslednjem računovodskem dnevniku ustvari en "
+"vnos za vsa nefakturirana naročila. Računi se v računovodstvu evidentirajo "
+"ločeno."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.whiteboard_product_template
@@ -8019,7 +8184,7 @@ msgstr "Tabla"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.whiteboard_pen_product_template
 msgid "Whiteboard Pen"
-msgstr ""
+msgstr "Pisalo za tablo"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8031,7 +8196,7 @@ msgstr "Z"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8048,6 +8213,8 @@ msgid ""
 "You are not allowed to change the cash rounding configuration while a pos "
 "session using it is already opened."
 msgstr ""
+"Konfiguracije zaokroževanja gotovine ni dovoljeno spreminjati, medtem ko je "
+"seja POS, ki jo uporablja, že odprta."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8083,6 +8250,8 @@ msgid ""
 "You can only unlink PoS order lines that are related to orders in new or "
 "cancelled state."
 msgstr ""
+"Vrstice naročil PoS lahko odstranite samo, če so povezane z naročili v novem "
+"ali preklicanem stanju."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8093,6 +8262,9 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
+"Ne morete: ustvariti naročila PoS iz zalednega vmesnika, odstraniti cenika, "
+"ustvariti pos.order v testu Python z orodjem Form ali urediti pogleda "
+"obrazca v Studiu, če ne obstaja nobeno naročilo PoS"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8142,6 +8314,8 @@ msgid ""
 "You cannot delete a rounding method that is used in a Point of Sale "
 "configuration."
 msgstr ""
+"Metode zaokroževanja, ki se uporablja v konfiguraciji prodajnega mesta, ni "
+"mogoče izbrisati."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8165,6 +8339,8 @@ msgid ""
 "You cannot share open orders with configuration that does not use the same "
 "currency."
 msgstr ""
+"Odprtih naročil ne morete deliti s konfiguracijo, ki ne uporablja iste "
+"valute."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8172,6 +8348,7 @@ msgstr ""
 #, python-format
 msgid "You cannot use the same journal on multiples cash payment methods."
 msgstr ""
+"Iste temeljnice ne morete uporabiti za več načinov gotovinskega plačila."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8181,6 +8358,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
+"Nimate dovoljenja za odprtje seje POS. Poskusite odpreti sejo z drugim "
+"uporabnikom"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8222,13 +8401,15 @@ msgid ""
 "You must define a product for everything you sell through\n"
 "                the point of sale interface."
 msgstr ""
+"Za vse, kar prodajate prek\n"
+"                vmesnika prodajnega mesta, morate določiti izdelek."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/product.py:0
 #, python-format
 msgid "You must first remove this product from the %s combo"
-msgstr ""
+msgstr "Najprej morate ta izdelek odstraniti iz kombinacije %s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8291,11 +8472,13 @@ msgid ""
 "Your address is missing or incomplete. <br/>\n"
 "                                Please make sure to"
 msgstr ""
+"Vaš naslov manjka ali je nepopoln. <br/>\n"
+"                                Prepričajte se, da"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Z"
-msgstr ""
+msgstr "Z"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8314,7 +8497,7 @@ msgstr "na voljo,"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "before continuing."
-msgstr ""
+msgstr "pred nadaljevanjem"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8369,7 +8552,7 @@ msgstr "npr. Naslov podjetja, spletna stran"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "e.g. NYC Shop"
-msgstr ""
+msgstr "npr. Trgovina NYC"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8379,7 +8562,7 @@ msgstr "npr. Politika vračila, Hvala za nakupovanje pri nas!"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "e.g. Soft Drinks"
-msgstr ""
+msgstr "Brezalkoholne pijače"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -8390,7 +8573,7 @@ msgstr "ePos Tiskalnik"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "fill all relevant information"
-msgstr ""
+msgstr "izpolnite vse ustrezne informacije"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -8402,14 +8585,14 @@ msgstr "za"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "for an order of"
-msgstr ""
+msgstr "za naročilo v vrednosti"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_info_popup/product_info_popup.xml:0
 #, python-format
 msgid "forecasted"
-msgstr ""
+msgstr "Napovedano"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8430,12 +8613,12 @@ msgstr "v tej kategoriji."
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 #, python-format
 msgid "items"
-msgstr ""
+msgstr "Artikli"
 
 #. module: point_of_sale
 #: model:mail.activity.type,summary:point_of_sale.mail_activity_old_session
 msgid "note"
-msgstr ""
+msgstr "opomba"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8454,7 +8637,7 @@ msgstr "naročila:"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "outstanding rescue session"
-msgstr ""
+msgstr "Nerešena reševalna seja"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8466,7 +8649,7 @@ msgstr "plačana naročila"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "qx9h1"
-msgstr ""
+msgstr "qx9h1"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8521,7 +8704,7 @@ msgstr "so bili dvojniki obstoječih naročil"
 #: code:addons/point_of_sale/static/src/app/navbar/sale_details_button/sales_detail_report.xml:0
 #, python-format
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #~ msgid "0.00"
 #~ msgstr "0,00"
