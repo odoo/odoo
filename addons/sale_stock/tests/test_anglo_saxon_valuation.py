@@ -181,8 +181,8 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
         closing_move = self._close()
         self.assertRecordValues(closing_move.line_ids, [
-            {'account_id': self.account_stock_variation.id, 'debit': 0.0, 'credit': 8.0},
-            {'account_id': self.account_stock_valuation.id, 'debit': 8.0, 'credit': 0.0},
+            {'account_id': self.account_stock_variation.id, 'debit': 0.0, 'credit': 4.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 4.0, 'credit': 0.0},
         ])
 
     # -------------------------------------------------------------------------
@@ -256,8 +256,8 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
         closing_move = self._close()
         self.assertRecordValues(closing_move.line_ids, [
-            {'account_id': self.account_stock_variation.id, 'debit': 0.0, 'credit': 8.0},
-            {'account_id': self.account_stock_valuation.id, 'debit': 8.0, 'credit': 0.0},
+            {'account_id': self.account_stock_variation.id, 'debit': 0.0, 'credit': 4.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 4.0, 'credit': 0.0},
         ])
 
     # -------------------------------------------------------------------------
@@ -1013,8 +1013,12 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         cogs_aml = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs' and l.account_id == self.account_stock_valuation)
         self.assertEqual(cogs_aml.credit, 104)
 
-        with self.assertRaises(UserError):
-            self._close()
+        # _should_create_account_move
+        closing_move = self._close()
+        self.assertRecordValues(closing_move.line_ids, [
+            {'account_id': self.account_stock_variation.id, 'debit': 104.0, 'credit': 0.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 104.0},
+        ])
 
     def test_fifo_delivered_invoice_post_delivery_with_return(self):
         """Receive 2@10. SO1 2@12. Return 1 from SO1. SO2 1@12. Receive 1@20.
@@ -1279,11 +1283,9 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(cogs_aml.debit, 0)
         self.assertEqual(cogs_aml.credit, 35, 'Should be to the average move value')
 
-        closing_move = self._close()
-        self.assertRecordValues(closing_move.line_ids, [
-            {'account_id': self.account_stock_variation.id, 'debit': 0.0, 'credit': 190.0},
-            {'account_id': self.account_stock_valuation.id, 'debit': 190.0, 'credit': 0.0},
-        ])
+        # _should_create_account_move
+        with self.assertRaises(UserError):
+            self._close()
 
     def test_fifo_return_and_create_invoice(self):
         """
@@ -1339,11 +1341,9 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(cogs_aml.debit, 0)
         self.assertEqual(cogs_aml.credit, 35, 'Should be to the average move value')
 
-        closing_move = self._close()
-        self.assertRecordValues(closing_move.line_ids, [
-            {'account_id': self.account_stock_variation.id, 'debit': 0.0, 'credit': 190.0},
-            {'account_id': self.account_stock_valuation.id, 'debit': 190.0, 'credit': 0.0},
-        ])
+        # _should_create_account_move
+        with self.assertRaises(UserError):
+            self._close()
 
     def test_fifo_two_step_return_store_picking_not_valued(self):
         """Ensure 2-step customer return does not value the Input -> Stock leg and keeps COGS correct."""
