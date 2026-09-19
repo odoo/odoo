@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add("website_sale_stock_reorder_from_portal"
         {
             content: "Check that there is one product that does not have enough stock",
             trigger:
-                "div.o_cart_product i.fa.fa-warning[title='You ask for 2 products but only 1 is available.']",
+                "div.o_cart_product i.fa-triangle-exclamation[title='You ask for 2 products but only 1 is available.']",
         },
     ],
 });
