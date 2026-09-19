@@ -34,10 +34,12 @@ class WorkflowEdge(models.Model):
         required=True,
         ondelete="cascade",
     )
-    automation_rule_id = fields.Many2one(
+    automation_rule_id = fields.Many2one(  # noqa: E8528  One2many inverse, cascading FK
         comodel_name="automation.rule",
         related="source_node_id.automation_rule_id",
         string="Automation Rule",
+        store=True,
+        index=True,
         ondelete="cascade",
     )
 

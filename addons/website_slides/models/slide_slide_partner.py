@@ -15,10 +15,12 @@ class SlideSlidePartner(models.Model):
         ondelete="cascade",
     )
     slide_category = fields.Selection(related="slide_id.slide_category")
-    channel_id = fields.Many2one(
+    channel_id = fields.Many2one(  # noqa: E8528  One2many inverse, cascading FK
         comodel_name="slide.channel",
         related="slide_id.channel_id",
         string="Channel",
+        store=True,
+        index=True,
         ondelete="cascade",
     )
     partner_id = fields.Many2one(
