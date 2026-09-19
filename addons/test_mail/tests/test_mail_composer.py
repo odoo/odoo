@@ -340,7 +340,7 @@ class TestComposerForm(TestMailComposer):
                 body_contains_signature_only=True,
             )
         ))
-        self.assertEqual(composer_form.body, '<p data-o-mail-quote="1">--<br data-o-mail-quote="1"/>Signature</p>')
+        self.assertEqual(composer_form.body, '<p data-o-mail-quote="1">--<br data-o-mail-quote="1">Signature</p>')
 
         # Now with user default template
         self.env['ir.default'].sudo().set(
@@ -971,7 +971,7 @@ class TestComposerInternals(TestMailComposer):
                 })
 
                 # creation values are taken
-                self.assertEqual(composer.body, '<p>Test Body <t t-out="record.name"/></p>')
+                self.assertEqual(composer.body, '<p>Test Body <t t-out="record.name"></t></p>')
                 self.assertEqual(composer.mail_server_id, self.mail_server_default)
                 self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}')
                 self.assertEqual(composer.subject, 'My amazing subject for {{ record.name }}')
@@ -999,7 +999,7 @@ class TestComposerInternals(TestMailComposer):
                     'scheduled_date': '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}',
                     'subject': 'Back to my amazing subject for {{ record.name }}',
                 })
-                self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name"/></p>')
+                self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name"></t></p>')
                 self.assertEqual(composer.mail_server_id, self.mail_server_default)
                 self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}')
                 self.assertEqual(composer.subject, 'Back to my amazing subject for {{ record.name }}')
@@ -1009,12 +1009,12 @@ class TestComposerInternals(TestMailComposer):
                 composer.write({'template_id': template_void.id})
 
                 if composition_mode == 'comment' and not batch:
-                    self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name"/></p>')
+                    self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name"></t></p>')
                     self.assertEqual(composer.mail_server_id, self.mail_server_default)
                     self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}')
                     self.assertEqual(composer.subject, 'Back to my amazing subject for {{ record.name }}')
                 else:
-                    self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name"/></p>')
+                    self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name"></t></p>')
                     self.assertEqual(composer.mail_server_id, self.mail_server_default)
                     self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}')
                     self.assertEqual(composer.subject, 'Back to my amazing subject for {{ record.name }}')

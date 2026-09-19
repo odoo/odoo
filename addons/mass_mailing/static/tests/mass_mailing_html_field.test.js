@@ -1,4 +1,5 @@
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
+import { EmailImageFormatPlugin } from "@mail/editor/plugins/email_image_format_plugin";
 import { IrUiView, ResCompany } from "@mass_mailing/../tests/mass_mailing_test_helpers";
 import { animationFrame, beforeEach, click, describe, expect, test, waitFor } from "@odoo/hoot";
 import {
@@ -18,6 +19,7 @@ import { FormController } from "@web/views/form/form_controller";
 import { MassMailingHtmlField } from "../src/fields/html_field/mass_mailing_html_field";
 import { MassMailingIframe } from "../src/iframe/mass_mailing_iframe";
 import { ThemeSelectorIframe } from "../src/themes/theme_selector/theme_selector_iframe";
+import { ThemeSelector } from "../src/themes/theme_selector/theme_selector";
 
 class Mailing extends models.Model {
     _name = "mailing.mailing";
@@ -214,27 +216,26 @@ describe("field HTML", () => {
         // Css assets are not needed for these tests.
         patch(MassMailingIframe.prototype, {
             loadIframeAssets() {
-                return {
-                    "mass_mailing.assets_iframe_style": {
-                        toggle: () => {},
-                    },
-                    "mass_mailing.assets_inside_basic_editor_iframe": {
-                        toggle: () => {},
-                    },
-                    "mass_mailing.assets_inside_builder_iframe": {
-                        toggle: () => {},
-                    },
-                };
+                return [];
             },
         });
         patch(ThemeSelectorIframe.prototype, {
-            async loadIframeAssets() {},
+            loadIframeAssets() {},
+        });
+        patch(ThemeSelector.prototype, {
+            loadStyleSheets() {
+                return [];
+            },
+        });
+        // Don't process images in non-image-specific tests
+        patch(EmailImageFormatPlugin.prototype, {
+            sanitizeImage: () => Promise.resolve(),
         });
     });
     test("save arch and html", async () => {
         onRpc("web_save", ({ args }) => {
             expect(args[1].body_arch).toMatch(/^<div/);
-            expect(args[1].body_html).toMatch(/^<table/);
+            expect(args[1].body_html).toMatch(/^<p/);
             expect.step("web_save mail body");
         });
         await mountView({
@@ -445,7 +446,9 @@ describe("field HTML", () => {
             ".o-snippets-menu [data-label='Domain'] span[data-icon='filter_alt'] + span"
         ).toHaveText("Id = 1");
         await clickSave();
-        const table = await waitFor(".o_mail_body_inline table[t-if]", { timeout: 3000 });
+        const table = await waitFor(".o_mail_body_inline [t-if*='object.filtered_domain']", {
+            timeout: 3000,
+        });
         expect(table).toHaveAttribute("t-if", 'object.filtered_domain([("id", "=", 1)])');
     });
     test(`Switching mailing records in the Form view properly switches between basic Editor, HtmlBuilder and readonly`, async () => {

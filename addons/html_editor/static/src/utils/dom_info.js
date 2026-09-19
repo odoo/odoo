@@ -617,6 +617,9 @@ export const phrasingContent = new Set(["#text", ...phrasingTagNames]);
 const flowContent = new Set([...phrasingContent, ...paragraphRelatedElements, "DIV", "HR"]);
 export const listItem = new Set(["LI"]);
 const listContainers = new Set(["UL", "OL"]);
+const tableContainerContent = new Set(["TR"]);
+const tableContent = new Set(["THEAD", "TBODY", "TFOOT"]).union(tableContainerContent);
+const rowContent = new Set(["TH", "TD"]);
 
 const allowedContent = {
     BLOCKQUOTE: flowContent,
@@ -633,8 +636,12 @@ const allowedContent = {
     UL: listItem,
     P: phrasingContent,
     PRE: phrasingContent,
+    TABLE: tableContent,
+    TBODY: tableContainerContent,
+    THEAD: tableContainerContent,
+    TFOOT: tableContainerContent,
     TD: flowContent,
-    TR: new Set(["TD"]),
+    TR: rowContent,
 };
 
 export function isParagraphRelatedElement(node) {
