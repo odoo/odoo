@@ -209,6 +209,27 @@ class TestColumnDdl(unittest.TestCase):
         schema.rename_column(cr, "t", "old", "new")
         self.assertEqual(len(cr.statements), 2)
 
+    def test_drop_columns_is_one_cascading_alter_for_the_columns_that_exist(self):
+        existing = [{"column_name": "a"}, {"column_name": "b"}]
+        cr = _RecordingCursor([existing, [], [], []])
+        self.assertEqual(schema.drop_columns(cr, "t", ["a", "gone", "b"]), ["a", "b"])
+        self.assertEqual(
+            cr.codes[-1],
+            'ALTER TABLE "t" DROP COLUMN "a" CASCADE, DROP COLUMN "b" CASCADE',
+        )
+        self.assertEqual(sum("DROP COLUMN" in code for code in cr.codes), 1)
+
+    def test_drop_columns_names_the_views_it_takes_down(self):
+        cr = _RecordingCursor([[{"column_name": "a"}], [("report_v", "v")], []])
+        with self.assertLogs("odoo.schema", level="INFO") as logs:
+            schema.drop_columns(cr, "t", ["a"])
+        self.assertIn("report_v", logs.output[0])
+
+    def test_drop_columns_leaves_a_table_without_them_alone(self):
+        cr = _RecordingCursor([[{"column_name": "kept"}]])
+        self.assertEqual(schema.drop_columns(cr, "t", ["gone"]), [])
+        self.assertEqual(len(cr.statements), 1)
+
     def test_not_null_and_default(self):
         cr = _RecordingCursor()
         schema.set_not_null(cr, "t", "c")

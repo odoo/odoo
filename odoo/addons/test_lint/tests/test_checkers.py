@@ -2248,6 +2248,31 @@ class TestFieldDeclarationLint(BaseCase):
             ],
         )
 
+    def test_a_stored_copy_of_a_related_value_is_flagged(self):
+        found = self._check(
+            """
+        class M(models.Model):
+            company_id = fields.Many2one(
+                related="order_id.company_id",
+                store=True,
+            )
+            currency_id = fields.Many2one(
+                related="order_id.currency_id",
+            )
+            image_128 = fields.Image(
+                related="image_1920",
+                max_width=128,
+                store=True,
+            )
+            state = fields.Selection(
+                related="order_id.state",
+                store=False,
+            )
+        """,
+            rule="stored-related",
+        )
+        self.assertEqual(found, [("stored-related", 3)])
+
     def test_the_label_position_of_each_relational_class_is_known(self):
         call = (
             ast.parse('fields.Many2many("a", "rel", "c1", "c2", "Label")').body[0].value

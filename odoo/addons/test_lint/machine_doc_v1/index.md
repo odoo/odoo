@@ -27,11 +27,13 @@ it fails until the floor is lowered in the same change.
 This module was edited as a shared ledger: 24 of its last 40 commits changed
 nothing in it but an integer and the comment above it.
 
-Four gates are floored above zero: `lint_docstring` (a one-sided ratchet that
+Five gates carry a floor: `lint_docstring` (a one-sided ratchet that
 reads 32 only on a fuller install), `bundle_double_eval` (ESM bundles that
 evaluate twice), the migration ledger `lint_credential_storage`, whose floor
-is the columns still to move into the vault, and `lint_receiver_fail_open`, whose
-floor is the machine routes still to put behind an inbound gate. Everything else -- every AST rule,
+is the columns still to move into the vault, `lint_receiver_fail_open`, whose
+floor is the machine routes still to put behind an inbound gate, and
+`lint_stored_related`, the stored copies of a related value still to convert
+-- the one AST rule with a floor. Everything else -- every other AST rule,
 every XML rule, the manifest and record-order gates -- is a hard zero. `n-plus-one-query` reached
 zero on 2026-09-12 by reading each of its 295 sites: a loop over the records
 is hoisted, a loop that runs one query per distinct key (company, model,
@@ -64,7 +66,7 @@ database, and `test_checkers.py` does exactly that.
 | `_checker_credential_storage.py` | `credential-storage` |
 | `_checker_receiver.py` | `receiver-fail-open` |
 | `_checker_row_counter.py` | `row-counter-in-test` |
-| `_checker_field_declaration.py` | `field-redeclared`, `default-evaluated-at-import`, `selection-duplicate-key`, `field-hook-prefix`, `field-positional-argument`, `field-attribute-order`, `dead-field-attribute` |
+| `_checker_field_declaration.py` | `field-redeclared`, `default-evaluated-at-import`, `selection-duplicate-key`, `field-hook-prefix`, `field-positional-argument`, `field-attribute-order`, `dead-field-attribute`, `stored-related` |
 
 `tax-company-singular` (E8514) catches `.tax_ids.filtered(lambda t: t.company_id)`
 and the five other tax field names. `account.tax` carries `company_ids`, a
@@ -155,7 +157,10 @@ argument -- a bare string that only the signature can tell is a label, a
 comodel or a selection; `field-attribute-order` (E8526) is keywords out of
 that order, or two or more sharing a line; `dead-field-attribute` (E8527) is
 an attribute setup ignores: `index=` where there is no column, `precompute=`
-without `store=True`, `compute=` beside `related=`. The fixer is
+without `store=True`, `compute=` beside `related=`; `stored-related` (E8528) is
+`related=` with `store=True` on anything but a Binary or an Image -- the one
+floored rule of this checker, since the copies exist and are converted module by
+module. The fixer is
 `_sort_field_attributes.py`, in the table below. `doc/coding_guidelines.rst` §2.3
 states the rule.
 

@@ -310,6 +310,13 @@ RULES: tuple[Rule, ...] = (
         "store=True and compute= beside related= are ignored at setup",
     ),
     Rule(
+        "stored-related",
+        "E8528",
+        "drop store=True: a related field over many2one hops filters, groups, "
+        "sorts and aggregates through the join. A copy that carries a composite "
+        "index or a UNIQUE stays, with `# noqa: E8528  <what needs the column>`",
+    ),
+    Rule(
         "noqa-rationale",
         "",
         "write the reason after the codes: `# noqa: F401  re-exported by __init__`",
@@ -483,6 +490,7 @@ CHECKERS: tuple[Checker, ...] = (
                 "field-positional-argument",
                 "field-attribute-order",
                 "dead-field-attribute",
+                "stored-related",
             }
         ),
     ),

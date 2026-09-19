@@ -340,6 +340,27 @@ def _check_dead(name: str, call: ast.Call) -> Iterator[Violation]:
         )
 
 
+def _check_stored_related(name: str, call: ast.Call) -> Iterator[Violation]:
+    # Binary and Image are left out: `image_128 = Image(related="image_1920",
+    # max_width=128, store=True)` stores a resize, not a copy of a column.
+    if call.func.attr in ("Binary", "Image"):
+        return
+    keys = keywords(call)
+    related, store = keys.get("related"), keys.get("store")
+    if (
+        isinstance(related, ast.Constant)
+        and isinstance(related.value, str)
+        and isinstance(store, ast.Constant)
+        and store.value is True
+    ):
+        yield Violation(
+            call.lineno,
+            call.col_offset,
+            "stored-related",
+            f"{name}: a stored copy of {related.value}",
+        )
+
+
 def _check_class(node: ast.ClassDef) -> Iterator[Violation]:
     bound: dict[str, int] = {}
     for statement in node.body:
@@ -367,6 +388,7 @@ def _check_class(node: ast.ClassDef) -> Iterator[Violation]:
         yield from _check_positional(name, call)
         yield from _check_layout(name, call)
         yield from _check_dead(name, call)
+        yield from _check_stored_related(name, call)
 
 
 def check(tree: ast.Module, nodes=None) -> Iterator[Violation]:

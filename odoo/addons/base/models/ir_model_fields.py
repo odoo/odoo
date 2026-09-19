@@ -813,20 +813,8 @@ class IrModelFields(models.Model):
             if sql.get_table_kind(cr, table) != sql.TableKind.Regular:
                 _debug.logic("drop_columns.skipped", table=table, reason="not_regular")
                 continue
-            existing = sql.get_table_columns(cr, table)
-            dropped = [name for name in names if name in existing]
+            dropped = sql.drop_columns(cr, table, names)
             _debug.lifecycle("drop_columns", table=table, columns=dropped)
-            if dropped:
-                cr.execute(
-                    SQL(
-                        "ALTER TABLE %s %s",
-                        SQL.identifier(table),
-                        SQL(", ").join(
-                            SQL("DROP COLUMN %s CASCADE", SQL.identifier(name))
-                            for name in dropped
-                        ),
-                    )
-                )
 
         self._drop_m2m_tables()
         return True

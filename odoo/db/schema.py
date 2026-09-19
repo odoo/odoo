@@ -545,6 +545,58 @@ def set_not_null(cr: BaseCursor, tablename: str, columnname: str) -> None:
     )
 
 
+def drop_columns(
+    cr: BaseCursor, tablename: str, columnnames: Iterable[str]
+) -> list[str]:
+    """Drop columns with whatever hangs on them; return the ones that were there.
+
+    The ORM creates the column of a field that becomes stored and never drops
+    the column of one that stops being stored: a `related=` that loses
+    `store=True` leaves its column, its index and every constraint over it in
+    place, read by nothing. The migration that goes with such a change calls
+    this.
+
+    One ALTER TABLE for the table, since each takes an ACCESS EXCLUSIVE lock.
+    CASCADE, because the indexes and constraints over a column go with it by
+    definition and a view selecting it would otherwise refuse the drop. A view
+    is a report model's, rebuilt by its `init()` later in the same upgrade --
+    the model that selects another module's column is loaded after that
+    module -- and the views taken down are logged so the upgrade says which.
+    """
+    existing = get_table_columns(cr, tablename)
+    dropped = [name for name in columnnames if name in existing]
+    if not dropped:
+        return dropped
+    views = sorted(
+        {
+            view
+            for name in dropped
+            for view, _kind in get_views_depending_on_table(cr, tablename, name)
+        }
+    )
+    with _debug.perf("schema.drop_columns", cr=cr, table=tablename, columns=dropped):
+        cr.execute(
+            SQL(
+                "ALTER TABLE %s %s",
+                SQL.identifier(tablename),
+                SQL(", ").join(
+                    SQL("DROP COLUMN %s CASCADE", SQL.identifier(name))
+                    for name in dropped
+                ),
+            )
+        )
+    if views:
+        _schema.info(
+            "Table %r: dropped columns %s and the views reading them: %s",
+            tablename,
+            ", ".join(dropped),
+            ", ".join(views),
+        )
+    else:
+        _schema.debug("Table %r: dropped columns %s", tablename, ", ".join(dropped))
+    return dropped
+
+
 def drop_not_null(cr: BaseCursor, tablename: str, columnname: str) -> None:
     with _debug.perf("schema.drop_not_null", cr=cr, table=tablename, column=columnname):
         cr.execute(

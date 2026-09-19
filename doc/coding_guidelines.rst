@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.54
+:Version: 6.55
 :Date: 2026-09-16
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -33,7 +33,7 @@ Each rule carries a bracketed label naming what catches it.
    * - ``[ruff CODE]``
      - ``ruff check`` reports it.
    * - ``[test_lint CODE]``
-     - A ``test_lint`` rule fails on it. ``E8501``--``E8517`` are the Python
+     - A ``test_lint`` rule fails on it. ``E8501``--``E8528`` are the Python
        AST checkers; the XML rules are named by rule (``data-root``,
        ``duplicate-field``, ...) and every other ``test_lint`` gate by test.
    * - ``[fixer NAME]``
@@ -1021,6 +1021,19 @@ index), ``precompute=`` on a compute without ``store=True`` (dropped with a
 warning), and
 ``compute=`` beside a truthy ``related=`` (replaced by the related path's own
 compute).
+
+**A related field is not stored to make it groupable** ``[test_lint E8528]``. A
+``related=`` whose hops are all many2one and whose last field has a column
+already filters, groups, sorts and aggregates in SQL through the join, and
+``fields_get`` reports it ``groupable``, ``sortable`` and ``searchable``;
+``store=True`` adds a copy that every write to the source rewrites on every
+child row. Two things need the column and keep it, each with
+``# noqa: E8528  <what needs the column>``: a UNIQUE or EXCLUDE constraint over
+it (PostgreSQL enforces none across two tables), and a composite index pairing
+it with a column of the model's own, where a measured plan says the join
+loses. ``Binary`` and ``Image`` are exempt: a stored ``image_128`` is a resize,
+not a copy. The existing copies are floored (``lint_stored_related``) and
+converted module by module.
 
 2.4 Method naming
 -----------------
@@ -8240,7 +8253,8 @@ commented reference code by nature.
 
 The framework passes a **cursor**, not an environment. Guard ``pre-migrate`` SQL
 with the helpers in ``odoo.db.schema`` -- ``table_exists``, ``column_exists``,
-``index_exists``, ``create_column``, ``convert_column``, ``drop_constraint`` --
+``index_exists``, ``create_column``, ``convert_column``, ``drop_columns``,
+``drop_constraint`` --
 rather than hand-written ``information_schema`` queries. (There is no
 ``odoo.tools.sql`` in this fork.) ``openupgradelib`` is available but is not the
 house default.
@@ -8252,6 +8266,17 @@ the ``ir.model.fields`` row for a field the code no longer declares and issues
 -- which ``modules/loading.py`` runs *after* every ``post-migrate``. So a
 ``post-migrate`` that harvests the old values into their new home works, and there
 is nothing left for a later version to harvest.
+
+**A field that stops being stored keeps its column until a migration drops it**
+``[review]``. The row in ``ir.model.fields`` survives -- the field is still
+declared -- so ``_process_end`` has nothing to delete, and the ORM creates
+columns but never drops one: a ``related=`` that loses ``store=True`` (§2.3,
+``E8528``) leaves the column, its index and any constraint over it in place,
+read by nothing and written by no one. The same change ships a
+``post-migrate`` calling ``schema.drop_columns(cr, table, columns)`` -- one
+``ALTER TABLE`` for the table, since each takes an exclusive lock. It cascades:
+a report view selecting the column is taken down, logged by name, and rebuilt by
+its model's ``init()`` later in the same upgrade.
 
 **A Many2many is the exception: its relation table is never dropped**
 ``[review]``. ``_drop_m2m_tables`` skips any field whose ``state`` is not
@@ -8710,6 +8735,13 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.55
+     - 2026-09-18
+     - §2.3: a related field is not stored to make it groupable (``E8528``,
+       floored); a UNIQUE/EXCLUDE or a measured composite index keeps the copy,
+       with a ``noqa`` naming it. The ``E85xx`` range reads ``E8528``. §12.2: a
+       field that stops being stored keeps its column until a migration calls
+       ``schema.drop_columns``.
    * - 6.54
      - 2026-09-16
      - §11.6: an expression with a bound parameter used twice (SELECT and GROUP BY)
