@@ -26,6 +26,7 @@ test("FloatFactorField in form view", async () => {
         expect(args[1].qux).toBe(4.6, { message: "the correct float value should be saved" });
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -64,6 +65,7 @@ test("FloatFactorField comma as decimal point", async () => {
         expect.step("save");
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,

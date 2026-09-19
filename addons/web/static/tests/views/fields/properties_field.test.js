@@ -1525,6 +1525,7 @@ test("properties: name reset", async () => {
  */
 test("properties: kanban view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: /* xml */ `
@@ -1580,6 +1581,7 @@ test("properties: kanban view with date and datetime property fields", async () 
     ];
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: /* xml */ `
@@ -1626,6 +1628,7 @@ test("properties: kanban view with multiple sources of properties definitions", 
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: /* xml */ `
@@ -1701,6 +1704,7 @@ test("properties: kanban view with label and border", async () => {
     );
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: /* xml */ `
@@ -1748,6 +1752,7 @@ test("properties: kanban view without properties", async () => {
         },
     ];
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: /* xml */ `

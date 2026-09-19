@@ -12,6 +12,7 @@ defineModels([Partner]);
 test.tags("mobile");
 test("boolean_checkbox display as checkbox instead of toggle on mobile", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         resId: 1,
         type: "form",

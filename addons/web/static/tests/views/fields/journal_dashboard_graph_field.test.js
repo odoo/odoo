@@ -93,6 +93,7 @@ const reload = async (kanban, params = {}) => {
 test.tags("desktop");
 test("JournalDashboardGraphField is rendered correctly", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: /* xml */ `
@@ -128,6 +129,7 @@ test("JournalDashboardGraphField is rendered correctly", async () => {
 
 test("rendering of a JournalDashboardGraphField in an updated grouped kanban view", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: /* xml */ `
