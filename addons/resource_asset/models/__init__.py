@@ -5,3 +5,6 @@ from . import resource_asset_meter
 from . import resource_asset_meter_reading
 from . import resource_asset
 from . import resource_resource
+from . import resource_asset_property
+from . import resource_asset_telecom
+from . import resource_asset_device

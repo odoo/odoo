@@ -11,20 +11,13 @@ from odoo.addons.resource.models.utils import (
     MANAGER_ROLE,
     OPERATOR_ROLE,
 )
+from odoo.addons.resource_asset.fields import AssetIdentifier
 
 _debug = DebugLog(__name__)
 
 CUSTODY_SILENT = "custody_silent"
 
 SKIP_IDENTITY_CHECK = "skip_asset_identity_check"
-
-IDENTIFIER_CODE_BY_FIELD = {
-    "license_plate": "plate",
-    "vin_sn": "vin",
-    "engine_sn": "engine",
-    "cadastral_id": "cadastral",
-    "imei": "imei",
-}
 
 
 class ResourceAsset(models.Model):
@@ -109,54 +102,19 @@ class ResourceAsset(models.Model):
         comodel_name="resource.asset.identifier",
         inverse_name="asset_id",
     )
-    license_plate = fields.Char(
-        compute="_compute_identifier_columns",
-        inverse="_inverse_identifier_columns",
-        store=True,
-        copy=False,
-        readonly=False,
-        tracking=True,
+    license_plate = AssetIdentifier(
+        identifier_code="plate",
         help="License plate number of the asset (eg plate number for a car)",
     )
-    vin_sn = fields.Char(
+    vin_sn = AssetIdentifier(
+        identifier_code="vin",
         string="Serial Number / VIN",
-        compute="_compute_identifier_columns",
-        inverse="_inverse_identifier_columns",
-        store=True,
-        copy=False,
-        readonly=False,
-        tracking=True,
         help="Unique number written on an asset's chassis (VIN/SN number).",
     )
-    engine_sn = fields.Char(
+    engine_sn = AssetIdentifier(
+        identifier_code="engine",
         string="Engine Serial Number",
-        compute="_compute_identifier_columns",
-        inverse="_inverse_identifier_columns",
-        store=True,
-        copy=False,
-        readonly=False,
-        tracking=True,
         help="Unique number written on the asset's engine.",
-    )
-    cadastral_id = fields.Char(
-        string="Cadastral ID",
-        compute="_compute_identifier_columns",
-        inverse="_inverse_identifier_columns",
-        store=True,
-        copy=False,
-        readonly=False,
-        tracking=True,
-        help="Government-assigned parcel identifier for real estate assets.",
-    )
-    imei = fields.Char(
-        string="IMEI",
-        compute="_compute_identifier_columns",
-        inverse="_inverse_identifier_columns",
-        store=True,
-        copy=False,
-        readonly=False,
-        tracking=True,
-        help="International Mobile Equipment Identity of a cellular-capable asset.",
     )
     missing_identifier_type_ids = fields.Many2many(
         comodel_name="resource.asset.identifier.type",
@@ -301,41 +259,34 @@ class ResourceAsset(models.Model):
                 )
             )
 
-    @api.depends("identifier_ids.value", "identifier_ids.type_id")
-    def _compute_identifier_columns(self):
-        for asset in self:
-            by_code = {i.type_id.code: i.value for i in asset.identifier_ids}
-            for field_name, code in IDENTIFIER_CODE_BY_FIELD.items():
-                asset[field_name] = by_code.get(code, False)
+    @api.model
+    def _get_identifier_field_names(self) -> tuple[str, ...]:
+        return tuple(
+            name
+            for name, field in self._fields.items()
+            if isinstance(field, AssetIdentifier)
+        )
 
-    def _inverse_identifier_columns(self):
-        types = {
-            identifier_type.code: identifier_type
-            for identifier_type in self.env["resource.asset.identifier.type"]
+    def _set_identifier(self, code, value):
+        self.check_singleton()
+        identifier_type = (
+            self.env["resource.asset.identifier.type"]
             .sudo()
-            .search([("code", "in", list(IDENTIFIER_CODE_BY_FIELD.values()))])
-        }
-        identifier_model = self.env["resource.asset.identifier"].sudo()
-        for asset in self:
-            by_type = {i.type_id: i for i in asset.sudo().identifier_ids}
-            for field_name, code in IDENTIFIER_CODE_BY_FIELD.items():
-                identifier_type = types.get(code)
-                if not identifier_type:
-                    continue
-                value = asset[field_name]
-                current = by_type.get(identifier_type)
-                if value and current and current.value != value:
-                    current.value = value
-                elif value and not current:
-                    identifier_model.create(
-                        {
-                            "asset_id": asset.id,
-                            "type_id": identifier_type.id,
-                            "value": value,
-                        }
-                    )
-                elif not value and current:
-                    current.unlink()
+            .search([("code", "=", code)], limit=1)
+        )
+        if not identifier_type:
+            return
+        current = self.sudo().identifier_ids.filtered(
+            lambda i: i.type_id == identifier_type
+        )[:1]
+        if value and current and current.value != value:
+            current.value = value
+        elif value and not current:
+            self.env["resource.asset.identifier"].sudo().create(
+                {"asset_id": self.id, "type_id": identifier_type.id, "value": value}
+            )
+        elif not value and current:
+            current.unlink()
 
     def _check_required_identifiers(self):
         if self.env.context.get(SKIP_IDENTITY_CHECK):
@@ -344,7 +295,11 @@ class ResourceAsset(models.Model):
         if not enforced:
             return
         enforced.invalidate_recordset(
-            ["identifier_ids", "missing_identifier_type_ids", *IDENTIFIER_CODE_BY_FIELD]
+            [
+                "identifier_ids",
+                "missing_identifier_type_ids",
+                *self._get_identifier_field_names(),
+            ]
         )
         for asset in enforced:
             missing = asset.missing_identifier_type_ids
@@ -505,7 +460,7 @@ class ResourceAsset(models.Model):
     def _check_identity_after(self, vals):
         if "kind_id" in vals:
             self._on_kind_changed(vals)
-        elif vals.keys() & {"identifier_ids", *IDENTIFIER_CODE_BY_FIELD}:
+        elif vals.keys() & {"identifier_ids", *self._get_identifier_field_names()}:
             self._check_required_identifiers()
 
     def _write_through_resource(self, vals):

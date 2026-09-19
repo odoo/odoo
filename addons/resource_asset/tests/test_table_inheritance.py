@@ -58,6 +58,29 @@ class TestAssetTableInheritanceRoot(TransactionCase):
         )
         self.assertEqual(van._get_concrete()._name, "resource.asset.vehicle")
 
+    def test_the_shipped_kinds_with_a_model_land_in_it(self):
+        for code in ("property", "telecom", "device"):
+            with self.subTest(kind=code):
+                kind = self.env.ref(f"resource_asset.kind_{code}")
+                asset = self.Asset.create({"name": f"A {code}", "kind_id": kind.id})
+                self.assertEqual(asset._get_concrete()._name, f"resource.asset.{code}")
+
+    def test_a_subtype_column_is_an_identifier_row(self):
+        kind = self.env.ref("resource_asset.kind_property")
+        parcel = self.Asset.create({"name": "Parcel", "kind_id": kind.id})
+        concrete = parcel._get_concrete()
+        concrete.cadastral_id = "CAD-1"
+        self.assertEqual(parcel.get_identifier("cadastral"), "CAD-1")
+        self.assertEqual(
+            self.env["resource.asset.property"].search(
+                [("cadastral_id", "=", "CAD-1")]
+            ),
+            concrete,
+        )
+        self.assertNotIn("cadastral_id", self.Asset._fields)
+        concrete.cadastral_id = False
+        self.assertFalse(parcel.identifier_ids)
+
     def test_no_shared_relation_table_points_at_a_subtype_table(self):
         # The vehicle's copy of an inherited many2many keeps the root's
         # relation table, so a key against `resource_asset_vehicle` would
