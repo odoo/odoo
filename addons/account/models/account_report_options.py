@@ -236,12 +236,15 @@ class AccountReportOptions(models.Model):
 
         main_company = self._get_sender_company_for_export(options)
 
+        date_from = options["date"]["date_from"]
         audit_return = self.env["account.return"].search_read(
             [
                 ("return_type_category", "=", "audit"),
                 ("company_id", "=", main_company.id),
                 ("date_to", "=", options["date"]["date_to"]),
-                ("date_from", "=", options["date"]["date_from"] or True),
+                ("date_from", "=", date_from)
+                if date_from
+                else ("date_from", "!=", False),
             ],
             limit=1,
             fields=["id"],
