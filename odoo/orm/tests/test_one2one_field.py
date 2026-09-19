@@ -78,3 +78,20 @@ def test_one2one_refuses_an_inverse_that_is_not_a_many2one():
     with pytest.raises(TypeError, match="inverts a many2one"):
         with model_test_env(TagSeat, TagHolder):
             pass
+
+
+def test_a_many2one_related_may_end_on_a_one2one():
+    class Badge(models.Model):
+        _name = "o.badge"
+        _module = _MOD + "_badge"
+        _description = "badge"
+        _log_access = False
+
+        holder_id = fields.Many2one("o.holder")
+        seat_id = fields.Many2one(related="holder_id.seat_id")
+
+    with model_test_env(Seat, Holder, Badge) as env:
+        field = env["o.badge"]._fields["seat_id"]
+        assert field.type == "many2one"
+        assert field.comodel_name == "o.seat"
+        assert field.related_field is env["o.holder"]._fields["seat_id"]

@@ -117,6 +117,9 @@ class One2one(One2many):
                             )
                         )
                     current[inverse] = False
+                    # The seat is released in the database before the next
+                    # holder takes it: the unique index checks each UPDATE.
+                    current.flush_recordset([inverse])
                 if target and current.id != target:
                     line = comodel.browse(target)
                     holder = line[inverse]

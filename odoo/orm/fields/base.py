@@ -147,6 +147,7 @@ class Field[T](
     is_temporal: bool = False
 
     is_many2one: bool = False
+    is_one2one: bool = False
 
     cache_is_record_value: bool = False
 
