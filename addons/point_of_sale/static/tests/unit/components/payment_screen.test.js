@@ -62,3 +62,43 @@ test("Do not print stock report if not configured", async () => {
     await comp.validateOrder();
     expect(order.picking_type_id.has_stock_reports_to_print).toBeEmpty();
 });
+
+test("Tip can be paid with another method while a QR code payment is pending", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const qrPm = store.models["pos.payment.method"].get(2);
+    const cashPm = store.models["pos.payment.method"].get(1);
+    qrPm.payment_method_type = "qr_code";
+    const comp = await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+    expect(await comp.addNewPaymentLine(qrPm)).toBe(true);
+    expect(order.payment_ids[0].payment_status).toBe("pending");
+    expect(await comp.addNewPaymentLine(cashPm)).toBe(true);
+    expect(order.payment_ids).toHaveLength(2);
+    // The pending QR code payment already reserves the whole amount due.
+    expect(order.payment_ids[1].getAmount()).toBe(0);
+    expect(order.isPaid()).toBe(false);
+
+    order.payment_ids[0].setPaymentStatus("waiting");
+    expect(order.electronicPaymentInProgress()).toBe(true);
+});
+
+test("Split an order between a pending QR code payment and another method", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const qrPm = store.models["pos.payment.method"].get(2);
+    const cashPm = store.models["pos.payment.method"].get(1);
+    qrPm.payment_method_type = "qr_code";
+    const comp = await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+    await comp.addNewPaymentLine(qrPm);
+    order.payment_ids[0].setAmount(10);
+    await comp.addNewPaymentLine(cashPm);
+    expect(order.payment_ids[1].getAmount()).toBe(7.85);
+    expect(order.isPaid()).toBe(false);
+
+    order.payment_ids[0].setPaymentStatus("done");
+    expect(order.isPaid()).toBe(true);
+});
