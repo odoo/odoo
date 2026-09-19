@@ -38,8 +38,6 @@ class WorkflowEdge(models.Model):
         comodel_name="automation.rule",
         related="source_node_id.automation_rule_id",
         string="Automation Rule",
-        store=True,
-        index=True,
         ondelete="cascade",
     )
 
