@@ -64,6 +64,7 @@ export class StatusBarField extends Component {
     rootRef = signal.ref();
     afterRef = signal.ref();
     dropdownRef = signal.ref();
+    highlighterRef = signal.ref();
 
     setup() {
         // Properties
@@ -82,6 +83,7 @@ export class StatusBarField extends Component {
             if (status === "shouldAdjust") {
                 adjust();
             }
+            this.syncHighlighter();
         };
         onMounted(adjustIfNeeded);
         onPatched(adjustIfNeeded);
@@ -267,9 +269,36 @@ export class StatusBarField extends Component {
         }
     }
 
+    /**
+     * Places the travelling highlight over the selected item. Its geometry can
+     * only be measured, never derived: items are as wide as their label, their
+     * number varies, and the bar lays them out reversed and wrapping.
+     */
+    syncHighlighter() {
+        const root = this.rootRef();
+        const highlighter = this.highlighterRef();
+        if (!root || !highlighter) {
+            return;
+        }
+        const current = root.querySelector(".o_arrow_button_current:not(.d-none)");
+        highlighter.classList.toggle("d-none", !current);
+        if (current) {
+            root.style.setProperty("--o-statusbar-highlight-x", `${current.offsetLeft}px`);
+            root.style.setProperty("--o-statusbar-highlight-y", `${current.offsetTop}px`);
+            root.style.setProperty("--o-statusbar-highlight-width", `${current.offsetWidth}px`);
+            root.style.setProperty("--o-statusbar-highlight-height", `${current.offsetHeight}px`);
+            highlighter.classList.toggle("o_first", current.classList.contains("o_first"));
+            highlighter.classList.toggle("o_last", current.classList.contains("o_last"));
+        }
+        if (!this.isHighlighterPlaced) {
+            this.isHighlighterPlaced = true;
+            requestAnimationFrame(() => root.classList.add("o-statusbar-animated"));
+        }
+    }
+
     areItemsWrapping() {
         const root = this.rootRef();
-        const firstItem = root.querySelector(":scope > :not(.d-none)");
+        const firstItem = root.querySelector(":scope > :not(.d-none, .o_statusbar_highlighter)");
         if (!firstItem) {
             return false;
         }
