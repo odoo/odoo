@@ -10,7 +10,6 @@ class LoyaltyRule(models.Model):
 
     website_id = fields.Many2one(
         related="program_id.website_id",
-        store=True,
     )
 
     @api.constrains("code", "website_id", "active")
