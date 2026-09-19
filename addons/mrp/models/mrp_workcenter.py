@@ -23,11 +23,12 @@ class MrpWorkcenter(models.Model):
     _order = "sequence, id"
     _inherit = ["mixin.mail.thread", "mixin.resource"]
     _check_company_auto = True
+    _resource_type = "material"
+    _resource_owns = False
 
     name = fields.Char(
-        related="resource_id.name",
         string="Work Center",
-        readonly=False,
+        required=True,
     )
     time_efficiency = fields.Float(
         related="resource_id.time_efficiency",
@@ -36,10 +37,8 @@ class MrpWorkcenter(models.Model):
         readonly=False,
     )
     active = fields.Boolean(
-        related="resource_id.active",
         string="Active",
         default=True,
-        readonly=False,
     )
 
     code = fields.Char(copy=False)
@@ -452,11 +451,6 @@ class MrpWorkcenter(models.Model):
         )
         blocking.write({"date_end": fields.Datetime.now()})
         return True
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        self = self.with_context(default_resource_type="material")
-        return super().create(vals_list)
 
     def action_show_operations(self):
         self.check_singleton()

@@ -12,7 +12,7 @@ class ResourceResource(models.Model):
     _inherit = "resource.resource"
 
     user_id = fields.Many2one(copy=False)
-    employee_id = fields.One2many(
+    employee_id = fields.One2one(
         comodel_name="hr.employee",
         inverse_name="resource_id",
         context={"active_test": False},

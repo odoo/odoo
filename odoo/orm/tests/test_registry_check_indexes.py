@@ -60,7 +60,7 @@ _IDX = sql.get_index_name("fake_model", "state")
 
 def test_btree_to_btree_not_null_marks_stale():
     reg = _make_registry(_Field("state", "btree_not_null"))
-    cr = _IdxCursor([(_IDX, "fake_model", "btree", False)])
+    cr = _IdxCursor([(_IDX, "fake_model", "btree", False, False)])
 
     reg.check_indexes(cr, ["fake.model"])
 
@@ -72,7 +72,7 @@ def test_btree_to_btree_not_null_marks_stale():
 
 def test_btree_not_null_to_btree_marks_stale():
     reg = _make_registry(_Field("state", True))
-    cr = _IdxCursor([(_IDX, "fake_model", "btree", True)])
+    cr = _IdxCursor([(_IDX, "fake_model", "btree", True, False)])
 
     reg.check_indexes(cr, ["fake.model"])
 
@@ -85,7 +85,7 @@ def test_btree_not_null_to_btree_marks_stale():
 
 def test_company_dependent_btree_not_null_expects_predicate():
     reg = _make_registry(_Field("state", "btree_not_null", company_dependent=True))
-    cr = _IdxCursor([(_IDX, "fake_model", "btree", False)])
+    cr = _IdxCursor([(_IDX, "fake_model", "btree", False, False)])
 
     reg.check_indexes(cr, ["fake.model"])
 
@@ -96,7 +96,7 @@ def test_company_dependent_btree_not_null_expects_predicate():
 
 def test_matching_partial_index_not_rebuilt():
     reg = _make_registry(_Field("state", "btree_not_null"))
-    cr = _IdxCursor([(_IDX, "fake_model", "btree", True)])
+    cr = _IdxCursor([(_IDX, "fake_model", "btree", True, False)])
 
     reg.check_indexes(cr, ["fake.model"])
 
@@ -105,7 +105,7 @@ def test_matching_partial_index_not_rebuilt():
 
 def test_matching_plain_index_not_rebuilt():
     reg = _make_registry(_Field("state", True))
-    cr = _IdxCursor([(_IDX, "fake_model", "btree", False)])
+    cr = _IdxCursor([(_IDX, "fake_model", "btree", False, False)])
 
     reg.check_indexes(cr, ["fake.model"])
 
@@ -114,7 +114,7 @@ def test_matching_plain_index_not_rebuilt():
 
 def test_access_method_mismatch_still_stale():
     reg = _make_registry(_Field("state", True))
-    cr = _IdxCursor([(_IDX, "fake_model", "gin", False)])
+    cr = _IdxCursor([(_IDX, "fake_model", "gin", False, False)])
 
     reg.check_indexes(cr, ["fake.model"])
 
@@ -139,3 +139,36 @@ def test_model_names_may_be_an_iterator():
 
     executed = "\n".join(cr.executed)
     assert "CREATE INDEX" in executed
+
+
+def test_unique_index_is_created_unique_and_partial():
+    reg = _make_registry(_Field("state", "unique"))
+    cr = _IdxCursor([])
+
+    reg.check_indexes(cr, ["fake.model"])
+
+    executed = "\n".join(cr.executed)
+    assert "CREATE UNIQUE INDEX" in executed
+    assert "IS NOT NULL" in executed
+
+
+def test_btree_not_null_to_unique_marks_stale():
+    reg = _make_registry(_Field("state", "unique"))
+    cr = _IdxCursor([(_IDX, "fake_model", "btree", True, False)])
+
+    reg.check_indexes(cr, ["fake.model"])
+
+    executed = "\n".join(cr.executed)
+    assert "DROP INDEX" in executed
+    assert "CREATE UNIQUE INDEX" in executed
+
+
+def test_unique_to_btree_not_null_marks_stale():
+    reg = _make_registry(_Field("state", "btree_not_null"))
+    cr = _IdxCursor([(_IDX, "fake_model", "btree", True, True)])
+
+    reg.check_indexes(cr, ["fake.model"])
+
+    executed = "\n".join(cr.executed)
+    assert "DROP INDEX" in executed
+    assert "CREATE UNIQUE INDEX" not in executed

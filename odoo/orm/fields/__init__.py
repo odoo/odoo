@@ -15,7 +15,7 @@ from .properties import (
     check_property_field_value_name,
 )
 from .reference import Many2oneReference, Reference
-from .relational import Many2many, Many2one, One2many
+from .relational import Many2many, Many2one, One2many, One2one
 from .selection import Selection
 from .temporal import Date, Datetime
 from .textual import Char, Html, Text
@@ -40,6 +40,7 @@ __all__ = [
     "Many2oneReference",
     "Monetary",
     "One2many",
+    "One2one",
     "Properties",
     "PropertiesDefinition",
     "Reference",

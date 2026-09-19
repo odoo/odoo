@@ -32,6 +32,39 @@ class TestResourceAssetMrp(TransactionCase):
         self.assertNotEqual(wc.resource_id, self.press.resource_id)
         self.assertTrue(wc.resource_id.active)
 
+    def test_detaching_leaves_a_material_resource_of_its_own(self):
+        wc = self.env["mrp.workcenter"].create(
+            {"name": "Pressing", "asset_id": self.press.id}
+        )
+        wc.asset_id = False
+        resource = wc.resource_id
+        self.assertEqual(resource.resource_type, "material")
+        self.assertFalse(resource.partner_id)
+        self.assertNotEqual(resource, self.press.resource_id)
+        self.assertTrue(self.press.resource_id.active)
+        self.assertFalse(resource._get_owners())
+
+    def test_archiving_the_work_centre_leaves_the_machine_in_service(self):
+        wc = self.env["mrp.workcenter"].create(
+            {"name": "Pressing", "asset_id": self.press.id}
+        )
+        wc.action_archive()
+        self.assertFalse(wc.active)
+        self.assertTrue(self.press.active)
+        self.assertTrue(self.press.resource_id.active)
+        wc.name = "Pressing renamed"
+        self.assertEqual(self.press.name, "Press 1")
+
+    def test_copying_a_work_centre_does_not_copy_its_machine(self):
+        wc = self.env["mrp.workcenter"].create(
+            {"name": "Pressing", "asset_id": self.press.id}
+        )
+        copy = wc.copy()
+        self.assertFalse(copy.asset_id)
+        self.assertNotEqual(copy.resource_id, wc.resource_id)
+        self.assertEqual(copy.resource_id.resource_type, "material")
+        self.assertEqual(self.press.workcenter_id, wc)
+
     def test_one_work_centre_per_machine(self):
         self.env["mrp.workcenter"].create(
             {"name": "Pressing", "asset_id": self.press.id}

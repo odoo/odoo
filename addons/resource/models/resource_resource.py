@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
@@ -549,6 +549,32 @@ class ResourceResource(models.Model):
     def _onchange_company_id(self):
         if self.company_id:
             self.calendar_id = self.company_id.resource_calendar_id.id
+
+    @api.model
+    @tools.ormcache(cache="stable")
+    def _get_owner_model_names(self) -> tuple[str, ...]:
+        return tuple(
+            name
+            for name, model in self.env.registry.items()
+            if not model._abstract
+            and getattr(model, "_resource_owns", False)
+            and "resource_id" in model._fields
+        )
+
+    def _get_owners(self) -> dict[int, models.BaseModel]:
+        """The record each resource is, by resource id: the one `mixin.resource`
+        owner whose `resource_id` names it. A resource nobody is has no entry."""
+        owners: dict[int, models.BaseModel] = {}
+        for model_name in self._get_owner_model_names():
+            records = (
+                self.env[model_name]
+                .sudo()
+                .with_context(active_test=False)
+                .search([("resource_id", "in", self.ids)])  # noqa: E8507  one query per owner model, not per resource
+            )
+            for record in records:
+                owners.setdefault(record.resource_id.id, record)
+        return owners
 
     def _on_custody_changed(self, role, changes, planned=False):
         pass

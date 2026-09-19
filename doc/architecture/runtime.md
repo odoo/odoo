@@ -325,6 +325,20 @@ under a second list would get a fresh virtual id there and come back
 duplicated on the next round-trip. `odoo/orm/tests/test_new_record_sibling_one2many.py`
 pins both halves.
 
+**A one-to-one is a one2many whose inverse the database holds unique.**
+`fields.One2one(comodel, inverse_name)` (`fields/relational/one2one.py`) reads and
+caches exactly as a one2many does, so every flush, scope and tree rule above
+applies to it unchanged; what it adds is a contract on the *inverse*: the
+many2one must declare `index="unique"` (a partial unique btree, `WHERE col IS NOT
+NULL`, kept stale-checked by `Registry.check_indexes`), so the cardinality is a
+fact of the schema and not of the reader. Writing a record points its inverse
+here; the record that held the seat is released when its inverse is optional and
+refused when it is required, because a one-to-one moves nothing silently. It
+replaced three hand-rolled shapes with the same intent — a one2many plus a stored
+computed many2one, a one2many read as a scalar, a searched compute — on
+`resource.resource.asset_id`, `resource.resource.employee_id` and
+`resource.asset.workcenter_id`.
+
 **An x2many cache slot belongs to the access scope that filled it.** The field
 cache keys a context-dependent field's slot by the values `Field.depends_context`
 names (`lang`, `active_test`, `company`, `uid`); every x2many adds `access`

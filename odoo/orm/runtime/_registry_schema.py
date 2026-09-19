@@ -21,6 +21,8 @@ if typing.TYPE_CHECKING:
     from odoo.orm._typing import ModelLike
 
 
+INDEX_KINDS = ("btree", "btree_not_null", "unique", "trigram", True, False, None)
+
 _logger = logging.getLogger("odoo.registry")
 _schema = logging.getLogger("odoo.schema")
 _debug = DebugLog(__name__)
@@ -157,7 +159,9 @@ class _RegistrySchemaMixin(_RegistryStubs):
             expression = f"{column_expression}"
             method = "btree"
             where = (
-                f"{column_expression} IS NOT NULL" if index == "btree_not_null" else ""
+                f"{column_expression} IS NOT NULL"
+                if index in ("btree_not_null", "unique")
+                else ""
             )
         return expression, method, where
 
@@ -170,6 +174,7 @@ class _RegistrySchemaMixin(_RegistryStubs):
         method: str,
         where: str,
         stale: bool,
+        unique: bool = False,
     ) -> None:
         try:
             with cr.savepoint(flush=False):
@@ -187,6 +192,7 @@ class _RegistrySchemaMixin(_RegistryStubs):
                     [expression],
                     method,
                     where,
+                    unique=unique,
                     check_exists=False,
                 )
         except psycopg.DatabaseError:
@@ -208,7 +214,8 @@ class _RegistrySchemaMixin(_RegistryStubs):
         cr.execute(
             """
             SELECT idx.relname, tbl.relname, am.amname,
-                   ix.indpred IS NOT NULL AS has_predicate
+                   ix.indpred IS NOT NULL AS has_predicate,
+                   ix.indisunique
               FROM pg_index ix
               JOIN pg_class idx ON idx.oid = ix.indexrelid
               JOIN pg_class tbl ON tbl.oid = ix.indrelid
@@ -219,8 +226,8 @@ class _RegistrySchemaMixin(_RegistryStubs):
             [[row[0] for row in expected]],
         )
         existing = {
-            indexname: (tablename, method, has_predicate)
-            for indexname, tablename, method, has_predicate in cr.fetchall()
+            indexname: (tablename, method, has_predicate, is_unique)
+            for indexname, tablename, method, has_predicate, is_unique in cr.fetchall()
         }
         _debug.pipeline(
             "registry.check_indexes",
@@ -231,10 +238,10 @@ class _RegistrySchemaMixin(_RegistryStubs):
 
         for indexname, tablename, field in expected:
             index = field.index
-            if index not in ("btree", "btree_not_null", "trigram", True, False, None):
+            if index not in INDEX_KINDS:
                 raise ValueError(
                     f"Invalid index value {index!r} on {field}; allowed values: "
-                    f"'btree', 'btree_not_null', 'trigram', True, False, None"
+                    f"'btree', 'btree_not_null', 'unique', 'trigram', True, False, None"
                 )
 
             if index and field.translate and index != "trigram":
@@ -249,11 +256,14 @@ class _RegistrySchemaMixin(_RegistryStubs):
             )
             if indexname in existing:
                 expected_method = "gin" if index == "trigram" else "btree"
-                expected_predicate = index == "btree_not_null"
-                _table, actual_method, actual_predicate = existing[indexname]
+                expected_predicate = index in ("btree_not_null", "unique")
+                _table, actual_method, actual_predicate, actual_unique = existing[
+                    indexname
+                ]
                 stale = (
                     actual_method != expected_method
                     or bool(actual_predicate) != expected_predicate
+                    or bool(actual_unique) != (index == "unique")
                 )
                 will_index = will_index and stale
             else:
@@ -262,12 +272,19 @@ class _RegistrySchemaMixin(_RegistryStubs):
             if will_index:
                 expression, method, where = self._get_index_expression(field, index)
                 self._apply_index(
-                    cr, indexname, tablename, expression, method, where, stale
+                    cr,
+                    indexname,
+                    tablename,
+                    expression,
+                    method,
+                    where,
+                    stale,
+                    unique=index == "unique",
                 )
 
             elif (
                 not index
-                and tablename == existing.get(indexname, (None, None, None))[0]
+                and tablename == existing.get(indexname, (None, None, None, None))[0]
             ):
                 _schema.info(
                     "Keep unexpected index %s on table %s", indexname, tablename
