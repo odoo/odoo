@@ -5,15 +5,15 @@ class StockMove(models.Model):
     _inherit = "stock.move"
 
     def _get_landed_cost(self, at_date=None):
-        domain = [('move_id', 'in', self.ids), ('cost_id.state', '=', 'done')]
+        domain = [('move_id', 'in', self.ids), ('cost_id.state', 'in', ('done', 'in_progress'))]
         if at_date:
             domain.append(('cost_id.date', '<=', at_date))
         landed_cost_group = self.env['stock.valuation.adjustment.lines']._read_group(domain, ['move_id'], ['id:recordset'])
         return dict(landed_cost_group)
 
-    def _get_value_from_extra(self, quantity, at_date=None):
+    def _get_value_from_extra(self, quantity, at_date=None, from_std_price=False):
         self.ensure_one()
-        accounting_data = super()._get_value_from_extra(quantity, at_date=at_date)
+        accounting_data = super()._get_value_from_extra(quantity, at_date=at_date, from_std_price=from_std_price)
         # Add landed costs value
         lcs = self._get_landed_cost(at_date=at_date)
         lcs = lcs.get(self)
@@ -21,6 +21,10 @@ class StockMove(models.Model):
             return accounting_data
         lcs_desc = []
         for lc in lcs:
+            # On FIFO/AVCO a validated landed cost is already in the standard price, so skip it
+            # when the value comes from there; the one still in progress is not yet, so add it.
+            if from_std_price and self.product_id.cost_method in ('fifo', 'average') and lc.cost_id.state == 'done':
+                continue
             accounting_data["value"] += lc.additional_landed_cost
             landed_cost = lc.cost_id
             value = lc.additional_landed_cost
