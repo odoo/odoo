@@ -1,5 +1,6 @@
 {
     "name": "Product Availability",
+    "version": "1.1",
     "category": "Website/Website",
     "summary": "Manage product inventory & availability",
     "description": """
