@@ -1,9 +1,10 @@
 import { AccountFileUploader } from "@account/components/account_file_uploader/account_file_uploader";
-import { Component, proxy, t, useProps } from "@odoo/owl";
+import { Component, proxy, t, usePlugin, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { DocumentFileUploader } from "../document_file_uploader/document_file_uploader";
+import { LazySessionPlugin } from "@web/webclient/lazy_session_plugin";
 
 export class BillGuide extends Component {
     static template = "account.BillGuide";
@@ -18,7 +19,7 @@ export class BillGuide extends Component {
     });
 
     setup() {
-        this.lazySession = useService("lazy_session");
+        this.lazySession = usePlugin(LazySessionPlugin);
         this.action = useService("action");
         this.ui = useService("ui");
 
