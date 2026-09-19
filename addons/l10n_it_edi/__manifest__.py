@@ -1,6 +1,6 @@
 {
     "name": "Italy - E-invoicing",
-    "version": "0.4",
+    "version": "0.5",
     "category": "Accounting/Localizations/EDI",
     "description": """
 E-invoice implementation

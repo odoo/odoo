@@ -45,7 +45,6 @@ class ResCompany(models.Model):
         related="partner_id.l10n_it_codice_fiscale",
         string="Codice Fiscale",
         size=16,
-        store=True,
         readonly=False,
         help="Fiscal code of your company",
     )
