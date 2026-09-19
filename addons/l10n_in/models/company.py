@@ -28,7 +28,6 @@ class ResCompany(models.Model):
     l10n_in_pan_entity_id = fields.Many2one(
         related="partner_id.l10n_in_pan_entity_id",
         string="PAN",
-        store=True,
         readonly=False,
         help="PAN enables the department to link all transactions of the person with the department.\n"
         "These transactions include taxpayments, TDS/TCS credits, returns of income/wealth/gift/FBT,"
