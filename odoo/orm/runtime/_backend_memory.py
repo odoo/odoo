@@ -1128,6 +1128,18 @@ class InMemoryBackend:
                         value = field.convert_to_cache(value, records)
                     field_caches[field].setdefault(record_id, value)
 
+    def search_raw(
+        self,
+        model: BaseModel,
+        domain: Domain,
+        offset: int,
+        limit: int | None,
+        order: str | None,
+        *,
+        check_access: bool = True,
+    ) -> Query | None:
+        return None
+
     def search(
         self,
         model: BaseModel,
