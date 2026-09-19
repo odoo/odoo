@@ -168,14 +168,14 @@ registerWebsitePreviewTour(
 const setSlideUrl = (urlText) => [
     {
         content: "Enter the URL to be linked with the slide",
-        trigger: "div[data-action-id='setSlideAnchorUrl'] input[title='Your URL']",
+        trigger: "div[data-action-id='setElementAnchorUrl'] input",
         run: `edit ${urlText} && press Tab`,
     },
 ];
 
 const checkSlideNotClickable = () => ({
-    content: "Check that the 'clickable-slide' class and anchor tag are removed",
-    trigger: ":iframe .carousel-item.active:not(.clickable-slide):not(:has(a.slide-link))",
+    content: "Check that the clickable anchor tag is removed",
+    trigger: ":iframe .carousel-item.active:not(:has(> a.stretched-link:not(:visible)))",
 });
 
 registerWebsitePreviewTour(
@@ -188,17 +188,17 @@ registerWebsitePreviewTour(
         ...clickOnSnippet(".carousel .carousel-item.active"),
 
         // Make the Slide clickable
-        changeOption("Slide (1/3)", "[data-action-id='makeSlideClickable'] input"),
+        changeOption("Slide (1/3)", "[data-action-id='setElementClickable'] input"),
 
         {
-            content: "Check that the 'clickable-slide' class is added to the carousel item",
-            trigger: ":iframe .carousel-item.active.clickable-slide",
+            content: "Check that the clickable anchor tag is added to the carousel item",
+            trigger: ":iframe .carousel-item.active > a.stretched-link:not(:visible)",
         },
         ...setSlideUrl("/contactus-thank-you"),
         {
             content: "Check that the anchor tag is added to the carousel item",
             trigger:
-                ":iframe .carousel-item.active.clickable-slide a.slide-link[href='/contactus-thank-you']:not(:visible)",
+                ":iframe .carousel-item.active > a.stretched-link:not(:visible)[href='/contactus-thank-you']",
         },
 
         // Enable the option to open the link in a new tab
@@ -211,37 +211,38 @@ registerWebsitePreviewTour(
         {
             content: "Check that the anchor tag is added to the carousel item",
             trigger:
-                ":iframe .carousel-item.active.clickable-slide a.slide-link[href='/contactus-thank-you'][target='_blank']",
+                ":iframe .carousel-item.active > a.stretched-link:not(:visible)[href='/contactus-thank-you'][target='_blank']",
         },
         ...clickOnEditAndWaitEditMode(),
         ...clickOnSnippet(".carousel .carousel-item.active"),
         {
             content: "Check that the entered URL is correctly shown in the option and remove it",
-            trigger: "div[data-action-id='setSlideAnchorUrl'] input:value(/contactus-thank-you)",
+            trigger: "div[data-action-id='setElementAnchorUrl'] input:value(/contactus-thank-you)",
             run: "edit ",
         },
         {
             content: "Press Tab in the URL input",
-            trigger: "div[data-action-id='setSlideAnchorUrl'] input",
+            trigger: "div[data-action-id='setElementAnchorUrl'] input",
             run: "press Tab",
         },
         {
-            content: "Check that the anchor tag is removed",
-            trigger: ":iframe .carousel-item.active.clickable-slide:not(:has(a.slide-link))",
+            content: "Check that the anchor tag is kept without a link",
+            trigger: ":iframe .carousel-item.active > a.stretched-link:not(:visible):not([href])",
         },
         {
             content: "Check that the 'Open in New Tab' option is no longer visible",
-            trigger: "[data-label='Open in New Tab']:not(:visible)",
+            trigger:
+                ".options-container[data-container-title='Slide (1/3)']:not(:has([data-label='Open in New Tab']))",
         },
         ...setSlideUrl("/contactus-thank-you"),
 
         // Turn off the 'Make Slide Clickable' option
-        changeOption("Slide (1/3)", "[data-action-id='makeSlideClickable'] input"),
+        changeOption("Slide (1/3)", "[data-action-id='setElementClickable'] input"),
 
         checkSlideNotClickable(),
 
         // Make the slide clickable again
-        changeOption("Slide (1/3)", "[data-action-id='makeSlideClickable'] input"),
+        changeOption("Slide (1/3)", "[data-action-id='setElementClickable'] input"),
 
         ...clickOnSave(),
         checkSlideNotClickable(),
