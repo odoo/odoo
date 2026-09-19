@@ -37,7 +37,6 @@ class ApprovalDecisionLog(models.Model):
     )
     company_id = fields.Many2one(
         related="request_id.company_id",
-        store=True,
     )
     approver_id = fields.Many2one(
         comodel_name="approval.approver",

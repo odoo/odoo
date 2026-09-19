@@ -262,12 +262,10 @@ class ApprovalRequest(models.Model):
     allow_self_approval = fields.Boolean(related="category_id.allow_self_approval")
     approval_type = fields.Selection(
         related="category_id.approval_type",
-        store=True,
         help="Category for filtering (e.g., purchase, expense)",
     )
     target_model = fields.Selection(
         related="category_id.target_model",
-        store=True,
         help="Model to create when approval is granted (if any)",
     )
     approval_progress = fields.Float(

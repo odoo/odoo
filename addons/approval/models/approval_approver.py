@@ -36,8 +36,6 @@ class ApprovalApprover(models.Model):
     company_id = fields.Many2one(
         related="request_id.company_id",
         string="Company",
-        store=True,
-        index=True,
         readonly=True,
     )
     user_id = fields.Many2one(

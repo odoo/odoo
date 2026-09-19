@@ -57,8 +57,6 @@ class ApprovalBinding(models.Model):
     model_name = fields.Char(
         related="model_id.model",
         string="Model Name",
-        store=True,
-        index=True,
     )
     method = fields.Char(
         help="Method to gate. It is wrapped at registry load, so the gate "
