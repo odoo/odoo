@@ -101,11 +101,12 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
                 "hourly_cost": 200,
             }
         )
+        # hr_employee_partner_company_uniq: one employee per partner and company
         foreign_employee_2 = self.env["hr.employee"].create(
             {
                 "name": "test",
                 "company_id": foreign_company.id,
-                "partner_id": foreign_partner.id,
+                "partner_id": foreign_partner.copy().id,
                 "hourly_cost": 500,
             }
         )
