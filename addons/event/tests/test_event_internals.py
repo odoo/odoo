@@ -4,12 +4,23 @@
 from datetime import date, datetime, timedelta
 from freezegun import freeze_time
 
+import logging
+import unittest
+
 from odoo import Command
 from odoo.addons.event.tests.common import EventCase
 from odoo import exceptions
 from odoo.fields import Datetime as FieldsDatetime
 from odoo.tests import Form, users, tagged
 from odoo.tools import mute_logger
+
+_logger = logging.getLogger(__name__)
+
+try:
+    import vobject
+except ImportError:
+    _logger.warning("`vobject` Python module not found, iCal file generation disabled. Consider installing this module if you want to generate iCal files")
+    vobject = None
 
 
 class TestEventInternalsCommon(EventCase):
@@ -464,6 +475,21 @@ class TestEventData(TestEventInternalsCommon):
         self.assertEqual(default_event.date_begin, self.reference_now)
         self.assertEqual(default_event.date_end, self.reference_now + timedelta(days=1))
         self.assertEqual(default_event.date_tz, self.user_eventmanager.tz)
+
+    def test_event_ics_file_timezone(self):
+        """The .ics file should reference the event timezone by its IANA name,
+        in the TZID parameters as well as in the VTIMEZONE component, and not
+        by its abbreviation (e.g. "EST" for "America/Detroit")."""
+        if not vobject:
+            raise unittest.SkipTest("Skip test when `vobject` Python module is not found.")
+
+        event = self.event_0.with_user(self.env.user)
+        event.write({'date_tz': 'America/Detroit'})
+        ics = event._get_ics_file()[event.id].decode('utf-8')
+        self.assertIn('DTSTART;TZID=America/Detroit:', ics)
+        self.assertIn('DTEND;TZID=America/Detroit:', ics)
+        self.assertIn('TZID:America/Detroit', ics)
+        self.assertNotIn('TZID:EST', ics)
 
     @users('user_eventmanager')
     def test_event_mail_default_config(self):
