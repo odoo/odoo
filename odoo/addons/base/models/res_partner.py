@@ -1136,6 +1136,36 @@ class ResPartner(models.Model):
         for vals in missing:
             vals["lang"] = lang_by_parent.get(vals.get("parent_id")) or default_lang
 
+    @api.model
+    def _address_fields(self) -> list[str]:
+        return list(ADDRESS_FIELDS)
+
+    def _convert_fields_to_values(self, field_names: list[str]) -> dict[str, Any]:
+        if any(self._fields[fname].type == "one2many" for fname in field_names):
+            msg = "One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`"
+            raise ValueError(msg)
+        return self._convert_to_write({fname: self[fname] for fname in field_names})
+
+    @api.model
+    def _commercial_fields(self) -> list[str]:
+        return self._synced_commercial_fields() + [
+            "company_registry",
+            "industry_ids",
+            "primary_industry_id",
+        ]
+
+    @api.model
+    def _company_dependent_commercial_fields(self) -> list[str]:
+        return [
+            fname
+            for fname in self._commercial_fields()
+            if self._fields[fname].company_dependent
+        ]
+
+    @api.model
+    def _formatting_address_fields(self) -> list[str]:
+        return self._address_fields()
+
     def _get_application_statistics(self) -> defaultdict[int, list]:
         return defaultdict(list)
 
@@ -1156,6 +1186,14 @@ class ResPartner(models.Model):
 
     def _get_company_registry_labels(self) -> dict[str, str]:
         return {}
+
+    @api.model
+    def _get_contact_children(
+        self, parents: ResPartner, *, new: bool = False
+    ) -> ResPartner:
+        if not new:
+            parents = parents.with_context(active_test=False)
+        return parents.child_ids.filtered(lambda c: not c.is_company)
 
     def _get_complete_name(self, type_description: dict[str, str]) -> str:
         self.check_singleton()
@@ -1431,115 +1469,6 @@ class ResPartner(models.Model):
     def _phone_get_number(self, *types: str, fname=False):
         return self._phone_get_numbers(fname=fname)._primary(*types)
 
-    def _search_identifier_candidates(
-        self, fname: str, values: set[str]
-    ) -> dict[str, list[ResPartner]]:
-        by_value: dict[str, list[ResPartner]] = defaultdict(list)
-        if not values:
-            return by_value
-        candidates = (
-            self.with_context(active_test=False)
-            .sudo()
-            .search_fetch(
-                [(fname, "in", list(values))],
-                [fname, "parent_id", "company_id", "country_id"],
-            )
-        )
-        for candidate in candidates.with_env(self.env)._filtered_access("read"):
-            by_value[candidate[fname]].append(candidate)
-        return by_value
-
-    def _update_avatar(self, avatar_field: str, image_field: str) -> None:
-        partners_with_internal_user = self.filtered(
-            lambda partner: (
-                partner.user_ids - partner.user_ids.filtered("share")
-                or partner.type == "contact"
-            )
-        )
-        super(ResPartner, partners_with_internal_user)._update_avatar(
-            avatar_field, image_field
-        )
-        partners_without_image = (self - partners_with_internal_user).filtered(
-            lambda p: not p[image_field]
-        )
-        for partner in partners_without_image:
-            partner[avatar_field] = base64.b64encode(partner._get_avatar_placeholder())
-
-        for partner in self - partners_with_internal_user - partners_without_image:
-            partner[avatar_field] = partner[image_field]
-        _debug.perf.count(
-            "avatar_updated",
-            field=avatar_field,
-            partners=len(self),
-            internal=len(partners_with_internal_user),
-            placeholder=len(partners_without_image),
-        )
-
-    def _update_identifier(self, code: str, value) -> None:
-        self.check_singleton()
-        identifier_type = self.env["res.partner.identifier.type"]._get_type_by_code(
-            code
-        )
-        if not identifier_type:
-            _debug.logic("identifier_type_unknown", partner=self.id, type=code)
-            raise UserError(
-                self.env._("There is no identifier type with code %(code)s.", code=code)
-            )
-        existing = self.identifier_ids.filtered(
-            lambda i, identifier_type=identifier_type: i.type_id == identifier_type
-        )
-        _debug.lifecycle(
-            "identifier_updated",
-            partner=self.id,
-            type=code,
-            existing=len(existing),
-            by="unlink" if not value else "write" if existing else "create",
-        )
-        if not value:
-            existing.unlink()
-            return
-        if existing:
-            existing[:1].value = value
-            existing[1:].unlink()
-        else:
-            self.env["res.partner.identifier"].create(
-                {
-                    "partner_id": self.id,
-                    "type_id": identifier_type.id,
-                    "value": value,
-                }
-            )
-
-    def _update_lang_from_parent(self) -> None:
-        if not self:
-            return
-        default_lang = self._get_default_lang()
-        _debug.logic(
-            "lang_from_parent",
-            partners=len(self),
-            with_parent=len(self.filtered("parent_id")),
-            default_lang=default_lang,
-        )
-        for partner in self:
-            if partner.parent_id:
-                partner.lang = partner.parent_id.lang or default_lang
-            elif not partner.lang:
-                partner.lang = default_lang
-
-    def _convert_fields_to_values(self, field_names: list[str]) -> dict[str, Any]:
-        if any(self._fields[fname].type == "one2many" for fname in field_names):
-            msg = "One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`"
-            raise ValueError(msg)
-        return self._convert_to_write({fname: self[fname] for fname in field_names})
-
-    @api.model
-    def _address_fields(self) -> list[str]:
-        return list(ADDRESS_FIELDS)
-
-    @api.model
-    def _formatting_address_fields(self) -> list[str]:
-        return self._address_fields()
-
     def _prepare_phone_replacement_vals(self, number):
         """Replace this contact's selected number, preserving other linked numbers."""
         current = self._phone_get_number()
@@ -1640,30 +1569,27 @@ class ResPartner(models.Model):
             address_format = "%(company_name)s\n" + address_format
         return address_format, args
 
-    def _update_address(self, vals: dict[str, Any]) -> None:
-        addr_vals = {key: vals[key] for key in self._address_fields() if key in vals}
-        if addr_vals:
-            super().write(addr_vals)
-
-    @api.model
-    def _commercial_fields(self) -> list[str]:
-        return self._synced_commercial_fields() + [
-            "company_registry",
-            "industry_ids",
-            "primary_industry_id",
-        ]
+    def _search_identifier_candidates(
+        self, fname: str, values: set[str]
+    ) -> dict[str, list[ResPartner]]:
+        by_value: dict[str, list[ResPartner]] = defaultdict(list)
+        if not values:
+            return by_value
+        candidates = (
+            self.with_context(active_test=False)
+            .sudo()
+            .search_fetch(
+                [(fname, "in", list(values))],
+                [fname, "parent_id", "company_id", "country_id"],
+            )
+        )
+        for candidate in candidates.with_env(self.env)._filtered_access("read"):
+            by_value[candidate[fname]].append(candidate)
+        return by_value
 
     @api.model
     def _synced_commercial_fields(self) -> list[str]:
         return ["vat"]
-
-    @api.model
-    def _company_dependent_commercial_fields(self) -> list[str]:
-        return [
-            fname
-            for fname in self._commercial_fields()
-            if self._fields[fname].company_dependent
-        ]
 
     def _sync_commercial_fields_from_company(self) -> None:
         commercial_partner = self.commercial_partner_id
@@ -1826,107 +1752,6 @@ class ResPartner(models.Model):
                 contacts._update_address(values)
 
     @api.model
-    def _get_contact_children(
-        self, parents: ResPartner, *, new: bool = False
-    ) -> ResPartner:
-        # a record just created holds its children in cache, all active; an
-        # existing one may have archived children, and the one2many read
-        # prefetches for the whole batch where a search would run per record
-        if not new:
-            parents = parents.with_context(active_test=False)
-        return parents.child_ids.filtered(lambda c: not c.is_company)
-
-    def _fields_sync(self, values: dict[str, Any], *, new: bool = False) -> None:
-        # parent-side syncs are per record; the children sync takes the batch
-        for partner in self:
-            _debug.logic(
-                "fields_sync",
-                partner=partner.id,
-                parent=partner.parent_id.id,
-                type=partner.type,
-                fields=list(values),
-            )
-            partner._sync_from_parent(values)
-            partner._sync_to_parent(values)
-        self._sync_children(values, new=new)
-
-    def _update_parent_address(self) -> None:
-        parent = self.parent_id
-        address_fields = self._address_fields()
-        if (
-            (parent.is_company or not parent.parent_id)
-            and any(self[f] for f in address_fields)
-            and not any(parent[f] for f in address_fields)
-            and len(parent.child_ids) == 1
-        ):
-            addr_vals = self._convert_fields_to_values(address_fields)
-            _debug.logic("parent_address_filled", partner=self.id, parent=parent.id)
-            parent._update_address(addr_vals)
-
-    def _clean_website(self, website: str) -> str:
-        url = urlsplit(website)
-        if not url.scheme:
-            if not url.netloc:
-                url = url._replace(netloc=url.path, path="")
-            website = urlunsplit(url._replace(scheme="http"))
-        return website
-
-    def _check_archive_allowed(self) -> None:
-        users = self.env["res.users"].sudo().search([("partner_id", "in", self.ids)])
-        if users:
-            _debug.logic("archive_refused", partners=self.ids, users=len(users))
-            raise self._prepare_linked_user_error(users, "archive")
-
-    def _rename_bank_holders(self, name: str) -> None:
-        banks_to_sync = self.with_context(active_test=False).bank_ids.filtered(
-            lambda bank: bank.acc_holder_name == bank.partner_id.name
-        )
-        _debug.logic(
-            "bank_holders_renamed", partners=self.ids, banks=len(banks_to_sync)
-        )
-        if banks_to_sync:
-            banks_to_sync.acc_holder_name = name
-
-    def _check_company_compatible_with_users(self, company_id: int) -> None:
-        company = self.env["res.company"].browse(company_id)
-        for partner in self.filtered("user_ids"):
-            companies = {user.company_id for user in partner.user_ids}
-            if len(companies) > 1 or company not in companies:
-                _debug.logic(
-                    "company_change_refused",
-                    partner=partner.id,
-                    company=company.id,
-                    user_companies=len(companies),
-                )
-                raise UserError(
-                    self.env._(
-                        "The selected company is not compatible with the companies of the related user(s)"
-                    )
-                )
-
-    def _propagate_company_to_children(self, company_id: int | Literal[False]) -> None:
-        children = self.with_context(active_test=False).search(
-            [("parent_id", "in", self.ids)]
-        )
-        _debug.pipeline(
-            "company_propagated_to_children",
-            partners=self.ids,
-            company=company_id,
-            children=len(children),
-        )
-        if children:
-            children.write({"company_id": company_id})
-
-    def _check_backing_users_writable(self) -> None:
-        backing_ids = (
-            self.sudo()
-            .user_ids.filtered(lambda u: u._is_internal() and u.id != self.env.uid)
-            .ids
-        )
-        if backing_ids:
-            self.env["res.users"].browse(backing_ids).check_access("write")
-
-    @api.model
     def _synced_field_names(self) -> set[str]:
         return (
             {"parent_id", "type"}
@@ -1957,6 +1782,146 @@ class ResPartner(models.Model):
             synced=sum(len(partners) for partners in groups.values()),
             groups=len(groups),
         )
+
+    def _update_avatar(self, avatar_field: str, image_field: str) -> None:
+        partners_with_internal_user = self.filtered(
+            lambda partner: (
+                partner.user_ids - partner.user_ids.filtered("share")
+                or partner.type == "contact"
+            )
+        )
+        super(ResPartner, partners_with_internal_user)._update_avatar(
+            avatar_field, image_field
+        )
+        partners_without_image = (self - partners_with_internal_user).filtered(
+            lambda p: not p[image_field]
+        )
+        for partner in partners_without_image:
+            partner[avatar_field] = base64.b64encode(partner._get_avatar_placeholder())
+
+        for partner in self - partners_with_internal_user - partners_without_image:
+            partner[avatar_field] = partner[image_field]
+        _debug.perf.count(
+            "avatar_updated",
+            field=avatar_field,
+            partners=len(self),
+            internal=len(partners_with_internal_user),
+            placeholder=len(partners_without_image),
+        )
+
+    def _update_identifier(self, code: str, value) -> None:
+        self.check_singleton()
+        identifier_type = self.env["res.partner.identifier.type"]._get_type_by_code(
+            code
+        )
+        if not identifier_type:
+            _debug.logic("identifier_type_unknown", partner=self.id, type=code)
+            raise UserError(
+                self.env._("There is no identifier type with code %(code)s.", code=code)
+            )
+        existing = self.identifier_ids.filtered(
+            lambda i, identifier_type=identifier_type: i.type_id == identifier_type
+        )
+        _debug.lifecycle(
+            "identifier_updated",
+            partner=self.id,
+            type=code,
+            existing=len(existing),
+            by="unlink" if not value else "write" if existing else "create",
+        )
+        if not value:
+            existing.unlink()
+            return
+        if existing:
+            existing[:1].value = value
+            existing[1:].unlink()
+        else:
+            self.env["res.partner.identifier"].create(
+                {
+                    "partner_id": self.id,
+                    "type_id": identifier_type.id,
+                    "value": value,
+                }
+            )
+
+    def _update_lang_from_parent(self) -> None:
+        if not self:
+            return
+        default_lang = self._get_default_lang()
+        _debug.logic(
+            "lang_from_parent",
+            partners=len(self),
+            with_parent=len(self.filtered("parent_id")),
+            default_lang=default_lang,
+        )
+        for partner in self:
+            if partner.parent_id:
+                partner.lang = partner.parent_id.lang or default_lang
+            elif not partner.lang:
+                partner.lang = default_lang
+
+    def _update_address(self, vals: dict[str, Any]) -> None:
+        addr_vals = {key: vals[key] for key in self._address_fields() if key in vals}
+        if addr_vals:
+            super().write(addr_vals)
+
+    def _update_parent_address(self) -> None:
+        parent = self.parent_id
+        address_fields = self._address_fields()
+        if (
+            (parent.is_company or not parent.parent_id)
+            and any(self[f] for f in address_fields)
+            and not any(parent[f] for f in address_fields)
+            and len(parent.child_ids) == 1
+        ):
+            addr_vals = self._convert_fields_to_values(address_fields)
+            _debug.logic("parent_address_filled", partner=self.id, parent=parent.id)
+            parent._update_address(addr_vals)
+
+    def _fields_sync(self, values: dict[str, Any], *, new: bool = False) -> None:
+        # parent-side syncs are per record; the children sync takes the batch
+        for partner in self:
+            _debug.logic(
+                "fields_sync",
+                partner=partner.id,
+                parent=partner.parent_id.id,
+                type=partner.type,
+                fields=list(values),
+            )
+            partner._sync_from_parent(values)
+            partner._sync_to_parent(values)
+        self._sync_children(values, new=new)
+
+    def _clean_website(self, website: str) -> str:
+        url = urlsplit(website)
+        if not url.scheme:
+            if not url.netloc:
+                url = url._replace(netloc=url.path, path="")
+            website = urlunsplit(url._replace(scheme="http"))
+        return website
+
+    def _rename_bank_holders(self, name: str) -> None:
+        banks_to_sync = self.with_context(active_test=False).bank_ids.filtered(
+            lambda bank: bank.acc_holder_name == bank.partner_id.name
+        )
+        _debug.logic(
+            "bank_holders_renamed", partners=self.ids, banks=len(banks_to_sync)
+        )
+        if banks_to_sync:
+            banks_to_sync.acc_holder_name = name
+
+    def _propagate_company_to_children(self, company_id: int | Literal[False]) -> None:
+        children = self.with_context(active_test=False).search(
+            [("parent_id", "in", self.ids)]
+        )
+        _debug.pipeline(
+            "company_propagated_to_children",
+            partners=self.ids,
+            company=company_id,
+            children=len(children),
+        )
+        if children:
+            children.write({"company_id": company_id})
 
     def _load_records_create(self, vals_list: list[ValuesType]) -> Self:
         partners = super(
@@ -2250,6 +2215,38 @@ class ResPartner(models.Model):
                 ]
             )
         )
+
+    def _check_archive_allowed(self) -> None:
+        users = self.env["res.users"].sudo().search([("partner_id", "in", self.ids)])
+        if users:
+            _debug.logic("archive_refused", partners=self.ids, users=len(users))
+            raise self._prepare_linked_user_error(users, "archive")
+
+    def _check_company_compatible_with_users(self, company_id: int) -> None:
+        company = self.env["res.company"].browse(company_id)
+        for partner in self.filtered("user_ids"):
+            companies = {user.company_id for user in partner.user_ids}
+            if len(companies) > 1 or company not in companies:
+                _debug.logic(
+                    "company_change_refused",
+                    partner=partner.id,
+                    company=company.id,
+                    user_companies=len(companies),
+                )
+                raise UserError(
+                    self.env._(
+                        "The selected company is not compatible with the companies of the related user(s)"
+                    )
+                )
+
+    def _check_backing_users_writable(self) -> None:
+        backing_ids = (
+            self.sudo()
+            .user_ids.filtered(lambda u: u._is_internal() and u.id != self.env.uid)
+            .ids
+        )
+        if backing_ids:
+            self.env["res.users"].browse(backing_ids).check_access("write")
 
     @api.model
     def _check_import_consistency(self, vals_list: list[ValuesType]) -> None:
