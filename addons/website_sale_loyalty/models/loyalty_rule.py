@@ -8,9 +8,8 @@ _debug = DebugLog(__name__)
 class LoyaltyRule(models.Model):
     _inherit = "loyalty.rule"
 
-    website_id = fields.Many2one(  # noqa: E8528  fires _check_code
+    website_id = fields.Many2one(
         related="program_id.website_id",
-        store=True,
     )
 
     @api.constrains("code", "website_id", "active")

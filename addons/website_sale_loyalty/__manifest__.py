@@ -1,6 +1,6 @@
 {
     "name": "Coupons, Promotions, Gift Card and Loyalty for eCommerce",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Website/Website",
     "summary": "Use coupon, promotion, gift cards and loyalty programs in your eCommerce store",
     "description": """
