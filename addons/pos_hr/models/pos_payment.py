@@ -8,6 +8,4 @@ class PosPayment(models.Model):
         comodel_name="hr.employee",
         related="pos_order_id.employee_id",
         string="Cashier",
-        store=True,
-        index=True,
     )

@@ -1,5 +1,6 @@
 {
     "name": "POS - HR",
+    "version": "1.1",
     "category": "Sales/Point of Sale",
     "summary": "Link module between Point of Sale and HR",
     "description": """
