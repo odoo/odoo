@@ -285,3 +285,36 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         })
         wizard.action_register_departure()
         self.assertEqual(len(holiday.timesheet_ids), 0, 'Timesheets related to the archived employee should have been deleted')
+
+    def test_holiday_with_calendar_timezone(self):
+        """
+        Tests that the timesheet for public holidays use the calendar's timezone
+        """
+        brussels_calendar = self.env['resource.calendar'].create({
+            'name': 'Brussels tz calendar',
+            'tz': 'Europe/Brussels',
+            'hours_per_day': 8.0,
+            'attendance_ids': [
+                (0, 0, {
+                    'name': str(day),
+                    'dayofweek': str(day),
+                    'hour_from': 8.0,
+                    'hour_to': 16.0,
+                    'day_period': 'morning',
+                }) for day in range(5)
+            ]
+        })
+
+        self.empl_employee.resource_calendar_id = brussels_calendar.id
+        christmas = self.env['resource.calendar.leaves'].create({
+            'name': 'Christmas',
+            'calendar_id': brussels_calendar.id,
+            'date_from': datetime(2026, 12, 24, 7, 0, 0),
+            'date_to': datetime(2026, 12, 24, 11, 0, 0),
+        })
+        timesheet = self.env['account.analytic.line'].search([
+            ('global_leave_id', '=', christmas.id),
+            ('employee_id', '=', self.empl_employee.id),
+        ])
+
+        self.assertEqual(timesheet.unit_amount, 4.0)
