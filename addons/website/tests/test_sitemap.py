@@ -1,8 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import TransactionCase, tagged
 import functools
+from datetime import datetime
+from types import SimpleNamespace
 from unittest.mock import patch
+
+from lxml import html
+
+from odoo.tests import HttpCase, TransactionCase, tagged
+
+from odoo.addons.website.models.ir_http import sitemap_group
+from odoo.addons.website.tests.common import all_sitemap_urls
 
 
 @tagged('-at_install', 'post_install')
@@ -39,7 +47,7 @@ class TestWebsiteSitemap(TransactionCase):
 
         def get_sitemap_lastmod():
             pages = website._enumerate_pages()
-            return next(p['lastmod'] for p in pages if p['loc'] == page_url)
+            return next(p['lastmod'] for p in pages if p['loc'] == page_url).date()
 
         old_date = "2002-05-06 12:00:00"
 
@@ -64,6 +72,7 @@ class TestWebsiteSitemap(TransactionCase):
 
         class FakeRule:
             endpoint = FakeEndpoint()
+            _converters = {}
 
         class FakeRouter:
             def iter_rules(self):
@@ -105,6 +114,7 @@ class TestWebsiteSitemap(TransactionCase):
 
         class RuleBound:
             endpoint = EndpointBound()
+            _converters = {}
 
         # Second rule uses a partial wrapping the same bound method
         class EndpointPartial:
@@ -112,6 +122,7 @@ class TestWebsiteSitemap(TransactionCase):
 
         class RulePartial:
             endpoint = EndpointPartial()
+            _converters = {}
 
         class FakeRouter:
             def iter_rules(self):
@@ -123,7 +134,101 @@ class TestWebsiteSitemap(TransactionCase):
         # The sitemap callable should have been executed only once
         self.assertEqual(call_count['n'], 1)
         # And the returned loc should be present (normalized already)
-        self.assertIn({'loc': '/once'}, locs)
+        self.assertIn('/once', [loc['loc'] for loc in locs])
+
+    def test_sitemap_group_tagging(self):
+        website = self.env.ref('base.default_website')
+        page = self.env['website.page'].create({
+            'name': 'Grouped Page',
+            'website_id': website.id,
+            'url': '/grp-test',
+            'type': 'qweb',
+            'arch': '<t t-call="website.layout"/>',
+            'is_published': True,
+        })
+        locs = list(website.with_user(website.user_id)._enumerate_pages())
+        # Every entry must be tagged with a group so the controller can split.
+        self.assertTrue(all('group' in loc for loc in locs))
+        # CMS pages are website-core content, bucketed under 'pages'.
+        page_loc = next(loc for loc in locs if loc['loc'] == page.url)
+        self.assertEqual(page_loc['group'], 'pages')
+
+    def test_sitemap_group_explicit_name(self):
+        # @sitemap_group must win over the module-derived default.
+        website = self.env['website'].search([], limit=1)
+
+        @sitemap_group('my-section')
+        def fake_sitemap_callable(env, rule, qs):
+            yield {'loc': '/named'}
+
+        class FakeEndpoint:
+            routing = {'sitemap': fake_sitemap_callable}
+
+        class FakeRule:
+            endpoint = FakeEndpoint()
+            _converters = {}
+
+        class FakeRouter:
+            def iter_rules(self):
+                return [FakeRule()]
+
+        with patch('odoo.addons.website.models.ir_http.IrHttp.routing_map', autospec=True, return_value=FakeRouter()):
+            locs = list(website.with_user(website.user_id)._enumerate_pages())
+
+        loc = next(l for l in locs if l['loc'] == '/named')
+        self.assertEqual(loc['group'], 'my-section', "@sitemap_group must set the sitemap group")
+
+    def test_sitemap_group_by_function_name(self):
+        # An override keeps the group of the function it overrides by keeping
+        # its name, without repeating @sitemap_group.
+        website = self.env['website'].search([], limit=1)
+
+        # Replaced in every route below, only its name is left to match.
+        @sitemap_group('my-section')
+        def fake_sitemap_items(env, rule, qs):
+            yield {'loc': '/items'}
+
+        @sitemap_group('my-section')
+        def fake_sitemap_news(env, rule, qs):
+            yield {'loc': '/news'}
+
+        class Override:
+            # Same name: group of the function it overrides.
+            def fake_sitemap_items(env, rule, qs):
+                yield {'loc': '/items-override'}
+
+            # Other name: group of its module, `pages` for `website`.
+            def fake_sitemap_items_renamed(env, rule, qs):
+                yield {'loc': '/items-renamed'}
+
+        class OtherController:
+            # Same name, own group: each of the two keeps its own.
+            @sitemap_group('other-section')
+            def fake_sitemap_news(env, rule, qs):
+                yield {'loc': '/news-other'}
+
+        sitemap_funcs = [
+            Override.fake_sitemap_items,
+            Override.fake_sitemap_items_renamed,
+            fake_sitemap_news,
+            OtherController.fake_sitemap_news,
+        ]
+
+        class FakeRouter:
+            def iter_rules(self):
+                return [
+                    SimpleNamespace(endpoint=SimpleNamespace(routing={'sitemap': func}), _converters={})
+                    for func in sitemap_funcs
+                ]
+
+        with patch('odoo.addons.website.models.ir_http.IrHttp.routing_map', autospec=True, return_value=FakeRouter()):
+            locs = list(website.with_user(website.user_id)._enumerate_pages())
+
+        groups = {loc['loc']: loc['group'] for loc in locs}
+        self.assertEqual(groups['/items-override'], 'my-section')
+        self.assertEqual(groups['/items-renamed'], 'pages')
+        self.assertEqual(groups['/news'], 'my-section')
+        self.assertEqual(groups['/news-other'], 'other-section')
 
     def test_enumerate_pages_homepage_filtering(self):
         website = self.env.ref('base.default_website')
@@ -147,3 +252,94 @@ class TestWebsiteSitemap(TransactionCase):
         locs_without_homepage_urls = [page['loc'] for page in locs_without_homepage]
         self.assertIn('/', locs_without_homepage_urls)
         self.assertNotIn(homepage_url, locs_without_homepage_urls)
+
+    def test_sitemap_group_invalid_name(self):
+        with self.assertRaises(ValueError):
+            sitemap_group('My Section!')(lambda env, rule, qs: None)
+
+    def test_views_lastmod_builder_edits(self):
+        website = self.env.ref('base.default_website')
+        with self.mock_datetime_and_now('2020-01-01'):
+            view = self.env['ir.ui.view'].create({
+                'name': 'Record page',
+                'type': 'qweb',
+                'key': 'website.test_record_page',
+                'arch': '<t t-name="website.test_record_page">'
+                        '<div class="oe_structure oe_empty" id="oe_structure_test_record_page"/>'
+                        '<div class="oe_structure"><p>Content</p></div>'
+                        '</t>',
+            })
+        builder = view.with_context(website_id=website.id)
+
+        def lastmod():
+            self.env.invalidate_all()
+            return website._get_views_lastmod(view)[view].strftime('%Y-%m-%d')
+
+        # An area with an id is saved in an extension view.
+        with self.mock_datetime_and_now('2021-01-01'):
+            builder.save('<div class="oe_structure oe_empty" id="oe_structure_test_record_page"><p>Block</p></div>', xpath='/t/div[1]')
+        self.assertEqual(lastmod(), '2021-01-01')
+        self.assertEqual(view.write_date.strftime('%Y-%m-%d'), '2020-01-01')
+
+        # Any other area is saved in this website's copy of the view.
+        with self.mock_datetime_and_now('2022-01-01'):
+            builder.save('<div class="oe_structure"><p>Edited</p></div>', xpath='/t/div[2]')
+        self.assertEqual(lastmod(), '2022-01-01')
+        self.assertEqual(view.write_date.strftime('%Y-%m-%d'), '2020-01-01')
+
+
+@tagged('-at_install', 'post_install')
+class TestSitemapIndex(HttpCase):
+    """/sitemap.xml is an index; check it splits URLs into per-group sub-sitemaps."""
+
+    def _open_sitemap_index(self):
+        # Drop cached sitemaps so each test regenerates from the current state.
+        self.env['ir.attachment'].search([('url', '=like', '/sitemap%')]).unlink()
+        return html.fromstring(self.url_open('/sitemap.xml').content)
+
+    def test_sitemap_index_splits_by_group(self):
+        website = self.env.ref('base.default_website')
+        page_url = '/index-split-test'
+        self.env['website.page'].create({
+            'name': 'Index Split Test',
+            'website_id': website.id,
+            'url': page_url,
+            'type': 'qweb',
+            'arch': '<t t-call="website.layout"/>',
+            'is_published': True,
+        })
+
+        index = self._open_sitemap_index()
+        locs = index.xpath('//loc/text()')
+        self.assertTrue(locs, "/sitemap.xml must be an index listing sub-sitemaps")
+        self.assertTrue(all(loc.endswith('.xml') for loc in locs),
+                        "The index must only list sub-sitemaps, not page URLs")
+        self.assertTrue(any('-pages-' in loc for loc in locs),
+                        "CMS pages must be listed in a 'pages' group sub-sitemap")
+
+        # The page URL itself lives in a sub-sitemap, not the index.
+        self.assertIn(page_url, all_sitemap_urls(self))
+
+    def test_sitemap_index_lastmod(self):
+        # Listings carry no date: a sub-sitemap is dated from its record pages.
+        locs = [
+            {'loc': '/things', 'group': 'things'},
+            {'loc': '/things/old', 'group': 'things', 'lastmod': datetime(2020, 1, 1)},
+            {'loc': '/things/new', 'group': 'things', 'lastmod': datetime(2021, 1, 1)},
+            {'loc': '/stuff', 'group': 'stuff'},
+        ]
+        self.patch(self.registry['website'], '_enumerate_pages', lambda website, **kwargs: iter(locs))
+        index = self._open_sitemap_index()
+        lastmods = {
+            sitemap.findtext('loc').rsplit('-', 2)[1]: sitemap.findtext('lastmod')
+            for sitemap in index.iter('sitemap')
+        }
+        self.assertEqual(lastmods, {'things': '2021-01-01', 'stuff': None})
+
+    def test_sitemap_group_chunking(self):
+        # A group over LOC_PER_SITEMAP is split into several indexed chunks.
+        with patch('odoo.addons.website.controllers.main.LOC_PER_SITEMAP', 1):
+            index = self._open_sitemap_index()
+        chunks = [loc for loc in index.xpath('//loc/text()') if '-pages-' in loc]
+        self.assertGreater(len(chunks), 1,
+                           "The 'pages' group must be split into multiple sub-sitemaps")
