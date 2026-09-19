@@ -45,6 +45,13 @@
                         invisible="not refunded_order_id">
                         <field name="refunded_order_id" widget="statinfo" string="Refunded Orders" />
                     </button>
+                    <button name="action_view_payments"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="menu"
+                        invisible="payment_count == 0">
+                        <field name="payment_count" widget="statinfo" string="Payments"/>
+                    </button>
                 </div>
                 <div class="oe_title">
                     <h1>
