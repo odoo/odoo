@@ -90,6 +90,15 @@
             opacity: var(--EmojiPicker-placeholderOpacity, 50%);
             color: var(--EmojiPicker-text-color, $input-placeholder-color);
         }
+
+        &:focus {
+            box-shadow: none;
+        }
+    }
+
+    .o-EmojiPicker-searchContour:focus-within {
+        --border-color: #{$input-focus-border-color};
+        box-shadow: $input-focus-box-shadow;
     }
 
     [data-icon="search"],
