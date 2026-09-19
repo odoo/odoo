@@ -87,7 +87,12 @@ class PosController(PortalAccount):
                 "SELECT id FROM pos_config WHERE id = %s FOR UPDATE NOWAIT",
                 (pos_config.id,)
             )
-            pos_config.open_ui()
+            try:
+                pos_config.open_ui()
+            except UserError:
+                request.is_frontend = True
+                request.lang = request.env['res.lang']._get_data(code=request.env.lang)
+                raise
             pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
 
         # The POS only works in one company, so we enforce the one of the session in the context
