@@ -121,6 +121,13 @@ class AccountMove(models.Model):
         copy=False,
     )
 
+    @api.depends('peppol_is_sent')
+    def _compute_show_reset_to_draft_button(self):
+        # EXTEND 'account' to hide the reset to draft button for invoice in PPF error
+        super()._compute_show_reset_to_draft_button()
+        relevant_moves = self.filtered(lambda move: move.pdp_ppf_move_state == 'error' or move.pdp_is_sent)
+        relevant_moves.show_reset_to_draft_button = False
+
     # TODO: remove in master
     @api.model
     def fields_get(self, allfields=None, attributes=None):
@@ -153,14 +160,16 @@ class AccountMove(models.Model):
     def _compute_peppol_move_state(self):
         super()._compute_peppol_move_state()
         for move in self:
+            if move.pdp_ppf_move_state == 'error':
+                move.peppol_move_state = 'error'
             # Handle sale and purchase documents in case we sent / received the document.
-            if move.peppol_move_state != 'error' and (response_status := move._pdp_get_response_status()):
+            elif move.peppol_move_state != 'error' and (response_status := move._pdp_get_response_status()):
                 move.peppol_move_state = response_status
 
     @api.depends('peppol_message_uuid', 'peppol_move_state', 'peppol_response_ids', 'peppol_response_ids.peppol_state', 'peppol_response_ids.response_code')
     def _compute_pdp_ppf_state(self):
-        for move in self:
-            processed = move.peppol_move_state and move.peppol_move_state not in ('ready', 'to_send', 'processing', 'error')
+        for move in self.filtered(lambda move: move.peppol_move_state != 'error'):
+            processed = move.peppol_move_state and move.peppol_move_state not in ('ready', 'to_send', 'processing')
             move.pdp_ppf_move_state = move._pdp_get_tax_extract_state() if processed and move.is_sale_document(include_receipts=False) else False
             move.pdp_ppf_lifecycle_state = move._pdp_get_lifecycle_state() if processed else False
 
@@ -192,7 +201,10 @@ class AccountMove(models.Model):
     @api.depends('peppol_is_sent', 'pdp_uses_pdp', 'move_type')
     def _compute_pdp_is_sent(self):
         for move in self:
-            move.pdp_is_sent = move.peppol_is_sent and move.pdp_uses_pdp
+            move.pdp_is_sent = move.pdp_uses_pdp and (
+                move.peppol_is_sent
+                or move.pdp_ppf_move_state == 'error'
+            )
 
     def _pdp_get_reconciled_amls(self):
         self.ensure_one()
