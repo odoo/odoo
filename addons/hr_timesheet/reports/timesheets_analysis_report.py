@@ -97,10 +97,10 @@ class TimesheetsAnalysisReport(models.Model):
                 A.task_id AS task_id,
                 A.parent_task_id AS parent_task_id,
                 A.employee_id AS employee_id,
-                A.manager_id AS manager_id,
+                E.parent_id AS manager_id,
                 A.company_id AS company_id,
                 A.department_id AS department_id,
-                A.currency_id AS currency_id,
+                C.currency_id AS currency_id,
                 A.date AS date,
                 A.amount AS amount,
                 A.unit_amount AS unit_amount,
@@ -109,7 +109,11 @@ class TimesheetsAnalysisReport(models.Model):
 
     @api.model
     def _from(self):
-        return "FROM account_analytic_line A"
+        return """
+            FROM account_analytic_line A
+            LEFT JOIN hr_employee E ON E.id = A.employee_id
+            LEFT JOIN res_company C ON C.id = A.company_id
+        """
 
     @api.model
     def _where(self):

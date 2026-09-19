@@ -137,7 +137,6 @@ class AccountAnalyticLine(models.Model):
         comodel_name="hr.employee",
         related="employee_id.parent_id",
         string="Manager",
-        store=True,
     )
     encoding_uom_id = fields.Many2one(
         comodel_name="uom.uom",
