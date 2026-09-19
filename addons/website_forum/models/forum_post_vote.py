@@ -32,15 +32,12 @@ class ForumPostVote(models.Model):
         comodel_name="forum.forum",
         related="post_id.forum_id",
         string="Forum",
-        store=True,
-        index="btree_not_null",
         readonly=False,
     )
     recipient_id = fields.Many2one(
         comodel_name="res.users",
         related="post_id.create_uid",
         string="To",
-        store=True,
         readonly=False,
     )
 
