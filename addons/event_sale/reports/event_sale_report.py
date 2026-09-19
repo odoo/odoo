@@ -155,7 +155,7 @@ SELECT
     ROW_NUMBER() OVER (ORDER BY event_registration.id) AS id,
 
     event_registration.id AS event_registration_id,
-    event_registration.company_id AS company_id,
+    event_event.company_id AS company_id,
     event_registration.event_id AS event_id,
     event_registration.event_slot_id AS event_slot_id,
     event_registration.event_ticket_id AS event_ticket_id,
