@@ -306,7 +306,10 @@ class PurchaseOrderLine(models.Model):
                 values.update(product_id=False, price_unit=0, product_uom_qty=0, product_uom_id=False, date_planned=False)
             else:
                 values.update(self._prepare_add_missing_fields(values))
-            if values.get('price_unit') and not values.get('technical_price_unit'):
+            # keeping technical_price_unit apart flags an imported price as
+            # manually set, so a later recompute does not replace it
+            if values.get('price_unit') and not values.get('technical_price_unit') \
+                    and not self.env.context.get('import_file'):
                 values['technical_price_unit'] = values['price_unit']
 
         lines = super().create(vals_list)
