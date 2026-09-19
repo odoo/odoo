@@ -166,9 +166,12 @@ class ProductPublicCategory(models.Model):
         if not (operator == "in" and True in value):
             return NotImplemented
 
+        website = self.env["website"]
+        if not self.env.website and self.env.context.get("host_id"):
+            website = website.browse(self.env.context.get("host_id"))
         published_products_domain = (
             Domain([("active", "=", True), ("is_published", "=", True)])
-            & self.env["website"].sale_product_domain()
+            & website.sale_product_domain()
         )
         # Bypass access rules in the subquery to avoid adding `has_published_products = True` twice.
         subquery = self._search(

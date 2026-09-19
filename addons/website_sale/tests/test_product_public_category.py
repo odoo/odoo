@@ -20,7 +20,7 @@ class TestProductPublicCategory(TransactionCase):
 
         cls.env["product.public.category"].search([]).unlink()
 
-        cls.env["product.public.category"].create([
+        cls.categories = cls.env["product.public.category"].create([
             {
                 "name": "1",
                 "child_id": create_multi([
@@ -68,3 +68,18 @@ class TestProductPublicCategory(TransactionCase):
         )
 
         self.assertSetEqual(unpublished_categs, {"1.1", "1.1.1", "2.2", "3"})
+
+    def test_category_is_published_depends_on_website(self):
+        category = self.categories[0].child_id[1]
+        website_1, website_2 = self.env['website'].create([
+            {'name': 'Test Website 1'}, {'name': 'Test Website 2'}
+        ])
+        self.assertTrue(category.with_context(host_id=website_1.id).is_published)
+        category.invalidate_recordset(["is_published", "has_published_products"])
+        self.assertTrue(category.with_context(host_id=website_2.id).is_published)
+
+        category.product_tmpl_ids[0].website_id = website_1
+        category.invalidate_recordset(["is_published", "has_published_products"])
+        self.assertTrue(category.with_context(host_id=website_1.id).is_published)
+        category.invalidate_recordset(["is_published", "has_published_products"])
+        self.assertFalse(category.with_context(host_id=website_2.id).is_published)
