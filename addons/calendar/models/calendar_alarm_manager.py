@@ -56,11 +56,11 @@ class CalendarAlarm_Manager(models.AbstractModel):
                 COALESCE((SELECT MIN(cal.start - interval '1' minute  * calcul_delta.max_delta)
                 FROM calendar_event cal
                 RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
-                WHERE cal.start - interval '1' minute  * calcul_delta.max_delta > now() at time zone 'utc'
-            ) + interval '3' minute, now() at time zone 'utc')""")
+                WHERE cal.start - interval '1' minute  * calcul_delta.max_delta > %(now)s
+            ) + interval '3' minute, %(now)s)""", now=self.env.cr.now())
         else:
             # now + given seconds
-            first_alarm_max_value = SQL("(now() at time zone 'utc' + interval %s second )", seconds)
+            first_alarm_max_value = SQL("(%(now)s + interval %s second )", seconds, now=self.env.cr.now())
 
         self.env.flush_all()
         self.env.cr.execute(SQL("""
@@ -68,8 +68,8 @@ class CalendarAlarm_Manager(models.AbstractModel):
             SELECT *
                 FROM ( %s ) AS ALL_EVENTS
             WHERE ALL_EVENTS.first_alarm < %s
-                AND ALL_EVENTS.last_alarm > (%s at time zone 'utc')
-        """, delta_request, base_request, first_alarm_max_value, fields.Datetime.now()))
+                AND ALL_EVENTS.last_alarm > (%s)
+        """, delta_request, base_request, first_alarm_max_value, self.env.cr.now()))
 
         for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration in self.env.cr.fetchall():
             result[event_id] = {
