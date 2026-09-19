@@ -33,6 +33,7 @@ class DiscussChannelWebclientController(WebclientController):
             # fetch channels data before messages to benefit from prefetching (channel info might
             # prefetch a lot of data that message format could use)
             store.add(channels._get_last_messages(), "_store_message_fields")
+            store.add(channels, {"last_message_fetched": True})
         if request.env.context["add_channels_last_needaction"] and (
             channels_with_needaction := channels.filtered("message_needaction_counter")
         ):
@@ -116,6 +117,8 @@ class DiscussChannelWebclientController(WebclientController):
                 fetch_params=fetch_params,
             )
             messages.set_message_done()
+            if channel._get_last_messages() <= messages:
+                store.add(channel, {"last_message_fetched": True})
 
     @store_handler("/discuss/channel/pin", audience="everyone", readonly=False)
     def store_set_discuss_channel_pin(self, store: Store, channel_id, pinned):
