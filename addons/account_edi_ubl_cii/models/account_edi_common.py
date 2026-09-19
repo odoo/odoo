@@ -1224,7 +1224,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         partner_bank_values['partner_banks'] = partner_banks
         if partner_banks:
-            collected_values['to_write']['partner_bank_id'] = partner_banks[:1].id
+            collected_values['to_write']['partner_bank_id'] = partner_banks.sorted(lambda bank: not bank.allow_out_payment)[:1].id
 
     def _import_retrieve_products_search_plan(self, collected_values):
         ProductProduct = self.env['product.product']
