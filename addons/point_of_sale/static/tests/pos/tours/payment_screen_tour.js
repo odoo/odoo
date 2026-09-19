@@ -9,7 +9,7 @@ import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_ut
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
-import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
+import { negateStep, refresh } from "@point_of_sale/../tests/generic_helpers/utils";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import { inLeftSide } from "./utils/common";
 
@@ -18,8 +18,11 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
     steps: () =>
         [
             Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
+            // ensure that even after refreshing the page while being offline all data is correctly reloaded
+            refresh(),
+            Dialog.confirm("Continue with limited functionality"),
+            Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Letter Tray", "10"),
             ProductScreen.clickPayButton(),
             PaymentScreen.emptyPaymentlines("52.8"),
