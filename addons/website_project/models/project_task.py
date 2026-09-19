@@ -7,7 +7,6 @@ class ProjectTask(models.Model):
     partner_name = fields.Char(
         related="partner_id.name",
         string="Customer Name",
-        store=True,
         readonly=False,
         tracking=False,
     )

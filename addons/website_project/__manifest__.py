@@ -1,6 +1,6 @@
 {
     "name": "Online Task Submission",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Website/Website",
     "summary": "Add a task suggestion form to your website",
     "description": """
