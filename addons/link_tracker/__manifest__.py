@@ -1,6 +1,6 @@
 {
     "name": "Link Tracker",
-    "version": "19.0.1.2",
+    "version": "19.0.1.3",
     "category": "Marketing",
     "summary": "Shorten URLs and use them to track clicks and UTMs",
     "author": "Odoo S.A.",

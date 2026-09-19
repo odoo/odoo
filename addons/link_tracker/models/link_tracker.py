@@ -729,8 +729,6 @@ class LinkTrackerClick(models.Model):
         comodel_name="utm.campaign",
         related="link_id.campaign_id",
         string="UTM Campaign",
-        store=True,
-        index="btree_not_null",
         ondelete="set null",
     )
     link_id = fields.Many2one(
