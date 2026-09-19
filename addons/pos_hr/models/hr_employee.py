@@ -72,6 +72,13 @@ class HrEmployee(models.Model):
 
         return read_records
 
+    def _is_pos_manager(self) -> bool:
+        self.check_singleton()
+        # an employee with no user has no group
+        return bool(self.user_id) and self.user_id._has_group(
+            "point_of_sale.group_pos_manager"
+        )
+
     def get_barcodes_and_pin_hashed(self):
         if not self.env.user.has_group("point_of_sale.group_pos_user"):
             _debug.logic(

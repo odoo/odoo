@@ -243,6 +243,10 @@ export class TourAutomatic {
                 end();
             },
             onComplete: async () => {
+                // no step is left to race a navigation: a page that unloads
+                // from here on (a backend that redirects once more after the
+                // last step observed it) is not the hazard the guard exists for
+                this.allowUnload = true;
                 // a tour is over when the client is idle: the last steps
                 // only observed, and what they observed may still be saving,
                 // which the harness would then report as a dirty form
