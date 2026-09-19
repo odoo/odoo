@@ -78,7 +78,6 @@ class AccountReturnCheck(models.Model):
     return_state = fields.Char(
         related="return_id.state",
         string="Return State",
-        store=True,
     )
     return_name = fields.Char(
         related="return_id.name",

@@ -18,7 +18,6 @@ class AccountFiscalPositionAccount(models.Model):
         comodel_name="res.company",
         related="position_id.company_id",
         string="Company",
-        store=True,
     )
     account_src_id = fields.Many2one(
         comodel_name="account.account",

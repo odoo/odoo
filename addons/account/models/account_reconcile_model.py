@@ -24,7 +24,6 @@ class AccountReconcileModelLine(models.Model):
     )
     company_id = fields.Many2one(
         related="model_id.company_id",
-        store=True,
     )
     sequence = fields.Integer(
         default=10,

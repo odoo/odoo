@@ -28,7 +28,6 @@ class AccountAnalyticLine(models.Model):
         comodel_name="account.journal",
         related="move_line_id.journal_id",
         string="Financial Journal",
-        store=True,
         readonly=True,
         check_company=True,
     )

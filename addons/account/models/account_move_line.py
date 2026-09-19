@@ -288,8 +288,6 @@ class AccountMoveLine(models.Model):
     tax_group_id = fields.Many2one(
         related="tax_line_id.tax_group_id",
         string="Originator tax group",
-        precompute=True,
-        store=True,
     )
     tax_base_amount = fields.Monetary(
         string="Base Amount",

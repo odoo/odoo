@@ -78,7 +78,6 @@ class AccountAccruedOrdersWizard(models.TransientModel):
     currency_id = fields.Many2one(
         related="company_id.currency_id",
         string="Company Currency",
-        store=True,
         readonly=True,
         help="Utility field to express amount currency",
     )
