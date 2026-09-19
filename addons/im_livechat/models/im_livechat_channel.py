@@ -610,9 +610,7 @@ class Im_LivechatChannel(models.Model):
             'button_text_color': self.button_text_color,
             'button_text': self.button_text,
             'default_message': self.default_message,
-            "channel_name": self.name,
             "channel_id": self.id,
-            "review_link": self.review_link,
         }
 
     def get_livechat_info(self, username=None):
