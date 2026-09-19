@@ -850,3 +850,52 @@ registry.category("web_tour.tours").add("test_reward_line_tax_grouping_key", {
             ReceiptScreen.isShown(),
         ].flat(),
 });
+<<<<<<< 630ed4e888522e8b1da4bd22db42057808b122b5
+||||||| ceb23bb4d22c073ba0e621b0ea4963847ebe37c6
+
+registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountPriceUnitRounding", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product A", "1"),
+            ProductScreen.addOrderline("Product B", "1"),
+            // 20.4% of 85.22 = 17.38488 -> 17.385 (3-digit price) -> -20.00 incl.
+            PosLoyalty.hasRewardLine("20.4% on specific products", "-20.00"),
+            PosLoyalty.orderTotalIs("78.00"),
+            // Overpay: the change makes the backend recompute the amounts.
+            PosLoyalty.finalizeOrder("Cash", "100"),
+        ].flat(),
+});
+=======
+
+registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountPriceUnitRounding", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product A", "1"),
+            ProductScreen.addOrderline("Product B", "1"),
+            // 20.4% of 85.22 = 17.38488 -> 17.385 (3-digit price) -> -20.00 incl.
+            PosLoyalty.hasRewardLine("20.4% on specific products", "-20.00"),
+            PosLoyalty.orderTotalIs("78.00"),
+            // Overpay: the change makes the backend recompute the amounts.
+            PosLoyalty.finalizeOrder("Cash", "100"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountNegativeLine", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product A", "1"),
+            ProductScreen.addOrderline("Voucher", "1"),
+            // 50 shared over 1000 - 100: both tax groups get the same 5.56% factor
+            PosLoyalty.hasRewardLine("on specific products", "-55.56"),
+            PosLoyalty.hasRewardLine("on specific products", "5.56"),
+            PosLoyalty.orderTotalIs("850.00"),
+            PosLoyalty.finalizeOrder("Cash", "850"),
+        ].flat(),
+});
+>>>>>>> 148ec013088f738e94e011e0f49d7b3ad60aa652
