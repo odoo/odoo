@@ -3,12 +3,15 @@
 import hootDom from "@odoo/hoot-dom";
 import { enableEventLogs, setupEventActions } from "@odoo/hoot-dom-helpers-events";
 import { browser } from "@web/core/browser/browser";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { RpcEvent } from "@web/core/events";
 import { rpcBus } from "@web/core/network";
 import { config as transitionConfig } from "@web/core/transition";
 import { Macro } from "@web/core/utils/macro";
 import { TourStepAutomatic } from "@web_tour/js/tour_automatic/tour_step_automatic";
 import { tourState } from "@web_tour/js/tour_state";
+
+const log = makeLogger("web_tour.automatic");
 
 const CLIENT_SETTLE_TIMEOUT = 10000;
 const EXPIRED = Symbol("expired");
@@ -247,6 +250,7 @@ export class TourAutomatic {
                 // from here on (a backend that redirects once more after the
                 // last step observed it) is not the hazard the guard exists for
                 this.allowUnload = true;
+                log.lifecycle("unloadAllowedAfterLastStep", { tour: this.name });
                 // a tour is over when the client is idle: the last steps
                 // only observed, and what they observed may still be saving,
                 // which the harness would then report as a dirty form
@@ -262,6 +266,11 @@ export class TourAutomatic {
         });
 
         const beforeUnloadHandler = () => {
+            log.lifecycle("beforeunload", {
+                tour: this.name,
+                step: this.currentIndex,
+                allowed: this.allowUnload,
+            });
             if (!this.allowUnload) {
                 const message = `
                     Be sure to use { expectUnloadPage: true } for any step

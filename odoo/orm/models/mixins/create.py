@@ -573,6 +573,13 @@ class CreateMixin(_ModelStubs):
 
                 records.modified([field.name for field in other_fields], create=True)
 
+        if self._constrained_projection_names:
+            _debug.logic(
+                "create.projection_constraints",
+                model=self._name,
+                records=len(records),
+                fields=sorted(self._constrained_projection_names),
+            )
         records._check_fields(
             chain(
                 (name for data in data_list for name in data["stored"]),

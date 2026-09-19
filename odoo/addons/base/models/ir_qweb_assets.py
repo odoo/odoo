@@ -101,7 +101,16 @@ class IrQweb(models.AbstractModel):
         # the specifiers the first one already mapped in a different document.
         # `is True`: a request stood in for by a Mock answers any attribute with
         # another Mock, which is truthy and is not a document this render opened
-        if not request or getattr(request, "_esm_document_open", False) is True:
+        document_open = (
+            getattr(request, "_esm_document_open", False) if request else False
+        )
+        if document_open is not True and document_open:
+            _debug.logic(
+                "esm_document_flag_ignored",
+                template=template,
+                flag=type(document_open).__name__,
+            )
+        if not request or document_open is True:
             return super()._render(template, values, **options)
         _debug.lifecycle("esm_document_opened", template=template)
         request._esm_import_map_rendered = False

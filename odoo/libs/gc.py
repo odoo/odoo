@@ -46,6 +46,7 @@ def _record_gc_timing(event: str, info: dict[str, Any]) -> None:
 
 
 def _stop_timing_at_exit() -> None:
+    _debug.lifecycle("gc.timing_stopped_at_exit")
     gc_set_timing(enable=False)
 
 

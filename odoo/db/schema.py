@@ -564,8 +564,15 @@ def drop_columns(
     module -- and the views taken down are logged so the upgrade says which.
     """
     existing = get_table_columns(cr, tablename)
-    dropped = [name for name in columnnames if name in existing]
+    requested = list(columnnames)
+    dropped = [name for name in requested if name in existing]
     if not dropped:
+        _debug.logic(
+            "schema.drop_columns.skipped",
+            table=tablename,
+            requested=requested,
+            reason="absent",
+        )
         return dropped
     views = sorted(
         {
@@ -585,6 +592,13 @@ def drop_columns(
                 ),
             )
         )
+    _debug.pipeline(
+        "schema.columns_dropped",
+        table=tablename,
+        columns=dropped,
+        absent=[name for name in requested if name not in existing],
+        views=views,
+    )
     if views:
         _schema.info(
             "Table %r: dropped columns %s and the views reading them: %s",

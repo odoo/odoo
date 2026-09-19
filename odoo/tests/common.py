@@ -298,9 +298,14 @@ def warmup(func: Callable, /) -> Callable:
         # before the test, which made a pinned count read one higher inside a
         # suite than alone. The second pass starts from a full ormcache and an
         # empty record cache, like the measured one.
-        for _cold_pass in range(2):
+        for cold_pass in (1, 2):
             with (
-                _debug.perf("test.warmup.cold", cr=self.cr, func=func.__qualname__),
+                _debug.perf(
+                    "test.warmup.cold",
+                    cr=self.cr,
+                    func=func.__qualname__,
+                    cold_pass=cold_pass,
+                ),
                 contextlib.closing(self.cr.savepoint(flush=False)),
             ):
                 func(self, *args, **kwargs)

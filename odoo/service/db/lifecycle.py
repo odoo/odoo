@@ -191,7 +191,9 @@ def _make_unaccent_indexable(cr: BaseCursor, name: str) -> None:
     try:
         with cr.savepoint(flush=False):
             cr.execute("ALTER FUNCTION unaccent(text) IMMUTABLE", log_exceptions=False)
+        _debug.lifecycle("database.unaccent_made_immutable", db=name)
     except psycopg.Error as e:
+        _debug.logic("database.unaccent_alter_refused", db=name, error=type(e).__name__)
         _logger.warning(
             "unaccent() exists in %r but cannot be made immutable (%s): "
             "trigram indexes will not serve accent-insensitive searches.",
