@@ -1,6 +1,6 @@
 {
     "name": "Lunch",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Human Resources/Lunch",
     "sequence": 300,
     "summary": "Handle lunch orders of your employees",

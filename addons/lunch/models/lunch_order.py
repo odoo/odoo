@@ -42,12 +42,12 @@ class LunchOrder(models.Model):
     )
     product_id = fields.Many2one(
         comodel_name="lunch.product",
+        index=True,
         required=True,
     )
     category_id = fields.Many2one(
         related="product_id.category_id",
         string="Product Category",
-        store=True,
     )
     date = fields.Date(
         string="Order Date",
@@ -58,8 +58,6 @@ class LunchOrder(models.Model):
     supplier_id = fields.Many2one(
         related="product_id.supplier_id",
         string="Vendor",
-        store=True,
-        index=True,
     )
     available_today = fields.Boolean(related="supplier_id.available_today")
 
@@ -101,7 +99,6 @@ class LunchOrder(models.Model):
     )
     currency_id = fields.Many2one(
         related="company_id.currency_id",
-        store=True,
     )
     quantity = fields.Float(
         default=1,

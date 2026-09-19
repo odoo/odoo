@@ -87,7 +87,6 @@ class LunchSupplier(models.Model):
     company_id = fields.Many2one(
         comodel_name="res.company",
         related="partner_id.company_id",
-        store=True,
         readonly=False,
     )
 
@@ -505,13 +504,14 @@ class LunchSupplier(models.Model):
     def _compute_buttons(self):
         self.env.cr.execute(
             """
-            SELECT supplier_id, state, COUNT(*)
+            SELECT product.supplier_id, lunch_order.state, COUNT(*)
               FROM lunch_order
-             WHERE supplier_id = ANY(%s)
-               AND state in ('ordered', 'sent')
-               AND date = %s
-               AND active
-          GROUP BY supplier_id, state
+              JOIN lunch_product product ON product.id = lunch_order.product_id
+             WHERE product.supplier_id = ANY(%s)
+               AND lunch_order.state in ('ordered', 'sent')
+               AND lunch_order.date = %s
+               AND lunch_order.active
+          GROUP BY product.supplier_id, lunch_order.state
         """,
             (list(self.ids), fields.Date.context_today(self)),
         )
