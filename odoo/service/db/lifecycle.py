@@ -183,23 +183,30 @@ def _create_empty_database(
         raise DatabaseExists(f"database {name!r} already exists!")
 
 
+def _make_unaccent_indexable(cr: BaseCursor, name: str) -> None:
+    unaccent_status = odoo.db.get_unaccent_status(cr)
+    _debug.logic("database.unaccent_status", db=name, status=unaccent_status.name)
+    if unaccent_status != odoo.db.FunctionStatus.PRESENT:
+        return
+    try:
+        with cr.savepoint(flush=False):
+            cr.execute("ALTER FUNCTION unaccent(text) IMMUTABLE", log_exceptions=False)
+    except psycopg.Error as e:
+        _logger.warning(
+            "unaccent() exists in %r but cannot be made immutable (%s): "
+            "trigram indexes will not serve accent-insensitive searches.",
+            name,
+            e,
+        )
+
+
 def _create_extensions(cr: BaseCursor, name: str, unaccent: bool) -> None:
     try:
         with cr.savepoint(flush=False):
             cr.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
             if unaccent:
                 cr.execute("CREATE EXTENSION IF NOT EXISTS unaccent")
-                unaccent_status = odoo.db.get_unaccent_status(cr)
-                _debug.logic(
-                    "database.unaccent_status",
-                    db=name,
-                    status=getattr(unaccent_status, "name", unaccent_status),
-                )
-                if unaccent_status != odoo.db.FunctionStatus.INDEXABLE:
-                    cr.execute(
-                        "ALTER FUNCTION unaccent(text) IMMUTABLE",
-                        log_exceptions=False,
-                    )
+        _make_unaccent_indexable(cr, name)
         _debug.pipeline("database.extensions_created", db=name, unaccent=unaccent)
     except psycopg.Error as e:
         _debug.logic("database.extensions_failed", db=name, error=type(e).__name__)
