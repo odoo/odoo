@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-09-07 09:36+0000\n"
+"PO-Revision-Date: 2026-09-15 04:32+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/account/"
 "ja/>\n"
@@ -346,9 +346,7 @@ msgstr ""
 msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
-msgstr ""
-"。仕訳は、会社で使用されている通貨で記入する前に、Odooに計算される必要があり"
-"ます。"
+msgstr "。会社の通貨で記帳する前に、Odooが仕訳を計算する必要があります。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -7618,7 +7616,7 @@ msgstr "%なら0から100の間の比率を入力します。"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "For this entry to be automatically posted, it required a bill date."
-msgstr "この仕訳を自動的に記入するためには、請求日が必要とされます。"
+msgstr "この仕訳を自動的に記帳するには、請求日が必要です。"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_non_accountable_fields_null
@@ -14357,7 +14355,9 @@ msgstr ""
 msgid ""
 "Specify whether this entry is posted automatically on its accounting date, "
 "and any similar recurring invoices."
-msgstr "類似の定期請求に、記帳日に自動で仕訳を記入するかどうかを特定します。"
+msgstr ""
+"この仕訳および同様の定期請求書が、会計日付に自動的に記帳されるかどうかを指定"
+"します。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -17305,7 +17305,7 @@ msgstr "未消込仕訳"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Unreconciled Transactions"
-msgstr "未突合の取引"
+msgstr "未消込取引"
 
 #. module: account
 #. odoo-javascript
@@ -17921,8 +17921,8 @@ msgid ""
 "When an internal transfer is posted, a paired payment is created. They are "
 "cross referenced through this field"
 msgstr ""
-"内部振替が計上されると、対応する支払いが作成される。両者はこのフィールドを通"
-"じて相互参照される。"
+"内部振替が記帳されると、対となる支払が作成されます。これらはこのフィールドを"
+"通じて相互参照されます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
@@ -18228,7 +18228,7 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
-"計上した仕訳明細を削除することはできません。仕訳を下書きに戻してから削除して"
+"記帳済の仕訳明細を削除することはできません。仕訳を下書きに戻してから削除して"
 "下さい。"
 
 #. module: account
@@ -18540,9 +18540,9 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
-"開始仕訳(%s)がすでに計上されている場合は、 \"openning_balance\"をインポートす"
-"ることはできません。 どうしても勘定科目開始残高を変更したい場合は、仕訳を下書"
-"きにリセットして下さい。"
+"期首仕訳(%s)がすでに記帳されているため、「opening_balance」をインポートできま"
+"せん。                 勘定科目の期首残高を確実に変更したい場合は、該当の仕訳"
+"を下書きに戻してください。"
 
 #. module: account
 #. odoo-python

@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-09-08 03:11+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"PO-Revision-Date: 2026-09-16 16:57+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/mail/"
 "ja/>\n"
 "Language: ja\n"
@@ -966,6 +966,10 @@ msgid ""
 "If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
 "please replace it here with a Klipy GIF API key"
 msgstr ""
+"GIFサポートを有効にするには、Klipy GIF APIキーを追加してください。 https://"
+"docs.klipy.com/getting-started \n"
+"Tenor GIF APIキーを使用していた場合(2026年6月30日にサービス終了)、ここで"
+"Klipy GIF APIキーに差し替えてください"
 
 #. module: mail
 #. odoo-javascript
@@ -3970,6 +3974,13 @@ msgid ""
 "Template Source Snippet:\n"
 "%(template_src)s"
 msgstr ""
+"%(template_label)sの QWeb テンプレートのレンダリングに失敗しました \n"
+"ターゲットモデル：%(model_name)s\n"
+"言語コンテキスト：%(lang_context)s\n"
+"エラー：%(error_details)s\n"
+"\n"
+"テンプレートソースのスニペット：\n"
+"%(template_src)s"
 
 #. module: mail
 #. odoo-python
@@ -3978,6 +3989,8 @@ msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
 msgstr ""
+"inline_template テンプレートのレンダリングに失敗しました:%(template_txt)s\n"
+"エラーの詳細:%(error)s"
 
 #. module: mail
 #. odoo-python
@@ -4886,6 +4899,8 @@ msgid ""
 "If you were using a Tenor API key, please replace it with a Klipy API key in "
 "the General Settings."
 msgstr ""
+"Tenor API キーを使用していた場合は、一般設定で Klipy API キーに置き換えてくだ"
+"さい。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -5447,7 +5462,7 @@ msgstr "宜しくお願いします。"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
 msgid "Klipy API key"
-msgstr ""
+msgstr "Klipy APIキー"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -5919,7 +5934,7 @@ msgstr "メールテンプレートリセット"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "メールテンプレート: '%(name)s' (ID:%(record_id)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -6073,7 +6088,7 @@ msgstr "完了とする"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "メール一括配信テンプレート: '%(name)s' (ID:%(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -6721,7 +6736,7 @@ msgstr "過去メッセージはありません。"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "No language detected in context"
-msgstr ""
+msgstr "コンテキスト内で言語が検出されませんでした"
 
 #. module: mail
 #. odoo-python
@@ -9607,7 +9622,7 @@ msgstr "Composerからテンプレートを作成するには、有効なモデ�
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Template name not identified"
-msgstr ""
+msgstr "テンプレート名が特定されませんでした"
 
 #. module: mail
 #. odoo-python
@@ -10583,13 +10598,13 @@ msgstr "無題%(record_model_name)s (%(record_id)s)"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mail Template"
-msgstr ""
+msgstr "名前のないメールテンプレート"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mailing"
-msgstr ""
+msgstr "無題のメール配信"
 
 #. module: mail
 #. odoo-javascript
@@ -11385,7 +11400,7 @@ msgstr "このメッセージを安全に無視することができます。"
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid "You cannot assign an empty domain name."
-msgstr ""
+msgstr "空のドメイン名を割り当てることはできません。"
 
 #. module: mail
 #. odoo-python

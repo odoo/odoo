@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-09-04 06:11+0000\n"
+"PO-Revision-Date: 2026-09-16 04:35+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
 "stock_account/ja/>\n"
@@ -823,7 +823,7 @@ msgstr "在庫入力勘定"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
 msgid "Stock Journal"
-msgstr "在庫記録簿"
+msgstr "在庫仕訳帳"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -947,8 +947,8 @@ msgid ""
 "intercompany in a single step while they should go through the intercompany "
 "transit location."
 msgstr ""
-"移動明細が一貫していません。グループ内積送ロケーションを経由すべきなのに、グ"
-"ループ内移動がワンステップで処理されています。"
+"移動明細が一貫していません。会社間積送ロケーションを経由すべきなのに、会社間"
+"移動がワンステップで処理されています。"
 
 #. module: stock_account
 #. odoo-python
@@ -986,7 +986,7 @@ msgid ""
 "The value of a stock valuation layer cannot be negative. Landed cost could "
 "be use to correct a specific transfer."
 msgstr ""
-"在庫評価レイヤーの値を負にすることはできません。陸上原価は、特定の転送を修正"
+"在庫評価レイヤーの値を負にすることはできません。陸上原価は、特定の移動を修正"
 "するために使用できます。"
 
 #. module: stock_account
@@ -1059,7 +1059,7 @@ msgstr "合計価格"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
-msgstr "転送"
+msgstr "移動"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
@@ -1223,8 +1223,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
-"プロダクトの自動在庫評価が有効になっている場合、このアカウントはプロダクトの"
-"現在価値を保持します。"
+"プロダクトで自動在庫評価を有効にすると、この勘定にはそのプロダクトの現在の在"
+"庫評価額が計上されます。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
