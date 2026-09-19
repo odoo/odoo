@@ -2,7 +2,7 @@ from odoo import fields, models
 
 
 class ResourceAsset(models.Model):
-    _inherit = "resource.asset"
+    _inherit = "resource.asset.vehicle"
 
     mobility_card = fields.Char(related="operator_employee_id.mobility_card")
 

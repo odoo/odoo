@@ -259,7 +259,7 @@ class MixinMailThread(models.AbstractModel):
             .sudo()
             ._search(
                 [
-                    ("res_model", "=", self._name),
+                    ("res_model", "=", self._get_reference_model_name()),
                     ("partner_id", operator, operand),
                 ]
             )
@@ -274,7 +274,7 @@ class MixinMailThread(models.AbstractModel):
             .sudo()
             .search_fetch(
                 [
-                    ("res_model", "=", self._name),
+                    ("res_model", "=", self._get_reference_model_name()),
                     ("res_id", "in", self.ids),
                     ("partner_id", "=", self.env.user.partner_id.id),
                 ],
@@ -296,7 +296,7 @@ class MixinMailThread(models.AbstractModel):
             .sudo()
             ._search(
                 [
-                    ("res_model", "=", self._name),
+                    ("res_model", "=", self._get_reference_model_name()),
                     ("partner_id", operator, self.env.user.partner_id.ids),
                 ]
             )
@@ -453,7 +453,7 @@ class MixinMailThread(models.AbstractModel):
     def _compute_message_attachment_count(self) -> None:
         counts_per_res_id = dict(
             self.env["ir.attachment"]._read_group(
-                [("res_id", "in", self._origin.ids), ("res_model", "=", self._name)],
+                [("res_id", "in", self._origin.ids), ("res_model", "=", self._get_reference_model_name())],
                 groupby=["res_id"],
                 aggregates=["__count"],
             )
@@ -595,17 +595,17 @@ class MixinMailThread(models.AbstractModel):
         messages = (
             self.env["mail.message"]
             .sudo()
-            .search([("model", "=", self._name), ("res_id", "in", self.ids)])
+            .search([("model", "=", self._get_reference_model_name()), ("res_id", "in", self.ids)])
         )
         followers = (
             self.env["mail.followers"]
             .sudo()
-            .search([("res_model", "=", self._name), ("res_id", "in", self.ids)])
+            .search([("res_model", "=", self._get_reference_model_name()), ("res_id", "in", self.ids)])
         )
         scheduled = (
             self.env["mail.scheduled.message"]
             .sudo()
-            .search([("model", "=", self._name), ("res_id", "in", self.ids)])
+            .search([("model", "=", self._get_reference_model_name()), ("res_id", "in", self.ids)])
         )
         _debug.lifecycle(
             "unlink",
@@ -1449,7 +1449,7 @@ class MixinMailThread(models.AbstractModel):
                 "incoming_email_cc": incoming_email_cc,
                 "incoming_email_to": incoming_email_to,
                 "message_type": message_type,
-                "model": self._name,
+                "model": self._get_reference_model_name(),
                 "outgoing_email_to": outgoing_email_to,
                 "parent_id": parent_id,
                 "partner_ids": list(partner_ids),
@@ -1778,7 +1778,7 @@ class MixinMailThread(models.AbstractModel):
             .search(
                 [
                     ("id", "in", list(set(asked.values()))),
-                    ("model", "=", self._name),
+                    ("model", "=", self._get_reference_model_name()),
                     ("res_id", "in", list(asked)),
                 ]
             )
@@ -2454,7 +2454,7 @@ class MixinMailThread(models.AbstractModel):
             msg_values = {
                 "author_id": author_id,
                 "email_from": email_from,
-                "model": self._name if record_id else model,
+                "model": self._get_reference_model_name() if record_id else model,
                 "res_id": record_id or res_id,
                 "body": _escape_body(body),
                 "is_internal": True,
@@ -2722,7 +2722,7 @@ class MixinMailThread(models.AbstractModel):
         }
 
         base_message_values = {
-            "model": self._name,
+            "model": self._get_reference_model_name(),
             "record_alias_domain_id": False,
             "record_company_id": False,
             "attachment_ids": attachment_ids,
@@ -2817,7 +2817,7 @@ class MixinMailThread(models.AbstractModel):
             current_ancestor = messages_sudo.search(
                 [
                     ("id", "=", parent_id),
-                    ("model", "=", self._name),
+                    ("model", "=", self._get_reference_model_name()),
                     ("res_id", "=", self.id),
                 ],
             )
@@ -4900,7 +4900,7 @@ class MixinMailThread(models.AbstractModel):
             .sudo()
             .search(
                 [
-                    ("res_model", "=", self._name),
+                    ("res_model", "=", self._get_reference_model_name()),
                     ("res_id", "in", self.ids),
                     ("partner_id", "in", partner_ids),
                 ]
@@ -5172,7 +5172,7 @@ class MixinMailThread(models.AbstractModel):
         domain = Domain(
             [
                 ("res_id", "in", self.ids),
-                ("res_model", "=", self._name),
+                ("res_model", "=", self._get_reference_model_name()),
                 ("partner_id", "!=", self.env.user.partner_id.id),
             ]
         )
@@ -5295,7 +5295,7 @@ class MixinMailThread(models.AbstractModel):
         MailMessage = self.env["mail.message"]
         messages = MailMessage.search(
             [
-                ("model", "=", self._name),
+                ("model", "=", self._get_reference_model_name()),
                 ("res_id", "=", self.id),
                 ("message_type", "!=", "user_notification"),
             ]
@@ -5394,7 +5394,7 @@ class MixinMailThread(models.AbstractModel):
                     attachment_ids,
                     {
                         "body": body,
-                        "model": self._name,
+                        "model": self._get_reference_model_name(),
                         "res_id": self.id,
                     },
                 )
@@ -5474,7 +5474,7 @@ class MixinMailThread(models.AbstractModel):
             for follower in self.env["mail.followers"].search_fetch(
                 [
                     ("res_id", "in", self.ids),
-                    ("res_model", "=", self._name),
+                    ("res_model", "=", self._get_reference_model_name()),
                     ("partner_id", "=", self.env.user.partner_id.id),
                 ],
                 ["res_id"],
@@ -5492,7 +5492,7 @@ class MixinMailThread(models.AbstractModel):
             res["attachments"] = self._get_mail_thread_data_attachments()
         if "scheduledMessages" in request_list:
             for scheduled in self.env["mail.scheduled.message"].search_fetch(
-                [("model", "=", self._name), ("res_id", "in", self.ids)], ["res_id"]
+                [("model", "=", self._get_reference_model_name()), ("res_id", "in", self.ids)], ["res_id"]
             ):
                 res["scheduled"][scheduled.res_id] |= scheduled
         if "suggestedRecipients" in request_list:
@@ -5605,7 +5605,7 @@ class MixinMailThread(models.AbstractModel):
         Attachment = self.env["ir.attachment"]
         ids_by_res_id = defaultdict(list)
         for attachment in Attachment.search(
-            [("res_id", "in", self.ids), ("res_model", "=", self._name)],
+            [("res_id", "in", self.ids), ("res_model", "=", self._get_reference_model_name())],
             order="id desc",
         ):
             ids_by_res_id[attachment.res_id].append(attachment.id)

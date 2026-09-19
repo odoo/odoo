@@ -7,10 +7,9 @@ class FleetVehicleSendMail(models.TransientModel):
     _description = "Send mails to Drivers"
 
     vehicle_ids = fields.Many2many(
-        comodel_name="resource.asset",
+        comodel_name="resource.asset.vehicle",
         string="Vehicles",
         required=True,
-        domain="[('kind_id.code', '=', 'vehicle')]",
     )
     author_id = fields.Many2one(
         comodel_name="res.partner",

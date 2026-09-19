@@ -28,7 +28,7 @@ class TestL10nMxFleetEmission(TransactionCase):
 
     def _vehicle(self, plate, product=None):
         product = product or self.model
-        return self.env["resource.asset"].create(
+        asset = self.env["resource.asset"].create(
             {
                 "name": plate,
                 "kind_id": product.asset_kind_id.id,
@@ -36,6 +36,8 @@ class TestL10nMxFleetEmission(TransactionCase):
                 "license_plate": plate,
             }
         )
+        # A vehicle's data lives on its model; a root row stays a root row.
+        return self.env[asset._get_concrete()._name].browse(asset.id)
 
     def test_color_from_last_digit(self) -> None:
         expected = {
@@ -98,7 +100,7 @@ class TestL10nMxFleetEmission(TransactionCase):
 
     def test_status_search(self) -> None:
         red = self._vehicle("ABC-123")
-        found = self.env["resource.asset"].search(
+        found = self.env["resource.asset.vehicle"].search(
             [("l10n_mx_emission_status", "in", ["due", "overdue", "upcoming"])]
         )
         self.assertIn(red, found)
@@ -163,13 +165,14 @@ class TestL10nMxFleetEmission(TransactionCase):
     def test_only_vehicles_are_inspected(self) -> None:
         press = self._vehicle("PRS-125", product=self.press)
         self.assertNotEqual(press.kind_code, "vehicle")
-        self.assertFalse(press.l10n_mx_emission_calendar_id)
-        self.assertFalse(press.l10n_mx_emission_inspection_ids)
+        # A press is not a vehicle: it has no emission data at all.
+        self.assertNotIn("l10n_mx_emission_calendar_id", press._fields)
+        self.assertFalse(self.Inspection.search([("asset_id", "=", press.id)]))
         self.assertNotIn(
-            press,
-            self.env["resource.asset"].search(
-                [("l10n_mx_emission_status", "in", ["due", "overdue", "upcoming"])]
-            ),
+            press.id,
+            self.env["resource.asset.vehicle"]
+            .search([("l10n_mx_emission_status", "in", ["due", "overdue", "upcoming"])])
+            .ids,
         )
 
     def test_a_calendar_arriving_after_the_vehicle_gives_it_its_color(self) -> None:
@@ -233,6 +236,7 @@ class TestL10nMxFleetEmission(TransactionCase):
                 }
             )
         )
+        vehicle = self.env["resource.asset.vehicle"].browse(vehicle.id)
         self.assertEqual(len(vehicle.sudo().l10n_mx_emission_inspection_ids), 2)
 
 

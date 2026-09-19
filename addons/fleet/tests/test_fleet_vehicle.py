@@ -34,7 +34,7 @@ class TestFleetVehicle(TransactionCase):
         )
 
     def _vehicle(self, plate="PRB-001", **vals):
-        return (
+        asset = (
             self.env["resource.asset"]
             .with_user(self.manager)
             .create(
@@ -47,6 +47,8 @@ class TestFleetVehicle(TransactionCase):
                 }
             )
         )
+        # A vehicle's own data lives on its model: read it there.
+        return self.env["resource.asset.vehicle"].with_user(self.manager).browse(asset.id)
 
     def test_a_vehicle_is_an_asset_of_its_model(self):
         vehicle = self._vehicle()
@@ -94,7 +96,9 @@ class TestFleetVehicle(TransactionCase):
         )
         self.assertEqual(vehicle.operator_history_count, 2)
         self.assertEqual(
-            self.env["resource.asset"].search([("operator_id", "=", self.bob.id)]),
+            self.env["resource.asset.vehicle"].search(
+                [("operator_id", "=", self.bob.id)]
+            ),
             vehicle,
         )
         self.assertIn(
@@ -117,7 +121,7 @@ class TestFleetVehicle(TransactionCase):
         self.assertEqual(car.future_operator_id, self.bob)
         self.assertGreater(car.date_future_operator, fields.Datetime.now())
         self.assertEqual(
-            self.env["resource.asset"].search(
+            self.env["resource.asset.vehicle"].search(
                 [("future_operator_id", "=", self.bob.id)]
             ),
             car,

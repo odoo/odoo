@@ -9,7 +9,7 @@ class ResourceAsset(models.Model):
         comodel_name="document.document",
         inverse_name="res_id",
         string="Documents",
-        domain=lambda self: [("res_model", "=", self._name)],
+        domain=lambda self: [("res_model", "=", self._get_reference_model_name())],
     )
     count_document = fields.Count(
         count_of="document_ids",
@@ -63,7 +63,7 @@ class ResourceAsset(models.Model):
         return {
             "name": name,
             "type": "binary",
-            "res_model": self._name,
+            "res_model": self._get_reference_model_name(),
             "res_id": self.id,
             "folder_id": self._get_document_folder().id or False,
             "tag_ids": [Command.set(self._get_document_tags().ids)],
@@ -99,12 +99,12 @@ class ResourceAsset(models.Model):
             "|",
             ("type", "=", "folder"),
             "&",
-            ("res_model", "=", self._name),
+            ("res_model", "=", self._get_reference_model_name()),
             ("res_id", "=", self.id),
         ]
         action["context"] = {
             "default_res_id": self.id,
-            "default_res_model": self._name,
+            "default_res_model": self._get_reference_model_name(),
             "searchpanel_default_user_folder_id": str(folder.id) if folder else False,
             "searchpanel_default_tag_ids": self._get_document_tags().ids,
         }

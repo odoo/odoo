@@ -510,7 +510,7 @@ class MixinMailActivity(models.AbstractModel):
 
         domain = Domain(
             [
-                ("res_model", "=", self._name),
+                ("res_model", "=", self._get_reference_model_name()),
                 ("res_id", "in", self.ids),
                 ("activity_type_id", "in", activity_types_ids),
             ]
@@ -606,7 +606,7 @@ class MixinMailActivity(models.AbstractModel):
             "summary": summary or activity_type.summary,
             "automated": True,
             "date_deadline": date_deadline,
-            "res_model_id": self.env["ir.model"]._get(self._name).id,
+            "res_model_id": self.env["ir.model"]._get(self._get_reference_model_name()).id,
             **act_values,
             "activity_type_id": activity_type.id,
         }

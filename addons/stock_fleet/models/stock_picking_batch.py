@@ -9,10 +9,7 @@ _debug = DebugLog(__name__)
 class StockPickingBatch(models.Model):
     _inherit = "stock.picking.batch"
 
-    vehicle_id = fields.Many2one(
-        comodel_name="resource.asset",
-        domain="[('kind_id.code', '=', 'vehicle')]",
-    )
+    vehicle_id = fields.Many2one(comodel_name="resource.asset.vehicle")
     vehicle_model_id = fields.Many2one(
         comodel_name="product.product",
         string="Vehicle Model",

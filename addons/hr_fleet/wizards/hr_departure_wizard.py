@@ -17,7 +17,7 @@ class HrDepartureWizard(models.TransientModel):
 
     def _free_company_car(self):
         departure = fields.Datetime.to_datetime(self.departure_date)
-        vehicles = self.env["resource.asset"].sudo().search([("kind_id.code", "=", "vehicle")])
+        vehicles = self.env["resource.asset.vehicle"].sudo().search([])
         assignments = (
             self.env["resource.assignment"]
             .sudo()

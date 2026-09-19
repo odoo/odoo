@@ -31,7 +31,7 @@ class TestHrFleetDriver(common.TransactionCase):
         car = self._car("HR-001", operator_employee_id=self.employee.id)
         self.assertEqual(car.operator_id, self.employee.resource_id)
         self.assertEqual(car.operator_employee_id, self.employee)
-        self.assertEqual(self.employee.car_ids, car)
+        self.assertEqual(self.employee.car_ids.ids, car.ids)
         self.assertEqual(self.employee.employee_cars_count, 1)
         self.assertIn("HR-001", self.employee.license_plate)
         self.assertEqual(

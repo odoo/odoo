@@ -151,7 +151,7 @@ class TestDispatchManagement(TransactionCase):
         )
         second = self._batch(self._picking())
         (first | second).action_merge()
-        self.assertEqual(first.vehicle_id, self.vehicle)
+        self.assertEqual(first.vehicle_id.id, self.vehicle.id)
         self.assertEqual(first.dock_id, self.dock)
 
     def test_docking_a_reserved_transfer_throws_its_reservation_away(self):

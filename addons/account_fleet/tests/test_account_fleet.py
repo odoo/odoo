@@ -41,8 +41,9 @@ class TestAccountFleet(AccountTestInvoicingCommon):
             }
         )
         bill.action_post()
-        self.assertEqual(self.car.service_count, 1)
+        car = self.env["resource.asset.vehicle"].browse(self.car.id)
+        self.assertEqual(car.service_count, 1)
         service = self.env["resource.asset.log"].search(
-            self.car.action_view_services()["domain"]
+            car.action_view_services()["domain"]
         )
         self.assertEqual((service.amount, service.state), (250.0, "done"))

@@ -11,7 +11,7 @@ class HrEmployee(models.Model):
         groups="fleet.fleet_group_manager",
     )
     car_ids = fields.Many2many(
-        comodel_name="resource.asset",
+        comodel_name="resource.asset.vehicle",
         string="Vehicles (private)",
         compute="_compute_car_ids",
         search="_search_car_ids",
@@ -26,11 +26,9 @@ class HrEmployee(models.Model):
 
     def _compute_car_ids(self):
         vehicles = (
-            self.env["resource.asset"]
+            self.env["resource.asset.vehicle"]
             .sudo()
-            .search(
-                [("kind_id.code", "=", "vehicle"), ("operator_id", "in", self.resource_id.ids)]
-            )
+            .search([("operator_id", "in", self.resource_id.ids)])
         )
         for employee in self:
             employee.car_ids = vehicles.filtered(
@@ -65,9 +63,9 @@ class HrEmployee(models.Model):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         vehicles = (
-            self.env["resource.asset"]
+            self.env["resource.asset.vehicle"]
             .sudo()
-            .search([("kind_id.code", "=", "vehicle"), ("license_plate", operator, value)])
+            .search([("license_plate", operator, value)])
         )
         return Domain("resource_id", "in", vehicles.operator_id.ids) | Domain(
             "private_car_plate", operator, value

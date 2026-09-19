@@ -120,9 +120,9 @@ class L10nMxFleetEmissionCalendar(models.Model):
         # is pushed to all vehicles by hand; a recompute queued this way does not
         # cascade, so what reads through the calendar is dropped from the cache.
         vehicles = (
-            self.env["resource.asset"]
+            self.env["resource.asset.vehicle"]
             .with_context(active_test=False)
-            .search([("kind_id.code", "=", "vehicle")])
+            .search([])
         )
         self.env.add_to_compute(
             vehicles._fields["l10n_mx_emission_calendar_id"], vehicles
