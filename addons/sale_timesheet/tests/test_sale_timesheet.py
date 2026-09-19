@@ -1374,6 +1374,74 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(invoice_2.invoice_line_ids.quantity, 4.0,
             "The second invoice should bill the remaining delivered hours.")
 
+    def test_invoice_rounding_after_separate_timesheets(self):
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_delivery_timesheet2.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        sale_order.action_confirm()
+        sale_order_line = sale_order.order_line
+        task = sale_order.tasks_ids
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': sale_order.ids,
+            'active_id': sale_order.id,
+        }
+
+        invoice_quantities = []
+        for minutes in [15, 50, 225, 75, 35]:
+            self.env['account.analytic.line'].create({
+                'name': f'Timesheet of {minutes} minutes',
+                'project_id': task.project_id.id,
+                'task_id': task.id,
+                'unit_amount': minutes / 60,
+                'employee_id': self.employee_user.id,
+            })
+            wizard = self.env['sale.advance.payment.inv'].with_context(context).create({
+                'advance_payment_method': 'delivered',
+            })
+            invoice = self.env['account.move'].browse(wizard.create_invoices()['res_id'])
+            invoice_quantities.append(invoice.invoice_line_ids.quantity)
+
+        self.assertEqual(invoice_quantities, [0.25, 0.83, 3.75, 1.25, 0.59])
+        self.assertEqual(sale_order_line.qty_delivered, 6.67)
+        self.assertEqual(sale_order_line.qty_invoiced, sale_order_line.qty_delivered)
+
+    def test_invoice_rounding_with_partial_period(self):
+        sale_order = self._create_order_with_timesheet_lines()
+        sale_order_line = sale_order.order_line
+        selected_timesheet = self._create_timesheet(sale_order_line, '2026-01-01', 50 / 60)
+        excluded_timesheet = self._create_timesheet(sale_order_line, '2026-01-02', 35 / 60)
+
+        invoice = self._create_invoice_timesheet_over_period(
+            sale_order, '2026-01-01', '2026-01-01'
+        )
+
+        self.assertEqual(self._get_valid_invoiced_lines(invoice).quantity, 0.83)
+        self.assertEqual(selected_timesheet.timesheet_invoice_id, invoice)
+        self.assertFalse(excluded_timesheet.timesheet_invoice_id)
+        self.assertEqual(sale_order_line.qty_delivered, 1.42)
+        self.assertEqual(sale_order_line.qty_invoiced, 0.83)
+
+    def test_invoice_rounding_with_completely_bounded_period(self):
+        sale_order = self._create_order_with_timesheet_lines()
+        sale_order_line = sale_order.order_line
+        self._create_timesheet(sale_order_line, '2026-01-01', 50 / 60)
+        first_invoice = self._create_invoice_timesheet_over_period(sale_order)
+        self.assertEqual(self._get_valid_invoiced_lines(first_invoice).quantity, 0.83)
+
+        self._create_timesheet(sale_order_line, '2026-01-02', 35 / 60)
+        final_invoice = self._create_invoice_timesheet_over_period(
+            sale_order, '2026-01-02', '2026-01-02'
+        )
+
+        self.assertEqual(self._get_valid_invoiced_lines(final_invoice).quantity, 0.59)
+        self.assertEqual(sale_order_line.qty_delivered, 1.42)
+        self.assertEqual(sale_order_line.qty_invoiced, sale_order_line.qty_delivered)
+
     def test_invoice_timesheet_uom_conversion_with_period(self):
         """
         Ensure that invoice quantities are correctly computed when:
