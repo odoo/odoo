@@ -142,7 +142,9 @@ class Many2many(_RelationalMulti):
         if self.comodel_name != field.comodel_name:
             return False
         root = model._table_inheritance_root
-        shared = bool(root) and root == model.env[field.model_name]._table_inheritance_root
+        shared = (
+            bool(root) and root == model.env[field.model_name]._table_inheritance_root
+        )
         if shared:
             _debug.logic(
                 "field.many2many.relation_shared_in_tree",
@@ -239,6 +241,29 @@ class Many2many(_RelationalMulti):
             links=sum(len(ids) for ids in values),
         )
 
+    def _invalidate_relation_siblings(self, records: BaseModel) -> None:
+        # Two fields of one model may read the same relation table the same way
+        # round, one of them through a domain (product.product's variant values
+        # beside its attribute values). A write through one changes what the
+        # other reads, and `create` has already cached the other as empty.
+        model = records.pool[self.model_name]
+        for mname, fname in records.pool.many2many_relations[
+            self._get_relation_triple()
+        ]:
+            if fname == self.name or mname not in (self.model_name, records._name):
+                continue
+            sibling = model._fields.get(fname)
+            if sibling is None or sibling is self:
+                continue
+            _debug.logic(
+                "field.many2many.sibling_invalidated",
+                model=self.model_name,
+                field=self.name,
+                sibling=fname,
+                records=len(records),
+            )
+            sibling._invalidate_cache(records.env, records._ids)
+
     def _apply_relation_delta(
         self,
         records: BaseModel,
@@ -267,6 +292,9 @@ class Many2many(_RelationalMulti):
                         ids=len(ids),
                     )
             self._update_cache(record, ids, created=created)
+
+        if store:
+            self._invalidate_relation_siblings(records)
 
         modified_corecord_ids = set()
 

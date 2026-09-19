@@ -3191,3 +3191,32 @@ class TestOrmProjectionGrandchild(models.Model):
                 raise ValidationError(
                     f"{grandchild.name}: a closed grandparent holds no quantity"
                 )
+
+
+class TestOrmSharedRelationTag(models.Model):
+    _name = "test_orm.shared_relation.tag"
+    _description = "test_orm.shared_relation.tag"
+
+    name = fields.Char()
+    featured = fields.Boolean()
+
+
+class TestOrmSharedRelationOwner(models.Model):
+    _name = "test_orm.shared_relation.owner"
+    _description = "test_orm.shared_relation.owner"
+
+    name = fields.Char()
+    tag_ids = fields.Many2many(
+        comodel_name="test_orm.shared_relation.tag",
+        relation="test_orm_shared_relation_rel",
+        column1="owner_id",
+        column2="tag_id",
+    )
+    featured_tag_ids = fields.Many2many(
+        comodel_name="test_orm.shared_relation.tag",
+        relation="test_orm_shared_relation_rel",
+        column1="owner_id",
+        column2="tag_id",
+        readonly=True,
+        domain=[("featured", "=", True)],
+    )
