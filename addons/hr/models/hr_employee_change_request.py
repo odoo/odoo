@@ -35,7 +35,6 @@ class HrEmployeeChangeRequest(models.Model):
     )
     company_id = fields.Many2one(
         related="employee_id.company_id",
-        store=True,
     )
     requested_by_uid = fields.Many2one(
         comodel_name="res.users",

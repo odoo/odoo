@@ -273,7 +273,6 @@ class HrEmployee(models.Model):
     birthday = fields.Date(
         related="private_address_id.birthdate",
         string="Birthday",
-        store=True,
         readonly=False,
         tracking=True,
         groups="hr.group_hr_user",
