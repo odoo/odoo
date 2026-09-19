@@ -18,7 +18,6 @@ class DocumentDocument(models.Model):
 
     is_mandatory = fields.Boolean(
         related="document_type_id.is_mandatory",
-        store=True,
         help="Whether this document type is required for compliance (inherited from document type)",
     )
     document_type_requires_original = fields.Boolean(
