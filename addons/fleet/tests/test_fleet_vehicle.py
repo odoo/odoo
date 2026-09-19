@@ -50,8 +50,8 @@ class TestFleetVehicle(TransactionCase):
 
     def test_a_vehicle_is_an_asset_of_its_model(self):
         vehicle = self._vehicle()
-        self.assertTrue(vehicle.is_vehicle)
-        self.assertTrue(self.model.is_vehicle)
+        self.assertEqual(vehicle._get_concrete()._name, "resource.asset.vehicle")
+        self.assertEqual(self.model.asset_kind_code, "vehicle")
         self.assertEqual(vehicle.manufacturer_id, self.brand)
         self.assertEqual(
             (vehicle.seats, vehicle.fuel_type, vehicle.co2), (5, "diesel", 120)
@@ -62,7 +62,7 @@ class TestFleetVehicle(TransactionCase):
             vehicle,
             self.env["resource.asset"].search(
                 self.env.ref("fleet.fleet_vehicle_action").domain
-                and [("is_vehicle", "=", True)]
+                and [("kind_id.code", "=", "vehicle")]
             ),
         )
         self.assertFalse(
@@ -73,7 +73,8 @@ class TestFleetVehicle(TransactionCase):
                     "kind_id": self.env.ref("resource_asset.kind_tool").id,
                 }
             )
-            .is_vehicle
+            .kind_code
+            == "vehicle"
         )
 
     def test_a_driver_is_an_operator_assignment(self):
@@ -288,7 +289,7 @@ class TestVehicleIsItsOwnModel(TransactionCase):
         )
 
         self.assertEqual(vehicle.resource_id.asset_id, self.Asset.browse(vehicle.id))
-        self.assertIn(vehicle.id, vehicle.resource_id.asset_ids.ids)
+        self.assertIn(vehicle.id, vehicle.resource_id.asset_id.ids)
 
     def test_a_vehicle_takes_part_in_the_asset_hierarchy(self):
         """`parent_id` names `resource.asset`, which is this model's tree root,

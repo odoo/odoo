@@ -67,7 +67,7 @@ class ResourceAsset(models.Model):
             digits = [c for c in (asset.license_plate or "") if c.isdigit()]
             asset.l10n_mx_emission_plate_digit = digits[-1] if digits else False
 
-    @api.depends("l10n_mx_emission_plate_digit", "is_vehicle")
+    @api.depends("l10n_mx_emission_plate_digit", "kind_id")
     def _compute_l10n_mx_emission_calendar_id(self) -> None:
         calendars = self.env["l10n_mx.fleet.emission.calendar"].search([])
         by_digit = {
@@ -78,7 +78,7 @@ class ResourceAsset(models.Model):
         for asset in self:
             asset.l10n_mx_emission_calendar_id = (
                 by_digit.get(asset.l10n_mx_emission_plate_digit, False)
-                if asset.is_vehicle
+                if asset.kind_code == "vehicle"
                 else False
             )
 
@@ -153,7 +153,7 @@ class ResourceAsset(models.Model):
         today = fields.Date.context_today(self)
         vehicles = self.with_context(active_test=False).search(
             [
-                ("is_vehicle", "=", True),
+                ("kind_id.code", "=", "vehicle"),
                 ("l10n_mx_emission_calendar_id", "!=", False),
             ]
         )

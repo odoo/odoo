@@ -7,8 +7,11 @@
         <field name="inherit_id" ref="product.view_product_template_form" />
         <field name="arch" type="xml">
             <page name="general_information" position="after">
-                <page name="vehicle" string="Vehicle" invisible="not is_vehicle">
-                    <field name="is_vehicle" invisible="1" />
+                <page
+                    name="vehicle"
+                    string="Vehicle"
+                    invisible="asset_kind_code != 'vehicle'">
+                    <field name="asset_kind_code" invisible="1" />
                     <group>
                         <group name="vehicle_body" string="Model">
                             <field name="vehicle_model_year" />
@@ -63,7 +66,7 @@
         <field name="name">Models</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,list,form</field>
-        <field name="domain">[('is_vehicle', '=', True)]</field>
+        <field name="domain">[('asset_kind_id.code', '=', 'vehicle')]</field>
         <field
             name="context"
             eval="{'default_asset_kind_id': ref('resource_asset.kind_vehicle'), 'default_type': 'consu', 'default_sale_ok': False}" />

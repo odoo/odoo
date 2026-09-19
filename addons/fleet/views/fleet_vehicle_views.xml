@@ -229,7 +229,7 @@
         <field name="path">fleet</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="fleet_vehicle_view_search" />
-        <field name="domain">[('is_vehicle', '=', True)]</field>
+        <field name="domain">[('kind_id.code', '=', 'vehicle')]</field>
         <field
             name="context"
             eval="{'default_kind_id': ref('resource_asset.kind_vehicle')}" />

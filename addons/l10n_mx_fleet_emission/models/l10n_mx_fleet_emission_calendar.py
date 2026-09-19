@@ -122,7 +122,7 @@ class L10nMxFleetEmissionCalendar(models.Model):
         vehicles = (
             self.env["resource.asset"]
             .with_context(active_test=False)
-            .search([("is_vehicle", "=", True)])
+            .search([("kind_id.code", "=", "vehicle")])
         )
         self.env.add_to_compute(
             vehicles._fields["l10n_mx_emission_calendar_id"], vehicles

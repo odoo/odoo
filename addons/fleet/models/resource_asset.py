@@ -4,11 +4,6 @@ from odoo import api, fields, models
 class ResourceAsset(models.Model):
     _inherit = "resource.asset"
 
-    is_vehicle = fields.Boolean(
-        compute="_compute_is_vehicle",
-        store=True,
-        index=True,
-    )
     company_country_code = fields.Char(related="company_id.country_id.code")
     tag_ids = fields.Many2many(
         comodel_name="fleet.vehicle.tag",
@@ -47,23 +42,18 @@ class ResourceAsset(models.Model):
     range_unit = fields.Selection(related="product_id.range_unit")
     service_count = fields.Integer(compute="_compute_service_count")
 
-    @api.depends("kind_id")
-    def _compute_is_vehicle(self):
-        vehicle_kind = self.env.ref(
-            "resource_asset.kind_vehicle", raise_if_not_found=False
-        )
-        for asset in self:
-            asset.is_vehicle = bool(vehicle_kind) and asset.kind_id == vehicle_kind
-
     @api.depends("product_id")
     def _compute_model_year(self):
         for asset in self:
             if not asset.model_year and asset.product_id.vehicle_model_year:
                 asset.model_year = asset.product_id.vehicle_model_year
 
-    @api.depends("product_id", "license_plate", "vin_sn", "name", "is_vehicle")
+    @api.depends("product_id", "license_plate", "vin_sn", "name", "kind_id")
     def _compute_display_name(self):
-        vehicles = self.filtered("is_vehicle")
+        # A root-typed recordset runs the root's compute, so the vehicle's
+        # naming lives here, keyed on the kind, until reads dispatch to the
+        # concrete model.
+        vehicles = self.filtered(lambda asset: asset.kind_code == "vehicle")
         for vehicle in vehicles:
             parts = [
                 part

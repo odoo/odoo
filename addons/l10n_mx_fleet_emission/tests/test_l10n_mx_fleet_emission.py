@@ -162,7 +162,7 @@ class TestL10nMxFleetEmission(TransactionCase):
 
     def test_only_vehicles_are_inspected(self) -> None:
         press = self._vehicle("PRS-125", product=self.press)
-        self.assertFalse(press.is_vehicle)
+        self.assertNotEqual(press.kind_code, "vehicle")
         self.assertFalse(press.l10n_mx_emission_calendar_id)
         self.assertFalse(press.l10n_mx_emission_inspection_ids)
         self.assertNotIn(

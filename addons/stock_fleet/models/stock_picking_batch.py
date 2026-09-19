@@ -11,7 +11,7 @@ class StockPickingBatch(models.Model):
 
     vehicle_id = fields.Many2one(
         comodel_name="resource.asset",
-        domain="[('is_vehicle', '=', True)]",
+        domain="[('kind_id.code', '=', 'vehicle')]",
     )
     vehicle_model_id = fields.Many2one(
         comodel_name="product.product",
@@ -19,7 +19,7 @@ class StockPickingBatch(models.Model):
         compute="_compute_vehicle_model_id",
         store=True,
         readonly=False,
-        domain="[('is_vehicle', '=', True)]",
+        domain="[('asset_kind_id.code', '=', 'vehicle')]",
     )
     allowed_dock_ids = fields.Many2many(
         related="picking_type_id.dock_ids",

@@ -426,8 +426,10 @@ class TestMaintenanceAssetAccess(TransactionCase):
         self.assertEqual(read[0]["asset_ids"][0]["display_name"], "Compressor")
 
     def test_a_new_kind_brings_its_technician(self):
+        # A kind with a model of its own is a table, and no row moves between
+        # tables: the asset starts on a kind that stays in the root.
         asset = self.env["resource.asset"].create(
-            {"name": "Lathe", "kind_id": self.machinery.id}
+            {"name": "Lathe", "kind_id": self.env.ref("resource_asset.kind_tool").id}
         )
         kind = self.env["resource.asset.kind"].create(
             {

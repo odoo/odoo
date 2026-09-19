@@ -29,7 +29,7 @@ class HrEmployee(models.Model):
             self.env["resource.asset"]
             .sudo()
             .search(
-                [("is_vehicle", "=", True), ("operator_id", "in", self.resource_id.ids)]
+                [("kind_id.code", "=", "vehicle"), ("operator_id", "in", self.resource_id.ids)]
             )
         )
         for employee in self:
@@ -67,7 +67,7 @@ class HrEmployee(models.Model):
         vehicles = (
             self.env["resource.asset"]
             .sudo()
-            .search([("is_vehicle", "=", True), ("license_plate", operator, value)])
+            .search([("kind_id.code", "=", "vehicle"), ("license_plate", operator, value)])
         )
         return Domain("resource_id", "in", vehicles.operator_id.ids) | Domain(
             "private_car_plate", operator, value

@@ -21,7 +21,7 @@ class L10nMxFleetEmissionInspection(models.Model):
         string="Vehicle",
         index=True,
         required=True,
-        domain=[("is_vehicle", "=", True)],
+        domain=[("kind_id.code", "=", "vehicle")],
         ondelete="cascade",
     )
     license_plate = fields.Char(related="asset_id.license_plate")
@@ -258,7 +258,7 @@ class L10nMxFleetEmissionInspection(models.Model):
         if vehicles is None:
             vehicles = self.env["resource.asset"].search(
                 [
-                    ("is_vehicle", "=", True),
+                    ("kind_id.code", "=", "vehicle"),
                     ("l10n_mx_emission_calendar_id", "!=", False),
                 ]
             )

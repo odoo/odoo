@@ -58,7 +58,7 @@
                             <field
                                 name="asset_id"
                                 string="Vehicle"
-                                domain="[('is_vehicle', '=', True)]" />
+                                domain="[('kind_id.code', '=', 'vehicle')]" />
                             <field
                                 name="product_id"
                                 string="Service"
@@ -158,7 +158,7 @@
         <field name="view_mode">list,form,pivot,graph</field>
         <field name="search_view_id" ref="fleet_vehicle_service_view_search" />
         <field
-            name="domain">[('asset_id.is_vehicle', '=', True), ('log_type', '=', 'service')]</field>
+            name="domain">[('asset_id.kind_id.code', '=', 'vehicle'), ('log_type', '=', 'service')]</field>
         <field
             name="context"
             eval="{'default_product_id': ref('fleet.product_product_vehicle_service'), 'search_default_groupby_product': 1}" />
@@ -181,7 +181,7 @@
         <field name="view_mode">graph,pivot</field>
         <field name="search_view_id" ref="fleet_vehicle_service_view_search" />
         <field
-            name="domain">[('asset_id.is_vehicle', '=', True), ('state', '!=', 'cancelled')]</field>
+            name="domain">[('asset_id.kind_id.code', '=', 'vehicle'), ('state', '!=', 'cancelled')]</field>
         <field name="context">{'search_default_filter_date': 1}</field>
         <field
             name="view_ids"
@@ -201,7 +201,7 @@
                 <field name="asset_id" string="Vehicle" />
                 <field
                     name="meter_id"
-                    domain="[('kind', '=', 'odometer'), ('asset_id.is_vehicle', '=', True)]" />
+                    domain="[('kind', '=', 'odometer'), ('asset_id.kind_id.code', '=', 'vehicle')]" />
                 <field name="value" />
                 <field name="source" optional="hide" />
                 <field name="note" optional="show" />
@@ -249,7 +249,7 @@
         <field name="view_mode">list,graph</field>
         <field name="search_view_id" ref="fleet_vehicle_odometer_view_search" />
         <field
-            name="domain">[('meter_id.kind', '=', 'odometer'), ('asset_id.is_vehicle', '=', True)]</field>
+            name="domain">[('meter_id.kind', '=', 'odometer'), ('asset_id.kind_id.code', '=', 'vehicle')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new odometer log

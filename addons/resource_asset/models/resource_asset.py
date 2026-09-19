@@ -31,6 +31,7 @@ class ResourceAsset(models.Model):
         "mixin.resource",
     ]
     _table_inheritance_root = "resource_asset"
+    _dispatch_write_to_concrete = True
     _order = "name, id"
     _check_company_auto = True
 

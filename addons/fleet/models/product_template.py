@@ -18,10 +18,7 @@ FUEL_TYPES = [
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    is_vehicle = fields.Boolean(
-        compute="_compute_is_vehicle",
-        search="_search_is_vehicle",
-    )
+    asset_kind_code = fields.Char(related="asset_kind_id.code")
     vehicle_model_year = fields.Selection(
         selection="_selection_vehicle_model_years",
         string="Model Year",
@@ -96,28 +93,6 @@ class ProductTemplate(models.Model):
 
     def _selection_vehicle_model_years(self):
         return [(str(year), str(year)) for year in range(1970, datetime.now().year + 2)]
-
-    @api.depends("asset_kind_id")
-    def _compute_is_vehicle(self):
-        vehicle_kind = self.env.ref(
-            "resource_asset.kind_vehicle", raise_if_not_found=False
-        )
-        for template in self:
-            template.is_vehicle = bool(vehicle_kind) and (
-                template.asset_kind_id == vehicle_kind
-            )
-
-    def _search_is_vehicle(self, operator, value):
-        if operator not in ("in", "not in"):
-            return NotImplemented
-        vehicle_kind = self.env.ref(
-            "resource_asset.kind_vehicle", raise_if_not_found=False
-        )
-        kinds = vehicle_kind.ids if vehicle_kind else []
-        wants = True in value
-        if (operator == "in") == wants:
-            return [("asset_kind_id", "in", kinds)]
-        return [("asset_kind_id", "not in", kinds)]
 
     @api.depends("range_unit")
     def _compute_co2_emission_unit(self):

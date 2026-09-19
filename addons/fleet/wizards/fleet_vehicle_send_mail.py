@@ -10,7 +10,7 @@ class FleetVehicleSendMail(models.TransientModel):
         comodel_name="resource.asset",
         string="Vehicles",
         required=True,
-        domain="[('is_vehicle', '=', True)]",
+        domain="[('kind_id.code', '=', 'vehicle')]",
     )
     author_id = fields.Many2one(
         comodel_name="res.partner",
