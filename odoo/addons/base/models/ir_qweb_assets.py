@@ -99,7 +99,9 @@ class IrQweb(models.AbstractModel):
         # a controller may render two, as Studio's report editor does for the
         # report and for the iframe that shows it, and the second one must map
         # the specifiers the first one already mapped in a different document.
-        if not request or getattr(request, "_esm_document_open", False):
+        # `is True`: a request stood in for by a Mock answers any attribute with
+        # another Mock, which is truthy and is not a document this render opened
+        if not request or getattr(request, "_esm_document_open", False) is True:
             return super()._render(template, values, **options)
         _debug.lifecycle("esm_document_opened", template=template)
         request._esm_import_map_rendered = False

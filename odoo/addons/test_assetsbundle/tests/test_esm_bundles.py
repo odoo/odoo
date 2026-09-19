@@ -1,5 +1,5 @@
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools.assets.esm_registry import esm_registry
@@ -475,6 +475,19 @@ class TestCollectingUrlsIsNotRenderingThem(TransactionCase):
         html = self._with_request(req, lambda q: str(q._render(view.id)))
         self.assertIn('type="importmap"', html)
         self.assertTrue(req._esm_import_map_rendered)
+
+    def test_a_mocked_request_still_opens_a_document(self):
+        view = self.env["ir.ui.view"].create(
+            {
+                "name": "native esm page under a mocked request",
+                "type": "qweb",
+                "arch": f'<div><t t-call-assets="{self.BUNDLE}" t-css="false"/></div>',
+            }
+        )
+        req = Mock()
+        html = self._with_request(req, lambda q: str(q._render(view.id)))
+        self.assertIn('type="importmap"', html)
+        self.assertEqual(req._esm_page_bundles, (self.BUNDLE,))
 
     def test_each_document_rendered_in_one_request_keeps_its_map(self):
         view = self.env["ir.ui.view"].create(
