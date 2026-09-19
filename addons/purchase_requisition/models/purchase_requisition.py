@@ -305,7 +305,6 @@ class PurchaseRequisitionLine(models.Model):
         comodel_name="res.company",
         related="requisition_id.company_id",
         string="Company",
-        store=True,
         readonly=True,
     )
     supplier_info_ids = fields.One2many(
