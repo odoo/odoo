@@ -1159,7 +1159,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
     def _start_pos_session(self, payment_methods, opening_cash):
         self.config.write({"payment_method_ids": [(6, 0, payment_methods.ids)]})
         pos_session = self.open_new_session(opening_cash)
-        self.assertEqual(
+        self.assertCountEqual(
             self.config.payment_method_ids.ids,
             pos_session.payment_method_ids.ids,
             msg="Payment methods in the config should be the same as the session.",

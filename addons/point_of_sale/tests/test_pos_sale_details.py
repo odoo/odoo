@@ -1173,7 +1173,7 @@ class TestPosSaleDetailsCoherence(TestPoSCommon):
         cashier = new_test_user(
             self.env,
             login="sale_details_cashier",
-            groups="point_of_sale.group_pos_user",
+            groups="base.group_user,point_of_sale.group_pos_user",
         )
 
         report = self.report.with_user(cashier).get_sale_details(
@@ -1198,7 +1198,7 @@ class TestPosSaleDetailsCoherence(TestPoSCommon):
         cashier = new_test_user(
             self.env,
             login="restricted_report_cashier",
-            groups="point_of_sale.group_pos_user",
+            groups="base.group_user,point_of_sale.group_pos_user",
             company_id=self.env.company.id,
         )
 

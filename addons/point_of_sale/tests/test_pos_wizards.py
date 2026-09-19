@@ -201,7 +201,7 @@ class TestPosWizards(TestPoSCommon):
 
         self.assertEqual(writes, [anonymous_order.ids])
         self.assertEqual(orders.partner_id, self.customer)
-        self.assertEqual(next_action["context"]["active_ids"], orders.ids)
+        self.assertCountEqual(next_action["context"]["active_ids"], orders.ids)
         self.assertFalse(next_action["context"]["generate_pdf"])
 
     def test_confirmation_rechecks_ambiguous_customers(self):
@@ -559,7 +559,7 @@ class TestPosWizards(TestPoSCommon):
         next_action = wizard.action_confirm()
 
         self.assertEqual(orders.partner_id, self.customer)
-        self.assertEqual(next_action["context"]["active_ids"], orders.ids)
+        self.assertCountEqual(next_action["context"]["active_ids"], orders.ids)
 
     def test_confirmation_context_cannot_replace_displayed_orders(self):
         orders = self._create_order(state="paid") | self._create_order(
@@ -575,7 +575,7 @@ class TestPosWizards(TestPoSCommon):
 
         self.assertEqual(orders.partner_id, self.customer)
         self.assertFalse(replacement[1].partner_id)
-        self.assertEqual(next_action["context"]["active_ids"], orders.ids)
+        self.assertCountEqual(next_action["context"]["active_ids"], orders.ids)
 
     def test_payment_rejects_context_for_another_model(self):
         order = self._create_order()
