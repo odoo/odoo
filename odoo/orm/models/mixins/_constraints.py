@@ -97,6 +97,21 @@ class _ConstraintsMixin(_ModelStubs):
             ),
         )
 
+    @property
+    def _constrained_projection_names(self) -> frozenset[str]:
+        cls = self.env.registry[self._name]
+        return get_or_create_class_memo(
+            cls,
+            "_constrained_projection_names__",
+            lambda: frozenset(
+                name
+                for name in self._constrained_field_names
+                if (field := cls._fields.get(name)) is not None
+                and field.related
+                and not field.store
+            ),
+        )
+
     def _check_fields(
         self, field_names: Iterable[str], excluded_names: Iterable[str] = ()
     ) -> None:

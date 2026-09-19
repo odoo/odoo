@@ -36,7 +36,7 @@ if typing.TYPE_CHECKING:
 def _fires_constraints(env, field) -> bool:
     if field.store or not field.related:
         return False
-    return field.name in env[field.model_name]._constrained_field_names
+    return field.name in env[field.model_name]._constrained_projection_names
 
 
 class RecomputeMixin(_ModelStubs):
@@ -80,8 +80,19 @@ class RecomputeMixin(_ModelStubs):
             )
             to_validate: dict = {}
             self._modified_trigger_loop(fnames, create, scheduler, to_validate)
+            # a record being created is not whole yet: `_create` checks it in its
+            # own pass, once its other fields are in
+            being_created = set(self._ids) if create else ()
             for field, ids in to_validate.items():
-                records = self.env[field.model_name].browse(ids).exists()
+                records = (
+                    self.env[field.model_name]
+                    .browse(
+                        id_
+                        for id_ in ids
+                        if field.model_name != self._name or id_ not in being_created
+                    )
+                    .exists()
+                )
                 _debug.pipeline(
                     "recompute.projection_constraints",
                     model=field.model_name,

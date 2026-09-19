@@ -1,6 +1,6 @@
 import typing
 from collections import defaultdict
-from itertools import batched
+from itertools import batched, chain
 from operator import attrgetter
 from typing import Self
 
@@ -574,7 +574,12 @@ class CreateMixin(_ModelStubs):
                 records.modified([field.name for field in other_fields], create=True)
 
         records._check_fields(
-            (name for data in data_list for name in data["stored"]),
+            chain(
+                (name for data in data_list for name in data["stored"]),
+                # a related field without a column is in no `stored` list, and a
+                # new record has a value for it as soon as its path is written
+                self._constrained_projection_names,
+            ),
             {name for data in data_list for name in data["inversed"]},
         )
         records.check_access("create")

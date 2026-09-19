@@ -45,6 +45,19 @@ class TestAProjectedFieldFiresItsConstraints(TransactionCase):
                 {"name": "late", "parent_id": closed.id, "quantity": 1}
             )
 
+    def test_a_new_record_is_checked_once_its_inverses_have_written(self):
+        # `parent_name` is written through its inverse, after the stored pass of
+        # create: a check run from `modified()` would read a parent still unnamed
+        unnamed = self.env["test_orm.projection.parent"].create({})
+        child = self.env["test_orm.projection.child"].create(
+            {"name": "named late", "parent_id": unnamed.id, "parent_name": "now named"}
+        )
+        self.assertEqual(child.parent_name, "now named")
+        with self.assertRaisesRegex(ValidationError, "no name"):
+            self.env["test_orm.projection.child"].create(
+                {"name": "never named", "parent_id": unnamed.copy({"name": False}).id}
+            )
+
     def test_an_unrelated_write_on_the_source_checks_nothing(self):
         calls = []
         Child = type(self.env["test_orm.projection.child"])
@@ -55,7 +68,7 @@ class TestAProjectedFieldFiresItsConstraints(TransactionCase):
             return original(records, field_names, excluded_names)
 
         self.patch(Child, "_check_fields", spy)
-        self.parent.name = "renamed"
+        self.parent.note = "no child reads this"
         self.assertFalse(calls)
 
     def test_only_the_children_of_the_written_parent_are_checked(self):

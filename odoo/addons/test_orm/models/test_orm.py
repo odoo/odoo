@@ -3128,6 +3128,7 @@ class TestOrmProjectionParent(models.Model):
     _description = "test_orm.projection.parent"
 
     name = fields.Char()
+    note = fields.Char()
     state = fields.Selection(
         selection=[("open", "Open"), ("closed", "Closed")],
         default="open",
@@ -3150,6 +3151,16 @@ class TestOrmProjectionChild(models.Model):
     parent_state = fields.Selection(
         related="parent_id.state",
     )
+    parent_name = fields.Char(
+        related="parent_id.name",
+        readonly=False,
+    )
+
+    @api.constrains("parent_state", "parent_name")
+    def _check_parent_is_named(self):
+        for child in self:
+            if child.parent_id and not child.parent_name:
+                raise ValidationError(f"{child.name}: its parent has no name")
 
     @api.constrains("parent_state", "quantity")
     def _check_closed_parent_holds_nothing(self):
