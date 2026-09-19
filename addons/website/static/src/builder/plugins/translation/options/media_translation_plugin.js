@@ -34,8 +34,6 @@ export class MediaTranslationPlugin extends Plugin {
             translateImageOptionSelector,
             translateDocumentOptionSelector,
         },
-        on_get_dirty_translations_handlers: this.registerImageDirtyTranslations.bind(this),
-        on_image_saved_handlers: this.updateTranslationsOnImageSaved.bind(this),
         on_will_save_media_dialog_handlers: withSequence(
             5,
             this.onWillSaveMediaDialogHandlers.bind(this)
@@ -50,7 +48,6 @@ export class MediaTranslationPlugin extends Plugin {
     };
 
     setup() {
-        this.imageTranslationsMap = new Map();
         this.savingMap = {
             images: this.saveImage.bind(this),
         };
@@ -77,46 +74,6 @@ export class MediaTranslationPlugin extends Plugin {
                     toProcessEl.dataset[dataAttr] = node.dataset[dataAttr];
                 }
             }
-        }
-    }
-
-    /**
-     * Prepares and keeps track of the dirty images translations before they are
-     * actually saved, so that they can be updated one last time _after_ the
-     * images have been processed and saved in DB (with the right info).
-     * @see updateTranslationsOnImageSaved
-     *
-     * @param {HTMLElement} translateEl - image element
-     * @param {HTMLSpanElement} spanEl - recreated translation span
-     * @param {string} attr - attribute currently processed on `translateEl`
-     */
-    registerImageDirtyTranslations(translateEl, spanEl, attr) {
-        if (translateEl.matches(".o_modified_image_to_save") && ["src", "srcset"].includes(attr)) {
-            if (this.imageTranslationsMap.has(translateEl)) {
-                this.imageTranslationsMap.get(translateEl).push([attr, spanEl]);
-            } else {
-                this.imageTranslationsMap.set(translateEl, [[attr, spanEl]]);
-            }
-        }
-    }
-    /**
-     * Updates the image translations after their final processing, just before
-     * save. Typically to change src/srcset from base64 to actual URLs.
-     * @see ImageSavePlugin.saveModifiedImage
-     *
-     * @param {Object} info
-     * @param {HTMLImageElement} info.imageEl
-     */
-    updateTranslationsOnImageSaved({ imageEl }) {
-        const fallbackAttributes = { srcset: "src" };
-        if (this.imageTranslationsMap.has(imageEl)) {
-            for (const [attr, spanEl] of this.imageTranslationsMap.get(imageEl)) {
-                spanEl.textContent =
-                    imageEl.getAttribute(attr) ||
-                    imageEl.getAttribute(fallbackAttributes[attr]) ||
-                    spanEl.textContent;
-            }
-            this.imageTranslationsMap.delete(imageEl);
         }
     }
 
