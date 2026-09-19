@@ -41,8 +41,6 @@ class MixinResource(models.AbstractModel):
         comodel_name="resource.calendar",
         related="resource_id.calendar_id",
         string="Working Hours",
-        store=True,
-        index=True,
         readonly=False,
     )
 
