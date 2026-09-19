@@ -1031,7 +1031,6 @@ class HrApplicant(models.Model):
         unique_attachments.copy({'res_model': 'hr.employee', 'res_id': employee.id})
         employee.write({
             'job_id': self.job_id.id,
-            'job_title': self.job_id.name,
             'department_id': self.department_id.id,
             'work_phone': self.department_id.company_id.phone,
         })
@@ -1045,7 +1044,6 @@ class HrApplicant(models.Model):
             'name': self.partner_name or self.partner_id.display_name,
             'work_contact_id': self.partner_id.id,
             'job_id': self.job_id.id,
-            'job_title': self.job_id.name,
             'private_street': address_sudo.street,
             'private_street2': address_sudo.street2,
             'private_city': address_sudo.city,
