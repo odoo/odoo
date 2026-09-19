@@ -1,5 +1,6 @@
 __all__ = ["disabling_gc", "freeze_survivors", "gc_set_timing", "thaw"]
 
+import atexit
 import contextlib
 import gc
 import logging
@@ -44,17 +45,23 @@ def _record_gc_timing(event: str, info: dict[str, Any]) -> None:
             )
 
 
+def _stop_timing_at_exit() -> None:
+    gc_set_timing(enable=False)
+
+
 def gc_set_timing(*, enable: bool) -> None:
     if _record_gc_timing in gc.callbacks:
         if enable:
             return
         gc.callbacks.remove(_record_gc_timing)
+        atexit.unregister(_stop_timing_at_exit)
         _debug.lifecycle("gc.timing", enabled=False)
     elif enable:
         global _gc_init_stats, _gc_timings  # noqa: PLW0603  gc callback state, as above
         _gc_init_stats = gc.get_stats()
         _gc_timings = [0, 0, 0]
         gc.callbacks.append(_record_gc_timing)
+        atexit.register(_stop_timing_at_exit)
         _debug.lifecycle("gc.timing", enabled=True)
 
 

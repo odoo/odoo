@@ -1,4 +1,6 @@
 import gc
+import subprocess
+import sys
 import unittest
 
 from odoo.libs.gc import (
@@ -55,6 +57,23 @@ class TestGcSetTiming(unittest.TestCase):
         gc_set_timing(enable=True)
         gc_set_timing(enable=False)
         self.assertNotIn(_record_gc_timing, gc.callbacks)
+
+    def test_callback_is_gone_before_the_interpreter_tears_modules_down(self):
+        script = (
+            "import atexit, gc\n"
+            "from odoo.libs import gc as libgc\n"
+            "atexit.register(lambda: print(libgc._record_gc_timing in gc.callbacks))\n"
+            "libgc.gc_set_timing(enable=True)\n"
+        )
+        result = subprocess.run(
+            [sys.executable, "-c", script],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=120,
+        )
+        self.assertEqual(result.stdout.strip(), "False", result.stderr)
+        self.assertNotIn("Exception ignored", result.stderr)
 
     def test_disable_when_not_registered_is_a_noop(self):
         gc_set_timing(enable=False)
