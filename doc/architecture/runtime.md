@@ -142,6 +142,16 @@ After `load_modules` returns, `Registry._new_finalize` marks the registry
 ready, calls `_get_field_triggers()`, and `signal_changes()` so other workers
 reload.
 
+The trigger graph is keyed on `Field` identity, and a table-inheritance tree
+gives every model its own `Field` for one stored column, so a dependency on a
+root column is registered against every sibling's copy
+(`_depended_fields_in_tree`). The trigger-tree walk closes a cycle on the
+**fact** a field stands for (`_trigger_fact_of`: the root table and column
+name for a tree field, the field itself elsewhere), not on the `Field`. A
+self-dependency shared by `n` siblings is then one level of `n` targets, as it
+is on a single model; keyed on `Field` it was `n!` paths, which is what put an
+install at 58 GB with nine `resource.asset` subtypes.
+
 ### Request lifecycle (HTTP)
 
 ```

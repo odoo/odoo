@@ -67,7 +67,7 @@ def _diamond_graph(depth: int):
     meta: list = []
 
     def field(m2o=False, o2m=False, name=0, inverse=0, model=0, comodel=0):
-        meta.append((m2o, o2m, name, inverse, model, comodel))
+        meta.append((m2o, o2m, name, inverse, model, comodel, len(meta)))
         return len(meta) - 1
 
     top = [field() for _ in range(depth + 1)]

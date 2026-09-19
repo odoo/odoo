@@ -284,7 +284,9 @@ class _RegistryFieldsMixin(_RegistryStubs):
                 triggered_fields=len(new_triggers),
                 inheritance_trees=len(self.model_names_by_inheritance_root),
             )
-            if not graph.set_triggers(new_triggers, epoch=start_epoch):
+            if not graph.set_triggers(
+                new_triggers, epoch=start_epoch, fact_of=self._trigger_fact_of
+            ):
                 self.__dict__["_field_triggers_refused_at"] = graph.trigger_epoch
                 span.set(published=False)
                 return graph.published_triggers
@@ -297,6 +299,17 @@ class _RegistryFieldsMixin(_RegistryStubs):
 
             span.set(published=True)
             return graph.published_triggers
+
+    def _trigger_fact_of(self, field: Field) -> Field | tuple[str, str]:
+        model_cls = self.models.get(field.model_name)
+        root = getattr(model_cls, "_table_inheritance_root", "")
+        if not root:
+            return field
+        for name in self.model_names_by_inheritance_root.get(root, ()):
+            other = self.models[name]
+            if other._table == root and field.name in other._fields:
+                return (root, field.name)
+        return field
 
     def _depended_fields_in_tree(self, dep_field: Field) -> tuple[Field, ...]:
         model_cls = self.models.get(dep_field.model_name)

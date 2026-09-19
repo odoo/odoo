@@ -10,6 +10,7 @@ from psycopg.errors import InsufficientPrivilege
 import odoo
 import odoo.release  # noqa: F401  binds the submodule so `odoo.release.version` resolves below
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.memory_watch import start_from_environ as start_memory_watch
 from odoo.service import db, server
 from odoo.tools import config
 
@@ -155,6 +156,7 @@ def run_server(args: list[str]) -> None:
         config.parse_config(args, setup_logging=True)
     check_db_user_not_postgres()
     report_configuration()
+    start_memory_watch()
 
     for db_name in config["db_name"]:
         check_db_not_maintenance(

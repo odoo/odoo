@@ -6,9 +6,9 @@ from unittest.mock import patch
 
 import xlsxwriter
 from lxml import etree
-from odoo_rust import csv_export
 
 from odoo import Command, http
+from odoo.libs.accel import csv_export
 from odoo.libs.documents import (
     ROWS,
     Document,

@@ -1,3 +1,4 @@
+import logging
 import threading
 from collections import defaultdict
 from typing import TYPE_CHECKING, Any
@@ -15,6 +16,18 @@ if TYPE_CHECKING:
 _Collector = Collector
 
 _debug = DebugLog(__name__)
+_logger = logging.getLogger(__name__)
+
+_TREE_NODE_BUDGET = 20_000
+
+
+def _measure(node: tuple) -> tuple[int, int]:
+    nodes, depth = 1, 0
+    for _label, child in node[1]:
+        child_nodes, child_depth = _measure(child)
+        nodes += child_nodes
+        depth = max(depth, child_depth + 1)
+    return nodes, depth
 
 
 def _get_stored_compute_adjacency(triggers: defaultdict) -> dict:
@@ -135,7 +148,9 @@ class TriggerTree(dict):
 class _TriggerIndex:
     __slots__ = ("field_ids", "fields", "meta", "payload")
 
-    def __init__(self, triggers: defaultdict) -> None:
+    def __init__(
+        self, triggers: defaultdict, fact_of: Callable[[Any], Any] | None = None
+    ) -> None:
         self.field_ids: dict[Any, int] = {}
         self.fields: list[Any] = []
         self.payload = [
@@ -152,6 +167,7 @@ class _TriggerIndex:
             for dep, buckets in triggers.items()
         ]
         strings: dict[Any, int] = {}
+        facts: dict[Any, int] = {}
         self.meta = [
             (
                 getattr(field, "is_many2one", False),
@@ -160,6 +176,7 @@ class _TriggerIndex:
                 strings.setdefault(getattr(field, "inverse_name", None), len(strings)),
                 strings.setdefault(getattr(field, "model_name", None), len(strings)),
                 strings.setdefault(getattr(field, "comodel_name", None), len(strings)),
+                facts.setdefault(fact_of(field) if fact_of else field, len(facts)),
             )
             for field in self.fields
         ]
@@ -173,10 +190,38 @@ class _TriggerIndex:
 
     def get_trees(self, fields: list[Any] | None) -> dict[Any, TriggerTree]:
         wanted = None if fields is None else [self.field_ids[f] for f in fields]
+        if _debug.perf.enabled:
+            return self._get_trees_one_by_one(wanted)
         return {
             self.fields[field_id]: self._wrap(node)
             for field_id, node in _get_trigger_trees(self.payload, self.meta, wanted)
         }
+
+    # One native call builds every tree before returning, so a tree that grows
+    # without bound names no field. With the perf channel on, each tree is
+    # built alone, measured, and logged before the next.
+    def _get_trees_one_by_one(self, wanted: list[int] | None) -> dict[Any, TriggerTree]:
+        if wanted is None:
+            wanted = [field_id for field_id, _buckets in self.payload]
+        trees = {}
+        for field_id in wanted:
+            field = self.fields[field_id]
+            _debug.pipeline("model_graph.tree_building", field=field)
+            with _debug.perf("model_graph.tree_built", field=field) as span:
+                [(_, node)] = _get_trigger_trees(self.payload, self.meta, [field_id])
+                nodes, depth = _measure(node)
+                span.set(nodes=nodes, depth=depth)
+            if nodes > _TREE_NODE_BUDGET:
+                _logger.warning(
+                    "trigger tree of %s holds %d nodes (depth %d), over the budget "
+                    "of %d; a dependency cycle through a path is the usual cause",
+                    field,
+                    nodes,
+                    depth,
+                    _TREE_NODE_BUDGET,
+                )
+            trees[field] = self._wrap(node)
+        return trees
 
     def _wrap(self, node: tuple) -> TriggerTree:
         root, children = node
@@ -189,6 +234,7 @@ class _TriggerIndex:
 
 class _TriggerState:
     __slots__ = (
+        "fact_of",
         "index",
         "merged",
         "modifying_relations",
@@ -198,8 +244,11 @@ class _TriggerState:
         "triggers",
     )
 
-    def __init__(self, triggers: defaultdict) -> None:
+    def __init__(
+        self, triggers: defaultdict, fact_of: Callable[[Any], Any] | None = None
+    ) -> None:
         self.triggers = triggers
+        self.fact_of = fact_of
         self.index: _TriggerIndex | None = None
         self.trees: dict[Any, TriggerTree] = {}
         self.merged: dict[tuple, TriggerTree] = {}
@@ -210,7 +259,7 @@ class _TriggerState:
     def get_index(self) -> _TriggerIndex:
         index = self.index
         if index is None:
-            index = self.index = _TriggerIndex(self.triggers)
+            index = self.index = _TriggerIndex(self.triggers, self.fact_of)
         return index
 
     def get_path_fields(self) -> frozenset:
@@ -288,8 +337,14 @@ class ModelGraph:
         with self._publish_lock:
             self._state = _TriggerState(_get_empty_triggers())
 
-    def set_triggers(self, triggers: defaultdict, *, epoch: int | None = None) -> bool:
-        state = _TriggerState(triggers)
+    def set_triggers(
+        self,
+        triggers: defaultdict,
+        *,
+        epoch: int | None = None,
+        fact_of: Callable[[Any], Any] | None = None,
+    ) -> bool:
+        state = _TriggerState(triggers, fact_of)
         with self._publish_lock:
             if epoch is not None and (
                 self._invalidation_barrier or epoch != self._epoch
@@ -334,7 +389,7 @@ class ModelGraph:
     def clear_caches(self) -> None:
         _debug.lifecycle("model_graph.caches_cleared", epoch=self._epoch)
         with self._publish_lock:
-            self._state = _TriggerState(self._state.triggers)
+            self._state = _TriggerState(self._state.triggers, self._state.fact_of)
 
     def discard_fields(self, fields: Collection) -> None:
         discarded = set(fields)
@@ -362,7 +417,7 @@ class ModelGraph:
             triggers_after=len(new_triggers),
         )
         with self._publish_lock:
-            self._state = _TriggerState(new_triggers)
+            self._state = _TriggerState(new_triggers, self._state.fact_of)
 
     def has_triggers(self, field: Any) -> bool:
         return field in self._state.triggers

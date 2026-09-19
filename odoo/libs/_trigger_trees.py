@@ -5,13 +5,17 @@ from collections.abc import Sequence
 __all__ = ["get_trigger_trees"]
 
 Bucket = tuple[Sequence[int], Sequence[int]]
-Meta = tuple[bool, bool, int, int, int, int]
+# (is_many2one, is_one2many, name, inverse_name, model_name, comodel_name, fact):
+# `fact` is the stored column a field stands for. Every model of a table-
+# inheritance tree keeps its own Field for one column, so the walk closes a
+# cycle on the fact, or a self-dependency shared by n siblings costs n! paths.
+Meta = tuple[bool, bool, int, int, int, int, int]
 Node = tuple[list[int], list[tuple[int, "Node"]]]
 
 
 def _is_inverse_pair(meta: Sequence[Meta], f1: int, f2: int) -> bool:
-    a_m2o, _, a_name, _, a_model, a_comodel = meta[f1]
-    _, b_o2m, _, b_inverse, b_model, b_comodel = meta[f2]
+    a_m2o, _, a_name, _, a_model, a_comodel, _ = meta[f1]
+    _, b_o2m, _, b_inverse, b_model, b_comodel, _ = meta[f2]
     return (
         a_m2o
         and b_o2m
@@ -40,13 +44,16 @@ def _get_tree(
     expanded: set[tuple[int, tuple[int, ...]]] = set()
     visited_memo: dict[int, frozenset[int]] = {}
 
+    def fact(field: int) -> int:
+        return meta[field][6]
+
     def collect(field: int, prefix: tuple[int, ...]) -> frozenset[int] | None:
         if (field, prefix) in expanded:
             visited = visited_memo[field]
             if visited.isdisjoint(seen):
                 return visited
-        seen.add(field)
-        visited = frozenset({field})
+        seen.add(fact(field))
+        visited = frozenset({fact(field)})
         clean = True
         for path, targets in triggers[field]:
             full_path = _concat_paths(meta, prefix, path)
@@ -60,8 +67,8 @@ def _get_tree(
                     root_set.add(target)
                     root_list.append(target)
             for target in targets:
-                if target in seen:
-                    if target not in visited:
+                if fact(target) in seen:
+                    if fact(target) not in visited:
                         clean = False
                     continue
                 if target not in triggers:
@@ -71,7 +78,7 @@ def _get_tree(
                     clean = False
                 else:
                     visited |= sub_visited
-        seen.discard(field)
+        seen.discard(fact(field))
         if clean:
             visited_memo[field] = visited
             expanded.add((field, prefix))

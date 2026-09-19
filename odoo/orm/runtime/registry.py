@@ -15,6 +15,7 @@ from odoo.libs import gc
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.func import locked, reset_cached_properties
 from odoo.libs.lru import LRU
+from odoo.libs.memory_watch import read_rss
 from odoo.libs.worker_thread import current_worker_thread
 from odoo.tools import OrderedSet, config
 from odoo.tools.cache import remove_counters
@@ -521,8 +522,13 @@ class Registry(
                 ),
             ) as phase:
                 for model in models:
-                    model._auto_init()
-                    model.init()
+                    with _debug.perf(
+                        "registry.init_model", cr=cr, model=model._name
+                    ) as span:
+                        rss = read_rss()
+                        model._auto_init()
+                        model.init()
+                        span.set(rss_mb=(read_rss() - rss) // (1024 * 1024))
 
                 self.metaschema.reflect(
                     env,

@@ -6,7 +6,7 @@ use pyo3::types::{PyList, PyTuple};
 type FieldId = u32;
 type Bucket = (Vec<FieldId>, Vec<FieldId>);
 type FieldTriggers = (FieldId, Vec<Bucket>);
-type Meta = (bool, bool, u32, u32, u32, u32);
+type Meta = (bool, bool, u32, u32, u32, u32, u32);
 
 #[derive(Clone, Copy)]
 struct FieldMeta {
@@ -16,6 +16,10 @@ struct FieldMeta {
     inverse_name: u32,
     model_name: u32,
     comodel_name: u32,
+    // The stored column the field stands for. Every model of a table-
+    // inheritance tree keeps its own field for one column, so a cycle closes
+    // on the fact, or a self-dependency shared by n siblings costs n! paths.
+    fact: u32,
 }
 
 struct Graph {
@@ -47,6 +51,10 @@ impl Graph {
         out.extend_from_slice(left);
         out.extend_from_slice(right);
         out
+    }
+
+    fn fact(&self, field: FieldId) -> FieldId {
+        self.meta[field as usize].fact
     }
 }
 
@@ -88,8 +96,9 @@ impl Walk<'_> {
                 return Some(visited.clone());
             }
         }
-        self.seen.insert(field);
-        let mut visited: HashSet<FieldId> = HashSet::from([field]);
+        let fact = self.graph.fact(field);
+        self.seen.insert(fact);
+        let mut visited: HashSet<FieldId> = HashSet::from([fact]);
         let mut clean = true;
         let buckets = &self.graph.triggers[&field];
         for (path, targets) in buckets {
@@ -104,8 +113,9 @@ impl Walk<'_> {
                 }
             }
             for &target in targets {
-                if self.seen.contains(&target) {
-                    if !visited.contains(&target) {
+                let target_fact = self.graph.fact(target);
+                if self.seen.contains(&target_fact) {
+                    if !visited.contains(&target_fact) {
                         clean = false;
                     }
                     continue;
@@ -119,7 +129,7 @@ impl Walk<'_> {
                 }
             }
         }
-        self.seen.remove(&field);
+        self.seen.remove(&fact);
         if clean {
             self.visited_memo.insert(field, visited.clone());
             self.expanded.insert((field, prefix));
@@ -220,13 +230,14 @@ pub fn get_trigger_trees<'py>(
         triggers: triggers.into_iter().collect(),
         meta: meta
             .into_iter()
-            .map(|(m, o, n, i, mo, co)| FieldMeta {
+            .map(|(m, o, n, i, mo, co, fact)| FieldMeta {
                 is_many2one: m,
                 is_one2many: o,
                 name: n,
                 inverse_name: i,
                 model_name: mo,
                 comodel_name: co,
+                fact,
             })
             .collect(),
     };
@@ -270,9 +281,11 @@ mod tests {
             inverse_name: inverse,
             model_name: model,
             comodel_name: comodel,
+            fact: u32::MAX,
         }
     }
 
+    // a field left with no fact is its own fact
     fn graph(edges: &[(u32, &[u32], &[u32])], meta: Vec<FieldMeta>) -> Graph {
         let mut triggers: HashMap<u32, Vec<Bucket>> = HashMap::new();
         for (dep, path, targets) in edges {
@@ -281,7 +294,36 @@ mod tests {
                 .or_default()
                 .push((path.to_vec(), targets.to_vec()));
         }
+        let meta = meta
+            .into_iter()
+            .enumerate()
+            .map(|(i, m)| FieldMeta { fact: if m.fact == u32::MAX { i as u32 } else { m.fact }, ..m })
+            .collect();
         Graph { triggers, meta }
+    }
+
+    fn count(node: &super::Node) -> usize {
+        1 + node.children.iter().map(|(_, c)| count(c)).sum::<usize>()
+    }
+
+    #[test]
+    fn siblings_sharing_one_fact_close_the_cycle_once_and_list_every_sibling() {
+        // n copies F_i of one column (fact 0), each depending on itself through
+        // its own many2one P_i (facts 1): F_i --[P_j]--> F_j for every i, j.
+        let n = 9u32;
+        let mut meta: Vec<FieldMeta> = (0..n).map(|_| plain(false, false, 0, 0, 0, 0)).collect();
+        meta.iter_mut().for_each(|m| m.fact = 0);
+        meta.extend((0..n).map(|i| FieldMeta { fact: 1, ..plain(true, false, 1, 0, i, i) }));
+        let edges: Vec<(u32, Vec<u32>, Vec<u32>)> = (0..n)
+            .flat_map(|i| (0..n).map(move |j| (i, vec![n + j], vec![j])))
+            .collect();
+        let borrowed: Vec<(u32, &[u32], &[u32])> =
+            edges.iter().map(|(d, p, t)| (*d, p.as_slice(), t.as_slice())).collect();
+        let g = graph(&borrowed, meta);
+        let tree = tree_of(&g, 0);
+        assert_eq!(count(&tree), 1 + n as usize);
+        let listed: Vec<u32> = flat(&tree).into_iter().flat_map(|(_, roots)| roots).collect();
+        assert_eq!(listed, (0..n).collect::<Vec<_>>());
     }
 
     fn flat(node: &super::Node) -> Vec<(Vec<u32>, Vec<u32>)> {

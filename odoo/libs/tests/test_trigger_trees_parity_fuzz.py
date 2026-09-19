@@ -18,11 +18,14 @@ def _random_graph(rng):
         model = rng.randrange(n_models)
         comodel = rng.randrange(n_models)
         if kind < 0.25:
-            meta.append((True, False, rng.randrange(6), 0, model, comodel))
+            meta.append((True, False, rng.randrange(6), 0, model, comodel, 0))
         elif kind < 0.5:
-            meta.append((False, True, 0, rng.randrange(6), model, comodel))
+            meta.append((False, True, 0, rng.randrange(6), model, comodel, 0))
         else:
-            meta.append((False, False, rng.randrange(6), 0, model, comodel))
+            meta.append((False, False, rng.randrange(6), 0, model, comodel, 0))
+    # a fact shared by a few fields, as sibling copies of one column share it
+    n_facts = rng.randrange(max(1, n_fields // 2), n_fields + 1)
+    meta = [(*m[:6], rng.randrange(n_facts)) for m in meta]
     triggers = []
     for dep in rng.sample(range(n_fields), rng.randrange(1, n_fields // 2 + 1)):
         buckets: dict[tuple[int, ...], list] = {}
@@ -61,14 +64,14 @@ def test_a_field_subset_is_built_in_the_order_asked():
 
 def test_an_untriggered_field_is_an_empty_tree_on_both_sides():
     triggers: list = [(0, [([], [1])])]
-    meta = [(False, False, 0, 0, 0, 0)] * 3
+    meta = [(False, False, 0, 0, 0, 0, i) for i in range(3)]
     assert fast.get_trigger_trees(triggers, meta, [2]) == reference(triggers, meta, [2])
     assert fast.get_trigger_trees(triggers, meta, [2]) == [(2, ([], []))]
 
 
 @pytest.mark.parametrize("build", [fast.get_trigger_trees, reference])
 def test_an_out_of_range_field_id_is_refused(build):
-    meta = [(False, False, 0, 0, 0, 0)] * 2
+    meta = [(False, False, 0, 0, 0, 0, i) for i in range(2)]
     with pytest.raises(IndexError):
         build([(0, [([], [5])])], meta)
     with pytest.raises(IndexError):
