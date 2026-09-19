@@ -131,7 +131,6 @@ class DocumentsDocument(models.Model):
         comodel_name="res.users",
         related="shortcut_document_id.owner_id",
         string="Source Document Owner",
-        store=True,
     )
     shortcut_ids = fields.One2many(
         comodel_name="document.document",
