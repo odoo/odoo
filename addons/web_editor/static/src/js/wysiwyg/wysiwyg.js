@@ -1346,6 +1346,9 @@ export class Wysiwyg extends Component {
                                 const text = $node.text();
                                 if (node.innerText !== text) {
                                     node.innerText = text;
+                                    // Ensure generated element translation can
+                                    // be saved
+                                    node.classList.add("o_dirty");
                                 }
                                 continue;
                             }
