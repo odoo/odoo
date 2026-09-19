@@ -102,7 +102,7 @@ class HrLeaveReport(models.Model):
                     allocation.date_from as date_from,
                     allocation.date_to as date_to,
                     'allocation' as leave_type,
-                    allocation.employee_company_id as company_id
+                    employee.company_id as company_id
                 from hr_leave_allocation as allocation
                 inner join hr_employee as employee on (allocation.employee_id = employee.id)
                 LEFT JOIN hr_version v ON v.id = employee.current_version_id
@@ -126,7 +126,7 @@ class HrLeaveReport(models.Model):
                     request.date_from as date_from,
                     request.date_to as date_to,
                     'request' as leave_type,
-                    request.employee_company_id as company_id
+                    employee.company_id as company_id
                 from hr_leave as request
                 inner join hr_employee as employee on (request.employee_id = employee.id)
                 LEFT JOIN hr_version v ON v.id = employee.current_version_id

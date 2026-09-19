@@ -28,7 +28,8 @@ class ResUsers(models.Model):
                     user.im_status = "leave_offline"
 
     _ON_LEAVE_IDS_QUERY = """SELECT res_users.id FROM res_users
-                            JOIN hr_leave ON hr_leave.user_id = res_users.id
+                            JOIN hr_employee ON hr_employee.user_id = res_users.id
+                            JOIN hr_leave ON hr_leave.employee_id = hr_employee.id
                             AND hr_leave.state = 'validate'
                             AND res_users.active = 't'
                             AND hr_leave.date_from <= %s AND hr_leave.date_to >= %s
@@ -36,7 +37,8 @@ class ResUsers(models.Model):
                             JOIN resource_time_type rtt ON hr_leave_type.time_type_id = rtt.id
                             AND rtt.is_work IS NOT TRUE;"""
     _ON_LEAVE_PARTNER_IDS_QUERY = """SELECT res_users.partner_id FROM res_users
-                            JOIN hr_leave ON hr_leave.user_id = res_users.id
+                            JOIN hr_employee ON hr_employee.user_id = res_users.id
+                            JOIN hr_leave ON hr_leave.employee_id = hr_employee.id
                             AND hr_leave.state = 'validate'
                             AND res_users.active = 't'
                             AND hr_leave.date_from <= %s AND hr_leave.date_to >= %s

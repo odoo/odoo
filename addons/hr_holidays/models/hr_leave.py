@@ -136,8 +136,6 @@ class HrLeave(models.Model):
         string="User",
         compute_sudo=True,
         related_sudo=True,
-        store=True,
-        index=True,
         readonly=True,
     )
     holiday_status_id = fields.Many2one(
@@ -179,7 +177,6 @@ class HrLeave(models.Model):
     employee_company_id = fields.Many2one(
         related="employee_id.company_id",
         string="Employee Company",
-        store=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",

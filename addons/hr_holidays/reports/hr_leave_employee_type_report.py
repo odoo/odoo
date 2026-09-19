@@ -99,7 +99,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
                     allocation.date_from as date_from,
                     allocation.date_to as date_to,
                     'left' as holiday_status,
-                    allocation.employee_company_id as company_id
+                    employee.company_id as company_id
                 FROM hr_leave_allocation as allocation
                 INNER JOIN hr_employee as employee ON (allocation.employee_id = employee.id)
                 LEFT JOIN hr_version v ON v.id = employee.current_version_id
@@ -149,7 +149,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
                         WHEN request.state IN ('validate1', 'validate') THEN 'taken'
                         WHEN request.state = 'confirm' THEN 'planned'
                     END as holiday_status,
-                    request.employee_company_id as company_id
+                    employee.company_id as company_id
                 FROM hr_leave as request
                 INNER JOIN hr_employee as employee ON (request.employee_id = employee.id)
                 LEFT JOIN hr_version v ON v.id = employee.current_version_id

@@ -119,7 +119,6 @@ class HrLeaveAllocation(models.Model):
     )
     employee_company_id = fields.Many2one(
         related="employee_id.company_id",
-        store=True,
         readonly=True,
     )
     active_employee = fields.Boolean(
