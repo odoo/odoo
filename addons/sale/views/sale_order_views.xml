@@ -287,10 +287,10 @@
                     invisible="invoice_status != 'to invoice' and not (has_overages and invoice_status == 'upselling')"/>
                 <button
                     string="Create Invoice"
-                    id="create_invoice_percentage"
+                    id="create_invoice_downpayment"
                     name="%(sale.action_view_sale_advance_payment_inv)d"
                     type="action"
-                    context="{'default_advance_payment_method': 'percentage'}"
+                    context="{'default_advance_payment_method': 'downpayment'}"
                     data-hotkey="q"
                     invisible="invoice_status != 'no' or state != 'sale'"/>
                 <button
