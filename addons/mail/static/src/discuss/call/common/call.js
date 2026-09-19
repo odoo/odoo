@@ -12,7 +12,7 @@ import {
     SURFACE_CORNER,
     SURFACE_PLACEMENT,
 } from "@mail/discuss/call/common/stage/layout_engine";
-import { resolveStageProfile } from "@mail/discuss/call/common/stage/layout_profile";
+import { CallProfile } from "@mail/discuss/call/common/call_profile";
 import { SurfaceManager } from "@mail/discuss/call/common/stage/surface_manager";
 
 import {
@@ -35,9 +35,8 @@ import { useService } from "@web/core/utils/hooks";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
 /** @typedef {import("@mail/discuss/call/common/call_layout").CallLayout} CallLayout */
-/** @typedef {import("@mail/discuss/call/common/stage/layout_profile").StageProfile} StageProfile */
-/** @typedef {import("@mail/discuss/call/common/stage/surface_manager").Surface} Surface */
-/** @typedef {import("@mail/discuss/call/common/stage/surface_manager").SurfaceDescriptor} SurfaceDescriptor */
+/** @typedef {CardData & {placement: string}} CallSurfaceDescriptor */
+/** @typedef {import("@mail/discuss/call/common/stage/surface_manager").Surface<CallSurfaceDescriptor>} CallSurface */
 
 const MORE_CARDS_KEY = "__more__";
 
@@ -45,9 +44,9 @@ const MORE_CARDS_KEY = "__more__";
  * The layout request this render would make: two renders sharing a signature need only one layout
  * pass. Excludes the measured box — the ResizeObserver is what notices a resize.
  *
- * @param {Surface[]} surfaces
+ * @param {CallSurface[]} surfaces
  * @param {boolean} hasMoreCards
- * @param {StageProfile} profile
+ * @param {CallProfile} profile
  * @param {string} [insetCorner]
  */
 function signatureOf(surfaces, hasMoreCards, profile, insetCorner) {
@@ -112,6 +111,7 @@ export class Call extends Component {
             hasOverlay: t.boolean().optional(true),
             isPip: t.boolean().optional(),
         });
+        /** @type {SurfaceManager<CallSurfaceDescriptor>} */
         this.surfaceManager = new SurfaceManager();
         this.geometryRenderer = new GeometryRenderer();
         /** Memoized: three readers per patch, and every read re-sorts and re-reconciles. */
@@ -175,25 +175,11 @@ export class Call extends Component {
 
     /** Every layout decision of this stage, in one place. */
     get profile() {
-        return resolveStageProfile({
-            hasFocus: Boolean(this.channel?.activeRtcSession),
-            hasVideo: Boolean(this.channel?.videoCount),
-            inChatWindow: Boolean(this.props.compact),
-            isActiveCall: this.isActiveCall,
-            isFullscreen: this.rtc.isFullscreen,
-            isPinned: Boolean(this.channel?.pinnedRtcSession),
-            isPip: Boolean(this.props.isPip),
-            isPresenting: this.isAnyonePresenting,
-            isSmallScreen: this.ui.isSmall,
-            isTouch: this.isMobileOs,
-            participantCount: this.channel?.rtc_session_ids.length ?? 0,
-            prefersVideoTiles: this.store.settings.showOnlyVideo,
-            userLayout: this.store.settings.callLayout,
-        });
+        return new CallProfile(this);
     }
 
     /** The session the spotlight and sidebar layouts fall back on. */
-    get spotlightTarget() {
+    get spotlightSession() {
         const sessions = this.channel.rtc_session_ids;
         return (
             this.channel.pinnedRtcSession ||
@@ -228,7 +214,7 @@ export class Call extends Component {
             }
         }
         // Keep a pin or presentation focused, or retain the last speaker when the call is quiet.
-        const focused = this.channel.activeRtcSession || this.spotlightTarget;
+        const focused = this.channel.activeRtcSession || this.spotlightSession;
         return focused ? [focused] : [];
     }
 
@@ -248,8 +234,9 @@ export class Call extends Component {
         }
     }
 
+    /** Whether this call takes a whole window, rather than a place inside one. */
     get isFullSize() {
-        return this.profile.isFullSize;
+        return Boolean(this.rtc.isFullscreen || this.props.isPip);
     }
 
     get isActiveCall() {
@@ -296,7 +283,7 @@ export class Call extends Component {
         return signatureOf(surfaces, hasMoreCards, this.profile, this.state.insetCorner);
     }
 
-    /** The {@link SurfaceDescriptor} the layout wants, before the card cap. */
+    /** The {@link CallSurfaceDescriptor} the layout wants, before the card cap. */
     get desiredCardData() {
         const focused = this.focusedSessions;
         if (!focused.length) {
@@ -528,7 +515,7 @@ export class Call extends Component {
     /**
      * Every card is out of the flow: the layout engine writes size and translate as inline styles.
      *
-     * @param {Surface} surface
+     * @param {CallSurface} surface
      */
     surfaceClassName(surface) {
         switch (surface.data.placement) {
@@ -592,7 +579,7 @@ export class Call extends Component {
     }
 
     /**
-     * @param {{ width: number, height: number, surfaces: Surface[], hasMoreCards: boolean }} stage
+     * @param {{ width: number, height: number, surfaces: CallSurface[], hasMoreCards: boolean }} stage
      */
     computeStageLayout({ width, height, surfaces, hasMoreCards }) {
         const { autoHeight, aspectRatio, capColumnsAtThree, fillMainWidth, insetBottomMargin } =
@@ -621,7 +608,7 @@ export class Call extends Component {
      *
      * @param {HTMLElement} gridEl
      * @param {Object} layout as returned by {@link computeLayout}
-     * @param {Surface[]} surfaces
+     * @param {CallSurface[]} surfaces
      * @param {boolean} hasMoreCards
      */
     applyGeometry(gridEl, layout, surfaces, hasMoreCards) {

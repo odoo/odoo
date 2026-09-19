@@ -1,10 +1,10 @@
 import { ACTION_TAGS } from "@mail/core/common/action";
-import { registerThreadAction, THREAD_ACTION_IDS } from "@mail/core/common/thread_actions";
+import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { CallSettings } from "@mail/discuss/call/common/call_settings";
 
 import { _t } from "@web/core/l10n/translation";
 
-registerThreadAction(THREAD_ACTION_IDS.CALL, {
+registerThreadAction("call", {
     condition: ({ channel, store }) => channel?.allowCalls && !channel?.eq(store.rtc.channel),
     hasBtnBg: true,
     icon: "phone",
@@ -15,7 +15,7 @@ registerThreadAction(THREAD_ACTION_IDS.CALL, {
     sequenceQuick: 30,
     tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],
 });
-registerThreadAction(THREAD_ACTION_IDS.CAMERA_CALL, {
+registerThreadAction("camera-call", {
     condition: ({ channel, store }) => channel?.allowCalls && !channel?.eq(store.rtc.channel),
     hasBtnBg: true,
     icon: "videocam",
@@ -31,7 +31,7 @@ registerThreadAction(THREAD_ACTION_IDS.CAMERA_CALL, {
     sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 25 : 35),
     tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],
 });
-registerThreadAction(THREAD_ACTION_IDS.CALL_SETTINGS, {
+registerThreadAction("call-settings", {
     actionPanelComponent: CallSettings,
     actionPanelComponentProps: () => ({ isCompact: true }),
     condition: ({ channel, owner, store }) =>
@@ -44,7 +44,7 @@ registerThreadAction(THREAD_ACTION_IDS.CALL_SETTINGS, {
     sequence: 5,
     sequenceGroup: 30,
 });
-registerThreadAction(THREAD_ACTION_IDS.DISCONNECT, {
+registerThreadAction("disconnect", {
     condition: ({ channel, owner, store }) =>
         store.rtc.selfSession?.in(channel?.rtc_session_ids) && owner.isDiscussSidebarChannelActions,
     hasBtnBg: true,

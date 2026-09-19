@@ -8,8 +8,8 @@
                 </div>
                 <div t-if="this.threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ this.threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer h-100 border flex-shrink-0 rounded-4" t-att-class="{
                     'w-100': this.ui.isSmall,
-                    'o-mail-DiscussApp-sidebarBgColor': this.threadActions.activeAction.id === this.THREAD_ACTION_IDS.MEETING_CHAT,
-                    'bg-view': this.threadActions.activeAction.id !== this.THREAD_ACTION_IDS.MEETING_CHAT,
+                    'o-mail-DiscussApp-sidebarBgColor': this.threadActions.activeAction.id === 'meeting-chat',
+                    'bg-view': this.threadActions.activeAction.id !== 'meeting-chat',
                 }">
                     <t t-component="this.threadActions.activeAction.actionPanelComponent" t-props="this.threadActions.activeAction.actionPanelComponentProps"/>
                 </div>

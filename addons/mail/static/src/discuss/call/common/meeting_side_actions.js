@@ -1,5 +1,5 @@
 import { ActionList } from "@mail/core/common/action_list";
-import { THREAD_ACTION_IDS, UseThreadActions } from "@mail/core/common/thread_actions";
+import { UseThreadActions } from "@mail/core/common/thread_actions";
 import { attClassObjectToString } from "@mail/utils/common/format";
 
 import { Component, computed, types, useProps } from "@odoo/owl";
@@ -9,9 +9,9 @@ import { useService } from "@web/core/utils/hooks";
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
 /** Thread actions a meeting has no use for, wherever its actions end up being rendered. */
-const HIDDEN_ACTION_IDS = [THREAD_ACTION_IDS.ADVANCED_SETTINGS, THREAD_ACTION_IDS.LEAVE];
+const HIDDEN_ACTION_IDS = ["advanced-settings", "leave"];
 /** Thread actions a bar with room to spare shows as their own button. */
-const QUICK_ACTION_IDS = [THREAD_ACTION_IDS.MEMBER_LIST, THREAD_ACTION_IDS.MEETING_CHAT];
+const QUICK_ACTION_IDS = ["member-list", "meeting-chat"];
 
 /**
  * The non-empty thread action groups of a meeting's "More" menu. Exported because a small screen

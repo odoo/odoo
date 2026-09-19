@@ -13,11 +13,11 @@ import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { MeetingReadyBanner } from "./meeting_ready_banner";
 import { meetingMoreActionGroups, MeetingSideActions } from "./meeting_side_actions";
-import { THREAD_ACTION_IDS, useThreadActions } from "@mail/core/common/thread_actions";
+import { useThreadActions } from "@mail/core/common/thread_actions";
 import { useMessageSearch } from "@mail/core/common/message_search_hook";
 
 const { DateTime } = luxon;
-const PIP_EXTRA_ACTION_IDS = [THREAD_ACTION_IDS.COPY_INVITE_LINK, THREAD_ACTION_IDS.MEETING_CHAT];
+const PIP_EXTRA_ACTION_IDS = ["copy-invite-link", "meeting-chat"];
 
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
@@ -33,8 +33,6 @@ export class Meeting extends Component {
         Thread,
     };
 
-    THREAD_ACTION_IDS = THREAD_ACTION_IDS;
-
     setup() {
         this.props = useProps({
             autoOpenAction: types.string().optional(),
@@ -48,7 +46,7 @@ export class Meeting extends Component {
             inMeetingView: {
                 openChat: () =>
                     this.threadActions.actions
-                        .find((action) => action.id === THREAD_ACTION_IDS.MEETING_CHAT)
+                        .find((action) => action.id === "meeting-chat")
                         ?.actionPanelOpen(),
             },
         });

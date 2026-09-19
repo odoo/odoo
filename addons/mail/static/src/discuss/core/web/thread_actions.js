@@ -1,11 +1,11 @@
-import { registerThreadAction, THREAD_ACTION_IDS } from "@mail/core/common/thread_actions";
+import { registerThreadAction } from "@mail/core/common/thread_actions";
 
 import { _t } from "@web/core/l10n/translation";
 
 export const expandDiscussSequenceGroup = 5;
 export const expandDiscussSequenceQuick = 0;
 
-registerThreadAction(THREAD_ACTION_IDS.EXPAND_DISCUSS, {
+registerThreadAction("expand-discuss", {
     condition: ({ channel, owner, store }) =>
         channel &&
         owner.props.chatWindow?.isOpen &&
@@ -29,7 +29,7 @@ registerThreadAction(THREAD_ACTION_IDS.EXPAND_DISCUSS, {
     sequenceGroup: expandDiscussSequenceGroup,
     sequenceQuick: expandDiscussSequenceQuick,
 });
-registerThreadAction(THREAD_ACTION_IDS.ADVANCED_SETTINGS, {
+registerThreadAction("advanced-settings", {
     condition: ({ channel, owner }) =>
         ["owner", "admin"].includes(channel?.self_member_id?.channel_role) &&
         !owner.isDiscussContent,
@@ -48,7 +48,7 @@ registerThreadAction(THREAD_ACTION_IDS.ADVANCED_SETTINGS, {
     sequence: 20,
     sequenceGroup: 30,
 });
-registerThreadAction(THREAD_ACTION_IDS.VIEW_RECORDINGS, {
+registerThreadAction("view-recordings", {
     condition: ({ channel, owner }) => channel && !owner.isDiscussContent,
     async onSelected({ channel, store }) {
         const action = await store.env.services.orm.call(
