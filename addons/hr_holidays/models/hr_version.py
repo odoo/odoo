@@ -21,6 +21,10 @@ class HrVersion(models.Model):
 
     departure_do_cancel_time_off_requests = fields.Boolean(related='departure_id.do_cancel_time_off_requests')
 
+    def _get_hr_responsible_domain(self):
+        return [('share', '=', False), ('company_ids', 'in', self.env.company.ids), ('all_group_ids', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').ids)]
+    hr_responsible_id = fields.Many2one(domain=_get_hr_responsible_domain)
+
     @api.constrains('contract_date_start', 'contract_date_end')
     def _check_contracts(self):
         self._get_leaves()._check_contracts()
