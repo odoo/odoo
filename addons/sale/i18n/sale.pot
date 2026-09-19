@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.5a1\n"
+"Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
-"PO-Revision-Date: 2026-09-11 17:43+0000\n"
+"POT-Creation-Date: 2026-09-18 17:39+0000\n"
+"PO-Revision-Date: 2026-09-18 17:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -262,7 +262,7 @@ msgid ""
 "                                                </t>\n"
 "                                                <t t-else=\"\">\n"
 "                                                    <span style=\"white-space: nowrap;\">\n"
-"                                                        <t t-if=\"hasattr(object, 'website_id') and object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
+"                                                        <t t-if=\"object.company_price_include == 'tax_excluded'\">\n"
 "                                                            <t t-out=\"format_amount(line.price_subtotal, object.currency_id) or ''\">$ 10.00</t>\n"
 "                                                        </t>\n"
 "                                                        <t t-else=\"\">\n"
@@ -310,11 +310,6 @@ msgid ""
 "                                <tr>\n"
 "                                    <td style=\"width: 20%; padding-top: 4px; border-top: 1px solid #343a40; opacity: 0.9;\" align=\"left\"><strong>Total</strong></td>\n"
 "                                    <td style=\"width: 80%; padding-top: 4px; border-top: 1px solid #343a40; font-weight: bold; \" align=\"right\">\n"
-"                                        <span style=\"display: inline-block; margin-right: 4px; padding: 4px 8px; border: 1px solid #dee2e6; border-radius: 4px;\">\n"
-"                                            <span t-attf-style=\"color: #{color}; font-weight: bold;\">\n"
-"                                                <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"/>\n"
-"                                            </span>\n"
-"                                        </span>\n"
 "                                        <span style=\"opacity: 0.9;\"><t t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</t></span>\n"
 "                                    </td>\n"
 "                                </tr>\n"
@@ -612,13 +607,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid ""
-"<span>1 Units</span>\n"
-"                                            <span>×</span>"
-msgstr ""
-
-#. module: sale
 #: model_terms:web_tour.tour,rainbow_man_message:sale.sale_tour
 msgid ""
 "<span><b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.\n"
@@ -890,7 +878,6 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_ids
-#: model:ir.ui.menu,name:sale.sale_menu_config_activities
 msgid "Activities"
 msgstr ""
 
@@ -906,7 +893,6 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_plans_ids
-#: model:ir.ui.menu,name:sale.sale_menu_config_activity_plan
 msgid "Activity Plans"
 msgstr ""
 
@@ -922,15 +908,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_type_action_config_sale
-#: model:ir.ui.menu,name:sale.sale_menu_config_activity_type
 msgid "Activity Types"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
-msgid ""
-"Activity plans are used to assign a list of activities in just a few clicks\n"
-"                (e.g. \"Delivery scheduling\", \"Order Payment Follow-up\", ...)"
 msgstr ""
 
 #. module: sale
@@ -1051,11 +1029,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__amount_unpaid
 msgid "Amount left to pay to avoid double payment or double invoicing."
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Amount paid:"
 msgstr ""
 
 #. module: sale
@@ -1336,11 +1309,6 @@ msgid "Catalog"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.menu_product_categories
-msgid "Categories"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 msgid "Category"
 msgstr ""
@@ -1399,8 +1367,9 @@ msgid "Collapse Prices"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.menu_product_combos
-msgid "Combo Choices"
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/combo_menu_widget.xml:0
+msgid "Combo"
 msgstr ""
 
 #. module: sale
@@ -1559,11 +1528,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model,website_form_label:sale.model_res_partner
 msgid "Create a Customer"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
-msgid "Create a Sale Order Activity Plan"
 msgstr ""
 
 #. module: sale
@@ -1788,6 +1752,7 @@ msgstr ""
 
 #. module: sale
 #. odoo-javascript
+#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Delete"
 msgstr ""
@@ -1968,6 +1933,8 @@ msgid "Discount:"
 msgstr ""
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/discount_menu_widget.xml:0
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_discount_per_so_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discounts"
@@ -2097,11 +2064,6 @@ msgid "Down Payments"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Down payment"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
 msgstr ""
@@ -2131,6 +2093,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "Down payment of %s%%"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "Down payment:"
 msgstr ""
 
 #. module: sale
@@ -2195,6 +2162,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Enter a description..."
 msgstr ""
 
 #. module: sale
@@ -2435,6 +2407,16 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Hide Composition"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Hide Prices"
 msgstr ""
 
 #. module: sale
@@ -2838,6 +2820,14 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+msgid ""
+"It seems that there is already a payment in progress for your order; you "
+"can't modify it anymore."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
 msgid "Journal"
 msgstr ""
@@ -2918,6 +2908,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Let’s create a beautiful quotation in a few clicks ."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Line"
 msgstr ""
 
 #. module: sale
@@ -3007,6 +3002,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
 msgid "Manual"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/discount_menu_widget.xml:0
+msgid "Manual Discount"
 msgstr ""
 
 #. module: sale
@@ -3179,6 +3180,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__no
 msgid "No"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/combo_menu_widget.xml:0
+msgid "No Combo Product Available"
 msgstr ""
 
 #. module: sale
@@ -3512,6 +3519,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.js:0
 msgid "Packaging"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "Paid:"
 msgstr ""
 
 #. module: sale
@@ -4154,11 +4166,6 @@ msgid "Sale Order Count"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
-msgid "Sale Order Plans"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
 msgid "Sale Order Warnings"
 msgstr ""
@@ -4362,11 +4369,6 @@ msgid "Sales Team"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.sales_team_config
-msgid "Sales Teams"
-msgstr ""
-
-#. module: sale
 #: model:ir.module.module,summary:base.module_sale
 msgid "Sales internal machinery"
 msgstr ""
@@ -4433,6 +4435,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Section"
 msgstr ""
 
@@ -4843,6 +4846,11 @@ msgstr ""
 msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "cancelling them or archiving the team instead."
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.sales_team_config
+msgid "Teams"
 msgstr ""
 
 #. module: sale
@@ -5352,12 +5360,6 @@ msgid "Unit Price"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Unit Price:"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.uom_uom_menu_list
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Units & Packagings"
 msgstr ""

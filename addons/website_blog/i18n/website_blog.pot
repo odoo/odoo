@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.5a1\n"
+"Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:44+0000\n"
-"PO-Revision-Date: 2026-09-11 17:44+0000\n"
+"POT-Creation-Date: 2026-09-18 17:40+0000\n"
+"PO-Revision-Date: 2026-09-18 17:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -139,6 +139,12 @@ msgid "<em>No tags defined</em>"
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content_mobile_toc
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_toc_display
+msgid "<em>No titles in the blog post</em>"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 msgid "<i class=\"oi me-1\" data-icon=\"chevron_backward\" role=\"img\"/>All blogs"
 msgstr ""
@@ -153,16 +159,6 @@ msgstr ""
 msgid ""
 "<i class=\"oi me-1\" data-icon=\"schedule\" role=\"img\" aria-label=\"Post "
 "date\" title=\"Post date\"/>"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_card
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_list_card
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_minimal_list_card
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_split_sticky_card
-#: model_terms:ir.ui.view,arch_db:website_blog.post_cover_image
-#: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
-msgid "<i class=\"oi me-2\" data-icon=\"block\" role=\"presentation\"/>Unpublished"
 msgstr ""
 
 #. module: website_blog
@@ -189,7 +185,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_next_full_cover
 msgid ""
 "<span class=\"h4 d-inline-block py-1 px-2 rounded-1 cursor-pointer\">\n"
-"                        <i class=\"oi oi-3x text-white\" data-icon=\"keyboard_arrow_right\" aria-label=\"Read next\" title=\"Read Next\"/>\n"
+"                        <i class=\"oi oi-3x\" data-icon=\"keyboard_arrow_right\" aria-label=\"Read next\" title=\"Read Next\"/>\n"
 "                    </span>"
 msgstr ""
 
@@ -562,7 +558,7 @@ msgstr ""
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content_footer_archive
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_archive_display
 msgid "Archive"
 msgstr ""
@@ -749,6 +745,12 @@ msgid "Blog Articles"
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
+msgid "Blog Cover"
+msgstr ""
+
+#. module: website_blog
 #: model:res.groups,name:website_blog.group_website_blog_manager
 msgid "Blog Manager"
 msgstr ""
@@ -775,6 +777,10 @@ msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_next_compact
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_split_cover
+#: model_terms:ir.ui.view,arch_db:website_blog.post_cover_image
 msgid "Blog Post Cover"
 msgstr ""
 
@@ -964,7 +970,7 @@ msgstr ""
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/tours/website_blog.js:0
-msgid "Click on the cover to edit it."
+msgid "Click on the <b>cover</b> to edit it."
 msgstr ""
 
 #. module: website_blog
@@ -1525,7 +1531,6 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_cover_properties_option.js:0
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Large"
@@ -1611,12 +1616,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 msgid "Marley"
-msgstr ""
-
-#. module: website_blog
-#. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_cover_properties_option.js:0
-msgid "Medium"
 msgstr ""
 
 #. module: website_blog
@@ -1996,6 +1995,12 @@ msgid "Picture Size"
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_next_compact
+#: model_terms:ir.ui.view,arch_db:website_blog.post_published_info
+msgid "Planned for"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_count
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__post_ids
 msgid "Posts"
@@ -2218,9 +2223,9 @@ msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content_footer_share_links
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_regular_cover_share_links
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_split_cover_share_links
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_split_cover
 msgid "Share"
 msgstr ""
 
@@ -2410,7 +2415,7 @@ msgid "Table of Contents"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content_mobile_toc
 msgid "Table of contents"
 msgstr ""
 
@@ -2602,12 +2607,6 @@ msgid "Thumbnails"
 msgstr ""
 
 #. module: website_blog
-#. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_cover_properties_option.js:0
-msgid "Tiny"
-msgstr ""
-
-#. module: website_blog
 #: model:blog.tag,name:website_blog.blog_tag_5
 msgid "Tips"
 msgstr ""
@@ -2690,11 +2689,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 msgid "Underrated destinations"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
-msgid "Unpublished"
 msgstr ""
 
 #. module: website_blog
@@ -2847,6 +2841,12 @@ msgid ""
 "Whether you're simplifying your home, your schedule, or your digital life, "
 "embracing a minimalist mindset can bring more focus, freedom, and peace into"
 " your everyday routine."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_minimal_list_card
+#: model_terms:ir.ui.view,arch_db:website_blog.post_published_info
+msgid "Will be published on {{0}}"
 msgstr ""
 
 #. module: website_blog
