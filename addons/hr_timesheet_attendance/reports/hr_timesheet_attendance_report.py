@@ -91,9 +91,10 @@ class HrTimesheetAttendanceReport(models.Model):
                     -ts.amount AS timesheet_cost,
                     ts.date AS date,
                     ts.company_id AS company_id,
-                    ts.currency_id AS currency_id
+                    ts_company.currency_id AS currency_id
                 FROM account_analytic_line AS ts
                 LEFT JOIN hr_employee ON hr_employee.id = ts.employee_id
+                LEFT JOIN res_company ts_company ON ts_company.id = ts.company_id
                 WHERE ts.project_id IS NOT NULL
                   AND date <= CURRENT_DATE
             ) AS t
