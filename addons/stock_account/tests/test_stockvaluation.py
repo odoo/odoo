@@ -1995,6 +1995,18 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date6)).total_value, 25)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date8)).total_value, 712.5)
 
+    def test_at_date_valuation_uses_company_timezone(self):
+        """ The at-date valuation and the closing entry must use the company's
+        local day, not the UTC day: in UTC-5 a receipt at 2026-06-30 20:00 local
+        (2026-07-01 01:00 UTC) must show as of June 30 and close dated June 30. """
+        self.env.company.tz = 'America/Bogota'  # UTC-5
+        product = self.product_standard_auto
+        with freeze_time('2026-07-01 01:00:00'):  # 2026-06-30 20:00 local
+            self._make_in_move(product, 1)
+            self.assertEqual(product.with_context(to_date=date(2026, 6, 30)).qty_available, 1)
+            self.assertEqual(product.with_context(to_date=date(2026, 6, 30)).total_value, 10.0)
+            self.assertEqual(self._close().date, date(2026, 6, 30))
+
     def test_at_date_fifo_1(self):
         """ Make some operations at different dates, check that the results of the valuation at
         date wizard are consistent. Afterwards, edit the done quantity of some operations. The
