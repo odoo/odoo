@@ -5,7 +5,7 @@ class TestOrmCourse(models.Model):
     _name = "test_orm.course"
     _description = "a course"
 
-    name = fields.Char("Name")
+    name = fields.Char()
     lesson_ids = fields.One2many("test_orm.lesson", "course_id")
     author_id = fields.Many2one("test_orm.person")
     private_field = fields.Char(groups="base.group_no_one")
@@ -25,7 +25,7 @@ class TestOrmLesson(models.Model):
     _name = "test_orm.lesson"
     _description = "a lesson of a course (a day typically)"
 
-    name = fields.Char("Name")
+    name = fields.Char()
     course_id = fields.Many2one("test_orm.course")
     attendee_ids = fields.Many2many(
         "test_orm.person",
@@ -48,7 +48,7 @@ class TestOrmPerson(models.Model):
     _name = "test_orm.person"
     _description = "a person, can be an author, teacher or attendee of a lesson"
 
-    name = fields.Char("Name")
+    name = fields.Char()
     employer_id = fields.Many2one("test_orm.employer")
     birthday = fields.Date()
     active = fields.Boolean(default=True)
@@ -64,7 +64,7 @@ class TestOrmEmployer(models.Model):
     _name = "test_orm.employer"
     _description = "the employer of a person"
 
-    name = fields.Char("Name")
+    name = fields.Char()
     employee_ids = fields.One2many("test_orm.person", "employer_id")
     all_employee_ids = fields.One2many(
         "test_orm.person", "employer_id", context={"active_test": False}

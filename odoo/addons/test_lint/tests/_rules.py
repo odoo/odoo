@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from . import (
     _checker_batch,
+    _checker_company_config,
     _checker_config_patch,
     _checker_credential_storage,
     _checker_egress,
@@ -160,6 +161,12 @@ RULES: tuple[Rule, ...] = (
         "n-plus-one-query",
         "E8507",
         "hoist the query out of the loop and index the result in memory",
+    ),
+    Rule(
+        "company-field-outside-config",
+        "E8529",
+        "declare the field on the application's mixin.company.config model and "
+        "link it from res.company through one <app>_config_id field",
     ),
     Rule(
         "tax-company-singular",
@@ -382,6 +389,12 @@ def _tax_company(unit: Unit) -> Iterable[object]:
     return _checker_tax_company.check(unit.tree, unit.nodes)
 
 
+def _company_config(unit: Unit) -> Iterable[object]:
+    if "/addons/base/" in unit.path:
+        return ()
+    return _checker_company_config.check(unit.tree)
+
+
 def _http_json(unit: Unit) -> Iterable[object]:
     return _checker_http_json.check(unit.tree, unit.nodes)
 
@@ -460,6 +473,11 @@ CHECKERS: tuple[Checker, ...] = (
     Checker(_config_patch, _anywhere, frozenset({"config-chainmap-patch"})),
     Checker(_shadowed_def, _anywhere, frozenset({"shadowed-definition"})),
     Checker(_tax_company, _anywhere, frozenset({"tax-company-singular"})),
+    Checker(
+        _company_config,
+        _in_an_addon_outside_tests,
+        frozenset({"company-field-outside-config"}),
+    ),
     Checker(_http_json, _in_an_addon_outside_tests, frozenset({"http-json-string"})),
     Checker(_row_counter, _in_tests, frozenset({"row-counter-in-test"})),
     Checker(

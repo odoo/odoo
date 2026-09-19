@@ -5,6 +5,7 @@ from . import ir_model
 from . import ir_model_fields
 
 from . import mixin_hierarchy
+from . import mixin_company_config
 from . import ir_model_fields_selection
 from . import ir_model_reflection
 from . import ir_model_access
