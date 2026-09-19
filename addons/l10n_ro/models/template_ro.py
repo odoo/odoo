@@ -9,6 +9,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template('ro')
     def _get_ro_template_data(self):
         return {
+            'vat_disabled_tax_id': 'tvatine',
+            'vat_disabled_purchase_tax_id': 'tva_vat_disabled_nd',
             'code_digits': '6',
         }
 

@@ -28,7 +28,16 @@ TEMPLATE_MODELS = (
     'account.reconcile.model',
 )
 
-TEMPLATE_DATA_KEYS = frozenset({'name', 'country', 'code_digits', 'parent', 'sequence', 'visible'})
+TEMPLATE_DATA_KEYS = frozenset({
+    'name',
+    'country',
+    'code_digits',
+    'parent',
+    'sequence',
+    'visible',
+    'vat_disabled_tax_id',
+    'vat_disabled_purchase_tax_id',
+})
 
 TAX_TAG_DELIMITER = '||'
 
