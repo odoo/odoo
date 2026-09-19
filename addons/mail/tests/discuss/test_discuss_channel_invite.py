@@ -178,9 +178,9 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
                     search_term, channel_id=channel.id
                 )
                 if is_selectable:
-                    self.assertEqual(result["selectable_email"], search_term)
+                    self.assertEqual(result["selectable_emails"], [search_term])
                     continue
-                self.assertFalse(result["selectable_email"])
+                self.assertFalse(result["selectable_emails"])
 
     @users("employee")
     def test_06_invite_by_email_posts_user_notification(self):
@@ -223,8 +223,8 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         result = self.env["res.partner"].search_for_channel_invite(
             "alfred@test.com", channel_id=group_chat.id
         )
-        self.assertEqual(result["selectable_email"], "alfred@test.com")
-        self.assertTrue(result["email_already_sent"])
+        self.assertEqual(result["selectable_emails"], ["alfred@test.com"])
+        self.assertTrue(result["emails_already_sent"])
         # Inviting again sends the link a second time, reusing the pending member.
         with self.mock_mail_gateway():
             group_chat.invite_by_email(["alfred@test.com"])
@@ -248,7 +248,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         result = self.env["res.partner"].search_for_channel_invite(
             "alfred@test.com", channel_id=group_chat.id
         )
-        self.assertFalse(result["selectable_email"])
+        self.assertFalse(result["selectable_emails"])
         with self.mock_mail_gateway():
             group_chat.invite_by_email(["alfred@test.com"])
             self.assertNoMail(self.env["res.partner"], email_to="alfred@test.com")
@@ -373,3 +373,129 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             "Joel", channel_id=group_chat.id, with_portal_users=True
         )
         self.assertEqual(result["partner_ids"], joel.partner_id.ids)
+
+    def test_13_support_multiple_terms_in_search_for_channel_invite(self):
+        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
+        john = new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
+        public_channel = self.env["discuss.channel"].create(
+            {"name": "public community", "group_public_id": False},
+        )
+        private_channel = self.env["discuss.channel"].create(
+            {
+                "name": "user restricted channel",
+                "channel_type": "channel",
+                "group_public_id": self.env.ref("base.group_user").id,
+            },
+        )
+        for channel in [public_channel, private_channel]:
+            res = self.env["res.partner"].search_for_channel_invite(
+                "alfred, john, bob", channel_id=channel.id
+            )
+            self.assertFalse(res["selectable_emails"])
+            self.assertEqual(res["partner_ids"], (bob.partner_id | john.partner_id).ids)
+
+        for channel in [public_channel, private_channel]:
+            res = self.env["res.partner"].search_for_channel_invite(
+                "alfred@test.com, john@test.com, bob@test.com", channel_id=channel.id
+            )
+            self.assertEqual(
+                res["selectable_emails"],
+                ["alfred@test.com"] if channel != private_channel else [],
+            )
+            self.assertEqual(res["partner_ids"], (bob.partner_id | john.partner_id).ids)
+
+    def test_14_search_for_channel_invite_normalizes_known_emails(self):
+        """A member's email should be recognized as already known regardless of case,
+        whether the member is backed by a partner or a guest, thanks to email_normalized."""
+        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
+        alfred = new_test_user(
+            self.env, "alfred", groups="base.group_user", email="Alfred@Test.com"
+        )
+        group_chat = self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
+        group_chat._add_members(partners=alfred.partner_id)
+        jane_guest = self.env["mail.guest"].create({"email": "Jane@Test.com", "name": "Jane"})
+        group_chat._add_members(guests=jane_guest)
+        result = self.env["res.partner"].search_for_channel_invite(
+            "alfred@test.com, jane@test.com", channel_id=group_chat.id
+        )
+        self.assertFalse(result["selectable_emails"])
+
+    def test_15_search_for_channel_invite_selectable_emails_not_limited(self):
+        """selectable_emails is not capped by limit: unlike partners, pasting a large batch of
+        new emails should propose all of them, not just enough to fill the partner limit."""
+        bob_one = new_test_user(self.env, "bob_one", groups="base.group_user", name="Bob One")
+        bob_two = new_test_user(self.env, "bob_two", groups="base.group_user", name="Bob Two")
+        channel = self.env["discuss.channel"].create(
+            {"name": "public community", "group_public_id": False},
+        )
+        result = self.env["res.partner"].search_for_channel_invite(
+            "Bob, alice@test.com, carol@test.com", channel_id=channel.id, limit=2
+        )
+        self.assertEqual(
+            set(result["partner_ids"]), {bob_one.partner_id.id, bob_two.partner_id.id}
+        )
+        self.assertEqual(result["selectable_emails"], ["alice@test.com", "carol@test.com"])
+
+    def test_16_search_for_channel_invite_exact_match_terms_match_full_name_or_email(self):
+        """An exact_match_term resolves to a partner only on a complete name or email, the
+        latter whatever its casing; a substring or an unknown value matches nothing."""
+        bob = new_test_user(
+            self.env, "bob", groups="base.group_user", name="Bob One", email="Bob@Test.com"
+        )
+        channel = self.env["discuss.channel"].create(
+            {"name": "public community", "group_public_id": False},
+        )
+        cases = [
+            ("Bob One", bob.partner_id.ids),
+            ("Bob@Test.com", bob.partner_id.ids),
+            ("bob@test.com", bob.partner_id.ids),
+            ("Bob", []),
+            ("Not A Partner", []),
+        ]
+        for term, expected_partner_ids in cases:
+            with self.subTest(term=term):
+                result = self.env["res.partner"].search_for_channel_invite(
+                    "", exact_match_terms=[term], channel_id=channel.id
+                )
+                self.assertEqual(result["exact_match_partner_ids"], expected_partner_ids)
+
+    def test_17_search_for_channel_invite_exact_match_terms_alongside_other_terms(self):
+        """A mixed search splits into three buckets: exact terms resolve on their own, the
+        remaining terms are fuzzy-matched, and unknown emails stay available to invite. The
+        email of an exactly matched partner is not proposed again."""
+        bob = new_test_user(
+            self.env, "bob", groups="base.group_user", name="Bob One", email="bob@test.com"
+        )
+        bob_two = new_test_user(self.env, "bob_two", groups="base.group_user", name="Bob Two")
+        channel = self.env["discuss.channel"].create(
+            {"name": "public community", "group_public_id": False},
+        )
+        result = self.env["res.partner"].search_for_channel_invite(
+            "bob@test.com, Bob Two, Not A Partner, alice@test.com, carol@test.com",
+            exact_match_terms=["bob@test.com", "Not A Partner"],
+            channel_id=channel.id,
+        )
+        self.assertEqual(result["exact_match_partner_ids"], bob.partner_id.ids)
+        self.assertEqual(result["partner_ids"], bob_two.partner_id.ids)
+        self.assertEqual(result["selectable_emails"], ["alice@test.com", "carol@test.com"])
+
+    def test_18_search_for_channel_invite_exact_match_terms_not_limited(self):
+        """Each exact_match_term can match at most one partner, so unlike the regular search
+        terms, they are not truncated to fit within limit."""
+        partners = [
+            new_test_user(self.env, f"bob_{i}", groups="base.group_user", name=f"Bob {i}")
+            for i in range(3)
+        ]
+        channel = self.env["discuss.channel"].create(
+            {"name": "public community", "group_public_id": False},
+        )
+        result = self.env["res.partner"].search_for_channel_invite(
+            "",
+            exact_match_terms=[f"Bob {i}" for i in range(3)],
+            channel_id=channel.id,
+            limit=1,
+        )
+        self.assertEqual(
+            set(result["exact_match_partner_ids"]),
+            {user.partner_id.id for user in partners},
+        )
