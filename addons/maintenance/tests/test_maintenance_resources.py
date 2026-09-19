@@ -172,7 +172,7 @@ class TestMaintenanceResources(TransactionCase):
         )
         panel = self.env["resource.asset"].create({"name": "Panel", "kind_id": kind.id})
         self.assertEqual(panel.maintenance_team_id, electricians)
-        panel.resource_id.write(
+        panel.resource_id.maintenance_profile_id.write(
             {"maintenance_team_id": False, "technician_user_id": False}
         )
         order = self.env["maintenance.order"].create(
@@ -284,10 +284,14 @@ class TestMaintenanceResources(TransactionCase):
 
     def test_a_machine_that_is_both_asset_and_resource_reports_one_mtbf(self):
         self.press.expected_mtbf = 30
-        self.assertEqual(self.press.resource_id.expected_mtbf, 30)
+        # The fact lives on the resource's one profile, whichever host wrote it.
+        self.assertEqual(
+            self.press.resource_id.maintenance_profile_id.expected_mtbf, 30
+        )
         self._order(maintenance_type="corrective", state="done")
         self.press.invalidate_recordset()
         self.assertEqual(self.press.maintenance_count, 1)
         self.assertEqual(
-            self.press.maintenance_count, self.press.resource_id.maintenance_count
+            self.press.maintenance_count,
+            len(self.press.resource_id.maintenance_ids),
         )

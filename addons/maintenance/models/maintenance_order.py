@@ -343,14 +343,14 @@ class MaintenanceOrder(models.Model):
 
     @api.depends(
         "company_id",
-        "resource_ids.maintenance_team_id",
+        "resource_ids.maintenance_profile_id.maintenance_team_id",
         "asset_ids.kind_id.maintenance_team_id",
     )
     def _compute_maintenance_team_id(self):
         default_teams = {}
         for order in self:
             team = (
-                order.resource_ids.maintenance_team_id.filtered(
+                order.resource_ids.maintenance_profile_id.maintenance_team_id.filtered(
                     lambda t, c=order.company_id: not t.company_id or t.company_id == c
                 )[:1]
                 or order.asset_ids.kind_id.maintenance_team_id[:1]
@@ -372,13 +372,13 @@ class MaintenanceOrder(models.Model):
 
     @api.depends(
         "company_id",
-        "resource_ids.technician_user_id",
+        "resource_ids.maintenance_profile_id.technician_user_id",
         "asset_ids.kind_id.technician_user_id",
     )
     def _compute_user_id(self):
         for order in self:
             technician = (
-                order.resource_ids.technician_user_id[:1]
+                order.resource_ids.maintenance_profile_id.technician_user_id[:1]
                 or order.asset_ids.kind_id.technician_user_id[:1]
             )
             if technician:
@@ -531,6 +531,34 @@ class MaintenanceOrder(models.Model):
 
     def _get_fields_reservation_date(self):
         return ("date_scheduled_start", "date_scheduled_end")
+
+    def _prepare_reservation_vals_list(self):
+        """The booking this order asks for, as the scheduling mixin reads it:
+        what an unsaved order would hold, so its conflicts show before it is
+        saved. The saved booking is written by _recreate_reservations, which
+        also books ahead and moves to a free window."""
+        self.check_singleton()
+        resources = self._get_booked_resources()
+        if (
+            not resources
+            or not self.block_resource
+            or not self.date_scheduled_start
+            or self.state not in BOOKING_STATES
+        ):
+            return []
+        start = self.date_scheduled_start
+        end = self.date_scheduled_end or start + timedelta(hours=self.duration or 1)
+        return [
+            {
+                "name": self.display_name,
+                "resource_id": resource.id,
+                "date_start": start,
+                "date_end": end,
+                "allocated_percentage": 100.0,
+                "enforcement_mode": "hard",
+            }
+            for resource in resources
+        ]
 
     def _get_booked_resources(self):
         self.check_singleton()
