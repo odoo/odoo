@@ -1373,7 +1373,10 @@ class MailingMailing(models.Model):
 
         if self.ab_testing_enabled:
             query += """
-               AND s.campaign_id = %%(mailing_campaign_id)s;
+               AND s.mass_mailing_id IN (
+                   SELECT id FROM mailing_mailing
+                    WHERE campaign_id = %%(mailing_campaign_id)s
+               );
             """
         else:
             query += """

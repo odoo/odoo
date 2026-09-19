@@ -1,6 +1,6 @@
 {
     "name": "Email Marketing",
-    "version": "2.8",
+    "version": "2.9",
     "category": "Marketing/Email Marketing",
     "sequence": 60,
     "summary": "Design, send and track emails",

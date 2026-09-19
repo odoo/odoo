@@ -99,8 +99,6 @@ class MailingTrace(models.Model):
     campaign_id = fields.Many2one(
         related="mass_mailing_id.campaign_id",
         string="Campaign",
-        store=True,
-        index="btree_not_null",
         readonly=True,
     )
     # Status

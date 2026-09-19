@@ -115,9 +115,12 @@ class UtmCampaign(models.Model):
                 COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'cancel') AS cancel
             FROM
                 mailing_trace s
+            JOIN
+                mailing_mailing m
+                ON (m.id = s.mass_mailing_id)
             RIGHT JOIN
                 utm_campaign c
-                ON (c.id = s.campaign_id)
+                ON (c.id = m.campaign_id)
             WHERE
                 c.id = ANY(%s)
             GROUP BY
