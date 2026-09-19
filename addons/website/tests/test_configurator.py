@@ -6,9 +6,9 @@ import odoo.tests
 
 class TestConfiguratorCommon(odoo.tests.HttpCase):
 
-    def _theme_upgrade_upstream(self):
-        # patch to prevent module install/upgrade during tests, but still generate the snippet templates the configurator needs.
-        self._generate_primary_snippet_templates()
+    def _button_immediate_install(self):
+        # patch to prevent module install during tests, but still generate the snippet templates the configurator needs.
+        self.env['theme.engine']._generate_primary_snippet_templates(self.ids)
 
     def setUp(self):
         super().setUp()
@@ -87,8 +87,8 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
         self.startPatcher(iap_patch)
 
         patcher = patch(
-            'odoo.addons.website.models.ir_module_module.IrModuleModule._theme_upgrade_upstream',
-            new=TestConfiguratorCommon._theme_upgrade_upstream,
+            'odoo.addons.base.models.ir_module.IrModuleModule.button_immediate_install',
+            new=TestConfiguratorCommon._button_immediate_install,
         )
         self.startPatcher(patcher)
 
