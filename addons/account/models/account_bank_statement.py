@@ -66,7 +66,6 @@ class AccountBankStatement(models.Model):
     company_id = fields.Many2one(
         comodel_name="res.company",
         related="journal_id.company_id",
-        store=True,
     )
 
     currency_id = fields.Many2one(
@@ -282,8 +281,9 @@ class AccountBankStatement(models.Model):
             ["statement_id", "internal_index"]
         )
         self.env["account.bank.statement"].flush_model(
-            ["balance_start", "balance_end_real", "first_line_index"]
+            ["balance_start", "balance_end_real", "first_line_index", "journal_id"]
         )
+        self.env["account.journal"].flush_model(["company_id", "currency_id"])
 
         self.env.cr.execute(
             SQL(
@@ -302,8 +302,8 @@ class AccountBankStatement(models.Model):
                                 -- silently reported as valid.
                                 COALESCE(currency.decimal_places, 2) AS decimal_places
                            FROM account_bank_statement st
-                      LEFT JOIN res_company co ON st.company_id = co.id
                       LEFT JOIN account_journal j ON st.journal_id = j.id
+                      LEFT JOIN res_company co ON j.company_id = co.id
                       LEFT JOIN res_currency currency
                              ON COALESCE(j.currency_id, co.currency_id) = currency.id
                           WHERE st.first_line_index IS NOT NULL
