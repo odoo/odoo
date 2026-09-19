@@ -20,6 +20,7 @@ def dict_to_xml(node, *, nsmap={}, template=None, render_empty_nodes=False, tag=
             '_text': 'content',
             'attribute_name': 'attribute_value',
         },
+        'child_tag': 'content',  # With a template, equivalent to {'_text': 'content'}
 
         # Lists of dicts are also rendered as child nodes
         'child_tag': [
@@ -45,6 +46,9 @@ def dict_to_xml(node, *, nsmap={}, template=None, render_empty_nodes=False, tag=
                 return etree.QName(nsmap[namespace], local_name).text
         return tag
 
+    if not isinstance(node, dict):
+        node = {'_text': node}
+
     if template is not None:
         # Ensure order of keys
         node = dict.fromkeys(template) | node
@@ -61,7 +65,13 @@ def dict_to_xml(node, *, nsmap={}, template=None, render_empty_nodes=False, tag=
 
     # Add attributes
     for attr_name, attr_value in node.items():
-        if not attr_name.startswith('_') and not isinstance(attr_value, (dict, list)) and attr_value is not None and attr_value is not False:
+        if (
+            not attr_name.startswith('_')
+            and not isinstance(attr_value, (dict, list))
+            and not (template is not None and attr_name in template)
+            and attr_value is not None
+            and attr_value is not False
+        ):
             element.set(convert_tag_to_lxml_convention(attr_name), str(attr_value))
 
     # Add text content if present
@@ -71,11 +81,20 @@ def dict_to_xml(node, *, nsmap={}, template=None, render_empty_nodes=False, tag=
 
     # Add child nodes
     for child_tag, child in node.items():
-        if not child_tag.startswith('_') and isinstance(child, (dict, list)):
+        if (
+            not child_tag.startswith('_')
+            and (isinstance(child, (dict, list)) or (template is not None and child_tag in template))
+        ):
             child_template = (template or {}).get(child_tag)
             child_is_empty = True
             if isinstance(child, dict):
                 child = [child]
+            elif not isinstance(child, list):
+                child = [child]
+            elif any(isinstance(sub_child, dict) for sub_child in child if sub_child is not None) and any(
+                not isinstance(sub_child, dict) for sub_child in child if sub_child is not None
+            ):
+                raise ValueError(f"Cannot mix dict and non-dict child nodes: {path}/{child_tag}")
 
             # child is a list (of dicts)
             for sub_child in child:

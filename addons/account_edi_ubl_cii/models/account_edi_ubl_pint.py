@@ -68,7 +68,7 @@ class AccountEdiUBLPint(models.AbstractModel):
         if terms_and_condition:
             notes.append(terms_and_condition)
 
-        vals['document_node']['cbc:Note'] = {'_text': ' '.join(notes) if notes else None}
+        vals['document_node']['cbc:Note'] = ' '.join(notes) if notes else None
 
     def _ubl_add_notes_nodes(self, vals):
         # [ibr-sr-51]-Note (ibt-022) MUST occur maximum once
@@ -134,7 +134,7 @@ class AccountEdiUBLPint(models.AbstractModel):
             for preceding_invoice_name in preceding_invoice_names:
                 nodes.append({
                     'cac:InvoiceDocumentReference': {
-                        'cbc:ID': {'_text': preceding_invoice_name},
+                        'cbc:ID': preceding_invoice_name,
                     }
                 })
 
@@ -190,9 +190,9 @@ class AccountEdiUBLPint(models.AbstractModel):
         if not nodes and commercial_partner.routing_scheme and commercial_partner.routing_endpoint:
             # TaxScheme based on partner's Scheme/Endpoint.
             nodes.append({
-                'cbc:CompanyID': {'_text': commercial_partner.routing_endpoint},
+                'cbc:CompanyID': commercial_partner.routing_endpoint,
                 'cac:TaxScheme': {
-                    'cbc:ID': {'_text': commercial_partner.routing_scheme},
+                    'cbc:ID': commercial_partner.routing_scheme,
                 },
             })
 
@@ -211,18 +211,18 @@ class AccountEdiUBLPint(models.AbstractModel):
             # [NO-R-002] For Norwegian suppliers, most invoice issuers are required to append
             # "Foretaksregisteret" to their invoice.
             nodes.append({
-                'cbc:CompanyID': {'_text': "Foretaksregisteret"},
+                'cbc:CompanyID': "Foretaksregisteret",
                 'cac:TaxScheme': {
-                    'cbc:ID': {'_text': "TAX"},
+                    'cbc:ID': "TAX",
                 },
             })
         elif country_code == 'SE':
             # [SE-R-005] For Swedish suppliers, when using Seller tax registration identifier,
             # 'Godkänd för F-skatt' must be stated
             nodes.append({
-                'cbc:CompanyID': {'_text': "GODKÄND FÖR F-SKATT"},
+                'cbc:CompanyID': "GODKÄND FÖR F-SKATT",
                 'cac:TaxScheme': {
-                    'cbc:ID': {'_text': "TAX"},
+                    'cbc:ID': "TAX",
                 },
             })
 
@@ -269,7 +269,7 @@ class AccountEdiUBLPint(models.AbstractModel):
                 '_text': payment_means_code,
                 'name': payment_means_name,
             },
-            'cbc:PaymentID': {'_text': invoice.payment_reference or invoice.name},
+            'cbc:PaymentID': invoice.payment_reference or invoice.name,
         }
 
         if partner_bank:

@@ -25,7 +25,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
     def _get_document_type_code_node(self, invoice, invoice_data):
         # [UBL-SR-43] DocumentTypeCode should only show up on a CreditNote XML with the value '50'
         if invoice.move_type == 'out_refund':
-            return {'_text': '50'}
+            return '50'
 
     # -------------------------------------------------------------------------
     # EXPORT: Templates
@@ -69,9 +69,9 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
             company_id = ro_vat
 
         vals['party_node']['cac:PartyTaxScheme'] = [{
-            'cbc:CompanyID': {'_text': company_id},
+            'cbc:CompanyID': company_id,
             'cac:TaxScheme': {
-                'cbc:ID': {'_text': 'VAT' if company_id[:2].isalpha() else 'NOT_EU_VAT'},
+                'cbc:ID': 'VAT' if company_id[:2].isalpha() else 'NOT_EU_VAT',
             },
         }] if company_id else []
 
@@ -85,7 +85,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         if _has_vat(ro_vat):
             # RO legal registration id is the (RO-prefixed) VAT, not the bare CUI/RO_EN.
             vals['party_node']['cac:PartyLegalEntity'] = [{
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:RegistrationName': commercial_partner.name,
                 'cbc:CompanyID': {
                     '_text': ro_vat,
                     'schemeID': None,
@@ -95,7 +95,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
             value = commercial_partner._get_additional_identifier('RO_EN')
             if value:
                 vals['party_node']['cac:PartyLegalEntity'] = [{
-                    'cbc:RegistrationName': {'_text': commercial_partner.name},
+                    'cbc:RegistrationName': commercial_partner.name,
                     'cbc:CompanyID': {
                         '_text': value,
                         'schemeID': None,
@@ -118,9 +118,9 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
             company_id = ro_vat
 
         vals['party_node']['cac:PartyTaxScheme'] = [{
-            'cbc:CompanyID': {'_text': company_id},
+            'cbc:CompanyID': company_id,
             'cac:TaxScheme': {
-                'cbc:ID': {'_text': 'VAT' if company_id[:2].isalpha() else 'NOT_EU_VAT'},
+                'cbc:ID': 'VAT' if company_id[:2].isalpha() else 'NOT_EU_VAT',
             },
         }] if company_id else []
 
@@ -134,7 +134,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         if _has_vat(ro_vat):
             # RO legal registration id is the (RO-prefixed) VAT, not the bare CUI/RO_EN.
             vals['party_node']['cac:PartyLegalEntity'] = [{
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:RegistrationName': commercial_partner.name,
                 'cbc:CompanyID': {
                     '_text': ro_vat,
                     'schemeID': None,
@@ -142,7 +142,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
             }]
         else:
             vals['party_node']['cac:PartyLegalEntity'] = [{
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:RegistrationName': commercial_partner.name,
                 'cbc:CompanyID': {
                     '_text': DEFAULT_VAT,
                     'schemeID': None,

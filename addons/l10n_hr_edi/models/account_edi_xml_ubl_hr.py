@@ -202,8 +202,8 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         if 'refund' in invoice.move_type and invoice.reversed_entry_id:
             vals['document_node']['cac:BillingReference'] = [{
                 'cac:InvoiceDocumentReference': {
-                    'cbc:ID': {'_text': invoice.ref},
-                    'cbc:IssueDate': {'_text': invoice.reversed_entry_id.invoice_date},
+                    'cbc:ID': invoice.ref,
+                    'cbc:IssueDate': invoice.reversed_entry_id.invoice_date,
                 },
             }]
 
@@ -236,7 +236,7 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
                         'cbc:Percent': category['cbc:Percent'],
                         'cbc:TaxExemptionReasonCode': category['cbc:TaxExemptionReasonCode'],
                         'cbc:TaxExemptionReason': category['cbc:TaxExemptionReason'],
-                        'hrextac:HRTaxScheme': category['cac:TaxScheme'] if hr_tax_name['_text'] != "HR:POVNAK" else {'_text': "OTH"},
+                        'hrextac:HRTaxScheme': category['cac:TaxScheme'] if hr_tax_name['_text'] != "HR:POVNAK" else "OTH",
                     })
                 hr_tax_subtotals.append({
                     'cbc:TaxableAmount': subtotal['cbc:TaxableAmount'],
@@ -314,12 +314,8 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         invoice = vals['invoice']
         document_node['cac:AccountingSupplierParty'].update({
             'cac:SellerContact': {
-                'cbc:ID': {
-                    '_text': invoice.l10n_hr_operator_oib
-                },
-                'cbc:Name': {
-                    '_text': invoice.l10n_hr_operator_name
-                }
+                'cbc:ID': invoice.l10n_hr_operator_oib,
+                'cbc:Name': invoice.l10n_hr_operator_name
             }
         })
 
@@ -364,7 +360,7 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_bis3
         node = super()._ubl_get_tax_category_node(vals, tax_category)
         node['cbc:Name']['_text'] = tax_category['hr_category_name']
-        node['hrextac:HRObracunPDVPoNaplati'] = {'_text': tax_category['invoice_legal_notes_str']}
+        node['hrextac:HRObracunPDVPoNaplati'] = tax_category['invoice_legal_notes_str']
         return node
 
     def _ubl_get_line_item_node_classified_tax_category_node(self, vals, tax_category):

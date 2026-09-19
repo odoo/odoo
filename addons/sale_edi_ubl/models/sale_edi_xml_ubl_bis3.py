@@ -123,18 +123,18 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
     def _add_sale_order_header_nodes(self, document_node, vals):
         sale_order = vals['sale_order']
         document_node.update({
-            'cbc:CustomizationID': {'_text': 'urn:fdc:peppol.eu:poacc:trns:order:3'},
-            'cbc:ProfileID': {'_text': 'urn:fdc:peppol.eu:poacc:bis:ordering:3'},
-            'cbc:ID': {'_text': sale_order.name},
-            'cbc:IssueDate': {'_text': sale_order.create_date.date()},
-            'cbc:OrderTypeCode': {'_text': '220'},
-            'cbc:Note': {'_text': html2plaintext(sale_order.note)} if sale_order.note else None,
-            'cbc:DocumentCurrencyCode': {'_text': vals['currency_name']},
+            'cbc:CustomizationID': 'urn:fdc:peppol.eu:poacc:trns:order:3',
+            'cbc:ProfileID': 'urn:fdc:peppol.eu:poacc:bis:ordering:3',
+            'cbc:ID': sale_order.name,
+            'cbc:IssueDate': sale_order.create_date.date(),
+            'cbc:OrderTypeCode': '220',
+            'cbc:Note': html2plaintext(sale_order.note) if sale_order.note else None,
+            'cbc:DocumentCurrencyCode': vals['currency_name'],
             'cac:ValidityPeriod': {
-                'cbc:EndDate': {'_text': sale_order.validity_date},
+                'cbc:EndDate': sale_order.validity_date,
             },
             'cac:OriginatorDocumentReference': {
-                'cbc:ID': {'_text': sale_order.client_order_ref}
+                'cbc:ID': sale_order.client_order_ref
             },
         })
 
@@ -178,7 +178,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         sale_order = vals['sale_order']
         if sale_order.payment_term_id:
             document_node['cac:PaymentTerms'] = {
-                'cbc:Note': {'_text': sale_order.payment_term_id.name}
+                'cbc:Note': sale_order.payment_term_id.name
             }
 
     def _add_sale_order_allowance_charge_nodes(self, document_node, vals):
