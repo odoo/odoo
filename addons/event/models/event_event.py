@@ -317,7 +317,6 @@ class EventEvent(models.Model):
         comodel_name="res.country",
         related="address_id.country_id",
         string="Country",
-        store=True,
         readonly=False,
     )
     event_url = fields.Char(

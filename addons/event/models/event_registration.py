@@ -189,7 +189,6 @@ class EventRegistration(models.Model):
         comodel_name="res.company",
         related="event_id.company_id",
         string="Company",
-        store=True,
         readonly=False,
     )
     state = fields.Selection(

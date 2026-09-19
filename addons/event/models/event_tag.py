@@ -46,7 +46,6 @@ class EventTag(models.Model):
     category_sequence = fields.Integer(
         related="category_id.sequence",
         string="Category Sequence",
-        store=True,
     )
     color = fields.Integer(
         string="Color Index",
