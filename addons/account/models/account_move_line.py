@@ -127,7 +127,6 @@ class AccountMoveLine(models.Model):
     )
     move_type = fields.Selection(
         related="move_id.move_type",
-        store=True,
     )
 
     account_id = fields.Many2one(
@@ -248,8 +247,6 @@ class AccountMoveLine(models.Model):
     )
     statement_id = fields.Many2one(
         related="statement_line_id.statement_id",
-        store=True,
-        index="btree_not_null",
         copy=False,
         bypass_search_access=True,
         help="The bank statement used for bank reconciliation",
