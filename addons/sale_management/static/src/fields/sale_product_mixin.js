@@ -8,6 +8,7 @@ const saleManagementProductMixin = () => ({
 
         const isOptionalLine = this.env.shouldCollapse(this.props.record, "is_optional");
         props.options = {
+            ...props.options,
             showQuantity: !isOptionalLine,
             showPrice: !isOptionalLine,
         };
