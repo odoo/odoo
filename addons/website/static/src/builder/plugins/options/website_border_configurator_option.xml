@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.WebsiteBorderConfiguratorOption" t-inherit="html_builder.BorderConfiguratorOption">
+    <xpath expr="//BuilderRow[@label.translate=&quot;Round Corners&quot;]/BuilderNumberInput" position="replace">
+        <t t-if="this.showRoundnessSuggestions">
+            <BuilderNumberInputSelect builderAction="'setBorderRadiusStyle'" builderActionParam="this.builderActionParam" isAnySelectItemActive="this.selectItemState.isAnyActive">
+                <t t-foreach="this.borderRadiusOptions" t-as="option" t-key="option.label">
+                    <BuilderNumberSelectItem
+                        id="option.class"
+                        action="'setBorderRadiusClass'"
+                        actionParam="{ mainParam: option.class, radiusActionParam: this.radiusActionParam }"
+                        isAnySelectItemActive="this.selectItemState.isAnyActive"
+                    >
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <t t-out="option.label"/>
+                            </div>
+                            <a
+                                class="oi oi-filled btn o-hb-theme-tab-link"
+                                data-icon="edit"
+                                title="Edit in Theme Tab"
+                                t-on-click="this.getOnClick(option.variable)"
+                            />
+                        </div>
+                    </BuilderNumberSelectItem>
+                </t>
+            </BuilderNumberInputSelect>
+        </t>
+
+        <t t-else="">
+            <t t-call="website.RoundnessInput"/>
+        </t>
+    </xpath>
+</t>
+
+<t t-name="website.RoundnessInput">
+    <BuilderNumberInput
+        action="this.props.action"
+        actionParam="this.radiusActionParam"
+        unit="'px'"
+        min="0"
+        composable="true"
+    />
+</t>
+
+</templates>

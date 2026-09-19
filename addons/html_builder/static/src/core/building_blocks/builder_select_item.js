@@ -15,14 +15,16 @@ const builderSelectItemProps = {
     className: t.string().optional(),
 };
 
+const builderSelectItemInternalProps = {
+    ...builderSelectItemProps,
+    className: t.string().optional(""),
+};
+
 export class BuilderSelectItemInternal extends Component {
     static components = { BuilderComponent };
     static template = "html_builder.BuilderSelectItemInternal";
 
-    props = useProps({
-        ...builderSelectItemProps,
-        className: t.string().optional(""),
-    });
+    props = useProps(builderSelectItemInternalProps);
 
     itemRef = signal.ref();
 
@@ -86,4 +88,21 @@ export class BuilderSelectItem extends BuilderSelectableWrapperComponent {
         `;
 
     props = useProps(builderSelectItemProps);
+}
+
+export class BuilderNumberSelectItemInternal extends BuilderSelectItemInternal {
+    static template = "html_builder.BuilderNumberSelectItemInternal";
+
+    props = useProps({ ...builderSelectItemInternalProps, isAnySelectItemActive: t.boolean() });
+}
+
+export class BuilderNumberSelectItem extends BuilderSelectItem {
+    static components = { ...super.components, BuilderNumberSelectItemInternal };
+    static template = xml`
+        <BuilderNumberSelectItemInternal t-props="{ ...this.forwardedProps, isAnySelectItemActive: this.props.isAnySelectItemActive }">
+            <t t-call-slot="default"/>
+        </BuilderNumberSelectItemInternal>
+        `;
+
+    props = useProps({ ...builderSelectItemProps, isAnySelectItemActive: t.boolean() });
 }
