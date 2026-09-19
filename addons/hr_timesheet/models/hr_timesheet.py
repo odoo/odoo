@@ -100,8 +100,6 @@ class AccountAnalyticLine(models.Model):
     parent_task_id = fields.Many2one(
         comodel_name="project.task",
         related="task_id.parent_id",
-        store=True,
-        index="btree_not_null",
     )
     project_id = fields.Many2one(
         comodel_name="project.project",
