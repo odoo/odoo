@@ -433,3 +433,62 @@ class TestFleetActionContexts(TransactionCase):
         self.assertEqual(model_context["default_asset_kind_id"], vehicle_kind.id)
         self.assertEqual(model_context["default_type"], "consu")
         self.assertFalse(model_context["default_sale_ok"])
+
+
+class TestIdentifierColumnsLiveOnTheVehicle(TransactionCase):
+    def test_the_root_reads_a_plate_through_the_rows_and_the_vehicle_stores_it(self):
+        Asset = self.env["resource.asset"]
+        Vehicle = self.env["resource.asset.vehicle"]
+        for name in ("license_plate", "vin_sn", "engine_sn"):
+            self.assertFalse(Asset._fields[name].store, name)
+            self.assertTrue(Vehicle._fields[name].store, name)
+            for sibling in Asset._get_model_names_in_tree() - {Vehicle._name}:
+                self.assertFalse(self.env[sibling]._fields[name].store, sibling)
+        self.env.cr.execute(
+            "SELECT column_name FROM information_schema.columns"
+            " WHERE table_name = 'resource_asset' AND column_name = 'license_plate'"
+        )
+        self.assertFalse(self.env.cr.fetchall())
+        tool = Asset.create(
+            {
+                "name": "Tagged Tool",
+                "kind_id": self.env.ref("resource_asset.kind_tool").id,
+                "license_plate": "TOOL-1",
+            }
+        )
+        self.assertEqual(tool.get_identifier("plate"), "TOOL-1")
+        self.assertEqual(tool.license_plate, "TOOL-1")
+        self.assertIn(tool, Asset.search([("license_plate", "=", "TOOL-1")]))
+        van = Asset.create(
+            {
+                "name": "Van",
+                "kind_id": self.env.ref("resource_asset.kind_vehicle").id,
+                "license_plate": "VAN-1",
+            }
+        )
+        self.assertIn(van, Asset.search([("license_plate", "ilike", "VAN")]))
+        self.assertEqual(Vehicle.browse(van.id).license_plate, "VAN-1")
+        self.assertEqual(Vehicle.search([("license_plate", "=", "VAN-1")]).id, van.id)
+
+    def test_a_deliberate_retype_moves_the_row_and_keeps_the_id(self):
+        Asset = self.env["resource.asset"]
+        tool_kind = self.env.ref("resource_asset.kind_tool")
+        van = Asset.create(
+            {
+                "name": "Retyped",
+                "kind_id": self.env.ref("resource_asset.kind_vehicle").id,
+                "license_plate": "RTY-1",
+            }
+        )
+        van_id = van.id
+        with self.assertRaises(ValidationError):
+            van.kind_id = tool_kind
+        van._retype(tool_kind)
+        self.assertEqual(Asset.browse(van_id)._get_concrete()._name, "resource.asset")
+        self.assertEqual(Asset.browse(van_id).kind_id, tool_kind)
+        self.assertEqual(Asset.browse(van_id).license_plate, "RTY-1")
+        self.assertFalse(self.env["resource.asset.vehicle"].search([("id", "=", van_id)]))
+        Asset.browse(van_id)._retype(self.env.ref("resource_asset.kind_vehicle"))
+        vehicle = self.env["resource.asset.vehicle"].browse(van_id)
+        self.assertEqual(vehicle._get_concrete()._name, "resource.asset.vehicle")
+        self.assertEqual(vehicle.license_plate, "RTY-1")

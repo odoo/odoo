@@ -31,7 +31,11 @@ class ResourceAsset(models.Model):
         "mixin.resource",
     ]
     _table_inheritance_root = "resource_asset"
-    _dispatch_write_to_concrete = True
+    # Writes stay on the model the caller holds: a hook that runs on the
+    # concrete model records the subtype's name in every polymorphic reference
+    # (mail tracking, documents, attachments), splitting a vehicle's chatter
+    # from its root. Dispatch waits for a canonical reference name on the tree.
+    _dispatch_write_to_concrete = False
     _order = "name, id"
     _check_company_auto = True
 
@@ -103,18 +107,23 @@ class ResourceAsset(models.Model):
         comodel_name="resource.asset.identifier",
         inverse_name="asset_id",
     )
+    # Accessors on the root: read and searched through the identifier rows,
+    # stored as columns only by the kinds that carry them.
     license_plate = AssetIdentifier(
         identifier_code="plate",
+        store=False,
         help="License plate number of the asset (eg plate number for a car)",
     )
     vin_sn = AssetIdentifier(
         identifier_code="vin",
         string="Serial Number / VIN",
+        store=False,
         help="Unique number written on an asset's chassis (VIN/SN number).",
     )
     engine_sn = AssetIdentifier(
         identifier_code="engine",
         string="Engine Serial Number",
+        store=False,
         help="Unique number written on the asset's engine.",
     )
     missing_identifier_type_ids = fields.Many2many(
@@ -436,7 +445,7 @@ class ResourceAsset(models.Model):
 
     def _write_concrete(self, vals):
         if "kind_id" in vals:
-            self._check_kind_belongs_to_this_model([vals])
+            self._check_kind_stays_in_this_table(vals["kind_id"])
         if "state" in vals:
             self._check_transition(vals["state"])
         if "odometer_uom_id" in vals:
@@ -624,6 +633,88 @@ class ResourceAsset(models.Model):
             for (index, __), record in zip(indexed, records, strict=True):
                 created[index] = record.id
         return self.browse(created[index] for index in range(len(vals_list)))
+
+    def _check_kind_stays_in_this_table(self, kind_id) -> None:
+        kind = self.env["resource.asset.kind"].browse(kind_id)
+        target = self._get_model_for_kind(kind)
+        for model_name in self._get_model_names_concrete().values():
+            if model_name != target:
+                raise ValidationError(
+                    self.env._(
+                        "An asset of kind %(kind)s is a %(model)s, and no row moves "
+                        "between the two tables. Create it there instead.",
+                        kind=kind.display_name,
+                        model=target,
+                    )
+                )
+
+    def _retype(self, kind):
+        """Deliberately make these assets a kind of another model. A kind
+        names a table, and this is the one door through which a row changes
+        table: parent to child is a DELETE and an INSERT, which the shared
+        sequence and the absence of foreign keys into the root allow. A column
+        only the source model declares does not travel; a stored compute only
+        the target declares is computed afresh."""
+        target = self._get_model_for_kind(kind)
+        by_source = defaultdict(list)
+        for record_id, model_name in self._get_model_names_concrete().items():
+            if model_name != target:
+                by_source[model_name].append(record_id)
+        if by_source:
+            self.env.flush_all()
+            Target = self.env[target]
+            for source, ids in by_source.items():
+                source_table = self.env[source]._table
+                columns = self._get_columns_shared(source_table, Target._table)
+                self.env.cr.execute(
+                    SQL(
+                        """
+                        WITH moved AS (
+                            DELETE FROM ONLY %(source)s WHERE id = ANY(%(ids)s) RETURNING *
+                        )
+                        INSERT INTO %(target)s (%(columns)s) SELECT %(columns)s FROM moved
+                        """,
+                        source=SQL.identifier(source_table),
+                        target=SQL.identifier(Target._table),
+                        ids=ids,
+                        columns=SQL(", ").join(SQL.identifier(c) for c in columns),
+                    )
+                )
+                _debug.lifecycle(
+                    "resource_asset.rows_retyped",
+                    source=source,
+                    target=target,
+                    rows=len(ids),
+                )
+            self.env.registry.clear_cache("default")
+            self.env.invalidate_all()
+            moved = Target.browse(
+                [record_id for ids in by_source.values() for record_id in ids]
+            )
+            root_fields = self.env[self._get_root_model_name()]._fields
+            for name, field in Target._fields.items():
+                root_field = root_fields.get(name)
+                stored_by_root = root_field is not None and root_field.store
+                if field.store and field.compute and not stored_by_root:
+                    field.compute_value(moved)
+            self.env.flush_all()
+        self.with_context(active_test=False).write({"kind_id": kind.id})
+        return self.browse(self.ids)
+
+    @api.model
+    def _get_columns_shared(self, source_table, target_table) -> list[str]:
+        self.env.cr.execute(
+            """
+            SELECT a.column_name
+              FROM information_schema.columns a
+              JOIN information_schema.columns b
+                ON b.column_name = a.column_name AND b.table_name = %s
+             WHERE a.table_name = %s
+             ORDER BY a.ordinal_position
+            """,
+            [target_table, source_table],
+        )
+        return [row[0] for row in self.env.cr.fetchall()]
 
     def _check_kind_belongs_to_this_model(self, vals_list) -> None:
         Kind = self.env["resource.asset.kind"]

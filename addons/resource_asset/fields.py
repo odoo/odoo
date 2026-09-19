@@ -32,9 +32,6 @@ class AssetIdentifier(fields.Char):
         string: str | Sentinel = SENTINEL,
         **kwargs: typing.Any,
     ) -> None:
-        kwargs.setdefault("store", True)
-        kwargs.setdefault("readonly", False)
-        kwargs.setdefault("copy", False)
         super().__init__(
             identifier_code=identifier_code,
             through=through,
@@ -49,6 +46,12 @@ class AssetIdentifier(fields.Char):
         attrs = super()._get_attrs(model_class, name)
         if attrs.get("inherited"):
             return attrs
+        # Defaults belong here, not in __init__: a model inheriting the field
+        # re-instantiates it with no arguments, and a default written by
+        # __init__ would then override what the declaring model said.
+        attrs.setdefault("store", True)
+        attrs.setdefault("readonly", False)
+        attrs.setdefault("copy", False)
         code = attrs.get("identifier_code") or self.identifier_code
         if not code:
             raise TypeError(
