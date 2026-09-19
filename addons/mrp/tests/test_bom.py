@@ -2692,6 +2692,16 @@ class TestBoM(TestMrpCommon):
             {'product_id': self.product_4.id, 'product_uom_qty': 1.0},
             ])
 
+        mo_form = Form(order2)
+        mo_form.bom_id = self.env['mrp.bom']
+        self.assertEqual(len(mo_form.move_raw_ids), 0)
+        mo_form.bom_id = bom
+        mo_form.save()
+        self.assertRecordValues(order2.move_raw_ids, [
+            {'product_id': self.product_2.id, 'product_uom_qty': 1.0},
+            {'product_id': self.product_4.id, 'product_uom_qty': 1.0},
+            ])
+
     def test_workorders_on_bom_changes(self):
         """
         Check that the workorders of the MO are changed according to the bom
