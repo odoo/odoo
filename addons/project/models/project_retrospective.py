@@ -132,8 +132,6 @@ class ProjectRetrospectiveAction(models.Model):
     )
     project_id = fields.Many2one(
         related="retrospective_id.project_id",
-        store=True,
-        index=True,
     )
     owner_id = fields.Many2one(
         comodel_name="res.users",

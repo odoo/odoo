@@ -2169,7 +2169,9 @@ class ProjectProject(models.Model):
         back from the record yet.
         """
         user_id = values.get("user_id")
-        return self.env["res.users"].browse(user_id) if user_id else self.env["res.users"]
+        return (
+            self.env["res.users"].browse(user_id) if user_id else self.env["res.users"]
+        )
 
     @api.model
     def _prepare_assignment_vals(self, users) -> dict[str, Any]:

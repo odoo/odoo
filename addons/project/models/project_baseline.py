@@ -115,8 +115,6 @@ class ProjectBaselineLine(models.Model):
     )
     project_id = fields.Many2one(
         related="baseline_id.project_id",
-        store=True,
-        index=True,
     )
     task_id = fields.Many2one(
         comodel_name="project.task",

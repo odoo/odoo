@@ -365,9 +365,9 @@ class TestDependencyStoresAgree(TestProjectCommon):
         )
         self.env.cr.execute(
             """INSERT INTO project_task_dependency
-               (task_id, depends_on_id, dependency_type, lag_hours, project_id)
-               VALUES (%s, %s, 'fs', 0.0, %s)""",
-            (task_a.id, task_b.id, project.id),
+               (task_id, depends_on_id, dependency_type, lag_hours)
+               VALUES (%s, %s, 'fs', 0.0)""",
+            (task_a.id, task_b.id),
         )
         self.env.invalidate_all()
         with self.assertRaises(UserError):

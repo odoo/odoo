@@ -52,8 +52,6 @@ class ProjectTaskDependency(models.Model):
     )
     project_id = fields.Many2one(
         related="task_id.project_id",
-        store=True,
-        index=True,
     )
 
     _unique_dependency = models.Constraint(
