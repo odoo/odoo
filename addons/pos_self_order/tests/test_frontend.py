@@ -33,7 +33,7 @@ class TestFrontendMobile(SelfOrderCommonTest):
 
         self.pos_config.open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-
+        pairing_cookie = self._get_pairing_cookie()
         response = self.url_open(
             "/pos-self-order/process-order/kiosk",
             data=json.dumps({
@@ -62,6 +62,7 @@ class TestFrontendMobile(SelfOrderCommonTest):
                 }
             }),
             headers={"Content-Type": "application/json"},
+            cookies={pairing_cookie['name']: pairing_cookie['value']}
         )
 
         result = response.json()
