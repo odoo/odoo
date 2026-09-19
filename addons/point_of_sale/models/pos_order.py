@@ -204,7 +204,6 @@ class PosOrder(models.Model):
         comodel_name="account.journal",
         related="session_id.config_id.journal_id",
         string="Sales Journal",
-        store=True,
         readonly=True,
         ondelete="restrict",
     )

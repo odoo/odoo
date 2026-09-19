@@ -58,8 +58,6 @@ class PosPayment(models.Model):
         comodel_name="pos.session",
         related="pos_order_id.session_id",
         string="Session",
-        store=True,
-        index=True,
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
@@ -70,7 +68,6 @@ class PosPayment(models.Model):
         comodel_name="res.company",
         related="pos_order_id.company_id",
         string="Company",
-        store=True,
     )
     card_type = fields.Char(
         string="Type of card used",

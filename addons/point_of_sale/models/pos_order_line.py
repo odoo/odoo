@@ -23,7 +23,6 @@ class PosOrderLine(models.Model):
         comodel_name="res.company",
         related="order_id.company_id",
         string="Company",
-        store=True,
     )
     name = fields.Char(
         string="Line No",
