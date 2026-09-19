@@ -5,8 +5,23 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                    <div name="l10n_pl_mpp_warning" class="alert alert-warning" role="alert"
+                        invisible="not l10n_pl_show_mpp_warning">
+                        Split Payment mechanism may be required.
+                    </div>
+            </xpath>
+
             <xpath expr="//group[@id='header_right_group']//field[@name='date']" position="attributes">
                 <attribute name="invisible" add="country_code != 'PL'" separator=" and "/>
+            </xpath>
+
+            <xpath expr="//page[@name='invoice_tab']//field[@name='amount_residual']/parent::div" position="after">
+                <field name="l10n_pl_mpp_label" nolabel="1" invisible="not l10n_pl_mpp"/>
+            </xpath>
+
+            <xpath expr="//page[@id='other_tab']//group[@id='other_tab_group']//group[@name='sale_info_group']" position="inside">
+                <field name="l10n_pl_mpp" readonly="state != 'draft'" invisible="not l10n_pl_show_mpp"/>
             </xpath>
             
             <notebook position="inside">
