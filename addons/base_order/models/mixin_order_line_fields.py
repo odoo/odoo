@@ -63,22 +63,14 @@ class MixinOrderLineFields(models.AbstractModel):
     date_order = fields.Datetime(
         related="order_id.date_order",
         string="Order Date",
-        precompute=True,
-        store=True,
-        index=True,
     )
     date_confirmed = fields.Datetime(
         related="order_id.date_confirmed",
         string="Confirmation Date",
-        precompute=True,
-        store=True,
-        index=True,
     )
     state = fields.Selection(
         related="order_id.state",
         string="Order Status",
-        precompute=True,
-        store=True,
     )
     fiscal_position_id = fields.Many2one(
         comodel_name="account.fiscal.position",
