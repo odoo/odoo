@@ -1,5 +1,8 @@
 .o_field_widget .o_priority {
-    gap: 0.5em;
+    @media (pointer: coarse) {
+        gap: 0.5em;
+    }
+
     > .o_priority_star {
         font-size: 1.25em !important;
         &[data-icon="star"] {
