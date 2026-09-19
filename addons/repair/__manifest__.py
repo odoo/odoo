@@ -1,6 +1,6 @@
 {
     "name": "Repairs",
-    "version": "1.2",
+    "version": "1.3",
     "category": "Supply Chain/Inventory",
     "sequence": 230,
     "summary": "Repair damaged products",
