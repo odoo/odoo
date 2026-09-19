@@ -23,7 +23,6 @@ class SurveyUser_InputLine(models.Model):
     survey_id = fields.Many2one(
         related="user_input_id.survey_id",
         string="Survey",
-        store=True,
         readonly=False,
     )
     question_id = fields.Many2one(
@@ -40,7 +39,6 @@ class SurveyUser_InputLine(models.Model):
     question_sequence = fields.Integer(
         related="question_id.sequence",
         string="Sequence",
-        store=True,
     )
     lang_id = fields.Many2one(
         comodel_name="res.lang",

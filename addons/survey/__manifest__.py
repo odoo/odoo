@@ -1,6 +1,6 @@
 {
     "name": "Surveys",
-    "version": "3.9",
+    "version": "3.10",
     "category": "Marketing/Surveys",
     "sequence": 220,
     "summary": "Send your surveys or share them live.",
