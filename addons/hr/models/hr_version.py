@@ -187,7 +187,7 @@ class HrVersion(models.Model):
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True, copy=False)
 
     def _get_hr_responsible_domain(self):
-        return "[('share', '=', False), ('company_ids', 'in', company_id), ('all_group_ids', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
+        return [('share', '=', False), ('company_ids', 'in', self.env.companies.ids), ('all_group_ids', 'in', self.env.ref('hr.group_hr_user').ids)]
 
     hr_responsible_id = fields.Many2one(
         'res.users', 'HR Responsible', tracking=True,
