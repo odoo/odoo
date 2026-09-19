@@ -157,7 +157,7 @@ argument -- a bare string that only the signature can tell is a label, a
 comodel or a selection; `field-attribute-order` (E8526) is keywords out of
 that order, or two or more sharing a line; `dead-field-attribute` (E8527) is
 an attribute setup ignores: `index=` where there is no column, `precompute=`
-without `store=True`, `compute=` beside `related=`; `stored-related` (E8528) is
+without `store=True`, `compute=` beside `related=`; `stored-related` (E8529) is
 `related=` with `store=True` on anything but a Binary or an Image -- the one
 floored rule of this checker, since the copies exist and are converted module by
 module. The fixer is

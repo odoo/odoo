@@ -69,6 +69,14 @@ class TestSuppression(BaseCase):
                     )
                 )
 
+    def test_no_two_rules_share_a_code(self):
+        by_code = {}
+        for rule in _rules.RULES:
+            if rule.code:
+                by_code.setdefault(rule.code, []).append(rule.name)
+        shared = {code: names for code, names in by_code.items() if len(names) > 1}
+        self.assertFalse(shared, "a noqa naming the code would silence both rules")
+
     def test_a_rule_named_in_full_scopes_the_suppression_too(self):
         line = "x  # noqa: sql-injection  the table name comes from _table"
         self.assertTrue(is_suppressed(line, 1, "sql-injection"))

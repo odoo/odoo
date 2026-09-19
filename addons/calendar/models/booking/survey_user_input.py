@@ -60,7 +60,7 @@ class SurveyUserInputLine(models.Model):
     appointment_type_id = fields.Many2one(
         related="user_input_id.appointment_type_id",
     )
-    calendar_event_id = fields.Many2one(  # noqa: E8528  One2many inverse
+    calendar_event_id = fields.Many2one(  # noqa: E8529  One2many inverse
         related="user_input_id.calendar_event_id",
         store=True,
         index=True,

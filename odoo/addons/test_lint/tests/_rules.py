@@ -311,10 +311,10 @@ RULES: tuple[Rule, ...] = (
     ),
     Rule(
         "stored-related",
-        "E8528",
+        "E8529",
         "drop store=True: a related field over many2one hops filters, groups, "
         "sorts and aggregates through the join. A copy that carries a composite "
-        "index or a UNIQUE stays, with `# noqa: E8528  <what needs the column>`",
+        "index or a UNIQUE stays, with `# noqa: E8529  <what needs the column>`",
     ),
     Rule(
         "noqa-rationale",
