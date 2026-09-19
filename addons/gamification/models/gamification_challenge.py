@@ -367,10 +367,11 @@ class GamificationChallenge(models.Model):
             """SELECT gg.id
                         FROM gamification_goal as gg
                         JOIN mail_presence as mp ON mp.user_id = gg.user_id
+                        JOIN gamification_challenge_line as line ON line.id = gg.line_id
                        WHERE gg.write_date <= mp.last_presence
                          AND mp.last_presence >= now() AT TIME ZONE 'UTC' - interval '%(session_lifetime)s seconds'
                          AND gg.closed IS NOT TRUE
-                         AND gg.challenge_id = ANY(%(challenge_ids)s)
+                         AND line.challenge_id = ANY(%(challenge_ids)s)
                          AND (gg.state = 'inprogress'
                               OR (gg.state = 'reached' AND gg.end_date >= %(yesterday)s))
                       GROUP BY gg.id

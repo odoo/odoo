@@ -94,7 +94,6 @@ class GamificationKudos(models.Model):
         comodel_name="res.partner",
         related="sender_id.partner_id",
         string="Sender Partner",
-        store=True,
     )
     recipient_id = fields.Many2one(
         comodel_name="res.users",
@@ -107,7 +106,6 @@ class GamificationKudos(models.Model):
         comodel_name="res.partner",
         related="recipient_id.partner_id",
         string="Recipient Partner",
-        store=True,
     )
     category_id = fields.Many2one(
         comodel_name="gamification.kudos.category",

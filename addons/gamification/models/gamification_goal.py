@@ -44,8 +44,6 @@ class GamificationGoal(models.Model):
     )
     challenge_id = fields.Many2one(
         related="line_id.challenge_id",
-        store=True,
-        index=True,
         readonly=True,
         help="Challenge that generated the goal, assign challenge to users "
         "to generate goals with a value in this field.",

@@ -236,7 +236,6 @@ class GamificationAchievementUnlock(models.Model):
     # Denormalized for display
     rarity = fields.Selection(
         related="achievement_id.rarity",
-        store=True,
         readonly=True,
     )
     achievement_name = fields.Char(

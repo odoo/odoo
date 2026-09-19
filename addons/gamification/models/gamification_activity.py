@@ -51,8 +51,6 @@ class GamificationActivity(models.Model):
         comodel_name="res.company",
         related="user_id.company_id",
         string="Company",
-        store=True,
-        index=True,
     )
     summary = fields.Char(
         readonly=True,

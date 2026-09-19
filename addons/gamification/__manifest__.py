@@ -1,6 +1,6 @@
 {
     "name": "Gamification",
-    "version": "1.3",
+    "version": "1.4",
     "category": "Productivity",
     "sequence": 160,
     "description": """

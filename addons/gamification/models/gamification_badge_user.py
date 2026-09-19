@@ -43,7 +43,6 @@ class GamificationBadgeUser(models.Model):
     level = fields.Selection(
         related="badge_id.level",
         string="Badge Level",
-        store=True,
         readonly=True,
     )
 
