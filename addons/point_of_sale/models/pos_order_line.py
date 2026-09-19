@@ -294,9 +294,8 @@ class PosOrderLine(models.Model):
 
         for record in self:
             line = record.with_company(record.order_id.company_id)
-            lang = line.order_id.partner_id.lang or record.env.user.lang
             account = line.product_id._get_product_accounts()['income'] or record.order_id.config_id.journal_id.default_account_id
-            product_name = line.with_context(lang=lang).full_product_name or line.product_id.with_context(lang=lang).display_name
+            product_name = ", ".join(line.custom_attribute_value_ids.mapped('display_name'))
 
             if not account:
                 raise UserError(_(
