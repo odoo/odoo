@@ -1063,6 +1063,7 @@ class SlideChannel(models.Model):
         domain = [website.website_domain(), [('is_visible', '=', True)]]
         if my:
             domain.append([('is_member', '=', True)])
+        tag_domains = {}
         if search_tags:
             ChannelTag = self.env['slide.channel.tag']
             try:
@@ -1072,10 +1073,16 @@ class SlideChannel(models.Model):
                 tags = ChannelTag
             # Group by group_id
             # OR inside a group, AND between groups.
-            for tags_ in tags.grouped('group_id').values():
-                domain.append([('tag_ids', 'in', tags_.ids)])
+            for group, group_tags in tags.grouped('group_id').items():
+                tag_domains[group.id] = [('tag_ids', 'in', group_tags.ids)]
+            domain += tag_domains.values()
         if slide_category and 'nbr_%s' % slide_category in self:
             domain.append([('nbr_%s' % slide_category, '>', 0)])
+
+        no_tag_domains = {
+            group_id: [sub_domain for sub_domain in domain if sub_domain is not tag_domain]
+            for group_id, tag_domain in tag_domains.items()
+        }
         search_fields = ['name', 'tag_ids.name', 'description_short']
         fetch_fields = ['name', 'website_url', 'total_time', 'description_short']
         mapping = {
@@ -1089,6 +1096,7 @@ class SlideChannel(models.Model):
         return {
             'model': 'slide.channel',
             'base_domain': domain,
+            'no_tag_domains': no_tag_domains,
             'search_fields': search_fields,
             'fetch_fields': fetch_fields,
             'mapping': mapping,

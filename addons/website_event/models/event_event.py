@@ -590,6 +590,7 @@ class EventEvent(models.Model):
         if event_type != 'all':
             domain.append([("event_type_id", "=", int(event_type))])
         search_tags = self.env['event.tag']
+        tag_domains = {}
         if tags:
             try:
                 tag_ids = list(filter(None, [self.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')])) or literal_eval(tags)
@@ -603,8 +604,9 @@ class EventEvent(models.Model):
             # Doing it this way allows to only get events who are tagged "age: 10-12" AND "activity: football".
             # Add another tag "age: 12-15" to the search and it would fetch the ones who are tagged:
             # ("age: 10-12" OR "age: 12-15") AND "activity: football
-            for tags in search_tags.grouped('category_id').values():
-                domain.append([('tag_ids', 'in', tags.ids)])
+            for category, category_tags in search_tags.grouped('category_id').items():
+                tag_domains[category.id] = [('tag_ids', 'in', category_tags.ids)]
+            domain += tag_domains.values()
 
         no_country_domain = domain.copy()
         include_online_events = (
@@ -627,6 +629,11 @@ class EventEvent(models.Model):
                 no_country_domain.append(date_details[2])
                 if date_details[0] != 'scheduled':
                     current_date = date_details[1]
+
+        no_tag_domains = {
+            category_id: [sub_domain for sub_domain in domain if sub_domain is not tag_domain]
+            for category_id, tag_domain in tag_domains.items()
+        }
 
         search_fields = ['name', 'tag_ids.name', 'subtitle']
         fetch_fields = ['name', 'website_url', 'date_begin', 'subtitle']
@@ -660,6 +667,7 @@ class EventEvent(models.Model):
             'search_tags': search_tags,
             'no_date_domain': no_date_domain,
             'no_country_domain': no_country_domain,
+            'no_tag_domains': no_tag_domains,
             'group_name': self.env._("Events"),
             'sequence': 40,
         }
