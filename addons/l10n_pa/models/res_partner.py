@@ -17,6 +17,18 @@ class ResPartner(models.Model):
         string='Corregimiento name',
         related='l10n_pa_corregimiento.name',
     )
+    l10n_pa_poblado = fields.Many2one(
+        comodel_name='l10n_pa.res.city.corregimiento.poblado',
+        string='Poblado',
+        domain="[('corregimiento_id', '=?', l10n_pa_corregimiento)]",
+        help='Poblados are populated places within a corregimiento.',
+    )
+    l10n_pa_barrio = fields.Many2one(
+        comodel_name='l10n_pa.res.city.corregimiento.poblado.barrio',
+        string='Barrio',
+        domain="[('poblado_id', '=?', l10n_pa_poblado)]",
+        help='Barrios are neighborhoods within a poblado.',
+    )
     l10n_pa_dv = fields.Char(
         string='DV',
         size=2,
@@ -27,6 +39,20 @@ class ResPartner(models.Model):
     def _onchange_l10n_pa_corregimiento(self):
         if self.l10n_pa_corregimiento:
             self.city_id = self.l10n_pa_corregimiento.city_id
+        if self.l10n_pa_poblado and self.l10n_pa_poblado.corregimiento_id != self.l10n_pa_corregimiento:
+            self.l10n_pa_poblado = False
+
+    @api.onchange('l10n_pa_poblado')
+    def _onchange_l10n_pa_poblado(self):
+        if self.l10n_pa_poblado:
+            self.l10n_pa_corregimiento = self.l10n_pa_poblado.corregimiento_id
+        if self.l10n_pa_barrio and self.l10n_pa_barrio.poblado_id != self.l10n_pa_poblado:
+            self.l10n_pa_barrio = False
+
+    @api.onchange('l10n_pa_barrio')
+    def _onchange_l10n_pa_barrio(self):
+        if self.l10n_pa_barrio:
+            self.l10n_pa_poblado = self.l10n_pa_barrio.poblado_id
 
     @api.onchange('city_id')
     def _onchange_l10n_pa_city_id(self):

@@ -7,6 +7,8 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     l10n_pa_corregimiento = fields.Many2one(related='partner_id.l10n_pa_corregimiento', readonly=False)
+    l10n_pa_poblado = fields.Many2one(related='partner_id.l10n_pa_poblado', readonly=False)
+    l10n_pa_barrio = fields.Many2one(related='partner_id.l10n_pa_barrio', readonly=False)
     l10n_pa_dv = fields.Char(related='partner_id.l10n_pa_dv', readonly=False)
 
     def _localization_use_documents(self):
