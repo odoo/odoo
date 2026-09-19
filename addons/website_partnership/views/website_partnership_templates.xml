@@ -74,6 +74,9 @@
             <h5>No results found for "<span t-out="searches.get('search', '')"/>"</h5>
             <a href="/partners">See all partners</a>
         </div>
+        <div t-if="partners and original_search" class="col-12 alert alert-warning mt8">
+            No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="searches.get('search', '')"/>'.
+        </div>
         <t t-set="last_grade" t-value="None"/>
         <t id="partners_cards" t-foreach="partners.sorted(lambda p: p.grade_id.id)" t-as="partner">
             <t t-if="last_grade != partner.grade_id.id">
@@ -144,19 +147,12 @@
 <template id="search_setting" inherit_id="website_partnership.index" name="Search">
     <xpath expr="//section[@id='page_top_section']" position="inside">
         <div class="o_wcrm_search d-flex w-100 w-lg-25">
-            <form class="flex-grow-1" action="" method="get">
-                <div id="search_input_group" class="input-group" role="search">
-                    <input id="search_input_text" type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="searches.get('search', '')"/>
-                    <button type="submit" aria-label="Search" title="Search" class="oe_search_button btn btn-light">
-                        <i class="oi" data-icon="search"/>
-                    </button>
-                </div>
-            </form>
-            <button class="btn btn-light position-relative ms-2 d-lg-none"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#o_wcrm_offcanvas">
-                <i class="oi" data-icon="tune"/>
-            </button>
+            <t t-call="website.website_search_box_input"
+                search_type.f="partners"
+                action="keep_partners_url(search=0)"
+                limit.f="6"
+                order_by.f="complete_name ASC"
+            />
         </div>
     </xpath>
 </template>
@@ -165,9 +161,8 @@
     <xpath expr="//div[@id='top_section_button_middle_pos']" position="before">
         <div id="dropdown_grades_selection" class="dropdown d-none d-lg-block">
             <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by category" aria-label="Filter by category" aria-expanded="false">
-                <t t-foreach="grades" t-as="grade">
-                    <span t-if="grade['active']" t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label"/>
-                </t>
+                <span t-if="current_grade" t-out="current_grade.name"/>
+                <span t-else="" t-out="all_categories_label"/>
             </button>
             <div class="dropdown-menu">
                 <t t-foreach="grades" t-as="grade">
