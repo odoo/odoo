@@ -259,7 +259,8 @@ class ResCompany(models.Model):
         config_vals_list = [self._split_config_vals(vals) for vals in vals_list]
         companies = super().create(vals_list)
         self.env.registry.clear_cache()
-        self.env["report.config"]._for_each(companies)
+        for field in self._config_link_fields().values():
+            self.env[field.comodel_name]._for_each(companies)
         _debug.lifecycle(
             "create",
             count=len(companies),
@@ -702,7 +703,18 @@ class ResCompany(models.Model):
     def _search_config_link(
         self, comodel_name: str, operator: str, value: Any
     ) -> list[tuple[str, str, Any]]:
-        configs = self.env[comodel_name].sudo().search([("id", operator, value)])
+        Config = self.env[comodel_name].sudo()
+        if operator in ("any", "not any"):
+            # a path through the link: the configuration's own domain
+            configs = Config.search(value)
+            return [
+                (
+                    "id",
+                    "not in" if operator == "not any" else "in",
+                    configs.company_id.ids,
+                )
+            ]
+        configs = Config.search([("id", operator, value)])
         return [("id", "in", configs.company_id.ids)]
 
     def _split_config_vals(self, vals: dict[str, Any]) -> dict[str, dict[str, Any]]:

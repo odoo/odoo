@@ -1,6 +1,6 @@
 {
     "name": "Mexico - Accounting",
-    "version": "2.3",
+    "version": "2.4",
     "category": "Accounting/Localizations/Account Charts",
     "description": """
 Minimal accounting configuration for Mexico.

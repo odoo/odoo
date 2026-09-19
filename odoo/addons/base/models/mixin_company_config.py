@@ -27,6 +27,15 @@ class MixinCompanyConfig(models.AbstractModel):
         "A company has one configuration record per application.",
     )
 
+    def _register_hook(self) -> None:
+        # every company has its row once the registry is loaded: a search
+        # through the company's link finds what it never had to create
+        super()._register_hook()
+        if self._abstract:
+            return
+        companies = self.env["res.company"].sudo().with_context(active_test=False)
+        self._for_each(companies.search([]))
+
     @api.model
     def _get_field_names_delegated_to_root(self) -> list[str]:
         return []
