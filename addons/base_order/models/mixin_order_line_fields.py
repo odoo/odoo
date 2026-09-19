@@ -53,9 +53,6 @@ class MixinOrderLineFields(models.AbstractModel):
         comodel_name="res.users",
         related="order_id.user_id",
         string="Responsible",
-        precompute=True,
-        store=True,
-        index="btree_not_null",
     )
     date_order = fields.Datetime(
         related="order_id.date_order",
