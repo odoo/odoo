@@ -17,3 +17,10 @@ class AccountJournal(models.Model):
     def _compute_outbound_payment_method_line_ids(self):
         super()._compute_outbound_payment_method_line_ids()
         self._assign_outstanding_account_to_payment_method_lines("outbound", payment_method_codes=['manual'], chart_template="in")
+
+    def _get_onboarding_action_data(self):
+        """E-invoicing onboarding is only relevant for GST-registered (regular) taxpayers."""
+        self.ensure_one()
+        if self.country_code == 'IN' and self.company_id.l10n_in_gst_registration_type != 'regular':
+            return None
+        return super()._get_onboarding_action_data()
