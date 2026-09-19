@@ -3,6 +3,7 @@
 from ast import literal_eval
 
 from odoo import Command, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class HrApplicant(models.Model):
@@ -17,6 +18,10 @@ class HrApplicant(models.Model):
         compute="_compute_current_applicant_skill_ids",
         readonly=False,
     )
+    experience = fields.Integer()
+    experience_score = fields.Integer(compute="_compute_matching_score", store=True)
+    is_experience_score_matching = fields.Boolean(string="Experience Score Matching", compute="_compute_matching_skill_ids")
+    job_expected_experience = fields.Integer(related='job_id.expected_experience', string='Job Experience', readonly=True)
     skill_ids = fields.Many2many("hr.skill", compute="_compute_skill_ids", store=True)
     matching_skill_ids = fields.Many2many(
         comodel_name="hr.skill",
@@ -48,13 +53,14 @@ class HrApplicant(models.Model):
             applicant.skill_ids = applicant.applicant_skill_ids.skill_id
 
     @api.depends_context("matching_job_id")
-    @api.depends("current_applicant_skill_ids", "type_id", "job_id", "job_id.job_skill_ids", "job_id.expected_degree")
+    @api.depends("current_applicant_skill_ids", "experience", "type_id", "job_id", "job_id.job_skill_ids", "job_id.expected_degree", "job_id.expected_experience")
     def _compute_matching_skill_ids(self):
         matching_job_id = self.env.context.get("matching_job_id")
         matching_job = self.env["hr.job"].browse(matching_job_id)
         for applicant in self:
             job = matching_job or applicant.job_id
             if not job or not (job.job_skill_ids or job.expected_degree):
+                applicant.is_experience_score_matching = False
                 applicant.matching_skill_ids = False
                 applicant.missing_skill_ids = False
                 applicant.is_degree_score_matching = False
@@ -64,12 +70,13 @@ class HrApplicant(models.Model):
             matching_applicant_skills = applicant.current_applicant_skill_ids.filtered(
                 lambda a: a.skill_id in job_skill_map,
             )
+            applicant.is_experience_score_matching = job.expected_experience and applicant.experience >= job.expected_experience
             applicant.matching_skill_ids = matching_applicant_skills.mapped("skill_id")
             applicant.missing_skill_ids = job_skills.mapped("skill_id") - matching_applicant_skills.mapped("skill_id")
             applicant.is_degree_score_matching = bool(job.expected_degree) and applicant.type_id.score >= job.expected_degree.sudo().score
 
     @api.depends_context("matching_job_id")
-    @api.depends("current_applicant_skill_ids", "type_id", "job_id", "job_id.job_skill_ids", "job_id.expected_degree")
+    @api.depends("current_applicant_skill_ids", "experience", "type_id", "job_id", "job_id.job_skill_ids", "job_id.expected_degree", "job_id.expected_experience")
     def _compute_matching_score(self):
         matching_job_id = self.env.context.get("matching_job_id")
         matching_job = self.env["hr.job"].browse(matching_job_id)
@@ -79,6 +86,7 @@ class HrApplicant(models.Model):
                 applicant.matching_score = False
                 applicant.degree_score = False
                 applicant.skills_score = False
+                applicant.experience_score = False
                 continue
             job_skills = job.job_skill_ids
             job_degree = job.expected_degree.sudo().score * 100
@@ -92,10 +100,18 @@ class HrApplicant(models.Model):
                 min(skill.level_progress, job_skill_map[skill.skill_id] * 2)
                 for skill in matching_applicant_skills
             )
-            job_total = sum(job_skills.mapped("level_progress")) + job_degree
+            job_total = sum(job_skills.mapped("level_progress")) + job_degree + (100 if job.expected_experience else 0)
+
+            applicant.experience_score = round(10000 / job_total) if job.expected_experience and applicant.experience >= job.expected_experience else 0
             applicant.degree_score = round((100 * applicant_degree) / job_total) if job_total else 0
             applicant.skills_score = round((100 * skills_total) / job_total) if job_total else 0
-            applicant.matching_score = applicant.degree_score + applicant.skills_score
+            applicant.matching_score = applicant.degree_score + applicant.skills_score + applicant.experience_score
+
+    @api.constrains('experience')
+    def _check_experience(self):
+        for applicant in self:
+            if applicant.experience < 0:
+                raise ValidationError(self.env._("Experience cannot be negative."))
 
     def _get_employee_create_vals(self):
         vals = super()._get_employee_create_vals()
