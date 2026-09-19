@@ -58,24 +58,26 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             len(order.order_line.ids), 1, "Free Large Cabinet should have been removed"
         )
 
-        # Free product in cart will be considered as paid product when changing quantity of paid
-        # product, so the free product quantity computation will be wrong.
-        # 75 Large Cabinet in cart, 25 free, set quantity to 6 Large Cabinet, you should have 2 free
-        # Large Cabinet, but you get 8 because it adds the 25 initial free Large Cabinet to the
-        # total paid Large Cabinet when computing (25+10 > 35 > /4 = 8 free Large Cabinet).
+        # A reward claim grants reward_product_qty (1 here) per claim, regardless of
+        # how many points are available.
         sol1.product_uom_qty = 75
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
             sum(order.order_line.filtered(lambda x: x.is_reward_line).mapped("product_uom_qty")),
-            25,
-            "We should have 25 Free Large Cabinet",
+            1,
+            "The claim should have created a single line of 1 Free Large Cabinet",
         )
         sol1.product_uom_qty = 6
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
             sum(order.order_line.filtered(lambda x: x.is_reward_line).mapped("product_uom_qty")),
             2,
-            "We should have 2 Free Large Cabinet",
+            "We should have 2 Free Large Cabinet lines, one per claim",
+        )
+        self.assertEqual(
+            len(order.order_line.filtered(lambda x: x.is_reward_line)),
+            2,
+            "We should have 2 separate reward lines, one per claim",
         )
 
     def test_program_numbers_check_eligibility(self):
