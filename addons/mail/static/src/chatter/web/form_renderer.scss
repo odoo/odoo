@@ -55,7 +55,14 @@
 }
 
 .o-mail-Chatter-topbar {
-    padding-bottom: map-get($spacers, 2);
+    // `overflow-x: auto`, needed to scroll the buttons on a narrow chatter, makes
+    // `overflow-y` compute to `auto` too, so the scroller clips whatever paints
+    // outside it. The buttons and the search input sit flush against its top and
+    // side edges, so their focus ring got cut off. Reserve the ring's width inside
+    // the scroller and pull the box back out by the same amount, which the chatter's
+    // surrounding spacing absorbs, so the contents stay exactly where they were.
+    margin: -$btn-focus-width (-$btn-focus-width) 0;
+    padding: $btn-focus-width $btn-focus-width map-get($spacers, 2);
 }
 
 .o-mail-Chatter-topbar button.btn-link.text-muted:hover {
