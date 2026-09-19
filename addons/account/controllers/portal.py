@@ -196,7 +196,7 @@ class PortalAccount(CustomerPortal):
         if access_token:
             email_to_unsubscribe = email_normalize(token_data.get('email_to_unsubscribe'), strict=False)
         else:
-            emails = email_normalize_all(journal.incoming_einvoice_notification_email or '')
+            emails = email_normalize_all(journal.journal_notification_emails or '')
             if len(emails) != 1:
                 return _render({'error': _('Deprecated link')}, 410)
             email_to_unsubscribe = emails[0]
@@ -209,7 +209,7 @@ class PortalAccount(CustomerPortal):
 
         journal = journal.with_company(journal.sudo().company_id.id)
 
-        all_recipients = email_normalize_all(journal.incoming_einvoice_notification_email or '')
+        all_recipients = email_normalize_all(journal.journal_notification_emails or '')
         email_found = any(r == email_to_unsubscribe for r in all_recipients)
 
         if not email_found:
