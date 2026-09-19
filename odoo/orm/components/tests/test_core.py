@@ -40,6 +40,7 @@ _DELEGATIONS = [
     ("schedule", "engine", "schedule", 2, False),
     ("mark_done", "engine", "mark_done", 2, False),
     ("is_pending", "engine", "is_pending", 2, True),
+    ("is_pending_in_tree", "engine", "is_pending_in_tree", 2, True),
     ("has_pending_field", "engine", "has_pending_field", 1, True),
     ("has_pending", "engine", "has_pending", 0, True),
     ("get_pending_ids", "engine", "get_pending_ids", 1, True),

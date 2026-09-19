@@ -148,6 +148,9 @@ class OrmCore[F: FieldKey = FieldKey]:
     def is_pending(self, field: F, record_id: Any) -> bool:
         return self._engine.is_pending(field, record_id)
 
+    def is_pending_in_tree(self, field: F, record_id: Any) -> bool:
+        return self._engine.is_pending_in_tree(field, record_id)
+
     def has_pending_field(self, field: F) -> bool:
         return self._engine.has_pending_field(field)
 

@@ -210,7 +210,7 @@ def get_cache_miss_from_default(
 def get_cache_miss(
     field: Field, record: BaseModel, env: Environment, record_id: IdType
 ) -> typing.Any:
-    if field.fetched_with_row and record_id:
+    if field.fetched_with_row and record_id and field.delegation_key_settled(env):
         source = "storage"  # debuglog
         value = get_cache_miss_from_storage(field, record, env, record_id)
     elif field.store and record._has_origin and not (field.compute and field.readonly):

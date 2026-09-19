@@ -58,16 +58,23 @@ class ComputeEngine[F: FieldKey = FieldKey]:
 
     @staticmethod
     def _keys(field: F) -> tuple[F, ...]:
-        # a pending or protected value is a fact of the row, which every
-        # model of a table-inheritance tree reads through its own field
+        # a value done or protected is a fact of the row, which every model
+        # of a table-inheritance tree reads through its own field; a pending
+        # one is scheduled on the model the trigger names, which owns the rows
+        # it will compute
         return (field, *getattr(field, "tree_siblings", ()))
 
     def schedule(self, field: F, ids: Iterable[Any]) -> None:
-        ids = list(ids)
-        if not ids:
-            return
-        for key in self._keys(field):
-            self._pending[key].update(ids)
+        existing = self._pending.get(field)
+        if existing is None:
+            ids = list(ids)
+            if not ids:
+                return
+            existing = self._pending[field]
+        existing.update(ids)
+
+    def is_pending_in_tree(self, field: F, record_id: Any) -> bool:
+        return any(record_id in self._pending.get(key, ()) for key in self._keys(field))
 
     def mark_done(self, field: F, ids: Iterable[Any]) -> None:
         ids = list(ids)

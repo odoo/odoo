@@ -111,8 +111,8 @@ def _prepare_fast_get(
         ids = record._ids
         if len(ids) != 1:
             return self._get_not_singleton(record, owner)
-        if self.is_stored_computed and env.core.has_pending_field(self):
-            self.recompute(record)
+        if self.is_stored_computed:
+            self.recompute_where_scheduled(record)
         try:
             value = env.__dict__["_field_cache_memo"][self][ids[0]]
         except KeyError:
@@ -480,6 +480,15 @@ class Field[T](
     def is_stored_computed(self) -> bool:
         return bool(self.compute and self.store)
 
+    def delegation_key_settled(self, env: Environment) -> bool:
+        # a delegated column comes through the delegation join: while the
+        # key is pending or unwritten the table names the wrong parent
+        if not self.inherited:
+            return True
+        key = env[self.model_name]._fields[self._related_names[0]]
+        core = env.core
+        return not (core.has_pending_field(key) or core.get_dirty(key))
+
     @property
     def fetched_with_row(self) -> bool:
         # a stored column, or a delegated field read under this model's own
@@ -489,8 +498,15 @@ class Field[T](
         if not (self.inherited and self.compute_sudo):
             return False
         target = self.related_field
+        seq = self._related_field_seq
+        key = seq[0] if seq else None
         return (
             target is not None
+            and key is not None
+            # the join needs the key in the table: a computed, unstored key
+            # names whatever the column last held
+            and bool(key.store)
+            and bool(key.column_type)
             and bool(target.store)
             and bool(target.column_type)
             and not target.is_x2many
@@ -930,8 +946,20 @@ class Field[T](
         return True, value
 
     def recompute_pending(self, records: ModelLike) -> None:
-        if self.is_stored_computed and records.env.core.has_pending_field(self):
-            self.recompute(records)
+        if self.is_stored_computed:
+            self.recompute_where_scheduled(records)
+
+    def recompute_where_scheduled(self, records: ModelLike) -> None:
+        # a row of a table-inheritance tree is scheduled on the model the
+        # trigger named: that model computes it, whichever member reads it
+        env = records.env
+        core = env.core
+        for field in (self, *self.tree_siblings):
+            if core.has_pending_field(field):
+                if field is self:
+                    field.recompute(records)
+                else:
+                    field.recompute(env[field.model_name].browse(records._ids))
 
     def recompute(self, records: ModelLike) -> None:
         _compute.recompute(self, records)

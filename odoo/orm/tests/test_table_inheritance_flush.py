@@ -229,3 +229,23 @@ def test_a_protection_through_one_model_covers_its_siblings():
         with env.protecting([leaf_loud], leaf):
             assert env.is_protected(root_loud, root)
         assert not env.is_protected(root_loud, root)
+
+
+def test_a_read_through_a_sibling_computes_where_the_row_is_scheduled():
+    # the trigger scheduled the row on the root; the leaf reading it must
+    # not compute a row it does not own, the root computes it and the mark
+    # is done for both
+    with model_test_env(CountedRoot, CountedLeaf) as env:
+        root = env["counted.root"].create({"name": "one"})
+        leaf = env["counted.leaf"].create({"name": "one"})
+        env.flush_all()
+        root_loud = env["counted.root"]._fields["loud"]
+        leaf_loud = env["counted.leaf"]._fields["loud"]
+        CountedRoot.computed_ids = []
+        env.add_to_compute(root_loud, root)
+        assert not env.core.is_pending(leaf_loud, leaf.id)
+        assert env.core.is_pending_in_tree(leaf_loud, leaf.id)
+        leaf.invalidate_recordset(["loud"])
+        leaf.loud
+        assert CountedRoot.computed_ids == [root.id]
+        assert not env.core.is_pending(root_loud, root.id)

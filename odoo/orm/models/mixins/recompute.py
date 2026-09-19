@@ -559,9 +559,9 @@ class RecomputeMixin(_ModelStubs):
             if ids is None:
                 sibling._flush_model_own(shared)
             else:
-                # a fetch of these rows: the sibling's dirty values must reach
-                # the table, its pending computes stay pending
-                sibling._flush()
+                # a fetch of these rows: the sibling's dirty values of the read
+                # columns must reach the table, its pending computes stay pending
+                sibling._flush_if_dirty([sibling._fields[fname] for fname in shared])
 
     @api.private
     def flush_recordset(self, fnames: Collection[str] | None = None) -> None:
@@ -600,6 +600,13 @@ class RecomputeMixin(_ModelStubs):
                 records=len(ids),
                 fields=None if named_fields is None else len(named_fields),
             )
+            self._flush()
+
+    def _flush_if_dirty(self, fields: Collection[Field]) -> None:
+        # a SELECT about to read these columns: a dirty value among them must
+        # reach the table first, and nothing is recomputed on the way
+        core = self.env.core
+        if any(core.get_dirty(field) for field in fields):
             self._flush()
 
     def _flush(self) -> None:

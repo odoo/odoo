@@ -1003,7 +1003,7 @@ class PostgresBackend:
                 # a fetch of known rows: their dirty values are written here,
                 # and the query then flushes only what else it reads. A
                 # search_fetch keeps its flush: the WHERE reads every row
-                model._flush()
+                model._flush_if_dirty(column_fields)
                 fetched_columns = set(column_fields)
                 select = select.with_to_flush(
                     [f for f in select.to_flush if f not in fetched_columns]
@@ -1029,12 +1029,12 @@ class PostgresBackend:
                     field._clear_dead_pending(fetched)
                     # a row whose compute is pending keeps it: the table holds
                     # the value before the change, not after it
-                    pending = core.get_pending_ids(field)
-                    if pending:
+                    members = (field, *field.tree_siblings)
+                    if any(core.has_pending_field(member) for member in members):
                         keep = [
                             i
                             for i, id_ in enumerate(fetched._ids)
-                            if id_ not in pending
+                            if not core.is_pending_in_tree(field, id_)
                         ]
                         if len(keep) != len(fetched):
                             field._insert_cache(

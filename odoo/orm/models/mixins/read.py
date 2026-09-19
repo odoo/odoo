@@ -375,9 +375,13 @@ class ReadMixin(_ModelStubs):
 
         prof = _OrmProfile(_orm_read)
 
-        fields_to_fetch = self._get_fields_to_fetch(
-            field_names, ignore_when_in_cache=True
-        )
+        fields_to_fetch = [
+            field
+            for field in self._get_fields_to_fetch(
+                field_names, ignore_when_in_cache=True
+            )
+            if field.delegation_key_settled(self.env)
+        ]
         self._flush_inheritance_tree_before_fetch(fields_to_fetch)
 
         in_prefetch_batch = self.env.transaction.prefetch_batch == (
@@ -468,7 +472,7 @@ class ReadMixin(_ModelStubs):
                     sibling=model_name,
                     fields=len(names),
                 )
-                other._flush()
+                other._flush_if_dirty([other._fields[name] for name in names])
 
     def _readable_prefetch_fields(self, prefetch: typing.Any) -> tuple[Field, ...]:
         fields = self.pool.prefetch_fields(self._name, prefetch)
