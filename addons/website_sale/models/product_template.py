@@ -1929,7 +1929,7 @@ class ProductTemplate(models.Model):
     def _get_first_available_combination(self, necessary_values=None):
         """Override of `product` to return the first combination that has stock."""
         res = super()._get_first_available_combination(necessary_values)
-        if not self.env.context.get("website_id"):
+        if not self.env.context.get("website_id") or self.allow_out_of_stock_order:
             return res
 
         for combination in self._get_possible_combinations(necessary_values):
