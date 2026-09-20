@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models
+from odoo.exceptions import RedirectWarning
 
 
 class StockValuationReport(models.AbstractModel):
@@ -208,7 +209,14 @@ class StockValuationReport(models.AbstractModel):
             for line in lines_by_key.values()
             for account in line['valuation_amount_by_account']
         }
+
         account_ids |= {account.id for account in valuation_amount_by_account}
+        if not (len(account_ids) and all(account_ids)):
+            raise RedirectWarning(
+                self.env._('Accrual Accounts need to be configured in the settings.'),
+                self.env.ref('account.action_account_config').id,
+                self.env._('Go to accounting settings')
+            )
         display_name_by_account_id = {
             account.id: account.display_name
             for account in self.env['account.account'].browse(account_ids)
