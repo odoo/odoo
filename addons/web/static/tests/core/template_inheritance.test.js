@@ -75,13 +75,13 @@ test("single operation: replace (debug mode)", async () => {
     }
 });
 
-test("single operation: replace root (and use a $0)", async () => {
+test("single operation: replace root (and use a replace-target)", async () => {
     const toTest = [
         {
             arch: `<t t-name="web.A"> <div>I was petrified</div> </t>`,
             operations: `
                 <t>
-                    <xpath expr="." position="replace"><div>At first I was afraid</div>$0</xpath>
+                    <xpath expr="." position="replace"><div>At first I was afraid</div><replace-target/></xpath>
                 </t>`,
             result: `<div t-translation-context="from_op" t-name="web.A">At first I was afraid</div>`,
             // in outer mode with no parent only first child of operation is kept
