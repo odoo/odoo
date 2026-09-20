@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import LazyTranslate
 
@@ -24,12 +25,6 @@ class ProjectProject(models.Model):
         tracking=True,
     )
 
-    direct_user_id = fields.Many2one(
-        comodel_name="res.users",
-        string="Project Manager without Employee",
-        tracking=True,
-        help="The manager of a project run by someone who holds no employee record: a consultant, a contractor, or an administrator standing in.",
-    )
     user_id = fields.Many2one(
         comodel_name="res.users",
         string="Project Manager (User)",
@@ -40,7 +35,7 @@ class ProjectProject(models.Model):
         tracking=False,
     )
 
-    @api.depends("employee_id.user_id", "direct_user_id")
+    @api.depends("employee_id.user_id")
     def _compute_user_id(self):
         for project in self:
             _debug.logic(
@@ -48,17 +43,14 @@ class ProjectProject(models.Model):
                 project=project,
                 employee=project.employee_id,
                 user=project.employee_id.user_id,
-                direct=project.direct_user_id,
             )
-            project.user_id = project.employee_id.user_id or project.direct_user_id
+            project.user_id = project.employee_id.user_id
 
     def _get_fields_assignment(self) -> set[str]:
-        return super()._get_fields_assignment() | {"employee_id", "direct_user_id"}
+        return super()._get_fields_assignment() | {"employee_id"}
 
     def _get_assigned_users(self, values):
         users = super()._get_assigned_users(values)
-        if values.get("direct_user_id"):
-            users |= self.env["res.users"].browse(values["direct_user_id"])
         if values.get("employee_id"):
             users |= (
                 self.env["hr.employee"].browse(values["employee_id"]).sudo().user_id
@@ -67,27 +59,28 @@ class ProjectProject(models.Model):
 
     @api.model
     def _prepare_assignment_vals(self, users):
-        """A manager is their employee where they have one, and themselves where
-        they do not: a consultant or a stand-in administrator manages a project
-        without ever being on the payroll."""
         user = users[:1]
-        employee = (
-            self.env["hr.employee"]
-            .sudo()
-            .search(
-                [("user_id", "=", user.id), ("company_id", "=", self.env.company.id)],
-                limit=1,
+        if not user:
+            return {"employee_id": False}
+        employee = self._get_manager_employee(user)
+        if not employee:
+            _debug.logic("project_manager.refused", reason="no_employee", user=user)
+            raise UserError(
+                self.env._(
+                    "%(user)s holds no employee record. A project manager is an "
+                    "employee; create the employee first.",
+                    user=user.display_name,
+                )
             )
-            or self.env["hr.employee"]
-            .sudo()
-            .search([("user_id", "=", user.id)], limit=1)
-            if user
-            else self.env["hr.employee"]
-        )
-        return {
-            "employee_id": employee.id,
-            "direct_user_id": False if employee else user.id,
-        }
+        return {"employee_id": employee.id}
+
+    @api.model
+    def _get_manager_employee(self, user):
+        employees = self.env["hr.employee"].sudo()
+        return employees.search(
+            [("user_id", "=", user.id), ("company_id", "=", self.env.company.id)],
+            limit=1,
+        ) or employees.search([("user_id", "=", user.id)], limit=1)
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -1,6 +1,6 @@
 {
     "name": "Project HR",
-    "version": "1.3",
+    "version": "1.4",
     "category": "Services/Project",
     "summary": "Replace user assignees in project with HR employees",
     "description": """

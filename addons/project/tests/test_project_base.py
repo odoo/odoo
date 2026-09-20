@@ -85,6 +85,7 @@ class TestProjectCommon(TransactionCase):
                 ],
             }
         )
+        cls._employ(cls.user_projectmanager)
 
         cls.project_pigs = (
             cls.env["project.project"]
@@ -150,6 +151,25 @@ class TestProjectCommon(TransactionCase):
                     ],
                 }
             )
+        )
+
+
+    @classmethod
+    def _employ(cls, users) -> None:
+        # a tree carrying project_hr assigns a project only to an employee, so
+        # the user this fixture makes a manager is one where hr exists; the
+        # project user stays without one, as the tests that employ them expect
+        if "hr.employee" not in cls.env:
+            return
+        cls.env["hr.employee"].create(
+            [
+                {
+                    "name": user.name,
+                    "user_id": user.id,
+                    "company_id": cls.env.company.id,
+                }
+                for user in users
+            ]
         )
 
 
