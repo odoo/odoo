@@ -1,5 +1,6 @@
+import random
 from ast import literal_eval
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from datetime import timedelta
 from unittest.mock import patch
 
@@ -43,7 +44,30 @@ Cheers,
 Somebody."""
 
 
+class _WarmUp(Exception):
+    pass
+
+
 class TestCrmCommon(TestSalesCommon, MailCase):
+    def assertQueryCountWarm(self, fn, **budgets):
+        """Count the queries of ``fn`` after one rolled-back rehearsal.
+
+        The rehearsal fills the registry caches the operation reads (record
+        rules, group membership, defaults), which a fresh process fills on
+        first use with ten to twenty queries that belong to no code under
+        test and vary with the installed module set. The random state is
+        restored so a seeded draw in ``fn`` is the one the test asserts.
+        """
+        state = random.getstate()
+        self.env.flush_all()
+        with suppress(_WarmUp), self.env.cr.savepoint():
+            fn()
+            raise _WarmUp
+        self.env.invalidate_all()
+        random.setstate(state)
+        with self.assertQueryCount(**budgets):
+            return fn()
+
     FIELDS_FIRST_SET = [
         "name",
         "partner_id",

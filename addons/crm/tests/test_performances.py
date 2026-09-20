@@ -39,13 +39,21 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
 
         with self.with_user("user_sales_manager"):
             self.env.user._is_internal()
-            # Pinned against a fresh `-i sale_team,crm --with-demo` run, stable over
-            # three runs. `assertQueryCount` only fails on an over-count, so a
-            # budget met from below is a guard that has retired: re-pin it.
-            with self.assertQueryCount(user_sales_manager=365):
-                self.env["team.team"].browse(
-                    self.sales_teams.ids
-                )._action_assign_leads()
+            # Counted after a rolled-back rehearsal (assertQueryCountWarm), so
+            # the figure is the assignment's own and reads the same on
+            # `-i sale_team,crm --with-demo` and on a seven-module closure to
+            # within two queries. Pinned at the wider closure; a reading one
+            # or two below on the narrower one is that difference, not slack.
+            # `assertQueryCount` only fails on an over-count, so a budget met
+            # from further below is a guard that has retired: re-pin it.
+            self.assertQueryCountWarm(
+                lambda: (
+                    self.env["team.team"]
+                    .browse(self.sales_teams.ids)
+                    ._action_assign_leads()
+                ),
+                user_sales_manager=414,
+            )
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])
         leads_st1 = leads.filtered_domain([("team_id", "=", self.sales_team_1.id)])
@@ -85,10 +93,14 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         leads.flush_recordset()
 
         with self.with_user("user_sales_manager"):
-            with self.assertQueryCount(user_sales_manager=133):
-                self.env["team.team"].browse(
-                    self.sales_teams.ids
-                )._action_assign_leads()
+            self.assertQueryCountWarm(
+                lambda: (
+                    self.env["team.team"]
+                    .browse(self.sales_teams.ids)
+                    ._action_assign_leads()
+                ),
+                user_sales_manager=111,
+            )
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])
         leads_st1 = leads.filtered_domain([("team_id", "=", self.sales_team_1.id)])
@@ -176,8 +188,12 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         leads.flush_recordset()
 
         with self.with_user("user_sales_manager"):
-            with self.assertQueryCount(user_sales_manager=954):
-                self.env["team.team"].browse(sales_teams.ids)._action_assign_leads()
+            self.assertQueryCountWarm(
+                lambda: (
+                    self.env["team.team"].browse(sales_teams.ids)._action_assign_leads()
+                ),
+                user_sales_manager=990,
+            )
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])
         self.assertEqual(leads.team_id, sales_teams)

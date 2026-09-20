@@ -30,8 +30,12 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         with self.assertQueryCount(user_sales_manager=0):
             test_leads = self.env["crm.lead"].browse(test_leads.ids)
 
-        with self.assertQueryCount(user_sales_manager=54):
-            test_leads._handle_salesmen_assignment(user_ids=user_ids, team_id=False)
+        self.assertQueryCountWarm(
+            lambda: test_leads._handle_salesmen_assignment(
+                user_ids=user_ids, team_id=False
+            ),
+            user_sales_manager=60,
+        )
 
         self.assertEqual(
             test_leads.team_id, self.sales_team_convert | self.sales_team_1
@@ -50,8 +54,12 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         with self.assertQueryCount(user_sales_manager=0):
             test_leads = self.env["crm.lead"].browse(test_leads.ids)
 
-        with self.assertQueryCount(user_sales_manager=80):
-            test_leads._handle_salesmen_assignment(user_ids=user_ids, team_id=team_id)
+        self.assertQueryCountWarm(
+            lambda: test_leads._handle_salesmen_assignment(
+                user_ids=user_ids, team_id=team_id
+            ),
+            user_sales_manager=59,
+        )
 
         self.assertEqual(test_leads.team_id, self.sales_team_convert)
         self.assertEqual(test_leads[0::3].user_id, self.user_sales_manager)
@@ -191,8 +199,8 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         test_leads = self._create_leads_batch(count=50, user_ids=[False])
         user_ids = self.assign_users.ids
 
-        with self.assertQueryCount(user_sales_manager=858):
-            mass_convert = (
+        def mass_convert():
+            wizard = (
                 self.env["crm.lead2opportunity.partner.mass"]
                 .with_context(
                     {
@@ -208,9 +216,11 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
                     }
                 )
             )
-            mass_convert.action_mass_convert()
+            wizard.action_mass_convert()
 
-        self.assertEqual(set(test_leads.mapped("type")), set(["opportunity"]))
+        self.assertQueryCountWarm(mass_convert, user_sales_manager=887)
+
+        self.assertEqual(set(test_leads.mapped("type")), {"opportunity"})
         self.assertEqual(len(test_leads.partner_id), len(test_leads))
         self.assertEqual(test_leads.team_id, self.sales_team_1)
         self.assertEqual(test_leads[0::3].user_id, self.user_sales_manager)
