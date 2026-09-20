@@ -1,6 +1,6 @@
 {
     "name": "Manufacturing",
-    "version": "2.8",
+    "version": "2.9",
     "category": "Supply Chain/Manufacturing",
     "sequence": 55,
     "summary": "Manufacturing Orders & BOMs",

@@ -27,21 +27,18 @@ class MrpWorkcenter(models.Model):
     name = fields.Char(
         related="resource_id.name",
         string="Work Center",
-        store=True,
         readonly=False,
     )
     time_efficiency = fields.Float(
         related="resource_id.time_efficiency",
         string="Time Efficiency",
         default=100,
-        store=True,
         readonly=False,
     )
     active = fields.Boolean(
         related="resource_id.active",
         string="Active",
         default=True,
-        store=True,
         readonly=False,
     )
 

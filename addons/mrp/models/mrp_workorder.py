@@ -107,7 +107,6 @@ class MrpWorkorder(models.Model):
     production_availability = fields.Selection(
         related="production_id.reservation_state",
         string="Stock Availability",
-        store=True,
         readonly=True,
     )
     production_state = fields.Selection(
