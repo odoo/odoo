@@ -74,13 +74,9 @@ def _pre_init_hook(env):
        -- The task_id is set to False when there is no project_id on the line, but at installation,
        -- no line is associated with a project -> task_id = False
        ADD COLUMN IF NOT EXISTS task_id        INT4,
-       -- At fresh installation, `task_id` is False -> parent_task_id, which is related to it, will also be False
-       ADD COLUMN IF NOT EXISTS parent_task_id INT4,
        -- The project_id is defined as being the same as the one from the task, but task_id = False -> project_id = False
        ADD COLUMN IF NOT EXISTS project_id     INT4,
        -- The department_id is the one from the `employee_id`, but `employee_id` by default is False -> department_id = False
-       ADD COLUMN IF NOT EXISTS department_id  INT4,
-       -- The manager_id is the manager of the employee_id, but there is no `employee_id` by default -> manager_id = False
-       ADD COLUMN IF NOT EXISTS manager_id     INT4
+       ADD COLUMN IF NOT EXISTS department_id  INT4
     """)
     )
