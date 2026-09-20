@@ -6,9 +6,51 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
+            <field name="city_id" position="attributes">
+                <attribute name="invisible">not country_enforce_cities or country_code == 'PA'</attribute>
+            </field>
+            <field name="city_id" position="after">
+                <field name="city_id"
+                       placeholder="Distrito..."
+                       class="o_address_city"
+                       domain="[('country_id', '=', country_id), ('state_id', '=?', state_id)]"
+                       invisible="not country_enforce_cities or country_code != 'PA'"
+                       context="{
+                           'default_country_id': country_id,
+                           'default_state_id': state_id,
+                           'default_zipcode': zip,
+                       }"/>
+            </field>
+            <xpath expr="//field[@name='child_ids']//form//field[@name='city_id']" position="attributes">
+                <attribute name="invisible">not country_enforce_cities or country_code == 'PA'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']//form//field[@name='city_id']" position="after">
+                <field name="city_id"
+                       placeholder="Distrito..."
+                       class="o_address_city"
+                       domain="[('country_id', '=', country_id), ('state_id', '=?', state_id)]"
+                       invisible="not country_enforce_cities or country_code != 'PA'"
+                       context="{
+                           'default_country_id': country_id,
+                           'default_state_id': state_id,
+                           'default_zipcode': zip,
+                       }"/>
+            </xpath>
             <field name="street2" position="after">
                 <field name="l10n_pa_corregimiento"
                        placeholder="Corregimiento..."
+                       class="o_address_street"
+                       options="{'no_open': True, 'no_quick_create': True}"
+                       invisible="country_code != 'PA'"
+                       readonly="type == 'contact' and parent_id"/>
+                <field name="l10n_pa_poblado"
+                       placeholder="Poblado..."
+                       class="o_address_street"
+                       options="{'no_open': True, 'no_quick_create': True}"
+                       invisible="country_code != 'PA'"
+                       readonly="type == 'contact' and parent_id"/>
+                <field name="l10n_pa_barrio"
+                       placeholder="Barrio..."
                        class="o_address_street"
                        options="{'no_open': True, 'no_quick_create': True}"
                        invisible="country_code != 'PA'"
