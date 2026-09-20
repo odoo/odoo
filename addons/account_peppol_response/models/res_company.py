@@ -4,6 +4,10 @@ from odoo import models
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
+    def _peppol_can_handle_responses(self):
+        self.ensure_one()
+        return bool(self.peppol_purchase_journal_id)
+
     def _inverse_peppol_purchase_journal_id(self):
         # If the user removed his import journal in his Peppol settings, we need to tell IAP the user can't support
         # responses anymore. If a journal is added when it was empty before, we also need to tell IAP the user can support
