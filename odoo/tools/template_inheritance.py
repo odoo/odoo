@@ -160,8 +160,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
             if pos == 'replace':
                 mode = spec.get('mode', 'outer')
                 if mode == "outer":
-                    for loc in spec.xpath(".//*[text()='$0']"):
-                        loc.text = ''
+                    for loc in spec.xpath(".//odoo-inherit-replace"):
                         copied_node = copy.deepcopy(node)
                         # TODO: Remove 'inherit_branding' logic if possible;
                         # currently needed to track node removal for branding
@@ -169,7 +168,8 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                         # sibling branding issues.
                         if inherit_branding:
                             copied_node.set('data-oe-no-branding', '1')
-                        loc.append(copied_node)
+                        copied_node.tail = loc.tail
+                        loc.getparent().replace(loc, copied_node)
                     if node.getparent() is None:
                         spec_content = None
                         comment = None

@@ -820,7 +820,7 @@ class TestApplyInheritanceWrapSpecs(ViewCase):
 
     def test_replace(self):
         spec = E.xpath(
-            E.div("$0", {'class': "some"}),
+            E.div(E('odoo-inherit-replace'), {'class': "some"}),
             expr="//p", position="replace")
 
         self.apply_spec(spec)
