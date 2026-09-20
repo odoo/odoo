@@ -102,7 +102,6 @@ class StockRule(models.Model):
         related="route_id.sequence",
         string="Route Sequence",
         compute_sudo=True,
-        store=True,
     )
     picking_type_id = fields.Many2one(
         comodel_name="stock.picking.type",

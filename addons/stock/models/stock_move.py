@@ -205,7 +205,6 @@ class StockMove(models.Model):
         comodel_name="product.template",
         related="product_id.product_tmpl_id",
         string="Product Template",
-        store=True,
     )
     never_product_template_attribute_value_ids = fields.Many2many(
         comodel_name="product.template.attribute.value",
