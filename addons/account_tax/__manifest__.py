@@ -1,6 +1,6 @@
 {
     "name": "Tax Computation Engine",
-    "version": "19.0.1.2.0",
+    "version": "19.0.1.3.0",
     "category": "Hidden",
     "summary": "Standalone tax computation for order types",
     "description": """
@@ -36,6 +36,7 @@ Key API:
         "product",
     ],
     "data": [
+        "security/account_tax_security.xml",
         "security/ir.model.access.csv",
     ],
     "assets": {
