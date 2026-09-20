@@ -535,6 +535,7 @@
         <field name="model">hr.employee.skill</field>
         <field name="arch" type="xml">
             <list string="Certification"
+                js_class="hr_employee_skill_certification_list"
                 action="open_hr_employee_skill_modal"
                 type="object"
                 create="0"
@@ -543,7 +544,9 @@
                 decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt; context_today().strftime('%Y-%m-%d')"
                 decoration-warning="valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime('%Y-%m-%d') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d')">
                 <header>
-                    <button name="open_hr_employee_skill_modal" string="New" type="object" class="btn-primary" display="always" invisible="not context.get('show_certificate')"/>
+                    <!-- Visibility is decided live in CertificationListController, which hides
+                         this button when there is no certification skill type yet. -->
+                    <button name="open_hr_employee_skill_modal" string="New" type="object" class="btn-primary" display="always"/>
                 </header>
                 <field name="employee_id" widget="many2one_avatar_employee"/>
                 <field name="skill_id" string="Certification"/>
@@ -577,15 +580,6 @@
         </field>
     </record>
 
-    <record id="action_server_hr_employee_skill_certification" model="ir.actions.server">
-        <field name="name">Certifications</field>
-        <field name="model_id" ref="model_hr_employee_skill"/>
-        <field name="state">code</field>
-        <field name="code">
-            action = model.action_hr_employee_skill_certification()
-        </field>
-    </record>
-
     <record id="action_hr_employee_skill_certification" model="ir.actions.act_window">
         <field name="name">Certifications</field>
         <field name="res_model">hr.employee.skill</field>
@@ -593,9 +587,21 @@
         <field name="domain">[('is_certification', '=', True), ('company_id', 'in', allowed_company_ids)]</field>
         <field name="context">{'show_employee': True}</field>
         <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No Certifications available!</p>
+        </field>
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'list', 'view_id': False}),
             (0, 0, {'view_mode': 'form', 'view_id': ref('employee_skill_view_inherit_certificate_form')})]"/>
+    </record>
+
+    <record id="action_hr_employee_new_certification" model="ir.actions.act_window">
+        <field name="name">New Certification</field>
+        <field name="res_model">hr.employee.skill</field>
+        <field name="target">new</field>
+        <field name="context">{'show_employee': True, 'certificate_skill': True}</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="employee_skill_view_inherit_certificate_form"/>
     </record>
 
     <menuitem
@@ -617,7 +623,7 @@
             id="hr_certification_menu"
             name="Certifications"
             parent="hr_skill_learning_menu"
-            action="action_server_hr_employee_skill_certification"
+            action="action_hr_employee_skill_certification"
             sequence="94"/>
 
         <menuitem
