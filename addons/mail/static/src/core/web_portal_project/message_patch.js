@@ -5,8 +5,8 @@ import { onWillUnmount } from "@odoo/owl";
 patch(Message.prototype, {
     setup() {
         super.setup(...arguments);
-        this.state.lastReadMoreIndex = 0;
-        this.state.isReadMoreByIndex = new Map();
+        this.lastReadMoreIndex = 0;
+        this.isReadMoreByIndex = new Map();
         onWillUnmount(() => {
             this.messageBody()?.querySelector(".o-mail-ellipsis")?.remove();
         });
@@ -22,6 +22,7 @@ patch(Message.prototype, {
         }
         super.prepareMessageBody(...arguments);
         Array.from(bodyEl.querySelectorAll(".o-mail-ellipsis")).forEach((el) => el.remove());
+        this.lastReadMoreIndex = 0;
         this.insertEllipsisbtn(bodyEl);
     },
 
@@ -127,7 +128,7 @@ patch(Message.prototype, {
         }
 
         for (const group of groups) {
-            const index = this.state.lastReadMoreIndex++;
+            const index = this.lastReadMoreIndex++;
             const ellipsisbtnEl = document.createElement("button");
             ellipsisbtnEl.className = "o-mail-ellipsis badge rounded-pill border-0 py-0 px-1";
             const iconellipsisEl = document.createElement("i");
@@ -135,11 +136,11 @@ patch(Message.prototype, {
             ellipsisbtnEl.append(iconellipsisEl);
             group[0].parentNode.insertBefore(ellipsisbtnEl, group[0]);
             // Toggle All next nodes
-            if (!this.state.isReadMoreByIndex.has(index)) {
-                this.state.isReadMoreByIndex.set(index, true);
+            if (!this.isReadMoreByIndex.has(index)) {
+                this.isReadMoreByIndex.set(index, true);
             }
             const updateFromState = () => {
-                const isReadMore = this.state.isReadMoreByIndex.get(index);
+                const isReadMore = this.isReadMoreByIndex.get(index);
                 for (const childEl of group) {
                     hide(childEl);
                     toggle(childEl, !isReadMore);
@@ -147,7 +148,7 @@ patch(Message.prototype, {
             };
             ellipsisbtnEl.addEventListener("click", (e) => {
                 e.preventDefault();
-                this.state.isReadMoreByIndex.set(index, !this.state.isReadMoreByIndex.get(index));
+                this.isReadMoreByIndex.set(index, !this.isReadMoreByIndex.get(index));
                 updateFromState();
             });
             updateFromState();
