@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.addons.l10n_pa.tools.partner_identifiers import PA_ADDITIONAL_IDENTIFIERS_METADATA
+from odoo.addons.l10n_pa.tools.postal_code import locate_postal_code
 
 
 class ResPartner(models.Model):
@@ -34,6 +35,31 @@ class ResPartner(models.Model):
         size=2,
         help='Check digit from the DGI',
     )
+
+    @api.onchange('zip')
+    def _onchange_l10n_pa_zip(self):
+        if self.country_code != 'PA' or not self.zip:
+            return
+        location = locate_postal_code(self.env, self.zip)
+        if not location:
+            return {'warning': {
+                'title': self.env._("Invalid postal code"),
+                'message': self.env._(
+                    "'%(code)s' could not be decoded, or doesn't fall within Panama.",
+                    code=self.zip,
+                ),
+            }}
+        if not location['corregimiento']:
+            return {'warning': {
+                'title': self.env._("Corregimiento not found"),
+                'message': self.env._(
+                    "The postal code is valid but doesn't fall within any known corregimiento boundary."
+                ),
+            }}
+        self.l10n_pa_corregimiento = location['corregimiento']
+        self.city_id = location['corregimiento'].city_id
+        self.l10n_pa_poblado = location['poblado']
+        self.l10n_pa_barrio = location['barrio']
 
     @api.onchange('l10n_pa_corregimiento')
     def _onchange_l10n_pa_corregimiento(self):
