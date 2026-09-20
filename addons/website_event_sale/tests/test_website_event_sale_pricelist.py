@@ -4,7 +4,7 @@ from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleCommon
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.shop import Shop
 from odoo.addons.website_sale.tests.common import MockRequest
 
 
@@ -23,7 +23,7 @@ class TestWebsiteEventPriceList(TestWebsiteEventSaleCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.WebsiteSaleController = WebsiteSale()
+        cls.WebsiteSaleController = Shop()
 
     def test_pricelist_different_currency(self):
         self.pricelist.sudo().write({

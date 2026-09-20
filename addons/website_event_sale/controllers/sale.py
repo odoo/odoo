@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.checkout.confirmation import Confirmation
 from odoo.http import request
 
 
-class WebsiteEventSale(WebsiteSale):
+class WebsiteEventSale(Confirmation):
 
     def _prepare_shop_payment_confirmation_values(self, order):
         values = super(WebsiteEventSale,
