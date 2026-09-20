@@ -123,7 +123,6 @@ class RatingRating(models.Model):
     is_internal = fields.Boolean(
         related="message_id.is_internal",
         string="Visible Internally Only",
-        store=True,
         readonly=False,
     )
     access_token = fields.Char(
