@@ -19,6 +19,10 @@ class L10n_PaResCityCorregimientoPobladoBarrio(models.Model):
         required=True,
         help='This code will help with the identification of each barrio in Panama.',
     )
+    boundary = fields.Text(
+        help='GeoJSON geometry ({"type": ..., "coordinates": ...}) of the barrio '
+             'boundary, used to resolve a Panama postal code to its barrio.',
+    )
 
     # Note: not enforcing name uniqueness within a poblado, consistent with the
     # poblado model - the DGI code is the actual unique identifier in this dataset.

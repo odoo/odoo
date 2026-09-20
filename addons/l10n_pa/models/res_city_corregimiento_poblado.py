@@ -19,6 +19,11 @@ class L10n_PaResCityCorregimientoPoblado(models.Model):
         required=True,
         help='This code will help with the identification of each poblado in Panama.',
     )
+    boundary = fields.Text(
+        help='GeoJSON geometry ({"type": ..., "coordinates": ...}) of the poblado '
+             'boundary, used to resolve a Panama postal code to its poblado. Not '
+             'every poblado has one in the official dataset.',
+    )
 
     # Note: the poblado name is not guaranteed unique within a corregimiento (the
     # official DGI dataset has distinct, separately-coded populated places that
