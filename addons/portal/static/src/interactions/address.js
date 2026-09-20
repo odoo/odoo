@@ -14,7 +14,11 @@ export class CustomerAddress extends Interaction {
             "t-on-change": this.onChangeCountry,
         },
         'select[name="state_id"]': { "t-on-change": this.onChangeState },
-        "form.address_autoformat": { "t-on-submit.prevent": this.saveAddress },
+        // a form without an endpoint of its own submits natively (the POS invoice
+        // request posts to its own controller and only wants the autoformat)
+        "form.address_autoformat[data-submit-url]": {
+            "t-on-submit.prevent": this.saveAddress,
+        },
         "#save_address": { "t-on-click.prevent": this.locked(this.saveAddress, true) },
     };
 

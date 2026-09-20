@@ -285,7 +285,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             "zipcode": "12345",
             "country_id": self.company.country_id.id,
             "phone": "123456789",
-            "state_id": self.env["res.country.state"].search([], limit=1).id,
+            "state_id": self.company.country_id.state_ids[:1].id,
             "csrf_token": odoo.http.Request.csrf_token(self),
         }
         self.url_open(
