@@ -1933,6 +1933,61 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
         self.assertEqual(leave_hours_multi2.duration_display, '13:00 hours')
 
+    def test_unified_time_off_hours_scenarios_duration_based_calendar(self):
+        duration_based_calendar = self.env['resource.calendar'].create({
+            'name': 'Duration Based 40h/week',
+            'company_id': False,
+            'attendance_ids': [Command.clear()] + [
+                Command.create({
+                    'dayofweek': dayofweek,
+                    'hour_from': 0,
+                    'hour_to': 0,
+                    'duration_hours': 8,
+                }) for dayofweek in ['0', '1', '2', '3', '4']
+            ],
+        })
+        employee = self.employee_emp
+        employee.resource_calendar_id = duration_based_calendar
+        employee.tz = 'Europe/Brussels'
+
+        # A duration based day is arbitrarily centered on midday, 08:00 -> 16:00 here,
+        # but the employee may work those 8 hours at any moment of the day.
+        leave_after_centered_hours = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Leave at the end of the day',
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': self.holidays_type_hours.id,
+            'request_date_from': time.strftime('2024-04-01'),
+            'request_date_to': time.strftime('2024-04-01'),
+            'request_hour_from': 16,
+            'request_hour_to': 20,
+        })
+        self.assertEqual(leave_after_centered_hours.duration_display, '4:00 hours')
+        self.assertEqual(leave_after_centered_hours.state, 'validate')
+
+        leave_over_centered_hours = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Leave in the middle of the day',
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': self.holidays_type_hours.id,
+            'request_date_from': time.strftime('2024-04-02'),
+            'request_date_to': time.strftime('2024-04-02'),
+            'request_hour_from': 10,
+            'request_hour_to': 14,
+        })
+        self.assertEqual(leave_over_centered_hours.duration_display, '4:00 hours')
+
+        # The days in between keep their centered attendances, only the first and the
+        # last day of the requested period are slid towards the requested hours.
+        leave_multi = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Leave from the end of a day to the start of another',
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': self.holidays_type_hours.id,
+            'request_date_from': time.strftime('2024-04-03'),
+            'request_date_to': time.strftime('2024-04-05'),
+            'request_hour_from': 20,
+            'request_hour_to': 4,
+        })
+        self.assertEqual(leave_multi.duration_display, '16:00 hours')
+
     def test_unified_time_off_hours_scenarios_irregular_calendar(self):
 
         employee = self.employee_emp
