@@ -39,7 +39,7 @@ class StockQuant(models.Model):
     expiration_date = fields.Datetime(
         related="lot_id.expiration_date",
     )
-    removal_date = fields.Datetime(
+    removal_date = fields.Datetime(  # noqa: E8529  FEFO gathers ORDER BY removal_date, in_date, id, and report_stock_quantity reads the column
         related="lot_id.removal_date",
         store=True,
     )

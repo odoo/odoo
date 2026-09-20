@@ -36,7 +36,7 @@ class AccountAnalyticAccount(models.Model):
         index=True,
         required=True,
     )
-    root_plan_id = fields.Many2one(
+    root_plan_id = fields.Many2one(  # noqa: E8529  plan_id.root_id is a non-stored compute over parent_path: there is no column to join
         comodel_name="account.analytic.plan",
         related="plan_id.root_id",
         string="Root Plan",
