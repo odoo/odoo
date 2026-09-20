@@ -55,6 +55,7 @@ class TestMemoryWatch(unittest.TestCase):
         ):
             watch = memory_watch.start_from_environ()
             self.assertIs(memory_watch.start_from_environ(), watch)
+        assert watch is not None
         self.assertEqual((watch.step, watch.limit), (4096 * MIB, 4096 * MIB))
         self.assertEqual(start.call_count, 1)
 

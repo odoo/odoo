@@ -24,16 +24,6 @@ class MixinTableInheritanceRoot(models.AbstractModel):
     _name = "mixin.table.inheritance.root"
     _description = "Table Inheritance Root"
 
-    def _get_root_model_name(self) -> str:
-        """The model owning the root table. Not a cache key: `self._name` is
-        already one, and resolving this walks the tree."""
-        root_table = self._table_inheritance_root
-        by_table = self.env.registry.model_names_by_inheritance_root
-        for name in by_table.get(root_table, ()):
-            if self.env.registry[name]._table == root_table:
-                return name
-        return self._name
-
     @api.model
     def _get_model_names_in_tree(self) -> frozenset[str]:
         root_table = self.env.registry[self._get_root_model_name()]._table

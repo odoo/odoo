@@ -115,3 +115,12 @@ class _ModelMetadataMixin(_ModelStubs):
 
     def _is_table_inheritance_root(self) -> bool:
         return bool(self._table) and self._table == self._table_inheritance_root
+
+    def _get_root_model_name(self) -> str:
+        """The model owning the root table. Not a cache key: `self._name` is
+        already one, and resolving this walks the tree."""
+        root_table = self._table_inheritance_root
+        for name in self.pool.model_names_by_inheritance_root.get(root_table, ()):
+            if self.pool[name]._table == root_table:
+                return name
+        return self._name

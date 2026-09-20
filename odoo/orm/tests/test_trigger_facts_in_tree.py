@@ -83,9 +83,8 @@ def test_sibling_copies_of_a_root_column_share_one_fact():
 
 
 def test_a_field_outside_a_tree_is_its_own_fact():
-    registry = _Registry({"m": _Model("m", "", [])}, {})
-    field = _Field("x", "m")
-    registry.models["m"]._fields["x"] = field
+    registry = _Registry({"m": _Model("m", "", [_Field("x", "m")])}, {})
+    field = registry.models["m"]._fields["x"]
     assert registry._trigger_fact_of(field) is field
 
 

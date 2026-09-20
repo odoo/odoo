@@ -30,7 +30,8 @@ def read_rss() -> int:
 
 
 def _main_thread_stack() -> str:
-    frame = sys._current_frames().get(threading.main_thread().ident)
+    ident = threading.main_thread().ident
+    frame = sys._current_frames().get(ident) if ident is not None else None
     if frame is None:
         return "<main thread has no frame>"
     return "".join(traceback.format_stack(frame))
