@@ -15,7 +15,7 @@ class MixinDocumentsUnlink(models.AbstractModel):
             .with_context(active_test=False)
             .search(
                 [
-                    ("res_model", "=", self._name),
+                    ("res_model", "=", self._get_reference_model_name()),
                     ("res_id", "in", self.ids),
                 ]
             )

@@ -32,11 +32,10 @@ class ResourceAsset(models.Model):
     ]
     _table_inheritance_root = "resource_asset"
     _resource_type = "material"
-    # Writes stay on the model the caller holds: a hook that runs on the
-    # concrete model records the subtype's name in every polymorphic reference
-    # (mail tracking, documents, attachments), splitting a vehicle's chatter
-    # from its root. Dispatch waits for a canonical reference name on the tree.
-    _dispatch_write_to_concrete = False
+    # A write through the root reaches each row's concrete model, so a kind's
+    # hooks run whichever model the caller holds; every polymorphic reference
+    # those hooks record names the root (`_get_reference_model_name`).
+    _dispatch_write_to_concrete = True
     _order = "name, id"
     _check_company_auto = True
 

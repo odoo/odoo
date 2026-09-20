@@ -305,7 +305,7 @@ class MailFollowers(models.Model):
         res_ids = records.ids if records else [0]
         params = {
             "subtype_id": subtype_id or 0,
-            "res_model": records._name if records else "",
+            "res_model": records._get_reference_model_name() if records else "",
             "res_ids": records.ids if records else [],
             "pids": pids,
         }

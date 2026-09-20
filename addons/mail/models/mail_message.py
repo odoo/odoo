@@ -1109,7 +1109,7 @@ class MailMessage(models.Model):
         if "model" in vals:
             res_model = vals["model"]
         elif thread:
-            res_model = thread._name
+            res_model = thread._get_reference_model_name()
         else:
             res_model = self.model
         if "res_id" in vals:

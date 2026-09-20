@@ -27,7 +27,9 @@ class MixinMailActivity(models.AbstractModel):
     _description = "Activity Mixin"
 
     def _get_default_activity_type(self) -> MailActivityType:
-        return self.env["mail.activity"]._default_activity_type_for_model(self._name)
+        return self.env["mail.activity"]._default_activity_type_for_model(
+            self._get_reference_model_name()
+        )
 
     activity_ids: MailActivity = fields.One2many(
         comodel_name="mail.activity",
@@ -208,7 +210,7 @@ class MixinMailActivity(models.AbstractModel):
             "activity_ids",
             "any",
             self.env["mail.activity"]._next_activity_query(
-                self._name, subdomain, user_id=user_id
+                self._get_reference_model_name(), subdomain, user_id=user_id
             ),
         )
 
@@ -410,7 +412,9 @@ class MixinMailActivity(models.AbstractModel):
         Activity.flush_model(
             ["active", "date_deadline", "res_id", "res_model", "user_id", "user_tz"]
         )
-        condition = SQL("res_model = %s AND active = true", self._name)
+        condition = SQL(
+            "res_model = %s AND active = true", self._get_reference_model_name()
+        )
         if user_id is not None:
             condition = SQL("%s AND user_id = %s", condition, user_id)
         sql_join = SQL(
@@ -566,7 +570,10 @@ class MixinMailActivity(models.AbstractModel):
             activity_type = self.env["mail.activity.type"].browse(
                 act_values.get("activity_type_id") or ()
             )
-        if activity_type.res_model and activity_type.res_model != self._name:
+        if (
+            activity_type.res_model
+            and activity_type.res_model != self._get_reference_model_name()
+        ):
             _debug.logic(
                 "activity_type_fallback",
                 model=self._name,
@@ -606,7 +613,9 @@ class MixinMailActivity(models.AbstractModel):
             "summary": summary or activity_type.summary,
             "automated": True,
             "date_deadline": date_deadline,
-            "res_model_id": self.env["ir.model"]._get(self._get_reference_model_name()).id,
+            "res_model_id": self.env["ir.model"]
+            ._get(self._get_reference_model_name())
+            .id,
             **act_values,
             "activity_type_id": activity_type.id,
         }

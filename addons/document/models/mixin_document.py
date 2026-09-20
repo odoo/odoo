@@ -75,7 +75,7 @@ class MixinDocuments(models.AbstractModel):
     def _prepare_document_create_values_for_linked_records(
         self, res_model: str, vals_list: list[dict], pre_vals_list: list[dict]
     ) -> list[dict]:
-        if self._name != res_model:
+        if self._get_reference_model_name() != res_model:
             _debug.logic(
                 "linked_record_vals_refused", model=self._name, res_model=res_model
             )

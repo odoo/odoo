@@ -48,7 +48,9 @@ class TestFleetVehicle(TransactionCase):
             )
         )
         # A vehicle's own data lives on its model: read it there.
-        return self.env["resource.asset.vehicle"].with_user(self.manager).browse(asset.id)
+        return (
+            self.env["resource.asset.vehicle"].with_user(self.manager).browse(asset.id)
+        )
 
     def test_a_vehicle_is_an_asset_of_its_model(self):
         vehicle = self._vehicle()
@@ -148,7 +150,9 @@ class TestFleetVehicle(TransactionCase):
     def test_a_vehicle_waiting_for_its_plate_is_named_by_what_identifies_it(self):
         awaiting = self._vehicle(plate=False, vin_sn="5YJ3E1EA8PF004242")
 
-        self.assertEqual(awaiting.display_name, "Probe Motors / Probe One / 5YJ3E1EA8PF004242")
+        self.assertEqual(
+            awaiting.display_name, "Probe Motors / Probe One / 5YJ3E1EA8PF004242"
+        )
 
     def test_a_model_carries_its_fuel_specifications(self):
         self.model.product_tmpl_id.write(
@@ -489,7 +493,9 @@ class TestIdentifierColumnsLiveOnTheVehicle(TransactionCase):
         self.assertEqual(Asset.browse(van_id)._get_concrete()._name, "resource.asset")
         self.assertEqual(Asset.browse(van_id).kind_id, tool_kind)
         self.assertEqual(Asset.browse(van_id).license_plate, "RTY-1")
-        self.assertFalse(self.env["resource.asset.vehicle"].search([("id", "=", van_id)]))
+        self.assertFalse(
+            self.env["resource.asset.vehicle"].search([("id", "=", van_id)])
+        )
         Asset.browse(van_id)._retype(self.env.ref("resource_asset.kind_vehicle"))
         vehicle = self.env["resource.asset.vehicle"].browse(van_id)
         self.assertEqual(vehicle._get_concrete()._name, "resource.asset.vehicle")
@@ -501,7 +507,10 @@ class TestAVehicleThreadsOnTheRoot(TransactionCase):
         Asset = self.env["resource.asset"]
         Vehicle = self.env["resource.asset.vehicle"]
         van = Asset.create(
-            {"name": "Threaded", "kind_id": self.env.ref("resource_asset.kind_vehicle").id}
+            {
+                "name": "Threaded",
+                "kind_id": self.env.ref("resource_asset.kind_vehicle").id,
+            }
         )
         van.message_post(body="through the root")
         vehicle = Vehicle.browse(van.id)
@@ -521,7 +530,40 @@ class TestAVehicleThreadsOnTheRoot(TransactionCase):
             views["models"]["resource.asset.vehicle"].get("thread_model"),
             "resource.asset",
         )
-        self.assertNotIn("thread_model", Asset.get_views([[False, "form"]])["models"]["resource.asset"])
+        self.assertNotIn(
+            "thread_model",
+            Asset.get_views([[False, "form"]])["models"]["resource.asset"],
+        )
+
+    def test_a_tracked_write_through_either_model_records_the_root(self):
+        Asset = self.env["resource.asset"]
+        Vehicle = self.env["resource.asset.vehicle"]
+        van = Asset.create(
+            {
+                "name": "Tracked",
+                "kind_id": self.env.ref("resource_asset.kind_vehicle").id,
+            }
+        )
+        self.flush_tracking()
+        van.write({"date_acquisition": "2026-01-01"})
+        self.flush_tracking()
+        Vehicle.browse(van.id).write({"date_acquisition": "2026-02-01"})
+        self.flush_tracking()
+        vehicle = Vehicle.browse(van.id)
+        vehicle.message_subscribe(partner_ids=self.env.user.partner_id.ids)
+        vehicle.activity_schedule("mail.mail_activity_data_todo", summary="Probe")
+        tracked = van.message_ids.filtered("tracking_value_ids")
+        self.assertEqual(len(tracked), 2)
+        self.assertEqual(set(tracked.mapped("model")), {"resource.asset"})
+        self.assertEqual(
+            set(van.message_follower_ids.mapped("res_model")), {"resource.asset"}
+        )
+        self.assertEqual(set(van.activity_ids.mapped("res_model")), {"resource.asset"})
+        self.assertEqual(vehicle.activity_ids, van.activity_ids)
+
+    def flush_tracking(self):
+        self.env.flush_all()
+        self.env.cr.precommit.run()
 
 
 class TestSetAsideColumnsAreSwept(TransactionCase):
