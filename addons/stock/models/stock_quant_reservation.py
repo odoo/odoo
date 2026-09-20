@@ -292,7 +292,11 @@ class StockQuantReservation(models.Model):
                     package_key,
                     owner_key,
                 )
-            res = self._filter_not_blocked(res._filtered_not_expired())
+            # cached quants carry the environment the cache was built in; the
+            # expiry cutoff lives in the gathering one
+            res = self._filter_not_blocked(
+                res.with_env(self.env)._filtered_not_expired()
+            )
             sort_key, sort_reverse = cache_sort
             res = res.sorted(sort_key, reverse=sort_reverse)
         else:
