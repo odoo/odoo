@@ -587,13 +587,21 @@ class CrmLead(models.Model):
 
     @api.depends("team_id", "type")
     def _compute_stage_id(self):
-        for lead in self:
-            if not lead.stage_id or (
-                lead.team_id
-                and lead.stage_id.team_ids
-                and lead.team_id not in lead.stage_id.team_ids
-            ):
-                lead.stage_id = lead._stage_find(domain=[("fold", "=", False)]).id
+        # one stage lookup per team, not per lead: the search depends on the
+        # team and the domain alone, and assigning a batch of leads ran it
+        # once per lead (200 identical queries over 200 leads)
+        to_place = self.filtered(
+            lambda lead: (
+                not lead.stage_id
+                or (
+                    lead.team_id
+                    and lead.stage_id.team_ids
+                    and lead.team_id not in lead.stage_id.team_ids
+                )
+            )
+        )
+        for leads in to_place.grouped("team_id").values():
+            leads.stage_id = leads[:1]._stage_find(domain=[("fold", "=", False)]).id
 
     @api.depends("user_id")
     def _compute_date_open(self):
