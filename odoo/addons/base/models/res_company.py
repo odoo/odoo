@@ -707,6 +707,12 @@ class ResCompany(models.Model):
         if operator in ("any", "not any"):
             # a path through the link: the configuration's own domain
             configs = Config.search(value)
+            _debug.logic(
+                "config_link_searched",
+                config=comodel_name,
+                operator=operator,
+                companies=configs.company_id.ids,
+            )
             return [
                 (
                     "id",
@@ -715,6 +721,12 @@ class ResCompany(models.Model):
                 )
             ]
         configs = Config.search([("id", operator, value)])
+        _debug.logic(
+            "config_link_searched",
+            config=comodel_name,
+            operator=operator,
+            companies=configs.company_id.ids,
+        )
         return [("id", "in", configs.company_id.ids)]
 
     def _split_config_vals(self, vals: dict[str, Any]) -> dict[str, dict[str, Any]]:

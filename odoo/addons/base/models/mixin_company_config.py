@@ -34,7 +34,8 @@ class MixinCompanyConfig(models.AbstractModel):
         if self._abstract:
             return
         companies = self.env["res.company"].sudo().with_context(active_test=False)
-        self._for_each(companies.search([]))
+        rows = self._for_each(companies.search([]))
+        _debug.lifecycle("registry_rows_ensured", model=self._name, rows=len(rows))
 
     @api.model
     def _get_field_names_delegated_to_root(self) -> list[str]:
