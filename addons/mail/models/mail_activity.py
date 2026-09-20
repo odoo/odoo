@@ -168,7 +168,7 @@ class MailActivity(models.Model):
         required=False,
         ondelete="cascade",
     )
-    user_tz = fields.Selection(
+    user_tz = fields.Selection(  # noqa: E8529  _sql_today builds a CASE on alias.user_tz; the source is two joins away (res_users, res_partner)
         related="user_id.tz",
         string="Timezone",
         store=True,
