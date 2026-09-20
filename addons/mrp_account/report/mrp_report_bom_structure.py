@@ -11,9 +11,17 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         res['price_precision'] = self.env['decimal.precision'].precision_get('Product Price')
         res['product_precision'] = self.env['decimal.precision'].precision_get('Product Unit')
         if bom.type == 'normal':
-            res['bom_cost'] += bom.extra_cost * line_qty
-            res['bom_unit_cost'] += bom.extra_cost * line_qty
+            extra_cost = bom.extra_cost * res['quantity'] * res.get('cost_share', 1)
+            res['bom_cost'] += extra_cost
+            if bom.uom_id != res['product'].uom_id:
+                extra_cost = bom.uom_id._compute_price(extra_cost, res['product'].uom_id)
+            res['bom_unit_cost'] += extra_cost
         return res
+
+    def _get_byproducts_lines(self, product, bom, bom_quantity, level, total, index):
+        if bom.type == 'normal':
+            total += bom.extra_cost * bom_quantity
+        return super()._get_byproducts_lines(product, bom, bom_quantity, level, total, index)
 
     def _get_bom_array_lines(self, data, level, unfolded_ids, unfolded, parent_unfolded=True):
         res = super()._get_bom_array_lines(data, level, unfolded_ids, unfolded, parent_unfolded)
