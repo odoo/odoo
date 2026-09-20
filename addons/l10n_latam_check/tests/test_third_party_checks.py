@@ -235,3 +235,30 @@ class TestThirdChecks(L10nLatamCheckTest):
             second_payment.l10n_latam_new_check_ids.outstanding_line_id,
             "Posting a second payment with the same check number for New Third Party Checks should be allowed.",
         )
+
+    def test_checks_other_currency(self):
+        other_currency = self.setup_other_currency('UYU').with_company(self.company_data_3['company'].id)
+        other_currency.rate_ids = [
+            Command.create({'rate': 10.0, 'name': '2017-01-01'}),
+            Command.create({'rate': 11.0, 'name': '2017-01-11'}),
+            Command.create({'rate': 12.0, 'name': '2017-01-21'}),
+        ]
+
+        journal = self.third_party_check_journal
+        vals = {
+            'partner_id': self.partner_a.id,
+            'date': '2017-01-26',
+            'currency_id': other_currency.id,
+            'payment_type': 'inbound',
+            'journal_id': journal.id,
+            'l10n_latam_new_check_ids': [
+                Command.create({'name': '00000001', 'payment_date': '2017-01-06', 'amount': 100}),
+                Command.create({'name': '00000002', 'payment_date': '2017-01-16', 'amount': 200}),
+            ],
+            'payment_method_line_id': journal._get_available_payment_method_lines('inbound').filtered(lambda x: x.code == 'new_third_party_checks').id,
+        }
+
+        payment = self.env['account.payment'].create(vals)
+        # Payment should be posted without an error
+        payment.action_post()
+        self.assertAlmostEqual(sum(line.debit for line in payment.move_id.line_ids), 100 / 10.0 + 200 / 11.0, 2)
