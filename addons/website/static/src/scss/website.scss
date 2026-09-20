@@ -1009,6 +1009,13 @@ font[class*='bg-'] {
     position: relative;
     pointer-events: none !important;
 }
+.o_bg_video_file {
+    @include o-position-absolute(0, 0, 0, 0);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none !important;
+}
 .o_bg_video_loading {
     @include o-position-absolute(0, 0 ,0 ,0);
 }
