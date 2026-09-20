@@ -1212,3 +1212,70 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         ):
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
         self.assertIn("reloading the CoA for 'deleted_xmlid'", log_cm.output[0])
+
+    def test_install_with_translation_longer_than_the_field(self):
+        """ Ensure an untranslatable field we translate anyway keeps its source value when the
+        translation does not fit the field.
+        Those fields are size constrained, a journal code being a `Char(size=7)`, and nothing
+        limits the length of a translation: 'BILL' is 'RACHUNEK' in Polish, 8 characters.
+        """
+
+        def local_get_mapping(self, get_all=False):
+            return {'translation': {
+                'name': 'translation',
+                'country_id': None,
+                'country_code': None,
+                'module': 'account',
+                'parent': None,
+            }}
+
+        company = self.company
+
+        translation_update_for_test_get_data = {
+            'account.journal': {
+                'sale': {
+                    'code': "INV",
+                    '__translation_module__': {'code': 'translation'},
+                },
+                'purchase': {
+                    'code': "BILL",
+                    '__translation_module__': {'code': 'translation'},
+                },
+            },
+        }
+
+        def local_get_data(self, template_code, demo=False):
+            data = test_get_data(self, template_code)
+            for model, record_info in translation_update_for_test_get_data.items():
+                for xmlid, data_update in record_info.items():
+                    data[model][xmlid].update(data_update)
+            return data
+
+        # Target lang for untranslatable fields
+        company.partner_id.lang = self.env['res.lang']._activate_lang('fr_BE').code
+
+        mock_python_translations = {('translation', 'fr'): {
+            "INV": "FV",          # fits in the 7 characters of a journal code
+            "BILL": "RACHUNEK",   # does not
+        }}
+
+        with (
+            patch.object(AccountChartTemplate, '_get_chart_template_mapping', side_effect=local_get_mapping, autospec=True),
+            patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True),
+            patch.object(code_translations, 'python_translations', mock_python_translations),
+            self.assertLogs('odoo.addons.account.models.chart_template', level='WARN') as log_cm,
+        ):
+            self.env['account.chart.template'].try_loading('translation', company=company, install_demo=False)
+
+        self.assertEqual(
+            self.env['account.chart.template'].ref('sale').code, "FV",
+            "a translation that fits the field is applied",
+        )
+        self.assertEqual(
+            self.env['account.chart.template'].ref('purchase').code, "BILL",
+            "a translation that does not fit falls back to the source value instead of being truncated",
+        )
+        self.assertTrue(
+            any("'RACHUNEK'" in output for output in log_cm.output),
+            "the ignored translation is reported",
+        )
