@@ -5,6 +5,11 @@
 table.o_section_and_note_list_view {
     --o-SectionAndNote-border-color: #{$gray-500};
 
+    .o_list_section_options {
+        width: 1px;  // to prevent the column to expand
+        text-overflow: unset !important;
+    }
+
     tr {
         &.o_is_line_note {
             font-style: italic;
@@ -12,11 +17,6 @@ table.o_section_and_note_list_view {
 
         &.o_is_line_section, &.o_is_line_subsection {
             --table-striped-bg: var(--table-bg-type);
-
-            .o_list_section_options {
-                width: 1px;  // to prevent the column to expand
-                text-overflow: unset !important;
-            }
         }
 
         &.o_is_line_section {
