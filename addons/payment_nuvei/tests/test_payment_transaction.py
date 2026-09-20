@@ -78,6 +78,20 @@ class TestPaymentTransaction(NuveiCommon):
             processing_values = tx._get_specific_rendering_values(None)
         self.assertDictEqual(processing_values, expected_values)
 
+    def test_processing_values_contain_rounded_amount_usd_webpay(self):
+        """Ensure that for USD currency with Webpay payment method, processing_values should
+        contain a value which is the amount rounded down to the nearest 0."""
+        currency_usd = self.env.ref("base.USD")
+        webpay_id = self.provider._get_pm_from_code("webpay")
+        tx = self._create_transaction(
+            "redirect", amount=1000.50, currency_id=currency_usd.id, payment_method_id=webpay_id.id
+        )
+        with patch(
+            "odoo.addons.payment.utils.generate_access_token", new=self._generate_test_access_token
+        ):
+            processing_values = tx._get_specific_rendering_values(None)
+        self.assertEqual(processing_values.get("url_params").get("total_amount"), 1000)
+
     @mute_logger("odoo.addons.payment.models.payment_transaction")
     def test_no_input_missing_from_redirect_form(self):
         """Test that no key is omitted from the rendering values."""
@@ -127,6 +141,26 @@ class TestPaymentTransaction(NuveiCommon):
         input_keys.sort()
         self.assertListEqual(input_keys, expected_input_keys)
 
+    def test_extract_reference_finds_reference(self):
+        """Test that the transaction reference is found in the payment data."""
+        tx = self._create_transaction(flow="redirect")
+        reference = self.env["payment.transaction"]._extract_reference(
+            "nuvei", {"productId": tx.reference}
+        )
+        self.assertEqual(tx.reference, reference)
+
+    def test_apply_updates_sets_provider_reference(self):
+        """Test that the provider reference is set when processing the payment data."""
+        tx = self._create_transaction(flow="redirect")
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
+        self.assertEqual(tx.provider_reference, self.payment_data["TransactionID"])
+
+    def test_apply_updates_sets_payment_method(self):
+        """Test that the payment method is updated from the payment data."""
+        tx = self._create_transaction(flow="redirect")
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
+        self.assertEqual(tx.payment_method_id, self.env.ref("payment_nuvei.payment_method_card"))
+
     def test_apply_updates_confirms_transaction(self):
         """Test that the transaction state is set to 'done' when the payment data indicates a
         successful payment."""
@@ -150,7 +184,7 @@ class TestPaymentTransaction(NuveiCommon):
         tx.with_context(payment_safe_write=True)._apply_updates(payload)
         self.assertEqual(tx.state, "error")
 
-    def test_processing_payment_data_sets_transaction_to_cancel(self):
+    def test_apply_updates_sets_transaction_to_cancel(self):
         """Test that the transaction state is set to 'cancel' when the payment data is
         missing."""
         tx = self._create_transaction(flow="redirect")
@@ -158,16 +192,10 @@ class TestPaymentTransaction(NuveiCommon):
         self.assertEqual(tx.state_message, "The customer left the payment page.")
         self.assertEqual(tx.state, "cancel")
 
-    def test_processing_values_contain_rounded_amount_usd_webpay(self):
-        """Ensure that for USD currency with Webpay payment method, processing_values should
-        contain a value which is the amount rounded down to the nearest 0."""
-        currency_usd = self.env.ref("base.USD")
-        webpay_id = self.provider._get_pm_from_code("webpay")
-        tx = self._create_transaction(
-            "redirect", amount=1000.50, currency_id=currency_usd.id, payment_method_id=webpay_id.id
+    def test_extract_amount_data_returns_amount_and_currency(self):
+        """Test that the amount and currency are returned from the payment data."""
+        tx = self._create_transaction("redirect")
+        amount_data = tx._extract_amount_data(self.payment_data)
+        self.assertDictEqual(
+            amount_data, {"amount": self.amount, "currency_code": "USD", "precision_digits": 2}
         )
-        with patch(
-            "odoo.addons.payment.utils.generate_access_token", new=self._generate_test_access_token
-        ):
-            processing_values = tx._get_specific_rendering_values(None)
-        self.assertEqual(processing_values.get("url_params").get("total_amount"), 1000)
