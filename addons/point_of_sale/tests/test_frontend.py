@@ -1724,13 +1724,13 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_07_product_combo_max_free_qty(self):
         setup_product_combo_items(self)
-        self.office_combo.combo_ids[0].write(
+        self.desks_combo.write(
             {
                 "qty_free": 2,
                 "qty_max": 2,
             }
         )
-        self.office_combo.combo_ids[1].write(
+        self.chairs_combo.write(
             {
                 "qty_free": 2,
                 "qty_max": 5,
