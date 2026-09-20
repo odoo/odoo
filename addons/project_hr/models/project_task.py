@@ -109,10 +109,14 @@ class ProjectTask(models.Model):
     def _assignee_commands_for_users(self, value, company):
         if isinstance(value, models.BaseModel):
             commands = [Command.set(value.ids)]
-        elif not value:
+        elif value is False or value is None:
             commands = [Command.clear()]
+        elif not value:
+            # an empty command list, as the ORM reads it: nothing changes
+            commands = []
         elif all(isinstance(item, int) for item in value):
-            commands = [Command.set(list(value))]
+            # a bare id list, as the ORM reads it: a falsy id names nobody
+            commands = [Command.set([item for item in value if item])]
         else:
             commands = list(value)
         user_ids = {
@@ -205,6 +209,7 @@ class ProjectTask(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        vals_list = [dict(vals) for vals in vals_list]
         for vals in vals_list:
             if "user_ids" not in vals:
                 continue
@@ -325,6 +330,8 @@ class ProjectTask(models.Model):
 
     def write(self, vals):
         if "user_ids" in vals:
+            # the caller's dict stays theirs: web_gantt_write reuses it per batch
+            vals = dict(vals)
             user_value = vals.pop("user_ids")
             if "employee_ids" not in vals:
                 if len(self.company_id) > 1:

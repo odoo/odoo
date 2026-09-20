@@ -123,3 +123,42 @@ class TestTaskAssigneesWrittenAsUsers(TransactionCase):
         )
         task.employee_ids = self.employee
         self.assertEqual(task.user_ids, self.user | stranger)
+
+    def test_an_empty_command_list_changes_nothing_and_false_clears(self):
+        task = self.env["project.task"].create(
+            {"name": "Kept", "project_id": self.project.id, "user_ids": self.user.ids}
+        )
+
+        task.write({"user_ids": []})
+        self.assertEqual(task.user_ids, self.user, "an empty list is no command")
+
+        task.write({"user_ids": False})
+        self.assertFalse(task.user_ids)
+
+    def test_a_falsy_id_in_a_bare_list_names_nobody(self):
+        task = self.env["project.task"].create(
+            {"name": "Nobody", "project_id": self.project.id}
+        )
+
+        task.write({"user_ids": [False]})
+
+        self.assertFalse(task.user_ids)
+        self.assertFalse(task.direct_user_ids)
+
+    def test_the_callers_values_are_left_as_given(self):
+        vals = {"user_ids": self.user.ids}
+        first = self.env["project.task"].create(
+            {"name": "First", "project_id": self.project.id, **vals}
+        )
+        second = self.env["project.task"].create(
+            {"name": "Second", "project_id": self.project.id}
+        )
+
+        second.write(vals)
+        self.assertEqual(vals, {"user_ids": self.user.ids})
+        self.assertEqual((first | second).user_ids, self.user)
+
+        shared = {"name": "Twins", "project_id": self.project.id, **vals}
+        twins = self.env["project.task"].create([shared, shared])
+        self.assertEqual(twins.mapped("user_ids"), self.user)
+        self.assertEqual(shared["user_ids"], self.user.ids)
