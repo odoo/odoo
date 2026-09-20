@@ -7,17 +7,22 @@ class TestMonetaryAccess(TransactionCaseWithUserDemo):
         user_demo = self.user_demo.with_user(user_admin)
 
         new_user = user_demo.copy({"monetary": 1 / 3})
-        new_user.partner_id.company_id = new_user.company_id
-
         self.assertEqual(
             new_user.currency_id.id,
             False,
-            "The cache contains the wrong value for currency.",
+            "no company on the partner yet, so no currency to round with",
+        )
+        new_user.partner_id.company_id = new_user.company_id
+
+        self.assertEqual(
+            new_user.currency_id,
+            new_user.company_id.currency_id,
+            "currency_id declares company_id.currency_id, so the write is seen at once",
         )
         self.assertEqual(
             new_user.monetary,
             1 / 3,
-            "Because of previous point, no rounding was done.",
+            "the value cached before the currency existed stays as it was cached",
         )
 
         self.env.invalidate_all()
