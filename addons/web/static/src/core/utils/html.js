@@ -201,6 +201,7 @@ export function isMarkup(content) {
  * Formats the given `text` as follow:
  *  - \*\*text\*\* => puts `text` in bold.
  *  - --text-- => puts `text` in "muted" (i.e. grayed out).
+ *  - !!text!! => puts `text` in "warning" (i.e. highlighted in orange).
  *  - \`text\` => puts `text` in a rounded badge (bg-primary).
  *  - \n => inserts a line break.
  *  - \t => inserts the equivalent of 4 spaces.
@@ -231,6 +232,8 @@ export function odoomark(text) {
         [/\*\*(.+?)\*\*/g, (_, content) => markup(`<b>${content}</b>`)],
         // Muted
         [/--(.+?)--/g, (_, content) => markup(`<span class="text-muted">${content}</span>`)],
+        // Warning
+        [/!!(.+?)!!/g, (_, content) => markup(`<span class="text-warning">${content}</span>`)],
         // Badge
         [
             /&#x60;(.+?)&#x60;/g,
