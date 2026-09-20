@@ -75,6 +75,10 @@ export class StockValuationReport extends Component {
         return this.formatMonetary(this.data.stock_variation);
     }
 
+    get stockVariationLabel() {
+        return this.data.company_inventory_valuation === "real_time" ? _t("Other Stock Variation") : _t("Stock Variation");
+    }
+
     // On Click Methods --------------------------------------------------------
     async openAccountMoves(accountIds=false) {
         const action = await this.actionService.loadAction("account.action_account_moves_all");
