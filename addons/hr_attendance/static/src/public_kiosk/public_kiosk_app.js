@@ -29,7 +29,12 @@ class kioskAttendanceApp extends Component {
         barcodeSource: { type: String },
         fromTrialMode: { type: Boolean },
         deviceTrackingEnabled: { type: Boolean },
+<<<<<<< 783ed8c78126fd3934bd7367ed55837fc6ba4879
         captureCheckInImage: { type: Boolean },
+||||||| 82f370da7daeaa805bd62345e3457252367004fb
+=======
+        lang: { type: String },
+>>>>>>> 57ec949c857c8dcd5e8f9df5f623f29a5dd555d5
     };
     static components = {
         KioskBarcodeScanner,
@@ -74,6 +79,7 @@ class kioskAttendanceApp extends Component {
             this.manualKioskMode = true;
             this.state.active_display = "manual";
         }
+        luxon.Settings.defaultLocale = this.props.lang;
     }
 
     switchDisplay(screen) {
@@ -261,6 +267,35 @@ export async function createPublicKioskAttendance(document, kiosk_backend_info) 
     session.server_version_info = kiosk_backend_info.server_version_info;
     const app = new App({
         getTemplate,
+<<<<<<< 783ed8c78126fd3934bd7367ed55837fc6ba4879
+||||||| 82f370da7daeaa805bd62345e3457252367004fb
+        env: env,
+        props:
+            {
+                token : kiosk_backend_info.token,
+                companyId: kiosk_backend_info.company_id,
+                companyName: kiosk_backend_info.company_name,
+                departments: kiosk_backend_info.departments,
+                kioskMode: kiosk_backend_info.kiosk_mode,
+                barcodeSource: kiosk_backend_info.barcode_source,
+                fromTrialMode: kiosk_backend_info.from_trial_mode,
+                deviceTrackingEnabled: kiosk_backend_info.device_tracking_enabled,
+            },
+=======
+        env: env,
+        props:
+            {
+                token : kiosk_backend_info.token,
+                companyId: kiosk_backend_info.company_id,
+                companyName: kiosk_backend_info.company_name,
+                departments: kiosk_backend_info.departments,
+                kioskMode: kiosk_backend_info.kiosk_mode,
+                barcodeSource: kiosk_backend_info.barcode_source,
+                fromTrialMode: kiosk_backend_info.from_trial_mode,
+                deviceTrackingEnabled: kiosk_backend_info.device_tracking_enabled,
+                lang: kiosk_backend_info.lang,
+            },
+>>>>>>> 57ec949c857c8dcd5e8f9df5f623f29a5dd555d5
         dev: env.debug,
         translateFn: appTranslateFn,
         translatableAttributes: ["data-tooltip"],
