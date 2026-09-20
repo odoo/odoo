@@ -55,7 +55,7 @@ test("basic rendering", async () => {
     expect(".o_switch_company_item input[type='checkbox']:not(:checked)").toHaveCount(2);
 
     expect(".o_switch_company_item:eq(0)").toHaveText("Hermit");
-    expect(".o_switch_company_item:eq(0)").toHaveClass("alert-secondary");
+    expect(".o_switch_company_item:eq(0)").toHaveClass("alert-light");
     expect(".o_switch_company_item:eq(1)").toHaveText("Herman's");
     expect(".o_switch_company_item:eq(2)").toHaveText("Heroes TM");
 
