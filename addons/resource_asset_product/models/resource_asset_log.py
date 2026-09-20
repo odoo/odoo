@@ -50,7 +50,6 @@ class ResourceAssetLog(models.Model):
     product_category_id = fields.Many2one(
         related="product_id.categ_id",
         string="Product Category",
-        store=True,
     )
     log_type = fields.Selection(
         selection="_selection_log_type",

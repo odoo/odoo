@@ -47,8 +47,6 @@ class ResourceAssetPart(models.Model):
     # FIELDS
     company_id = fields.Many2one(
         related="asset_id.company_id",
-        store=True,
-        index=True,
     )
     asset_id = fields.Many2one(
         comodel_name="resource.asset",
@@ -648,12 +646,9 @@ class ResourceAssetPartFlag(models.Model):
     )
     asset_id = fields.Many2one(
         related="part_id.asset_id",
-        store=True,
-        index=True,
     )
     company_id = fields.Many2one(
         related="part_id.company_id",
-        store=True,
     )
     reason = fields.Selection(
         selection=FLAG_REASONS,
