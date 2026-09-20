@@ -19,6 +19,14 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
         self._send_patched(invoice)
         self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice")
 
+    def test_export_invoice_line_discount(self):
+        """ A discounted invoice line should be exported as an AllowanceCharge on the line. """
+        invoice = self._create_french_invoice()
+        invoice.invoice_line_ids[0].discount = 10.0
+        invoice.action_post()
+        self._send_patched(invoice)
+        self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice_discount")
+
     def test_export_invoice_partner_fr_without_pdp(self):
         """
         A French Peppol proxy user must have the BR-FR-05 mandatory notes
