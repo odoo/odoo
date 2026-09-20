@@ -14,7 +14,6 @@ class ResourceAssetMeter(models.Model):
     )
     company_id = fields.Many2one(
         related="asset_id.company_id",
-        store=True,
     )
     name = fields.Char(
         translate=True,

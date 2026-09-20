@@ -20,7 +20,6 @@ class ResourceAssetIdentifier(models.Model):
     )
     company_id = fields.Many2one(
         related="asset_id.company_id",
-        store=True,
     )
     type_id = fields.Many2one(
         comodel_name="resource.asset.identifier.type",

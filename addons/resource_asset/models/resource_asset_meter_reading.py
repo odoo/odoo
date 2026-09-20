@@ -15,12 +15,9 @@ class ResourceAssetMeterReading(models.Model):
     )
     asset_id = fields.Many2one(
         related="meter_id.asset_id",
-        store=True,
-        index=True,
     )
     company_id = fields.Many2one(
         related="meter_id.company_id",
-        store=True,
     )
     date = fields.Datetime(
         default=fields.Datetime.now,
