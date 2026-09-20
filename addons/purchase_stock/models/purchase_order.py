@@ -3,10 +3,9 @@
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import api, Command, fields, models, SUPERUSER_ID, _
+from odoo import api, Command, fields, models, _
 from odoo.fields import Domain
 from odoo.tools.float_utils import float_compare, float_repr
-from odoo.exceptions import UserError
 from odoo.tools.misc import OrderedSet
 
 
@@ -34,10 +33,15 @@ class PurchaseOrder(models.Model):
     date_promised = fields.Datetime('Promised Date', index=True, copy=False, compute="_compute_date_promised", store=True, readonly=False,
         help="Date promised by the vendor for at least 1 or more products to be delivered by.")
 
-    @api.depends('order_line.move_ids.picking_id')
+    @api.depends('order_line.move_ids.picking_id', 'picking_ids.move_ids.move_dest_ids')
     def _compute_picking_ids(self):
         for order in self:
-            order.picking_ids = order.order_line.move_ids.picking_id
+            moves = order.order_line.move_ids
+            picking_ids = self.env['stock.picking']
+            while moves:
+                picking_ids |= moves.picking_id
+                moves = moves.move_dest_ids
+            order.picking_ids = picking_ids
 
     @api.depends('picking_ids')
     def _compute_incoming_picking_count(self):
@@ -127,7 +131,7 @@ class PurchaseOrder(models.Model):
                 if to_log:
                     order._log_decrease_ordered_quantity(to_log)
         if 'priority' in vals:
-            self.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel')).priority = vals['priority']
+            self.order_line.move_ids.picking_id.filtered(lambda p: p.state not in ('done', 'cancel')).priority = vals['priority']
         return res
 
     # --------------------------------------------------
@@ -227,9 +231,9 @@ class PurchaseOrder(models.Model):
             # The purpose is to link the po that the user will manually generate to the existing moves's chain.
             if order.state in ('draft', 'sent', 'to approve', 'purchase'):
                 order_lines_ids.update(order.order_line.ids)
-            pickings_to_cancel_ids.update(order.picking_ids.filtered(lambda r: r.state not in ('cancel', 'done')).ids)
+            pickings_to_cancel_ids.update(order.order_line.move_ids.picking_id.filtered(lambda r: r.state not in ('cancel', 'done')).ids)
             # We can't cancel pickings that are already done, so we leave them untouched but log a note about it.
-            for picking in order.picking_ids:
+            for picking in order.order_line.move_ids.picking_id:
                 if picking.state == 'done':
                     picking.message_post(body=self.env._("The purchase order %s this receipt is linked to was cancelled.", order._get_html_link()))
 
@@ -418,13 +422,13 @@ class PurchaseOrder(models.Model):
         """Helper method to add picking info to the Date Updated activity when
         vender updates date_planned of the po lines.
         """
-        validated_picking = self.picking_ids.filtered(lambda p: p.state == 'done')
+        validated_picking = self.order_line.move_ids.picking_id.filtered(lambda p: p.state == 'done')
         if validated_picking:
             message = _("Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.", validated_picking[0].name)
-        elif not self.picking_ids:
+        elif not self.order_line.move_ids.picking_id:
             message = _("Corresponding receipt not found.")
         else:
-            message = _("Those dates have been updated accordingly on the receipt %s.", self.picking_ids[0].name)
+            message = _("Those dates have been updated accordingly on the receipt %s.", self.order_line.move_ids.picking_id[0].name)
         activity.note += Markup('<p>{}</p>').format(message)
 
     def _create_update_date_activity(self, updated_dates):
