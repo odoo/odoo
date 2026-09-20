@@ -124,7 +124,7 @@ class PhoneNumber(models.Model):
             )
 
     @api.model
-    def _search_number_ids(self, operator, value):
+    def _search_number_terms(self, operator, value):
         value = value.strip() if isinstance(value, str) else value
         if not value:
             return []
@@ -132,19 +132,34 @@ class PhoneNumber(models.Model):
             raise UserError(
                 _("Please enter at least 3 characters when searching a Phone number.")
             )
-        sql_operator = {"=like": "LIKE", "=ilike": "ILIKE"}.get(operator, operator)
         if value.startswith(("+", "00")):
             term = PHONE_NOISE_PATTERN.sub(
                 "", value[1 if value.startswith("+") else 2 :]
             )
             if operator not in ("=", "!="):
                 term = f"{term}%"
-            terms = ["00" + term, "+" + term]
+            return ["00" + term, "+" + term]
+        term = PHONE_NOISE_PATTERN.sub("", value)
+        if operator not in ("=", "!="):
+            term = f"%{term}%"
+        return [term]
+
+    @api.model
+    def _search_number_ids(self, operator, value):
+        """The phone numbers matching ``value`` -- one term, or a collection of
+        them under ``in`` -- in a single statement."""
+        if operator == "in":
+            operator, values = "=", value
         else:
-            term = PHONE_NOISE_PATTERN.sub("", value)
-            if operator not in ("=", "!="):
-                term = f"%{term}%"
-            terms = [term]
+            values = [value]
+        terms = [
+            term
+            for value in values
+            for term in self._search_number_terms(operator, value)
+        ]
+        if not terms:
+            return []
+        sql_operator = {"=like": "LIKE", "=ilike": "ILIKE"}.get(operator, operator)
         clauses = [
             SQL(
                 "REGEXP_REPLACE(pn.%s, %s, '', 'g') %s %s",
@@ -168,12 +183,22 @@ class PhoneNumber(models.Model):
     def _search_phone_domain(self, fnames, operator, value):
         if isinstance(value, str):
             value = value.strip()
-        if operator == "not in":
-            return Domain.AND(self._search_phone_domain(fnames, "!=", v) for v in value)
-        if operator == "in":
-            return Domain.OR(self._search_phone_domain(fnames, "=", v) for v in value)
         if not fnames:
             raise UserError(_("Missing definition of phone fields."))
+        if operator in ("in", "not in"):
+            values = [v.strip() if isinstance(v, str) else v for v in value]
+            if any(v is True or not v for v in values):
+                aggregator = Domain.OR if operator == "in" else Domain.AND
+                return aggregator(
+                    self._search_phone_domain(
+                        fnames, "=" if operator == "in" else "!=", v
+                    )
+                    for v in values
+                )
+            ids = self._search_number_ids("in", values)
+            if operator == "not in":
+                return Domain.AND(Domain(fname, "not in", ids) for fname in fnames)
+            return Domain.OR(Domain(fname, "in", ids) for fname in fnames)
         if (value is True or not value) and operator in ("=", "!="):
             if value:
                 operator = "=" if operator == "!=" else "!="
