@@ -9,7 +9,7 @@
                     class="name text-large"
                     t-out="line['sale_order_line_name']"
                 />
-                <t t-else="">$0</t>
+                <t t-else="" t-replaced=""/>
             </div>
             <div name="extra-info" position="inside">
                 <t t-if="line.get('sale_order_name')">

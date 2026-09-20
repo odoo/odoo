@@ -6,7 +6,7 @@
                 <span>Rating:</span>
                 <img class="o-rating-preview-image ms-2" t-att-src="this.ratingProps.rating.rating_image_url" t-att-alt="this.ratingProps.rating.rating_text"/>
             </t>
-            <t t-else="">$0</t>
+            <t t-else="" t-replaced=""/>
         </xpath>
     </t>
 </templates>

@@ -3,11 +3,11 @@
     <t t-inherit="mail.ThreadIcon" t-inherit-mode="extension">
         <xpath expr="//*[@name='group']" position="replace">
             <t t-if="this.channel.hasOtherMembersTyping and this.props.typing" t-call="mail.ThreadIcon.typing"/>
-            <t t-else="">$0</t>
+            <t t-else="" t-replaced=""/>
         </xpath>
         <xpath expr="//t[@name='chat']" position="replace">
             <t t-if="this.channel.hasOtherMembersTyping and this.props.typing" t-call="mail.ThreadIcon.typing"/>
-            <t t-else="">$0</t>
+            <t t-else="" t-replaced=""/>
         </xpath>
     </t>
     <t t-name="mail.ThreadIcon.typing">

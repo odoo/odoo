@@ -462,7 +462,7 @@
         <t t-if="website">
             <t t-set="is_connected" t-value="website.user_id != user_id"/>
         </t>
-        <t t-else="">$0</t>
+        <t t-else="" t-replaced=""/>
     </xpath>
 </template>
 
@@ -3403,7 +3403,7 @@ Disallow: /*/my/*
             <a t-if="_simple_button_layout" t-attf-class="o_search_btn {{_simple_button_classes or 'p-1 bg-o-color-3 lh-1'}} btn o_not_editable" role="button" title="Search" href="#">
                 <i class="oi-stack lh-lg oi" data-icon="search" role="img"/>
             </a>
-            <t>$0</t>
+            <t t-replaced=""/>
             <input name="order" type="hidden" class="o_search_order_by oe_unremovable" t-att-value="order_by"/>
             <t t-out="0"/>
         </form>

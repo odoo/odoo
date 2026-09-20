@@ -5,7 +5,7 @@
             <div t-if="this.livechatProps.isTypingMessage">
                 <img height="30" t-att-src="this.url('/im_livechat/static/src/img/chatbot_is_typing.gif')"/>
             </div>
-            <t t-else="">$0</t>
+            <t t-else="" t-replaced=""/>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-Message-textContent')]" position="after">
             <ul class="p-0 m-0" t-if="this.props.message.chatbotStep?.answer_ids.length and !(this.props.message.chatbotStep.selectedAnswerEver or this.props.message.channel_id?.chatbot?.completed)">

@@ -45,21 +45,21 @@
                 t-if="line._can_be_edited_on_portal()"
                 t-call="sale_management.sale_order_portal_optional_product_quantity"
             />
-            <t t-else="">$0</t>
+            <t t-else="" t-replaced=""/>
         </xpath>
         <xpath expr="//td[@name='td_combo_quantity']/div[@id='quote_qty']" position="replace">
             <t
                 t-if="line._can_be_edited_on_portal()"
                 t-call="sale_management.sale_order_portal_optional_product_quantity"
             />
-            <t t-else="">$0</t>
+            <t t-else="" t-replaced=""/>
         </xpath>
         <xpath expr="//div[hasclass('d-lg-none')]//span[@name='span_qty_uom']" position="replace">
             <t
                 t-if="line._can_be_edited_on_portal()"
                 t-call="sale_management.sale_order_portal_optional_product_quantity"
             />
-            <t t-else="">$0</t>
+            <t t-else="" t-replaced=""/>
         </xpath>
     </template>
 

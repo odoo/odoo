@@ -10,7 +10,7 @@
                     <span t-if="this.props.message.notification_ids[0].isFailure">(<t t-out="this.props.message.notification_ids[0].failureMessage"/>)</span>
                 </div>
             </t>
-            <t t-else="">$0</t>
+            <t t-else="" t-replaced=""/>
         </xpath>
     </t>
 

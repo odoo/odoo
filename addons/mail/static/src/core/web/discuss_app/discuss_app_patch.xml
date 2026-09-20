@@ -4,7 +4,7 @@
         <xpath expr="//*[@t-ref='this.root']" position="replace">
             <div class="h-100 d-flex flex-column">
                 <ControlPanel t-if="!this.ui.isSmall and this.env.config?.breadcrumbs?.length > 1"/>
-                <t>$0</t>
+                <t t-replaced=""/>
             </div>
         </xpath>
         <xpath expr="//*[@t-ref='this.root']" position="attributes">

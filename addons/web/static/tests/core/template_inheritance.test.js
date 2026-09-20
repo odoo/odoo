@@ -90,7 +90,7 @@ test("single operation: replace root (and use a t-replaced)", async () => {
             arch: `<t t-name="web.A"> <div>I was petrified</div> </t>`,
             operations: `
                 <t>
-                    <xpath expr="." position="replace"> <div>$0</div><div>At first I was afraid</div> </xpath>
+                    <xpath expr="." position="replace"> <div t-replaced=""/><div>At first I was afraid</div> </xpath>
                 </t>`,
             result: `<div t-translation-context="from_op" t-name="web.A"><t t-name="web.A" t-translation-context="from_target"> <div>I was petrified</div> </t></div>`,
         },
@@ -98,7 +98,7 @@ test("single operation: replace root (and use a t-replaced)", async () => {
             arch: `<t t-name="web.A"> <div>I was petrified</div> </t>`,
             operations: `
                 <t>
-                    <xpath expr="." position="replace"> <t><t t-if="cond"><div>At first I was afraid</div></t><t t-else="">$0</t></t> </xpath>
+                    <xpath expr="." position="replace"> <t><t t-if="cond"><div>At first I was afraid</div></t><t t-else="" t-replaced=""/></t> </xpath>
                 </t>`,
             result: `<t t-translation-context="from_op" t-name="web.A"><t t-if="cond"><div>At first I was afraid</div></t><t t-else=""><t t-name="web.A" t-translation-context="from_target"> <div>I was petrified</div> </t></t></t>`,
         },

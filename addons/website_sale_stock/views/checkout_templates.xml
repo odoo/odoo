@@ -21,7 +21,7 @@
                             + ' ' + order.partner_shipping_id.pickup_location_data.get('zip_code','')"
                 />
             </t>
-             <t t-else="">$0</t>
+             <t t-else="" t-replaced=""/>
          </div>
      </template>
 

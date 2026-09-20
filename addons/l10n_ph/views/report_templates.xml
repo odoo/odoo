@@ -14,7 +14,7 @@
             <t t-if="company.account_fiscal_country_id.code == 'PH'">
                 <span t-out="('VAT REG ' if company.l10n_ph_is_vat_registered else 'NON VAT REG ') + company.country_id.vat_label"/>:
             </t>
-            <t t-else="">$0</t>
+            <t t-else="" t-replaced=""/>
         </xpath>
     </template>
 </odoo>

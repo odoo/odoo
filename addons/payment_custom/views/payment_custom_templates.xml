@@ -20,7 +20,7 @@
                   t-value="'d-flex flex-column flex-md-row align-items-stretch gap-2 gap-md-3 mb32'"
                />
             </t>
-            <t t-else="">$0</t>
+            <t t-else="" t-replaced=""/>
         </xpath>
 
         <xpath expr="//div[@id='o_payment_status_icon']" position="attributes">
@@ -35,7 +35,7 @@
             >
                 <t t-call="payment_custom.custom_payment_transfer_details" tx_sudo="tx"/>
             </div>
-            <t t-else="">$0</t>
+            <t t-else="" t-replaced=""/>
         </xpath>
 
     </template>

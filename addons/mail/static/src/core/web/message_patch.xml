@@ -14,7 +14,7 @@
                     </div>
                 </div>
             </t>
-            <t t-else="">$0</t>
+            <t t-else="" t-replaced=""/>
         </xpath>
         <xpath expr="//div[hasclass('o-mail-Message-avatarContainer')]" position="attributes">
             <attribute name="t-att-aria-label">this.getAuthorText()</attribute>
