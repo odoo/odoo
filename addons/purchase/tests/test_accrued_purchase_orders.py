@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, Command
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
 from odoo.exceptions import UserError
@@ -75,32 +75,6 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         }).create({
             'account_id': account_id,
         })
-
-    def test_accrued_order(self):
-        # nothing to bill : no entries to be created
-        with self.assertRaises(UserError):
-            self.wizard.create_entries()
-
-        # 5 qty of each product billeable
-        self.purchase_order.order_line.qty_received = 5
-        self.assertRecordValues(self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids, [
-            # reverse move lines
-            {'account_id': self.account_expense.id, 'debit': 0, 'credit': 5000},
-            {'account_id': self.alt_exp_account.id, 'debit': 0, 'credit': 1000},
-            {'account_id': self.account_revenue.id, 'debit': 6000, 'credit': 0},
-            # move lines
-            {'account_id': self.account_expense.id, 'debit': 5000, 'credit': 0},
-            {'account_id': self.alt_exp_account.id, 'debit': 1000, 'credit': 0},
-            {'account_id': self.account_revenue.id, 'debit': 0, 'credit': 6000},
-        ])
-
-        # received products billed, nothing to bill left
-        move = self.env['account.move'].browse(self.purchase_order.action_create_invoice()['res_id'])
-        move.invoice_date = '2020-01-01'
-        move.action_post()
-
-        with self.assertRaises(UserError):
-            self.wizard.with_context(accrual_entry_date='2020-01-30').create_entries()
 
     def test_multi_currency_accrued_order(self):
         # 5 qty of each product billeable

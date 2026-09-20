@@ -5,6 +5,10 @@ import { StockValuationReport } from "@account/components/stock_valuation/stock_
 
 
 patch(StockValuationReport.prototype, {
+    openStockReport() {
+        return this.actionService.doAction("stock.action_product_stock_view");
+    },
+
     openStockMoveView(title, usage) {
         const domain = [
             "|",

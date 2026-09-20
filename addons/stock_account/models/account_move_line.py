@@ -14,39 +14,6 @@ class AccountMoveLine(models.Model):
     def _compute_cogs_move_ids(self):
         self.cogs_move_ids = False
 
-    def _stock_account_prepare_cogs_vals(self):
-        """ Values of the two COGS journal items (interim + expense) of the invoice line. """
-        self.ensure_one()
-        move = self.move_id
-        if not self._use_inventory_valuation() or self.product_id.valuation != 'real_time':
-            return []
-        accounts = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
-        stock_account = accounts['stock_valuation']
-        credit_expense_account = accounts['expense'] or move.journal_id.default_account_id
-        if not stock_account or not credit_expense_account:
-            return []
-
-        sign = -1 if move.move_type == 'out_refund' else 1
-        price_unit = self._get_cogs_value()
-        amount_currency = sign * self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id) * price_unit
-
-        common_vals = {
-            'name': self.name[:64] if self.name else '',
-            'move_id': move.id,
-            'partner_id': move.commercial_partner_id.id,
-            'product_id': self.product_id.id,
-            'product_uom_id': self.product_uom_id.id,
-            'quantity': self.quantity,
-            'analytic_distribution': self.analytic_distribution,
-            'display_type': 'cogs',
-            'tax_ids': [],
-            'cogs_origin_id': self.id,
-        }
-        return [
-            dict(common_vals, price_unit=price_unit, amount_currency=-amount_currency, account_id=stock_account.id),
-            dict(common_vals, price_unit=-price_unit, amount_currency=amount_currency, account_id=credit_expense_account.id),
-        ]
-
     def _set_cogs(self):
         """Re-evaluate the COGS of the originating invoice lines after the value of
         one of their backing stock moves changed, updating the existing COGS journal
