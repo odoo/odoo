@@ -1,4 +1,4 @@
-import { Component, computed, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
+import { Component, computed, proxy, t, useOnChange, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { MAX_VALID_DATE, MIN_VALID_DATE, clampDate, isInRange, today } from "../l10n/dates";
 import { localization } from "../l10n/localization";
@@ -328,15 +328,24 @@ export class DateTimePicker extends Component {
         return minDate;
     });
     title = computed(() => this.activePrecisionLevel.getTitle(this.state.focusDate));
-    items = computed(() =>
-        this.activePrecisionLevel.getItems(this.state.focusDate, {
-            maxDate: this.maxDate(),
-            minDate: this.minDate(),
+    dateRange = computed(() => {
+        const minDate = this.minDate();
+        const maxDate = this.maxDate();
+        if (maxDate < minDate) {
+            throw new Error(`DateTimePicker error: given "maxDate" comes before "minDate".`);
+        }
+        return { minDate, maxDate };
+    });
+    items = computed(() => {
+        const { minDate, maxDate } = this.dateRange();
+        return this.activePrecisionLevel.getItems(this.state.focusDate, {
+            maxDate,
+            minDate,
             showWeekNumbers: this.props.showWeekNumbers ?? !this.props.range,
             isDateValid: this.props.isDateValid,
             dayCellClass: this.props.dayCellClass,
-        })
-    );
+        });
+    });
     selectedRange = computed(() => {
         const values = this.values();
         const selectedRange = [...values];
@@ -349,6 +358,9 @@ export class DateTimePicker extends Component {
         }
         return selectedRange;
     });
+    allowedPrecisionLevels = computed(() =>
+        this.filterPrecisionLevels(this.props.minPrecision, this.props.maxPrecision)
+    );
 
     //-------------------------------------------------------------------------
     // Getters
@@ -360,8 +372,8 @@ export class DateTimePicker extends Component {
 
     get isLastPrecisionLevel() {
         return (
-            this.allowedPrecisionLevels.indexOf(this.state.precision) ===
-            this.allowedPrecisionLevels.length - 1
+            this.allowedPrecisionLevels().indexOf(this.state.precision) ===
+            this.allowedPrecisionLevels().length - 1
         );
     }
 
@@ -374,8 +386,6 @@ export class DateTimePicker extends Component {
     //-------------------------------------------------------------------------
 
     setup() {
-        /** @type {PrecisionLevel[]} */
-        this.allowedPrecisionLevels = [];
         this.shouldAdjustFocusDate = false;
 
         this.state = proxy({
@@ -389,37 +399,24 @@ export class DateTimePicker extends Component {
             precision: this.props.minPrecision,
         });
 
-        this.onPropsUpdated(this.props);
-        onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
+        useOnChange(
+            () => [
+                this.props.focusedDateIndex,
+                this.props.maxDate,
+                this.props.minDate,
+                this.props.range,
+                this.props.type,
+                this.props.value,
+            ],
+            () => this.onPropsUpdated()
+        );
     }
 
-    /**
-     * @param {DateTimePickerProps} props
-     */
-    onPropsUpdated(props) {
-        /** @type {[NullableDateTime] | NullableDateRange} */
-        const values = ensureArray(props.value).map((value) =>
-            value && !value.isValid ? null : value
-        );
-        this.allowedPrecisionLevels = this.filterPrecisionLevels(
-            props.minPrecision,
-            props.maxPrecision
-        );
-
-        let maxDate = parseLimitDate(props.maxDate, MAX_VALID_DATE);
-        let minDate = parseLimitDate(props.minDate, MIN_VALID_DATE);
-        if (props.type === "date") {
-            maxDate = maxDate.endOf("day");
-            minDate = minDate.startOf("day");
-        }
-
-        if (maxDate < minDate) {
-            throw new Error(`DateTimePicker error: given "maxDate" comes before "minDate".`);
-        }
-
-        this.state.timeValues = this.getTimeValues(props, values);
-        this.shouldAdjustFocusDate = !props.range;
-        this.adjustFocus(values, props.focusedDateIndex, minDate, maxDate);
+    onPropsUpdated() {
+        const values = this.values();
+        this.state.timeValues = this.getTimeValues(values);
+        this.shouldAdjustFocusDate = !this.props.range;
+        this.adjustFocus(values, this.props.focusedDateIndex);
     }
 
     //-------------------------------------------------------------------------
@@ -499,10 +496,9 @@ export class DateTimePicker extends Component {
     }
 
     /**
-     * @param {DateTimePickerProps} props
      * @param {[NullableDateTime] | NullableDateRange} values
      */
-    getTimeValues(props, values) {
+    getTimeValues(values) {
         const timeValues = values.map(
             (val, index) =>
                 new Time({
@@ -515,11 +511,11 @@ export class DateTimePicker extends Component {
                 })
         );
 
-        if (props.range) {
+        if (this.props.range) {
             return timeValues;
         } else {
             const values = [];
-            values[props.focusedDateIndex] = timeValues[props.focusedDateIndex];
+            values[this.props.focusedDateIndex] = timeValues[this.props.focusedDateIndex];
             return values;
         }
     }
@@ -595,10 +591,10 @@ export class DateTimePicker extends Component {
      * @param {DateTime} date
      */
     zoomIn(date) {
-        const index = this.allowedPrecisionLevels.indexOf(this.state.precision) - 1;
-        if (index in this.allowedPrecisionLevels) {
+        const index = this.allowedPrecisionLevels().indexOf(this.state.precision) - 1;
+        if (index in this.allowedPrecisionLevels()) {
             this.state.focusDate = this.clamp(date);
-            this.state.precision = this.allowedPrecisionLevels[index];
+            this.state.precision = this.allowedPrecisionLevels()[index];
             return true;
         }
         return false;
@@ -608,9 +604,9 @@ export class DateTimePicker extends Component {
      * Returns whether the zoom has occurred
      */
     zoomOut() {
-        const index = this.allowedPrecisionLevels.indexOf(this.state.precision) + 1;
-        if (index in this.allowedPrecisionLevels) {
-            this.state.precision = this.allowedPrecisionLevels[index];
+        const index = this.allowedPrecisionLevels().indexOf(this.state.precision) + 1;
+        if (index in this.allowedPrecisionLevels()) {
+            this.state.precision = this.allowedPrecisionLevels()[index];
             return true;
         }
         return false;
