@@ -29,9 +29,9 @@ class EventBooth(models.Model):
         ondelete="set null",
         groups="sale.group_sale_salesman",
     )
-    sale_order_id = fields.Many2one(
+    sale_order_id = fields.Many2one(  # noqa: E8529  One2many inverse of sale.order.event_booth_ids
         related="sale_order_line_id.order_id",
-        store="True",
+        store=True,
         index="btree_not_null",
         readonly=True,
         groups="sale.group_sale_salesman",

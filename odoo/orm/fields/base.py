@@ -4,7 +4,6 @@ import functools
 import itertools
 import logging
 import typing
-import warnings
 from collections.abc import (
     Callable,
     Collection,
@@ -81,6 +80,18 @@ def _get_recordset_like(records: BaseModel, ids: Iterable[IdType]) -> BaseModel:
 
 
 _logger = logging.getLogger("odoo.fields")
+
+BOOLEAN_ATTRIBUTES = (
+    "store",
+    "precompute",
+    "copy",
+    "recursive",
+    "compute_sudo",
+    "related_sudo",
+    "required",
+    "readonly",
+    "export_string_translation",
+)
 _debug = DebugLog(__name__)
 
 
@@ -242,6 +253,13 @@ class Field[T](
     _register_type: typing.ClassVar[bool] = True
 
     def __init__(self, string: str | Sentinel = SENTINEL, **kwargs):
+        for key in BOOLEAN_ATTRIBUTES:
+            value = kwargs.get(key, SENTINEL)
+            if value is not SENTINEL and not isinstance(value, bool):
+                # store="True" is truthy and so is store="False"
+                raise TypeError(
+                    f"{type(self).__name__}({key}={value!r}): {key} takes a bool"
+                )
         kwargs["string"] = string
         self._sequence = next(_global_seq)
         self._args__ = ReadonlyDict(
@@ -373,18 +391,6 @@ class Field[T](
             else:
                 self.setup_nonrelated(model)
             self._check_stand_in_fields(model)
-
-            if not isinstance(self.required, bool):
-                warnings.warn(
-                    f"Property {self}.required should be a boolean ({self.required}).",
-                    stacklevel=1,
-                )
-
-            if not isinstance(self.readonly, bool):
-                warnings.warn(
-                    f"Property {self}.readonly should be a boolean ({self.readonly}).",
-                    stacklevel=1,
-                )
 
             self._setup_done = True
             reset_cached_properties(self)

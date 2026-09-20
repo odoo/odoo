@@ -40,7 +40,7 @@ class HrLeaveAccrualPlan(models.Model):
     company_id = fields.Many2one(
         comodel_name="res.company",
         compute="_compute_company_id",
-        store="True",
+        store=True,
         readonly=False,
         domain=lambda self: [("id", "in", self.env.companies.ids)],
     )

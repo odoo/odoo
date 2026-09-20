@@ -7,7 +7,7 @@ class SurveySurvey(models.Model):
     generate_lead = fields.Boolean(
         string="Lead Generating",
         compute="_compute_generate_lead",
-        store="True",
+        store=True,
     )
     lead_count = fields.Integer(
         string="Leads",

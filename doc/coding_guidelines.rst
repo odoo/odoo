@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.57
+:Version: 6.58
 :Date: 2026-09-16
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -1021,6 +1021,12 @@ index), ``precompute=`` on a compute without ``store=True`` (dropped with a
 warning), and
 ``compute=`` beside a truthy ``related=`` (replaced by the related path's own
 compute).
+
+**A boolean field attribute takes a Python bool.** ``store``, ``precompute``,
+``copy``, ``recursive``, ``compute_sudo``, ``related_sudo``, ``required``,
+``readonly`` and ``export_string_translation`` raise ``TypeError`` at
+declaration for anything else: ``store="True"`` was truthy, so was
+``store="False"``, and no rule that reads ``store=True`` could see either.
 
 **A related field is not stored to make it groupable** ``[test_lint E8529]``. A
 ``related=`` whose hops are all many2one and whose last field has a column
@@ -8746,6 +8752,10 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.58
+     - 2026-09-20
+     - §2.3: a boolean field attribute takes a Python bool; the ORM raises
+       ``TypeError`` on ``store="True"`` instead of reading it as true.
    * - 6.57
      - 2026-09-19
      - ``stored-related`` is ``E8529``: it shared ``E8528`` with

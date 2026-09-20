@@ -203,7 +203,7 @@ class AppointmentType(models.Model):
         ],
         compute="_compute_category_id",
         inverse="_inverse_category",
-        store="True",
+        store=True,
         help="""Used to define this appointment type's category.\n
         Can be one of:\n
             - Weekly Schedule: the default category, weekly recurring slots. Accessible from the website\n
