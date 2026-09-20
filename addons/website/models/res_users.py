@@ -12,7 +12,7 @@ _debug = DebugLog(__name__)
 class ResUsers(models.Model):
     _inherit = "res.users"
 
-    website_id = fields.Many2one(
+    website_id = fields.Many2one(  # noqa: E8529  UNIQUE (login, website_id)
         comodel_name="website",
         related="partner_id.website_id",
         related_sudo=False,
