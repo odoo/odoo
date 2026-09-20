@@ -76,8 +76,6 @@ class TableKind(enum.Enum):
     Other = None
 
 
-# Every relkind `TableKind` names; `Temporary` is a persistence, not a relkind,
-# and a kind reported as absent here makes `_auto_init` CREATE TABLE over it.
 _EXISTING_RELKINDS: tuple[str, ...] = tuple(
     kind.value
     for kind in TableKind
@@ -90,12 +88,12 @@ def get_tables_existing(cr: BaseCursor, tablenames: Iterable[str]) -> list[str]:
     cr.execute(
         SQL(
             """
-        SELECT c.relname
-          FROM pg_class c
-         WHERE c.relname = ANY(%s)
-           AND c.relkind = ANY(%s)
-           AND c.relnamespace = current_schema::regnamespace
-    """,
+            SELECT c.relname
+            FROM pg_class c
+            WHERE c.relname = ANY(%s)
+                AND c.relkind = ANY(%s)
+                AND c.relnamespace = current_schema::regnamespace
+            """,
             asked,
             list(_EXISTING_RELKINDS),
         )
@@ -116,8 +114,8 @@ def get_unaccent_status(cr: BaseCursor) -> FunctionStatus:
         SELECT p.provolatile
         FROM pg_proc p
         WHERE p.proname = 'unaccent'
-              AND p.pronamespace = current_schema::regnamespace
-              AND p.pronargs = 1
+            AND p.pronamespace = current_schema::regnamespace
+            AND p.pronargs = 1
     """)
     result = cr.fetchone()
     if not result:
@@ -134,7 +132,7 @@ def has_trigram(cr: BaseCursor) -> bool:
     cr.execute("""
         SELECT 1 FROM pg_proc
         WHERE proname = 'word_similarity'
-          AND pronamespace = current_schema::regnamespace
+            AND pronamespace = current_schema::regnamespace
     """)
     available = bool(cr.fetchone())
     _debug.logic("schema.trigram_status", available=available)
@@ -151,11 +149,11 @@ def get_table_kind(cr: BaseCursor, tablename: str) -> TableKind | None:
     cr.execute(
         SQL(
             """
-        SELECT c.relkind, c.relpersistence
-          FROM pg_class c
-         WHERE c.relname = %s
-           AND c.relnamespace = current_schema::regnamespace
-    """,
+            SELECT c.relkind, c.relpersistence
+            FROM pg_class c
+            WHERE c.relname = %s
+            AND c.relnamespace = current_schema::regnamespace
+            """,
             tablename,
         )
     )
@@ -258,21 +256,21 @@ def get_table_columns(cr: BaseCursor, tablename: str) -> dict[str, dict]:
         cr.execute(
             SQL(
                 """
-            SELECT a.attname AS column_name,
-                   t.typname AS udt_name,
-                   CASE WHEN a.atttypmod > 0 AND t.typname IN ('varchar', 'bpchar')
-                        THEN a.atttypmod - 4
-                        ELSE NULL
-                   END AS character_maximum_length,
-                   CASE WHEN a.attnotnull THEN 'NO' ELSE 'YES' END AS is_nullable
-              FROM pg_attribute a
-              JOIN pg_class c ON a.attrelid = c.oid
-              JOIN pg_type t ON a.atttypid = t.oid
-             WHERE c.relname = %s
-               AND c.relnamespace = current_schema::regnamespace
-               AND a.attnum > 0
-               AND NOT a.attisdropped
-            """,
+                SELECT a.attname AS column_name,
+                    t.typname AS udt_name,
+                    CASE WHEN a.atttypmod > 0 AND t.typname IN ('varchar', 'bpchar')
+                            THEN a.atttypmod - 4
+                            ELSE NULL
+                    END AS character_maximum_length,
+                    CASE WHEN a.attnotnull THEN 'NO' ELSE 'YES' END AS is_nullable
+                FROM pg_attribute a
+                JOIN pg_class c ON a.attrelid = c.oid
+                JOIN pg_type t ON a.atttypid = t.oid
+                WHERE c.relname = %s
+                    AND c.relnamespace = current_schema::regnamespace
+                    AND a.attnum > 0
+                    AND NOT a.attisdropped
+                """,
                 tablename,
             )
         )
@@ -286,9 +284,9 @@ def column_exists(cr: RowCountReader, tablename: str, columnname: str) -> bool:
         SQL(
             """
             SELECT 1
-              FROM pg_attribute a
-              JOIN pg_class c ON a.attrelid = c.oid
-             WHERE c.relname = %s
+            FROM pg_attribute a
+            JOIN pg_class c ON a.attrelid = c.oid
+            WHERE c.relname = %s
                AND a.attname = %s
                AND c.relnamespace = current_schema::regnamespace
                AND a.attnum > 0
@@ -352,8 +350,6 @@ def create_column(
 def convert_column(
     cr: BaseCursor, tablename: str, columnname: str, columntype: str
 ) -> None:
-    # Every scope that builds SQL from the type guards it itself (test_lint E8501
-    # reads the guard per function); _convert_column checks again for its callers.
     if not _SQL_TYPE_TOKEN.fullmatch(columntype):
         raise _refuse_column_type(columntype, tablename, columnname)
     using = SQL("%s::%s", SQL.identifier(columnname), SQL(columntype))
@@ -446,19 +442,19 @@ def get_views_depending_on_table(
     cr.execute(
         SQL(
             """
-        SELECT distinct dependee.relname, dependee.relkind
-        FROM pg_depend
-        JOIN pg_rewrite ON pg_depend.objid = pg_rewrite.oid
-        JOIN pg_class as dependee ON pg_rewrite.ev_class = dependee.oid
-        JOIN pg_class as dependent ON pg_depend.refobjid = dependent.oid
-        JOIN pg_attribute ON pg_depend.refobjid = pg_attribute.attrelid
-            AND pg_depend.refobjsubid = pg_attribute.attnum
-        WHERE dependent.relname = %s
-        AND pg_attribute.attnum > 0
-        AND pg_attribute.attname = %s
-        AND dependee.relkind in ('v', 'm')
-        AND dependee.relnamespace = current_schema::regnamespace
-    """,
+            SELECT distinct dependee.relname, dependee.relkind
+            FROM pg_depend
+            JOIN pg_rewrite ON pg_depend.objid = pg_rewrite.oid
+            JOIN pg_class as dependee ON pg_rewrite.ev_class = dependee.oid
+            JOIN pg_class as dependent ON pg_depend.refobjid = dependent.oid
+            JOIN pg_attribute ON pg_depend.refobjid = pg_attribute.attrelid
+                AND pg_depend.refobjsubid = pg_attribute.attnum
+            WHERE dependent.relname = %s
+                AND pg_attribute.attnum > 0
+                AND pg_attribute.attname = %s
+                AND dependee.relkind in ('v', 'm')
+                AND dependee.relnamespace = current_schema::regnamespace
+            """,
             table,
             column,
         )
@@ -469,19 +465,6 @@ def get_views_depending_on_table(
 def rename_column(
     cr: BaseCursor, tablename: str, columnname: str, newname: str
 ) -> None:
-    """Rename a column, and the NOT NULL constraint that is named after it.
-
-    `set_not_null` uses `ALTER COLUMN ... SET NOT NULL`, and PostgreSQL names the
-    resulting constraint `<table>_<column>_not_null`. A bare `RENAME COLUMN`
-    leaves that name behind, so an upgraded database and a freshly installed one
-    end up enforcing the same rule under different names -- the constraint still
-    works, but a schema diff between the two reports a difference that is not
-    one, and a later migration dropping it by name finds nothing on exactly the
-    databases that have been upgraded.
-
-    Renaming both is what makes the two paths arrive at the same schema, which
-    is the property a migration exists to keep.
-    """
     with _debug.perf(
         "schema.rename_column",
         cr=cr,
@@ -502,9 +485,9 @@ def rename_column(
             SQL(
                 """
                 SELECT 1
-                  FROM pg_constraint c
-                  JOIN pg_class t ON t.oid = c.conrelid
-                 WHERE t.relname = %s
+                FROM pg_constraint c
+                JOIN pg_class t ON t.oid = c.conrelid
+                WHERE t.relname = %s
                    AND c.conname = %s
                    AND t.relnamespace = current_schema::regnamespace
                 """,
@@ -548,21 +531,6 @@ def set_not_null(cr: BaseCursor, tablename: str, columnname: str) -> None:
 def drop_columns(
     cr: BaseCursor, tablename: str, columnnames: Iterable[str]
 ) -> list[str]:
-    """Drop columns with whatever hangs on them; return the ones that were there.
-
-    The ORM creates the column of a field that becomes stored and never drops
-    the column of one that stops being stored: a `related=` that loses
-    `store=True` leaves its column, its index and every constraint over it in
-    place, read by nothing. The migration that goes with such a change calls
-    this.
-
-    One ALTER TABLE for the table, since each takes an ACCESS EXCLUSIVE lock.
-    CASCADE, because the indexes and constraints over a column go with it by
-    definition and a view selecting it would otherwise refuse the drop. A view
-    is a report model's, rebuilt by its `init()` later in the same upgrade --
-    the model that selects another module's column is loaded after that
-    module -- and the views taken down are logged so the upgrade says which.
-    """
     existing = get_table_columns(cr, tablename)
     requested = list(columnnames)
     dropped = [name for name in requested if name in existing]
@@ -654,13 +622,13 @@ def get_constraint_definition(
     cr.execute(
         SQL(
             """
-        SELECT COALESCE(d.description, pg_get_constraintdef(c.oid))
-        FROM pg_constraint c
-        JOIN pg_class t ON t.oid = c.conrelid
-        LEFT JOIN pg_description d ON c.oid = d.objoid
-        WHERE t.relname = %s AND conname = %s
-          AND t.relnamespace = current_schema::regnamespace
-    """,
+            SELECT COALESCE(d.description, pg_get_constraintdef(c.oid))
+            FROM pg_constraint c
+            JOIN pg_class t ON t.oid = c.conrelid
+            LEFT JOIN pg_description d ON c.oid = d.objoid
+            WHERE t.relname = %s AND conname = %s
+                AND t.relnamespace = current_schema::regnamespace
+            """,
             tablename,
             constraintname,
         )
@@ -774,11 +742,13 @@ _FK_BASE_QUERY = """
     FROM pg_constraint AS fk
     JOIN pg_class AS c1 ON fk.conrelid = c1.oid
     JOIN pg_class AS c2 ON fk.confrelid = c2.oid
-    JOIN pg_attribute AS a1 ON a1.attrelid = c1.oid AND fk.conkey[1] = a1.attnum
-    JOIN pg_attribute AS a2 ON a2.attrelid = c2.oid AND fk.confkey[1] = a2.attnum
-   WHERE fk.contype = 'f'
-     AND array_length(fk.conkey, 1) = 1
-     AND c1.relnamespace = current_schema::regnamespace
+    JOIN pg_attribute AS a1 ON a1.attrelid = c1.oid
+        AND fk.conkey[1] = a1.attnum
+    JOIN pg_attribute AS a2 ON a2.attrelid = c2.oid
+        AND fk.confkey[1] = a2.attnum
+    WHERE fk.contype = 'f'
+        AND array_length(fk.conkey, 1) = 1
+        AND c1.relnamespace = current_schema::regnamespace
 """
 
 
@@ -849,8 +819,8 @@ def index_exists(cr: RowCountReader, indexname: str) -> bool:
         SQL(
             """
             SELECT 1
-              FROM pg_class c
-             WHERE c.relname = %s
+            FROM pg_class c
+            WHERE c.relname = %s
                AND c.relkind IN ('i', 'I')
                AND c.relnamespace = current_schema::regnamespace
             """,
@@ -868,14 +838,14 @@ def get_index_definition(
     cr.execute(
         SQL(
             """
-        SELECT idx.indexdef, d.description
-        FROM pg_class c
-        JOIN pg_indexes idx ON c.relname = idx.indexname
-            AND idx.schemaname = current_schema
-        LEFT JOIN pg_description d ON c.oid = d.objoid
-        WHERE c.relname = %s AND c.relkind IN ('i', 'I')
-          AND c.relnamespace = current_schema::regnamespace
-    """,
+            SELECT idx.indexdef, d.description
+            FROM pg_class c
+            JOIN pg_indexes idx ON c.relname = idx.indexname
+                AND idx.schemaname = current_schema
+            LEFT JOIN pg_description d ON c.oid = d.objoid
+            WHERE c.relname = %s AND c.relkind IN ('i', 'I')
+                AND c.relnamespace = current_schema::regnamespace
+            """,
             indexname,
         )
     )
@@ -893,12 +863,12 @@ def get_index_constraint(cr: BaseCursor, indexname: str) -> str | None:
     cr.execute(
         SQL(
             """
-        SELECT c.conname
-        FROM pg_constraint c
-        JOIN pg_class i ON i.oid = c.conindid
-        WHERE i.relname = %s
-          AND i.relnamespace = current_schema::regnamespace
-    """,
+            SELECT c.conname
+            FROM pg_constraint c
+            JOIN pg_class i ON i.oid = c.conindid
+            WHERE i.relname = %s
+                AND i.relnamespace = current_schema::regnamespace
+            """,
             indexname,
         )
     )
@@ -1049,18 +1019,18 @@ def get_column_names_in_constraint(
     cr.execute(
         SQL(
             """
-        SELECT
-            ARRAY(
-                SELECT attname FROM pg_attribute
-                WHERE attrelid = conrelid
-                AND attnum = ANY(conkey)
-            ) as "columns"
-        FROM pg_constraint
-        JOIN pg_class t ON t.oid = conrelid
-        WHERE conname = %s
-            AND t.relname = %s
-            AND t.relnamespace = current_schema::regnamespace
-    """,
+            SELECT
+                ARRAY(
+                    SELECT attname FROM pg_attribute
+                    WHERE attrelid = conrelid
+                    AND attnum = ANY(conkey)
+                ) as "columns"
+            FROM pg_constraint
+            JOIN pg_class t ON t.oid = conrelid
+            WHERE conname = %s
+                AND t.relname = %s
+                AND t.relnamespace = current_schema::regnamespace
+            """,
             diagnostics.constraint_name,
             diagnostics.table_name,
         )

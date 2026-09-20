@@ -1079,53 +1079,53 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
             queries.append(
                 SQL(
                     """
-                SELECT
-                    account_move_line.id,
-                    COALESCE(account_move_line.date_maturity, account_move_line.date) AS date_maturity,
-                    account_move_line.name,
-                    account_move_line.ref,
-                    account_move_line.parent_state,
-                    account_move_line.company_id,
-                    account_move_line.account_id,
-                    account_move_line.payment_id,
-                    aml_with_partner.partner_id,
-                    account_move_line.currency_id,
-                    account_move_line.amount_currency,
-                    account_move_line.matching_number,
-                    account_move_line.no_followup,
-                    %(additional_columns)s
-                    COALESCE(account_move.invoice_date, account_move_line.date)      AS invoice_date,
-                    %(debit_select)s                                                 AS debit,
-                    %(credit_select)s                                                AS credit,
-                    %(balance_select)s                                               AS amount,
-                    %(balance_select)s                                               AS balance,
-                    account_move.name                                                AS move_name,
-                    account_move.move_type                                           AS move_type,
-                    %(account_code)s                                                 AS account_code,
-                    %(account_name)s                                                 AS account_name,
-                    journal.code                                                     AS journal_code,
-                    %(journal_name)s                                                 AS journal_name,
-                    %(column_group_key)s                                             AS column_group_key,
-                    'indirectly_linked_aml'                                          AS key,
-                    partial.id                                                       AS partial_id
-                FROM %(table_references)s
-                    %(currency_table_join)s,
-                    account_partial_reconcile partial,
-                    account_move,
-                    account_move_line aml_with_partner,
-                    account_journal journal
-                WHERE
-                    (account_move_line.id = partial.debit_move_id OR account_move_line.id = partial.credit_move_id)
-                    AND account_move_line.partner_id IS NULL
-                    AND account_move.id = account_move_line.move_id
-                    AND (aml_with_partner.id = partial.debit_move_id OR aml_with_partner.id = partial.credit_move_id)
-                    AND %(indirectly_linked_aml_partner_clause)s
-                    AND journal.id = account_move_line.journal_id
-                    AND %(account_alias)s.id = account_move_line.account_id
-                    AND %(search_condition)s
-                    AND partial.max_date BETWEEN %(date_from)s AND %(date_to)s
-                ORDER BY %(order_by)s
-                """,
+                    SELECT
+                        account_move_line.id,
+                        COALESCE(account_move_line.date_maturity, account_move_line.date) AS date_maturity,
+                        account_move_line.name,
+                        account_move_line.ref,
+                        account_move_line.parent_state,
+                        account_move_line.company_id,
+                        account_move_line.account_id,
+                        account_move_line.payment_id,
+                        aml_with_partner.partner_id,
+                        account_move_line.currency_id,
+                        account_move_line.amount_currency,
+                        account_move_line.matching_number,
+                        account_move_line.no_followup,
+                        %(additional_columns)s
+                        COALESCE(account_move.invoice_date, account_move_line.date)      AS invoice_date,
+                        %(debit_select)s                                                 AS debit,
+                        %(credit_select)s                                                AS credit,
+                        %(balance_select)s                                               AS amount,
+                        %(balance_select)s                                               AS balance,
+                        account_move.name                                                AS move_name,
+                        account_move.move_type                                           AS move_type,
+                        %(account_code)s                                                 AS account_code,
+                        %(account_name)s                                                 AS account_name,
+                        journal.code                                                     AS journal_code,
+                        %(journal_name)s                                                 AS journal_name,
+                        %(column_group_key)s                                             AS column_group_key,
+                        'indirectly_linked_aml'                                          AS key,
+                        partial.id                                                       AS partial_id
+                    FROM %(table_references)s
+                        %(currency_table_join)s,
+                        account_partial_reconcile partial,
+                        account_move,
+                        account_move_line aml_with_partner,
+                        account_journal journal
+                    WHERE
+                        (account_move_line.id = partial.debit_move_id OR account_move_line.id = partial.credit_move_id)
+                        AND account_move_line.partner_id IS NULL
+                        AND account_move.id = account_move_line.move_id
+                        AND (aml_with_partner.id = partial.debit_move_id OR aml_with_partner.id = partial.credit_move_id)
+                        AND %(indirectly_linked_aml_partner_clause)s
+                        AND journal.id = account_move_line.journal_id
+                        AND %(account_alias)s.id = account_move_line.account_id
+                        AND %(search_condition)s
+                        AND partial.max_date BETWEEN %(date_from)s AND %(date_to)s
+                    ORDER BY %(order_by)s
+                    """,
                     additional_columns=additional_columns,
                     debit_select=report._currency_table_apply_rate(
                         SQL(

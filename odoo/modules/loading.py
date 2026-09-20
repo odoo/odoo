@@ -141,13 +141,14 @@ def _files_missing_records(cr: BaseCursor, stored_files: dict) -> set[str]:
         cr.execute(
             """
             SELECT x.xmlid
-              FROM unnest(%s::text[]) AS x(xmlid)
-             WHERE NOT EXISTS (
-                   SELECT 1 FROM ir_model_data d
-                    WHERE d.module = split_part(x.xmlid, '.', 1)
-                      AND d.name = substr(x.xmlid, strpos(x.xmlid, '.') + 1)
+            FROM unnest(%s::text[]) AS x(xmlid)
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM ir_model_data d
+                WHERE d.module = split_part(x.xmlid, '.', 1)
+                    AND d.name = substr(x.xmlid, strpos(x.xmlid, '.') + 1)
              )
-        """,
+            """,
             [list(files_by_xmlid)],
         )
         stale: set[str] = set()
@@ -372,9 +373,6 @@ def load_demo(
                 files=len(package.manifest.get("demo") or ())
                 + len(package.manifest.get("demo_xml") or ()),
             )
-            # A flushing savepoint restores the ORM state on rollback: without it the
-            # failed file's pending writes survive and reference the rows the rollback
-            # removed, and the next flush fails the whole installation.
             with env.cr.savepoint():
                 load_data(env(su=True), idref, mode, kind="demo", package=package)
         return True
@@ -437,8 +435,9 @@ def _warn_models_without_access_rules(
         SELECT m.model FROM ir_model m
         WHERE NOT EXISTS (
             SELECT 1 FROM ir_model_access a WHERE a.model_id = m.id
-        ) AND m.model = ANY(%s)
-    """,
+        )
+            AND m.model = ANY(%s)
+        """,
         [list(concrete_models)],
     )
     models = [model for [model] in env.cr.fetchall()]
@@ -566,10 +565,6 @@ class _PackageLoader:
         )
 
     def adopt_state_set_by_migration(self) -> None:
-        # The graph read this module's state before the modules ahead of it ran
-        # their migrations. One whose pre-migrate hands this module records the
-        # database already holds marks it "to upgrade": installing would load its
-        # data in init mode, which rewrites noupdate records.
         package = self.package
         self.cr.execute(
             "SELECT state, demo FROM ir_module_module WHERE id = %s", [package.id]
@@ -786,10 +781,6 @@ class _PackageLoader:
             )
             return
         if pending := self._get_installed_not_yet_loaded():
-            # The table already carries those modules' columns -- a NOT NULL
-            # one has no field in this registry to give it a value -- so the
-            # registry cannot represent the schema the tests would write to.
-            # The suite runs once it can, after the graph is loaded.
             _debug.logic(
                 "modules.package.at_install_tests.skipped",
                 module=self.name,
@@ -835,8 +826,6 @@ class _PackageLoader:
             self.package.module_graph, self.name, self.registry.loaded_modules
         )
 
-    # odoo.db.sql_counter counts every cursor's statements, this one's included;
-    # "other" is what ran elsewhere: registry setup cursors, hooks, the tests.
     def log_cost(self) -> None:
         cursor_queries = self.cr.sql_log_count - self.cursor_queries_at_start
         extra_queries = (
@@ -899,15 +888,6 @@ class _PackageLoader:
 def get_installed_not_yet_loaded(
     graph: ModuleGraph, name: str, loaded: Collection[str]
 ) -> list[str]:
-    """The graph's installed modules that load after ``name``.
-
-    A fresh install has none: a module marked "to install" has no column in any
-    table yet, and its own at_install tests are its own. What makes a module
-    count is that its schema is already there -- installed, or installed and
-    about to upgrade -- while its models are not. Depending on ``name`` is not
-    the criterion: mail puts a NOT NULL column on res_users without depending
-    on the module whose tests create a user.
-    """
     pending = [
         node.name
         for node in graph
@@ -1065,10 +1045,6 @@ def _run_deferred_at_install_tests(
 
     _debug.pipeline("modules.deferred_tests.begin", modules=len(names))
     registry.check_null_constraints(cr)
-    # The tests open their own connections; anything this transaction still
-    # holds -- the module-list update, the upgrade marking, every row it read
-    # -- blocks their DDL and their module-state writes for good. The
-    # non-deferred path commits in `mark_module_installed` before its tests.
     env.flush_all()
     cr.commit()
     _debug.lifecycle("modules.deferred_tests.committed", modules=len(names))
