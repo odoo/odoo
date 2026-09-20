@@ -33,11 +33,11 @@ def _record_decisions_the_ledger_never_saw(cr):
         """
         WITH inserted AS (
             INSERT INTO approval_decision_log (
-                request_id, company_id, approver_id, verdict, state_after, user_id,
+                request_id, approver_id, verdict, state_after, user_id,
                 elevation, refusal_reason_id, note, date,
                 create_uid, write_uid, create_date, write_date
             )
-            SELECT row.request_id, request.company_id, row.id, row.state,
+            SELECT row.request_id, row.id, row.state,
                    request.state, COALESCE(row.decided_by_user_id, row.user_id),
                    'none', row.refusal_reason_id, row.note,
                    COALESCE(row.decision_date, row.write_date,
