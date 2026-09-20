@@ -1,6 +1,6 @@
 {
     "name": "Skills Certification",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Human Resources/Employees",
     "summary": "Add certification to resume of your employees",
     "description": """
