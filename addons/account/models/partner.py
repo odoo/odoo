@@ -993,8 +993,9 @@ class ResPartner(models.Model):
     def _deduce_additional_identifiers_from_vat(self):
         """Populate companion identifiers freely derivable from the VAT (e.g. BE_VAT → BE_EN,
         AT_VAT → AT_EN) so users only enter the VAT and don't have to retype the same digits.
-        Pre-existing entries are kept as-is and tracking is muted to avoid recomputing
-        VAT-tracked computed fields mid-inverse."""
+        Deduced identifiers are always overwritten when the VAT changes, because they are
+        derived values. keeping them in sync with the VAT.
+        Tracking is muted to avoid recomputing VAT-tracked computed fields mid-inverse."""
         for partner in self:
             if not partner.vat or not partner.country_code:
                 continue
@@ -1002,14 +1003,16 @@ class ResPartner(models.Model):
             if not vat_key:
                 continue
             deduced_identifiers = get_deduced_identifiers(vat_key, partner.vat)
+            if not deduced_identifiers:
+                continue
             identifiers = partner.additional_identifiers or {}
-            new_identifiers = {k: v for k, v in deduced_identifiers.items() if k not in identifiers}
-            if not new_identifiers:
+            updated_identifiers = {k: v for k, v in deduced_identifiers.items() if identifiers.get(k) != v}
+            if not updated_identifiers:
                 continue
             try:
                 # Use mail_notrack to avoid triggering mail tracking, which would
                 # recompute tracked computed fields (e.g. vies_valid) mid-inverse.
-                partner.with_context(mail_notrack=True).additional_identifiers = {**identifiers, **new_identifiers}
+                partner.with_context(mail_notrack=True).additional_identifiers = {**identifiers, **updated_identifiers}
             except ValidationError:
                 _logger.info("Skipped %s: deduced identifier from %s could not be validated.", deduced_identifiers, vat_key)
                 continue
