@@ -1,6 +1,6 @@
 {
     "name": "Work Entries",
-    "version": "1.2",
+    "version": "1.3",
     "category": "Human Resources/Employees",
     "sequence": 39,
     "summary": "Manage work entries",

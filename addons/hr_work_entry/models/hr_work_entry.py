@@ -74,7 +74,6 @@ class HrWorkEntry(models.Model):
     department_id = fields.Many2one(
         comodel_name="hr.department",
         related="employee_id.department_id",
-        store=True,
     )
     amount_rate = fields.Float(
         string="Pay rate",
