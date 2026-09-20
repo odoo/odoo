@@ -6,14 +6,16 @@
             <div class="d-flex flex-column my-1">
                 <h5>Channel Notifications</h5>
                 <span class="mb-1 text-muted small">This setting will be applied to all channels using the default notification settings.</span>
+                <div class="o-mail-DiscussNotificationSettings-options d-flex flex-column">
                 <t t-foreach="this.store.settings.NOTIFICATIONS" t-as="notif" t-key="notif.label">
-                    <button class="btn d-flex my-1" t-att-class="{'o-selected' : notif.label === this.store.self_user.res_users_settings_id.channelNotifications}" t-on-click="()=> this.store.settings.setCustomNotifications(notif.label)">
+                    <button class="o-mail-DiscussNotificationSettings-option btn d-flex my-1" t-att-class="{'o-selected' : notif.label === this.store.self_user.res_users_settings_id.channelNotifications}" t-on-click="()=> this.store.settings.setCustomNotifications(notif.label)">
                         <input class="form-check-input" type="radio" t-att-checked="notif.label === this.store.self_user.res_users_settings_id.channelNotifications"/>
                         <div class="d-flex flex-column text-start flex-grow-1 mx-3">
                             <span t-out="notif.name"/>
                         </div>
                     </button>
                 </t>
+                </div>
             </div>
             <hr class="o-discuss-separator my-1"/>
             <label class="cursor-pointer d-flex align-items-center my-1">
