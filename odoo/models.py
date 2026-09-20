@@ -640,6 +640,9 @@ class BaseModel(metaclass=MetaModel):
     through an environment using `sudo` or a more privileged user.
     """
 
+    _allow_sudo_display_name: bool = True
+    """Whether display names may be read as sudo through a Many2one."""
+
     _depends = frozendict()
     """dependencies of models backed up by SQL views
     ``{model_name: field_names}``, where ``field_names`` is an iterable.

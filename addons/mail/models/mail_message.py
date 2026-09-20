@@ -70,6 +70,7 @@ class Message(models.Model):
     _description = 'Message'
     _order = 'id desc'
     _rec_name = 'record_name'
+    _allow_sudo_display_name = False
 
     @api.model
     def default_get(self, fields):
@@ -189,6 +190,13 @@ class Message(models.Model):
     # as the cache value for this inverse one2many is up-to-date.
     # Besides for new messages, and messages never sending emails, there was no mail, and it was searching for nothing.
     mail_ids = fields.One2many('mail.mail', 'mail_message_id', string='Mails', groups="base.group_system")
+
+    @api.depends('record_name')
+    def _compute_display_name(self):
+        accessible_records = self._filtered_access('read')
+        not_accessible_records = self - accessible_records
+        not_accessible_records.display_name = _("Restricted Record")
+        super(Message, accessible_records)._compute_display_name()
 
     @api.depends('body')
     def _compute_preview(self):
