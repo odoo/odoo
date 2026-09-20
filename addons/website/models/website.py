@@ -596,6 +596,7 @@ class Website(models.CachedModel):
         # For text content generation
         return self._api_rpc(route, params, 'website.olg_api_endpoint', DEFAULT_OLG_ENDPOINT, **kwargs)
 
+    @api.private
     def get_cta_data(self, website_purpose, website_type):
         return {'cta_btn_text': False, 'cta_btn_href': '/contactus', 'shop_btn_href': '#'}
 
@@ -706,6 +707,7 @@ class Website(models.CachedModel):
         el.set('style', ' '.join(snippet_style))
 
     @api.model
+    @api.private
     def get_theme_configurator_snippets(self, theme_name):
         """
         Prepare and return configurator_snippets by fetching theme snippets and
@@ -746,11 +748,17 @@ class Website(models.CachedModel):
 
         return configurator_snippets
 
+    def _check_configurator_access(self):
+        if not self.env.user.has_group('website.group_website_designer'):
+            raise AccessError(_("You don't have the necessary access rights to use the website configurator."))
+
+    @api.private
     def configurator_set_menu_links(self, menu_company, module_data):
         menus = self.env['website.menu'].search([('url', 'in', list(module_data.keys())), ('website_id', '=', self.id)])
         for m in menus:
             m.sequence = module_data[m.url]['sequence']
 
+    @api.private
     def configurator_get_footer_links(self):
         return [
             {'text': _("Privacy Policy"), 'href': '/privacy'},
@@ -758,6 +766,7 @@ class Website(models.CachedModel):
 
     @api.model
     def configurator_init(self):
+        self._check_configurator_access()
         r = dict()
         current_website = self.env.website or self.env.website.browse(self.env.context.get('host_id')) or self.env.ref('base.default_website')
         company = current_website.company_id
@@ -784,6 +793,7 @@ class Website(models.CachedModel):
     @api.model
     def configurator_recommended_themes(self, industry_id, result_nbr_max=6,
                                         industry_name='', website_type='', positioning='', skip_ai=False):
+        self._check_configurator_access()
         Module = self.env['ir.module.module']
         domain = Module.get_themes_domain()
         domain = Domain.AND([[('name', '!=', 'theme_default')], domain])
@@ -821,12 +831,8 @@ class Website(models.CachedModel):
 
         themes_with_previews = []
         for theme_name in themes_suggested:
-            preview_url = self._get_configurator_theme_preview_url(theme_name)
-            if preview_url:
-                themes_with_previews.append({
-                    'name': theme_name,
-                    'preview_url': preview_url,
-                })
+            if self._get_configurator_theme_preview_url(theme_name):
+                themes_with_previews.append({'name': theme_name})
             if len(themes_with_previews) >= result_nbr_max:
                 break
         return themes_with_previews
@@ -870,6 +876,7 @@ class Website(models.CachedModel):
 
     @api.model
     def configurator_skip(self):
+        self._check_configurator_access()
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         website.ensure_one()
         theme = self.env["ir.module.module"].search([("name", "=", "theme_default")])
@@ -878,6 +885,7 @@ class Website(models.CachedModel):
 
     @api.model
     def configurator_missing_industry(self, unknown_industry):
+        self._check_configurator_access()
         self._website_api_rpc(
             '/api/website/unknown_industry',
             {
@@ -888,6 +896,7 @@ class Website(models.CachedModel):
 
     @api.model
     def configurator_get_images(self, industry_id, theme=''):
+        self._check_configurator_access()
         if not industry_id or industry_id <= 0:
             return {}
         try:
@@ -908,6 +917,7 @@ class Website(models.CachedModel):
 
     @api.model
     def configurator_apply(self, **kwargs):
+        self._check_configurator_access()
         website = self.env.website or self.env.website.browse(self.env.context.get('host_id')) or self.env.ref('base.default_website')
         self = self.with_context(website_id=website.id)  # noqa: PLW0642
         skip_ai = kwargs.get('skip_ai')  # Used by design-themes tooling
@@ -1290,6 +1300,7 @@ class Website(models.CachedModel):
     # Extension hook: allows installed modules (e.g. website_sale, website_blog, ...) to perform
     # additional setup steps on the generated website. This acts as an entry point for modules to
     # customize the website.
+    @api.private
     def configurator_addons_apply(self, industry_name=None, **kwargs):
         pass
 
