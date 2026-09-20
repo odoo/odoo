@@ -820,7 +820,7 @@ class TestApplyInheritanceWrapSpecs(ViewCase):
 
     def test_replace(self):
         spec = E.xpath(
-            E.div("$0", {'class': "some"}),
+            E.div(E('replace-target'), {'class': "some"}),
             expr="//p", position="replace")
 
         self.apply_spec(spec)
@@ -828,6 +828,19 @@ class TestApplyInheritanceWrapSpecs(ViewCase):
             self.base_arch,
             E.template(E.div(
                 E.div(E.p('Content'), {'class': 'some'})
+            ))
+        )
+
+    def test_replace_with_sibling(self):
+        spec = E.xpath(
+            E.div("text", E('first-sibling'), 'more text', E('replace-target'), 'tail text', {'class': "some"}),
+            expr="//p", position="replace")
+
+        self.apply_spec(spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(E.div(
+                E.div("text", E('first-sibling'), 'more text', E.p('Content'), 'tail text', {'class': 'some'})
             ))
         )
 
@@ -1159,6 +1172,37 @@ class TestTemplating(ViewCase):
         [added_content] = arch.xpath("//*[@id='added_content']")
         self.assertIsNone(wrapper.get('data-oe-xpath'), "branding should be lowered for the copied target")
         self.assertIsNotNone(added_content.get('data-oe-xpath'))
+
+    def test_branding_t0_sibling(self):
+        view1 = self.View.create({
+            'name': "Base view",
+            'type': 'qweb',
+            'arch': """<root>
+                <p role="search">initial content</p>
+            </root>
+            """
+        })
+        view2 = self.View.create({
+            'name': "Extension view",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """<xpath expr="//p[@role='search']" position="replace">
+                <form>
+                    <replace-target/>
+                    <p id="added_content">content of sibling</p>
+                </form>
+            </xpath>
+            """
+        })
+        arch_string = view1.with_context(inherit_branding=True).get_combined_arch()
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+        [added_content] = arch.xpath("//*[@id='added_content']")
+        self.assertEqual(added_content.get('data-oe-xpath'), '/xpath/form/p[1]')
+        self.assertEqual(
+            len(etree.fromstring(view2.arch).xpath(added_content.get('data-oe-xpath'))),
+            1,
+            'data-oe-xpath of node find the node in the initial view')
 
     def test_branding_inherit(self):
         view1 = self.View.create({

@@ -2540,7 +2540,7 @@ actual arch.
         node_path = e.get('data-oe-xpath')
         if node_path is None:
             # Handle special case for jump points defined by the magic template
-            # <t>$0</t>. No branding is allowed in this case since it points to
+            # <replace-target/>. No branding is allowed in this case since it points to
             # a generic template.
             if e.get('data-oe-no-branding'):
                 e.attrib.pop('data-oe-no-branding')
@@ -2567,7 +2567,7 @@ actual arch.
             # running index by tag type, for XPath query generation
             indexes = collections.Counter()
             for child in e.iterchildren(etree.Element, etree.ProcessingInstruction):
-                if child.get('data-oe-xpath'):
+                if child.get('data-oe-xpath') or child.get('data-oe-no-branding'):
                     # injected by view inheritance, skip otherwise
                     # generated xpath is incorrect
                     self.distribute_branding(child)
