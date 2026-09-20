@@ -38,8 +38,6 @@ class MixinOrderLineFields(models.AbstractModel):
         related="order_id.currency_id",
         string="Currency",
         depends=["order_id.currency_id"],
-        precompute=True,
-        store=True,
     )
     partner_id = fields.Many2one(  # noqa: E8529  One2many inverse of res.partner's order line lists
         comodel_name="res.partner",

@@ -1,6 +1,6 @@
 {
     "name": "Base Order Management",
-    "version": "19.0.3.6.3",
+    "version": "19.0.3.6.5",
     "category": "Hidden",
     "summary": "Foundation mixins for sale and purchase order types",
     "description": """

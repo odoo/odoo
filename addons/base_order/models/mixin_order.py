@@ -180,8 +180,6 @@ class MixinOrder(models.AbstractModel):
     )
     commercial_partner_id = fields.Many2one(
         related="partner_id.commercial_partner_id",
-        store=True,
-        index=True,
     )
 
     user_id = fields.Many2one(
