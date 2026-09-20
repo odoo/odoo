@@ -1,6 +1,6 @@
 {
     "name": "Third Party and Deferred/Electronic Checks Management",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "category": "Accounting/Localizations",
     "summary": "Checks Management",
     "description": """

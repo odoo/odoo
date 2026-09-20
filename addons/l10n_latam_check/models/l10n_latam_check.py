@@ -66,7 +66,6 @@ class L10n_LatamCheck(models.Model):
     original_journal_id = fields.Many2one(related="payment_id.journal_id")
     company_id = fields.Many2one(
         related="payment_id.company_id",
-        store=True,
     )
     currency_id = fields.Many2one(related="payment_id.currency_id")
     payment_channel_id = fields.Many2one(  # noqa: E8529  UNIQUE (name, payment_channel_id) partial
