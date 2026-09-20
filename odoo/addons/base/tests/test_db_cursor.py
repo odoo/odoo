@@ -4758,7 +4758,7 @@ class TestCronsRecoverLikeRequests(BaseCase):
         )
         self.assertIn(
             "_run_job_within_budget",
-            methods["_run_job"],
+            _reachable("_run_job", methods),
             "the run loop must go through the budgeted runner",
         )
 
