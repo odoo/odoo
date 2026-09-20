@@ -39,11 +39,10 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
 
         with self.with_user("user_sales_manager"):
             self.env.user._is_internal()
-            # Pinned against a fresh `-i sale_team,crm --test-enable` run with demo
-            # data, the heaviest install path measured: a fresh `-i crm` without
-            # demo data reads fewer. `assertQueryCount` only fails on an
-            # over-count, so the ceiling belongs on the heavier path.
-            with self.assertQueryCount(user_sales_manager=500):
+            # Pinned against a fresh `-i sale_team,crm --with-demo` run, stable over
+            # three runs. `assertQueryCount` only fails on an over-count, so a
+            # budget met from below is a guard that has retired: re-pin it.
+            with self.assertQueryCount(user_sales_manager=365):
                 self.env["team.team"].browse(
                     self.sales_teams.ids
                 )._action_assign_leads()
@@ -86,7 +85,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         leads.flush_recordset()
 
         with self.with_user("user_sales_manager"):
-            with self.assertQueryCount(user_sales_manager=245):
+            with self.assertQueryCount(user_sales_manager=133):
                 self.env["team.team"].browse(
                     self.sales_teams.ids
                 )._action_assign_leads()
@@ -177,7 +176,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         leads.flush_recordset()
 
         with self.with_user("user_sales_manager"):
-            with self.assertQueryCount(user_sales_manager=2299):
+            with self.assertQueryCount(user_sales_manager=954):
                 self.env["team.team"].browse(sales_teams.ids)._action_assign_leads()
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])

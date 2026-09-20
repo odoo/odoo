@@ -491,34 +491,23 @@ class TeamTeam(models.Model):
             self.env.cr.commit()
 
         global_data = {"assigned": set(), "merged": set(), "duplicates": set()}
-        leads_done_ids, lead_unlink_ids, counter = set(), set(), 0
-        while population:
-            counter += 1
-            team = random.choices(population, weights=weights, k=1)[0]
-
-            teams_data[team]["leads"] = teams_data[team]["leads"].filtered(
-                lambda l: l.id not in leads_done_ids
-            )
-            if not teams_data[team]["leads"]:
-                population_index = population.index(team)
-                population.pop(population_index)
-                weights.pop(population_index)
-                continue
-
-            candidate_lead = teams_data[team]["leads"][0]
-            assign_res = team._allocate_leads_deduplicate(
-                candidate_lead, duplicates_cache=duplicates_lead_cache
-            )
-            for key in ("assigned", "merged", "duplicates"):
-                teams_data[team][key].update(assign_res[key])
-                leads_done_ids.update(assign_res[key])
-                global_data[key].update(assign_res[key])
-            lead_unlink_ids.update(assign_res["duplicates"])
-
-            if auto_commit and counter % BUNDLE_COMMIT_SIZE == 0:
-                self.env["crm.lead"].browse(lead_unlink_ids).unlink()
-                lead_unlink_ids = set()
-                self.env.cr.commit()
+        lead_unlink_ids = set()
+        batches = self._allocate_leads_draw(
+            population, weights, teams_data, duplicates_lead_cache
+        )
+        for team, batch in batches.items():
+            for chunk in self._allocate_leads_chunks(batch, BUNDLE_COMMIT_SIZE):
+                assign_res = team._allocate_leads_deduplicate(
+                    chunk, duplicates_cache=duplicates_lead_cache
+                )
+                for key in ("assigned", "merged", "duplicates"):
+                    teams_data[team][key].update(assign_res[key])
+                    global_data[key].update(assign_res[key])
+                lead_unlink_ids.update(assign_res["duplicates"])
+                if auto_commit:
+                    self.env["crm.lead"].browse(lead_unlink_ids).unlink()
+                    lead_unlink_ids = set()
+                    self.env.cr.commit()
 
         self.env["crm.lead"].browse(lead_unlink_ids).unlink()
 
@@ -543,6 +532,48 @@ class TeamTeam(models.Model):
             )
         return teams_data
 
+    @staticmethod
+    def _allocate_leads_chunks(leads, size):
+        return [leads[start : start + size] for start in range(0, len(leads), size)]
+
+    def _allocate_leads_draw(self, population, weights, teams_data, duplicates_cache):
+        """Draw the assignment order in memory and return the leads each team takes.
+
+        The weighted draw is the assignment policy, so it stays per lead; only
+        the persistence is batched per team afterwards, which is what makes the
+        cost of an allocation proportional to the teams rather than the leads.
+        """
+        population, weights = list(population), list(weights)
+        cached = self.env["crm.lead"].union(*duplicates_cache.values())
+        existing_ids = set(cached.exists().ids)
+        for lead, duplicates in duplicates_cache.items():
+            duplicates_cache[lead] = duplicates.filtered(
+                lambda dup: dup.id in existing_ids
+            )
+        batches = dict.fromkeys(population, self.env["crm.lead"])
+        leads_done_ids = set()
+        while population:
+            team = random.choices(population, weights=weights, k=1)[0]
+            candidate = next(
+                (
+                    lead
+                    for lead in teams_data[team]["leads"]
+                    if lead.id not in leads_done_ids
+                ),
+                None,
+            )
+            if candidate is None:
+                population_index = population.index(team)
+                population.pop(population_index)
+                weights.pop(population_index)
+                continue
+            batches[team] += candidate
+            leads_done_ids.add(candidate.id)
+            duplicates = duplicates_cache[candidate]
+            if len(duplicates) > 1:
+                leads_done_ids.update(duplicates.ids)
+        return batches
+
     def _allocate_leads_deduplicate(self, leads, duplicates_cache=None):
         self.check_singleton()
         duplicates_cache = duplicates_cache if duplicates_cache is not None else {}
@@ -555,10 +586,14 @@ class TeamTeam(models.Model):
             duplicates_cache.update(
                 self.env["crm.lead"]._get_lead_duplicates_by_lead(missing)
             )
+        cached = self.env["crm.lead"].union(*(duplicates_cache[lead] for lead in leads))
+        existing_ids = set(cached.exists().ids)
 
         for lead in leads:
             if lead.id not in leads_done_ids:
-                lead_duplicates = duplicates_cache[lead].exists()
+                lead_duplicates = duplicates_cache[lead].filtered(
+                    lambda dup: dup.id in existing_ids
+                )
 
                 if len(lead_duplicates) > 1:
                     leads_dups_dict[lead] = lead_duplicates
@@ -606,7 +641,6 @@ class TeamTeam(models.Model):
             member: member._get_assignment_quota(force_quota=force_quota)
             for member in self.team_member_ids
         }
-        counter = 0
         leads_per_team = dict(
             self.env["crm.lead"]._read_group(
                 teams_with_members._get_domain_lead_to_assign(),
@@ -623,9 +657,6 @@ class TeamTeam(models.Model):
             )
             if not member_found:
                 return None
-            lead.with_context(mail_auto_subscribe_no_notify=True).convert_opportunity(
-                lead.partner_id, user_ids=member_found.user_id.ids
-            )
             result_data[member_found]["assigned"] += lead
 
             assign_lst.remove(member_found)
@@ -651,6 +682,7 @@ class TeamTeam(models.Model):
             )
             if not members_to_assign:
                 continue
+            members_to_assign_all = list(members_to_assign)
             result_data.update(
                 {
                     member: {
@@ -685,7 +717,6 @@ class TeamTeam(models.Model):
             assigned_preferred_leads = self.env["crm.lead"]
 
             for lead in preferred_leads.sorted(lambda lead: (-lead.probability, id)):
-                counter += 1
                 member_found = update_lead_assignment(
                     lead,
                     members_to_assign_wpref,
@@ -694,11 +725,8 @@ class TeamTeam(models.Model):
                     members_to_assign,
                     members_to_assign_wpref,
                 )
-                if not member_found:
-                    continue
-                assigned_preferred_leads += lead
-                if auto_commit and counter % commit_bundle_size == 0:
-                    self.env.cr.commit()
+                if member_found:
+                    assigned_preferred_leads += lead
 
             to_assign -= assigned_preferred_leads
             leads_per_member = {
@@ -708,18 +736,22 @@ class TeamTeam(models.Model):
                 for member in members_to_assign
             }
             for lead in to_assign.sorted(lambda lead: (-lead.probability, id)):
-                counter += 1
-                member_found = update_lead_assignment(
+                update_lead_assignment(
                     lead,
                     members_to_assign,
                     leads_per_member,
                     quota_per_member,
                     members_to_assign,
                 )
-                if not member_found:
-                    continue
-                if auto_commit and counter % commit_bundle_size == 0:
-                    self.env.cr.commit()
+
+            for member in members_to_assign_all:
+                assigned = result_data[member]["assigned"]
+                for chunk in self._allocate_leads_chunks(assigned, commit_bundle_size):
+                    chunk.with_context(
+                        mail_auto_subscribe_no_notify=True
+                    ).convert_opportunity(None, user_ids=member.user_id.ids)
+                    if auto_commit:
+                        self.env.cr.commit()
 
             if auto_commit:
                 self.env.cr.commit()

@@ -30,7 +30,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         with self.assertQueryCount(user_sales_manager=0):
             test_leads = self.env["crm.lead"].browse(test_leads.ids)
 
-        with self.assertQueryCount(user_sales_manager=232):
+        with self.assertQueryCount(user_sales_manager=54):
             test_leads._handle_salesmen_assignment(user_ids=user_ids, team_id=False)
 
         self.assertEqual(
@@ -50,7 +50,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         with self.assertQueryCount(user_sales_manager=0):
             test_leads = self.env["crm.lead"].browse(test_leads.ids)
 
-        with self.assertQueryCount(user_sales_manager=205):
+        with self.assertQueryCount(user_sales_manager=80):
             test_leads._handle_salesmen_assignment(user_ids=user_ids, team_id=team_id)
 
         self.assertEqual(test_leads.team_id, self.sales_team_convert)
@@ -191,7 +191,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         test_leads = self._create_leads_batch(count=50, user_ids=[False])
         user_ids = self.assign_users.ids
 
-        with self.assertQueryCount(user_sales_manager=1096):
+        with self.assertQueryCount(user_sales_manager=858):
             mass_convert = (
                 self.env["crm.lead2opportunity.partner.mass"]
                 .with_context(

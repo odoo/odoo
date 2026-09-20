@@ -2068,7 +2068,7 @@ class CrmLead(models.Model):
             "type": "opportunity",
             "date_conversion": self.env.cr.now(),
         }
-        if customer != self.partner_id:
+        if customer is not None and customer != self.partner_id:
             upd_values["partner_id"] = customer.id if customer else False
         if not self.stage_id:
             stage = self._stage_find(team_id=new_team_id)
@@ -2076,12 +2076,17 @@ class CrmLead(models.Model):
         return upd_values
 
     def convert_opportunity(self, partner, user_ids=False, team_id=False):
-        customer = partner or self.env["res.partner"]
+        """Convert the leads; ``partner=None`` keeps each lead's own customer."""
+        customer = partner if partner is None else partner or self.env["res.partner"]
+        leads_by_vals = {}
         for lead in self:
             if not lead.active or lead.won_status == "won":
                 continue
             vals = lead._convert_opportunity_data(customer, team_id)
-            lead.write(vals)
+            key = tuple(sorted(vals.items()))
+            leads_by_vals[key] = leads_by_vals.get(key, self.browse()) + lead
+        for key, leads in leads_by_vals.items():
+            leads.write(dict(key))
 
         if user_ids or team_id:
             self._handle_salesmen_assignment(user_ids=user_ids, team_id=team_id)
