@@ -30,6 +30,7 @@ Con la Colaboración de
         'views/res_city_corregimiento_poblado_views.xml',
         'views/res_city_corregimiento_poblado_barrio_views.xml',
         'data/res_country_data.xml',
+        'data/account_tax_report_data.xml',
         'data/l10n_latam.document.type.csv',
         'data/res.city.csv',
         'data/l10n_pa.res.city.corregimiento.csv',

@@ -20,10 +20,8 @@ class L10n_PaResCityCorregimientoPobladoBarrio(models.Model):
         help='This code will help with the identification of each barrio in Panama.',
     )
 
-    _name_poblado_uniq = models.Constraint(
-        'unique(poblado_id, name)',
-        'The name of the barrio must be unique by poblado!',
-    )
+    # Note: not enforcing name uniqueness within a poblado, consistent with the
+    # poblado model - the DGI code is the actual unique identifier in this dataset.
     _l10n_pa_code_uniq = models.Constraint(
         'unique(l10n_pa_code)',
         'The DGI code of the barrio must be unique!',

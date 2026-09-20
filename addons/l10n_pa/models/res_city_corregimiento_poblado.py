@@ -20,10 +20,9 @@ class L10n_PaResCityCorregimientoPoblado(models.Model):
         help='This code will help with the identification of each poblado in Panama.',
     )
 
-    _name_corregimiento_uniq = models.Constraint(
-        'unique(corregimiento_id, name)',
-        'The name of the poblado must be unique by corregimiento!',
-    )
+    # Note: the poblado name is not guaranteed unique within a corregimiento (the
+    # official DGI dataset has distinct, separately-coded populated places that
+    # share a name). The DGI code is the actual unique identifier.
     _l10n_pa_code_uniq = models.Constraint(
         'unique(l10n_pa_code)',
         'The DGI code of the poblado must be unique!',
