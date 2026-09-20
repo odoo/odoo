@@ -36,14 +36,14 @@ class DiscussChannelRtcSession(models.Model):
         required=True,
         ondelete="cascade",
     )
-    channel_id: DiscussChannel = fields.Many2one(
+    channel_id: DiscussChannel = fields.Many2one(  # noqa: E8529  One2many inverse of discuss.channel.rtc_session_ids
         comodel_name="discuss.channel",
         related="channel_member_id.channel_id",
         store=True,
         index="btree_not_null",
         readonly=True,
     )
-    partner_id: ResPartner = fields.Many2one(
+    partner_id: ResPartner = fields.Many2one(  # noqa: E8529  One2many inverse of res.partner.rtc_session_ids
         comodel_name="res.partner",
         related="channel_member_id.partner_id",
         string="Partner",

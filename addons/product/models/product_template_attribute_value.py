@@ -55,7 +55,7 @@ class ProductTemplateAttributeValue(models.Model):
     product_tmpl_id = fields.Many2one(
         related="attribute_line_id.product_tmpl_id",
     )
-    attribute_id = fields.Many2one(
+    attribute_id = fields.Many2one(  # noqa: E8529  One2many inverse of product.attribute.template_value_ids
         related="attribute_line_id.attribute_id",
         store=True,
         index=True,

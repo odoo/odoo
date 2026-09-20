@@ -41,7 +41,7 @@ class MixinOrderLineFields(models.AbstractModel):
         precompute=True,
         store=True,
     )
-    partner_id = fields.Many2one(
+    partner_id = fields.Many2one(  # noqa: E8529  One2many inverse of res.partner's order line lists
         comodel_name="res.partner",
         related="order_id.partner_id",
         string="Partner",

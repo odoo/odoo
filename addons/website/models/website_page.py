@@ -85,7 +85,7 @@ class WebsitePage(models.Model):
         help='Add this page to the "+New" page templates. It will be added to the "Custom" category.',
     )
 
-    website_id = fields.Many2one(
+    website_id = fields.Many2one(  # noqa: E8529  page serving filters and orders on it; TestWebsitePerformance's query pins rise through ir_ui_view
         related="view_id.website_id",
         store=True,
         readonly=False,
