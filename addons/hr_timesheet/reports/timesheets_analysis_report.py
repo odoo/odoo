@@ -95,7 +95,7 @@ class TimesheetsAnalysisReport(models.Model):
                 A.user_id AS user_id,
                 A.project_id AS project_id,
                 A.task_id AS task_id,
-                TSK.parent_id AS parent_task_id,
+                A.parent_task_id AS parent_task_id,
                 A.employee_id AS employee_id,
                 E.parent_id AS manager_id,
                 A.company_id AS company_id,
@@ -113,7 +113,6 @@ class TimesheetsAnalysisReport(models.Model):
             FROM account_analytic_line A
             LEFT JOIN hr_employee E ON E.id = A.employee_id
             LEFT JOIN res_company C ON C.id = A.company_id
-            LEFT JOIN project_task TSK ON TSK.id = A.task_id
         """
 
     @api.model
