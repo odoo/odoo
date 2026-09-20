@@ -32,8 +32,6 @@ class ProductComboItem(models.Model):
     )
     company_id = fields.Many2one(
         related="combo_id.company_id",
-        precompute=True,
-        store=True,
     )
     extra_price = fields.Float(
         min_display_digits="Product Price",

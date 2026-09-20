@@ -54,8 +54,6 @@ class ProductTemplateAttributeValue(models.Model):
 
     product_tmpl_id = fields.Many2one(
         related="attribute_line_id.product_tmpl_id",
-        store=True,
-        index=True,
     )
     attribute_id = fields.Many2one(
         related="attribute_line_id.attribute_id",
