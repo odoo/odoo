@@ -38,7 +38,7 @@ class ResCompany(models.Model):
         groups='base.group_user',
     )
     l10n_fr_pdp_registered = fields.Boolean(
-        string="Approved Platform Registerd",
+        string="Approved Platform Registered",
         compute="_compute_l10n_fr_pdp_registered",
         groups='base.group_user',
     )
@@ -88,6 +88,18 @@ class ResCompany(models.Model):
         string="Authentication IAP UUID",
         groups='account.group_account_invoice',
     )
+
+    def _get_einvoicing_network_name(self):
+        self.ensure_one()
+        if self._peppol_is_french_company():
+            return self.env._("the Approved Platform")
+        return super()._get_einvoicing_network_name()
+
+    def _get_einvoicing_identifier_name(self):
+        self.ensure_one()
+        if self._peppol_is_french_company():
+            return self.env._("French e-invoicing identifier")
+        return super()._get_einvoicing_identifier_name()
 
     @api.depends('peppol_eas', 'peppol_endpoint')
     def _compute_pdp_identifier(self):
