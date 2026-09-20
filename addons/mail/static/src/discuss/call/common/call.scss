@@ -14,14 +14,6 @@
         background-color: var(--o-discuss-Call-bgColor, #{$dark});
     }
 
-    &:has(.o-discuss-Call-sidebar) {
-        grid-template-columns: 1fr 230px;
-
-        @include media-breakpoint-down(sm) {
-            grid-template-columns: 1fr 160px;
-        }
-    }
-
     &.o-compact {
         height: auto;
         min-height: auto;
@@ -51,46 +43,5 @@
         &.o-minimized {
             height: 100%;
         }
-    }
-}
-
-.o-discuss-Call-sidebar {
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    &::-webkit-scrollbar {
-        width: 0.3vw;
-    }
-}
-
-.o-discuss-Call-sidebarCard {
-    aspect-ratio: 16/9;
-}
-
-.o-discuss-Call-mainCardStyle {
-    width: var(--width);
-    height: var(--height);
-    min-width: var(--width);
-    min-height: var(--height);
-    aspect-ratio: 16/9;
-
-    &.o-active {
-        width: 100%;
-        height: auto;
-    }
-}
-
-// ------------------------------------------------------------------
-// Style
-// ------------------------------------------------------------------
-
-.o-discuss-Call-sidebar {
-
-    &::-webkit-scrollbar {
-        background: map-get($grays, '900');
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: map-get($grays, '700');
     }
 }
