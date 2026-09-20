@@ -372,7 +372,7 @@ class ResCompany(models.Model):
         ],
         **company_default_for('cost_method', 'product.category', 'property_cost_method'),
         default='standard',
-        required=True,
+        ui_required=True,
     )
 
     # Cash Rounding default accounts

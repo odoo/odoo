@@ -924,6 +924,9 @@ class Field[T, C]:
             .with_company(records.env.company) \
             ._get_model_defaults(records._name).get(self.name)
         fallback = self.convert_to_cache(fallback, records, validate=False)
+        if fallback is None and self.default:
+            fallback = self.default(records)
+            fallback = self.convert_to_cache(fallback, records, validate=False)
         return self.convert_to_record(fallback, records)
 
     #
