@@ -1909,6 +1909,7 @@ class CrmLead(models.Model):
 
     def _merge_dependences_history(self, opportunities):
         self.check_singleton()
+        messages_by_subject = {}
         for opportunity_su in opportunities.sudo():
             for message_su in opportunity_su.message_ids:
                 if message_su.subject:
@@ -1919,12 +1920,11 @@ class CrmLead(models.Model):
                     )
                 else:
                     subject = _("From %(source_name)s", source_name=opportunity_su.name)
-                message_su.write(
-                    {
-                        "res_id": self.id,
-                        "subject": subject,
-                    }
+                messages_by_subject[subject] = (
+                    messages_by_subject.get(subject, message_su.browse()) + message_su
                 )
+        for subject, messages_su in messages_by_subject.items():
+            messages_su.write({"res_id": self.id, "subject": subject})
         opportunities.activity_ids.write(
             {
                 "res_id": self.id,
