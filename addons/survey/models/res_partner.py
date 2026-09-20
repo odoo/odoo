@@ -20,9 +20,12 @@ class ResPartner(models.Model):
         for partner in self:
             partner.certifications_count = data.get(partner.id, 0)
 
-    @api.depends('is_company', 'child_ids.certifications_count')
+    @api.depends('is_company', 'certifications_count', 'child_ids.certifications_count')
     def _compute_certifications_company_count(self):
-        self.certifications_company_count = sum(child.certifications_count for child in self.child_ids)
+        for partner in self:
+            partner.certifications_company_count = (
+                partner.certifications_count + sum(child.certifications_count for child in partner.child_ids)
+            )
 
     def action_view_certifications(self):
         action = self.env["ir.actions.actions"]._for_xml_id("survey.res_partner_action_certifications")
