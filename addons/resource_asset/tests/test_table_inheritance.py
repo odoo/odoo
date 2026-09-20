@@ -37,7 +37,7 @@ class TestAssetTableInheritanceRoot(TransactionCase):
         self.assertEqual(self.env.cr.fetchall(), [])
 
     def test_what_the_root_grants_the_subtype_grants(self):
-        # account_depreciation grants accountants the root; creating a vehicle
+        # account_depreciation grants accountants the root; creating a property
         # through the root dispatches to the subtype and must not refuse them.
         group = self.env.ref("base.group_user")
         user = self.env["res.users"].create(
@@ -53,10 +53,9 @@ class TestAssetTableInheritanceRoot(TransactionCase):
                 "perm_create": True,
             }
         )
-        van = self.Asset.with_user(user).create(
-            {"name": "Van", "kind_id": self.vehicle.id}
-        )
-        self.assertEqual(van._get_concrete()._name, "resource.asset.vehicle")
+        kind = self.env.ref("resource_asset.kind_property")
+        plot = self.Asset.with_user(user).create({"name": "Plot", "kind_id": kind.id})
+        self.assertEqual(plot._get_concrete()._name, "resource.asset.property")
 
     def test_the_shipped_kinds_with_a_model_land_in_it(self):
         for code in ("property", "telecom", "device"):
