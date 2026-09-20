@@ -124,18 +124,26 @@ class TestSearchAge(TransactionCase):
             with self.assertRaises(UserError):
                 self.Partner.search([("age", ">", value)])
 
-    def test_age_declares_no_aggregator(self):
-        """A non-stored field cannot be aggregated, so it must not claim to be.
-
-        `web/static/src/model/relational_model/field_values.js` asks the server
-        for `<field>:<aggregator>` for every aggregatable field a view holds, so
-        a truthy aggregator on this one turns any grouped list containing it
-        into an Internal Server Error. Integer defaults to `sum`, which is both
-        meaningless for ages and loaded.
+    def test_age_declares_no_aggregator_and_folds_through_records_when_asked(self):
+        """`web/static/src/model/relational_model/field_values.js` asks the
+        server for `<field>:<aggregator>` for every aggregatable field a view
+        holds; Integer defaults to `sum`, which is meaningless for ages, so the
+        field declares none. Asked for explicitly, an aggregate of this
+        non-stored compute folds through the group's records (odoo
+        1700ca96ddc1), so a grouped list that wants an average gets one.
         """
         self.assertFalse(self.Partner._fields["age"].aggregator)
-        with self.assertRaises(ValueError):
-            self.Partner.web_read_group([], ["age_range_id"], ["age:avg"])
+        adults = self.Partner.browse(
+            [self.ages[18].id, self.ages[19].id, self.ages[40].id]
+        )
+        groups = self.Partner._read_group(
+            [("id", "in", adults.ids)], ["age_range_id"], ["age:avg"]
+        )
+        by_range = dict(groups)
+        self.assertEqual(
+            sum(by_range.values()) / len(by_range),
+            sum(adults.mapped("age")) / len(adults),
+        )
 
 
 @tagged("post_install", "-at_install")

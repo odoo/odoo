@@ -67,5 +67,5 @@ from . import test_planning_overlap
 from . import test_task_planning_flow
 from . import test_task_state_on_create
 from . import test_project_access
-from . import test_rating_stats
 from . import test_rating_mixin_collision
+from . import test_rating_stats
