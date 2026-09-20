@@ -55,7 +55,7 @@ class TestStageSelection:
 
     def test_an_unknown_stage_is_refused(self, manager):
         mgr, pkg = manager({"module": {}})
-        with pytest.raises(AssertionError):
+        with pytest.raises(ValueError, match="invalid migration stage 'middle'"):
             mgr.migrate_module(pkg, "middle")
 
 

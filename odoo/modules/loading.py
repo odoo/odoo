@@ -1534,6 +1534,21 @@ class _ModuleLoader:
             for package in self.graph:
                 self.migrations.migrate_module(package, "end")
 
+    def restore_relations_dropped_by_migrations(self) -> None:
+        if not self.registry.updated_modules:
+            return
+        self.registry.check_tables_exist(self.cr)
+        env = self.env
+        queried = {
+            model._table: name
+            for name, model in self.registry.items()
+            if not model._abstract and env[name]._table_query
+        }
+        missing = set(queried).difference(schema.get_tables_existing(self.cr, queried))
+        for table in sorted(missing):
+            env[queried[table]].init()
+        env.flush_all()
+
     def log_pending_module_states(self) -> None:
         cr = self.cr
         cr.execute(
@@ -1830,6 +1845,7 @@ def load_modules(
         loader.run_deferred_at_install_tests()
         loader.log_modules_that_never_loaded()
         loader.run_end_migrations()
+        loader.restore_relations_dropped_by_migrations()
         loader.log_pending_module_states()
         loader.finalize_constraints()
         loader.run_post_update_model_checks()
