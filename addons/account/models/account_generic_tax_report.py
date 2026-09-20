@@ -323,7 +323,8 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
                 FROM %(table_references)s
                 JOIN account_move_line_account_tax_rel tax_rel ON account_move_line.id = tax_rel.account_move_line_id
                 JOIN account_tax tax ON tax.id = tax_rel.account_tax_id
-                LEFT JOIN account_tax src_tax ON src_tax.id = account_move_line.tax_line_id
+                LEFT JOIN account_tax_repartition_line src_rep ON src_rep.id = account_move_line.tax_repartition_line_id
+                LEFT JOIN account_tax src_tax ON src_tax.id = src_rep.tax_id
                 LEFT JOIN account_tax src_group_tax ON src_group_tax.id = account_move_line.group_tax_id
                 WHERE %(search_condition)s
                     AND (
@@ -335,7 +336,7 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
                     AND (
                         (
                             /* Tax lines affecting the base of others. */
-                            account_move_line.tax_line_id IS NOT NULL
+                            src_tax.id IS NOT NULL
                             AND (
                                 src_tax.type_tax_use IN ('sale', 'purchase')
                                 OR src_group_tax.type_tax_use IN ('sale', 'purchase')
@@ -344,7 +345,7 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
                         OR
                         (
                             /* For regular base lines. */
-                            account_move_line.tax_line_id IS NULL
+                            src_tax.id IS NULL
                             AND tax.type_tax_use IN ('sale', 'purchase')
                         )
                     )
@@ -464,7 +465,8 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
                     SUM(account_move_line.balance) AS tax_amount
                     %(select_deductible)s
                 FROM %(table_references)s
-                JOIN account_tax tax ON tax.id = account_move_line.tax_line_id
+                JOIN account_tax_repartition_line tax_rep ON tax_rep.id = account_move_line.tax_repartition_line_id
+                JOIN account_tax tax ON tax.id = tax_rep.tax_id
                 %(join_deductible)s
                 LEFT JOIN account_tax group_tax ON group_tax.id = account_move_line.group_tax_id
                 WHERE %(search_condition)s

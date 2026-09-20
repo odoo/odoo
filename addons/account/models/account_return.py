@@ -1722,17 +1722,17 @@ class AccountReturn(models.Model):
 
         query = SQL(
             """
-            SELECT "account_move_line".tax_line_id as tax_id,
+            SELECT repartition.tax_id as tax_id,
                     tax.tax_group_id as tax_group_id,
                     %(tax_name)s as tax_name,
                     "account_move_line".account_id,
                     COALESCE(SUM("account_move_line".balance), 0) as amount
             FROM account_tax tax, account_tax_repartition_line repartition, %(table_references)s
             WHERE %(search_condition)s
-              AND tax.id = "account_move_line".tax_line_id
               AND repartition.id = "account_move_line".tax_repartition_line_id
+              AND tax.id = repartition.tax_id
               AND repartition.use_in_tax_closing
-            GROUP BY tax.tax_group_id, "account_move_line".tax_line_id, tax.name, "account_move_line".account_id
+            GROUP BY tax.tax_group_id, repartition.tax_id, tax.name, "account_move_line".account_id
             """,
             tax_name=tax_name,
             table_references=query.from_clause,

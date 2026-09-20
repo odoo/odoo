@@ -90,8 +90,10 @@ SELECT
     base_line.amount_currency AS base_amount_currency,
     TRUE AS is_fallback
 FROM %(table_references)s
+LEFT JOIN account_tax_repartition_line tax_rep ON
+    tax_rep.id = account_move_line.tax_repartition_line_id
 JOIN account_move_line_account_tax_rel tax_rel ON
-    tax_rel.account_tax_id = COALESCE(account_move_line.group_tax_id, account_move_line.tax_line_id)
+    tax_rel.account_tax_id = COALESCE(account_move_line.group_tax_id, tax_rep.tax_id)
 JOIN account_move_line base_line ON
     base_line.id = tax_rel.account_move_line_id
     AND base_line.tax_repartition_line_id IS NULL
@@ -101,7 +103,7 @@ LEFT JOIN mapped_tax_lines ON
     mapped_tax_lines.tax_line_id = account_move_line.id
 LEFT JOIN mapped_base_taxes ON
     mapped_base_taxes.base_line_id = base_line.id
-    AND mapped_base_taxes.matched_tax_id = account_move_line.tax_line_id
+    AND mapped_base_taxes.matched_tax_id = tax_rep.tax_id
 WHERE (
     /* this tax line matched nothing at all -- the historical all-or-nothing
        case, where approximating every one of its base lines is the best
@@ -151,15 +153,15 @@ SELECT
     /* which tax matched this pair, so the fallback can ask whether a base
        line is already covered by SOME tax line of that tax rather than only
        by the one it is currently looking at */
-    account_move_line.tax_line_id AS matched_tax_id
+    tax_rep.tax_id AS matched_tax_id
 
 FROM %(table_references)s
 JOIN account_tax_repartition_line tax_rep ON
     tax_rep.id = account_move_line.tax_repartition_line_id
 JOIN account_tax tax ON
-    tax.id = account_move_line.tax_line_id
+    tax.id = tax_rep.tax_id
 JOIN account_move_line_account_tax_rel tax_rel ON
-    tax_rel.account_tax_id = COALESCE(account_move_line.group_tax_id, account_move_line.tax_line_id)
+    tax_rel.account_tax_id = COALESCE(account_move_line.group_tax_id, tax_rep.tax_id)
 JOIN account_move move ON
     move.id = account_move_line.move_id
 JOIN account_move_line base_line ON
@@ -191,7 +193,7 @@ WHERE account_move_line.tax_repartition_line_id IS NOT NULL
         -- keeping only the rows from affecting_base_tax_lines that end with the same taxes applied (see comment in tax_line_tax_ids)
         NOT tax.include_base_amount
         OR base_line_tax_ids.tax_ids[ARRAY_LENGTH(base_line_tax_ids.tax_ids, 1) - COALESCE(ARRAY_LENGTH(tax_line_tax_ids.tax_ids, 1), 0):ARRAY_LENGTH(base_line_tax_ids.tax_ids, 1)]
-            = ARRAY[account_move_line.tax_line_id] || COALESCE(tax_line_tax_ids.tax_ids, ARRAY[]::INTEGER[])
+            = ARRAY[tax_rep.tax_id] || COALESCE(tax_line_tax_ids.tax_ids, ARRAY[]::INTEGER[])
     )
 """
 
@@ -222,7 +224,7 @@ SELECT
     comp_curr.decimal_places AS comp_curr_prec,
     curr.decimal_places AS curr_prec,
 
-    tax_line.tax_line_id AS tax_id,
+    tax_line_rep.tax_id AS tax_id,
 
     %(company_base_window)s,
     account_move_line.balance AS total_tax_amount,
@@ -231,9 +233,11 @@ SELECT
     account_move_line.amount_currency AS total_tax_amount_currency
 
 FROM %(table_references)s
+JOIN account_tax_repartition_line affecting_rep ON
+    affecting_rep.id = account_move_line.tax_repartition_line_id
 JOIN account_tax tax_include_base_amount ON
     tax_include_base_amount.include_base_amount
-    AND tax_include_base_amount.id = account_move_line.tax_line_id
+    AND tax_include_base_amount.id = affecting_rep.tax_id
 JOIN base_tax_line_mapping base_tax_line_mapping ON
     base_tax_line_mapping.tax_line_id = account_move_line.id
 JOIN account_move_line_account_tax_rel tax_rel ON
@@ -245,7 +249,9 @@ JOIN account_move_line tax_line ON
     -- line with base lines of its own move; stated so the planner reaches
     -- tax_line by index instead of filtering the mapping against itself
     tax_line.move_id = account_move_line.move_id
-    AND tax_line.tax_line_id = tax_rel.account_tax_id
+JOIN account_tax_repartition_line tax_line_rep ON
+    tax_line_rep.id = tax_line.tax_repartition_line_id
+    AND tax_line_rep.tax_id = tax_rel.account_tax_id
 JOIN res_currency curr ON
     curr.id = tax_line.currency_id
 JOIN res_company tax_line_company ON
@@ -348,7 +354,7 @@ SELECT
     sub.src_line_id,
     sub.is_fallback,
 
-    tax_line.tax_line_id AS tax_id,
+    tax_line_rep.tax_id AS tax_id,
     tax_line.group_tax_id,
     tax_line.tax_repartition_line_id,
 
@@ -380,8 +386,10 @@ JOIN account_move tax_move ON
     tax_move.id = tax_line.move_id
 JOIN account_move_line base_line ON
     base_line.id = sub.base_line_id
+JOIN account_tax_repartition_line tax_line_rep ON
+    tax_line_rep.id = tax_line.tax_repartition_line_id
 JOIN account_tax tax ON
-    tax.id = tax_line.tax_line_id
+    tax.id = tax_line_rep.tax_id
 JOIN res_currency curr ON
     curr.id = tax_line.currency_id
 JOIN res_company tax_line_company ON
@@ -503,7 +511,7 @@ class AccountMoveLine(models.Model):
         self, table_references: SQL, search_condition: SQL
     ) -> SQL:
         partition = SQL("tax_line.id, account_move_line.id")
-        order = SQL("tax_line.tax_line_id, base_line.id")
+        order = SQL("tax_line_rep.tax_id, base_line.id")
         return SQL(
             _SQL_TAX_AMOUNT_AFFECTING_BASE_TO_DISPATCH,
             table_references=table_references,
@@ -556,7 +564,7 @@ class AccountMoveLine(models.Model):
     @api.model
     def _get_sql_base_tax_matching_all_amounts(self) -> SQL:
         partition = SQL("tax_line.id")
-        order = SQL("tax_line.tax_line_id, sub.base_line_id, sub.src_line_id")
+        order = SQL("tax_line_rep.tax_id, sub.base_line_id, sub.src_line_id")
         return SQL(
             _SQL_BASE_TAX_MATCHING_ALL_AMOUNTS,
             company_base_window_final=_sql_taxable_base_window(

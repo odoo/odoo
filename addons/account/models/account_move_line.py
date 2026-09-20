@@ -272,9 +272,6 @@ class AccountMoveLine(models.Model):
         comodel_name="account.tax",
         related="tax_repartition_line_id.tax_id",
         string="Originator Tax",
-        precompute=True,
-        store=True,
-        ondelete="restrict",
         help="Indicates that this journal item is a tax line",
     )
     tax_group_id = fields.Many2one(

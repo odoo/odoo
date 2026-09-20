@@ -291,7 +291,14 @@ class AccountTaxMergeWizardLine(models.TransientModel):
         hashed = {
             row[0]
             for row in self.env.execute_query(
-                query.select(SQL("DISTINCT account_move_line.tax_line_id"))
+                query.select(
+                    SQL(
+                        "DISTINCT %s",
+                        self.env["account.move.line"]._field_to_sql(
+                            "account_move_line", "tax_line_id", query
+                        ),
+                    )
+                )
             )
             if row[0]
         }

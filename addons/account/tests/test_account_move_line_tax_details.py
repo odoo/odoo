@@ -1525,7 +1525,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         self.assertIn(
             squash(
                 "OVER (PARTITION BY tax_line.id"
-                " ORDER BY tax_line.tax_line_id, sub.base_line_id, sub.src_line_id)"
+                " ORDER BY tax_line_rep.tax_id, sub.base_line_id, sub.src_line_id)"
             ),
             code,
         )

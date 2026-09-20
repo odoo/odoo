@@ -1220,7 +1220,11 @@ class AccountJournalReportHandler(models.AbstractModel):
                     WHEN 'asset_cash' THEN 5
                     ELSE 2
                 END,
-                account_move_line.tax_line_id NULLS FIRST
+                (
+                    SELECT tax_rep.tax_id
+                      FROM account_tax_repartition_line tax_rep
+                     WHERE tax_rep.id = account_move_line.tax_repartition_line_id
+                ) NULLS FIRST
             """,
             table=query.from_clause,
             case_statement=self._get_payment_lines_filter_case_statement(options),
