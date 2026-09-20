@@ -2121,8 +2121,12 @@ class PosSession(models.Model):
             {
                 "amount": abs(new_amount_currency),
                 "payment_type": "outbound" if new_amount_currency < 0 else "inbound",
-                # Changing direction recomputes the payment defaults. Keep the
-                # POS receivable account used by the session's counterpart.
+                # Writing the direction queues every compute that hangs off it,
+                # and currency_id hangs off journal_id: left to recompute, a payment
+                # of a foreign-currency session falls back to the journal's or the
+                # company's currency. Keep what the session created it with.
+                "journal_id": account_payment.journal_id.id,
+                "currency_id": account_payment.currency_id.id,
                 "destination_account_id": account_payment.destination_account_id.id,
             }
         )
