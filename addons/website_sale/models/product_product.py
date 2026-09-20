@@ -104,9 +104,11 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if self.env.user.has_group("base.group_system"):
             return True
+        if not self.active:
+            return False
         if self._is_donation():
             return True
-        if not self.active or not self.website_published:
+        if not self.website_published:
             return False
         if not self.filtered_domain(self.env["website"]._product_domain()):
             return False

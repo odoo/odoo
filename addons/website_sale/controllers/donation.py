@@ -10,7 +10,7 @@ class WebsiteSaleDonation(http.Controller):
         :rtype: dict
         """
         donation_product = self.env.ref("website_sale.product_donation", raise_if_not_found=False)
-        if not donation_product:
+        if not donation_product or not donation_product.active:
             return {}
         # Unpublished, sudo to allow public users to read it
         donation_product_sudo = donation_product.sudo()

@@ -6,7 +6,7 @@ from collections import defaultdict
 from urllib.parse import urlencode, urlparse
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.db import FunctionStatus
@@ -291,8 +291,6 @@ class ProductTemplate(models.Model):
         return records
 
     def write(self, vals):
-        if "active" in vals and not vals["active"] and any(pt._is_donation() for pt in self):
-            raise ValidationError(self.env._("Donation products cannot be archived."))
         # Clear empty ecommerce description content to avoid side-effects on product pages
         # when there is no content to display anyway.
         if vals.get("description_ecommerce"):
