@@ -151,6 +151,22 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.assertEqual(self.cron.lastcall, fields.Datetime.now())
         self.assertEqual(self.partner.name, "You have been CRONWNED")
 
+    def test_a_job_on_a_borrowed_transaction_gives_the_default_env_back(self):
+        self.cron.user_id = self.env.ref("base.user_admin")
+        self.cron.code = "model.search([], limit=1)"
+        caller = self.env(user=self.env.ref("base.user_demo", False) or self.env.user)
+        caller.transaction.default_env = caller
+
+        with self.enter_registry_test_mode():
+            self.cron.method_direct_trigger()
+
+        self.assertIs(
+            caller.transaction.default_env,
+            caller,
+            "under registry test mode the job shares the caller's transaction; left"
+            " as its default environment, every later flush runs as the job's user",
+        )
+
     def test_cron_direct_trigger_exception(self):
         self.cron.code = textwrap.dedent("raise UserError('oops')")
         with (

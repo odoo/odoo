@@ -4,6 +4,8 @@ import math
 import os
 import time
 import typing
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
 from enum import StrEnum
 from functools import partial
@@ -184,6 +186,20 @@ class _Watermark:
         else:
             self.stalled += 1
         return self.stalled >= MAX_STALLED_ATTEMPTS_PER_RUN
+
+
+@contextmanager
+def _job_default_env(env: api.Environment) -> Iterator[None]:
+    # A job owns its cursor in production. Under registry test mode it borrows
+    # the test's transaction, whose default environment has to survive the job:
+    # left in place, every later flush of that test class runs as the job's user.
+    transaction = env.transaction
+    previous = transaction.default_env
+    transaction.default_env = env
+    try:
+        yield
+    finally:
+        transaction.default_env = previous
 
 
 class CompletionStatus(StrEnum):
@@ -574,33 +590,33 @@ class IrCron(models.Model):
         deadline: float | None = None,
     ) -> None:
         env = api.Environment(cron_cr, job.user_id, {})
-        env.transaction.default_env = env
-        ir_cron = env[cls._name]
+        with _job_default_env(env):
+            ir_cron = env[cls._name]
 
-        ir_cron._remove_triggers_due(job)
-        failed_by_timeout = job.timed_out_counter >= CONSECUTIVE_TIMEOUT_FOR_FAILURE
-        _debug.logic(
-            "job_run_decision",
-            job=job.id,
-            timed_out_counter=job.timed_out_counter,
-            failed_by_timeout=failed_by_timeout,
-        )
+            ir_cron._remove_triggers_due(job)
+            failed_by_timeout = job.timed_out_counter >= CONSECUTIVE_TIMEOUT_FOR_FAILURE
+            _debug.logic(
+                "job_run_decision",
+                job=job.id,
+                timed_out_counter=job.timed_out_counter,
+                failed_by_timeout=failed_by_timeout,
+            )
 
-        if not failed_by_timeout:
-            cls._run_job_within_budget(job, deadline=deadline)
-            return
+            if not failed_by_timeout:
+                cls._run_job_within_budget(job, deadline=deadline)
+                return
 
-        status = CompletionStatus.FAILED
-        cron_cr.execute(
-            """
-            UPDATE ir_cron_progress
-            SET timed_out_counter = 0
-            WHERE id = %s
-        """,
-            (job.progress_id,),
-        )
-        _logger.error("Job %r (%s) timed out", job.cron_name, job.id)
-        cls._apply_job_completion(cron_cr, ir_cron, job, status)
+            status = CompletionStatus.FAILED
+            cron_cr.execute(
+                """
+                UPDATE ir_cron_progress
+                SET timed_out_counter = 0
+                WHERE id = %s
+            """,
+                (job.progress_id,),
+            )
+            _logger.error("Job %r (%s) timed out", job.cron_name, job.id)
+            cls._apply_job_completion(cron_cr, ir_cron, job, status)
 
     @classmethod
     def _apply_job_completion(
@@ -774,40 +790,40 @@ class IrCron(models.Model):
                     "cron_hard_deadline": hard_deadline,
                 },
             )
-            env.transaction.default_env = env
-            cron = env[cls._name].browse(job.id)
+            with _job_default_env(env):
+                cron = env[cls._name].browse(job.id)
 
-            _logger.info("Job %r (%s) starting", job.cron_name, job.id)
-            status = (
-                CompletionStatus.FAILED if cls._is_user_archived(job, env) else None
-            )
+                _logger.info("Job %r (%s) starting", job.cron_name, job.id)
+                status = (
+                    CompletionStatus.FAILED if cls._is_user_archived(job, env) else None
+                )
 
-            status, loop_count, done_total, remaining = cls._drain_cron_job(
-                cron, job, env, job_cr, hard_deadline, status
-            )
+                status, loop_count, done_total, remaining = cls._drain_cron_job(
+                    cron, job, env, job_cr, hard_deadline, status
+                )
 
-            status = status or CompletionStatus.PARTIALLY_DONE
-            _logger.info(
-                "Job %r (%s) %s (#loop %s; done %s; remaining %s; duration %.2fs)",
-                job.cron_name,
-                job.id,
-                status,
-                loop_count,
-                done_total,
-                remaining,
-                time.monotonic() - start_time,
-            )
+                status = status or CompletionStatus.PARTIALLY_DONE
+                _logger.info(
+                    "Job %r (%s) %s (#loop %s; done %s; remaining %s; duration %.2fs)",
+                    job.cron_name,
+                    job.id,
+                    status,
+                    loop_count,
+                    done_total,
+                    remaining,
+                    time.monotonic() - start_time,
+                )
 
-            _debug.perf.count(
-                "job_run_summary",
-                job=job.id,
-                status=str(status),
-                loops=loop_count,
-                done=done_total,
-                remaining=remaining,
-                seconds=time.monotonic() - start_time,
-            )
-            cls._apply_job_completion(job_cr, cron, job, status)
+                _debug.perf.count(
+                    "job_run_summary",
+                    job=job.id,
+                    status=str(status),
+                    loops=loop_count,
+                    done=done_total,
+                    remaining=remaining,
+                    seconds=time.monotonic() - start_time,
+                )
+                cls._apply_job_completion(job_cr, cron, job, status)
 
         return status
 
