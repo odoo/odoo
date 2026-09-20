@@ -820,7 +820,7 @@ class TestApplyInheritanceWrapSpecs(ViewCase):
 
     def test_replace(self):
         spec = E.xpath(
-            E.div("$0", {'class': "some"}),
+            E.div(E('replace-target'), {'class': "some"}),
             expr="//p", position="replace")
 
         self.apply_spec(spec)
@@ -828,6 +828,19 @@ class TestApplyInheritanceWrapSpecs(ViewCase):
             self.base_arch,
             E.template(E.div(
                 E.div(E.p('Content'), {'class': 'some'})
+            ))
+        )
+
+    def test_replace_with_sibling(self):
+        spec = E.xpath(
+            E.div("text", E('first-sibling'), 'more text', E('replace-target'), 'tail text', {'class': "some"}),
+            expr="//p", position="replace")
+
+        self.apply_spec(spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(E.div(
+                E.div("text", E('first-sibling'), 'more text', E.p('Content'), 'tail text', {'class': 'some'})
             ))
         )
 

@@ -102,7 +102,7 @@ test("translation-context: xpath position replace (outer)", async () => {
     `);
 });
 
-test("translation-context: xpath position replace (outer) with $0", async () => {
+test("translation-context: xpath position replace (outer) with replace-target", async () => {
     registerTemplates(
         { name: "A", content: `<div class="o_test_component" title="title"> text </div>` },
         {
