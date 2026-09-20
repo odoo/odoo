@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.tests import TransactionCase, tagged
 
@@ -20,7 +21,7 @@ class TestProductPublicCategory(TransactionCase):
 
         cls.env["product.public.category"].search([]).unlink()
 
-        cls.env["product.public.category"].create([
+        cls.categories = cls.env["product.public.category"].create([
             {
                 "name": "1",
                 "child_id": create_multi([
@@ -68,3 +69,19 @@ class TestProductPublicCategory(TransactionCase):
         )
 
         self.assertSetEqual(unpublished_categs, {"1.1", "1.1.1", "2.2", "3"})
+
+    def test_compute_website_url_mixed_access(self):
+        public_user = self.env.ref('base.public_user')
+        categories = (self.categories[0] + self.categories[0].child_id).with_user(public_user)
+
+        categories[0].check_access('read')
+        with self.assertRaises(AccessError):
+            categories[1].check_access('read')
+        categories[2].check_access('read')
+        # prefetch as public user
+        categories[0].website_url
+        self.assertRecordValues(categories.sudo(), [
+            {'website_url': f'/shop/category/1-{categories[0].id}'},
+            {'website_url': '#'},
+            {'website_url': f'/shop/category/1-{categories[0].id}/1-2-{categories[2].id}'},
+        ])
