@@ -614,7 +614,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">L373.balance + (L293.balance * (L17.balance + L18.balance) / L19.balance)</field>
-                                <field name="subformula">if_other_expr_above(L19.balance, PAB(0))</field>
+                                <field name="subformula">ignore_zero_division</field>
                             </record>
                         </field>
                     </record>
@@ -651,7 +651,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">L293.balance * ((L11.balance + L12.balance + L13.balance + L14.balance + L15.balance) / L19.balance)</field>
-                                <field name="subformula">if_other_expr_above(L19.balance, PAB(0))</field>
+                                <field name="subformula">ignore_zero_division</field>
                             </record>
                         </field>
                     </record>
@@ -724,7 +724,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">L293.balance * (L16.balance / L19.balance)</field>
-                                <field name="subformula">if_other_expr_above(L19.balance, PAB(0))</field>
+                                <field name="subformula">ignore_zero_division</field>
                             </record>
                         </field>
                     </record>
