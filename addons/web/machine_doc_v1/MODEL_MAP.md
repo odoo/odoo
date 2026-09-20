@@ -251,14 +251,23 @@ Transient wizard for live-preview report customization (colors, fonts, logos).
 
 ### models/res_company.py — ResCompany (`_inherit = 'res.company'`)
 
-Auto-regenerate report stylesheet on style changes, and hold the company's default home menu layout.
+Regenerate the report stylesheet, and hold the company's default home menu layout. The document-layout fields this file used to declare live on `report.config` since web 2.4 (see `report_config.py`); the company reads them as `report_config_id.x`.
 
-**Fields:** `external_report_layout_id` (Many2one `ir.ui.view` — the `report.layout` view poured around every external report), `font` (Selection), `primary_color` / `secondary_color` (Char), `layout_background` (Selection) and `layout_background_image` (Binary) — the document-layout block, moved here from `base` at web 2.3 because nothing in `base` reads it; `report_theme_id` (Many2one `report.theme`, defaults to `web.report_theme_modern`); `homemenu_default_config` (Json): the home menu layout a user of the company sees until they save one of their own, the same `{version, order, pinned, hidden}` shape as `res.users.settings.homemenu_config`. Surfaced in `session_info` and written from the home menu's edit mode by an admin ("Set as company default"); a user's own layout replaces it whole, never merges with it.
+**Fields:** `homemenu_default_config` (Json): the home menu layout a user of the company sees until they save one of their own, the same `{version, order, pinned, hidden}` shape as `res.users.settings.homemenu_config`. Surfaced in `session_info` and written from the home menu's edit mode by an admin ("Set as company default"); a user's own layout replaces it whole, never merges with it.
 
 **Key Methods:**
-- `create(vals_list)` / `write(vals)` — Triggers `_update_asset_style()` if style fields change (font, colors, layout); `write` also clears the registry's `assets` cache, which used to be `base`'s job when it held the fields. `create` uses `@api.model_create_multi` (takes list of dicts).
 - `_get_asset_style_b64()` — Renders `web.styles_company_report` QWeb template, returns base64 CSS.
 - `_update_asset_style()` — Updates `web.asset_styles_company_report` attachment if content changed.
+
+### models/report_config.py — ReportConfig (`_inherit = 'report.config'`)
+
+The document-layout block of a company's report configuration (`report.config` is base's `mixin.company.config` record, one per company): the `report.layout` view poured around every external report, the font, the brand colours, the background and the theme. Moved here from `res.company` at web 2.4 with the extraction; `web.external_layout` reads them as `layout.x`.
+
+**Fields:** `external_report_layout_id` (Many2one `ir.ui.view`), `font` (Selection, default `Lato`), `primary_color` / `secondary_color` (Char), `layout_background` (Selection, default `Blank`, required), `layout_background_image` (Binary), `report_theme_id` (Many2one `report.theme`, defaults to `web.report_theme_modern`).
+
+**Key Methods:**
+- `create(vals_list)` / `write(vals)` — Trigger `res.company._update_asset_style()` when one of `_REPORT_STYLE_FIELDS` (layout view, font, colours, theme) changes; `write` also clears the registry's `assets` cache. `create` uses `@api.model_create_multi`.
+- `_update_report_theme_default()` — Gives every configuration without a theme the modern one; the data hook after the theme record ships.
 
 ### models/report_theme.py — ReportTheme (`_name = 'report.theme'`)
 
@@ -455,7 +464,8 @@ Quick lookup — file → model → primary role:
 | `ir_actions_report.py` | ir.actions.report | PDF engine, layouts, attachments (the action type is base's) |
 | `report_layout.py` | report.layout | External layout catalogue |
 | `base_document_layout.py` | base.document.layout | Report layout wizard |
-| `res_company.py` | res.company | Report style auto-regeneration |
+| `res_company.py` | res.company | Report stylesheet regeneration, default home menu |
+| `report_config.py` | report.config | Document layout: external layout view, font, colours, background, theme |
 | `report_theme.py` | report.theme | Report layout theme records |
 | `properties_base_definition.py` | properties.base.definition | Property field definitions |
 | `res_config_settings.py` | res.config.settings | web_app_name config |
