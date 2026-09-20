@@ -3252,6 +3252,22 @@ class TestFilestoreDedup(TransactionCaseWithUserDemo):
         self.assertEqual(empty_stream.type, "data")
         self.assertEqual(empty_stream.size, 0)
 
+    def test_fetch_content_answers_the_stored_bytes(self):
+        """Without a provider, fetching is reading: same bytes, same prefix.
+
+        The method exists so a provider module can override it; base must
+        answer exactly what this database holds, or every caller that moved to
+        it would read something different from `_get_content_prefix`.
+        """
+        payload = b"the-content" * 4
+        on_disk = self.Attachment.create({"name": "disk.bin", "raw": payload})
+        self.env.flush_all()
+        self.assertEqual(on_disk._fetch_content(), payload)
+        self.assertEqual(on_disk._fetch_content(5), payload[:5])
+
+        bare = self.Attachment.create({"name": "bare.bin"})
+        self.assertEqual(bare._fetch_content(), b"")
+
     def test_store_key_wins_over_inline_data_for_every_reader(self):
         payload = b"the-real-content" * 5
         attachment = self.Attachment.create({"name": "both.bin", "raw": payload})

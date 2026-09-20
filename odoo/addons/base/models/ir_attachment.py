@@ -896,6 +896,25 @@ class IrAttachment(models.Model):
                 return file.read(size)
         return b""
 
+    def _fetch_content(self, size: int | None = None) -> bytes:
+        """Bytes of this attachment, wherever the blob lives.
+
+        `_get_content_prefix` reads what this database holds -- `db_datas`, the
+        filestore, a static file -- and answers `b""` for a blob a storage
+        provider holds, which is the same answer it gives for an empty file.
+        Indexation, extraction and OCR all need the bytes and none of them
+        should have to know where they came from, so this is the method that
+        may go and get them; a provider module overrides it to bring the blob
+        back over the network.
+
+        It is not on any request's cheap path and it does not swallow a failed
+        fetch: a caller that walks many attachments catches per record, so that
+        a provider being unreachable reads as an error rather than as a file
+        with nothing in it.
+        """
+        self.check_singleton()
+        return self._get_content_prefix(size)
+
     def _with_field_rows(self) -> Self:
         return self.with_context(skip_res_field_check=True)
 

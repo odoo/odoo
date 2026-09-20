@@ -113,9 +113,15 @@ class MixinExtract(models.AbstractModel):
                 order="id desc",
                 limit=1,
             )
-        if not attachment or not attachment.raw:
+        if not attachment:
             return None
-        return document_of(attachment)
+        # Not `attachment.raw`: that is empty for a blob a storage provider
+        # holds, and gating on it refused to extract exactly the documents that
+        # live in the cloud.
+        content = attachment._fetch_content()
+        if not content:
+            return None
+        return document_of(attachment, content)
 
     def _update_from_extraction(self, result) -> None:
         self.check_singleton()

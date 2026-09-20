@@ -50,6 +50,28 @@ class IrAttachment(models.Model):
                     }
                 )
 
+    def _fetch_content(self, size=None):
+        """Download the blob a provider holds, so the bytes exist for a reader.
+
+        `raw` and `_get_content_prefix` answer `b""` for a `cloud_storage`
+        attachment: this database keeps the URL, not the file. Everything that
+        turns bytes into text -- indexation, the document layer, OCR -- reads
+        one of those two and therefore reads a cloud-stored document as an
+        empty one, with no error anywhere. Fetching here puts the blob back in
+        front of every one of them without any of them learning about clouds.
+
+        `size` is served with a Range request, so a caller that only needs a
+        header does not pull a gigabyte across the network.
+        """
+        if self.type != "cloud_storage":
+            return super()._fetch_content(size)
+        self.check_singleton()
+        url = self._generate_cloud_storage_download_info()["url"]
+        headers = {"Range": f"bytes=0-{size - 1}"} if size else {}
+        response = requests.get(url, timeout=60, headers=headers)
+        response.raise_for_status()
+        return response.content
+
     def _migrate_remote_to_local(self):
         if self.type != "cloud_storage":
             return super()._migrate_remote_to_local()
