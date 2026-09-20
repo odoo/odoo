@@ -7,7 +7,6 @@ class EventTypeBooth(models.Model):
     product_id = fields.Many2one(related="booth_category_id.product_id")
     price = fields.Float(
         related="booth_category_id.price",
-        store=True,
     )
     currency_id = fields.Many2one(related="booth_category_id.currency_id")
 

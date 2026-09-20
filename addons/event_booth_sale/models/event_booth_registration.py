@@ -25,7 +25,6 @@ class EventBoothRegistration(models.Model):
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         related="sale_order_line_id.partner_id",
-        store=True,
     )
     contact_name = fields.Char(
         compute="_compute_contact_name",

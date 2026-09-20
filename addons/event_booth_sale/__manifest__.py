@@ -1,6 +1,6 @@
 {
     "name": "Events Booths Sales",
-    "version": "1.3",
+    "version": "1.4",
     "category": "Marketing/Events",
     "summary": "Manage event booths sale",
     "description": """
