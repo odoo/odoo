@@ -546,6 +546,24 @@
             </field>
         </record>
 
+        <record id="account_move_view_list_stock_closing" model="ir.ui.view">
+            <field name="name">account.move.view.list.stock.closing</field>
+            <field name="model">account.move</field>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <list string="Journal Entries" default_order="reversed_entry_id nulls first, date"
+                      decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+                    <field name="currency_id" column_invisible="True"/>
+                    <field name="ref"/>
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="journal_id" optional="show"/>
+                    <field name="amount_total" sum="Total"/>
+                    <field name="state" optional="hide" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
+                </list>
+            </field>
+        </record>
+
         <record id="view_invoice_tree" model="ir.ui.view">
             <field name="name">account.invoice.list</field>
             <field name="model">account.move</field>
