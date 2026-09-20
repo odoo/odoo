@@ -242,11 +242,10 @@ class StockLot(models.Model):
             value = {float(v) for v in value}
         else:
             value = float(value)
-        domain = [
-            ('lot_id', '!=', False),
-            '|', ('location_id.usage', '=', 'internal'),
-            '&', ('location_id.usage', '=', 'transit'), ('location_id.company_id', 'in', self.env.companies.ids)
-        ]
+        domain_quant_loc = self.env['product.product'].with_context(
+            skip_in_progress=True,
+        )._get_domain_locations()[0]
+        domain = Domain([('lot_id', '!=', False)]) & domain_quant_loc
         lots_w_qty = self.env['stock.quant']._read_group(domain=domain, groupby=['lot_id'], aggregates=['quantity:sum'], having=[('quantity:sum', '!=', 0)])
         ids = []
         lot_ids_w_qty = []
