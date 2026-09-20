@@ -37,6 +37,9 @@ export class StockValuationReportLine extends Component {
         if (this.props.line?.credit) {
             return this.env.formatMonetary(this.props.line.credit);
         }
+        if (!this.state.displaySublines && this.props.sublines?.length === 1 && this.props.sublines[0].credit) {
+            return this.env.formatMonetary(this.props.sublines[0].credit);
+        }
         return false;
     }
 
@@ -49,6 +52,9 @@ export class StockValuationReportLine extends Component {
     get debit() {
         if (this.props.line?.debit) {
             return this.env.formatMonetary(this.props.line.debit);
+        }
+        if (!this.state.displaySublines && this.props.sublines?.length === 1 && this.props.sublines[0].debit) {
+            return this.env.formatMonetary(this.props.sublines[0].debit);
         }
         return false;
     }

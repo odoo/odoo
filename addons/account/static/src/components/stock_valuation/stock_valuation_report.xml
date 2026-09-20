@@ -19,6 +19,14 @@
                 <div id="warnings" class="warnings d-print-none"/>
                 <div class="fit-content w-print-100">
                     <table class="table table-borderless table-hover w-print-100 mx-auto">
+                        <thead>
+                            <tr>
+                                <th class="w-50"/>
+                                <th class="w-25">Debit</th>
+                                <th class="w-25">Credit</th>
+                                <th/>
+                            </tr>
+                        </thead>
                         <tbody>
                             <t t-call="account.StockValuationReport.InitialBalance"/>
                             <t t-if="this.data.accrual" t-call="account.StockValuationReport.Accrual"/>
@@ -48,7 +56,7 @@
 
     <t t-name="account.StockValuationReport.StockVariation">
         <StockValuationReportLine
-            label.translate="Stock Variation"
+            label="this.stockVariationLabel"
             level="0"
             sublines="this.data.stock_variation.lines"
             value="this.data.stock_variation.value"/>
@@ -80,7 +88,6 @@
             label.translate="Accruals"
             level="0"
             displayDebitCredit="true"
-            onClickMethod="this.data.accrual.lines.length ? this.openAccountMoves.bind(this) : undefined"
             sublines="this.data.accrual.lines"
             value="this.data.accrual.value"/>
         <t t-call="account.StockValuationReport.EmptyLine"/>

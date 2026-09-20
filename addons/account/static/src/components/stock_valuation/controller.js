@@ -74,7 +74,7 @@ export class StockValuationReportController {
 
     // Actions -----------------------------------------------------------------
     async actionGenerateEntries() {
-        const kwargs = { include_accruals: true };
+        const kwargs = { include_accruals: true, auto_post: true };
         const date = this.state.date.toISODate() || false;
         if (date && date != DateTime.now().toISODate()) {
             kwargs.at_date = date;

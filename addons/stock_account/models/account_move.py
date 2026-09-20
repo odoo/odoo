@@ -12,10 +12,6 @@ class AccountMove(models.Model):
     # OVERRIDE METHODS
     # -------------------------------------------------------------------------
 
-    def _update_average_cost_on_hand(self):
-        # the cost is updated at stock move validation when stock is installed
-        pass
-
     def _get_lines_onchange_currency(self):
         # OVERRIDE
         return self.line_ids.filtered(lambda l: l.display_type != 'cogs')
