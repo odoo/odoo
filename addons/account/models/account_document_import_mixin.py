@@ -168,7 +168,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
         # Call _extend_with_attachments at the end, because it commits the transaction.
         for record, file_data_group in zip(records, file_data_groups):
             record_extended = record._extend_with_attachments(file_data_group, new=True)
-            if not record_extended:
+            if record_extended is None:
                 record.message_post(
                     body=self.env._("There was an error while importing the bill, you can find attached the incoming XML"),
                 )
@@ -300,7 +300,9 @@ class AccountDocumentImportMixin(models.AbstractModel):
         :param self:        An invoice on which to apply the attachments.
         :param files_data:  A list of file_data dicts, each representing an in-DB or extracted attachment.
         :param new:         If true, indicates that the invoice was newly created, will be passed to the decoder.
-        :return:            True if at least one document is successfully imported.
+        :return:            True if a document was successfully imported, False if no suitable
+                            decoder was found or the decoder declined the document, None if the
+                            import failed.
 
         ⚠️ Because this method commits the cursor, try to:
         (1) do as much work as possible before calling this method, and
@@ -328,20 +330,14 @@ class AccountDocumentImportMixin(models.AbstractModel):
                 "Attachment(s) %s not imported: no suitable decoder found.",
                 [file_data['name'] for file_data in files_data],
             )
-            return
+            return False
 
         try:
             with rollbackable_transaction(self.env.cr):
                 reason_cannot_decode = file_data['decoder_info']['decoder'](self, file_data, new)
                 if reason_cannot_decode:
-                    self.message_post(
-                        body=self.env._(
-                            "Attachment %(filename)s not imported: %(reason)s",
-                            filename=file_data['name'],
-                            reason=reason_cannot_decode,
-                        )
-                    )
-                    return
+                    self._notify_attachment_not_imported(file_data, reason_cannot_decode)
+                    return False
         except RedirectWarning:
             raise
         except Exception as e:
@@ -357,6 +353,21 @@ class AccountDocumentImportMixin(models.AbstractModel):
             ))
             return
         return True
+
+    def _notify_attachment_not_imported(self, file_data, reason):
+        """ Inform the user that an attachment was not imported because the decoder declined it.
+
+        :param file_data: The file_data dict of the attachment that was not imported.
+        :param reason:    The reason returned by the decoder.
+        """
+        self.ensure_one()
+        self.message_post(
+            body=self.env._(
+                "Attachment %(filename)s not imported: %(reason)s",
+                filename=file_data['name'],
+                reason=reason,
+            ),
+        )
 
     def _get_edi_decoder(self, file_data, new=False):
         """ Main method that should be overridden to implement decoders for various file types.
