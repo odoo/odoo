@@ -77,10 +77,8 @@ class AccountMoveLine(models.Model):
         readonly=True,
     )
     company_currency_id = fields.Many2one(
-        related="move_id.company_currency_id",
+        related="company_id.currency_id",
         string="Company Currency",
-        precompute=True,
-        store=True,
         readonly=True,
     )
     move_name = fields.Char(  # noqa: E8529  composite index (date, move_name, id): the ledger's sort key
@@ -101,7 +99,6 @@ class AccountMoveLine(models.Model):
     )
     invoice_date = fields.Date(
         related="move_id.invoice_date",
-        store=True,
         copy=False,
         aggregator="min",
     )
@@ -227,7 +224,7 @@ class AccountMoveLine(models.Model):
         readonly=True,
         check_company=True,
     )
-    payment_id = fields.Many2one(
+    payment_id = fields.Many2one(  # noqa: E8529  move_id.origin_payment_id is a non-stored compute over account_payment.move_id: no column to join
         comodel_name="account.payment",
         related="move_id.origin_payment_id",
         string="Originator Payment",
@@ -240,8 +237,6 @@ class AccountMoveLine(models.Model):
         comodel_name="account.bank.statement.line",
         related="move_id.statement_line_id",
         string="Originator Statement Line",
-        store=True,
-        index="btree_not_null",
         bypass_search_access=True,
         help="The statement line that created this entry",
     )

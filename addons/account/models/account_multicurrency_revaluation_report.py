@@ -418,6 +418,7 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
                   FROM %(table_references)s,
                        account_account AS account,
                        res_currency AS aml_currency,
+                       res_company AS aml_company,
                        res_currency AS aml_comp_currency,
                        custom_currency_table,
 
@@ -463,14 +464,15 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
                  WHERE %(search_condition)s
                    AND account_move_line.account_id = account.id
                    AND account_move_line.currency_id = aml_currency.id
-                   AND account_move_line.company_currency_id = aml_comp_currency.id
+                   AND account_move_line.company_id = aml_company.id
+                   AND aml_company.currency_id = aml_comp_currency.id
                    AND account_move_line.currency_id = custom_currency_table.currency_id
                    AND account.account_type NOT IN ('income', 'income_other', 'expense', 'expense_depreciation', 'expense_direct_cost', 'off_balance')
                    AND (
-                        account.currency_id != account_move_line.company_currency_id
+                        account.currency_id != aml_company.currency_id
                         OR (
                             account.account_type IN ('asset_receivable', 'liability_payable')
-                            AND (account_move_line.currency_id != account_move_line.company_currency_id)
+                            AND (account_move_line.currency_id != aml_company.currency_id)
                         )
                    )
                    AND %(exist_condition)s (
@@ -497,13 +499,14 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
                   FROM %(table_references)s
                   JOIN account_account account ON account_move_line.account_id = account.id
                   JOIN custom_currency_table ON custom_currency_table.currency_id = account_move_line.currency_id
+                  JOIN res_company aml_company ON aml_company.id = account_move_line.company_id
                  WHERE %(search_condition)s
                    AND account.account_type NOT IN ('income', 'income_other', 'expense', 'expense_depreciation', 'expense_direct_cost', 'off_balance')
                    AND (
-                        account.currency_id != account_move_line.company_currency_id
+                        account.currency_id != aml_company.currency_id
                         OR (
                             account.account_type IN ('asset_receivable', 'liability_payable')
-                            AND (account_move_line.currency_id != account_move_line.company_currency_id)
+                            AND (account_move_line.currency_id != aml_company.currency_id)
                         )
                    )
                    AND %(exist_condition)s (

@@ -177,9 +177,9 @@ class AccountAgedPartnerBalanceReportHandler(models.AbstractModel):
             return fields.Date.to_string(date_obj - relativedelta(days=days))
 
         aging_date_field = (
-            SQL.identifier("invoice_date")
+            SQL.identifier("aged_move", "invoice_date")
             if options["aging_based_on"] == "base_on_invoice_date"
-            else SQL.identifier("date_maturity")
+            else SQL.identifier("account_move_line", "date_maturity")
         )
         date_to = fields.Date.from_string(options["date"]["date_to"])
         interval = options["aging_interval"]
@@ -343,10 +343,10 @@ class AccountAgedPartnerBalanceReportHandler(models.AbstractModel):
                 ) AS amount_currency,
                 ARRAY_AGG(DISTINCT account_move_line.partner_id) AS partner_id,
                 ARRAY_AGG(account_move_line.payment_id) AS payment_id,
-                ARRAY_AGG(DISTINCT account_move_line.invoice_date) AS invoice_date,
-                ARRAY_AGG(DISTINCT COALESCE(account_move_line.%(aging_date_field)s, account_move_line.date)) AS report_date,
+                ARRAY_AGG(DISTINCT aged_move.invoice_date) AS invoice_date,
+                ARRAY_AGG(DISTINCT COALESCE(%(aging_date_field)s, account_move_line.date)) AS report_date,
                 ARRAY_AGG(DISTINCT %(account_code)s) AS account_name,
-                ARRAY_AGG(DISTINCT COALESCE(account_move_line.%(aging_date_field)s, account_move_line.date)) AS due_date,
+                ARRAY_AGG(DISTINCT COALESCE(%(aging_date_field)s, account_move_line.date)) AS due_date,
                 ARRAY_AGG(DISTINCT account_move_line.currency_id) AS currency_id,
                 COUNT(account_move_line.id) AS aml_count,
                 ARRAY_AGG(%(account_code)s) AS account_code,
@@ -355,6 +355,7 @@ class AccountAgedPartnerBalanceReportHandler(models.AbstractModel):
             FROM %(table_references)s
 
             JOIN account_journal journal ON journal.id = account_move_line.journal_id
+            JOIN account_move aged_move ON aged_move.id = account_move_line.move_id
             %(currency_table_join)s
 
             LEFT JOIN LATERAL (
@@ -380,12 +381,12 @@ class AccountAgedPartnerBalanceReportHandler(models.AbstractModel):
             JOIN period_table ON
                 (
                     period_table.date_start IS NULL
-                    OR COALESCE(account_move_line.%(aging_date_field)s, account_move_line.date) <= DATE(period_table.date_start)
+                    OR COALESCE(%(aging_date_field)s, account_move_line.date) <= DATE(period_table.date_start)
                 )
                 AND
                 (
                     period_table.date_stop IS NULL
-                    OR COALESCE(account_move_line.%(aging_date_field)s, account_move_line.date) >= DATE(period_table.date_stop)
+                    OR COALESCE(%(aging_date_field)s, account_move_line.date) >= DATE(period_table.date_stop)
                 )
 
             WHERE %(search_condition)s

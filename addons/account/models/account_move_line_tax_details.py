@@ -173,10 +173,6 @@ JOIN account_move_line base_line ON
     )
     AND COALESCE(base_line.partner_id, 0) = COALESCE(account_move_line.partner_id, 0)
     AND base_line.currency_id = account_move_line.currency_id
-    -- a tax line whose company currency went missing cannot be priced, and
-    -- every downstream CTE drops it; excluded here so it cannot serve as the
-    -- src of another tax line's dispatch either
-    AND account_move_line.company_currency_id IS NOT NULL
     AND (
         COALESCE(tax_rep.account_id, base_line.account_id) = account_move_line.account_id
         OR (tax.tax_exigibility = 'on_payment' AND tax.cash_basis_transition_account_id IS NOT NULL)
@@ -252,8 +248,10 @@ JOIN account_move_line tax_line ON
     AND tax_line.tax_line_id = tax_rel.account_tax_id
 JOIN res_currency curr ON
     curr.id = tax_line.currency_id
+JOIN res_company tax_line_company ON
+    tax_line_company.id = tax_line.company_id
 JOIN res_currency comp_curr ON
-    comp_curr.id = tax_line.company_currency_id
+    comp_curr.id = tax_line_company.currency_id
 JOIN account_move_line base_line ON
     base_line.id = base_tax_line_mapping.base_line_id
 WHERE %(search_condition)s
@@ -386,8 +384,10 @@ JOIN account_tax tax ON
     tax.id = tax_line.tax_line_id
 JOIN res_currency curr ON
     curr.id = tax_line.currency_id
+JOIN res_company tax_line_company ON
+    tax_line_company.id = tax_line.company_id
 JOIN res_currency comp_curr ON
-    comp_curr.id = tax_line.company_currency_id
+    comp_curr.id = tax_line_company.currency_id
 """
 
 _SQL_TAX_DETAILS_FINAL_SELECT = """

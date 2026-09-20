@@ -181,7 +181,7 @@ class AccountInvoiceReport(models.Model):
                 line.account_id,
                 line.journal_id,
                 line.company_id,
-                line.company_currency_id,
+                line_company.currency_id AS company_currency_id,
                 line.partner_id AS commercial_partner_id,
                 account.account_type AS user_type,
                 move.state,
@@ -227,16 +227,18 @@ class AccountInvoiceReport(models.Model):
     def _from(self) -> SQL:
         return SQL(
             """
-            FROM account_move_line line
-                LEFT JOIN res_partner partner ON partner.id = line.partner_id
-                LEFT JOIN product_product product ON product.id = line.product_id
-                LEFT JOIN account_account account ON account.id = line.account_id
-                LEFT JOIN product_template template ON template.id = product.product_tmpl_id
-                LEFT JOIN uom_uom uom_line ON uom_line.id = line.product_uom_id
-                LEFT JOIN uom_uom uom_template ON uom_template.id = template.uom_id
-                INNER JOIN account_move move ON move.id = line.move_id
-                LEFT JOIN res_partner commercial_partner ON commercial_partner.id = move.commercial_partner_id
-                JOIN %(currency_table)s ON account_currency_table.company_id = line.company_id
+            FROM
+                account_move_line line
+            LEFT JOIN res_partner partner ON partner.id = line.partner_id
+            LEFT JOIN product_product product ON product.id = line.product_id
+            LEFT JOIN account_account account ON account.id = line.account_id
+            LEFT JOIN product_template template ON template.id = product.product_tmpl_id
+            LEFT JOIN uom_uom uom_line ON uom_line.id = line.product_uom_id
+            LEFT JOIN uom_uom uom_template ON uom_template.id = template.uom_id
+            INNER JOIN account_move move ON move.id = line.move_id
+            INNER JOIN res_company line_company ON line_company.id = line.company_id
+            LEFT JOIN res_partner commercial_partner ON commercial_partner.id = move.commercial_partner_id
+            JOIN %(currency_table)s ON account_currency_table.company_id = line.company_id
             """,
             currency_table=self.env["res.currency"]._get_simple_currency_table(
                 self.env.companies

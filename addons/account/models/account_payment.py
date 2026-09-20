@@ -36,7 +36,7 @@ _SQL_RECONCILED_INVOICES_PER_PAYMENT = """
 _SQL_RECONCILED_STATEMENT_LINES_PER_PAYMENT = """
     SELECT
         payment.id,
-        ARRAY_AGG(DISTINCT counterpart_line.statement_line_id) AS statement_line_ids
+        ARRAY_AGG(DISTINCT counterpart_move.statement_line_id) AS statement_line_ids
     FROM account_payment payment
     JOIN account_move move ON move.id = payment.move_id
     JOIN account_move_line line ON line.move_id = move.id
@@ -49,10 +49,11 @@ _SQL_RECONCILED_STATEMENT_LINES_PER_PAYMENT = """
         part.debit_move_id = counterpart_line.id
         OR
         part.credit_move_id = counterpart_line.id
+    JOIN account_move counterpart_move ON counterpart_move.id = counterpart_line.move_id
     WHERE account.id = payment.outstanding_account_id
         AND payment.id = ANY(%(payment_ids)s)
         AND line.id != counterpart_line.id
-        AND counterpart_line.statement_line_id IS NOT NULL
+        AND counterpart_move.statement_line_id IS NOT NULL
     GROUP BY payment.id
 """
 

@@ -1164,7 +1164,7 @@ class AccountJournalReportHandler(models.AbstractModel):
                 account_move_line.id AS move_line_id,
                 account_move_line.name,
                 account_move_line.date,
-                account_move_line.invoice_date,
+                am.invoice_date,
                 account_move_line.amount_currency,
                 account_move_line.tax_base_amount,
                 account_move_line.currency_id AS move_line_currency,
