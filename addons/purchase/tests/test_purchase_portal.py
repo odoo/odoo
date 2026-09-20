@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 from odoo.fields import Command
 from odoo.tests import tagged
@@ -26,6 +26,12 @@ class TestPurchasePortalRoutes(HttpCaseWithUserPortal):
         cls.token = cls.order._portal_get_or_create_token()
         cls.line = cls.order.line_ids[:1]
 
+    @staticmethod
+    def _arrival(days_ahead):
+        # the route refuses a date before today, so a literal written on the
+        # day the test was written is refused the day after
+        return date.today() + timedelta(days=days_ahead)
+
     def test_order_page_without_token_redirects_home(self):
         res = self.url_open(f"/my/purchase/{self.order.id}")
         self.assertNotIn(f"/my/purchase/{self.order.id}", res.url)
@@ -51,7 +57,7 @@ class TestPurchasePortalRoutes(HttpCaseWithUserPortal):
             "id": 1,
             "params": {
                 "access_token": self.token,
-                str(self.line.id): "2026-09-15",
+                str(self.line.id): self._arrival(5).isoformat(),
             },
         }
         res = self.opener.post(
@@ -60,7 +66,7 @@ class TestPurchasePortalRoutes(HttpCaseWithUserPortal):
         )
         self.assertEqual(res.status_code, 200)
         self.env.invalidate_all()
-        self.assertEqual(self.line.date_commitment.date(), date(2026, 9, 15))
+        self.assertEqual(self.line.date_commitment.date(), self._arrival(5))
 
     def test_update_line_ignores_invalid_date(self):
         before = self.line.date_commitment
@@ -102,7 +108,7 @@ class TestPurchasePortalRoutes(HttpCaseWithUserPortal):
             "id": 1,
             "params": {
                 "access_token": self.token,
-                str(self.line.id): "2026-09-16",
+                str(self.line.id): self._arrival(6).isoformat(),
             },
         }
         res = self.opener.post(
@@ -119,7 +125,7 @@ class TestPurchasePortalRoutes(HttpCaseWithUserPortal):
             "id": 1,
             "params": {
                 "access_token": "not-the-token",
-                str(self.line.id): "2026-09-17",
+                str(self.line.id): self._arrival(7).isoformat(),
             },
         }
         res = self.opener.post(
@@ -138,7 +144,7 @@ class TestPurchasePortalRoutes(HttpCaseWithUserPortal):
             "jsonrpc": "2.0",
             "method": "call",
             "id": 1,
-            "params": {str(self.line.id): "2026-09-18"},
+            "params": {str(self.line.id): self._arrival(8).isoformat()},
         }
         res = self.opener.post(
             self.base_url()
