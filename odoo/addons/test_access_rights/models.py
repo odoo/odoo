@@ -34,6 +34,7 @@ class Test_Access_RightSome_Obj(models.Model):
         groups="test_access_rights.test_group",
     )
 
+    @api.depends("val")
     def _compute_forbidden_searchable(self):
         for record in self:
             record.forbidden_searchable = record.val
@@ -105,6 +106,7 @@ class ResPartner(models.Model):
     )
     monetary = fields.Monetary()
 
+    @api.depends("company_id.currency_id")
     def _compute_currency_id(self):
         for partner in self:
             partner.currency_id = partner.sudo().company_id.currency_id
