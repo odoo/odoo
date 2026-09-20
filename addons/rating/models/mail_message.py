@@ -1,7 +1,10 @@
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.mail.tools.discuss import Store
+
+_debug = DebugLog(__name__)
 
 
 class MailMessage(models.Model):
@@ -33,9 +36,12 @@ class MailMessage(models.Model):
         # the compute a one2many read per batch on every message created.
         for vals in vals_list:
             vals.setdefault("rating_id", False)
-        return super().create(vals_list)
+        messages = super().create(vals_list)
+        _debug.lifecycle("create", messages=messages)
+        return messages
 
     @api.depends("rating_ids.consumed")
+    @_debug.perf.timed
     def _compute_rating_id(self):
         for message in self:
             message.rating_id = message.rating_ids.filtered(

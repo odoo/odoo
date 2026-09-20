@@ -545,6 +545,13 @@ class MaintenanceOrder(models.Model):
             or not self.date_scheduled_start
             or self.state not in BOOKING_STATES
         ):
+            _debug.logic(
+                "no_reservation",
+                order=self,
+                blocking=self.block_resource,
+                scheduled=bool(self.date_scheduled_start),
+                state=self.state,
+            )
             return []
         start = self.date_scheduled_start
         end = self.date_scheduled_end or start + timedelta(hours=self.duration or 1)

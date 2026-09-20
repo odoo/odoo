@@ -24,6 +24,12 @@ class MailActivity(models.Model):
     def _compute_is_document_request(self) -> None:
         for activity in self:
             activity.is_document_request = bool(activity.request_document_ids)
+        if _debug.logic.enabled:
+            _debug.logic(
+                "request_flag_computed",
+                activities=self,
+                requests=len(self.filtered("is_document_request")),
+            )
 
     @api.model_create_multi
     def create(self, vals_list: list[dict]) -> MailActivity:

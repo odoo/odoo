@@ -52,6 +52,13 @@ def setup_related(field: Field, model: BaseModel) -> None:
 
     # A one2one reads as one record, so a many2one may end on it.
     reads_one = field.is_many2one and related_field.is_one2one
+    if reads_one:
+        _debug.logic(
+            "field.related.many2one_over_one2one",
+            model=field.model_name,
+            field=field.name,
+            target=str(related_field),
+        )
     if field.type != related_field.type and not reads_one:
         raise TypeError(
             f"Type of related field {field} is inconsistent with {related_field}"

@@ -2,6 +2,9 @@ import re
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResourceAssetIdentifierType(models.Model):
@@ -46,6 +49,9 @@ class ResourceAssetIdentifierType(models.Model):
             try:
                 re.compile(record.pattern)
             except re.error as error:
+                _debug.logic(
+                    "identifier_type.refused", reason="invalid_pattern", type=record
+                )
                 raise ValidationError(
                     self.env._(
                         "%(name)s: invalid pattern (%(error)s).",

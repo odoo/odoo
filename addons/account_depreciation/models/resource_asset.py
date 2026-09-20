@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 RUNNING_BOARD = ("open", "paused")
 
@@ -43,6 +46,12 @@ class ResourceAsset(models.Model):
         for asset in self:
             state = asset.board_id.depreciation_state
             if not asset.active and state and state != "close":
+                _debug.logic(
+                    "archive.refused",
+                    reason="board_not_closed",
+                    asset=asset,
+                    state=state,
+                )
                 raise UserError(_("You cannot archive a record that is not closed"))
 
     @api.depends("board_id.depreciation_move_ids.date", "board_id.depreciation_state")
@@ -70,6 +79,7 @@ class ResourceAsset(models.Model):
         "board_id.original_move_line_ids.account_id",
         "board_id.value_non_deductible_tax",
     )
+    @_debug.perf.timed
     def _compute_value(self):
         for asset in self:
             board = asset.board_id
@@ -123,6 +133,7 @@ class ResourceAsset(models.Model):
             return super().action_dispose()
         if len(self) == 1:
             return self.board_id.action_asset_modify()
+        _debug.logic("dispose.refused", reason="several_running_boards", assets=running)
         raise UserError(
             _(
                 "%(assets)s: a running depreciation board is disposed one asset at a time, through its Dispose or Sell action.",
@@ -134,6 +145,7 @@ class ResourceAsset(models.Model):
         running = self.filtered(
             lambda asset: asset.board_id.depreciation_state in RUNNING_BOARD
         )
+        _debug.pipeline("dispose", assets=self, through_board=len(running), date=date)
         for asset in running:
             asset.board_id._check_disposal_accounts()
             asset.board_id._close(self.env["account.move.line"], date)
@@ -146,6 +158,9 @@ class ResourceAsset(models.Model):
                 lambda asset: asset.board_id.depreciation_state in RUNNING_BOARD
             )
             if running:
+                _debug.logic(
+                    "transition.refused", reason="running_board", assets=running
+                )
                 raise UserError(
                     _(
                         "%(assets)s: a running depreciation board is disposed through its Dispose or Sell action, which books the disposal entry.",
@@ -163,6 +178,9 @@ class ResourceAsset(models.Model):
                 )
             )
             if closed:
+                _debug.logic(
+                    "reactivation.refused", reason="board_closed", assets=closed
+                )
                 raise UserError(
                     _(
                         "%(assets)s: the depreciation board is closed, so the asset stays disposed. Set the board running again to restore it.",

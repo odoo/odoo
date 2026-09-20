@@ -9,9 +9,12 @@ from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare, float_is_zero, formatLang
 from odoo.tools.date_utils import end_of
 from odoo.tools.misc import clean_context
+
+_debug = DebugLog(__name__)
 
 DAYS_PER_MONTH = 30
 DAYS_PER_YEAR = DAYS_PER_MONTH * 12
@@ -350,6 +353,7 @@ class AccountDepreciationBoard(models.Model):
                     ].asset_remaining_value
                 )
             ):
+                _debug.logic("board.refused", reason="remaining_value", board=asset)
                 raise UserError(
                     _("The remaining value on the last depreciation line must be 0")
                 )
@@ -358,10 +362,12 @@ class AccountDepreciationBoard(models.Model):
     def _check_board_has_company_and_start(self):
         for asset in self.filtered("depreciation_state"):
             if not asset.company_id:
+                _debug.logic("board.refused", reason="no_company", board=asset)
                 raise ValidationError(
                     _("%(asset)s depreciates, so it needs a company.", asset=asset.name)
                 )
             if not asset.date_prorata:
+                _debug.logic("board.refused", reason="no_prorata_date", board=asset)
                 raise ValidationError(
                     _(
                         "%(asset)s depreciates, so it needs a prorata date.",
@@ -373,6 +379,7 @@ class AccountDepreciationBoard(models.Model):
     def _check_single_source_account(self):
         for asset in self:
             if len(asset.original_move_line_ids.account_id) > 1:
+                _debug.logic("bills.refused", reason="several_accounts", board=asset)
                 raise ValidationError(
                     _("All the lines should be from the same account")
                 )
@@ -381,12 +388,19 @@ class AccountDepreciationBoard(models.Model):
     def _check_related_purchase(self):
         for asset in self:
             if asset.original_move_line_ids and asset.value_purchase == 0:
+                _debug.logic("bills.refused", reason="null_purchase_value", board=asset)
                 raise UserError(
                     _(
                         "You cannot create an asset from lines containing credit and debit on the account or with a null amount"
                     )
                 )
             if asset.depreciation_state not in (False, "draft"):
+                _debug.logic(
+                    "bills.refused",
+                    reason="board_running",
+                    board=asset,
+                    state=asset.depreciation_state,
+                )
                 raise UserError(
                     _(
                         "You cannot add or remove bills when the asset is already running or closed."
@@ -400,6 +414,7 @@ class AccountDepreciationBoard(models.Model):
         for vals in vals_list:
             state = vals.get("depreciation_state")
             if state and state != "draft":
+                _debug.logic("create.refused", reason="state_given", state=state)
                 raise UserError(
                     _(
                         "An asset is created in draft and confirmed afterwards; it cannot "
@@ -413,6 +428,7 @@ class AccountDepreciationBoard(models.Model):
             if not vals.get("name"):
                 vals["name"] = self._get_name_from_lines(vals)
             if not vals.get("name"):
+                _debug.logic("create.refused", reason="no_name")
                 raise UserError(_("An asset needs a name."))
             if not vals.get("kind_id"):
                 profile = self.env["account.depreciation.profile"].browse(
@@ -426,6 +442,11 @@ class AccountDepreciationBoard(models.Model):
         boards = super(
             AccountDepreciationBoard, self.with_context(mail_create_nolog=True)
         ).create(vals_list)
+        _debug.lifecycle(
+            "create",
+            boards=boards,
+            on_existing_assets=sum(1 for vals in vals_list if vals.get("asset_id")),
+        )
         for board, vals in zip(boards, vals_list, strict=True):
             requested = vals.get("value_original")
             if requested is not None and board.currency_id.compare_amounts(
@@ -445,6 +466,7 @@ class AccountDepreciationBoard(models.Model):
         }
         vals_list = super().copy_data(default)
         inherited = [name for name, field in self._fields.items() if field.inherited]
+        _debug.lifecycle("copy_data", boards=self, asset_defaults=sorted(asset_default))
         for board, vals in zip(self, vals_list, strict=True):
             for name in inherited:
                 vals.pop(name, None)
@@ -484,12 +506,21 @@ class AccountDepreciationBoard(models.Model):
         if bodies:
             self.env["account.move"].browse(bodies)._message_log_batch(bodies=bodies)
         orphaned_moves.asset_move_type = False
+        _debug.lifecycle(
+            "unlink", boards=self, bills_noted=len(bodies), orphaned=orphaned_moves
+        )
         return super().unlink()
 
     @api.ondelete(at_uninstall=True)
     def _unlink_if_model_or_draft(self):
         for asset in self:
             if asset.depreciation_state in ["open", "paused", "close"]:
+                _debug.logic(
+                    "unlink.refused",
+                    reason="state",
+                    board=asset,
+                    state=asset.depreciation_state,
+                )
                 raise UserError(
                     _(
                         "You cannot delete a document that is in %s state.",
@@ -505,6 +536,7 @@ class AccountDepreciationBoard(models.Model):
                 asset.depreciation_move_ids.filtered(lambda x: x.state == "posted")
             )
             if posted_amount > 0:
+                _debug.logic("unlink.refused", reason="posted_entries", board=asset)
                 raise UserError(
                     _(
                         "You cannot delete an asset linked to posted entries."
@@ -572,6 +604,7 @@ class AccountDepreciationBoard(models.Model):
         "increased_board_id.depreciation_lifetime_days",
         "increased_board_id.date_prorata_paused",
     )
+    @_debug.perf.timed
     def _compute_lifetime_days(self):
         for asset in self:
             if not asset.depreciation_state or not asset.date_prorata:
@@ -676,6 +709,7 @@ class AccountDepreciationBoard(models.Model):
         "depreciation_move_ids.depreciation_value",
         "depreciation_move_ids.reversal_move_ids",
     )
+    @_debug.perf.timed
     def _compute_value_depreciable_residual(self):
         grouped_moves = self.env["account.move"]._read_group(
             domain=[
@@ -686,6 +720,9 @@ class AccountDepreciationBoard(models.Model):
             aggregates=["depreciation_value:sum"],
         )
         depreciation_sum_by_asset = {asset.id: total for asset, total in grouped_moves}
+        _debug.perf.count(
+            "posted_depreciation_summed", boards=self, groups=len(grouped_moves)
+        )
         for record in self:
             asset_depreciation = depreciation_sum_by_asset.get(record.id, 0.0)
             record.value_depreciable_residual = (
@@ -702,6 +739,7 @@ class AccountDepreciationBoard(models.Model):
         "depreciation_state",
         "depreciation_move_ids.state",
     )
+    @_debug.perf.timed
     def _compute_book_value(self):
         for record in self:
             record.value_book = (
@@ -725,6 +763,7 @@ class AccountDepreciationBoard(models.Model):
         "original_move_line_ids.deductible_amount",
         "original_move_line_ids.quantity",
     )
+    @_debug.perf.timed
     def _compute_value_non_deductible_tax(self):
         for record in self:
             record.value_non_deductible_tax = 0.0
@@ -894,6 +933,7 @@ class AccountDepreciationBoard(models.Model):
         self.asset_id.filtered(lambda asset: asset.state == "draft")._transition(
             "in_service"
         )
+        _debug.lifecycle("confirm", boards=self)
         self._log_asset_created()
         try:
             with self.env.cr.savepoint():
@@ -907,6 +947,7 @@ class AccountDepreciationBoard(models.Model):
                 if unposted:
                     unposted._post()
         except psycopg.errors.CheckViolation:
+            _debug.logic("confirm.refused", reason="check_violation", boards=self)
             raise ValidationError(
                 _(
                     "At least one asset (%s) couldn't be set as running because it lacks any required information",
@@ -986,6 +1027,7 @@ class AccountDepreciationBoard(models.Model):
             ).with_context(force_delete=True).unlink()
             asset.depreciation_paused_days = 0
             asset.write({"depreciation_state": "cancelled"})
+            _debug.lifecycle("cancel", board=asset, reversed_entries=len(posted_moves))
 
     def action_reset_to_draft(self):
         self.write({"depreciation_state": "draft"})
@@ -1025,6 +1067,13 @@ class AccountDepreciationBoard(models.Model):
             lambda move: move.depreciation_board_id.depreciation_state == "open"
         )
         new_depreciation_moves_to_post._post()
+        _debug.pipeline(
+            "entries_created",
+            boards=self,
+            entries=new_depreciation_moves,
+            posted=len(new_depreciation_moves_to_post),
+            from_date=date or None,
+        )
 
     @contextmanager
     def _shared_fiscalyear_dates(self):
@@ -1096,6 +1145,13 @@ class AccountDepreciationBoard(models.Model):
                 )
                 board._post_non_deductible_tax_value()
         to_validate.action_confirm()
+        _debug.pipeline(
+            "plans_landed",
+            plans=len(plans),
+            boards=boards,
+            confirmed=len(to_validate),
+            landed_units=len(landed),
+        )
         return boards
 
     def _create_move_before_date(self, date):
@@ -1172,6 +1228,14 @@ class AccountDepreciationBoard(models.Model):
 
         if abs(imported_amount) <= abs(amount):
             amount -= imported_amount
+        _debug.pipeline(
+            "entry_before_date",
+            board=self,
+            date=date,
+            days=days_depreciated,
+            amount=amount,
+            imported=imported_amount,
+        )
         if not float_is_zero(amount, precision_rounding=self.currency_id.rounding):
             new_line = self._add_depreciation_line(
                 amount, beginning_depreciation_date, date, days_depreciated
@@ -1185,6 +1249,9 @@ class AccountDepreciationBoard(models.Model):
                     m.state == "draft"
                     or (m._is_effective_depreciation() and m.date > date)
                 )
+            )
+            _debug.lifecycle(
+                "future_entries_cancelled", board=asset, entries=obsolete_moves
             )
             obsolete_moves._unlink_or_reverse()
 
@@ -1206,6 +1273,12 @@ class AccountDepreciationBoard(models.Model):
         if date_disposal <= self.company_id._get_user_fiscal_lock_date(
             self.depreciation_journal_id
         ):
+            _debug.logic(
+                "close.refused",
+                reason="before_lock_date",
+                board=self,
+                date=date_disposal,
+            )
             raise UserError(_("You cannot dispose of an asset before the lock date."))
         if invoice_line_ids and self.increase_ids.filtered(
             lambda a: (
@@ -1213,6 +1286,7 @@ class AccountDepreciationBoard(models.Model):
                 or a.value_depreciable_residual > 0
             )
         ):
+            _debug.logic("close.refused", reason="running_increase", board=self)
             raise UserError(
                 _(
                     "You cannot automate the journal entry for an asset that has a running gross increase. Please use 'Dispose' on the increase(s)."
@@ -1222,6 +1296,13 @@ class AccountDepreciationBoard(models.Model):
             lambda asset: asset.depreciation_state not in ("close", "cancelled")
         )
         full_asset.depreciation_state = "close"
+        _debug.pipeline(
+            "close",
+            board=self,
+            increases=len(full_asset) - 1,
+            sold=bool(invoice_line_ids),
+            date=date_disposal,
+        )
         move_ids = full_asset._get_disposal_moves(
             [
                 invoice_line_ids if asset == self else self.env["account.move.line"]
@@ -1376,6 +1457,7 @@ class AccountDepreciationBoard(models.Model):
         self.check_singleton()
         self._create_move_before_date(date)
         self.write({"depreciation_state": "paused"})
+        _debug.lifecycle("pause", board=self, date=date)
         self.message_post(body=_("Asset paused. %s", message or ""))
 
     def _recompute_board(self, start_depreciation_date=False):
@@ -1474,6 +1556,14 @@ class AccountDepreciationBoard(models.Model):
                     days=1
                 )
 
+        _debug.pipeline(
+            "board_recomputed",
+            board=self,
+            method=self.depreciation_method,
+            lines=len(depreciation_move_values),
+            posted_kept=len(posted_depreciation_move_ids),
+            residual=residual_amount,
+        )
         return depreciation_move_values
 
     @api.model
@@ -1716,6 +1806,12 @@ class AccountDepreciationBoard(models.Model):
 
             amount = _get_max_between_linear_and_degressive(linear_amount)
         else:
+            _debug.logic(
+                "board.refused",
+                reason="unknown_method",
+                board=self,
+                method=self.depreciation_method,
+            )
             raise UserError(
                 _(
                     "The depreciation method %s has no board computation.",
@@ -1833,6 +1929,13 @@ class AccountDepreciationBoard(models.Model):
                 ],
             }
             move_ids += self.env["account.move"].create(vals).ids
+            _debug.pipeline(
+                "disposal_move_prepared",
+                board=asset,
+                sale=bool(invoice_line_ids),
+                lines=len(line_datas),
+                difference=difference,
+            )
 
         return move_ids
 
@@ -1958,11 +2061,21 @@ class AccountDepreciationBoard(models.Model):
             expense_lines.account_id = vals["account_depreciation_expense_id"]
         if rejournaled_moves:
             rejournaled_moves.journal_id = vals["depreciation_journal_id"]
+        _debug.lifecycle(
+            "write.propagated_to_moves",
+            boards=self,
+            fields=sorted(propagated),
+            analytic_lines=len(analytic_lines),
+            depreciation_lines=len(depreciation_lines),
+            expense_lines=len(expense_lines),
+            rejournaled=len(rejournaled_moves),
+        )
         return result
 
     def _check_disposal_accounts(self):
         company = self.company_id.sudo()
         if not (company.gain_account_id and company.loss_account_id):
+            _debug.logic("disposal.refused", reason="no_gain_loss_account", board=self)
             raise UserError(
                 _(
                     "%(asset)s depreciates, so disposing of it books an entry. Set the gain and loss accounts of %(company)s first.",

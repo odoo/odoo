@@ -228,6 +228,9 @@ class ResourceAsset(models.Model):
             if not meter:
                 meter = asset._create_odometer_meter()
             if meter.value > asset.odometer:
+                _debug.logic(
+                    "odometer.refused", reason="below_last_reading", asset=asset
+                )
                 raise ValidationError(
                     self.env._(
                         "%(asset)s: the odometer cannot go below its last reading of %(value)s.",
@@ -260,6 +263,7 @@ class ResourceAsset(models.Model):
             lambda asset: asset.odometer_meter_id.reading_ids
         )
         if with_readings:
+            _debug.logic("odometer_uom.refused", reason="readings_exist", assets=self)
             raise ValidationError(
                 self.env._(
                     "%(assets)s already carry odometer readings in their current "
@@ -314,6 +318,9 @@ class ResourceAsset(models.Model):
         for asset in enforced:
             missing = asset.missing_identifier_type_ids
             if missing:
+                _debug.logic(
+                    "asset.refused", reason="missing_required_identifiers", asset=asset
+                )
                 raise ValidationError(
                     self.env._(
                         "%(asset)s is a %(kind)s, which requires %(types)s.",
@@ -377,12 +384,16 @@ class ResourceAsset(models.Model):
     @api.constrains("parent_id")
     def _check_parent(self):
         if self._has_cycle():
+            _debug.logic("asset.refused", reason="parent_cycle", assets=self)
             raise ValidationError(self.env._("An asset cannot be a part of itself."))
 
     @api.constrains("state", "date_disposal")
     def _check_disposal(self):
         for asset in self:
             if asset.state == "disposed" and not asset.date_disposal:
+                _debug.logic(
+                    "asset.refused", reason="disposed_without_date", asset=asset
+                )
                 raise ValidationError(
                     self.env._(
                         "%(name)s: a disposed asset needs its disposal date.",
@@ -590,6 +601,7 @@ class ResourceAsset(models.Model):
         self._transition("disposed", date=date)
 
     def _transition(self, state, date=None):
+        _debug.lifecycle("transition", assets=self, state=state, date=date)
         vals = {"state": state}
         if state == "disposed":
             vals.update(
@@ -640,6 +652,7 @@ class ResourceAsset(models.Model):
         target = self._get_model_for_kind(kind)
         for model_name in self._get_model_names_concrete().values():
             if model_name != target:
+                _debug.logic("write.refused", reason="kind_changes_table", assets=self)
                 raise ValidationError(
                     self.env._(
                         "An asset of kind %(kind)s is a %(model)s, and no row moves "
@@ -661,6 +674,12 @@ class ResourceAsset(models.Model):
         for record_id, model_name in self._get_model_names_concrete().items():
             if model_name != target:
                 by_source[model_name].append(record_id)
+        _debug.lifecycle(
+            "retype",
+            assets=self,
+            target=target,
+            moving={source: len(ids) for source, ids in by_source.items()},
+        )
         if by_source:
             self.env.flush_all()
             Target = self.env[target]
@@ -725,6 +744,9 @@ class ResourceAsset(models.Model):
                 continue
             model_name = self._get_model_for_kind(kind)
             if model_name != self._name:
+                _debug.logic(
+                    "create.refused", reason="kind_of_another_model", model=self._name
+                )
                 raise ValidationError(
                     self.env._(
                         "An asset of kind %(kind)s is a %(model)s, and no row "

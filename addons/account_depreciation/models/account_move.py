@@ -2,8 +2,11 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, float_compare
 from odoo.tools.misc import formatLang
+
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
@@ -86,6 +89,7 @@ class AccountMove(models.Model):
         "depreciation_board_id.value_depreciated_import",
         "state",
     )
+    @_debug.perf.timed
     def _compute_depreciation_cumulative_value(self):
         self.asset_depreciated_value = 0
         self.asset_remaining_value = 0
@@ -108,6 +112,7 @@ class AccountMove(models.Model):
                     move.asset_depreciated_value = depreciated
 
     @api.depends("line_ids.balance")
+    @_debug.perf.timed
     def _compute_depreciation_value(self):
         for move in self:
             asset = (
@@ -159,6 +164,9 @@ class AccountMove(models.Model):
             depreciation_line = move._get_asset_depreciation_line()
             counterpart_line = move.line_ids - depreciation_line
             if len(depreciation_line) != 1 or len(counterpart_line) != 1:
+                _debug.logic(
+                    "depreciation_value.refused", reason="not_two_lines", move=move
+                )
                 raise UserError(
                     _(
                         "The depreciation of %s cannot be set from the board: the entry "
@@ -184,6 +192,9 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda mv: mv.depreciation_board_id):
             asset_id = move.depreciation_board_id
             if asset_id.depreciation_state == "draft" and move.state == "posted":
+                _debug.logic(
+                    "post.refused", reason="draft_board", move=move, board=asset_id
+                )
                 raise ValidationError(
                     _(
                         "You can't post an entry related to a draft asset. Please post the asset before."
@@ -252,6 +263,12 @@ class AccountMove(models.Model):
                     ),
                 )
                 move.depreciation_board_id.message_post(body=msg)
+                _debug.lifecycle(
+                    "depreciation_entry_reversed",
+                    move=move,
+                    board=move.depreciation_board_id,
+                    to_first_draft=bool(first_draft),
+                )
                 default_values["depreciation_board_id"] = move.depreciation_board_id.id
                 default_values["asset_number_days"] = -move.asset_number_days
                 default_values["asset_depreciation_beginning_date"] = (
@@ -266,6 +283,7 @@ class AccountMove(models.Model):
                 board.depreciation_state != "draft"
                 for board in move.capitalised_board_ids
             ):
+                _debug.logic("draft.refused", reason="posted_board", move=move)
                 raise UserError(
                     _("You cannot reset to draft an entry related to a posted asset")
                 )
@@ -300,6 +318,7 @@ class AccountMove(models.Model):
                 if not move_line._creates_an_asset():
                     continue
                 plans.extend(move_line._plan_assets())
+        _debug.pipeline("assets_planned", moves=self, plans=len(plans))
         return self.env["account.depreciation.board"]._create_from_plans(plans)
 
     @api.model
@@ -312,6 +331,11 @@ class AccountMove(models.Model):
             "asset_number_days",
         } - set(vals)
         if missing_fields:
+            _debug.logic(
+                "depreciation_move.refused",
+                reason="missing_fields",
+                missing=sorted(missing_fields),
+            )
             raise UserError(_("Some fields are missing %s", ", ".join(missing_fields)))
         asset = vals["asset_id"]
         analytic_distribution = asset.analytic_distribution
@@ -507,6 +531,13 @@ class AccountMoveLine(models.Model):
                         "component_of_unit": position > 0,
                     }
                 )
+        _debug.pipeline(
+            "line_planned",
+            line=self,
+            units=units,
+            profiles=len(profiles),
+            plans=len(plans),
+        )
         return plans
 
     def _get_asset_vals(self):
@@ -514,6 +545,7 @@ class AccountMoveLine(models.Model):
         move = self.move_id
         if not self.name:
             if not self.product_id:
+                _debug.logic("asset_vals.refused", reason="no_label", line=self)
                 raise UserError(
                     _(
                         "Journal Items of %(account)s should have a label in order to generate an asset",
@@ -539,10 +571,15 @@ class AccountMoveLine(models.Model):
 
     def turn_as_asset(self):
         if len(self.company_id) != 1:
+            _debug.logic(
+                "turn_as_asset.refused", reason="several_companies", lines=self
+            )
             raise UserError(_("All the lines should be from the same company"))
         if any(line.move_id.state == "draft" for line in self):
+            _debug.logic("turn_as_asset.refused", reason="draft_moves", lines=self)
             raise UserError(_("All the lines should be posted"))
         if any(account != self[0].account_id for account in self.mapped("account_id")):
+            _debug.logic("turn_as_asset.refused", reason="several_accounts", lines=self)
             raise UserError(_("All the lines should be from the same account"))
         ctx = self.env.context.copy()
         ctx.update(
@@ -566,6 +603,7 @@ class AccountMoveLine(models.Model):
         "quantity",
         "move_id.line_ids.balance",
     )
+    @_debug.perf.timed
     def _compute_non_deductible_tax_value(self):
         non_deductible_tax_ids = self.tax_ids.invoice_repartition_line_ids.filtered(
             lambda line: line.repartition_type == "tax" and not line.use_in_tax_closing
@@ -598,6 +636,7 @@ class AccountMoveLine(models.Model):
             res = {
                 row["base_line_id"]: row["sum"] for row in self.env.cr.dictfetchall()
             }
+            _debug.perf.count("non_deductible_tax_read", lines=self, rows=len(res))
 
         for record in self:
             record.non_deductible_tax_value = res.get(record._origin.id, 0.0)

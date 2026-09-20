@@ -1,6 +1,9 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MaintenanceProfile(models.Model):
@@ -71,6 +74,9 @@ class MaintenanceProfile(models.Model):
         for profile in self:
             team = profile.maintenance_team_id
             if team.company_id and team.company_id != profile.company_id:
+                _debug.logic(
+                    "team_cleared", reason="other_company", profile=profile, team=team
+                )
                 profile.maintenance_team_id = False
 
     @api.depends(
@@ -80,6 +86,7 @@ class MaintenanceProfile(models.Model):
         "resource_id.maintenance_ids.date_done",
         "resource_id.maintenance_ids.date_confirmed",
     )
+    @_debug.perf.timed
     def _compute_reliability(self):
         for profile in self:
             orders = profile.resource_id.maintenance_ids.filtered(

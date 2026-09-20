@@ -2,8 +2,11 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_is_zero
 from odoo.tools.misc import format_date
+
+_debug = DebugLog(__name__)
 
 
 class AssetModify(models.TransientModel):
@@ -152,6 +155,7 @@ class AssetModify(models.TransientModel):
                 or a.value_depreciable_residual > 0
             )
         ):
+            _debug.logic("sell.refused", reason="running_increase", board=self.asset_id)
             raise UserError(
                 _(
                     "You cannot automate the journal entry for an asset that has a running gross increase. Please use 'Dispose' on the increase(s)."
@@ -297,6 +301,9 @@ class AssetModify(models.TransientModel):
                     and m.date > fields.Date.today()
                 )
             ):
+                _debug.logic(
+                    "create.refused", reason="future_posted_entries", board=asset
+                )
                 raise UserError(
                     _(
                         "Reverse the depreciation entries posted in the future in order to modify the depreciation"
@@ -313,6 +320,9 @@ class AssetModify(models.TransientModel):
         if self.date <= self.asset_id.company_id._get_user_fiscal_lock_date(
             self.asset_id.depreciation_journal_id
         ):
+            _debug.logic(
+                "modify.refused", reason="before_lock_date", wizard=self, date=self.date
+            )
             raise UserError(_("You can't re-evaluate the asset before the lock date."))
         if self.env.context.get("resume_after_pause"):
             return
@@ -324,6 +334,12 @@ class AssetModify(models.TransientModel):
             ],
             limit=1,
         ):
+            _debug.logic(
+                "modify.refused",
+                reason="unposted_before_date",
+                wizard=self,
+                date=self.date,
+            )
             raise UserError(
                 _(
                     "There are unposted depreciations prior to the selected operation date, please deal with them first."
@@ -339,6 +355,12 @@ class AssetModify(models.TransientModel):
         )
         number_days = self.asset_id._get_delta_days(date_before_pause, self.date) - 1
         if number_days < 0:
+            _debug.logic(
+                "resume.refused",
+                reason="date_before_pause",
+                wizard=self,
+                days=number_days,
+            )
             raise UserError(
                 _("You cannot resume at a date equal to or before the pause date")
             )
@@ -416,6 +438,12 @@ class AssetModify(models.TransientModel):
             }
         )
         asset_increase.action_confirm()
+        _debug.lifecycle(
+            "gross_increase_created",
+            board=self.asset_id,
+            increase=asset_increase,
+            amount=increase_total,
+        )
         self.asset_id.message_post(
             body=_(
                 "A gross increase has been created: %(link)s",
@@ -443,6 +471,7 @@ class AssetModify(models.TransientModel):
             )
         )
         move._post()
+        _debug.lifecycle("value_decrease_posted", board=self.asset_id, move=move)
         return move
 
     @staticmethod
@@ -457,6 +486,7 @@ class AssetModify(models.TransientModel):
         children = self.asset_id.increase_ids
         if not children:
             return
+        _debug.pipeline("propagate_to_children", board=self.asset_id, children=children)
         children.write(
             {
                 "depreciation_duration": asset_vals["depreciation_duration"],
@@ -540,6 +570,17 @@ class AssetModify(models.TransientModel):
             self._create_value_decrease(-increase)
 
         restart_date = self.date if resuming else self.date + relativedelta(days=1)
+        _debug.pipeline(
+            "modify",
+            wizard=self,
+            board=self.asset_id,
+            resuming=resuming,
+            residual_increase=residual_increase,
+            salvage_increase=salvage_increase,
+            decrease=-increase if increase < 0 else 0.0,
+            children_changed=computation_children_changed,
+            restart=restart_date,
+        )
         self._rebuild_board(self.asset_id, restart_date)
         if computation_children_changed:
             self._propagate_to_children(asset_vals, restart_date)
@@ -561,6 +602,11 @@ class AssetModify(models.TransientModel):
             self.gain_account_id,
             self.loss_account_id,
         ):
+            _debug.logic(
+                "sell_dispose.refused",
+                reason="outcome_is_depreciation_account",
+                wizard=self,
+            )
             raise UserError(
                 _("You cannot select the same account as the Depreciation Account")
             )

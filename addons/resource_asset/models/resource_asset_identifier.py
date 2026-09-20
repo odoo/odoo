@@ -4,6 +4,9 @@ from collections import defaultdict
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResourceAssetIdentifier(models.Model):
@@ -45,6 +48,9 @@ class ResourceAssetIdentifier(models.Model):
         for identifier in self:
             pattern = identifier.type_id.pattern
             if pattern and not re.fullmatch(pattern, identifier.normalized_value or ""):
+                _debug.logic(
+                    "identifier.refused", reason="pattern", identifier=identifier
+                )
                 raise ValidationError(
                     self.env._(
                         "%(value)s is not a valid %(type)s.",
@@ -76,6 +82,9 @@ class ResourceAssetIdentifier(models.Model):
                 )
             holders = holders.filtered(lambda h, a=identifier.asset_id: h.asset_id != a)
             if holders:
+                _debug.logic(
+                    "identifier.refused", reason="duplicate", identifier=identifier
+                )
                 raise ValidationError(
                     self.env._(
                         "%(type)s %(value)s already identifies %(asset)s.",

@@ -1,4 +1,7 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 KIND_DEFAULTS = ("technician_user_id", "maintenance_team_id")
 
@@ -21,6 +24,7 @@ class ResourceAsset(models.Model):
             if not given.get(fname) and kind[fname]
         }
         if vals:
+            _debug.lifecycle("kind_defaults_taken", asset=self, fields=sorted(vals))
             self.sudo().write(vals)
 
     def _sync_state_from_maintenance(self):
@@ -37,6 +41,7 @@ class ResourceAsset(models.Model):
             )
         )
         busy = in_progress.resource_ids
+        _debug.pipeline("state_synced", assets=self, orders=in_progress, busy=len(busy))
         assets = self.sudo()
         assets.filtered(
             lambda asset: asset.resource_id in busy and asset.state == "in_service"

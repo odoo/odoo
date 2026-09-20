@@ -68,6 +68,13 @@ class One2one(One2many):
         delta = CommandDelta.fold(commands, superseding=True)
         targets = list(delta.set_ids) if delta.replaced else list(delta.linked)
         if len(targets) > 1 or (targets and delta.created) or len(delta.created) > 1:
+            _debug.logic(
+                "field.one2one.refused",
+                reason="several_targets",
+                field=self.name,
+                targets=len(targets),
+                created=len(delta.created),
+            )
             raise UserError(
                 model.env._(
                     "%(field)s takes one record; several were given.",
@@ -92,6 +99,12 @@ class One2one(One2many):
         for recs, commands in records_commands_list:
             delta, target, releases = self._fold_target(model, commands)
             if len(recs) > 1 and (target or delta.created):
+                _debug.logic(
+                    "field.one2one.refused",
+                    reason="shared_target",
+                    field=self.name,
+                    records=recs,
+                )
                 raise UserError(
                     model.env._(
                         "%(field)s: one record cannot be shared by several %(model)s.",
@@ -107,6 +120,13 @@ class One2one(One2many):
                 current = record[self.name]
                 if releases and current and current.id != target:
                     if inverse_field.required:
+                        _debug.logic(
+                            "field.one2one.refused",
+                            reason="required_inverse",
+                            field=self.name,
+                            record=record,
+                            current=current,
+                        )
                         raise UserError(
                             model.env._(
                                 "%(record)s already is %(current)s's %(field)s, which "
@@ -120,10 +140,20 @@ class One2one(One2many):
                     # The seat is released in the database before the next
                     # holder takes it: the unique index checks each UPDATE.
                     current.flush_recordset([inverse])
+                    _debug.lifecycle(
+                        "field.one2one.released", field=self.name, released=current
+                    )
                 if target and current.id != target:
                     line = comodel.browse(target)
                     holder = line[inverse]
                     if holder and holder != record:
+                        _debug.logic(
+                            "field.one2one.refused",
+                            reason="taken",
+                            field=self.name,
+                            line=line,
+                            holder=holder,
+                        )
                         raise UserError(
                             model.env._(
                                 "%(line)s already belongs to %(holder)s.",

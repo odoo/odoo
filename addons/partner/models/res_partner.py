@@ -3,6 +3,9 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResPartner(models.Model):
@@ -53,6 +56,9 @@ class ResPartner(models.Model):
         if value is None or value is False:
             if operator in ("=", "!="):
                 return Domain("birthdate", operator, False)
+            _debug.logic(
+                "age_search.refused", reason="unset_with_order", operator=operator
+            )
             raise UserError(self.env._("Age is searched by a whole number of years."))
 
         try:
@@ -60,6 +66,7 @@ class ResPartner(models.Model):
         except TypeError, ValueError, OverflowError:
             years = None
         if isinstance(value, bool) or years is None or years != value:
+            _debug.logic("age_search.refused", reason="not_whole_years", value=value)
             raise UserError(self.env._("Age is searched by a whole number of years."))
 
         at_least = self._latest_birthdate_for_age(years)
@@ -85,6 +92,12 @@ class ResPartner(models.Model):
         dated = self.filtered("birthdate")
         age_ranges = (
             self.env["res.partner.age.range"].sudo().search([]) if dated else None
+        )
+        _debug.perf.count(
+            "age_ranges_read",
+            partners=self,
+            dated=len(dated),
+            ranges=len(age_ranges) if age_ranges is not None else 0,
         )
         for partner in self:
             if partner.birthdate:

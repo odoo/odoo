@@ -1,6 +1,9 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 
 from .maintenance_order import OPEN_STATES
+
+_debug = DebugLog(__name__)
 
 PROFILE_FACTS = (
     "date_in_service",
@@ -86,6 +89,7 @@ class MixinMaintenanceTarget(models.AbstractModel):
                 host[name] = profile[name]
 
     @api.depends("maintenance_ids.state")
+    @_debug.perf.timed
     def _compute_maintenance_open_count(self):
         for host in self:
             host.maintenance_open_count = len(
@@ -103,6 +107,9 @@ class MixinMaintenanceTarget(models.AbstractModel):
                 .sudo()
                 .create({"resource_id": self.resource_id.id})
             )
+            _debug.lifecycle(
+                "profile_created", host=self, resource=self.resource_id, profile=profile
+            )
             self.resource_id.invalidate_recordset(["maintenance_profile_id"])
             self.invalidate_recordset(["maintenance_profile_id"])
         return profile.sudo()
@@ -115,6 +122,7 @@ class MixinMaintenanceTarget(models.AbstractModel):
                 continue
             profile = host._get_or_create_maintenance_profile()
             if profile[name] != value:
+                _debug.logic("profile_fact_written", host=host, field=name)
                 profile[name] = value
 
     def _inverse_maintenance_team_id(self):
