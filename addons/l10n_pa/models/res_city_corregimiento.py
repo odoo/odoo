@@ -29,6 +29,6 @@ class L10n_PaResCityCorregimiento(models.Model):
         'The name of the corregimiento must be unique by district!',
     )
     _l10n_pa_code_uniq = models.Constraint(
-        'unique(l10n_pa_code) DEFERRABLE INITIALLY DEFERRED',
+        'unique(l10n_pa_code)',
         'The DGI code of the corregimiento must be unique!',
     )

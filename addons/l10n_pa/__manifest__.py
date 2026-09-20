@@ -14,6 +14,7 @@ Con la Colaboración de
 
     """,
     'author': 'Cubic ERP',
+    'version': '1.1',
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'account',
