@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 15:03+0000\n"
-"PO-Revision-Date: 2026-09-14 06:14+0000\n"
+"PO-Revision-Date: 2026-09-16 04:35+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/base/"
 "ja/>\n"
@@ -4676,7 +4676,7 @@ msgid ""
 "=================================\n"
 msgstr ""
 "\n"
-"会計報告の現金主義\n"
+"会計レポート用の現金主義\n"
 "=================================\n"
 
 #. module: base
@@ -9218,11 +9218,11 @@ msgid ""
 "Cash Management format (CAMT.053).\n"
 msgstr ""
 "\n"
-"Module to import CAMT bank statements.\n"
+"CAMT銀行取引明細書をインポートするモジュール。\n"
 "======================================\n"
 "\n"
-"Improve the import of bank statement feature to support the SEPA recommended "
-"Cash Management format (CAMT.053).\n"
+"SEPA推奨のキャッシュマネジメント形式(CAMT.053)に対応するよう、銀行取引明細書"
+"のインポート機能を改善します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -12778,10 +12778,10 @@ msgstr ""
 "peppol) 上で一意な識別子を持ちます。それは特定のOdooデータベース上で特定の会"
 "社に\n"
 "リンクしています。\n"
-"- 暗号化機能により、プロキシからの受信時にすべてのユーザーデータを復号化でき"
-"る。\n"
-"- 認証は、万が一誰かがユーザーのデータベースに侵入した場合に備えて、なりすま"
-"しを避けるための追加のセキュリティレベルを提供します。\n"
+"- 暗号化機能により、プロキシからの受信時にすべてのユーザデータを復号化できま"
+"す。\n"
+"- 認証は、万が一誰かがユーザのデータベースに侵入した場合に備えて、なりすまし"
+"を避けるための追加のセキュリティレベルを提供します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_loyalty
@@ -12828,13 +12828,16 @@ msgstr ""
 "\n"
 "このモジュールは完全に統合されたカスタマーポータルのために必要なベースコード"
 "を追加します。\n"
-"It contains the base controller class and base templates. Business addons\n"
-"will add their specific templates and controllers to extend the customer\n"
-"portal.\n"
+"基本コントローラクラスおよび基本テンプレートが含まれています。業務系アドオン"
+"は、\n"
+"顧客ポータルを拡張するために、それぞれ固有のテンプレートとコントローラ\n"
+"を追加します。\n"
 "\n"
-"This module contains most code coming from odoo v10 website_portal. Purpose\n"
-"of this module is to allow the display of a customer portal without having\n"
-"a dependency towards website editing and customization capabilities."
+"本モジュールには、Odoo v10のwebsite_portal由来のコードの大部分が含まれていま"
+"す。\n"
+"本モジュールの目的は、ウェブサイト編集・カスタマイズ機能への依存なしに、顧客"
+"ポータルを\n"
+"表示できるようにすることです。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_qr_code_sepa
@@ -12887,7 +12890,7 @@ msgid ""
 "==================================================================\n"
 msgstr ""
 "\n"
-"このモジュールは、倉庫管理に一括転送オプションを追加します\n"
+"このモジュールは、倉庫管理にバッチ移動オプションを追加します\n"
 "==================================================================\n"
 
 #. module: base
@@ -14621,9 +14624,9 @@ msgstr ""
 "\n"
 "このモジュールは、小切手を印刷して支払いを行うための基本的な機能を提供しま"
 "す\n"
-"国固有のチェックテンプレートを提供するモジュールの依存関係として使用する必要"
-"があります。\n"
-"チェック設定は、会計仕訳帳設定ページにあります。\n"
+"国固有の小切手テンプレートを提供するモジュールの依存関係として使用する必要が"
+"あります。\n"
+"小切手の設定は、会計仕訳帳設定ページから行えます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_enterprise
@@ -17262,7 +17265,7 @@ msgstr "AIドキュメント"
 #: model:ir.module.module,shortdesc:base.module_ai_documents_account
 #: model:ir.module.module,summary:base.module_ai_documents_account
 msgid "AI Documents Account"
-msgstr "AIドキュメントアカウント"
+msgstr "AIドキュメント会計"
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_documents_fleet
@@ -17469,7 +17472,7 @@ msgstr "AIテキストドラフト、会計との連携"
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_knowledge
 msgid "AI text draft integration with knowledge"
-msgstr "AIテキストドラフト、ナレッジとの連携"
+msgstr "AIテキスト下書き、ナレッジとの連携"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_website_helpdesk
@@ -17712,7 +17715,7 @@ msgstr "スーパーユーザのみアクセス可能"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_update_tax_tags
 msgid "Account - Allow updating tax grids"
-msgstr "アカウント - 税グリッドの更新を許可"
+msgstr "会計 - 税グリッドの更新を許可"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_pos_settle_due
@@ -17737,7 +17740,7 @@ msgstr "勘定科目表"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_extract
 msgid "Account Extract"
-msgstr "口座抽出"
+msgstr "会計データ抽出"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_fiscal_categories
@@ -17754,7 +17757,7 @@ msgstr "アカウントの請求書の抜粋"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract_purchase
 msgid "Account Invoice Extract Purchase"
-msgstr "アカウント請求書抽出購入"
+msgstr "会計 請求書抽出 購買"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_loans_extract
@@ -17769,7 +17772,7 @@ msgstr "口座番号"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_online_payment
 msgid "Account Online Payment"
-msgstr "口座オンライン支払"
+msgstr "会計 オンライン決済"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_sepa
@@ -18235,7 +18238,7 @@ msgstr "アクションを追加"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports_cash_basis
 msgid "Add cash basis functionality for reports"
-msgstr "レポートに現金ベースの機能を追加する"
+msgstr "レポートに現金主義の機能を追加"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides_survey
@@ -19214,7 +19217,7 @@ msgstr "アポイントメントアプリからOutlookカレンダーの同期�
 #. module: base
 #: model:ir.module.module,summary:base.module_account_update_tax_tags
 msgid "Allow updating tax grids on existing entries"
-msgstr "既存のエントリーの税グリッドの更新を許可"
+msgstr "既存仕訳の税グリッド更新を許可"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment_integration_monster
@@ -20533,7 +20536,7 @@ msgstr "評価 - スキル"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_survey
 msgid "Appraisal - Survey"
-msgstr "鑑定-調査"
+msgstr "評価 - アンケート調査"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_appraisals
@@ -20697,7 +20700,7 @@ msgstr "アルゼンチン電子請求"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_stock_batch
 msgid "Argentinean Stock - Batch Transfers"
-msgstr "アルゼンチン在庫 - 一括転送"
+msgstr "アルゼンチン在庫 - バッチ移動"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_website_sale
@@ -21440,12 +21443,12 @@ msgstr "AIエージェントで販売在庫を強化します。"
 #: model:ir.module.module,summary:base.module_ai_sale
 #: model:ir.module.module,summary:base.module_ai_sale_margin
 msgid "Augment Sales with AI Agents."
-msgstr "AIエージェントで販売を強化します。"
+msgstr "AIエージェントで売上拡大。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_stock
 msgid "Augment Stock with AI Agents."
-msgstr "AIエージェントで在庫を強化します。"
+msgstr "AIエージェントで在庫管理機能を拡張。"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.ISK
@@ -21719,9 +21722,7 @@ msgstr "自動的にリードを作成します。"
 msgid ""
 "Automatically finds the purchase order linked to a vendor bill when using "
 "invoice extraction"
-msgstr ""
-"請求書抽出を使用すると、仕入先の請求書にリンクされている注文書が自動的に検索"
-"されます"
+msgstr "請求書抽出の使用時に、仕入先請求書に紐づく購買オーダを自動的に特定します"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_appointment_sale_project
@@ -22408,7 +22409,7 @@ msgstr "一括支払"
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_stock_picking_batch
 msgid "Batch Transfer, Carrier"
-msgstr "一括転送、配送会社"
+msgstr "バッチ移動、配送会社"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_bewise
@@ -23053,7 +23054,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_stock_batch
 msgid "Bridge module for Argentine delivery guides on batch transfers."
-msgstr "一括転送に関するアルゼンチンの納品伝票向けのブリッジモジュール。"
+msgstr "バッチ移動に関するアルゼンチンの納品伝票向けのブリッジモジュール。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_enterprise
@@ -23935,7 +23936,7 @@ msgstr "チェック"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_check_printing
 msgid "Check Printing Base"
-msgstr "印刷のベースをチェック"
+msgstr "小切手印刷ベース"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__is_company
@@ -23948,7 +23949,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_check_printing
 msgid "Check printing basic features"
-msgstr "印刷の基本機能を確認します。"
+msgstr "小切手印刷の基本機能"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_mass_mailing
@@ -26962,7 +26963,7 @@ msgstr "ディスカス"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_tracking
 msgid "Discuss Tracking"
-msgstr "ディスカス トラッキング"
+msgstr "ディスカス追跡"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__disjoint_ids
@@ -33088,7 +33089,7 @@ msgstr "販売/購買オーダおよび請求書のための会社間モジュ�
 #: model:ir.module.module,shortdesc:base.module_account_inter_company_rules
 #: model:ir.module.module,shortdesc:base.module_sale_purchase_inter_company_rules
 msgid "Inter Company Module for Sale/Purchase Orders and Invoices"
-msgstr "販売/購入注文および請求書のための会社間モジュール"
+msgstr "販売/購買オーダおよび請求書用会社間モジュール"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_service
@@ -33098,13 +33099,13 @@ msgstr "営業アプリとサービスアプリの相互作用 (プロジェク�
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase_stock_inter_company_rules
 msgid "Intercompany SO/PO"
-msgstr "グループ内販売/購買オーダ"
+msgstr "会社間販売/購買オーダ"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_inter_company_rules
 #: model:ir.module.module,summary:base.module_sale_purchase_inter_company_rules
 msgid "Intercompany SO/PO/INV rules"
-msgstr "グループ内販売オーダ /購買オーダ /請求ルール"
+msgstr "会社間販売オーダ /購買オーダ /請求ルール"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
@@ -35780,7 +35781,7 @@ msgstr "フリート機能と会計管理"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_fleet
 msgid "Manage accounting with fleets"
-msgstr "fleetsで会計を管理する"
+msgstr "フリートで会計を管理"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.grant_menu_access
@@ -41855,7 +41856,7 @@ msgstr "支払"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment
 msgid "Payment - Account"
-msgstr "支払い-アカウント"
+msgstr "支払 - 会計"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_custom
@@ -50703,7 +50704,7 @@ msgstr "タスクごとの作業時間を記録"
 #. module: base
 #: model:ir.module.module,summary:base.module_maintenance
 msgid "Track equipment and manage maintenance requests"
-msgstr "機器・備品の追跡と保守依頼の管理"
+msgstr "機器・備品の追跡と整備依頼の管理"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm
@@ -53348,7 +53349,7 @@ msgstr "キーを書き留めてください"
 #: model:ir.module.module,description:base.module_ai_social
 #: model:ir.module.module,summary:base.module_ai_social
 msgid "Write social post using AI."
-msgstr "AIを使用してソーシャルメディアの投稿を作成してください。"
+msgstr "AIを使用してソーシャルメディアの投稿を作成。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview

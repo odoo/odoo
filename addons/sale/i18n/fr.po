@@ -12,13 +12,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 17:31+0000\n"
-"Last-Translator: Camille Dantinne <cmd@odoo.com>\n"
+"PO-Revision-Date: 2026-09-17 14:01+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/sale/"
 "fr/>\n"
 "Language: fr\n"
@@ -1739,7 +1740,7 @@ msgstr "Ajouter/Supprimer des abonnés"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__allow_invoice_overages
 msgid "Allow Invoice Overages"
-msgstr ""
+msgstr "Autoriser les dépassements de facturation"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
@@ -1958,7 +1959,7 @@ msgstr "Transactions autorisées"
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_automatic_invoice
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__sale_automatic_invoice
 msgid "Automatic Invoicing"
-msgstr ""
+msgstr "Facturation automatique"
 
 #. module: sale
 #. odoo-javascript
@@ -2317,7 +2318,7 @@ msgstr "Confirmer les commandes"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Confirmation"
-msgstr ""
+msgstr "Confirmation"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__confirmation_message
@@ -2352,7 +2353,7 @@ msgstr "Facturation consolidée"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__consolidation_currency_id
 msgid "Consolidation Currency"
-msgstr ""
+msgstr "Devise de consolidation"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -2889,7 +2890,7 @@ msgstr "Compte analytique de répartition"
 #: model:ir.model.fields,field_description:sale.field_sale_order__document_tax_mode
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__document_tax_mode
 msgid "Document Tax Mode"
-msgstr ""
+msgstr "Mode de taxe du document"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -3088,7 +3089,7 @@ msgstr "Données fiscales supplémentaires"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__extra_total_fields
 msgid "Extra Total Fields"
-msgstr ""
+msgstr "Champs de total supplémentaires"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
@@ -3290,7 +3291,7 @@ msgstr "A un message"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_overages
 msgid "Has Overages"
-msgstr ""
+msgstr "A des dépassements"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
@@ -3528,7 +3529,7 @@ msgstr "Lignes de facture"
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__invoice_overages
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_overages
 msgid "Invoice Overages"
-msgstr ""
+msgstr "Facturer les dépassements"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_paid
@@ -3698,7 +3699,7 @@ msgstr "Est un produit archivé"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__mandatory_product
 msgid "Is Product Mandatory"
-msgstr ""
+msgstr "Le produit est obligatoire"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
@@ -3741,7 +3742,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -3857,7 +3858,7 @@ msgstr "Gérer les objectifs d'équipes & de ventes ainsi que les commissions"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__sale_order_mandatory_product
 msgid "Mandatory Product"
-msgstr ""
+msgstr "Produit obligatoire"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -3915,7 +3916,7 @@ msgstr "Marketing"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_marketplaces
 msgid "Marketplaces"
-msgstr ""
+msgstr "Marketplaces"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__medium_id
@@ -4162,6 +4163,9 @@ msgid ""
 "to track if something gets invoiced or delivered).\n"
 "Set the quantity to 0 instead."
 msgstr ""
+"Une fois une commande client confirmée, vous ne pouvez pas supprimer l’une "
+"de ses lignes (nous devons suivre si quelque chose est facturé ou livré).\n"
+"Mettez plutôt la quantité à 0."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -4300,7 +4304,7 @@ msgstr "Statut de la facture de la commande"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__line_name
 msgid "Order Line Name"
-msgstr ""
+msgstr "Nom de la ligne de commande"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -4484,7 +4488,7 @@ msgstr "Conditions de paiement"
 #: model:ir.ui.menu,name:sale.payment_provider_menu
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Payments"
-msgstr ""
+msgstr "Paiements"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pending_email_template_id
@@ -4528,7 +4532,7 @@ msgstr "Le pourcentage d'acompte doit être un pourcentage valide."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Prevent selling without a linked product"
-msgstr ""
+msgstr "Empêcher la vente sans produit lié"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4728,7 +4732,7 @@ msgstr "Qté commandée"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_overage
 msgid "Qty Overage"
-msgstr ""
+msgstr "Qté de dépassement"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
@@ -4872,7 +4876,7 @@ msgstr "Devis à revoir"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__consolidation_rate
 msgid "Rate"
-msgstr ""
+msgstr "Taux"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
@@ -5472,7 +5476,7 @@ msgstr "Synchronisation Shopee"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_ship_button
 msgid "Show Ship Button"
-msgstr ""
+msgstr "Afficher le bouton d’expédition"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -6213,7 +6217,7 @@ msgstr "Total"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Total Advantage"
-msgstr ""
+msgstr "Avantage total"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
@@ -6256,7 +6260,7 @@ msgstr "Suivi"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_count
 msgid "Transaction Count"
-msgstr ""
+msgstr "Nombre de transactions"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_ids
@@ -6803,6 +6807,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} {{ object.name or 'n/a' }} "
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'Pending Order' or 'Order' }} {{ object.name or 'n/a' }} {"
+"{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_proforma
@@ -6820,6 +6827,9 @@ msgid ""
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }} "
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order' }} {{ object.name or 'n/a' }} {{ "
+"object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 
 #~ msgid "Connect your software"
 #~ msgstr "Connecter votre logiciel"

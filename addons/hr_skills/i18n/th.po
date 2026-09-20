@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:49+0000\n"
-"PO-Revision-Date: 2026-08-31 19:07+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-09-14 09:33+0000\n"
+"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
 "hr_skills/th/>\n"
 "Language: th\n"
@@ -59,6 +59,12 @@ msgid ""
 "                Show Skill Types\n"
 "                </a>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">ไม่มีใบรับรองใดๆ ให้เลือกไปที่ประเภททักษะต่"
+"างๆ!</p>\n"
+"                <a type=\"action\" name=\"hr_skills.hr_skill_type_action\" "
+"class=\"btn btn-primary\">\n"
+"                แสดงประเภททักษะต่างๆ\n"
+"               </a>"
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_line_admin_7
@@ -206,7 +212,7 @@ msgstr "Burtho Inc."
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_csharp
 msgid "C#"
-msgstr ""
+msgstr "C#"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_c
@@ -259,7 +265,7 @@ msgstr "ใบรับรอง"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_job_skill__certificate_filename
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__certificate_filename
 msgid "Certificate Filename"
-msgstr ""
+msgstr "ชื่อไฟล์ใบรับรอง"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__certification_ids
@@ -376,7 +382,7 @@ msgstr "ประเภทหลักสูตร"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_resume_line_type_tree_view
 msgid "Course?"
-msgstr ""
+msgstr "คอร์ส?"
 
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.menu_learnings_training_attendances_courses
@@ -392,13 +398,13 @@ msgstr "Craigmore South Junior Primary School"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
 msgid "Create Resume Lines"
-msgstr ""
+msgstr "สร้างบรรทัดในเรซูเม่"
 
 #. module: hr_skills
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 msgid "Create Skills"
-msgstr ""
+msgstr "สร้างทักษะ"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__create_uid
@@ -439,18 +445,18 @@ msgstr "การคิดเชิงวิพากษ์"
 #: code:addons/hr_skills/static/src/components/internal_resume_lines/internal_resume_one2many.xml:0
 #: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
 msgid "Current"
-msgstr ""
+msgstr "ปัจจุบัน"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__current_employee_skill_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__current_employee_skill_ids
 msgid "Current Employee Skill"
-msgstr ""
+msgstr "ทักษะของพนักงานปัจจุบัน"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_job__current_job_skill_ids
 msgid "Current Job Skill"
-msgstr ""
+msgstr "ทักษะงานปัจจุบัน"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_graph
@@ -526,7 +532,7 @@ msgstr "Davis, Sanchez และ Miller"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/formatted_date/formatted_date.js:0
 msgid "Day Format"
-msgstr ""
+msgstr "รูปแบบวันที่"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_decision_making
@@ -580,7 +586,7 @@ msgstr "การโฆษณาแบบดิจิตอล"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_certification_page
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__display_certification_page
 msgid "Display Certification Page"
-msgstr ""
+msgstr "แสดงหน้าของใบรับรอง"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_name
@@ -735,7 +741,7 @@ msgstr "ประสบการณ์"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/components/internal_resume_lines/internal_resume_one2many.xml:0
 msgid "Experience -"
-msgstr ""
+msgstr "ประสบการณ์ -"
 
 #. module: hr_skills
 #: model:ir.model.fields.selection,name:hr_skills.selection__hr_resume_line__course_type__external
@@ -993,7 +999,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 msgid "If skills are missing, they can be created by an HR officer."
-msgstr ""
+msgstr "หากทักษะขาดหายไป เจ้าหน้าที่ทรัพยากรบุคคลสามารถสร้างขึ้นได้"
 
 #. module: hr_skills
 #: model:ir.model.fields,help:hr_skills.field_hr_employee_skill_report__active
@@ -1007,7 +1013,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/formatted_date/formatted_date.js:0
 msgid "Indefinite"
-msgstr ""
+msgstr "ไม่กำหนด"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_indonesian
@@ -1214,7 +1220,7 @@ msgstr "ระดับ"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_job_skill__levels_count
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__levels_count
 msgid "Levels Count"
-msgstr ""
+msgstr "จำนวนระดับ"
 
 #. module: hr_skills
 #: model:hr.resume.line,name:hr_skills.employee_resume_fme_lewis_group
@@ -1346,7 +1352,7 @@ msgstr "การพัฒนาแอพพลิเคชั่นบนมื
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/formatted_date/formatted_date.js:0
 msgid "Month Format"
-msgstr ""
+msgstr "รูปแบบเดือน"
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_jog_douglas_thompson_and_conner
@@ -1386,12 +1392,12 @@ msgstr "ใหม่"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.js:0
 msgid "New Resume Line"
-msgstr ""
+msgstr "บรรทัดเรซูเม่ใหม่"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_public_view_form_inherit
 msgid "No certifications found."
-msgstr ""
+msgstr "ไม่พบการรับรองใดๆ"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_nosql
@@ -1452,7 +1458,7 @@ msgstr "อื่น ๆ"
 #. module: hr_skills
 #: model:hr.resume.line.type,name:hr_skills.resume_type_experience
 msgid "Other Experience"
-msgstr ""
+msgstr "ประสบการณ์อื่น"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__show_others
@@ -1518,7 +1524,7 @@ msgstr "Phillips, Jones และ Brown"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 msgid "Pick a skill from the list"
-msgstr ""
+msgstr "เลือกทักษะจากรายการ"
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_mit_burns_lester_and_cuevas
@@ -1645,7 +1651,7 @@ msgstr "Python"
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_r
 msgid "R"
-msgstr ""
+msgstr "R"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_sql
@@ -1665,7 +1671,7 @@ msgstr "โต้ตอบ"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_resource_resource
 msgid "Resource"
-msgstr ""
+msgstr "ทรัพยากร"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_resourcefulness
@@ -1689,17 +1695,17 @@ msgstr "เรซูเม่ %s"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.view_resume_lines_filter
 msgid "Resume Lines"
-msgstr ""
+msgstr "บรรทัดเรซูเม่"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_resume_line_list_view
 msgid "Resume Section"
-msgstr ""
+msgstr "ส่วนเรซูเม่"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_resume_type_action
 msgid "Resume Sections"
-msgstr ""
+msgstr "ส่วนเรซูเม่"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line
@@ -1781,7 +1787,7 @@ msgstr "นักเขียนทางวิทยาศาสตร์"
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_type_certifications_scrum_master
 msgid "Scrum Master"
-msgstr ""
+msgstr "Scrum Master"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
@@ -1917,17 +1923,17 @@ msgstr "ประเภททักษะ"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_job_skill
 msgid "Skill for job position"
-msgstr ""
+msgstr "ทักษะสำหรับตำแหน่งงาน"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_individual_skill_mixin
 msgid "Skill level"
-msgstr ""
+msgstr "ระดับทักษะ"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_skill
 msgid "Skill level for employee"
-msgstr ""
+msgstr "ระดับทักษะสำหรับพนักงาน"
 
 #. module: hr_skills
 #. odoo-javascript
@@ -1950,7 +1956,7 @@ msgstr "ทักษะ"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 msgid "Skills & Certifications"
-msgstr ""
+msgstr "ทักษะและใบรับรอง"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_department_view_kanban

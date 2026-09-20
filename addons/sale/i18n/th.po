@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:39+0000\n"
-"PO-Revision-Date: 2026-09-04 04:09+0000\n"
+"PO-Revision-Date: 2026-09-18 09:33+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/sale/th/>"
 "\n"
@@ -3741,7 +3741,7 @@ msgstr "บรรทัดคำสั่งที่เชื่อมโยง
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_virtual_id
 msgid "Linked Virtual"
-msgstr ""
+msgstr "คลังเสมือนแบบเชื่อมโยง"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5263,7 +5263,7 @@ msgstr "ชื่อส่วน (เช่น สินค้า และบ�
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Section Summary"
-msgstr ""
+msgstr "สรุปยอดตามหัวข้อ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
@@ -5653,7 +5653,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
 msgid "Technical Price Unit"
-msgstr ""
+msgstr "หน่วยราคาทางเทคนิค"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5667,7 +5667,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Template for Quotations"
-msgstr ""
+msgstr "เทมเพลตสำหรับใบเสนอราคา"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
@@ -5743,13 +5743,13 @@ msgstr "โทเค็นการเข้าถึงไม่ถูกต้
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "The amount is lower than the prepayment amount."
-msgstr ""
+msgstr "จำนวนเงินนี้ต่ำกว่าจำนวนเงินที่ชำระล่วงหน้า"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 msgid "The amount must be greater than the prepayment amount."
-msgstr ""
+msgstr "จำนวนเงินต้องมากกว่าจำนวนเงินที่ชำระล่วงหน้า"
 
 #. module: sale
 #. odoo-python
@@ -5798,6 +5798,7 @@ msgid ""
 "The following sale orders %(invalid_orders)s can't be delivered. Cancelled "
 "all deliveries."
 msgstr ""
+"คำสั่งซื้อการขายต่อไปนี้ %(invalid_orders)s ไม่สามารถจัดส่งได้ ได้ยกเลิกการจัดส่งทั้งหมดแล้ว"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_automatic_invoice
@@ -5892,7 +5893,7 @@ msgstr "สินค้า (%(product)s) มีค่าที่ไม่สา
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 msgid "The sale order has expired."
-msgstr ""
+msgstr "คำสั่งซื้อได้หมดอายุแล้ว"
 
 #. module: sale
 #. odoo-python
@@ -6068,7 +6069,6 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
-#, fuzzy
 msgid "Today"
 msgstr "วันนี้"
 
@@ -6134,7 +6134,7 @@ msgstr "การติดตาม"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_count
 msgid "Transaction Count"
-msgstr ""
+msgstr "จำนวนธุรกรรม"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_ids
@@ -6144,7 +6144,7 @@ msgstr "ธุรกรรม"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__translated_product_name
 msgid "Translated Product Name"
-msgstr ""
+msgstr "ชื่อสินค้าที่แปลแล้ว"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name
@@ -6176,13 +6176,13 @@ msgstr "แคมเปญ UTM"
 #: model:ir.model.fields,field_description:sale.field_sale_order__utm_reference
 #: model:ir.model.fields,field_description:sale.field_sale_report__utm_reference
 msgid "UTM Reference"
-msgstr ""
+msgstr "อ้างอิง UTM"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_to_invoice
 msgid "Un-invoiced Balance"
-msgstr ""
+msgstr "ยอดคงเหลือที่ยังไม่ได้ออกใบแจ้งหนี้"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_id
@@ -6222,7 +6222,7 @@ msgstr "ราคาก่อนรวมภาษีมูลค่าเพิ
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_delivered_amount
 msgid "Untaxed Amount Delivered"
-msgstr ""
+msgstr "จำนวนเงินที่ส่งมอบโดยไม่ถูกเก็บภาษี"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
@@ -6254,7 +6254,7 @@ msgstr "อัปเดตราคา"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/upload_rfq_cog_menu/upload_rfq_cog_menu.xml:0
 msgid "Upload Request For Quotation"
-msgstr ""
+msgstr "อัปโหลดคำขอใบเสนอราคา"
 
 #. module: sale
 #. odoo-python
@@ -6274,6 +6274,7 @@ msgstr "เพิ่มโอกาสในการขายต่อยอด
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Use fixed-price and cost-based services and materials for re-invoicing"
 msgstr ""
+"ใช้บริการและวัสดุที่มีราคาคงที่และตามต้นทุนสำหรับการออกใบแจ้งหนี้ใหม่อีกครั้ง"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -6324,7 +6325,6 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#, fuzzy
 msgid "Values set here are company-specific."
 msgstr "ค่าที่ตั้งไว้นี้เป็นค่าเฉพาะบริษัท"
 
@@ -6346,7 +6346,7 @@ msgstr "ดูรายละเอียด"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "View Other Providers"
-msgstr ""
+msgstr "ดูผู้ให้บริการรายอื่น"
 
 #. module: sale
 #. odoo-python
@@ -6357,11 +6357,10 @@ msgstr "ดูใบเสนอราคา"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_id
 msgid "Virtual"
-msgstr ""
+msgstr "เสมือน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_available_at_date
-#, fuzzy
 msgid "Virtual Available At Date"
 msgstr "พร้อมใช้งานเสมือนจริง ณ วันที่"
 
@@ -6397,17 +6396,17 @@ msgstr "คำแจ้งเตือนสำหรับการเปลี
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Warning on Sales Orders"
-msgstr ""
+msgstr "คำเตือนเกี่ยวกับคำสั่งซื้อ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on Sales Orders and Invoices"
-msgstr ""
+msgstr "คำเตือนเกี่ยวกับใบสั่งขายและใบแจ้งหนี้"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Yes, cancel order"
-msgstr ""
+msgstr "ใช่ ยกเลิกคำสั่งซื้อ"
 
 #. module: sale
 #. odoo-python
@@ -6472,19 +6471,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/account_analytic_line.py:0
 msgid "You cannot modify already invoiced services."
-msgstr ""
+msgstr "คุณไม่สามารถแก้ไขบริการที่ได้ออกใบแจ้งหนี้ไปแล้วได้"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "You cannot modify the product of this order line."
-msgstr ""
+msgstr "คุณไม่สามารถแก้ไขสินค้าในบรรทัดคำสั่งซื้อนี้ได้"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/account_analytic_line.py:0
 msgid "You cannot remove already invoiced services."
-msgstr ""
+msgstr "คุณไม่สามารถลบบริการที่ได้ออกใบแจ้งหนี้ไปแล้วได้"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
@@ -6523,7 +6522,6 @@ msgstr "ข้อมูลอ้างอิงของคุณ:"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
-#, fuzzy
 msgid "Your browser does not support iframe."
 msgstr "เบราว์เซอร์ของคุณไม่รองรับ iframe"
 
@@ -6561,6 +6559,9 @@ msgid ""
 "Please change the company of your quotation or remove the products from "
 "other companies(%(bad_products)s)."
 msgstr ""
+"ใบเสนอราคาของคุณมีสินค้าจากบริษัท%(product_company)s ในขณะที่ใบเสนอราคาของคุณเป็นของบริษั"
+"ท%(quote_company)s \n"
+"โปรดเปลี่ยนบริษัทในใบเสนอราคาของคุณหรือลบสินค้าจากบริษัทอื่น (%(bad_products)s) ออกไป"
 
 #. module: sale
 #. odoo-javascript
@@ -6589,11 +6590,12 @@ msgstr "วัน"
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "e.g. This customer has reported recurring issues with previous orders."
 msgstr ""
+"ตัวอย่าง: ลูกค้ารายนี้ได้รายงานปัญหาที่เกิดขึ้นซ้ำๆ กับคำสั่งซื้อก่อนหน้านี้"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "e.g. This product is defective."
-msgstr ""
+msgstr "ตัวอย่าง: สินค้านี้มีข้อบกพร่อง"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -6609,13 +6611,13 @@ msgstr "สำหรับคำสั่งขายนี้"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "items?"
-msgstr ""
+msgstr "รายการต่างๆ?"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "let's continue"
-msgstr ""
+msgstr "มาต่อกันเถอะ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -6642,7 +6644,7 @@ msgstr "หน่วย"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "you confirm acceptance on behalf of"
-msgstr ""
+msgstr "คุณยืนยันการยอมรับในนามของ"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_payment_executed
@@ -6662,6 +6664,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} {{ object.name or 'n/a' }} "
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'Pending Order' or 'Order' }} {{ object.name or 'n/a' }} {"
+"{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_proforma
@@ -6679,6 +6684,9 @@ msgid ""
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }} "
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order' }} {{ object.name or 'n/a' }} {{ "
+"object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 
 #~ msgid "Connect your software"
 #~ msgstr "เชื่อมต่อซอฟต์แวร์ของคุณ"
