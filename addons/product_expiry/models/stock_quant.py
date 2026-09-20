@@ -38,7 +38,6 @@ class StockQuant(models.Model):
 
     expiration_date = fields.Datetime(
         related="lot_id.expiration_date",
-        store=True,
     )
     removal_date = fields.Datetime(
         related="lot_id.removal_date",
@@ -88,6 +87,12 @@ class StockQuant(models.Model):
         for quant in self:
             if quant.removal_date and quant.removal_date <= current_date:
                 quant.available_quantity = 0
+
+    def _aggregates_through_records(self, field, func):
+        # _read_group_select below answers this one in SQL
+        if field.name == "available_quantity" and func == "sum":
+            return False
+        return super()._aggregates_through_records(field, func)
 
     def _read_group_select(self, aggregate_spec, query):
         if aggregate_spec != "available_quantity:sum":

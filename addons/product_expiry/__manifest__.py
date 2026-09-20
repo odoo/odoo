@@ -1,5 +1,6 @@
 {
     "name": "Products Expiration Date",
+    "version": "1.1",
     "category": "Supply Chain/Inventory",
     "description": """
 Track different dates on products and production lots.
