@@ -24,6 +24,11 @@ class ResourceAssetKind(models.Model):
         string="Refuse Incomplete Assets",
         help="Refuse an asset of this kind that is missing a required identifier, instead of only reporting the gap. Off by default: a unit usually arrives before its paperwork, and a fleet that is already incomplete would become unwritable.",
     )
+    group_id = fields.Many2one(
+        comodel_name="res.groups",
+        string="Visible To",
+        help="The group a user needs to see assets of this kind and the menus that open them. Empty: every asset user sees them.",
+    )
     asset_properties_definition = fields.PropertiesDefinition(string="Asset Properties")
     asset_ids = fields.One2many(
         comodel_name="resource.asset",

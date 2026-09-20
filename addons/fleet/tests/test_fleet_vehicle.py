@@ -146,9 +146,9 @@ class TestFleetVehicle(TransactionCase):
             )
 
     def test_a_vehicle_waiting_for_its_plate_is_named_by_what_identifies_it(self):
-        awaiting = self._vehicle(plate=False, vin_sn="VIN-4242")
+        awaiting = self._vehicle(plate=False, vin_sn="5YJ3E1EA8PF004242")
 
-        self.assertEqual(awaiting.display_name, "Probe Motors / Probe One / VIN-4242")
+        self.assertEqual(awaiting.display_name, "Probe Motors / Probe One / 5YJ3E1EA8PF004242")
 
     def test_a_model_carries_its_fuel_specifications(self):
         self.model.product_tmpl_id.write(
@@ -358,7 +358,9 @@ class TestVehicleInheritsWhatBindsAnAsset(TransactionCase):
         cls.kind = cls.env.ref("resource_asset.kind_vehicle")
         cls.other_company = cls.env["res.company"].create({"name": "Elsewhere"})
         cls.user = new_test_user(
-            cls.env, login="vehicle_reader", groups="resource_asset.group_asset_user"
+            cls.env,
+            login="vehicle_reader",
+            groups="resource_asset.group_asset_user,fleet.fleet_group_user",
         )
 
     def test_the_multi_company_rule_of_the_asset_binds_the_vehicle(self):

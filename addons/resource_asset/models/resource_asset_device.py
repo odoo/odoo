@@ -9,6 +9,10 @@ class ResourceAssetDevice(models.Model):
     _inherit = ["resource.asset"]
     _table = "resource_asset_device"
 
+    serial_number = AssetIdentifier(
+        identifier_code="serial",
+        string="Serial Number",
+    )
     imei = AssetIdentifier(
         identifier_code="imei",
         string="IMEI",

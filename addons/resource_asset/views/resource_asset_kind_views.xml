@@ -11,6 +11,7 @@
                 <field name="code" />
                 <field name="scheduled" />
                 <field name="identifier_type_ids" widget="many2many_tags" />
+                <field name="group_id" optional="show" />
                 <field name="asset_count" />
             </list>
         </field>
@@ -30,6 +31,7 @@
                         </group>
                         <group>
                             <field name="identifier_type_ids" widget="many2many_tags" />
+                            <field name="group_id" />
                         </group>
                     </group>
                     <field name="asset_properties_definition" />

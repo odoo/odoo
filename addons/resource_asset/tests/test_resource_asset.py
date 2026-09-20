@@ -120,12 +120,16 @@ class TestResourceAsset(TransactionCase):
     def test_an_enforcing_kind_takes_an_asset_that_carries_everything(self):
         self.vehicle.enforce_identifiers = True
 
-        truck = self._truck("Complete truck", license_plate="ENF-1", vin_sn="ENFVIN1")
+        truck = self._truck(
+            "Complete truck", license_plate="ENF-1", vin_sn="1HGCM82633A004351"
+        )
 
         self.assertFalse(truck.missing_identifier_type_ids)
 
     def test_clearing_an_identifier_an_enforcing_kind_needs_is_refused(self):
-        truck = self._truck("Losing its vin", license_plate="ENF-2", vin_sn="ENFVIN2")
+        truck = self._truck(
+            "Losing its vin", license_plate="ENF-2", vin_sn="1HGCM82633A004352"
+        )
         self.vehicle.enforce_identifiers = True
 
         with self.assertRaises(ValidationError):
@@ -170,7 +174,7 @@ class TestResourceAsset(TransactionCase):
         complete = self._truck("Complete")
         complete.identifier_ids = [
             (0, 0, {"type_id": self.plate.id, "value": "P-1"}),
-            (0, 0, {"type_id": self.vin.id, "value": "V1"}),
+            (0, 0, {"type_id": self.vin.id, "value": "1HGCM82633A000001"}),
         ]
         no_vin = self._truck("No VIN")
         no_vin.identifier_ids = [(0, 0, {"type_id": self.plate.id, "value": "P-2"})]

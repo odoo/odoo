@@ -12,3 +12,4 @@ from . import resource_asset_machinery
 from . import resource_asset_equipment
 from . import resource_asset_it
 from . import resource_asset_furniture
+from . import res_users
