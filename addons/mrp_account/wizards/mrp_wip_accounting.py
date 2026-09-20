@@ -67,13 +67,11 @@ class MrpAccountWipAccounting(models.TransientModel):
             lambda mo: mo.state in ["progress", "to_close", "confirmed"]
         )
         if "journal_id" in fields_list:
-            default = (
-                self.env["product.category"]
-                ._fields["property_stock_journal"]
-                .get_company_dependent_fallback(self.env["product.category"])
+            journal = self._get_company_or_category_default(
+                "account_stock_journal_id", "property_stock_journal"
             )
-            if default:
-                res["journal_id"] = default.id
+            if journal:
+                res["journal_id"] = journal.id
         if "reference" in fields_list:
             res["reference"] = _(
                 "Manufacturing WIP - %(orders_list)s",
@@ -106,16 +104,19 @@ class MrpAccountWipAccounting(models.TransientModel):
     )
     mo_ids = fields.Many2many(comodel_name="mrp.production")
 
-    def _get_overhead_account(self):
-        overhead_account = self.env.company.account_production_wip_overhead_account_id
-        if overhead_account:
-            return overhead_account.id
+    def _get_company_or_category_default(self, company_field, category_field):
+        # The company carries the fact; the categories' default mirrors it and
+        # stands in where a company has none.
         ProductCategory = self.env["product.category"]
-        return (
-            ProductCategory._fields["property_stock_account_production_cost_id"]
-            .get_company_dependent_fallback(ProductCategory)
-            .id
-        )
+        return self.env.company[company_field] or ProductCategory._fields[
+            category_field
+        ].get_company_dependent_fallback(ProductCategory)
+
+    def _get_overhead_account(self):
+        return self._get_company_or_category_default(
+            "account_production_wip_overhead_account_id",
+            "property_stock_account_production_cost_id",
+        ).id
 
     def _get_day_end_utc(self, day):
         try:
@@ -150,12 +151,9 @@ class MrpAccountWipAccounting(models.TransientModel):
             components=compo_value,
             overhead=overhead_value,
         )
-        sval_acc = (
-            self.env["product.category"]
-            ._fields["property_stock_valuation_account_id"]
-            .get_company_dependent_fallback(self.env["product.category"])
-            .id
-        )
+        sval_acc = self._get_company_or_category_default(
+            "account_stock_valuation_id", "property_stock_valuation_account_id"
+        ).id
         return [
             Command.create(
                 {
