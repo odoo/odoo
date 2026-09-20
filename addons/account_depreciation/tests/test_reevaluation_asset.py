@@ -2608,7 +2608,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             }
         )
         bill.action_post()
-        asset = bill.capitalised_asset_ids
+        asset = bill.capitalised_board_ids
 
         self.env.company.loss_account_id = self.company_data[
             "default_account_expense"

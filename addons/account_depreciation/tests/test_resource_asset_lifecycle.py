@@ -95,7 +95,7 @@ class TestResourceAssetLifecycle(TestAccountAssetCommon):
 
     def test_disposing_several_assets_refuses_when_one_has_a_running_board(self):
         board = self._running_board()
-        van = self.env["resource.asset"].create(
+        van = self.env["account.depreciation.board"].create(
             {"name": "Van", "kind_id": self.env.ref("resource_asset.kind_vehicle").id}
         )
         with self.assertRaises(UserError):
@@ -103,7 +103,7 @@ class TestResourceAssetLifecycle(TestAccountAssetCommon):
         self.assertNotEqual(van.state, "disposed")
 
     def test_disposing_an_asset_without_a_running_board_disposes_it(self):
-        van = self.env["resource.asset"].create(
+        van = self.env["account.depreciation.board"].create(
             {"name": "Van", "kind_id": self.env.ref("resource_asset.kind_vehicle").id}
         )
         draft = self.create_asset(1200, "yearly", 4)
@@ -143,7 +143,7 @@ class TestResourceAssetLifecycle(TestAccountAssetCommon):
         self.assertEqual(asset.depreciation_state, "open")
 
     def test_disposing_an_asset_without_a_board_needs_no_accounts(self):
-        van = self.env["resource.asset"].create(
+        van = self.env["account.depreciation.board"].create(
             {"name": "Van", "kind_id": self.env.ref("resource_asset.kind_vehicle").id}
         )
         van._dispose(self.today)

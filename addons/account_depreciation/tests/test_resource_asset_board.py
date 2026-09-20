@@ -30,8 +30,7 @@ class TestResourceAssetBoard(TestAccountAssetCommon):
         self.assertFalse(van.depreciation_state)
         self.assertEqual(van.date_acquisition, datetime.date(2019, 5, 1))
         self.assertEqual(van.date_disposal, datetime.date(2024, 5, 1))
-        self.assertFalse(van.date_prorata)
-        self.assertFalse(van.depreciation_journal_id)
+        self.assertFalse(van.board_id)
         van.active = False
         self.assertFalse(van.active)
 
@@ -63,9 +62,9 @@ class TestResourceAssetBoard(TestAccountAssetCommon):
         van = self._plain_asset()
         board = self.create_asset(1200, "yearly", 4)
         action = self.env.ref("account_depreciation.action_account_asset_form")
-        listed = self.env["resource.asset"].search(eval(action.domain))  # noqa: S307  a literal domain from our own data file
+        listed = self.env["account.depreciation.board"].search(eval(action.domain))  # noqa: S307  a literal domain from our own data file
         self.assertIn(board, listed)
-        self.assertNotIn(van, listed)
+        self.assertNotIn(van, listed.asset_id)
 
     def test_copying_a_plain_asset_does_not_make_it_a_board(self):
         van = self._plain_asset()
@@ -89,7 +88,12 @@ class TestResourceAssetBoard(TestAccountAssetCommon):
         van = (
             self.env["resource.asset"]
             .with_user(asset_user)
-            .create({"name": "Delivery van", "kind_id": self.vehicle.id})
+            .create(
+                {
+                    "name": "Delivery van",
+                    "kind_id": self.env.ref("account_depreciation.kind_fixed_asset").id,
+                }
+            )
         )
         self.assertFalse(van.sudo().depreciation_state)
 
@@ -120,7 +124,7 @@ class TestResourceAssetBoard(TestAccountAssetCommon):
         ).action_modify()
         increase = asset.increase_ids
         self.assertEqual(len(increase), 1)
-        self.assertEqual(increase.increased_asset_id, asset)
-        self.assertEqual(increase.parent_id, asset)
-        self.assertIn(increase, asset.child_ids)
+        self.assertEqual(increase.increased_board_id, asset)
+        self.assertEqual(increase.parent_id, asset.asset_id)
+        self.assertIn(increase.asset_id, asset.child_ids)
         self.assertEqual(asset.count_increase, 1)

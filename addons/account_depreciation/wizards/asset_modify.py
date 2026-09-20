@@ -15,10 +15,10 @@ class AssetModify(models.TransientModel):
 
     name = fields.Text(string="Note")
     asset_id = fields.Many2one(
-        comodel_name="resource.asset",
+        comodel_name="account.depreciation.board",
         required=True,
         ondelete="cascade",
-        help="The asset to be modified by this wizard",
+        help="The depreciation board this wizard modifies",
     )
     depreciation_duration = fields.Integer(
         string="Duration",
@@ -285,11 +285,11 @@ class AssetModify(models.TransientModel):
 
     @api.model_create_multi
     def create(self, vals_list):
-        Asset = self.env["resource.asset"]
+        Board = self.env["account.depreciation.board"]
         for vals in vals_list:
             if "asset_id" not in vals:
                 continue
-            asset = Asset.browse(vals["asset_id"])
+            asset = Board.browse(vals["asset_id"])
             if asset.depreciation_move_ids.filtered(
                 lambda m: (
                     m.state == "posted"
@@ -305,7 +305,7 @@ class AssetModify(models.TransientModel):
             for fname in self.INHERITED_FROM_ASSET:
                 if fname not in vals:
                     value = asset[fname]
-                    vals[fname] = value.id if Asset._fields[fname].relational else value
+                    vals[fname] = value.id if Board._fields[fname].relational else value
         return super().create(vals_list)
 
     def _check_can_modify(self):
@@ -318,7 +318,7 @@ class AssetModify(models.TransientModel):
             return
         if self.env["account.move"].search_count(
             [
-                ("depreciation_asset_id", "=", self.asset_id.id),
+                ("depreciation_board_id", "=", self.asset_id.id),
                 ("state", "=", "draft"),
                 ("date", "<=", self.date),
             ],
@@ -379,8 +379,9 @@ class AssetModify(models.TransientModel):
             }
         )
         move._post()
-        asset_increase = self.env["resource.asset"].create(
+        asset_increase = self.env["account.depreciation.board"].create(
             {
+                "created_asset": True,
                 "name": f"{self.asset_id.name}: {self.name}"
                 if self.name
                 else self.asset_id.name,
@@ -402,8 +403,8 @@ class AssetModify(models.TransientModel):
                 "account_depreciation_id": self.account_depreciation_id.id,
                 "account_depreciation_expense_id": self.account_depreciation_expense_id.id,
                 "depreciation_journal_id": self.asset_id.depreciation_journal_id.id,
-                "parent_id": self.asset_id.id,
-                "increased_asset_id": self.asset_id.id,
+                "parent_id": self.asset_id.asset_id.id,
+                "increased_board_id": self.asset_id.id,
                 "kind_id": self.asset_id.kind_id.id,
                 "original_move_line_ids": [
                     Command.set(

@@ -217,7 +217,11 @@ def _place_boards(env, board_ids, targets):
                 asset.id,
             )
         )
-        if board["parent_id"]:
+        # Since 1.5 the increase link is the board's, read from the legacy
+        # parent through the map; before, it sits on the asset.
+        if board["parent_id"] and column_exists(
+            cr, "resource_asset", "increased_asset_id"
+        ):
             cr.execute(
                 SQL(
                     "UPDATE resource_asset SET increased_asset_id = %s WHERE id = %s",
@@ -313,6 +317,17 @@ def _repoint_entries(cr):
         )
         cr.execute("ALTER TABLE account_move DROP COLUMN legacy_depreciation_asset_id")
     if table_exists(cr, "legacy_asset_move_line_rel"):
+        # 1.5 moves this relation onto the board; until then it is the
+        # asset's, and the ORM no longer creates it.
+        cr.execute(
+            """
+            CREATE TABLE IF NOT EXISTS asset_move_line_rel (
+                asset_id integer NOT NULL,
+                line_id integer NOT NULL,
+                PRIMARY KEY (asset_id, line_id)
+            )
+            """
+        )
         cr.execute(
             SQL(
                 """

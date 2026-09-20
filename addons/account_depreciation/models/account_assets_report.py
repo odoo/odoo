@@ -136,7 +136,7 @@ class AccountAssetReportHandler(models.AbstractModel):
             name = name_per_line_id[line_id]
             line = {
                 "id": report._get_generic_line_id(
-                    "resource.asset", asset_id, parent_line_id=parent_id
+                    "account.depreciation.board", asset_id, parent_line_id=parent_id
                 ),
                 "level": 2,
                 "name": name,
@@ -370,7 +370,10 @@ class AccountAssetReportHandler(models.AbstractModel):
             _model, res_id = report._get_model_info_from_id(line["id"])
 
             line["id"] = report._prepare_line_id(
-                [(None, parent_model, parent_id), (None, "resource.asset", res_id)]
+                [
+                    (None, parent_model, parent_id),
+                    (None, "account.depreciation.board", res_id),
+                ]
             )
 
             is_parent_in_unfolded_lines = any(
@@ -448,11 +451,19 @@ class AccountAssetReportHandler(models.AbstractModel):
     def _query_values(self, options, prefix_to_match=None, forced_account_id=None):
 
         self.env["account.move.line"].check_access("read")
-        self.env["resource.asset"].check_access("read")
+        self.env["account.depreciation.board"].check_access("read")
 
-        query = Query(self.env, alias="asset", table=SQL.identifier("resource_asset"))
+        query = Query(
+            self.env, alias="board", table=SQL.identifier("account_depreciation_board")
+        )
+        query.add_join(
+            "JOIN",
+            alias="asset",
+            table="resource_asset",
+            condition=SQL("asset.id = board.asset_id"),
+        )
         account_alias = query.join(
-            lhs_alias="asset",
+            lhs_alias="board",
             lhs_column="account_asset_id",
             rhs_table="account_account",
             rhs_column="id",
@@ -470,7 +481,7 @@ class AccountAssetReportHandler(models.AbstractModel):
             alias="move",
             table="account_move",
             condition=SQL(
-                "move.depreciation_asset_id = asset.id AND move.state = ANY(%s)",
+                "move.depreciation_board_id = board.id AND move.state = ANY(%s)",
                 list(move_states),
             ),
         )
@@ -514,31 +525,31 @@ class AccountAssetReportHandler(models.AbstractModel):
         )
         if selected_journals:
             query.add_where(
-                SQL("asset.depreciation_journal_id in %s", selected_journals)
+                SQL("board.depreciation_journal_id in %s", selected_journals)
             )
 
         sql = SQL(
             """
-            SELECT asset.id AS asset_id,
-                   asset.increased_asset_id AS parent_id,
+            SELECT board.id AS asset_id,
+                   board.increased_board_id AS parent_id,
                    asset.name AS asset_name,
-                   asset.asset_group_id AS asset_group_id,
+                   board.asset_group_id AS asset_group_id,
                    COALESCE(asset.value_original, 0) AS asset_original_value,
                    asset_company.currency_id AS asset_currency_id,
-                   COALESCE(asset.value_salvage, 0) as asset_salvage_value,
+                   COALESCE(board.value_salvage, 0) as asset_salvage_value,
                    MIN(move.date) AS asset_date,
                    asset.date_disposal AS asset_disposal_date,
                    asset.date_acquisition AS asset_acquisition_date,
-                   asset.depreciation_method AS asset_method,
-                   asset.depreciation_duration AS asset_method_number,
-                   asset.depreciation_period AS asset_method_period,
-                   asset.depreciation_factor AS asset_method_progress_factor,
-                   asset.depreciation_state AS asset_state,
+                   board.depreciation_method AS asset_method,
+                   board.depreciation_duration AS asset_method_number,
+                   board.depreciation_period AS asset_method_period,
+                   board.depreciation_factor AS asset_method_progress_factor,
+                   board.depreciation_state AS asset_state,
                    asset.company_id AS company_id,
                    %(account_code)s AS account_code,
                    %(account_name)s AS account_name,
                    %(account_id)s AS account_id,
-                   COALESCE(SUM(move.depreciation_value) FILTER (WHERE move.date < %(date_from)s), 0) + COALESCE(asset.value_depreciated_import, 0) AS depreciated_before,
+                   COALESCE(SUM(move.depreciation_value) FILTER (WHERE move.date < %(date_from)s), 0) + COALESCE(board.value_depreciated_import, 0) AS depreciated_before,
                    COALESCE(SUM(move.depreciation_value) FILTER (WHERE move.date BETWEEN %(date_from)s AND %(date_to)s), 0) AS depreciated_during,
                    COALESCE(SUM(move.depreciation_value) FILTER (WHERE move.date BETWEEN %(date_from)s AND %(date_to)s AND move.asset_move_type IN ('disposal', 'sale')), 0) AS asset_disposal_value
               FROM %(from_clause)s
@@ -546,10 +557,9 @@ class AccountAssetReportHandler(models.AbstractModel):
                AND asset.company_id in %(company_ids)s
                AND (asset.date_acquisition <= %(date_to)s OR move.date <= %(date_to)s)
                AND (asset.date_disposal >= %(date_from)s OR asset.date_disposal IS NULL)
-               AND asset.depreciation_state IS NOT NULL
-               AND (asset.depreciation_state not in ('draft', 'cancelled') OR (asset.depreciation_state = 'draft' AND %(include_draft)s))
-               AND (asset.active = 't' OR asset.depreciation_state = 'close')
-          GROUP BY asset.id, asset_company.currency_id, account_id, account_code, account_name
+               AND (board.depreciation_state not in ('draft', 'cancelled') OR (board.depreciation_state = 'draft' AND %(include_draft)s))
+               AND (asset.active = 't' OR board.depreciation_state = 'close')
+          GROUP BY board.id, asset.id, asset_company.currency_id, account_id, account_code, account_name
           ORDER BY account_code, asset.date_acquisition, asset.id;
             """,
             account_code=account_code,

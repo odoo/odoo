@@ -62,27 +62,27 @@ class TestResourceAssetComponents(TestAccountAssetCommon):
 
     def test_one_profile_creates_one_root_asset(self):
         self.account.depreciation_profile_ids = self.depreciable
-        assets = self._bill().capitalised_asset_ids
+        assets = self._bill().capitalised_board_ids
         self.assertEqual(len(assets), 1)
         self.assertFalse(assets.parent_id)
         self.assertEqual(assets.depreciation_profile_id, self.depreciable)
 
     def test_a_second_profile_lands_on_a_component(self):
         self.account.depreciation_profile_ids = self.depreciable | self.non_depreciable
-        assets = self._bill().capitalised_asset_ids
+        assets = self._bill().capitalised_board_ids
         self.assertEqual(len(assets), 2)
         root = assets.filtered(lambda asset: not asset.parent_id)
         component = assets - root
         self.assertEqual(len(root), 1)
-        self.assertEqual(component.parent_id, root)
+        self.assertEqual(component.parent_id, root.asset_id)
         self.assertIn(component.depreciation_profile_id.name, component.name)
         self.assertIn(root.name, component.name)
 
     def test_a_line_naming_an_asset_without_a_board_depreciates_that_asset(self):
         self.account.depreciation_profile_ids = self.depreciable
         van = self._plain_asset()
-        assets = self._bill(asset=van).capitalised_asset_ids
-        self.assertEqual(assets, van)
+        assets = self._bill(asset=van).capitalised_board_ids
+        self.assertEqual(assets.asset_id, van)
         self.assertEqual(van.depreciation_state, "draft")
         self.assertFalse(van.parent_id)
 
@@ -90,22 +90,23 @@ class TestResourceAssetComponents(TestAccountAssetCommon):
         self.account.depreciation_profile_ids = self.depreciable
         van = self._plain_asset()
         self._bill(asset=van)
-        second = self._bill(asset=van, label="Crane").capitalised_asset_ids
-        self.assertNotEqual(second, van)
+        second = self._bill(asset=van, label="Crane").capitalised_board_ids
+        self.assertNotEqual(second.asset_id, van)
         self.assertEqual(second.parent_id, van)
         self.assertIn(van.name, second.name)
 
     def test_a_line_naming_an_asset_with_two_profiles_keeps_one_root(self):
         self.account.depreciation_profile_ids = self.depreciable | self.non_depreciable
         van = self._plain_asset()
-        assets = self._bill(asset=van).capitalised_asset_ids
+        assets = self._bill(asset=van).capitalised_board_ids
         self.assertEqual(len(assets), 2)
-        self.assertIn(van, assets)
-        self.assertEqual((assets - van).parent_id, van)
+        self.assertIn(van, assets.asset_id)
+        component = assets.filtered(lambda board: board.asset_id != van)
+        self.assertEqual(component.parent_id, van)
 
     def test_several_units_of_one_line_are_siblings(self):
         self.account.multiple_assets_per_line = True
         self.account.depreciation_profile_ids = self.depreciable
-        assets = self._bill(price=1000, quantity=3).capitalised_asset_ids
+        assets = self._bill(price=1000, quantity=3).capitalised_board_ids
         self.assertEqual(len(assets), 3)
         self.assertFalse(assets.parent_id)

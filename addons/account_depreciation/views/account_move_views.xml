@@ -8,11 +8,11 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <field
-                    name="depreciation_asset_id"
+                    name="depreciation_board_id"
                     groups="account.group_account_readonly,account.group_account_invoice"
                     invisible="1" />
                 <field
-                    name="capitalised_asset_ids"
+                    name="capitalised_board_ids"
                     groups="account.group_account_readonly,account.group_account_invoice"
                     invisible="1" />
                 <field
@@ -29,7 +29,7 @@
                     string="Asset"
                     icon="fa-cube"
                     groups="account.group_account_invoice,account.group_account_readonly"
-                    invisible="not depreciation_asset_id"
+                    invisible="not depreciation_board_id"
                     class="oe_stat_button" />
                 <button
                     name="action_view_capitalised_asset_ids"
@@ -62,7 +62,7 @@
                 <field
                     name="asset_move_type"
                     groups="account.group_account_invoice,account.group_account_readonly"
-                    invisible="not depreciation_asset_id and not capitalised_asset_ids"
+                    invisible="not depreciation_board_id and not capitalised_board_ids"
                     readonly="0" />
             </xpath>
             <xpath
@@ -71,7 +71,7 @@
                 <field
                     name="asset_move_type"
                     groups="account.group_account_invoice,account.group_account_readonly"
-                    invisible="not depreciation_asset_id and not capitalised_asset_ids"
+                    invisible="not depreciation_board_id and not capitalised_board_ids"
                     readonly="0" />
             </xpath>
         </field>
@@ -86,8 +86,8 @@
                 <group
                     string="Related Assets"
                     groups="account.group_account_invoice,account.group_account_readonly"
-                    invisible="not capitalised_asset_ids">
-                    <field name="capitalised_asset_ids" nolabel="1" />
+                    invisible="not capitalised_board_ids">
+                    <field name="capitalised_board_ids" nolabel="1" />
                 </group>
             </field>
         </field>

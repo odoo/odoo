@@ -3,6 +3,7 @@ from . import account_asset_group
 from . import account_assets_report
 from . import account_chart_template
 from . import account_depreciation_profile
+from . import account_depreciation_board
 from . import account_move
 from . import account_return
 from . import res_company

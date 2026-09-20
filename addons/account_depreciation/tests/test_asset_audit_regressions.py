@@ -115,7 +115,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
     def test_board_computation_rejects_an_unknown_method(self):
         asset = self.create_asset(1200, "yearly", 4)
         self.env.cr.execute(
-            "UPDATE resource_asset SET depreciation_method = 'exotic' WHERE id = %s",
+            "UPDATE account_depreciation_board SET depreciation_method = 'exotic' WHERE id = %s",
             (asset.id,),
         )
         asset.invalidate_recordset(["depreciation_method"])
@@ -144,7 +144,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
             }
         )
         asset = (
-            self.env["resource.asset"]
+            self.env["account.depreciation.board"]
             .with_user(user)
             .create(
                 {
@@ -378,7 +378,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         )
         move.action_post()
         line = move.line_ids.filtered(lambda aml: aml.debit)
-        siblings = self.env["resource.asset"]
+        siblings = self.env["account.depreciation.board"]
         for index in range(3):
             siblings |= self.create_asset(
                 300,
@@ -388,7 +388,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
                 original_move_line_ids=[Command.set(line.ids)],
             )
 
-        Asset = self.env["resource.asset"]
+        Asset = self.env["account.depreciation.board"]
         siblings.invalidate_recordset()
         one_at_a_time = [
             len(Asset.browse(asset.id).linked_assets_ids) for asset in siblings
@@ -407,7 +407,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         self.assertTrue(siblings[1].warning_count_assets)
 
     def test_board_asks_each_fiscal_year_once_for_the_whole_batch(self):
-        assets = self.env["resource.asset"]
+        assets = self.env["account.depreciation.board"]
         for index in range(5):
             assets |= self.create_asset(
                 6000, "monthly", 24, name=f"batched {index}", depreciation_state="draft"
@@ -444,7 +444,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
             return original(self, *args, **kwargs)
 
         with patch.object(AccountJournal, "search", counting):
-            assets = self.env["resource.asset"].create(
+            assets = self.env["account.depreciation.board"].create(
                 [
                     {
                         "name": f"journal batch {index}",
@@ -608,7 +608,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         self.assertEqual(
             len(sale_moves), 1, "only the asset that was sold gets a sale entry"
         )
-        self.assertEqual(sale_moves.depreciation_asset_id, asset)
+        self.assertEqual(sale_moves.depreciation_board_id, asset)
         neutralised = sum(
             line.balance
             for line in sale_moves.line_ids
@@ -655,7 +655,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
             2000, "yearly", 4
         )
 
-        action = assets.open_asset(["form"])
+        action = assets.open_board(["form"])
 
         self.assertFalse(action["res_id"])
         self.assertEqual(sorted(action["domain"][0][2]), sorted(assets.ids))
@@ -793,7 +793,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         line = bill.line_ids.filtered(
             lambda aml: aml.account_id == self.company_data["default_account_assets"]
         )
-        assets = self.env["resource.asset"]
+        assets = self.env["account.depreciation.board"]
         for index in range(count):
             assets |= self.create_asset(
                 900,
@@ -816,12 +816,12 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
 
     def test_deleting_every_asset_of_a_bill_untypes_it_too(self):
         bill, assets = self._bill_with_assets(2, "pair")
-        self.assertEqual(len(bill.capitalised_asset_ids), 2)
+        self.assertEqual(len(bill.capitalised_board_ids), 2)
 
         assets.unlink()
         self.env.flush_all()
 
-        self.assertFalse(bill.capitalised_asset_ids)
+        self.assertFalse(bill.capitalised_board_ids)
         self.assertFalse(bill.asset_move_type)
 
     def test_deleting_one_of_two_assets_leaves_the_bill_typed(self):
@@ -830,7 +830,7 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         assets[0].unlink()
         self.env.flush_all()
 
-        self.assertEqual(len(bill.capitalised_asset_ids), 1)
+        self.assertEqual(len(bill.capitalised_board_ids), 1)
         self.assertEqual(bill.asset_move_type, "purchase")
 
     def test_deleting_assets_logs_one_note_per_bill(self):

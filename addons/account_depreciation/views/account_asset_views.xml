@@ -2,9 +2,8 @@
 <odoo>
 
     <record id="view_account_asset_form" model="ir.ui.view">
-        <field name="name">resource.asset.form.depreciation</field>
-        <field name="model">resource.asset</field>
-        <field name="priority">90</field>
+        <field name="name">account.depreciation.board.form</field>
+        <field name="model">account.depreciation.board</field>
         <field name="arch" type="xml">
             <form string="Asset">
                 <field
@@ -16,7 +15,7 @@
                 <field name="display_account_asset_id" invisible="1" />
                 <field name="depreciation_state" invisible="1" />
                 <field name="count_depreciation" invisible="1" />
-                <field name="increased_asset_id" invisible="1" />
+                <field name="increased_board_id" invisible="1" />
                 <header>
                     <button
                         name="action_confirm"
@@ -122,7 +121,7 @@
                             type="object"
                             string="Parent Asset"
                             icon="fa-bars"
-                            invisible="not increased_asset_id"
+                            invisible="not increased_board_id"
                             class="oe_stat_button" />
                     </div>
                     <widget
@@ -336,7 +335,7 @@
                         <page name="related_items" string="Bills">
                             <field
                                 name="original_move_line_ids"
-                                domain="[                                     ('parent_state', '=', 'posted'),                                     ('company_id', '=', company_id),                                     ('account_id.account_type', 'in', ('asset_fixed', 'asset_non_current', 'asset_current')),                                     ('move_id.move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt', 'entry')),                                     ('move_id.depreciation_asset_id', '=', False),                                 ]"
+                                domain="[                                     ('parent_state', '=', 'posted'),                                     ('company_id', '=', company_id),                                     ('account_id.account_type', 'in', ('asset_fixed', 'asset_non_current', 'asset_current')),                                     ('move_id.move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt', 'entry')),                                     ('move_id.depreciation_board_id', '=', False),                                 ]"
                                 context="{'disable_preview': 1, 'list_view_ref': 'account_depreciation.view_account_move_line_list_asset'}"
                                 readonly="depreciation_state == 'posted'"
                                 class="original_move_line_ids_field">
@@ -388,9 +387,8 @@
     </record>
 
     <record id="view_account_asset_kanban" model="ir.ui.view">
-        <field name="name">resource.asset.kanban.depreciation</field>
-        <field name="model">resource.asset</field>
-        <field name="priority">90</field>
+        <field name="name">account.depreciation.board.kanban</field>
+        <field name="model">account.depreciation.board</field>
         <field name="arch" type="xml">
             <kanban sample="1" class="o_kanban_mobile">
                 <field name="currency_id" />
@@ -452,9 +450,8 @@
     </record>
 
     <record id="view_account_asset_tree" model="ir.ui.view">
-        <field name="name">resource.asset.list.depreciation</field>
-        <field name="model">resource.asset</field>
-        <field name="priority">90</field>
+        <field name="name">account.depreciation.board.list</field>
+        <field name="model">account.depreciation.board</field>
         <field name="arch" type="xml">
             <list
                 string="Assets"
@@ -508,7 +505,7 @@
                     groups="!base.group_multi_company"
                     column_invisible="True"
                     readonly="depreciation_state != 'draft'" />
-                <field name="increased_asset_id" optional="hide" readonly="1" />
+                <field name="increased_board_id" optional="hide" readonly="1" />
                 <field name="depreciation_state" readonly="1" />
                 <field
                     name="activity_exception_decoration"
@@ -524,9 +521,8 @@
     </record>
 
     <record id="view_account_asset_search" model="ir.ui.view">
-        <field name="name">resource.asset.search.depreciation</field>
-        <field name="model">resource.asset</field>
-        <field name="priority">90</field>
+        <field name="name">account.depreciation.board.search</field>
+        <field name="model">account.depreciation.board</field>
         <field name="arch" type="xml">
             <search string="Asset Account">
                 <field name="name" string="Asset" />
@@ -587,12 +583,10 @@
 
     <record id="action_account_asset_form" model="ir.actions.act_window">
         <field name="name">Assets</field>
-        <field name="res_model">resource.asset</field>
+        <field name="res_model">account.depreciation.board</field>
         <field name="path">assets</field>
         <field name="search_view_id" ref="view_account_asset_search" />
-        <field
-            name="domain">[('depreciation_state', '!=', False), ('increased_asset_id', '=', False)]</field>
-        <field name="context">{'default_depreciation_state': 'draft'}</field>
+        <field name="domain">[('increased_board_id', '=', False)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Import your fixed assets' original data and their already accumulated depreciation.
@@ -611,8 +605,8 @@
 
     <record id="action_account_asset_run" model="ir.actions.server">
         <field name="name">Confirm</field>
-        <field name="model_id" ref="resource_asset.model_resource_asset" />
-        <field name="binding_model_id" ref="resource_asset.model_resource_asset" />
+        <field name="model_id" ref="model_account_depreciation_board" />
+        <field name="binding_model_id" ref="model_account_depreciation_board" />
         <field name="binding_icon">fa-solid fa-check</field>
         <field
             name="group_ids"
@@ -625,8 +619,8 @@
 
     <record id="action_account_asset_compute_depreciations" model="ir.actions.server">
         <field name="name">Compute Depreciation</field>
-        <field name="model_id" ref="resource_asset.model_resource_asset" />
-        <field name="binding_model_id" ref="resource_asset.model_resource_asset" />
+        <field name="model_id" ref="model_account_depreciation_board" />
+        <field name="binding_model_id" ref="model_account_depreciation_board" />
         <field name="binding_view_types">list,kanban</field>
         <field
             name="group_ids"
@@ -655,7 +649,7 @@
 
     <record id="action_server_download_asset_template" model="ir.actions.server">
         <field name="name">Download Asset Import Template</field>
-        <field name="model_id" ref="resource_asset.model_resource_asset" />
+        <field name="model_id" ref="model_account_depreciation_board" />
         <field name="state">code</field>
         <field
             name="code">active_company = env.company

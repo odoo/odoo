@@ -103,7 +103,7 @@ class AccountDepreciationProfile(models.Model):
         help="The kind given to an asset this profile creates. Without one, the asset is a Fixed Asset.",
     )
     asset_ids = fields.One2many(
-        comodel_name="resource.asset",
+        comodel_name="account.depreciation.board",
         inverse_name="depreciation_profile_id",
         string="Assets",
     )
@@ -146,4 +146,4 @@ class AccountDepreciationProfile(models.Model):
 
     def action_view_assets(self):
         self.check_singleton()
-        return self.asset_ids.open_asset(["list", "form"])
+        return self.asset_ids.open_board(["list", "form"])
