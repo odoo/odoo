@@ -127,17 +127,30 @@ def get_cache_miss_from_origin(
     return field._get_cache(env)[record_id]
 
 
+def _get_tree_sibling_cached(field: Field, env: Environment, record_id) -> typing.Any:
+    for sibling in field.tree_siblings:
+        value = sibling._get_cache(env).get(record_id, SENTINEL)
+        if value is not SENTINEL:
+            return value
+    return SENTINEL
+
+
 def get_cache_miss_by_compute(
     field: Field, record: BaseModel, env: Environment, record_id
 ):
     if env.is_protected(field, record):
+        # protection is a fact of the row: the value a sibling model of the
+        # tree holds for it is the row's value, read through this field
+        value = _get_tree_sibling_cached(field, env, record_id)
         _debug.logic(
             "field.cache_miss.compute_protected",
             model=field.model_name,
             field=field.name,
             record=record_id,
+            from_sibling=value is not SENTINEL,
         )
-        value = field.convert_to_cache(False, record, validate=False)
+        if value is SENTINEL:
+            value = field.convert_to_cache(False, record, validate=False)
         field._update_cache(record, value)
     else:
         recs = record if field.recursive else field._to_prefetch(record)

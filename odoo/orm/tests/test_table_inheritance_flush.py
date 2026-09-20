@@ -147,14 +147,25 @@ class CountedRoot(models.Model):
 
     name = fields.Char()
     loud = fields.Char(compute="_compute_loud", store=True, recursive=True)
+    hint = fields.Char(compute="_compute_hint", inverse="_inverse_hint")
 
     computed_ids: list = []
+    hints_seen_through_root: list = []
 
     @api.depends("name")
     def _compute_loud(self):
         for record in self:
             type(self).computed_ids.append(record.id)
             record.loud = (record.name or "").upper()
+
+    @api.depends("name")
+    def _compute_hint(self):
+        for record in self:
+            record.hint = f"computed {record.name}"
+
+    def _inverse_hint(self):
+        through_root = self.env["counted.root"].browse(self.ids)
+        type(self).hints_seen_through_root.extend(through_root.mapped("hint"))
 
 
 class CountedLeaf(models.Model):
@@ -266,3 +277,17 @@ def test_a_compute_through_one_model_evicts_the_value_the_others_cached():
         env.add_to_compute(root_loud, root)
         assert root.loud == "UNO"
         assert "loud" not in leaf._cache, "the leaf must re-read what the root computed"
+
+
+def test_a_protected_read_through_a_sibling_sees_the_value_being_written():
+    # the leaf's write holds the new value in the leaf's cache and evicts the
+    # root's copy; the inverse, protected, reads the row through the root and
+    # must see that value, not the False a protected miss falls back to
+    with model_test_env(CountedRoot, CountedLeaf) as env:
+        leaf = env["counted.leaf"].create({"name": "one"})
+        env.flush_all()
+        CountedRoot.hints_seen_through_root = []
+        leaf.hint = "written"
+        assert CountedRoot.hints_seen_through_root == ["written"]
+        root = env["counted.root"].browse(leaf.id)
+        assert root.hint == "written"
