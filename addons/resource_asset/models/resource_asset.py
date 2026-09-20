@@ -34,12 +34,12 @@ class ResourceAsset(models.Model):
     _order = "name, id"
     _check_company_auto = True
 
-    name = fields.Char(
+    name = fields.Char(  # noqa: E8529  identity column of a delegated record: the asset, SAF-T and compliance reports read it in raw SQL across three repos
         related="resource_id.name",
         store=True,
         readonly=False,
     )
-    active = fields.Boolean(
+    active = fields.Boolean(  # noqa: E8529  identity column of a delegated record: every search filters on it, and the asset reports test it in raw SQL
         related="resource_id.active",
         default=True,
         store=True,

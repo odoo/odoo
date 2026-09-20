@@ -69,7 +69,7 @@ class AccountMoveLine(models.Model):
         store=False,
     )
 
-    company_id = fields.Many2one(
+    company_id = fields.Many2one(  # noqa: E8529  measured: a 2 M-line ledger aggregates 3-4x slower filtering company and state through account_move
         related="move_id.company_id",
         precompute=True,
         store=True,
@@ -89,7 +89,7 @@ class AccountMoveLine(models.Model):
         store=True,
         index="btree",
     )
-    parent_state = fields.Selection(
+    parent_state = fields.Selection(  # noqa: E8529  measured: a 2 M-line ledger aggregates 3-4x slower filtering state through account_move (88 -> 326 ms, 250 -> 679 ms)
         related="move_id.state",
         store=True,
     )

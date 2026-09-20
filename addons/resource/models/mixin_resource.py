@@ -27,7 +27,7 @@ class MixinResource(models.AbstractModel):
         readonly=False,
         help="The time zone where this resource works. Its working schedule is read in this zone: an 08:00-17:00 schedule means 08:00-17:00 here, whatever zone the schedule names. For an employee deployed away from the corporate office, set the zone of the place of work.",
     )
-    company_id = fields.Many2one(
+    company_id = fields.Many2one(  # noqa: E8529  multi-company key of hr.employee and resource.asset: UNIQUE (user_id, company_id) and two more on hr_employee, and the raw SQL that joins either table
         comodel_name="res.company",
         related="resource_id.company_id",
         string="Company",

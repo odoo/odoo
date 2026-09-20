@@ -93,7 +93,7 @@ class HrEmployee(models.Model):
         comodel_name="resource.resource",
         required=True,
     )
-    name = fields.Char(
+    name = fields.Char(  # noqa: E8529  identity column of a delegated record: 33 files join hr_employee in raw SQL and read it, and it leads _order and name search
         related="partner_id.name",
         string="Employee Name",
         inherited=True,
@@ -102,7 +102,7 @@ class HrEmployee(models.Model):
         readonly=False,
         tracking=True,
     )
-    active = fields.Boolean(
+    active = fields.Boolean(  # noqa: E8529  identity column of a delegated record: every search filters on it, 33 files join hr_employee in raw SQL
         related="resource_id.active",
         string="Active",
         default=True,
