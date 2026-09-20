@@ -21,6 +21,7 @@ records numbers. """,
     'data': [
         'views/phone_blacklist_views.xml',
         'views/res_partner_views.xml',
+        'wizard/mail_activity_schedule_views.xml',
         'wizard/phone_blacklist_remove_view.xml',
         'security/ir.access.csv',
     ],

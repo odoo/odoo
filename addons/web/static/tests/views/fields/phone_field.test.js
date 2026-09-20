@@ -51,7 +51,7 @@ afterEach(() => {
 
 test("callPhoneNumber reports that it opened the native phone link", () => {
     patchWithCleanup(user, { isSystem: false });
-    const callMade = callPhoneNumber({ services: {} }, { phoneNumber: "+12 345 67 89" });
+    const callMade = callPhoneNumber({ services: {} }, { phoneNumber: "+12 (345) 67-89" });
 
     expect(callMade).toBe(true);
     expect.verifySteps(["tel:+123456789"]);
@@ -136,6 +136,21 @@ test("PhoneField in form view on normal screens (edit)", async () => {
     // save
     await clickSave();
     expect(`input[type="tel"]`).toHaveValue("new");
+});
+
+test("PhoneField can hide action buttons", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+            <form>
+                <field name="foo" widget="phone" options="{'display_buttons': False}"/>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name='foo'] input").toHaveValue("yop");
+    expect(".o_field_widget[name='foo'] .o_phone_form_link").toHaveCount(0);
 });
 
 test("PhoneField in editable list view on normal screens", async () => {
