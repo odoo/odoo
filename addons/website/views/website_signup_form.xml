@@ -1,0 +1,17 @@
+<odoo>
+
+<template id="website_signup_extra_fields" inherit_id="auth_signup.signup" name="Website Signup Form">
+     <xpath expr="//form[hasclass('oe_signup_form')]" position="attributes">
+          <attribute name="data-model_name">res.partner</attribute>
+          <attribute name="enctype">multipart/form-data</attribute>
+          <attribute name="class" add="s_website_form_no_recaptcha" separator=" "/>
+     </xpath>
+     <xpath expr="//t[@t-call='auth_signup.fields']" position="after">
+          <div id="oe_structure_signup_fields"
+               class="oe_structure oe_empty s_website_form s_website_form_rows row s_col_no_bgcolor"
+               data-vcss="001"
+               data-editor-message="Add fields to the sign up form"/>
+     </xpath>
+</template>
+
+</odoo>
