@@ -192,6 +192,31 @@ class IrActionsActions(models.Model):
             table = self.env[model_name]._table
             if table == self._table or not sql.table_exists(cr, table):
                 continue
+            # A root row whose id already names a row of the concrete table is a
+            # shadow, not a stray: the action itself is complete in the subtype
+            # table and the root copy carries only the root's own columns.
+            # Moving it would insert a second row under the same id with every
+            # subtype column null, which the subtype's own NOT NULLs reject --
+            # `ir_act_server.model_id` first. Drop the shadow instead.
+            cr.execute(
+                SQL(
+                    "DELETE FROM ONLY %(root)s root WHERE root.type = %(type)s"
+                    " AND EXISTS (SELECT 1 FROM ONLY %(table)s sub"
+                    " WHERE sub.id = root.id)",
+                    root=SQL.identifier(self._table),
+                    table=SQL.identifier(table),
+                    type=model_name,
+                )
+            )
+            if shadows := cr.rowcount:
+                _logger.info(
+                    "%d %s shadow row(s) dropped from %s; the action itself "
+                    "already lives in %s.",
+                    shadows,
+                    model_name,
+                    self._table,
+                    table,
+                )
             cr.execute(
                 SQL(
                     "DELETE FROM ONLY %(root)s WHERE type = %(type)s"
