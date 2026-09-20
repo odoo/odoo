@@ -80,7 +80,12 @@ class ResPartner(models.Model):
 
     @api.depends("birthdate")
     def _compute_age_range_id(self) -> None:
-        age_ranges = self.env["res.partner.age.range"].sudo().search([])
+        # The ranges are read once, and only when a partner in the batch has
+        # a birthdate: a contact without one (most of them) costs no query.
+        dated = self.filtered("birthdate")
+        age_ranges = (
+            self.env["res.partner.age.range"].sudo().search([]) if dated else None
+        )
         for partner in self:
             if partner.birthdate:
                 age_range = age_ranges.filtered(

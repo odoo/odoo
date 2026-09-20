@@ -129,7 +129,11 @@ class MixinCompanyConfig(models.AbstractModel):
     def _for_each(self, companies: models.Model) -> Self:
         # a company not yet saved has no configuration to find or create
         companies = companies.filtered(lambda company: isinstance(company.id, int))
-        existing = self.sudo().search([("company_id", "in", companies.ids)])
+        # One query finds and fills the configurations: they are read in the
+        # caller's scope when it may read them, so the values it asks for next
+        # come from the cache; a reader without rights finds them as superuser.
+        reader = self if self.has_access("read") else self.sudo()
+        existing = reader.search_fetch([("company_id", "in", companies.ids)])
         missing = companies - existing.company_id
         if missing:
             _debug.lifecycle(

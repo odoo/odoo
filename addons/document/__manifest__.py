@@ -1,6 +1,6 @@
 {
     "name": "Documents",
-    "version": "1.16",
+    "version": "1.17",
     "category": "Productivity/Documents",
     "sequence": 80,
     "summary": "Collect, organize and share documents.",

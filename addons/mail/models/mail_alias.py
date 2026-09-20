@@ -433,34 +433,40 @@ class MailAlias(models.Model):
     @api.model
     @ormcache(cache="mail")
     def _get_alias_addresses(self) -> AliasAddresses:
-        aliases = self.sudo().search_fetch(
-            [("alias_name", "!=", False)],
+        # One query builds the whole cache: the parent's model name is joined
+        # in rather than read through ir.model afterwards.
+        self.flush_model(
             [
-                "alias_full_name",
                 "alias_name",
+                "alias_full_name",
                 "alias_incoming_local",
                 "alias_domain_id",
                 "alias_parent_model_id",
                 "alias_parent_thread_id",
-            ],
+            ]
         )
-        _debug.perf.count("addresses_computed", aliases=len(aliases))
+        self.env.cr.execute(
+            """
+            SELECT alias.alias_full_name, alias.alias_name, alias.alias_incoming_local,
+                   alias.alias_domain_id, parent_model.model, alias.alias_parent_thread_id
+              FROM mail_alias alias
+              LEFT JOIN ir_model parent_model ON parent_model.id = alias.alias_parent_model_id
+             WHERE alias.alias_name IS NOT NULL
+            """
+        )
+        rows = self.env.cr.fetchall()
+        _debug.perf.count("addresses_computed", aliases=len(rows))
         by_parent: dict[tuple[str, int], str] = {}
-        for alias in aliases:
-            if alias.alias_domain_id and alias.alias_parent_thread_id:
-                by_parent.setdefault(
-                    (alias.alias_parent_model_id.model, alias.alias_parent_thread_id),
-                    alias.alias_full_name,
-                )
+        for full_name, _name, _local, domain_id, parent_model, parent_thread_id in rows:
+            if domain_id and parent_thread_id:
+                by_parent.setdefault((parent_model, parent_thread_id), full_name)
         return AliasAddresses(
             frozenset(
-                alias.alias_full_name
-                for alias in aliases
-                if alias.alias_full_name and not alias.alias_incoming_local
+                full_name
+                for full_name, _name, local, *_rest in rows
+                if full_name and not local
             ),
-            frozenset(
-                alias.alias_name for alias in aliases if alias.alias_incoming_local
-            ),
+            frozenset(name for _full, name, local, *_rest in rows if local),
             by_parent,
         )
 

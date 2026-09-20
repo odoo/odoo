@@ -12,9 +12,13 @@ class MailMessage(models.Model):
         inverse_name="message_id",
         string="Related ratings",
     )
+    # Stored: the message store reads it on every thread load, and a stored
+    # column travels with the message row where a one2many scan is a query
+    # per batch.
     rating_id = fields.Many2one(
         comodel_name="rating.rating",
         compute="_compute_rating_id",
+        store=True,
     )
     rating_value = fields.Float(
         compute="_compute_rating_value",
@@ -23,6 +27,14 @@ class MailMessage(models.Model):
         store=False,
     )
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        # A message is created before any rating names it: saying so spares
+        # the compute a one2many read per batch on every message created.
+        for vals in vals_list:
+            vals.setdefault("rating_id", False)
+        return super().create(vals_list)
+
     @api.depends("rating_ids.consumed")
     def _compute_rating_id(self):
         for message in self:
@@ -30,7 +42,7 @@ class MailMessage(models.Model):
                 lambda rating: rating.consumed
             ).sorted("create_date", reverse=True)[:1]
 
-    @api.depends("rating_ids", "rating_ids.rating")
+    @api.depends("rating_id.rating")
     def _compute_rating_value(self):
         for message in self:
             message.rating_value = (

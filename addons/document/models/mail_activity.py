@@ -10,8 +10,27 @@ _debug = DebugLog(__name__)
 class MailActivity(models.Model):
     _inherit = "mail.activity"
 
+    request_document_ids = fields.One2many(
+        comodel_name="document.document",
+        inverse_name="request_activity_id",
+        string="Requested Documents",
+    )
+    is_document_request = fields.Boolean(
+        compute="_compute_is_document_request",
+        store=True,
+    )
+
+    @api.depends("request_document_ids")
+    def _compute_is_document_request(self) -> None:
+        for activity in self:
+            activity.is_document_request = bool(activity.request_document_ids)
+
     @api.model_create_multi
     def create(self, vals_list: list[dict]) -> MailActivity:
+        # No document names an activity before it exists: saying so spares the
+        # compute a one2many read per batch; the link below sets it when made.
+        for vals in vals_list:
+            vals.setdefault("is_document_request", False)
         activities = super().create(vals_list)
         upload_activities = activities.filtered(
             lambda act: act.activity_category == "upload_file"
@@ -141,12 +160,16 @@ class MailActivity(models.Model):
     def _action_done(
         self, feedback: str | bool = False, attachment_ids: list[int] | None = None
     ) -> tuple:
-        if not self:
+        # An activity knows whether a document names it as its request, from
+        # its own row: closing any other activity asks the document table
+        # nothing.
+        requests = self.filtered("is_document_request")
+        if not requests:
             return super()._action_done(
                 feedback=feedback, attachment_ids=attachment_ids
             )
         documents = self.env["document.document"].search(
-            [("request_activity_id", "in", self.ids)]
+            [("request_activity_id", "in", requests.ids)]
         )
         document_without_attachment = documents.filtered(lambda d: not d.attachment_id)
         if document_without_attachment and not feedback:

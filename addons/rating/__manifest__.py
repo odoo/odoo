@@ -1,6 +1,6 @@
 {
     "name": "Customer Rating",
-    "version": "1.2",
+    "version": "1.3",
     "category": "Productivity",
     "description": """
 This module allows a customer to give rating.

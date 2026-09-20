@@ -7,7 +7,7 @@ from odoo import _, api, exceptions, fields, models
 from odoo.api import ValuesType
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import ormcache
+from odoo.tools import SQL, ormcache
 
 if typing.TYPE_CHECKING:
     from odoo.addons.base.models.res_company import ResCompany
@@ -150,18 +150,39 @@ class MailAliasDomain(models.Model):
         if not names:
             return
 
-        siblings = self.sudo().search([("name", "in", names)])
+        # The records being checked are read from the cache and the others
+        # from the table: any fetch here would flush this model's pending
+        # rows first, and the unique index would refuse before this check can
+        # say why.
+        def addresses(domain):
+            return tuple(
+                f"{alias}@{domain.name}" if alias else ""
+                for alias in (domain.bounce_alias, domain.catchall_alias)
+            )
+
+        self.env.cr.execute(
+            SQL(
+                """
+                SELECT id, name, bounce_alias, catchall_alias
+                  FROM mail_alias_domain
+                 WHERE name = ANY(%s) AND NOT (id = ANY(%s))
+                """,
+                names,
+                list(self.ids),
+            )
+        )
         by_name = {}
-        for domain in siblings:
-            for address in (domain.bounce_email, domain.catchall_email):
-                if not address:
-                    continue
-                owners = by_name.setdefault(address, [])
-                if domain not in owners:
-                    owners.append(domain)
+        for sibling_id, name, bounce_alias, catchall_alias in self.env.cr.fetchall():
+            for alias in (bounce_alias, catchall_alias):
+                if alias:
+                    by_name.setdefault(f"{alias}@{name}", []).append(sibling_id)
+        for domain in self:
+            for address in addresses(domain):
+                if address:
+                    by_name.setdefault(address, []).append(domain.id)
 
         for domain in self:
-            for address in (domain.bounce_email, domain.catchall_email):
+            for address in addresses(domain):
                 if address and len(by_name.get(address, ())) > 1:
                     raise exceptions.ValidationError(
                         _(
@@ -171,7 +192,8 @@ class MailAliasDomain(models.Model):
                             address=address,
                         )
                     )
-            if domain.bounce_email and domain.bounce_email == domain.catchall_email:
+            bounce, catchall = addresses(domain)
+            if bounce and bounce == catchall:
                 raise exceptions.ValidationError(
                     _(
                         "Bounce and catchall cannot both be %(address)s: a message to "

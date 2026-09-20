@@ -2,7 +2,7 @@ import datetime
 
 import markupsafe
 
-from odoo import _, fields, models, tools
+from odoo import fields, models, tools
 
 
 class MixinMailThread(models.AbstractModel):
