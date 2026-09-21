@@ -703,7 +703,7 @@
                         <t t-name="card">
                             <main class="row-gap-1" t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
                                 <div class="o_kanban_project_header">
-                                    <a t-if="record.parent_id.raw_value" class="o_kanban_parent btn btn-link d-inline-flex gap-1 align-items-center mw-100 me-4 p-1 text-truncate" title="See Parent Task" name="action_open_parent_task" type="object" role="button">
+                                    <a t-if="record.parent_id.raw_value" class="o_kanban_parent btn btn-hover-dark d-inline-flex gap-1 align-items-center mw-100 me-4 p-1 text-truncate" title="See Parent Task" name="action_open_parent_task" type="object" role="button">
                                         <i class="oi oi-flip-vertical" data-icon="subdirectory_arrow_right"/>
                                         <field name="parent_id" class="text-truncate small lh-1"/>
                                     </a>

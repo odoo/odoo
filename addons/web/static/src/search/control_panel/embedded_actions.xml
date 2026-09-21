@@ -39,7 +39,7 @@
                     >
                         <div class="d-flex p-0 pe-1 align-items-center justify-content-between">
                             <span t-out="action.name"/>
-                            <i t-if="action.is_deletable" class="oi o_icon_right btn btn-link text-danger p-0 position-absolute end-0" data-icon="delete" title="Delete item" t-on-click.stop="() => this.props.state.openConfirmationDialog(action)" />
+                            <i t-if="action.is_deletable" class="oi o_icon_right btn btn-hover-danger p-0 position-absolute end-0" data-icon="delete" title="Delete item" t-on-click.stop="() => this.props.state.openConfirmationDialog(action)" />
                         </div>
                     </DropdownItem>
                 </t>
