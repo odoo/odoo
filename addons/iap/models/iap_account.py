@@ -4,14 +4,15 @@ import hashlib
 import logging
 import secrets
 import uuid
-import werkzeug.urls
 
-from odoo import api, fields, models, _
+import requests
+
+from odoo import api, fields, models, _, modules, tools
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, UserError
 from odoo.modules import module
 from odoo.tools import get_lang
-from odoo.tools.urls import urljoin as url_join
+from odoo.tools.urls import urljoin
 
 _logger = logging.getLogger(__name__)
 
@@ -58,6 +59,59 @@ class IapAccount(models.Model):
         self._get_account_information_from_iap()
         return super().web_read(*args, **kwargs)
 
+    def action_manage(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': self.get_credits_url(self.service_name, self.account_token),
+            'target': 'new',
+        }
+
+    def action_rotate_token(self):
+        self.ensure_one()
+        if not self.try_lock_for_update():
+            raise UserError(self.env._("Unable to rotate token, another process is busy. Please try later."))
+
+        endpoint = iap_tools.iap_get_endpoint(self.env)
+        # Request the rotation
+        url = urljoin(endpoint, '/iap/1/request-rotate-account-token')
+        try:
+            resp = requests.post(url, json={"old_account_token": self.account_token}, timeout=10)
+            resp.raise_for_status()
+        except requests.RequestException:
+            _logger.exception("IAP rotate token exception")
+            raise UserError(self.env._("Unexpected while contacting IAP. Please contact the support."))
+        data = resp.json()
+        if data.get('error'):
+            _logger.error("IAP rotate token error: %s", data['error'])
+            raise UserError(self.env._("Unexpected while contacting IAP. Please contact the support."))
+
+        # Write new token
+        if not data.get('new_account_token'):
+            _logger.error("IAP rotate token error: empty new_account_token")
+            raise UserError(self.env._("Unexpected while contacting IAP. Please contact the support."))
+        self.account_token = data['new_account_token']
+
+        if not tools.config['test_enable'] and not module.current_test:
+            self.env.cr.commit()
+
+        # Confirm the rotation
+        url = urljoin(endpoint, '/iap/1/confirm-rotate-account-token')
+        try:
+            resp = requests.post(url, json={
+                "new_account_token": self.account_token,
+            }, timeout=10)
+            resp.raise_for_status()
+        except requests.RequestException:
+            _logger.exception("IAP confirm rotate token exception")
+            raise UserError(self.env._("Unexpected while contacting IAP. Please contact the support."))
+        data = resp.json()
+        if data.get('error'):
+            _logger.error("IAP confirm rotate token error: %s", data['error'])
+            raise UserError(self.env._("Unexpected while contacting IAP. Please contact the support."))
+
+        _logger.info("IAP account token rotated. Account ID: %s", self.id)
+
     def write(self, vals):
         res = super().write(vals)
         if (
@@ -66,7 +120,7 @@ class IapAccount(models.Model):
         ):
             route = '/iap/1/update-warning-email-alerts'
             endpoint = iap_tools.iap_get_endpoint(self.env)
-            url = url_join(endpoint, route)
+            url = urljoin(endpoint, route)
             for account in self:
                 data = {
                     'account_token': account.sudo().account_token,
@@ -88,7 +142,7 @@ class IapAccount(models.Model):
             return
         route = '/iap/1/get-accounts-information'
         endpoint = iap_tools.iap_get_endpoint(self.env)
-        url = url_join(endpoint, route)
+        url = urljoin(endpoint, route)
         params = {
             'iap_accounts': [{
                 'token': account.sudo().account_token,
@@ -200,19 +254,23 @@ class IapAccount(models.Model):
     @api.model
     def get_credits_url(self, service_name, account_token=None):
         """ Called notably by: buy more widget, partner_autocomplete, snailmail, ... """
-        dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        if tools.config['test_enable'] or modules.module.current_test:
+            return "test_url"
         endpoint = iap_tools.iap_get_endpoint(self.env)
-        route = '/iap/1/credit'
-        base_url = url_join(endpoint, route)
+        url = urljoin(endpoint, '/iap/1/request-link-my-account')
         account_token = account_token or self.get(service_name).sudo().account_token
-        hashed_account_token = self._hash_iap_token(account_token)
-        d = {
-            'dbuuid': dbuuid,
-            'service_name': service_name,
-            'account_token': hashed_account_token,
-            'hashed': 1,
-        }
-        return '%s?%s' % (base_url, werkzeug.urls.url_encode(d))
+        try:
+            resp = requests.post(url, json={
+                "account_token": account_token,
+                "service_name": service_name,
+                "dbuuid": self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+            }, timeout=5)
+            resp.raise_for_status()
+            data = resp.json()
+        except requests.RequestException:
+            _logger.exception("Unable to get My IAP Account's url")
+            raise UserError(self.env._("Unexpected while contacting IAP. Please contact the support."))
+        return data['url']
 
     @api.model
     def _hash_iap_token(self, key):
@@ -229,6 +287,23 @@ class IapAccount(models.Model):
                 account_token=self.sudo().account_token,
                 service_name=self.service_name,
             ),
+        }
+
+    @api.model
+    def action_view_my_services(self):
+        endpoint = iap_tools.iap_get_endpoint(self.env)
+        url = urljoin(endpoint, '/iap/1/request-link-my-services')
+        account_tokens = self.env["iap.account"].search([]).mapped("account_token")
+        try:
+            resp = requests.post(url, json={"account_tokens": account_tokens}, timeout=5)
+            resp.raise_for_status()
+            data = resp.json()
+        except requests.RequestException:
+            _logger.exception("action_view_my_services")
+            raise UserError(self.env._("Unexpected while contacting IAP. Please contact the support."))
+        return {
+            "type": "ir.actions.act_url",
+            "url": data['url'],
         }
 
     @api.model
@@ -252,7 +327,7 @@ class IapAccount(models.Model):
         if account:
             route = '/iap/1/balance'
             endpoint = iap_tools.iap_get_endpoint(self.env)
-            url = url_join(endpoint, route)
+            url = urljoin(endpoint, route)
             params = {
                 'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
                 'account_token': account.sudo().account_token,
