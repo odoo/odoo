@@ -1,6 +1,8 @@
 from odoo import api, fields, models
 from odoo.tools import SQL
 
+BAND_THRESHOLD = 2
+
 
 class Test_Read_GroupOn_Date(models.Model):
     _name = "test_read_group.on_date"
@@ -258,6 +260,11 @@ class Test_Read_GroupTask(models.Model):
         group_by_sql="_parity_group_sql",
         order_by_sql="_parity_order_sql",
     )
+    band = fields.Selection(
+        [("low", "Low"), ("high", "High")],
+        compute="_compute_band",
+        group_by_sql="_band_group_sql",
+    )
     integer_squared = fields.Integer(
         compute="_compute_integer_squared", value_sql="_integer_squared_sql"
     )
@@ -268,6 +275,21 @@ class Test_Read_GroupTask(models.Model):
     def _compute_lead_user_id(self):
         for task in self:
             task.lead_user_id = task.user_ids[:1]
+
+    @api.depends("integer")
+    def _compute_band(self):
+        for task in self:
+            task.band = "high" if task.integer > BAND_THRESHOLD else "low"
+
+    def _band_group_sql(self, field, alias, query):
+        # carries a parameter on purpose: the same SQL object reaches SELECT,
+        # GROUPING(), GROUP BY and ORDER BY, and psycopg binds server-side, so
+        # an uninlined placeholder is a different $n in each of them
+        return SQL(
+            "CASE WHEN %s > %s THEN 'high' ELSE 'low' END",
+            self._field_to_sql(alias, "integer", query),
+            BAND_THRESHOLD,
+        )
 
     @api.depends("integer")
     def _compute_parity(self):

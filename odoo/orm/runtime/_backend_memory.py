@@ -22,6 +22,7 @@ from psycopg.errors import (
 from odoo.exceptions import LockError, UserError
 from odoo.libs.accel import fast_clone
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.sql import get_index_name
 from odoo.tools import SQL, OrderedSet, Query, get_lang, partition, unique
 from odoo.tools.translate import _
 
@@ -239,6 +240,18 @@ def _check_table_constraints(storage, model: BaseModel, rows: list[dict]) -> Non
         if isinstance(obj, Constraint)
         and (match := _UNIQUE_DEFINITION.match(obj.get_definition(registry)))
     ]
+    # `index="unique"` is a partial unique index on the column, NULLs excluded
+    # (_registry_schema._get_index_expression), which is the same shape as a
+    # one-column UNIQUE constraint and is the only thing holding a One2one to
+    # one row. A translated column is never indexed, so it is never unique.
+    uniques += [
+        (get_index_name(model._table, field.name), (field.name,))
+        for field in model._fields.values()
+        if field.index == "unique"
+        and field.store
+        and field.column_type
+        and not field.translate
+    ]
     if not uniques:
         return
     existing = [
@@ -247,13 +260,22 @@ def _check_table_constraints(storage, model: BaseModel, rows: list[dict]) -> Non
         if (stored := storage.get_row(model._table, row_id)) is not None
     ]
     for conname, columns in uniques:
+        # the state the batch leaves behind, not the state it starts from: a
+        # row of this batch that rewrites the key no longer holds its stored
+        # value, so releasing a value on one row and taking it on another in
+        # one flush is allowed, exactly as the successive UPDATEs allow it
+        rewritten = {
+            row.get("id") for row in rows if all(column in row for column in columns)
+        }
         seen: set[tuple] = set()
         for row in rows:
+            if not all(column in row for column in columns):
+                continue
             key = tuple(row.get(column) for column in columns)
             if any(value is None for value in key):
                 continue
             if key in seen or any(
-                stored.get("id") != row.get("id")
+                stored.get("id") not in rewritten
                 and tuple(stored.get(column) for column in columns) == key
                 for stored in existing
             ):
@@ -1139,26 +1161,63 @@ class InMemoryBackend:
             if field.is_stored_computed:
                 # a stale PENDING marker would keep the row's value out
                 field._clear_dead_pending(records)
-        for record_id in record_ids:
-            row = self.storage.get_row(model._table, record_id)
-            if row is not None:
-                for field in column_fields:
-                    if field.translate and prefetch_langs:
-                        # the whole translation object, spread over the
-                        # language caches the way the SQL read is inserted
-                        field._insert_cache(
-                            model.browse((record_id,)),
-                            [_unwrap_json(row.get(field.name))],
-                        )
-                        continue
-                    value = _get_column_read_value(field, row.get(field.name), env)
-                    if field.type == "json":
-                        value = fast_clone(value)
-                    elif not (field.is_binary and isinstance(value, str)):
-                        # a pretty size enters the cache as the text SQL
-                        # answers, not as the bytes a binary holds
-                        value = field.convert_to_cache(value, records)
-                    field_caches[field].setdefault(record_id, value)
+        rows = {
+            record_id: row
+            for record_id in record_ids
+            if (row := self.storage.get_row(model._table, record_id)) is not None
+        }
+        if not rows:
+            return
+        core = env.core
+        for field in column_fields:
+            if field.translate and prefetch_langs:
+                # the whole translation object, spread over the language
+                # caches the way the SQL read is inserted
+                for record_id, row in rows.items():
+                    field._insert_cache(
+                        model.browse((record_id,)),
+                        [_unwrap_json(row.get(field.name))],
+                    )
+                continue
+            ids, values = [], []
+            for record_id, row in rows.items():
+                value = _get_column_read_value(field, row.get(field.name), env)
+                if field.type == "json":
+                    value = fast_clone(value)
+                elif not (field.is_binary and isinstance(value, str)):
+                    # a pretty size enters the cache as the text SQL answers,
+                    # not as the bytes a binary holds
+                    value = field.convert_to_cache(value, records)
+                ids.append(record_id)
+                values.append(value)
+            if field.is_stored_computed:
+                # a row whose compute is pending keeps it: the table holds the
+                # value before the change, not after it (backend.fetch)
+                members = (field, *field.tree_siblings)
+                if any(core.has_pending_field(member) for member in members):
+                    keep = [
+                        index
+                        for index, record_id in enumerate(ids)
+                        if not core.is_pending_in_tree(field, record_id)
+                    ]
+                    ids = [ids[index] for index in keep]
+                    values = [values[index] for index in keep]
+            if not ids:
+                continue
+            try:
+                # through the field, so a relational read mirrors into the
+                # superuser scope exactly as the SQL fetch does
+                field._insert_cache(model.browse(tuple(ids)), values)
+            except (KeyError, AttributeError, TypeError) as e:
+                _logger.debug(
+                    "DictBackend cache insert fell back for %s.%s: %s",
+                    model._name,
+                    field.name,
+                    e,
+                )
+                field_cache = field_caches[field]
+                for record_id, value in zip(ids, values, strict=True):
+                    field_cache.setdefault(record_id, value)
 
     def search_raw(
         self,

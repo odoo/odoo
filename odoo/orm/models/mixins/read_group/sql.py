@@ -265,7 +265,13 @@ class _ReadGroupSQLMixin(_ModelStubs):
                 shape="sql_hook",
                 hook=field.group_by_sql,
             )
-            return getattr(self, field.group_by_sql)(field, alias, query)
+            # inlined like every other groupby term: the same SQL object is
+            # placed in SELECT, GROUPING(), GROUP BY and ORDER BY, and a
+            # parameter binds server-side as a different $n in each, which
+            # PostgreSQL reads as different expressions
+            return getattr(self, field.group_by_sql)(field, alias, query).inlined(
+                self.env.cr
+            )
 
         _debug.logic(
             "read_group.groupby",

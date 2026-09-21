@@ -246,3 +246,23 @@ class TestStandInFields(common.TransactionCase):
         field._setup_attrs__(type(self.Task), "probe_field")
         with self.assertRaisesRegex(ValueError, "names no method"):
             field._check_stand_in_fields(self.Task)
+
+    def test_a_sql_hook_carrying_a_parameter_groups_and_orders(self):
+        # the hook's SQL is inlined like every other groupby term; left as a
+        # bound parameter it becomes $1 in SELECT and $2 in GROUP BY, and
+        # PostgreSQL reads those as different expressions
+        groups = self.Task._read_group(
+            self.domain, ["band"], ["__count", "id:array_agg"], order="band"
+        )
+        by_python = {}
+        for task in self.Task.search(self.domain):
+            by_python.setdefault(task.band, []).append(task.id)
+        self.assertEqual(
+            [(band, count, sorted(ids)) for band, count, ids in groups],
+            [(band, len(ids), sorted(ids)) for band, ids in sorted(by_python.items())],
+        )
+
+    def test_a_sql_hook_carrying_a_parameter_survives_a_grouping_set(self):
+        self.Task._read_grouping_sets(
+            self.domain, [("band",), ("band", "key")], ["__count"]
+        )

@@ -12,12 +12,30 @@ from ...._typing import (
 )
 from ....constants import READ_GROUP_TIME_GRANULARITY
 from ....fields.temporal import Date, Datetime
+from ....parsing import regex_order_part_read_group
 from ._empty import _ReadGroupEmptyMixin
 
 if typing.TYPE_CHECKING:
     from collections.abc import Sequence
 
 _debug = DebugLog(__name__)
+
+
+def _orders_descending_by(read_group_order: str | None, groupby: str) -> bool:
+    """Whether `read_group_order` sorts by `groupby`, descending.
+
+    Its first term decides, and it is parsed rather than spelled out: an
+    order is written `stage_id DESC`, `stage_id desc, id` or
+    `stage_id desc nulls last` as readily as `stage_id desc`, and a string
+    comparison sends the expanded groups up while the real ones come down.
+    """
+    if not read_group_order:
+        return False
+    first = read_group_order.split(",", 1)[0]
+    match = regex_order_part_read_group.fullmatch(first)
+    if match is None or match["term"] != groupby:
+        return False
+    return (match["direction"] or "").lower() == "desc"
 
 
 class _ReadGroupFillMixin(_ReadGroupEmptyMixin):
@@ -63,7 +81,7 @@ class _ReadGroupFillMixin(_ReadGroupEmptyMixin):
         if field.relational:
             groups = self.env[field.comodel_name].browse(value.id for value in values)
             values = group_expand(self, groups, domain).sudo()
-            if read_group_order == groupby + " desc":
+            if _orders_descending_by(read_group_order, groupby):
                 values = values.browse(reversed(values._ids))
 
             def value2key(value):
@@ -71,7 +89,7 @@ class _ReadGroupFillMixin(_ReadGroupEmptyMixin):
 
         else:
             values = group_expand(self, values, domain)
-            if read_group_order == groupby + " desc":
+            if _orders_descending_by(read_group_order, groupby):
                 values.reverse()
 
             def value2key(value):
