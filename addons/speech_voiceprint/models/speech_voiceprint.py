@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 from odoo.tools import config
 
 from ..tools import embedder
+from odoo.addons.media.tools.audio import SAMPLE_RATE, decode_audio
 
 _logger = logging.getLogger(__name__)
 
@@ -105,7 +106,7 @@ class SpeechVoiceprint(models.Model):
     @api.model
     def _decode(self, audio_bytes):
         try:
-            return embedder.decode_audio(audio_bytes)
+            return decode_audio(audio_bytes)
         except ImportError as error:
             raise UserError(
                 self.env._("Voice recognition is not installed on this server yet.")
@@ -124,7 +125,7 @@ class SpeechVoiceprint(models.Model):
             samples = embedder.slice_spans(
                 samples, spans, max_seconds=MAX_VOICE_SECONDS
             )
-        seconds = samples.size / embedder.SAMPLE_RATE
+        seconds = samples.size / SAMPLE_RATE
         return model.embed(samples), seconds
 
     @api.model

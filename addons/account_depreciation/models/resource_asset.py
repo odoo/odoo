@@ -8,6 +8,7 @@ RUNNING_BOARD = ("open", "paused")
 
 
 class ResourceAsset(models.Model):
+    _name = "resource.asset"
     _inherit = ["resource.asset", "mixin.analytic"]
 
     board_id = fields.One2one(

@@ -5,6 +5,7 @@ from .pine_labs_pos_request import call_pine_labs
 
 
 class PosPaymentMethod(models.Model):
+    _name = "pos.payment.method"
     _inherit = ["pos.payment.method", "mixin.integration.connected"]
 
     def _integration_connection_service(self):

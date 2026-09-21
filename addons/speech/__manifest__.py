@@ -74,9 +74,9 @@ transcription as the engine's key terms. A module adds its own kinds of term.
 No engine ships here
 --------------------
 This module registers no reader and no writer. ``speech_ai`` provides both on
-the ``gateway_ml`` registry, and a local engine would be a second module beside it.
-With neither installed, ``can_transcribe`` is False everywhere and the actions
-say so rather than failing at a vendor call.
+the ``gateway_ml`` registry; ``speech_local`` reads on this server, for a
+company no vendor may serve. With neither installed, ``can_transcribe`` is
+False everywhere and the actions say so rather than failing at a vendor call.
     """,
     "author": "AgroMarin",
     "website": "https://www.agromarin.mx",

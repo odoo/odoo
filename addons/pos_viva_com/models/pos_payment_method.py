@@ -14,6 +14,7 @@ TIMEOUT = 10
 
 
 class PosPaymentMethod(models.Model):
+    _name = "pos.payment.method"
     _inherit = ["pos.payment.method", "mixin.integration.connected"]
 
     @api.model

@@ -2,6 +2,7 @@ from odoo import fields, models
 
 
 class HrJob(models.Model):
+    _name = "hr.job"
     _inherit = ["mixin.hr.individual.skill.owner", "hr.job"]
 
     job_skill_ids = fields.One2many(

@@ -5,6 +5,7 @@ from .razorpay_pos_request import RazorpayPosRequest
 
 
 class PosPaymentMethod(models.Model):
+    _name = "pos.payment.method"
     _inherit = ["pos.payment.method", "mixin.integration.connected"]
 
     def _integration_connection_service(self):

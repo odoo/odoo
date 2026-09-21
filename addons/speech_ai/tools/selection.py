@@ -29,6 +29,8 @@ def pick_model(
     provider_code: str | Iterable[str] | None = None,
     required_capabilities: dict | None = None,
 ) -> Any:
+    if "speech_ai" not in env.registry.loaded_modules:
+        return None
     model = get_router(env).select_model(
         kind,
         company_id=company_id,

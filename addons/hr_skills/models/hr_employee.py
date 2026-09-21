@@ -13,6 +13,7 @@ _debug = DebugLog(__name__)
 
 
 class HrEmployee(models.Model):
+    _name = "hr.employee"
     _inherit = ["mixin.hr.individual.skill.owner", "hr.employee"]
 
     resume_line_ids = fields.One2many(

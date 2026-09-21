@@ -16,6 +16,7 @@ UNPREDICTABLE_ADYEN_DATA = object()  # sentinel
 
 
 class PosPaymentMethod(models.Model):
+    _name = "pos.payment.method"
     _inherit = ["pos.payment.method", "mixin.integration.connected"]
 
     @api.model

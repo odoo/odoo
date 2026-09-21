@@ -80,11 +80,12 @@ class SpeechSpeaker(models.Model):
             elif not speaker.name:
                 speaker.name = speaker.label
 
-    @api.depends("partner_id.main_user_id.share")
+    @api.depends("partner_id.user_ids.share")
     def _compute_user_id(self) -> None:
         for speaker in self:
-            user = speaker.partner_id.main_user_id
-            speaker.user_id = user if user and not user.share else False
+            speaker.user_id = speaker.partner_id.user_ids.filtered(
+                lambda user: not user.share
+            )[:1]
 
     @api.depends("attachment_id.transcript_cues", "label")
     def _compute_talk(self) -> None:

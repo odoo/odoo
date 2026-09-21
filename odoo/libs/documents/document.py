@@ -87,6 +87,7 @@ class Document:
         self.options: dict[str, Any] = options
         self._derived: dict[str, Any] = {}
         self._derived_at: dict[str, int] = {}
+        self._read_by: dict[str, str] = {}
         _debug.lifecycle(
             "document.created",
             mimetype=self.mimetype,
@@ -256,7 +257,7 @@ class Document:
             ceiling=ceiling,
         ) as span:
             tried = failed = skipped = 0  # debuglog
-            winner = None  # debuglog
+            winner = ""
             for reader in get_readers(self.mimetype, representation):
                 if reader.cost > ceiling:
                     skipped += 1  # debuglog
@@ -286,7 +287,7 @@ class Document:
                 read = self._is_read(representation, answer)
                 if value is None or read:
                     value = answer
-                    winner = reader.name  # debuglog
+                    winner = reader.name
                 if read:
                     break
             if clamp and value:
@@ -300,7 +301,11 @@ class Document:
             )
         self._derived[representation] = value
         self._derived_at[representation] = ceiling
+        self._read_by[representation] = winner
         return value
+
+    def read_by(self, representation: str) -> str:
+        return self._read_by.get(representation, "")
 
     def __repr__(self) -> str:
         return f"<Document {self.name or '?'} {self.mimetype} {len(self.data)}B>"

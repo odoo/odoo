@@ -5,6 +5,7 @@ _debug = DebugLog(__name__)
 
 
 class HrApplicant(models.Model):
+    _name = "hr.applicant"
     _inherit = ["mixin.hr.individual.skill.owner", "hr.applicant"]
 
     applicant_skill_ids = fields.One2many(

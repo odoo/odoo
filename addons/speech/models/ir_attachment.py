@@ -5,14 +5,20 @@ from typing import Any, Self
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.libs.documents import EXPENSIVE, Cue, Document, cues_as_text, extension_for
+from odoo.libs.documents import (
+    CUES,
+    EXPENSIVE,
+    Cue,
+    Document,
+    cues_as_text,
+    extension_for,
+)
 
 from ..tools.engines import (
     DEFAULT_SPEECH_MIMETYPE,
     can_transcribe,
     engine_error,
     synthesis_engines,
-    transcription_engines,
 )
 
 _logger = logging.getLogger(__name__)
@@ -132,7 +138,8 @@ class IrAttachment(models.Model):
     ) -> list[Cue] | None:
         self.check_singleton()
         mimetype = self.mimetype or ""
-        if not can_transcribe(mimetype, self.env):
+        company = self.company_id or self.env.company
+        if not can_transcribe(mimetype, self.with_company(company).env):
             raise UserError(
                 self.env._(
                     "No speech engine reads %(mimetype)s.", mimetype=mimetype or "?"
@@ -182,8 +189,7 @@ class IrAttachment(models.Model):
         failure = engine_error(document)
         if failure:
             raise UserError(failure)
-        engine = next(iter(transcription_engines(document.mimetype, self.env)), None)
-        return cues, engine.name if engine else ""
+        return cues, document.read_by(CUES)
 
     def _transcript_document(
         self, language: str | None = None, **options: Any

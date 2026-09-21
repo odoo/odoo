@@ -170,6 +170,31 @@ class TestDeriving(unittest.TestCase):
         finally:
             _forget(broken, working)
 
+    def test_the_reader_that_answered_is_named(self):
+        broken = _Stub("broken", {"a/b"}, (TEXT,), boom=True)
+        silent = _Stub("silent", {"a/b"}, (TEXT,), None)
+        working = _Stub("working", {"a/b"}, (TEXT,), "hello")
+        register_reader(broken)
+        register_reader(silent)
+        register_reader(working)
+        try:
+            doc = Document(b"...", "a/b", "x")
+            self.assertEqual(doc.read_by(TEXT), "")
+            self.assertEqual(doc.text, "hello")
+            self.assertEqual(doc.read_by(TEXT), "working")
+        finally:
+            _forget(broken, silent, working)
+
+    def test_no_reader_is_named_when_none_answered(self):
+        silent = _Stub("silent", {"a/b"}, (TEXT,), None)
+        register_reader(silent)
+        try:
+            doc = Document(b"...", "a/b", "x")
+            _ = doc.text
+            self.assertEqual(doc.read_by(TEXT), "")
+        finally:
+            _forget(silent)
+
     def test_an_empty_answer_does_not_end_the_search(self):
         cheap = _Stub("cheap", {"a/b"}, (TEXT,), "", cost=FREE)
         dear = _Stub("dear", {"a/b"}, (TEXT,), "read from the pages", cost=EXPENSIVE)
@@ -462,9 +487,9 @@ class TestTheAuditFoundThese(unittest.TestCase):
     def test_the_clamp_warns_once_per_document_not_once_per_read(self):
         doc = Document(("x" * 200_000).encode(), "text/plain", "big.txt")
         with self.assertLogs("odoo.libs.documents.document", level="WARNING") as caught:
-            doc.text
-            doc.text
-            doc.text
+            _ = doc.text
+            _ = doc.text
+            _ = doc.text
         self.assertEqual(len(caught.records), 1)
 
 

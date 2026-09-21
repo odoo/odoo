@@ -54,6 +54,7 @@
 # ISO-8859-1, and its two misses return None, so they raise rather than corrupt
 # -- but it loses koi8-r, which 5.2.0 gets right, so it buys nothing.
 # Re-measure before moving; do not read "7.x is current" as a reason to.
+av==18.1.0  # media (tools/audio.py): speech_local, speech_voiceprint
 boto3==1.43.93  # cloud_storage_s3
 botocore==1.43.93  # cloud_storage_s3 -- boto3's own pinned
                    # runtime, held at the matching version so a boto3 bump
@@ -61,6 +62,7 @@ botocore==1.43.93  # cloud_storage_s3 -- boto3's own pinned
 chardet==5.2.0  # base_import, mail
 defusedxml==0.7.1  # attachment_indexation, website
 google-auth==2.58.0  # cloud_storage_google
+numpy==2.5.0  # speech_local, speech_voiceprint
 odfpy==1.4.1  # base_import: .ods reader (models/odf_ods_reader.py) — optional
 openpyxl==3.1.5  # attachment_indexation, base_import, survey — optional
 paho-mqtt==2.1.0  # integration_mqtt
@@ -85,6 +87,7 @@ qrcode==8.2  # auth_totp, pos_self_order
 # `ImportError: onnxruntime is not installed`.
 rapidocr==3.9.2
 onnxruntime==1.30.0
+sherpa-onnx==1.13.7  # speech_local, speech_voiceprint
 # The only remaining reason pytz is installed anywhere: vobject depends on it.
 vobject==0.9.9  # calendar, event, web, website_event_track — optional
 websocket-client==1.9.0  # integration_websocket

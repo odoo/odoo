@@ -14,6 +14,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PosPaymentMethod(models.Model):
+    _name = "pos.payment.method"
     _inherit = ["pos.payment.method", "mixin.integration.connected"]
 
     _MERCADO_PAGO_REFERENCE = re.compile(
