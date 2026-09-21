@@ -6,7 +6,10 @@ registry.
 
 from datetime import UTC, datetime
 
+from psycopg.errors import IntegrityError
+
 from odoo.tests.common import TransactionCase
+from odoo.tools import mute_logger
 
 
 class TestResourceSecondPassConsumers(TransactionCase):
@@ -76,13 +79,29 @@ class TestResourceSecondPassConsumers(TransactionCase):
         )
         self.assertEqual(five_days[record.id]["days"], 5)
 
-    def test_shared_resource_returns_every_record(self):
-        shared = self._resource(name="Shared")
+    def test_a_resource_has_one_owner_and_a_batch_answers_each(self):
+        # a resource has one owner (mixin.resource.resource_id is unique):
+        # two records of one model cannot share it, and a batch over records
+        # of distinct resources answers every one of them
+        one = self._resource(name="One")
         first = self.env["resource.test"].create(
-            {"name": "first", "resource_id": shared.id, "company_id": self.company.id}
+            {"name": "first", "resource_id": one.id, "company_id": self.company.id}
         )
+        with self.assertRaises(IntegrityError), mute_logger("odoo.db.cursor"):
+            with self.env.cr.savepoint():
+                self.env["resource.test"].create(
+                    {
+                        "name": "second",
+                        "resource_id": one.id,
+                        "company_id": self.company.id,
+                    }
+                )
         second = self.env["resource.test"].create(
-            {"name": "second", "resource_id": shared.id, "company_id": self.company.id}
+            {
+                "name": "second",
+                "resource_id": self._resource(name="Other").id,
+                "company_id": self.company.id,
+            }
         )
         window = (
             datetime(2026, 3, 2).replace(tzinfo=UTC),

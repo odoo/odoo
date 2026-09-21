@@ -1476,6 +1476,7 @@ class HrEmployee(models.Model):
             len(latest_version_by_employee),
             len(earliest_version_by_employee),
         )
+        changed = self.browse()
         for employee in self:
             new_current_version = latest_version_by_employee.get(
                 employee.id
@@ -1490,6 +1491,26 @@ class HrEmployee(models.Model):
                     new_current_version.id,
                 )
                 employee.current_version_id = new_current_version
+                changed |= employee
+        changed._sync_resource_calendar_with_current_version()
+
+    def _sync_resource_calendar_with_current_version(self):
+        # the resource works the current version's calendar; the version's
+        # own inverse keeps them together while that version stays current,
+        # and this keeps them together when another version takes over,
+        # whether a contract starts, a version goes, or the day comes
+        for employee in self.filtered("id"):
+            resource = employee.resource_id
+            calendar = employee.current_version_id.resource_calendar_id
+            if resource and calendar and resource.calendar_id != calendar:
+                dbg.pipeline.debug(
+                    "[employee:%s] resource %s calendar %s -> %s on version change",
+                    employee.id,
+                    resource.id,
+                    resource.calendar_id.id,
+                    calendar.id,
+                )
+                resource.calendar_id = calendar
 
     @dbg.timed
     @api.depends("partner_id")

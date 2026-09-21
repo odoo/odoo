@@ -132,6 +132,28 @@ class TestContractCalendars(TestHrCommon):
             self.employee.version_ids[0].resource_calendar_id, self.calendar_richard
         )
 
+    def test_the_resource_works_the_calendar_of_whichever_version_is_current(self):
+        # the current version changes without any calendar being written: a
+        # version is created and takes over, then goes away; the resource
+        # follows each time, it is what every schedule reads
+        resource = self.employee.resource_id
+        self.assertEqual(resource.calendar_id, self.calendar_richard)
+        cdd = self.employee.create_version(self.contract_cdd_values)
+        self.assertEqual(self.employee.current_version_id, cdd)
+        self.assertEqual(resource.calendar_id, self.calendar_35h)
+
+        cdd.unlink()
+        self.assertNotEqual(self.employee.current_version_id, cdd)
+        self.assertEqual(
+            self.employee.current_version_id.resource_calendar_id,
+            self.calendar_richard,
+        )
+        self.assertEqual(
+            resource.calendar_id,
+            self.calendar_richard,
+            "the resource works the calendar of the version that is current now",
+        )
+
     def test_a_resource_is_never_shared_by_two_employees(self):
         with self.assertRaises(IntegrityError), self.cr.savepoint():
             self.env["hr.employee"].create(

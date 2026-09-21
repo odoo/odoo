@@ -5554,9 +5554,14 @@ class ProjectTask(models.Model):
                         task.date_end - task.date_start
                     ).total_seconds() / 3600
                     rate = interval_duration / task_total_duration
+                    # the load a placed task spreads over its window is its
+                    # effort: the estimate first, the booking only when there
+                    # is none, since a flexible resource's booking is the
+                    # capacity the window holds, not the work
+                    effort_hours = task.planned_hours or task.allocated_hours
                     interval_allocated_hours = (
-                        rate * task.allocated_hours
-                        if task.allocated_hours
+                        rate * effort_hours
+                        if effort_hours
                         else interval_duration / 3600
                     )
                     interval_allocated_hours_per_user = interval_allocated_hours / len(
