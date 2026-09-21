@@ -6,7 +6,6 @@ import logging
 import os
 import selectors
 import socket
-import sys
 import threading
 import time
 from collections import deque
@@ -17,7 +16,8 @@ from odoo.libs.debug_log import DebugLog
 from odoo.libs.http1 import ProtocolError, find_head
 from odoo.libs.worker_thread import as_worker_thread
 
-from ._env import bequeath_socket, get_env_int, take_inherited_socket
+from ._env import bequeath_socket, get_env_int
+from ._listener import acquire_listener
 from ._transport import (
     REQUEST_THREAD_PREFIX,
     Connection,
@@ -27,7 +27,7 @@ from ._transport import (
     WSGIApp,
     serve_one,
 )
-from .settings import SD_LISTEN_FDS_START, adopt_activated_socket, current
+from .settings import current
 
 if TYPE_CHECKING:
     from .settings import ServerSettings
@@ -285,58 +285,13 @@ class ThreadedHTTPServer:
     def _bind(
         host: str, port: int, *, announce: bool = True
     ) -> tuple[socket.socket, bool]:
-        if inherited := take_inherited_socket():
-            inherited.setblocking(False)
-            if announce:
-                _logger.info(
-                    "HTTP service serving %s:%s on the listening socket inherited "
-                    "from the server this one replaced; the port was never closed",
-                    *inherited.getsockname()[:2],
-                )
-            _debug.lifecycle("httpd.bound", source="inherited", fd=inherited.fileno())
-            return inherited, True
-        if current().http_socket_activation:
-            sock = adopt_activated_socket(SD_LISTEN_FDS_START)
-            if announce:
-                _logger.info("HTTP service running through socket activation")
-            sock.setblocking(False)
-            _debug.lifecycle(
-                "httpd.bound", source="socket_activation", fd=SD_LISTEN_FDS_START
-            )
-            return sock, True
-        family = socket.AF_INET6 if ":" in host else socket.AF_INET
-        sock = socket.socket(family, socket.SOCK_STREAM)
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        try:
-            sock.bind((host, port))
-        except OSError as exc:
-            sock.close()
-            _debug.logic(
-                "httpd.bind_failed",
-                host=host,
-                port=port,
-                errno=exc.errno,
-                error=type(exc).__name__,
-            )
-            sys.stderr.write(
-                f"{exc.strerror or exc}\nPort {port} is in use by another program. "
-                "Either identify and stop that program, or start the server with a "
-                "different port.\n"
-            )
-            raise SystemExit(1) from exc
-        sock.listen(socket.SOMAXCONN)
-        sock.setblocking(False)
-        if announce:
-            _logger.info("HTTP service running on %s:%s", *sock.getsockname()[:2])
-        _debug.lifecycle(
-            "httpd.bound",
-            source="bind",
-            family=family.name,
-            host=host,
-            port=sock.getsockname()[1],
+        return acquire_listener(
+            host,
+            port,
             backlog=socket.SOMAXCONN,
+            activated=current().http_socket_activation,
+            announce=announce,
         )
-        return sock, False
 
     def _serve_connection(self, conn: Connection) -> None:
         served = 0  # debuglog

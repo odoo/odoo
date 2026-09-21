@@ -83,6 +83,7 @@ class TestTheServersReadInOneDirection:
         for leaf in (
             "settings",
             "_env",
+            "_listener",
             "_limits",
             "_base_server",
             "_cron",

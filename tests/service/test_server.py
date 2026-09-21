@@ -17,6 +17,7 @@ import pytest
 from odoo.service import (
     _base_server,
     _cron,
+    _listener,
     _limits,
     _prefork,
     _process_state,
@@ -2474,10 +2475,10 @@ class TestTheStartupLineNamesTheSocketItActuallyGot:
                 gevent_port=0,
             ),
             patch.object(signal, "signal"),
-            patch.object(_prefork.socket, "socket") as mock_sock,
-            patch.object(_prefork, "adopt_activated_socket", return_value=MagicMock()),
+            patch.object(_listener.socket, "socket") as mock_sock,
+            patch.object(_listener, "adopt_activated_socket", return_value=MagicMock()),
             patch.object(
-                _prefork,
+                _listener,
                 "take_inherited_socket",
                 return_value=MagicMock() if env else None,
             ),
@@ -2501,6 +2502,51 @@ class TestTheStartupLineNamesTheSocketItActuallyGot:
             "a reload handoff still announces itself as a fresh bind"
         )
         assert "running on %s:%s" not in said
+
+
+class TestATakenPortIsAnOperatorMessageInBothFlavours:
+    """The threaded server said which port and why; the master raised OSError.
+
+    Both walked their own way to a listening socket, and only one of them had
+    learned to answer a taken port in words.  A prefork master printed
+    `OSError: [Errno 98] Address already in use` over a traceback through
+    `_bind_listener`, which is the single most common way a server fails to
+    start.
+    """
+
+    @staticmethod
+    def _start_on(port, *, interface="127.0.0.1"):
+        server = _prefork.PreforkServer(None)
+        server.logger = MagicMock()
+        server.interface, server.port, server.population = interface, port, 1
+        server.open_pipe = MagicMock(return_value=(0, 0))
+        server._census = MagicMock()
+        with (
+            server_settings.override(
+                http_enable=True,
+                http_socket_activation=False,
+                websocket_socket_activation=False,
+                gevent_port=0,
+            ),
+            patch.object(signal, "signal"),
+        ):
+            server.start()
+
+    def test_the_master_exits_with_the_message_not_a_traceback(self, capsys):
+        taken = socket.socket()
+        taken.bind(("127.0.0.1", 0))
+        taken.listen(1)
+        port = taken.getsockname()[1]
+        try:
+            with pytest.raises(SystemExit) as info:
+                self._start_on(port)
+        finally:
+            taken.close()
+        assert info.value.code == 1
+        assert f"Port {port} is in use" in capsys.readouterr().err
+
+    def test_a_free_port_still_binds(self):
+        self._start_on(0)
 
 
 class TestAWatchdogKillOfAWorkerThatNeverGotReadyIsACrash:

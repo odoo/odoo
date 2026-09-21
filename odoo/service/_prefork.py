@@ -26,18 +26,14 @@ from odoo.tools.misc import dumpstacks, stripped_sys_argv
 from . import _process_state
 from ._base_server import CommonServer
 from ._census import WorkerCensus
-from ._env import (
-    INHERITED_SOCKET_FD,
-    INHERITED_WEBSOCKET_FD,
-    get_env_float,
-    take_inherited_socket,
-)
+from ._env import INHERITED_SOCKET_FD, INHERITED_WEBSOCKET_FD, get_env_float
 from ._limits import empty_pipe, get_graceful_stop_timeout
+from ._listener import acquire_listener
 from ._reload import GenerationHandoff
 from ._sdnotify import Watchdog, notify, notify_ready
 from ._worker import Worker, WorkerCron, WorkerHTTP, WorkerJob
 from .lifecycle import preload_registries
-from .settings import SD_LISTEN_FDS_START, adopt_activated_socket
+from .settings import SD_LISTEN_FDS_START
 
 _logger = logging.getLogger("odoo.service.server")
 _debug = DebugLog(__name__)
@@ -726,69 +722,26 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGUSR2, log_ormcache_stats)
 
         if self.settings.http_enable:
-            if inherited := take_inherited_socket():
-                self.socket = inherited
-                _debug.lifecycle(
-                    "prefork.socket_bound", source="inherited", fd=inherited.fileno()
-                )
-                self.logger.info(
-                    "HTTP service serving %s:%s on the listening "
-                    "socket inherited from the server this one replaced; the "
-                    "port was never closed",
-                    self.interface,
-                    self.port,
-                )
-            elif self.settings.http_socket_activation:
-                self.socket = adopt_activated_socket(SD_LISTEN_FDS_START)
-                os.set_inheritable(self.socket.fileno(), False)
-                _debug.lifecycle("prefork.socket_bound", source="socket_activation")
-                self.logger.info("HTTP service running through socket activation")
-            else:
-                self.socket = self._bind_listener(
-                    self.port, backlog=8 * self.population
-                )
-                self.logger.info(
-                    "HTTP service running on %s:%s",
-                    self.interface,
-                    self.port,
-                )
+            self.socket, _ = acquire_listener(
+                self.interface,
+                self.port,
+                backlog=8 * self.population,
+                activated=self.settings.http_socket_activation,
+                logger=self.logger,
+            )
             # The websocket port is the master's too: the evented child
             # adopts it, so its restarts and this master's reloads leave the
             # port bound and the connections that arrive meanwhile queued.
-            if inherited := take_inherited_socket(INHERITED_WEBSOCKET_FD):
-                self.websocket_socket = inherited
-                _debug.lifecycle(
-                    "prefork.websocket_socket_bound",
-                    source="inherited",
-                    fd=inherited.fileno(),
-                )
-            elif self.settings.websocket_socket_activation:
-                self.websocket_socket = adopt_activated_socket(SD_LISTEN_FDS_START + 1)
-                os.set_inheritable(self.websocket_socket.fileno(), False)
-                _debug.lifecycle(
-                    "prefork.websocket_socket_bound", source="socket_activation"
-                )
-                self.logger.info("Websocket service running through socket activation")
-            else:
-                self.websocket_socket = self._bind_listener(
-                    self.settings.gevent_port, backlog=socket.SOMAXCONN
-                )
-
-    def _bind_listener(self, port: int, *, backlog: int) -> socket.socket:
-        family = socket.AF_INET6 if ":" in self.interface else socket.AF_INET
-        sock = socket.socket(family, socket.SOCK_STREAM)
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        sock.setblocking(False)
-        sock.bind((self.interface, port))
-        sock.listen(backlog)
-        _debug.lifecycle(
-            "prefork.socket_bound",
-            source="bind",
-            interface=self.interface,
-            port=port,
-            backlog=backlog,
-        )
-        return sock
+            self.websocket_socket, _ = acquire_listener(
+                self.interface,
+                self.settings.gevent_port,
+                backlog=socket.SOMAXCONN,
+                what="Websocket",
+                inherited_fd=INHERITED_WEBSOCKET_FD,
+                activated=self.settings.websocket_socket_activation,
+                activated_fd=SD_LISTEN_FDS_START + 1,
+                logger=self.logger,
+            )
 
     def describe_capacity(self) -> str:
         settings = self.settings

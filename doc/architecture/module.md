@@ -47,7 +47,9 @@ odoo/
 │                   _params (annotation-driven @route(typed=True) coercion),
 │                   geoip
 ├── service/        Process lifecycle + the servers
-│   ├── server, _base_server, _threaded (ThreadedServer + WebsocketServer),
+│   ├── server, _base_server, _listener (the one way a server comes by a
+│   │   listening socket: handover, socket activation or a fresh bind),
+│   │   _threaded (ThreadedServer + WebsocketServer),
 │   │   _prefork, _reload (the master's other generation across a SIGHUP:
 │   │   candidate, promotion, replacement), _census (the master's worker counts, a file its
 │   │   children read for /web/metrics), _worker, _watcher (on libs/inotify), _transport (one
