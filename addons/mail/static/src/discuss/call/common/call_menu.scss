@@ -1,6 +1,6 @@
 .o-discuss-CallMenu-buttonContent {
-    max-width: 150px;
-    @include o-mail-call-bordered(.35);
+    max-width: 160px;
+    @include o-mail-call-bordered(var(--discuss-CallMenu-borderedOpacity, .35));
 
     &.o-isOdooCommunity {
         height: $o-navbar-height - 20px !important; // same button height as in enterprise.
