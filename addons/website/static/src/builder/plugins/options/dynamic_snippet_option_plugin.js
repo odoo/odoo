@@ -85,6 +85,10 @@ class DynamicSnippetOptionPlugin extends Plugin {
         },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         is_unremovable_selector: ".s_dynamic_snippet_title",
+        is_movable_selector: {
+            exclude: ".s_dynamic_snippet_title, .s_dynamic_snippet_content",
+            direction: "vertical",
+        },
     };
     setup() {
         this.dynamicFiltersCache = new Cache(this._fetchDynamicFilters, JSON.stringify);
