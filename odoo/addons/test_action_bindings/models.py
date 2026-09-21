@@ -70,3 +70,24 @@ class TabActionView(models.Model):
                 SQL.identifier(self._table),
             )
         )
+
+
+class TabReferenceView(models.Model):
+    """A SQL view carrying a res_model/res_id pair, like ir.attachment.report."""
+
+    _name = "tab.reference.view"
+    _description = "tab.reference.view"
+    _auto = False
+
+    res_model = fields.Char(readonly=True)
+    res_id = fields.Many2oneReference(model_field="res_model", readonly=True)
+
+    def init(self) -> None:
+        self.env.cr.execute(
+            SQL(
+                "CREATE OR REPLACE VIEW %s AS SELECT id,"
+                " 'ir.actions.act_window'::varchar AS res_model,"
+                " action_id AS res_id FROM tab_action_holder",
+                SQL.identifier(self._table),
+            )
+        )

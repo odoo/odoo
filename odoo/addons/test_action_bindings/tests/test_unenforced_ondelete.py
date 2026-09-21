@@ -155,3 +155,18 @@ class TestMergeRepointsReferencesWithoutForeignKeys(TransactionCase):
         )
         holder.invalidate_recordset()
         self.assertEqual(holder.action_id.id, target.id)
+
+    def test_a_view_is_not_a_sidecar_the_merge_writes(self):
+        sidecars = self.env["mixin.merge"]._get_sidecar_reference_fields()
+        self.assertNotIn(
+            "tab.reference.view", {model_name for model_name, __, __ in sidecars}
+        )
+        windows = self.env["ir.actions.act_window"]
+        source = windows.create({"name": "tab-src2", "res_model": "res.currency"})
+        target = windows.create({"name": "tab-dst2", "res_model": "res.currency"})
+        self.env["tab.action.holder"].create({"action_id": source.id})
+        self.env.flush_all()
+        # the view names source through res_id; the merge must not write it
+        self.env["mixin.merge"]._update_reference_fields_generic(
+            "ir.actions.act_window", source, target
+        )

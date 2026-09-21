@@ -395,7 +395,9 @@ class MixinMerge(models.AbstractModel):
         return sorted(
             (model._name, field.model_field, field.name)
             for model in self.env.values()
-            if not model._abstract
+            # a view or table query derives its rows: nothing there to repoint,
+            # and an UPDATE on one fails (ir.attachment.report has no table)
+            if not model._abstract and model._is_an_ordinary_table()
             for field in model._fields.values()
             if _is_searchable_reference_pair(model, field)
         )
@@ -522,7 +524,11 @@ class MixinMerge(models.AbstractModel):
             except KeyError:
                 continue
 
-            if Model._abstract or field.compute is not None:
+            if (
+                Model._abstract
+                or field.compute is not None
+                or not Model._is_an_ordinary_table()
+            ):
                 continue
 
             records_ref = (
@@ -592,6 +598,8 @@ class MixinMerge(models.AbstractModel):
             "company_dependent_many2ones", model=dst_record._name, fields=len(fields)
         )
         for field in fields:
+            if not self.env[field.model_name]._is_an_ordinary_table():
+                continue
             self.env.cr.execute(
                 SQL(
                     """
