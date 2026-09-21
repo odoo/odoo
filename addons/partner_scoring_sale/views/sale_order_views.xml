@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form_inherit_partner_scoring" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.partner.scoring</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sale_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="tier_id" invisible="not tier_id" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sales_order_filter_inherit_partner_scoring" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit.partner.scoring</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sale_order_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='customer']" position="after">
+                <filter
+                    name="tier"
+                    string="Commercial Tier"
+                    context="{'group_by': 'tier_id'}" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

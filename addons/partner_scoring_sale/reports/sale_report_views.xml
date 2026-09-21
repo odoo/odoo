@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sale_report_search_inherit_partner_scoring" model="ir.ui.view">
+        <field name="name">sale.report.search.inherit.partner.scoring</field>
+        <field name="model">sale.report</field>
+        <field name="inherit_id" ref="sale.view_sale_report_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='Customer']" position="after">
+                <filter
+                    name="tier"
+                    string="Commercial Tier"
+                    context="{'group_by': 'tier_id'}" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
