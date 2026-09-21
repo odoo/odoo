@@ -5,15 +5,15 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     l10n_hr_mer_connection_state = fields.Selection(
-        related="company_id.l10n_hr_mer_connection_state"
+        related="company_id.l10n_hr_edi_config_id.l10n_hr_mer_connection_state"
     )
     l10n_hr_mer_connection_mode = fields.Selection(
-        related="company_id.l10n_hr_mer_connection_mode",
+        related="company_id.l10n_hr_edi_config_id.l10n_hr_mer_connection_mode",
         readonly=False,
     )
 
     l10n_hr_mer_username = fields.Char(
-        related="company_id.l10n_hr_mer_username",
+        related="company_id.l10n_hr_edi_config_id.l10n_hr_mer_username",
         readonly=False,
     )
     l10n_hr_mer_password = fields.Char(
@@ -21,7 +21,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     l10n_hr_mer_company_ident = fields.Char(
-        related="company_id.l10n_hr_mer_company_ident",
+        related="company_id.l10n_hr_edi_config_id.l10n_hr_mer_company_ident",
         readonly=False,
     )
     l10n_hr_mer_company_bu = fields.Char(
@@ -29,11 +29,11 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     l10n_hr_mer_software_ident = fields.Char(
-        related="company_id.l10n_hr_mer_software_ident",
+        related="company_id.l10n_hr_edi_config_id.l10n_hr_mer_software_ident",
         readonly=False,
     )
     l10n_hr_mer_purchase_journal_id = fields.Many2one(
-        related="company_id.l10n_hr_mer_purchase_journal_id",
+        related="company_id.l10n_hr_edi_config_id.l10n_hr_mer_purchase_journal_id",
         readonly=False,
     )
 
@@ -47,4 +47,4 @@ class ResConfigSettings(models.TransientModel):
 
     def button_l10n_hr_deactivate_mojeracun(self):
         self.check_singleton()
-        self.company_id.l10n_hr_mer_connection_state = "inactive"
+        self.company_id.l10n_hr_edi_config_id.l10n_hr_mer_connection_state = "inactive"

@@ -75,7 +75,7 @@ class AccountMove(models.Model):
     )
     l10n_in_warning = fields.Json(compute="_compute_l10n_in_warning")
     l10n_in_is_gst_registered_enabled = fields.Boolean(
-        related="company_id.l10n_in_is_gst_registered"
+        related="company_id.l10n_in_config_id.l10n_in_is_gst_registered"
     )
     l10n_in_tds_deduction = fields.Selection(
         related="commercial_partner_id.l10n_in_pan_entity_id.tds_deduction",
@@ -125,10 +125,10 @@ class AccountMove(models.Model):
         compute="_compute_l10n_in_display_higher_tcs_button",
     )
     l10n_in_tds_feature_enabled = fields.Boolean(
-        related="company_id.l10n_in_tds_feature"
+        related="company_id.l10n_in_config_id.l10n_in_tds_feature"
     )
     l10n_in_tcs_feature_enabled = fields.Boolean(
-        related="company_id.l10n_in_tcs_feature"
+        related="company_id.l10n_in_config_id.l10n_in_tcs_feature"
     )
 
     # gstin_status related field
@@ -259,7 +259,7 @@ class AccountMove(models.Model):
     def _onchange_name_warning(self):
         if (
             self.country_code == "IN"
-            and self.company_id.l10n_in_is_gst_registered
+            and self.company_id.l10n_in_config_id.l10n_in_is_gst_registered
             and self.journal_id.type == "sale"
             and self.name
             and (len(self.name) > 16 or not re.match(r"^[a-zA-Z0-9-\/]+$", self.name))
@@ -277,7 +277,7 @@ class AccountMove(models.Model):
 
     @api.depends(
         "invoice_line_ids.l10n_in_hsn_code",
-        "company_id.l10n_in_hsn_code_digit",
+        "company_id.l10n_in_config_id.l10n_in_hsn_code_digit",
         "invoice_line_ids.tax_ids",
         "commercial_partner_id.l10n_in_pan_entity_id",
         "invoice_line_ids.price_total",
@@ -297,9 +297,12 @@ class AccountMove(models.Model):
             company = move.company_id
             action_name = _("Journal Item(s)")
             action_text = _("View Journal Item(s)")
-            if company.l10n_in_tcs_feature or company.l10n_in_tds_feature:
+            if (
+                company.l10n_in_config_id.l10n_in_tcs_feature
+                or company.l10n_in_config_id.l10n_in_tds_feature
+            ):
                 invalid_tax_lines = move._get_l10n_in_invalid_tax_lines()
-                if company.l10n_in_tcs_feature and invalid_tax_lines:
+                if company.l10n_in_config_id.l10n_in_tcs_feature and invalid_tax_lines:
                     warnings["lower_tcs_tax"] = {
                         "message": _(
                             "As the Partner's PAN missing/invalid apply TCS at the higher rate."
@@ -350,8 +353,8 @@ class AccountMove(models.Model):
                     }
 
             if (
-                company.l10n_in_is_gst_registered
-                and company.l10n_in_hsn_code_digit
+                company.l10n_in_config_id.l10n_in_is_gst_registered
+                and company.l10n_in_config_id.l10n_in_hsn_code_digit
                 and (filtered_lines := move.invoice_line_ids.filtered(line_filter_func))
             ):
                 lines = self.env["account.move.line"]
@@ -359,7 +362,8 @@ class AccountMove(models.Model):
                     hsn_code = line.l10n_in_hsn_code
                     if not hsn_code or (
                         not re.match(r"^\d{4}$|^\d{6}$|^\d{8}$", hsn_code)
-                        or len(hsn_code) < int(company.l10n_in_hsn_code_digit)
+                        or len(hsn_code)
+                        < int(company.l10n_in_config_id.l10n_in_hsn_code_digit)
                     ):
                         lines |= line._origin
 
@@ -372,7 +376,7 @@ class AccountMove(models.Model):
                     msg = _(
                         "Ensure that the HSN/SAC Code consists either %s in invoice lines",
                         digit_suffixes.get(
-                            company.l10n_in_hsn_code_digit,
+                            company.l10n_in_config_id.l10n_in_hsn_code_digit,
                             _("Invalid HSN/SAC Code digit"),
                         ),
                     )
@@ -400,7 +404,8 @@ class AccountMove(models.Model):
     def _compute_l10n_in_show_gstin_status(self):
         indian_moves = self.filtered(
             lambda m: (
-                m.country_code == "IN" and m.company_id.l10n_in_gstin_status_feature
+                m.country_code == "IN"
+                and m.company_id.l10n_in_config_id.l10n_in_gstin_status_feature
             )
         )
         (self - indian_moves).l10n_in_show_gstin_status = False
@@ -425,7 +430,7 @@ class AccountMove(models.Model):
         for move in self:
             if (
                 move.country_code == "IN"
-                and move.company_id.l10n_in_gstin_status_feature
+                and move.company_id.l10n_in_config_id.l10n_in_gstin_status_feature
                 and move.payment_state not in ["paid", "reversed"]
                 and move.state != "cancel"
             ):
@@ -450,7 +455,7 @@ class AccountMove(models.Model):
 
     def _compute_l10n_in_total_withholding_amount(self):
         for move in self:
-            if self.env.company.l10n_in_tds_feature:
+            if self.env.company.l10n_in_config_id.l10n_in_tds_feature:
                 move.l10n_in_total_withholding_amount = sum(
                     move.l10n_in_withhold_move_ids.filtered(
                         lambda m: m.state == "posted"
@@ -462,7 +467,7 @@ class AccountMove(models.Model):
     @api.depends("l10n_in_warning")
     def _compute_l10n_in_display_higher_tcs_button(self):
         for move in self:
-            if move.company_id.l10n_in_tcs_feature:
+            if move.company_id.l10n_in_config_id.l10n_in_tcs_feature:
                 move.l10n_in_display_higher_tcs_button = (
                     move.l10n_in_warning and move.l10n_in_warning.get("lower_tcs_tax")
                 )
@@ -531,7 +536,7 @@ class AccountMove(models.Model):
         default_domain = [
             ("account_id.l10n_in_tds_tcs_section_id", "=", section_alert.id),
             ("move_id.move_type", "!=", "entry"),
-            ("company_id.l10n_in_tds_feature", "!=", False),
+            ("company_id.l10n_in_config_id.l10n_in_tds_feature", "!=", False),
             ("company_id.l10n_in_tan", "=", self.company_id.l10n_in_tan),
             ("parent_state", "=", "posted"),
         ]
@@ -583,12 +588,12 @@ class AccountMove(models.Model):
         match section_id.tax_source_type:
             case "tcs":
                 return (
-                    self.company_id.l10n_in_tcs_feature
+                    self.company_id.l10n_in_config_id.l10n_in_tcs_feature
                     and self.journal_id.type == "sale"
                 )
             case "tds":
                 return (
-                    self.company_id.l10n_in_tds_feature
+                    self.company_id.l10n_in_config_id.l10n_in_tds_feature
                     and self.journal_id.type == "purchase"
                     and section_id
                     not in self.l10n_in_withhold_move_ids.filtered(
@@ -700,7 +705,7 @@ class AccountMove(models.Model):
         for move in posted.filtered(
             lambda m: (
                 m.country_code == "IN"
-                and m.company_id.l10n_in_is_gst_registered
+                and m.company_id.l10n_in_config_id.l10n_in_is_gst_registered
                 and m.is_sale_document()
             )
         ):
@@ -756,9 +761,12 @@ class AccountMove(models.Model):
 
     def _generate_qr_code(self, silent_errors=False):
         self.check_singleton()
-        if self.company_id.country_code == "IN" and self.company_id.l10n_in_upi_id:
+        if (
+            self.company_id.country_code == "IN"
+            and self.company_id.l10n_in_config_id.l10n_in_upi_id
+        ):
             payment_url = "upi://pay?pa=%s&pn=%s&am=%s&tr=%s&tn=%s" % (
-                self.company_id.l10n_in_upi_id,
+                self.company_id.l10n_in_config_id.l10n_in_upi_id,
                 self.company_id.name,
                 self.amount_residual,
                 self.payment_reference or self.name,
@@ -918,7 +926,7 @@ class AccountMove(models.Model):
         gst_treatment = self.l10n_in_gst_treatment
         company = self.company_id
         tax_types = set(self.invoice_line_ids.tax_ids.mapped("l10n_in_tax_type"))
-        if company.l10n_in_is_gst_registered and tax_types:
+        if company.l10n_in_config_id.l10n_in_is_gst_registered and tax_types:
             if gst_treatment in ["overseas", "special_economic_zone"]:
                 return "Tax Invoice"
             elif tax_types.issubset(exempt_types):

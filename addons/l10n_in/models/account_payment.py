@@ -14,12 +14,12 @@ class AccountPayment(models.Model):
         compute="_compute_l10n_in_total_withholding_amount"
     )
     l10n_in_tds_feature_enabled = fields.Boolean(
-        related="company_id.l10n_in_tds_feature"
+        related="company_id.l10n_in_config_id.l10n_in_tds_feature"
     )
 
     def _compute_l10n_in_total_withholding_amount(self):
         for payment in self:
-            if payment.company_id.l10n_in_tds_feature:
+            if payment.company_id.l10n_in_config_id.l10n_in_tds_feature:
                 payment.l10n_in_total_withholding_amount = sum(
                     payment.l10n_in_withhold_move_ids.filtered(
                         lambda m: m.state == "posted"

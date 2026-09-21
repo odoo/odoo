@@ -18,20 +18,22 @@ class ProductTemplate(models.Model):
         compute="_compute_l10n_in_is_gst_registered_enabled"
     )
 
-    @api.depends("company_id.l10n_in_is_gst_registered")
+    @api.depends("company_id.l10n_in_config_id.l10n_in_is_gst_registered")
     @api.depends_context("allowed_company_ids")
     def _compute_l10n_in_is_gst_registered_enabled(self):
         for record in self:
             allowed_companies = record.company_id or self.env.companies
             record.l10n_in_is_gst_registered_enabled = any(
-                company.l10n_in_is_gst_registered for company in allowed_companies
+                company.l10n_in_config_id.l10n_in_is_gst_registered
+                for company in allowed_companies
             )
 
     @api.depends("sale_ok", "l10n_in_hsn_code")
     def _compute_l10n_in_hsn_warning(self):
         digit_suffixes = {"4": _("either 4, 6 or 8"), "6": _("either 6 or 8"), "8": "8"}
         active_hsn_code_digit_len = max(
-            int(company.l10n_in_hsn_code_digit) for company in self.env.companies
+            int(company.l10n_in_config_id.l10n_in_hsn_code_digit)
+            for company in self.env.companies
         )
         for record in self:
             check_hsn = (

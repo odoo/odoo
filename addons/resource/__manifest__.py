@@ -1,6 +1,6 @@
 {
     "name": "Resource",
-    "version": "1.20",
+    "version": "1.21",
     "category": "Hidden",
     "description": """
 Module for resource management.

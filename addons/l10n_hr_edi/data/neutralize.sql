@@ -1,5 +1,5 @@
 -- reset MojEracun status
-UPDATE res_company
+UPDATE l10n_hr_edi_config
 SET l10n_hr_mer_username = NULL,
     l10n_hr_mer_company_ident = NULL,
     l10n_hr_mer_software_ident = NULL,

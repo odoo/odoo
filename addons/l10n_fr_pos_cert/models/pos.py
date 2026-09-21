@@ -318,7 +318,7 @@ class PosOrder(models.Model):
                     and not (o.l10n_fr_secure_sequence_number or o.l10n_fr_hash)
                 )
             ):
-                new_number = order.company_id.l10n_fr_pos_cert_sequence_id.next_by_id()
+                new_number = order.company_id.l10n_fr_pos_cert_config_id.l10n_fr_pos_cert_sequence_id.next_by_id()
                 res |= super(PosOrder, order).write(
                     {"l10n_fr_secure_sequence_number": new_number}
                 )

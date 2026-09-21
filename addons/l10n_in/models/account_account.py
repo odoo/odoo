@@ -17,12 +17,17 @@ class AccountAccount(models.Model):
         store=True,
     )
 
-    @api.depends("company_ids.l10n_in_tds_feature", "company_ids.l10n_in_tcs_feature")
+    @api.depends(
+        "company_ids.l10n_in_config_id.l10n_in_tds_feature",
+        "company_ids.l10n_in_config_id.l10n_in_tcs_feature",
+    )
     def _compute_tds_tcs_features(self):
         for record in self:
             record.l10n_in_tds_feature_enabled = any(
-                company.l10n_in_tds_feature for company in record.company_ids
+                company.l10n_in_config_id.l10n_in_tds_feature
+                for company in record.company_ids
             )
             record.l10n_in_tcs_feature_enabled = any(
-                company.l10n_in_tcs_feature for company in record.company_ids
+                company.l10n_in_config_id.l10n_in_tcs_feature
+                for company in record.company_ids
             )

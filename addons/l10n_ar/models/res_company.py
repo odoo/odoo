@@ -14,7 +14,23 @@ class ResCompany(models.Model):
         string="Company Requires Vat?",
         compute="_compute_l10n_ar_company_requires_vat",
     )
-    l10n_ar_afip_start_date = fields.Date(string="Activities Start")
+    l10n_ar_config_id = fields.Many2one(
+        comodel_name="l10n_ar.config",
+        compute="_compute_l10n_ar_config_id",
+        search="_search_l10n_ar_config_id",
+    )
+    l10n_ar_afip_start_date = fields.Date(
+        related="l10n_ar_config_id.l10n_ar_afip_start_date",
+    )
+
+    def _search_l10n_ar_config_id(self, operator, value):
+        return self._search_config_link("l10n_ar.config", operator, value)
+
+    def _compute_l10n_ar_config_id(self):
+        configs = self.env["l10n_ar.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.l10n_ar_config_id = by_company.get(company.id, False)
 
     @api.onchange("country_id")
     def onchange_country(self):

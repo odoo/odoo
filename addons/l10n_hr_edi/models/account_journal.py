@@ -32,18 +32,19 @@ class AccountJournal(models.Model):
     )
     # MER-specific fields
     l10n_hr_mer_connection_state = fields.Selection(
-        related="company_id.l10n_hr_mer_connection_state"
+        related="company_id.l10n_hr_edi_config_id.l10n_hr_mer_connection_state"
     )
     l10n_hr_is_mer_journal = fields.Boolean(
         string="Journal used for eRacun via MojEracun",
         compute="_compute_l10n_hr_is_mer_journal",
     )
 
-    @api.depends("company_id.l10n_hr_mer_purchase_journal_id")
+    @api.depends("company_id.l10n_hr_edi_config_id.l10n_hr_mer_purchase_journal_id")
     def _compute_l10n_hr_is_mer_journal(self):
         for journal in self:
             journal.l10n_hr_is_mer_journal = (
-                journal.company_id.l10n_hr_mer_purchase_journal_id == journal
+                journal.company_id.l10n_hr_edi_config_id.l10n_hr_mer_purchase_journal_id
+                == journal
             )
 
     def l10n_hr_mer_get_new_documents(self):

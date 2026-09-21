@@ -28,7 +28,7 @@ class MojEracunServiceError(Exception):
 
 
 def _get_server_url(company, edi_mode=None):
-    edi_mode = edi_mode or company.l10n_hr_mer_connection_mode
+    edi_mode = edi_mode or company.l10n_hr_edi_config_id.l10n_hr_mer_connection_mode
     urls = {
         "prod": "https://www.moj-eracun.hr",
         "test": "https://demo.moj-eracun.hr",
@@ -68,7 +68,7 @@ def _prepare_request(company, endpoint_type, params=False):
     url = f"{_get_server_url(company)}{endpoint}"
 
     # Last barrier : in case the demo mode is not handled by the caller, we block access.
-    if company.l10n_hr_mer_connection_mode == "demo":
+    if company.l10n_hr_edi_config_id.l10n_hr_mer_connection_mode == "demo":
         raise MojEracunServiceError(
             "block_demo_mode", "Can't access the proxy in demo mode"
         )
@@ -136,11 +136,11 @@ def _prepare_request(company, endpoint_type, params=False):
 
 def _call_mer_service(company, endpoint, params=None):
     params_base = {
-        "Username": company.l10n_hr_mer_username,
+        "Username": company.l10n_hr_edi_config_id.l10n_hr_mer_username,
         "Password": company.l10n_hr_mer_password,
-        "CompanyId": company.l10n_hr_mer_company_ident,
+        "CompanyId": company.l10n_hr_edi_config_id.l10n_hr_mer_company_ident,
         "CompanyBu": company.partner_id.l10n_hr_business_unit_code,
-        "SoftwareId": company.l10n_hr_mer_software_ident,
+        "SoftwareId": company.l10n_hr_edi_config_id.l10n_hr_mer_software_ident,
     }
     if params:
         params = params_base | params

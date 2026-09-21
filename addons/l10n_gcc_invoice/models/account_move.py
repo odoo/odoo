@@ -69,7 +69,8 @@ class AccountMove(models.Model):
             return
         self.env["account.config"].flush_model(["invoice_terms"])
         self.env.cr.execute(
-            'SELECT "id","invoice_terms" FROM "res_company" WHERE id = any(%s)',
+            'SELECT "company_id","invoice_terms" FROM "account_config" '
+            "WHERE company_id = any(%s)",
             [moves_to_fix.company_id.ids],
         )
         translation_by_company_id = {

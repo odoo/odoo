@@ -1,7 +1,7 @@
 import logging
 
-from odoo import api, fields, models, tools
-from odoo.exceptions import UserError, ValidationError
+from odoo import fields, models, tools
+from odoo.exceptions import UserError
 
 from ..tools import (
     MojEracunServiceError,
@@ -24,107 +24,27 @@ class ResCompany(models.Model):
         "l10n_hr_mer_password": "l10n_hr_mer_password",
     }
 
-    l10n_hr_mer_username = fields.Char(
-        string="MojEracun username",
-        groups="account.group_account_manager",
+    l10n_hr_edi_config_id = fields.Many2one(
+        comodel_name="l10n_hr_edi.config",
+        compute="_compute_l10n_hr_edi_config_id",
+        search="_search_l10n_hr_edi_config_id",
     )
+
     l10n_hr_mer_password = fields.Char(
         string="MojEracun password",
         compute="_compute_credential_doors",
         inverse="_inverse_credential_doors",
         groups="account.group_account_manager",
     )
-    l10n_hr_mer_company_ident = fields.Char(
-        string="MojEracun CompanyId",
-        groups="account.group_account_manager",
-    )
-    l10n_hr_mer_software_ident = fields.Char(
-        string="MojEracun SoftwareId",
-        default="Saodoo-001",
-        help="Default SoftwareID for Odoo is 'Saodoo-001'",
-    )
-    l10n_hr_mer_connection_state = fields.Selection(
-        selection=[
-            ("inactive", "Inactive"),
-            ("active", "Active"),
-        ],
-        string="MojEracun connection status",
-        compute="_compute_l10n_hr_mojeracun_state",
-        default="inactive",
-        store=True,
-        required=True,
-    )
-    l10n_hr_mer_connection_mode = fields.Selection(
-        selection=[
-            ("prod", "Production"),
-            ("test", "Test"),
-            ("demo", "Demo"),
-        ],
-        string="MojEracun Operating mode",
-        default="test",
-    )
-    l10n_hr_mer_purchase_journal_id = fields.Many2one(
-        comodel_name="account.journal",
-        string="eracun Purchase Journal",
-        compute="_compute_l10n_hr_mer_purchase_journal_id",
-        store=True,
-        readonly=False,
-        domain=[("type", "=", "purchase")],
-    )
 
-    # -------------------------------------------------------------------------
-    # CONSTRAINTS
-    # -------------------------------------------------------------------------
+    def _search_l10n_hr_edi_config_id(self, operator, value):
+        return self._search_config_link("l10n_hr_edi.config", operator, value)
 
-    @api.constrains("l10n_hr_mer_purchase_journal_id")
-    def _check_l10n_hr_mer_purchase_journal_id(self):
+    def _compute_l10n_hr_edi_config_id(self):
+        configs = self.env["l10n_hr_edi.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
         for company in self:
-            if (
-                company.l10n_hr_mer_purchase_journal_id
-                and company.l10n_hr_mer_purchase_journal_id.type != "purchase"
-            ):
-                raise ValidationError(
-                    self.env._(
-                        "A purchase journal must be used to receive eRacun document via MojEracun."
-                    )
-                )
-
-    # -------------------------------------------------------------------------
-    # COMPUTE METHODS
-    # -------------------------------------------------------------------------
-
-    @api.depends("l10n_hr_mer_connection_state")
-    def _compute_l10n_hr_mer_purchase_journal_id(self):
-        for company in self:
-            if (
-                not company.l10n_hr_mer_purchase_journal_id
-                and company.l10n_hr_mer_connection_state == "active"
-            ):
-                company.l10n_hr_mer_purchase_journal_id = self.env[  # noqa: E8507 - one lookup per company, on its own journals
-                    "account.journal"
-                ].search(
-                    [
-                        *self.env["account.journal"]._check_company_domain(company),
-                        ("type", "=", "purchase"),
-                    ],
-                    limit=1,
-                )
-            else:
-                company.l10n_hr_mer_purchase_journal_id = (
-                    company.l10n_hr_mer_purchase_journal_id
-                )
-
-    @api.depends("l10n_hr_mer_username", "l10n_hr_mer_password")
-    def _compute_l10n_hr_mojeracun_state(self):
-        for company in self:
-            if any(
-                not field
-                for field in [
-                    company.l10n_hr_mer_username,
-                    company.l10n_hr_mer_password,
-                ]
-            ):
-                company.l10n_hr_mer_connection_state = "inactive"
+            company.l10n_hr_edi_config_id = by_company.get(company.id, False)
 
     # -------------------------------------------------------------------------
     # MOJERACUN PARTICIPANT MANAGEMENT
@@ -132,8 +52,9 @@ class ResCompany(models.Model):
 
     def _l10n_hr_activate_mojeracun(self):
         for company in self:
-            if company.l10n_hr_mer_username and company.l10n_hr_mer_password:
-                company.l10n_hr_mer_connection_state = "active"
+            config = company.l10n_hr_edi_config_id
+            if config.l10n_hr_mer_username and company.l10n_hr_mer_password:
+                config.l10n_hr_mer_connection_state = "active"
 
     # -------------------------------------------------------------------------
     # CRONS
@@ -141,21 +62,21 @@ class ResCompany(models.Model):
 
     def _cron_mer_get_new_documents(self):
         edi_user_companies = self.search(
-            [("l10n_hr_mer_connection_state", "=", "active")]
+            [("l10n_hr_edi_config_id.l10n_hr_mer_connection_state", "=", "active")]
         )
         for company in edi_user_companies:
             company._l10n_hr_mer_get_new_documents(from_cron=True)
 
     def _cron_mer_update_document_status(self):
         edi_user_companies = self.search(
-            [("l10n_hr_mer_connection_state", "=", "active")]
+            [("l10n_hr_edi_config_id.l10n_hr_mer_connection_state", "=", "active")]
         )
         for company in edi_user_companies:
             company._l10n_hr_mer_update_document_status_company(from_cron=True)
 
     def _cron_mer_archive_signed_xmls(self):
         edi_user_companies = self.search(
-            [("l10n_hr_mer_connection_state", "=", "active")]
+            [("l10n_hr_edi_config_id.l10n_hr_mer_connection_state", "=", "active")]
         )
         for company in edi_user_companies:
             company._l10n_hr_mer_archive_signed_xmls(from_cron=True)
@@ -201,7 +122,7 @@ class ResCompany(models.Model):
                 )
                 original_addendum.business_document_status = "1"
             return True
-        journal = self.l10n_hr_mer_purchase_journal_id
+        journal = self.l10n_hr_edi_config_id.l10n_hr_mer_purchase_journal_id
         if not journal:
             return False
 
@@ -245,7 +166,7 @@ class ResCompany(models.Model):
         need_retrigger = False
         imported_documents = {}
         for company in self.filtered(
-            lambda c: c.l10n_hr_mer_connection_state == "active"
+            lambda c: c.l10n_hr_edi_config_id.l10n_hr_mer_connection_state == "active"
         ):
             try:
                 response = _mer_api_query_inbox(
@@ -316,7 +237,10 @@ class ResCompany(models.Model):
                     )
                     if from_cron:
                         continue
-                    if company.l10n_hr_mer_connection_mode == "test":
+                    if (
+                        company.l10n_hr_edi_config_id.l10n_hr_mer_connection_mode
+                        == "test"
+                    ):
                         # Bypassing randomness of MER test server responce
                         fisc_data = {
                             "messages": [
@@ -367,7 +291,10 @@ class ResCompany(models.Model):
                     )
                     if from_cron:
                         continue
-                    if company.l10n_hr_mer_connection_mode == "test":
+                    if (
+                        company.l10n_hr_edi_config_id.l10n_hr_mer_connection_mode
+                        == "test"
+                    ):
                         # Bypassing randomness of MER test server responce
                         business_data = {
                             "DocumentProcessStatusId": "0",
@@ -415,7 +342,7 @@ class ResCompany(models.Model):
         Fetch and update the status of up to 20000 documents belonging to a company on MojEracun.
         """
         for company in self.filtered(
-            lambda c: c.l10n_hr_mer_connection_state == "active"
+            lambda c: c.l10n_hr_edi_config_id.l10n_hr_mer_connection_state == "active"
         ):
             for query_function, check_function in [
                 (
@@ -444,7 +371,11 @@ class ResCompany(models.Model):
                         "Failed to retreive fiscalization data for company %s",
                         company.name,
                     )
-                    if from_cron or company.l10n_hr_mer_connection_mode == "test":
+                    if (
+                        from_cron
+                        or company.l10n_hr_edi_config_id.l10n_hr_mer_connection_mode
+                        == "test"
+                    ):
                         response_fisc = []
                     else:
                         raise

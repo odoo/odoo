@@ -76,10 +76,10 @@ class TestHrEdiFlowsMocked(
             "headers": {"charset": "utf-8", "content-type": "application/json"},
             "data": None,
             "json": {
-                "Username": self.env.company.l10n_hr_mer_username,
+                "Username": self.env.company.l10n_hr_edi_config_id.l10n_hr_mer_username,
                 "Password": self.env.company.l10n_hr_mer_password,
-                "CompanyId": self.env.company.l10n_hr_mer_company_ident,
-                "SoftwareId": self.env.company.l10n_hr_mer_software_ident,
+                "CompanyId": self.env.company.l10n_hr_edi_config_id.l10n_hr_mer_company_ident,
+                "SoftwareId": self.env.company.l10n_hr_edi_config_id.l10n_hr_mer_software_ident,
                 **(request_args or {}),
             },
             "timeout": 30,

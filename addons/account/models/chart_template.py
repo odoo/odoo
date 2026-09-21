@@ -301,10 +301,14 @@ class AccountChartTemplate(models.AbstractModel):
         template_data = data.pop("template_data")
         self._split_company_config_data(company, data)
         if company.parent_id:
-            data = {
-                "res.company": data["res.company"],
-                "account.config": data["account.config"],
+            # a branch takes the company's own values and every configuration's,
+            # not just the accounting one: the split above has already moved each
+            # key to the configuration that declares it, and keeping only
+            # `account.config` dropped the rest on the floor
+            keep = {"res.company"} | {
+                field.comodel_name for field in company._config_link_fields().values()
             }
+            data = {model: vals for model, vals in data.items() if model in keep}
 
         if reload_template:
             self._pre_reload_data(company, template_data, data, force_create)

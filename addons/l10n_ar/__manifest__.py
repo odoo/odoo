@@ -1,6 +1,6 @@
 {
     "name": "Argentina - Accounting",
-    "version": "3.7",
+    "version": "3.8",
     "category": "Accounting/Localizations/Account Charts",
     "description": """
 Functional

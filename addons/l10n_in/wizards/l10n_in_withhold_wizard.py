@@ -339,7 +339,9 @@ class L10n_InWithholdWizard(models.TransientModel):
     # ===== MOVE CREATION METHODS =====
     def action_create_and_post_withhold(self):
         self.check_singleton()
-        withholding_account_id = self.company_id.l10n_in_withholding_account_id
+        withholding_account_id = (
+            self.company_id.l10n_in_config_id.l10n_in_withholding_account_id
+        )
         self._check_withhold_data_on_post(withholding_account_id)
 
         # Withhold creation and posting

@@ -24,7 +24,20 @@ def ctx_tz(record, field):
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    l10n_fr_pos_cert_sequence_id = fields.Many2one(comodel_name="ir.sequence")
+    l10n_fr_pos_cert_config_id = fields.Many2one(
+        comodel_name="l10n_fr_pos_cert.config",
+        compute="_compute_l10n_fr_pos_cert_config_id",
+        search="_search_l10n_fr_pos_cert_config_id",
+    )
+
+    def _search_l10n_fr_pos_cert_config_id(self, operator, value):
+        return self._search_config_link("l10n_fr_pos_cert.config", operator, value)
+
+    def _compute_l10n_fr_pos_cert_config_id(self):
+        configs = self.env["l10n_fr_pos_cert.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.l10n_fr_pos_cert_config_id = by_company.get(company.id, False)
 
     @api.model_create_multi
     def create(self, vals_list):

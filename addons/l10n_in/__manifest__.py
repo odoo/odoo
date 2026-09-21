@@ -1,6 +1,6 @@
 {
     "name": "Indian - Accounting",
-    "version": "2.1",
+    "version": "2.2",
     "category": "Accounting/Localizations/Account Charts",
     "description": """
 Indian Accounting: Chart of Account.

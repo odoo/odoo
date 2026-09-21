@@ -59,7 +59,7 @@ class EWayBillApi:
         )
         try:
             response = self.env["iap.account"]._l10n_in_connect_to_server(
-                is_production=self.company.sudo().l10n_in_edi_production_env,
+                is_production=self.company.sudo().l10n_in_config_id.l10n_in_edi_production_env,
                 params=params,
                 url_path=url_path,
                 config_parameter="l10n_in_edi_ewaybill.endpoint",

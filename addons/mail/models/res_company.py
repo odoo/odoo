@@ -9,11 +9,14 @@ if typing.TYPE_CHECKING:
 class ResCompany(models.Model):
     _inherit = "res.company"
 
+    mail_config_id = fields.Many2one(
+        comodel_name="mail.config",
+        compute="_compute_mail_config_id",
+        search="_search_mail_config_id",
+    )
     alias_domain_id: MailAliasDomain = fields.Many2one(
-        comodel_name="mail.alias.domain",
-        string="Email Domain",
-        default=lambda self: self._default_alias_domain_id(),
-        index="btree_not_null",
+        related="mail_config_id.alias_domain_id",
+        readonly=False,
     )
     bounce_email = fields.Char(compute="_compute_bounce")
     bounce_formatted = fields.Char(
@@ -36,18 +39,22 @@ class ResCompany(models.Model):
         compute_sudo=True,
     )
     email_primary_color = fields.Char(
-        string="Email Button Text",
-        default="#FFFFFF",
+        related="mail_config_id.email_primary_color",
         readonly=False,
     )
     email_secondary_color = fields.Char(
-        string="Email Button Color",
-        default="#875A7B",
+        related="mail_config_id.email_secondary_color",
         readonly=False,
     )
 
-    def _default_alias_domain_id(self) -> MailAliasDomain:
-        return self.env["mail.alias.domain"]._get_default_domain()
+    def _search_mail_config_id(self, operator, value):
+        return self._search_config_link("mail.config", operator, value)
+
+    def _compute_mail_config_id(self):
+        configs = self.env["mail.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.mail_config_id = by_company.get(company.id, False)
 
     @api.depends("alias_domain_id.bounce_email", "name")
     def _compute_bounce(self) -> None:

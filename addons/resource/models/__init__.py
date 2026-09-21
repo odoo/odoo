@@ -1,4 +1,5 @@
 from . import mixin_resource_ledger
+from . import resource_config
 from . import res_company
 from . import res_partner
 from . import res_users

@@ -25,7 +25,7 @@ class TestGccInvoice(AccountTestInvoicingCommon):
             }
         )
         # Add translation to invoice terms
-        self.env.company.update_field_translations(
+        self.env.company.account_config_id.update_field_translations(
             "invoice_terms",
             {
                 "en_US": {"English Terms": "English Terms"},

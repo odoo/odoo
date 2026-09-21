@@ -21,7 +21,7 @@ class ResConfigSettings(models.TransientModel):
     )
     alias_domain_id: MailAliasDomain = fields.Many2one(
         comodel_name="mail.alias.domain",
-        related="company_id.alias_domain_id",
+        related="company_id.mail_config_id.alias_domain_id",
         string="Alias Domain",
         readonly=False,
         help="If you have setup a catch-all email domain redirected to the Odoo server, enter the domain name here.",
@@ -61,11 +61,11 @@ class ResConfigSettings(models.TransientModel):
         help="Base64 encoded key",
     )
     email_primary_color = fields.Char(
-        related="company_id.email_primary_color",
+        related="company_id.mail_config_id.email_primary_color",
         readonly=False,
     )
     email_secondary_color = fields.Char(
-        related="company_id.email_secondary_color",
+        related="company_id.mail_config_id.email_secondary_color",
         readonly=False,
     )
 

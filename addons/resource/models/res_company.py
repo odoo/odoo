@@ -12,11 +12,24 @@ class ResCompany(models.Model):
         inverse_name="company_id",
         string="Working Hours",
     )
-    resource_calendar_id = fields.Many2one(
-        comodel_name="resource.calendar",
-        string="Default Working Hours",
-        ondelete="restrict",
+    resource_config_id = fields.Many2one(
+        comodel_name="resource.config",
+        compute="_compute_resource_config_id",
+        search="_search_resource_config_id",
     )
+    resource_calendar_id = fields.Many2one(
+        related="resource_config_id.resource_calendar_id",
+        readonly=False,
+    )
+
+    def _search_resource_config_id(self, operator, value):
+        return self._search_config_link("resource.config", operator, value)
+
+    def _compute_resource_config_id(self):
+        configs = self.env["resource.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.resource_config_id = by_company.get(company.id, False)
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:

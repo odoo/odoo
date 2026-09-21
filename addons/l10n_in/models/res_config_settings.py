@@ -14,30 +14,30 @@ class ResConfigSettings(models.TransientModel):
         implied_group="l10n_in.group_l10n_in_reseller",
     )
     l10n_in_edi_production_env = fields.Boolean(
-        related="company_id.l10n_in_edi_production_env",
+        related="company_id.l10n_in_config_id.l10n_in_edi_production_env",
         string="Indian Production Environment",
         readonly=False,
     )
     l10n_in_hsn_code_digit = fields.Selection(
-        related="company_id.l10n_in_hsn_code_digit",
+        related="company_id.l10n_in_config_id.l10n_in_hsn_code_digit",
         readonly=False,
     )
 
     # TDS/TCS settings
     l10n_in_tds_feature = fields.Boolean(
-        related="company_id.l10n_in_tds_feature",
+        related="company_id.l10n_in_config_id.l10n_in_tds_feature",
         readonly=False,
     )
     l10n_in_tcs_feature = fields.Boolean(
-        related="company_id.l10n_in_tcs_feature",
+        related="company_id.l10n_in_config_id.l10n_in_tcs_feature",
         readonly=False,
     )
     l10n_in_withholding_account_id = fields.Many2one(
-        related="company_id.l10n_in_withholding_account_id",
+        related="company_id.l10n_in_config_id.l10n_in_withholding_account_id",
         readonly=False,
     )
     l10n_in_withholding_journal_id = fields.Many2one(
-        related="company_id.l10n_in_withholding_journal_id",
+        related="company_id.l10n_in_config_id.l10n_in_withholding_journal_id",
         readonly=False,
     )
     l10n_in_tan = fields.Char(
@@ -47,7 +47,7 @@ class ResConfigSettings(models.TransientModel):
 
     # GST settings
     l10n_in_is_gst_registered = fields.Boolean(
-        related="company_id.l10n_in_is_gst_registered",
+        related="company_id.l10n_in_config_id.l10n_in_is_gst_registered",
         readonly=False,
     )
     l10n_in_gstin = fields.Char(
@@ -56,7 +56,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     l10n_in_gstin_status_feature = fields.Boolean(
-        related="company_id.l10n_in_gstin_status_feature",
+        related="company_id.l10n_in_config_id.l10n_in_gstin_status_feature",
         readonly=False,
     )
     l10n_in_gst_efiling_feature = fields.Boolean(

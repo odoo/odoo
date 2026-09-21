@@ -947,7 +947,7 @@ class AccountMove(models.Model):
             params = {**default_params, "json_payload": json_payload}
         try:
             response = self.env["iap.account"]._l10n_in_connect_to_server(
-                company.sudo().l10n_in_edi_production_env,
+                company.sudo().l10n_in_config_id.l10n_in_edi_production_env,
                 params,
                 f"/iap/l10n_in_edi/1/{url_end_point}",
                 "l10n_in_edi.endpoint",

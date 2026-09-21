@@ -1,6 +1,6 @@
 {
     "name": "Croatia - e-invoicing",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Accounting/Localizations/Reporting",
     "description": """
 e-invoicing for Croatia

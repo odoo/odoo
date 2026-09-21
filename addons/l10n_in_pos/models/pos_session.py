@@ -6,7 +6,7 @@ class PosSession(models.Model):
 
     def _get_sale_key(self, base_line):
         res = super()._get_sale_key(base_line)
-        if self.config_id.company_id.l10n_in_is_gst_registered:
+        if self.config_id.company_id.l10n_in_config_id.l10n_in_is_gst_registered:
             res.update(
                 {
                     "uom_id": base_line["uom_id"].id,
@@ -17,7 +17,7 @@ class PosSession(models.Model):
 
     def _prepare_sale_vals(self, key, sale_vals):
         res = super()._prepare_sale_vals(key, sale_vals)
-        if self.config_id.company_id.l10n_in_is_gst_registered:
+        if self.config_id.company_id.l10n_in_config_id.l10n_in_is_gst_registered:
             res.update(
                 {
                     "l10n_in_hsn_code": key["l10n_in_hsn_code"],

@@ -49,18 +49,20 @@ class AccountTax(models.Model):
         compute="_compute_l10n_in_tcs_feature_enabled"
     )
 
-    @api.depends("company_ids.l10n_in_tds_feature")
+    @api.depends("company_ids.l10n_in_config_id.l10n_in_tds_feature")
     def _compute_l10n_in_tds_feature_enabled(self):
         for tax in self:
             tax.l10n_in_tds_feature_enabled = any(
-                company.l10n_in_tds_feature for company in tax.company_ids
+                company.l10n_in_config_id.l10n_in_tds_feature
+                for company in tax.company_ids
             )
 
-    @api.depends("company_ids.l10n_in_tcs_feature")
+    @api.depends("company_ids.l10n_in_config_id.l10n_in_tcs_feature")
     def _compute_l10n_in_tcs_feature_enabled(self):
         for tax in self:
             tax.l10n_in_tcs_feature_enabled = any(
-                company.l10n_in_tcs_feature for company in tax.company_ids
+                company.l10n_in_config_id.l10n_in_tcs_feature
+                for company in tax.company_ids
             )
 
     @api.depends("country_code", "invoice_repartition_line_ids.tag_ids")

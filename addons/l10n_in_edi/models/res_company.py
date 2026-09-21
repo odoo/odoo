@@ -72,7 +72,7 @@ class ResCompany(models.Model):
         }
         try:
             response = self.env["iap.account"]._l10n_in_connect_to_server(
-                self_sudo.l10n_in_edi_production_env,
+                self_sudo.l10n_in_config_id.l10n_in_edi_production_env,
                 params,
                 "/iap/l10n_in_edi/1/authenticate",
                 "l10n_in_edi.endpoint",

@@ -107,15 +107,17 @@ class ResPartner(models.Model):
             )
 
     @api.depends(
-        "company_id.l10n_in_is_gst_registered",
-        "company_id.l10n_in_gstin_status_feature",
+        "company_id.l10n_in_config_id.l10n_in_is_gst_registered",
+        "company_id.l10n_in_config_id.l10n_in_gstin_status_feature",
     )
     def _compute_l10n_in_gst_registered_and_status(self):
         for record in self:
             company = record.company_id or self.env.company
-            record.l10n_in_is_gst_registered_enabled = company.l10n_in_is_gst_registered
+            record.l10n_in_is_gst_registered_enabled = (
+                company.l10n_in_config_id.l10n_in_is_gst_registered
+            )
             record.l10n_in_gstin_status_feature_enabled = (
-                company.l10n_in_gstin_status_feature
+                company.l10n_in_config_id.l10n_in_gstin_status_feature
             )
 
     @api.onchange("vat")
@@ -189,13 +191,15 @@ class ResPartner(models.Model):
             )
         if not self.vat:
             raise ValidationError(_("Please enter the GSTIN"))
-        if not self.env.company.l10n_in_gstin_status_feature:
+        if not self.env.company.l10n_in_config_id.l10n_in_gstin_status_feature:
             raise ValidationError(
                 _(
                     "This feature is not activated. Go to Settings to activate this feature."
                 )
             )
-        is_production = self.env.company.sudo().l10n_in_edi_production_env
+        is_production = (
+            self.env.company.sudo().l10n_in_config_id.l10n_in_edi_production_env
+        )
         params = {
             "gstin_to_search": self.vat,
             "gstin": self.env.company.vat,

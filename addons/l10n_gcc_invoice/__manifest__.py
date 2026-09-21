@@ -1,6 +1,6 @@
 {
     "name": "Gulf Cooperation Council - Invoice",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "category": "Accounting/Localizations",
     "description": """
 Adds Arabic as a secondary language on your invoice, credit note, debit note, vendor bill, and refund bill
@@ -11,6 +11,7 @@ Adds Arabic as a secondary language on your invoice, credit note, debit note, ve
         "account",
     ],
     "data": [
+        "security/ir.model.access.csv",
         "views/report_invoice.xml",
         "views/res_config_settings_views.xml",
     ],

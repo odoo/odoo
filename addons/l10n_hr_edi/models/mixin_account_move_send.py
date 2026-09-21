@@ -117,7 +117,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         if method == "mojeracun":
             return (
-                company.l10n_hr_mer_connection_state == "active"
+                company.l10n_hr_edi_config_id.l10n_hr_mer_connection_state == "active"
                 and company.country_code == "HR"
             )
         return super()._is_applicable_to_company(method, company)
