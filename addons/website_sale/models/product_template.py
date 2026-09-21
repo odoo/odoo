@@ -1526,14 +1526,14 @@ class ProductTemplate(models.Model):
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         search_term = self.env.context.get("search_term", "")
+        website_domain = self.env.website.website_domain()
 
         for product, data in zip(self, results_data):
             combination_info = product._get_combination_info(only_template=True)
             values = product.attribute_line_ids.value_ids
-            data["attribute_value_ids"] = values.read(["id", "name"])
-            data["product_tag_ids"] = product.product_tag_ids.filtered(
-                "visible_to_customers"
-            ).read(["name"])
+            tags = product.product_tag_ids.filtered("visible_to_customers").read(["name"])
+            categories = product.public_categ_ids.filtered_domain(website_domain).read(["name"])
+            data["badges"] = tags + categories + values.read(["name"])
             price = self._search_render_results_prices(mapping, combination_info)
             if price:
                 data["price"] = price
