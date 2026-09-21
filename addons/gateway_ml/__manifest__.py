@@ -1,6 +1,6 @@
 {
     "name": "API AI",
-    "version": "19.0.1.21.1",
+    "version": "19.0.1.22.0",
     "category": "Hidden",
     "sequence": 10,
     "summary": "AI provider registry, orchestration and vendor clients",

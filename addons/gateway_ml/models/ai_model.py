@@ -27,6 +27,7 @@ class AIModel(models.Model):
             ("chat", "Chat"),
             ("vision", "Vision"),
             ("audio", "Audio"),
+            ("speech", "Speech"),
             ("embedding", "Embedding"),
         ],
         default="chat",
@@ -98,6 +99,11 @@ class AIModel(models.Model):
         help="The query parameter a Deepgram model reads boosted vocabulary from.",
     )
     max_context_window = fields.Integer(help="Maximum context window size in tokens")
+    max_audio_mb = fields.Integer(
+        string="Max audio (MiB)",
+        help="Largest audio body the vendor accepts for this model; 0 when it "
+        "states no limit",
+    )
     max_output_tokens = fields.Integer(
         help="Maximum number of output tokens per request"
     )

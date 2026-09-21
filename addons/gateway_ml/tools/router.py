@@ -19,6 +19,7 @@ _logger = logging.getLogger(__name__)
 NON_RETRYABLE_ERRORS = (AuthenticationError, ClientError, ValidationError)
 
 STRATEGIES = ("balanced", "cost", "accuracy", "speed")
+MIB = 1024 * 1024
 
 OPERATION_KINDS = {
     "chat": ("chat",),
@@ -203,6 +204,12 @@ class MlRouter:
                     request.prompt, model=ai_model.code, **sampling
                 )
             }
+        limit = ai_model.max_audio_mb * MIB
+        if limit and len(request.audio) > limit:
+            raise CommError(
+                f"{ai_model.code} on {ai_model.provider_id.code} accepts at most "
+                f"{ai_model.max_audio_mb} MiB of audio, got {len(request.audio)} bytes"
+            )
         audio = {
             "filename": request.filename or "audio",
             "mimetype": request.mimetype or None,
@@ -226,6 +233,15 @@ class MlRouter:
                 model=ai_model.code,
             )
         }
+
+    def audio_capacity(self, model, company_id=None):
+        """The largest audio body ``model`` or one of its runnable fallbacks takes, in bytes; 0 when unbounded."""
+        limits = [
+            hop.max_audio_mb * MIB
+            for hop in self._get_runnable_chain(model, None, company_id)
+            if hop.kind == "audio"
+        ]
+        return 0 if not limits or 0 in limits else max(limits)
 
     def run_with_fallback(
         self,

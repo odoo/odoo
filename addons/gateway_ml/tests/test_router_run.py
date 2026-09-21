@@ -23,6 +23,16 @@ class TestRouterRun(TransactionCase):
                 provider.action_archive()
         connect(cls.env, cls.openai)
         connect(cls.env, cls.deepgram)
+        if not cls.env["gateway.ml.model"].search([("kind", "=", "speech")], limit=1):
+            # speech_ai seeds the voices; the router synthesises without it.
+            cls.env["gateway.ml.model"].create(
+                {
+                    "name": "Test voice",
+                    "code": "test-voice",
+                    "kind": "speech",
+                    "provider_id": cls.openai.id,
+                }
+            )
         cls.router = MlRouter(cls.env)
 
     def _run(self, operation, request, **kwargs):
@@ -101,6 +111,29 @@ class TestRouterRun(TransactionCase):
     def test_an_unknown_operation_is_refused(self):
         with self.assertRaises(ValueError):
             self.router.run("dream", MlRequest())
+
+    def test_audio_past_the_model_limit_goes_to_a_fallback_with_room(self):
+        whisper = self.env.ref("gateway_ml.ai_model_openai_whisper_1")
+        nova = self.env.ref("gateway_ml.ai_model_deepgram_nova_3")
+        whisper.write({"max_audio_mb": 1, "fallback_model_ids": [(6, 0, nova.ids)]})
+        nova.max_audio_mb = 4
+        big = b"A" * (2 * 1024 * 1024)
+
+        self.assertEqual(self.router.audio_capacity(whisper), 4 * 1024 * 1024)
+        result, client = self._run("transcribe", MlRequest(audio=big), model=whisper)
+        self.assertEqual(result.model, nova)
+        client.transcribe.assert_called_once()
+
+        nova.max_audio_mb = 1
+        self.assertEqual(self.router.audio_capacity(whisper), 1024 * 1024)
+        with self.assertRaises(CommError) as caught:
+            self._run("transcribe", MlRequest(audio=big), model=whisper)
+        self.assertIn("MiB", str(caught.exception))
+
+        nova.max_audio_mb = 0
+        self.assertEqual(self.router.audio_capacity(whisper), 0)
+        result, _client = self._run("transcribe", MlRequest(audio=big), model=whisper)
+        self.assertEqual(result.model, nova)
 
 
 @tagged("post_install", "-at_install")
