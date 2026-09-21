@@ -20,7 +20,6 @@ import {
     models,
     mountWithCleanup,
     onRpc,
-    patchWithCleanup,
     waitUntilIdle,
 } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
@@ -28,17 +27,18 @@ import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { delay } from "@web/core/utils/concurrency";
 import { uniqueId } from "@web/core/utils/functions";
+import { patch } from "@web/core/utils/patch";
 
 // Avoid server requests for test snippet thumbnails.
 export const dummyThumbnailImg =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
 
-export function patchWithCleanupImg() {
+export function patchImg() {
     const defaultImg = dummyThumbnailImg;
-    patchWithCleanup(Image, {
+    patch(Image, {
         template: xml`<img t-att-data-src="this.props.src" t-att-alt="this.props.alt" t-att-class="this.props.class" t-att-style="this.props.style" t-att="this.props.attrs" src="${defaultImg}"/>`,
     });
-    patchWithCleanup(Image.prototype, {
+    patch(Image.prototype, {
         loadImage: () => {},
         getSvg: function () {
             this.isSvg = () => false;
@@ -236,7 +236,7 @@ export async function setupHTMLBuilder(
     defineModels([IrUiView]);
 
     if (patchImages) {
-        patchWithCleanupImg();
+        patchImg();
     }
 
     if (!snippets) {
@@ -262,7 +262,7 @@ export async function setupHTMLBuilder(
         };
     }
 
-    patchWithCleanup(IrUiView.prototype, {
+    patch(IrUiView.prototype, {
         render_public_asset: () => getSnippetView(snippets),
     });
 
@@ -292,10 +292,10 @@ export async function setupHTMLBuilder(
         await animationFrame();
         await waitUntilIdle(comp);
     };
-    patchWithCleanup(Builder.prototype, {
+    patch(Builder.prototype, {
         setup() {
             super.setup();
-            patchWithCleanup(this.env.editorBus, {
+            patch(this.env.editorBus, {
                 trigger(eventName, detail) {
                     if (eventName === "DOM_UPDATED") {
                         lastUpdatePromise = detail.updatePromise;
@@ -313,7 +313,7 @@ export async function setupHTMLBuilder(
 
     let editableContent;
     // hack to get a promise that resolves when editor is ready
-    patchWithCleanup(SetupEditorPlugin.prototype, {
+    patch(SetupEditorPlugin.prototype, {
         setup() {
             super.setup();
             _resolve();
@@ -325,7 +325,7 @@ export async function setupHTMLBuilder(
 
     // Remove as soon as the background shape are not always instantiated when
     // entering in edit mode.
-    patchWithCleanup(BackgroundShapeOptionPlugin.prototype, {
+    patch(BackgroundShapeOptionPlugin.prototype, {
         getShapeStylePosition(shapeId, flip) {
             if (!this.shapeStyles[this.convertShapeIdForStyleSearch(shapeId)]) {
                 return [50, 50];
@@ -385,7 +385,7 @@ let isBuilderOptionPatched = false;
 
 export function addBuilderOption(option) {
     if (!isBuilderOptionPatched) {
-        patchWithCleanup(BuilderOptionsPlugin.prototype, {
+        patch(BuilderOptionsPlugin.prototype, {
             computeBuilderOptionsFromTemplate() {
                 const options = super.computeBuilderOptionsFromTemplate();
                 const normalizedTestOptions = testBuilderOptions.map(

@@ -17,7 +17,8 @@ import {
     tick,
 } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 
@@ -79,7 +80,7 @@ test("set the label of the select from the active select item and be updated on 
     expect(".we-bg-options-container .dropdown").toHaveText("B");
 });
 test("set the label of the select after SVG Image children are inserted", async () => {
-    patchWithCleanup(Image.prototype, {
+    patch(Image.prototype, {
         async getSvg() {
             const svgEl = new window.DOMParser()
                 .parseFromString(

@@ -11,7 +11,8 @@ import { HistoryPlugin } from "@html_editor/core/history_plugin";
 import { animationFrame, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, delay, hover, press, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains, getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, getService } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 
@@ -220,7 +221,7 @@ describe("Block editable", () => {
 
 describe("Async operations", () => {
     beforeEach(() => {
-        patchWithCleanup(HistoryPlugin.prototype, {
+        patch(HistoryPlugin.prototype, {
             makePreviewableAsyncOperation(operation) {
                 const res = super.makePreviewableAsyncOperation(operation);
                 const revert = res.revert;

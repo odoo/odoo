@@ -2,7 +2,7 @@ import {
     confirmAddSnippet,
     getSnippetStructure,
     getSnippetView,
-    patchWithCleanupImg,
+    patchImg,
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { Builder } from "@html_builder/builder";
@@ -332,7 +332,7 @@ export async function setupWebsiteBuilder(
         });
     }
 
-    patchWithCleanupImg();
+    patchImg();
 
     const iframe = queryOne("iframe[data-src^='/website/force/1']");
     if (isBrowserFirefox() && !(iframe?.contentDocument.readyState === "complete")) {

@@ -8,8 +8,9 @@ import { BuilderSelectionRestrictionPlugin } from "@html_builder/core/builder_se
 import { Operation } from "@html_builder/core/operation";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 
@@ -138,7 +139,7 @@ test("A snippet should appear disabled if there is nowhere to drop it", async ()
 test.tags("desktop");
 test("click just after drop is redispatched in next operation", async () => {
     const nextDef = Promise.withResolvers();
-    patchWithCleanup(Operation.prototype, {
+    patch(Operation.prototype, {
         next(fn, ...args) {
             const originalFn = fn;
             fn = async () => {
@@ -150,13 +151,13 @@ test("click just after drop is redispatched in next operation", async () => {
             return res;
         },
     });
-    patchWithCleanup(BuilderOptionsPlugin.prototype, {
+    patch(BuilderOptionsPlugin.prototype, {
         updateContainers(...args) {
             expect.step("updateContainers");
             super.updateContainers(...args);
         },
     });
-    patchWithCleanup(BuilderSelectionRestrictionPlugin.prototype, {
+    patch(BuilderSelectionRestrictionPlugin.prototype, {
         async onClick(ev) {
             expect.step("onClick");
             super.onClick(ev);

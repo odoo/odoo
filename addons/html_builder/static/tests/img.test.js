@@ -3,7 +3,8 @@ import { ImgGroup } from "@html_builder/core/img_group";
 import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { Component, xml, useProps } from "@odoo/owl";
-import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 
@@ -13,7 +14,7 @@ test("ImgGroup's inner Image components should not be blocked before src load", 
         img2: Promise.withResolvers(),
         img3: Promise.withResolvers(),
     };
-    patchWithCleanup(Image.prototype, {
+    patch(Image.prototype, {
         loadImage() {
             const { promise: def } = defs[this.props.class];
             return Promise.all([super.loadImage(), def]);

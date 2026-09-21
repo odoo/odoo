@@ -9,7 +9,8 @@ import { HistoryPlugin } from "@html_editor/core/history_plugin";
 import { expect, test, describe } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, edit, fill, freezeTime, press } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 
@@ -128,7 +129,7 @@ test("range input should step up or down with arrow keys", async () => {
 });
 
 test("keeping an arrow key pressed should commit only once", async () => {
-    patchWithCleanup(HistoryPlugin.prototype, {
+    patch(HistoryPlugin.prototype, {
         makePreviewableAsyncOperation(...args) {
             const res = super.makePreviewableAsyncOperation(...args);
             const commit = res.commit;

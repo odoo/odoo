@@ -10,14 +10,8 @@ import { SavePlugin } from "@html_builder/core/save_plugin";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, tick } from "@odoo/hoot-dom";
 import { signal, xml } from "@odoo/owl";
-import {
-    contains,
-    defineModels,
-    fields,
-    models,
-    onRpc,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
+import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 
@@ -264,7 +258,7 @@ describe("isPreviewing is passed to action's apply and clean", () => {
 
 test("reload action: apply, clean save and reload are called in the right order (async)", async () => {
     let reloadDef, applyDef, cleanDef;
-    patchWithCleanup(SavePlugin.prototype, {
+    patch(SavePlugin.prototype, {
         async save() {
             expect.step("save sync");
             await super.save();
@@ -274,7 +268,7 @@ test("reload action: apply, clean save and reload are called in the right order 
             return new Promise((resolve) => setTimeout(resolve, 10));
         },
     });
-    patchWithCleanup(Builder.prototype, {
+    patch(Builder.prototype, {
         setup() {
             super.setup();
             this.editor.config.reloadEditor = async () => {

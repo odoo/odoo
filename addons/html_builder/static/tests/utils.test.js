@@ -11,7 +11,8 @@ import { SavePlugin } from "@html_builder/core/save_plugin";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, delay, queryOne, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 
@@ -160,13 +161,13 @@ describe("waitSidebarUpdated", () => {
 test("Shouldn't reload(save, etc) when a reload is canceled", async () => {
     const { promise, resolve } = Promise.withResolvers();
 
-    patchWithCleanup(SavePlugin.prototype, {
+    patch(SavePlugin.prototype, {
         async save() {
             expect.step("save");
             await super.save();
         },
     });
-    patchWithCleanup(Builder.prototype, {
+    patch(Builder.prototype, {
         setup() {
             super.setup();
             this.editor.config.reloadEditor = async () => {

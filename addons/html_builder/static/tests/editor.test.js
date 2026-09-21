@@ -16,7 +16,8 @@ import {
     advanceTime,
 } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 
@@ -249,7 +250,7 @@ describe("toolbar dropdowns", () => {
     });
 
     test("font size dropdown should close only after click", async () => {
-        patchWithCleanup(FontSizePlugin.prototype, {
+        patch(FontSizePlugin.prototype, {
             get fontSizeItems() {
                 return [{ name: "test", className: "test-font-size" }];
             },
