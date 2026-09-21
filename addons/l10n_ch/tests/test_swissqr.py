@@ -79,8 +79,8 @@ class TestSwissQR(AccountTestInvoicingCommon):
         )
 
     def create_account(self, number):
-        """Generates a test res.partner.bank."""
-        return self.env["res.partner.bank"].create(
+        """Generates a test res.partner.bank.account."""
+        return self.env["res.partner.bank.account"].create(
             {
                 "acc_number": number,
                 "partner_id": self.env.user.company_id.partner_id.id,

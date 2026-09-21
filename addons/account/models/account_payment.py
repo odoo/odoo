@@ -146,11 +146,11 @@ class AccountPayment(models.Model):
         readonly=True,
     )
     available_partner_bank_ids = fields.Many2many(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         compute="_compute_available_partner_bank_ids",
     )
     partner_bank_id = fields.Many2one(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         string="Recipient Bank Account",
         compute="_compute_partner_bank_id",
         store=True,

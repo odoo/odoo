@@ -2,8 +2,9 @@
 <odoo>
 
     <record id="view_res_partner_bank_inherit_l10n_mx_edi_bank" model="ir.ui.view">
-        <field name="name">view.res.partner.bank.inherit.l10n_mx_edi_bank</field>
-        <field name="model">res.partner.bank</field>
+        <field
+            name="name">view.res.partner.bank.account.inherit.l10n_mx_edi_bank</field>
+        <field name="model">res.partner.bank.account</field>
         <field name="inherit_id" ref="account.view_partner_bank_form_inherit_account" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='acc_number']" position="after">

@@ -78,14 +78,16 @@ class TestResBank(TransactionCase):
     def test_a_bank_account_still_names_its_bank(self):
         bank = self.env["res.bank"].create({"name": "Holder Bank", "bic": "HLDRBANK"})
         partner = self.env["res.partner"].create({"name": "Holder"})
-        account = self.env["res.partner.bank"].create(
+        account = self.env["res.partner.bank.account"].create(
             {"acc_number": "HB-0001", "partner_id": partner.id, "bank_id": bank.id}
         )
         self.assertEqual(account.bank_name, "Holder Bank")
         self.assertEqual(account.bank_bic, "HLDRBANK")
         self.assertEqual(account.display_name, "HB-0001 - Holder Bank")
         self.assertEqual(
-            self.env["res.partner.bank"].search([("bank_id.name", "=", "Holder Bank")]),
+            self.env["res.partner.bank.account"].search(
+                [("bank_id.name", "=", "Holder Bank")]
+            ),
             account,
         )
         self.assertEqual(partner.bank_ids, account)

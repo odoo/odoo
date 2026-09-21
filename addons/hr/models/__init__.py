@@ -19,7 +19,7 @@ from . import hr_config
 from . import res_company
 from . import res_partner
 from . import res_partner_tag
-from . import res_partner_bank
+from . import res_partner_bank_account
 from . import resource
 from . import resource_assignment
 from . import resource_calendar

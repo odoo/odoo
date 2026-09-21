@@ -12,7 +12,7 @@ from . import res_country
 from . import res_currency
 from . import l10n_ar_config
 from . import res_company
-from . import res_partner_bank
+from . import res_partner_bank_account
 from . import uom_uom
 from . import account_chart_template
 from . import account_move

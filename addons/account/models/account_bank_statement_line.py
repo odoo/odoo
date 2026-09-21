@@ -642,7 +642,7 @@ class AccountBankStatementLine(models.Model):
         self.check_singleton()
         if not self.partner_id:
             _debug.logic("bank_account_skipped", stline=self, reason="no_partner")
-            return self.env["res.partner.bank"]
+            return self.env["res.partner.bank.account"]
         if str2bool(
             self.env["ir.config_parameter"]
             .sudo()
@@ -651,7 +651,7 @@ class AccountBankStatementLine(models.Model):
             _debug.logic(
                 "bank_account_create_skipped", stline=self, reason="config_param"
             )
-            return self.env["res.partner.bank"].search(
+            return self.env["res.partner.bank.account"].search(
                 [
                     ("acc_number", "=", self.account_number),
                     ("partner_id", "=", self.partner_id.id),
@@ -659,7 +659,7 @@ class AccountBankStatementLine(models.Model):
                 ],
                 limit=1,
             )
-        return self.env["res.partner.bank"]._get_or_create_bank_account(
+        return self.env["res.partner.bank.account"]._get_or_create_bank_account(
             account_number=self.account_number,
             partner=self.partner_id,
             company=self.company_id,

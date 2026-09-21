@@ -330,7 +330,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         Test whether the elements only specific to ubl_be are correctly exported
         and imported in the xml file
         """
-        acc_bank = self.env["res.partner.bank"].create(
+        acc_bank = self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "BE15001559627231",
                 "allow_out_payment": True,

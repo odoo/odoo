@@ -2059,7 +2059,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.invoice.write({"invoice_origin": "S00001"})
         self.invoice.action_post()
 
-        bank1 = self.env["res.partner.bank"].create(
+        bank1 = self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "BE43798822936101",
                 "partner_id": self.partner_a.id,
@@ -3142,7 +3142,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(move.fiscal_position_id, self.fiscal_pos_a)
 
     def test_out_invoice_switch_out_refund_4(self):
-        bank = self.env["res.partner.bank"].create(
+        bank = self.env["res.partner.bank.account"].create(
             {
                 "bank_name": "FAKE",
                 "acc_number": "1234567890",
@@ -5904,7 +5904,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
     def test_out_invoice_bank_partner(self):
         company_1 = self.company_data["company"]
         company_2 = self.company_data_2["company"]
-        bank = self.env["res.partner.bank"].create(
+        bank = self.env["res.partner.bank.account"].create(
             {
                 "bank_name": "FAKE",
                 "acc_number": "1234567890",
@@ -5912,7 +5912,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 "allow_out_payment": True,
             }
         )
-        bank_2 = self.env["res.partner.bank"].create(
+        bank_2 = self.env["res.partner.bank.account"].create(
             {
                 "bank_name": "FAKE 2",
                 "acc_number": "1234567890",

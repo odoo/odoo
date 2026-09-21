@@ -85,7 +85,7 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
             ]
         )
 
-        cls.env["res.partner.bank"].create(
+        cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "0144748555",
                 "allow_out_payment": True,

@@ -13223,12 +13223,12 @@ msgid "Account Fiscal Report"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__partner_id
 msgid "Account Holder"
 msgstr "Konto omanik"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__acc_holder_name
 msgid "Account Holder Name"
 msgstr "Konto omaniku nimi"
 
@@ -13243,7 +13243,7 @@ msgid "Account Invoice Extract Purchase"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_number
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__acc_number
 msgid "Account Number"
 msgstr "Konto number"
 
@@ -13278,7 +13278,7 @@ msgid "Account accountant check printing"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,help:base.field_res_partner_bank__acc_holder_name
+#: model:ir.model.fields,help:base.field_res_partner_bank_account__acc_holder_name
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
@@ -13522,7 +13522,7 @@ msgstr "Aktiveeri"
 #: model:ir.model.fields,field_description:base.field_res_currency__active
 #: model:ir.model.fields,field_description:base.field_res_lang__active
 #: model:ir.model.fields,field_description:base.field_res_partner__active
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__active
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__active
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__active
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__active
 #: model:ir.model.fields,field_description:base.field_res_users__active
@@ -17428,7 +17428,7 @@ msgstr "Bani"
 
 #. module: base
 #: model:ir.model,name:base.model_res_bank
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_id
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__bank_id
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_tree
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Bank"
@@ -17436,7 +17436,7 @@ msgstr "Pank"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
-#: model:ir.model,name:base.model_res_partner_bank
+#: model:ir.model,name:base.model_res_partner_bank_account
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_search
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_tree
 msgid "Bank Accounts"
@@ -17449,7 +17449,7 @@ msgstr "Panga aadress"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__bic
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_bic
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__bank_bic
 msgid "Bank Identifier Code"
 msgstr "Panga identifitseerimiskood BIC"
 
@@ -17464,7 +17464,7 @@ msgid "Bank account"
 msgstr "Pangakonto"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_res_partner_bank__acc_type
+#: model:ir.model.fields,help:base.field_res_partner_bank_account__acc_type
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
 msgstr "Pangakonto tüüp: Tavaline või IBAN. Pangakonto numbri alusel."
@@ -19294,7 +19294,7 @@ msgid "Cleaning Services"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__clearing_number
 msgid "Clearing Number"
 msgstr ""
 
@@ -19501,7 +19501,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__color
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__color
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__color
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__color
 #: model_terms:ir.ui.view,arch_db:base.res_partner_tag_view_search
 msgid "Color"
@@ -19637,7 +19637,7 @@ msgstr "Ettevõtted"
 #: model:ir.model.fields,field_description:base.field_ir_sequence__company_id
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__company_id
 #: model:ir.model.fields,field_description:base.field_res_partner__company_id
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__company_id
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__company_id
 #: model:ir.model.fields,field_description:base.field_res_users__company_id
 #: model:ir.model.fields.selection,name:base.selection__res_partner__company_type__company
 #: model_terms:ir.ui.view,arch_db:base.ir_default_search_view
@@ -20279,7 +20279,7 @@ msgstr "Riigi suunakood"
 #: model:ir.model.fields,field_description:base.field_res_company__country_code
 #: model:ir.model.fields,field_description:base.field_res_country__code
 #: model:ir.model.fields,field_description:base.field_res_partner__country_code
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__country_code
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__country_code
 #: model:ir.model.fields,field_description:base.field_res_users__country_code
 msgid "Country Code"
 msgstr "Riigikood"
@@ -20640,7 +20640,7 @@ msgstr "Loodud Vaated"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__create_uid
 #: model:ir.model.fields,field_description:base.field_res_lang__create_uid
 #: model:ir.model.fields,field_description:base.field_res_partner__create_uid
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__create_uid
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__create_uid
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__create_uid
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__create_uid
 #: model:ir.model.fields,field_description:base.field_res_users__create_uid
@@ -20729,7 +20729,7 @@ msgstr "Loonud"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__create_date
 #: model:ir.model.fields,field_description:base.field_res_lang__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner__create_date
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__create_date
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__create_date
@@ -20851,7 +20851,7 @@ msgstr "Valuutad"
 #: model:ir.model.fields,field_description:base.field_res_country__currency_id
 #: model:ir.model.fields,field_description:base.field_res_currency__name
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__currency_id
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__currency_id
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__currency_id
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 msgid "Currency"
@@ -21972,7 +21972,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__display_name
 #: model:ir.model.fields,field_description:base.field_res_lang__display_name
 #: model:ir.model.fields,field_description:base.field_res_partner__display_name
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__display_name
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__display_name
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__display_name
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__display_name
 #: model:ir.model.fields,field_description:base.field_res_users__display_name
@@ -26511,7 +26511,7 @@ msgstr "IBAN Pangakontod"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__id
 #: model:ir.model.fields,field_description:base.field_res_lang__id
 #: model:ir.model.fields,field_description:base.field_res_partner__id
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__id
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__id
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__id
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__id
 #: model:ir.model.fields,field_description:base.field_res_users__id
@@ -28819,7 +28819,7 @@ msgstr "Viimati uuendatud"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__write_uid
 #: model:ir.model.fields,field_description:base.field_res_lang__write_uid
 #: model:ir.model.fields,field_description:base.field_res_partner__write_uid
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__write_uid
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__write_uid
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__write_uid
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__write_uid
 #: model:ir.model.fields,field_description:base.field_res_users__write_uid
@@ -28907,7 +28907,7 @@ msgstr "Viimati uuendas"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__write_date
 #: model:ir.model.fields,field_description:base.field_res_lang__write_date
 #: model:ir.model.fields,field_description:base.field_res_partner__write_date
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__write_date
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__write_date
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__write_date
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__write_date
 #: model:ir.model.fields,field_description:base.field_res_users__write_date
@@ -31375,7 +31375,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__name
 #: model:ir.model.fields,field_description:base.field_res_lang__name
 #: model:ir.model.fields,field_description:base.field_res_partner__name
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_name
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__bank_name
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__name
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__name
 #: model:ir.model.fields,field_description:base.field_res_users__name
@@ -31843,7 +31843,7 @@ msgstr "Märkus"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__note
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__note
 #: model:ir.model.fields,field_description:base.field_res_users__comment
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -37750,7 +37750,7 @@ msgid "Sanitize HTML overridable"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__sanitized_acc_number
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__sanitized_acc_number
 msgid "Sanitized Account Number"
 msgstr "Puhastatud Konto Number"
 
@@ -38153,7 +38153,7 @@ msgid "Send Follow-Up to your Contacts on WhatsApp"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__allow_out_payment
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__allow_out_payment
 msgid "Send Money"
 msgstr "Saada raha"
 
@@ -38305,7 +38305,7 @@ msgid "Sendcould Locations for Website Delivery"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,help:base.field_res_partner_bank__allow_out_payment
+#: model:ir.model.fields,help:base.field_res_partner_bank_account__allow_out_payment
 msgid ""
 "Sending fake invoices with a fraudulent account number is a common phishing "
 "practice. To protect yourself, always verify new bank account numbers, "
@@ -38372,7 +38372,7 @@ msgstr "Eraldaja, mida kasutatakse aadressi eraldamiseks display_name'ist."
 #: model:ir.model.fields,field_description:base.field_res_company__sequence
 #: model:ir.model.fields,field_description:base.field_res_groups__sequence
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__sequence
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__sequence
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__sequence
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__evaluation_type__sequence
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 #: model_terms:ir.ui.view,arch_db:base.view_sequence_search
@@ -39029,7 +39029,7 @@ msgstr "Somaalia"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_bank__bic
-#: model:ir.model.fields,help:base.field_res_partner_bank__bank_bic
+#: model:ir.model.fields,help:base.field_res_partner_bank_account__bank_bic
 msgid "Sometimes called BIC or Swift."
 msgstr "Tihti kutsutakse BIC või Swift."
 
@@ -40637,7 +40637,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_res_company__country_code
 #: model:ir.model.fields,help:base.field_res_country__code
 #: model:ir.model.fields,help:base.field_res_partner__country_code
-#: model:ir.model.fields,help:base.field_res_partner_bank__country_code
+#: model:ir.model.fields,help:base.field_res_partner_bank_account__country_code
 #: model:ir.model.fields,help:base.field_res_users__country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -40747,7 +40747,7 @@ msgid "The code of the state must be unique by country!"
 msgstr ""
 
 #. module: base
-#: model:ir.model.constraint,message:base.constraint_res_partner_bank_unique_number
+#: model:ir.model.constraint,message:base.constraint_res_partner_bank_account_unique_number
 msgid "The combination Account Number/Partner must be unique."
 msgstr "Kontonumbri/partneri kombinatsioon peab olema unikaalne."
 
@@ -42621,7 +42621,7 @@ msgstr "Tyiyn"
 #: model:ir.model.fields,field_description:base.field_ir_logging__type
 #: model:ir.model.fields,field_description:base.field_ir_model__state
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__state
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_type
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__acc_type
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search

@@ -103,8 +103,8 @@
     </record>
 
     <record id="view_partner_bank_search" model="ir.ui.view">
-        <field name="name">res.partner.bank.search</field>
-        <field name="model">res.partner.bank</field>
+        <field name="name">res.partner.bank.account.search</field>
+        <field name="model">res.partner.bank.account</field>
         <field name="arch" type="xml">
             <search string="Bank Accounts">
                 <field
@@ -126,8 +126,8 @@
     </record>
 
     <record id="view_partner_bank_tree" model="ir.ui.view">
-        <field name="name">res.partner.bank.list</field>
-        <field name="model">res.partner.bank</field>
+        <field name="name">res.partner.bank.account.list</field>
+        <field name="model">res.partner.bank.account</field>
         <field name="arch" type="xml">
             <list string="Bank Accounts" multi_edit="1" decoration-muted="(not active)">
                 <field name="sequence" widget="handle" />
@@ -148,8 +148,8 @@
     </record>
 
     <record id="view_partner_bank_form" model="ir.ui.view">
-        <field name="name">res.partner.bank.form</field>
-        <field name="model">res.partner.bank</field>
+        <field name="name">res.partner.bank.account.form</field>
+        <field name="model">res.partner.bank.account</field>
         <field name="priority">15</field>
         <field name="arch" type="xml">
             <form name="bank_account_form" string="Bank account">
@@ -198,7 +198,7 @@
 
     <record id="action_res_partner_bank_account_form" model="ir.actions.act_window">
         <field name="name">Bank Accounts</field>
-        <field name="res_model">res.partner.bank</field>
+        <field name="res_model">res.partner.bank.account</field>
         <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

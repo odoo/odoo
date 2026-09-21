@@ -20,7 +20,7 @@ class PosPaymentMethod(models.Model):
             ("none", self.env._("None required")),
             ("terminal", self.env._("Terminal")),
         ]
-        if self.env["res.partner.bank"].get_available_qr_methods_in_sequence():
+        if self.env["res.partner.bank.account"].get_available_qr_methods_in_sequence():
             selection.append(("qr_code", self.env._("Bank App (QR Code)")))
         return selection
 
@@ -131,7 +131,7 @@ class PosPaymentMethod(models.Model):
     default_qr = fields.Char(compute="_compute_default_qr")
     qr_code_method = fields.Selection(
         selection=lambda self: self.env[
-            "res.partner.bank"
+            "res.partner.bank.account"
         ].get_available_qr_methods_in_sequence(),
         string="QR Code Format",
         copy=False,
@@ -188,7 +188,9 @@ class PosPaymentMethod(models.Model):
             payment_method.hide_qr_code_method = (
                 payment_method.payment_method_type != "qr_code"
                 or len(
-                    self.env["res.partner.bank"].get_available_qr_methods_in_sequence()
+                    self.env[
+                        "res.partner.bank.account"
+                    ].get_available_qr_methods_in_sequence()
                 )
                 == 1
             )
@@ -199,7 +201,7 @@ class PosPaymentMethod(models.Model):
             self.use_payment_terminal = False
 
         selection_options = self.env[
-            "res.partner.bank"
+            "res.partner.bank.account"
         ].get_available_qr_methods_in_sequence()
         if len(selection_options) == 1:
             self.qr_code_method = selection_options[0][0]

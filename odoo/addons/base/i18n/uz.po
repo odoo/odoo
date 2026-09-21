@@ -16221,13 +16221,13 @@ msgid "Account Fiscal Report"
 msgstr "Hisobning fiskal hisoboti"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__partner_id
 #, fuzzy
 msgid "Account Holder"
 msgstr "Hisob egasi"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__acc_holder_name
 #, fuzzy
 msgid "Account Holder Name"
 msgstr "Hisob egasining nomi"
@@ -16245,7 +16245,7 @@ msgid "Account Invoice Extract Purchase"
 msgstr "Xarid uchun hisob-fakturani hisobdan olish"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_number
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__acc_number
 #, fuzzy
 msgid "Account Number"
 msgstr "Hisob raqami"
@@ -16287,7 +16287,7 @@ msgid "Account accountant check printing"
 msgstr "Hisob buxgalterining chek chop etishi"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_res_partner_bank__acc_holder_name
+#: model:ir.model.fields,help:base.field_res_partner_bank_account__acc_holder_name
 #, fuzzy
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
@@ -16548,7 +16548,7 @@ msgstr "Faollashtirish"
 #: model:ir.model.fields,field_description:base.field_res_currency__active
 #: model:ir.model.fields,field_description:base.field_res_lang__active
 #: model:ir.model.fields,field_description:base.field_res_partner__active
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__active
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__active
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__active
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__active
 #: model:ir.model.fields,field_description:base.field_res_users__active
@@ -21334,7 +21334,7 @@ msgstr "Bani"
 
 #. module: base
 #: model:ir.model,name:base.model_res_bank
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_id
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__bank_id
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_tree
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 #, fuzzy
@@ -21343,7 +21343,7 @@ msgstr "Bank"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
-#: model:ir.model,name:base.model_res_partner_bank
+#: model:ir.model,name:base.model_res_partner_bank_account
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_search
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_tree
 #, fuzzy
@@ -21358,7 +21358,7 @@ msgstr "Bank manzili"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__bic
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_bic
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__bank_bic
 #, fuzzy
 msgid "Bank Identifier Code"
 msgstr "Bank identifikatsiya kodi"
@@ -21376,7 +21376,7 @@ msgid "Bank account"
 msgstr "Bank hisobi"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_res_partner_bank__acc_type
+#: model:ir.model.fields,help:base.field_res_partner_bank_account__acc_type
 #, fuzzy
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
@@ -23582,7 +23582,7 @@ msgid "Cleaning Services"
 msgstr "Tozalash xizmatlari"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__clearing_number
 #, fuzzy
 msgid "Clearing Number"
 msgstr "Kliring raqami"
@@ -23829,7 +23829,7 @@ msgstr "Kolonlar"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__color
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__color
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__color
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__color
 #: model_terms:ir.ui.view,arch_db:base.res_partner_tag_view_search
 #, fuzzy
@@ -23992,7 +23992,7 @@ msgstr "Kompaniyalar"
 #: model:ir.model.fields,field_description:base.field_ir_sequence__company_id
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__company_id
 #: model:ir.model.fields,field_description:base.field_res_partner__company_id
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__company_id
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__company_id
 #: model:ir.model.fields,field_description:base.field_res_users__company_id
 #: model:ir.model.fields.selection,name:base.selection__res_partner__company_type__company
 #: model_terms:ir.ui.view,arch_db:base.ir_default_search_view
@@ -24747,7 +24747,7 @@ msgstr "Mamlakat chaqiruv kodi"
 #: model:ir.model.fields,field_description:base.field_res_company__country_code
 #: model:ir.model.fields,field_description:base.field_res_country__code
 #: model:ir.model.fields,field_description:base.field_res_partner__country_code
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__country_code
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__country_code
 #: model:ir.model.fields,field_description:base.field_res_users__country_code
 #, fuzzy
 msgid "Country Code"
@@ -25166,7 +25166,7 @@ msgstr "Yaratilgan ko‘rinishlar"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__create_uid
 #: model:ir.model.fields,field_description:base.field_res_lang__create_uid
 #: model:ir.model.fields,field_description:base.field_res_partner__create_uid
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__create_uid
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__create_uid
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__create_uid
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__create_uid
 #: model:ir.model.fields,field_description:base.field_res_users__create_uid
@@ -25256,7 +25256,7 @@ msgstr "Yaratuvchi"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__create_date
 #: model:ir.model.fields,field_description:base.field_res_lang__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner__create_date
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__create_date
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__create_date
@@ -25400,7 +25400,7 @@ msgstr "Valyutalar"
 #: model:ir.model.fields,field_description:base.field_res_country__currency_id
 #: model:ir.model.fields,field_description:base.field_res_currency__name
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__currency_id
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__currency_id
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__currency_id
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 #, fuzzy
@@ -26715,7 +26715,7 @@ msgstr "Kesishmaydigan guruhlar"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__display_name
 #: model:ir.model.fields,field_description:base.field_res_lang__display_name
 #: model:ir.model.fields,field_description:base.field_res_partner__display_name
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__display_name
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__display_name
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__display_name
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__display_name
 #: model:ir.model.fields,field_description:base.field_res_users__display_name
@@ -32167,7 +32167,7 @@ msgstr "IBAN bank hisoblari"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__id
 #: model:ir.model.fields,field_description:base.field_res_lang__id
 #: model:ir.model.fields,field_description:base.field_res_partner__id
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__id
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__id
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__id
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__id
 #: model:ir.model.fields,field_description:base.field_res_users__id
@@ -34909,7 +34909,7 @@ msgstr "Oxirgi yangilanish"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__write_uid
 #: model:ir.model.fields,field_description:base.field_res_lang__write_uid
 #: model:ir.model.fields,field_description:base.field_res_partner__write_uid
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__write_uid
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__write_uid
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__write_uid
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__write_uid
 #: model:ir.model.fields,field_description:base.field_res_users__write_uid
@@ -34998,7 +34998,7 @@ msgstr "Oxirgi yangilagan shaxs"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__write_date
 #: model:ir.model.fields,field_description:base.field_res_lang__write_date
 #: model:ir.model.fields,field_description:base.field_res_partner__write_date
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__write_date
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__write_date
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__write_date
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__write_date
 #: model:ir.model.fields,field_description:base.field_res_users__write_date
@@ -37936,7 +37936,7 @@ msgstr "Nakfa"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__name
 #: model:ir.model.fields,field_description:base.field_res_lang__name
 #: model:ir.model.fields,field_description:base.field_res_partner__name
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_name
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__bank_name
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__name
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__name
 #: model:ir.model.fields,field_description:base.field_res_users__name
@@ -38494,7 +38494,7 @@ msgstr "Eslatma"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__note
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__note
 #: model:ir.model.fields,field_description:base.field_res_users__comment
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -45554,7 +45554,7 @@ msgid "Sanitize HTML overridable"
 msgstr "HTMLni o‘zgartirib bo‘lmaydigan qilib tozalash"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__sanitized_acc_number
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__sanitized_acc_number
 #, fuzzy
 msgid "Sanitized Account Number"
 msgstr "Tozalangan hisob raqami"
@@ -46035,7 +46035,7 @@ msgid "Send Follow-Up to your Contacts on WhatsApp"
 msgstr "WhatsApp orqali kontaktlaringizga kuzatuv xabarlarini yuborish"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__allow_out_payment
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__allow_out_payment
 #, fuzzy
 msgid "Send Money"
 msgstr "Pul jo‘natish"
@@ -46230,7 +46230,7 @@ msgid "Sendcould Locations for Website Delivery"
 msgstr "Veb-saytda yetkazib berish uchun Sendcloud joylashuvlari"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_res_partner_bank__allow_out_payment
+#: model:ir.model.fields,help:base.field_res_partner_bank_account__allow_out_payment
 #, fuzzy
 msgid ""
 "Sending fake invoices with a fraudulent account number is a common phishing "
@@ -46307,7 +46307,7 @@ msgstr "Manzilni displey_nomidan ajratish uchun ishlatiladigan ajratuvchi."
 #: model:ir.model.fields,field_description:base.field_res_company__sequence
 #: model:ir.model.fields,field_description:base.field_res_groups__sequence
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__sequence
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__sequence
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__sequence
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__evaluation_type__sequence
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 #: model_terms:ir.ui.view,arch_db:base.view_sequence_search
@@ -47093,7 +47093,7 @@ msgstr "Somali"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_bank__bic
-#: model:ir.model.fields,help:base.field_res_partner_bank__bank_bic
+#: model:ir.model.fields,help:base.field_res_partner_bank_account__bank_bic
 #, fuzzy
 msgid "Sometimes called BIC or Swift."
 msgstr "Ba'zan BIC yoki Swift deb ham ataladi"
@@ -49017,7 +49017,7 @@ msgstr "Avstriya naqd pul xavfsizligi to‘g‘risidagi qoida"
 #: model:ir.model.fields,help:base.field_res_company__country_code
 #: model:ir.model.fields,help:base.field_res_country__code
 #: model:ir.model.fields,help:base.field_res_partner__country_code
-#: model:ir.model.fields,help:base.field_res_partner_bank__country_code
+#: model:ir.model.fields,help:base.field_res_partner_bank_account__country_code
 #: model:ir.model.fields,help:base.field_res_users__country_code
 #, fuzzy
 msgid ""
@@ -49150,7 +49150,7 @@ msgid "The code of the state must be unique by country!"
 msgstr "Davlat kodi har bir mamlakat uchun noyob bo‘lishi kerak!"
 
 #. module: base
-#: model:ir.model.constraint,message:base.constraint_res_partner_bank_unique_number
+#: model:ir.model.constraint,message:base.constraint_res_partner_bank_account_unique_number
 #, fuzzy
 msgid "The combination Account Number/Partner must be unique."
 msgstr "Hisob raqami/Hamkor kombinatsiyasi noyob bo‘lishi kerak."
@@ -51406,7 +51406,7 @@ msgstr "Tiyin"
 #: model:ir.model.fields,field_description:base.field_ir_logging__type
 #: model:ir.model.fields,field_description:base.field_ir_model__state
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__state
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_type
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__acc_type
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search

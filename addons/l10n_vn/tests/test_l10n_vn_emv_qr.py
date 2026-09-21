@@ -28,7 +28,7 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
             }
         )
 
-        cls.acc_emv_vn = cls.env["res.partner.bank"].create(
+        cls.acc_emv_vn = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "123456789012345678",
                 "bank_id": cls.bank_vn.id,
@@ -39,7 +39,7 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
             }
         )
 
-        cls.acc_emv_vn_without_paynow_info = cls.env["res.partner.bank"].create(
+        cls.acc_emv_vn_without_paynow_info = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "1234567890",
                 "partner_id": cls.company_data["company"].partner_id.id,
@@ -129,7 +129,7 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
 
     def test_remove_vietnamese_accents(self):
         accent_string = "áàảãạăắằẳẵặâấầẩẫậÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬéèẻẽẹêếềểễệÉÈẺẼẸÊẾỀỂỄỆóòỏõọôốồổỗộơớờởỡợÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢíìỉĩịÍÌỈĨỊúùủũụưứừửữựÚÙỦŨỤƯỨỪỬỮỰýỳỷỹỵÝỲỶỸỴđĐ"
-        result = self.env["res.partner.bank"]._remove_accents(accent_string)
+        result = self.env["res.partner.bank.account"]._remove_accents(accent_string)
         self.assertEqual(
             result,
             "aaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAeeeeeeeeeeeEEEEEEEEEEEoooooooooooooooooOOOOOOOOOOOOOOOOOiiiiiIIIIIuuuuuuuuuuuUUUUUUUUUUUyyyyyYYYYYdD",

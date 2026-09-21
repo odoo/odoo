@@ -11206,12 +11206,12 @@ msgid "Account Fiscal Report"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__partner_id
 msgid "Account Holder"
 msgstr "Nosioc računa"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__acc_holder_name
 msgid "Account Holder Name"
 msgstr ""
 
@@ -11226,7 +11226,7 @@ msgid "Account Invoice Extract Purchase"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_number
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__acc_number
 msgid "Account Number"
 msgstr "Broj računa"
 
@@ -11261,7 +11261,7 @@ msgid "Account accountant check printing"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,help:base.field_res_partner_bank__acc_holder_name
+#: model:ir.model.fields,help:base.field_res_partner_bank_account__acc_holder_name
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
@@ -11481,7 +11481,7 @@ msgstr "Aktiviraj"
 #: model:ir.model.fields,field_description:base.field_res_currency__active
 #: model:ir.model.fields,field_description:base.field_res_lang__active
 #: model:ir.model.fields,field_description:base.field_res_partner__active
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__active
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__active
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__active
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__active
 #: model:ir.model.fields,field_description:base.field_res_users__active
@@ -15355,7 +15355,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_bank
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_id
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__bank_id
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_tree
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Bank"
@@ -15363,7 +15363,7 @@ msgstr "Banka"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
-#: model:ir.model,name:base.model_res_partner_bank
+#: model:ir.model,name:base.model_res_partner_bank_account
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_search
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_tree
 msgid "Bank Accounts"
@@ -15376,7 +15376,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__bic
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_bic
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__bank_bic
 msgid "Bank Identifier Code"
 msgstr "Identifikacijska šifra banke"
 
@@ -15391,7 +15391,7 @@ msgid "Bank account"
 msgstr "Žiro račun"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_res_partner_bank__acc_type
+#: model:ir.model.fields,help:base.field_res_partner_bank_account__acc_type
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
 msgstr ""
@@ -17214,7 +17214,7 @@ msgid "Cleaning Services"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__clearing_number
 msgid "Clearing Number"
 msgstr ""
 
@@ -17418,7 +17418,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__color
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__color
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__color
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__color
 #: model_terms:ir.ui.view,arch_db:base.res_partner_tag_view_search
 msgid "Color"
@@ -17554,7 +17554,7 @@ msgstr "Kompanije"
 #: model:ir.model.fields,field_description:base.field_ir_sequence__company_id
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__company_id
 #: model:ir.model.fields,field_description:base.field_res_partner__company_id
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__company_id
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__company_id
 #: model:ir.model.fields,field_description:base.field_res_users__company_id
 #: model:ir.model.fields.selection,name:base.selection__res_partner__company_type__company
 #: model_terms:ir.ui.view,arch_db:base.ir_default_search_view
@@ -18182,7 +18182,7 @@ msgstr "Pozivni broj države"
 #: model:ir.model.fields,field_description:base.field_res_company__country_code
 #: model:ir.model.fields,field_description:base.field_res_country__code
 #: model:ir.model.fields,field_description:base.field_res_partner__country_code
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__country_code
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__country_code
 #: model:ir.model.fields,field_description:base.field_res_users__country_code
 msgid "Country Code"
 msgstr "Šifra države"
@@ -18541,7 +18541,7 @@ msgstr "Kreirani prikazi"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__create_uid
 #: model:ir.model.fields,field_description:base.field_res_lang__create_uid
 #: model:ir.model.fields,field_description:base.field_res_partner__create_uid
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__create_uid
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__create_uid
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__create_uid
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__create_uid
 #: model:ir.model.fields,field_description:base.field_res_users__create_uid
@@ -18630,7 +18630,7 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__create_date
 #: model:ir.model.fields,field_description:base.field_res_lang__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner__create_date
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__create_date
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__create_date
@@ -18752,7 +18752,7 @@ msgstr "Valute"
 #: model:ir.model.fields,field_description:base.field_res_country__currency_id
 #: model:ir.model.fields,field_description:base.field_res_currency__name
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__currency_id
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__currency_id
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__currency_id
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 msgid "Currency"
@@ -19858,7 +19858,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__display_name
 #: model:ir.model.fields,field_description:base.field_res_lang__display_name
 #: model:ir.model.fields,field_description:base.field_res_partner__display_name
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__display_name
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__display_name
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__display_name
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__display_name
 #: model:ir.model.fields,field_description:base.field_res_users__display_name
@@ -24359,7 +24359,7 @@ msgstr "IBAN žiro račun"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__id
 #: model:ir.model.fields,field_description:base.field_res_lang__id
 #: model:ir.model.fields,field_description:base.field_res_partner__id
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__id
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__id
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__id
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__id
 #: model:ir.model.fields,field_description:base.field_res_users__id
@@ -26601,7 +26601,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__write_uid
 #: model:ir.model.fields,field_description:base.field_res_lang__write_uid
 #: model:ir.model.fields,field_description:base.field_res_partner__write_uid
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__write_uid
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__write_uid
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__write_uid
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__write_uid
 #: model:ir.model.fields,field_description:base.field_res_users__write_uid
@@ -26689,7 +26689,7 @@ msgstr "Zadnji ažurirao"
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__write_date
 #: model:ir.model.fields,field_description:base.field_res_lang__write_date
 #: model:ir.model.fields,field_description:base.field_res_partner__write_date
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__write_date
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__write_date
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__write_date
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__write_date
 #: model:ir.model.fields,field_description:base.field_res_users__write_date
@@ -29045,7 +29045,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__name
 #: model:ir.model.fields,field_description:base.field_res_lang__name
 #: model:ir.model.fields,field_description:base.field_res_partner__name
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_name
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__bank_name
 #: model:ir.model.fields,field_description:base.field_res_partner_tag__name
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__name
 #: model:ir.model.fields,field_description:base.field_res_users__name
@@ -29504,7 +29504,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__note
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__note
 #: model:ir.model.fields,field_description:base.field_res_users__comment
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -35353,7 +35353,7 @@ msgid "Sanitize HTML overridable"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__sanitized_acc_number
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__sanitized_acc_number
 msgid "Sanitized Account Number"
 msgstr ""
 
@@ -35744,7 +35744,7 @@ msgid "Send Follow-Up to your Contacts on WhatsApp"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__allow_out_payment
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__allow_out_payment
 msgid "Send Money"
 msgstr "Pošalji novac"
 
@@ -35896,7 +35896,7 @@ msgid "Sendcould Locations for Website Delivery"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,help:base.field_res_partner_bank__allow_out_payment
+#: model:ir.model.fields,help:base.field_res_partner_bank_account__allow_out_payment
 msgid ""
 "Sending fake invoices with a fraudulent account number is a common phishing "
 "practice. To protect yourself, always verify new bank account numbers, "
@@ -35959,7 +35959,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_company__sequence
 #: model:ir.model.fields,field_description:base.field_res_groups__sequence
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__sequence
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__sequence
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__sequence
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__evaluation_type__sequence
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 #: model_terms:ir.ui.view,arch_db:base.view_sequence_search
@@ -36615,7 +36615,7 @@ msgstr "Somalija"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_bank__bic
-#: model:ir.model.fields,help:base.field_res_partner_bank__bank_bic
+#: model:ir.model.fields,help:base.field_res_partner_bank_account__bank_bic
 msgid "Sometimes called BIC or Swift."
 msgstr "Ponekad se naziva BIC ili SWIFT"
 
@@ -38217,7 +38217,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_res_company__country_code
 #: model:ir.model.fields,help:base.field_res_country__code
 #: model:ir.model.fields,help:base.field_res_partner__country_code
-#: model:ir.model.fields,help:base.field_res_partner_bank__country_code
+#: model:ir.model.fields,help:base.field_res_partner_bank_account__country_code
 #: model:ir.model.fields,help:base.field_res_users__country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -38316,7 +38316,7 @@ msgid "The code of the state must be unique by country!"
 msgstr ""
 
 #. module: base
-#: model:ir.model.constraint,message:base.constraint_res_partner_bank_unique_number
+#: model:ir.model.constraint,message:base.constraint_res_partner_bank_account_unique_number
 msgid "The combination Account Number/Partner must be unique."
 msgstr ""
 
@@ -40034,7 +40034,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_logging__type
 #: model:ir.model.fields,field_description:base.field_ir_model__state
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__state
-#: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_type
+#: model:ir.model.fields,field_description:base.field_res_partner_bank_account__acc_type
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search

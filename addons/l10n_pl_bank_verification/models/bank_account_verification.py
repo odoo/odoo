@@ -55,11 +55,11 @@ class BankAccountVerification(models.Model):
         readonly=True,
     )
     partner_bank_id = fields.Many2one(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         string="Bank Account",
         readonly=True,
     )
-    # We need to store the bank account number itself to prevent changes on the res.partner.bank record
+    # We need to store the bank account number itself to prevent changes on the res.partner.bank.account record
     partner_bank_account_number = fields.Char(
         compute="_compute_partner_bank_account_number",
         store=True,
@@ -139,11 +139,11 @@ class BankAccountVerification(models.Model):
     def _l10n_pl_get_verification(self, partner_bank_data, date):
         """
         :param partner_bank_data: list(tuple(partner_id, partner_banks)): recordset of partner bank to get verification for by partner id
-        :returns: A recordset of l10n_pl.bank.account.verification for all res.partner.bank in param
+        :returns: A recordset of l10n_pl.bank.account.verification for all res.partner.bank.account in param
         """
         create_vals = []
         verifications = self.browse()
-        partner_banks = self.env["res.partner.bank"].union(
+        partner_banks = self.env["res.partner.bank.account"].union(
             *[partner_bank for _partner_id, partner_bank in partner_bank_data]
         )
         partners_without_bank_account = self.env["res.partner"].browse(
@@ -178,7 +178,7 @@ class BankAccountVerification(models.Model):
                     "incomplete_partner", partners=partners_to_create_verification_for
                 )
 
-        partner_banks_to_check = self.env["res.partner.bank"]
+        partner_banks_to_check = self.env["res.partner.bank.account"]
         if partner_banks:
             # create list of partner_bank to check
             all_partners = self.env["res.partner"].browse(

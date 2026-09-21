@@ -4,8 +4,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class ResPartnerBank(models.Model):
-    _inherit = "res.partner.bank"
+class ResPartnerBankAccount(models.Model):
+    _inherit = "res.partner.bank.account"
 
     aba_bsb = fields.Char(
         string="BSB",

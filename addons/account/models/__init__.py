@@ -6,7 +6,7 @@ from . import mixin_account_document_import
 from . import account_fiscal_position
 from . import account_fiscal_position_account
 from . import res_partner
-from . import res_partner_bank
+from . import res_partner_bank_account
 from . import account_account_tag
 from . import mixin_company_split
 from . import account_group

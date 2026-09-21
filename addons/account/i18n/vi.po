@@ -2546,7 +2546,7 @@ msgstr "Kế toán Có bút toán được hash"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__partner_id
 #: model:ir.model.fields,field_description:account_reports.field_account_return_payment_wizard__partner_id
 #: model:ir.model.fields,field_description:account_reports.field_qr_code_payment_wizard__partner_id
 msgid "Account Holder"
@@ -2554,13 +2554,13 @@ msgstr "Chủ tài khoản"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__acc_holder_name
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__acc_holder_name
 msgid "Account Holder Name"
 msgstr "Tên chủ tài khoản"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__journal_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__journal_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_tree
 msgid "Account Journal"
@@ -2626,7 +2626,7 @@ msgstr "Tên tài khoản kế toán"
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_acc_number
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_number
 #: model:ir.model.fields,field_description:account.field_base_document_layout__account_number
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__acc_number
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__acc_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Account Number"
 msgstr "Số tài khoản"
@@ -2770,7 +2770,7 @@ msgstr "Nhóm tài khoản"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_holder_name
-#: model:ir.model.fields,help:account.field_res_partner_bank__acc_holder_name
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__acc_holder_name
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
@@ -3063,7 +3063,7 @@ msgstr "Tác vụ"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_needaction
 #: model:ir.model.fields,field_description:account.field_account_tax__message_needaction
 #: model:ir.model.fields,field_description:account.field_res_company__message_needaction
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_needaction
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_needaction
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_needaction
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_needaction
 msgid "Action Needed"
@@ -3097,7 +3097,7 @@ msgstr "Kích hoạt để tạo biên lai bán hàng"
 #: model:ir.model.fields,field_description:account.field_account_report__active
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__active
 #: model:ir.model.fields,field_description:account.field_account_tax__active
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__active
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__active
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__active
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 #: model:ir.model.fields,field_description:account_reports.field_account_return__active
@@ -3112,7 +3112,7 @@ msgstr "Đang hoạt động"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_ids
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_check_template__activity_type
 msgid "Activities"
@@ -3131,7 +3131,7 @@ msgstr "Hoạt động của"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_exception_decoration
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_exception_decoration
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_exception_decoration
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_exception_decoration
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr "Hoạt động ngoại lệ"
@@ -3143,7 +3143,7 @@ msgstr "Hoạt động ngoại lệ"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_state
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_state
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_state
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_state
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_state
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_state
 msgid "Activity State"
 msgstr "Trạng thái hoạt động"
@@ -3155,7 +3155,7 @@ msgstr "Trạng thái hoạt động"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_type_icon
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_type_icon
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_type_icon
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_type_icon
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_type_icon
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_type_icon
 msgid "Activity Type Icon"
 msgstr "Biểu tượng loại hoạt động"
@@ -4105,7 +4105,7 @@ msgstr "Không nhập được tệp đính kèm %(filename)s: %(reason)s"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_tax__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_res_company__message_attachment_count
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_attachment_count
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_attachment_count
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_attachment_count
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_attachment_count
 msgid "Attachment Count"
@@ -4400,7 +4400,7 @@ msgstr "Phần trăm số dư không được bằng 0"
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_id
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__bank_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__bank_id
 #: model:ir.model.fields,field_description:account.field_res_users__bank_account_count
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__bank
 #: model:res.groups.privilege,name:account.res_group_privilege_accounting_bank
@@ -4476,7 +4476,7 @@ msgstr "Loại tài khoản ngân hàng"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_supplier_accounts
-#: model:ir.model,name:account.model_res_partner_bank
+#: model:ir.model,name:account.model_res_partner_bank_account
 msgid "Bank Accounts"
 msgstr "Tài khoản ngân hàng"
 
@@ -5513,7 +5513,7 @@ msgstr "Thành phố"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__clearing_number
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__clearing_number
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__clearing_number
 msgid "Clearing Number"
 msgstr "Số thanh toán bù trừ"
 
@@ -6115,7 +6115,7 @@ msgstr "Quốc gia trùng khớp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_country_name
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_country_name
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__partner_country_name
 msgid "Country Name"
 msgstr "Tên quốc gia"
 
@@ -6633,7 +6633,7 @@ msgstr "Tiền tệ"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__currency_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__currency_id
 #: model:ir.model.fields,field_description:account.field_res_partner__currency_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__currency_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__currency_id
 #: model:ir.model.fields,field_description:account.field_res_users__currency_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
@@ -6838,7 +6838,7 @@ msgstr "URL cổng thông tin khách hàng"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_customer_rank
 #: model:ir.model.fields,field_description:account.field_res_partner__customer_rank
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_customer_rank
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__partner_customer_rank
 #: model:ir.model.fields,field_description:account.field_res_users__customer_rank
 msgid "Customer Rank"
 msgstr "Xếp hạng khách hàng"
@@ -7749,7 +7749,7 @@ msgstr "Hiển thị tab mapping"
 #: model:ir.model.fields,field_description:account.field_res_currency__display_name
 #: model:ir.model.fields,field_description:account.field_res_groups__display_name
 #: model:ir.model.fields,field_description:account.field_res_partner__display_name
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__display_name
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__display_name
 #: model:ir.model.fields,field_description:account.field_sequence_mixin__display_name
 #: model:ir.model.fields,field_description:account.field_uom_uom__display_name
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_name
@@ -8178,7 +8178,7 @@ msgstr "Nhân bản"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__duplicate_bank_partner_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__duplicate_bank_partner_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__duplicate_bank_partner_ids
 #: model:ir.model.fields,field_description:account.field_res_users__duplicate_bank_partner_ids
 msgid "Duplicate Bank Partner"
 msgstr "Sao chép đối tác ngân hàng"
@@ -9150,7 +9150,7 @@ msgstr "Theo dõi, tải xuống hoặc thanh toán hóa đơn của bạn"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_follower_ids
 #: model:ir.model.fields,field_description:account.field_account_tax__message_follower_ids
 #: model:ir.model.fields,field_description:account.field_res_company__message_follower_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_follower_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_follower_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_follower_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_follower_ids
 msgid "Followers"
@@ -9166,7 +9166,7 @@ msgstr "Người theo dõi"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_tax__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_res_company__message_partner_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_partner_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_partner_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_partner_ids
 msgid "Followers (Partners)"
@@ -9179,7 +9179,7 @@ msgstr "Người theo dõi (Đối tác)"
 #: model:ir.model.fields,help:account.field_account_move__activity_type_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_type_icon
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_type_icon
-#: model:ir.model.fields,help:account.field_res_partner_bank__activity_type_icon
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__activity_type_icon
 #: model:ir.model.fields,help:account_reports.field_account_return__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Font biểu tượng, ví dụ: fa-tasks"
@@ -9669,7 +9669,7 @@ msgstr "Vị trí tài chính đã thay đổi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_iban_warning
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__has_iban_warning
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__has_iban_warning
 msgid "Has Iban Warning"
 msgstr "Có cảnh báo Iban"
 
@@ -9694,7 +9694,7 @@ msgstr "Có báo cáo không hợp lệ"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_message
 #: model:ir.model.fields,field_description:account.field_account_tax__has_message
 #: model:ir.model.fields,field_description:account.field_res_company__has_message
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__has_message
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__has_message
 #: model:ir.model.fields,field_description:account_reports.field_account_return__has_message
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__has_message
 msgid "Has Message"
@@ -9702,7 +9702,7 @@ msgstr "Có tin nhắn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_money_transfer_warning
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__has_money_transfer_warning
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__has_money_transfer_warning
 msgid "Has Money Transfer Warning"
 msgstr "Có cảnh báo chuyển tiền"
 
@@ -9932,7 +9932,7 @@ msgstr "ICE:"
 #: model:ir.model.fields,field_description:account.field_res_currency__id
 #: model:ir.model.fields,field_description:account.field_res_groups__id
 #: model:ir.model.fields,field_description:account.field_res_partner__id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__id
 #: model:ir.model.fields,field_description:account.field_sequence_mixin__id
 #: model:ir.model.fields,field_description:account.field_uom_uom__id
 #: model:ir.model.fields,field_description:account.field_validate_account_move__id
@@ -10039,7 +10039,7 @@ msgstr "INV001"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_exception_icon
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_exception_icon
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_exception_icon
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_exception_icon
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_exception_icon
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_exception_icon
 msgid "Icon"
 msgstr "Biểu tượng"
@@ -10051,7 +10051,7 @@ msgstr "Biểu tượng"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_icon
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_exception_icon
-#: model:ir.model.fields,help:account.field_res_partner_bank__activity_exception_icon
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__activity_exception_icon
 #: model:ir.model.fields,help:account_reports.field_account_return__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "Biểu tượng cho thấy một hoạt động ngoại lệ."
@@ -10084,7 +10084,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction
 #: model:ir.model.fields,help:account.field_account_tax__message_needaction
 #: model:ir.model.fields,help:account.field_res_company__message_needaction
-#: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__message_needaction
 #: model:ir.model.fields,help:account_reports.field_account_return__message_needaction
 #: model:ir.model.fields,help:account_reports.field_account_return_type__message_needaction
 msgid "If checked, new messages require your attention."
@@ -10109,8 +10109,8 @@ msgstr "Nếu chọn, bạn cần chú ý tới các tin nhắn mới."
 #: model:ir.model.fields,help:account.field_account_tax__message_has_sms_error
 #: model:ir.model.fields,help:account.field_res_company__message_has_error
 #: model:ir.model.fields,help:account.field_res_company__message_has_sms_error
-#: model:ir.model.fields,help:account.field_res_partner_bank__message_has_error
-#: model:ir.model.fields,help:account.field_res_partner_bank__message_has_sms_error
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__message_has_error
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__message_has_sms_error
 #: model:ir.model.fields,help:account_reports.field_account_return__message_has_error
 #: model:ir.model.fields,help:account_reports.field_account_return__message_has_sms_error
 #: model:ir.model.fields,help:account_reports.field_account_return_type__message_has_error
@@ -11259,7 +11259,7 @@ msgstr "Là bút toán"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_is_follower
 #: model:ir.model.fields,field_description:account.field_account_tax__message_is_follower
 #: model:ir.model.fields,field_description:account.field_res_company__message_is_follower
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_is_follower
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_is_follower
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_is_follower
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_is_follower
 msgid "Is Follower"
@@ -12164,7 +12164,7 @@ msgstr "Thông báo ngày khoá sổ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__lock_trust_fields
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__lock_trust_fields
 msgid "Lock Trust Fields"
 msgstr "Khoá trường tin cậy"
 
@@ -12549,7 +12549,7 @@ msgstr "Tin nhắn"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_tax__message_has_error
 #: model:ir.model.fields,field_description:account.field_res_company__message_has_error
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_has_error
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_has_error
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_has_error
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_has_error
 msgid "Message Delivery error"
@@ -12565,7 +12565,7 @@ msgstr "Lỗi gửi tin nhắn"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_ids
 #: model:ir.model.fields,field_description:account.field_account_tax__message_ids
 #: model:ir.model.fields,field_description:account.field_res_company__message_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_ids
 msgid "Messages"
@@ -12687,7 +12687,7 @@ msgstr "Tiền tệ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__money_transfer_service
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__money_transfer_service
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__money_transfer_service
 msgid "Money Transfer Service"
 msgstr "Dịch vụ chuyển tiền"
 
@@ -12798,7 +12798,7 @@ msgstr "Hoạt động của tôi"
 #: model:ir.model.fields,field_description:account.field_account_move__my_activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_payment__my_activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__my_activity_date_deadline
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__my_activity_date_deadline
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__my_activity_date_deadline
 #: model:ir.model.fields,field_description:account_reports.field_account_return__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "Thời hạn hoạt động của tôi"
@@ -12969,7 +12969,7 @@ msgstr "Hoạt động tiếp theo"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_calendar_event_id
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "Sự kiện trên lịch cho hoạt động tiếp theo"
@@ -12981,7 +12981,7 @@ msgstr "Sự kiện trên lịch cho hoạt động tiếp theo"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_date_deadline
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_date_deadline
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_date_deadline
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Thời hạn cho hoạt động tiếp theo"
@@ -12993,7 +12993,7 @@ msgstr "Thời hạn cho hoạt động tiếp theo"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_summary
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_summary
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_summary
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_summary
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_summary
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_summary
 msgid "Next Activity Summary"
 msgstr "Tóm tắt hoạt động tiếp theo"
@@ -13005,7 +13005,7 @@ msgstr "Tóm tắt hoạt động tiếp theo"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_type_id
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_type_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_type_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_type_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_type_id
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_type_id
 msgid "Next Activity Type"
 msgstr "Loại hoạt động tiếp theo"
@@ -13309,7 +13309,7 @@ msgstr "Số"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,field_description:account.field_account_tax__message_needaction_counter
 #: model:ir.model.fields,field_description:account.field_res_company__message_needaction_counter
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_needaction_counter
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_needaction_counter
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_needaction_counter
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_needaction_counter
 msgid "Number of Actions"
@@ -13335,7 +13335,7 @@ msgstr "Số ngày trước khi đề xuất thanh toán sớm hết hạn"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_has_error_counter
 #: model:ir.model.fields,field_description:account.field_account_tax__message_has_error_counter
 #: model:ir.model.fields,field_description:account.field_res_company__message_has_error_counter
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_has_error_counter
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_has_error_counter
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_has_error_counter
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_has_error_counter
 msgid "Number of errors"
@@ -13351,7 +13351,7 @@ msgstr "Số lượng lỗi"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_account_tax__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
-#: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__message_needaction_counter
 #: model:ir.model.fields,help:account_reports.field_account_return__message_needaction_counter
 #: model:ir.model.fields,help:account_reports.field_account_return_type__message_needaction_counter
 msgid "Number of messages requiring action"
@@ -13367,7 +13367,7 @@ msgstr "Số tin nhắn cần xử lý"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_has_error_counter
 #: model:ir.model.fields,help:account.field_account_tax__message_has_error_counter
 #: model:ir.model.fields,help:account.field_res_company__message_has_error_counter
-#: model:ir.model.fields,help:account.field_res_partner_bank__message_has_error_counter
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__message_has_error_counter
 #: model:ir.model.fields,help:account_reports.field_account_return__message_has_error_counter
 #: model:ir.model.fields,help:account_reports.field_account_return_type__message_has_error_counter
 msgid "Number of messages with delivery error"
@@ -15237,7 +15237,7 @@ msgstr "Chi phí RD"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
 #: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
 #: model:ir.model.fields,field_description:account.field_res_company__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__rating_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__rating_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__rating_ids
 msgid "Ratings"
@@ -15499,7 +15499,7 @@ msgstr "Mô hình tài liệu liên quan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__related_moves
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__related_moves
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__related_moves
 msgid "Related Moves"
 msgstr "Bút toán liên quan"
 
@@ -15711,7 +15711,7 @@ msgstr "Giá trị còn lại theo loại tiền tệ"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_user_id
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_user_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_user_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_user_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_user_id
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_user_id
 msgid "Responsible User"
 msgstr "Người phụ trách"
@@ -16002,7 +16002,7 @@ msgstr "Ghi nợ trực tiếp SEPA (SDD)"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_account_tax__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_res_company__message_has_sms_error
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_has_sms_error
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_has_sms_error
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_has_sms_error
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_has_sms_error
 msgid "SMS Delivery error"
@@ -16429,7 +16429,7 @@ msgstr "Gửi bản sao đến"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__allow_out_payment
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__allow_out_payment
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__allow_out_payment
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__outbound
 msgid "Send Money"
 msgstr "Gửi tiền"
@@ -16505,7 +16505,7 @@ msgstr "Phương thức gửi"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__allow_out_payment
-#: model:ir.model.fields,help:account.field_res_partner_bank__allow_out_payment
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__allow_out_payment
 msgid ""
 "Sending fake invoices with a fraudulent account number is a common phishing "
 "practice. To protect yourself, always verify new bank account numbers, "
@@ -17151,7 +17151,7 @@ msgstr "Trạng thái Đang thanh toán"
 #: model:ir.model.fields,help:account.field_account_move__activity_state
 #: model:ir.model.fields,help:account.field_account_payment__activity_state
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_state
-#: model:ir.model.fields,help:account.field_res_partner_bank__activity_state
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__activity_state
 #: model:ir.model.fields,help:account_reports.field_account_return__activity_state
 msgid ""
 "Status based on activities\n"
@@ -17277,7 +17277,7 @@ msgstr "Dữ liệu tóm tắt"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_supplier_rank
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_rank
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_supplier_rank
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__partner_supplier_rank
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_rank
 msgid "Supplier Rank"
 msgstr "Xếp hạng nhà cung cấp"
@@ -17887,7 +17887,7 @@ msgstr "Trường kỹ thuật để có được miền trên ngân hàng"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__has_iban_warning
-#: model:ir.model.fields,help:account.field_res_partner_bank__has_iban_warning
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__has_iban_warning
 msgid ""
 "Technical field used to display a warning if the IBAN country is different "
 "than the holder country."
@@ -17897,7 +17897,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__has_money_transfer_warning
-#: model:ir.model.fields,help:account.field_res_partner_bank__has_money_transfer_warning
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__has_money_transfer_warning
 msgid ""
 "Technical field used to display a warning if the account is a transfer "
 "service account."
@@ -18170,7 +18170,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
-#: model:ir.model.fields,help:account.field_res_partner_bank__journal_id
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__journal_id
 msgid "The accounting journal corresponding to this bank account."
 msgstr "Sổ nhật ký kế toán tương ứng với tài khoản ngân hàng này."
 
@@ -19955,7 +19955,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_exception_decoration
-#: model:ir.model.fields,help:account.field_res_partner_bank__activity_exception_decoration
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__activity_exception_decoration
 #: model:ir.model.fields,help:account_reports.field_account_return__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Loại hoạt động ngoại lệ trong bản ghi."
@@ -20375,7 +20375,7 @@ msgstr "User Hard Lock Date"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__user_has_group_validate_bank_account
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__user_has_group_validate_bank_account
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__user_has_group_validate_bank_account
 msgid "User Has Group Validate Bank Account"
 msgstr "User Has Group Validate Bank Account"
 
@@ -20723,7 +20723,7 @@ msgstr "Trang web"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__website_message_ids
 #: model:ir.model.fields,field_description:account.field_account_tax__website_message_ids
 #: model:ir.model.fields,field_description:account.field_res_company__website_message_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__website_message_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__website_message_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__website_message_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__website_message_ids
 msgid "Website Messages"
@@ -20739,7 +20739,7 @@ msgstr "Thông báo trên trang web"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__website_message_ids
 #: model:ir.model.fields,help:account.field_account_tax__website_message_ids
 #: model:ir.model.fields,help:account.field_res_company__website_message_ids
-#: model:ir.model.fields,help:account.field_res_partner_bank__website_message_ids
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__website_message_ids
 #: model:ir.model.fields,help:account_reports.field_account_return__website_message_ids
 #: model:ir.model.fields,help:account_reports.field_account_return_type__website_message_ids
 msgid "Website communication history"

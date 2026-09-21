@@ -21,7 +21,7 @@ class TestL10nTHEmvQrCode(AccountTestInvoicingCommon):
             }
         )
 
-        cls.acc_emv_th = cls.env["res.partner.bank"].create(
+        cls.acc_emv_th = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "123456789012345678",
                 "partner_id": cls.company_data["company"].partner_id.id,
@@ -30,7 +30,9 @@ class TestL10nTHEmvQrCode(AccountTestInvoicingCommon):
             }
         )
 
-        cls.acc_emv_th_without_promptpay_info = cls.env["res.partner.bank"].create(
+        cls.acc_emv_th_without_promptpay_info = cls.env[
+            "res.partner.bank.account"
+        ].create(
             {
                 "acc_number": "1234567890",
                 "partner_id": cls.company_data["company"].partner_id.id,

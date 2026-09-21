@@ -1200,7 +1200,7 @@ Inherits: `mixin.format.address`, `mixin.format.vat.label`, `mixin.avatar`, `mix
 - `tz` (Selection) — Timezone
 - `user_id` (Many2one → res.users, computed, precompute, readonly=False, stored) — Salesperson
 - `vat` (Char, indexed), `company_registry` (Char)
-- `bank_ids` (One2many → res.partner.bank)
+- `bank_ids` (One2many → res.partner.bank.account)
 - `tag_ids` (Many2many → res.partner.tag) — Tags
 - `active` (Boolean, default=True)
 - `type` (Selection) — `contact`, `invoice`, `delivery`, `other`
@@ -1209,7 +1209,7 @@ Inherits: `mixin.format.address`, `mixin.format.vat.label`, `mixin.avatar`, `mix
 - `email`, `email_formatted` (Char), `phone_ids` (Many2many → phone.number)
 - `preferred_phone_id` (Many2one → phone.number, editable, stored) — contact-owned priority; unlinking the number clears it. `_phone_get_number()` selects active numbers using this preference, then the shared number order.
 - `main_phone_id`, `main_mobile_id` (Many2one → phone.number, computed, stored) — typed selections from that same contact order.
-- `main_bank_id` (Many2one → res.partner.bank, computed, stored)
+- `main_bank_id` (Many2one → res.partner.bank.account, computed, stored)
 - `is_company` (Boolean)
 - `company_id` (Many2one → res.company)
 - `commercial_partner_id` (Many2one, computed, stored, recursive, indexed)
@@ -1649,9 +1649,9 @@ under the bank's own access (`_inherits_rules = False`, `_inherits_sudo_fields`)
 `res.company` does. The bank's own row holds `partner_id` (required, restrict) and `bic`
 (Char, indexed). `_get_bank_partner_ids()` (ormcache) backs `res.partner.is_bank`.
 
-### models/res_partner_bank.py
+### models/res_partner_bank_account.py
 
-#### ResPartnerBank — `res.partner.bank` (`_name`, `_rec_name = acc_number`)
+#### ResPartnerBank — `res.partner.bank.account` (`_name`, `_rec_name = acc_number`)
 
 Partner bank accounts.
 
@@ -2111,7 +2111,7 @@ Quick lookup — file → model → primary role:
 | `mixin_properties_base_definition.py` | mixin.properties.base.definition | Properties mixin |
 | `phone_number.py` | phone.number | Shared phone numbers |
 | `report_paperformat.py` | report.paperformat | Paper format config |
-| `res_bank.py` | res.bank, res.partner.bank | Banks + accounts |
+| `res_bank.py` | res.bank, res.partner.bank.account | Banks + accounts |
 | `res_company.py` | res.company | Company hierarchy |
 | `res_config.py` | res.config, res.config.settings | Settings framework |
 | `res_country.py` | res.country, .group, .state | Geography |

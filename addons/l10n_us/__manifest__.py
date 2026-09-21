@@ -14,7 +14,7 @@
     ],
     "data": [
         "data/res_company_data.xml",
-        "views/res_partner_bank_views.xml",
+        "views/res_partner_bank_account_views.xml",
     ],
     "demo": [
         "demo/demo_company.xml",

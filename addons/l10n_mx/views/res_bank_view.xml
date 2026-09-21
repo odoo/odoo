@@ -17,7 +17,7 @@
 
     <record id="view_partner_bank_form_l10n_mx_edi_bank" model="ir.ui.view">
         <field name="name">view.partner.bank.form.mx.inherit</field>
-        <field name="model">res.partner.bank</field>
+        <field name="model">res.partner.bank.account</field>
         <field name="inherit_id" ref="base.view_partner_bank_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='bank_id']" position="after">
@@ -32,7 +32,7 @@
 
     <record id="view_partner_bank_tree_l10n_mx_edi_bank" model="ir.ui.view">
         <field name="name">view.partner.bank.list.mx.inherit</field>
-        <field name="model">res.partner.bank</field>
+        <field name="model">res.partner.bank.account</field>
         <field name="inherit_id" ref="base.view_partner_bank_tree" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='bank_name']" position="after">

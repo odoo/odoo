@@ -7,13 +7,13 @@ from odoo.exceptions import ValidationError
 from odoo.tools import LazyTranslate, street_split
 from odoo.tools.misc import mod10r
 
-from odoo.addons.account_iban.models.res_partner_bank import (
+from odoo.addons.account_iban.models.res_partner_bank_account import (
     check_iban,
     get_iban_part,
     normalize_iban,
     pretty_iban,
 )
-from odoo.addons.base.models.res_partner_bank import sanitize_account_number
+from odoo.addons.base.models.res_partner_bank_account import sanitize_account_number
 
 _lt = LazyTranslate(__name__)
 
@@ -44,8 +44,8 @@ def is_qr_iban_range(iban):
     )  # Those values for iid are reserved for QR-IBANs only
 
 
-class ResPartnerBank(models.Model):
-    _inherit = "res.partner.bank"
+class ResPartnerBankAccount(models.Model):
+    _inherit = "res.partner.bank.account"
 
     l10n_ch_qr_iban = fields.Char(
         string="QR-IBAN",

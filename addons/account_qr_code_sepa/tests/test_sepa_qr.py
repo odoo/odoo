@@ -14,7 +14,7 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
         super().setUpClass()
 
         cls.company_data["company"].account_config_id.qr_code = True
-        cls.acc_sepa_iban = cls.env["res.partner.bank"].create(
+        cls.acc_sepa_iban = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "BE15001559627230",
                 "partner_id": cls.company_data["company"].partner_id.id,
@@ -22,7 +22,7 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
             }
         )
 
-        cls.acc_non_sepa_iban = cls.env["res.partner.bank"].create(
+        cls.acc_non_sepa_iban = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "SA4420000001234567891234",
                 "partner_id": cls.company_data["company"].partner_id.id,

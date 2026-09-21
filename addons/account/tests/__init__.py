@@ -88,8 +88,8 @@ from . import test_res_partner_merge
 from . import test_account_merge_wizard
 from . import test_account_move_attachment
 from . import test_account_bill_deductibility
-from . import test_duplicate_res_partner_bank
-from . import test_res_partner_bank_trust
+from . import test_duplicate_res_partner_bank_account
+from . import test_res_partner_bank_account_trust
 from . import test_account_move_import_template
 from . import test_res_company
 from . import test_res_currency

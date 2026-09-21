@@ -11,7 +11,7 @@ class TestL10nBrPix(AccountTestInvoicingCommon):
     @AccountTestInvoicingCommon.setup_country("br")
     def setUpClass(cls):
         super().setUpClass()
-        cls.partner_bank = cls.env["res.partner.bank"].create(
+        cls.partner_bank = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "123456789012345678",
                 "partner_id": cls.company_data["company"].partner_id.id,

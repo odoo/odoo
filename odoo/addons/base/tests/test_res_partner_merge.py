@@ -10,7 +10,7 @@ class TestMergePartner(TransactionCase):
     def setUp(self):
         super().setUp()
         self.Partner = self.env["res.partner"]
-        self.Bank = self.env["res.partner.bank"]
+        self.Bank = self.env["res.partner.bank.account"]
 
         self.partner1 = self.Partner.create(
             {"name": "Partner 1", "email": "partner1@example.com"}
@@ -49,21 +49,21 @@ class TestMergePartner(TransactionCase):
         self.attachment_bank1 = self.env["ir.attachment"].create(
             {
                 "name": "Attachment Bank 1",
-                "res_model": "res.partner.bank",
+                "res_model": "res.partner.bank.account",
                 "res_id": self.bank1.id,
             }
         )
         self.attachment_bank2 = self.env["ir.attachment"].create(
             {
                 "name": "Attachment Bank 2",
-                "res_model": "res.partner.bank",
+                "res_model": "res.partner.bank.account",
                 "res_id": self.bank2.id,
             }
         )
         self.attachment_bank3 = self.env["ir.attachment"].create(
             {
                 "name": "Attachment Bank 2",
-                "res_model": "res.partner.bank",
+                "res_model": "res.partner.bank.account",
                 "res_id": self.bank3.id,
             }
         )
@@ -321,7 +321,7 @@ class TestMergePartnerForeignKeyClash(TransactionCase):
 
     def test_a_repeated_account_is_dropped_and_the_others_are_carried_over(self):
         Partner = self.env["res.partner"]
-        Bank = self.env["res.partner.bank"]
+        Bank = self.env["res.partner.bank.account"]
         dst = Partner.create({"name": "fk dst", "email": "fk@example.com"})
         src_clash = Partner.create({"name": "fk src clash", "email": "fk@example.com"})
         src_keep = Partner.create({"name": "fk src keep", "email": "fk@example.com"})
@@ -409,7 +409,7 @@ class TestMergePartnerAbsorbSourceValues(TransactionCase):
                 "tag_ids": [Command.set(self.tag_src.ids)],
             }
         )
-        self.env["res.partner.bank"].create(
+        self.env["res.partner.bank.account"].create(
             {"acc_number": "BE55001234567890", "partner_id": src.id}
         )
         attachment = self.env["ir.attachment"].create(
@@ -863,7 +863,7 @@ class TestMergePartnerIdentifiers(TransactionCase):
 class TestMergePartnerSingleSourceClash(TransactionCase):
     def test_one_repeated_account_does_not_take_the_sources_others_with_it(self):
         Partner = self.env["res.partner"]
-        Bank = self.env["res.partner.bank"]
+        Bank = self.env["res.partner.bank.account"]
         dst = Partner.create({"name": "clash dst", "email": "sc@example.com"})
         src = Partner.create({"name": "clash src", "email": "sc@example.com"})
 

@@ -737,7 +737,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         return party_node
 
     def _get_financial_account_node(self, vals):
-        """Generic helper to generate the FinancialAccount node for a res.partner.bank"""
+        """Generic helper to generate the FinancialAccount node for a res.partner.bank.account"""
         partner_bank = vals["partner_bank"]
         bank = partner_bank.bank_id
         financial_institution_branch = None

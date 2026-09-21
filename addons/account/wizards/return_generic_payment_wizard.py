@@ -26,7 +26,7 @@ class AccountReturnGenericPaymentWizard(models.TransientModel):
     # No check_company= here on purpose: this model does not set _check_company_auto,
     # so the flag would enforce nothing while reading as though it did. The reader's
     # own record rules are what scope this now, via compute_sudo=False above.
-    partner_bank_id = fields.Many2one(comodel_name="res.partner.bank")
+    partner_bank_id = fields.Many2one(comodel_name="res.partner.bank.account")
     communication = fields.Char(compute="_compute_communication")
 
     amount_to_pay = fields.Monetary(

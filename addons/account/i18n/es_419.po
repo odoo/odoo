@@ -2689,7 +2689,7 @@ msgstr "La cuenta tiene asientos con hash"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__partner_id
 #: model:ir.model.fields,field_description:account_reports.field_account_return_payment_wizard__partner_id
 #: model:ir.model.fields,field_description:account_reports.field_qr_code_payment_wizard__partner_id
 msgid "Account Holder"
@@ -2697,13 +2697,13 @@ msgstr "Titular de la cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__acc_holder_name
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__acc_holder_name
 msgid "Account Holder Name"
 msgstr "Nombre del titular de la cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__journal_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__journal_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_tree
 msgid "Account Journal"
@@ -2769,7 +2769,7 @@ msgstr "Nombre de la cuenta"
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_acc_number
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_number
 #: model:ir.model.fields,field_description:account.field_base_document_layout__account_number
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__acc_number
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__acc_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Account Number"
 msgstr "Número de cuenta"
@@ -2917,7 +2917,7 @@ msgstr "Grupos de cuentas"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_holder_name
-#: model:ir.model.fields,help:account.field_res_partner_bank__acc_holder_name
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__acc_holder_name
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
@@ -3213,7 +3213,7 @@ msgstr "Acción"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_needaction
 #: model:ir.model.fields,field_description:account.field_account_tax__message_needaction
 #: model:ir.model.fields,field_description:account.field_res_company__message_needaction
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_needaction
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_needaction
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_needaction
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_needaction
 msgid "Action Needed"
@@ -3247,7 +3247,7 @@ msgstr "Activar para crear un recibo de venta"
 #: model:ir.model.fields,field_description:account.field_account_report__active
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__active
 #: model:ir.model.fields,field_description:account.field_account_tax__active
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__active
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__active
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__active
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 #: model:ir.model.fields,field_description:account_reports.field_account_return__active
@@ -3262,7 +3262,7 @@ msgstr "Activo"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_ids
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_check_template__activity_type
 msgid "Activities"
@@ -3281,7 +3281,7 @@ msgstr "Actividades de"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_exception_decoration
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_exception_decoration
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_exception_decoration
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_exception_decoration
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr "Decoración de la actividad de excepción"
@@ -3293,7 +3293,7 @@ msgstr "Decoración de la actividad de excepción"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_state
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_state
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_state
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_state
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_state
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_state
 msgid "Activity State"
 msgstr "Estado de la actividad"
@@ -3305,7 +3305,7 @@ msgstr "Estado de la actividad"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_type_icon
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_type_icon
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_type_icon
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_type_icon
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_type_icon
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_type_icon
 msgid "Activity Type Icon"
 msgstr "Icono del tipo de actividad"
@@ -4261,7 +4261,7 @@ msgstr "No fue posible importar el archivo adjunto %(filename)s: %(reason)s"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_tax__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_res_company__message_attachment_count
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_attachment_count
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_attachment_count
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_attachment_count
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_attachment_count
 msgid "Attachment Count"
@@ -4556,7 +4556,7 @@ msgstr "El porcentaje de balance no puede ser 0"
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_id
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__bank_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__bank_id
 #: model:ir.model.fields,field_description:account.field_res_users__bank_account_count
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__bank
 #: model:res.groups.privilege,name:account.res_group_privilege_accounting_bank
@@ -4633,7 +4633,7 @@ msgstr "Tipo de cuenta bancaria"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_supplier_accounts
-#: model:ir.model,name:account.model_res_partner_bank
+#: model:ir.model,name:account.model_res_partner_bank_account
 msgid "Bank Accounts"
 msgstr "Cuentas bancarias"
 
@@ -5671,7 +5671,7 @@ msgstr "Ciudad"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__clearing_number
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__clearing_number
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__clearing_number
 msgid "Clearing Number"
 msgstr "Número de compensación"
 
@@ -6276,7 +6276,7 @@ msgstr "El país coincide"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_country_name
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_country_name
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__partner_country_name
 msgid "Country Name"
 msgstr "Nombre del país"
 
@@ -6795,7 +6795,7 @@ msgstr "Monedas"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__currency_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__currency_id
 #: model:ir.model.fields,field_description:account.field_res_partner__currency_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__currency_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__currency_id
 #: model:ir.model.fields,field_description:account.field_res_users__currency_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
@@ -6998,7 +6998,7 @@ msgstr "URL del portal de cliente"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_customer_rank
 #: model:ir.model.fields,field_description:account.field_res_partner__customer_rank
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_customer_rank
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__partner_customer_rank
 #: model:ir.model.fields,field_description:account.field_res_users__customer_rank
 msgid "Customer Rank"
 msgstr "Rango del cliente"
@@ -7914,7 +7914,7 @@ msgstr "Mostrar pestaña de mapeo"
 #: model:ir.model.fields,field_description:account.field_res_currency__display_name
 #: model:ir.model.fields,field_description:account.field_res_groups__display_name
 #: model:ir.model.fields,field_description:account.field_res_partner__display_name
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__display_name
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__display_name
 #: model:ir.model.fields,field_description:account.field_sequence_mixin__display_name
 #: model:ir.model.fields,field_description:account.field_uom_uom__display_name
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_name
@@ -8345,7 +8345,7 @@ msgstr "Duplicar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__duplicate_bank_partner_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__duplicate_bank_partner_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__duplicate_bank_partner_ids
 #: model:ir.model.fields,field_description:account.field_res_users__duplicate_bank_partner_ids
 msgid "Duplicate Bank Partner"
 msgstr "Duplicar contacto de banco"
@@ -9325,7 +9325,7 @@ msgstr "Siga, descargue o pague sus facturas"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_follower_ids
 #: model:ir.model.fields,field_description:account.field_account_tax__message_follower_ids
 #: model:ir.model.fields,field_description:account.field_res_company__message_follower_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_follower_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_follower_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_follower_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_follower_ids
 msgid "Followers"
@@ -9341,7 +9341,7 @@ msgstr "Seguidores"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_tax__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_res_company__message_partner_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_partner_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_partner_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_partner_ids
 msgid "Followers (Partners)"
@@ -9354,7 +9354,7 @@ msgstr "Seguidores (contactos)"
 #: model:ir.model.fields,help:account.field_account_move__activity_type_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_type_icon
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_type_icon
-#: model:ir.model.fields,help:account.field_res_partner_bank__activity_type_icon
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__activity_type_icon
 #: model:ir.model.fields,help:account_reports.field_account_return__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Icono de Font Awesome ej. fa-tasks"
@@ -9848,7 +9848,7 @@ msgstr "Ha cambiado la posición fiscal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_iban_warning
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__has_iban_warning
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__has_iban_warning
 msgid "Has Iban Warning"
 msgstr "Tiene advertencia IBAN"
 
@@ -9873,7 +9873,7 @@ msgstr "Tiene estados de cuenta que no son válidos"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_message
 #: model:ir.model.fields,field_description:account.field_account_tax__has_message
 #: model:ir.model.fields,field_description:account.field_res_company__has_message
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__has_message
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__has_message
 #: model:ir.model.fields,field_description:account_reports.field_account_return__has_message
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__has_message
 msgid "Has Message"
@@ -9881,7 +9881,7 @@ msgstr "Tiene un mensaje"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_money_transfer_warning
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__has_money_transfer_warning
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__has_money_transfer_warning
 msgid "Has Money Transfer Warning"
 msgstr "Tiene advertencia de transferencia de dinero"
 
@@ -10112,7 +10112,7 @@ msgstr "ICE:"
 #: model:ir.model.fields,field_description:account.field_res_currency__id
 #: model:ir.model.fields,field_description:account.field_res_groups__id
 #: model:ir.model.fields,field_description:account.field_res_partner__id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__id
 #: model:ir.model.fields,field_description:account.field_sequence_mixin__id
 #: model:ir.model.fields,field_description:account.field_uom_uom__id
 #: model:ir.model.fields,field_description:account.field_validate_account_move__id
@@ -10219,7 +10219,7 @@ msgstr "INV001"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_exception_icon
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_exception_icon
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_exception_icon
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_exception_icon
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_exception_icon
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_exception_icon
 msgid "Icon"
 msgstr "Icono"
@@ -10231,7 +10231,7 @@ msgstr "Icono"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_icon
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_exception_icon
-#: model:ir.model.fields,help:account.field_res_partner_bank__activity_exception_icon
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__activity_exception_icon
 #: model:ir.model.fields,help:account_reports.field_account_return__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "Icono que indica una actividad de excepción."
@@ -10264,7 +10264,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction
 #: model:ir.model.fields,help:account.field_account_tax__message_needaction
 #: model:ir.model.fields,help:account.field_res_company__message_needaction
-#: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__message_needaction
 #: model:ir.model.fields,help:account_reports.field_account_return__message_needaction
 #: model:ir.model.fields,help:account_reports.field_account_return_type__message_needaction
 msgid "If checked, new messages require your attention."
@@ -10289,8 +10289,8 @@ msgstr "Si está seleccionado, hay nuevos mensajes que requieren tu atención."
 #: model:ir.model.fields,help:account.field_account_tax__message_has_sms_error
 #: model:ir.model.fields,help:account.field_res_company__message_has_error
 #: model:ir.model.fields,help:account.field_res_company__message_has_sms_error
-#: model:ir.model.fields,help:account.field_res_partner_bank__message_has_error
-#: model:ir.model.fields,help:account.field_res_partner_bank__message_has_sms_error
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__message_has_error
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__message_has_sms_error
 #: model:ir.model.fields,help:account_reports.field_account_return__message_has_error
 #: model:ir.model.fields,help:account_reports.field_account_return__message_has_sms_error
 #: model:ir.model.fields,help:account_reports.field_account_return_type__message_has_error
@@ -11456,7 +11456,7 @@ msgstr "Tiene asientos"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_is_follower
 #: model:ir.model.fields,field_description:account.field_account_tax__message_is_follower
 #: model:ir.model.fields,field_description:account.field_res_company__message_is_follower
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_is_follower
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_is_follower
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_is_follower
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_is_follower
 msgid "Is Follower"
@@ -12372,7 +12372,7 @@ msgstr "Mensaje de fecha de bloqueo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__lock_trust_fields
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__lock_trust_fields
 msgid "Lock Trust Fields"
 msgstr "Bloquear campos de crédito"
 
@@ -12761,7 +12761,7 @@ msgstr "Mensaje"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_tax__message_has_error
 #: model:ir.model.fields,field_description:account.field_res_company__message_has_error
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_has_error
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_has_error
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_has_error
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_has_error
 msgid "Message Delivery error"
@@ -12777,7 +12777,7 @@ msgstr "Error al enviar el mensaje"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_ids
 #: model:ir.model.fields,field_description:account.field_account_tax__message_ids
 #: model:ir.model.fields,field_description:account.field_res_company__message_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_ids
 msgid "Messages"
@@ -12899,7 +12899,7 @@ msgstr "Monetario"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__money_transfer_service
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__money_transfer_service
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__money_transfer_service
 msgid "Money Transfer Service"
 msgstr "Servicio de transferencia de dinero"
 
@@ -13012,7 +13012,7 @@ msgstr "Mis actividades"
 #: model:ir.model.fields,field_description:account.field_account_move__my_activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_payment__my_activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__my_activity_date_deadline
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__my_activity_date_deadline
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__my_activity_date_deadline
 #: model:ir.model.fields,field_description:account_reports.field_account_return__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "Fecha límite de mi actividad"
@@ -13184,7 +13184,7 @@ msgstr "Siguiente actividad"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_calendar_event_id
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "Siguiente evento en el calendario de actividades"
@@ -13196,7 +13196,7 @@ msgstr "Siguiente evento en el calendario de actividades"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_date_deadline
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_date_deadline
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_date_deadline
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Siguiente fecha límite de la actividad"
@@ -13208,7 +13208,7 @@ msgstr "Siguiente fecha límite de la actividad"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_summary
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_summary
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_summary
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_summary
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_summary
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_summary
 msgid "Next Activity Summary"
 msgstr "Resumen de la siguiente actividad"
@@ -13220,7 +13220,7 @@ msgstr "Resumen de la siguiente actividad"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_type_id
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_type_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_type_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_type_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_type_id
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_type_id
 msgid "Next Activity Type"
 msgstr "Tipo de la siguiente actividad"
@@ -13527,7 +13527,7 @@ msgstr "Número"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,field_description:account.field_account_tax__message_needaction_counter
 #: model:ir.model.fields,field_description:account.field_res_company__message_needaction_counter
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_needaction_counter
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_needaction_counter
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_needaction_counter
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_needaction_counter
 msgid "Number of Actions"
@@ -13553,7 +13553,7 @@ msgstr "Número de días antes de que expire la propuesta de pago anticipado"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_has_error_counter
 #: model:ir.model.fields,field_description:account.field_account_tax__message_has_error_counter
 #: model:ir.model.fields,field_description:account.field_res_company__message_has_error_counter
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_has_error_counter
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_has_error_counter
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_has_error_counter
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_has_error_counter
 msgid "Number of errors"
@@ -13569,7 +13569,7 @@ msgstr "Número de errores"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_account_tax__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
-#: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__message_needaction_counter
 #: model:ir.model.fields,help:account_reports.field_account_return__message_needaction_counter
 #: model:ir.model.fields,help:account_reports.field_account_return_type__message_needaction_counter
 msgid "Number of messages requiring action"
@@ -13585,7 +13585,7 @@ msgstr "Número de mensajes que requieren una acción"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_has_error_counter
 #: model:ir.model.fields,help:account.field_account_tax__message_has_error_counter
 #: model:ir.model.fields,help:account.field_res_company__message_has_error_counter
-#: model:ir.model.fields,help:account.field_res_partner_bank__message_has_error_counter
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__message_has_error_counter
 #: model:ir.model.fields,help:account_reports.field_account_return__message_has_error_counter
 #: model:ir.model.fields,help:account_reports.field_account_return_type__message_has_error_counter
 msgid "Number of messages with delivery error"
@@ -15451,7 +15451,7 @@ msgstr "Gastos de I+D"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
 #: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
 #: model:ir.model.fields,field_description:account.field_res_company__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__rating_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__rating_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__rating_ids
 msgid "Ratings"
@@ -15712,7 +15712,7 @@ msgstr "Modelo de documento relacionado"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__related_moves
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__related_moves
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__related_moves
 msgid "Related Moves"
 msgstr "Movimientos relacionados"
 
@@ -15928,7 +15928,7 @@ msgstr "Remanente en moneda"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_user_id
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_user_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_user_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_user_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_user_id
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_user_id
 msgid "Responsible User"
 msgstr "Usuario responsable"
@@ -16219,7 +16219,7 @@ msgstr "Domiciliación bancaria SEPA (SDD)"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_account_tax__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_res_company__message_has_sms_error
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_has_sms_error
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_has_sms_error
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_has_sms_error
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_has_sms_error
 msgid "SMS Delivery error"
@@ -16647,7 +16647,7 @@ msgstr "Enviar copia a"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__allow_out_payment
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__allow_out_payment
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__allow_out_payment
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__outbound
 msgid "Send Money"
 msgstr "Enviar dinero"
@@ -16722,7 +16722,7 @@ msgstr "Métodos de envío"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__allow_out_payment
-#: model:ir.model.fields,help:account.field_res_partner_bank__allow_out_payment
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__allow_out_payment
 msgid ""
 "Sending fake invoices with a fraudulent account number is a common phishing "
 "practice. To protect yourself, always verify new bank account numbers, "
@@ -17381,7 +17381,7 @@ msgstr "Estado en pago"
 #: model:ir.model.fields,help:account.field_account_move__activity_state
 #: model:ir.model.fields,help:account.field_account_payment__activity_state
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_state
-#: model:ir.model.fields,help:account.field_res_partner_bank__activity_state
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__activity_state
 #: model:ir.model.fields,help:account_reports.field_account_return__activity_state
 msgid ""
 "Status based on activities\n"
@@ -17507,7 +17507,7 @@ msgstr "Datos resumidos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_supplier_rank
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_rank
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_supplier_rank
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__partner_supplier_rank
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_rank
 msgid "Supplier Rank"
 msgstr "Rango de proveedor"
@@ -18121,7 +18121,7 @@ msgstr "Campo técnico para obtener el dominio del banco"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__has_iban_warning
-#: model:ir.model.fields,help:account.field_res_partner_bank__has_iban_warning
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__has_iban_warning
 msgid ""
 "Technical field used to display a warning if the IBAN country is different "
 "than the holder country."
@@ -18131,7 +18131,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__has_money_transfer_warning
-#: model:ir.model.fields,help:account.field_res_partner_bank__has_money_transfer_warning
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__has_money_transfer_warning
 msgid ""
 "Technical field used to display a warning if the account is a transfer "
 "service account."
@@ -18408,7 +18408,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
-#: model:ir.model.fields,help:account.field_res_partner_bank__journal_id
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__journal_id
 msgid "The accounting journal corresponding to this bank account."
 msgstr "El diario contable que corresponde a esta cuenta bancaria."
 
@@ -20225,7 +20225,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_exception_decoration
-#: model:ir.model.fields,help:account.field_res_partner_bank__activity_exception_decoration
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__activity_exception_decoration
 #: model:ir.model.fields,help:account_reports.field_account_return__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Tipo de la actividad de excepción registrada."
@@ -20646,7 +20646,7 @@ msgstr "Fecha de bloqueo permanente del usuario"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__user_has_group_validate_bank_account
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__user_has_group_validate_bank_account
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__user_has_group_validate_bank_account
 msgid "User Has Group Validate Bank Account"
 msgstr "El usuario tiene un grupo para validar la cuenta bancaria "
 
@@ -20993,7 +20993,7 @@ msgstr "Sitio web"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__website_message_ids
 #: model:ir.model.fields,field_description:account.field_account_tax__website_message_ids
 #: model:ir.model.fields,field_description:account.field_res_company__website_message_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__website_message_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__website_message_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__website_message_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__website_message_ids
 msgid "Website Messages"
@@ -21009,7 +21009,7 @@ msgstr "Mensajes del sitio web"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__website_message_ids
 #: model:ir.model.fields,help:account.field_account_tax__website_message_ids
 #: model:ir.model.fields,help:account.field_res_company__website_message_ids
-#: model:ir.model.fields,help:account.field_res_partner_bank__website_message_ids
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__website_message_ids
 #: model:ir.model.fields,help:account_reports.field_account_return__website_message_ids
 #: model:ir.model.fields,help:account_reports.field_account_return_type__website_message_ids
 msgid "Website communication history"

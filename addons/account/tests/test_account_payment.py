@@ -23,21 +23,21 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
         cls.bank_journal_1 = cls.company_data["default_journal_bank"]
         cls.bank_journal_2 = cls.company_data["default_journal_bank"].copy()
 
-        cls.partner_bank_account1 = cls.env["res.partner.bank"].create(
+        cls.partner_bank_account1 = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "0123456789",
                 "partner_id": cls.partner_a.id,
                 "acc_type": "bank",
             }
         )
-        cls.partner_bank_account2 = cls.env["res.partner.bank"].create(
+        cls.partner_bank_account2 = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "9876543210",
                 "partner_id": cls.partner_a.id,
                 "acc_type": "bank",
             }
         )
-        cls.comp_bank_account1 = cls.env["res.partner.bank"].create(
+        cls.comp_bank_account1 = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "985632147",
                 "partner_id": cls.env.company.partner_id.id,
@@ -45,7 +45,7 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
                 "allow_out_payment": True,
             }
         )
-        cls.comp_bank_account2 = cls.env["res.partner.bank"].create(
+        cls.comp_bank_account2 = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "741258963",
                 "partner_id": cls.env.company.partner_id.id,

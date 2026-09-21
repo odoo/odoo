@@ -22,7 +22,7 @@
         <field name="partner_id" ref="base.partner_demo_company_no" />
     </record>
 
-    <record id="base.demo_bank_no" model="res.partner.bank" forcecreate="1">
+    <record id="base.demo_bank_no" model="res.partner.bank.account" forcecreate="1">
         <field name="acc_number">NO8330001234567</field>
         <field name="partner_id" ref="base.partner_demo_company_no" />
         <field name="company_id" ref="base.demo_company_no" />

@@ -6,11 +6,11 @@ logging.getLogger("odoo.orm.models.metaclass").setLevel(logging.ERROR)
 
 
 def test_name_derived_from_camelcase():
-    class ResPartnerBank(models.Model):
+    class ResPartnerBankAccount(models.Model):
         _module = "test_meta_camel"
         _description = "x"
 
-    assert ResPartnerBank._name == "res.partner.bank"
+    assert ResPartnerBankAccount._name == "res.partner.bank.account"
 
 
 def test_name_derivation_splits_each_consecutive_capital():

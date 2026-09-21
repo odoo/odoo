@@ -117,7 +117,7 @@ class TestFieldDescriptionMemo(TransactionCaseWithUserDemo):
         self.assertGreater(compared, 2 * len(env.registry))
 
     def test_a_callable_selection_is_evaluated_on_every_call(self):
-        Bank = self.env["res.partner.bank"]
+        Bank = self.env["res.partner.bank.account"]
         field = Bank._fields["acc_type"]
         self.assertIn("selection", field._dynamic_description_attrs(self.env))
         # what the installed modules answer, not a literal: account_iban

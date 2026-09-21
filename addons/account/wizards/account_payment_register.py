@@ -67,11 +67,11 @@ class AccountPaymentRegister(models.TransientModel):
         compute="_compute_available_journal_ids",
     )
     available_partner_bank_ids = fields.Many2many(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         compute="_compute_available_partner_bank_ids",
     )
     partner_bank_id = fields.Many2one(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         string="Recipient Bank Account",
         compute="_compute_partner_bank_id",
         store=True,
@@ -253,7 +253,7 @@ class AccountPaymentRegister(models.TransientModel):
     actionable_errors = fields.Json(compute="_compute_actionable_errors")
 
     untrusted_bank_ids = fields.Many2many(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         compute="_compute_trust_values",
     )
     total_payments_amount = fields.Integer(compute="_compute_trust_values")
@@ -369,7 +369,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _get_line_batch_key(self, line):
         move = line.move_id
 
-        partner_bank_account = self.env["res.partner.bank"]
+        partner_bank_account = self.env["res.partner.bank.account"]
         if move.is_invoice(include_receipts=True):
             partner_bank_account = move.partner_bank_id._origin
 
@@ -535,7 +535,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_trust_values(self):
         for wizard in self:
             untrusted_payments_count = 0
-            untrusted_accounts = self.env["res.partner.bank"]
+            untrusted_accounts = self.env["res.partner.bank.account"]
             missing_account_partners = self.env["res.partner"]
 
             total_payment_count = len(wizard.batches)
@@ -730,9 +730,9 @@ class AccountPaymentRegister(models.TransientModel):
                 partner_bank_id = batch["payment_values"]["partner_bank_id"]
                 available_partner_banks = wizard.available_partner_bank_ids._origin
                 if partner_bank_id and partner_bank_id in available_partner_banks.ids:
-                    wizard.partner_bank_id = self.env["res.partner.bank"].browse(
-                        partner_bank_id
-                    )
+                    wizard.partner_bank_id = self.env[
+                        "res.partner.bank.account"
+                    ].browse(partner_bank_id)
                 else:
                     wizard.partner_bank_id = available_partner_banks[:1]
             else:
@@ -1930,7 +1930,7 @@ class AccountPaymentRegister(models.TransientModel):
             batch_result, self.journal_id
         )
         if partner_bank_id and partner_bank_id in available_partner_banks.ids:
-            return self.env["res.partner.bank"].browse(partner_bank_id)
+            return self.env["res.partner.bank.account"].browse(partner_bank_id)
         else:
             return available_partner_banks[:1]
 
@@ -1946,7 +1946,7 @@ class AccountPaymentRegister(models.TransientModel):
         if len(self.untrusted_bank_ids) == 1:
             action = {
                 "view_mode": "form",
-                "res_model": "res.partner.bank",
+                "res_model": "res.partner.bank.account",
                 "type": "ir.actions.act_window",
                 "res_id": self.untrusted_bank_ids.id,
                 "views": [
@@ -1961,7 +1961,7 @@ class AccountPaymentRegister(models.TransientModel):
         else:
             action = {
                 "type": "ir.actions.act_window",
-                "res_model": "res.partner.bank",
+                "res_model": "res.partner.bank.account",
                 "views": [
                     [False, "list"],
                     [

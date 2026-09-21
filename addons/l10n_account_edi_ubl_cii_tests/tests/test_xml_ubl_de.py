@@ -289,7 +289,7 @@ class TestUBLDE(TestUBLCommon):
         Test whether the elements which are only specific to ubl_de are correctly exported
         and imported in the xml file
         """
-        acc_bank = self.env["res.partner.bank"].create(
+        acc_bank = self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "BE15001559627232",
                 "allow_out_payment": True,
@@ -346,7 +346,7 @@ class TestUBLDE(TestUBLCommon):
             }
         )
 
-        acc_bank = self.env["res.partner.bank"].create(
+        acc_bank = self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "DE15001559627232",
                 "allow_out_payment": True,

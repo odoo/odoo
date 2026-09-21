@@ -60,7 +60,7 @@ class TestItEdi(AccountTestInvoicingCommon):
         cls.company = cls.company_data_2["company"]
         cls.company.partner_id.write({"l10n_it_pa_index": "0803HR0"})
 
-        cls.test_bank = cls.env["res.partner.bank"].create(
+        cls.test_bank = cls.env["res.partner.bank.account"].create(
             {
                 "partner_id": cls.company.partner_id.id,
                 "acc_number": "IT1212341234123412341234123",

@@ -44,7 +44,7 @@
         "views/res_config_settings_views.xml",
         "views/hr_menus.xml",
         "views/res_partner_views.xml",
-        "views/res_partner_bank_views.xml",
+        "views/res_partner_bank_account_views.xml",
         "views/discuss_channel_views.xml",
         "views/res_users.xml",
         "views/hr_templates.xml",

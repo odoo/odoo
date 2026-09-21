@@ -223,12 +223,12 @@ class TestAccountPartner(AccountTestInvoicingCommon):
 
         self.partner_a.parent_id = self.partner_b
 
-    def test_res_partner_bank(self):
+    def test_res_partner_bank_account(self):
         self.env.user.group_ids -= self.env.ref("base.group_system")
         self.env.user.group_ids += self.env.ref("base.group_partner_manager")
         self.env.user.group_ids += self.env.ref("account.group_validate_bank_account")
         partner = self.env["res.partner"].create({"name": "MyCustomer"})
-        account = self.env["res.partner.bank"].create(
+        account = self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "123456789",
                 "partner_id": partner.id,

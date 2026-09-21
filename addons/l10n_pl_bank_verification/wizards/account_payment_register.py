@@ -13,7 +13,7 @@ class L10nPlAccountPaymentRegister(models.TransientModel):
     )
     # partners for whose we cannot find link between vat and bank account calling gov api
     l10n_pl_bank_verification_invalid_bank_account_ids = fields.Many2many(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         compute="_compute_l10n_pl_bank_verification",
     )
     # partners whose vat cannot be found in gov api
@@ -40,8 +40,8 @@ class L10nPlAccountPaymentRegister(models.TransientModel):
                 continue
 
             partner_to_partner_banks = defaultdict(
-                self.env["res.partner.bank"].browse
-            )  # {partner: recordset(res.partner.bank)}
+                self.env["res.partner.bank.account"].browse
+            )  # {partner: recordset(res.partner.bank.account)}
             for batch in wizard.batches:
                 if self._batch_need_check(batch):
                     partner_to_partner_banks[batch["payment_values"]["partner_id"]] |= (
@@ -121,6 +121,6 @@ class L10nPlAccountPaymentRegister(models.TransientModel):
     @api.model
     def _get_partner_bank_from_batch(self, batch):
         if partner_bank_id := batch["payment_values"]["partner_bank_id"]:
-            return self.env["res.partner.bank"].browse(partner_bank_id)
+            return self.env["res.partner.bank.account"].browse(partner_bank_id)
         partner = self.env["res.partner"].browse(batch["payment_values"]["partner_id"])
         return partner.bank_ids[:1]

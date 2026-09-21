@@ -18,7 +18,7 @@ class TestPartyLink(TransactionCase):
             }
         )
         employee.partner_id.tag_ids = tag
-        bank = self.env["res.partner.bank"].create(
+        bank = self.env["res.partner.bank.account"].create(
             {"acc_number": "LINK-ACC-1", "partner_id": employee.partner_id.id}
         )
         employee.bank_account_ids = bank

@@ -35,7 +35,7 @@ class TestDuplicatePartnerBank(SavepointCaseWithUserDemo):
             .create({"name": "PartnerA", "company_id": cls.company_a.id})
         )
         cls.partner_bank_a = (
-            cls.env["res.partner.bank"]
+            cls.env["res.partner.bank.account"]
             .with_user(cls.user_a)
             .create({"acc_number": "12345", "partner_id": cls.partner_a.id})
         )
@@ -67,7 +67,7 @@ class TestDuplicatePartnerBank(SavepointCaseWithUserDemo):
             .create({"name": "PartnerB", "company_id": cls.company_b.id})
         )
         cls.partner_bank_b = (
-            cls.env["res.partner.bank"]
+            cls.env["res.partner.bank.account"]
             .with_user(cls.user_b)
             .create({"acc_number": "12345", "partner_id": cls.partner_b.id})
         )

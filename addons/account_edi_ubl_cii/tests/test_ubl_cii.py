@@ -835,7 +835,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
 
     def test_bank_details_import(self):
         acc_number = "1234567890"
-        partner_bank = self.env["res.partner.bank"].create(
+        partner_bank = self.env["res.partner.bank.account"].create(
             {
                 "active": False,
                 "acc_number": acc_number,
@@ -1058,7 +1058,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
 
     def test_payment_means_code_in_facturx_xml(self):
         bank_ing = self.env["res.bank"].create({"name": "ING", "bic": "BBRUBEBB"})
-        partner_bank = self.env["res.partner.bank"].create(
+        partner_bank = self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "BE15001559627230",
                 "partner_id": self.partner_a.id,
@@ -1252,7 +1252,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
                 ],
             }
         )
-        company_bank = self.env["res.partner.bank"].create(
+        company_bank = self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "FR7630006000011234567890189",
                 "partner_id": company.partner_id.id,

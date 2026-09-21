@@ -76,7 +76,7 @@ class TestWizardAudit(AccountTestInvoicingCommon):
         )
         self.env["account.journal"].search(
             [("type", "=", "bank"), ("company_id", "=", self.env.company.id)]
-        ).bank_account_id = self.env["res.partner.bank"].create(
+        ).bank_account_id = self.env["res.partner.bank.account"].create(
             {"acc_number": "AUD-1", "partner_id": self.env.company.partner_id.id}
         )
         wizard = self.env["account.setup.bank.manual.config"]

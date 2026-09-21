@@ -47,8 +47,8 @@ class L10nPlAccountPayment(models.Model):
     @api.depends("state", "date", "partner_id", "partner_bank_id")
     def _compute_l10n_pl_verification_id(self):
         partner_to_partner_banks = defaultdict(
-            self.env["res.partner.bank"].browse
-        )  # {partner: recordset(res.partner.bank)}
+            self.env["res.partner.bank.account"].browse
+        )  # {partner: recordset(res.partner.bank.account)}
         for pay in self:
             if pay.state == "draft":
                 pay.l10n_pl_verification_id = False

@@ -167,7 +167,7 @@ odoo/addons/base/
 │   ├── res_groups_privilege.py      #   Group privilege categories
 │   ├── res_lang.py                  #   Language management + formatting
 │   ├── res_partner.py               #   Contacts/companies (core business entity)
-│   ├── res_partner_bank.py          #   Partner bank accounts
+│   ├── res_partner_bank_account.py          #   Partner bank accounts
 │   ├── res_partner_identifier.py    #   One contact's identifier value
 │   ├── res_partner_identifier_type.py #   Identifier kinds (RFC, CURP, SIREN...)
 │   ├── res_partner_industry.py      #   Industry classification
@@ -249,7 +249,7 @@ every Odoo module depends on.
 | Security | res.groups, res.groups.privilege | Group hierarchy, privilege categories |
 | Companies | res.company | Multi-company hierarchy (parent_store) |
 | Localization | res.country, res.country.state, res.country.group, res.lang | Geography, languages |
-| Finance | res.currency, res.currency.rate, res.bank, res.partner.bank | Currencies, exchange rates, banking |
+| Finance | res.currency, res.currency.rate, res.bank, res.partner.bank.account | Currencies, exchange rates, banking |
 | Config | res.config, res.config.settings | Settings wizard framework |
 | Devices | res.device, res.device.log | Session/device tracking |
 

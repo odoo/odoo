@@ -150,7 +150,7 @@ class TestCIIFR(TestUBLCommon):
     ####################################################
 
     def test_export_pdf(self):
-        acc_bank = self.env["res.partner.bank"].create(
+        acc_bank = self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "FR15001559627231",
                 "allow_out_payment": True,

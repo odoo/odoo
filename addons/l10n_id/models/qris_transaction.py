@@ -23,7 +23,7 @@ class L10n_IdQrisTransaction(models.Model):
     qris_creation_datetime = fields.Datetime(readonly=True)
 
     bank_id = fields.Many2one(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         help="Bank used to generate the current QRIS transaction",
     )
     paid = fields.Boolean(help="Payment Status of QRIS")
@@ -59,7 +59,7 @@ class L10n_IdQrisTransaction(models.Model):
     def _l10n_id_get_qris_qr_statuses(self):
         """Fetch the result of the transaction
 
-        :param invoice_bank_id (Model <res.partner.bank>): bank (with QRIS configuration)
+        :param invoice_bank_id (Model <res.partner.bank.account>): bank (with QRIS configuration)
         :returns tuple(bool, dict): paid/unpaid status and status_response from QRIS
         """
         # storing all failure transactions in case final result is unpaid

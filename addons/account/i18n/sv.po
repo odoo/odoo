@@ -2562,7 +2562,7 @@ msgstr "Konto har hashade poster"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__partner_id
 #: model:ir.model.fields,field_description:account_reports.field_account_return_payment_wizard__partner_id
 #: model:ir.model.fields,field_description:account_reports.field_qr_code_payment_wizard__partner_id
 msgid "Account Holder"
@@ -2570,13 +2570,13 @@ msgstr "Kontoinnehavare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__acc_holder_name
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__acc_holder_name
 msgid "Account Holder Name"
 msgstr "Kontoinnehavare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__journal_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__journal_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_tree
 msgid "Account Journal"
@@ -2642,7 +2642,7 @@ msgstr "Kontots namn"
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_acc_number
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_number
 #: model:ir.model.fields,field_description:account.field_base_document_layout__account_number
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__acc_number
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__acc_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Account Number"
 msgstr "Kontonummer"
@@ -2786,7 +2786,7 @@ msgstr "Kontogrupper"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_holder_name
-#: model:ir.model.fields,help:account.field_res_partner_bank__acc_holder_name
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__acc_holder_name
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
@@ -3077,7 +3077,7 @@ msgstr "Åtgärder"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_needaction
 #: model:ir.model.fields,field_description:account.field_account_tax__message_needaction
 #: model:ir.model.fields,field_description:account.field_res_company__message_needaction
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_needaction
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_needaction
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_needaction
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_needaction
 msgid "Action Needed"
@@ -3111,7 +3111,7 @@ msgstr "Aktivera för att skapa försäljningskvitto"
 #: model:ir.model.fields,field_description:account.field_account_report__active
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__active
 #: model:ir.model.fields,field_description:account.field_account_tax__active
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__active
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__active
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__active
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 #: model:ir.model.fields,field_description:account_reports.field_account_return__active
@@ -3126,7 +3126,7 @@ msgstr "Aktiv"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_ids
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_check_template__activity_type
 msgid "Activities"
@@ -3145,7 +3145,7 @@ msgstr "Aktiviteter för"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_exception_decoration
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_exception_decoration
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_exception_decoration
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_exception_decoration
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr "Aktivitet undantaget dekoration"
@@ -3157,7 +3157,7 @@ msgstr "Aktivitet undantaget dekoration"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_state
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_state
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_state
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_state
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_state
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_state
 msgid "Activity State"
 msgstr "Aktivitetsläge"
@@ -3169,7 +3169,7 @@ msgstr "Aktivitetsläge"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_type_icon
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_type_icon
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_type_icon
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_type_icon
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_type_icon
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_type_icon
 msgid "Activity Type Icon"
 msgstr "Ikon för aktivitetstyp"
@@ -4107,7 +4107,7 @@ msgstr "Bifogad fil %(filename)s inte importerad: %(reason)s"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_tax__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_res_company__message_attachment_count
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_attachment_count
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_attachment_count
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_attachment_count
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_attachment_count
 msgid "Attachment Count"
@@ -4403,7 +4403,7 @@ msgstr "Saldoprocentsatsen kan inte vara 0"
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_id
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__bank_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__bank_id
 #: model:ir.model.fields,field_description:account.field_res_users__bank_account_count
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__bank
 #: model:res.groups.privilege,name:account.res_group_privilege_accounting_bank
@@ -4478,7 +4478,7 @@ msgstr "Typ av bankkonto"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_supplier_accounts
-#: model:ir.model,name:account.model_res_partner_bank
+#: model:ir.model,name:account.model_res_partner_bank_account
 msgid "Bank Accounts"
 msgstr "Bankkonton"
 
@@ -5506,7 +5506,7 @@ msgstr "Stad"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__clearing_number
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__clearing_number
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__clearing_number
 msgid "Clearing Number"
 msgstr "Clearingnummer"
 
@@ -6104,7 +6104,7 @@ msgstr "Länder Matchar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_country_name
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_country_name
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__partner_country_name
 msgid "Country Name"
 msgstr "Land"
 
@@ -6622,7 +6622,7 @@ msgstr "Valutor"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__currency_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__currency_id
 #: model:ir.model.fields,field_description:account.field_res_partner__currency_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__currency_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__currency_id
 #: model:ir.model.fields,field_description:account.field_res_users__currency_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
@@ -6825,7 +6825,7 @@ msgstr "URL till kundportal"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_customer_rank
 #: model:ir.model.fields,field_description:account.field_res_partner__customer_rank
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_customer_rank
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__partner_customer_rank
 #: model:ir.model.fields,field_description:account.field_res_users__customer_rank
 msgid "Customer Rank"
 msgstr "Kundranking"
@@ -7735,7 +7735,7 @@ msgstr "Fliken Display Mapping"
 #: model:ir.model.fields,field_description:account.field_res_currency__display_name
 #: model:ir.model.fields,field_description:account.field_res_groups__display_name
 #: model:ir.model.fields,field_description:account.field_res_partner__display_name
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__display_name
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__display_name
 #: model:ir.model.fields,field_description:account.field_sequence_mixin__display_name
 #: model:ir.model.fields,field_description:account.field_uom_uom__display_name
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_name
@@ -8164,7 +8164,7 @@ msgstr "Kopiera"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__duplicate_bank_partner_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__duplicate_bank_partner_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__duplicate_bank_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__duplicate_bank_partner_ids
 #: model:ir.model.fields,field_description:account.field_res_users__duplicate_bank_partner_ids
 msgid "Duplicate Bank Partner"
 msgstr "Duplikat Bank Partner"
@@ -9132,7 +9132,7 @@ msgstr "Följ, hämta eller betala dina fakturor"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_follower_ids
 #: model:ir.model.fields,field_description:account.field_account_tax__message_follower_ids
 #: model:ir.model.fields,field_description:account.field_res_company__message_follower_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_follower_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_follower_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_follower_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_follower_ids
 msgid "Followers"
@@ -9148,7 +9148,7 @@ msgstr "Följare"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_tax__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_res_company__message_partner_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_partner_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_partner_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_partner_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_partner_ids
 msgid "Followers (Partners)"
@@ -9161,7 +9161,7 @@ msgstr "Följare (kontakter)"
 #: model:ir.model.fields,help:account.field_account_move__activity_type_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_type_icon
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_type_icon
-#: model:ir.model.fields,help:account.field_res_partner_bank__activity_type_icon
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__activity_type_icon
 #: model:ir.model.fields,help:account_reports.field_account_return__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Font Awesome-ikon t.ex. fa-tasks"
@@ -9654,7 +9654,7 @@ msgstr "Har Skattemässig Position Förändrats"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_iban_warning
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__has_iban_warning
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__has_iban_warning
 msgid "Has Iban Warning"
 msgstr "Har IBAN Varning"
 
@@ -9679,7 +9679,7 @@ msgstr "Har ogiltiga uttalanden"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_message
 #: model:ir.model.fields,field_description:account.field_account_tax__has_message
 #: model:ir.model.fields,field_description:account.field_res_company__has_message
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__has_message
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__has_message
 #: model:ir.model.fields,field_description:account_reports.field_account_return__has_message
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__has_message
 msgid "Has Message"
@@ -9687,7 +9687,7 @@ msgstr "Har meddelande"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_money_transfer_warning
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__has_money_transfer_warning
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__has_money_transfer_warning
 msgid "Has Money Transfer Warning"
 msgstr "Har varning för överföring av pengar"
 
@@ -9917,7 +9917,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_currency__id
 #: model:ir.model.fields,field_description:account.field_res_groups__id
 #: model:ir.model.fields,field_description:account.field_res_partner__id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__id
 #: model:ir.model.fields,field_description:account.field_sequence_mixin__id
 #: model:ir.model.fields,field_description:account.field_uom_uom__id
 #: model:ir.model.fields,field_description:account.field_validate_account_move__id
@@ -10024,7 +10024,7 @@ msgstr "INV001"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_exception_icon
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_exception_icon
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_exception_icon
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_exception_icon
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_exception_icon
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_exception_icon
 msgid "Icon"
 msgstr "Ikon"
@@ -10036,7 +10036,7 @@ msgstr "Ikon"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_icon
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_exception_icon
-#: model:ir.model.fields,help:account.field_res_partner_bank__activity_exception_icon
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__activity_exception_icon
 #: model:ir.model.fields,help:account_reports.field_account_return__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "Ikon för att indikera en undantagsaktivitet."
@@ -10069,7 +10069,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction
 #: model:ir.model.fields,help:account.field_account_tax__message_needaction
 #: model:ir.model.fields,help:account.field_res_company__message_needaction
-#: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__message_needaction
 #: model:ir.model.fields,help:account_reports.field_account_return__message_needaction
 #: model:ir.model.fields,help:account_reports.field_account_return_type__message_needaction
 msgid "If checked, new messages require your attention."
@@ -10094,8 +10094,8 @@ msgstr "Om markerat, nya meddelanden kräver din uppmärksamhet."
 #: model:ir.model.fields,help:account.field_account_tax__message_has_sms_error
 #: model:ir.model.fields,help:account.field_res_company__message_has_error
 #: model:ir.model.fields,help:account.field_res_company__message_has_sms_error
-#: model:ir.model.fields,help:account.field_res_partner_bank__message_has_error
-#: model:ir.model.fields,help:account.field_res_partner_bank__message_has_sms_error
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__message_has_error
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__message_has_sms_error
 #: model:ir.model.fields,help:account_reports.field_account_return__message_has_error
 #: model:ir.model.fields,help:account_reports.field_account_return__message_has_sms_error
 #: model:ir.model.fields,help:account_reports.field_account_return_type__message_has_error
@@ -11249,7 +11249,7 @@ msgstr "Är inmatningar"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_is_follower
 #: model:ir.model.fields,field_description:account.field_account_tax__message_is_follower
 #: model:ir.model.fields,field_description:account.field_res_company__message_is_follower
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_is_follower
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_is_follower
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_is_follower
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_is_follower
 msgid "Is Follower"
@@ -12159,7 +12159,7 @@ msgstr "Meddelande om låsdatum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__lock_trust_fields
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__lock_trust_fields
 msgid "Lock Trust Fields"
 msgstr "Fält inom Lock Trust"
 
@@ -12544,7 +12544,7 @@ msgstr "Meddelande"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_tax__message_has_error
 #: model:ir.model.fields,field_description:account.field_res_company__message_has_error
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_has_error
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_has_error
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_has_error
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_has_error
 msgid "Message Delivery error"
@@ -12560,7 +12560,7 @@ msgstr "Meddelande leveransfel"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_ids
 #: model:ir.model.fields,field_description:account.field_account_tax__message_ids
 #: model:ir.model.fields,field_description:account.field_res_company__message_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_ids
 msgid "Messages"
@@ -12682,7 +12682,7 @@ msgstr "Monetär"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__money_transfer_service
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__money_transfer_service
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__money_transfer_service
 msgid "Money Transfer Service"
 msgstr "Penningöverföring"
 
@@ -12795,7 +12795,7 @@ msgstr "Mina aktivieteter"
 #: model:ir.model.fields,field_description:account.field_account_move__my_activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_payment__my_activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__my_activity_date_deadline
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__my_activity_date_deadline
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__my_activity_date_deadline
 #: model:ir.model.fields,field_description:account_reports.field_account_return__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "Mina aktiviteters deadline"
@@ -12966,7 +12966,7 @@ msgstr "Nästa aktivitet"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_calendar_event_id
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "Nästa Kalenderhändelse för Aktivitet"
@@ -12978,7 +12978,7 @@ msgstr "Nästa Kalenderhändelse för Aktivitet"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_date_deadline
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_date_deadline
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_date_deadline
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Nästa slutdatum för aktivitet"
@@ -12990,7 +12990,7 @@ msgstr "Nästa slutdatum för aktivitet"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_summary
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_summary
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_summary
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_summary
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_summary
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_summary
 msgid "Next Activity Summary"
 msgstr "Nästa aktivitetssammanställning"
@@ -13002,7 +13002,7 @@ msgstr "Nästa aktivitetssammanställning"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_type_id
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_type_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_type_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_type_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_type_id
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_type_id
 msgid "Next Activity Type"
 msgstr "Nästa aktivitetstyp"
@@ -13307,7 +13307,7 @@ msgstr "Nummer"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,field_description:account.field_account_tax__message_needaction_counter
 #: model:ir.model.fields,field_description:account.field_res_company__message_needaction_counter
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_needaction_counter
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_needaction_counter
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_needaction_counter
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_needaction_counter
 msgid "Number of Actions"
@@ -13333,7 +13333,7 @@ msgstr "Antal dagar innan förslaget om tidig betalning löper ut"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_has_error_counter
 #: model:ir.model.fields,field_description:account.field_account_tax__message_has_error_counter
 #: model:ir.model.fields,field_description:account.field_res_company__message_has_error_counter
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_has_error_counter
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_has_error_counter
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_has_error_counter
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_has_error_counter
 msgid "Number of errors"
@@ -13349,7 +13349,7 @@ msgstr "Antal fel"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_account_tax__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
-#: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__message_needaction_counter
 #: model:ir.model.fields,help:account_reports.field_account_return__message_needaction_counter
 #: model:ir.model.fields,help:account_reports.field_account_return_type__message_needaction_counter
 msgid "Number of messages requiring action"
@@ -13365,7 +13365,7 @@ msgstr "Antal meddelanden som kräver åtgärd"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_has_error_counter
 #: model:ir.model.fields,help:account.field_account_tax__message_has_error_counter
 #: model:ir.model.fields,help:account.field_res_company__message_has_error_counter
-#: model:ir.model.fields,help:account.field_res_partner_bank__message_has_error_counter
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__message_has_error_counter
 #: model:ir.model.fields,help:account_reports.field_account_return__message_has_error_counter
 #: model:ir.model.fields,help:account_reports.field_account_return_type__message_has_error_counter
 msgid "Number of messages with delivery error"
@@ -15221,7 +15221,7 @@ msgstr "RD-utgifter"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
 #: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
 #: model:ir.model.fields,field_description:account.field_res_company__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__rating_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__rating_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__rating_ids
 msgid "Ratings"
@@ -15482,7 +15482,7 @@ msgstr "Modell för relaterade dokument"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__related_moves
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__related_moves
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__related_moves
 msgid "Related Moves"
 msgstr "Relaterade flytter"
 
@@ -15695,7 +15695,7 @@ msgstr "Återstående i valuta"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_user_id
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_user_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_user_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_user_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__activity_user_id
 #: model:ir.model.fields,field_description:account_reports.field_account_return__activity_user_id
 msgid "Responsible User"
 msgstr "Ansvarig användare"
@@ -15986,7 +15986,7 @@ msgstr "SEPA-autogiro (SDD)"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_account_tax__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_res_company__message_has_sms_error
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__message_has_sms_error
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__message_has_sms_error
 #: model:ir.model.fields,field_description:account_reports.field_account_return__message_has_sms_error
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__message_has_sms_error
 msgid "SMS Delivery error"
@@ -16411,7 +16411,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__allow_out_payment
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__allow_out_payment
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__allow_out_payment
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__outbound
 msgid "Send Money"
 msgstr "Skicka pengar"
@@ -16485,7 +16485,7 @@ msgstr "Metoder för utskick"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__allow_out_payment
-#: model:ir.model.fields,help:account.field_res_partner_bank__allow_out_payment
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__allow_out_payment
 msgid ""
 "Sending fake invoices with a fraudulent account number is a common phishing "
 "practice. To protect yourself, always verify new bank account numbers, "
@@ -17138,7 +17138,7 @@ msgstr "Status i betalning"
 #: model:ir.model.fields,help:account.field_account_move__activity_state
 #: model:ir.model.fields,help:account.field_account_payment__activity_state
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_state
-#: model:ir.model.fields,help:account.field_res_partner_bank__activity_state
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__activity_state
 #: model:ir.model.fields,help:account_reports.field_account_return__activity_state
 msgid ""
 "Status based on activities\n"
@@ -17264,7 +17264,7 @@ msgstr "Sammanfattande data"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_supplier_rank
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_rank
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_supplier_rank
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__partner_supplier_rank
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_rank
 msgid "Supplier Rank"
 msgstr "Leverantörsrankning"
@@ -17874,7 +17874,7 @@ msgstr "Tekniskt område för att få domänen på banken"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__has_iban_warning
-#: model:ir.model.fields,help:account.field_res_partner_bank__has_iban_warning
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__has_iban_warning
 msgid ""
 "Technical field used to display a warning if the IBAN country is different "
 "than the holder country."
@@ -17884,7 +17884,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__has_money_transfer_warning
-#: model:ir.model.fields,help:account.field_res_partner_bank__has_money_transfer_warning
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__has_money_transfer_warning
 msgid ""
 "Technical field used to display a warning if the account is a transfer "
 "service account."
@@ -18159,7 +18159,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
-#: model:ir.model.fields,help:account.field_res_partner_bank__journal_id
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__journal_id
 msgid "The accounting journal corresponding to this bank account."
 msgstr "Den redovisande journalen som motsvarar detta bankkonto."
 
@@ -19957,7 +19957,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_exception_decoration
-#: model:ir.model.fields,help:account.field_res_partner_bank__activity_exception_decoration
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__activity_exception_decoration
 #: model:ir.model.fields,help:account_reports.field_account_return__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Typ av undantagsaktivitet som har registrerats."
@@ -20379,7 +20379,7 @@ msgstr "Användarens hårda låsdatum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__user_has_group_validate_bank_account
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__user_has_group_validate_bank_account
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__user_has_group_validate_bank_account
 msgid "User Has Group Validate Bank Account"
 msgstr "Användare har gruppvaliderat bankkonto"
 
@@ -20725,7 +20725,7 @@ msgstr "Webbplats"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__website_message_ids
 #: model:ir.model.fields,field_description:account.field_account_tax__website_message_ids
 #: model:ir.model.fields,field_description:account.field_res_company__website_message_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__website_message_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank_account__website_message_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return__website_message_ids
 #: model:ir.model.fields,field_description:account_reports.field_account_return_type__website_message_ids
 msgid "Website Messages"
@@ -20741,7 +20741,7 @@ msgstr "Webbplatsmeddelanden"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__website_message_ids
 #: model:ir.model.fields,help:account.field_account_tax__website_message_ids
 #: model:ir.model.fields,help:account.field_res_company__website_message_ids
-#: model:ir.model.fields,help:account.field_res_partner_bank__website_message_ids
+#: model:ir.model.fields,help:account.field_res_partner_bank_account__website_message_ids
 #: model:ir.model.fields,help:account_reports.field_account_return__website_message_ids
 #: model:ir.model.fields,help:account_reports.field_account_return_type__website_message_ids
 msgid "Website communication history"

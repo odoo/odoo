@@ -10,7 +10,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 from odoo.tools.image import image_data_uri
 
-from odoo.addons.base.models.res_partner_bank import sanitize_account_number
+from odoo.addons.base.models.res_partner_bank_account import sanitize_account_number
 
 _debug = DebugLog(__name__)
 
@@ -21,9 +21,9 @@ MONEY_TRANSFER_SERVICES = {
 }
 
 
-class ResPartnerBank(models.Model):
-    _name = "res.partner.bank"
-    _inherit = ["res.partner.bank", "mixin.mail.thread", "mixin.mail.activity"]
+class ResPartnerBankAccount(models.Model):
+    _name = "res.partner.bank.account"
+    _inherit = ["res.partner.bank.account", "mixin.mail.thread", "mixin.mail.activity"]
 
     journal_id = fields.One2many(
         comodel_name="account.journal",
@@ -104,8 +104,8 @@ class ResPartnerBank(models.Model):
                     """
                 SELECT this.id,
                        ARRAY_AGG(other.partner_id)
-                  FROM res_partner_bank this
-             LEFT JOIN res_partner_bank other ON this.acc_number = other.acc_number
+                  FROM res_partner_bank_account this
+             LEFT JOIN res_partner_bank_account other ON this.acc_number = other.acc_number
                                              AND this.id != other.id
                                              AND other.active = TRUE
                  WHERE this.id = ANY(%(ids)s)
@@ -471,7 +471,7 @@ class ResPartnerBank(models.Model):
         )
         if not pairs:
             return
-        archived = self.env["res.partner.bank"].search(
+        archived = self.env["res.partner.bank.account"].search(
             [
                 ("active", "=", False),
                 ("partner_id", "in", [partner_id for partner_id, _acc in pairs]),
@@ -606,7 +606,8 @@ class ResPartnerBank(models.Model):
             "default_acc_number", False
         ) or self.env.context.get("default_name", False)
         return super(
-            ResPartnerBank, self.with_context(default_acc_number=default_acc_number)
+            ResPartnerBankAccount,
+            self.with_context(default_acc_number=default_acc_number),
         ).default_get(fields)
 
     @api.depends("allow_out_payment", "acc_number", "bank_id")

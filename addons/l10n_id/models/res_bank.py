@@ -33,8 +33,8 @@ def _l10n_id_make_qris_request(endpoint, params):
     return response
 
 
-class ResPartnerBank(models.Model):
-    _inherit = "res.partner.bank"
+class ResPartnerBankAccount(models.Model):
+    _inherit = "res.partner.bank.account"
 
     l10n_id_qris_api_key = fields.Char(
         string="QRIS API Key",

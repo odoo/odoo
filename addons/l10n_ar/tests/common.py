@@ -77,7 +77,7 @@ class TestAr(AccountTestInvoicingCommon):
         cls.partner_mono = cls.company_mono.partner_id
 
         # ==== Bank Account ====
-        cls.bank_account_ri = cls.env["res.partner.bank"].create(
+        cls.bank_account_ri = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "7982898111100056688080",
                 "partner_id": cls.company_ri.partner_id.id,

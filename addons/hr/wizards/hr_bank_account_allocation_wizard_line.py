@@ -12,7 +12,7 @@ class BankAccountAllocationLineWizard(models.TransientModel):
         ondelete="cascade",
     )
     bank_account_id = fields.Many2one(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         readonly=True,
         required=True,
     )

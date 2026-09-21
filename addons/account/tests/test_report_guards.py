@@ -470,7 +470,7 @@ class TestPaymentWizardBankExposure(TestAccountReportsCommon):
                 "company_id": cls.company_b.id,
             }
         )
-        cls.bank_b = cls.env["res.partner.bank"].create(
+        cls.bank_b = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "BE68539007547034",
                 "partner_id": partner_b.id,
@@ -483,7 +483,7 @@ class TestPaymentWizardBankExposure(TestAccountReportsCommon):
                 "company_id": cls.env.company.id,
             }
         )
-        cls.bank_a = cls.env["res.partner.bank"].create(
+        cls.bank_a = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "BE71096123456769",
                 "partner_id": partner_a.id,

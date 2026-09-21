@@ -126,8 +126,8 @@ class BankAccountAllocationWizard(models.TransientModel):
                     self.env._("Total percentage allocation must equal 100%.")
                 )
 
-        trusted = self.env["res.partner.bank"]
-        untrusted = self.env["res.partner.bank"]
+        trusted = self.env["res.partner.bank.account"]
+        untrusted = self.env["res.partner.bank.account"]
         for account, is_trusted in trust_by_account.items():
             if is_trusted:
                 trusted |= account

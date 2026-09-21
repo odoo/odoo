@@ -474,7 +474,7 @@ class HrEmployee(models.Model):
     )
 
     bank_account_ids = fields.Many2many(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         relation="employee_bank_account_rel",
         column1="employee_id",
         column2="bank_account_id",
@@ -489,7 +489,7 @@ class HrEmployee(models.Model):
         groups="hr.group_hr_user",
     )
     primary_bank_account_id = fields.Many2one(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         compute="_compute_primary_bank_account_id",
         groups="hr.group_hr_user",
     )
@@ -3508,7 +3508,9 @@ class HrEmployee(models.Model):
 
     def _update_bank_account_contact(self, partner_id):
         accounts_sudo = (
-            self.env["res.partner.bank"].sudo().browse(self.bank_account_ids.ids)
+            self.env["res.partner.bank.account"]
+            .sudo()
+            .browse(self.bank_account_ids.ids)
         )
         to_move = accounts_sudo.filtered(
             lambda account: account.partner_id.id != partner_id

@@ -738,7 +738,7 @@ class AccountMove(models.Model):
         help="Dynamic domain limiting delivery address selection.",
     )
     partner_bank_id = fields.Many2one(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         string="Recipient Bank",
         compute="_compute_partner_bank_id",
         store=True,
@@ -783,7 +783,7 @@ class AccountMove(models.Model):
     )
     qr_code_method = fields.Selection(
         selection=lambda self: self.env[
-            "res.partner.bank"
+            "res.partner.bank.account"
         ].get_available_qr_methods_in_sequence(),
         string="Payment QR-code",
         copy=False,
@@ -1545,7 +1545,7 @@ class AccountMove(models.Model):
 
             move.partner_bank_id = move.bank_partner_id.bank_ids.filtered_domain(
                 [
-                    *self.env["res.partner.bank"]._check_company_domain(
+                    *self.env["res.partner.bank.account"]._check_company_domain(
                         move.company_id
                     ),
                     ("active", "=", True),
@@ -7687,7 +7687,7 @@ class AccountMove(models.Model):
                 raise UserError(error_msg)
             return self.qr_code_method
         for candidate_method, _candidate_name in self.env[
-            "res.partner.bank"
+            "res.partner.bank.account"
         ].get_available_qr_methods_in_sequence():
             if not self.partner_bank_id._get_error_messages_for_qr(
                 candidate_method, self.partner_id, self.currency_id

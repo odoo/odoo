@@ -113,7 +113,7 @@ class TestCustomProviderFlows(PaymentCustomCommon):
         self.assertFalse(self.company.partner_id.bank_ids)
         self.assertIsNone(tx._get_custom_qr_code())
 
-        self.env["res.partner.bank"].create(
+        self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "FR1420041010050500013M02606",
                 "partner_id": self.company.partner_id.id,

@@ -49,7 +49,7 @@
         <value model="res.company" eval="obj().env.ref('base.company_ri')" />
     </function>
 
-    <record id="base.bank_account_ri" model="res.partner.bank" forcecreate="1">
+    <record id="base.bank_account_ri" model="res.partner.bank.account" forcecreate="1">
         <field name="acc_number">7982898111100056688080</field>
         <field name="partner_id" ref="base.partner_ri" />
         <field name="company_id" ref="base.company_ri" />

@@ -2,8 +2,8 @@
 <odoo>
 
     <record id="view_partner_bank_form_inherit_account" model="ir.ui.view">
-        <field name="name">res.partner.bank.form.inherit.account</field>
-        <field name="model">res.partner.bank</field>
+        <field name="name">res.partner.bank.account.form.inherit.account</field>
+        <field name="model">res.partner.bank.account</field>
         <field name="inherit_id" ref="base.view_partner_bank_form" />
         <field name="mode">primary</field>
         <field name="priority">14</field>
@@ -77,8 +77,8 @@
     </record>
 
     <record id="view_partner_bank_search_inherit" model="ir.ui.view">
-        <field name="name">res.partner.bank.search.inherit</field>
-        <field name="model">res.partner.bank</field>
+        <field name="name">res.partner.bank.account.search.inherit</field>
+        <field name="model">res.partner.bank.account</field>
         <field name="inherit_id" ref="base.view_partner_bank_search" />
         <field name="arch" type="xml">
             <xpath expr="//search" position="inside">
@@ -130,7 +130,7 @@
 
     <record id="action_account_supplier_accounts" model="ir.actions.act_window">
         <field name="name">Bank Accounts</field>
-        <field name="res_model">res.partner.bank</field>
+        <field name="res_model">res.partner.bank.account</field>
         <field name="view_mode">list,form</field>
         <field name="view_id" ref="base.view_partner_bank_tree" />
         <field name="search_view_id" ref="view_partner_bank_search_inherit" />

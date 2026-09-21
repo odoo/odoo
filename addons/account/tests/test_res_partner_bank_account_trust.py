@@ -7,7 +7,7 @@ class TestResPartnerBankTrust(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.RPB = cls.env["res.partner.bank"]
+        cls.RPB = cls.env["res.partner.bank.account"]
         cls.be = cls.env.ref("base.be")
         cls.fr = cls.env.ref("base.fr")
         cls.partner_be = cls.env["res.partner"].create(

@@ -980,7 +980,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
             ],
         )
 
-    def test_res_partner_bank_find_create_multi_account(self):
+    def test_res_partner_bank_account_find_create_multi_account(self):
         partner = self.env["res.partner"].create({"name": "Zitycard"})
 
         for acc_number in ("123456789", "123456780"):
@@ -995,7 +995,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
             st_line.set_line_bank_statement_line(inv_line.id)
 
         bank_accounts = (
-            self.env["res.partner.bank"]
+            self.env["res.partner.bank.account"]
             .sudo()
             .with_context(active_test=False)
             .search(
@@ -1732,7 +1732,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         st_line = self._create_st_line(
             1000.0, partner_id=None, account_number="014 474 8555"
         )
-        bank_account = self.env["res.partner.bank"].create(
+        bank_account = self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "0144748555",
                 "partner_id": self.partner_a.id,
@@ -1742,7 +1742,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         st_line._set_partner_from_transaction()
         self.assertEqual(st_line.partner_id, bank_account.partner_id)
 
-        self.env["res.partner.bank"].create(
+        self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "0144748555",
                 "partner_id": self.partner_b.id,
@@ -1769,7 +1769,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
             account_number="014 474 8555",
             update_create_date=False,
         )
-        self.env["res.partner.bank"].create(
+        self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "0144748555",
                 "partner_id": self.partner_a.id,
@@ -1845,7 +1845,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
                 {"name": "Turlututu tsoin tsoin"},
             ]
         )
-        bank_account = self.env["res.partner.bank"].create(
+        bank_account = self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "0144748555",
                 "partner_id": self.partner_a.id,
@@ -1886,7 +1886,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
                 {"name": "Turlututu"},
             ]
         )
-        bank_account = self.env["res.partner.bank"].create(
+        bank_account = self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "123456789",
                 "partner_id": partner_a.id,
@@ -1902,7 +1902,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         st_line._set_partner_from_transaction()
         self.assertEqual(st_line.partner_id, bank_account.partner_id)
 
-    def test_res_partner_bank_find_create_when_archived(self):
+    def test_res_partner_bank_account_find_create_when_archived(self):
         partner = self.env["res.partner"].create(
             {
                 "name": "Zitycard",
@@ -1930,9 +1930,9 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         )
         st_line.set_line_bank_statement_line(inv_line.id)
 
-        self.env["res.partner.bank"].flush_model()
+        self.env["res.partner.bank.account"].flush_model()
 
-    def test_res_partner_bank_find_create_multi_company(self):
+    def test_res_partner_bank_account_find_create_multi_company(self):
         partner = self.env["res.partner"].create(
             {
                 "name": "Zitycard",
@@ -1955,7 +1955,7 @@ class TestAccountBankStatement(TestBankRecWidgetCommon):
         )
         st_line.set_line_bank_statement_line(inv_line.id)
 
-        self.env["res.partner.bank"].flush_model()
+        self.env["res.partner.bank.account"].flush_model()
 
     def test_validation_exchange_difference_draft_invoice(self):
         inv_line = self._create_invoice_line(

@@ -6,8 +6,8 @@ from odoo.addons.account.tools import (
 )
 
 
-class ResPartnerBank(models.Model):
-    _inherit = "res.partner.bank"
+class ResPartnerBankAccount(models.Model):
+    _inherit = "res.partner.bank.account"
 
     def _prepare_qr_payload(
         self,

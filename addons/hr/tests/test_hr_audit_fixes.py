@@ -20,7 +20,7 @@ class TestHrAuditFixes(TestHrCommon):
         )
 
     def _add_bank_account(self, employee, acc_number):
-        return self.env["res.partner.bank"].create(
+        return self.env["res.partner.bank.account"].create(
             {"acc_number": acc_number, "partner_id": employee.partner_id.id}
         )
 
@@ -296,14 +296,14 @@ class TestHrAuditRound2(TestHrCommon):
                 }
             )
         self.assertFalse(
-            self.env["res.partner.bank"]
+            self.env["res.partner.bank.account"]
             .sudo()
             .search([("acc_number", "=", "ATTACKER-0001")]),
             "no bank account should have been created",
         )
 
     def test_bank_account_number_masking(self):
-        mask = self.env["res.partner.bank"]._mask_account_number
+        mask = self.env["res.partner.bank.account"]._mask_account_number
         self.assertEqual(mask("1234"), "****")
         self.assertEqual(mask("12345"), "*2345")
         self.assertEqual(mask("123456"), "**3456")
@@ -316,7 +316,7 @@ class TestHrAuditRound2(TestHrCommon):
 
     def test_bank_account_masking_end_to_end_non_hr(self):
         emp = self._new_employee("Masked Guy")
-        ba = self.env["res.partner.bank"].create(
+        ba = self.env["res.partner.bank.account"].create(
             {"acc_number": "123456", "partner_id": emp.partner_id.id}
         )
         emp.bank_account_ids = [(4, ba.id)]

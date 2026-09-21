@@ -115,7 +115,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         if model == "res.partner":
             tables.add("res_partner_identifier")
             tables.add("res_partner_phone_number_rel")
-            tables.add("res_partner_bank")
+            tables.add("res_partner_bank_account")
         return tables
 
     @api.model
@@ -180,10 +180,10 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             )
             if duplicate_account:
                 self._update_foreign_keys_generic(
-                    "res.partner.bank", src_account, duplicate_account
+                    "res.partner.bank.account", src_account, duplicate_account
                 )
                 self._update_reference_fields_generic(
-                    "res.partner.bank", src_account, duplicate_account
+                    "res.partner.bank.account", src_account, duplicate_account
                 )
                 src_account.sudo().unlink()
                 absorbed += 1  # debuglog

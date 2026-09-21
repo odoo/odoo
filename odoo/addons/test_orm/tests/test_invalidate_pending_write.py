@@ -122,14 +122,14 @@ class TestInvalidateInversePendingWrite(TransactionCase):
     def _dirty_inverse(self):
         source = self.env["res.partner"].create({"name": "source"})
         target = self.env["res.partner"].create({"name": "target"})
-        bank = self.env["res.partner.bank"].create(
+        bank = self.env["res.partner.bank.account"].create(
             {"acc_number": "ACC-1", "partner_id": source.id}
         )
         self.env.flush_all()
         self.env.invalidate_all()
 
         bank.write({"partner_id": target.id})
-        field = self.env["res.partner.bank"]._fields["partner_id"]
+        field = self.env["res.partner.bank.account"]._fields["partner_id"]
         self.assertIn(
             bank.id,
             self.env.core.get_dirty(field) or (),
@@ -141,7 +141,7 @@ class TestInvalidateInversePendingWrite(TransactionCase):
         source, bank, target = self._dirty_inverse()
         source.invalidate_recordset(["bank_ids"], flush=False)
 
-        field = self.env["res.partner.bank"]._fields["partner_id"]
+        field = self.env["res.partner.bank.account"]._fields["partner_id"]
         self.assertIn(
             bank.id,
             field._get_cache(self.env),
@@ -155,7 +155,7 @@ class TestInvalidateInversePendingWrite(TransactionCase):
     def test_inverse_invalidation_still_drops_clean_values(self):
         source = self.env["res.partner"].create({"name": "source"})
         target = self.env["res.partner"].create({"name": "target"})
-        Bank = self.env["res.partner.bank"]
+        Bank = self.env["res.partner.bank.account"]
         bank = Bank.create({"acc_number": "ACC-1", "partner_id": source.id})
         clean = Bank.create({"acc_number": "ACC-2", "partner_id": source.id})
         self.env.flush_all()

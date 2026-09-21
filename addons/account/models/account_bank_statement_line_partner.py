@@ -27,7 +27,7 @@ class AccountBankStatementLine(models.Model):
             SELECT ARRAY_AGG(DISTINCT partner_bank.partner_id) FILTER (WHERE partner_bank.company_id::TEXT = ANY(STRING_TO_ARRAY(company.parent_path, '/'))) AS account_matching_partner_with_company,
                    ARRAY_AGG(DISTINCT partner_bank.partner_id) FILTER (WHERE partner_bank.company_id IS NULL) AS account_matching_partner_without_company,
                    st_line.id AS st_line_id
-              FROM res_partner_bank partner_bank
+              FROM res_partner_bank_account partner_bank
               JOIN account_bank_statement_line st_line ON partner_bank.sanitized_acc_number = NULLIF(REGEXP_REPLACE(st_line.account_number, '\\W+', '', 'g'), '')
               JOIN res_company company ON company.id = st_line.company_id
               JOIN res_partner partner ON partner.id = partner_bank.partner_id

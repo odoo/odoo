@@ -184,7 +184,7 @@ class TestUBLROCommon(TestUBLCommon):
             }
         )
 
-        cls.env["res.partner.bank"].create(
+        cls.env["res.partner.bank.account"].create(
             {
                 "acc_type": "iban",
                 "partner_id": cls.company_data["company"].partner_id.id,

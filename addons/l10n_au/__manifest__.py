@@ -43,7 +43,7 @@ Also:
         "views/menuitems.xml",
         "views/report_invoice.xml",
         "views/res_company_views.xml",
-        "views/res_partner_bank_views.xml",
+        "views/res_partner_bank_account_views.xml",
     ],
     "demo": [
         "demo/demo_company.xml",

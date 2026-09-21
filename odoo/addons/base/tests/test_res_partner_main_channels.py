@@ -62,7 +62,7 @@ class TestMainChannelsPickTheRightRecord(TransactionCase):
         self.assertEqual(self.partner.main_mobile_id.number, "+52 55 3333 3333")
 
     def test_the_main_bank_account_is_the_first_active_one(self):
-        Bank = self.env["res.partner.bank"]
+        Bank = self.env["res.partner.bank.account"]
         far = Bank.create(
             {"acc_number": "MAIN-1", "partner_id": self.partner.id, "sequence": 20}
         )
@@ -77,7 +77,7 @@ class TestMainChannelsPickTheRightRecord(TransactionCase):
     def test_they_are_stored_so_a_domain_and_a_group_by_reach_them(self):
         mobile = self._number("+52 55 3333 3333", "mobile")
         self.partner.phone_ids = mobile
-        self.env["res.partner.bank"].create(
+        self.env["res.partner.bank.account"].create(
             {"acc_number": "MAIN-3", "partner_id": self.partner.id}
         )
         self.env.flush_all()

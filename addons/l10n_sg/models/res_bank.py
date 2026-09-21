@@ -4,8 +4,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class ResPartnerBank(models.Model):
-    _inherit = "res.partner.bank"
+class ResPartnerBankAccount(models.Model):
+    _inherit = "res.partner.bank.account"
 
     proxy_type = fields.Selection(
         selection_add=[("mobile", "Mobile Number"), ("uen", "UEN")],
@@ -27,13 +27,13 @@ class ResPartnerBank(models.Model):
     def _compute_country_proxy_keys(self):
         bank_sg = self.filtered(lambda b: b.country_code == "SG")
         bank_sg.country_proxy_keys = "mobile,uen"
-        super(ResPartnerBank, self - bank_sg)._compute_country_proxy_keys()
+        super(ResPartnerBankAccount, self - bank_sg)._compute_country_proxy_keys()
 
     @api.depends("country_code")
     def _compute_display_qr_setting(self):
         bank_sg = self.filtered(lambda b: b.country_code == "SG")
         bank_sg.display_qr_setting = True
-        super(ResPartnerBank, self - bank_sg)._compute_display_qr_setting()
+        super(ResPartnerBankAccount, self - bank_sg)._compute_display_qr_setting()
 
     def _get_merchant_account_info(self):
         if self.country_code == "SG":

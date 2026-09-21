@@ -2036,7 +2036,7 @@ class AccountMove(models.Model):
                     tree, ".//DatiPagamento/DettaglioPagamento/IBAN"
                 ):
                     if self.partner_id and self.partner_id.commercial_partner_id:
-                        bank = self.env["res.partner.bank"].search(
+                        bank = self.env["res.partner.bank.account"].search(
                             [
                                 ("acc_number", "=", acc_number),
                                 (
@@ -2050,7 +2050,7 @@ class AccountMove(models.Model):
                             limit=1,
                         )
                     else:
-                        bank = self.env["res.partner.bank"].search(
+                        bank = self.env["res.partner.bank.account"].search(
                             [
                                 ("acc_number", "=", acc_number),
                                 ("company_id", "in", [self.company_id.id, False]),

@@ -147,7 +147,7 @@ class TestPrivacyWizard(TransactionCase):
 
     def test_wizard_indirect_reference_cascade(self):
         # Don't retrieve ondelete cascade records
-        self.env["res.partner.bank"].create(
+        self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "0123-%s" % self.partner.id,
                 "partner_id": self.partner.id,

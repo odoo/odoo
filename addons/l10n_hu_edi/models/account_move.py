@@ -16,7 +16,7 @@ from odoo.tools import (
 )
 from odoo.tools.misc import split_every
 
-from odoo.addons.account_iban.models.res_partner_bank import normalize_iban
+from odoo.addons.account_iban.models.res_partner_bank_account import normalize_iban
 from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import (
     L10nHuEdiConnection,
     L10nHuEdiConnectionError,

@@ -397,7 +397,7 @@ class AccountJournal(models.Model):
         readonly=True,
     )
     bank_account_id = fields.Many2one(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         index="btree_not_null",
         copy=False,
         domain="[('partner_id','=', company_partner_id)]",
@@ -1316,7 +1316,9 @@ class AccountJournal(models.Model):
             ),
         )
         if vals.get("bank_account_id"):
-            bank_account = self.env["res.partner.bank"].browse(vals["bank_account_id"])
+            bank_account = self.env["res.partner.bank.account"].browse(
+                vals["bank_account_id"]
+            )
             for journal in self:
                 company = (
                     self.env["res.company"].browse(vals["company_id"])
@@ -1859,7 +1861,9 @@ class AccountJournal(models.Model):
 
     def set_bank_account(self, acc_number, bank_id=None):
         self.check_singleton()
-        self.bank_account_id = self.env["res.partner.bank"]._get_or_create_bank_account(
+        self.bank_account_id = self.env[
+            "res.partner.bank.account"
+        ]._get_or_create_bank_account(
             account_number=acc_number,
             partner=self.company_id.partner_id,
             allow_company_account_creation=True,

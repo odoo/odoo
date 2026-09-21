@@ -422,12 +422,12 @@ class ResPartner(models.Model):
         string="Identifiers",
     )
     bank_ids = fields.One2many(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         inverse_name="partner_id",
         string="Banks",
     )
     main_bank_id = fields.Many2one(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         string="Main Bank Account",
         compute="_compute_main_bank_id",
         store=True,

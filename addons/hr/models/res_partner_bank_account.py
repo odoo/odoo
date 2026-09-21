@@ -4,8 +4,8 @@ from odoo.fields import Domain
 from ..tools import debug_log as dbg
 
 
-class ResPartnerBank(models.Model):
-    _inherit = "res.partner.bank"
+class ResPartnerBankAccount(models.Model):
+    _inherit = "res.partner.bank.account"
 
     bank_street = fields.Char(
         related="bank_id.street",
@@ -103,7 +103,7 @@ class ResPartnerBank(models.Model):
             employee_partners = Employee.search(in_companies).partner_id
             matched |= Domain("partner_id", "not in", employee_partners.ids)
         dbg.logic.debug(
-            "res.partner.bank._search_employee_id %s %s: %d wanted, matches "
+            "res.partner.bank.account._search_employee_id %s %s: %d wanted, matches "
             "unassigned=%s",
             operator,
             value,
@@ -147,9 +147,9 @@ class ResPartnerBank(models.Model):
                 )
                 account_employee |= account
             dbg.logic.debug(
-                "res.partner.bank display_name on %s: non-hr user %s, %s masked",
+                "res.partner.bank.account display_name on %s: non-hr user %s, %s masked",
                 dbg.rec(self),
                 self.env.uid,
                 dbg.rec(account_employee),
             )
-        super(ResPartnerBank, self - account_employee)._compute_display_name()
+        super(ResPartnerBankAccount, self - account_employee)._compute_display_name()

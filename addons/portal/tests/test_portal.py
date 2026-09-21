@@ -17,7 +17,7 @@ class TestUsersHttp(HttpCase):
             name="Partner A",
         )
 
-        bank_account = self.env["res.partner.bank"].create(
+        bank_account = self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "123456789",
                 "partner_id": portal_user.partner_id.id,

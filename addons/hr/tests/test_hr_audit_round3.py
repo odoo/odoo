@@ -232,11 +232,11 @@ class TestHrAuditRound3(TestHrCommon):
 
     def test_bank_account_search_by_absent_employee(self):
         partner = self.env["res.partner"].create({"name": "R3 Plain"})
-        plain = self.env["res.partner.bank"].create(
+        plain = self.env["res.partner.bank.account"].create(
             {"acc_number": "R3PLAIN0001", "partner_id": partner.id}
         )
         employee = self.Employee.create({"name": "R3 Banked"})
-        banked = self.env["res.partner.bank"].create(
+        banked = self.env["res.partner.bank.account"].create(
             {"acc_number": "R3EMP00001", "partner_id": employee.partner_id.id}
         )
         employee.bank_account_ids = [(6, 0, banked.ids)]
@@ -244,21 +244,25 @@ class TestHrAuditRound3(TestHrCommon):
 
         scope = [("id", "in", (plain | banked).ids)]
         self.assertEqual(
-            self.env["res.partner.bank"].search([*scope, ("employee_id", "=", False)]),
+            self.env["res.partner.bank.account"].search(
+                [*scope, ("employee_id", "=", False)]
+            ),
             plain,
         )
         self.assertEqual(
-            self.env["res.partner.bank"].search([*scope, ("employee_id", "!=", False)]),
+            self.env["res.partner.bank.account"].search(
+                [*scope, ("employee_id", "!=", False)]
+            ),
             banked,
         )
 
     def test_bank_account_search_is_usable_by_a_non_hr_user(self):
         partner = self.env["res.partner"].create({"name": "R3 NonHR Plain"})
-        plain = self.env["res.partner.bank"].create(
+        plain = self.env["res.partner.bank.account"].create(
             {"acc_number": "R3NHR0001", "partner_id": partner.id}
         )
         employee = self.Employee.create({"name": "R3 NonHR Banked"})
-        banked = self.env["res.partner.bank"].create(
+        banked = self.env["res.partner.bank.account"].create(
             {"acc_number": "R3NHR0002", "partner_id": employee.partner_id.id}
         )
         employee.bank_account_ids = [(6, 0, banked.ids)]
@@ -271,7 +275,7 @@ class TestHrAuditRound3(TestHrCommon):
         )
         self.env.flush_all()
 
-        Bank = self.env["res.partner.bank"].with_user(plain_user)
+        Bank = self.env["res.partner.bank.account"].with_user(plain_user)
         scope = [("id", "in", (plain | banked).ids)]
         self.assertEqual(Bank.search([*scope, ("employee_id", "=", False)]), plain)
         self.assertFalse(Bank.search([*scope, ("employee_id", "!=", False)]))
@@ -279,10 +283,10 @@ class TestHrAuditRound3(TestHrCommon):
 
     def test_bank_account_search_matches_its_own_compute(self):
         employee = self.Employee.create({"name": "R3 Two Accounts"})
-        listed = self.env["res.partner.bank"].create(
+        listed = self.env["res.partner.bank.account"].create(
             {"acc_number": "R3TWO0001", "partner_id": employee.partner_id.id}
         )
-        unlisted = self.env["res.partner.bank"].create(
+        unlisted = self.env["res.partner.bank.account"].create(
             {"acc_number": "R3TWO0002", "partner_id": employee.partner_id.id}
         )
         employee.bank_account_ids = [(6, 0, listed.ids)]
@@ -290,7 +294,7 @@ class TestHrAuditRound3(TestHrCommon):
 
         self.assertEqual(unlisted.employee_id, employee, "the compute claims it")
         self.assertEqual(
-            self.env["res.partner.bank"].search(
+            self.env["res.partner.bank.account"].search(
                 [
                     ("id", "in", (listed | unlisted).ids),
                     ("employee_id", "=", employee.id),
@@ -379,11 +383,11 @@ class TestHrAuditRound3(TestHrCommon):
             for name, field in Users._fields.items()
             if name in self_writable
             and field.relational
-            and field.comodel_name == "res.partner.bank"
+            and field.comodel_name == "res.partner.bank.account"
         ]
         self.assertFalse(
             offenders,
-            "self-writable relation(s) to res.partner.bank: %s" % offenders,
+            "self-writable relation(s) to res.partner.bank.account: %s" % offenders,
         )
 
     def test_version_periods_rejects_an_employee_only_field(self):

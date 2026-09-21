@@ -1,7 +1,7 @@
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.account_iban.models.res_partner_bank import (
+from odoo.addons.account_iban.models.res_partner_bank_account import (
     check_iban,
     get_bban_from_iban,
     get_iban_part,
@@ -62,8 +62,8 @@ class TestAccountIban(TransactionCase):
             check_iban("BE69539007547034")
 
     def test_check_iban_returns_bool(self):
-        """res.partner.bank.is_valid_iban returns True for valid, False for invalid."""
-        Bank = self.env["res.partner.bank"]
+        """res.partner.bank.account.is_valid_iban returns True for valid, False for invalid."""
+        Bank = self.env["res.partner.bank.account"]
         self.assertTrue(Bank.is_valid_iban(VALID_IBAN))
         self.assertFalse(Bank.is_valid_iban("not-an-iban"))
 
@@ -72,14 +72,14 @@ class TestAccountIban(TransactionCase):
         partner = self.env["res.partner"].create({"name": "IBAN mutation probe"})
         vals = {"partner_id": partner.id, "acc_number": "BE68 5390-0754_7034"}
         original = dict(vals)
-        bank = self.env["res.partner.bank"].create(vals)
+        bank = self.env["res.partner.bank.account"].create(vals)
         self.assertEqual(vals, original)
         self.assertEqual(bank.acc_number, "BE68 5390 0754 7034")
 
     def test_write_does_not_mutate_caller_vals(self):
         """write() must not rewrite acc_number in the caller's own vals dict."""
         partner = self.env["res.partner"].create({"name": "IBAN mutation probe"})
-        bank = self.env["res.partner.bank"].create(
+        bank = self.env["res.partner.bank.account"].create(
             {"partner_id": partner.id, "acc_number": VALID_IBAN}
         )
         vals = {"acc_number": "BE68 5390-0754_7034"}
@@ -105,7 +105,7 @@ class TestAccountIban(TransactionCase):
     def test_get_bban_returns_bban_for_iban_account(self):
         """get_bban() returns the BBAN for an account whose acc_type is iban."""
         partner = self.env["res.partner"].create({"name": "IBAN mutation probe"})
-        bank = self.env["res.partner.bank"].create(
+        bank = self.env["res.partner.bank.account"].create(
             {"partner_id": partner.id, "acc_number": VALID_IBAN}
         )
         self.assertEqual(bank.acc_type, "iban")
@@ -114,7 +114,7 @@ class TestAccountIban(TransactionCase):
     def test_get_bban_raises_for_non_iban_account(self):
         """get_bban() raises UserError when acc_type is not iban."""
         partner = self.env["res.partner"].create({"name": "IBAN mutation probe"})
-        bank = self.env["res.partner.bank"].create(
+        bank = self.env["res.partner.bank.account"].create(
             {"partner_id": partner.id, "acc_number": "not-an-iban"}
         )
         self.assertNotEqual(bank.acc_type, "iban")
@@ -123,10 +123,10 @@ class TestAccountIban(TransactionCase):
 
     def test_get_acc_type_detects_iban(self):
         """_get_acc_type() returns 'iban' for a well-formed IBAN."""
-        Bank = self.env["res.partner.bank"]
+        Bank = self.env["res.partner.bank.account"]
         self.assertEqual(Bank._get_acc_type(VALID_IBAN), "iban")
 
     def test_get_acc_type_falls_back_for_non_iban(self):
         """_get_acc_type() delegates to super() for a non-IBAN account number."""
-        Bank = self.env["res.partner.bank"]
+        Bank = self.env["res.partner.bank.account"]
         self.assertEqual(Bank._get_acc_type("not-an-iban"), "bank")

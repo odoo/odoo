@@ -81,7 +81,7 @@ class AccountReturnType(models.Model):
         tracking=True,
     )
     payment_partner_bank_id = fields.Many2one(
-        comodel_name="res.partner.bank",
+        comodel_name="res.partner.bank.account",
         tracking=True,
     )
     payment_partner_id = fields.Many2one(

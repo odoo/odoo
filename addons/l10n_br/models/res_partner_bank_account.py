@@ -8,8 +8,8 @@ from odoo.tools import float_repr
 from odoo.addons.mail.tools.mail_validation import is_valid_email
 
 
-class ResPartnerBank(models.Model):
-    _inherit = "res.partner.bank"
+class ResPartnerBankAccount(models.Model):
+    _inherit = "res.partner.bank.account"
 
     proxy_type = fields.Selection(
         selection_add=[
@@ -80,14 +80,14 @@ class ResPartnerBank(models.Model):
     def _compute_country_proxy_keys(self):
         bank_br = self.filtered(lambda b: b.country_code == "BR")
         bank_br.country_proxy_keys = "email,mobile,br_cpf_cnpj,br_random"
-        super(ResPartnerBank, self - bank_br)._compute_country_proxy_keys()
+        super(ResPartnerBankAccount, self - bank_br)._compute_country_proxy_keys()
 
     @api.depends("country_code")
     def _compute_display_qr_setting(self):
         """Override."""
         bank_br = self.filtered(lambda b: b.country_code == "BR")
         bank_br.display_qr_setting = True
-        super(ResPartnerBank, self - bank_br)._compute_display_qr_setting()
+        super(ResPartnerBankAccount, self - bank_br)._compute_display_qr_setting()
 
     def _get_additional_data_field(self, comment):
         """Override."""

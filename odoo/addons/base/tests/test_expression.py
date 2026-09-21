@@ -393,7 +393,7 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(Partner.search([("id", "child_of", top.ids)]), accessible)
         self.assertEqual(Partner.search([("id", "parent_of", bot.ids)]), accessible)
 
-        Bank = self.env["res.partner.bank"].with_user(self.user_demo)
+        Bank = self.env["res.partner.bank.account"].with_user(self.user_demo)
         bank_top, bank_med, bank_bot = Bank.create(
             [
                 {"acc_number": "1", "partner_id": top.id},
@@ -1778,7 +1778,7 @@ class TestBypassAccess(TransactionExpressionCase):
     def test_bypass_search_access(self):
         partner_obj = self.env["res.partner"]
         state_obj = self.env["res.country.state"]
-        bank_obj = self.env["res.partner.bank"]
+        bank_obj = self.env["res.partner.bank.account"]
 
         def patch_bypass_search_access(model, fname, value):
             self.patch(model._fields[fname], "bypass_search_access", value)
@@ -2927,7 +2927,7 @@ class TestOne2many(TransactionCase):
     def setUp(self):
         super().setUp()
         self.env["ir.rule"].search(
-            [("model_id.model", "=", "res.partner.bank")]
+            [("model_id.model", "=", "res.partner.bank.account")]
         ).active = False
         self.Partner = self.env["res.partner"].with_context(active_test=False)
         self.partner = self.Partner.create(
@@ -2952,9 +2952,9 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner"."id"
             FROM "res_partner"
             WHERE EXISTS (SELECT FROM (
-                SELECT "res_partner_bank"."partner_id" AS __inverse
-                FROM "res_partner_bank"
-                WHERE "res_partner_bank"."id" = ANY(%s)
+                SELECT "res_partner_bank_account"."partner_id" AS __inverse
+                FROM "res_partner_bank_account"
+                WHERE "res_partner_bank_account"."id" = ANY(%s)
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         """
@@ -2968,9 +2968,9 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner"."id"
             FROM "res_partner"
             WHERE EXISTS (SELECT FROM (
-                SELECT "res_partner_bank"."partner_id" AS __inverse
-                FROM "res_partner_bank"
-                WHERE "res_partner_bank"."sanitized_acc_number" LIKE %s
+                SELECT "res_partner_bank_account"."partner_id" AS __inverse
+                FROM "res_partner_bank_account"
+                WHERE "res_partner_bank_account"."sanitized_acc_number" LIKE %s
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         """
@@ -2988,9 +2988,9 @@ class TestOne2many(TransactionCase):
                 FROM "res_partner"
                 WHERE (
                     EXISTS (SELECT FROM (
-                        SELECT "res_partner_bank"."partner_id" AS __inverse
-                        FROM "res_partner_bank"
-                        WHERE "res_partner_bank"."sanitized_acc_number" LIKE %s
+                        SELECT "res_partner_bank_account"."partner_id" AS __inverse
+                        FROM "res_partner_bank_account"
+                        WHERE "res_partner_bank_account"."sanitized_acc_number" LIKE %s
                     ) AS __sub WHERE __inverse = "res_partner"."id")
                     AND "res_partner"."parent_id" IS NOT NULL
                 )
@@ -3016,9 +3016,9 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner"."id"
             FROM "res_partner"
             WHERE EXISTS (SELECT FROM (
-                SELECT "res_partner_bank"."partner_id" AS __inverse
-                FROM "res_partner_bank"
-                WHERE "res_partner_bank"."id" = ANY(%s)
+                SELECT "res_partner_bank_account"."partner_id" AS __inverse
+                FROM "res_partner_bank_account"
+                WHERE "res_partner_bank_account"."id" = ANY(%s)
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         """
@@ -3032,9 +3032,9 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner"."id"
             FROM "res_partner"
             WHERE EXISTS (SELECT FROM (
-                SELECT "res_partner_bank"."partner_id" AS __inverse
-                FROM "res_partner_bank"
-                WHERE "res_partner_bank"."sanitized_acc_number" LIKE %s
+                SELECT "res_partner_bank_account"."partner_id" AS __inverse
+                FROM "res_partner_bank_account"
+                WHERE "res_partner_bank_account"."sanitized_acc_number" LIKE %s
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         """
@@ -3048,14 +3048,14 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner"."id"
             FROM "res_partner"
             WHERE (EXISTS (SELECT FROM (
-                SELECT "res_partner_bank"."partner_id" AS __inverse
-                FROM "res_partner_bank"
-                WHERE "res_partner_bank"."sanitized_acc_number" LIKE %s
+                SELECT "res_partner_bank_account"."partner_id" AS __inverse
+                FROM "res_partner_bank_account"
+                WHERE "res_partner_bank_account"."sanitized_acc_number" LIKE %s
             ) AS __sub WHERE __inverse = "res_partner"."id")
             AND EXISTS (SELECT FROM (
-                SELECT "res_partner_bank"."partner_id" AS __inverse
-                FROM "res_partner_bank"
-                WHERE "res_partner_bank"."sanitized_acc_number" LIKE %s
+                SELECT "res_partner_bank_account"."partner_id" AS __inverse
+                FROM "res_partner_bank_account"
+                WHERE "res_partner_bank_account"."sanitized_acc_number" LIKE %s
             ) AS __sub WHERE __inverse = "res_partner"."id"))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         """
@@ -3078,9 +3078,9 @@ class TestOne2many(TransactionCase):
                 FROM "res_partner"
                 WHERE (
                     EXISTS (SELECT FROM (
-                        SELECT "res_partner_bank"."partner_id" AS __inverse
-                        FROM "res_partner_bank"
-                        WHERE "res_partner_bank"."sanitized_acc_number" LIKE %s
+                        SELECT "res_partner_bank_account"."partner_id" AS __inverse
+                        FROM "res_partner_bank_account"
+                        WHERE "res_partner_bank_account"."sanitized_acc_number" LIKE %s
                     ) AS __sub WHERE __inverse = "res_partner"."id")
                     AND "res_partner"."parent_id" IS NOT NULL
                 )
@@ -3114,11 +3114,11 @@ class TestOne2many(TransactionCase):
                 FROM "res_partner"
                 WHERE (
                     EXISTS (SELECT FROM (
-                        SELECT "res_partner_bank"."partner_id" AS __inverse
-                        FROM "res_partner_bank"
+                        SELECT "res_partner_bank_account"."partner_id" AS __inverse
+                        FROM "res_partner_bank_account"
                         WHERE (
-                            "res_partner_bank"."id" IN (%s)
-                            AND "res_partner_bank"."sanitized_acc_number" LIKE %s
+                            "res_partner_bank_account"."id" IN (%s)
+                            AND "res_partner_bank_account"."sanitized_acc_number" LIKE %s
                         )
                     ) AS __sub WHERE __inverse = "res_partner"."id")
                     AND ("res_partner"."name" NOT IN (%s) OR "res_partner"."name" IS NULL)
@@ -3175,9 +3175,9 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner"."id"
             FROM "res_partner"
             WHERE EXISTS (SELECT FROM (
-                SELECT "res_partner_bank"."partner_id" AS __inverse
-                FROM "res_partner_bank"
-                WHERE "res_partner_bank"."sanitized_acc_number" LIKE %s
+                SELECT "res_partner_bank_account"."partner_id" AS __inverse
+                FROM "res_partner_bank_account"
+                WHERE "res_partner_bank_account"."sanitized_acc_number" LIKE %s
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         """
@@ -3195,8 +3195,8 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner"."id"
             FROM "res_partner"
             WHERE EXISTS (SELECT FROM (
-                SELECT "res_partner_bank"."partner_id" AS __inverse
-                FROM "res_partner_bank"
+                SELECT "res_partner_bank_account"."partner_id" AS __inverse
+                FROM "res_partner_bank_account"
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY "res_partner"."id"
         """
@@ -3210,8 +3210,8 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner"."id"
             FROM "res_partner"
             WHERE NOT EXISTS (SELECT FROM (
-                SELECT "res_partner_bank"."partner_id" AS __inverse
-                FROM "res_partner_bank"
+                SELECT "res_partner_bank_account"."partner_id" AS __inverse
+                FROM "res_partner_bank_account"
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY "res_partner"."id"
         """

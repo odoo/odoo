@@ -26,14 +26,14 @@ class TestGenQRRReference(AccountTestInvoicingCommon):
                 "country_id": cls.env.ref("base.ch").id,
             }
         )
-        cls.bank_acc_qriban = cls.env["res.partner.bank"].create(
+        cls.bank_acc_qriban = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": QR_IBAN,
                 "bank_id": cls.bank.id,
                 "partner_id": cls.partner.id,
             }
         )
-        cls.qr_bank_account = cls.env["res.partner.bank"].create(
+        cls.qr_bank_account = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "CH4431999123000889012",
                 "partner_id": cls.partner.id,

@@ -98,7 +98,7 @@ class BaseDocumentLayout(models.TransientModel):
             elif record.account_number:
                 _debug.logic("layout_bank_account_created", partner=record.partner_id)
                 record.partner_id.bank_ids += self.env[
-                    "res.partner.bank"
+                    "res.partner.bank.account"
                 ]._get_or_create_bank_account(
                     account_number=record.account_number,
                     partner=record.partner_id,

@@ -10,7 +10,7 @@ class TestMergePartner(AccountTestInvoicingCommon):
         super().setUpClass()
 
         cls.Partner = cls.env["res.partner"]
-        cls.Bank = cls.env["res.partner.bank"]
+        cls.Bank = cls.env["res.partner.bank.account"]
         cls.Payment = cls.env["account.payment"]
 
         cls.partner1 = cls.Partner.create(

@@ -180,7 +180,7 @@ class TestBankAccountEmployeeComputeAgreesWithSearch(TestHrCommon):
         super().setUpClass()
         cls.staffer = cls.env["hr.employee"].create({"name": "Bank Owner"})
         cls.env.flush_all()
-        cls.account = cls.env["res.partner.bank"].create(
+        cls.account = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "BE68539007547034",
                 "partner_id": cls.staffer.partner_id.id,
@@ -189,7 +189,7 @@ class TestBankAccountEmployeeComputeAgreesWithSearch(TestHrCommon):
         cls.env.flush_all()
 
     def _search_finds_the_account(self):
-        found = self.env["res.partner.bank"].search(
+        found = self.env["res.partner.bank.account"].search(
             [("employee_id", "=", self.staffer.id)]
         )
         return self.account in found
@@ -296,7 +296,7 @@ class TestMultipleBankAccountsFlag(TestHrCommon):
         self.env.flush_all()
         partner = employee.partner_id
         self.assertFalse(employee.has_multiple_bank_accounts)
-        first, second = self.env["res.partner.bank"].create(
+        first, second = self.env["res.partner.bank.account"].create(
             [
                 {"acc_number": "BE68539007547035", "partner_id": partner.id},
                 {"acc_number": "BE68539007547036", "partner_id": partner.id},
@@ -572,7 +572,7 @@ class TestSalaryDistributionStaysCurrencyRounded(TestHrCommon):
     def _employee_with_accounts(self, count, tag):
         employee = self.env["hr.employee"].create({"name": f"Dist {tag}"})
         self.env.flush_all()
-        accounts = self.env["res.partner.bank"].create(
+        accounts = self.env["res.partner.bank.account"].create(
             [
                 {
                     "acc_number": f"DIST{tag}{index:04d}",
@@ -625,7 +625,7 @@ class TestSalaryDistributionStaysCurrencyRounded(TestHrCommon):
         for count in (1, 6, 7):
             with self.subTest(accounts=count):
                 employee, _accounts = self._employee_with_accounts(count, f"a{count}")
-                extra = self.env["res.partner.bank"].create(
+                extra = self.env["res.partner.bank.account"].create(
                     {
                         "acc_number": f"DISTX{count}9999",
                         "partner_id": employee.partner_id.id,

@@ -18,7 +18,7 @@ with a single statement.
         "views/setup_wizards_view.xml",
     ],
     "demo": [
-        "demo/res_partner_bank_demo.xml",
+        "demo/res_partner_bank_account_demo.xml",
     ],
     "assets": {
         "web.assets_backend": [

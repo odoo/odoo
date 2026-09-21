@@ -7,7 +7,7 @@ from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
 class TestResPartnerBank(SavepointCaseWithUserDemo):
     def test_sanitized_acc_number(self):
-        partner_bank_model = self.env["res.partner.bank"]
+        partner_bank_model = self.env["res.partner.bank.account"]
         acc_number = " BE-001 2518823 03 "
         vals = partner_bank_model.search([("acc_number", "=", acc_number)])
         self.assertEqual(0, len(vals))
@@ -51,7 +51,7 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
 
     def test_acc_holder_name_follows_partner_rename_when_not_customized(self):
         partner = self.env["res.partner"].create({"name": "Old Name"})
-        bank = self.env["res.partner.bank"].create(
+        bank = self.env["res.partner.bank.account"].create(
             {"acc_number": "BE001 2518823 03", "partner_id": partner.id}
         )
         self.assertEqual(bank.acc_holder_name, "Old Name")
@@ -60,7 +60,7 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
 
     def test_acc_holder_name_customization_survives_partner_rename(self):
         partner = self.env["res.partner"].create({"name": "Old Name"})
-        bank = self.env["res.partner.bank"].create(
+        bank = self.env["res.partner.bank.account"].create(
             {"acc_number": "BE001 2518823 03", "partner_id": partner.id}
         )
         bank.acc_holder_name = "Custom Holder"
@@ -70,7 +70,7 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
     def test_acc_holder_name_recomputed_on_partner_change(self):
         partner_a = self.env["res.partner"].create({"name": "Holder A"})
         partner_b = self.env["res.partner"].create({"name": "Holder B"})
-        bank = self.env["res.partner.bank"].create(
+        bank = self.env["res.partner.bank.account"].create(
             {"acc_number": "BE001 2518823 03", "partner_id": partner_a.id}
         )
         bank.partner_id = partner_b
@@ -84,13 +84,15 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
 
     def test_acc_type_selection_uses_private_hook(self):
         selection = (
-            self.env["res.partner.bank"]._fields["acc_type"].get_values(self.env)
+            self.env["res.partner.bank.account"]
+            ._fields["acc_type"]
+            .get_values(self.env)
         )
         self.assertIn("bank", selection)
 
     def test_unlink_archives_instead_of_deleting(self):
         partner = self.env["res.partner"].create({"name": "Pepper Test"})
-        partner_bank = self.env["res.partner.bank"].create(
+        partner_bank = self.env["res.partner.bank.account"].create(
             {"acc_number": "BE001 2518823 03", "partner_id": partner.id}
         )
         partner_bank.unlink()
@@ -105,14 +107,14 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
         partner = self.env["res.partner"].create(
             {"name": "Pepper Test", "company_id": self.env.company.id}
         )
-        partner_bank = self.env["res.partner.bank"].create(
+        partner_bank = self.env["res.partner.bank.account"].create(
             {"acc_number": "BE001 2518823 03", "partner_id": partner.id}
         )
         partner_bank.unlink()
         self.assertFalse(partner_bank.active)
         with self.assertRaises(IntegrityError), self.cr.savepoint():
             self.cr.execute(
-                "INSERT INTO res_partner_bank"
+                "INSERT INTO res_partner_bank_account"
                 " (partner_id, acc_number, sanitized_acc_number, company_id, active)"
                 " VALUES (%s, %s, %s, %s, TRUE)",
                 [
@@ -125,7 +127,7 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
 
     def test_acc_holder_name_follows_partner_rename_on_archived_accounts(self):
         partner = self.env["res.partner"].create({"name": "Old Name"})
-        bank = self.env["res.partner.bank"].create(
+        bank = self.env["res.partner.bank.account"].create(
             {"acc_number": "BE001 2518823 03", "partner_id": partner.id}
         )
         bank.unlink()
@@ -140,13 +142,13 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
 
     def test_get_or_create_revives_an_archived_exact_match(self):
         partner = self.env["res.partner"].create({"name": "Pepper Test"})
-        bank = self.env["res.partner.bank"].create(
+        bank = self.env["res.partner.bank.account"].create(
             {"acc_number": "BE001 2518823 03", "partner_id": partner.id}
         )
         bank.unlink()
         self.assertFalse(bank.active)
 
-        found = self.env["res.partner.bank"]._get_or_create_bank_account(
+        found = self.env["res.partner.bank.account"]._get_or_create_bank_account(
             "BE0012518823 03", partner, self.env.company
         )
 
@@ -155,12 +157,12 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
 
     def test_get_or_create_leaves_an_archived_match_archived_when_asked(self):
         partner = self.env["res.partner"].create({"name": "Pepper Test"})
-        bank = self.env["res.partner.bank"].create(
+        bank = self.env["res.partner.bank.account"].create(
             {"acc_number": "BE001 2518823 03", "partner_id": partner.id}
         )
         bank.unlink()
 
-        found = self.env["res.partner.bank"]._get_or_create_bank_account(
+        found = self.env["res.partner.bank.account"]._get_or_create_bank_account(
             "BE0012518823 03",
             partner,
             self.env.company,
@@ -177,12 +179,12 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
         child = self.env["res.partner"].create(
             {"name": "Holder Child", "parent_id": company.id}
         )
-        bank = self.env["res.partner.bank"].create(
+        bank = self.env["res.partner.bank.account"].create(
             {"acc_number": "BE001 2518823 03", "partner_id": child.id}
         )
         bank.unlink()
 
-        found = self.env["res.partner.bank"]._get_or_create_bank_account(
+        found = self.env["res.partner.bank.account"]._get_or_create_bank_account(
             "BE001 2518823 03", company, self.env.company
         )
 

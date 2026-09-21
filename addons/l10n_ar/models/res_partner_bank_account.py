@@ -7,8 +7,8 @@ from odoo import _, api, models
 _logger = logging.getLogger(__name__)
 
 
-class ResPartnerBank(models.Model):
-    _inherit = "res.partner.bank"
+class ResPartnerBankAccount(models.Model):
+    _inherit = "res.partner.bank.account"
 
     @api.model
     def _get_account_types_supported(self):

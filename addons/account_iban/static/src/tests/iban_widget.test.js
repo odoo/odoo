@@ -21,13 +21,13 @@ const invalidIban = "invalidIban!";
 test.tags("focus required");
 test("Iban Widget full flow", async () => {
     const pyEnv = await startServer();
-    const bankId = pyEnv["res.partner.bank"].create({ acc_number: "" });
+    const bankId = pyEnv["res.partner.bank.account"].create({ acc_number: "" });
     const partnerId = pyEnv["res.partner"].create({
         name: "Awesome partner",
         bank_ids: [bankId],
     });
     await start();
-    onRpc("res.partner.bank", "is_valid_iban", (params) => {
+    onRpc("res.partner.bank.account", "is_valid_iban", (params) => {
         const iban = params.args[1].replace(/\s/g, "");
         return iban === validIban;
     });

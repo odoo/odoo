@@ -41,14 +41,14 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
                     ]
                 }
             )
-            cls.bank_company = cls.env["res.partner.bank"].create(
+            cls.bank_company = cls.env["res.partner.bank.account"].create(
                 {
                     "acc_number": "HU7357735773",
                     "allow_out_payment": True,
                     "partner_id": cls.company_data["company"].partner_id.id,
                 }
             )
-            cls.bank_partner = cls.env["res.partner.bank"].create(
+            cls.bank_partner = cls.env["res.partner.bank.account"].create(
                 {
                     "acc_number": "HU9487189480",
                     "partner_id": cls.partner_company.id,

@@ -105,9 +105,9 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
                 "vat": vat,
             }
         )
-        bank_account = self.env["res.partner.bank"]
+        bank_account = self.env["res.partner.bank.account"]
         if account_number:
-            bank_account = self.env["res.partner.bank"].create(
+            bank_account = self.env["res.partner.bank.account"].create(
                 {
                     "acc_number": account_number,
                     "partner_id": supplier.id,
@@ -150,7 +150,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         with Form.from_action(self.env, moves.action_register_payment()) as wiz_form:
             self.assertEqual(
                 wiz_form.l10n_pl_bank_verification_invalid_bank_account_ids.ids,
-                (invalid_bank_accounts or self.env["res.partner.bank"]).ids,
+                (invalid_bank_accounts or self.env["res.partner.bank.account"]).ids,
             )
             self.assertEqual(
                 wiz_form.l10n_pl_not_found_partner_ids.ids,
@@ -270,7 +270,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
 
         # assign a bank account number
         bank_account = self.pl_supplier_bank_account = self.env[
-            "res.partner.bank"
+            "res.partner.bank.account"
         ].create(
             {
                 "acc_number": "61109010140000071219812870",
@@ -673,7 +673,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
     )
     def test_create_single_payment_for_partner_with_2_bank_accounts(self):
         # Partner has 2 bank accounts: 1 valid and 1 invalid
-        self.env["res.partner.bank"].create(
+        self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "PL61109010140000071219812000",  # invalid
                 "partner_id": self.pl_supplier.id,
@@ -694,7 +694,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         verification_start_count = len(verification)
 
         # Create a second bank account and trigger the verification creation
-        second_bank_account = self.env["res.partner.bank"].create(
+        second_bank_account = self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "PL61109010140000071219812000",  # invalid
                 "partner_id": self.pl_supplier.id,

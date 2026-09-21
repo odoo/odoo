@@ -12,9 +12,9 @@ class ResBank(models.Model):
     )
 
 
-class ResPartnerBank(models.Model):
-    _name = "res.partner.bank"
-    _inherit = ["res.partner.bank", "mixin.fiscal.country.codes"]
+class ResPartnerBankAccount(models.Model):
+    _name = "res.partner.bank.account"
+    _inherit = ["res.partner.bank.account", "mixin.fiscal.country.codes"]
 
     l10n_mx_edi_clabe = fields.Char(
         string="CLABE",

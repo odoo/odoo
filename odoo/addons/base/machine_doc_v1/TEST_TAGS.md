@@ -240,7 +240,7 @@ These run in **both** at_install and post_install phases by default.
 - `test_qweb_field.py` — QWeb field widgets
 - `test_res_currency.py` — Currency conversion
 - `test_res_lang.py` — Language management
-- `test_res_partner_bank.py` — Bank accounts
+- `test_res_partner_bank_account.py` — Bank accounts
 - `test_search.py` — Search operations
 - `test_signature.py` — Digital signatures
 - `test_sort_collation.py` — TestSortCollation

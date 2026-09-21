@@ -57,7 +57,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             }
         )
 
-        cls.env["res.partner.bank"].create(
+        cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "ES9121000418450200051332",
                 "partner_id": cls.company_data["company"].partner_id.id,

@@ -1322,7 +1322,7 @@ msgid "Bank Account Allocations"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_res_partner_bank
+#: model:ir.model,name:hr.model_res_partner_bank_account
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_ids
 #: model:ir.model.fields,field_description:hr.field_res_users__bank_account_ids
 msgid "Bank Accounts"
@@ -1474,7 +1474,7 @@ msgstr "Statsborgerskab"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_city
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_city
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank_account__bank_city
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
@@ -1739,7 +1739,7 @@ msgstr "Entreprenør"
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__country_id
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__country_id
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__country_id
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_country
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank_account__bank_country
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
@@ -1872,7 +1872,7 @@ msgstr "Valuta"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_account_setup_bank_manual_config__currency_symbol
-#: model:ir.model.fields,help:hr.field_res_partner_bank__currency_symbol
+#: model:ir.model.fields,help:hr.field_res_partner_bank_account__currency_symbol
 msgid "Currency sign, to be used when printing amounts."
 msgstr "Valutategn til brug ved udskrift af beløb."
 
@@ -2127,7 +2127,7 @@ msgstr "Diskussionskanal"
 #: model:ir.model.fields,field_description:hr.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:hr.field_res_partner__display_name
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__display_name
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank_account__display_name
 #: model:ir.model.fields,field_description:hr.field_res_users__display_name
 #: model:ir.model.fields,field_description:hr.field_resource_calendar__display_name
 #: model:ir.model.fields,field_description:hr.field_resource_schedule_exception__display_name
@@ -2239,7 +2239,7 @@ msgstr "Element, der skal overvåges"
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_email
 #: model:ir.model.fields,field_description:hr.field_hr_employee__email
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__email
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_email
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank_account__bank_email
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Email"
 msgstr "E-mail"
@@ -2275,7 +2275,7 @@ msgstr "Nødtelefon"
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__employee_id
 #: model:ir.model.fields,field_description:hr.field_res_partner__employee
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_id
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank_account__employee_id
 #: model:ir.model.fields,field_description:hr.field_res_users__employee
 #: model:ir.model.fields,field_description:hr.field_resource_resource__employee_id
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__employee
@@ -2340,7 +2340,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_salary_amount_is_percentage
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_salary_amount_is_percentage
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank_account__employee_salary_amount_is_percentage
 msgid "Employee Salary Amount Is Percentage"
 msgstr ""
 
@@ -2651,7 +2651,7 @@ msgstr "Familie"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_state
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_state
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank_account__bank_state
 msgid "Fed. State"
 msgstr "Delstat"
 
@@ -2829,7 +2829,7 @@ msgstr "Har en besked"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_has_multiple_bank_accounts
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_multiple_bank_accounts
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_has_multiple_bank_accounts
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank_account__employee_has_multiple_bank_accounts
 msgid "Has Multiple Bank Accounts"
 msgstr ""
 
@@ -2934,7 +2934,7 @@ msgstr "Personalechef (HR)"
 #: model:ir.model.fields,field_description:hr.field_res_company__id
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__id
 #: model:ir.model.fields,field_description:hr.field_res_partner__id
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__id
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank_account__id
 #: model:ir.model.fields,field_description:hr.field_res_users__id
 #: model:ir.model.fields,field_description:hr.field_resource_calendar__id
 #: model:ir.model.fields,field_description:hr.field_resource_schedule_exception__id
@@ -3981,7 +3981,7 @@ msgstr "Opdatering af personlige oplysninger."
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_phone
 #: model:ir.model.fields,field_description:hr.field_hr_employee__phone
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__phone
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_phone
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank_account__bank_phone
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Phone"
 msgstr "Telefon"
@@ -4464,7 +4464,7 @@ msgstr "CPR-nummer"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_salary_amount
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_salary_amount
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank_account__employee_salary_amount
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Salary Allocation"
@@ -4683,7 +4683,7 @@ msgstr "Lovpligtigt"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_street
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_street
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank_account__bank_street
 msgid "Street"
 msgstr "Gade"
 
@@ -4703,7 +4703,7 @@ msgstr "Gade..."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_street2
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_street2
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank_account__bank_street2
 msgid "Street2"
 msgstr "Gade2"
 
@@ -4741,7 +4741,7 @@ msgstr "Opsummering"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__currency_symbol
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__symbol
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__currency_symbol
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank_account__currency_symbol
 msgid "Symbol"
 msgstr "Symbol"
 
@@ -5684,7 +5684,7 @@ msgstr "Postnummer"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_zip
-#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_zip
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank_account__bank_zip
 msgid "Zip"
 msgstr "Postnummer"
 

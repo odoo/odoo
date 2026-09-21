@@ -6,8 +6,8 @@ from odoo.exceptions import ValidationError
 from odoo.tools import single_email_re
 
 
-class ResPartnerBank(models.Model):
-    _inherit = "res.partner.bank"
+class ResPartnerBankAccount(models.Model):
+    _inherit = "res.partner.bank.account"
 
     proxy_type = fields.Selection(
         selection_add=[
@@ -61,13 +61,13 @@ class ResPartnerBank(models.Model):
     def _compute_country_proxy_keys(self):
         bank_hk = self.filtered(lambda b: b.country_code == "HK")
         bank_hk.country_proxy_keys = "id,mobile,email"
-        super(ResPartnerBank, self - bank_hk)._compute_country_proxy_keys()
+        super(ResPartnerBankAccount, self - bank_hk)._compute_country_proxy_keys()
 
     @api.depends("country_code")
     def _compute_display_qr_setting(self):
         bank_hk = self.filtered(lambda b: b.country_code == "HK")
         bank_hk.display_qr_setting = True
-        super(ResPartnerBank, self - bank_hk)._compute_display_qr_setting()
+        super(ResPartnerBankAccount, self - bank_hk)._compute_display_qr_setting()
 
     # Follow the documentation of FPS QR Code Standard [1]
     # [1]: https://www.hkma.gov.hk/media/eng/doc/key-functions/financial-infrastructure/infrastructure/retail-payment-initiatives/Common_QR_Code_Specification.pdf

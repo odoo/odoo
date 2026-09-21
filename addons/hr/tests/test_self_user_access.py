@@ -22,7 +22,7 @@ class TestSelfAccessPreferences(TestHrCommon):
             email="ric@example.com",
         )
         james = james.with_user(james)
-        james_bank_account = self.env["res.partner.bank"].create(
+        james_bank_account = self.env["res.partner.bank.account"].create(
             {"acc_number": "BE1234567890", "partner_id": james.partner_id.id}
         )
         self.env["hr.employee"].create(
@@ -301,7 +301,7 @@ class TestSelfAccessRights(TestHrCommon):
             email="hubert@oss.fr",
         )
         hubert = hubert.with_user(hubert)
-        hubert_acc = self.env["res.partner.bank"].create(
+        hubert_acc = self.env["res.partner.bank.account"].create(
             {"acc_number": "FR1234567890", "partner_id": hubert.partner_id.id}
         )
         hubert_emp = self.env["hr.employee"].create(

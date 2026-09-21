@@ -745,11 +745,13 @@ class AccountEdiCommon(models.AbstractModel):
         if not partner:
             return
 
-        banks = self.env["res.partner.bank"]
+        banks = self.env["res.partner.bank.account"]
         for account_number in bank_details:
             try:
                 # A received document must not bring back an account someone archived.
-                banks += self.env["res.partner.bank"]._get_or_create_bank_account(
+                banks += self.env[
+                    "res.partner.bank.account"
+                ]._get_or_create_bank_account(
                     account_number=account_number,
                     partner=partner,
                     company=invoice.company_id,

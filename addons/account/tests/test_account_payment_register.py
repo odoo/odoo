@@ -73,21 +73,21 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             }
         )
 
-        cls.partner_bank_account1 = cls.env["res.partner.bank"].create(
+        cls.partner_bank_account1 = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "0123456789",
                 "partner_id": cls.partner_a.id,
                 "acc_type": "bank",
             }
         )
-        cls.partner_bank_account2 = cls.env["res.partner.bank"].create(
+        cls.partner_bank_account2 = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "9876543210",
                 "partner_id": cls.partner_a.id,
                 "acc_type": "bank",
             }
         )
-        cls.comp_bank_account1 = cls.env["res.partner.bank"].create(
+        cls.comp_bank_account1 = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "985632147",
                 "partner_id": cls.env.company.partner_id.id,
@@ -95,7 +95,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
                 "allow_out_payment": True,
             }
         )
-        cls.comp_bank_account2 = cls.env["res.partner.bank"].create(
+        cls.comp_bank_account2 = cls.env["res.partner.bank.account"].create(
             {
                 "acc_number": "741258963",
                 "partner_id": cls.env.company.partner_id.id,
@@ -841,14 +841,14 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
         )
 
     def test_register_payment_multiple_batch_grouped_with_credit_note(self):
-        bank1 = self.env["res.partner.bank"].create(
+        bank1 = self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "BE43798822936101",
                 "partner_id": self.partner_a.id,
                 "allow_out_payment": True,
             }
         )
-        bank2 = self.env["res.partner.bank"].create(
+        bank2 = self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "BE85812541345906",
                 "partner_id": self.partner_a.id,
@@ -1001,7 +1001,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
 
     def test_register_payment_multi_batches_grouped_with_credit_note(self):
         partner_b = self.partner_b.copy({"property_account_position_id": False})
-        self.env["res.partner.bank"].create(
+        self.env["res.partner.bank.account"].create(
             {
                 "acc_number": "123454321",
                 "partner_id": partner_b.id,

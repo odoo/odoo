@@ -112,7 +112,7 @@ from . import mixin_recurrence_rrule
 
 
 from . import res_bank
-from . import res_partner_bank
+from . import res_partner_bank_account
 from . import res_config
 from . import res_currency
 from . import res_company

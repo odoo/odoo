@@ -22,9 +22,11 @@ class TestModuleReferenceValues(TransactionCase):
 
     def test_attribution_follows_the_record_not_the_external_id(self):
         partner_field = self.env["ir.model.fields"].search(
-            [("model", "=", "res.partner.bank"), ("name", "=", "id")], limit=1
+            [("model", "=", "res.partner.bank.account"), ("name", "=", "id")], limit=1
         )
-        self.assertTrue(partner_field, "res.partner.bank must expose an id field")
+        self.assertTrue(
+            partner_field, "res.partner.bank.account must expose an id field"
+        )
         self.env["ir.model.data"].sudo().create(
             {
                 "module": "base",
@@ -38,7 +40,7 @@ class TestModuleReferenceValues(TransactionCase):
 
         self.assertIn(
             "id",
-            names["base"]["res.partner.bank"],
+            names["base"]["res.partner.bank.account"],
             "the field belongs to the model its record names",
         )
         self.assertNotIn(

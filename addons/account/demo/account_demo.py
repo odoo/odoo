@@ -32,7 +32,7 @@ class AccountChartTemplate(models.AbstractModel):
             "mail.message": self._prepare_demo_data_mail_message(company),
             "mail.activity": self._prepare_demo_data_mail_activity(company),
             "product.product": self._prepare_demo_data_product(),
-            "res.partner.bank": self._prepare_demo_data_bank(company),
+            "res.partner.bank.account": self._prepare_demo_data_bank(company),
             "res.partner": self._prepare_demo_data_partner(),
             "res.users": self._prepare_demo_data_user(),
             "account.journal": self._prepare_demo_data_journal(company),

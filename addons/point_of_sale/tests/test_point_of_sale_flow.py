@@ -2033,7 +2033,7 @@ class TestPointOfSaleFlow(CommonPosTest):
     def test_pos_order_partner_bank_id(self):
         self.pos_config_usd.open_ui()
         self.cash_payment_method.journal_id.bank_account_id = self.env[
-            "res.partner.bank"
+            "res.partner.bank.account"
         ].create(
             {
                 "acc_number": "FR7612345678901234567890123",

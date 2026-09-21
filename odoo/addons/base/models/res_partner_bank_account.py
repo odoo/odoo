@@ -16,8 +16,8 @@ def sanitize_account_number(acc_number: str | bool) -> str | bool:
     return False
 
 
-class ResPartnerBank(models.Model):
-    _name = "res.partner.bank"
+class ResPartnerBankAccount(models.Model):
+    _name = "res.partner.bank.account"
     _rec_name = "acc_number"
     _description = "Bank Accounts"
     _order = "sequence, id"
@@ -29,7 +29,9 @@ class ResPartnerBank(models.Model):
 
     active = fields.Boolean(default=True)
     acc_type = fields.Selection(
-        selection=lambda x: x.env["res.partner.bank"]._get_account_types_supported(),
+        selection=lambda x: x.env[
+            "res.partner.bank.account"
+        ]._get_account_types_supported(),
         string="Type",
         compute="_compute_acc_type",
         help="Bank account type: Normal or IBAN. Inferred from the bank account number.",
@@ -175,7 +177,7 @@ class ResPartnerBank(models.Model):
         revive_archived_match=True,
     ):
         bank_account = (
-            self.env["res.partner.bank"]
+            self.env["res.partner.bank.account"]
             .sudo()
             .with_context(active_test=False)
             .search(
@@ -219,7 +221,7 @@ class ResPartnerBank(models.Model):
                     )
                 )
             bank_account = (
-                self.env["res.partner.bank"]
+                self.env["res.partner.bank.account"]
                 .with_context(clean_context(self.env.context))
                 .create(
                     {
@@ -235,7 +237,7 @@ class ResPartnerBank(models.Model):
             )
         usable = bank_account.filtered_domain(
             [
-                *self.env["res.partner.bank"]._check_company_domain(company),
+                *self.env["res.partner.bank.account"]._check_company_domain(company),
                 ("active", "=", True),
             ]
         )
