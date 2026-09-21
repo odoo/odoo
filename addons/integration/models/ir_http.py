@@ -17,14 +17,20 @@ class IrHttp(models.AbstractModel):
     def _auth_routing_keys(cls) -> dict[str, tuple[str, ...]]:
         return {
             **super()._auth_routing_keys(),
-            "receiver": ("receiver", "receiver_event"),
+            "receiver": ("receiver", "receiver_event", "receiver_refusal"),
         }
 
     @classmethod
     def _auth_method_receiver(
-        cls, receiver: str | None = None, receiver_event: str | None = None
+        cls,
+        receiver: str | None = None,
+        receiver_event: str | None = None,
+        receiver_refusal: str | None = None,
     ) -> None:
         cls._auth_method_public()
+        if receiver_refusal:
+            model_name, _, method = receiver_refusal.partition(":")
+            request.receiver_refusal = getattr(request.env[model_name], method)
         if not receiver:
             _logger.error(
                 "%s %s declares auth='receiver' without a receiver= resolver",
@@ -41,7 +47,10 @@ class IrHttp(models.AbstractModel):
             model_name = receiver.partition(":")[0]
             request.env["inbound.access.log"]._record_unknown_caller(
                 model_name,
-                ", ".join(f"{k}={str(v)[:16]}" for k, v in request.path_args.items()),
+                resolution.claimed
+                or ", ".join(
+                    f"{k}={str(v)[:16]}" for k, v in request.path_args.items()
+                ),
                 request.httprequest.remote_addr,
                 user_agent=request.httprequest.headers.get("User-Agent"),
                 status_code=404,

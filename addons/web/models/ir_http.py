@@ -278,8 +278,11 @@ class IrHttp(models.AbstractModel):
             ),
             user.company_id.id,
         )
+        # A public or portal session reads the configuration too, and the
+        # configuration row is the administrator's to see.
         return (
             self.env["res.company"]
+            .sudo()
             .browse(company_id)
             .web_config_id.homemenu_default_config
             or None

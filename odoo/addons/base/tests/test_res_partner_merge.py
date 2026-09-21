@@ -829,9 +829,9 @@ class TestMergePartnerIdentifiers(TransactionCase):
         ) in wizard._get_sidecar_reference_fields():
             model = self.env[model_name]
             self.assertTrue(
-                model._fields[model_field].store,
+                model._fields[model_field]._description_searchable,
                 f"{model_name}.{model_field} names the model of a reference "
-                "pair and must be stored, or the pair cannot be searched",
+                "pair and must be searchable, or the pair cannot be found",
             )
 
     def test_identifier_survives_a_merge_that_does_not_absorb_source_values(self):

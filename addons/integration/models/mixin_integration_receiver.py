@@ -5,8 +5,14 @@ from typing import Any
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.http import request
+
+from ..tools.admission import Refused
+from ..tools.exchange_queue import keep_row_on_rollback
 
 _logger = logging.getLogger(__name__)
+
+_OMITTED_PAYLOAD_HEAD_CHARS = 512
 
 
 class MixinIntegrationReceiver(models.AbstractModel):
@@ -49,6 +55,74 @@ class MixinIntegrationReceiver(models.AbstractModel):
         if self.processing_mode == "async":
             return 0
         return max(0, self.log_request_payload_max_bytes)
+
+    def _inbound_event_logged(self, event_type: str | None) -> bool:
+        """Whether an admitted call of this kind leaves a row. A poll that a
+        reader repeats every few seconds is not worth one per repetition."""
+        return True
+
+    def _open_inbound_exchange(self, admission, event_type):
+        """The row is the call: created now, in the request's transaction, so
+        the handler can queue it, settle it or hand it to a worker, and so a
+        copy of an event already received inside the window is refused on
+        the row that holds it."""
+        if not self._inbound_event_logged(event_type):
+            return
+        httprequest = request.httprequest
+        body = admission.body.decode("utf-8", errors="replace")
+        payload_hash = admission.payload_hash
+        if self.processing_mode == "async":
+            # The row is the work item: the body is kept as received.
+            payload_vals = {"request_payload": body}
+        else:
+            payload_vals = self._omitted_payload_vals(
+                body
+            ) or self._prepare_inbound_payload_vals(body)
+        vals = {
+            "direction": "inbound",
+            "channel_id": f"{self._name},{self.id}",
+            "company_id": self._get_inbound_company_id() or False,
+            "request_method": httprequest.method,
+            "request_url": httprequest.path[:2048],
+            "source_ip": admission.remote_addr or False,
+            "user_agent": (httprequest.headers.get("User-Agent") or "")[:512] or False,
+            "event_type": event_type or False,
+            "state": "success",
+            "date_completed": fields.Datetime.now(),
+            "signature_verified": self.auth_type != "none",
+            **payload_vals,
+            # The hash of the body as received, whatever the row keeps of it.
+            "request_payload_hash_override": payload_hash,
+        }
+        exchange = self.env["integration.exchange"].sudo().create(vals)
+        keep_row_on_rollback(self.env, vals, admission)
+        admission.exchange = exchange
+        if self.check_duplicate_event(payload_hash, exclude_event_id=exchange.id):
+            _logger.info(
+                "Duplicate event for %s (exchange %d)", self.display_name, exchange.id
+            )
+            exchange.mark_duplicate()
+            raise Refused(
+                409, "Duplicate event detected", "duplicate_event", commit=True
+            )
+
+    def _omitted_payload_vals(self, body: str) -> dict[str, Any]:
+        limit = self._payload_log_limit()
+        size = len(body.encode("utf-8"))
+        if not limit or size <= limit:
+            return {}
+        return {
+            "request_payload": json.dumps(
+                {
+                    "_omitted": {
+                        "bytes": size,
+                        "reason": "larger than this endpoint's payload log limit",
+                        "head": body[:_OMITTED_PAYLOAD_HEAD_CHARS],
+                    },
+                },
+            ),
+            "request_payload_omitted_bytes": size,
+        }
 
     processing_mode = fields.Selection(
         selection=[
@@ -273,6 +347,7 @@ class MixinIntegrationReceiver(models.AbstractModel):
 
         if event_log:
             event = event_log
+            event.write({"state": "pending", "date_completed": False})
         else:
             payload_str: str
             if isinstance(payload, str):

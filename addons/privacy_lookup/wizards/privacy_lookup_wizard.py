@@ -57,12 +57,13 @@ class PrivacyLookupWizard(models.TransientModel):
                 FROM res_partner
                 WHERE email_normalized = %s
                 OR name ilike %s)
-            SELECT
+            (SELECT
                 %s AS res_model_id,
                 id AS res_id,
                 active AS is_active
             FROM res_partner
             WHERE id IN (SELECT id FROM indirect_references)
+            ORDER BY id)
             UNION ALL
             SELECT
                 %s AS res_model_id,

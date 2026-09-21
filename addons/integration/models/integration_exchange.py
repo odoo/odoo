@@ -126,16 +126,10 @@ class IntegrationExchange(models.Model):
         store=True,
     )
 
-    request_method = fields.Selection(
-        selection=[
-            ("GET", "GET"),
-            ("POST", "POST"),
-            ("PUT", "PUT"),
-            ("PATCH", "PATCH"),
-            ("DELETE", "DELETE"),
-            ("HEAD", "HEAD"),
-            ("OPTIONS", "OPTIONS"),
-        ],
+    # An HTTP method is a token, not a closed list: a DAV client PROPFINDs
+    # and REPORTs, and every one of its calls is an exchange like any other.
+    request_method = fields.Char(
+        size=16,
         index=True,
     )
     request_url = fields.Char(index=True)

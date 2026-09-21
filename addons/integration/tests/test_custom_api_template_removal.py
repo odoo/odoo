@@ -4,7 +4,6 @@ from pathlib import Path
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
-
 MIGRATION = Path(__file__).resolve().parents[1] / "migrations/1.27.0/post-migrate.py"
 
 

@@ -778,6 +778,7 @@ class TestIrJob(TransactionCase):
                 "priority": 10,
                 "max_retries": 3,
                 "max_defers": 100,
+                "idle_timeout": None,
             },
             "the declaration is still reachable along the MRO",
         )

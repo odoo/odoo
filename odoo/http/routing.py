@@ -41,6 +41,7 @@ _KNOWN_ROUTING_PARAMETERS: set[str] = {
     "readonly",
     "receiver",
     "receiver_event",
+    "receiver_refusal",
     "save_session",
     "scope",
     "statement_timeout",

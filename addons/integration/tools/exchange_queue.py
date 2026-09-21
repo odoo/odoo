@@ -69,3 +69,28 @@ def _without_vanished_connections(
         else vals
         for vals in logs
     ]
+
+
+def keep_row_on_rollback(env: api.Environment, vals: dict[str, Any], admission) -> None:
+    cr = env.cr
+    registry = env.registry
+    uid = env.uid
+
+    @cr.postrollback.add
+    def keep_row_of_rolled_back_transaction():
+        try:
+            with registry.cursor() as log_cr:
+                log_env = api.Environment(log_cr, uid, {})
+                log_env["integration.exchange"].sudo().create(
+                    {
+                        **vals,
+                        "event_type": admission.event_type or vals.get("event_type"),
+                        "state": "failed",
+                        "error_type": "other",
+                        "error_message": admission.error or "the request rolled back",
+                    }
+                )
+        except Exception:
+            _logger.exception(
+                "Could not keep the exchange row of a rolled-back transaction"
+            )

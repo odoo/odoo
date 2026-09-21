@@ -2,6 +2,8 @@ import json
 import logging
 from typing import Any
 
+from werkzeug.exceptions import RequestEntityTooLarge
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
@@ -117,7 +119,12 @@ class MixinInboundGate(models.AbstractModel):
             )
         subject = resolution.subject
         if not subject:
-            return Resolution(model.browse(), resolution.extra, model.browse())
+            return Resolution(
+                model.browse(),
+                resolution.extra,
+                model.browse(),
+                claimed=resolution.claimed,
+            )
         if resolution.gate is None:
             if hasattr(subject, "admit"):
                 resolution.gate = subject
@@ -162,8 +169,27 @@ class MixinInboundGate(models.AbstractModel):
                 413,
                 f"Request exceeds maximum size of {self.max_payload_size // 1024}KB",
                 "payload_too_large",
+                detail={"limit_bytes": self.max_payload_size},
             )
-        body = httprequest.get_data(cache=True)
+        # A body past the limit is refused while it is still being read.
+        httprequest.max_content_length = self.max_payload_size or None
+        try:
+            body = httprequest.get_data(cache=True)
+        except RequestEntityTooLarge:
+            self._record_inbound_verdict(
+                False,
+                413,
+                f"payload too large for {self.display_name}",
+                "payload_too_large",
+                headers=dict(httprequest.headers),
+                remote_addr=remote_addr,
+            )
+            raise Refused(
+                413,
+                f"Request exceeds maximum size of {self.max_payload_size // 1024}KB",
+                "payload_too_large",
+                detail={"limit_bytes": self.max_payload_size},
+            ) from None
         # The verdict is written on its own cursor: a refusal raises, the
         # request rolls back, and the refusal must outlive that.
         with self.env.registry.cursor() as verdict_cr:
@@ -175,16 +201,29 @@ class MixinInboundGate(models.AbstractModel):
         if not allowed:
             raise Refused(status, reason, self._refusal_code(status))
         admission = Admission(
-            gate=self, subject=subject or self, body=body, remote_addr=remote_addr
+            gate=self,
+            subject=subject or self,
+            body=body,
+            remote_addr=remote_addr,
+            event_type=event_type,
         )
+        self._open_inbound_exchange(admission, event_type)
+        return admission
+
+    def _open_inbound_exchange(
+        self, admission: Admission, event_type: str | None
+    ) -> None:
+        """Record the admitted call. The gate's own record is a log line,
+        queued and written at commit; a receiver that processes what it is
+        sent makes the row the call's work item instead."""
+        httprequest = request.httprequest
         self._record_inbound_exchange(
             method=httprequest.method,
             path=httprequest.path,
-            remote_addr=remote_addr,
+            remote_addr=admission.remote_addr,
             user_agent=httprequest.headers.get("User-Agent"),
             event_type=event_type,
         )
-        return admission
 
     @staticmethod
     def _refusal_code(status: int) -> str:
@@ -344,6 +383,13 @@ class MixinInboundGate(models.AbstractModel):
             ):
                 _logger.debug("Timestamp verification failed for %s", self.display_name)
                 return False
+
+        # A route's resolver may hand the gate the check itself -- a Basic
+        # login on a bearer-keyed device, a signed link -- and then that is
+        # the identity for this call, whatever the gate's own scheme.
+        verify = self.env.context.get(INBOUND_VERIFY_KEY)
+        if verify is not None:
+            return bool(verify(headers, body))
 
         if self.auth_type == "none":
             return True
