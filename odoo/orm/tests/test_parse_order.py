@@ -3,48 +3,54 @@ used to run the regex themselves and re-derive desc/nulls from it."""
 
 import pytest
 
-from odoo.orm.parsing import parse_order
+from odoo.orm.parsing import OrderTerm, parse_order
+
+
+def terms_of(order: str) -> tuple[OrderTerm, ...]:
+    parsed = parse_order(order)
+    assert parsed is not None, f"{order!r} was expected to parse"
+    return parsed
 
 
 def test_a_bare_field_is_ascending_with_nulls_last():
-    (term,) = parse_order("name")
+    (term,) = terms_of("name")
     assert (term.field, term.property, term.func) == ("name", None, None)
     assert term.desc is False
     assert term.nulls_first is False
 
 
 def test_descending_puts_nulls_first_by_default():
-    (term,) = parse_order("name desc")
+    (term,) = terms_of("name desc")
     assert term.desc is True
     assert term.nulls_first is True
 
 
 @pytest.mark.parametrize("order", ["name DESC", "name Desc", "  name   desc  "])
 def test_direction_is_case_insensitive_and_space_tolerant(order):
-    (term,) = parse_order(order)
+    (term,) = terms_of(order)
     assert term.desc is True
 
 
 def test_an_explicit_nulls_clause_wins_over_the_default():
-    (term,) = parse_order("name desc nulls last")
+    (term,) = terms_of("name desc nulls last")
     assert term.desc is True
     assert term.nulls_first is False
-    (term,) = parse_order("name nulls first")
+    (term,) = terms_of("name nulls first")
     assert term.desc is False
     assert term.nulls_first is True
 
 
 def test_every_term_is_returned_in_order():
-    terms = parse_order("a desc, b, c nulls first")
+    terms = terms_of("a desc, b, c nulls first")
     assert [t.field for t in terms] == ["a", "b", "c"]
     assert [t.desc for t in terms] == [True, False, False]
     assert [t.nulls_first for t in terms] == [True, False, True]
 
 
 def test_a_property_and_a_granularity_are_carried():
-    (term,) = parse_order("attributes.colour desc")
+    (term,) = terms_of("attributes.colour desc")
     assert (term.field, term.property) == ("attributes", "colour")
-    (term,) = parse_order("date:month")
+    (term,) = terms_of("date:month")
     assert (term.field, term.func) == ("date", "month")
 
 

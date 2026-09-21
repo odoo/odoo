@@ -532,17 +532,40 @@ class _RelationalMulti(_Relational):
     def _reads_as_superuser(self, env: Environment) -> bool:
         # a user's read equals the superuser's only when nothing narrows it:
         # a static field domain, a comodel whose _search is not overridden,
-        # model access, and no read rule for the user on the comodel
+        # model access, and no read rule for the user on the comodel.
+        # Four ways to decline and one to allow, so the inputs are logged
+        # rather than the verdict: this is the seam the x2many access scopes
+        # are built on, and which of the four said no is the whole question.
         comodel = env[self.comodel_name]
-        if callable(self.domain) or is_search_overridden(type(comodel)):
-            return False
+        callable_domain = callable(self.domain)
+        search_overridden = is_search_overridden(type(comodel))
         policy = env.registry.access_policy
-        try:
-            return policy.model_allowed(env, self.comodel_name, "read") and (
-                not policy.record_domain(env, self.comodel_name, "read")
+        model_allowed = rule = no_policy = None
+        if not (callable_domain or search_overridden):
+            try:
+                model_allowed = policy.model_allowed(env, self.comodel_name, "read")
+                rule = bool(
+                    model_allowed
+                    and policy.record_domain(env, self.comodel_name, "read")
+                )
+            except NotImplementedError:
+                no_policy = True
+        verdict = bool(model_allowed) and rule is False
+        if _debug.logic.enabled:
+            _debug.logic(
+                "field.x2many.reads_as_superuser",
+                model=self.model_name,
+                field=self.name,
+                comodel=self.comodel_name,
+                uid=env.uid,
+                callable_domain=callable_domain,
+                search_overridden=search_overridden,
+                model_allowed=model_allowed,
+                has_read_rule=rule,
+                no_access_policy=no_policy,
+                verdict=verdict,
             )
-        except NotImplementedError:
-            return False
+        return verdict
 
     def _scope_env(self, env: Environment, key: tuple) -> Environment:
         index = env._field_depends_context[self].index("access")

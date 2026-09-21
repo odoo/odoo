@@ -392,9 +392,25 @@ class ReadMixin(_ModelStubs):
                 if not in_prefetch_batch:
                     self.check_access("read")
                 elif not self.env.su and self._check_access("read"):
+                    _debug.logic(
+                        "read.fetch.prefetch_batch_denied",
+                        model=self._name,
+                        records=len(self),
+                        uid=self.env.uid,
+                        su=self.env.su,
+                        reason="access",
+                    )
                     raise PrefetchBatchDenied(self._name)
             except MissingError:
                 if in_prefetch_batch:
+                    _debug.logic(
+                        "read.fetch.prefetch_batch_denied",
+                        model=self._name,
+                        records=len(self),
+                        uid=self.env.uid,
+                        su=self.env.su,
+                        reason="missing",
+                    )
                     raise PrefetchBatchDenied(self._name) from None
                 before = len(self)  # debuglog
                 self = self.exists()
@@ -437,6 +453,15 @@ class ReadMixin(_ModelStubs):
 
         if fetched != self:
             if in_prefetch_batch:
+                _debug.logic(
+                    "read.fetch.prefetch_batch_denied",
+                    model=self._name,
+                    records=len(self),
+                    fetched=len(fetched),
+                    uid=self.env.uid,
+                    su=self.env.su,
+                    reason="short_read",
+                )
                 raise PrefetchBatchDenied(self._name)
             forbidden = (self - fetched).exists()
             _debug.logic(

@@ -371,20 +371,38 @@ class TraversalMixin(_ModelStubs):
         _fields = self._fields
         env = self.env
 
+        # five guards send `sorted()` to the Python fallback, and the caller
+        # logs only that it went; which guard decided is the question a slow
+        # sort actually raises, so the reason is carried to one exit
         terms = parse_order(order)
-        if terms is None:
-            return None
+        refused = "unparsable_order" if terms is None else ""
+        refused_field = ""
         sort_specs = []
-        for term in terms:
-            if term.property:
-                return None
+        for term in terms or ():
             field = _fields.get(term.field)
-            if field is None or not can_scan_sorted(field):
-                return None
-            if field.is_many2one and env[field.comodel_name]._order != "id":
-                return None
-            cache = None if term.field == "id" else field._get_cache(env)
-            sort_specs.append((cache, term.desc, term.nulls_first))
+            if term.property:
+                refused = "property_term"
+            elif field is None:
+                refused = "unknown_field"
+            elif not can_scan_sorted(field):
+                refused = "field_not_scannable"
+            elif field.is_many2one and env[field.comodel_name]._order != "id":
+                refused = "comodel_order_not_id"
+            else:
+                cache = None if term.field == "id" else field._get_cache(env)
+                sort_specs.append((cache, term.desc, term.nulls_first))
+                continue
+            refused_field = term.field
+            break
+        if refused:
+            _debug.logic(
+                "traversal.sorted.native_refused",
+                model=self._name,
+                order=order,
+                field=refused_field,
+                reason=refused,
+            )
+            return None
 
         ids = self._ids
         for field_cache, desc, nulls_first in reversed(sort_specs):
