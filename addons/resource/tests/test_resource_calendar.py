@@ -2,8 +2,7 @@
 from datetime import datetime, UTC
 from zoneinfo import ZoneInfo
 
-from odoo.tests import Form
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests import tagged, Form, TransactionCase
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -209,3 +208,24 @@ class TestResourceCalendar(TransactionCase):
             self.assertEqual(len(calendar.attendance_ids_1st_week), 5)
             self.assertEqual(len(calendar.attendance_ids_2nd_week), 5)
             self.assertTrue(calendar.two_weeks_calendar)
+
+    def test_company_change_attendance_persistence(self):
+        """
+        Test to ensure that altering the company does not wipe the current schedule.
+        """
+        work_schedule = self.env['resource.calendar'].create({
+            'name': 'Test Work Schedule',
+            'company_id': False,
+            'attendance_ids': False
+        })
+        attendance_1 = self.env['resource.calendar.attendance'].create({
+            'calendar_id': work_schedule.id,
+            'dayofweek': '1',
+            'hour_from': 8,
+            'hour_to': 17,
+        })
+        self.env.user.group_ids += self.env.ref('base.group_multi_company')
+        with Form(work_schedule) as form:
+            form.company_id = self.env.company
+
+        self.assertEqual(work_schedule.attendance_ids, attendance_1)
