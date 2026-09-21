@@ -1,5 +1,6 @@
 import typing
 from collections import defaultdict
+from collections.abc import Collection
 from itertools import batched, chain
 from operator import attrgetter
 from typing import Self
@@ -101,10 +102,18 @@ class CreateMixin(_ModelStubs):
         self,
         values: ValuesType,
         _missing_defaults_cache: dict[frozenset[str], list[str]] | None = None,
+        only: Collection[str] | None = None,
     ) -> ValuesType:
+        # `only` narrows the defaults to the names the caller will read.
+        # `default_get` cannot be hoisted out of a batch -- a default may have
+        # a side effect, and stock.warehouse.orderpoint's name draws from a
+        # sequence -- so the way to make a second pass cheap is to ask it for
+        # less, and the way to make it safe is to keep a side-effecting
+        # default the caller does not read out of the call entirely.
         vals_keys = frozenset(values)
-        if _missing_defaults_cache is not None and vals_keys in _missing_defaults_cache:
-            missing_defaults = _missing_defaults_cache[vals_keys]
+        cache_key = vals_keys if only is None else vals_keys | {"\0only"} | frozenset(only)
+        if _missing_defaults_cache is not None and cache_key in _missing_defaults_cache:
+            missing_defaults = _missing_defaults_cache[cache_key]
         else:
             avoid_models = set()
 
@@ -125,9 +134,18 @@ class CreateMixin(_ModelStubs):
                             return True
                 return False
 
+            candidates = (
+                self._fields.items()
+                if only is None
+                else [
+                    (name, field)
+                    for name in only
+                    if (field := self._fields.get(name)) is not None
+                ]
+            )
             missing_defaults = [
                 name
-                for name, field in self._fields.items()
+                for name, field in candidates
                 if name not in values
                 if not avoid(field)
             ]
@@ -140,7 +158,7 @@ class CreateMixin(_ModelStubs):
                 cached=_missing_defaults_cache is not None,
             )
             if _missing_defaults_cache is not None:
-                _missing_defaults_cache[vals_keys] = missing_defaults
+                _missing_defaults_cache[cache_key] = missing_defaults
 
         if missing_defaults:
             defaults = self.default_get(missing_defaults)
@@ -158,6 +176,9 @@ class CreateMixin(_ModelStubs):
 
         else:
             defaults = dict(values)
+
+        if only is not None:
+            return defaults
 
         cls = type(self)
         properties_names = get_or_create_class_memo(

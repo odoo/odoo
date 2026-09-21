@@ -620,10 +620,13 @@ class ResPartner(models.Model):
         if self.env.context.get("_partners_skip_fields_sync"):
             return partners
 
+        # `_fields_sync` reads the synced names and nothing else, and the
+        # defaults for everything else were already applied inside `super()`
+        synced = self._synced_field_names()
         missing_defaults_cache: dict[frozenset[str], list[str]] = {}
         for partner, vals in zip(partners, vals_list, strict=True):
             vals = self.env["res.partner"]._add_missing_default_values(
-                vals, _missing_defaults_cache=missing_defaults_cache
+                vals, _missing_defaults_cache=missing_defaults_cache, only=synced
             )
             partner._fields_sync(vals, new=True)
         return partners
