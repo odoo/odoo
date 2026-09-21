@@ -20,11 +20,18 @@
         z-index: 1;
         --btn-disabled-opacity: 0.25;
 
-        &:not(.o-hasBtnBg):not(.active) {
-            --btn-bg: transparent;
-            --btn-border-color: transparent;
-            --btn-hover-bg: transparent;
-            --btn-hover-border-color: transparent;
+        &.o-inline:not(.o-hasBtnBg):not(.o-tag-JOIN_LEAVE_CALL) {
+
+            &.active, &.show {
+                --btn-active-border-color: transparent;
+            }
+
+            &:not(.active) {
+                --btn-bg: transparent;
+                --btn-border-color: transparent;
+                --btn-hover-bg: transparent;
+                --btn-hover-border-color: transparent;
+            }
         }
 
         &.o-simulateDarkTheme {
@@ -58,6 +65,11 @@
 
             i.o-xsmaller {
                 transform: translateY(-2px);
+            }
+
+            &.o_btn_circle.active::before,
+            &.o_btn_circle.show::before {
+                --btn-active-bg: transparent;
             }
         }
 
