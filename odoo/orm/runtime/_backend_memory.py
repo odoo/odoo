@@ -1231,6 +1231,31 @@ class InMemoryBackend:
     ) -> Query | None:
         return None
 
+    @staticmethod
+    def _refuse_what_sql_cannot_compile(model: BaseModel, domain: Domain) -> None:
+        """A search this tier can answer and PostgreSQL cannot is a test that
+        passes here and fails there.
+
+        This backend evaluates a domain through `filtered_domain`, in Python,
+        over the records -- so it can answer a condition on a non-stored
+        computed field that `_field_to_sql` refuses outright with "Cannot
+        convert ... to SQL because it is not stored". The recompute
+        traversal's `search(Domain(field, "in", ids))` is one caller that
+        depends on the difference, which is why the ORM warns at setup that
+        such a field "should be searchable".
+        """
+        for condition in domain.iter_conditions():
+            fname = condition.field_expr.split(".", 1)[0]
+            field = model._fields.get(fname)
+            if field is None or field.store or field.search or field.related:
+                continue
+            if field.name == "id":
+                continue
+            raise ValueError(
+                f"Cannot convert {model._name}.{field.name} to SQL because it "
+                f"is not stored"
+            )
+
     def search(
         self,
         model: BaseModel,
@@ -1242,6 +1267,7 @@ class InMemoryBackend:
         check_access: bool = True,
         prof: typing.Any = None,
     ) -> Query:
+        self._refuse_what_sql_cannot_compile(model, domain)
         searched_fnames = flush_search_dependencies(model, domain, order)
         # a SQL search fills no field cache; the in-memory one evaluates the
         # domain and the order through the records, so what it loads to do
