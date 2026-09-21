@@ -73,15 +73,32 @@ class AccountMove(models.Model):
             "WHERE company_id = any(%s)",
             [moves_to_fix.company_id.ids],
         )
-        translation_by_company_id = {
-            company_id: narration for company_id, narration in self.env.cr.fetchall()
+        terms_by_company_id = dict(self.env.cr.fetchall())
+        narration = self._fields["narration"]
+        # one language at a time: a translated field's cache is keyed by the
+        # environment's language, so handing it the whole jsonb stores that dict
+        # AS the value for the current language rather than replacing the
+        # field's translations
+        languages = {
+            language
+            for terms in terms_by_company_id.values()
+            if terms
+            for language in terms
         }
-        self.env.cache.update_raw(
-            moves_to_fix,
-            self._fields["narration"],
-            [translation_by_company_id[move.company_id.id] for move in moves_to_fix],
-            dirty=True,
-        )
+        for language in languages:
+            moves = moves_to_fix.filtered(
+                lambda move, language=language: (
+                    language in (terms_by_company_id[move.company_id.id] or {})
+                )
+            )
+            if not moves:
+                continue
+            self.env.cache.update_raw(
+                moves.with_context(lang=language),
+                narration,
+                [terms_by_company_id[move.company_id.id][language] for move in moves],
+                dirty=True,
+            )
         moves_to_fix.modified(["narration"])
 
     @api.model_create_multi
