@@ -63,6 +63,7 @@ from odoo.orm.tests import test_architecture_pins as pins
 from odoo.db import cursor
 from odoo.orm.runtime import _registry_signaling as signaling
 from odoo.orm.runtime import transaction
+from odoo.service import transaction as transaction_svc
 from odoo.orm.tests import test_backend_dispatch_surface as dispatch
 
 pages = pathlib.Path(sys.argv[1])
@@ -117,6 +118,29 @@ cite(
     len(signaling.SIGNALING_TABLES),
     "runtime.md",
     r"@ sequence reads",
+)
+
+# qualities.md's contention scenario names the retry budget and the back-off
+# curve it describes. They are constants, not measurements -- the 2026-08-28
+# stamp on that scenario belongs to its throughput table -- so they are gated
+# and not frozen. `\s*` because the page wraps between the name and the value.
+cite(
+    "retry budget",
+    transaction_svc.MAX_TRIES_ON_CONCURRENCY_FAILURE,
+    "qualities.md",
+    r"`MAX_TRIES_ON_CONCURRENCY_FAILURE`\s*\(@\)",
+)
+cite(
+    "back-off base",
+    transaction_svc.BASE_CONCURRENCY_BACKOFF_SECONDS,
+    "qualities.md",
+    r"`BASE_CONCURRENCY_BACKOFF_SECONDS`\s*\(@\)",
+)
+cite(
+    "back-off ceiling",
+    transaction_svc.MAX_CONCURRENCY_BACKOFF_SECONDS,
+    "qualities.md",
+    r"`MAX_CONCURRENCY_BACKOFF_SECONDS`\s*\(@\)",
 )
 
 # risks.md sizes the in-memory read_group the differential walk has to cover.
