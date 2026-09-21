@@ -69,7 +69,7 @@ def to_record_ids(values: Any) -> list[int]:
 
 def get_twilio_credentials(env: Environment) -> tuple[str | None, str | None]:
     params = env["ir.config_parameter"].sudo()
-    if not params.get_param("mail.use_twilio_rtc_servers"):
+    if not params.get_param_bool("mail.use_twilio_rtc_servers"):
         return None, None
     account_sid = params.get_param("mail.twilio_account_sid")
     auth_token = env["credential.credential"]._get_system_secret(
@@ -82,7 +82,7 @@ def get_sfu_url(env: Environment) -> str | None:
     params = env["ir.config_parameter"].sudo()
     sfu_url = (
         params.get_param("mail.sfu_server_url")
-        if params.get_param("mail.use_sfu_server")
+        if params.get_param_bool("mail.use_sfu_server")
         else None
     )
     if not sfu_url:

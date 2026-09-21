@@ -209,7 +209,7 @@ class PaymentTransaction(models.Model):
         if (
             not self.env["ir.config_parameter"]
             .sudo()
-            .get_param("sale.automatic_invoice")
+            .get_param_bool("sale.automatic_invoice")
         ):
             _debug.logic("cron_send_invoice_skipped", reason="automatic_invoice_off")
             return

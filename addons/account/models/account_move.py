@@ -2796,7 +2796,7 @@ class AccountMove(models.Model):
         use_invoice_terms = (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param("account.use_invoice_terms")
+            .get_param_bool("account.use_invoice_terms")
         )
         invoice_to_update_terms = self.filtered(
             lambda m: use_invoice_terms and m.is_sale_document(include_receipts=True)

@@ -140,7 +140,7 @@ class IrHttp(models.AbstractModel):
             "is_internal_user": user._is_internal(),
             "registry_hash": registry_hash,
             "menus_cache_version": f"{registry_hash}:{session_uid}",
-            "show_effect": bool(ir_config_sudo.get_param("base.show_effect")),
+            "show_effect": ir_config_sudo.get_param_bool("base.show_effect"),
             "currencies": self.env["res.currency"].get_all_currencies(),
             "quick_login": str2bool(
                 ir_config_sudo.get_param("web.quick_login", default=True), True

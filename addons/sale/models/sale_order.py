@@ -441,7 +441,7 @@ class SaleOrder(models.Model):
         use_invoice_terms = (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param("account.use_invoice_terms")
+            .get_param_bool("account.use_invoice_terms")
         )
         for order in self:
             template = order.sale_order_template_id.with_context(

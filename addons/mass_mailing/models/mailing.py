@@ -1636,7 +1636,7 @@ class MailingMailing(models.Model):
         if (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param("mass_mailing.mass_mailing_reports")
+            .get_param_bool("mass_mailing.mass_mailing_reports")
         ):
             mailings = self.env["mailing.mailing"].search(
                 [

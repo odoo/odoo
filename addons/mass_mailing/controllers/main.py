@@ -354,14 +354,9 @@ class MassMailController(http.Controller):
             "feedback_readonly": False,
             "opt_out_reasons": opt_out_reasons,
             # blocklist
-            "blocklist_enabled": bool(
-                request.env["ir.config_parameter"]
-                .sudo()
-                .get_param(
-                    "mass_mailing.show_blacklist_buttons",
-                    default=True,
-                )
-            ),
+            "blocklist_enabled": request.env["ir.config_parameter"]
+            .sudo()
+            .get_param_bool("mass_mailing.show_blacklist_buttons", True),
             "blocklist_possible": mail_blocklist is not None,
             "is_blocklisted": mail_blocklist.active if mail_blocklist else False,
             # mailing lists

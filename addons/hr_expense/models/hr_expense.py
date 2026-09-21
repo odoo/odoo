@@ -1174,7 +1174,7 @@ class HrExpense(models.Model):
         use_mailgateway = (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param("hr_expense.use_mailgateway")
+            .get_param_bool("hr_expense.use_mailgateway")
         )
         expense_alias = (
             self.env.ref("hr_expense.mail_alias_expense", raise_if_not_found=False)
