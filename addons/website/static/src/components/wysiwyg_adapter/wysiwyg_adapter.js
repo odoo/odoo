@@ -10,7 +10,7 @@ import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 import weUtils from '@web_editor/js/common/utils';
 import { isMediaElement } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
-import { cloneContentEls, checkAndNotifySEO } from "@website/js/utils";
+import { cloneContentEls, checkAndNotifySEO, getEmbedCode } from "@website/js/utils";
 
 import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
 import { WebsiteDialog } from '../dialog/dialog';
@@ -1079,8 +1079,13 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             for (const embedCodeEl of $clonedEl[0].querySelectorAll(".s_embed_code")) {
                 const embedTemplateEl = embedCodeEl.querySelector(".s_embed_code_saved");
                 if (embedTemplateEl) {
+                    const code = getEmbedCode(embedTemplateEl);
+                    embedTemplateEl.classList.add("o_translate_inline");
+                    embedTemplateEl.content.replaceChildren(
+                        embedTemplateEl.ownerDocument.createTextNode(code)
+                    );
                     embedCodeEl.querySelector(".s_embed_code_embedded")
-                        .replaceChildren(cloneContentEls(embedTemplateEl.content, true));
+                        .replaceChildren(cloneContentEls(code, true));
                 }
             }
             await super._saveElement($clonedEl, context, withLang, ...rest);
