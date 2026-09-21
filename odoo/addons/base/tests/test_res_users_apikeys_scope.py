@@ -338,3 +338,17 @@ class TestScopeRecords(TransactionCase):
         self.assertEqual((described.name, described.max_depth), ("Described", 3))
         self.assertEqual(other.key, "door.other")
         self.assertEqual(Scope.search_count([("key", "=", "door.described.later")]), 1)
+
+    def test_a_door_only_scope_reaches_no_model_at_the_universal_door(self):
+        Scope = self.env["res.users.apikeys.scope"]
+        door = Scope.create({"name": "Door", "key": "door.only", "door_only": True})
+        self.assertIsNone(door._rules().rule("res.partner"))
+        with self.assertRaises(AccessError):
+            call_kw(
+                self.env["res.partner"].with_context(api_scope_id=door.id),
+                "search_count",
+                [[]],
+                {},
+            )
+        door.door_only = False
+        self.assertIsNotNone(door._rules().rule("res.partner"), "every model again")

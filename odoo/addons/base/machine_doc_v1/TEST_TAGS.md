@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (4041 methods, 817 classes, 142 files)
+# All base tests (4042 methods, 817 classes, 142 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -175,7 +175,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_res_partner_sync.py` | `res_partner`, `res_partner_sync` | 1 | 10 | TransactionCase |
 | `test_res_users.py` | `post_install`, `-at_install`, `groups` | 30 | 100 | UsersCommonCase, TransactionCase, HttpCase |
 | `test_res_users_apikeys.py` | `post_install`, `-at_install` | 1 | 24 | TransactionCase |
-| `test_res_users_apikeys_scope.py` | `post_install`, `-at_install` | 7 | 35 | ScopeCase, TransactionCase |
+| `test_res_users_apikeys_scope.py` | `post_install`, `-at_install` | 7 | 36 | ScopeCase, TransactionCase |
 | `test_res_users_identitycheck.py` | `post_install`, `-at_install` | 1 | 5 | TransactionCase |
 | `test_res_users_log.py` | `post_install`, `-at_install` | 2 | 5 | TransactionCase |
 | `test_res_users_settings.py` | `post_install`, `-at_install` | 4 | 16 | TransactionCase |
@@ -260,7 +260,7 @@ These run in **both** at_install and post_install phases by default.
 |--------|-------|
 | Total test files | 142 |
 | Total test classes | 817 |
-| Total test methods | 4041 |
+| Total test methods | 4042 |
 | Files with @tagged | 82 (58%) |
 | Files without @tagged | 60 (42%) |
 | Classes using post_install | 279 |

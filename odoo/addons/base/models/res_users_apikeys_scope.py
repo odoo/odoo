@@ -29,6 +29,11 @@ class ResUsersApikeysScope(models.Model):
         "Empty: every model the key's user may reach, every operation, "
         "nothing hidden.",
     )
+    door_only = fields.Boolean(
+        help="A key of this scope opens its door and nothing else: at the "
+        "universal RPC doors it reaches no model at all. For a door whose "
+        "calls are not model calls -- a DAV client, a device protocol.",
+    )
     max_depth = fields.Integer(
         default=8,
         help="How many relations a field path (a domain, an order, a read "
@@ -75,6 +80,10 @@ class ResUsersApikeysScope(models.Model):
     @tools.ormcache("self.id")
     def _rules(self) -> api_scope.ScopeRules:
         self.check_singleton()
+        if self.door_only:
+            return api_scope.ScopeRules(
+                key=self.key, models={}, max_depth=self.max_depth
+            )
         lines = self.sudo().line_ids
         if not lines:
             return api_scope.ScopeRules(key=self.key, max_depth=self.max_depth)
