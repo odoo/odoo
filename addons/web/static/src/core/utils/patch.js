@@ -65,7 +65,7 @@ function findAncestorPropertyDescriptor(objToPatch, key) {
  * @template T
  * @template {Partial<T>} U
  * @param {T} objToPatch The object to patch
- * @param {U} extension The object containing the patched properties
+ * @param {U & ThisType<T & U>} extension The object containing the patched properties
  * @returns {() => void} Returns an unpatch function
  */
 export function patch(objToPatch, extension) {
