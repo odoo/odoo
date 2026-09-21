@@ -64,7 +64,7 @@ def restoring(tmp_path):
             patch.object(restore, "create_empty_database"),
             patch.object(restore, "_rollback_new_database"),
             patch.object(restore, "_check_filestore_dest_free"),
-            patch.object(restore, "_check_dump_sql_safe"),
+            patch.object(restore, "_refuse_psql_meta_commands"),
             patch.object(restore, "check_db_name"),
             patch.object(restore, "shutil", MagicMock(move=lambda *a: moved.append(a))),
             patch.object(restore.odoo.tools, "config", MagicMock()),
@@ -98,7 +98,7 @@ class TestArchiveMustBeAnOdooBackup:
     def test_a_zip_of_the_wrong_kind_is_refused_before_any_sql_runs(self, restoring):
         blob = _zip_bytes({"notes.txt": b"x"})
         with (
-            patch.object(restore, "_check_dump_sql_safe") as scanned,
+            patch.object(restore, "_refuse_psql_meta_commands") as scanned,
             pytest.raises(RuntimeError),
         ):
             restoring(blob)

@@ -5,7 +5,7 @@ import pytest
 
 from odoo.service.db._dump_scanner import (
     _ALLOWED_PSQL_META_COMMANDS,
-    _check_dump_sql_safe,
+    _refuse_psql_meta_commands,
 )
 
 from .._pg import pg_dump_path
@@ -100,4 +100,4 @@ class TestPgDumpMetaCommandShape:
         sql = dump_sql
         path = tmp_path / "dump.sql"
         path.write_text(sql, encoding="latin-1")
-        _check_dump_sql_safe(str(path))
+        _refuse_psql_meta_commands(str(path))

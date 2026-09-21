@@ -1,3 +1,40 @@
+"""What psql will be made to do by a dump, and what it will not.
+
+A `dump.sql` is restored by feeding it to `psql -f`, and psql interprets
+meta-commands -- `\\!`, `\\i`, `\\copy ... from program`, `\\o` -- in the CLIENT,
+with the privileges of whoever runs the server process.  A backup from an
+untrusted source could carry one.  This module refuses every meta-command but
+`\\.`, `\\restrict` and `\\unrestrict`, and refuses a change to
+`standard_conforming_strings`, which decides how a quoted string ends and could
+otherwise desynchronise the scan from what psql actually parses.
+
+**It does not make the dump's SQL safe, and it is not trying to.**  A restore
+executes the dump's SQL with the privileges of the role that connects, so a
+dump this module accepts can still do anything that role may do.  Measured
+2026-09-21 on a superuser role, which is what `psql -X -q -v ON_ERROR_STOP=1
+-f <dump.sql>` connects as in the common deployment:
+
+    COPY pwned FROM PROGRAM 'echo ...'      accepted here, and it runs
+
+`CREATE FUNCTION ... LANGUAGE plpython3u` is the same door, and so are
+`ALTER SYSTEM`, `CREATE SERVER` and the rest.  Filtering them one at a time
+would make this module's name truer without making it true: arbitrary SQL
+cannot be made safe by scanning it, a legitimate Odoo dump may carry
+`CREATE EXTENSION`, and a check whose name promises a property it lacks is
+worse than no check because the next reader stops looking.
+
+The property that makes a restore safe against a hostile backup is a
+**non-superuser restore role** with no `pg_execute_server_program` and no right
+to create an untrusted procedural language.  That is a deployment fact, and
+`doc/architecture/deployment.md` states it.  `pg_restore` -- the custom-format
+path, which this module does not scan -- speaks libpq and has no meta-commands
+at all, so it carries exactly this same exposure and no more; its absence here
+is consistent rather than a second gap.
+
+`TestTheBoundaryIsAContract` in `tests/service/test_dump_scanner.py` pins both
+halves, so the accepting half is a stated contract and not an oversight.
+"""
+
 from __future__ import annotations
 
 import logging
@@ -408,7 +445,7 @@ def _drain_physical_line(fh: TextIO, cap: int) -> None:
             return
 
 
-def _check_dump_sql_safe(sql_path: str) -> None:
+def _refuse_psql_meta_commands(sql_path: str) -> None:
     max_line = get_env_int(
         "ODOO_DUMP_SCAN_MAX_LINE",
         _DEFAULT_MAX_SCAN_LINE,
@@ -474,7 +511,7 @@ def _check_dump_sql_safe(sql_path: str) -> None:
 
 __all__ = (
     "_PsqlSqlScanner",
-    "_check_dump_sql_safe",
     "_get_disallowed_psql_meta_command",
     "_iter_physical_lines",
+    "_refuse_psql_meta_commands",
 )

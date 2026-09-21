@@ -437,6 +437,42 @@ rendered and not listed here, or listed and no longer rendered.
 | `odoo_replica_lagging` | gauge | 1 while the lag gate routes read-only cursors to the primary |
 | `odoo_replica_write_pins` | gauge | sessions reading from the primary because they wrote |
 
+## Restoring a backup executes its SQL
+
+A `.zip` backup's `dump.sql` is restored with `psql -X -q -v ON_ERROR_STOP=1
+-f`, and a `.dump` backup with `pg_restore --no-owner --exit-on-error`. Both
+replay the archive's SQL **with the privileges of the role that connects**, so
+restoring a backup is as trusted an operation as running that SQL by hand.
+
+`odoo/service/db/_dump_scanner.py` scans the plain-SQL path and refuses psql
+meta-commands — `\!`, `\i`, `\copy ... from program` and the rest — because
+those are interpreted by the psql **client**, with the privileges of whoever
+runs the server process, which is a different and larger blast radius than the
+database. It refuses a change to `standard_conforming_strings` for the same
+reason: that setting decides where a quoted string ends, so it could
+desynchronise the scan from what psql parses.
+
+**The scan does not make the SQL safe, and no scan could.** A dump it accepts
+can still carry `COPY ... FROM PROGRAM`, `CREATE FUNCTION ... LANGUAGE
+plpython3u`, `ALTER SYSTEM` or `CREATE SERVER`, each of which runs as the
+connecting role. `pg_restore` is unscanned and equivalent, not worse: it speaks
+libpq and has no meta-commands, so no archive can hand it a `\!`.
+
+| If the restore role is | Then a hostile backup |
+|---|---|
+| **superuser**, or holds `pg_execute_server_program` | runs shell commands on the database host. Measured 2026-09-21: `COPY t FROM PROGRAM` puts a command's output into a table through the command above |
+| an ordinary owner of its own database | can corrupt or destroy that database's data, and nothing outside it |
+
+So the one thing that makes restoring an untrusted backup survivable is a
+**non-superuser restore role** without `pg_execute_server_program` and without
+the right to create an untrusted procedural language. That is a deployment
+decision and the server cannot make it: `db_user` is whatever the conf names.
+Restoring a backup you produced is unaffected either way.
+
+The database manager's master password gates *who may ask for a restore*. It
+says nothing about what the backup contains, and a backup is a file that
+travels.
+
 ## What a deployment must provide
 
 | Dependency | Why it is not optional |

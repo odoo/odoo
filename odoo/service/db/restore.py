@@ -17,7 +17,7 @@ from odoo.tools.misc import exec_pg_environ, get_pg_tool_path
 
 from .._env import get_env_float, get_env_int
 from ._checks import check_db_management_enabled, check_db_name
-from ._dump_scanner import _check_dump_sql_safe
+from ._dump_scanner import _refuse_psql_meta_commands
 from .lifecycle import (
     _announce_database,
     _check_filestore_dest_free,
@@ -179,7 +179,7 @@ def _get_restore_command(
     if zipfile.is_zipfile(dump_file):
         filestore_path = _extract_zip_dump(dump_file, dump_dir)
         dump_sql_path = str(Path(dump_dir, "dump.sql"))
-        _check_dump_sql_safe(dump_sql_path)
+        _refuse_psql_meta_commands(dump_sql_path)
         pg_args = ["-X", "-q", "-v", "ON_ERROR_STOP=1", "-f", dump_sql_path]
         _debug.logic(
             "database.restore.command",

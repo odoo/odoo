@@ -155,7 +155,7 @@ def test_the_guard_would_catch_a_regression():
         _object_targets(
             "def db_mod():\n"
             "    return _dump_scanner\n"
-            'patch.object(db_mod, "_check_dump_sql_safe")'
+            'patch.object(db_mod, "_refuse_psql_meta_commands")'
         )
     )
     assert list(

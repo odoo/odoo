@@ -52,7 +52,7 @@ class TestDumpSqlMetaCommandScanner:
             path = f.name
         try:
             with pytest.raises(RuntimeError, match="Refusing to restore"):
-                db_mod._check_dump_sql_safe(path)
+                db_mod._refuse_psql_meta_commands(path)
         finally:
             pathlib.Path(path).unlink()
 
@@ -63,7 +63,7 @@ class TestDumpSqlMetaCommandScanner:
             f.write("\\restrict TOK\nCREATE TABLE t (id int);\n\\unrestrict TOK\n")
             path = f.name
         try:
-            db_mod._check_dump_sql_safe(path)
+            db_mod._refuse_psql_meta_commands(path)
         finally:
             pathlib.Path(path).unlink()
 
@@ -124,7 +124,7 @@ class TestDumpSqlScannerStandardConformingStrings:
             path = f.name
         try:
             with pytest.raises(RuntimeError, match="standard_conforming_strings"):
-                db_mod._check_dump_sql_safe(path)
+                db_mod._refuse_psql_meta_commands(path)
         finally:
             pathlib.Path(path).unlink()
 
@@ -183,12 +183,12 @@ class TestDumpSqlScannerLineBound:
         monkeypatch.setenv("ODOO_DUMP_SCAN_MAX_LINE", str(4 * 1024 * 1024))
         path = self._write(tmp_path, "SELECT '" + "A" * (5 * 1024 * 1024) + "';\n")
         with pytest.raises(RuntimeError, match="longer than"):
-            db_mod._check_dump_sql_safe(path)
+            db_mod._refuse_psql_meta_commands(path)
 
     def test_line_at_the_limit_is_accepted(self, db_mod, tmp_path, monkeypatch):
         monkeypatch.setenv("ODOO_DUMP_SCAN_MAX_LINE", str(4 * 1024 * 1024))
         path = self._write(tmp_path, "SELECT '" + "A" * (2 * 1024 * 1024) + "';\n")
-        db_mod._check_dump_sql_safe(path)
+        db_mod._refuse_psql_meta_commands(path)
 
     def test_cap_does_not_blind_the_scanner(self, db_mod, tmp_path, monkeypatch):
         monkeypatch.setenv("ODOO_DUMP_SCAN_MAX_LINE", str(4 * 1024 * 1024))
@@ -196,14 +196,14 @@ class TestDumpSqlScannerLineBound:
             tmp_path, "\\! touch /tmp/pwn\nSELECT '" + "A" * (9 * 1024 * 1024) + "';\n"
         )
         with pytest.raises(RuntimeError, match="meta-command"):
-            db_mod._check_dump_sql_safe(path)
+            db_mod._refuse_psql_meta_commands(path)
 
     def test_malformed_env_override_falls_back_to_the_default(
         self, db_mod, tmp_path, monkeypatch
     ):
         monkeypatch.setenv("ODOO_DUMP_SCAN_MAX_LINE", "not-a-number")
         path = self._write(tmp_path, "SELECT 1;\n")
-        db_mod._check_dump_sql_safe(path)
+        db_mod._refuse_psql_meta_commands(path)
 
     def test_overlong_copy_data_line_is_accepted(self, db_mod, tmp_path, monkeypatch):
         monkeypatch.setenv("ODOO_DUMP_SCAN_MAX_LINE", str(4 * 1024 * 1024))
@@ -214,7 +214,7 @@ class TestDumpSqlScannerLineBound:
             "COPY ir_attachment (id, db_datas) FROM stdin;\n"
             f"1\t{big}\n\\.\nSELECT 1;\n",
         )
-        db_mod._check_dump_sql_safe(path)
+        db_mod._refuse_psql_meta_commands(path)
 
     def test_overlong_copy_data_does_not_blind_a_later_meta_command(
         self, db_mod, tmp_path, monkeypatch
@@ -226,13 +226,13 @@ class TestDumpSqlScannerLineBound:
             f"COPY t (a) FROM stdin;\n{big}\n\\.\n\\! touch /tmp/pwn\n",
         )
         with pytest.raises(RuntimeError, match="meta-command"):
-            db_mod._check_dump_sql_safe(path)
+            db_mod._refuse_psql_meta_commands(path)
 
     def test_overlong_sql_line_still_refused(self, db_mod, tmp_path, monkeypatch):
         monkeypatch.setenv("ODOO_DUMP_SCAN_MAX_LINE", str(4 * 1024 * 1024))
         path = self._write(tmp_path, "SELECT '" + "A" * (8 * 1024 * 1024) + "';\n")
         with pytest.raises(RuntimeError, match="longer than"):
-            db_mod._check_dump_sql_safe(path)
+            db_mod._refuse_psql_meta_commands(path)
 
 
 class TestDumpSqlScannerLexerDivergence:
@@ -410,21 +410,21 @@ class TestDumpSqlScannerStreaming:
             def readline(self, *a, **kw):
                 limit = a[0] if a else kw.get("size")
                 assert limit is not None and limit > 0, (
-                    "_check_dump_sql_safe must bound each readline, else a "
+                    "_refuse_psql_meta_commands must bound each readline, else a "
                     "newline-free dump is slurped one 'line' at a time"
                 )
                 return self._fh.readline(*a, **kw)
 
             def read(self, *a, **kw):
                 raise AssertionError(
-                    "_check_dump_sql_safe must stream, not read() the dump"
+                    "_refuse_psql_meta_commands must stream, not read() the dump"
                 )
 
         def spy_open(self, *a, **kw):
             return NoSlurp(real_open(self, *a, **kw))
 
         with patch.object(type(p), "open", spy_open):
-            db_mod._check_dump_sql_safe(str(p))
+            db_mod._refuse_psql_meta_commands(str(p))
 
     def test_peak_memory_is_independent_of_dump_size(self, db_mod, tmp_path):
         import tracemalloc
@@ -433,7 +433,7 @@ class TestDumpSqlScannerStreaming:
             p = tmp_path / f"dump_{n_lines}.sql"
             p.write_text("SELECT 1;\n" * n_lines, encoding="latin-1")
             tracemalloc.start()
-            db_mod._check_dump_sql_safe(str(p))
+            db_mod._refuse_psql_meta_commands(str(p))
             _cur, peak = tracemalloc.get_traced_memory()
             tracemalloc.stop()
             return peak
@@ -544,4 +544,55 @@ class TestTheScannerAlwaysTerminates:
         assert scanned is not None, "corpus did not finish; see the sibling test"
         assert [sql for sql, found in scanned if found is not None], (
             "no pathological input was flagged; the corpus is inert"
+        )
+
+
+class TestTheBoundaryIsAContract:
+    """What this scanner accepts, stated so it is not re-found as a bug.
+
+    Its property is "psql will not be made to run a command", not "this dump
+    is safe". A restore executes the dump's SQL as the role that connects, so
+    every statement below is accepted here and will run -- and on a superuser
+    role, measured 2026-09-21, `COPY ... FROM PROGRAM` puts the output of a
+    shell command into a table through the exact command the zip restore path
+    uses.
+
+    These assertions are deliberately the uncomfortable direction. Filtering
+    these statements one at a time would make the module's name truer without
+    making it true, and would leave the next reader believing a restore of an
+    untrusted backup is safe. What makes it safe is a non-superuser restore
+    role; `doc/architecture/deployment.md` says so, and this pins the code's
+    half of that division.
+    """
+
+    SERVER_SIDE = [
+        "COPY t FROM PROGRAM 'id';\n",
+        "CREATE FUNCTION f() RETURNS void AS $$ pass $$ LANGUAGE plpython3u;\n",
+        "ALTER SYSTEM SET log_directory = '/tmp';\n",
+        "CREATE EXTENSION IF NOT EXISTS plpython3u;\n",
+        "DROP SCHEMA public CASCADE;\n",
+    ]
+
+    @pytest.mark.parametrize("sql", SERVER_SIDE)
+    def test_it_accepts_sql_that_runs_with_the_role_s_privileges(self, db_mod, sql):
+        assert db_mod._get_disallowed_psql_meta_command(sql) is None, (
+            "this scanner refuses psql meta-commands, not SQL. If it has "
+            "started refusing this, say so in its docstring and in "
+            "deployment.md -- the division of responsibility moved"
+        )
+
+    def test_the_client_side_vector_it_does_refuse_is_still_refused(self, db_mod):
+        """The pin above is only worth having while the real guard holds."""
+        assert db_mod._get_disallowed_psql_meta_command("\\! id\n") is not None
+
+    def test_the_two_halves_are_not_the_same_question(self, db_mod):
+        """`COPY ... FROM PROGRAM` and `\\copy ... from program` differ by one
+        character and by which process runs the program."""
+        assert (
+            db_mod._get_disallowed_psql_meta_command("COPY t FROM PROGRAM 'id';\n")
+            is None
+        )
+        assert (
+            db_mod._get_disallowed_psql_meta_command("\\copy t from program 'id'\n")
+            is not None
         )
