@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 from odoo.addons.stock_account.models.constants import (
     COST_METHOD_SELECTION,
@@ -48,3 +48,19 @@ class StockConfig(models.Model):
         default="standard",
         required=True,
     )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        configs = super().create(vals_list)
+        configs._set_category_defaults_of(vals_list)
+        return configs
+
+    def write(self, vals):
+        result = super().write(vals)
+        self._set_category_defaults_of([vals])
+        return result
+
+    def _set_category_defaults_of(self, vals_list):
+        changed = {key for vals in vals_list for key in vals}
+        if changed:
+            self.company_id._set_category_defaults(changed)
