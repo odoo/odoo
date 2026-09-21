@@ -23,7 +23,7 @@ test("Add member to channel", async () => {
     await contains(".o-discuss-ChannelMember:text('Mitchell Admin')");
     await click("[title='Add People']");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('Harry'))");
-    await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
+    await click(".o-discuss-ChannelInvitation button:text('Invite'):enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(".o-discuss-ChannelMember:text('Harry')");
 });

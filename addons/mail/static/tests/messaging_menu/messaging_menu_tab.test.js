@@ -295,7 +295,7 @@ test("create new chat from chat tab", async () => {
     await click("button:has([data-icon='add']):text(Chat)");
     await contains(".o-discuss-ChannelInvitation");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner'))");
-    await click("button[title='Create Chat']:enabled");
+    await click("button:text('Create Chat'):enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(".o-mail-ChatWindow-displayName:text('TestPartner')");
 });
@@ -314,7 +314,7 @@ test("create new group chat from chat tab", async () => {
     await contains(".o-discuss-ChannelInvitation");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner1'))");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2'))");
-    await click("button[title='Create Chat']:enabled");
+    await click("button:text('Create Chat'):enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(
         ".o-mail-ChatWindow-displayName:text('Mitchell Admin, TestPartner1, and TestPartner2')"

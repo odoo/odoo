@@ -59,7 +59,7 @@ test("can invite users in channel from chat window", async () => {
     await click(".o-dropdown-item:text('Invite People')");
     await contains(".o-discuss-ChannelInvitation");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner'))");
-    await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
+    await click(".o-discuss-ChannelInvitation button:text('Invite'):enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     const [{ date }] = pyEnv["mail.message"].search_read([["res_id", "=", channelId]]);
     const time = deserializeDateTime(date).toLocaleString(luxon.DateTime.TIME_SIMPLE, {
@@ -190,7 +190,7 @@ test("should be able to create a new group chat from an existing chat", async ()
     await contains(".o-discuss-ChannelInvitation");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2'))");
-    await click("button[title='Create Group Chat']:enabled");
+    await click("button:text('Create Group Chat'):enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(
         ".o-mail-NotificationItem:has(:text('Mitchell Admin, TestPartner, and TestPartner2'))"
