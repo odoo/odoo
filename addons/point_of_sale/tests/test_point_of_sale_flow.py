@@ -991,7 +991,7 @@ class TestPointOfSaleFlow(CommonPosTest):
 
     def test_sale_order_postponed_invoicing_anglosaxon(self):
         self.env.company.account_config_id.anglo_saxon_accounting = True
-        self.env.company.point_of_sale_update_stock_quantities = "closing"
+        self.env.company.point_of_sale_config_id.point_of_sale_update_stock_quantities = "closing"
         order, _ = self.create_backend_pos_order(
             {
                 "line_data": [

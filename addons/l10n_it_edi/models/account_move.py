@@ -2,13 +2,12 @@ import logging
 import re
 import uuid
 from base64 import b64decode, b64encode
-from collections import defaultdict
 from datetime import datetime
 
 from lxml import etree
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models, modules
+from odoo import Command, _, api, fields, models
 from odoo.db.schema import column_exists, create_column
 from odoo.exceptions import LockError, UserError
 from odoo.libs.text import nl2br, nl2br_enclose
@@ -114,7 +113,7 @@ class AccountMove(models.Model):
     )
     l10n_it_edi_attachment_name = fields.Char(string="FatturaPA Attachment")
     l10n_it_edi_proxy_mode = fields.Selection(
-        related="company_id.l10n_it_edi_proxy_user_id.edi_mode",
+        related="company_id.l10n_it_edi_config_id.l10n_it_edi_proxy_user_id.edi_mode",
         depends=["company_id"],
     )
     l10n_it_edi_button_label = fields.Char(compute="_compute_l10n_it_edi_button_label")
@@ -978,9 +977,7 @@ class AccountMove(models.Model):
         seller_info_values = (
             company.partner_id if not is_self_invoice else partner
         )._l10n_it_edi_get_values()
-        representative_info_values = (
-            company.l10n_it_tax_representative_partner_id._l10n_it_edi_get_values()
-        )
+        representative_info_values = company.l10n_it_edi_config_id.l10n_it_tax_representative_partner_id._l10n_it_edi_get_values()
 
         if self._l10n_it_edi_is_simplified_document_type(document_type):
             formato_trasmissione = "FSM10"
@@ -1116,7 +1113,7 @@ class AccountMove(models.Model):
             "sender": sender,
             "buyer": buyer,
             "seller": seller,
-            "representative": company.l10n_it_tax_representative_partner_id,
+            "representative": company.l10n_it_edi_config_id.l10n_it_tax_representative_partner_id,
             "sender_info": sender_info_values,
             "buyer_info": buyer_info_values,
             "seller_info": seller_info_values,
@@ -1129,7 +1126,7 @@ class AccountMove(models.Model):
             "currency": self.currency_id or self.company_currency_id
             if not convert_to_euros
             else self.env.ref("base.EUR"),
-            "regime_fiscale": company.l10n_it_tax_system
+            "regime_fiscale": company.l10n_it_edi_config_id.l10n_it_tax_system
             if not is_self_invoice
             else "RF18",
             "is_self_invoice": is_self_invoice,
@@ -1892,9 +1889,9 @@ class AccountMove(models.Model):
             # Set the move journal to the preferred/default purchase journal set from the italian EDI settings
             if (
                 self.move_type in self.get_purchase_types(include_receipts=True)
-                and self.company_id.l10n_it_edi_purchase_journal_id
+                and self.company_id.l10n_it_edi_config_id.l10n_it_edi_purchase_journal_id
             ):
-                self.journal_id = self.company_id.l10n_it_edi_purchase_journal_id
+                self.journal_id = self.company_id.l10n_it_edi_config_id.l10n_it_edi_purchase_journal_id
 
             if self.name and self.name != "/":
                 # the journal might've changed, so we need to recompute the name in case it was set (first entry in journal)
@@ -2851,7 +2848,7 @@ class AccountMove(models.Model):
         * transactionId: The fatturapa ID of this request.
         * error:         An eventual error.
         """
-        proxy_user = self.company_id.l10n_it_edi_proxy_user_id
+        proxy_user = self.company_id.l10n_it_edi_config_id.l10n_it_edi_proxy_user_id
         proxy_user.check_singleton()
         if proxy_user.edi_mode == "demo":
             return {"id_transaction": "demo"}
@@ -2878,7 +2875,7 @@ class AccountMove(models.Model):
 
     def _l10n_it_edi_update_send_state(self):
         """Check if the current invoices have been processed by the SdI."""
-        proxy_user = self.company_id.l10n_it_edi_proxy_user_id
+        proxy_user = self.company_id.l10n_it_edi_config_id.l10n_it_edi_proxy_user_id
         if proxy_user.edi_mode == "demo":
             for move in self:
                 filename = move.l10n_it_edi_attachment_name or "???"

@@ -1,6 +1,6 @@
 {
     "name": "Egypt E-Invoicing",
-    "version": "0.4",
+    "version": "0.5",
     "category": "Accounting/Localizations/EDI",
     "summary": "Egypt Tax Authority Invoice Integration",
     "description": """
@@ -33,6 +33,7 @@ Integrates with the ETA portal to automatically send and sign the Invoices to th
         "data/l10n_eg_edi.uom.code.csv",
         "data/uom.uom.csv",
         "security/ir.model.access.csv",
+        "security/l10n_eg_edi_eta_security.xml",
         "security/eta_thumb_drive_security.xml",
         "views/uom_uom_view.xml",
         "views/account_move_view.xml",

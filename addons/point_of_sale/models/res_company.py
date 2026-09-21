@@ -9,35 +9,30 @@ class ResCompany(models.Model):
     _name = "res.company"
     _inherit = ["res.company", "mixin.pos.load"]
 
-    point_of_sale_update_stock_quantities = fields.Selection(
-        selection=[
-            ("closing", "At the session closing"),
-            ("real", "In real time"),
-        ],
-        string="Update quantities in stock",
-        default="real",
-        help="At the session closing: A picking is created for the entire session when it's closed\n In real time: Each order sent to the server create its own picking",
+    point_of_sale_config_id = fields.Many2one(
+        comodel_name="point_of_sale.config",
+        compute="_compute_point_of_sale_config_id",
+        search="_search_point_of_sale_config_id",
     )
+
     point_of_sale_use_ticket_qr_code = fields.Boolean(
-        string="Self-service invoicing",
-        default=True,
-        help="Print information on the receipt to allow the customer to easily access the invoice anytime, from Odoo's portal.",
+        related="point_of_sale_config_id.point_of_sale_use_ticket_qr_code",
     )
     point_of_sale_ticket_unique_code = fields.Boolean(
-        string="Generate a code on ticket",
-        help="Add a 5-digit code on the receipt to allow the user to request the invoice for an order on the portal.",
+        related="point_of_sale_config_id.point_of_sale_ticket_unique_code",
     )
     point_of_sale_ticket_portal_url_display_mode = fields.Selection(
-        selection=[
-            ("qr_code", "QR code"),
-            ("url", "URL"),
-            ("qr_code_and_url", "QR code + URL"),
-        ],
-        string="Print",
-        default="qr_code_and_url",
-        required=True,
-        help="Choose how the URL to the portal will be print on the receipt.",
+        related="point_of_sale_config_id.point_of_sale_ticket_portal_url_display_mode",
     )
+
+    def _search_point_of_sale_config_id(self, operator, value):
+        return self._search_config_link("point_of_sale.config", operator, value)
+
+    def _compute_point_of_sale_config_id(self):
+        configs = self.env["point_of_sale.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.point_of_sale_config_id = by_company.get(company.id, False)
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -57,63 +52,16 @@ class ResCompany(models.Model):
             "partner_id",
             "country_id",
             "state_id",
-            "point_of_sale_use_ticket_qr_code",
-            "point_of_sale_ticket_unique_code",
-            "point_of_sale_ticket_portal_url_display_mode",
             "street",
             "city",
             "zip",
-        ]
-
-    @api.model
-    def _load_pos_data_config_fields(self, config):
-        # configuration the point of sale reads as if it were the company's:
-        # the record keeps the shape the client expects, each name read off
-        # the configuration that declares it
-        return [
             "tax_calculation_rounding_method",
             "account_fiscal_country_id",
             "nomenclature_id",
+            "point_of_sale_use_ticket_qr_code",
+            "point_of_sale_ticket_unique_code",
+            "point_of_sale_ticket_portal_url_display_mode",
         ]
-
-    @api.model
-    def _load_pos_data_config_field(self, fname):
-        return next(
-            (link, self.env[field.comodel_name]._fields[fname])
-            for link, field in self._config_link_fields().items()
-            if fname in self.env[field.comodel_name]._fields
-        )
-
-    @api.model
-    def _load_pos_data_projected_fields(self):
-        return {
-            fname: self._load_pos_data_config_field(fname)[1]
-            for fname in self._load_pos_data_config_fields(self.env["pos.config"])
-        }
-
-    @api.model
-    def _load_pos_data_read(self, records, config):
-        rows = super()._load_pos_data_read(records, config)
-        config_fields = self._load_pos_data_config_fields(config)
-        if not rows or not config_fields:
-            return rows
-        companies = self.browse([row["id"] for row in rows])
-        by_link = {}
-        for fname in config_fields:
-            link, _field = self._load_pos_data_config_field(fname)
-            by_link.setdefault(link, []).append(fname)
-        for link, fnames in by_link.items():
-            configs = companies[link]
-            values = dict(
-                zip(
-                    configs.company_id.ids,
-                    configs.read(fnames, load=False),
-                    strict=True,
-                )
-            )
-            for row in rows:
-                row.update({fname: values[row["id"]][fname] for fname in fnames})
-        return rows
 
     @api.constrains(
         "account_config_id.fiscalyear_lock_date",

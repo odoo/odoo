@@ -26,7 +26,7 @@ class L10n_Sa_EdiOtpWizard(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
-        if self.env.company.l10n_sa_api_mode == "sandbox":
+        if self.env.company.l10n_sa_edi_config_id.l10n_sa_api_mode == "sandbox":
             res["l10n_sa_otp"] = "123456" if self.l10n_sa_renewal else "123345"
         return res
 

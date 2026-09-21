@@ -6,7 +6,7 @@ from markupsafe import Markup
 
 from odoo import fields
 from odoo.exceptions import AccessError
-from odoo.tools import LazyTranslate, _
+from odoo.tools import _
 
 from odoo.addons.l10n_in_ewaybill.models.error_codes import ERROR_CODES
 
@@ -53,7 +53,7 @@ class EWayBillApi:
     def _ewaybill_jsonrpc_to_server(self, url_path, params):
         params.update(
             {
-                "username": self.company.sudo().l10n_in_ewaybill_username,
+                "username": self.company.sudo().l10n_in_ewaybill_config_id.l10n_in_ewaybill_username,
                 "gstin": self.company.vat,
             }
         )
@@ -87,12 +87,12 @@ class EWayBillApi:
     def _ewaybill_check_authentication(self):
         sudo_company = self.company.sudo()
         if (
-            sudo_company.l10n_in_ewaybill_username
+            sudo_company.l10n_in_ewaybill_config_id.l10n_in_ewaybill_username
             and sudo_company._l10n_in_ewaybill_token_is_valid()
         ):
             return True
         elif (
-            sudo_company.l10n_in_ewaybill_username
+            sudo_company.l10n_in_ewaybill_config_id.l10n_in_ewaybill_username
             and sudo_company.l10n_in_ewaybill_password
         ):
             try:
@@ -108,7 +108,7 @@ class EWayBillApi:
             url_path="/iap/l10n_in_edi_ewaybill/1/authenticate", params=params
         )
         if response and response.get("status_cd") == "1":
-            self.company.sudo().l10n_in_ewaybill_auth_validity = (
+            self.company.sudo().l10n_in_ewaybill_config_id.l10n_in_ewaybill_auth_validity = (
                 fields.Datetime.now() + timedelta(hours=6, minutes=00, seconds=00)
             )
 

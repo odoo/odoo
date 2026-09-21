@@ -369,9 +369,7 @@ class AccountCashFlowReportHandler(models.AbstractModel):
         )
 
     @_debug.perf.timed
-    def _get_liquidity_balance(
-        self, report, options, payment_account_ids, date_scope
-    ):
+    def _get_liquidity_balance(self, report, options, payment_account_ids, date_scope):
         """Compute the balance of all liquidity accounts to populate the following sections:
             'Cash and cash equivalents, beginning of period' and 'Cash and cash equivalents, closing balance'.
 

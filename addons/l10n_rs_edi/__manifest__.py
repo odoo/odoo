@@ -1,6 +1,6 @@
 {
     "name": "Serbia - eFaktura E-invoicing",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Accounting/Localizations/EDI",
     "summary": "E-Invoice implementation for Serbia",
     "description": """
@@ -17,6 +17,8 @@ eFaktura E-invoice implementation for Serbia
         "rs",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/l10n_rs_edi_security.xml",
         "views/res_config_settings_views.xml",
         "views/account_move.xml",
         "views/res_partner_views.xml",

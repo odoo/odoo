@@ -92,6 +92,18 @@ class ResCompany(models.Model):
         compute="_compute_account_config_id",
         search="_search_account_config_id",
     )
+
+    account_fiscal_country_id = fields.Many2one(
+        related="account_config_id.account_fiscal_country_id",
+    )
+
+    account_use_credit_limit = fields.Boolean(
+        related="account_config_id.account_use_credit_limit",
+    )
+
+    tax_calculation_rounding_method = fields.Selection(
+        related="account_config_id.tax_calculation_rounding_method",
+    )
     account_enabled_tax_country_ids = fields.Many2many(
         related="account_config_id.account_enabled_tax_country_ids"
     )

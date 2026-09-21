@@ -5,6 +5,7 @@ from . import account_payment_channel
 from . import account_tax
 from . import ddt
 from . import l10n_it_document_type
+from . import l10n_it_edi_config
 from . import res_company
 from . import res_config_settings
 from . import res_partner

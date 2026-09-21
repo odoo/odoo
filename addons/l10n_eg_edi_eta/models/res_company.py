@@ -7,20 +7,24 @@ class ResCompany(models.Model):
         "l10n_eg_client_secret": "l10n_eg_client_secret",
     }
 
-    l10n_eg_client_identifier = fields.Char(
-        string="ETA Client ID",
-        groups="base.group_erp_manager",
+    l10n_eg_edi_eta_config_id = fields.Many2one(
+        comodel_name="l10n_eg_edi_eta.config",
+        compute="_compute_l10n_eg_edi_eta_config_id",
+        search="_search_l10n_eg_edi_eta_config_id",
     )
+
     l10n_eg_client_secret = fields.Char(
         string="ETA Secret",
         compute="_compute_credential_doors",
         inverse="_inverse_credential_doors",
         groups="base.group_erp_manager",
     )
-    l10n_eg_production_env = fields.Boolean(string="In Production Environment")
-    l10n_eg_invoicing_threshold = fields.Float(
-        string="Invoicing Threshold",
-        default=0.0,
-        help="Threshold at which you are required to give the VAT number "
-        "of the customer. ",
-    )
+
+    def _search_l10n_eg_edi_eta_config_id(self, operator, value):
+        return self._search_config_link("l10n_eg_edi_eta.config", operator, value)
+
+    def _compute_l10n_eg_edi_eta_config_id(self):
+        configs = self.env["l10n_eg_edi_eta.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.l10n_eg_edi_eta_config_id = by_company.get(company.id, False)

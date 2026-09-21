@@ -576,7 +576,7 @@ class AccountMove(models.Model):
                     {
                         "company_id": self.env.company.id,
                         "move_type": "in_invoice",
-                        "journal_id": self.env.company.l10n_ro_edi_anaf_imported_inv_journal_id.id,
+                        "journal_id": self.env.company.l10n_ro_edi_config_id.l10n_ro_edi_anaf_imported_inv_journal_id.id,
                     }
                 )
 

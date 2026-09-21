@@ -1,6 +1,6 @@
 {
     "name": "Italy - Declaration of Intent",
-    "version": "0.1",
+    "version": "0.2",
     "category": "Accounting/Localizations",
     "description": """
     Add support for the Declaration of Intent (Dichiarazione di Intento) to the Italian localization.
@@ -17,6 +17,7 @@
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/l10n_it_edi_doi_security.xml",
         "data/invoice_it_template.xml",
         "views/l10n_it_edi_doi_declaration_of_intent_views.xml",
         "views/account_move_views.xml",

@@ -1,6 +1,6 @@
 {
     "name": "Taiwan - E-invoicing",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Accounting/Localizations/EDI",
     "summary": "E-invoicing using ECpay",
     "description": """
@@ -22,6 +22,7 @@
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/l10n_tw_edi_ecpay_security.xml",
         "views/res_config_setting_view.xml",
         "views/account_tax.xml",
         "views/account_move_view.xml",

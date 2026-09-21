@@ -19,7 +19,7 @@ class AccountMove(models.Model):
         compute="_compute_l10n_in_ewaybill_details"
     )
     l10n_in_ewaybill_feature_enabled = fields.Boolean(
-        related="company_id.l10n_in_ewaybill_feature",
+        related="company_id.l10n_in_ewaybill_config_id.l10n_in_ewaybill_feature",
         string="E-Waybill Feature Enabled",
     )
 
@@ -48,7 +48,7 @@ class AccountMove(models.Model):
             ewaybill = move.l10n_in_ewaybill_ids and move.l10n_in_ewaybill_ids[0]
             if (
                 move.country_code == "IN"
-                and move.company_id.l10n_in_ewaybill_feature
+                and move.company_id.l10n_in_ewaybill_config_id.l10n_in_ewaybill_feature
                 and ewaybill.state == "generated"
             ):
                 move.l10n_in_ewaybill_name = ewaybill.name

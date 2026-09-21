@@ -76,7 +76,7 @@ class AccountPayment(models.Model):
         """
         for payment in self:
             payment.withholding_hide_tax_base_account = bool(
-                payment.company_id.withholding_tax_base_account_id
+                payment.company_id.l10n_account_withholding_tax_config_id.withholding_tax_base_account_id
             )
 
     @api.depends("should_withhold_tax")

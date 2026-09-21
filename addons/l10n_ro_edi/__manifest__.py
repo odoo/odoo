@@ -1,6 +1,6 @@
 {
     "name": "Romania - E-invoicing",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Accounting/Localizations/EDI",
     "summary": "E-Invoice implementation for Romania",
     "description": """
@@ -16,6 +16,7 @@ E-invoice implementation for Romania
     "data": [
         "data/ir_cron.xml",
         "security/ir.model.access.csv",
+        "security/l10n_ro_edi_security.xml",
         "views/account_move_views.xml",
         "views/res_config_settings_views.xml",
     ],

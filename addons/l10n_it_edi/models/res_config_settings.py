@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -10,7 +10,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     l10n_it_edi_purchase_journal_id = fields.Many2one(
-        related="company_id.l10n_it_edi_purchase_journal_id",
+        related="company_id.l10n_it_edi_config_id.l10n_it_edi_purchase_journal_id",
         readonly=False,
     )
     l10n_it_edi_show_purchase_journal_id = fields.Boolean(
@@ -47,7 +47,9 @@ class ResConfigSettings(models.TransientModel):
     def _inverse_l10n_it_edi_register(self):
         for config in self:
             company = config.company_id._l10n_it_get_edi_company()
-            company.l10n_it_edi_register = config.l10n_it_edi_register
+            company.l10n_it_edi_config_id.l10n_it_edi_register = (
+                config.l10n_it_edi_register
+            )
             proxy_user = (
                 self.env["account_edi_proxy_client.user"]
                 .sudo()

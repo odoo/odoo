@@ -223,14 +223,18 @@ class AccountJournal(models.Model):
         try:
             # If the company does not have a private key, we generate it.
             # The private key is used to generate the CSR but also to sign the invoices
-            ec_private_key_sudo = self.company_id.sudo().l10n_sa_private_key_id
+            ec_private_key_sudo = (
+                self.company_id.sudo().l10n_sa_edi_config_id.l10n_sa_private_key_id
+            )
             if not ec_private_key_sudo:
                 ec_private_key_sudo = (
                     self.env["certificate.key"]
                     .sudo()
                     ._generate_ec_private_key(self.company_id, name="CCSID private key")
                 )
-                self.company_id.l10n_sa_private_key_id = ec_private_key_sudo
+                self.company_id.l10n_sa_edi_config_id.l10n_sa_private_key_id = (
+                    ec_private_key_sudo
+                )
             self._l10n_sa_generate_csr()
             # STEP 1: The first step of the process is to get the CCSID
             self._l10n_sa_get_compliance_CSID(otp)
@@ -273,7 +277,7 @@ class AccountJournal(models.Model):
                 {
                     "name": "CCSID Certificate",
                     "content": b64decode(CCSID_data["binarySecurityToken"]),
-                    "private_key_id": self.company_id.sudo().l10n_sa_private_key_id.id,
+                    "private_key_id": self.company_id.sudo().l10n_sa_edi_config_id.l10n_sa_private_key_id.id,
                     "company_id": self.company_id.id,
                 }
             )
@@ -562,7 +566,7 @@ class AccountJournal(models.Model):
         self.check_singleton()
         auth_data = PCSID_data
         # For renewal, the sandbox API expects a specific Username/Password, which are set in the SANDBOX_AUTH dict
-        if self.company_id.l10n_sa_api_mode == "sandbox":
+        if self.company_id.l10n_sa_edi_config_id.l10n_sa_api_mode == "sandbox":
             auth_data = SANDBOX_AUTH
         request_data = {
             "body": json.dumps({"csr": self.l10n_sa_csr.decode()}),
@@ -669,7 +673,10 @@ class AccountJournal(models.Model):
         ):
             raise UserError(str(ERROR_MESSAGE))
         certificate = self_sudo.l10n_sa_production_csid_certificate_id
-        if not certificate.is_valid and self.company_id.l10n_sa_api_mode != "sandbox":
+        if (
+            not certificate.is_valid
+            and self.company_id.l10n_sa_edi_config_id.l10n_sa_api_mode != "sandbox"
+        ):
             raise UserError(_("The Journal is not valid anymore. Please Renew it."))
         return json.loads(self_sudo.l10n_sa_production_csid_json), certificate.id
 
@@ -679,7 +686,7 @@ class AccountJournal(models.Model):
         """
         Helper function to make api calls to the ZATCA API Endpoint
         """
-        api_url = ZATCA_API_URLS[self.company_id.l10n_sa_api_mode]
+        api_url = ZATCA_API_URLS[self.company_id.l10n_sa_edi_config_id.l10n_sa_api_mode]
         request_url = urljoin(api_url, request_url)
         status_code = False
         try:
@@ -770,7 +777,7 @@ class AccountJournal(models.Model):
 
     def _l10n_sa_load_edi_demo_data(self):
         self.check_singleton()
-        self.company_id.l10n_sa_private_key_id = self.env[
+        self.company_id.l10n_sa_edi_config_id.l10n_sa_private_key_id = self.env[
             "certificate.key"
         ]._generate_ec_private_key(self.company_id)
         self.write(

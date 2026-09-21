@@ -177,7 +177,7 @@ class ProjectSaleLineEmployeeMap(models.Model):
     def _compute_display_cost(self):
         is_uom_day = (
             self.env.ref("uom.product_uom_day")
-            == self.env.company.timesheet_encode_uom_id
+            == self.env.company.hr_timesheet_config_id.timesheet_encode_uom_id
         )
         resource_calendar_per_hours = self._get_working_hours_per_calendar(is_uom_day)
 
@@ -192,7 +192,7 @@ class ProjectSaleLineEmployeeMap(models.Model):
     def _inverse_display_cost(self):
         is_uom_day = (
             self.env.ref("uom.product_uom_day")
-            == self.env.company.timesheet_encode_uom_id
+            == self.env.company.hr_timesheet_config_id.timesheet_encode_uom_id
         )
         resource_calendar_per_hours = self._get_working_hours_per_calendar(is_uom_day)
 

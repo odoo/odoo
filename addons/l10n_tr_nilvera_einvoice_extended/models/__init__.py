@@ -7,6 +7,7 @@ from . import l10n_tr_nilvera_einvoice_extended_account_tax_code
 from . import l10n_tr_nilvera_einvoice_extended_tax_office
 from . import product_product
 from . import product_template
+from . import l10n_tr_nilvera_einvoice_extended_config
 from . import res_company
 from . import res_config_settings
 from . import res_partner

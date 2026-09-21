@@ -1,6 +1,6 @@
 {
     "name": "Brazilian - Accounting",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Accounting/Localizations/Account Charts",
     "description": """
 Base module for the Brazilian localization
@@ -61,6 +61,7 @@ Create electronic sales invoices with Avatax.
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/l10n_br_security.xml",
         "views/res_partner_views.xml",
         "data/account_tax_report_data.xml",
         "data/res_country_data.xml",

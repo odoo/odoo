@@ -5,11 +5,9 @@ from datetime import datetime
 import requests
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.http import request
 from odoo.tools.safe_eval import json
-from odoo.tools.urls import urljoin as url_join
 
 
 class ResCompany(models.Model):
@@ -20,7 +18,12 @@ class ResCompany(models.Model):
         "l10n_ro_edi_refresh_token": "l10n_ro_edi_refresh_token",
     }
 
-    l10n_ro_edi_client_id = fields.Char(string="eFactura Client ID")
+    l10n_ro_edi_config_id = fields.Many2one(
+        comodel_name="l10n_ro_edi.config",
+        compute="_compute_l10n_ro_edi_config_id",
+        search="_search_l10n_ro_edi_config_id",
+    )
+
     l10n_ro_edi_client_secret = fields.Char(
         string="Client Secret",
         compute="_compute_credential_doors",
@@ -36,47 +39,15 @@ class ResCompany(models.Model):
         compute="_compute_credential_doors",
         inverse="_inverse_credential_doors",
     )
-    l10n_ro_edi_access_expiry_date = fields.Date(string="Access Token Expiry Date")
-    l10n_ro_edi_refresh_expiry_date = fields.Date(string="Refresh Token Expiry Date")
-    l10n_ro_edi_callback_url = fields.Char(compute="_compute_l10n_ro_edi_callback_url")
-    l10n_ro_edi_test_env = fields.Boolean(
-        string="Use Test Environment",
-        default=True,
-    )
-    l10n_ro_edi_anaf_imported_inv_journal_id = fields.Many2one(
-        comodel_name="account.journal",
-        string="Select journal for SPV imported bills",
-        compute="_compute_l10n_ro_edi_anaf_imported_inv_journal_id",
-        store=True,
-        readonly=False,
-        domain="[('type', '=', 'purchase')]",
-    )
 
-    @api.depends("country_code")
-    def _compute_l10n_ro_edi_callback_url(self):
-        """Callback URLs are used for generating client_id and client_secret from l10n_ro_edi's setting."""
-        for company in self:
-            if company.country_code == "RO":
-                company.l10n_ro_edi_callback_url = url_join(
-                    request.httprequest.url_root, "l10n_ro_edi/callback/%s" % company.id
-                )
-            else:
-                company.l10n_ro_edi_callback_url = False
+    def _search_l10n_ro_edi_config_id(self, operator, value):
+        return self._search_config_link("l10n_ro_edi.config", operator, value)
 
-    @api.depends("country_code")
-    def _compute_l10n_ro_edi_anaf_imported_inv_journal_id(self):
+    def _compute_l10n_ro_edi_config_id(self):
+        configs = self.env["l10n_ro_edi.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
         for company in self:
-            company.l10n_ro_edi_anaf_imported_inv_journal_id = False
-            if company.country_code == "RO":
-                company.l10n_ro_edi_anaf_imported_inv_journal_id = self.env[  # noqa: E8507 - one lookup per company, on its own journals
-                    "account.journal"
-                ].search(
-                    [
-                        ("type", "=", "purchase"),
-                        *self.env["account.journal"]._check_company_domain(company.id),
-                    ],
-                    limit=1,
-                )
+            company.l10n_ro_edi_config_id = by_company.get(company.id, False)
 
     def _l10n_ro_edi_log_message(self, message: str, func: str):
         with self.pool.cursor() as cr:
@@ -128,14 +99,17 @@ class ResCompany(models.Model):
         to make request to the SPV and renew the company's token fields.
         """
         self.check_singleton()
-        if not self.l10n_ro_edi_client_id or not self.l10n_ro_edi_client_secret:
+        if (
+            not self.l10n_ro_edi_config_id.l10n_ro_edi_client_id
+            or not self.l10n_ro_edi_client_secret
+        ):
             raise UserError(_("Client ID and Client Secret field must be filled."))
 
         response = self._post_held_oauth2_refresh_grant(
             "https://logincert.anaf.ro/anaf-oauth2/v1/token",
             "l10n_ro_edi_refresh_token",
             {
-                "client_id": self.l10n_ro_edi_client_id,
+                "client_id": self.l10n_ro_edi_config_id.l10n_ro_edi_client_id,
                 "client_secret": self.l10n_ro_edi_client_secret,
             },
             purpose="l10n_ro_edi",
@@ -160,7 +134,7 @@ class ResCompany(models.Model):
             .search(
                 [
                     ("company_credential_id", "!=", False),
-                    ("l10n_ro_edi_client_id", "!=", False),
+                    ("l10n_ro_edi_config_id.l10n_ro_edi_client_id", "!=", False),
                 ]
             )
             .filtered(
@@ -204,7 +178,7 @@ class ResCompany(models.Model):
             .search(
                 [
                     ("company_credential_id", "!=", False),
-                    ("l10n_ro_edi_client_id", "!=", False),
+                    ("l10n_ro_edi_config_id.l10n_ro_edi_client_id", "!=", False),
                 ]
             )
             .filtered(

@@ -528,15 +528,26 @@ class ResCompany(models.Model):
             and getattr(self.env[field.comodel_name], "_company_config", False)
         }
 
+    def _config_link_of_field(self, fname: str) -> str | None:
+        links = self._config_link_fields()
+        field = self._fields.get(fname)
+        if field is not None:
+            related = getattr(field, "related", None)
+            if related and related.split(".")[0] in links:
+                return related.split(".")[0]
+            return None
+        for link, link_field in links.items():
+            if fname in self.env[link_field.comodel_name]._fields:
+                return link
+        return None
+
     def _config_owner_of(self, fname: str) -> models.Model:
-        # the record a field named on the company is written to: the company
-        # itself, or the configuration that declares the field
         self.check_singleton()
+        link = self._config_link_of_field(fname)
+        if link:
+            return self[link]
         if fname in self._fields:
             return self
-        for link, field in self._config_link_fields().items():
-            if fname in self.env[field.comodel_name]._fields:
-                return self[link]
         raise KeyError(fname)
 
     def _get_cache_invalidation_fields(self) -> set[str]:
@@ -715,8 +726,8 @@ class ResCompany(models.Model):
         self, comodel_name: str, operator: str, value: Any
     ) -> list[tuple[str, str, Any]]:
         Config = self.env[comodel_name]
-        if operator in ("any", "not any"):
-            # a path through the link: the configuration's own domain
+        Config.sudo()._for_each(self.sudo().with_context(active_test=False).search([]))
+        if operator in ("any", "any!", "not any", "not any!"):
             configs = Config.search(value)
             _debug.logic(
                 "config_link_searched",
@@ -727,7 +738,7 @@ class ResCompany(models.Model):
             return [
                 (
                     "id",
-                    "not in" if operator == "not any" else "in",
+                    "not in" if operator.startswith("not ") else "in",
                     configs.company_id.ids,
                 )
             ]
@@ -741,19 +752,19 @@ class ResCompany(models.Model):
         return [("id", "in", configs.company_id.ids)]
 
     def _split_config_vals(self, vals: dict[str, Any]) -> dict[str, dict[str, Any]]:
+        # routed by ownership, not by absence from the company: a field the
+        # company exposes as a related THROUGH a link is still the
+        # configuration's, and a related is read-only unless it says otherwise,
+        # so a write left here would be dropped rather than refused
         config_vals: dict[str, dict[str, Any]] = {}
-        for link, field in self._config_link_fields().items():
-            config_fields = self.env[field.comodel_name]._fields
-            keys = [
-                key
-                for key in vals
-                if key not in self._fields
-                and key in config_fields
-                and key != "company_id"
-            ]
-            if keys:
-                config_vals[link] = {key: vals.pop(key) for key in keys}
-                _debug.logic("config_vals_routed", link=link, fields=keys)
+        for key in list(vals):
+            if key == "company_id":
+                continue
+            link = self._config_link_of_field(key)
+            if link:
+                config_vals.setdefault(link, {})[key] = vals.pop(key)
+        for link, keys in config_vals.items():
+            _debug.logic("config_vals_routed", link=link, fields=sorted(keys))
         return config_vals
 
     def _is_every_branch_selected(self) -> bool:

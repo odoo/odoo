@@ -6,7 +6,7 @@ class StockRule(models.Model):
 
     def _prepare_purchase_order_vals(self, company_id, origins, values):
         if not values[0].get("partner_id") and (
-            company_id.subcontracting_location_id.parent_path
+            company_id.mrp_subcontracting_config_id.subcontracting_location_id.parent_path
             in self.location_dest_id.parent_path
             or self.location_dest_id.is_subcontract()
         ):

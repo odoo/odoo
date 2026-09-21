@@ -12,7 +12,7 @@ class PosSession(models.Model):
     def l10n_tw_edi_check_mobile_barcode(self, text):
         self.check_singleton()
         json_data = {
-            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_merchant_id,
+            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_merchant_id,
             "BarCode": text,
         }
         response_data = call_ecpay_api("/CheckBarcode", json_data, self.company_id)
@@ -22,7 +22,7 @@ class PosSession(models.Model):
     def l10n_tw_edi_check_love_code(self, text):
         self.check_singleton()
         json_data = {
-            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_merchant_id,
+            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_merchant_id,
             "LoveCode": text,
         }
 

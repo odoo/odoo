@@ -260,8 +260,8 @@ class AccountMove(models.Model):
         threshold = 1
         while not files_data["fileToBytes"] and threshold < 3:
             time.sleep(0.125 * threshold)
-            files_data, error_message = self._l10n_vn_edi_try_download_invoice_file_data(
-                file_format
+            files_data, error_message = (
+                self._l10n_vn_edi_try_download_invoice_file_data(file_format)
             )
             threshold += 1
         return files_data, error_message
@@ -459,7 +459,10 @@ class AccountMove(models.Model):
         company = self.company_id
         commercial_partner = self.commercial_partner_id
         errors = []
-        if not company.l10n_vn_edi_username or not company.l10n_vn_edi_password:
+        if (
+            not company.l10n_vn_edi_viettel_config_id.l10n_vn_edi_username
+            or not company.l10n_vn_edi_password
+        ):
             errors.append(
                 _(
                     "Sinvoice credentials are missing on company %s.",
@@ -943,12 +946,13 @@ class AccountMove(models.Model):
         # First, check if we have a token stored and if it is still valid.
         if (
             credentials_company.l10n_vn_edi_token
-            and credentials_company.l10n_vn_edi_token_expiry > datetime.now()
+            and credentials_company.l10n_vn_edi_viettel_config_id.l10n_vn_edi_token_expiry
+            > datetime.now()
         ):
             return credentials_company.l10n_vn_edi_token, ""
 
         data = {
-            "username": credentials_company.l10n_vn_edi_username,
+            "username": credentials_company.l10n_vn_edi_viettel_config_id.l10n_vn_edi_username,
             "password": credentials_company.l10n_vn_edi_password,
         }
         request_response, error_message = _l10n_vn_edi_send_request(
@@ -989,13 +993,16 @@ class AccountMove(models.Model):
             - We store the access token on the appropriate company, based on which holds the credentials.
         """
         if (
-            self.company_id.l10n_vn_edi_username
+            self.company_id.l10n_vn_edi_viettel_config_id.l10n_vn_edi_username
             and self.company_id.l10n_vn_edi_password
         ):
             return self.company_id
 
         return self.company_id.sudo().parent_ids.filtered(
-            lambda c: c.l10n_vn_edi_username and c.l10n_vn_edi_password
+            lambda c: (
+                c.l10n_vn_edi_viettel_config_id.l10n_vn_edi_username
+                and c.l10n_vn_edi_password
+            )
         )[-1:]
 
     # -------------------------------------------------------------------------

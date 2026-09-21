@@ -530,7 +530,7 @@ class AccountMove(models.Model):
     def _l10n_tw_edi_check_before_generate_invoice_json(self):
         self.check_singleton()
         errors = []
-        if not self.company_id.sudo().l10n_tw_edi_ecpay_merchant_id:
+        if not self.company_id.sudo().l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_merchant_id:
             errors.append(
                 self.env._("Please fill in the ECpay API information in the Setting!")
             )
@@ -794,9 +794,7 @@ class AccountMove(models.Model):
     def _l10n_tw_edi_generate_invoice_json(self):
         self.check_singleton()
         self._l10n_tw_edi_check_before_generate_invoice_json()
-        tax_type, special_tax_type, is_zero_tax_rate = (
-            self._l10n_tw_edi_get_tax_types()
-        )
+        tax_type, special_tax_type, is_zero_tax_rate = self._l10n_tw_edi_get_tax_types()
         self.l10n_tw_edi_related_number = base64.urlsafe_b64encode(uuid.uuid4().bytes)[
             :20
         ]
@@ -814,7 +812,7 @@ class AccountMove(models.Model):
         )
 
         json_data = {
-            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_merchant_id,
+            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_merchant_id,
             "RelateNumber": self.l10n_tw_edi_related_number,
             "CustomerIdentifier": self.partner_id.vat
             if self.l10n_tw_edi_is_b2b and self.partner_id.vat
@@ -898,7 +896,7 @@ class AccountMove(models.Model):
         self.check_singleton()
         self._l10n_tw_edi_check_before_generate_issue_allowance_json()
         json_data = {
-            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_merchant_id,
+            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_merchant_id,
         }
 
         self._l10n_tw_edi_prepare_item_list(json_data, is_allowance=True)
@@ -945,7 +943,7 @@ class AccountMove(models.Model):
         Create a buyer before issuing B2B invoices
         """
         buyer_json_data = {
-            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_merchant_id,
+            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_merchant_id,
             "Action": "Add",
             "Type": "1",
             "Identifier": self.partner_id.commercial_partner_id.vat,
@@ -1027,7 +1025,7 @@ class AccountMove(models.Model):
             )
 
         json_data = {
-            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_merchant_id,
+            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_merchant_id,
             "RelateNumber": self.l10n_tw_edi_related_number,
         }
 
@@ -1079,7 +1077,7 @@ class AccountMove(models.Model):
             )
 
         json_data = {
-            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_merchant_id,
+            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_merchant_id,
             "InvoiceDate": self.l10n_tw_edi_invoice_create_date.strftime(
                 "%Y-%m-%d %H:%M:%S"
             ),

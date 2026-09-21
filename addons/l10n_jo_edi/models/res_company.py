@@ -7,26 +7,24 @@ class ResCompany(models.Model):
         "l10n_jo_edi_secret_key": "l10n_jo_edi_secret_key",
     }
 
-    l10n_jo_edi_sequence_income_source = fields.Char(
-        string="JoFotara Sequence of Income Source"
+    l10n_jo_edi_config_id = fields.Many2one(
+        comodel_name="l10n_jo_edi.config",
+        compute="_compute_l10n_jo_edi_config_id",
+        search="_search_l10n_jo_edi_config_id",
     )
+
     l10n_jo_edi_secret_key = fields.Char(
         string="JoFotara Secret Key",
         compute="_compute_credential_doors",
         inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
-    l10n_jo_edi_client_identifier = fields.Char(
-        string="JoFotara Client ID",
-        groups="base.group_system",
-    )
-    l10n_jo_edi_taxpayer_type = fields.Selection(
-        selection=[
-            ("income", "Unregistered in the sales tax"),
-            ("sales", "Registered in the sales tax"),
-            ("special", "Registered in the special sales tax"),
-        ],
-        string="JoFotara Taxpayer Type",
-        default="sales",
-    )
-    l10n_jo_edi_demo_mode = fields.Boolean(string="JoFotara Demo Mode")
+
+    def _search_l10n_jo_edi_config_id(self, operator, value):
+        return self._search_config_link("l10n_jo_edi.config", operator, value)
+
+    def _compute_l10n_jo_edi_config_id(self):
+        configs = self.env["l10n_jo_edi.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.l10n_jo_edi_config_id = by_company.get(company.id, False)

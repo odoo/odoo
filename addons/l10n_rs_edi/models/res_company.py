@@ -7,12 +7,23 @@ class ResCompany(models.Model):
         "l10n_rs_edi_api_key": "l10n_rs_edi_api_key",
     }
 
+    l10n_rs_edi_config_id = fields.Many2one(
+        comodel_name="l10n_rs_edi.config",
+        compute="_compute_l10n_rs_edi_config_id",
+        search="_search_l10n_rs_edi_config_id",
+    )
+
     l10n_rs_edi_api_key = fields.Char(
         string="eFaktura API Key",
         compute="_compute_credential_doors",
         inverse="_inverse_credential_doors",
     )
-    l10n_rs_edi_demo_env = fields.Boolean(
-        string="Use Demo Environment",
-        default=True,
-    )
+
+    def _search_l10n_rs_edi_config_id(self, operator, value):
+        return self._search_config_link("l10n_rs_edi.config", operator, value)
+
+    def _compute_l10n_rs_edi_config_id(self):
+        configs = self.env["l10n_rs_edi.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.l10n_rs_edi_config_id = by_company.get(company.id, False)

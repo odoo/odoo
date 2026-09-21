@@ -44,11 +44,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
     def _get_address_node(self, vals):
         address_node = super()._get_address_node(vals)
         partner = vals["partner"]
-
-        if partner._name == "res.bank":
-            state = partner.state
-        else:
-            state = partner.state_id
+        state = partner.state_id
 
         if state:
             address_node["cbc:CountrySubentity"]["_text"] = (

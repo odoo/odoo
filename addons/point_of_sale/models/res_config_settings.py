@@ -64,7 +64,7 @@ class ResConfigSettings(models.TransientModel):
         help="Display the price of your products through electronic price tags",
     )
     update_stock_quantities = fields.Selection(
-        related="company_id.point_of_sale_update_stock_quantities",
+        related="company_id.point_of_sale_config_id.point_of_sale_update_stock_quantities",
         readonly=False,
     )
     account_default_pos_receivable_account_id = fields.Many2one(
@@ -349,7 +349,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     point_of_sale_use_ticket_qr_code = fields.Boolean(
-        related="company_id.point_of_sale_use_ticket_qr_code",
+        related="company_id.point_of_sale_config_id.point_of_sale_use_ticket_qr_code",
         readonly=False,
     )
     pos_auto_validate_terminal_payment = fields.Boolean(
@@ -363,7 +363,7 @@ class ResConfigSettings(models.TransientModel):
         domain="[('id', '!=', pos_config_id), ('module_pos_restaurant', '=', False)]",
     )
     point_of_sale_ticket_unique_code = fields.Boolean(
-        related="company_id.point_of_sale_ticket_unique_code",
+        related="company_id.point_of_sale_config_id.point_of_sale_ticket_unique_code",
         readonly=False,
     )
     pos_show_product_images = fields.Boolean(
@@ -375,7 +375,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     point_of_sale_ticket_portal_url_display_mode = fields.Selection(
-        related="company_id.point_of_sale_ticket_portal_url_display_mode",
+        related="company_id.point_of_sale_config_id.point_of_sale_ticket_portal_url_display_mode",
         readonly=False,
         required=True,
     )

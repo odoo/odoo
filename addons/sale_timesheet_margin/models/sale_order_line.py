@@ -48,9 +48,13 @@ class SaleOrderLine(models.Model):
                     line.id, line.product_id.standard_price
                 )
                 product_uom_id = line.product_uom_id or line.product_id.uom_id
-                if product_uom_id != line.company_id.project_time_mode_id:
+                if (
+                    product_uom_id
+                    != line.company_id.hr_timesheet_config_id.project_time_mode_id
+                ):
                     product_cost = product_uom_id._get_quantity_in_unit(
-                        product_cost, line.company_id.project_time_mode_id
+                        product_cost,
+                        line.company_id.hr_timesheet_config_id.project_time_mode_id,
                     )
 
                 _debug.logic(

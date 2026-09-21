@@ -233,7 +233,8 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
                             "cbc:EmbeddedDocumentBinaryObject": {
                                 "_text": (
                                     "NWZlY2ViNjZmZmM4NmYzOGQ5NTI3ODZjNmQ2OTZjNzljMmRiYzIzOWRkNGU5MWI0NjcyOWQ3M2EyN2ZiNTdlOQ=="
-                                    if invoice.company_id.l10n_sa_api_mode == "sandbox"
+                                    if invoice.company_id.l10n_sa_edi_config_id.l10n_sa_api_mode
+                                    == "sandbox"
                                     or not invoice.journal_id.l10n_sa_latest_submission_hash
                                     else invoice.journal_id.l10n_sa_latest_submission_hash
                                 ),

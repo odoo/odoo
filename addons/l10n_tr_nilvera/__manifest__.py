@@ -1,6 +1,6 @@
 {
     "name": "Türkiye - Nilvera",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Accounting/Accounting",
     "description": """
 Base module containing core functionalities required by other Nilvera modules.
@@ -13,6 +13,7 @@ Base module containing core functionalities required by other Nilvera modules.
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/l10n_tr_nilvera_security.xml",
         "views/res_config_settings_views.xml",
         "views/res_partner_views.xml",
         "data/uom_data.xml",

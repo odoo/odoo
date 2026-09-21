@@ -1,3 +1,3 @@
 -- disable l10n_vn_edi integration
-UPDATE res_company
+UPDATE l10n_vn_edi_viettel_config
    SET l10n_vn_edi_username = '';

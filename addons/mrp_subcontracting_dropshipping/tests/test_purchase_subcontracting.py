@@ -278,7 +278,7 @@ class TestSubcontractingDropshippingFlows(
         po = self.env["purchase.order"].create(
             {
                 "partner_id": subcontractor.id,
-                "picking_type_id": self.env.company.dropship_subcontractor_pick_type_id.id,
+                "picking_type_id": self.env.company.mrp_subcontracting_dropshipping_config_id.dropship_subcontractor_pick_type_id.id,
                 "dest_address_id": self.subcontractor_partner1.id,
                 "line_ids": [
                     (
@@ -414,7 +414,9 @@ class TestSubcontractingDropshippingFlows(
         self.assertEqual(component_lines[1]["route_name"], "Buy")
 
     def test_partner_id_no_overwrite(self):
-        subcontract_location = self.company.subcontracting_location_id
+        subcontract_location = (
+            self.company.mrp_subcontracting_config_id.subcontracting_location_id
+        )
         p1, _p2 = self.env["res.partner"].create(
             [
                 {
@@ -607,7 +609,7 @@ class TestSubcontractingDropshippingFlows(
         po_dropship_subcontractor.action_confirm()
         self.assertEqual(
             po_dropship_subcontractor.picking_ids.picking_type_id,
-            self.company.dropship_subcontractor_pick_type_id,
+            self.company.mrp_subcontracting_dropshipping_config_id.dropship_subcontractor_pick_type_id,
         )
         self.assertEqual(
             po_dropship_subcontractor.picking_ids, subcontracted_mo.picking_ids

@@ -71,7 +71,7 @@ class MixinAccountMoveSend(models.AbstractModel):
         # Show alert if the current company is in Türkiye and test mode is enabled for Nilvera
         if (
             self.env.company.account_config_id.account_fiscal_country_id.code == "TR"
-            and self.env.company.l10n_tr_nilvera_use_test_env
+            and self.env.company.l10n_tr_nilvera_config_id.l10n_tr_nilvera_use_test_env
         ):
             alerts["l10n_tr_nilvera_einvoice_test_mode"] = {
                 "level": "info",

@@ -661,7 +661,7 @@ class PosSession(models.Model):
                 {
                     "config_id": config_id,
                     "update_stock_at_closing": (
-                        pos_config.company_id.point_of_sale_update_stock_quantities
+                        pos_config.company_id.point_of_sale_config_id.point_of_sale_update_stock_quantities
                         == "closing"
                     ),
                 }

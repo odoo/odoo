@@ -1,6 +1,6 @@
 {
     "name": "Estonia - Accounting",
-    "version": "1.3",
+    "version": "1.4",
     "category": "Accounting/Localizations/Account Charts",
     "description": """
 This is the base module to manage the accounting chart for Estonia in Odoo.
@@ -17,6 +17,8 @@ This is the base module to manage the accounting chart for Estonia in Odoo.
         "ee",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/l10n_ee_security.xml",
         "data/account_tax_report_data.xml",
         "views/account_tax_form.xml",
     ],

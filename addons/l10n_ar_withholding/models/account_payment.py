@@ -18,7 +18,8 @@ class AccountPayment(models.Model):
         for pay in self:
             pay.move_id.line_ids.filtered(
                 lambda x: (
-                    x.account_id == pay.company_id.l10n_ar_tax_base_account_id
+                    x.account_id
+                    == pay.company_id.l10n_ar_withholding_config_id.l10n_ar_tax_base_account_id
                     or x.tax_line_id.l10n_ar_withholding_payment_type
                 )
             ).unlink()

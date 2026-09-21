@@ -116,7 +116,7 @@ class PoSOrder(models.Model):
             }
 
         json_data = {
-            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_merchant_id,
+            "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_merchant_id,
             "RelateNumber": invoice.l10n_tw_edi_related_number,
         }
 

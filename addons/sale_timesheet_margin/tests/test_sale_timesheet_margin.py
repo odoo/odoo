@@ -60,7 +60,8 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
         )
         sale_order.line_ids._compute_purchase_price()
         expected_cost = self.uom_day._get_quantity_in_unit(
-            self.employee_manager.hourly_cost, self.env.company.project_time_mode_id
+            self.employee_manager.hourly_cost,
+            self.env.company.hr_timesheet_config_id.project_time_mode_id,
         )
         self.assertEqual(
             sale_order.line_ids.purchase_price,

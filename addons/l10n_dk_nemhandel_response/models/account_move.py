@@ -61,7 +61,7 @@ class AccountMove(models.Model):
             "nemhandel_can_send_response"
         ).grouped("company_id")
         for company in moves_to_respond_by_company:
-            company.nemhandel_edi_user._nemhandel_send_response(
+            company.l10n_dk_nemhandel_config_id.nemhandel_edi_user._nemhandel_send_response(
                 moves_to_respond_by_company[company], "BusinessAccept"
             )
 

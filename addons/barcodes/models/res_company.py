@@ -10,6 +10,10 @@ class ResCompany(models.Model):
         search="_search_barcodes_config_id",
     )
 
+    nomenclature_id = fields.Many2one(
+        related="barcodes_config_id.nomenclature_id",
+    )
+
     def _search_barcodes_config_id(self, operator, value):
         return self._search_config_link("barcodes.config", operator, value)
 

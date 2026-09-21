@@ -8,5 +8,6 @@ from . import account_tax
 from . import certificate
 from . import ir_attachment
 from . import res_partner
+from . import l10n_sa_edi_config
 from . import res_company
 from . import res_config_settings

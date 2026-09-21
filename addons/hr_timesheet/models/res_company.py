@@ -1,5 +1,4 @@
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
@@ -8,45 +7,20 @@ _debug = DebugLog(__name__)
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    @api.model
-    def _default_project_time_mode_id(self):
-        return self.env.ref("uom.product_uom_hour", raise_if_not_found=False)
-
-    @api.model
-    def _default_timesheet_encode_uom_id(self):
-        return self.env.ref("uom.product_uom_hour", raise_if_not_found=False)
-
-    project_time_mode_id = fields.Many2one(
-        comodel_name="uom.uom",
-        string="Project Time Unit",
-        default=_default_project_time_mode_id,
-        help="This will set the unit of measure used in projects and tasks.\n"
-        "If you use the timesheet linked to projects, don't "
-        "forget to setup the right unit of measure in your employees.",
-    )
-    timesheet_encode_uom_id = fields.Many2one(
-        comodel_name="uom.uom",
-        string="Timesheet Encoding Unit",
-        default=_default_timesheet_encode_uom_id,
-    )
-    internal_project_id = fields.Many2one(
-        comodel_name="project.project",
-        domain=[("is_template", "=", False)],
-        help="Default project value for timesheet generated from time off type.",
+    hr_timesheet_config_id = fields.Many2one(
+        comodel_name="hr_timesheet.config",
+        compute="_compute_hr_timesheet_config_id",
+        search="_search_hr_timesheet_config_id",
     )
 
-    @api.constrains("internal_project_id")
-    def _check_internal_project_id_company(self):
-        if self.filtered(
-            lambda company: (
-                company.internal_project_id
-                and company.internal_project_id.sudo().company_id != company
-            )
-        ):
-            _debug.logic("internal_project_company_mismatch", companies=self)
-            raise ValidationError(
-                _("The Internal Project of a company should be in that company.")
-            )
+    def _search_hr_timesheet_config_id(self, operator, value):
+        return self._search_config_link("hr_timesheet.config", operator, value)
+
+    def _compute_hr_timesheet_config_id(self):
+        configs = self.env["hr_timesheet.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.hr_timesheet_config_id = by_company.get(company.id, False)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -89,5 +63,7 @@ class ResCompany(models.Model):
             project.company_id.id: project for project in project_ids
         }
         for company in self:
-            company.internal_project_id = projects_by_company.get(company.id, False)
+            company.hr_timesheet_config_id.internal_project_id = (
+                projects_by_company.get(company.id, False)
+            )
         return project_ids

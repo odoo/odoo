@@ -129,8 +129,9 @@ class ProjectTask(models.Model):
             )
 
     def _uom_in_days(self):
-        return self.env.company.timesheet_encode_uom_id == self.env.ref(
-            "uom.product_uom_day"
+        return (
+            self.env.company.hr_timesheet_config_id.timesheet_encode_uom_id
+            == self.env.ref("uom.product_uom_day")
         )
 
     def _compute_encode_uom_in_days(self):

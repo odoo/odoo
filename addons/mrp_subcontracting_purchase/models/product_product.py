@@ -7,7 +7,7 @@ class ProductProduct(models.Model):
 
     @api.model
     def _get_domain_monthly_demand_moves_location(self):
-        subcontracting_location_ids = self.env.companies.subcontracting_location_id.child_internal_location_ids.ids
+        subcontracting_location_ids = self.env.companies.mrp_subcontracting_config_id.subcontracting_location_id.child_internal_location_ids.ids
         return Domain.AND(
             [
                 Domain.OR(

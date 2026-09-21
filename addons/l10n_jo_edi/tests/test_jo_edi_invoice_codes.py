@@ -92,5 +92,7 @@ class TestJoEdiInvoiceCodes(JoEdiCommon):
                 invoice.preferred_payment_channel_id = self.env[
                     "account.payment.channel"
                 ].search([("code", "=", payment_method)], limit=1)
-                self.company.l10n_jo_edi_taxpayer_type = company_type
+                self.company.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type = (
+                    company_type
+                )
                 self.assertEqual(self._get_xml_invoice_type(invoice), expected_code)

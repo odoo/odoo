@@ -208,7 +208,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             "cac:Party": {
                 "cac:PartyIdentification": {
                     "cbc:ID": {
-                        "_text": invoice.company_id.l10n_jo_edi_sequence_income_source
+                        "_text": invoice.company_id.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source
                     }
                 }
             }
@@ -267,7 +267,10 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
 
     def _add_document_tax_total_nodes(self, document_node, vals):
         # Tax unregistered companies should have no tax values
-        if vals["invoice"].company_id.l10n_jo_edi_taxpayer_type == "income":
+        if (
+            vals["invoice"].company_id.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type
+            == "income"
+        ):
             return
 
         # In the document-level tax total, we only report general (not special) taxes
@@ -487,7 +490,12 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         base_line = vals["base_line"]
 
         # Tax unregistered companies should have no tax values
-        if base_line["record"].move_id.company_id.l10n_jo_edi_taxpayer_type == "income":
+        if (
+            base_line[
+                "record"
+            ].move_id.company_id.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type
+            == "income"
+        ):
             return
 
         aggregated_tax_details = self.env[

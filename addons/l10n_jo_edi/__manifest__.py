@@ -1,6 +1,6 @@
 {
     "name": "Jordan E-Invoicing",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Accounting/Localizations/EDI",
     "summary": "Electronic Invoicing for Jordan UBL 2.1",
     "description": """
@@ -17,6 +17,8 @@
         "jo",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/l10n_jo_edi_security.xml",
         "views/account_move_views.xml",
         "views/report_invoice.xml",
         "views/res_config_settings_views.xml",

@@ -17,7 +17,7 @@ class ResConfigSettings(models.TransientModel):
     reminder_allow = fields.Boolean(string="Approver Reminder")
     project_time_mode_id = fields.Many2one(
         comodel_name="uom.uom",
-        related="company_id.project_time_mode_id",
+        related="company_id.hr_timesheet_config_id.project_time_mode_id",
         string="Project Time Unit",
         readonly=False,
         help="This will set the unit of measure used in projects and tasks.\n"
@@ -45,7 +45,8 @@ class ResConfigSettings(models.TransientModel):
         for settings in self:
             settings.timesheet_encode_method = (
                 "days"
-                if settings.company_id.timesheet_encode_uom_id == uom_day
+                if settings.company_id.hr_timesheet_config_id.timesheet_encode_uom_id
+                == uom_day
                 else "hours"
             )
 
@@ -58,7 +59,7 @@ class ResConfigSettings(models.TransientModel):
                 company=settings.company_id,
                 method=settings.timesheet_encode_method,
             )
-            settings.company_id.timesheet_encode_uom_id = (
+            settings.company_id.hr_timesheet_config_id.timesheet_encode_uom_id = (
                 uom_day if settings.timesheet_encode_method == "days" else uom_hour
             )
 

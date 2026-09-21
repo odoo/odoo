@@ -32,7 +32,7 @@ class AccountMove(models.Model):
                     and not move.commercial_partner_id.vat
                     and currency_id.compare_amounts(
                         abs(move.amount_total_signed),
-                        move.company_id.l10n_es_simplified_invoice_limit,
+                        move.company_id.l10n_es_config_id.l10n_es_simplified_invoice_limit,
                     )
                     <= 0
                     and move.commercial_partner_id.country_id

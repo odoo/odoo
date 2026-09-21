@@ -39,7 +39,7 @@ class ProjectUpdate(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         updates = super().create(vals_list)
-        encode_uom = self.env.company.timesheet_encode_uom_id
+        encode_uom = self.env.company.hr_timesheet_config_id.timesheet_encode_uom_id
         ratio = self.env.ref("uom.product_uom_hour").factor / encode_uom.factor
         _debug.lifecycle("project_updates_created", updates=updates, uom=encode_uom)
         for update in updates:

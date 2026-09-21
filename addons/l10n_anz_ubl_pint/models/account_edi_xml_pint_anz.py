@@ -47,7 +47,7 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         # In this case, the tax category code should be O (Outside scope of tax).
         # See https://docs.peppol.eu/poac/aunz/pint-aunz/bis/#_tax_category_code
         supplier = vals["supplier"]
-        if not supplier.ref_company_ids[:1].l10n_au_is_gst_registered:
+        if not supplier.ref_company_ids[:1].l10n_au_config_id.l10n_au_is_gst_registered:
             grouping_key["tax_category_code"] = "O"
 
         # As of PINT A-NZ v1.1.0: [aligned-ibrp-o-05-aunz] tax categories of type "Not Subject to tax" (i.e. tax_category_code == 'O') must NOT have
@@ -113,7 +113,11 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
             ):
                 continue
 
-            if vals["supplier"].ref_company_ids[:1].l10n_au_is_gst_registered:
+            if (
+                vals["supplier"]
+                .ref_company_ids[:1]
+                .l10n_au_config_id.l10n_au_is_gst_registered
+            ):
                 constraints["anz_tax_breakdown_amount"] = self.env._(
                     "A tax category of type 'Not subject to tax' must have tax"
                     " amount set to 0"
@@ -135,7 +139,9 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         # There should be at most one tax breakdown of type "Not subject to tax".
         if (
             count_outside_of_scope_breakdown > 1
-            and vals["supplier"].ref_company_ids[:1].l10n_au_is_gst_registered
+            and vals["supplier"]
+            .ref_company_ids[:1]
+            .l10n_au_config_id.l10n_au_is_gst_registered
         ):
             constraints["anz_duplicate_tax_breakdown"] = self.env._(
                 "A tax breakdown of type 'Not subject to tax' should appear at most"

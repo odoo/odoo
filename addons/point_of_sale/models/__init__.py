@@ -30,6 +30,7 @@ from . import product_combo
 from . import product_combo_item
 from . import res_partner
 from . import phone_number
+from . import point_of_sale_config
 from . import res_company
 from . import res_config_settings
 from . import ir_http

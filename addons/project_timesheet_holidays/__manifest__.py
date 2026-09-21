@@ -1,6 +1,6 @@
 {
     "name": "Timesheet when on Time Off",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Human Resources",
     "summary": "Schedule timesheet when on time off",
     "description": """
@@ -20,6 +20,7 @@ on leaves. Project and task can be configured company-wide.
         "views/res_config_settings_views.xml",
         "views/project_task_views.xml",
         "security/ir.model.access.csv",
+        "security/project_timesheet_holidays_security.xml",
     ],
     "demo": [
         "demo/holiday_timesheets_demo.xml",

@@ -69,7 +69,9 @@ class AccountMove(models.Model):
     def _compute_eta_qr_code_str(self):
         for move in self:
             if move.invoice_date and move.l10n_eg_uuid and move.l10n_eg_long_id:
-                is_prod = move.company_id.l10n_eg_production_env
+                is_prod = (
+                    move.company_id.l10n_eg_edi_eta_config_id.l10n_eg_production_env
+                )
                 base_url = self.env["account.edi.format"]._l10n_eg_get_eta_qr_domain(
                     production_enviroment=is_prod
                 )

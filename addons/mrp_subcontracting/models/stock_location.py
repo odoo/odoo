@@ -13,7 +13,10 @@ class StockLocation(models.Model):
     @api.constrains("usage", "location_id")
     def _check_subcontracting_location(self):
         for location in self:
-            if location == location.company_id.subcontracting_location_id:
+            if (
+                location
+                == location.company_id.mrp_subcontracting_config_id.subcontracting_location_id
+            ):
                 raise ValidationError(
                     _("You cannot alter the company's subcontracting location")
                 )
@@ -31,5 +34,7 @@ class StockLocation(models.Model):
             return super()._filtered_putaway_access()
 
     def is_subcontract(self):
-        subcontracting_location = self.company_id.subcontracting_location_id
+        subcontracting_location = (
+            self.company_id.mrp_subcontracting_config_id.subcontracting_location_id
+        )
         return subcontracting_location and self._is_child_of(subcontracting_location)

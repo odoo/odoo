@@ -289,7 +289,7 @@ class TestPosMargin(TestPoSCommon):
         self.categ_anglo.property_cost_method = "average"
         product1 = self.create_product("Product 1", self.categ_anglo, 10, 5)
         product2 = self.create_product("Product 2", self.categ_basic, 50, 30)
-        self.env.company.point_of_sale_update_stock_quantities = "closing"
+        self.env.company.point_of_sale_config_id.point_of_sale_update_stock_quantities = "closing"
 
         move1 = (
             self.env["stock.move"]
@@ -362,4 +362,4 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(self._synced_orders()[0].margin_percent, 0.4333)
         self.assertEqual(self._synced_orders()[1].margin_percent, 0.6)
 
-        self.env.company.point_of_sale_update_stock_quantities = "real"
+        self.env.company.point_of_sale_config_id.point_of_sale_update_stock_quantities = "real"

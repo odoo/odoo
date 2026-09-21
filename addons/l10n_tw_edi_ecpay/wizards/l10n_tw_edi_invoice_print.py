@@ -40,7 +40,7 @@ class L10nTwEDIInvoicePrint(models.TransientModel):
         self.check_singleton()
 
         json_data = {
-            "MerchantID": self.invoice_id.company_id.sudo().l10n_tw_edi_ecpay_merchant_id,
+            "MerchantID": self.invoice_id.company_id.sudo().l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_merchant_id,
             "InvoiceNo": self.invoice_id.l10n_tw_edi_ecpay_invoice_id,
             "InvoiceDate": self.invoice_id.l10n_tw_edi_invoice_create_date.strftime(
                 "%Y-%m-%d"

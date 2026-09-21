@@ -41,9 +41,9 @@
                             EU Tax ID: <span t-out="'HU%s' % o.company_id.vat[:8]" />
                         </li>
                         <li t-if="o.move_type in ['out_invoice', 'out_receipt'] and o.partner_bank_id">Bank Account: <span t-field="o.partner_bank_id.acc_number" /></li>
-                        <li t-if="o.company_id.l10n_hu_tax_regime=='ie'">The issuer of the invoice is <u>Exempt from VAT</u>.</li>
-                        <li t-if="o.company_id.l10n_hu_tax_regime=='ca'">The issuer of the invoice is <u>Cash accounting</u>.</li>
-                        <li t-if="o.company_id.l10n_hu_tax_regime=='sb'">The issuer of the invoice is <u>Small taxpayer</u>.</li>
+                        <li t-if="o.company_id.l10n_hu_edi_config_id.l10n_hu_tax_regime=='ie'">The issuer of the invoice is <u>Exempt from VAT</u>.</li>
+                        <li t-if="o.company_id.l10n_hu_edi_config_id.l10n_hu_tax_regime=='ca'">The issuer of the invoice is <u>Cash accounting</u>.</li>
+                        <li t-if="o.company_id.l10n_hu_edi_config_id.l10n_hu_tax_regime=='sb'">The issuer of the invoice is <u>Small taxpayer</u>.</li>
                     </ul>
                 </div>
             </div>

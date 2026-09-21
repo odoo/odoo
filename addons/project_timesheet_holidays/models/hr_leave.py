@@ -31,8 +31,8 @@ class HrLeave(models.Model):
         }
         for leave in self:
             project, task = (
-                leave.employee_id.company_id.internal_project_id,
-                leave.employee_id.company_id.leave_timesheet_task_id,
+                leave.employee_id.company_id.hr_timesheet_config_id.internal_project_id,
+                leave.employee_id.company_id.project_timesheet_holidays_config_id.leave_timesheet_task_id,
             )
 
             if not project or not task or leave.holiday_status_id.time_type_id.is_work:
@@ -166,8 +166,14 @@ class HrLeave(models.Model):
         leaves = self.env["resource.schedule.exception"]
         global_leaves = leaves.search(
             leaves._get_domain_public_holidays(min_date, max_date)
-            & Domain("company_id.internal_project_id", "!=", False)
-            & Domain("company_id.leave_timesheet_task_id", "!=", False)
+            & Domain(
+                "company_id.hr_timesheet_config_id.internal_project_id", "!=", False
+            )
+            & Domain(
+                "company_id.project_timesheet_holidays_config_id.leave_timesheet_task_id",
+                "!=",
+                False,
+            )
         )
         _debug.pipeline(
             "global_leave_backfill",

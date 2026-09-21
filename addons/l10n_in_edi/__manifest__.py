@@ -1,6 +1,6 @@
 {
     "name": "Indian - E-invoicing",
-    "version": "1.04.00",
+    "version": "1.04.1",
     "category": "Accounting/Localizations/EDI",
     "description": """
 Indian - E-invoicing
@@ -33,6 +33,7 @@ For the creation of API username and password please ref this document: <https:/
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/l10n_in_edi_security.xml",
         "views/account_move_views.xml",
         "views/edi_pdf_report.xml",
         "views/res_config_settings_views.xml",

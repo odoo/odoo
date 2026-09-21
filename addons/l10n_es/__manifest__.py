@@ -1,6 +1,6 @@
 {
     "name": "Spain - Accounting (PGCE 2008)",
-    "version": "5.4",
+    "version": "5.5",
     "category": "Accounting/Localizations/Account Charts",
     "description": """
 Spanish charts of accounts (PGCE 2008).
@@ -31,6 +31,8 @@ Spanish charts of accounts (PGCE 2008).
         "es",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/l10n_es_security.xml",
         "data/account.account.tag.csv",
         "data/res_partner_data.xml",
         "data/res_country_group.xml",

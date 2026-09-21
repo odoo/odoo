@@ -430,7 +430,7 @@ class AccountMove(models.Model):
                             for msg in move._l10n_ke_get_cu_messages()
                         ]
                     ),
-                    "proxy_address": move.company_id.l10n_ke_cu_proxy_address,
+                    "proxy_address": move.company_id.l10n_ke_edi_tremol_config_id.l10n_ke_cu_proxy_address,
                     "company_vat": move.company_id.vat,
                     "name": move.name,
                 }

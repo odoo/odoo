@@ -4,14 +4,35 @@ from odoo import _, api, fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    subcontracting_location_id = fields.Many2one(comodel_name="stock.location")
+    mrp_subcontracting_config_id = fields.Many2one(
+        comodel_name="mrp_subcontracting.config",
+        compute="_compute_mrp_subcontracting_config_id",
+        search="_search_mrp_subcontracting_config_id",
+    )
+
+    def _search_mrp_subcontracting_config_id(self, operator, value):
+        return self._search_config_link("mrp_subcontracting.config", operator, value)
+
+    def _compute_mrp_subcontracting_config_id(self):
+        configs = self.env["mrp_subcontracting.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.mrp_subcontracting_config_id = by_company.get(company.id, False)
 
     @api.model
     def _create_missing_subcontracting_location(self):
         company_without_subcontracting_loc = (
             self.env["res.company"]
             .with_context(active_test=False)
-            .search([("subcontracting_location_id", "=", False)])
+            .search(
+                [
+                    (
+                        "mrp_subcontracting_config_id.subcontracting_location_id",
+                        "=",
+                        False,
+                    )
+                ]
+            )
         )
         company_without_subcontracting_loc._create_subcontracting_location()
 
@@ -34,4 +55,6 @@ class ResCompany(models.Model):
                 subcontracting_location.id,
                 company_id=company.id,
             )
-            company.subcontracting_location_id = subcontracting_location
+            company.mrp_subcontracting_config_id.subcontracting_location_id = (
+                subcontracting_location
+            )

@@ -4,9 +4,24 @@ from odoo import api, fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    dropship_subcontractor_pick_type_id = fields.Many2one(
-        comodel_name="stock.picking.type"
+    mrp_subcontracting_dropshipping_config_id = fields.Many2one(
+        comodel_name="mrp_subcontracting_dropshipping.config",
+        compute="_compute_mrp_subcontracting_dropshipping_config_id",
+        search="_search_mrp_subcontracting_dropshipping_config_id",
     )
+
+    def _search_mrp_subcontracting_dropshipping_config_id(self, operator, value):
+        return self._search_config_link(
+            "mrp_subcontracting_dropshipping.config", operator, value
+        )
+
+    def _compute_mrp_subcontracting_dropshipping_config_id(self):
+        configs = self.env["mrp_subcontracting_dropshipping.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.mrp_subcontracting_dropshipping_config_id = by_company.get(
+                company.id, False
+            )
 
     def _create_subcontracting_dropshipping_sequence(self):
         seq_vals = [
@@ -42,7 +57,7 @@ class ResCompany(models.Model):
                     "default_location_src_id": self.env.ref(
                         "stock.stock_location_suppliers"
                     ).id,
-                    "default_location_dest_id": company.subcontracting_location_id.id,
+                    "default_location_dest_id": company.mrp_subcontracting_config_id.subcontracting_location_id.id,
                     "sequence_code": "DSC",
                     "use_existing_lots": False,
                 }
@@ -50,14 +65,16 @@ class ResCompany(models.Model):
         if pick_type_vals:
             pick_type_ids = self.env["stock.picking.type"].create(pick_type_vals)
             for pick_type in pick_type_ids:
-                pick_type.company_id.dropship_subcontractor_pick_type_id = pick_type.id
+                pick_type.company_id.mrp_subcontracting_dropshipping_config_id.dropship_subcontractor_pick_type_id = pick_type.id
 
     def _create_subcontracting_dropshipping_rules(self):
         dropship_route = self.env.ref("stock_dropshipping.route_drop_shipping")
         supplier_location = self.env.ref("stock.stock_location_suppliers")
         vals = []
         for company in self:
-            subcontracting_location = company.subcontracting_location_id
+            subcontracting_location = (
+                company.mrp_subcontracting_config_id.subcontracting_location_id
+            )
             dropship_picking_type = self.env["stock.picking.type"].search(  # noqa: E8507 - company setup: one lookup per company
                 [
                     ("company_id", "=", company.id),
@@ -116,7 +133,7 @@ class ResCompany(models.Model):
                     (
                         "default_location_dest_id",
                         "in",
-                        all_companies.subcontracting_location_id.ids,
+                        all_companies.mrp_subcontracting_config_id.subcontracting_location_id.ids,
                     ),
                 ]
             )

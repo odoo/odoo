@@ -1,9 +1,7 @@
 from datetime import UTC
 
-from stdnum.in_ import gstin, pan
-
-from odoo import _, api, fields, models
-from odoo.exceptions import AccessError, ValidationError
+from odoo import _, fields, models
+from odoo.exceptions import AccessError
 from odoo.libs.datetime import timezone
 
 
@@ -14,12 +12,12 @@ class ResCompany(models.Model):
         "l10n_in_edi_token": "l10n_in_edi_token",
     }
 
-    # E-Invoice fields
-    l10n_in_edi_feature = fields.Boolean(string="Indian E-Invoicing")
-    l10n_in_edi_username = fields.Char(
-        string="E-invoice (IN) Username",
-        groups="base.group_system",
+    l10n_in_edi_config_id = fields.Many2one(
+        comodel_name="l10n_in_edi.config",
+        compute="_compute_l10n_in_edi_config_id",
+        search="_search_l10n_in_edi_config_id",
     )
+
     l10n_in_edi_password = fields.Char(
         string="E-invoice (IN) Password",
         compute="_compute_credential_doors",
@@ -32,25 +30,35 @@ class ResCompany(models.Model):
         inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
-    l10n_in_edi_token_validity = fields.Datetime(
-        string="E-invoice (IN) Valid Until",
-        groups="base.group_system",
-    )
 
-    # E-Invoice Business Methods
+    def _search_l10n_in_edi_config_id(self, operator, value):
+        return self._search_config_link("l10n_in_edi.config", operator, value)
+
+    def _compute_l10n_in_edi_config_id(self):
+        configs = self.env["l10n_in_edi.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.l10n_in_edi_config_id = by_company.get(company.id, False)
 
     def _l10n_in_edi_token_is_valid(self):
         self.check_singleton()
         return (
             self.l10n_in_edi_token
-            and self.l10n_in_edi_token_validity > fields.Datetime.now()
+            and self.l10n_in_edi_config_id.l10n_in_edi_token_validity
+            > fields.Datetime.now()
         )
 
     def _l10n_in_edi_get_token(self):
         self_sudo = self.sudo()
-        if self_sudo.l10n_in_edi_username and self_sudo._l10n_in_edi_token_is_valid():
+        if (
+            self_sudo.l10n_in_edi_config_id.l10n_in_edi_username
+            and self_sudo._l10n_in_edi_token_is_valid()
+        ):
             return self_sudo.l10n_in_edi_token
-        elif self_sudo.l10n_in_edi_username and self_sudo.l10n_in_edi_password:
+        elif (
+            self_sudo.l10n_in_edi_config_id.l10n_in_edi_username
+            and self_sudo.l10n_in_edi_password
+        ):
             self_sudo._l10n_in_edi_authenticate()
             return self_sudo.l10n_in_edi_token
         return False
@@ -58,7 +66,7 @@ class ResCompany(models.Model):
     def _l10n_in_edi_authenticate(self):
         self_sudo = self.sudo()
         params = {
-            "username": self_sudo.l10n_in_edi_username,
+            "username": self_sudo.l10n_in_edi_config_id.l10n_in_edi_username,
             "password": self_sudo.l10n_in_edi_password,
             "gstin": self_sudo.vat,
         }

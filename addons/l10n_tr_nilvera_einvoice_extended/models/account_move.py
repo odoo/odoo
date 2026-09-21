@@ -88,5 +88,5 @@ class AccountMove(models.Model):
     def _get_partner_l10n_tr_nilvera_customer_alias_name(self):
         self.check_singleton()
         if self.l10n_tr_is_export_invoice:
-            return self.company_id.l10n_tr_nilvera_export_alias
+            return self.company_id.l10n_tr_nilvera_einvoice_extended_config_id.l10n_tr_nilvera_export_alias
         return super()._get_partner_l10n_tr_nilvera_customer_alias_name()

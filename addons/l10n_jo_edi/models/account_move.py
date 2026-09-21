@@ -188,7 +188,7 @@ class AccountMove(models.Model):
     def _is_sales_refund(self):
         self.check_singleton()
         return (
-            self.company_id.l10n_jo_edi_taxpayer_type == "sales"
+            self.company_id.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type == "sales"
             and self.move_type == "out_refund"
         )
 
@@ -209,7 +209,7 @@ class AccountMove(models.Model):
             "income": "1",
             "sales": "2",
             "special": "3",
-        }.get(self.company_id.l10n_jo_edi_taxpayer_type, "1")
+        }.get(self.company_id.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type, "1")
 
     def action_draft(self):
         # EXTENDS 'account'
@@ -247,12 +247,12 @@ class AccountMove(models.Model):
     def _l10n_jo_prepare_jofotara_headers(self):
         self.check_singleton()
         return {
-            "Client-Id": self.sudo().company_id.l10n_jo_edi_client_identifier,
+            "Client-Id": self.sudo().company_id.l10n_jo_edi_config_id.l10n_jo_edi_client_identifier,
             "Secret-Key": self.sudo().company_id.l10n_jo_edi_secret_key,
         }
 
     def _send_l10n_jo_edi_request(self, params, headers):
-        if self.env.company.l10n_jo_edi_demo_mode:
+        if self.env.company.l10n_jo_edi_config_id.l10n_jo_edi_demo_mode:
             return {"EINV_QR": "Demo JoFotara QR"}  # mocked response
 
         try:
@@ -304,13 +304,13 @@ class AccountMove(models.Model):
 
     def _l10n_jo_get_config_errors(self):
         error_msgs = []
-        if not self.sudo().company_id.l10n_jo_edi_client_identifier:
+        if not self.sudo().company_id.l10n_jo_edi_config_id.l10n_jo_edi_client_identifier:
             error_msgs.append(_("Client ID is missing."))
         if not self.sudo().company_id.l10n_jo_edi_secret_key:
             error_msgs.append(_("Secret key is missing."))
-        if not self.company_id.l10n_jo_edi_taxpayer_type:
+        if not self.company_id.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type:
             error_msgs.append(_("Taxpayer type is missing."))
-        if not self.company_id.l10n_jo_edi_sequence_income_source:
+        if not self.company_id.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source:
             error_msgs.append(
                 _("Activity number (Sequence of income source) is missing.")
             )
@@ -384,7 +384,8 @@ class AccountMove(models.Model):
             lambda line: line.display_type not in NON_ACCOUNTABLE_DISPLAY_TYPES
         ):
             if (
-                self.company_id.l10n_jo_edi_taxpayer_type == "income"
+                self.company_id.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type
+                == "income"
                 and len(line.tax_ids) != 0
             ):
                 error_msgs.append(
@@ -393,7 +394,8 @@ class AccountMove(models.Model):
                     )
                 )
             elif (
-                self.company_id.l10n_jo_edi_taxpayer_type == "sales"
+                self.company_id.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type
+                == "sales"
                 and len(line.tax_ids) != 1
             ):
                 error_msgs.append(
@@ -402,7 +404,8 @@ class AccountMove(models.Model):
                     )
                 )
             elif (
-                self.company_id.l10n_jo_edi_taxpayer_type == "special"
+                self.company_id.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type
+                == "special"
                 and len(line.tax_ids) != 2
             ):
                 error_msgs.append(
@@ -416,7 +419,9 @@ class AccountMove(models.Model):
     def _mark_sent_jo_edi(self):
         self.l10n_jo_edi_error = False
         self.l10n_jo_edi_state = (
-            "demo" if self.env.company.l10n_jo_edi_demo_mode else "sent"
+            "demo"
+            if self.env.company.l10n_jo_edi_config_id.l10n_jo_edi_demo_mode
+            else "sent"
         )
 
     def _l10n_jo_edi_send(self):

@@ -32,9 +32,13 @@ class PosConfig(models.Model):
             config.simplified_partner_id = self.env.ref("l10n_es.partner_simplified").id
 
     def get_limited_partners_loading(self, offset=0):
-        # this function normally returns 100 partners, but we have to make sure that
-        # the simplified partner is also loaded
+        # the simplified partner must be loaded whatever the ranking says -- but
+        # only for a Spanish till, and only on its first page: appended to every
+        # page it came back once per page, and appended for every till it put a
+        # Spanish partner in the list of companies that have no Spanish journal
         res = super().get_limited_partners_loading(offset)
+        if not self.is_spanish or offset:
+            return res
         if (self.simplified_partner_id.id,) not in res:
             res.append((self.simplified_partner_id.id,))
         return res

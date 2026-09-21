@@ -84,7 +84,9 @@ class TestAngloSaxonCommon(AccountTestInvoicingCommon):
             }
         )
         cls.company.account_config_id.anglo_saxon_accounting = True
-        cls.company.point_of_sale_update_stock_quantities = "real"
+        cls.company.point_of_sale_config_id.point_of_sale_update_stock_quantities = (
+            "real"
+        )
         cls.product.categ_id = cls.category
         cls.product.property_account_expense_id = account_expense
         cls.product.property_account_income_id = account_income
@@ -441,7 +443,9 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         )
 
     def test_action_pos_order_invoice(self):
-        self.company.point_of_sale_update_stock_quantities = "closing"
+        self.company.point_of_sale_config_id.point_of_sale_update_stock_quantities = (
+            "closing"
+        )
 
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id

@@ -30,7 +30,9 @@ class AccountAnalyticLine(models.Model):
             self._get_domain_favorite_project_id(employee_id), ["project_id"], limit=5
         )
         if not last_timesheets:
-            internal_project = self.env.company.internal_project_id
+            internal_project = (
+                self.env.company.hr_timesheet_config_id.internal_project_id
+            )
             _debug.logic(
                 "favorite_project", by="internal_project", project=internal_project
             )
@@ -213,11 +215,11 @@ class AccountAnalyticLine(models.Model):
             readonly_timesheets.readonly_timesheet = True
             (self - readonly_timesheets).readonly_timesheet = False
 
-    @api.depends("company_id.timesheet_encode_uom_id")
+    @api.depends("company_id.hr_timesheet_config_id.timesheet_encode_uom_id")
     def _compute_encoding_uom_id(self):
         for analytic_line in self:
             analytic_line.encoding_uom_id = (
-                analytic_line.company_id.timesheet_encode_uom_id
+                analytic_line.company_id.hr_timesheet_config_id.timesheet_encode_uom_id
             )
 
     @api.depends("task_id.partner_id", "project_id.partner_id")
@@ -263,7 +265,7 @@ class AccountAnalyticLine(models.Model):
             line.department_id = line.employee_id.department_id
 
     @api.depends(
-        "company_id.timesheet_encode_uom_id",
+        "company_id.hr_timesheet_config_id.timesheet_encode_uom_id",
         "display_name",
         "project_id",
         "unit_amount",
@@ -274,7 +276,7 @@ class AccountAnalyticLine(models.Model):
             zip(
                 companies,
                 [
-                    company.timesheet_encode_uom_id
+                    company.hr_timesheet_config_id.timesheet_encode_uom_id
                     == self.env.ref("uom.product_uom_day")
                     for company in companies
                 ],
@@ -388,7 +390,9 @@ class AccountAnalyticLine(models.Model):
             )
 
             if not vals.get("product_uom_id"):
-                vals["product_uom_id"] = company.project_time_mode_id.id
+                vals["product_uom_id"] = (
+                    company.hr_timesheet_config_id.project_time_mode_id.id
+                )
 
             if not vals.get("name"):
                 vals["name"] = "/"
@@ -440,7 +444,7 @@ class AccountAnalyticLine(models.Model):
                     vals["company_id"] = company.id
                 if not vals.get("product_uom_id"):
                     vals["product_uom_id"] = (
-                        company.project_time_mode_id.id
+                        company.hr_timesheet_config_id.project_time_mode_id.id
                         if company
                         else self.env["res.company"]
                         .browse(vals.get("company_id", self.env.company.id))
@@ -474,7 +478,7 @@ class AccountAnalyticLine(models.Model):
                     vals["company_id"] = company.id
                 if not vals.get("product_uom_id"):
                     vals["product_uom_id"] = (
-                        company.project_time_mode_id.id
+                        company.hr_timesheet_config_id.project_time_mode_id.id
                         if company
                         else self.env["res.company"]
                         .browse(vals.get("company_id", self.env.company.id))
@@ -691,7 +695,7 @@ class AccountAnalyticLine(models.Model):
         return "unit_amount" if self.project_id else super()._split_amount_fname()
 
     def _is_timesheet_encode_uom_day(self):
-        company_uom = self.env.company.timesheet_encode_uom_id
+        company_uom = self.env.company.hr_timesheet_config_id.timesheet_encode_uom_id
         return company_uom == self.env.ref("uom.product_uom_day")
 
     def _is_updatable_timesheet(self):

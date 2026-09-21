@@ -12,13 +12,19 @@ from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCom
 @tagged("post_install", "-at_install")
 class TestSubcontractingBasic(TransactionCase):
     def test_subcontracting_location_1(self):
-        self.assertTrue(self.env.company.subcontracting_location_id)
-        self.assertTrue(self.env.company.subcontracting_location_id.active)
-        company2 = self.env["res.company"].create({"name": "Test Company"})
-        self.assertTrue(company2.subcontracting_location_id)
         self.assertTrue(
-            self.env.company.subcontracting_location_id
-            != company2.subcontracting_location_id
+            self.env.company.mrp_subcontracting_config_id.subcontracting_location_id
+        )
+        self.assertTrue(
+            self.env.company.mrp_subcontracting_config_id.subcontracting_location_id.active
+        )
+        company2 = self.env["res.company"].create({"name": "Test Company"})
+        self.assertTrue(
+            company2.mrp_subcontracting_config_id.subcontracting_location_id
+        )
+        self.assertTrue(
+            self.env.company.mrp_subcontracting_config_id.subcontracting_location_id
+            != company2.mrp_subcontracting_config_id.subcontracting_location_id
         )
 
     def test_duplicating_warehouses_recreates_their_routes_and_operation_types(self):
@@ -154,7 +160,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         partner_subcontract_location = self.env["stock.location"].create(
             {
                 "name": "Specific partner location",
-                "location_id": self.env.company.subcontracting_location_id.id,
+                "location_id": self.env.company.mrp_subcontracting_config_id.subcontracting_location_id.id,
                 "usage": "internal",
                 "company_id": self.env.company.id,
             }
@@ -222,12 +228,16 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         avail_qty_comp1_in_global_location = self.env[
             "stock.quant"
         ]._get_available_quantity(
-            self.comp1, self.env.company.subcontracting_location_id, allow_negative=True
+            self.comp1,
+            self.env.company.mrp_subcontracting_config_id.subcontracting_location_id,
+            allow_negative=True,
         )
         avail_qty_comp2_in_global_location = self.env[
             "stock.quant"
         ]._get_available_quantity(
-            self.comp2, self.env.company.subcontracting_location_id, allow_negative=True
+            self.comp2,
+            self.env.company.mrp_subcontracting_config_id.subcontracting_location_id,
+            allow_negative=True,
         )
         self.assertEqual(avail_qty_comp1_in_global_location, -1)
         self.assertEqual(avail_qty_comp2_in_global_location, -1)
@@ -324,7 +334,9 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         orderpoint_form.product_id = self.comp2
         orderpoint_form.product_min_qty = 0.0
         orderpoint_form.product_max_qty = 10.0
-        orderpoint_form.location_id = self.env.company.subcontracting_location_id
+        orderpoint_form.location_id = (
+            self.env.company.mrp_subcontracting_config_id.subcontracting_location_id
+        )
         orderpoint_form.save()
 
         picking_form = Form(self.env["stock.picking"])
@@ -349,7 +361,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
                 (
                     "location_dest_id",
                     "=",
-                    self.env.company.subcontracting_location_id.id,
+                    self.env.company.mrp_subcontracting_config_id.subcontracting_location_id.id,
                 ),
             ]
         )
@@ -734,7 +746,9 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             return picking.backorder_ids
 
         def check_quants(product, stock_qty, sub_qty, prod_qty):
-            subcontracting_location = self.env.company.subcontracting_location_id
+            subcontracting_location = (
+                self.env.company.mrp_subcontracting_config_id.subcontracting_location_id
+            )
             production_location = product.property_stock_production
             stock_location = self.env.ref("stock.stock_location_stock")
 
@@ -1042,7 +1056,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         custom_subcontract_location = self.env["stock.location"].create(
             {
                 "name": "custom partner location",
-                "location_id": self.env.company.subcontracting_location_id.id,
+                "location_id": self.env.company.mrp_subcontracting_config_id.subcontracting_location_id.id,
                 "usage": "internal",
                 "company_id": self.env.company.id,
             }

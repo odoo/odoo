@@ -1,6 +1,5 @@
 from odoo import _, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import html_escape
 
 from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBillError
 
@@ -9,7 +8,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     l10n_in_ewaybill_username = fields.Char(
-        related="company_id.l10n_in_ewaybill_username",
+        related="company_id.l10n_in_ewaybill_config_id.l10n_in_ewaybill_username",
         string="Indian Ewaybill username",
         readonly=False,
     )
@@ -19,7 +18,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     l10n_in_ewaybill_feature = fields.Boolean(
-        related="company_id.l10n_in_ewaybill_feature",
+        related="company_id.l10n_in_ewaybill_config_id.l10n_in_ewaybill_feature",
         readonly=False,
     )
 

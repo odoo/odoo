@@ -6,7 +6,7 @@ from collections import defaultdict
 
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, LockError, UserError
 from odoo.tools import float_compare, float_is_zero
 
@@ -73,7 +73,7 @@ class AccountMove(models.Model):
         for move in self:
             move.l10n_in_edi_content = (
                 move.country_code == "IN"
-                and move.company_id.l10n_in_edi_feature
+                and move.company_id.l10n_in_edi_config_id.l10n_in_edi_feature
                 and move.is_sale_document(include_receipts=True)
                 and move.journal_id.type == "sale"
                 and base64.b64encode(
@@ -157,7 +157,7 @@ class AccountMove(models.Model):
     def _l10n_in_check_einvoice_eligible(self):
         self.check_singleton()
         return (
-            self.company_id.l10n_in_edi_feature
+            self.company_id.l10n_in_edi_config_id.l10n_in_edi_feature
             and self.journal_id.type == "sale"
             and any(
                 line.display_type == "product"
@@ -937,7 +937,7 @@ class AccountMove(models.Model):
             }
         default_params = {
             "auth_token": token,
-            "username": company.sudo().l10n_in_edi_username,
+            "username": company.sudo().l10n_in_edi_config_id.l10n_in_edi_username,
             "gstin": company.vat,
         }
         if params:

@@ -7,8 +7,10 @@ from odoo.addons.l10n_jo_edi.tests.jo_edi_common import JoEdiCommon
 @tagged("post_install_l10n", "post_install", "-at_install")
 class TestJoEdiTypes(JoEdiCommon):
     def test_jo_income_invoice(self):
-        self.company.l10n_jo_edi_taxpayer_type = "income"
-        self.company.l10n_jo_edi_sequence_income_source = "4419618"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type = "income"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source = (
+            "4419618"
+        )
 
         invoice_vals = {
             "name": "EIN/998833/0",
@@ -38,8 +40,10 @@ class TestJoEdiTypes(JoEdiCommon):
         )
 
     def test_jo_income_refund(self):
-        self.company.l10n_jo_edi_taxpayer_type = "income"
-        self.company.l10n_jo_edi_sequence_income_source = "4419618"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type = "income"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source = (
+            "4419618"
+        )
 
         invoice_vals = {
             "name": "EIN00017",
@@ -83,8 +87,10 @@ class TestJoEdiTypes(JoEdiCommon):
         )
 
     def test_jo_sales_invoice(self):
-        self.company.l10n_jo_edi_taxpayer_type = "sales"
-        self.company.l10n_jo_edi_sequence_income_source = "16683693"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type = "sales"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source = (
+            "16683693"
+        )
 
         invoice_vals = {
             "name": "TestEIN022",
@@ -114,8 +120,10 @@ class TestJoEdiTypes(JoEdiCommon):
         )
 
     def test_jo_sales_refund(self):
-        self.company.l10n_jo_edi_taxpayer_type = "sales"
-        self.company.l10n_jo_edi_sequence_income_source = "16683693"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type = "sales"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source = (
+            "16683693"
+        )
 
         invoice_vals = {
             "name": "TestEIN022",
@@ -149,8 +157,10 @@ class TestJoEdiTypes(JoEdiCommon):
         )
 
     def test_jo_special_invoice(self):
-        self.company.l10n_jo_edi_taxpayer_type = "special"
-        self.company.l10n_jo_edi_sequence_income_source = "16683696"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type = "special"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source = (
+            "16683696"
+        )
 
         invoice_vals = {
             "name": "TestEIN013",
@@ -183,8 +193,10 @@ class TestJoEdiTypes(JoEdiCommon):
         )
 
     def test_jo_special_refund(self):
-        self.company.l10n_jo_edi_taxpayer_type = "special"
-        self.company.l10n_jo_edi_sequence_income_source = "16683696"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type = "special"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source = (
+            "16683696"
+        )
 
         invoice_vals = {
             "name": "TestEIN013",
@@ -219,8 +231,10 @@ class TestJoEdiTypes(JoEdiCommon):
         )
 
     def test_jo_no_vat_customer(self):
-        self.company.l10n_jo_edi_taxpayer_type = "income"
-        self.company.l10n_jo_edi_sequence_income_source = "4419618"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type = "income"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source = (
+            "4419618"
+        )
         self.partner_jo.vat = False
 
         invoice = self._l10n_jo_create_invoice(
@@ -252,8 +266,10 @@ class TestJoEdiTypes(JoEdiCommon):
         )
 
     def test_jo_no_country_customer(self):
-        self.company.l10n_jo_edi_taxpayer_type = "income"
-        self.company.l10n_jo_edi_sequence_income_source = "4419618"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type = "income"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source = (
+            "4419618"
+        )
         self.partner_jo.country_id = False
 
         invoice = self._l10n_jo_create_invoice(
@@ -285,8 +301,10 @@ class TestJoEdiTypes(JoEdiCommon):
         )
 
     def test_credit_notes_lines_matching(self):
-        self.company.l10n_jo_edi_taxpayer_type = "income"
-        self.company.l10n_jo_edi_sequence_income_source = "4419618"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type = "income"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source = (
+            "4419618"
+        )
 
         invoice_vals = {
             "name": "EIN00017",

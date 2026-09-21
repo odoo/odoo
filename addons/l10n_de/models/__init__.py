@@ -5,6 +5,7 @@ from . import datev
 from . import chart_template
 from . import ir_actions_report
 from . import account_config
+from . import l10n_de_config
 from . import res_company
 from . import template_de_skr03
 from . import template_de_skr04

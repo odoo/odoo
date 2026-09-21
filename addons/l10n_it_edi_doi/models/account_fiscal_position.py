@@ -13,7 +13,7 @@ class AccountFiscalPosition(models.Model):
         for fiscal_position in self:
             if (
                 fiscal_position
-                == fiscal_position.company_id.l10n_it_edi_doi_fiscal_position_id
+                == fiscal_position.company_id.l10n_it_edi_doi_config_id.l10n_it_edi_doi_fiscal_position_id
             ):
                 _debug.logic("doi_fiscal_position_protected", positions=self)
                 raise UserError(

@@ -95,7 +95,8 @@ class CertificateCertificate(models.Model):
                             # Industry
                             x509.NameAttribute(
                                 ObjectIdentifier("2.5.4.15"),
-                                company_id.partner_id.primary_industry_id.name or "Other",
+                                company_id.partner_id.primary_industry_id.name
+                                or "Other",
                             ),
                         ]
                     )
@@ -108,7 +109,9 @@ class CertificateCertificate(models.Model):
             (
                 x509.UnrecognizedExtension(
                     ObjectIdentifier("1.3.6.1.4.1.311.20.2"),
-                    CERT_TEMPLATE_NAME[company_id.l10n_sa_api_mode],
+                    CERT_TEMPLATE_NAME[
+                        company_id.l10n_sa_edi_config_id.l10n_sa_api_mode
+                    ],
                 ),
                 False,
             ),
@@ -120,7 +123,10 @@ class CertificateCertificate(models.Model):
             builder = builder.add_extension(ext[0], critical=ext[1])
 
         private_key = serialization.load_pem_private_key(
-            base64.b64decode(company_id.l10n_sa_private_key_id.pem_key), password=None
+            base64.b64decode(
+                company_id.l10n_sa_edi_config_id.l10n_sa_private_key_id.pem_key
+            ),
+            password=None,
         )
         request = builder.sign(private_key, hashes.SHA256())
 

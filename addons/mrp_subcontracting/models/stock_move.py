@@ -199,7 +199,7 @@ class StockMove(models.Model):
                 move.picking_id.partner_id.with_company(
                     company
                 ).property_stock_subcontractor
-                or company.subcontracting_location_id
+                or company.mrp_subcontracting_config_id.subcontracting_location_id
             )
             _debug.lifecycle(
                 "subcontract_move_marked",

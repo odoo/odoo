@@ -1,6 +1,6 @@
 {
     "name": "France - Localizations",
-    "version": "2.1",
+    "version": "2.2",
     "category": "Accounting/Localizations/Account Charts",
     "author": "Odoo S.A.",
     "icon": "/account/static/description/l10n.png",
@@ -12,6 +12,8 @@
         "fr",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/l10n_fr_security.xml",
         "data/res_country_data.xml",
         "views/res_company_views.xml",
         "views/res_partner_views.xml",

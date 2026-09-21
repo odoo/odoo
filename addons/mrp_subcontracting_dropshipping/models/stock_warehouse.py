@@ -65,7 +65,7 @@ class StockWarehouse(models.Model):
             company_rules = all_rules.filtered(
                 lambda r, company=company: r.company_id == company
             )
-            company.dropship_subcontractor_pick_type_id.active = bool(
+            company.mrp_subcontracting_dropshipping_config_id.dropship_subcontractor_pick_type_id.active = bool(
                 company_rules.filtered(lambda r: r.action == "pull")
             )
 

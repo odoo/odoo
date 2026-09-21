@@ -56,8 +56,7 @@ def migrate(cr, version):
         )
         if cr.rowcount:
             _logger.info(
-                "account 1.19: %d move(s) with auto_post=%s now recur every"
-                " %s %s.",
+                "account 1.19: %d move(s) with auto_post=%s now recur every %s %s.",
                 cr.rowcount,
                 old_value,
                 interval,

@@ -5,7 +5,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     l10n_vn_edi_username = fields.Char(
-        related="company_id.l10n_vn_edi_username",
+        related="company_id.l10n_vn_edi_viettel_config_id.l10n_vn_edi_username",
         readonly=False,
     )
     l10n_vn_edi_password = fields.Char(

@@ -1,4 +1,5 @@
 from . import (
+    project_timesheet_holidays_config,
     res_company,
 )
 from . import account_analytic

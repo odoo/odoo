@@ -47,14 +47,15 @@ class ProjectTask(models.Model):
         timeoff_tasks = self.filtered(
             lambda task: (
                 task.leave_types_count
-                or task.company_id.leave_timesheet_task_id == task
+                or task.company_id.project_timesheet_holidays_config_id.leave_timesheet_task_id
+                == task
             )
         )
         _debug.logic(
             "timeoff_task_verdict",
             tasks=self,
             timeoff=timeoff_tasks,
-            company_leave_task=self.env.company.leave_timesheet_task_id,
+            company_leave_task=self.env.company.project_timesheet_holidays_config_id.leave_timesheet_task_id,
         )
         timeoff_tasks.is_timeoff_task = True
         (self - timeoff_tasks).is_timeoff_task = False
@@ -82,8 +83,10 @@ class ProjectTask(models.Model):
             )
         }
 
-        if self.env.company.leave_timesheet_task_id:
-            timeoff_tasks_ids.add(self.env.company.leave_timesheet_task_id.id)
+        if self.env.company.project_timesheet_holidays_config_id.leave_timesheet_task_id:
+            timeoff_tasks_ids.add(
+                self.env.company.project_timesheet_holidays_config_id.leave_timesheet_task_id.id
+            )
 
         _debug.pipeline(
             "timeoff_task_search_resolved",

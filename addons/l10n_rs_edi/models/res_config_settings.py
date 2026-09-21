@@ -9,6 +9,6 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     l10n_rs_edi_demo_env = fields.Boolean(
-        related="company_id.l10n_rs_edi_demo_env",
+        related="company_id.l10n_rs_edi_config_id.l10n_rs_edi_demo_env",
         readonly=False,
     )

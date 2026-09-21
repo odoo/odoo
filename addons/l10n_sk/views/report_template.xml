@@ -7,8 +7,8 @@
             ID: <span t-field="company.company_registry" />
         </li>
         <li
-            t-if="company.income_tax_id and company.account_config_id.account_fiscal_country_id.code == 'SK'">
-            Tax ID: <span t-field="company.income_tax_id" />
+            t-if="company.l10n_sk_config_id.income_tax_id and company.account_config_id.account_fiscal_country_id.code == 'SK'">
+            Tax ID: <span t-field="company.l10n_sk_config_id.income_tax_id" />
         </li>
         <li
             t-if="company.vat and company.account_config_id.account_fiscal_country_id.code == 'SK'">
@@ -27,8 +27,8 @@
                 ID: <span t-field="company.company_registry" />
             </div>
             <div
-                t-if="company.income_tax_id and company.account_config_id.account_fiscal_country_id.code == 'SK'">
-                Tax ID: <span t-field="company.income_tax_id" />
+                t-if="company.l10n_sk_config_id.income_tax_id and company.account_config_id.account_fiscal_country_id.code == 'SK'">
+                Tax ID: <span t-field="company.l10n_sk_config_id.income_tax_id" />
             </div>
             <div
                 t-if="company.vat and company.account_config_id.account_fiscal_country_id.code == 'SK'">

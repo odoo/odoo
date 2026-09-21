@@ -40,7 +40,9 @@ class AccountMove(models.Model):
         copy=False,
         readonly=True,
     )
-    l10n_pl_edi_register = fields.Boolean(related="company_id.l10n_pl_edi_register")
+    l10n_pl_edi_register = fields.Boolean(
+        related="company_id.l10n_pl_edi_config_id.l10n_pl_edi_register"
+    )
     l10n_pl_edi_header = fields.Html(
         copy=False,
         readonly=True,

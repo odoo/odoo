@@ -1,6 +1,6 @@
 {
     "name": "France - Time Off",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Human Resources/Time Off",
     "summary": "Management of leaves for part-time workers in France",
     "author": "Odoo S.A.",
@@ -12,6 +12,8 @@
         "fr",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/l10n_fr_hr_holidays_security.xml",
         "views/res_config_settings_views.xml",
         "views/l10n_fr_hr_holidays_menus.xml",
     ],

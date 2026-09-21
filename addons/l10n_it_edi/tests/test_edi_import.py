@@ -343,7 +343,9 @@ class TestItEdiImport(TestItEdi):
             "The Italian default purchase journal requires a default account.",
         ):
             # It should raise an error when we try to set the company's default purchase journal in the Settings.
-            self.company.l10n_it_edi_purchase_journal_id = preferred_journal
+            self.company.l10n_it_edi_config_id.l10n_it_edi_purchase_journal_id = (
+                preferred_journal
+            )
 
         preferred_journal.default_account_id = self.company_data_2[
             "default_journal_purchase"

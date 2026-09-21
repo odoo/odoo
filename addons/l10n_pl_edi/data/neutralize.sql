@@ -4,19 +4,19 @@
 DELETE FROM certificate_certificate
       WHERE id IN (
                 SELECT l10n_pl_edi_certificate
-                  FROM res_company
+                  FROM l10n_pl_edi_config
                )
 ;
 
 -- clear KSeF Credentials
-UPDATE res_company
+UPDATE l10n_pl_edi_config
    SET l10n_pl_edi_certificate = NULL,
        l10n_pl_edi_session_id = NULL
 ;
 
 -- Remove the attached binary data
 DELETE FROM ir_attachment
-      WHERE res_model = 'res.company'
+      WHERE res_model = 'l10n_pl_edi.config'
         AND res_field IN ('l10n_pl_edi_session_key', 'l10n_pl_edi_session_iv')
 ;
 

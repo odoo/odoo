@@ -224,7 +224,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             }
         )
 
-        leave_task = self.test_company.leave_timesheet_task_id
+        leave_task = self.test_company.project_timesheet_holidays_config_id.leave_timesheet_task_id
 
         timesheets_by_employee = self._get_timesheets_by_employee(leave_task)
         self.assertFalse(timesheets_by_employee.get(self.part_time_employee.id, False))
@@ -352,7 +352,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             }
         )
 
-        leave_task = self.test_company.leave_timesheet_task_id
+        leave_task = self.test_company.project_timesheet_holidays_config_id.leave_timesheet_task_id
         self.assertEqual(
             leave_task.effective_hours, 4 * self.part_time_calendar.hours_per_day
         )
@@ -375,7 +375,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             }
         )
 
-        leave_task = self.test_company.leave_timesheet_task_id
+        leave_task = self.test_company.project_timesheet_holidays_config_id.leave_timesheet_task_id
 
         global_time_off.calendar_id = False
 
@@ -426,7 +426,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             )
         )
 
-        leave_task = self.test_company.leave_timesheet_task_id
+        leave_task = self.test_company.project_timesheet_holidays_config_id.leave_timesheet_task_id
         timesheets_by_employee = self._get_timesheets_by_employee(leave_task)
         self.assertEqual(timesheets_by_employee.get(self.part_time_employee.id), 4)
         self.assertEqual(timesheets_by_employee.get(self.part_time_employee2.id), 4)
@@ -462,7 +462,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             }
         )
 
-        leave_task = self.test_company.leave_timesheet_task_id
+        leave_task = self.test_company.project_timesheet_holidays_config_id.leave_timesheet_task_id
         timesheets_by_employee = self._get_timesheets_by_employee(leave_task)
         self.assertFalse(timesheets_by_employee.get(self.part_time_employee, False))
         self.assertFalse(timesheets_by_employee.get(self.full_time_employee, False))
@@ -487,7 +487,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             ]
         )
 
-        leave_task = self.test_company.leave_timesheet_task_id
+        leave_task = self.test_company.project_timesheet_holidays_config_id.leave_timesheet_task_id
         timesheets_by_employee = self._get_timesheets_by_employee(leave_task)
 
         self.assertEqual(timesheets_by_employee.get(self.part_time_employee.id), 2)

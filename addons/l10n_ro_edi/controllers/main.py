@@ -17,14 +17,17 @@ class L10nRoEdiController(http.Controller):
     def authorize(self, company_id, **kw):
         """Generate Authorization Token to acquire access_key for requesting Access Token"""
         company = http.request.env["res.company"].browse(company_id)
-        if not company.l10n_ro_edi_client_id or not company.l10n_ro_edi_client_secret:
+        if (
+            not company.l10n_ro_edi_config_id.l10n_ro_edi_client_id
+            or not company.l10n_ro_edi_client_secret
+        ):
             raise UserError(_("Client ID and Client Secret field must be filled."))
 
         auth_url_params = urlencode(
             {
                 "response_type": "code",
-                "client_id": company.l10n_ro_edi_client_id,
-                "redirect_uri": company.l10n_ro_edi_callback_url,
+                "client_id": company.l10n_ro_edi_config_id.l10n_ro_edi_client_id,
+                "redirect_uri": company.l10n_ro_edi_config_id.l10n_ro_edi_callback_url,
                 "token_content_type": "jwt",
             }
         )
@@ -55,11 +58,11 @@ class L10nRoEdiController(http.Controller):
                 purpose="l10n_ro_edi",
                 data={
                     "grant_type": "authorization_code",
-                    "client_id": company.l10n_ro_edi_client_id,
+                    "client_id": company.l10n_ro_edi_config_id.l10n_ro_edi_client_id,
                     "client_secret": company.l10n_ro_edi_client_secret,
                     "code": access_key,
                     "access_key": access_key,
-                    "redirect_uri": company.l10n_ro_edi_callback_url,
+                    "redirect_uri": company.l10n_ro_edi_config_id.l10n_ro_edi_callback_url,
                     "token_content_type": "jwt",
                 },
                 headers={

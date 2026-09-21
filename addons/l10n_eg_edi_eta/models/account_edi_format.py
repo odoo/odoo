@@ -127,7 +127,7 @@ class AccountEdiFormat(models.Model):
             request_data,
             request_url,
             "POST",
-            production_enviroment=invoice.company_id.l10n_eg_production_env,
+            production_enviroment=invoice.company_id.l10n_eg_edi_eta_config_id.l10n_eg_production_env,
         )
         if response_data.get("error"):
             return response_data
@@ -196,7 +196,7 @@ class AccountEdiFormat(models.Model):
             request_data,
             request_url,
             "PUT",
-            production_enviroment=invoice.company_id.l10n_eg_production_env,
+            production_enviroment=invoice.company_id.l10n_eg_edi_eta_config_id.l10n_eg_production_env,
         )
         if response_data.get("error"):
             return response_data
@@ -224,7 +224,7 @@ class AccountEdiFormat(models.Model):
             request_data,
             request_url,
             "GET",
-            production_enviroment=invoice.company_id.l10n_eg_production_env,
+            production_enviroment=invoice.company_id.l10n_eg_edi_eta_config_id.l10n_eg_production_env,
         )
         if response_data.get("error"):
             return response_data
@@ -262,7 +262,7 @@ class AccountEdiFormat(models.Model):
         return {"error": _("an Unknown error has occured"), "blocking_level": "warning"}
 
     def _l10n_eg_eta_get_access_token(self, invoice):
-        user = invoice.company_id.sudo().l10n_eg_client_identifier
+        user = invoice.company_id.sudo().l10n_eg_edi_eta_config_id.l10n_eg_client_identifier
         secret = invoice.company_id.sudo().l10n_eg_client_secret
         access = "%s:%s" % (user, secret)
         user_and_pass = b64encode(access.encode()).decode()
@@ -276,7 +276,7 @@ class AccountEdiFormat(models.Model):
             request_url,
             "POST",
             is_access_token_req=True,
-            production_enviroment=invoice.company_id.l10n_eg_production_env,
+            production_enviroment=invoice.company_id.l10n_eg_edi_eta_config_id.l10n_eg_production_env,
         )
         if response_data.get("error"):
             return response_data
@@ -301,7 +301,7 @@ class AccountEdiFormat(models.Model):
             request_data,
             request_url,
             "GET",
-            production_enviroment=invoice.company_id.l10n_eg_production_env,
+            production_enviroment=invoice.company_id.l10n_eg_edi_eta_config_id.l10n_eg_production_env,
         )
         if response_data.get("error"):
             return response_data
@@ -311,11 +311,14 @@ class AccountEdiFormat(models.Model):
         return {"error": _("PDF Document is not available")}
 
     @api.model
-    def _l10n_eg_is_info_address_complete(self, partner_id, issuer=False, invoice=False):
+    def _l10n_eg_is_info_address_complete(
+        self, partner_id, issuer=False, invoice=False
+    ):
         fields = ["country_id", "state_id", "city", "street", "l10n_eg_building_no"]
         if (
             invoice
-            and invoice.amount_total >= invoice.company_id.l10n_eg_invoicing_threshold
+            and invoice.amount_total
+            >= invoice.company_id.l10n_eg_edi_eta_config_id.l10n_eg_invoicing_threshold
         ) or self._l10n_eg_get_partner_tax_type(partner_id, issuer) != "P":
             fields.append("vat")
         return all(partner_id[field] for field in fields)
@@ -561,7 +564,8 @@ class AccountEdiFormat(models.Model):
         individual_type = self._l10n_eg_get_partner_tax_type(partner, issuer)
         address["type"] = individual_type or ""
         if (
-            invoice.amount_total >= invoice.company_id.l10n_eg_invoicing_threshold
+            invoice.amount_total
+            >= invoice.company_id.l10n_eg_edi_eta_config_id.l10n_eg_invoicing_threshold
             or individual_type != "P"
         ):
             address["id"] = partner.vat or ""
@@ -599,13 +603,13 @@ class AccountEdiFormat(models.Model):
                 )
             )
         if not self._l10n_eg_get_eta_token_domain(
-            invoice.company_id.l10n_eg_production_env
+            invoice.company_id.l10n_eg_edi_eta_config_id.l10n_eg_production_env
         ):
             errors.append(
                 _("Please configure the token domain from the system parameters")
             )
         if not self._l10n_eg_get_eta_api_domain(
-            invoice.company_id.l10n_eg_production_env
+            invoice.company_id.l10n_eg_edi_eta_config_id.l10n_eg_production_env
         ):
             errors.append(
                 _("Please configure the API domain from the system parameters")
@@ -624,7 +628,9 @@ class AccountEdiFormat(models.Model):
             invoice.journal_id.l10n_eg_branch_id
         ):
             errors.append(_("Please add all the required fields in the branch details"))
-        if not self._l10n_eg_is_info_address_complete(invoice.partner_id, invoice=invoice):
+        if not self._l10n_eg_is_info_address_complete(
+            invoice.partner_id, invoice=invoice
+        ):
             errors.append(
                 _("Please add all the required fields in the customer details")
             )

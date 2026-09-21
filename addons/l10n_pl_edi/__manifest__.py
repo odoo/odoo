@@ -1,6 +1,6 @@
 {
     "name": "Polish E-Invoicing FA(3)",
-    "version": "1.2",
+    "version": "1.3",
     "category": "Accounting/Localizations",
     "summary": "Support for FA(3) electronic invoices in Poland via KSeF",
     "description": "Export FA(3) compliant XML invoices and prepare for integration with KSeF.",
@@ -17,6 +17,8 @@
         ],
     },
     "data": [
+        "security/ir.model.access.csv",
+        "security/l10n_pl_edi_security.xml",
         "views/account_move_views.xml",
         "views/report_invoice.xml",
         "views/res_config_settings_views.xml",

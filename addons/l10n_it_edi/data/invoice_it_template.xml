@@ -114,18 +114,19 @@
                             <t t-set="partner_info" t-value="seller_info" />
                         </t>
                         <IscrizioneREA
-                            t-if="not is_self_invoice and company.l10n_it_has_eco_index">
-                            <Ufficio t-out="company.l10n_it_eco_index_office.code" />
+                            t-if="not is_self_invoice and company.l10n_it_edi_config_id.l10n_it_has_eco_index">
+                            <Ufficio
+                                t-out="company.l10n_it_edi_config_id.l10n_it_eco_index_office.code" />
                             <NumeroREA
-                                t-out="format_alphanumeric(company.l10n_it_eco_index_number)" />
+                                t-out="format_alphanumeric(company.l10n_it_edi_config_id.l10n_it_eco_index_number)" />
                             <CapitaleSociale
-                                t-if="company.l10n_it_eco_index_share_capital != 0"
-                                t-out="format_numbers_two(company.l10n_it_eco_index_share_capital)" />
+                                t-if="company.l10n_it_edi_config_id.l10n_it_eco_index_share_capital != 0"
+                                t-out="format_numbers_two(company.l10n_it_edi_config_id.l10n_it_eco_index_share_capital)" />
                             <SocioUnico
-                                t-if="company.l10n_it_eco_index_sole_shareholder != 'NO'"
-                                t-out="company.l10n_it_eco_index_sole_shareholder" />
+                                t-if="company.l10n_it_edi_config_id.l10n_it_eco_index_sole_shareholder != 'NO'"
+                                t-out="company.l10n_it_edi_config_id.l10n_it_eco_index_sole_shareholder" />
                             <StatoLiquidazione
-                                t-out="company.l10n_it_eco_index_liquidation_state" />
+                                t-out="company.l10n_it_edi_config_id.l10n_it_eco_index_liquidation_state" />
                         </IscrizioneREA>
                     </CedentePrestatore>
                     <RappresentanteFiscale

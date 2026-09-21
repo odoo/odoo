@@ -44,7 +44,9 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
         Ensure the warnings are computed correctly when editing line values on an invoice.
         """
         declaration = self.declaration_1000
-        declaration_tax = declaration.company_id.l10n_it_edi_doi_tax_id
+        declaration_tax = (
+            declaration.company_id.l10n_it_edi_doi_config_id.l10n_it_edi_doi_tax_id
+        )
 
         self.assertRecordValues(
             declaration,
@@ -94,7 +96,9 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
         Ensure the warnings are computed correctly when editing line values on a quotation or sale order.
         """
         declaration = self.declaration_1000
-        declaration_tax = declaration.company_id.l10n_it_edi_doi_tax_id
+        declaration_tax = (
+            declaration.company_id.l10n_it_edi_doi_config_id.l10n_it_edi_doi_tax_id
+        )
 
         self.assertRecordValues(
             declaration,
@@ -173,7 +177,9 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
         We create a single invoice and post it.
         """
         declaration = self.declaration_1000
-        declaration_tax = declaration.company_id.l10n_it_edi_doi_tax_id
+        declaration_tax = (
+            declaration.company_id.l10n_it_edi_doi_config_id.l10n_it_edi_doi_tax_id
+        )
 
         self.assertRecordValues(
             declaration,
@@ -257,7 +263,9 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
             I.e. the invoice should not influence the Not Yet Invoiced amount of the declaration.
         """
         declaration = self.declaration_1000
-        declaration_tax = declaration.company_id.l10n_it_edi_doi_tax_id
+        declaration_tax = (
+            declaration.company_id.l10n_it_edi_doi_config_id.l10n_it_edi_doi_tax_id
+        )
 
         order = self.create_sale_order(
             declaration,
@@ -385,7 +393,9 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
         """
 
         declaration = self.declaration_1000
-        declaration_tax = declaration.company_id.l10n_it_edi_doi_tax_id
+        declaration_tax = (
+            declaration.company_id.l10n_it_edi_doi_config_id.l10n_it_edi_doi_tax_id
+        )
 
         # Add an order that is not used in the rest of this test.
         # This way we can always show the warning and that this amount will not be removed from Not Yet Invoiced.
@@ -567,7 +577,9 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
         """
 
         declaration = self.declaration_1000
-        declaration_tax = declaration.company_id.l10n_it_edi_doi_tax_id
+        declaration_tax = (
+            declaration.company_id.l10n_it_edi_doi_config_id.l10n_it_edi_doi_tax_id
+        )
 
         orders = self.env["sale.order"].create(
             [

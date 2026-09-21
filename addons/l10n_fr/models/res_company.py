@@ -4,23 +4,29 @@ from odoo import _, api, fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    l10n_fr_closing_sequence_id = fields.Many2one(
-        comodel_name="ir.sequence",
-        string="Sequence to use to build sale closings",
-        readonly=True,
-    )
-    ape = fields.Char(string="APE")
-    is_france_country = fields.Boolean(
-        string="Is Part of DOM-TOM",
-        compute="_compute_is_france_country",
+    l10n_fr_config_id = fields.Many2one(
+        comodel_name="l10n_fr.config",
+        compute="_compute_l10n_fr_config_id",
+        search="_search_l10n_fr_config_id",
     )
 
-    @api.depends("country_code")
-    def _compute_is_france_country(self):
+    ape = fields.Char(
+        related="l10n_fr_config_id.ape",
+        readonly=False,
+    )
+
+    is_france_country = fields.Boolean(
+        related="l10n_fr_config_id.is_france_country",
+    )
+
+    def _search_l10n_fr_config_id(self, operator, value):
+        return self._search_config_link("l10n_fr.config", operator, value)
+
+    def _compute_l10n_fr_config_id(self):
+        configs = self.env["l10n_fr.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
         for company in self:
-            company.is_france_country = (
-                company.country_code in self._get_france_country_codes()
-            )
+            company.l10n_fr_config_id = by_company.get(company.id, False)
 
     @api.model
     def _get_france_country_codes(self):
@@ -75,7 +81,7 @@ class ResCompany(models.Model):
         for company in self:
             vals_write = {}
             for seq_field in sequence_fields:
-                if not company[seq_field]:
+                if not company._config_owner_of(seq_field)[seq_field]:
                     vals = {
                         "name": _(
                             "Securisation of %(field)s - %(company)s",
@@ -92,4 +98,4 @@ class ResCompany(models.Model):
                     seq = self.env["ir.sequence"].create(vals)
                     vals_write[seq_field] = seq.id
             if vals_write:
-                company.write(vals_write)
+                company.write(vals_write)  # routed to the owning configuration

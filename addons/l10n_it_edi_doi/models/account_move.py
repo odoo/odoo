@@ -95,7 +95,7 @@ class AccountMove(models.Model):
         The direction_sign determines the sign: 1 (-1) for inbound (outbound) types.
         """
         for move in self:
-            tax = move.company_id.l10n_it_edi_doi_tax_id
+            tax = move.company_id.l10n_it_edi_doi_config_id.l10n_it_edi_doi_tax_id
             if not tax or not move.l10n_it_edi_doi_id:
                 move.l10n_it_edi_doi_amount = 0
                 continue
@@ -181,9 +181,7 @@ class AccountMove(models.Model):
     def _compute_fiscal_position_id(self):
         super()._compute_fiscal_position_id()
         for move in self:
-            declaration_fiscal_position = (
-                move.company_id.l10n_it_edi_doi_fiscal_position_id
-            )
+            declaration_fiscal_position = move.company_id.l10n_it_edi_doi_config_id.l10n_it_edi_doi_fiscal_position_id
             if declaration_fiscal_position and move.l10n_it_edi_doi_id:
                 move.fiscal_position_id = declaration_fiscal_position
 
@@ -228,7 +226,9 @@ class AccountMove(models.Model):
                 )
                 errors.extend(validity_warnings)
 
-            declaration_of_intent_tax = move.company_id.l10n_it_edi_doi_tax_id
+            declaration_of_intent_tax = (
+                move.company_id.l10n_it_edi_doi_config_id.l10n_it_edi_doi_tax_id
+            )
             if not declaration_of_intent_tax:
                 continue
 

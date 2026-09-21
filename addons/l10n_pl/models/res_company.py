@@ -4,8 +4,17 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    l10n_pl_reports_tax_office_id = fields.Many2one(
-        comodel_name="l10n_pl.l10n_pl_tax_office",
-        string="Tax Office",
-        groups="account.group_account_user",
+    l10n_pl_config_id = fields.Many2one(
+        comodel_name="l10n_pl.config",
+        compute="_compute_l10n_pl_config_id",
+        search="_search_l10n_pl_config_id",
     )
+
+    def _search_l10n_pl_config_id(self, operator, value):
+        return self._search_config_link("l10n_pl.config", operator, value)
+
+    def _compute_l10n_pl_config_id(self):
+        configs = self.env["l10n_pl.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.l10n_pl_config_id = by_company.get(company.id, False)

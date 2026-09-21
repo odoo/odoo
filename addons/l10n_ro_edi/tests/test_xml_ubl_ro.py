@@ -341,11 +341,14 @@ class TestUBLRO(TestUBLROCommon):
             )
 
     def test_export_constraints(self):
-        self.company_data["company"].company_registry = False
         for required_field in ("city", "street", "state_id", "vat"):
             prev_val = self.company_data["company"][required_field]
             self.company_data["company"][required_field] = False
             invoice = self.create_move("out_invoice", send=False)
+            # after the move is built, because creating one writes the seller's
+            # own country and VAT back onto the company, and a Romanian
+            # company's registry is recomputed from its VAT
+            self.company_data["company"].company_registry = False
             with self.assertRaisesRegex(UserError, "required"):
                 invoice._generate_and_send(
                     allow_fallback_pdf=False, template_id=self.move_template.id

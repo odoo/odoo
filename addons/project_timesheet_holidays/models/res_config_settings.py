@@ -8,7 +8,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     internal_project_id = fields.Many2one(
-        related="company_id.internal_project_id",
+        related="company_id.hr_timesheet_config_id.internal_project_id",
         string="Internal Project",
         readonly=False,
         required=True,
@@ -17,7 +17,7 @@ class ResConfigSettings(models.TransientModel):
         " You can specify another project on each time off type individually.",
     )
     leave_timesheet_task_id = fields.Many2one(
-        related="company_id.leave_timesheet_task_id",
+        related="company_id.project_timesheet_holidays_config_id.leave_timesheet_task_id",
         string="Time Off Task",
         readonly=False,
         domain="[('company_id', '=', company_id), ('project_id', '=?', internal_project_id), ('has_template_ancestor', '=', False)]",

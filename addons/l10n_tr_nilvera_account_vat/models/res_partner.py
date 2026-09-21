@@ -13,5 +13,8 @@ class ResPartner(models.Model):
         return (
             super().check_vat_tr(vat)
             or vat in L10N_TR_GIB_ALLOWED_NUMS
-            or (company.l10n_tr_nilvera_use_test_env and vat in NILVERA_TEST_VAT_NUMS)
+            or (
+                company.l10n_tr_nilvera_config_id.l10n_tr_nilvera_use_test_env
+                and vat in NILVERA_TEST_VAT_NUMS
+            )
         )

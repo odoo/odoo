@@ -25,7 +25,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=True,
     )
     l10n_pl_edi_register = fields.Boolean(
-        related="company_id.l10n_pl_edi_register",
+        related="company_id.l10n_pl_edi_config_id.l10n_pl_edi_register",
         string="Allow KSeF integration",
         readonly=False,
     )
@@ -33,7 +33,9 @@ class ResConfigSettings(models.TransientModel):
     @api.depends("company_id")
     def _compute_l10n_pl_edi_certificate(self):
         for config in self:
-            config.l10n_pl_edi_certificate = config.company_id.l10n_pl_edi_certificate
+            config.l10n_pl_edi_certificate = (
+                config.company_id.l10n_pl_edi_config_id.l10n_pl_edi_certificate
+            )
 
     @api.onchange("l10n_pl_edi_register")
     def _l10n_pl_edi_reset(self):
@@ -47,8 +49,10 @@ class ResConfigSettings(models.TransientModel):
             company = config.company_id.sudo()
             if config.l10n_pl_edi_certificate:
                 config._l10n_pl_edi_ksef_authenticate()
-                company.l10n_pl_edi_register = True
-                company.l10n_pl_edi_certificate = config.l10n_pl_edi_certificate
+                company.l10n_pl_edi_config_id.l10n_pl_edi_register = True
+                company.l10n_pl_edi_config_id.l10n_pl_edi_certificate = (
+                    config.l10n_pl_edi_certificate
+                )
             else:
                 # Persisted reset happens only on save
                 company.write(

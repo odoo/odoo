@@ -1,6 +1,6 @@
 {
     "name": "Greece - myDATA",
-    "version": "19.0.2.1.0",
+    "version": "19.0.2.1.1",
     "category": "Accounting/Localizations",
     "summary": "Connect to myDATA API implementation for Greece",
     "description": """
@@ -22,6 +22,7 @@
         "data/exchange_data.xml",
         "data/template.xml",
         "security/ir.model.access.csv",
+        "security/l10n_gr_edi_security.xml",
         "views/account_fiscal_position_views.xml",
         "views/account_move_views.xml",
         "views/account_tax_views.xml",

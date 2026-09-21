@@ -4,11 +4,26 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
+    l10n_au_config_id = fields.Many2one(
+        comodel_name="l10n_au.config",
+        compute="_compute_l10n_au_config_id",
+        search="_search_l10n_au_config_id",
+    )
+
     l10n_au_is_gst_registered = fields.Boolean(
-        string="Australia GST registered",
-        help="Enable if your company is registered for GST.",
+        related="l10n_au_config_id.l10n_au_is_gst_registered",
+        readonly=False,
     )
     l10n_au_trading_name = fields.Char(
-        string="Trading Name",
-        help="The trading name of the company.",
+        related="l10n_au_config_id.l10n_au_trading_name",
+        readonly=False,
     )
+
+    def _search_l10n_au_config_id(self, operator, value):
+        return self._search_config_link("l10n_au.config", operator, value)
+
+    def _compute_l10n_au_config_id(self):
+        configs = self.env["l10n_au.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.l10n_au_config_id = by_company.get(company.id, False)

@@ -12,14 +12,32 @@ class ResCompany(models.Model):
         "l10n_gr_edi_aade_key": "l10n_gr_edi_aade_key",
     }
 
-    l10n_gr_edi_aade_id = fields.Char(string="AADE User ID")
+    l10n_gr_edi_config_id = fields.Many2one(
+        comodel_name="l10n_gr_edi.config",
+        compute="_compute_l10n_gr_edi_config_id",
+        search="_search_l10n_gr_edi_config_id",
+    )
+
+    l10n_gr_edi_aade_id = fields.Char(
+        related="l10n_gr_edi_config_id.l10n_gr_edi_aade_id",
+        readonly=False,
+    )
+    l10n_gr_edi_test_env = fields.Boolean(
+        related="l10n_gr_edi_config_id.l10n_gr_edi_test_env",
+        readonly=False,
+    )
+
     l10n_gr_edi_aade_key = fields.Char(
         string="AADE Subscription Key",
         compute="_compute_credential_doors",
         inverse="_inverse_credential_doors",
     )
-    l10n_gr_edi_test_env = fields.Boolean(
-        string="Greece Test Environment",
-        default=True,
-        help="Enable test environments with credentials obtained from https://mydata-dev-register.azurewebsites.net/",
-    )
+
+    def _search_l10n_gr_edi_config_id(self, operator, value):
+        return self._search_config_link("l10n_gr_edi.config", operator, value)
+
+    def _compute_l10n_gr_edi_config_id(self):
+        configs = self.env["l10n_gr_edi.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.l10n_gr_edi_config_id = by_company.get(company.id, False)

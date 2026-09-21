@@ -46,7 +46,7 @@ class SaleOrderLine(models.Model):
             line.remaining_hours_available for line in self
         ):
             company = self.env.company
-            encoding_uom = company.timesheet_encode_uom_id
+            encoding_uom = company.hr_timesheet_config_id.timesheet_encode_uom_id
             is_hour = is_day = False
             unit_label = ""
             if encoding_uom == self.env.ref("uom.product_uom_hour"):
@@ -63,10 +63,8 @@ class SaleOrderLine(models.Model):
                             f" ({format_duration(line.remaining_hours)} {unit_label})"
                         )
                     elif is_day:
-                        remaining_days = (
-                            company.project_time_mode_id._get_quantity_in_unit(
-                                line.remaining_hours, encoding_uom, round=False
-                            )
+                        remaining_days = company.hr_timesheet_config_id.project_time_mode_id._get_quantity_in_unit(
+                            line.remaining_hours, encoding_uom, round=False
                         )
                         remaining_time = f" ({remaining_days:.02f} {unit_label})"
                     name = f"{line.display_name}{remaining_time}"
@@ -142,7 +140,7 @@ class SaleOrderLine(models.Model):
         return domain
 
     def _convert_qty_company_hours(self, dest_company):
-        company_time_uom_id = dest_company.project_time_mode_id
+        company_time_uom_id = dest_company.hr_timesheet_config_id.project_time_mode_id
         allocated_hours = 0.0
         product_uom_id = self.product_uom_id
         if product_uom_id == self.env.ref("uom.product_uom_unit"):
@@ -169,7 +167,7 @@ class SaleOrderLine(models.Model):
                 }
             )
             return project
-        project_uom = self.company_id.project_time_mode_id
+        project_uom = self.company_id.hr_timesheet_config_id.project_time_mode_id
         uom_unit = self.env.ref("uom.product_uom_unit")
         uom_hour = self.env.ref("uom.product_uom_hour")
 

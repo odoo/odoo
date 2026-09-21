@@ -30,7 +30,7 @@ def send_efactura_request(
     :param data: XML data for ``upload`` request
     :return: Dictionary of {'error': `str`, ['timeout': True for Timeout errors]} or {'content': <response.content>} from E-Factura
     """
-    send_mode = "test" if company.l10n_ro_edi_test_env else "prod"
+    send_mode = "test" if company.l10n_ro_edi_config_id.l10n_ro_edi_test_env else "prod"
     url = f"https://api.anaf.ro/{send_mode}/FCTEL/rest/{endpoint}"
     if endpoint in ["upload", "uploadb2c"]:
         method = "POST"

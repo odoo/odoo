@@ -15,10 +15,10 @@ class IrHttp(models.AbstractModel):
             for company in company_ids:
                 result["user_companies"]["allowed_companies"][company.id].update(
                     {
-                        "timesheet_uom_id": company.timesheet_encode_uom_id.id,
-                        "timesheet_uom_factor": company.project_time_mode_id._get_quantity_in_unit(
+                        "timesheet_uom_id": company.hr_timesheet_config_id.timesheet_encode_uom_id.id,
+                        "timesheet_uom_factor": company.hr_timesheet_config_id.project_time_mode_id._get_quantity_in_unit(
                             1.0,
-                            company.timesheet_encode_uom_id,
+                            company.hr_timesheet_config_id.timesheet_encode_uom_id,
                             round=False,
                             raise_if_failure=False,
                         ),
@@ -36,9 +36,9 @@ class IrHttp(models.AbstractModel):
     @api.model
     def get_timesheet_uoms(self):
         company_ids = self.env.user.company_ids
-        uom_ids = company_ids.mapped("timesheet_encode_uom_id") | company_ids.mapped(
-            "project_time_mode_id"
-        )
+        uom_ids = company_ids.mapped(
+            "hr_timesheet_config_id.timesheet_encode_uom_id"
+        ) | company_ids.mapped("hr_timesheet_config_id.project_time_mode_id")
         return {
             uom.id: {
                 "id": uom.id,

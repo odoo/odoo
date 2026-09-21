@@ -56,7 +56,9 @@ class ETransportAPI:
         self, company, endpoint: str, method: str, session=None, data=None
     ) -> dict:
         _debug.perf.count("etransport_api_request")
-        api_env = "test" if company.l10n_ro_edi_test_env else "prod"
+        api_env = (
+            "test" if company.l10n_ro_edi_config_id.l10n_ro_edi_test_env else "prod"
+        )
         url = f"{ETRANSPORT_URLS[api_env]}/{endpoint}"
         headers = {
             "Content-Type": "application/xml",

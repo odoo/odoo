@@ -55,8 +55,8 @@ def _uninstall_hook(env):
 
     project_ids = (
         env["res.company"]
-        .search([("internal_project_id", "!=", False)])
-        .mapped("internal_project_id")
+        .search([("hr_timesheet_config_id.internal_project_id", "!=", False)])
+        .mapped("hr_timesheet_config_id.internal_project_id")
     )
     if project_ids:
         _debug.lifecycle("uninstall_internal_projects_archived", projects=project_ids)

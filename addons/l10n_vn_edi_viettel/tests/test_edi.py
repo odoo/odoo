@@ -471,7 +471,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
                 invoice._l10n_vn_edi_get_access_token()
                 self.assertEqual(invoice.company_id.l10n_vn_edi_token, "123")
                 self.assertEqual(
-                    invoice.company_id.l10n_vn_edi_token_expiry,
+                    invoice.company_id.l10n_vn_edi_viettel_config_id.l10n_vn_edi_token_expiry,
                     datetime.strptime("2024-01-01 02:10:00", "%Y-%m-%d %H:%M:%S"),
                 )
             # Second fetch should not set anything as the token isn't expired.
@@ -479,7 +479,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
                 invoice._l10n_vn_edi_get_access_token()
                 self.assertEqual(invoice.company_id.l10n_vn_edi_token, "123")
                 self.assertEqual(
-                    invoice.company_id.l10n_vn_edi_token_expiry,
+                    invoice.company_id.l10n_vn_edi_viettel_config_id.l10n_vn_edi_token_expiry,
                     datetime.strptime("2024-01-01 02:10:00", "%Y-%m-%d %H:%M:%S"),
                 )
             # Third fetch will get a new token due as it expired
@@ -487,7 +487,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
                 invoice._l10n_vn_edi_get_access_token()
                 self.assertEqual(invoice.company_id.l10n_vn_edi_token, "123")
                 self.assertEqual(
-                    invoice.company_id.l10n_vn_edi_token_expiry,
+                    invoice.company_id.l10n_vn_edi_viettel_config_id.l10n_vn_edi_token_expiry,
                     datetime.strptime("2024-01-01 02:25:00", "%Y-%m-%d %H:%M:%S"),
                 )
 

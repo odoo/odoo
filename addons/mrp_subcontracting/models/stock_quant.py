@@ -12,5 +12,5 @@ class StockQuant(models.Model):
     def _search_is_subcontract(self, operator, value):
         if operator != "in":
             return NotImplemented
-        subcontracting_location_ids = self.env.companies.subcontracting_location_id.child_internal_location_ids.ids
+        subcontracting_location_ids = self.env.companies.mrp_subcontracting_config_id.subcontracting_location_id.child_internal_location_ids.ids
         return [("location_id", operator, subcontracting_location_ids)]

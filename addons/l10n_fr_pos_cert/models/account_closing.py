@@ -235,7 +235,9 @@ class AccountSaleClosing(models.Model):
         res_company = self.env["res.company"].search([])
         account_closings = self.env["account.sale.closing"]
         for company in res_company.filtered(lambda c: c._is_accounting_unalterable()):
-            new_sequence_number = company.l10n_fr_closing_sequence_id.next_by_id()
+            new_sequence_number = (
+                company.l10n_fr_config_id.l10n_fr_closing_sequence_id.next_by_id()
+            )
             values = self._prepare_closing_vals(frequency, company)
             values["frequency"] = frequency
             values["company_id"] = company.id

@@ -1,3 +1,4 @@
+from . import l10n_rs_edi_config
 from . import res_company
 from . import res_config_settings
 from . import account_move

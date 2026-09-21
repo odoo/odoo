@@ -33,7 +33,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
 
     def _is_valid_mobile_barcode(self, carrier_number, order):
         json_data = {
-            "MerchantID": order.company_id.l10n_tw_edi_ecpay_merchant_id,
+            "MerchantID": order.company_id.l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_merchant_id,
             "BarCode": carrier_number,
         }
 
@@ -42,7 +42,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
 
     def _is_valid_tax_id(self, tax_id, order):
         json_data = {
-            "MerchantID": order.company_id.l10n_tw_edi_ecpay_merchant_id,
+            "MerchantID": order.company_id.l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_merchant_id,
             "UnifiedBusinessNo": tax_id,
         }
 
@@ -53,7 +53,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
 
     def _is_valid_love_code(self, love_code, order):
         json_data = {
-            "MerchantID": order.company_id.l10n_tw_edi_ecpay_merchant_id,
+            "MerchantID": order.company_id.l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_merchant_id,
             "LoveCode": love_code,
         }
 

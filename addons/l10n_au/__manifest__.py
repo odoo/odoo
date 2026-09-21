@@ -1,6 +1,6 @@
 {
     "name": "Australia - Accounting",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Accounting/Localizations/Account Charts",
     "description": """
 Australian Accounting Module
@@ -23,6 +23,8 @@ Also:
         "au",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/l10n_au_security.xml",
         "data/account_tax_report_data.xml",
         "data/account_tax_template_data.xml",
         "data/bas_a.xml",

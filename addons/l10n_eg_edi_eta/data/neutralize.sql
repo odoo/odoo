@@ -1,3 +1,3 @@
 -- disable l10n_eg_edi_eta integration
-UPDATE res_company
+UPDATE l10n_eg_edi_eta_config
    SET l10n_eg_production_env = false;

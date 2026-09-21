@@ -4,12 +4,21 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    # ------------------
-    # Fields declaration
-    # ------------------
-
-    withholding_tax_base_account_id = fields.Many2one(
-        comodel_name="account.account",
-        string="Withholding Tax Base",
-        help="This account will be set on withholding tax base lines.",
+    l10n_account_withholding_tax_config_id = fields.Many2one(
+        comodel_name="l10n_account_withholding_tax.config",
+        compute="_compute_l10n_account_withholding_tax_config_id",
+        search="_search_l10n_account_withholding_tax_config_id",
     )
+
+    def _search_l10n_account_withholding_tax_config_id(self, operator, value):
+        return self._search_config_link(
+            "l10n_account_withholding_tax.config", operator, value
+        )
+
+    def _compute_l10n_account_withholding_tax_config_id(self):
+        configs = self.env["l10n_account_withholding_tax.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.l10n_account_withholding_tax_config_id = by_company.get(
+                company.id, False
+            )

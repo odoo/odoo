@@ -44,10 +44,14 @@ def call_ecpay_api(endpoint, json_data, company_id, is_b2b=False):
     AES-CBC encryption is used for hashkey and hashIV:
     https://developers.ecpay.com.tw/?p=22160
     """
-    url = STAGING_URL if company_id.l10n_tw_edi_ecpay_staging_mode else PRODUCTION_URL
+    url = (
+        STAGING_URL
+        if company_id.l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_staging_mode
+        else PRODUCTION_URL
+    )
     request_url = url + ("B2BInvoice" if is_b2b else "B2CInvoice")
-    hashkey = company_id.sudo().l10n_tw_edi_ecpay_hashkey
-    hashIV = company_id.sudo().l10n_tw_edi_ecpay_hashIV
+    hashkey = company_id.sudo().l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_hashkey
+    hashIV = company_id.sudo().l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_hashIV
     try:
         cipher = Cipher(
             algorithms.AES(hashkey.encode("utf-8")), modes.CBC(hashIV.encode("utf-8"))
@@ -56,7 +60,7 @@ def call_ecpay_api(endpoint, json_data, company_id, is_b2b=False):
         urlencode_data = urllib.parse.quote(json.dumps(json_data))
         encrypted_data = encrypt(urlencode_data, cipher)
         json_body = {
-            "MerchantID": company_id.sudo().l10n_tw_edi_ecpay_merchant_id,
+            "MerchantID": company_id.sudo().l10n_tw_edi_ecpay_config_id.l10n_tw_edi_ecpay_merchant_id,
             "RqHeader": {
                 "Timestamp": round(datetime.datetime.now().timestamp()),
             },

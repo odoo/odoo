@@ -1,6 +1,6 @@
 {
     "name": "Vietnam - E-invoicing",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Accounting/Localizations/EDI",
     "summary": "E-invoicing using SInvoice by Viettel",
     "description": """
@@ -21,6 +21,7 @@ Using SInvoice by Viettel
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/l10n_vn_edi_viettel_security.xml",
         "views/account_move_views.xml",
         "views/res_config_settings_views.xml",
         "views/res_partner_views.xml",

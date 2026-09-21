@@ -46,7 +46,10 @@ class TestL10nRoEdiTokenRefresh(TransactionCase):
             (data["client_id"], data["client_secret"]), ("ro-client", "ro-secret")
         )
         self.assertEqual(self.company.l10n_ro_edi_refresh_token, "new-refresh")
-        self.assertEqual(self.company.l10n_ro_edi_access_expiry_date, expiry.date())
+        self.assertEqual(
+            self.company.l10n_ro_edi_config_id.l10n_ro_edi_access_expiry_date,
+            expiry.date(),
+        )
 
     def test_without_a_refresh_token_nothing_is_sent(self):
         self.company.l10n_ro_edi_refresh_token = False

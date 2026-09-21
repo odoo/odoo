@@ -1,6 +1,6 @@
 {
     "name": "Germany - Accounting",
-    "version": "3.0",
+    "version": "3.1",
     "category": "Accounting/Localizations/Account Charts",
     "description": """
 Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03 oder SKR04.
@@ -32,6 +32,8 @@ By default, the audit trail is enabled for GoBD compliance.
         "de",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/l10n_de_security.xml",
         "data/account_account_tags_data.xml",
         "views/account_view.xml",
         "views/res_company_views.xml",

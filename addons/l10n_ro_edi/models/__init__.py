@@ -2,6 +2,7 @@ from . import account_edi_xml_ubl_ciusro
 from . import account_move
 from . import mixin_account_move_send
 from . import ciusro_document
+from . import l10n_ro_edi_config
 from . import res_company
 from . import res_config_settings
 from . import res_partner

@@ -256,8 +256,10 @@ class TestJoEdiPrecision(JoEdiCommon):
     def test_jo_sales_invoice_precision(self):
         eur = self.env.ref("base.EUR")
         self.setup_currency_rate(eur, 1.41)
-        self.company.l10n_jo_edi_taxpayer_type = "sales"
-        self.company.l10n_jo_edi_sequence_income_source = "16683693"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type = "sales"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source = (
+            "16683693"
+        )
 
         self._validate_invoice_vals_jo_edi_numbers(
             {
@@ -445,8 +447,10 @@ class TestJoEdiPrecision(JoEdiCommon):
         )
 
     def test_jo_special_invoice_precision(self):
-        self.company.l10n_jo_edi_taxpayer_type = "special"
-        self.company.l10n_jo_edi_sequence_income_source = "16683693"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type = "special"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source = (
+            "16683693"
+        )
         self._validate_invoice_vals_jo_edi_numbers(
             {
                 "name": "TestEIN014",
@@ -514,8 +518,10 @@ class TestJoEdiPrecision(JoEdiCommon):
             for xml_line in root.findall("./{*}InvoiceLine"):
                 yield float(xml_line.findtext("{*}Price/{*}PriceAmount"))
 
-        self.company.l10n_jo_edi_taxpayer_type = "sales"
-        self.company.l10n_jo_edi_sequence_income_source = "16683693"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type = "sales"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source = (
+            "16683693"
+        )
         invoice = self._l10n_jo_create_invoice(
             {
                 "name": "TestEIN014",
@@ -610,8 +616,10 @@ class TestJoEdiPrecision(JoEdiCommon):
         The aim of this test is to ensure that the taxes amounts on lines are calculated using rounded base amounts
         this would get broken if _add_tax_details_in_base_line uses round_globally
         """
-        self.company.l10n_jo_edi_taxpayer_type = "sales"
-        self.company.l10n_jo_edi_sequence_income_source = "16683693"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_taxpayer_type = "sales"
+        self.company.l10n_jo_edi_config_id.l10n_jo_edi_sequence_income_source = (
+            "16683693"
+        )
 
         self._validate_invoice_vals_jo_edi_numbers(
             {

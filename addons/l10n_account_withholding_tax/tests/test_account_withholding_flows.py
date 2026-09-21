@@ -14,15 +14,17 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
     def setUpClass(cls):
         super().setUpClass()
         # Set the withholding account so that we don't have to worry about it.
-        cls.company_data["company"].withholding_tax_base_account_id = cls.env[
-            "account.account"
-        ].create(
-            {
-                "code": "WITHB",
-                "name": "Withholding Tax Base Account",
-                "reconcile": True,
-                "account_type": "asset_current",
-            }
+        cls.company_data[
+            "company"
+        ].l10n_account_withholding_tax_config_id.withholding_tax_base_account_id = (
+            cls.env["account.account"].create(
+                {
+                    "code": "WITHB",
+                    "name": "Withholding Tax Base Account",
+                    "reconcile": True,
+                    "account_type": "asset_current",
+                }
+            )
         )
         # We create a sequence for the same reason, so that we can forget about it.
         cls.withholding_sequence = cls.env["ir.sequence"].create(
@@ -631,7 +633,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
         payment = payment_register._create_payments()
         outstanding = self.outstanding_account
         receivable = self.company_data["default_account_receivable"]
-        withholding_account = self.env.company.withholding_tax_base_account_id
+        withholding_account = self.env.company.l10n_account_withholding_tax_config_id.withholding_tax_base_account_id
 
         self.assertRecordValues(
             payment.move_id.line_ids,

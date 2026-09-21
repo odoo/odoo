@@ -19,7 +19,7 @@ class AccountMoveSend(models.AbstractModel):
                     "label": self.env._("by KSeF (e-Faktura)"),
                     "is_applicable": lambda move: (
                         move.company_id.country_code == "PL"
-                        and move.company_id.l10n_pl_edi_register
+                        and move.company_id.l10n_pl_edi_config_id.l10n_pl_edi_register
                     ),
                     "help": self.env._(
                         "Send the electronic invoice to the Polish National e-Invoicing System (KSeF)."
@@ -94,7 +94,7 @@ class AccountMoveSend(models.AbstractModel):
                         {
                             "l10n_pl_edi_status": "sent",
                             "l10n_pl_edi_ref": l10n_pl_edi_ref,
-                            "l10n_pl_edi_session_id": move.company_id.sudo().l10n_pl_edi_session_id,
+                            "l10n_pl_edi_session_id": move.company_id.sudo().l10n_pl_edi_config_id.l10n_pl_edi_session_id,
                             "l10n_pl_edi_header": False,
                             "l10n_pl_edi_attachment_id": self.env["ir.attachment"]
                             .sudo()

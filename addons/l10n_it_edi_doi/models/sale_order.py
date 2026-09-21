@@ -161,9 +161,7 @@ class SaleOrder(models.Model):
     def _compute_fiscal_position_id(self):
         super()._compute_fiscal_position_id()
         for order in self:
-            declaration_fiscal_position = (
-                order.company_id.l10n_it_edi_doi_fiscal_position_id
-            )
+            declaration_fiscal_position = order.company_id.l10n_it_edi_doi_config_id.l10n_it_edi_doi_fiscal_position_id
             if declaration_fiscal_position and order.l10n_it_edi_doi_id:
                 _debug.logic(
                     "fiscal_position_from_declaration",
@@ -223,7 +221,9 @@ class SaleOrder(models.Model):
                 )
                 errors.extend(validity_warnings)
 
-            declaration_of_intent_tax = order.company_id.l10n_it_edi_doi_tax_id
+            declaration_of_intent_tax = (
+                order.company_id.l10n_it_edi_doi_config_id.l10n_it_edi_doi_tax_id
+            )
             if not declaration_of_intent_tax:
                 continue
             declaration_tax_lines = order.line_ids.filtered(
@@ -312,7 +312,7 @@ class SaleOrder(models.Model):
         if additional_invoiced_qty is None:
             additional_invoiced_qty = {}
 
-        tax = declaration.company_id.l10n_it_edi_doi_tax_id
+        tax = declaration.company_id.l10n_it_edi_doi_config_id.l10n_it_edi_doi_tax_id
         if not tax:
             return 0
 

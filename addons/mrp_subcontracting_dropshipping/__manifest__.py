@@ -1,6 +1,6 @@
 {
     "name": "Dropship and Subcontracting Management",
-    "version": "0.1",
+    "version": "0.2",
     "category": "Supply Chain/Purchase",
     "description": """
 This bridge module allows to manage subcontracting with the dropshipping module.
@@ -12,6 +12,8 @@ This bridge module allows to manage subcontracting with the dropshipping module.
         "stock_dropshipping",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/mrp_subcontracting_dropshipping_security.xml",
         "data/mrp_subcontracting_dropshipping_data.xml",
         "views/purchase_order_views.xml",
     ],

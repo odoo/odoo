@@ -23,34 +23,12 @@ class ResCompany(models.Model):
         "l10n_hu_edi_replacement_key": "l10n_hu_edi_replacement_key",
     }
 
-    account_fiscal_country_id = fields.Many2one(
-        related="account_config_id.account_fiscal_country_id",
+    l10n_hu_edi_config_id = fields.Many2one(
+        comodel_name="l10n_hu_edi.config",
+        compute="_compute_l10n_hu_edi_config_id",
+        search="_search_l10n_hu_edi_config_id",
     )
-    l10n_hu_tax_regime = fields.Selection(
-        selection=[
-            ("ie", "Individual Exemption"),
-            ("ca", "Cash Accounting"),
-            ("sb", "Small Business"),
-        ],
-        string="NAV Tax Regime",
-    )
-    l10n_hu_edi_server_mode = fields.Selection(
-        selection=[
-            ("production", "Production"),
-            ("test", "Test"),
-            ("demo", "Demo"),
-        ],
-        string="Server Mode",
-        help="""
-            - Production: Sends invoices to the NAV's production system.
-            - Test: Sends invoices to the NAV's test system.
-            - Demo: Mocks the NAV system (does not require credentials).
-        """,
-    )
-    l10n_hu_edi_username = fields.Char(
-        string="NAV Username",
-        groups="base.group_system",
-    )
+
     l10n_hu_edi_password = fields.Char(
         string="NAV Password",
         compute="_compute_credential_doors",
@@ -69,10 +47,15 @@ class ResCompany(models.Model):
         inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
-    l10n_hu_edi_last_transaction_recovery = fields.Datetime(
-        string="Last transaction recovery (in production mode)",
-        default=lambda self: fields.Datetime.now(),
-    )
+
+    def _search_l10n_hu_edi_config_id(self, operator, value):
+        return self._search_config_link("l10n_hu_edi.config", operator, value)
+
+    def _compute_l10n_hu_edi_config_id(self):
+        configs = self.env["l10n_hu_edi.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.l10n_hu_edi_config_id = by_company.get(company.id, False)
 
     def _l10n_hu_edi_configure_company(self):
         """Single-time configuration for companies, to be applied when l10n_hu_edi is installed
@@ -114,13 +97,13 @@ class ResCompany(models.Model):
         self.check_singleton()
         credentials_dict = {
             "vat": self.vat,
-            "mode": self.l10n_hu_edi_server_mode,
-            "username": self.l10n_hu_edi_username,
+            "mode": self.l10n_hu_edi_config_id.l10n_hu_edi_server_mode,
+            "username": self.l10n_hu_edi_config_id.l10n_hu_edi_username,
             "password": self.l10n_hu_edi_password,
             "signature_key": self.l10n_hu_edi_signature_key,
             "replacement_key": self.l10n_hu_edi_replacement_key,
         }
-        if self.l10n_hu_edi_server_mode != "demo" and not all(
+        if self.l10n_hu_edi_config_id.l10n_hu_edi_server_mode != "demo" and not all(
             credentials_dict.values()
         ):
             raise UserError(_("Missing NAV credentials for company %s", self.name))
@@ -165,8 +148,10 @@ class ResCompany(models.Model):
             # to indicate which transactions to request.
             # In test mode (where we expect far fewer invoices), we just take the last 24 hours.
             recovery_end_time = fields.Datetime.now()
-            if company.l10n_hu_edi_server_mode == "production":
-                recovery_start_time = company.l10n_hu_edi_last_transaction_recovery
+            if company.l10n_hu_edi_config_id.l10n_hu_edi_server_mode == "production":
+                recovery_start_time = (
+                    company.l10n_hu_edi_config_id.l10n_hu_edi_last_transaction_recovery
+                )
             else:
                 recovery_start_time = recovery_end_time - timedelta(hours=24)
 
@@ -207,7 +192,8 @@ class ResCompany(models.Model):
             transactions_to_query = (
                 t
                 for t in reversed(transactions)
-                if t["username"] == company.sudo().l10n_hu_edi_username
+                if t["username"]
+                == company.sudo().l10n_hu_edi_config_id.l10n_hu_edi_username
                 and t["source"] == "MGM"
                 and t["transaction_code"]
                 not in invoices_to_check.mapped("l10n_hu_edi_transaction_code")
@@ -301,8 +287,10 @@ class ResCompany(models.Model):
             # The server might still be processing transactions from the last 6 minutes,
             # so we should keep open the possibility of re-querying them.
             recovery_close_time = recovery_end_time - timedelta(minutes=6)
-            if company.l10n_hu_edi_server_mode == "production":
-                company.l10n_hu_edi_last_transaction_recovery = recovery_close_time
+            if company.l10n_hu_edi_config_id.l10n_hu_edi_server_mode == "production":
+                company.l10n_hu_edi_config_id.l10n_hu_edi_last_transaction_recovery = (
+                    recovery_close_time
+                )
 
             # Any invoices still in a 'timeout' state that are more than 6 minutes old and could not be matched should be considered not received.
             invoices_to_check.filtered(

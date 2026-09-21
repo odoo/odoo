@@ -246,7 +246,8 @@ class MixinAccountWithholdingLine(models.AbstractModel):
         """
         for line in self:
             line.account_id = (
-                line.account_id or line.company_id.withholding_tax_base_account_id
+                line.account_id
+                or line.company_id.l10n_account_withholding_tax_config_id.withholding_tax_base_account_id
             )
 
     # The following computes are related to the comodel (payment or register payment wizard) and are needed for various computations.
@@ -560,7 +561,8 @@ class MixinAccountWithholdingLine(models.AbstractModel):
             if not tax_data:
                 return None
             account = (
-                company.withholding_tax_base_account_id or base_line_data["account_id"]
+                company.l10n_account_withholding_tax_config_id.withholding_tax_base_account_id
+                or base_line_data["account_id"]
             )
             tax = tax_data["tax"]
             # Note: keep this aligned with _get_grouping_key

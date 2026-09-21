@@ -12,13 +12,13 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     l10n_tr_nilvera_use_test_env = fields.Boolean(
-        related="company_id.l10n_tr_nilvera_use_test_env",
+        related="company_id.l10n_tr_nilvera_config_id.l10n_tr_nilvera_use_test_env",
         string="Use testing environment",
         readonly=False,
         required=True,
     )
     l10n_tr_nilvera_purchase_journal_id = fields.Many2one(
-        related="company_id.l10n_tr_nilvera_purchase_journal_id",
+        related="company_id.l10n_tr_nilvera_config_id.l10n_tr_nilvera_purchase_journal_id",
         readonly=False,
     )
     l10n_tr_nilvera_vat = fields.Char(

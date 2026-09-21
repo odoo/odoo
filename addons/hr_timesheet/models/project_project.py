@@ -82,17 +82,19 @@ class ProjectProject(models.Model):
 
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = (
-            self.env.company.timesheet_encode_uom_id
+            self.env.company.hr_timesheet_config_id.timesheet_encode_uom_id
             == self.env.ref("uom.product_uom_day")
         )
 
-    @api.depends("company_id", "company_id.timesheet_encode_uom_id")
+    @api.depends(
+        "company_id", "company_id.hr_timesheet_config_id.timesheet_encode_uom_id"
+    )
     @api.depends_context("company")
     def _compute_timesheet_encode_uom_id(self):
         for project in self:
             project.timesheet_encode_uom_id = (
-                project.company_id.timesheet_encode_uom_id
-                or self.env.company.timesheet_encode_uom_id
+                project.company_id.hr_timesheet_config_id.timesheet_encode_uom_id
+                or self.env.company.hr_timesheet_config_id.timesheet_encode_uom_id
             )
 
     @api.depends("account_id")
@@ -105,7 +107,7 @@ class ProjectProject(models.Model):
     def _compute_is_internal_project(self):
         for project in self:
             project.is_internal_project = (
-                project == project.company_id.internal_project_id
+                project == project.company_id.hr_timesheet_config_id.internal_project_id
             )
 
     @api.model
@@ -113,12 +115,15 @@ class ProjectProject(models.Model):
         if operator not in ("in", "not in"):
             return NotImplemented
 
-        Company = self.env["res.company"]
-        sql = Company._search(
-            [("internal_project_id", "!=", False)],
-            active_test=False,
-            bypass_access=True,
-        ).subselect("internal_project_id")
+        sql = (
+            self.env["hr_timesheet.config"]
+            ._search(
+                [("internal_project_id", "!=", False)],
+                active_test=False,
+                bypass_access=True,
+            )
+            .subselect("internal_project_id")
+        )
         return [("id", operator, sql)]
 
     @api.depends("allow_timesheets", "timesheet_ids.unit_amount", "allocated_hours")
@@ -294,8 +299,8 @@ class ProjectProject(models.Model):
         return []
 
     def _convert_project_uom_to_timesheet_encode_uom(self, time):
-        uom_from = self.company_id.project_time_mode_id
-        uom_to = self.env.company.timesheet_encode_uom_id
+        uom_from = self.company_id.hr_timesheet_config_id.project_time_mode_id
+        uom_to = self.env.company.hr_timesheet_config_id.timesheet_encode_uom_id
         return round(
             uom_from._get_quantity_in_unit(time, uom_to, raise_if_failure=False), 2
         )
@@ -315,7 +320,7 @@ class ProjectProject(models.Model):
         ):
             return buttons
 
-        encode_uom = self.env.company.timesheet_encode_uom_id
+        encode_uom = self.env.company.hr_timesheet_config_id.timesheet_encode_uom_id
         uom_ratio = self.env.ref("uom.product_uom_hour").factor / encode_uom.factor
 
         allocated = self.allocated_hours * uom_ratio

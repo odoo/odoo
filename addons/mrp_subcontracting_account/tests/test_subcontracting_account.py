@@ -35,13 +35,13 @@ class TestAccountSubcontractingFlows(
             self.comp1,
             10,
             unit_cost=10,
-            location_dest_id=self.env.company.subcontracting_location_id.id,
+            location_dest_id=self.env.company.mrp_subcontracting_config_id.subcontracting_location_id.id,
         )
         self._make_in_move(
             self.comp2,
             10,
             unit_cost=20,
-            location_dest_id=self.env.company.subcontracting_location_id.id,
+            location_dest_id=self.env.company.mrp_subcontracting_config_id.subcontracting_location_id.id,
         )
         all_amls_ids = self.env["account.move.line"].search([]).ids
 

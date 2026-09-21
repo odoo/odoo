@@ -1,6 +1,6 @@
 {
     "name": "Kenya Tremol Device EDI Integration",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Accounting/Localizations/EDI",
     "summary": "Kenya Tremol Device EDI Integration",
     "description": """
@@ -15,6 +15,8 @@ This module integrates with the Kenyan G03 Tremol control unit device to the KRA
         "ke",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/l10n_ke_edi_tremol_security.xml",
         "views/account_move_view.xml",
         "views/report_invoice.xml",
         "views/res_config_settings_view.xml",

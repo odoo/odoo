@@ -142,7 +142,9 @@ class AccountMove(models.Model):
             "sendToCir": "Yes" if send_to_cir else "No",
         }
         url = (
-            DEMO_EFAKTURA_URL if self.company_id.l10n_rs_edi_demo_env else EFAKTURA_URL
+            DEMO_EFAKTURA_URL
+            if self.company_id.l10n_rs_edi_config_id.l10n_rs_edi_demo_env
+            else EFAKTURA_URL
         )
         headers = {
             "Content-Type": "application/xml",

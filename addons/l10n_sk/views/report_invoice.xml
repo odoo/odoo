@@ -31,9 +31,9 @@
             <!-- add trade registry-->
         <xpath expr="//div[@name='comment']" position="after">
             <p
-                t-if="o.company_id.trade_registry and o.company_id.country_code == 'SK'"
+                t-if="o.company_id.l10n_sk_config_id.trade_registry and o.company_id.country_code == 'SK'"
                 name="trade_registry">
-                <strong>Trade registry: </strong><t t-out="o.company_id.trade_registry" />
+                <strong>Trade registry: </strong><t t-out="o.company_id.l10n_sk_config_id.trade_registry" />
             </p>
         </xpath>
     </template>

@@ -1,6 +1,6 @@
 {
     "name": "Indian - E-waybill",
-    "version": "2.1",
+    "version": "2.2",
     "category": "Accounting/Localizations",
     "description": """
 Indian - E-waybill
@@ -24,6 +24,7 @@ Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-c
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/l10n_in_ewaybill_security.xml",
         "security/ir_rules.xml",
         "data/ewaybill_type_data.xml",
         "views/l10n_in_ewaybill_views.xml",

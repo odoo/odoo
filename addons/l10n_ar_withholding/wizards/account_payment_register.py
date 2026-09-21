@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -162,7 +161,7 @@ class AccountPaymentRegister(models.TransientModel):
                 lambda x: x.base_amount == base_amount
             )
             nice_base_label = ",".join(withholding_lines.mapped("name"))
-            account_id = self.company_id.l10n_ar_tax_base_account_id.id
+            account_id = self.company_id.l10n_ar_withholding_config_id.l10n_ar_tax_base_account_id.id
             base_amount = sign * base_amount
             cc_base_amount = self.company_currency_id.round(
                 base_amount * conversion_rate

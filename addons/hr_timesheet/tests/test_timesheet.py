@@ -156,7 +156,7 @@ class TestTimesheet(TestCommonTimesheet):
 
     def test_log_timesheet(self):
         Timesheet = self.env["account.analytic.line"]
-        timesheet_uom = self.project_customer.account_id.company_id.project_time_mode_id
+        timesheet_uom = self.project_customer.account_id.company_id.hr_timesheet_config_id.project_time_mode_id
         timesheet1 = Timesheet.with_user(self.user_employee).create(
             {
                 "project_id": self.project_customer.id,
@@ -448,7 +448,7 @@ class TestTimesheet(TestCommonTimesheet):
             self.task1.write({"project_id": False})
 
     def test_favorite_project_id(self):
-        self.env.company.internal_project_id.privacy_visibility = "followers"
+        self.env.company.hr_timesheet_config_id.internal_project_id.privacy_visibility = "followers"
 
         favorite_project = (
             self.env["account.analytic.line"]
@@ -802,12 +802,12 @@ class TestTimesheet(TestCommonTimesheet):
         )
         self.assertEqual(
             timesheet1.product_uom_id,
-            self.project_customer.account_id.company_id.timesheet_encode_uom_id,
+            self.project_customer.account_id.company_id.hr_timesheet_config_id.timesheet_encode_uom_id,
             "The default UoM set on the timesheet should be the one set on the company of AA.",
         )
         self.assertEqual(
             timesheet2.product_uom_id,
-            self.project_customer.account_id.company_id.timesheet_encode_uom_id,
+            self.project_customer.account_id.company_id.hr_timesheet_config_id.timesheet_encode_uom_id,
             "Even if the product_uom_id field is empty in the vals, the product_uom_id should have a UoM by default,"
             " otherwise the `total_timesheet_time` in project should not included the timesheet.",
         )
@@ -847,7 +847,7 @@ class TestTimesheet(TestCommonTimesheet):
         )
         self.assertEqual(
             timesheet_with_project.product_uom_id,
-            self.project_customer.company_id.project_time_mode_id,
+            self.project_customer.company_id.hr_timesheet_config_id.project_time_mode_id,
             "The product_uom_id of the timesheet should be equal to the project's company uom "
             "if the project's analytic account has no company_id and no task_id is defined in the vals",
         )
@@ -858,7 +858,7 @@ class TestTimesheet(TestCommonTimesheet):
         )
         self.assertEqual(
             timesheet_with_task.product_uom_id,
-            self.task1.company_id.project_time_mode_id,
+            self.task1.company_id.hr_timesheet_config_id.project_time_mode_id,
             "The product_uom_id of the timesheet should be equal to the task's company uom "
             "if the project's analytic account has no company_id",
         )
@@ -868,7 +868,7 @@ class TestTimesheet(TestCommonTimesheet):
         )
         self.assertEqual(
             timesheet_with_project.product_uom_id,
-            self.env.company.project_time_mode_id,
+            self.env.company.hr_timesheet_config_id.project_time_mode_id,
             "The product_uom_id of the timesheet should be equal to the company uom "
             "if the project's analytic account and the project have no company_id",
         )
@@ -920,7 +920,9 @@ class TestTimesheet(TestCommonTimesheet):
             "Timesheet time should be 8 hours for new project update",
         )
         self.env["project.project"].invalidate_model()
-        self.env.company.timesheet_encode_uom_id = self.env.ref("uom.product_uom_day")
+        self.env.company.hr_timesheet_config_id.timesheet_encode_uom_id = self.env.ref(
+            "uom.product_uom_day"
+        )
         self.assertEqual(
             project.total_timesheet_time, 1, "Total timesheet time should be 1 day"
         )
@@ -931,7 +933,7 @@ class TestTimesheet(TestCommonTimesheet):
         )
         self.assertEqual(
             project.timesheet_encode_uom_id,
-            self.env.company.timesheet_encode_uom_id,
+            self.env.company.hr_timesheet_config_id.timesheet_encode_uom_id,
             "Timesheet encode uom should be the one from the company of the env, since the project has no company.",
         )
         project_update_days = self.env["project.update"].create(
@@ -1182,8 +1184,8 @@ class TestTimesheet(TestCommonTimesheet):
             timesheet.calendar_display_name, f"{self.project_customer.name} (1h30)"
         )
         timesheet.unit_amount = 8
-        timesheet.company_id.timesheet_encode_uom_id = self.env.ref(
-            "uom.product_uom_day"
+        timesheet.company_id.hr_timesheet_config_id.timesheet_encode_uom_id = (
+            self.env.ref("uom.product_uom_day")
         )
         timesheet.invalidate_recordset(["calendar_display_name"])
         self.assertEqual(

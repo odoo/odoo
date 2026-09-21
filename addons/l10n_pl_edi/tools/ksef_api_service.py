@@ -30,13 +30,13 @@ class KsefApiService:
         self.api_url = self._get_api_url()
         company_sudo = company.sudo()
         self.raw_symmetric_key = (
-            base64.b64decode(company_sudo.l10n_pl_edi_session_key)
-            if company_sudo.l10n_pl_edi_session_key
+            base64.b64decode(company_sudo.l10n_pl_edi_config_id.l10n_pl_edi_session_key)
+            if company_sudo.l10n_pl_edi_config_id.l10n_pl_edi_session_key
             else None
         )
         self.raw_iv = (
-            base64.b64decode(company_sudo.l10n_pl_edi_session_iv)
-            if company_sudo.l10n_pl_edi_session_iv
+            base64.b64decode(company_sudo.l10n_pl_edi_config_id.l10n_pl_edi_session_iv)
+            if company_sudo.l10n_pl_edi_config_id.l10n_pl_edi_session_iv
             else None
         )
 
@@ -148,7 +148,7 @@ class KsefApiService:
     def open_ksef_session(self):
         """Builds the encrypted request and opens an interactive session, with one retry on token expiry."""
         if (
-            self.company.sudo().l10n_pl_edi_session_id
+            self.company.sudo().l10n_pl_edi_config_id.l10n_pl_edi_session_id
             and self.get_session_status().get("code") == 100
         ):
             return None
@@ -254,7 +254,7 @@ class KsefApiService:
             "encryptedInvoiceContent": base64.b64encode(encrypted_data).decode("utf-8"),
         }
 
-        endpoint = f"{self.api_url}/sessions/online/{self.company.sudo().l10n_pl_edi_session_id}/invoices"
+        endpoint = f"{self.api_url}/sessions/online/{self.company.sudo().l10n_pl_edi_config_id.l10n_pl_edi_session_id}/invoices"
         headers = {"Content-Type": "application/json"}
 
         response = self._send_request(
@@ -267,7 +267,7 @@ class KsefApiService:
 
     def close_ksef_session(self):
         """Closes an interactive session."""
-        session_id = self.company.sudo().l10n_pl_edi_session_id
+        session_id = self.company.sudo().l10n_pl_edi_config_id.l10n_pl_edi_session_id
         if not session_id:
             _logger.warning("No KSeF session data found to close.")
             return
@@ -291,7 +291,7 @@ class KsefApiService:
             )
 
     def get_session_status(self):
-        session_id = self.company.sudo().l10n_pl_edi_session_id
+        session_id = self.company.sudo().l10n_pl_edi_config_id.l10n_pl_edi_session_id
         if not session_id:
             raise UserError(
                 self.env._("No active KSeF session found. Please open a session first.")
@@ -308,7 +308,7 @@ class KsefApiService:
         Gets the status of all invoices sent within the current session (paginated).
         Corresponds to: GET /api/v2/sessions/online/{referenceNumber}/invoices
         """
-        session_id = self.company.sudo().l10n_pl_edi_session_id
+        session_id = self.company.sudo().l10n_pl_edi_config_id.l10n_pl_edi_session_id
         if not session_id:
             raise UserError(
                 self.env._("No active KSeF session found. Please open a session first.")
@@ -324,7 +324,10 @@ class KsefApiService:
         Gets the processing status of a specific invoice within the current session.
         :param invoice_reference_number: The 'invoiceReferenceNumber' returned by the send_invoice response.
         """
-        session_id = session_id or self.company.sudo().l10n_pl_edi_session_id
+        session_id = (
+            session_id
+            or self.company.sudo().l10n_pl_edi_config_id.l10n_pl_edi_session_id
+        )
         endpoint = (
             f"{self.api_url}/sessions/{session_id}/invoices/{invoice_reference_number}"
         )
@@ -333,7 +336,10 @@ class KsefApiService:
         return response.json()
 
     def get_invoice_upo(self, invoice_reference_number, session_id=None):
-        session_id = session_id or self.company.sudo().l10n_pl_edi_session_id
+        session_id = (
+            session_id
+            or self.company.sudo().l10n_pl_edi_config_id.l10n_pl_edi_session_id
+        )
         endpoint = f"{self.api_url}/sessions/{session_id}/invoices/{invoice_reference_number}/upo"
         response = self._send_request("GET", endpoint)
         return response.content

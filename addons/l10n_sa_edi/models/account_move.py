@@ -66,7 +66,7 @@ class AccountMove(models.Model):
         for move in self:
             if (
                 move.country_code == "SA"
-                and move.company_id.l10n_sa_edi_is_production
+                and move.company_id.l10n_sa_edi_config_id.l10n_sa_edi_is_production
                 and move.attachment_ids.filtered(
                     lambda a: a.description == descr and a.res_model == "account.move"
                 )
@@ -256,7 +256,7 @@ class AccountMove(models.Model):
             # - Invoice has been successfully submitted in Production mode.
             # - The invoice submission encountered a timed out, regardless of the API mode.
             if move.l10n_sa_chain_index and (
-                move.company_id.l10n_sa_edi_is_production
+                move.company_id.l10n_sa_edi_config_id.l10n_sa_edi_is_production
                 or not move._l10n_sa_is_in_chain()
             ):
                 move.show_reset_to_draft_button = False
@@ -267,7 +267,7 @@ class AccountMove(models.Model):
             if (
                 move.country_code == "SA"
                 and move.l10n_sa_chain_index
-                and move.company_id.l10n_sa_edi_is_production
+                and move.company_id.l10n_sa_edi_config_id.l10n_sa_edi_is_production
             ):
                 raise UserError(
                     _(

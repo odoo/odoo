@@ -1,6 +1,6 @@
 {
     "name": "Slovak - Accounting",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Accounting/Localizations/Account Charts",
     "description": """
 Slovakia accounting chart and localization: Chart of Accounts 2020, basic VAT rates +
@@ -30,6 +30,8 @@ Pre viac informácií kontaktujte info@26house.com alebo navštívte https://www
         "sk",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/l10n_sk_security.xml",
         "views/res_partner_views.xml",
         "views/res_company_views.xml",
         "views/report_invoice.xml",

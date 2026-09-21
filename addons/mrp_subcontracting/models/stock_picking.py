@@ -158,7 +158,7 @@ class StockPicking(models.Model):
             subcontract_move.picking_id.partner_id.with_company(
                 subcontract_move.company_id
             ).property_stock_subcontractor
-            or subcontract_move.company_id.subcontracting_location_id
+            or subcontract_move.company_id.mrp_subcontracting_config_id.subcontracting_location_id
         )
         return {
             "company_id": subcontract_move.company_id.id,

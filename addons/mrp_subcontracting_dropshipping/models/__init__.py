@@ -1,5 +1,6 @@
 from . import stock_move
 from . import stock_picking
+from . import mrp_subcontracting_dropshipping_config
 from . import res_company
 from . import stock_warehouse
 from . import purchase

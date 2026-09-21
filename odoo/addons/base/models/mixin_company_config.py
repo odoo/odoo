@@ -85,7 +85,10 @@ class MixinCompanyConfig(models.AbstractModel):
             )
         }
         if not existing:
-            return super().create(vals_list)
+            records = super().create(vals_list)
+            for vals in vals_list:
+                self._clear_registry_cache_for(vals)
+            return records
         records = self.browse()
         to_create = []
         for vals in vals_list:
@@ -104,7 +107,32 @@ class MixinCompanyConfig(models.AbstractModel):
             records |= config.with_env(self.env)
         if to_create:
             records |= super().create(to_create)
+        for vals in vals_list:
+            self._clear_registry_cache_for(vals)
         return records
+
+    def write(self, vals: ValuesType) -> bool:
+        result = super().write(vals)
+        self._clear_registry_cache_for(vals)
+        return result
+
+    def _clear_registry_cache_for(self, vals: ValuesType) -> None:
+        # a setting an ormcache answers about moved here with the rest of the
+        # application's configuration, and the company's own hook no longer
+        # sees it written
+        invalidation_fields = self._get_cache_invalidation_fields()
+        if invalidation_fields.isdisjoint(vals):
+            return
+        _debug.lifecycle(
+            "registry_cache_cleared",
+            model=self._name,
+            fields=sorted(invalidation_fields & set(vals)),
+        )
+        self.env.registry.clear_cache()
+
+    @api.model
+    def _get_cache_invalidation_fields(self) -> set[str]:
+        return set()
 
     @api.model
     def _for(self, company: models.Model) -> Self:

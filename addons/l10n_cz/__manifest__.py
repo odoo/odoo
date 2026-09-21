@@ -1,6 +1,6 @@
 {
     "name": "Czech - Accounting",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Accounting/Localizations/Account Charts",
     "description": """
 Czech accounting chart and localization.  With Chart of Accounts with taxes and basic fiscal positions.
@@ -35,6 +35,7 @@ Tento modul definuje:
         "views/report_template.xml",
         "views/tax_office_view.xml",
         "security/ir.model.access.csv",
+        "security/l10n_cz_security.xml",
         "views/l10n_cz_menus.xml",
     ],
     "demo": [

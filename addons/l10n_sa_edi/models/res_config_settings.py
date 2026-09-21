@@ -5,7 +5,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     l10n_sa_api_mode = fields.Selection(
-        related="company_id.l10n_sa_api_mode",
+        related="company_id.l10n_sa_edi_config_id.l10n_sa_api_mode",
         readonly=False,
     )
 

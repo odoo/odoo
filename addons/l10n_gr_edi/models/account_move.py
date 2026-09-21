@@ -692,7 +692,7 @@ class AccountMove(models.Model):
                 "message": _("You can only send to myDATA from a posted invoice."),
             }
         if (
-            not self.company_id.l10n_gr_edi_aade_id
+            not self.company_id.l10n_gr_edi_config_id.l10n_gr_edi_aade_id
             or not self.company_id.l10n_gr_edi_aade_key
         ):
             errors["l10n_gr_edi_company_no_cred"] = {

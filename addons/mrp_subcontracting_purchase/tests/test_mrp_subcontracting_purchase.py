@@ -87,7 +87,9 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.bom.produce_delay = 1
         self.bom.days_to_prepare_mo = 3
 
-        subcontractor_location = self.env.company.subcontracting_location_id
+        subcontractor_location = (
+            self.env.company.mrp_subcontracting_config_id.subcontracting_location_id
+        )
         self.env["stock.quant"]._update_available_quantity(
             self.comp1, subcontractor_location, 4
         )
@@ -605,7 +607,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
                     "state": "done",
                 },
                 {
-                    "location_dest_id": self.company.subcontracting_location_id.id,
+                    "location_dest_id": self.company.mrp_subcontracting_config_id.subcontracting_location_id.id,
                     "quantity": 1.0,
                     "state": "done",
                 },
@@ -719,10 +721,14 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.bom.produce_delay = 10
 
         self.env["stock.quant"]._update_available_quantity(
-            self.comp1, self.company.subcontracting_location_id, 100
+            self.comp1,
+            self.company.mrp_subcontracting_config_id.subcontracting_location_id,
+            100,
         )
         self.env["stock.quant"]._update_available_quantity(
-            self.comp2, self.company.subcontracting_location_id, 100
+            self.comp2,
+            self.company.mrp_subcontracting_config_id.subcontracting_location_id,
+            100,
         )
         self.env.invalidate_all()
         self.bom.days_to_prepare_mo = 2
@@ -800,7 +806,13 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         ]
         po.action_confirm()
         ressuply_pick = self.env["stock.picking"].search(
-            [("location_dest_id", "=", self.company.subcontracting_location_id.id)]
+            [
+                (
+                    "location_dest_id",
+                    "=",
+                    self.company.mrp_subcontracting_config_id.subcontracting_location_id.id,
+                )
+            ]
         )
         self.assertEqual(len(ressuply_pick.move_ids), 2)
         self.assertEqual(
@@ -1002,7 +1014,9 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.bom.produce_delay = 1
         self.bom.days_to_prepare_mo = 3
 
-        subcontractor_location = self.env.company.subcontracting_location_id
+        subcontractor_location = (
+            self.env.company.mrp_subcontracting_config_id.subcontracting_location_id
+        )
         self.env["stock.quant"]._update_available_quantity(
             self.comp1, subcontractor_location, 4
         )
@@ -1031,7 +1045,9 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
     def test_location_after_dest_location_update_backorder_production(self):
         grp_multi_loc = self.env.ref("stock.group_stock_multi_locations")
         self.env.user.write({"group_ids": [Command.link(grp_multi_loc.id)]})
-        subcontract_loc = self.env.company.subcontracting_location_id
+        subcontract_loc = (
+            self.env.company.mrp_subcontracting_config_id.subcontracting_location_id
+        )
         production_loc = self.finished.property_stock_production
         final_loc = self.env["stock.location"].create(
             {

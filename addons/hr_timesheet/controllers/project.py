@@ -23,8 +23,8 @@ class ProjectCustomerPortal(CustomerPortal):
             .sudo()
             .browse(session_info["user_companies"]["current_company"])
         )
-        timesheet_encode_uom = company.timesheet_encode_uom_id
-        project_time_mode_uom = company.project_time_mode_id
+        timesheet_encode_uom = company.hr_timesheet_config_id.timesheet_encode_uom_id
+        project_time_mode_uom = company.hr_timesheet_config_id.project_time_mode_id
 
         session_info["user_companies"]["allowed_companies"][company.id].update(
             timesheet_uom_id=timesheet_encode_uom.id,

@@ -13,40 +13,30 @@ class ResCompany(models.Model):
         "l10n_sa_edi_additional_identification_number",
     )
 
-    l10n_sa_private_key_id = fields.Many2one(
-        comodel_name="certificate.key",
-        string="ZATCA Private key",
-        copy=False,
-        domain=[("public", "=", False)],
-        help="The private key used to generate the CSR and obtain certificates",
+    l10n_sa_edi_config_id = fields.Many2one(
+        comodel_name="l10n_sa_edi.config",
+        compute="_compute_l10n_sa_edi_config_id",
+        search="_search_l10n_sa_edi_config_id",
     )
 
-    l10n_sa_api_mode = fields.Selection(
-        selection=[
-            ("sandbox", "Sandbox"),
-            ("preprod", "Simulation (Pre-Production)"),
-            ("prod", "Production"),
-        ],
-        default="sandbox",
-        copy=False,
-        required=True,
-        help="Specifies which API the system should use",
-    )
+    def _search_l10n_sa_edi_config_id(self, operator, value):
+        return self._search_config_link("l10n_sa_edi.config", operator, value)
 
-    l10n_sa_edi_is_production = fields.Boolean(
-        string="Is Production",
-        copy=False,
-    )
+    def _compute_l10n_sa_edi_config_id(self):
+        configs = self.env["l10n_sa_edi.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.l10n_sa_edi_config_id = by_company.get(company.id, False)
 
     def write(self, vals):
         for company in self:
             if "l10n_sa_api_mode" in vals:
                 if (
-                    company.l10n_sa_api_mode == "prod"
+                    company.l10n_sa_edi_config_id.l10n_sa_api_mode == "prod"
                     and vals["l10n_sa_api_mode"] != "prod"
                 ):
                     # Prevent API mode change from 'Production' if any invoice was submitted to ZATCA in Production mode.
-                    if company.l10n_sa_edi_is_production:
+                    if company.l10n_sa_edi_config_id.l10n_sa_edi_is_production:
                         raise UserError(
                             _(
                                 "ZATCA API Mode cannot be changed after an invoice has been successfully submitted under the Production Mode."

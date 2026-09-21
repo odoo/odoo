@@ -1,6 +1,6 @@
 {
     "name": "Italy - E-invoicing",
-    "version": "0.5",
+    "version": "0.6",
     "category": "Accounting/Localizations/EDI",
     "description": """
 E-invoice implementation
@@ -23,6 +23,7 @@ E-invoice implementation
     },
     "data": [
         "security/ir.model.access.csv",
+        "security/l10n_it_edi_security.xml",
         "data/account.account.tag.csv",
         "data/invoice_it_simplified_template.xml",
         "data/invoice_it_template.xml",

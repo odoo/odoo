@@ -246,9 +246,9 @@ class ResourceScheduleException(models.Model):
                 index=index + 1,
                 total=len(work_hours_data),
             ),
-            "project_id": employee_id.company_id.internal_project_id.id,
-            "task_id": employee_id.company_id.leave_timesheet_task_id.id,
-            "account_id": employee_id.company_id.internal_project_id.account_id.id,
+            "project_id": employee_id.company_id.hr_timesheet_config_id.internal_project_id.id,
+            "task_id": employee_id.company_id.project_timesheet_holidays_config_id.leave_timesheet_task_id.id,
+            "account_id": employee_id.company_id.hr_timesheet_config_id.internal_project_id.account_id.id,
             "unit_amount": work_hours_count,
             "user_id": employee_id.user_id.id,
             "date": day_date,
@@ -261,8 +261,8 @@ class ResourceScheduleException(models.Model):
         results_with_leave_timesheet = self.filtered(
             lambda r: (
                 not r.resource_id
-                and r.company_id.internal_project_id
-                and r.company_id.leave_timesheet_task_id
+                and r.company_id.hr_timesheet_config_id.internal_project_id
+                and r.company_id.project_timesheet_holidays_config_id.leave_timesheet_task_id
             )
         )
         _debug.logic(

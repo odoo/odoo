@@ -9,8 +9,10 @@ class Testl10nFrPosCert(TestPointOfSaleHttpCommon):
         super().setUpClass()
         company = cls.main_pos_config.company_id
         company.country_id = cls.env.ref("base.fr")
-        company.point_of_sale_use_ticket_qr_code = True
-        company.point_of_sale_ticket_portal_url_display_mode = "qr_code_and_url"
+        company.point_of_sale_config_id.point_of_sale_use_ticket_qr_code = True
+        company.point_of_sale_config_id.point_of_sale_ticket_portal_url_display_mode = (
+            "qr_code_and_url"
+        )
 
 
 @tagged("post_install_l10n", "post_install", "-at_install")

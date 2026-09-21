@@ -53,7 +53,7 @@ class AccountEdiFormat(models.Model):
         Generate an ECDSA SHA256 digital signature for the XML eInvoice
         """
         decoded_hash = b64decode(invoice_hash).decode()
-        return company_id.sudo().l10n_sa_private_key_id._sign(
+        return company_id.sudo().l10n_sa_edi_config_id.l10n_sa_private_key_id._sign(
             decoded_hash, formatting="base64"
         )
 
@@ -447,9 +447,9 @@ class AccountEdiFormat(models.Model):
         )
 
         # Set 'l10n_sa_edi_is_production' to True upon the first invoice submission in Production mode
-        if not invoice.company_id.l10n_sa_edi_is_production:
-            invoice.company_id.l10n_sa_edi_is_production = (
-                invoice.company_id.l10n_sa_api_mode == "prod"
+        if not invoice.company_id.l10n_sa_edi_config_id.l10n_sa_edi_is_production:
+            invoice.company_id.l10n_sa_edi_config_id.l10n_sa_edi_is_production = (
+                invoice.company_id.l10n_sa_edi_config_id.l10n_sa_api_mode == "prod"
             )
 
         # Save the submitted/returned invoice XML content once the submission has been completed successfully
@@ -500,8 +500,7 @@ class AccountEdiFormat(models.Model):
             line.tax_ids
             for line in invoice.invoice_line_ids.filtered(
                 lambda line: (
-                    line.display_type == "product"
-                    and line._is_edi_line_tax_required()
+                    line.display_type == "product" and line._is_edi_line_tax_required()
                 )
             )
         ):
@@ -525,7 +524,7 @@ class AccountEdiFormat(models.Model):
                     "- The company VAT identification must contain 15 digits, with the first and last digits being '3' as per the BR-KSA-39 and BR-KSA-40 of ZATCA KSA business rule."
                 )
             )
-        if not journal.company_id.sudo().l10n_sa_private_key_id:
+        if not journal.company_id.sudo().l10n_sa_edi_config_id.l10n_sa_private_key_id:
             errors.append(
                 _(
                     "- No Private Key was generated for company %s. A Private Key is mandatory in order to generate Certificate Signing Requests (CSR).",

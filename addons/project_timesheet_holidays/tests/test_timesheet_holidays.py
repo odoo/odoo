@@ -26,7 +26,7 @@ class TestTimesheetHolidaysCreate(common.TransactionCase):
         Company = Company.with_company(main_company)
         company = Company.create({"name": "Wall Company"})
         self.assertEqual(
-            company.internal_project_id.sudo().company_id,
+            company.hr_timesheet_config_id.internal_project_id.sudo().company_id,
             company,
             "It should have created a project for the company",
         )
@@ -40,8 +40,10 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.leave_start_datetime = datetime(2018, 2, 5)
         self.leave_end_datetime = self.leave_start_datetime + relativedelta(days=2)
 
-        self.internal_project = self.env.company.internal_project_id
-        self.internal_task_leaves = self.env.company.leave_timesheet_task_id
+        self.internal_project = (
+            self.env.company.hr_timesheet_config_id.internal_project_id
+        )
+        self.internal_task_leaves = self.env.company.project_timesheet_holidays_config_id.leave_timesheet_task_id
 
         self.hr_leave_type_with_ts = (
             self.env["hr.leave.type"]
@@ -142,10 +144,12 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         holiday.with_user(SUPERUSER_ID).action_approve()
 
         self.assertEqual(
-            holiday.timesheet_ids.project_id.id, company.internal_project_id.id
+            holiday.timesheet_ids.project_id.id,
+            company.hr_timesheet_config_id.internal_project_id.id,
         )
         self.assertEqual(
-            holiday.timesheet_ids.task_id.id, company.leave_timesheet_task_id.id
+            holiday.timesheet_ids.task_id.id,
+            company.project_timesheet_holidays_config_id.leave_timesheet_task_id.id,
         )
 
     def test_validate_worked_leave(self):

@@ -1,6 +1,6 @@
 {
     "name": "Hungary - E-invoicing",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "category": "Accounting/Localizations/EDI",
     "description": """
 * Electronically report invoices to the NAV (Hungarian Tax Agency) when issuing physical (paper) invoices.
@@ -17,6 +17,7 @@
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/l10n_hu_edi_security.xml",
         "data/uom.uom.csv",
         "data/account_cash_rounding.xml",
         "data/template_requests.xml",

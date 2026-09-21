@@ -39,7 +39,7 @@ class ProductTemplate(models.Model):
     def _compute_service_upsell_threshold_ratio(self):
         product_uom_hour = self.env.ref("uom.product_uom_hour")
         uom_unit = self.env.ref("uom.product_uom_unit")
-        company_uom = self.env.company.timesheet_encode_uom_id
+        company_uom = self.env.company.hr_timesheet_config_id.timesheet_encode_uom_id
         for record in self:
             if (
                 not record.uom_id
@@ -49,7 +49,8 @@ class ProductTemplate(models.Model):
                 record.service_upsell_threshold_ratio = False
                 continue
             timesheet_encode_uom = (
-                record.company_id.timesheet_encode_uom_id or company_uom
+                record.company_id.hr_timesheet_config_id.timesheet_encode_uom_id
+                or company_uom
             )
             record.service_upsell_threshold_ratio = f"(1 {record.uom_id.name} = {timesheet_encode_uom.factor / product_uom_hour.factor:.2f} {timesheet_encode_uom.name})"
 

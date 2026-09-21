@@ -26,7 +26,7 @@ class AccountMove(models.Model):
     )
     timesheet_encode_uom_id = fields.Many2one(
         comodel_name="uom.uom",
-        related="company_id.timesheet_encode_uom_id",
+        related="company_id.hr_timesheet_config_id.timesheet_encode_uom_id",
         export_string_translation=False,
     )
     timesheet_total_duration = fields.Integer(
@@ -35,7 +35,9 @@ class AccountMove(models.Model):
         help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit",
     )
 
-    @api.depends("timesheet_ids", "company_id.timesheet_encode_uom_id")
+    @api.depends(
+        "timesheet_ids", "company_id.hr_timesheet_config_id.timesheet_encode_uom_id"
+    )
     def _compute_timesheet_total_duration(self):
         if not self.env.user.has_group("hr_timesheet.group_hr_timesheet_user"):
             self.timesheet_total_duration = 0
@@ -50,7 +52,7 @@ class AccountMove(models.Model):
             {timesheet_invoice.id: amount for timesheet_invoice, amount in group_data}
         )
         for invoice in self:
-            total_time = invoice.company_id.project_time_mode_id._get_quantity_in_unit(
+            total_time = invoice.company_id.hr_timesheet_config_id.project_time_mode_id._get_quantity_in_unit(
                 timesheet_unit_amount_dict[invoice.id],
                 invoice.timesheet_encode_uom_id,
                 rounding_method="HALF-UP",

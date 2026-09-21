@@ -190,7 +190,7 @@ class AccountPaymentRegister(models.TransientModel):
         """
         for wizard in self:
             wizard.withholding_hide_tax_base_account = bool(
-                wizard.company_id.withholding_tax_base_account_id
+                wizard.company_id.l10n_account_withholding_tax_config_id.withholding_tax_base_account_id
             )
 
     # ----------------------------

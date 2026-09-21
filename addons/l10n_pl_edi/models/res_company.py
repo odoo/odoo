@@ -12,17 +12,12 @@ class ResCompany(models.Model):
         "l10n_pl_edi_refresh_token": "l10n_pl_edi_refresh_token",
     }
 
-    l10n_pl_edi_register = fields.Boolean(
-        string="KSeF Integration Enabled",
-        compute="_compute_l10n_pl_edi_register",
-        compute_sudo=True,
+    l10n_pl_edi_config_id = fields.Many2one(
+        comodel_name="l10n_pl_edi.config",
+        compute="_compute_l10n_pl_edi_config_id",
+        search="_search_l10n_pl_edi_config_id",
     )
-    l10n_pl_edi_certificate = fields.Many2one(
-        comodel_name="certificate.certificate",
-        string="KSeF Certificate",
-        store=True,
-        groups="base.group_system",
-    )
+
     l10n_pl_edi_access_token = fields.Char(
         string="KSeF Token",
         compute="_compute_credential_doors",
@@ -37,26 +32,15 @@ class ResCompany(models.Model):
         readonly=True,
         groups="base.group_system",
     )
-    l10n_pl_edi_session_id = fields.Char(
-        string="Reference number",
-        readonly=True,
-        groups="base.group_system",
-    )
-    l10n_pl_edi_session_key = fields.Binary(
-        string="Session key",
-        readonly=True,
-        groups="base.group_system",
-    )
-    l10n_pl_edi_session_iv = fields.Binary(
-        string="Session iv",
-        readonly=True,
-        groups="base.group_system",
-    )
 
-    @api.depends("l10n_pl_edi_certificate")
-    def _compute_l10n_pl_edi_register(self):
+    def _search_l10n_pl_edi_config_id(self, operator, value):
+        return self._search_config_link("l10n_pl_edi.config", operator, value)
+
+    def _compute_l10n_pl_edi_config_id(self):
+        configs = self.env["l10n_pl_edi.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
         for company in self:
-            company.l10n_pl_edi_register = bool(company.l10n_pl_edi_certificate)
+            company.l10n_pl_edi_config_id = by_company.get(company.id, False)
 
     @api.model
     def _cron_l10n_pl_edi_refresh_tokens(self):
@@ -64,14 +48,16 @@ class ResCompany(models.Model):
         Automatically performs a full KSeF authentication to renew both
         the access token and the refresh token for active companies.
         """
-        companies = self.search([("l10n_pl_edi_certificate", "!=", False)])
+        companies = self.search(
+            [("l10n_pl_edi_config_id.l10n_pl_edi_certificate", "!=", False)]
+        )
 
         for company in companies:
             try:
                 config = self.env["res.config.settings"].new(
                     {
                         "company_id": company.id,
-                        "l10n_pl_edi_certificate": company.l10n_pl_edi_certificate.id,
+                        "l10n_pl_edi_certificate": company.l10n_pl_edi_config_id.l10n_pl_edi_certificate.id,
                     }
                 )
 

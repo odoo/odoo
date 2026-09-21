@@ -8,6 +8,8 @@ class TestCompanyConfig(TransactionCase):
     def test_one_record_per_company_created_on_first_read(self):
         Config = self.env["test_orm.company_config"]
         company = self.env["res.company"].create({"name": "config co"})
+        self.assertTrue(Config.search([("company_id", "=", company.id)]))
+        Config.search([("company_id", "=", company.id)]).unlink()
         self.assertFalse(Config.search([("company_id", "=", company.id)]))
         config = Config._for(company)
         self.assertEqual(config.company_id, company)
@@ -102,3 +104,14 @@ class TestCompanyConfig(TransactionCase):
             as_portal.search([("limit", "=", 7)])
         with self.assertRaises(AccessError):
             as_portal._for(company).limit
+
+    def test_a_search_through_the_link_sees_a_company_never_read(self):
+        Config = self.env["test_orm.company_config"]
+        company = self.env["res.company"].create({"name": "unread co"})
+        Config.search([("company_id", "=", company.id)]).unlink()
+        self.env.flush_all()
+        self.assertFalse(Config.search([("company_id", "=", company.id)]))
+        found = self.env["res.company"].search(
+            [("test_orm_company_config_id.limit", "=", 3)]
+        )
+        self.assertIn(company, found, "the row is created by the search")

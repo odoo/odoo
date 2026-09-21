@@ -225,10 +225,12 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
             self.assertEqual(res_invoice1, invoice1)
             self.assertEqual(res_invoice2, invoice2)
             self.assertEqual(
-                res_invoice1.company_id.l10n_it_edi_proxy_user_id, self.proxy_user
+                res_invoice1.company_id.l10n_it_edi_config_id.l10n_it_edi_proxy_user_id,
+                self.proxy_user,
             )
             self.assertEqual(
-                res_invoice2.company_id.l10n_it_edi_proxy_user_id, second_proxy
+                res_invoice2.company_id.l10n_it_edi_config_id.l10n_it_edi_proxy_user_id,
+                second_proxy,
             )
 
     def test_l10n_it_edi_send_success(self):

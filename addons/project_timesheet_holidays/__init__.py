@@ -9,15 +9,19 @@ def post_init(env):
     companies = env["res.company"].search(
         [
             "|",
-            ("internal_project_id", "=", False),
-            ("leave_timesheet_task_id", "=", False),
+            ("hr_timesheet_config_id.internal_project_id", "=", False),
+            (
+                "project_timesheet_holidays_config_id.leave_timesheet_task_id",
+                "=",
+                False,
+            ),
         ]
     )
     internal_projects_by_company_dict = None
     project = env["project.project"]
     for company in companies:
         company = company.with_company(company)
-        if not company.internal_project_id:
+        if not company.hr_timesheet_config_id.internal_project_id:
             if not internal_projects_by_company_dict:
                 internal_projects_by_company_read = project.search_read(  # noqa: E8507 - computed once, on first need
                     [
@@ -42,11 +46,11 @@ def post_init(env):
                     }
                 ).id
             company.write({"internal_project_id": project_id})
-        if not company.leave_timesheet_task_id:
+        if not company.project_timesheet_holidays_config_id.leave_timesheet_task_id:
             task = company.env["project.task"].create(
                 {
                     "name": env._("Time Off"),
-                    "project_id": company.internal_project_id.id,
+                    "project_id": company.hr_timesheet_config_id.internal_project_id.id,
                     "active": True,
                     "company_id": company.id,
                 }

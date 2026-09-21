@@ -6,6 +6,6 @@ class ResConfigSettings(models.TransientModel):
 
     l10n_fr_reference_leave_type = fields.Many2one(
         comodel_name="hr.leave.type",
-        related="company_id.l10n_fr_reference_leave_type",
+        related="company_id.l10n_fr_hr_holidays_config_id.l10n_fr_reference_leave_type",
         readonly=False,
     )

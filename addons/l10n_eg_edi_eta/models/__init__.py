@@ -1,5 +1,6 @@
 from . import eta_activity_type
 from . import uom_uom
+from . import l10n_eg_edi_eta_config
 from . import res_company
 from . import res_partner
 from . import account_move

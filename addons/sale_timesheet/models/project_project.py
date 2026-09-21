@@ -77,7 +77,7 @@ class ProjectProject(models.Model):
         arch, view = super()._get_view(view_id, view_type, **options)
         if (
             view_type == "form"
-            and self.env.company.timesheet_encode_uom_id
+            and self.env.company.hr_timesheet_config_id.timesheet_encode_uom_id
             == self.env.ref("uom.product_uom_day")
         ):
             for node in arch.xpath("//field[@name='display_cost'][not(@string)]"):

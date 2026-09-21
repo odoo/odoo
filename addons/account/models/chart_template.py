@@ -868,15 +868,15 @@ class AccountChartTemplate(models.AbstractModel):
             data.update(ordered)
         for key in list(company_data):
             base_key = key.split("@")[0]
-            if base_key in company._fields or base_key == "__translation_module__":
+            if base_key == "__translation_module__":
                 continue
-            for link, field in links.items():
-                config = company[link]
-                if base_key in config._fields:
-                    data[field.comodel_name].setdefault(config.id, {})[key] = (
-                        company_data.pop(key)
-                    )
-                    break
+            link = company._config_link_of_field(base_key)
+            if not link:
+                continue
+            config = company[link]
+            data[links[link].comodel_name].setdefault(config.id, {})[key] = (
+                company_data.pop(key)
+            )
 
     def _pre_load_account_config_vals(self, company, template_data):
         config = company.account_config_id
@@ -914,7 +914,10 @@ class AccountChartTemplate(models.AbstractModel):
         vals = {
             key: val
             for key, val in template_data.items()
-            if key in company._fields and key != "name" and key not in property_accounts
+            if key in company._fields
+            and key != "name"
+            and key not in property_accounts
+            and not company._config_link_of_field(key)
         }
         if not company.root_id._existing_accounting():
             vals["currency_id"] = (

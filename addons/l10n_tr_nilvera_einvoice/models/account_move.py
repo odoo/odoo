@@ -353,7 +353,7 @@ class AccountMove(models.Model):
 
     def _l10n_tr_get_document_category_default_journal(self, journal_type):
         if journal_type == "purchase":
-            return self.env.company.l10n_tr_nilvera_purchase_journal_id
+            return self.env.company.l10n_tr_nilvera_config_id.l10n_tr_nilvera_purchase_journal_id
         return None
 
     @api.deprecated(

@@ -777,7 +777,8 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             self.assertEqual(mock_send.call_count, 1)
         self.assertEqual(invoice.l10n_pl_edi_status, "accepted")
         self.assertEqual(
-            invoice.l10n_pl_edi_session_id, invoice.company_id.l10n_pl_edi_session_id
+            invoice.l10n_pl_edi_session_id,
+            invoice.company_id.l10n_pl_edi_config_id.l10n_pl_edi_session_id,
         )
         self.assertEqual(invoice.l10n_pl_edi_ref, "999999")
         self.assertEqual(

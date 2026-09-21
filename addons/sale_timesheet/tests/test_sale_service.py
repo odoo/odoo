@@ -988,7 +988,9 @@ class TestSaleService(TestCommonSaleTimesheet):
             "Project's allocated hours should add up correctly.",
         )
 
-        self.env.company.timesheet_encode_uom_id = self.env.ref("uom.product_uom_day")
+        self.env.company.hr_timesheet_config_id.timesheet_encode_uom_id = self.env.ref(
+            "uom.product_uom_day"
+        )
         so_copy = self.sale_order.copy()
         so_copy.action_confirm()
         self.assertEqual(

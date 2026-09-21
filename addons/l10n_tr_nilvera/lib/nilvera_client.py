@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 
 def _get_nilvera_client(company, timeout_limit=None):
     return NilveraClient(
-        test_environment=company.l10n_tr_nilvera_use_test_env,
+        test_environment=company.l10n_tr_nilvera_config_id.l10n_tr_nilvera_use_test_env,
         api_key=company.l10n_tr_nilvera_api_key,
         timeout_limit=timeout_limit,
     )

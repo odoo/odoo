@@ -1,6 +1,5 @@
 import base64
 import logging
-import math
 import re
 
 from lxml import etree
@@ -10,8 +9,6 @@ from odoo.exceptions import LockError, UserError, ValidationError
 from odoo.http import request
 from odoo.tools import (
     cleanup_xml_node,
-    float_compare,
-    float_is_zero,
     float_repr,
     float_round,
     formatLang,
@@ -568,7 +565,7 @@ class AccountMove(models.Model):
         }
 
         if companies_missing_credentials := self.company_id.filtered(
-            lambda c: not c.l10n_hu_edi_server_mode
+            lambda c: not c.l10n_hu_edi_config_id.l10n_hu_edi_server_mode
         ):
             errors["l10n_hu_edi_company_credentials_missing"] = {
                 "message": _("Please set NAV credentials in the Accounting Settings!"),
@@ -1144,7 +1141,8 @@ class AccountMove(models.Model):
                 supplier, self.fiscal_position_id.foreign_vat
             ),
             "supplierBankAccountNumber": format_bank_account_number(supplier_bank),
-            "individualExemption": self.company_id.l10n_hu_tax_regime == "ie",
+            "individualExemption": self.company_id.l10n_hu_edi_config_id.l10n_hu_tax_regime
+            == "ie",
             "customer": customer,
             "customerVatStatus": (not customer.is_company and "PRIVATE_PERSON")
             or (customer.country_code == "HU" and "DOMESTIC")
@@ -1153,9 +1151,11 @@ class AccountMove(models.Model):
             if customer.is_company
             else None,
             "customerBankAccountNumber": format_bank_account_number(customer_bank),
-            "smallBusinessIndicator": self.company_id.l10n_hu_tax_regime == "sb",
+            "smallBusinessIndicator": self.company_id.l10n_hu_edi_config_id.l10n_hu_tax_regime
+            == "sb",
             "exchangeRate": currency_rate,
-            "cashAccountingIndicator": self.company_id.l10n_hu_tax_regime == "ca",
+            "cashAccountingIndicator": self.company_id.l10n_hu_edi_config_id.l10n_hu_tax_regime
+            == "ca",
             "shipping_partner": self.partner_shipping_id,
             "sales_partner": self.user_id,
             "mergedItemIndicator": False,

@@ -238,10 +238,10 @@ class StockWarehouse(models.Model):
         return data
 
     def _get_subcontracting_location(self):
-        return self.company_id.subcontracting_location_id
+        return self.company_id.mrp_subcontracting_config_id.subcontracting_location_id
 
     def _get_subcontracting_locations(self):
-        return self.company_id.subcontracting_location_id.child_internal_location_ids
+        return self.company_id.mrp_subcontracting_config_id.subcontracting_location_id.child_internal_location_ids
 
     def _update_resupply_rules(self):
         subcontracting_locations = self._get_subcontracting_locations()

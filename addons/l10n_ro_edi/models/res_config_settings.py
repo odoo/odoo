@@ -5,7 +5,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     l10n_ro_edi_client_id = fields.Char(
-        related="company_id.l10n_ro_edi_client_id",
+        related="company_id.l10n_ro_edi_config_id.l10n_ro_edi_client_id",
         readonly=False,
     )
     l10n_ro_edi_client_secret = fields.Char(
@@ -21,22 +21,22 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     l10n_ro_edi_access_expiry_date = fields.Date(
-        related="company_id.l10n_ro_edi_access_expiry_date",
+        related="company_id.l10n_ro_edi_config_id.l10n_ro_edi_access_expiry_date",
         readonly=False,
     )
     l10n_ro_edi_refresh_expiry_date = fields.Date(
-        related="company_id.l10n_ro_edi_refresh_expiry_date",
+        related="company_id.l10n_ro_edi_config_id.l10n_ro_edi_refresh_expiry_date",
         readonly=False,
     )
     l10n_ro_edi_callback_url = fields.Char(
-        related="company_id.l10n_ro_edi_callback_url"
+        related="company_id.l10n_ro_edi_config_id.l10n_ro_edi_callback_url"
     )
     l10n_ro_edi_test_env = fields.Boolean(
-        related="company_id.l10n_ro_edi_test_env",
+        related="company_id.l10n_ro_edi_config_id.l10n_ro_edi_test_env",
         readonly=False,
     )
     l10n_ro_edi_anaf_imported_inv_journal_id = fields.Many2one(
-        related="company_id.l10n_ro_edi_anaf_imported_inv_journal_id",
+        related="company_id.l10n_ro_edi_config_id.l10n_ro_edi_anaf_imported_inv_journal_id",
         readonly=False,
     )
 

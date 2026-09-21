@@ -3,6 +3,7 @@ from . import account_fiscal_position
 from . import account_move
 from . import account_tax
 from . import declaration_of_intent
+from . import l10n_it_edi_doi_config
 from . import res_company
 from . import res_partner
 from . import sale_order
