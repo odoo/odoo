@@ -115,6 +115,7 @@ class IrHttp(models.AbstractModel):
             "is_admin": user._is_admin() if session_uid else False,
             "is_public": user._is_public(),
             "is_internal_user": is_internal_user,
+            "is_regular_user": user._is_regular() if session_uid else False,
             "user_context": user_context,
             "db": self.env.cr.dbname,
             "registry_hash": hmac(self.env(su=True), "webclient-cache", self.env.registry.registry_sequence),
