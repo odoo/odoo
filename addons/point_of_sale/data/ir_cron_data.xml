@@ -12,6 +12,16 @@
         <field name="nextcall" eval="(DateTime.now().replace(hour=1, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
 
+    <record id="ir_cron_tracking_number_reset" model="ir.cron">
+        <field name="name">POS: Tracking Number Reset</field>
+        <field name="model_id" ref="point_of_sale.model_pos_order"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_reset_tracking_numbers()</field>
+        <field name="active" eval="True"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="nextcall" eval="(DateTime.now().replace(hour=5, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
     <!--
         Generic POS cron executed every 5 minutes.
 

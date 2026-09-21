@@ -38,6 +38,18 @@ class PosSelfOrderController(http.Controller):
         order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
         preset_id = order_ids.preset_id
 
+        for order in order_ids:
+            if not order.pos_reference:
+                order.pos_reference = pos_config._get_next_order_refs()
+            if not order.floating_order_name:
+                order.floating_order_name = order._get_self_order_floating_name(
+                    pos_config,
+                    safe_data,
+                    device_type,
+                    table,
+                    order.tracking_number,
+                 )
+
         if preset_id and preset_id.service_at == 'delivery':
             self._ensure_delivery_fee(order_ids, preset_id)
 
