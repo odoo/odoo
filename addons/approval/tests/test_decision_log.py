@@ -127,5 +127,27 @@ class TestDecisionLog(ApprovalCommon):
         self._decide(request, self.approver_1, "approve")
         as_owner = request.with_user(self.owner_user)
         self.assertEqual(len(as_owner.decision_log_ids), 1)
+        self.assertEqual(
+            self.env["approval.decision.log"].with_user(self.owner_user).search([]),
+            request.decision_log_ids,
+        )
+
+    def test_the_form_shows_the_history_to_an_approver_who_is_no_manager(self):
+        request = self._prepare_request(self.category)
+        self._decide(request, self.approver_1, "approve")
+        [values] = request.with_user(self.approver_2).web_read(
+            {"decision_log_ids": {"fields": {"verdict": {}, "user_id": {}}}}
+        )
+        self.assertEqual(
+            [log["verdict"] for log in values["decision_log_ids"]], ["approved"]
+        )
+
+    def test_the_history_of_a_request_you_cannot_read_stays_hidden(self):
+        request = self._prepare_request(self.category)
+        self._decide(request, self.approver_1, "approve")
+        log = request.decision_log_ids
+        Log = self.env["approval.decision.log"].with_user(self.approver_3)
+        self.assertFalse(Log.search([]))
+        self.assertFalse(Log.search_count([("id", "=", log.id)]))
         with self.assertRaises(AccessError):
-            self.env["approval.decision.log"].with_user(self.owner_user).search([])
+            log.with_user(self.approver_3).read(["verdict"])

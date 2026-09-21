@@ -121,7 +121,7 @@ dashboards.
 | `test_analytics_accuracy.py` | SQL view accuracy, metric calculations |
 | `test_prediction_and_snapshot.py` | On-demand outcome prediction, category snapshots (+ batched-query regression) |
 | `test_state_guards.py` | What each request state allows: submitted-request guards, locked fields, forged computed fields |
-| `test_decision_log.py` | The ledger: a decision logged with its actor, a reset that erases the rows but not the history, a withdrawal as a fact, a delegate logged acting for the approver, an elevated decision saying so, grants and revocations, the log refusing change and deletion even by the superuser, and the history read through the request |
+| `test_decision_log.py` | The ledger: a decision logged with its actor, a reset that erases the rows but not the history, a withdrawal as a fact, a delegate logged acting for the approver, an elevated decision saying so, grants and revocations, the log refusing change and deletion even by the superuser, the history read through the request, shown on the form to an approver who is no manager, and hidden with a request the user cannot read |
 | `test_decision_attribution.py` | decision attribution under delegation, decision-funnel scoping, change-request close-out, manual-approver preservation, escalation lookup, document-requirement language, batched round-opening |
 | `test_invariants.py` | invariants that must hold across the whole lifecycle (pending-review predicate, decision funnels) |
 | `test_multi_company.py` | Multi-company isolation across every company_id-scoped model |

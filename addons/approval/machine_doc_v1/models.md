@@ -1206,7 +1206,7 @@ closure with it. Read their fields in those modules.
 | Model | `approval.decision.log` |
 | File | `models/approval_decision_log.py` |
 | Order | `date desc, id desc` |
-| Access | Approval managers read the model directly; everyone else reads a request's history through `approval.request.decision_log_ids` (`compute_sudo`), so whoever may read the request may read what was decided about it |
+| Access | Internal users read it (ACL); `_search` and `_check_access` derive visibility from the request, so whoever may read the request may read what was decided about it and nothing else. No `ir.rule`: rule domains are evaluated as superuser, so `request_id any []` would skip the request's own rules. The web client reads `approval.request.decision_log_ids`' columns as the user, which is why the ACL is needed despite the field's `compute_sudo` |
 
 | Field | Type | Notes |
 |-------|------|-------|
