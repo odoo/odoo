@@ -2927,6 +2927,11 @@ class TestExpDropClosesPoolTwice(BaseCase):
         fake_conn.cursor.return_value = fake_cursor
 
         with (
+            # `exp_drop` is the RPC-facing entry: it refuses a database this
+            # process does not serve, which on a `-d <db>` lane is every name
+            # but the lane's own.  The listing patch alone got past the gate
+            # until the gate also began asking the process-level predicate.
+            tools.config.patch(db_name=[fake_db], dbfilter=""),
             patch("odoo.service.db.listing.list_dbs", return_value=[fake_db]),
             patch("odoo.modules.registry.Registry.remove"),
             patch("odoo.service.db.lifecycle._terminate_backends"),

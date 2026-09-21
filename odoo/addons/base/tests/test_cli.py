@@ -1063,7 +1063,7 @@ class TestCommand(BaseCase):
             mock.patch.object(server_mod, "check_db_user_not_postgres"),
             mock.patch.object(server_mod, "report_configuration"),
             mock.patch.object(server_mod, "write_pid_file"),
-            mock.patch.object(server_mod.db, "_create_empty_database"),
+            mock.patch.object(server_mod.db, "create_empty_database"),
             mock.patch.object(server_mod.server, "start", return_value=0),
             mock.patch.dict(config._runtime_options, {"init": {}}, clear=False),
             isolated_config(),
