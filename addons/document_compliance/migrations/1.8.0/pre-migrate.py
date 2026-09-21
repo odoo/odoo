@@ -20,12 +20,12 @@ def migrate(cr, version):
     cr.execute(
         """
         UPDATE ir_model_data
-        SET module = 'credit_management'
+        SET module = 'account_credit'
         WHERE module = 'document_compliance' AND name = ANY(%s)
         """,
         [CREDIT_TYPE_XMLIDS],
     )
-    _logger.info("Handed %d credit document types to credit_management", cr.rowcount)
+    _logger.info("Handed %d credit document types to account_credit", cr.rowcount)
 
     cr.execute(
         "ALTER TABLE document_document "
