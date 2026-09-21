@@ -572,7 +572,9 @@ class HrEmployee(models.Model):
         versions = self.version_ids.filtered(lambda v: v.active) or self.with_context(active_test=False).version_ids
         if not versions:
             return self.env['hr.version']
-        filtered_versions = versions.filtered_domain([('date_version', '<=', date)])
+        filtered_versions = versions.filtered_domain(
+            [('contract_date_start', '<=', date)] if self.env.context.get('use_contract', False) else [('date_version', '<=', date)]
+        )
         return max(filtered_versions, key=lambda v: v.date_version) if filtered_versions else versions[0]
 
     def create_version(self, values):
