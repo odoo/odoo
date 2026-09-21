@@ -28,6 +28,12 @@ class _Handler(http.server.BaseHTTPRequestHandler):
 
     do_HEAD = do_GET
 
+    def do_POST(self):
+        self.server.seen.append((self.path, self.headers.get("Host")))
+        length = int(self.headers.get("Content-Length") or 0)
+        self.body = self.rfile.read(length)
+        self.routes[self.path](self)
+
     def log_message(self, *args):
         pass
 
@@ -38,6 +44,18 @@ def _ok(handler):
     handler.send_header("Content-Length", str(len(body)))
     handler.end_headers()
     handler.wfile.write(body)
+
+
+def _xmlrpc_echo(handler):
+    import xmlrpc.client
+
+    params, method = xmlrpc.client.loads(handler.body)
+    body = xmlrpc.client.dumps(({"method": method, "params": list(params)},))
+    handler.send_response(200)
+    handler.send_header("Content-Type", "text/xml")
+    handler.send_header("Content-Length", str(len(body)))
+    handler.end_headers()
+    handler.wfile.write(body.encode())
 
 
 def _redirect_to(location):
@@ -270,3 +288,26 @@ class TestCaps:
                 f"http://service.test:{server.server_port}/dribble"
             )
         assert time.monotonic() - started < 1.5
+
+
+class TestXmlRpcProxy:
+    def test_the_proxy_posts_through_the_guarded_session(self, server):
+        _Handler.routes["/xmlrpc/2/common"] = _xmlrpc_echo
+        session = session_for()
+        proxy = guarded_http.xmlrpc_proxy(
+            session, f"http://127.0.0.1:{server.server_port}/xmlrpc/2/common"
+        )
+
+        result = proxy.version(1, "two")
+
+        assert result == {"method": "version", "params": [1, "two"]}
+        assert server.seen == [("/xmlrpc/2/common", f"127.0.0.1:{server.server_port}")]
+
+    def test_a_refused_destination_never_reaches_the_server(self, server):
+        session = session_for(resolver=resolver_for({"evil.test": ["10.0.0.9"]}))
+        proxy = guarded_http.xmlrpc_proxy(session, "http://evil.test/xmlrpc/2/common")
+
+        with pytest.raises(netguard.DestinationRefused):
+            proxy.version()
+
+        assert server.seen == []

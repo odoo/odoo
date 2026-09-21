@@ -186,6 +186,25 @@ class TestCheckUrl:
         with pytest.raises(netguard.DestinationRefused, match="scheme"):
             netguard.check_url(url, policy=netguard.PRIVATE_ALLOWED)
 
+    @pytest.mark.parametrize(
+        ("url", "expected"),
+        [
+            ("wss://device.example.test/stream", ("wss", 443)),
+            ("mqtt://broker.example.test", ("mqtt", 1883)),
+            ("modbus://plc.example.test", ("modbus", 502)),
+            ("sftp://files.example.test", ("sftp", 22)),
+            ("smtps://mail.example.test", ("smtps", 465)),
+            ("imap://mail.example.test:1143", ("imap", 1143)),
+        ],
+    )
+    def test_a_non_http_dial_scheme_takes_its_default_port(self, url, expected):
+        host = url.split("//")[1].split("/")[0].split(":")[0]
+        resolver = resolver_for({host: ["93.184.216.34"]})
+        destination = netguard.check_url(
+            url, policy=netguard.PUBLIC_ONLY, resolver=resolver
+        )
+        assert (destination.scheme, destination.port) == expected
+
     def test_a_url_without_host_is_refused(self):
         with pytest.raises(netguard.DestinationRefused, match="host"):
             netguard.check_url("http:///path", policy=netguard.PRIVATE_ALLOWED)

@@ -243,8 +243,11 @@ RULES: tuple[Rule, ...] = (
         "send the call through `env['ir.egress']` (a configured vendor through "
         "integration's `get_api_client(env, code)`, which builds on it), so the "
         "address is checked, the connection pinned, every redirect checked again "
-        "and the response capped; a vendor SDK that cannot take the session takes "
-        "`# noqa: E8518  <why it cannot>`",
+        "and the response capped; an XML-RPC peer through `ir.egress.xmlrpc_proxy`; "
+        "a dial no HTTP session can carry (WebSocket, MQTT, Modbus, SSH, SMTP, IMAP, "
+        "POP) checks its host through `ir.egress.check_host` first and takes "
+        "`# noqa: E8518  <checked how, and why it cannot be pinned>`; a vendor SDK "
+        "that cannot take the session takes `# noqa: E8518  <why it cannot>`",
     ),
     Rule(
         "receiver-fail-open",

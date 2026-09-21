@@ -418,6 +418,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u {uid} --password-
             port=self.port,
             encryption=self.encryption,
         ):
+            self.env["ir.egress"].check_host(self.server, self.port, policy="private")
             connection = connect(
                 connection_type, self.server, self.port, self.encryption
             )

@@ -199,7 +199,7 @@ class WebsocketClient(Thread):
                     "Failed to get session ID, status %s", session_response.status_code
                 )
 
-        self.ws = websocket.WebSocketApp(
+        self.ws = websocket.WebSocketApp(  # noqa: E8518 - runs on the IoT Box, dialling the Odoo server its operator paired it with; ir.egress does not exist there
             self.websocket_url,
             header={
                 "User-Agent": "OdooIoTBox/1.0",

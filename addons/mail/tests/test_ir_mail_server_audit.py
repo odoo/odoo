@@ -33,6 +33,7 @@ from odoo.addons.mail.models.ir_mail_server import (
     _log_smtp_debug,
     _SmtpSessionContext,
 )
+from odoo.addons.mail.tests.common import FakedDialCase
 
 _IR_MAIL_SERVER_LOGGER = "odoo.addons.mail.models.ir_mail_server"
 
@@ -1007,7 +1008,7 @@ class TestConnectionTestErrorClassification(TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestSmtpDebugGoesThroughTheLogger(TransactionCase):
+class TestSmtpDebugGoesThroughTheLogger(FakedDialCase, TransactionCase):
     def test_debug_transcript_is_logged(self):
         with self.assertLogs(_IR_MAIL_SERVER_LOGGER, logging.DEBUG) as captured:
             _log_smtp_debug("send:", "'EHLO odoo\\r\\n'")
@@ -1464,7 +1465,7 @@ class TestCertificateMaterialValidatedOnWrite(TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestSmtpHeloName(TransactionCase):
+class TestSmtpHeloName(FakedDialCase, TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -1615,7 +1616,7 @@ class TestSessionAdvertisedSizeLimit(TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestResolvedServerIsNotResolvedTwice(TransactionCase):
+class TestResolvedServerIsNotResolvedTwice(FakedDialCase, TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

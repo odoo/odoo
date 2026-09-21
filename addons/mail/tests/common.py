@@ -51,6 +51,16 @@ mail_new_test_user = partial(
 )
 
 
+class FakedDialCase:
+    """For tests that replace smtplib/imaplib themselves: the dial is faked,
+    so the address check that precedes it is too -- the test hosts are names
+    that do not resolve."""
+
+    def setUp(self):
+        super().setUp()
+        self.patch(type(self.env["ir.egress"]), "check_host", lambda *a, **k: ())
+
+
 class MockSmtplibCase:
     @contextmanager
     def mock_smtplib_connection(self):
@@ -115,6 +125,11 @@ class MockSmtplibCase:
             patch(
                 "smtplib.SMTP",
                 side_effect=lambda *args, **kwargs: self.testing_smtp_session,
+            ),
+            # The dial is faked, so the address check that precedes it is too:
+            # the test hosts are names that do not resolve.
+            patch.object(
+                type(self.env["ir.egress"]), "check_host", lambda *args, **kwargs: ()
             ),
             patch.object(type(IrMailServer), "_disable_send", lambda _: False),
             patch.object(

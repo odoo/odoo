@@ -844,8 +844,11 @@ class IrMail_Server(models.Model):
         self, transport: _SmtpTransport
     ) -> smtplib.SMTP | smtplib.SMTP_SSL:
         local_hostname = self._get_smtp_local_hostname()
+        self.env["ir.egress"].check_host(
+            transport.server, transport.port, policy="private"
+        )
         if transport.encryption in IMPLICIT_TLS_ENCRYPTIONS:
-            connection = smtplib.SMTP_SSL(
+            connection = smtplib.SMTP_SSL(  # noqa: E8518 - host checked above; smtplib dials by name so TLS verifies the certificate
                 transport.server,
                 transport.port,
                 local_hostname=local_hostname,
@@ -853,7 +856,7 @@ class IrMail_Server(models.Model):
                 context=transport.ssl_context,
             )
         else:
-            connection = smtplib.SMTP(
+            connection = smtplib.SMTP(  # noqa: E8518 - host checked above; smtplib dials by name so STARTTLS verifies the certificate
                 transport.server,
                 transport.port,
                 local_hostname=local_hostname,

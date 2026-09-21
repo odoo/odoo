@@ -149,7 +149,7 @@ def main() -> None:
     socket.setdefaulttimeout(options.timeout)
 
     try:
-        models = xmlrpclib.ServerProxy(
+        models = xmlrpclib.ServerProxy(  # noqa: E8518 - the MTA's mailgate script, run beside the server it is configured to deliver to
             "%s://%s:%s/xmlrpc/2/object"
             % (options.protocol, options.host, options.port),
             allow_none=True,

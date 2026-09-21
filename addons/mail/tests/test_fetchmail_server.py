@@ -14,6 +14,7 @@ from odoo.addons.mail.models.fetchmail_server import (
     MAIL_SERVER_DEACTIVATE_TIME,
     SERVER_TEARDOWN_BUDGET,
 )
+from odoo.addons.mail.tests.common import FakedDialCase
 from odoo.addons.mail.tools import incoming_mail
 
 RAW_MESSAGE = (
@@ -428,7 +429,7 @@ class TestFetchmailConfiguration(FetchmailCommon):
                     server.write({"state": "draft"})
 
 
-class TestFetchmailConnect(FetchmailCommon):
+class TestFetchmailConnect(FakedDialCase, FetchmailCommon):
     def test_an_unreachable_configuration_names_the_field(self):
         for values, expected in [
             ({"server": False}, "Server Name"),

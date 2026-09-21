@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import contextlib
+import io
 import socket
 import threading
 import time
 import typing
+import xmlrpc.client
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -286,3 +288,52 @@ def guarded_session(
     session.mount("https://", adapter)
     session.max_redirects = max_redirects
     return session
+
+
+class GuardedXmlRpcTransport(xmlrpc.client.Transport):
+    def __init__(
+        self,
+        session: requests.Session,
+        base_url: str,
+        *,
+        timeout: float | tuple[float, float] = DEFAULT_TIMEOUT,
+    ) -> None:
+        super().__init__()
+        self._session = session
+        self._base_url = base_url.rstrip("/")
+        self._timeout = timeout
+
+    def request(  # type: ignore[override]
+        self,
+        host: str,
+        handler: str,
+        request_body: bytes,
+        verbose: bool = False,
+    ) -> typing.Any:
+        # `host` is the URL's netloc as ServerProxy parsed it; the base URL
+        # given at construction carries the scheme too, so it is the one used.
+        del host
+        response = self._session.post(
+            f"{self._base_url}{handler}",
+            data=request_body,
+            headers={"Content-Type": "text/xml"},
+            timeout=self._timeout,
+        )
+        response.raise_for_status()
+        self.verbose = verbose
+        return self.parse_response(io.BytesIO(response.content))
+
+
+def xmlrpc_proxy(
+    session: requests.Session,
+    url: str,
+    *,
+    timeout: float | tuple[float, float] = DEFAULT_TIMEOUT,
+) -> xmlrpc.client.ServerProxy:
+    parts = parse_url(url)
+    base_url = f"{parts.scheme}://{parts.netloc}"
+    return xmlrpc.client.ServerProxy(
+        url,
+        transport=GuardedXmlRpcTransport(session, base_url, timeout=timeout),
+        allow_none=True,
+    )

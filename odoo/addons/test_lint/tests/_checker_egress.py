@@ -33,7 +33,13 @@ def _imports(tree: ast.Module) -> tuple[dict[str, str], dict[str, str]]:
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
-                modules[alias.asname or alias.name.split(".")[0]] = alias.name
+                # `import a.b` binds `a`; the call then spells `a.b.x` itself.
+                # Only `import a.b as c` binds the full dotted name.
+                if alias.asname:
+                    modules[alias.asname] = alias.name
+                else:
+                    top = alias.name.split(".")[0]
+                    modules[top] = top
         elif isinstance(node, ast.ImportFrom) and node.module:
             for alias in node.names:
                 names[alias.asname or alias.name] = f"{node.module}.{alias.name}"
@@ -75,7 +81,45 @@ def _egress_target(call: ast.Call, modules, names) -> str | None:
         return dotted
     if dotted in ("boto3.client", "boto3.resource", "boto3.session.Session"):
         return dotted
+    if dotted in _DIAL_CALLS:
+        return dotted
+    if module == "pymodbus.client" and attr.startswith(_MODBUS_NETWORK_CLIENTS):
+        return dotted
     return None
+
+
+_MODBUS_NETWORK_CLIENTS = (
+    "ModbusTcpClient",
+    "ModbusTlsClient",
+    "ModbusUdpClient",
+    "AsyncModbusTcpClient",
+    "AsyncModbusTlsClient",
+    "AsyncModbusUdpClient",
+)
+
+_DIAL_CALLS = frozenset(
+    {
+        "xmlrpc.client.ServerProxy",
+        "xmlrpc.client.Server",
+        "http.client.HTTPConnection",
+        "http.client.HTTPSConnection",
+        "socket.create_connection",
+        "websocket.WebSocketApp",
+        "websocket.WebSocket",
+        "websocket.create_connection",
+        "paho.mqtt.client.Client",
+        "paramiko.SSHClient",
+        "paramiko.Transport",
+        "smtplib.SMTP",
+        "smtplib.SMTP_SSL",
+        "imaplib.IMAP4",
+        "imaplib.IMAP4_SSL",
+        "poplib.POP3",
+        "poplib.POP3_SSL",
+        "ftplib.FTP",
+        "ftplib.FTP_TLS",
+    }
+)
 
 
 def check_raw_egress(tree: ast.Module, nodes=None) -> Iterator[Violation]:
@@ -87,7 +131,7 @@ def check_raw_egress(tree: ast.Module, nodes=None) -> Iterator[Violation]:
                 yield Violation(
                     node.lineno,
                     node.col_offset,
-                    f"{target}() leaves Odoo outside ir.egress",
+                    f"{target}() dials out of Odoo outside ir.egress",
                 )
 
 

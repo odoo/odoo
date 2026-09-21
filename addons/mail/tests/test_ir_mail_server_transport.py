@@ -17,7 +17,7 @@ from odoo.addons.mail.models.ir_mail_server import (
     MailDeliveryError,
     OutgoingEmailError,
 )
-from odoo.addons.mail.tests.common import MockSmtplibCase
+from odoo.addons.mail.tests.common import FakedDialCase, MockSmtplibCase
 
 
 def _generate_self_signed_cert(common_name="smtp.example.com"):
@@ -772,7 +772,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
 
 @tagged("mail_server")
-class TestSslContexts(TransactionCase):
+class TestSslContexts(FakedDialCase, TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

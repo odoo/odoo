@@ -1,4 +1,6 @@
+import ipaddress
 import logging
+import xmlrpc.client
 from typing import Any, Literal
 from urllib.parse import urlsplit
 
@@ -54,6 +56,29 @@ class IrEgress(models.AbstractModel):
         destination = netguard.check_url(url, policy=self._get_policy(policy))
         _debug.logic("egress_url_allowed", policy=policy, host=urlsplit(url).hostname)
         return destination
+
+    @api.private
+    @api.model
+    def check_host(
+        self, host: str, port: int, *, policy: PolicyName = "public"
+    ) -> tuple[ipaddress.IPv4Address | ipaddress.IPv6Address, ...]:
+        addresses = netguard.check_host(host, port, policy=self._get_policy(policy))
+        _debug.logic("egress_host_allowed", policy=policy, host=host, port=port)
+        return addresses
+
+    @api.private
+    @api.model
+    def xmlrpc_proxy(
+        self,
+        url: str,
+        *,
+        purpose: str,
+        policy: PolicyName = "public",
+        timeout: float | tuple[float, float] = guarded_http.DEFAULT_TIMEOUT,
+        **session_options: Any,
+    ) -> xmlrpc.client.ServerProxy:
+        session = self.session(purpose=purpose, policy=policy, **session_options)
+        return guarded_http.xmlrpc_proxy(session, url, timeout=timeout)
 
     @api.private
     @api.model

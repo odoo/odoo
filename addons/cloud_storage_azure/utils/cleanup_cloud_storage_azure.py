@@ -89,9 +89,13 @@ def list_blob_urls(container_name, batch_size=1000):
 
 
 def get_blobs_to_be_deleted(blob_urls, batch_size=1000):
-    common = xmlrpc.client.ServerProxy(f"{odoo_url}/xmlrpc/2/common")
+    common = xmlrpc.client.ServerProxy(  # noqa: E8518 - an operator's standalone script dialling the server they name on its command line; no server-side policy applies
+        f"{odoo_url}/xmlrpc/2/common"
+    )
     uid = common.authenticate(odoo_db, odoo_username, odoo_password, {})
-    models = xmlrpc.client.ServerProxy(f"{odoo_url}/xmlrpc/2/object")
+    models = xmlrpc.client.ServerProxy(  # noqa: E8518 - same standalone script
+        f"{odoo_url}/xmlrpc/2/object"
+    )
     for blob_urls_ in batched(blob_urls, batch_size):
         blob_urls_ = list(blob_urls_)
         attachments = models.execute_kw(

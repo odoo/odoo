@@ -221,7 +221,23 @@ def check_host(
     return addresses
 
 
-_DEFAULT_PORTS = {"http": 80, "https": 443}
+_DEFAULT_PORTS = {
+    "http": 80,
+    "https": 443,
+    "ws": 80,
+    "wss": 443,
+    "mqtt": 1883,
+    "mqtts": 8883,
+    "modbus": 502,
+    "ssh": 22,
+    "sftp": 22,
+    "smtp": 25,
+    "smtps": 465,
+    "imap": 143,
+    "imaps": 993,
+    "pop3": 110,
+    "pop3s": 995,
+}
 
 
 def check_url(
@@ -234,7 +250,8 @@ def check_url(
     scheme = parts.scheme.lower()
     if scheme not in _DEFAULT_PORTS:
         raise DestinationRefused(
-            f"the scheme {scheme or '(none)'!r} is not http or https"
+            f"the scheme {scheme or '(none)'!r} is not one a dial can carry: "
+            f"{', '.join(_DEFAULT_PORTS)}"
         )
     if not parts.hostname:
         raise DestinationRefused(f"{url!r} has no host")
