@@ -272,3 +272,33 @@ class APITransportTestCase(TransactionCase):
 
     def flush_pending_logs(self):
         self.env.cr.precommit.run()
+
+
+def open_admission(
+    gate,
+    body=b'{"probe": 1}',
+    event_type="probe",
+    *,
+    method="POST",
+    path="/probe",
+    remote_addr="203.0.113.1",
+    headers=None,
+):
+    """An admitted call of `gate` outside an HTTP request: the row it opens,
+    on a mocked request, is what a handler test settles and reads."""
+    from odoo.addons.integration.tools.admission import Admission
+
+    admission = Admission(
+        gate=gate,
+        subject=gate,
+        body=body,
+        remote_addr=remote_addr,
+        event_type=event_type,
+        method=method,
+        path=path,
+        user_agent=(headers or {}).get("User-Agent", "probe"),
+    )
+    admission.event_type = gate._inbound_event_type(admission, event_type)
+    if gate._inbound_event_logged(admission.event_type):
+        gate._open_inbound_exchange(admission, admission.event_type)
+    return admission

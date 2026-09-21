@@ -1,12 +1,14 @@
 import hashlib
 import hmac
 import importlib.util
+import json
 from pathlib import Path
 
 from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase, tagged
 
+from odoo.addons.integration.tests.common import open_admission
 
 MIGRATION = Path(__file__).resolve().parents[1] / "migrations/1.2/post-migrate.py"
 
@@ -144,28 +146,54 @@ class TestWebhookSecurity(TransactionCase):
         self.assertTrue(rule._check_inbound_request({}, self.body, "1.2.3.4")[0])
 
     def _calls(self, rule):
-        self.env.cr.precommit.run()
         return self.env["integration.exchange"].search(
             [("channel_id", "=", f"automation.rule,{rule.id}")]
         )
 
+    def _call(self, rule, payload):
+        admission = open_admission(
+            rule,
+            json.dumps(payload).encode(),
+            "webhook",
+            path=f"/web/hook/{rule.webhook_uuid}",
+        )
+        rule._execute_webhook(payload, admission)
+        return admission
+
     def test_every_call_is_recorded_without_its_body_unless_asked(self):
         rule = self._new_rule(auth_type="none")
 
-        rule._execute_webhook({"secret_field": "value"})
+        self._call(rule, {"secret_field": "value"})
 
         call = self._calls(rule)
         self.assertEqual(len(call), 1)
         self.assertEqual(call.state, "success")
+        self.assertEqual(call.event_type, "webhook")
         self.assertFalse(call.request_payload)
         self.assertNotIn(rule.webhook_uuid, call.request_url)
+
+    def test_a_call_keeps_its_body_when_asked(self):
+        rule = self._new_rule(auth_type="none")
+        rule.log_webhook_calls = True
+
+        self._call(rule, {"field": "value"})
+
+        self.assertEqual(
+            json.loads(self._calls(rule).request_payload), {"field": "value"}
+        )
 
     def test_a_failing_call_is_recorded_with_its_error(self):
         rule = self._new_rule(auth_type="none", record_getter="model.browse([])")
 
-        with self.assertRaises(ValidationError):
-            rule._execute_webhook({"id": 1})
+        # not assertRaises: its savepoint would roll the row back too
+        try:
+            self._call(rule, {"id": 1})
+        except ValidationError:
+            pass
+        else:
+            self.fail("a webhook with no record ran")
 
         call = self._calls(rule)
         self.assertEqual(call.state, "failed")
         self.assertEqual(call.status_code, 500)
+        self.assertIn("ValidationError", call.error_message)

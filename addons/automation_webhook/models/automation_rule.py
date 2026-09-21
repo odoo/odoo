@@ -1,7 +1,5 @@
-import json
 import logging
 import secrets
-import time
 import traceback
 from datetime import timedelta
 from uuid import uuid4
@@ -201,33 +199,32 @@ class AutomationRule(models.Model):
     def _webhook_rate_ok(self):
         return self.check_rate_limit()
 
-    def _execute_webhook(self, payload):
+    def _inbound_payload_logged(self, event_type):
+        return self.log_webhook_calls
+
+    def _inbound_exchange_vals(self, admission, event_type):
+        # The address is the credential of a rule with no other scheme; the
+        # row names the rule, not the secret.
+        return {
+            **super()._inbound_exchange_vals(admission, event_type),
+            "request_url": f"/web/hook/{(self.webhook_uuid or '')[:8]}",
+        }
+
+    def _execute_webhook(self, payload, admission=None):
+        """Run the webhook; `admission` is the call's row, settled here with
+        the dispatch's outcome so a direct call leaves no second record."""
         self.check_singleton()
-        started = time.monotonic()
         try:
             result = self._dispatch_webhook(payload)
         except Exception as error:
-            self._record_webhook_exchange(payload, started, error=error)
+            if admission is not None:
+                admission.annotate(status_code=500)
+                admission.settle(f"{type(error).__name__}: {error}")
             raise
-        self._record_webhook_exchange(payload, started)
+        if admission is not None:
+            admission.annotate(status_code=200)
+            admission.settle()
         return result
-
-    def _record_webhook_exchange(self, payload, started, error=None):
-        httprequest = request.httprequest if request else None
-        body = None
-        if self.log_webhook_calls and payload is not None:
-            body = json.dumps(payload, default=str)
-        self._record_inbound_exchange(
-            method=httprequest.method if httprequest else "POST",
-            path=f"/web/hook/{(self.webhook_uuid or '')[:8]}",
-            body=body,
-            status_code=500 if error else 200,
-            error=f"{type(error).__name__}: {error}" if error else None,
-            remote_addr=httprequest.remote_addr if httprequest else None,
-            user_agent=httprequest.headers.get("User-Agent") if httprequest else None,
-            duration_ms=(time.monotonic() - started) * 1000,
-            event_type="webhook",
-        )
 
     def _dispatch_webhook(self, payload):
         if self.trigger != "on_webhook":

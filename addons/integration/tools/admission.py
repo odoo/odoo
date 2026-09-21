@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import time
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from typing import Any
@@ -9,7 +10,9 @@ import werkzeug.wrappers
 from werkzeug.exceptions import HTTPException
 
 from odoo.http import request
+from odoo.libs import redact
 
+from .exchange_queue import queue_exchange_values
 from .payload import compute_payload_hash, inspect_json_payload
 
 
@@ -98,9 +101,14 @@ class Admission:
     body: bytes
     remote_addr: str | None
     event_type: str | None = None
+    method: str = "POST"
+    path: str = ""
+    user_agent: str | None = None
     exchange: Any = None
     extra: dict[str, Any] = field(default_factory=dict)
     error: str | None = None
+    annotations: dict[str, Any] = field(default_factory=dict)
+    started: float = field(default_factory=time.monotonic)
     _payload: Any = field(default=None, repr=False)
     _payload_error: str | None = field(default=None, repr=False)
     _payload_read: bool = field(default=False, repr=False)
@@ -145,14 +153,49 @@ class Admission:
         if self.exchange is not None:
             self.exchange.event_type = event_type
 
+    def keep(self) -> None:
+        """A withheld call that turned out to be worth a row: a poll that
+        delivered something. Opens the row now, with what was annotated."""
+        if self.exchange is not None:
+            return
+        self.gate._open_inbound_exchange(self, self.event_type)
+        if self.annotations:
+            self.exchange.write(self.annotations)
+
+    def annotate(self, **vals: Any) -> None:
+        """What the handler learnt about the call that the gate could not:
+        the user it ran as, the record it touched, what it did."""
+        self.annotations.update(vals)
+        if self.exchange is not None:
+            self.exchange.write(vals)
+
+    @property
+    def elapsed_ms(self) -> float:
+        return (time.monotonic() - self.started) * 1000
+
     def settle(self, error: str | None = None, *, retry: bool = False) -> None:
         self.error = error
         if self.exchange is None:
+            if error:
+                self._record_withheld_failure(error)
             return
         if error:
-            self.exchange.mark_failed(error, schedule_retry=retry)
+            self.exchange.mark_failed(redact.mask_text(error), schedule_retry=retry)
         else:
             self.exchange.mark_success()
+        self.exchange.duration_ms = self.elapsed_ms
+
+    def _record_withheld_failure(self, error: str) -> None:
+        """A call whose kind leaves no row still leaves one when it fails."""
+        vals = {
+            **self.gate._inbound_exchange_vals(self, self.event_type),
+            **self.annotations,
+            "state": "failed",
+            "error_type": "other",
+            "error_message": redact.mask_text(error),
+            "duration_ms": self.elapsed_ms,
+        }
+        queue_exchange_values(self.gate.env, vals)
 
 
 @dataclass

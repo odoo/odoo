@@ -16,10 +16,12 @@ from ..tools.authentication import (
     is_ip_in_allowlist,
     is_timestamp_valid,
 )
-from ..tools.exchange_queue import queue_exchange_values
+from ..tools.exchange_queue import keep_row_on_rollback, queue_exchange_values
 from odoo.addons.rate_limit.tools import get_caller_rate_limiter
 
 _logger = logging.getLogger(__name__)
+
+_OMITTED_PAYLOAD_HEAD_CHARS = 512
 
 INBOUND_SUBJECT_KEY = "inbound_subject"
 INBOUND_VERIFY_KEY = "inbound_verify"
@@ -55,6 +57,31 @@ class MixinInboundGate(models.AbstractModel):
         default=300,
         help="Maximum age of request timestamp. Default: 5 minutes",
     )
+
+    log_request_payload_max_bytes = fields.Integer(
+        default=0,
+        help="Store at most this many bytes of each request body on the "
+        "integration.exchange row; 0 keeps the whole body.\n\n"
+        "For an endpoint that accepts a file the body is the file: a phone "
+        "posting a call recording as base64 wrote roughly 48 MB of text into a "
+        "log column, beside the same audio already stored as an attachment. "
+        "Duplicate detection is unaffected -- the hash of the body as received "
+        "is kept either way. Ignored for an asynchronous endpoint, where the "
+        "stored body is the work queue and not merely a record of it.",
+    )
+    log_retention_days = fields.Integer(
+        default=0,
+        help="Delete this gate's exchange rows older than this many days. 0 uses "
+        "the retention set in API Transport settings.",
+    )
+
+    @api.constrains("log_request_payload_max_bytes")
+    def _check_log_request_payload_max_bytes(self):
+        for record in self:
+            if record.log_request_payload_max_bytes < 0:
+                raise ValidationError(
+                    self.env._("The payload log limit cannot be negative."),
+                )
 
     ip_whitelist = fields.Text(
         help="Comma-separated list of allowed IPs or CIDRs (e.g., '192.168.1.0/24, 10.0.0.5'). "
@@ -206,24 +233,95 @@ class MixinInboundGate(models.AbstractModel):
             body=body,
             remote_addr=remote_addr,
             event_type=event_type,
+            method=httprequest.method,
+            path=httprequest.path,
+            user_agent=httprequest.headers.get("User-Agent"),
         )
-        self._open_inbound_exchange(admission, event_type)
+        admission.event_type = self._inbound_event_type(admission, event_type)
+        if self._inbound_event_logged(admission.event_type):
+            self._open_inbound_exchange(admission, admission.event_type)
         return admission
+
+    def _inbound_event_type(
+        self, admission: Admission, event_type: str | None
+    ) -> str | None:
+        """The event this call is, once the body can say more than the route
+        did: a JSON-RPC method, a webhook's own type field."""
+        return event_type
+
+    def _inbound_event_logged(self, event_type: str | None) -> bool:
+        """Whether an admitted call of this kind leaves a row. A poll that a
+        reader repeats every few seconds is not worth one per repetition; its
+        failure still is, and `Admission.settle` writes that one."""
+        return True
+
+    def _inbound_payload_logged(self, event_type: str | None) -> bool:
+        """Whether the row keeps the body. A conversation's content is not
+        the operator's to read; the hash of the body is kept either way."""
+        return True
 
     def _open_inbound_exchange(
         self, admission: Admission, event_type: str | None
     ) -> None:
-        """Record the admitted call. The gate's own record is a log line,
-        queued and written at commit; a receiver that processes what it is
-        sent makes the row the call's work item instead."""
-        httprequest = request.httprequest
-        self._record_inbound_exchange(
-            method=httprequest.method,
-            path=httprequest.path,
-            remote_addr=admission.remote_addr,
-            user_agent=httprequest.headers.get("User-Agent"),
-            event_type=event_type,
+        """The row is the call: created now, in the request's transaction, so
+        the handler can settle it, annotate it or hand it to a worker, and
+        kept as a failed row when the request rolls back."""
+        vals = self._inbound_exchange_vals(admission, event_type)
+        exchange = self.env["integration.exchange"].sudo().create(vals)
+        keep_row_on_rollback(self.env, vals, admission)
+        admission.exchange = exchange
+
+    def _inbound_exchange_vals(
+        self, admission: Admission, event_type: str | None
+    ) -> dict[str, Any]:
+        return {
+            "direction": "inbound",
+            "channel_id": f"{self._name},{self.id}",
+            "company_id": self._get_inbound_company_id() or False,
+            "request_method": admission.method,
+            "request_url": admission.path[:2048],
+            "source_ip": admission.remote_addr or False,
+            "user_agent": (admission.user_agent or "")[:512] or False,
+            "event_type": event_type or False,
+            "state": "success",
+            "date_completed": fields.Datetime.now(),
+            "signature_verified": self.auth_type != "none",
+            **self._inbound_payload_vals(admission, event_type),
+            # The hash of the body as received, whatever the row keeps of it.
+            "request_payload_hash_override": admission.payload_hash,
+        }
+
+    def _inbound_payload_vals(
+        self, admission: Admission, event_type: str | None
+    ) -> dict[str, Any]:
+        if not self._inbound_payload_logged(event_type):
+            return {}
+        body = admission.body.decode("utf-8", errors="replace")
+        return self._omitted_payload_vals(body) or self._prepare_inbound_payload_vals(
+            body
         )
+
+    def _omitted_payload_vals(self, body: str) -> dict[str, Any]:
+        limit = self._payload_log_limit()
+        size = len(body.encode("utf-8"))
+        if not limit or size <= limit:
+            return {}
+        return {
+            "request_payload": json.dumps(
+                {
+                    "_omitted": {
+                        "bytes": size,
+                        "reason": "larger than this endpoint's payload log limit",
+                        "head": body[:_OMITTED_PAYLOAD_HEAD_CHARS],
+                    },
+                },
+            ),
+            "request_payload_omitted_bytes": size,
+        }
+
+    def _payload_log_limit(self) -> int:
+        self.check_singleton()
+        return max(0, self.log_request_payload_max_bytes)
 
     @staticmethod
     def _refusal_code(status: int) -> str:

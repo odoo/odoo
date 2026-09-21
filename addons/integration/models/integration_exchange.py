@@ -641,6 +641,8 @@ class IntegrationExchange(models.Model):
 
     @api.autovacuum
     def _gc_old_logs(self):
+        # The sweep is SQL over what the transaction has written so far.
+        self.flush_model()
         default_retention = int(
             self.env["ir.config_parameter"]
             .sudo()
@@ -649,18 +651,12 @@ class IntegrationExchange(models.Model):
                 default="90",
             ),
         )
-        overrides = (
-            self.env["integration.service"]
-            .sudo()
-            .with_context(active_test=False)
-            .search([("log_retention_days", ">", 0)])
-        )
-        overridden_refs = [f"integration.service,{e.id}" for e in overrides]
-
-        for endpoint in overrides:
+        overridden_refs = []
+        for channel in self._channels_with_own_retention():
+            ref = f"{channel._name},{channel.id}"
+            overridden_refs.append(ref)
             self._remove_logs_past_retention(
-                endpoint.log_retention_days,
-                SQL("channel_id = %s", f"integration.service,{endpoint.id}"),
+                channel.log_retention_days, SQL("channel_id = %s", ref)
             )
 
         if default_retention > 0:
@@ -670,6 +666,17 @@ class IntegrationExchange(models.Model):
                 if overridden_refs
                 else SQL("TRUE"),
             )
+
+    def _channels_with_own_retention(self):
+        """Every channel row, of any channel model, that names a retention."""
+        channels = []
+        for model_name, _label in self._selection_channel_models():
+            Model = self.env[model_name].sudo().with_context(active_test=False)
+            if "log_retention_days" in Model._fields:
+                channels.extend(
+                    Model.search([("log_retention_days", ">", 0)])  # noqa: E8507  one query per channel model
+                )
+        return channels
 
     def _remove_logs_past_retention(self, days, scope):
         """Delete expired exchange rows within a supplied SQL scope predicate.

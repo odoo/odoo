@@ -11,15 +11,17 @@ class AutomationRuleController(Controller):
         type="http",
         auth="receiver",
         receiver="automation.rule:_receiver_for_webhook",
+        receiver_event="webhook",
         methods=["GET", "POST"],
         csrf=False,
         save_session=False,
     )
     def call_webhook_http(self, webhook_uuid, **kwargs):
-        rule = request.admission.subject
+        admission = request.admission
+        rule = admission.subject
         data = get_webhook_request_payload()
         try:
-            rule._execute_webhook(data)
+            rule._execute_webhook(data, admission)
         except Exception:
             return request.prepare_json_response({"status": "error"}, status=500)
         return request.prepare_json_response({"status": "ok"}, status=200)

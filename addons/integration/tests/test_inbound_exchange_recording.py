@@ -1,8 +1,10 @@
 import json
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
+
+from .common import open_admission
 
 
 @tagged("post_install", "-at_install", "integration")
@@ -76,26 +78,7 @@ class TestInboundExchangeRecording(TransactionCase):
         self.assertEqual(row.error_message, "handler raised")
 
     def _admit(self, body=b'{"probe": 1}', event_type="probe"):
-        from odoo.addons.integration.tools.admission import Admission
-
-        httprequest = MagicMock()
-        httprequest.method = "POST"
-        httprequest.path = "/probe"
-        httprequest.headers = {"User-Agent": "probe"}
-        mocked = MagicMock()
-        mocked.httprequest = httprequest
-        admission = Admission(
-            gate=self.receiver,
-            subject=self.receiver,
-            body=body,
-            remote_addr="203.0.113.1",
-            event_type=event_type,
-        )
-        with patch(
-            "odoo.addons.integration.models.mixin_integration_receiver.request", mocked
-        ):
-            self.receiver._open_inbound_exchange(admission, event_type)
-        return admission
+        return open_admission(self.receiver, body, event_type)
 
     def test_an_admitted_call_is_a_row_the_handler_can_settle(self):
         admission = self._admit()
@@ -178,3 +161,92 @@ class TestInboundExchangeRecording(TransactionCase):
             self.assertTrue(self.receiver._authenticate_by_scheme({"X-Probe": "yes"}))
             self.assertFalse(self.receiver._authenticate_by_scheme({"X-Probe": "no"}))
         self.assertEqual(calls, ["yes", "no"])
+
+
+@tagged("post_install", "-at_install", "integration")
+class TestGateRow(TransactionCase):
+    """What every gate does with the row it opens, receiver or not: names the
+    event from the body, withholds a poll, keeps a withheld call's failure,
+    takes the handler's annotations and stamps the duration."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.receiver = cls.env["integration.receiver"].create(
+            {"name": "Gate probe", "code": "gate_probe", "auth_type": "none"}
+        )
+
+    def _rows(self):
+        return (
+            self.env["integration.exchange"]
+            .sudo()
+            .search([("channel_id", "=", f"integration.receiver,{self.receiver.id}")])
+        )
+
+    def test_the_body_names_the_event(self):
+        def from_body(self, admission, event_type):
+            return f"{event_type}:{admission.payload['kind']}"
+
+        with patch.object(type(self.receiver), "_inbound_event_type", from_body):
+            admission = open_admission(self.receiver, b'{"kind": "ping"}', "probe")
+
+        self.assertEqual(admission.event_type, "probe:ping")
+        self.assertEqual(self._rows().event_type, "probe:ping")
+
+    def test_a_withheld_call_leaves_no_row_and_its_failure_leaves_one(self):
+        with patch.object(
+            type(self.receiver), "_inbound_event_logged", lambda self, event: False
+        ):
+            admission = open_admission(self.receiver)
+            self.assertIsNone(admission.exchange)
+            admission.annotate(user_id=self.env.user.id)
+            admission.settle()
+            self.env.cr.precommit.run()
+            self.assertFalse(self._rows(), "a successful poll is not worth a row")
+
+            admission.settle("the handler could not")
+            self.env.cr.precommit.run()
+
+        row = self._rows()
+        self.assertEqual(len(row), 1)
+        self.assertEqual(
+            (row.state, row.error_message, row.event_type, row.user_id),
+            ("failed", "the handler could not", "probe", self.env.user),
+        )
+        self.assertGreaterEqual(row.duration_ms, 0)
+
+    def test_the_handler_annotates_the_row_and_settling_times_it(self):
+        admission = open_admission(self.receiver)
+        admission.annotate(user_id=self.env.user.id, origin_model="res.partner")
+        admission.settle()
+
+        row = admission.exchange
+        self.assertEqual(
+            (row.user_id, row.origin_model), (self.env.user, "res.partner")
+        )
+        self.assertEqual(row.state, "success")
+        self.assertGreater(row.duration_ms, 0)
+
+    def test_a_settled_error_is_masked(self):
+        admission = open_admission(self.receiver)
+        admission.settle("token=hunter2 refused")
+
+        self.assertNotIn("hunter2", admission.exchange.error_message)
+
+    def test_a_gate_s_own_retention_wins_over_the_default(self):
+        from datetime import timedelta
+
+        from odoo import fields
+
+        self.env["ir.config_parameter"].sudo().set_param(
+            "integration.log_retention_days", "90"
+        )
+        self.receiver.log_retention_days = 7
+        old = open_admission(self.receiver).exchange
+        old.date_completed = fields.Datetime.now() - timedelta(days=30)
+        recent = open_admission(self.receiver).exchange
+
+        self.env["integration.exchange"]._gc_old_logs()
+
+        self.assertFalse(old.exists())
+        self.assertTrue(recent.exists())
