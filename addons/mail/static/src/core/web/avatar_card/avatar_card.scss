@@ -16,8 +16,9 @@
 .o_avatar_card {
     --card-bg: #{$popover-bg};
     --card-border-color: #{$popover-border-color};
+    --card-border-radius: #{$popover-border-radius};
+    --card-border-width: #{$popover-border-width};
 
-    border-radius: var(--popover-inner-border-radius, #{$border-radius});
     overflow: hidden;
 
     max-width: 380px;
@@ -28,8 +29,4 @@
     .o_card_user_infos a:focus-visible {
         outline: none;
     }
-}
-
-.o_popover:has(.o_card_avatar) {
-    --popover-border-color: #{$gray-300};
 }
