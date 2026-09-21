@@ -19,7 +19,7 @@ _logger = logging.getLogger(__name__)
 
 JOB_CHANNEL = "speech"
 
-STATES = [
+TRANSCRIPT_STATES = [
     ("none", "Not transcribed"),
     ("queued", "Queued"),
     ("running", "Transcribing"),
@@ -31,38 +31,38 @@ STATES = [
 class IrAttachment(models.Model):
     _inherit = "ir.attachment"
 
-    speech_state = fields.Selection(
-        selection=STATES,
+    transcript_state = fields.Selection(
+        selection=TRANSCRIPT_STATES,
         default="none",
         index="btree_not_null",
         copy=False,
         readonly=True,
     )
-    speech_cues = fields.Json(
+    transcript_cues = fields.Json(
         copy=False,
         readonly=True,
         help="What is said in this recording, with the moment each phrase "
         "starts and ends.",
     )
-    speech_language = fields.Char(
+    transcript_language = fields.Char(
         copy=False,
         readonly=True,
     )
-    speech_engine = fields.Char(
+    transcript_engine = fields.Char(
         copy=False,
         readonly=True,
     )
-    speech_error = fields.Text(
+    transcript_error = fields.Text(
         copy=False,
         readonly=True,
     )
-    speech_transcript = fields.Text(compute="_compute_speech_transcript")
+    transcript_text = fields.Text(compute="_compute_transcript_text")
     can_transcribe = fields.Boolean(compute="_compute_can_transcribe")
 
-    @api.depends("speech_cues")
-    def _compute_speech_transcript(self) -> None:
+    @api.depends("transcript_cues")
+    def _compute_transcript_text(self) -> None:
         for attachment in self:
-            attachment.speech_transcript = cues_as_text(attachment._speech_cues())
+            attachment.transcript_text = cues_as_text(attachment._transcript_cues())
 
     @api.depends("mimetype")
     def _compute_can_transcribe(self) -> None:
@@ -73,7 +73,7 @@ class IrAttachment(models.Model):
         for attachment in self:
             attachment.can_transcribe = readable.get(attachment.mimetype, False)
 
-    def _speech_cues(self) -> list[Cue]:
+    def _transcript_cues(self) -> list[Cue]:
         self.check_singleton()
         return [
             Cue(
@@ -83,12 +83,12 @@ class IrAttachment(models.Model):
                 speaker=cue.get("speaker", ""),
                 confidence=cue.get("confidence", 0.0),
             )
-            for cue in self.speech_cues or []
+            for cue in self.transcript_cues or []
         ]
 
-    def _speech_vtt(self) -> str:
+    def _transcript_vtt(self) -> str:
         self.check_singleton()
-        cues = self._speech_cues()
+        cues = self._transcript_cues()
         return Document.of(cues=cues).data.decode() if cues else ""
 
     def action_transcribe(self) -> bool:
@@ -111,7 +111,7 @@ class IrAttachment(models.Model):
             identity_key=f"speech.transcribe.{self.id}",
             name=f"Transcribe {self.name or self.id}",
         )._job_transcribe(language=language)
-        self.sudo().write({"speech_state": "queued", "speech_error": False})
+        self.sudo().write({"transcript_state": "queued", "transcript_error": False})
         return job
 
     @api.job(channel=JOB_CHANNEL, max_retries=1)
@@ -130,20 +130,22 @@ class IrAttachment(models.Model):
                     "No speech engine reads %(mimetype)s.", mimetype=mimetype or "?"
                 )
             )
-        self.sudo().write({"speech_state": "running"})
+        self.sudo().write({"transcript_state": "running"})
         try:
-            cues, engine = self._speech_read(language, prompt)
+            cues, engine = self._read_transcript(language, prompt)
         except Exception as error:
             _logger.warning(
                 "Could not transcribe attachment %s: %s", self.id, error, exc_info=True
             )
-            self.sudo().write({"speech_state": "failed", "speech_error": str(error)})
-            self._speech_notify_owner(transcribed=False)
+            self.sudo().write(
+                {"transcript_state": "failed", "transcript_error": str(error)}
+            )
+            self._notify_transcript_owner(transcribed=False)
             return None
         self.sudo().write(
             {
-                "speech_state": "done",
-                "speech_cues": [
+                "transcript_state": "done",
+                "transcript_cues": [
                     {
                         "start": cue.start,
                         "end": cue.end,
@@ -153,20 +155,20 @@ class IrAttachment(models.Model):
                     }
                     for cue in cues
                 ],
-                "speech_engine": engine,
-                "speech_language": language or self.speech_language,
-                "speech_error": False,
+                "transcript_engine": engine,
+                "transcript_language": language or self.transcript_language,
+                "transcript_error": False,
             }
         )
-        self._speech_index(cues)
-        self._speech_notify_owner(transcribed=True)
+        self._index_transcript(cues)
+        self._notify_transcript_owner(transcribed=True)
         return cues
 
-    def _speech_read(
+    def _read_transcript(
         self, language: str | None = None, prompt: str | None = None
     ) -> tuple[list[Cue], str]:
         self.check_singleton()
-        document = self._speech_document(language=language, prompt=prompt)
+        document = self._transcript_document(language=language, prompt=prompt)
         cues = document.cues
         failure = engine_error(document)
         if failure:
@@ -174,18 +176,20 @@ class IrAttachment(models.Model):
         engine = next(iter(transcription_engines(document.mimetype, self.env)), None)
         return cues, engine.name if engine else ""
 
-    def _speech_document(self, language: str | None = None, **options: Any) -> Document:
+    def _transcript_document(
+        self, language: str | None = None, **options: Any
+    ) -> Document:
         self.check_singleton()
         document = self._as_document(
             read_up_to=EXPENSIVE,
-            language=language or self.speech_language or None,
+            language=language or self.transcript_language or None,
             **options,
         )
         if document is None:
             raise UserError(self.env._("This attachment holds no data to transcribe."))
         return document
 
-    def _speech_index(self, cues: list[Cue]) -> None:
+    def _index_transcript(self, cues: list[Cue]) -> None:
         self.check_singleton()
         text = cues_as_text(cues)
         if not text:
@@ -198,7 +202,7 @@ class IrAttachment(models.Model):
         )
         self.invalidate_recordset(["index_content"])
 
-    def _speech_notify_owner(self, transcribed: bool) -> None:
+    def _notify_transcript_owner(self, transcribed: bool) -> None:
         self.check_singleton()
         segments = (
             self.env["media.segment"].sudo().search([("attachment_id", "=", self.id)])
@@ -212,7 +216,7 @@ class IrAttachment(models.Model):
                 if done is None:
                     continue
                 done(self)
-                if owner.transcription_state == "done":
+                if owner.timeline_transcript_state == "done":
                     owner._on_media_fully_transcribed()
             else:
                 failed = getattr(owner, "_on_media_transcription_failed", None)

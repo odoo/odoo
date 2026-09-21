@@ -4,8 +4,8 @@ from odoo import fields, models
 class MediaSegment(models.Model):
     _inherit = "media.segment"
 
-    transcription_state = fields.Selection(
-        related="attachment_id.speech_state",
+    transcript_state = fields.Selection(
+        related="attachment_id.transcript_state",
         string="Transcription",
     )
-    speech_cues = fields.Json(related="attachment_id.speech_cues")
+    transcript_cues = fields.Json(related="attachment_id.transcript_cues")

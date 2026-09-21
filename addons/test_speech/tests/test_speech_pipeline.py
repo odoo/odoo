@@ -21,7 +21,7 @@ class TestTranscription(SpeechCase):
         attachment = self._audio()
         self.assertTrue(attachment.can_transcribe)
         attachment._transcribe()
-        self.assertEqual(attachment.speech_state, "done")
+        self.assertEqual(attachment.transcript_state, "done")
 
     def test_a_container_naming_its_codec_is_still_that_container(self):
         self._register(StubTranscription())
@@ -45,12 +45,10 @@ class TestTranscription(SpeechCase):
         self._register(StubTranscription())
         attachment = self._audio()
         attachment._transcribe()
-        self.assertEqual(attachment.speech_state, "done")
-        self.assertEqual(len(attachment.speech_cues), 2)
-        self.assertEqual(attachment.speech_cues[1]["speaker"], "Alice")
-        self.assertEqual(
-            attachment.speech_transcript, "the invoice went out\non Tuesday"
-        )
+        self.assertEqual(attachment.transcript_state, "done")
+        self.assertEqual(len(attachment.transcript_cues), 2)
+        self.assertEqual(attachment.transcript_cues[1]["speaker"], "Alice")
+        self.assertEqual(attachment.transcript_text, "the invoice went out\non Tuesday")
 
     def test_a_transcript_becomes_what_the_attachment_is_indexed_by(self):
         self._register(StubTranscription())
@@ -71,7 +69,7 @@ class TestTranscription(SpeechCase):
         self._register(StubTranscription())
         attachment = self._audio()
         attachment._transcribe()
-        self.assertEqual(attachment.speech_engine, "stub_transcription")
+        self.assertEqual(attachment.transcript_engine, "stub_transcription")
 
     def test_the_engine_is_handed_the_language_that_was_asked_for(self):
         engine = self._register(StubTranscription())
@@ -87,22 +85,22 @@ class TestTranscription(SpeechCase):
         self._register(StubTranscription(error=ValueError("vendor said no")))
         attachment = self._audio()
         self.assertIsNone(attachment._transcribe())
-        self.assertEqual(attachment.speech_state, "failed")
-        self.assertIn("vendor said no", attachment.speech_error)
+        self.assertEqual(attachment.transcript_state, "failed")
+        self.assertIn("vendor said no", attachment.transcript_error)
 
     def test_an_engine_outage_is_not_reported_as_a_silent_recording(self):
         self._register(StubTranscription(error=ValueError("vendor is down")))
         attachment = self._audio()
         attachment._transcribe()
-        self.assertNotEqual(attachment.speech_state, "done")
-        self.assertFalse(attachment.speech_cues)
+        self.assertNotEqual(attachment.transcript_state, "done")
+        self.assertFalse(attachment.transcript_cues)
 
     def test_a_recording_with_nothing_said_is_transcribed_and_empty(self):
         self._register(StubTranscription(cues=[]))
         attachment = self._audio()
         attachment._transcribe()
-        self.assertEqual(attachment.speech_state, "done")
-        self.assertEqual(attachment.speech_transcript, "")
+        self.assertEqual(attachment.transcript_state, "done")
+        self.assertEqual(attachment.transcript_text, "")
 
     def test_transcribing_what_no_engine_reads_is_refused_by_name(self):
         attachment = self._audio()
@@ -117,7 +115,7 @@ class TestTranscription(SpeechCase):
         engine = self._register(StubTranscription())
         attachment = self._audio()
         attachment.action_transcribe()
-        self.assertEqual(attachment.speech_state, "queued")
+        self.assertEqual(attachment.transcript_state, "queued")
         self.assertEqual(engine.calls, [])
 
     def test_the_queued_job_names_the_method_that_transcribes(self):
@@ -147,10 +145,8 @@ class TestTranscription(SpeechCase):
         )
         target = self.env[job.model_name].browse(job.record_ids)
         getattr(target, job.method_name)(**(job.kwargs or {}))
-        self.assertEqual(attachment.speech_state, "done")
-        self.assertEqual(
-            attachment.speech_transcript, "the invoice went out\non Tuesday"
-        )
+        self.assertEqual(attachment.transcript_state, "done")
+        self.assertEqual(attachment.transcript_text, "the invoice went out\non Tuesday")
 
     def test_queueing_the_same_recording_twice_does_not_queue_it_twice(self):
         self._register(StubTranscription())
@@ -169,7 +165,7 @@ class TestTranscription(SpeechCase):
         self._register(StubTranscription())
         attachment = self._audio()
         attachment._transcribe()
-        vtt = attachment._speech_vtt()
+        vtt = attachment._transcript_vtt()
         self.assertTrue(vtt.startswith("WEBVTT"))
         self.assertIn("00:00:01.500 --> 00:00:03.000", vtt)
         self.assertIn("<v Alice>on Tuesday", vtt)
@@ -200,7 +196,7 @@ class TestTimeline(SpeechCase):
         recording = self._recording()
         self.assertEqual(recording.media_duration_ms, 0)
         self.assertFalse(recording.has_media)
-        self.assertEqual(recording.transcription_state, "none")
+        self.assertEqual(recording.timeline_transcript_state, "none")
 
     def test_the_transcript_is_its_segments_in_order(self):
         self._register(StubTranscription())
@@ -212,7 +208,7 @@ class TestTimeline(SpeechCase):
         early._transcribe()
         late._transcribe()
         self.assertEqual(
-            recording.media_transcript,
+            recording.timeline_transcript,
             "the invoice went out\non Tuesday\nthe invoice went out\non Tuesday",
         )
 
@@ -223,7 +219,7 @@ class TestTimeline(SpeechCase):
         recording._add_media_segment(first, 0, 2000)
         recording._add_media_segment(self._audio("b.mp3"), 2000, 4000)
         first._transcribe()
-        self.assertEqual(recording.transcription_state, "none")
+        self.assertEqual(recording.timeline_transcript_state, "none")
 
     def test_a_failed_segment_shows_over_a_done_one(self):
         recording = self._recording()
@@ -231,9 +227,9 @@ class TestTimeline(SpeechCase):
         bad = self._audio("b.mp3")
         recording._add_media_segment(good, 0, 2000)
         recording._add_media_segment(bad, 2000, 4000)
-        good.sudo().speech_state = "done"
-        bad.sudo().speech_state = "failed"
-        self.assertEqual(recording.transcription_state, "failed")
+        good.sudo().transcript_state = "done"
+        bad.sudo().transcript_state = "failed"
+        self.assertEqual(recording.timeline_transcript_state, "failed")
 
     def test_the_owner_is_told_when_a_segment_is_transcribed(self):
         self._register(StubTranscription())
@@ -272,7 +268,7 @@ class TestTimeline(SpeechCase):
         recording._add_media_segment(self._audio("b.mp3"), 2000, 4000)
         recording.action_transcribe_media()
         self.assertEqual(
-            set(recording.segment_ids.attachment_id.mapped("speech_state")),
+            set(recording.segment_ids.attachment_id.mapped("transcript_state")),
             {"queued"},
         )
 
@@ -348,5 +344,5 @@ class TestRoundTrip(SpeechCase):
         self._register(StubTranscription(cues=[Cue(0.0, 1.0, "read this aloud", "")]))
         spoken = self.env["ir.attachment"]._speech_synthesize("read this aloud")
         spoken._transcribe()
-        self.assertEqual(spoken.speech_transcript, "read this aloud")
+        self.assertEqual(spoken.transcript_text, "read this aloud")
         self.assertEqual(CUE_FIXTURE[0].text, "the invoice went out")

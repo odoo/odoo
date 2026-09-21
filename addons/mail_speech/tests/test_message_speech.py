@@ -86,14 +86,14 @@ class TestMessageSpeech(MailCommon):
         _message, attachment = self._voice_message()
         self.assertTrue(attachment.can_transcribe)
         attachment._transcribe()
-        self.assertEqual(attachment.speech_transcript, "left you a note")
+        self.assertEqual(attachment.transcript_text, "left you a note")
 
     def test_the_client_is_told_what_a_voice_message_says(self):
         self._with_transcription()
         message, attachment = self._voice_message()
         fields = attachment._to_store_defaults(None)
-        self.assertIn("speech_transcript", fields)
-        self.assertIn("speech_state", fields)
+        self.assertIn("transcript_text", fields)
+        self.assertIn("transcript_state", fields)
         self.assertIn("can_transcribe", fields)
         self.assertTrue(attachment._speech_messages() >= message)
 
@@ -101,7 +101,7 @@ class TestMessageSpeech(MailCommon):
         self._with_transcription()
         message, attachment = self._voice_message()
         attachment._transcribe()
-        self.assertEqual(attachment.speech_state, "done")
+        self.assertEqual(attachment.transcript_state, "done")
         self.assertIn(message, attachment._speech_messages())
 
     def test_a_message_is_read_aloud_and_the_audio_is_attached_to_it(self):

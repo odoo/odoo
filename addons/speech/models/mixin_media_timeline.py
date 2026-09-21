@@ -5,6 +5,7 @@ import typing
 from odoo import api, fields, models
 
 from ..tools.engines import can_transcribe
+from .ir_attachment import TRANSCRIPT_STATES
 
 if typing.TYPE_CHECKING:
     from odoo.addons.base.models.ir_attachment import IrAttachment
@@ -13,41 +14,35 @@ if typing.TYPE_CHECKING:
 class MixinMediaTimeline(models.AbstractModel):
     _inherit = "mixin.media.timeline"
 
-    media_transcript = fields.Text(compute="_compute_media_transcript")
-    transcription_state = fields.Selection(
-        selection=[
-            ("none", "Not transcribed"),
-            ("queued", "Queued"),
-            ("running", "Transcribing"),
-            ("done", "Transcribed"),
-            ("failed", "Failed"),
-        ],
-        compute="_compute_transcription_state",
+    timeline_transcript = fields.Text(compute="_compute_timeline_transcript")
+    timeline_transcript_state = fields.Selection(
+        selection=TRANSCRIPT_STATES,
+        compute="_compute_timeline_transcript_state",
     )
 
-    @api.depends("segment_ids.attachment_id.speech_cues")
-    def _compute_media_transcript(self) -> None:
+    @api.depends("segment_ids.attachment_id.transcript_cues")
+    def _compute_timeline_transcript(self) -> None:
         for record in self:
             spoken = [
-                segment.attachment_id.speech_transcript
+                segment.attachment_id.transcript_text
                 for segment in record.segment_ids.sorted("start_ms")
             ]
-            record.media_transcript = "\n".join(part for part in spoken if part)
+            record.timeline_transcript = "\n".join(part for part in spoken if part)
 
-    @api.depends("segment_ids.attachment_id.speech_state")
-    def _compute_transcription_state(self) -> None:
+    @api.depends("segment_ids.attachment_id.transcript_state")
+    def _compute_timeline_transcript_state(self) -> None:
         for record in self:
-            states = set(record.segment_ids.attachment_id.mapped("speech_state"))
+            states = set(record.segment_ids.attachment_id.mapped("transcript_state"))
             if "running" in states:
-                record.transcription_state = "running"
+                record.timeline_transcript_state = "running"
             elif "queued" in states:
-                record.transcription_state = "queued"
+                record.timeline_transcript_state = "queued"
             elif "failed" in states:
-                record.transcription_state = "failed"
+                record.timeline_transcript_state = "failed"
             elif states and states == {"done"}:
-                record.transcription_state = "done"
+                record.timeline_transcript_state = "done"
             else:
-                record.transcription_state = "none"
+                record.timeline_transcript_state = "none"
 
     def action_transcribe_media(self) -> bool:
         for record in self:

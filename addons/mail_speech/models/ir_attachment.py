@@ -16,17 +16,17 @@ class IrAttachment(models.Model):
     def _to_store_defaults(self, target: Store.Target) -> StoreFieldsInput:
         return super()._to_store_defaults(target) + [
             "can_transcribe",
-            "speech_state",
-            "speech_transcript",
+            "transcript_state",
+            "transcript_text",
         ]
 
-    def _speech_notify_owner(self, transcribed: bool) -> None:
-        super()._speech_notify_owner(transcribed)
+    def _notify_transcript_owner(self, transcribed: bool) -> None:
+        super()._notify_transcript_owner(transcribed)
         for attachment in self:
             for message in attachment._speech_messages():
                 Store(bus_channel=message._bus_channel()).add(
                     attachment,
-                    ["speech_state", "speech_transcript"],
+                    ["transcript_state", "transcript_text"],
                 ).bus_send()
 
     def _speech_messages(self) -> models.Model:

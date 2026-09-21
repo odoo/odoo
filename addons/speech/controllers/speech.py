@@ -44,7 +44,9 @@ class SpeechController(http.Controller):
         self, attachment_id: int, access_token: str | None = None
     ) -> Response:
         attachment = self._speech_attachment(attachment_id, access_token)
-        return self._speech_text_response(attachment.sudo()._speech_vtt(), "text/vtt")
+        return self._speech_text_response(
+            attachment.sudo()._transcript_vtt(), "text/vtt"
+        )
 
     @http.route(
         "/speech/attachment/<int:attachment_id>/transcript.txt",
@@ -58,5 +60,5 @@ class SpeechController(http.Controller):
     ) -> Response:
         attachment = self._speech_attachment(attachment_id, access_token)
         return self._speech_text_response(
-            attachment.sudo().speech_transcript, "text/plain"
+            attachment.sudo().transcript_text, "text/plain"
         )

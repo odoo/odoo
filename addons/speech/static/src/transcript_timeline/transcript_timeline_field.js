@@ -19,7 +19,7 @@ export class TranscriptTimelineField extends MediaTimelineField {
 
     /** @param {any} record */
     _toSegment(record) {
-        return { ...super._toSegment(record), cues: record.data.speech_cues ?? [] };
+        return { ...super._toSegment(record), cues: record.data.transcript_cues ?? [] };
     }
 
     /** @returns {Cue[]} */
@@ -47,6 +47,6 @@ registry.category("fields").add("transcript_timeline", {
     supportedTypes: ["one2many"],
     relatedFields: () => [
         ...MEDIA_TIMELINE_FIELDS,
-        { name: "speech_cues", type: "json" },
+        { name: "transcript_cues", type: "json" },
     ],
 });

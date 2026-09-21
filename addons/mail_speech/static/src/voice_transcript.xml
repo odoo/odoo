@@ -3,9 +3,9 @@
 
     <t t-name="mail_speech.VoiceTranscript">
         <div class="o-mail-VoiceTranscript small">
-            <t t-if="props.attachment.speech_transcript">
+            <t t-if="props.attachment.transcript_text">
                 <div class="o-mail-VoiceTranscript-text text-muted fst-italic"
-                     t-esc="props.attachment.speech_transcript" />
+                     t-esc="props.attachment.transcript_text" />
             </t>
             <t t-elif="props.attachment.can_transcribe">
                 <button class="btn btn-link btn-sm p-0 text-muted"

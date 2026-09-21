@@ -58,8 +58,8 @@ test("a transcribed voice message shows what it says", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-VoicePlayer");
     speechArrives(attachmentId, {
-        speech_state: "done",
-        speech_transcript: "left you a note about Tuesday",
+        transcript_state: "done",
+        transcript_text: "left you a note about Tuesday",
     });
     await contains(".o-mail-VoiceTranscript-text", {
         text: "left you a note about Tuesday",
@@ -72,7 +72,7 @@ test("an untranscribed voice message offers to transcribe it", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-VoicePlayer");
-    speechArrives(attachmentId, { can_transcribe: true, speech_state: "none" });
+    speechArrives(attachmentId, { can_transcribe: true, transcript_state: "none" });
     await contains(".o-mail-VoiceTranscript button", { text: "Transcribe" });
 });
 
@@ -82,7 +82,7 @@ test("a voice message being transcribed says so and cannot be asked twice", asyn
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-VoicePlayer");
-    speechArrives(attachmentId, { can_transcribe: true, speech_state: "queued" });
+    speechArrives(attachmentId, { can_transcribe: true, transcript_state: "queued" });
     await contains(".o-mail-VoiceTranscript button:disabled", {
         text: "Transcribing…",
     });
@@ -94,7 +94,7 @@ test("a voice message no engine can read offers nothing", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-VoicePlayer");
-    speechArrives(attachmentId, { can_transcribe: false, speech_state: "none" });
+    speechArrives(attachmentId, { can_transcribe: false, transcript_state: "none" });
     await contains(".o-mail-VoiceTranscript");
     expect(".o-mail-VoiceTranscript button").toHaveCount(0);
 });
@@ -110,7 +110,7 @@ test("asking for a transcript calls the model that queues one", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-VoicePlayer");
-    speechArrives(attachmentId, { can_transcribe: true, speech_state: "none" });
+    speechArrives(attachmentId, { can_transcribe: true, transcript_state: "none" });
     await click(".o-mail-VoiceTranscript button");
     expect(asked).toEqual([[attachmentId]]);
     await contains(".o-mail-VoiceTranscript button:disabled");
@@ -121,11 +121,11 @@ test("a transcript replaces the offer to make one", async () => {
     const { channelId, attachmentId } = voiceMessageIn(pyEnv);
     await start();
     await openDiscuss(channelId);
-    speechArrives(attachmentId, { can_transcribe: true, speech_state: "none" });
+    speechArrives(attachmentId, { can_transcribe: true, transcript_state: "none" });
     await contains(".o-mail-VoiceTranscript button", { text: "Transcribe" });
     speechArrives(attachmentId, {
-        speech_state: "done",
-        speech_transcript: "the invoice went out",
+        transcript_state: "done",
+        transcript_text: "the invoice went out",
     });
     await contains(".o-mail-VoiceTranscript-text", { text: "the invoice went out" });
     expect(".o-mail-VoiceTranscript button").toHaveCount(0);

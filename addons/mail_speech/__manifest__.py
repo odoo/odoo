@@ -1,6 +1,6 @@
 {
     "name": "Discuss - Speech",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.2.0",
     "category": "Productivity/Discuss",
     "summary": "Record a Discuss call, and read back what was said in it",
     "description": """

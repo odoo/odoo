@@ -1,6 +1,6 @@
 {
     "name": "Speech",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.2.0",
     "category": "Hidden",
     "sequence": 10,
     "summary": "Transcription and synthesis for every stored recording",
@@ -35,7 +35,7 @@ attachment's ``index_content`` -- the one place this database already puts "what
 is inside this binary, in words" -- so a recording answers the ordinary
 attachment search with no search code of its own, and every ``extract``
 strategy that reads text starts working on recordings without being told that
-audio exists. ``speech_cues`` holds the same words with their timing, for
+audio exists. ``transcript_cues`` holds the same words with their timing, for
 playback and for subtitles.
 
 Writing speech

@@ -129,12 +129,12 @@ class TestSegmentOwnership(SpeechCase):
     def test_someone_who_cannot_read_the_owner_cannot_read_its_transcript(self):
         recording = self._recording()
         segment = recording._add_media_segment(self._audio(), 0, 1000)
-        segment.attachment_id.sudo().speech_cues = [
+        segment.attachment_id.sudo().transcript_cues = [
             {"start": 0.0, "end": 1.0, "text": "secret", "speaker": ""}
         ]
         portal_env = self.env(user=self._portal_user(), su=False)
         with self.assertRaises(AccessError):
-            segment.with_env(portal_env).read(["speech_cues"])
+            segment.with_env(portal_env).read(["transcript_cues"])
         self.assertFalse(
             portal_env["media.segment"].search([("id", "=", segment.id)]),
             "a segment whose owner is unreadable is not even found",
@@ -173,12 +173,21 @@ class TestTheMixinDoesNotSquatAConsumersFieldNames(SpeechCase):
         self._register(StubTranscription(cues=[Cue(0.0, 1.0, "from the segments", "")]))
         owner._add_media_segment(attachment, 0, 1000)
         attachment._transcribe()
-        self.assertEqual(owner.media_transcript, "from the segments")
+        self.assertEqual(owner.timeline_transcript, "from the segments")
         self.assertFalse(owner.transcript)
 
     def test_no_mixin_field_takes_a_bare_name_a_consumer_would_plausibly_own(self):
         declared = set(self.env["mixin.media.timeline"]._fields) - set(
             self.env["base"]._fields
         )
-        squatters = {"transcript", "duration", "state", "name", "summary", "status"}
+        squatters = {
+            "transcript",
+            "transcript_text",
+            "transcript_state",
+            "duration",
+            "state",
+            "name",
+            "summary",
+            "status",
+        }
         self.assertEqual(declared & squatters, set())

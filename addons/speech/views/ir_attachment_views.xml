@@ -9,16 +9,22 @@
             <xpath expr="//sheet" position="inside">
                 <group
                     string="Speech"
-                    invisible="not can_transcribe and speech_state == 'none'">
+                    invisible="not can_transcribe and transcript_state == 'none'">
                     <field name="can_transcribe" invisible="1" />
-                    <field name="speech_state" />
-                    <field name="speech_engine" invisible="speech_state != 'done'" />
-                    <field name="speech_language" invisible="speech_state != 'done'" />
-                    <field name="speech_error" invisible="speech_state != 'failed'" />
+                    <field name="transcript_state" />
                     <field
-                        name="speech_transcript"
+                        name="transcript_engine"
+                        invisible="transcript_state != 'done'" />
+                    <field
+                        name="transcript_language"
+                        invisible="transcript_state != 'done'" />
+                    <field
+                        name="transcript_error"
+                        invisible="transcript_state != 'failed'" />
+                    <field
+                        name="transcript_text"
                         widget="text"
-                        invisible="speech_state != 'done'" />
+                        invisible="transcript_state != 'done'" />
                 </group>
             </xpath>
             <xpath expr="//sheet" position="before">
@@ -27,7 +33,7 @@
                         name="action_transcribe"
                         type="object"
                         string="Transcribe"
-                        invisible="not can_transcribe or speech_state in ('queued', 'running')"
+                        invisible="not can_transcribe or transcript_state in ('queued', 'running')"
                         class="btn-primary" />
                 </header>
             </xpath>

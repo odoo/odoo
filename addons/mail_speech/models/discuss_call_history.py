@@ -32,7 +32,7 @@ class DiscussCallHistory(models.Model):
         for history in self:
             history.channel_id._bus_send(
                 "discuss.call.history/transcribed",
-                {"id": history.id, "transcript": history.media_transcript},
+                {"id": history.id, "transcript": history.timeline_transcript},
             )
 
     def _on_media_transcribed(self, attachment: IrAttachment) -> None:

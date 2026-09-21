@@ -90,7 +90,7 @@ class TestUploadRoute(HttpCase):
         self._start()
         self._post()
         segment = self.env["media.segment"].search([], limit=1)
-        self.assertEqual(segment.attachment_id.speech_state, "queued")
+        self.assertEqual(segment.attachment_id.transcript_state, "queued")
 
     def test_a_file_that_is_not_a_recording_is_refused(self):
         self._join()

@@ -75,8 +75,8 @@ class TestCallRecording(MailCommon):
     def test_a_transcribed_call_reads_back_as_one_transcript(self):
         segment = self._record(self._recorder(), 0, 5000)
         segment.attachment_id._transcribe()
-        self.assertEqual(segment._owner().media_transcript, "can you hear me")
-        self.assertEqual(segment._owner().transcription_state, "done")
+        self.assertEqual(segment._owner().timeline_transcript, "can you hear me")
+        self.assertEqual(segment._owner().timeline_transcript_state, "done")
 
     def test_what_was_said_in_a_call_is_searchable(self):
         segment = self._record(self._recorder(), 0, 5000)
@@ -93,7 +93,7 @@ class TestCallRecording(MailCommon):
         history = self.env["discuss.call.history"]
         for field in (
             "segment_ids",
-            "media_transcript",
+            "timeline_transcript",
             "media_duration_ms",
             "has_media",
         ):

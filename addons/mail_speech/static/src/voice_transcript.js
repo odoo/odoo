@@ -14,7 +14,7 @@ export class VoiceTranscript extends Component {
 
     /** @returns {boolean} */
     get isPending() {
-        return ["queued", "running"].includes(this.props.attachment.speech_state);
+        return ["queued", "running"].includes(this.props.attachment.transcript_state);
     }
 
     /** @returns {string} */
@@ -22,14 +22,14 @@ export class VoiceTranscript extends Component {
         if (this.isPending) {
             return _t("Transcribing…");
         }
-        if (this.props.attachment.speech_state === "failed") {
+        if (this.props.attachment.transcript_state === "failed") {
             return _t("Could not transcribe");
         }
         return _t("Transcribe");
     }
 
     async onClickTranscribe() {
-        this.props.attachment.speech_state = "queued";
+        this.props.attachment.transcript_state = "queued";
         await this.orm.call("ir.attachment", "action_transcribe", [
             [this.props.attachment.id],
         ]);
