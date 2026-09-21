@@ -22,24 +22,13 @@ class HrEmployee(models.Model):
     hr_icon_display = fields.Selection(selection_add=[('presence_home', 'At Home'),
                                                       ('presence_office', 'At Office'),
                                                       ('presence_other', 'At Other')])
+    today_actual_location_id = fields.Many2one(
+        'hr.work.location',
+        string="Today's Location",
+        compute='_compute_today_actual_location',
+        store=True,
+    )
     today_location_name = fields.Char()
-
-    @api.model
-    def _get_current_day_location_field(self):
-        return DAYS[fields.Date.today().weekday()]
-
-    # hack to allow groupby on today's location. Since there are 7 different fields, we have to use a placeholder
-    # in the search view and replace it with the correct field every time the views are fetched.
-    @api.model
-    def get_views(self, views, options=None):
-        res = super().get_views(views, options)
-        dayfield = self._get_current_day_location_field()
-        if 'search' in res['views']:
-            res['views']['search']['arch'] = res['views']['search']['arch'].replace('today_location_name', dayfield)
-        if 'list' in res['views']:
-            res['views']['list']['arch'] = res['views']['list']['arch'].replace('work_location_name', dayfield)
-        res["models"][self._name]["fields"].update(self.fields_get([dayfield]))
-        return res
 
     def _compute_exceptional_location_id(self):
         today = fields.Date.today()
@@ -51,6 +40,13 @@ class HrEmployee(models.Model):
 
         for employee in self:
             employee.exceptional_location_id = employee_work_locations.get(employee.id, False)
+
+    @api.depends('work_location_id', *DAYS)
+    def _compute_today_actual_location(self):
+        dayfield = self._get_current_day_location_field()
+        for employee in self:
+            specific_location = employee[dayfield]
+            employee.today_actual_location_id = specific_location or employee.work_location_id
 
     @api.depends(*DAYS, 'exceptional_location_id')
     def _compute_presence_icon(self):
@@ -65,14 +61,27 @@ class HrEmployee(models.Model):
 
     @api.depends(*DAYS, "exceptional_location_id")
     def _compute_work_location_name(self):
-        dayfield = self.env['hr.employee']._get_current_day_location_field()
+        dayfield = self.env['hr.employee'].today_actual_location_id
         for employee in self:
-            current_location = employee.exceptional_location_id or employee[dayfield]
+            current_location = employee.exceptional_location_id or dayfield
             employee.work_location_name = current_location.name
 
     @api.depends(*DAYS, "exceptional_location_id")
     def _compute_work_location_type(self):
-        dayfield = self.env['hr.employee']._get_current_day_location_field()
+        dayfield = self.env['hr.employee'].today_actual_location_id
         for employee in self:
-            current_location = employee.exceptional_location_id or employee[dayfield]
+            current_location = employee.exceptional_location_id or dayfield
             employee.work_location_type = current_location.location_type
+
+    @api.model
+    def _get_current_day_location_field(self):
+        return DAYS[fields.Date.today().weekday()]
+
+    @api.model
+    def _cron_update_today_location(self):
+        """ Method triggered by the cron job every night at midnight to refresh the day """
+        # We search for all employees who have a schedule set (or simply all active)
+        employees = self.search([('active', '=', True)])
+
+        # Triggering the compute method to refresh the stored column in the database
+        employees._compute_today_actual_location()
