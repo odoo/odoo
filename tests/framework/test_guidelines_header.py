@@ -68,12 +68,17 @@ class TestTheHeaderStatesTheNewestChange:
         of 6.16's reserved-row reading", "after 6.13 drained the abolished
         verbs") both resolve to it by proximity.
 
-        The Change protocol makes an Appendix D row the record of a rule
-        change, so a number that names two different changes cannot be cited
-        -- but renumbering seven historical rows, with no room between 6.25
-        and 6.26 for them, is the team's call and not a test's. This pins the
-        damage instead: an eighth collision fails here, and so does a repair,
-        which is the point at which someone should delete this test.
+        Renumbering was measured and rejected, and Appendix D's own opening
+        now records that: the seven rows need slots between 6.26 and 6.25 and
+        there are none, so an integer re-sequence cascades over 32 rows --
+        and five commit bodies cite these numbers, where a body cannot be
+        amended on a shared branch. Each citation would then resolve to a
+        DIFFERENT change rather than to nothing, which is worse than an
+        ambiguity a reader can see.
+
+        So this pins the damage instead: an eighth collision fails here, and
+        so does a repair, the latter being the point at which this test and
+        the note it guards should both go.
         """
         appendix = guide[guide.index("Appendix D — Document history") :]
         seen: dict[str, int] = {}

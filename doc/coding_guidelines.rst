@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.60
+:Version: 6.61
 :Date: 2026-09-21
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -8759,6 +8759,30 @@ Appendix D — Document history
 
 One row per change, one clause. The argument lives in the section it moved.
 
+**6.10 through 6.16 each name two changes, and this is recorded rather than
+repaired** ``[measured 2026-09-21]``. Two §2.4 campaigns ran at once — one over
+``addons/`` (stock, point_of_sale, project, mrp, hr), one over the core
+packages (base, http, db, cli) — and each numbered its rows from 6.10, so
+fourteen rows carry seven numbers. The ``addons`` block sits between 6.26 and
+6.25; the core block is in its own descending place below 6.17.
+
+**Disambiguate by scope, not by date**: **twelve of the fourteen rows are dated
+2026-08-31** — all seven of the core block and five of the addons one — so the
+date separates only the addons 6.16 and 6.15 and nothing else. Every row names
+the tree it swept in its first clause, and that is the discriminator.
+
+Renumbering was measured and rejected. The seven rows need slots between 6.26
+and 6.25 and there are none, so any integer re-sequence cascades: **32 rows
+down to 6.0**, against 16 free slots in the window. Worse, the numbers are
+cited from commit bodies — five of them — and a commit body cannot be amended
+on a shared branch, so a renumber leaves each citation resolving **to a
+different change** rather than to nothing. Ambiguity a reader can see beats a
+silent redirection.
+
+``tests/framework/test_guidelines_header.py`` pins exactly these seven, so an
+eighth collision fails and so does a repair, the latter being the point at
+which that test should go.
+
 .. list-table::
    :header-rows: 1
    :widths: 8 12 80
@@ -8766,6 +8790,13 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.61
+     - 2026-09-21
+     - Appendix D states its own 6.10-6.16 collision: two §2.4 campaigns
+       numbered from the same point, disambiguated by scope because five rows
+       of each share a date. Renumbering priced at 32 cascading rows and five
+       unamendable commit-body citations left pointing at different changes,
+       and rejected on that.
    * - 6.60
      - 2026-09-21
      - §1.4/commit-citation: a machine doc's citation of a live method is
