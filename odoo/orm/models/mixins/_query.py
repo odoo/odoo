@@ -269,9 +269,9 @@ class _QueryMixin(_ModelStubs):
         *path_fnames, last_fname = field.related.split(".")
         for path_fname in path_fnames:
             path_field = model._fields[path_fname]
-            if not path_field.is_many2one:
+            if not (path_field.is_many2one or path_field.is_one2one):
                 raise ValueError(
-                    f"Cannot convert {field} (related={field.related}) to SQL because {path_fname} is not a Many2one"
+                    f"Cannot convert {field} (related={field.related}) to SQL because {path_fname} is not a Many2one or a One2one"
                 )
             model, alias = path_field.join(model, alias, query)
 
@@ -314,6 +314,16 @@ class _QueryMixin(_ModelStubs):
                     f"{field_expr!r}: a property of a field that composes its own SQL"
                 )
             return getattr(self, field.value_sql)(field, alias, query)
+
+        if field.is_one2one:
+            # no column on this side: the value is the id of the one comodel
+            # row whose unique inverse names this row
+            if property_name or query is None:
+                raise ValueError(
+                    f"{field_expr!r}: a One2one converts to SQL only as itself, with a query"
+                )
+            _comodel, coalias = field.join(self, alias, query)
+            return SQL.identifier(coalias, "id")
 
         if not property_name and alias == self._table:
             # proven by the first fetch of the column to be exactly this

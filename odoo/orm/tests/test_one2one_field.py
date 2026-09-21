@@ -95,3 +95,37 @@ def test_a_many2one_related_may_end_on_a_one2one():
         assert field.type == "many2one"
         assert field.comodel_name == "o.seat"
         assert field.related_field is env["o.holder"]._fields["seat_id"]
+
+
+def test_a_one2one_converts_to_sql_through_its_inverse():
+    with model_test_env(Seat, Holder) as env:
+        holder = env["o.holder"]
+        query = holder._as_query()
+        sql = holder._field_to_sql("o_holder", "seat_id", query)
+        coalias = sql.code.strip('"').split('"."')[0]
+        assert sql.code == f'"{coalias}"."id"'
+        from_clause = query.from_clause.code
+        assert "LEFT JOIN" in from_clause
+        assert f'"{coalias}"."holder_id" = "o_holder"."id"' in from_clause
+        # asking twice reuses the join rather than stacking a second one
+        holder._field_to_sql("o_holder", "seat_id", query)
+        assert query.from_clause.code.count("LEFT JOIN") == 1
+
+
+def test_a_related_through_a_one2one_converts_to_sql():
+    class Pass(models.Model):
+        _name = "o.pass"
+        _module = _MOD + "_pass"
+        _description = "pass"
+        _log_access = False
+
+        holder_id = fields.Many2one("o.holder")
+        seat_id = fields.Many2one(related="holder_id.seat_id")
+
+    with model_test_env(Seat, Holder, Pass) as env:
+        model = env["o.pass"].sudo()
+        query = model._as_query()
+        sql = model._field_to_sql("o_pass", "seat_id", query)
+        from_clause = query.from_clause.code
+        assert from_clause.count("LEFT JOIN") == 2
+        assert sql.code.endswith('."id"')

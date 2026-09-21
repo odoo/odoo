@@ -3,6 +3,7 @@ from typing import override
 
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
+from odoo.tools import SQL, Query
 from odoo.tools.misc import SENTINEL, Sentinel
 
 from ._commands import CommandDelta
@@ -14,7 +15,7 @@ _debug = DebugLog(__name__)
 if typing.TYPE_CHECKING:
     from collections.abc import Sequence
 
-    from ..._typing import CommandValue
+    from ..._typing import CommandValue, ModelLike
     from ...models import BaseModel
 
 
@@ -61,6 +62,39 @@ class One2one(One2many):
                 f"{self}: {self.comodel_name}.{self.inverse_name} must declare "
                 f'index="unique"; a one2one is held by the database.'
             )
+
+    def join(self, model: ModelLike, alias: str, query: Query) -> tuple[BaseModel, str]:
+        """LEFT JOIN the comodel row whose inverse names this row.
+
+        The inverse's unique index admits at most one such row, so the join
+        never multiplies the query's rows; a row with none reads NULL.
+        """
+        comodel = model.env[self.comodel_name]
+        inverse = comodel._fields[self.inverse_name]
+        if not inverse.store:
+            raise ValueError(
+                f"Cannot convert {self} to SQL because its inverse {inverse} is not stored"
+            )
+        coalias = query.get_table_alias(alias, self.name)
+        _debug.pipeline(
+            "field.one2one.join",
+            model=model._name,
+            field=self.name,
+            comodel=self.comodel_name,
+            alias=alias,
+            coalias=coalias,
+        )
+        query.add_join(
+            "LEFT JOIN",
+            coalias,
+            comodel._table,
+            SQL(
+                "%s = %s",
+                comodel._field_to_sql(coalias, self.inverse_name, query),
+                SQL.identifier(alias, "id"),
+            ),
+        )
+        return (comodel, coalias)
 
     def _fold_target(
         self, model: BaseModel, commands: list[CommandValue]
