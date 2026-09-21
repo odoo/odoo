@@ -143,19 +143,6 @@ cite(
     r"`MAX_CONCURRENCY_BACKOFF_SECONDS`\s*\(@\)",
 )
 
-# risks.md sizes the in-memory read_group the differential walk has to cover.
-memory_backend = ast.parse(pathlib.Path("odoo/orm/runtime/_backend_memory.py").read_text())
-in_memory = next(
-    n for n in ast.walk(memory_backend)
-    if isinstance(n, ast.ClassDef) and n.name == "_InMemoryReadGroup"
-)
-cite(
-    "_InMemoryReadGroup size",
-    in_memory.end_lineno - in_memory.lineno + 1,
-    "risks.md",
-    r"`_InMemoryReadGroup` — @ lines of",
-)
-
 # scenarios.md numbers the load it considers worth naming and says how many
 # it left out. `restore_relations_dropped_by_migrations` landed on 2026-09-20
 # and appeared in neither table for a day: the page said 23 calls where the

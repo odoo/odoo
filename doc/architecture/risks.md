@@ -102,7 +102,7 @@ scope invariant runs the same random walk in memory
 (`base/tests/test_x2many_cache_scope.py::TestX2manyScopeInvariant`); row
 operations (`has_cycle`, the skip-locked increment, the restrict guard) and
 grouping sets are pinned on both, and `_InMemoryReadGroup` — 520 lines of
-grouping, granularity and aggregate emulation — is drawn against PostgreSQL by
+grouping, granularity and aggregate emulation on 2026-09-21 — is drawn against PostgreSQL by
 `test_read_group/tests/test_backend_matrix.py::TestReadGroupBackendWalk`:
 random rows, then random `_read_group` calls (groupbys, granularities,
 aggregates, orders, havings, limits, offsets) run through both tiers and
