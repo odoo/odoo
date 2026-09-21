@@ -9,6 +9,7 @@ import {
     listGroupToTable,
     normalizeColors,
     normalizeRem,
+    toInline,
 } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { enableTransitions } from "@odoo/hoot-mock";
@@ -1568,5 +1569,12 @@ describe("Should not convert blacklisted class to inline styles", () => {
                     "should ignore styles from lower specificity class in favor of blacklisted class",
             }
         );
+    });
+
+    test("should set display block on mx-auto and ms-auto images", async () => {
+        editable.innerHTML = `<img class="mx-auto" src="/web/image/test"/><img class="ms-auto" src="/web/image/test2"/>`;
+        await toInline(editable, []);
+        expect(editable.querySelector("img.mx-auto")).toHaveStyle({ display: "block" });
+        expect(editable.querySelector("img.ms-auto")).toHaveStyle({ display: "block" });
     });
 });
