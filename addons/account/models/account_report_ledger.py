@@ -1,4 +1,5 @@
 import datetime
+import re
 from collections import defaultdict
 from collections.abc import Collection
 
@@ -10,7 +11,11 @@ from odoo.tools import SQL, date_utils
 from odoo.tools.misc import format_date
 
 from .account_report import (
+    ACCOUNT_CODES_ENGINE_SPLIT_REGEX,
+    ACCOUNT_CODES_ENGINE_TERM_REGEX,
+    LEDGER_AUDITABLE_ENGINES,
     UNDISTR_LINE_NAME,
+    report_option_filter_field,
 )
 
 _debug = DebugLog(__name__)
@@ -18,6 +23,180 @@ _debug = DebugLog(__name__)
 
 class AccountReport(models.Model):
     _inherit = "account.report"
+
+    chart_template = fields.Selection(
+        selection=lambda self: self.env[
+            "account.chart.template"
+        ]._select_chart_template(),
+        string="Chart of Accounts",
+    )
+    only_tax_exigible = report_option_filter_field(
+        fields.Boolean, "only_tax_exigible", "Only Tax Exigible Lines"
+    )
+    allow_foreign_vat = report_option_filter_field(
+        fields.Boolean, "allow_foreign_vat", "Allow Foreign VAT"
+    )
+    currency_translation = report_option_filter_field(
+        fields.Selection,
+        "currency_translation",
+        default="cta",
+        selection=[
+            ("current", "Use the most recent rate at the date of the report"),
+            ("cta", "Use CTA"),
+        ],
+    )
+    filter_multi_company = report_option_filter_field(
+        fields.Selection,
+        "filter_multi_company",
+        "Multi-Company",
+        default="selector",
+        selection=[
+            ("selector", "Use Company Selector"),
+            ("tax_units", "Use Tax Units"),
+        ],
+    )
+    filter_show_draft = report_option_filter_field(
+        fields.Boolean,
+        "filter_show_draft",
+        "Draft Entries",
+        default=True,
+    )
+    filter_unreconciled = report_option_filter_field(
+        fields.Boolean,
+        "filter_unreconciled",
+        "Unreconciled Entries",
+        default=False,
+    )
+    filter_journals = report_option_filter_field(
+        fields.Boolean, "filter_journals", "Journals"
+    )
+    filter_analytic = report_option_filter_field(
+        fields.Boolean, "filter_analytic", "Analytic Filter"
+    )
+    filter_hierarchy = report_option_filter_field(
+        fields.Selection,
+        "filter_hierarchy",
+        "Account Groups",
+        default="optional",
+        selection=[
+            ("by_default", "Enabled by Default"),
+            ("optional", "Optional"),
+            ("never", "Never"),
+        ],
+    )
+    filter_account_type = report_option_filter_field(
+        fields.Selection,
+        "filter_account_type",
+        "Account Types",
+        default="disabled",
+        selection=[
+            ("both", "Payable and receivable"),
+            ("payable", "Payable"),
+            ("receivable", "Receivable"),
+            ("disabled", "Disabled"),
+        ],
+    )
+    filter_partner = report_option_filter_field(
+        fields.Boolean, "filter_partner", "Partners"
+    )
+    filter_aml_ir_filters = report_option_filter_field(
+        fields.Boolean,
+        "filter_aml_ir_filters",
+        "Favorite Filters",
+        help="If activated, user-defined filters on journal items can be selected on this report",
+    )
+    filter_budgets = report_option_filter_field(
+        fields.Boolean, "filter_budgets", "Budgets"
+    )
+    availability_condition = fields.Selection(
+        selection_add=[
+            ("country",),
+            ("coa", "Chart of Accounts Matches"),
+            ("always",),
+        ],
+        ondelete={"coa": "set always"},
+    )
+
+    @api.constrains("availability_condition", "chart_template")
+    def _check_availability_condition_chart_template(self):
+        for record in self:
+            if record.availability_condition == "coa" and not record.chart_template:
+                raise ValidationError(
+                    _(
+                        "The Availability is set to 'Chart of Accounts Matches' but the field Chart of Accounts is not set."
+                    )
+                )
+
+    @_debug.perf.timed
+    def _move_tax_tags_to_country(self, country_id):
+        moving_reports = self.filtered(lambda x: x.country_id.id != country_id)
+        tax_tags_expressions = moving_reports.line_ids.expression_ids.filtered(
+            lambda x: x.engine == "tax_tags"
+        )
+        if not tax_tags_expressions:
+            _debug.logic(
+                "tag_move_skipped", report=self, reason="no_tax_tags_expressions"
+            )
+            return
+
+        tag_model = self.env["account.account.tag"].with_context(
+            active_test=False, lang="en_US"
+        )
+        source_tags = tax_tags_expressions._get_matching_tags()
+        if not source_tags:
+            _debug.logic("tag_move_skipped", report=self, reason="no_matching_tags")
+            return
+
+        reports_by_tag = defaultdict(self.env["account.report"].browse)
+        for expression in source_tags._get_related_tax_report_expressions():
+            reports_by_tag[expression._tax_tag_key()] |= (
+                expression.report_line_id.report_id
+            )
+
+        destination_names = set(
+            tag_model.search(
+                [
+                    ("applicability", "=", "taxes"),
+                    ("country_id", "=", country_id),
+                    ("name", "in", source_tags.mapped("name")),
+                ]
+            ).mapped("name")
+        )
+
+        tags_to_move = tag_model.browse()
+        for tag in source_tags:
+            users = reports_by_tag[(tag.name, tag.country_id.id)]
+            if tag.name not in destination_names and users <= moving_reports:
+                tags_to_move += tag
+        _debug.logic(
+            "tags_partitioned",
+            report=self,
+            country_id=country_id,
+            source_tags=source_tags,
+            destination_names=len(destination_names),
+            tags_to_move=tags_to_move,
+        )
+        tags_to_move.write({"country_id": country_id})
+
+        missing_names = (
+            set(source_tags.mapped("name"))
+            - destination_names
+            - set(tags_to_move.mapped("name"))
+        )
+        expression_model = self.env["account.report.expression"]
+        _debug.pipeline(
+            "missing_tags_creating",
+            report=self,
+            country_id=country_id,
+            missing_names=len(missing_names),
+        )
+        tag_model.create(
+            [
+                tag_vals
+                for name in sorted(missing_names)
+                for tag_vals in expression_model._prepare_tag_vals(name, country_id)
+            ]
+        )
 
     horizontal_group_ids = fields.Many2many(
         comodel_name="account.report.horizontal.group",
@@ -123,6 +302,8 @@ class AccountReport(models.Model):
                 actions=actions,
                 active=vals.get("active"),
             )
+        if "country_id" in vals:
+            self._move_tax_tags_to_country(vals["country_id"])
         return super().write(vals)
 
     @api.model_create_multi
@@ -1625,6 +1806,33 @@ class AccountReportLine(models.Model):
     display_custom_groupby_warning = fields.Boolean(
         compute="_compute_display_custom_groupby_warning"
     )
+    account_codes_formula = fields.Char(
+        string="Account Codes Formula Shortcut",
+        inverse="_inverse_account_codes_formula",
+        store=False,
+        copy=False,
+        help="Internal field to shorten expression_ids creation for the account_codes engine",
+    )
+    tax_tags_formula = fields.Char(
+        string="Tax Tags Formula Shortcut",
+        inverse="_inverse_tax_tags_formula",
+        store=False,
+        copy=False,
+        help="Internal field to shorten expression_ids creation for the tax_tags engine",
+    )
+
+    def _inverse_tax_tags_formula(self):
+        self._create_report_expression(engine="tax_tags")
+
+    def _inverse_account_codes_formula(self):
+        self._create_report_expression(engine="account_codes")
+
+    def _get_shortcut_expression_formula(self, engine):
+        if engine == "account_codes" and self.account_codes_formula:
+            return None, self.account_codes_formula
+        if engine == "tax_tags" and self.tax_tags_formula:
+            return None, self.tax_tags_formula
+        return super()._get_shortcut_expression_formula(engine)
 
     def fetch(self, field_names: Collection[str] | None = None) -> None:
         super().fetch(field_names)
@@ -2093,6 +2301,331 @@ class AccountReportLine(models.Model):
 
 class AccountReportExpression(models.Model):
     _inherit = "account.report.expression"
+
+    engine = fields.Selection(
+        selection_add=[
+            ("domain",),
+            ("tax_tags", "Tax Tags"),
+            ("aggregation",),
+            ("account_codes", "Prefix of Account Codes"),
+        ],
+        ondelete={"tax_tags": "cascade", "account_codes": "cascade"},
+    )
+    carryover_target = fields.Char(
+        string="Carry Over To",
+        help="Formula in the form line_code.expression_label. This allows setting the target of the carryover for this expression "
+        "(on a _carryover_*-labeled expression), in case it is different from the parent line.",
+    )
+
+    def _get_auditable_engines(self):
+        return super()._get_auditable_engines() | LEDGER_AUDITABLE_ENGINES
+
+    @api.constrains("formula")
+    def _check_formula_account_codes(self):
+        for expression in self.filtered(lambda x: x.engine == "account_codes"):
+            for token in ACCOUNT_CODES_ENGINE_SPLIT_REGEX.split(
+                expression.formula.replace(" ", "")
+            ):
+                if token:
+                    token_match = ACCOUNT_CODES_ENGINE_TERM_REGEX.match(token)
+                    prefix = token_match and token_match["prefix"]
+                    if not prefix:
+                        expression._raise_formula_error()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        result = super().create(vals_list)
+        result.filtered(lambda x: x.engine == "tax_tags")._create_missing_tax_tags()
+        return result
+
+    def write(self, vals):
+        self._strip_formula_vals(vals)
+
+        tax_tags_expressions = self.filtered(lambda x: x.engine == "tax_tags")
+        _debug.logic(
+            "tax_tags_engine_change",
+            records=self,
+            tax_tags_expressions=tax_tags_expressions,
+            new_engine=vals.get("engine"),
+            formula_changed="formula" in vals,
+        )
+
+        if vals.get("engine") == "tax_tags":
+            (self - tax_tags_expressions)._create_missing_tax_tags(
+                formula_override=vals.get("formula")
+            )
+
+        if vals.get("engine") and vals["engine"] != "tax_tags":
+            tax_tags_expressions._release_tax_tags()
+
+        if "formula" not in vals or (
+            vals.get("engine") and vals["engine"] != "tax_tags"
+        ):
+            _debug.logic(
+                "tag_rename_skipped", records=self, reason="no_tax_tags_formula"
+            )
+            return super().write(vals)
+
+        former_formulas_by_country = defaultdict(list)
+        for expr in tax_tags_expressions:
+            former_formulas_by_country[expr.report_line_id.report_id.country_id].append(
+                expr.formula
+            )
+
+        result = super().write(vals)
+        new_formula = vals["formula"]
+        tag_model = self.env["account.account.tag"]
+        for country, former_formulas_list in former_formulas_by_country.items():
+            new_tag_exists = bool(tag_model._get_tax_tags(new_formula, country.id))
+            _debug.logic(
+                "tag_rename_country",
+                records=self,
+                country=country,
+                new_tag_exists=new_tag_exists,
+                former_formulas=len(former_formulas_list),
+            )
+            for former_formula in former_formulas_list:
+                if new_tag_exists:
+                    break
+                former_tax_tags = tag_model._get_tax_tags(former_formula, country.id)
+                if former_tax_tags and all(
+                    tag_expr in self
+                    for tag_expr in former_tax_tags._get_related_tax_report_expressions()
+                ):
+                    former_tax_tags._update_field_translations(
+                        "name", {"en_US": new_formula.lstrip("-")}
+                    )
+                    _debug.logic(
+                        "former_tag_renamed", records=self, tags=former_tax_tags
+                    )
+                else:
+                    _debug.logic(
+                        "new_tag_created",
+                        records=self,
+                        country=country,
+                        shared_former_tags=former_tax_tags,
+                    )
+                    tag_model.create(self._prepare_tag_vals(new_formula, country.id))
+                new_tag_exists = True
+
+        return result
+
+    @api.constrains("carryover_target", "label")
+    @_debug.perf.timed
+    def _check_carryover_target(self):
+        for expression in self:
+            if not expression.carryover_target:
+                continue
+            if not expression.label.startswith("_carryover_"):
+                _debug.logic(
+                    "carryover_target_rejected",
+                    expression=expression,
+                    label=expression.label,
+                    reason="label_prefix",
+                )
+                raise ValidationError(
+                    _(
+                        "You cannot use the field carryover_target in an expression that does not have the label starting with _carryover_"
+                    )
+                )
+            _line_code, target_label = expression._parse_carryover_target()
+            if not target_label.startswith("_applied_carryover_"):
+                _debug.logic(
+                    "carryover_target_label_rejected",
+                    expression=expression,
+                    target_label=target_label,
+                )
+                raise ValidationError(
+                    _(
+                        "When targeting an expression for carryover, the label of that expression must start with _applied_carryover_"
+                    )
+                )
+
+    def _parse_carryover_target(self):
+        self.check_singleton()
+        parts = self.carryover_target.split(".")
+        if len(parts) != 2 or not all(parts):
+            raise ValidationError(
+                _(
+                    "The carryover target of expression '%(label)s' must have the form "
+                    "'line_code.expression_label', but is '%(target)s'.",
+                    label=self.label,
+                    target=self.carryover_target,
+                )
+            )
+        return parts[0], parts[1]
+
+    def _tax_tag_key(self):
+        self.check_singleton()
+        return (
+            self.formula.lstrip("-"),
+            self.report_line_id.report_id.country_id.id,
+        )
+
+    @api.model
+    @_debug.perf.timed
+    def _search_tax_tags(self, tag_keys):
+        tag_model = self.env["account.account.tag"]
+        if not tag_keys:
+            return tag_model
+        return tag_model.with_context(active_test=False, lang="en_US").search(
+            Domain.OR(
+                Domain(tag_model._get_domain_tax_tags(tag_name, country_id))
+                for tag_name, country_id in tag_keys
+            )
+        )
+
+    @_debug.perf.timed
+    def _create_missing_tax_tags(self, formula_override=None):
+        wanted_keys = set()
+        for expression in self:
+            tag_name, country_id = expression._tax_tag_key()
+            if formula_override:
+                tag_name = formula_override.lstrip("-")
+            wanted_keys.add((tag_name, country_id))
+        existing_keys = {
+            (tag.name, tag.country_id.id) for tag in self._search_tax_tags(wanted_keys)
+        }
+        tags_create_vals = [
+            tag_vals
+            for tag_name, country_id in sorted(
+                wanted_keys - existing_keys, key=lambda key: (key[0], key[1] or 0)
+            )
+            for tag_vals in self._prepare_tag_vals(tag_name, country_id)
+        ]
+        _debug.pipeline(
+            "missing_tax_tags_resolved",
+            expressions=self,
+            wanted=len(wanted_keys),
+            existing=len(existing_keys),
+            to_create=len(tags_create_vals),
+            formula_override=bool(formula_override),
+        )
+        if tags_create_vals:
+            self.env["account.account.tag"].create(tags_create_vals)
+
+    @api.ondelete(at_uninstall=False)
+    @_debug.perf.timed
+    def _unlink_archive_used_tags(self):
+        _debug.lifecycle("_unlink_archive_used_tags", records=self)
+        self._release_tax_tags()
+
+    @_debug.perf.timed
+    def _release_tax_tags(self):
+        expressions_tags = self._get_matching_tags().with_context(lang="en_US")
+        if not expressions_tags:
+            _debug.logic("tag_release_skipped", records=self, reason="no_matching_tags")
+            return
+
+        still_referenced_keys = {
+            expression._tax_tag_key()
+            for expression in expressions_tags.sudo()._get_related_tax_report_expressions()
+            - self
+        }
+        orphan_tags = expressions_tags.filtered(
+            lambda tag: (tag.name, tag.country_id.id) not in still_referenced_keys
+        )
+        if not orphan_tags:
+            _debug.logic(
+                "tag_release_skipped",
+                records=self,
+                reason="all_tags_still_referenced",
+                tags=expressions_tags,
+            )
+            return
+
+        tags_used_by_aml_ids = {
+            tag.id
+            for [tag] in self.env["account.move.line"]
+            .sudo()
+            ._read_group(
+                [("tax_tag_ids", "in", orphan_tags.ids)], groupby=["tax_tag_ids"]
+            )
+        }
+        tags_to_archive = orphan_tags.filtered(
+            lambda tag: tag.id in tags_used_by_aml_ids
+        )
+        tags_to_unlink = orphan_tags - tags_to_archive
+
+        rep_lines_with_tag = (
+            self.env["account.tax.repartition.line"]
+            .sudo()
+            .search([("tag_ids", "in", orphan_tags.ids)])
+        )
+        rep_lines_with_tag.write(
+            {"tag_ids": [Command.unlink(tag.id) for tag in orphan_tags]}
+        )
+        _debug.pipeline(
+            "tags_released",
+            records=self,
+            orphan_tags=orphan_tags,
+            archived=tags_to_archive,
+            unlinked=tags_to_unlink,
+            repartition_lines=rep_lines_with_tag,
+        )
+        tags_to_archive.active = False
+        tags_to_unlink.unlink()
+
+    def _get_matching_tags(self):
+        return self._search_tax_tags(
+            {
+                expression._tax_tag_key()
+                for expression in self
+                if expression.engine == "tax_tags"
+            }
+        )
+
+    @api.model
+    def _prepare_tag_vals(self, tag_name, country_id):
+        return [
+            {
+                "name": tag_name.lstrip("-"),
+                "applicability": "taxes",
+                "country_id": country_id,
+            }
+        ]
+
+    def _get_carryover_target_expression(self, options):
+        self.check_singleton()
+
+        if self.carryover_target:
+            line_code, expr_label = self._parse_carryover_target()
+            _debug.logic(
+                "carryover_target_explicit",
+                expression=self,
+                line_code=line_code,
+                expr_label=expr_label,
+            )
+            return self.env["account.report.expression"].search(
+                [
+                    ("report_line_id.code", "=", line_code),
+                    ("label", "=", expr_label),
+                    ("report_line_id.report_id", "=", self.report_line_id.report_id.id),
+                ],
+                limit=1,
+            )
+
+        main_expr_label = re.sub(r"^_carryover_", "", self.label)
+        target_label = "_applied_carryover_%s" % main_expr_label
+        auto_chosen_target = self.report_line_id.expression_ids.filtered(
+            lambda x: x.label == target_label
+        )
+
+        if not auto_chosen_target:
+            _debug.logic(
+                "carryover_target_not_found", expression=self, target_label=target_label
+            )
+            raise UserError(
+                _(
+                    "Could not determine carryover target automatically for expression %s.",
+                    self.label,
+                )
+            )
+
+        _debug.logic(
+            "carryover_target_auto", expression=self, target=auto_chosen_target
+        )
+        return auto_chosen_target
 
     @_debug.perf.timed
     def action_view_carryover_lines(self, options, column_group_key=None):

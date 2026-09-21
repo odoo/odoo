@@ -1,6 +1,5 @@
 import ast
 import re
-from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -53,9 +52,8 @@ IF_OTHER_EXPR_SUBFORMULA_REGEX = re.compile(
     r"if_other_expr_(above|below)\((?P<line_code>.+)[.](?P<expr_label>.+),.+\)"
 )
 
-AUDITABLE_ENGINES = frozenset(
-    {"tax_tags", "domain", "account_codes", "external", "aggregation"}
-)
+AUDITABLE_ENGINES = frozenset({"domain", "external", "aggregation"})
+LEDGER_AUDITABLE_ENGINES = frozenset({"tax_tags", "account_codes"})
 
 ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX = re.compile(
     r"tag\(((?P<id>\d+)|(?P<ref>\w+\.\w+))\)"
@@ -143,20 +141,10 @@ class AccountReport(models.Model):
         readonly=False,
         help="Create a structured report with multiple sections for convenient navigation and simultaneous printing.",
     )
-    chart_template = fields.Selection(
-        selection=lambda self: self.env[
-            "account.chart.template"
-        ]._select_chart_template(),
-        string="Chart of Accounts",
-    )
     country_id = fields.Many2one(comodel_name="res.country")
-    only_tax_exigible = report_option_filter_field(
-        fields.Boolean, "only_tax_exigible", "Only Tax Exigible Lines"
-    )
     availability_condition = fields.Selection(
         selection=[
             ("country", "Country Matches"),
-            ("coa", "Chart of Accounts Matches"),
             ("always", "Always"),
         ],
         string="Availability",
@@ -170,10 +158,6 @@ class AccountReport(models.Model):
     integer_rounding = fields.Selection(
         selection=[("HALF-UP", "Nearest"), ("UP", "Up"), ("DOWN", "Down")]
     )
-    allow_foreign_vat = report_option_filter_field(
-        fields.Boolean, "allow_foreign_vat", "Allow Foreign VAT"
-    )
-
     default_opening_date_filter = report_option_filter_field(
         fields.Selection,
         "default_opening_date_filter",
@@ -192,43 +176,11 @@ class AccountReport(models.Model):
         ],
     )
 
-    currency_translation = report_option_filter_field(
-        fields.Selection,
-        "currency_translation",
-        default="cta",
-        selection=[
-            ("current", "Use the most recent rate at the date of the report"),
-            ("cta", "Use CTA"),
-        ],
-    )
-
-    filter_multi_company = report_option_filter_field(
-        fields.Selection,
-        "filter_multi_company",
-        "Multi-Company",
-        default="selector",
-        selection=[
-            ("selector", "Use Company Selector"),
-            ("tax_units", "Use Tax Units"),
-        ],
-    )
     filter_date_range = report_option_filter_field(
         fields.Boolean,
         "filter_date_range",
         "Date Range",
         default=True,
-    )
-    filter_show_draft = report_option_filter_field(
-        fields.Boolean,
-        "filter_show_draft",
-        "Draft Entries",
-        default=True,
-    )
-    filter_unreconciled = report_option_filter_field(
-        fields.Boolean,
-        "filter_unreconciled",
-        "Unreconciled Entries",
-        default=False,
     )
     filter_unfold_all = report_option_filter_field(
         fields.Boolean, "filter_unfold_all", "Unfold All"
@@ -249,48 +201,6 @@ class AccountReport(models.Model):
     )
     filter_growth_comparison = report_option_filter_field(
         fields.Boolean, "filter_growth_comparison", "Growth Comparison", default=True
-    )
-    filter_journals = report_option_filter_field(
-        fields.Boolean, "filter_journals", "Journals"
-    )
-    filter_analytic = report_option_filter_field(
-        fields.Boolean, "filter_analytic", "Analytic Filter"
-    )
-    filter_hierarchy = report_option_filter_field(
-        fields.Selection,
-        "filter_hierarchy",
-        "Account Groups",
-        default="optional",
-        selection=[
-            ("by_default", "Enabled by Default"),
-            ("optional", "Optional"),
-            ("never", "Never"),
-        ],
-    )
-    filter_account_type = report_option_filter_field(
-        fields.Selection,
-        "filter_account_type",
-        "Account Types",
-        default="disabled",
-        selection=[
-            ("both", "Payable and receivable"),
-            ("payable", "Payable"),
-            ("receivable", "Receivable"),
-            ("disabled", "Disabled"),
-        ],
-    )
-    filter_partner = report_option_filter_field(
-        fields.Boolean, "filter_partner", "Partners"
-    )
-    filter_aml_ir_filters = report_option_filter_field(
-        fields.Boolean,
-        "filter_aml_ir_filters",
-        "Favorite Filters",
-        help="If activated, user-defined filters on journal items can be selected on this report",
-    )
-
-    filter_budgets = report_option_filter_field(
-        fields.Boolean, "filter_budgets", "Budgets"
     )
 
     @_debug.perf.timed
@@ -416,7 +326,7 @@ class AccountReport(models.Model):
                     )
                 )
 
-    @api.constrains("availability_condition", "country_id", "chart_template")
+    @api.constrains("availability_condition", "country_id")
     @_debug.perf.timed
     def _check_availability_condition(self):
         for record in self:
@@ -426,95 +336,11 @@ class AccountReport(models.Model):
                         "The Availability is set to 'Country Matches' but the field Country is not set."
                     )
                 )
-            if record.availability_condition == "coa" and not record.chart_template:
-                raise ValidationError(
-                    _(
-                        "The Availability is set to 'Chart of Accounts Matches' but the field Chart of Accounts is not set."
-                    )
-                )
 
     @api.onchange("availability_condition")
     def _onchange_availability_condition(self):
         if self.availability_condition != "country":
             self.country_id = None
-
-    @_debug.perf.timed
-    def write(self, vals):
-        _debug.lifecycle("write", records=self, fields=sorted(vals))
-        if "country_id" in vals:
-            self._move_tax_tags_to_country(vals["country_id"])
-        return super().write(vals)
-
-    @_debug.perf.timed
-    def _move_tax_tags_to_country(self, country_id):
-        moving_reports = self.filtered(lambda x: x.country_id.id != country_id)
-        tax_tags_expressions = moving_reports.line_ids.expression_ids.filtered(
-            lambda x: x.engine == "tax_tags"
-        )
-        if not tax_tags_expressions:
-            _debug.logic(
-                "tag_move_skipped", report=self, reason="no_tax_tags_expressions"
-            )
-            return
-
-        tag_model = self.env["account.account.tag"].with_context(
-            active_test=False, lang="en_US"
-        )
-        source_tags = tax_tags_expressions._get_matching_tags()
-        if not source_tags:
-            _debug.logic("tag_move_skipped", report=self, reason="no_matching_tags")
-            return
-
-        reports_by_tag = defaultdict(self.env["account.report"].browse)
-        for expression in source_tags._get_related_tax_report_expressions():
-            reports_by_tag[expression._tax_tag_key()] |= (
-                expression.report_line_id.report_id
-            )
-
-        destination_names = set(
-            tag_model.search(
-                [
-                    ("applicability", "=", "taxes"),
-                    ("country_id", "=", country_id),
-                    ("name", "in", source_tags.mapped("name")),
-                ]
-            ).mapped("name")
-        )
-
-        tags_to_move = tag_model.browse()
-        for tag in source_tags:
-            users = reports_by_tag[(tag.name, tag.country_id.id)]
-            if tag.name not in destination_names and users <= moving_reports:
-                tags_to_move += tag
-        _debug.logic(
-            "tags_partitioned",
-            report=self,
-            country_id=country_id,
-            source_tags=source_tags,
-            destination_names=len(destination_names),
-            tags_to_move=tags_to_move,
-        )
-        tags_to_move.write({"country_id": country_id})
-
-        missing_names = (
-            set(source_tags.mapped("name"))
-            - destination_names
-            - set(tags_to_move.mapped("name"))
-        )
-        expression_model = self.env["account.report.expression"]
-        _debug.pipeline(
-            "missing_tags_creating",
-            report=self,
-            country_id=country_id,
-            missing_names=len(missing_names),
-        )
-        tag_model.create(
-            [
-                tag_vals
-                for name in sorted(missing_names)
-                for tag_vals in expression_model._prepare_tag_vals(name, country_id)
-            ]
-        )
 
     @_debug.perf.timed
     def copy_data(self, default=None):

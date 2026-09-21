@@ -107,13 +107,6 @@ class AccountReportLine(models.Model):
         copy=False,
         help="Internal field to shorten expression_ids creation for the domain engine",
     )
-    account_codes_formula = fields.Char(
-        string="Account Codes Formula Shortcut",
-        inverse="_inverse_account_codes_formula",
-        store=False,
-        copy=False,
-        help="Internal field to shorten expression_ids creation for the account_codes engine",
-    )
     aggregation_formula = fields.Char(
         string="Aggregation Formula Shortcut",
         inverse="_inverse_aggregation_formula",
@@ -134,13 +127,6 @@ class AccountReportLine(models.Model):
         recursive=True,
         store=True,
         readonly=False,
-    )
-    tax_tags_formula = fields.Char(
-        string="Tax Tags Formula Shortcut",
-        inverse="_inverse_tax_tags_formula",
-        store=False,
-        copy=False,
-        help="Internal field to shorten expression_ids creation for the tax_tags engine",
     )
 
     _code_uniq = models.UniqueIndex(
@@ -327,14 +313,39 @@ class AccountReportLine(models.Model):
     def _inverse_aggregation_formula(self):
         self._create_report_expression(engine="aggregation")
 
-    def _inverse_tax_tags_formula(self):
-        self._create_report_expression(engine="tax_tags")
-
-    def _inverse_account_codes_formula(self):
-        self._create_report_expression(engine="account_codes")
-
     def _inverse_external_formula(self):
         self._create_report_expression(engine="external")
+
+    def _get_shortcut_expression_formula(self, engine):
+        self.check_singleton()
+        if engine == "domain" and self.domain_formula:
+            domain_match = DOMAIN_REGEX.match(self.domain_formula)
+            if not domain_match:
+                raise ValidationError(
+                    _(
+                        "Invalid domain formula '%(formula)s' on report line "
+                        "'%(line)s'. Expected the form 'sum(<domain>)' "
+                        "(optionally '-sum(<domain>)').",
+                        formula=self.domain_formula,
+                        line=self.name,
+                    )
+                )
+            subformula, formula = domain_match.groups()
+            formula = re.sub(
+                r"""\bref\((?P<quote>['"])(?P<xmlid>.+?)(?P=quote)\)""",
+                lambda m: str(self.env.ref(m["xmlid"]).id),
+                formula,
+            )
+            return subformula, formula
+        if engine == "aggregation" and self.aggregation_formula:
+            return None, self.aggregation_formula
+        if engine == "external" and self.external_formula:
+            if self.external_formula == "percentage":
+                return "editable;rounding=0", "most_recent"
+            if self.external_formula == "monetary":
+                return "editable", "sum"
+            return "editable", "most_recent"
+        return None
 
     @_debug.perf.timed
     def _create_report_expression(self, engine):
@@ -343,36 +354,9 @@ class AccountReportLine(models.Model):
             lambda exp: exp.label == "balance"
         ).get_external_id()
         for report_line in self:
-            if engine == "domain" and report_line.domain_formula:
-                domain_match = DOMAIN_REGEX.match(report_line.domain_formula)
-                if not domain_match:
-                    raise ValidationError(
-                        _(
-                            "Invalid domain formula '%(formula)s' on report line "
-                            "'%(line)s'. Expected the form 'sum(<domain>)' "
-                            "(optionally '-sum(<domain>)').",
-                            formula=report_line.domain_formula,
-                            line=report_line.name,
-                        )
-                    )
-                subformula, formula = domain_match.groups()
-                formula = re.sub(
-                    r"""\bref\((?P<quote>['"])(?P<xmlid>.+?)(?P=quote)\)""",
-                    lambda m: str(self.env.ref(m["xmlid"]).id),
-                    formula,
-                )
-            elif engine == "account_codes" and report_line.account_codes_formula:
-                subformula, formula = None, report_line.account_codes_formula
-            elif engine == "aggregation" and report_line.aggregation_formula:
-                subformula, formula = None, report_line.aggregation_formula
-            elif engine == "external" and report_line.external_formula:
-                subformula, formula = "editable", "most_recent"
-                if report_line.external_formula == "percentage":
-                    subformula = "editable;rounding=0"
-                elif report_line.external_formula == "monetary":
-                    formula = "sum"
-            elif engine == "tax_tags" and report_line.tax_tags_formula:
-                subformula, formula = None, report_line.tax_tags_formula
+            shortcut = report_line._get_shortcut_expression_formula(engine)
+            if shortcut:
+                subformula, formula = shortcut
             else:
                 report_line.expression_ids.filtered(
                     lambda exp: (
