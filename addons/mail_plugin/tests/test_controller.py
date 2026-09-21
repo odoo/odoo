@@ -6,7 +6,7 @@ from odoo.exceptions import AccessError
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail_plugin.tests.common import (
     TestMailPluginControllerCommon,
-    mock_auth_method_outlook,
+    as_outlook_user,
 )
 
 
@@ -37,7 +37,7 @@ class TestMailPluginController(TestMailPluginControllerCommon):
             partner.parent_id, company, "Should change the company of the partner"
         )
 
-    @mock_auth_method_outlook("employee")
+    @as_outlook_user("employee")
     def test_get_partner_blacklisted_domain(self):
         domain = min(iap_tools._MAIL_PROVIDERS)
 

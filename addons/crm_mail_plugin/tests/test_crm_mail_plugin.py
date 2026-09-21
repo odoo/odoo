@@ -2,12 +2,12 @@ import json
 
 from odoo.addons.mail_plugin.tests.common import (
     TestMailPluginControllerCommon,
-    mock_auth_method_outlook,
+    as_outlook_user,
 )
 
 
 class TestCrmMailPlugin(TestMailPluginControllerCommon):
-    @mock_auth_method_outlook("employee")
+    @as_outlook_user("employee")
     def test_get_contact_data(self):
         partner, partner_2 = self.env["res.partner"].create(
             [
@@ -54,7 +54,7 @@ class TestCrmMailPlugin(TestMailPluginControllerCommon):
             msg="The second lead does not belong to the first partner, it should not be returned",
         )
 
-    @mock_auth_method_outlook("employee")
+    @as_outlook_user("employee")
     def test_crm_lead_create_multi_company(self):
         company_a, company_b = self.env["res.company"].create(
             [

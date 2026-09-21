@@ -177,9 +177,11 @@ class FakeIrHttp:
         return adapter.match(path_info=path_info, return_rule=True)
 
     def _authenticate(self, endpoint: Any) -> None:
-        self._authenticate_explicit(endpoint.routing["auth"])
+        self._authenticate_explicit(endpoint.routing["auth"], routing=endpoint.routing)
 
-    def _authenticate_explicit(self, auth: str) -> None:
+    def _authenticate_explicit(
+        self, auth: str, routing: dict[str, Any] | None = None
+    ) -> None:
         if auth == "none":
             request.update_env(anonymous=True)
         elif auth == "public":

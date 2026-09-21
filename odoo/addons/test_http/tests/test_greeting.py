@@ -144,6 +144,40 @@ class TestHttpGreeting(TestHttpBase):
             self.assertRegex(res.text, r".*Authorization.*headers")
             self.logout(keep_db=False)
 
+    def test_greeting0_bearer_scope_is_the_routes(self):
+        """`@route(scope=...)` names the API-key scope the bearer must carry;
+        a key of another scope is refused with the same 401 as no key."""
+        self.authenticate(None, None)
+        joe = new_test_user(self.env, "joe", context={"lang": "en_US"})
+        joe = joe.with_user(joe)
+        expiration = datetime.datetime.now() + datetime.timedelta(days=0.5)
+        rpc_key = joe.env["res.users.apikeys"]._generate("rpc", "rpc", expiration)
+        scoped_key = joe.env["res.users.apikeys"]._generate(
+            "test_http.greeting", "scoped", expiration
+        )
+
+        for path, key, expected_code in [
+            ("/test_http/greeting-bearer-scoped", rpc_key, 401),
+            ("/test_http/greeting-bearer-scoped", scoped_key, 200),
+            ("/test_http/greeting-bearer", scoped_key, 401),
+            ("/test_http/greeting-bearer", rpc_key, 200),
+        ]:
+            with self.subTest(path=path, key=key[:6]):
+                res = self.db_url_open(path, headers={"Authorization": f"Bearer {key}"})
+                self.assertEqual(res.status_code, expected_code)
+                if expected_code == 401:
+                    self.assertEqual(res.headers.get("WWW-Authenticate"), "Bearer")
+                self.logout()
+
+        with self.subTest(
+            "a session-less bearer call runs in the key's user's context"
+        ):
+            res = self.db_url_open(
+                "/test_http/greeting-bearer-scoped",
+                headers={"Authorization": f"Bearer {scoped_key}"},
+            )
+            self.assertEqual(res.text, "Tek'ma'te; user=joe; lang=en_US")
+
     def test_greeting1_headers_nodb(self):
         res = self.nodb_url_open("/test_http/greeting")
         self.assertEqual(res.status_code, 200)

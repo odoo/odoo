@@ -1,29 +1,46 @@
+import functools
 import json
-from contextlib import contextmanager
+from datetime import timedelta
 from unittest.mock import patch
 
-from odoo import SUPERUSER_ID
-from odoo.http import request
+from odoo import SUPERUSER_ID, fields
 from odoo.tests.common import HttpCase
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 
+OUTLOOK_SCOPE = "odoo.plugin.outlook"
 
-@contextmanager
-def mock_auth_method_outlook(login):
 
-    def patched_auth_method_outlook(*args, **kwargs):
-        request.update_env(
-            user=request.env["res.users"]
-            .with_user(SUPERUSER_ID)
-            .search([("login", "=", login)], limit=1)
+def outlook_api_key(env, login):
+    user = env["res.users"].with_user(SUPERUSER_ID).search([("login", "=", login)])
+    return (
+        env["res.users.apikeys"]
+        .with_user(user)
+        ._generate(
+            OUTLOOK_SCOPE,
+            f"mail plugin test ({login})",
+            fields.Datetime.now() + timedelta(days=1),
         )
+    )
 
-    with patch(
-        "odoo.addons.mail_plugin.models.ir_http.IrHttp._auth_method_outlook",
-        new=patched_auth_method_outlook,
-    ):
-        yield
+
+def as_outlook_user(login):
+    """Run the test with a real Outlook-scoped API key in the Authorization
+    header, so the route's `auth="bearer", scope=...` is what admits it."""
+
+    def decorator(method):
+        @functools.wraps(method)
+        def wrapper(self, *args, **kwargs):
+            key = outlook_api_key(self.env, login)
+            self.opener.headers["Authorization"] = f"Bearer {key}"
+            try:
+                return method(self, *args, **kwargs)
+            finally:
+                self.opener.headers.pop("Authorization", None)
+
+        return wrapper
+
+    return decorator
 
 
 class TestMailPluginControllerCommon(HttpCase):
@@ -35,7 +52,7 @@ class TestMailPluginControllerCommon(HttpCase):
             groups="base.group_user,base.group_partner_manager",
         )
 
-    @mock_auth_method_outlook("employee")
+    @as_outlook_user("employee")
     def mock_plugin_partner_get(self, name, email, patched_iap_enrich):
         data = {
             "id": 0,
@@ -60,7 +77,7 @@ class TestMailPluginControllerCommon(HttpCase):
 
         return result.json().get("result", {})
 
-    @mock_auth_method_outlook("employee")
+    @as_outlook_user("employee")
     def mock_enrich_and_create_company(self, partner_id, patched_iap_enrich):
         data = {
             "id": 0,

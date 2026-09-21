@@ -120,7 +120,9 @@ class HttpExtension(Protocol):
     def _authenticate(self, endpoint: Callable) -> None:
         pass
 
-    def _authenticate_explicit(self, auth: str) -> None:
+    def _authenticate_explicit(
+        self, auth: str, routing: Mapping[str, Any] | None = None
+    ) -> None:
         pass
 
     def _pre_dispatch(

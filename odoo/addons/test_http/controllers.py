@@ -89,6 +89,15 @@ class TestHttp(http.Controller):
         )
         return f"Tek'ma'te; user={self.env.user.login}"
 
+    @http.route(
+        "/test_http/greeting-bearer-scoped",
+        type="http",
+        auth="bearer",
+        scope="test_http.greeting",
+    )
+    def greeting_bearer_scoped(self):
+        return f"Tek'ma'te; user={self.env.user.login}; lang={self.env.lang}"
+
     @http.route("/test_http/wsgi_environ", type="http", auth="none")
     def wsgi_environ(self):
         environ = {

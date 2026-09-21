@@ -179,8 +179,10 @@ class IrHttp(models.AbstractModel):
             ]
         ]
 
+    _auth_routing_keys: dict[str, tuple[str, ...]] = {"bearer": ("scope",)}
+
     @classmethod
-    def _auth_method_bearer(cls) -> None:
+    def _auth_method_bearer(cls, scope: str = "rpc") -> None:
         headers = request.httprequest.headers
 
         def get_http_authorization_bearer_token() -> str | None:
@@ -199,9 +201,11 @@ class IrHttp(models.AbstractModel):
 
         if token := get_http_authorization_bearer_token():
             uid = request.env["res.users.apikeys"]._check_credentials(
-                scope="rpc", key=token
+                scope=scope, key=token
             )
-            _debug.logic("bearer_auth", uid=uid, session_uid=request.env.uid)
+            _debug.logic(
+                "bearer_auth", uid=uid, scope=scope, session_uid=request.env.uid
+            )
             if not uid:
                 _debug.logic("bearer_auth_refused", reason="invalid_apikey")
                 e = "Invalid apikey"
@@ -215,7 +219,10 @@ class IrHttp(models.AbstractModel):
                 )
                 e = "Session user does not match the used apikey."
                 raise AccessDenied(e)
+            session_uid = request.env.uid
             request.update_env(user=uid)
+            if not session_uid:
+                request.update_context(**request.env.user.context_get())
             request.session.can_save = False
         elif not request.env.uid:
             _debug.logic("bearer_auth", uid=None, reason="no_token_no_session")
@@ -251,10 +258,22 @@ class IrHttp(models.AbstractModel):
         preflight = http.is_cors_preflight(request, endpoint)
         auth = "none" if preflight else endpoint.routing["auth"]
         _debug.pipeline("authenticate", auth=auth, cors_preflight=preflight)
-        cls._authenticate_explicit(auth)
+        cls._authenticate_explicit(auth, routing=endpoint.routing)
 
     @classmethod
-    def _authenticate_explicit(cls, auth: str) -> None:
+    def _auth_options(cls, auth: str, routing: dict[str, Any] | None) -> dict[str, Any]:
+        if not routing:
+            return {}
+        return {
+            key: routing[key]
+            for key in cls._auth_routing_keys.get(auth, ())
+            if key in routing
+        }
+
+    @classmethod
+    def _authenticate_explicit(
+        cls, auth: str, routing: dict[str, Any] | None = None
+    ) -> None:
         try:
             if request.session.uid is not None:
                 if not security.is_session_valid(request.session, request.env, request):
@@ -267,7 +286,7 @@ class IrHttp(models.AbstractModel):
                 msg = f"Unknown authentication method: {auth!r}"
                 raise AccessDenied(msg)
             with _debug.perf("authenticate", auth=auth, uid=request.env.uid):
-                auth_method()
+                auth_method(**cls._auth_options(auth, routing))
         except (
             AccessDenied,
             http.SessionExpiredException,

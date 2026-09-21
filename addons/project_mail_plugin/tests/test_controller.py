@@ -1,10 +1,13 @@
 import json
-from unittest.mock import patch
 
-from odoo.addons.mail_plugin.tests.common import TestMailPluginControllerCommon
+from odoo.addons.mail_plugin.tests.common import (
+    TestMailPluginControllerCommon,
+    as_outlook_user,
+)
 
 
 class TestMailPluginProjectController(TestMailPluginControllerCommon):
+    @as_outlook_user("employee")
     def test_user_lang(self):
         self.env["res.lang"]._activate_lang("fr_BE")
         self.env["res.lang"]._activate_lang("es_ES")
@@ -27,19 +30,11 @@ class TestMailPluginProjectController(TestMailPluginControllerCommon):
                 "params": {"search_term": "Test Mail Plugin"},
             }
 
-            with patch.object(
-                type(self.env["res.users.apikeys"]),
-                "_check_credentials",
-                new=lambda *args, **kwargs: self.user_test.id,
-            ):
-                result = self.url_open(
-                    "/mail_plugin/project/search",
-                    data=json.dumps(data).encode(),
-                    headers={
-                        "Content-Type": "application/json",
-                        "Authorization": "dummy",
-                    },
-                )
+            result = self.url_open(
+                "/mail_plugin/project/search",
+                data=json.dumps(data).encode(),
+                headers={"Content-Type": "application/json"},
+            )
 
             result = result.json().get("result")
             self.assertEqual(len(result), 1)

@@ -9,7 +9,8 @@ class CrmClient(MailPluginController):
     @http.route(
         route="/mail_client_extension/log_single_mail_content",
         type="jsonrpc",
-        auth="outlook",
+        auth="bearer",
+        scope="odoo.plugin.outlook",
         cors="*",
     )
     def log_single_mail_content(self, lead, message, **kw):
@@ -19,7 +20,8 @@ class CrmClient(MailPluginController):
     @http.route(
         "/mail_client_extension/lead/get_by_partner_id",
         type="jsonrpc",
-        auth="outlook",
+        auth="bearer",
+        scope="odoo.plugin.outlook",
         cors="*",
     )
     def crm_lead_get_by_partner_id(self, partner, limit=5, offset=0, **kwargs):
@@ -40,7 +42,13 @@ class CrmClient(MailPluginController):
             "/odoo/action-%s?partner_id=%s" % (server_action.id, int(partner_id))
         )
 
-    @http.route("/mail_plugin/lead/create", type="jsonrpc", auth="outlook", cors="*")
+    @http.route(
+        "/mail_plugin/lead/create",
+        type="jsonrpc",
+        auth="bearer",
+        scope="odoo.plugin.outlook",
+        cors="*",
+    )
     def crm_lead_create(self, partner_id, email_body, email_subject):
         partner = request.env["res.partner"].browse(partner_id).exists()
         if not partner:

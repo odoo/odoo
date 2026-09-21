@@ -20,7 +20,8 @@ class MailPluginController(http.Controller):
     @http.route(
         "/mail_client_extension/modules/get",
         type="jsonrpc",
-        auth="outlook",
+        auth="bearer",
+        scope="odoo.plugin.outlook",
         csrf=False,
         cors="*",
     )
@@ -30,7 +31,8 @@ class MailPluginController(http.Controller):
     @http.route(
         "/mail_plugin/partner/enrich_and_create_company",
         type="jsonrpc",
-        auth="outlook",
+        auth="bearer",
+        scope="odoo.plugin.outlook",
         cors="*",
     )
     def res_partner_enrich_and_create_company(self, partner_id):
@@ -64,7 +66,8 @@ class MailPluginController(http.Controller):
     @http.route(
         "/mail_plugin/partner/enrich_and_update_company",
         type="jsonrpc",
-        auth="outlook",
+        auth="bearer",
+        scope="odoo.plugin.outlook",
         cors="*",
     )
     def res_partner_enrich_and_update_company(self, partner_id):
@@ -156,7 +159,8 @@ class MailPluginController(http.Controller):
     @http.route(
         ["/mail_client_extension/partner/get", "/mail_plugin/partner/get"],
         type="jsonrpc",
-        auth="outlook",
+        auth="bearer",
+        scope="odoo.plugin.outlook",
         cors="*",
     )
     def res_partner_get(self, email=None, name=None, partner_id=None, **kwargs):
@@ -227,7 +231,13 @@ class MailPluginController(http.Controller):
 
         return response
 
-    @http.route("/mail_plugin/partner/search", type="jsonrpc", auth="outlook", cors="*")
+    @http.route(
+        "/mail_plugin/partner/search",
+        type="jsonrpc",
+        auth="bearer",
+        scope="odoo.plugin.outlook",
+        cors="*",
+    )
     def res_partners_search(self, search_term, limit=30, **kwargs):
         normalized_email = tools.email_normalize(search_term)
 
@@ -250,7 +260,8 @@ class MailPluginController(http.Controller):
     @http.route(
         ["/mail_client_extension/partner/create", "/mail_plugin/partner/create"],
         type="jsonrpc",
-        auth="outlook",
+        auth="bearer",
+        scope="odoo.plugin.outlook",
         cors="*",
     )
     def res_partner_create(self, email, name, company):
@@ -275,7 +286,11 @@ class MailPluginController(http.Controller):
         return response
 
     @http.route(
-        "/mail_plugin/log_mail_content", type="jsonrpc", auth="outlook", cors="*"
+        "/mail_plugin/log_mail_content",
+        type="jsonrpc",
+        auth="bearer",
+        scope="odoo.plugin.outlook",
+        cors="*",
     )
     def log_mail_content(self, model, res_id, message, attachments=None):
         if model not in self._mail_content_logging_models_whitelist():
@@ -292,7 +307,11 @@ class MailPluginController(http.Controller):
         return True
 
     @http.route(
-        "/mail_plugin/get_translations", type="jsonrpc", auth="outlook", cors="*"
+        "/mail_plugin/get_translations",
+        type="jsonrpc",
+        auth="bearer",
+        scope="odoo.plugin.outlook",
+        cors="*",
     )
     def get_translations(self):
         return self._prepare_translations()

@@ -3,7 +3,13 @@ from odoo.http import request
 
 
 class ProjectClient(http.Controller):
-    @http.route("/mail_plugin/project/search", type="jsonrpc", auth="outlook", cors="*")
+    @http.route(
+        "/mail_plugin/project/search",
+        type="jsonrpc",
+        auth="bearer",
+        scope="odoo.plugin.outlook",
+        cors="*",
+    )
     def projects_search(self, search_term, limit=5):
         projects = request.env["project.project"].search(
             [("name", "ilike", search_term)], limit=limit
@@ -19,7 +25,13 @@ class ProjectClient(http.Controller):
             for project in projects.sudo()
         ]
 
-    @http.route("/mail_plugin/task/create", type="jsonrpc", auth="outlook", cors="*")
+    @http.route(
+        "/mail_plugin/task/create",
+        type="jsonrpc",
+        auth="bearer",
+        scope="odoo.plugin.outlook",
+        cors="*",
+    )
     def task_create(self, email_subject, email_body, project_id, partner_id):
         partner = request.env["res.partner"].browse(partner_id).exists()
         if not partner:
@@ -47,7 +59,13 @@ class ProjectClient(http.Controller):
 
         return {"task_id": record.id, "name": record.name}
 
-    @http.route("/mail_plugin/project/create", type="jsonrpc", auth="outlook", cors="*")
+    @http.route(
+        "/mail_plugin/project/create",
+        type="jsonrpc",
+        auth="bearer",
+        scope="odoo.plugin.outlook",
+        cors="*",
+    )
     def project_create(self, name):
         record = request.env["project.project"].create({"name": name})
         return {"project_id": record.id, "name": record.name}
