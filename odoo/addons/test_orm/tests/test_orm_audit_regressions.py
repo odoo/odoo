@@ -124,3 +124,50 @@ class TestOne2oneAgainstTheRealIndex(TransactionCase):
         with self.assertRaises(UserError):
             second.write({"seat_id": [Command.link(seat.id)]})
         self.assertEqual(seat.holder_id, first)
+
+
+class TestMany2oneSortMatchesSql(TransactionCase):
+    """`sorted()` and `search()` must order a many2one the same way. The cache
+    scan may only do it when the comodel is ordered by id, because SQL sorts a
+    many2one through the comodel's own `_order`."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Discussion = cls.env["test_orm.discussion"]
+        cls.Message = cls.env["test_orm.message"]
+        discussions = cls.Discussion.create(
+            [
+                {"name": f"d{i}", "participants": [Command.set([cls.env.uid])]}
+                for i in range(4)
+            ]
+        )
+        cls.messages = cls.Message.create(
+            [
+                {
+                    "discussion": discussions[i % 4].id if i % 5 else False,
+                    "body": f"b{i}",
+                    "author": cls.env.uid,
+                }
+                for i in range(30)
+            ]
+        )
+        cls.env.flush_all()
+
+    def test_the_comodel_is_ordered_by_id(self):
+        self.assertEqual(self.Discussion._order, "id", "test premise")
+
+    def test_sorted_orders_a_many2one_as_search_does(self):
+        for order in (
+            "discussion, id",
+            "discussion desc, id",
+            "discussion nulls last, id",
+            "discussion desc nulls last, id",
+        ):
+            with self.subTest(order=order):
+                expected = self.Message.search(
+                    [("id", "in", self.messages.ids)], order=order
+                ).ids
+                self.env.invalidate_all()
+                self.messages.mapped("discussion")
+                self.assertEqual(self.messages.sorted(order).ids, expected)

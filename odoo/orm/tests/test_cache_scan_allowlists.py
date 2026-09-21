@@ -46,6 +46,7 @@ SAMPLES: dict[str, list] = {
     "binary": [None, b"", b"xx"],
     "reference": [None, "", "res.users,1"],
     "many2one_reference": [None, 0, 1],
+    "many2one": [None, 1, 7, 42],
 }
 """Cache-shaped values per registered type.
 
@@ -201,16 +202,34 @@ class TestTheFlagsMatchTheConversions(unittest.TestCase):
                         f"cached values do not sort: {exc}"
                     )
 
-    def test_relational_types_claim_nothing(self):
+    VALUE_FLAGS = (
+        "cache_is_record_value",
+        "cache_truthiness_matches",
+        "cache_is_read_value",
+    )
+    """The flags whose scans hand the cached value to a caller. A relational
+    field caches ids, so claiming one of these hands out an id where a
+    recordset is expected. `cache_is_orderable` hands out nothing -- it only
+    says the cached values sort -- which is why many2one may claim it."""
+
+    def test_no_relational_type_hands_out_its_cached_ids(self):
         for type_name in ("many2one", "one2many", "many2many"):
             cls = Field._by_type__[type_name]
-            for flag in SCAN_FLAGS:
+            for flag in self.VALUE_FLAGS:
                 with self.subTest(type=type_name, flag=flag):
                     self.assertFalse(
                         getattr(cls, flag),
                         f"{cls.__name__}.{flag} would let a scan hand out ids "
                         f"where a recordset is expected",
                     )
+
+    def test_only_many2one_is_orderable_among_the_relational_types(self):
+        # a many2one caches one id, which sorts the way ORDER BY on that
+        # column sorts; an x2many caches a tuple of them, which does not
+        self.assertTrue(Field._by_type__["many2one"].cache_is_orderable)
+        for type_name in ("one2many", "many2many"):
+            with self.subTest(type=type_name):
+                self.assertFalse(Field._by_type__[type_name].cache_is_orderable)
 
 
 class TestNoFlagLeaksThroughAResetType(unittest.TestCase):

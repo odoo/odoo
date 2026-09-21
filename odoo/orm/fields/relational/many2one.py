@@ -58,6 +58,12 @@ def _optimize_comodel_id_lookup(condition: DomainCondition) -> Domain | None:
 class Many2one(_Relational):
     type = "many2one"
     is_many2one = True
+    # the cache holds the foreign key, so a scan of it sorts the records the
+    # way ORDER BY on that column does -- but only when the comodel is ordered
+    # by id, since SQL sorts a many2one through the comodel's own _order.
+    # `_sorted_by_ids` is what applies that condition; without this flag its
+    # many2one guard was unreachable and every many2one took the Python sort.
+    cache_is_orderable = True
     _column_type = ("int4", "int4")
 
     ondelete: OnDelete | None = None
