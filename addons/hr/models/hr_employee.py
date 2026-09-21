@@ -648,7 +648,7 @@ class HrEmployee(models.Model):
         first_version_index = len(versions) - 1
 
         while first_version_index > 0:
-            if has_work_hours_between_versions(versions[first_version_index - 1], versions[first_version_index]):
+            if versions[first_version_index - 1]._has_work_hours_between_versions(versions[first_version_index]):
                 break  # version_before is not consecutive with first_version
             first_version_index -= 1
         return versions[first_version_index:]
