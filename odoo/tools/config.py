@@ -290,6 +290,9 @@ class configmanager:
             self._default_options,
         )
 
+        self._deferred_file_options: dict[str, tuple[str, str]] = {}
+        self._claimed_file_options: set[str] = set()
+
         self.options_index: dict[str, _OdooOption] = {}
 
         self.optional_options: dict[str, _OdooOption] = {}
@@ -2266,8 +2269,36 @@ class configmanager:
         )
         self._load_file_options(self["config"])
 
+    def _server_wide_owners(self, p: configparser.RawConfigParser) -> list[str]:
+        for options in (self._cli_options, self._env_options):
+            if options.get("server_wide_modules"):
+                names = options["server_wide_modules"]
+                break
+        else:
+            raw = p.get("options", "server_wide_modules", fallback="")
+            names = [name.strip() for name in raw.split(",")]
+        return sorted(filter(None, names), key=len, reverse=True)
+
+    def claim_file_options(self, *names: str) -> None:
+        self._claimed_file_options.update(names)
+        for name in names:
+            self._deferred_file_options.pop(name, None)
+
+    def warn_unclaimed_file_options(self) -> None:
+        for name, (owner, rcfile) in self._deferred_file_options.items():
+            self._log(
+                logging.WARNING,
+                "unknown option %r in the config file at %s: server-wide module "
+                "%r did not claim it, option stored as-is, without parsing",
+                name,
+                rcfile,
+                owner,
+            )
+        self._deferred_file_options.clear()
+
     def _load_file_options(self, rcfile: str) -> None:
         self._file_options.clear()
+        self._deferred_file_options.clear()
         p = configparser.RawConfigParser(inline_comment_prefixes=("#", ";"))
         try:
             p.read([rcfile])
@@ -2284,6 +2315,7 @@ class configmanager:
             _debug.logic("config.file.no_options_section", rcfile=rcfile)
             return
 
+        owners = self._server_wide_owners(p)
         unknown = 0  # debuglog
         skipped = 0  # debuglog
         try:
@@ -2293,7 +2325,12 @@ class configmanager:
                     value = str(self._parse_without_demo(None, "without_demo", value))
                 option = self.options_index.get(name)
                 if not option:
-                    if name not in self.aliases:
+                    owner = next((m for m in owners if name.startswith(f"{m}_")), None)
+                    if name in self._claimed_file_options or name in self.aliases:
+                        owner = None
+                    elif owner:
+                        self._deferred_file_options[name] = (owner, rcfile)
+                    else:
                         self._log(
                             logging.WARNING,
                             "unknown option %r in the config file at "

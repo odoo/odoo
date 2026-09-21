@@ -19,7 +19,7 @@ from odoo.libs.worker_thread import current_worker_thread
 from odoo.modules.module import load_odoo_module
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
-from odoo.tools import profiler
+from odoo.tools import config, profiler
 from odoo.tools.misc import stripped_sys_argv
 
 from . import _process_state
@@ -40,6 +40,7 @@ def load_server_wide_modules() -> None:
             modules=len(current().server_wide_modules),
         ):
             _load_server_wide_modules()
+    config.warn_unclaimed_file_options()
 
 
 def _load_server_wide_modules() -> None:
