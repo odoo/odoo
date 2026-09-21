@@ -1,6 +1,6 @@
 {
     "name": "Media",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "category": "Hidden",
     "summary": "Recordings kept as timelines of segments, and played as one",
     "description": """
@@ -17,6 +17,12 @@ owner is not a schema change.
 ``_add_media_segment`` a channel files a recording with. A segment is reachable
 exactly as far as its owner is: reading it needs the owner readable, anything
 else the owner writable.
+
+An owner states how long its recordings are kept (``_media_retention_days``);
+filing a segment stamps its attachment's ``content_expires_at`` from arrival,
+and base's autovacuum then drops the bytes and keeps the row, so what was said
+about a recording outlives the recording. ``_restamp_media_expiry`` applies a
+changed policy to what is not released yet.
 
 This module knows nothing about words. ``speech`` extends the segment and the
 timeline with transcripts; the ``media_timeline`` widget plays, and speech's

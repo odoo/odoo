@@ -17,9 +17,13 @@ class SpeechTestRecording(models.Model):
         default="recording",
         required=True,
     )
+    retention_days = fields.Integer(default=0)
     transcribed_count = fields.Integer(default=0)
     failed_count = fields.Integer(default=0)
     completed = fields.Boolean(default=False)
+
+    def _media_retention_days(self) -> int:
+        return self.retention_days
 
     def _on_media_transcribed(self, attachment: IrAttachment) -> None:
         self.transcribed_count += 1

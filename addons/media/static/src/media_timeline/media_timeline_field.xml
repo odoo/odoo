@@ -7,8 +7,12 @@
                 <div class="text-muted fst-italic" t-esc="emptyMessage" />
             </t>
             <t t-else="">
+                <div
+                    t-if="isReleased"
+                    class="text-muted fst-italic"
+                    t-esc="releasedMessage" />
                 <video
-                    t-if="isVideo"
+                    t-elif="isVideo"
                     t-ref="player"
                     class="o_media_timeline_player w-100"
                     controls="1"

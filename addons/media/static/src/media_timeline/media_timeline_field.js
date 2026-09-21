@@ -13,6 +13,7 @@ const RATES = [0.5, 0.75, 1, 1.25, 1.5, 2];
  * @property {number} startMs
  * @property {number} endMs
  * @property {string} mimetype
+ * @property {boolean} released
  */
 
 export class MediaTimelineField extends Component {
@@ -49,6 +50,7 @@ export class MediaTimelineField extends Component {
             startMs: record.data.start_ms ?? 0,
             endMs: record.data.end_ms ?? 0,
             mimetype: record.data.mimetype ?? "",
+            released: Boolean(record.data.content_released_at),
         };
     }
 
@@ -71,7 +73,14 @@ export class MediaTimelineField extends Component {
     /** @returns {string} */
     get source() {
         const segment = this.current;
-        return segment ? `/web/content/${segment.attachmentId}` : "";
+        return segment && !segment.released
+            ? `/web/content/${segment.attachmentId}`
+            : "";
+    }
+
+    /** @returns {boolean} */
+    get isReleased() {
+        return Boolean(this.current?.released);
     }
 
     /**
@@ -188,6 +197,11 @@ export class MediaTimelineField extends Component {
     get emptyMessage() {
         return _t("Nothing was recorded.");
     }
+
+    /** @returns {string} */
+    get releasedMessage() {
+        return _t("The audio was removed at the end of its retention.");
+    }
 }
 
 export const MEDIA_TIMELINE_FIELDS = [
@@ -195,6 +209,7 @@ export const MEDIA_TIMELINE_FIELDS = [
     { name: "end_ms", type: "integer" },
     { name: "attachment_id", type: "many2one", relation: "ir.attachment" },
     { name: "mimetype", type: "char" },
+    { name: "content_released_at", type: "datetime" },
 ];
 
 registry.category("fields").add("media_timeline", {

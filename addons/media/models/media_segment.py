@@ -55,6 +55,7 @@ class MediaSegment(models.Model):
     )
     duration_ms = fields.Integer(compute="_compute_duration_ms")
     mimetype = fields.Char(related="attachment_id.mimetype")
+    content_released_at = fields.Datetime(related="attachment_id.content_released_at")
 
     _owner_idx = models.Index("(res_model, res_id, start_ms)")
     _span_is_forward = models.Constraint(
@@ -159,6 +160,15 @@ class MediaSegment(models.Model):
             chunk_max=SEARCH_ACCESS_CHUNK_MAX,
             **kwargs,
         )
+
+    def _stamp_content_expiry(self, days: int) -> None:
+        for segment in self.sudo():
+            attachment = segment.attachment_id
+            attachment.content_expires_at = (
+                fields.Datetime.add(attachment.create_date, days=days)
+                if days
+                else False
+            )
 
     @api.model
     def _of(self, records: models.Model) -> models.Model:

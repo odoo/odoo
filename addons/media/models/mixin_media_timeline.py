@@ -37,7 +37,7 @@ class MixinMediaTimeline(models.AbstractModel):
         self, attachment: IrAttachment, start_ms: int, end_ms: int
     ) -> MediaSegment:
         self.check_singleton()
-        return self.env["media.segment"].create(
+        segment = self.env["media.segment"].create(
             {
                 "res_model": self._name,
                 "res_id": self.id,
@@ -46,6 +46,17 @@ class MixinMediaTimeline(models.AbstractModel):
                 "end_ms": end_ms,
             }
         )
+        segment._stamp_content_expiry(self._media_retention_days())
+        return segment
+
+    def _media_retention_days(self) -> int:
+        return 0
+
+    def _restamp_media_expiry(self) -> None:
+        for record in self:
+            record.segment_ids.filtered(
+                lambda segment: not segment.content_released_at
+            )._stamp_content_expiry(record._media_retention_days())
 
     @api.ondelete(at_uninstall=False)
     def _unlink_media_segments(self) -> None:
