@@ -208,6 +208,7 @@ export class PresetInfoPopup extends Component {
             resetFieldValidity: (name) => invalidFields.delete(name),
             setInvalidField: (name) => invalidFields.add(name),
             isFieldInvalid: (name) => invalidFields.has(name),
+            isFieldTranslatable: () => false,
             update: async (values) => {
                 for (const [key, value] of Object.entries(values)) {
                     if (key === "countryId") {
