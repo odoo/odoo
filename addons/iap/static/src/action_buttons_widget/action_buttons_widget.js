@@ -17,7 +17,8 @@ class IAPActionButtonsWidget extends Component {
     }
 
     async onViewServicesClicked() {
-        this.action.doAction("iap.iap_account_action");
+        const action = await this.orm.call("iap.account", "action_view_my_services");
+        this.action.doAction(action);
     }
 
     async onManageServiceLinkClicked() {
