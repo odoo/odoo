@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from odoo.exceptions import UserError
 from odoo.libs.documents import (
     CUES,
     EXPENSIVE,
@@ -11,6 +12,7 @@ from odoo.libs.documents import (
     Cue,
     register_reader,
 )
+from odoo.tools import human_size
 
 from .selection import (
     TRANSCRIPTION_CAPABILITIES,
@@ -20,17 +22,19 @@ from .selection import (
     pick_model,
     run,
 )
+from odoo.addons.gateway_ml.tools.router import get_router
 from odoo.addons.speech.tools.engines import record_engine_error
 
 _logger = logging.getLogger(__name__)
 
 
 def _cue_of(span: dict) -> Cue:
+    index = span.get("speaker_index")
     return Cue(
         start=float(span.get("start") or 0.0),
         end=float(span.get("end") or 0.0),
         text=(span.get("text") or "").strip(),
-        speaker=span.get("speaker") or "",
+        speaker=f"SPEAKER_{index}" if index is not None else span.get("speaker") or "",
         confidence=float(span.get("confidence") or 0.0),
     )
 
@@ -62,7 +66,9 @@ class AiTranscription(BaseReader):
             return []
         language = document.options.get("language")
         prompt = document.options.get("prompt")
+        company = env["res.company"].browse(company_id)
         try:
+            _check_capacity(env, model, document, company_id, purpose)
             spans = run(
                 env,
                 "transcribe_timed",
@@ -74,6 +80,8 @@ class AiTranscription(BaseReader):
                 mimetype=document.mimetype or "",
                 language=language,
                 prompt=prompt or "",
+                vocabulary=tuple(env["speech.vocabulary"]._keyterms(company)),
+                speakers=True,
             ).cues
         except Exception as error:
             record_engine_error(document, error)
@@ -94,3 +102,19 @@ def _pick_timed_model(env: Any, company_id: int, purpose: str) -> Any:
 
 
 register_reader(AiTranscription())
+
+
+def _check_capacity(env: Any, model: Any, document: Any, company_id: int, purpose: str):
+    capacity = get_router(env).audio_capacity(
+        model, company_id=company_id, purpose=purpose
+    )
+    if capacity and len(document.data) > capacity:
+        raise UserError(
+            env._(
+                "The recording weighs %(size)s and %(vendor)s accepts at most "
+                "%(capacity)s.",
+                size=human_size(len(document.data)),
+                vendor=model.provider_id.name,
+                capacity=human_size(capacity),
+            )
+        )

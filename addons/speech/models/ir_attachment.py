@@ -64,14 +64,17 @@ class IrAttachment(models.Model):
         for attachment in self:
             attachment.transcript_text = cues_as_text(attachment._transcript_cues())
 
-    @api.depends("mimetype")
+    @api.depends("mimetype", "company_id")
     def _compute_can_transcribe(self) -> None:
-        readable = {
-            mimetype: can_transcribe(mimetype, self.env)
-            for mimetype in set(self.mapped("mimetype"))
-        }
+        readable = {}
         for attachment in self:
-            attachment.can_transcribe = readable.get(attachment.mimetype, False)
+            company = attachment.company_id or self.env.company
+            key = (attachment.mimetype, company)
+            if key not in readable:
+                readable[key] = can_transcribe(
+                    attachment.mimetype or "", self.with_company(company).env
+                )
+            attachment.can_transcribe = readable[key]
 
     def _transcript_cues(self) -> list[Cue]:
         self.check_singleton()

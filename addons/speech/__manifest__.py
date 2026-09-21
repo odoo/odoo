@@ -1,6 +1,6 @@
 {
     "name": "Speech",
-    "version": "19.0.1.2.0",
+    "version": "19.0.1.3.0",
     "category": "Hidden",
     "sequence": 10,
     "summary": "Transcription and synthesis for every stored recording",
@@ -65,6 +65,12 @@ rolled-up state and three hooks, and ``media.segment`` with its attachment's
 cues and state. The ``transcript_timeline`` widget is the ``media_timeline``
 player with the words following along.
 
+Vocabulary
+----------
+``speech.vocabulary`` holds the brands, places and names a transcriber must spell
+right, shared or per company. The first hundred, in order, travel with every
+transcription as the engine's key terms. A module adds its own kinds of term.
+
 No engine ships here
 --------------------
 This module registers no reader and no writer. ``speech_ai`` provides both on
@@ -79,8 +85,12 @@ say so rather than failing at a vendor call.
         "media",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/speech_security.xml",
         "views/ir_attachment_views.xml",
         "views/media_segment_views.xml",
+        "views/speech_vocabulary_views.xml",
+        "views/speech_menus.xml",
     ],
     "assets": {
         "web.assets_backend": [

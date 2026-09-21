@@ -1,10 +1,15 @@
 from unittest.mock import Mock, patch
 
+from psycopg.errors import IntegrityError
+
+from odoo.exceptions import UserError
 from odoo.libs.documents import Document
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
+from odoo.tools import mute_logger
 
 from odoo.addons.gateway_ml.tools.router import MlRouter
+from odoo.addons.speech.tools.engines import engine_error
 from odoo.addons.speech_ai.tools.readers import AiTranscription, _pick_timed_model
 from odoo.addons.speech_ai.tools.selection import TRANSCRIPTION_PURPOSE
 
@@ -91,3 +96,100 @@ class TestReaderSelection(TransactionCase):
 
         self.assertEqual(cues, [])
         client.transcribe_cues.assert_not_called()
+
+    def test_the_company_vocabulary_and_speaker_separation_reach_the_vendor(self):
+        self._allow(self.openai)
+        self.env["speech.vocabulary"].create(
+            {"name": "Proxity", "company_id": self.env.company.id}
+        )
+
+        _cues, client = self._read()
+
+        kwargs = client.transcribe_cues.call_args.kwargs
+        self.assertIn("Proxity", kwargs["vocabulary"])
+        self.assertTrue(kwargs["speakers"])
+
+    def test_a_vendors_speaker_index_becomes_one_label_for_every_consumer(self):
+        self._allow(self.openai)
+        spans = [
+            {"text": "hola", "end": 1, "speaker": "Speaker 2", "speaker_index": 2},
+            {"text": "sí", "start": 1, "end": 2, "speaker": ""},
+        ]
+        client = Mock(transcribe_cues=Mock(return_value=spans))
+        with patch.object(MlRouter, "_get_client", return_value=client):
+            cues = AiTranscription().read(
+                Document(_OGG, "audio/ogg", "a.ogg", env=self.env)
+            )
+        self.assertEqual([cue.speaker for cue in cues], ["SPEAKER_2", ""])
+
+    def test_a_recording_larger_than_the_model_takes_is_refused_before_sending(self):
+        self._allow(self.openai)
+        for xmlid in (
+            "gateway_ml.ai_model_openai_whisper_1",
+            "gateway_ml.ai_model_openai_gpt_transcribe",
+        ):
+            self.env.ref(xmlid).write({"max_audio_mb": 1, "fallback_model_ids": [(5,)]})
+        big = _OGG + b"\x00" * (1024 * 1024 + 1)
+        client = Mock(transcribe_cues=Mock(return_value=[]))
+        document = Document(big, "audio/ogg", "long.ogg", env=self.env)
+        with (
+            patch.object(MlRouter, "_get_client", return_value=client),
+            self.assertRaises(UserError) as caught,
+        ):
+            AiTranscription().read(document)
+        self.assertIn("accepts at most", str(caught.exception))
+        self.assertTrue(engine_error(document))
+        client.transcribe_cues.assert_not_called()
+
+
+@tagged("post_install", "-at_install")
+class TestVocabulary(TransactionCase):
+    def test_a_company_hears_its_own_terms_and_the_shared_ones(self):
+        other = self.env["res.company"].create({"name": "Other vocabulary company"})
+        Vocabulary = self.env["speech.vocabulary"]
+        Vocabulary.create({"name": "Mine", "company_id": self.env.company.id})
+        Vocabulary.create({"name": "Shared"})
+        Vocabulary.create({"name": "Theirs", "company_id": other.id})
+        terms = Vocabulary._keyterms(self.env.company)
+        self.assertIn("Mine", terms)
+        self.assertIn("Shared", terms)
+        self.assertNotIn("Theirs", terms)
+
+    def test_a_term_is_registered_once_per_company(self):
+        Vocabulary = self.env["speech.vocabulary"]
+        Vocabulary.create({"name": "Unico"})
+        with self.assertRaises(IntegrityError), mute_logger("odoo.sql_db"):
+            Vocabulary.create({"name": "Unico"})
+
+
+@tagged("post_install", "-at_install")
+class TestCanTranscribeFollowsTheAttachmentsCompany(TransactionCase):
+    def test_the_attachments_company_policy_decides(self):
+        endpoint = self.env["integration.service"].search([("code", "=", "openai")])
+        self.env["credential.credential"].create(
+            {
+                "name": "openai",
+                "endpoint_id": endpoint.id,
+                "bearer_token": "K",
+                "company_id": False,
+            }
+        )
+        other = self.env["res.company"].create({"name": "Other transcription company"})
+        self.env["gateway.ml.policy"].create(
+            {
+                "company_id": other.id,
+                "purpose_id": self.env.ref("speech_ai.purpose_speech_transcription").id,
+                "provider_ids": [
+                    (6, 0, self.env.ref("gateway_ml.ai_provider_openai").ids)
+                ],
+            }
+        )
+        Attachment = self.env["ir.attachment"]
+        here = Attachment.create(
+            {"name": "here.ogg", "raw": _OGG, "company_id": self.env.company.id}
+        )
+        there = Attachment.create(
+            {"name": "there.ogg", "raw": _OGG, "company_id": other.id}
+        )
+        self.assertFalse(here.can_transcribe)
+        self.assertTrue(there.can_transcribe)
