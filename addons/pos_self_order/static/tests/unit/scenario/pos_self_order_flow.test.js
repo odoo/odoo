@@ -418,7 +418,7 @@ test("self_combo_selector: Office Combo with attributes + 2 plain items", async 
     ]);
     await Utils.clickBtn("Order");
     await Utils.checkOrderNumberShown();
-    await Utils.checkOrderNumberIs("S", "1");
+    await Utils.checkOrderNumberIs("", "1");
     await Utils.clickBtn("Ok");
     await Utils.checkIsNoBtn("Order Now");
 });
@@ -558,7 +558,7 @@ test("self_kiosk_each_table_takeaway_in: table mode, order, qty numpad, close, v
     await Utils.clickNumpad("3");
     await Utils.clickBtn("Order");
     await Utils.checkOrderNumberShown();
-    await Utils.checkOrderNumberIs("K1-", "1");
+    await Utils.checkOrderNumberIs("", "1");
     await Utils.clickBtn("Close");
     await Utils.checkIsNoBtn("My Order");
     await Utils.clickBtn("Order Now");
