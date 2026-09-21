@@ -18,17 +18,20 @@ registerThreadAction("hr-view-profile", {
         );
         store.env.services.action.doAction(action);
     },
-    async setup({ channel }) {
-        let employeeId;
-        if (channel?.correspondent?.partner_id && !channel.correspondent.partner_id.employeeId) {
+    async setup({ channel, owner }) {
+        if (!owner.props.chatWindow) {
+            return;
+        }
+        const partner = channel?.correspondent?.partner_id;
+        if (partner && !partner.employeeId) {
             const employees = await this.store.env.services.orm.silent.searchRead(
                 "hr.employee",
-                [["user_partner_id", "=", channel.correspondent.partner_id.id]],
+                [["user_partner_id", "=", partner.id]],
                 ["id"]
             );
-            employeeId = employees[0]?.id;
+            const employeeId = employees[0]?.id;
             if (employeeId) {
-                channel.correspondent.partner_id.employeeId = employeeId;
+                partner.employeeId = employeeId;
             }
         }
     },
