@@ -5,7 +5,6 @@ from odoo import fields, http, models, tools
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.http import Response, request
-from odoo.tools import consteq
 from odoo.tools.misc import get_lang
 from odoo.tools.translate import LazyTranslate
 
@@ -69,10 +68,10 @@ class PortalMailGroup(http.Controller):
             token = kw.get("token")
             group = request.env["mail.group"].browse(group_id).exists().sudo()
             if not group:
-                raise werkzeug.exceptions.NotFound()
+                raise werkzeug.exceptions.NotFound
 
             if token != group._generate_group_access_token():
-                raise werkzeug.exceptions.NotFound()
+                raise werkzeug.exceptions.NotFound
 
             mail_groups = group
 
@@ -174,7 +173,7 @@ class PortalMailGroup(http.Controller):
         self, group, message, mode="thread", date_begin=None, date_end=None, **post
     ):
         if group != message.mail_group_id:
-            raise werkzeug.exceptions.NotFound()
+            raise werkzeug.exceptions.NotFound
 
         GroupMessage = request.env["mail.group.message"]
         base_domain = Domain.AND(
@@ -224,7 +223,7 @@ class PortalMailGroup(http.Controller):
     )
     def group_message_get_replies(self, group, message, last_displayed_id, **post):
         if group != message.mail_group_id:
-            raise werkzeug.exceptions.NotFound()
+            raise werkzeug.exceptions.NotFound
 
         replies_domain = Domain.AND(
             [
@@ -262,19 +261,14 @@ class PortalMailGroup(http.Controller):
         "/group/<int:group_id>/unsubscribe_oneclick",
         website=True,
         type="http",
-        auth="public",
+        auth="receiver",
+        receiver="mail.group:_receiver_for_unsubscribe",
+        receiver_event="group_unsubscribe",
         methods=["POST"],
         csrf=False,
     )
-    def group_unsubscribe_oneclick(self, group_id, token, email):  # noqa: E8528 - RFC 8058 one-click unsubscribe, authorised by the email access token
-        group_sudo = request.env["mail.group"].sudo().browse(group_id).exists()
-        if group_sudo and token and email:
-            correct_token = group_sudo._generate_email_access_token(email)
-            if not consteq(correct_token, token):
-                raise werkzeug.exceptions.NotFound()
-            group_sudo._leave_group(email)
-        else:
-            raise werkzeug.exceptions.NotFound()
+    def group_unsubscribe_oneclick(self, group_id, token, email):
+        request.admission.subject._leave_group(request.admission.extra["email"])
         return Response(status=200)
 
     @http.route("/group/subscribe", type="jsonrpc", auth="public", website=True)
@@ -312,18 +306,18 @@ class PortalMailGroup(http.Controller):
     def _group_subscription_get_group(self, group_id, email, token):
         group = request.env["mail.group"].browse(int(group_id)).exists()
         if not group:
-            raise werkzeug.exceptions.NotFound()
+            raise werkzeug.exceptions.NotFound
 
         group_sudo = group.sudo()
 
         if token and token != group_sudo._generate_group_access_token():
-            raise werkzeug.exceptions.NotFound()
+            raise werkzeug.exceptions.NotFound
 
         if not token:
             try:
                 group.check_access("read")
             except AccessError:
-                raise werkzeug.exceptions.NotFound()
+                raise werkzeug.exceptions.NotFound from None
 
         partner_id = None
         if not request.env.user._is_public():
@@ -381,7 +375,7 @@ class PortalMailGroup(http.Controller):
             return False
         group = request.env["mail.group"].browse(int(group_id)).exists().sudo()
         if not group:
-            raise werkzeug.exceptions.NotFound()
+            raise werkzeug.exceptions.NotFound
 
         excepted_token = group._generate_action_token(email, action)
         return group if token == excepted_token else False

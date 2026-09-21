@@ -10,7 +10,6 @@ from odoo import http, models
 from odoo.exceptions import AccessError
 from odoo.http import STATIC_CACHE, NotFound, Response, request
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import consteq
 from odoo.tools.misc import file_open
 
 from odoo.addons.mail.tools.discuss import add_guest_to_context
@@ -92,18 +91,7 @@ class MailController(http.Controller):
             for key, value in request.params.items()
             if key in MailThread._ACTION_LINK_SIGNED_PARAMS
         }
-        token = str(token)
-        if consteq(MailThread._encode_link(base_link, params), token):
-            _debug.logic("action_token", path=base_link, by="hmac")
-            return True
-        if consteq(MailThread._encode_link_legacy_sha1(base_link, params), token):
-            _debug.logic("action_token", path=base_link, by="legacy_sha1")
-            _logger.info(
-                "Accepted a legacy SHA-1 action link token on route %s",
-                request.httprequest.path,
-            )
-            return True
-        return False
+        return MailThread._is_action_link_token_valid(base_link, params, token)
 
     @classmethod
     def _get_token_record_and_redirect(
@@ -310,23 +298,20 @@ class MailController(http.Controller):
                 res_id = False
         return self._redirect_to_record(model, res_id, access_token, **kwargs)
 
-    @http.route("/mail/unfollow", type="http", auth="public", csrf=False)
-    def mail_action_unfollow(  # noqa: E8528 - a link from an email, authorised by the record token
+    @http.route(
+        "/mail/unfollow",
+        type="http",
+        auth="receiver",
+        receiver="mixin.mail.thread:_receiver_for_unfollow_link",
+        receiver_event="mail_unfollow",
+        csrf=False,
+    )
+    def mail_action_unfollow(
         self, model: str, res_id: str, pid: str, token: str, **kwargs
     ) -> Response:
-        try:
-            res_id, pid = int(res_id), int(pid)
-        except TypeError, ValueError:
-            raise NotFound from None
-        comparison, record, __ = MailController._get_token_record_and_redirect(
-            model, res_id, token
-        )
-        if not comparison or not record:
-            raise AccessError(request.env._("Non existing record or wrong token."))
-        if not isinstance(record, request.env.registry["mixin.mail.thread"]):
-            raise NotFound
-
-        record_sudo = record.sudo()
+        record_sudo = request.admission.subject
+        record = record_sudo.with_user(request.env.user)
+        res_id, pid = record.id, request.admission.extra["pid"]
         _debug.lifecycle("unfollow_link", model=model, record=res_id, partner=pid)
         record_sudo.message_unsubscribe([pid])
 

@@ -11,13 +11,15 @@ from markupsafe import Markup
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import hmac
+from odoo.http import request
+from odoo.tools import consteq, hmac
 from odoo.tools.mail import (
     add_html_content,
     email_normalize,
     generate_tracking_message_id,
 )
 
+from odoo.addons.integration.tools.admission import Resolution
 from odoo.addons.mail.models.mixin_mail_gateway import RouteVerdict
 from odoo.addons.mail.tools.alias_error import AliasError
 
@@ -352,11 +354,11 @@ class MailGroup(models.Model):
     ):
         self.check_singleton()
         Mailthread = self.env["mixin.mail.thread"]
-        values = dict(
-            (key, val)
+        values = {
+            key: val
             for key, val in kwargs.items()
             if key in self.env["mail.message"]._fields
-        )
+        }
         author_id, email_from = Mailthread._message_compute_author(
             author_id, email_from
         )
@@ -522,7 +524,9 @@ class MailGroup(models.Model):
         batch_size = self.env["ir.config_parameter"]._get_positive_int_param(
             "mail.session.batch.size", GROUP_SEND_BATCH_SIZE
         )
-        for batch_email_member in batched(member_emails.items(), batch_size):
+        for batch_email_member in batched(
+            member_emails.items(), batch_size, strict=False
+        ):
             mail_values = []
             for email_member_normalized, email_member in batch_email_member:
                 if email_member_normalized == message.email_from_normalized:
@@ -791,8 +795,7 @@ class MailGroup(models.Model):
             ),
         )
         base_url = self.get_base_url()
-        confirm_action_url = tools.urls.urljoin(base_url, confirm_action_url)
-        return confirm_action_url
+        return tools.urls.urljoin(base_url, confirm_action_url)
 
     def _generate_action_token(self, email, action):
         if action not in ["subscribe", "unsubscribe"]:
@@ -805,6 +808,32 @@ class MailGroup(models.Model):
 
         data = (self.id, email_normalized, action)
         return hmac(self.env(su=True), "mail_group-email-subscription", data)
+
+    @api.model
+    def _receiver_for_unsubscribe(self, group_id=None, **path_args):
+        """The route's receiver for the one-click unsubscribe: the group,
+        admitted on the member's email access token the mail carried."""
+        group = self.sudo().browse(group_id).exists()
+        if not group:
+            return group
+        params = request.get_http_params()
+        token, email = params.get("token"), params.get("email")
+
+        def verify(headers, body):
+            return bool(token and email) and consteq(
+                group._generate_email_access_token(email), token
+            )
+
+        return Resolution(
+            group,
+            {"email": email},
+            (
+                group,
+                self.env._("%(group)s unsubscribes", group=group.name),
+                "unsubscribe",
+            ),
+            verify,
+        )
 
     def _generate_email_access_token(self, email):
         return tools.hmac(

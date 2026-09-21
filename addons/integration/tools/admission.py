@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -95,3 +96,16 @@ class Admission:
         if self.payload is None:
             raise Refused(400, "the request body is not a JSON object", "invalid_json")
         return self.payload
+
+
+@dataclass
+class Resolution:
+    """What a route's resolver answers when a bare record is not enough: the
+    subject, what it parsed on the way, the record whose gate admits the call
+    (or ``(record, name, purpose)`` naming the receiver's purpose), and a
+    verifier when the identity is not the subject's own to check."""
+
+    subject: Any
+    extra: dict[str, Any] = field(default_factory=dict)
+    gate: Any = None
+    verify: Callable[[Mapping[str, Any], bytes], bool] | None = None

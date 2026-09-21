@@ -8,7 +8,7 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
-from .mixin_inbound_gate import INBOUND_SUBJECT_KEY
+from .mixin_inbound_gate import INBOUND_SUBJECT_KEY, INBOUND_VERIFY_KEY
 
 CALLER_CHECK_KEY = "inbound_caller_check"
 
@@ -92,13 +92,15 @@ class IntegrationReceiver(models.Model):
     ) -> bool:
         check = self.env.context.get(CALLER_CHECK_KEY)
         if check is None:
+            verify = self.env.context.get(INBOUND_VERIFY_KEY)
             subject_ref = self.env.context.get(INBOUND_SUBJECT_KEY)
             subject = (
                 self.env[subject_ref[0]].sudo().browse(subject_ref[1])
                 if subject_ref
                 else None
             )
-            verify = getattr(subject, "_verify_inbound_request", None)
+            if verify is None:
+                verify = getattr(subject, "_verify_inbound_request", None)
             if verify is None:
                 raise ValidationError(
                     self.env._(

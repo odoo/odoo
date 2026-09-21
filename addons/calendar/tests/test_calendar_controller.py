@@ -72,7 +72,7 @@ class TestCalendarController(HttpCase):
         res = self.url_open(url)
 
         self.assertEqual(
-            res.status_code, 400, "Forwarded invitation should be rejected"
+            res.status_code, 401, "Forwarded invitation should be rejected"
         )
         self.env.invalidate_all()
         self.assertEqual(

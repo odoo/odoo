@@ -231,7 +231,7 @@ class TestInvitationTokenRoutes(CalendarPrivacyCommon, HttpCase):
             response = self.url_open(f"{route}?token=&id={event.id}")
             self.assertEqual(
                 response.status_code,
-                400,
+                404,
                 f"{route} must reject an empty token, not match a NULL one",
             )
         self.env.invalidate_all()

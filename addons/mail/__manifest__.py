@@ -65,6 +65,7 @@ For more specific needs, you may also assign custom-defined actions
     "license": "LGPL-3",
     "depends": [
         "credential",
+        "integration",
         "web_tour",
         "html_editor",
     ],

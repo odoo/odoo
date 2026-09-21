@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.libs import redact
 
-from ..tools.admission import Admission, Refused
+from ..tools.admission import Admission, Refused, Resolution
 from ..tools.authentication import (
     CaseInsensitiveHeaders,
     execute_signature_verification,
@@ -20,6 +20,7 @@ from odoo.addons.rate_limit.tools import get_caller_rate_limiter
 _logger = logging.getLogger(__name__)
 
 INBOUND_SUBJECT_KEY = "inbound_subject"
+INBOUND_VERIFY_KEY = "inbound_verify"
 
 
 class MixinInboundGate(models.AbstractModel):
@@ -82,7 +83,7 @@ class MixinInboundGate(models.AbstractModel):
         path_args: dict[str, Any],
         event_type: str | None = None,
     ):
-        """``(subject, gate, extra)`` for a route's ``receiver=`` declaration.
+        """The ``Resolution`` of a route's ``receiver=`` declaration.
 
         ``<model>:<field>`` searches the subject by the path variable of that
         name; ``<model>:_method`` calls the method with the path variables, and
@@ -93,49 +94,58 @@ class MixinInboundGate(models.AbstractModel):
         ``(record, name, purpose)`` tuple names the receiver's purpose too)."""
         model_name, _, selector = declaration.partition(":")
         model = self.env[model_name].sudo()
-        extra: dict[str, Any] = {}
         if selector in model._fields:
             value = path_args.get(selector)
             subject = (
                 model.search([(selector, "=", value)], limit=1) if value else model
             )
+            resolution = Resolution(subject)
         elif selector and callable(getattr(model, selector, None)):
-            subject = getattr(model, selector)(
+            answer = getattr(model, selector)(
                 **path_args, **({"receiver_event": event_type} if event_type else {})
             )
-            if isinstance(subject, tuple):
-                subject, extra = subject
+            if isinstance(answer, Resolution):
+                resolution = answer
+            elif isinstance(answer, tuple):
+                resolution = Resolution(*answer)
+            else:
+                resolution = Resolution(answer)
         else:
             raise ValueError(
                 f"receiver={declaration!r} names neither a field nor a method of "
                 f"{model_name}"
             )
+        subject = resolution.subject
         if not subject:
-            return model.browse(), model.browse(), extra
-        if hasattr(subject, "admit"):
-            return subject, subject, extra
-        owner = getattr(subject, "_inbound_gate_owner", None)
-        owner = owner() if owner is not None else subject
-        name, purpose = None, None
-        if isinstance(owner, tuple):
-            owner, name, purpose = owner
-        if hasattr(owner, "admit"):
-            return subject, owner, extra
-        return (
-            subject,
-            self.env["integration.receiver"]._for_record(
+            return Resolution(model.browse(), resolution.extra, model.browse())
+        if resolution.gate is None:
+            if hasattr(subject, "admit"):
+                resolution.gate = subject
+            else:
+                owner = getattr(subject, "_inbound_gate_owner", None)
+                resolution.gate = owner() if owner is not None else subject
+        if not hasattr(resolution.gate, "admit"):
+            owner, name, purpose = (
+                resolution.gate
+                if isinstance(resolution.gate, tuple)
+                else (resolution.gate, None, None)
+            )
+            resolution.gate = self.env["integration.receiver"]._for_record(
                 owner, name or owner.display_name, purpose
-            ),
-            extra,
-        )
+            )
+        return resolution
 
-    def admit(self, subject=None, event_type: str | None = None) -> Admission:
+    def admit(
+        self, subject=None, event_type: str | None = None, verify=None
+    ) -> Admission:
         self.check_singleton()
         gate = self
         if subject is not None and subject is not self:
-            gate = self.with_context(
+            gate = gate.with_context(
                 **{INBOUND_SUBJECT_KEY: (subject._name, subject.id)}
             )
+        if verify is not None:
+            gate = gate.with_context(**{INBOUND_VERIFY_KEY: verify})
         httprequest = request.httprequest
         remote_addr = httprequest.remote_addr
         content_length = httprequest.content_length

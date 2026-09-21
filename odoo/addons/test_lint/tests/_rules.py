@@ -3,6 +3,7 @@ from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 
 from . import (
+    _checker_auth_method,
     _checker_batch,
     _checker_company_config,
     _checker_config_patch,
@@ -259,6 +260,14 @@ RULES: tuple[Rule, ...] = (
         "probe that must stay open takes `# noqa: E8528  <why>`",
     ),
     Rule(
+        "auth-method-outside-owner",
+        "E8531",
+        "an identity is a scheme on a receiver row, not a method on ir.http: put "
+        "the check in the subject's `_verify_inbound_request` (or a Resolution's "
+        'verifier) behind `auth="receiver"`; base owns user/none/public/bearer '
+        "and integration owns receiver",
+    ),
+    Rule(
         "secret-in-environ",
         "E8519",
         "hand the secret to the child process in its own `env=` mapping: "
@@ -410,6 +419,10 @@ def _receiver_fail_open(unit: Unit) -> Iterable[object]:
     return _checker_receiver.check(unit.tree)
 
 
+def _auth_method_outside_owner(unit: Unit) -> Iterable[object]:
+    return _checker_auth_method.check(unit.tree, unit.path)
+
+
 def _secret_in_environ(unit: Unit) -> Iterable[object]:
     return _checker_egress.check_secret_in_environ(unit.tree, unit.nodes)
 
@@ -493,6 +506,11 @@ CHECKERS: tuple[Checker, ...] = (
         _receiver_fail_open,
         _in_an_addon_outside_tests,
         frozenset({"receiver-fail-open"}),
+    ),
+    Checker(
+        _auth_method_outside_owner,
+        _in_an_addon_outside_tests,
+        frozenset({"auth-method-outside-owner"}),
     ),
     Checker(
         _credential_storage,

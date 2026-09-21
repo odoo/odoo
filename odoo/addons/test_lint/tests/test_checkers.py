@@ -6,6 +6,7 @@ from odoo.modules import Manifest
 from odoo.tests.common import BaseCase, no_retry
 
 from . import (
+    _checker_auth_method,
     _checker_batch,
     _checker_config_patch,
     _checker_credential_storage,
@@ -1930,6 +1931,37 @@ class TestRawEgressLint(BaseCase):
                 "paho.mqtt.client.Client",
                 "pymodbus.client.ModbusTcpClient",
             ],
+        )
+
+
+@no_retry
+class TestAuthMethodOutsideOwnerLint(BaseCase):
+    def _names(self, snippet, path):
+        tree = ast.parse(dedent(snippet).strip())
+        return [v.message.split(":")[0] for v in _checker_auth_method.check(tree, path)]
+
+    def test_a_new_scheme_outside_base_and_integration_is_flagged(self):
+        snippet = """
+        class IrHttp(models.AbstractModel):
+            _inherit = "ir.http"
+
+            @classmethod
+            def _auth_method_outlook(cls):
+                pass
+
+            @classmethod
+            def _auth_method_public(cls):
+                pass
+        """
+        self.assertEqual(
+            self._names(snippet, "/w/odoo/addons/mail_plugin/models/ir_http.py"),
+            ["_auth_method_outlook"],
+        )
+        self.assertEqual(
+            self._names(snippet, "/w/odoo/odoo/addons/base/models/ir_http.py"), []
+        )
+        self.assertEqual(
+            self._names(snippet, "/w/odoo/addons/integration/models/ir_http.py"), []
         )
 
 

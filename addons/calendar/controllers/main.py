@@ -53,13 +53,25 @@ class CalendarController(http.Controller):
     # ------------------------------------------------------------
 
     # YTI Note: Keep id and kwargs only for retrocompatibility purpose
-    @http.route("/calendar/meeting/accept", type="http", auth="calendar")
+    @http.route(
+        "/calendar/meeting/accept",
+        type="http",
+        auth="receiver",
+        receiver="calendar.attendee:_receiver_for_invitation",
+        receiver_event="calendar_invitation",
+    )
     def accept_meeting(self, token, id, **kwargs):
         attendee = self._attendee_from_token(token, [("state", "!=", "accepted")])
         attendee.do_accept()
         return self.view_meeting(token, id)
 
-    @http.route("/calendar/recurrence/accept", type="http", auth="calendar")
+    @http.route(
+        "/calendar/recurrence/accept",
+        type="http",
+        auth="receiver",
+        receiver="calendar.attendee:_receiver_for_invitation",
+        receiver_event="calendar_invitation",
+    )
     def accept_recurrence(self, token, id, **kwargs):
         attendee = self._attendee_from_token(token, [("state", "!=", "accepted")])
         if attendee:
@@ -81,13 +93,25 @@ class CalendarController(http.Controller):
             attendees.do_accept()
         return self.view_meeting(token, id)
 
-    @http.route("/calendar/meeting/decline", type="http", auth="calendar")
+    @http.route(
+        "/calendar/meeting/decline",
+        type="http",
+        auth="receiver",
+        receiver="calendar.attendee:_receiver_for_invitation",
+        receiver_event="calendar_invitation",
+    )
     def decline_meeting(self, token, id, **kwargs):
         attendee = self._attendee_from_token(token, [("state", "!=", "declined")])
         attendee.do_decline()
         return self.view_meeting(token, id)
 
-    @http.route("/calendar/recurrence/decline", type="http", auth="calendar")
+    @http.route(
+        "/calendar/recurrence/decline",
+        type="http",
+        auth="receiver",
+        receiver="calendar.attendee:_receiver_for_invitation",
+        receiver_event="calendar_invitation",
+    )
     def decline_recurrence(self, token, id, **kwargs):
         attendee = self._attendee_from_token(token, [("state", "!=", "declined")])
         if attendee:
@@ -366,7 +390,9 @@ class CalendarController(http.Controller):
                 ("Content-Length", len(content)),
                 (
                     "Content-Disposition",
-                    prepare_content_disposition_header(event._get_customer_summary() + ".ics"),
+                    prepare_content_disposition_header(
+                        event._get_customer_summary() + ".ics"
+                    ),
                 ),
             ],
         )
@@ -418,7 +444,13 @@ class CalendarController(http.Controller):
             return empty, False, False
         return event, attendee.partner_id.id, can_manage
 
-    @http.route("/calendar/meeting/view", type="http", auth="calendar")
+    @http.route(
+        "/calendar/meeting/view",
+        type="http",
+        auth="receiver",
+        receiver="calendar.attendee:_receiver_for_invitation",
+        receiver_event="calendar_invitation",
+    )
     def view_meeting(self, token, id, **kwargs):
         try:
             event_id = int(id)

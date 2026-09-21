@@ -68,6 +68,7 @@ database, and `test_checkers.py` does exactly that.
 | `_checker_egress.py` | `raw-egress`, `secret-in-environ` |
 | `_checker_credential_storage.py` | `credential-storage` |
 | `_checker_receiver.py` | `receiver-fail-open` |
+| `_checker_auth_method.py` | `auth-method-outside-owner` |
 | `_checker_row_counter.py` | `row-counter-in-test` |
 | `_checker_field_declaration.py` | `field-redeclared`, `default-evaluated-at-import`, `selection-duplicate-key`, `field-hook-prefix`, `field-positional-argument`, `field-attribute-order`, `dead-field-attribute`, `stored-related` |
 
@@ -116,6 +117,12 @@ never saw: a settings field with `config_parameter=`, which keeps its value in
 clear in `ir.config_parameter`. The floor is the backlog of fields still to move
 into the vault.
 
+`auth-method-outside-owner` (E8531) holds `ir.http`'s `auth=` vocabulary to its two
+owners: base defines `user`, `none`, `public` and `bearer`, integration defines
+`receiver`, and no other module adds a `_auth_method_<name>` (an override of an owned
+one, website's `public`, is not a new scheme). An identity is a scheme on a receiver
+row or a resolver's verifier, never a fourth method -- `mail_plugin`'s `outlook` and
+`calendar`'s attendee token were the two that went that way before the rule.
 `receiver-fail-open` (E8528) counts routes that take calls from machines without
 declaring who may make them: `auth="public"` or `"none"` with `csrf=False`. Since
 2026-09-21 it is a fact of the routing map, not of the handler: a route that admits

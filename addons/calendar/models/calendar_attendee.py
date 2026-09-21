@@ -4,10 +4,12 @@ from itertools import batched, zip_longest
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.http import request
 from odoo.tools.misc import clean_context
 
 from odoo.addons.base.models.res_partner import _selection_timezones
 from odoo.addons.calendar.models.utils import generate_calendar_token
+from odoo.addons.integration.tools.admission import Resolution
 
 _logger = logging.getLogger(__name__)
 
@@ -21,6 +23,37 @@ class CalendarAttendee(models.Model):
     _description = "Calendar Attendee Information"
     _order = "create_date ASC"
     _search_visibility_fields = ("event_id",)
+
+    @api.model
+    def _receiver_for_invitation(self, **path_args):
+        """The route's receiver for an invitation link: the attendee bearing the
+        token, admitted by the company's receiver; an empty token is no token
+        (`access_token = ''` would match every row whose column is NULL), and a
+        valid one presented from somebody else's session was forwarded."""
+        token = request.get_http_params().get("token") or ""
+        if not token:
+            return self.browse()
+        attendee = self.sudo().search([("access_token", "=", token)], limit=1)
+        if not attendee:
+            return attendee
+        company = (attendee.event_id.user_id.company_id or self.env.company).sudo()
+
+        def verify(headers, body):
+            if request.session.uid:
+                user = self.env["res.users"].sudo().browse(request.session.uid)
+                return attendee.partner_id == user.partner_id
+            return True
+
+        return Resolution(
+            attendee,
+            {},
+            (
+                company,
+                self.env._("%(company)s invitation links", company=company.name),
+                "calendar_invitation",
+            ),
+            verify,
+        )
 
     def _default_access_token(self):
         return generate_calendar_token()

@@ -10,10 +10,13 @@ from markupsafe import Markup
 from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError
 from odoo.fields import Command, Domain
+from odoo.http import request
 from odoo.libs.datetime import timezone
 from odoo.libs.numbers import float_round
 from odoo.libs.web import urljoin as url_join
-from odoo.tools import SQL
+from odoo.tools import SQL, consteq
+
+from odoo.addons.integration.tools.admission import Resolution
 
 _logger = logging.getLogger(__name__)
 
@@ -383,6 +386,40 @@ class DigestDigest(models.Model):
                 # budget exhausted; the cron reschedules itself and the digests
                 # left over are still due on the next pass.
                 break
+
+    @api.model
+    def _receiver_for_unsubscribe(self, digest_id=None, **path_args):
+        """The route's receiver for the one-click unsubscribe: the digest,
+        admitted on the user's token the mail carried, or -- the old link --
+        on a signed-in internal user with no token at all."""
+        digest = self.sudo().browse(digest_id).exists()
+        if not digest:
+            return digest
+        params = request.get_http_params()
+        token, user_id = params.get("token"), params.get("user_id")
+
+        def verify(headers, body):
+            if token and user_id:
+                try:
+                    expected = digest._get_unsubscribe_token(int(user_id))
+                except TypeError, ValueError:
+                    return False
+                return consteq(expected, token)
+            if not token and not user_id and request.session.uid:
+                user = self.env["res.users"].sudo().browse(request.session.uid)
+                return bool(user.exists()) and not user.share
+            return False
+
+        return Resolution(
+            digest,
+            {"token": token, "user_id": user_id},
+            (
+                digest,
+                self.env._("%(digest)s unsubscribes", digest=digest.name),
+                "unsubscribe",
+            ),
+            verify,
+        )
 
     def _get_unsubscribe_token(self, user_id):
         """Generate a secure hash for this digest and user. It allows to

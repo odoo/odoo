@@ -15,15 +15,18 @@ from urllib.parse import urlencode
 
 from lxml import etree, html
 from markupsafe import Markup, escape
+from werkzeug.exceptions import NotFound
 
 from odoo import _, api, exceptions, fields, models, tools
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
+from odoo.http import request
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import (
     SQL,
     clean_context,
+    consteq,
     html2plaintext,
     html_escape,
     is_html_empty,
@@ -40,6 +43,7 @@ from odoo.tools.mail import (
     generate_tracking_message_id,
 )
 
+from odoo.addons.integration.tools.admission import Resolution
 from odoo.addons.mail.tools.discuss import Store, StoreFieldsInput, StoreFieldSpec
 from odoo.addons.mail.tools.html_body import (
     iter_fragment_elements,
@@ -4710,6 +4714,61 @@ class MixinMailThread(models.AbstractModel):
         ):
             additional_users_su |= parent_msg.author_id.main_user_id
         return additional_users_su
+
+    @api.model
+    def _is_action_link_token_valid(
+        self, base_link: str, params: dict, token: str
+    ) -> bool:
+        signed = {
+            key: value
+            for key, value in params.items()
+            if key in self._ACTION_LINK_SIGNED_PARAMS
+        }
+        token = str(token or "")
+        if consteq(self._encode_link(base_link, signed), token):
+            return True
+        if consteq(self._encode_link_legacy_sha1(base_link, signed), token):
+            _logger.info("Accepted a legacy SHA-1 action link token on %s", base_link)
+            return True
+        return False
+
+    @api.model
+    def _receiver_for_unfollow_link(self, **path_args):
+        """The route's receiver for /mail/unfollow: the followed record, admitted
+        by the company's action-link receiver on the signed token the mail
+        carried."""
+        params = request.get_http_params()
+        try:
+            res_id, pid = int(params.get("res_id")), int(params.get("pid"))
+        except TypeError, ValueError:
+            raise NotFound from None
+        model = params.get("model")
+        if (
+            not model
+            or model not in self.env
+            or not isinstance(self.env[model], self.env.registry["mixin.mail.thread"])
+        ):
+            raise NotFound
+        record = self.env[model].sudo().browse(res_id).exists()
+        if not record:
+            return record
+        company = record.company_id if "company_id" in record._fields else None
+        company = (company or self.env.company).sudo()
+        path = request.httprequest.path
+
+        def verify(headers, body):
+            return self._is_action_link_token_valid(path, params, params.get("token"))
+
+        return Resolution(
+            record,
+            {"pid": pid},
+            (
+                company,
+                self.env._("%(company)s action links", company=company.name),
+                "mail_action_link",
+            ),
+            verify,
+        )
 
     @api.model
     def _encode_link(self, base_link: str, params: dict) -> str:

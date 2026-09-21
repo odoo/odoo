@@ -17,10 +17,13 @@ from PIL import Image, UnidentifiedImageError
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Datetime, Domain
+from odoo.http import request
 from odoo.libs.numbers import float_round
+from odoo.tools import consteq
 from odoo.tools.image import ImageProcess
 
 from odoo.addons.base_import.models.base_import import ImportValidationError
+from odoo.addons.integration.tools.admission import Resolution
 
 _logger = logging.getLogger(__name__)
 
@@ -2099,6 +2102,42 @@ class MailingMailing(models.Model):
         except Exception:
             mailing_domain = [("id", "in", [])]
         return mailing_domain
+
+    @api.model
+    def _receiver_for_unsubscribe(self, mailing_id=None, **path_args):
+        """The route's receiver for the one-click unsubscribe: the mailing,
+        admitted on the recipient's hash token the mail carried."""
+        mailing = self.sudo().browse(mailing_id).exists()
+        if not mailing:
+            return mailing
+        params = request.get_http_params()
+        document_id, email, hash_token = (
+            params.get("document_id"),
+            params.get("email"),
+            params.get("hash_token"),
+        )
+
+        def verify(headers, body):
+            if not (hash_token and email and document_id):
+                return False
+            try:
+                expected = mailing._generate_mailing_recipient_token(
+                    int(document_id), email
+                )
+            except TypeError, ValueError:
+                return False
+            return consteq(expected, hash_token)
+
+        return Resolution(
+            mailing,
+            {"document_id": document_id, "email": email, "hash_token": hash_token},
+            (
+                mailing,
+                self.env._("%(mailing)s unsubscribes", mailing=mailing.display_name),
+                "unsubscribe",
+            ),
+            verify,
+        )
 
     def _generate_mailing_recipient_token(self, document_id, email):
         """Generate a secure token for a given mailing and recipient (based on

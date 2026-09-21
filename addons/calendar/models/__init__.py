@@ -1,4 +1,3 @@
-from . import ir_http
 from . import mixin_calendar_privacy
 from . import res_partner
 from . import calendar_event

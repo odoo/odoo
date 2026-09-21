@@ -102,11 +102,13 @@ class MassMailController(http.Controller):
         ["/mailing/<int:mailing_id>/unsubscribe_oneclick"],
         type="http",
         website=True,
-        auth="public",
+        auth="receiver",
+        receiver="mailing.mailing:_receiver_for_unsubscribe",
+        receiver_event="mailing_unsubscribe",
         methods=["POST"],
         csrf=False,
     )
-    def mailing_unsubscribe_oneclick(  # noqa: E8528 - RFC 8058 one-click unsubscribe, authorised by the hash token
+    def mailing_unsubscribe_oneclick(
         self, mailing_id, document_id=None, email=None, hash_token=None, **post
     ):
         self.mailing_unsubscribe(
