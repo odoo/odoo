@@ -1537,15 +1537,27 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
     _startAnimation($el) {
         // Forces the browser to redraw using setTimeout.
         setTimeout(() => {
+            const animationEndEvents =
+                'webkitAnimationEnd oanimationend msAnimationEnd animationend';
+            const onAnimationEnd = (ev) => {
+                const duration = parseFloat($el.css('animation-duration'));
+                const elapsedTime = ev.originalEvent?.elapsedTime ?? ev.elapsedTime;
+                // Chrome may queue a zero-time animationend while resetting an
+                // animation and dispatch it when the real animation starts.
+                // TODO: Understand why Chrome inconsistently queues this event.
+                if (ev.target !== $el[0] || (duration > 0 && elapsedTime === 0)) {
+                    return;
+                }
+                $el.off(animationEndEvents, onAnimationEnd);
+                $el.addClass("o_animated").removeClass("o_animating");
+                this._toggleOverflowXYHidden(false);
+                $(window).trigger("resize");
+            };
             this._toggleOverflowXYHidden(true);
             $el
             .css({"animation-play-state": "running"})
             .addClass("o_animating")
-            .one('webkitAnimationEnd oanimationend msAnimationEnd animationend', () => {
-                $el.addClass("o_animated").removeClass("o_animating");
-                this._toggleOverflowXYHidden(false);
-                $(window).trigger("resize");
-            });
+            .on(animationEndEvents, onAnimationEnd);
         });
     },
     /**
