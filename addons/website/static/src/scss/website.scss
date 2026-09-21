@@ -3821,6 +3821,14 @@ input[value*="data-oe-translation-source-sha"] {
             }
         }
     }
+    // Draw the focus ring on the icon instead of the link so that it follows
+    // the icon layout.
+    a:focus-visible:has(.oi) {
+        outline: none;
+        .oi {
+            outline: $focus-ring-width solid $focus-ring-color;
+        }
+    }
 
     &:not(.no_icon_color) {
         a {
