@@ -15,6 +15,7 @@ You could use this simplified accounting in case you work with an (external) acc
     "website": "https://www.odoo.com/app/invoicing",
     "license": "LGPL-3",
     "depends": [
+        "report_formula",
         "account_coa",
         "account_tax",
         "onboarding",

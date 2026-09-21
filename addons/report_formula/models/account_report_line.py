@@ -5,7 +5,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.libs.debug_log import DebugLog
 
-from odoo.addons.account.models.account_report import (
+from .account_report import (
     DOMAIN_REGEX,
     REFERENCE_UNSAFE_CHARS_REGEX,
 )

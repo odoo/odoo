@@ -13,12 +13,13 @@ from odoo.libs.numbers import float_round
 from odoo.service.model import get_public_method
 from odoo.tools import SQL
 
-from .account_report import ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX, UNDISTR_LINE_NAME
-from odoo.addons.account.models.account_report import (
-    ACCOUNT_CODES_ENGINE_SPLIT_REGEX,
-    ACCOUNT_CODES_ENGINE_TERM_REGEX,
-)
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
+from odoo.addons.report_formula.models.account_report import (
+    ACCOUNT_CODES_ENGINE_SPLIT_REGEX,
+    ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX,
+    ACCOUNT_CODES_ENGINE_TERM_REGEX,
+    UNDISTR_LINE_NAME,
+)
 from odoo.addons.web.controllers.utils import clean_action
 
 _debug = DebugLog(__name__)

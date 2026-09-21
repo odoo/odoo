@@ -7,7 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 
-from odoo.addons.account.models.account_report import (
+from .account_report import (
     AGGREGATION_CODE_TERM_REGEX,
     AGGREGATION_ENGINE_FORMULA_REGEX,
     AGGREGATION_NUMBER_TERM_REGEX,
@@ -133,7 +133,8 @@ class AccountReportExpression(models.Model):
             try:
                 domain = ast.literal_eval(expression.formula)
                 source_model = expression.report_line_id.report_id._get_source_model()
-                source_model._search(domain)
+                if source_model is not None:
+                    source_model._search(domain)
             except Exception as error:
                 expression._raise_formula_error(error)
 

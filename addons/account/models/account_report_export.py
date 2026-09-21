@@ -22,12 +22,14 @@ from odoo.tools import html2plaintext
 from odoo.tools.mail import html_to_inner_content
 from odoo.tools.misc import file_path, format_date
 
-from .account_report import (
+from odoo.addons.report_formula.models.account_report import (
     ACCOUNT_CODES_ENGINE_SPLIT_REGEX,
     ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX,
     ACCOUNT_CODES_ENGINE_TERM_REGEX,
 )
-from .account_report_custom_handler import AccountReportFileDownloadException
+from odoo.addons.report_formula.models.account_report_custom_handler import (
+    AccountReportFileDownloadException,
+)
 
 _debug = DebugLog(__name__)
 

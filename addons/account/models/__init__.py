@@ -65,11 +65,6 @@ from . import mail_template
 from . import mail_tracking_value
 from . import merge_partner_automatic
 from . import res_currency
-from . import account_report
-from . import account_report_column
-from . import account_report_expression
-from . import account_report_external_value
-from . import account_report_line
 from . import onboarding_onboarding_step
 from . import template_generic_coa
 from . import uom_uom
@@ -104,7 +99,6 @@ from . import res_company_reports
 from . import account
 from . import account_report_annotation
 from . import account_report_horizontal_group
-from . import account_report_custom_handler
 from . import account_report_ledger
 from . import account_report_export
 from . import account_report_options

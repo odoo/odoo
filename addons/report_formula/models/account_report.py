@@ -203,6 +203,9 @@ class AccountReport(models.Model):
         fields.Boolean, "filter_growth_comparison", "Growth Comparison", default=True
     )
 
+    def _get_source_model(self):
+        """The model a `domain` expression searches; None when the report has none."""
+
     @_debug.perf.timed
     def _compute_report_option_filter(self, field_name, default_value=False):
         sections = self.filtered("section_main_report_ids")

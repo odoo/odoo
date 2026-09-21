@@ -1,6 +1,6 @@
 from odoo import fields, models
 
-from odoo.addons.account.models.account_report import (
+from .account_report import (
     FIGURE_TYPE_SELECTION_VALUES,
 )
 

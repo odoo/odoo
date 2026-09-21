@@ -10,7 +10,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, date_utils
 from odoo.tools.misc import format_date
 
-from .account_report import (
+from odoo.addons.report_formula.models.account_report import (
     ACCOUNT_CODES_ENGINE_SPLIT_REGEX,
     ACCOUNT_CODES_ENGINE_TERM_REGEX,
     LEDGER_AUDITABLE_ENGINES,
