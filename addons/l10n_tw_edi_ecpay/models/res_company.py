@@ -20,8 +20,9 @@ class ResCompany(models.Model):
             company.l10n_tw_edi_ecpay_config_id = by_company.get(company.id, False)
 
     def _is_ecpay_enabled(self):
+        config = self.sudo().l10n_tw_edi_ecpay_config_id
         return bool(
-            self.sudo().l10n_tw_edi_ecpay_merchant_id
-            and self.sudo().l10n_tw_edi_ecpay_hashkey
-            and self.sudo().l10n_tw_edi_ecpay_hashIV
+            config.l10n_tw_edi_ecpay_merchant_id
+            and config.l10n_tw_edi_ecpay_hashkey
+            and config.l10n_tw_edi_ecpay_hashIV
         )

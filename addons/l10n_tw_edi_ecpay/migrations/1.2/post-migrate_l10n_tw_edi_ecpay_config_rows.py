@@ -21,7 +21,8 @@ def migrate(cr, version):
     companies = env["res.company"].with_context(active_test=False).search([])
     env["l10n_tw_edi_ecpay.config"]._for_each(companies)
     env.flush_all()
-    assignments = ", ".join(f"{column} = c.{column}" for column in present)
+    # quoted: hashIV is a mixed-case column, which PostgreSQL folds unquoted
+    assignments = ", ".join(f'"{column}" = c."{column}"' for column in present)
     cr.execute(
         f"UPDATE l10n_tw_edi_ecpay_config x SET {assignments} FROM res_company c WHERE c.id = x.company_id"
     )

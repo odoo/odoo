@@ -1,7 +1,7 @@
 import logging
 from typing import Any
 
-from odoo import api
+from odoo import SUPERUSER_ID, api
 
 _logger = logging.getLogger(__name__)
 
@@ -19,7 +19,6 @@ def _register_flush_hooks(env: api.Environment) -> None:
     cr = env.cr
     pending = cr.precommit.data[PENDING_KEY] = []
     registry = env.registry
-    uid = env.uid
 
     @cr.precommit.add
     def batch_create_logs():
@@ -39,7 +38,7 @@ def _register_flush_hooks(env: api.Environment) -> None:
             return
         try:
             with registry.cursor() as log_cr:
-                log_env = api.Environment(log_cr, uid, {})
+                log_env = api.Environment(log_cr, SUPERUSER_ID, {})
                 log_env["integration.exchange"].sudo().create(
                     _without_vanished_connections(log_env, pending)
                 )
@@ -74,13 +73,12 @@ def _without_vanished_connections(
 def keep_row_on_rollback(env: api.Environment, vals: dict[str, Any], admission) -> None:
     cr = env.cr
     registry = env.registry
-    uid = env.uid
 
     @cr.postrollback.add
     def keep_row_of_rolled_back_transaction():
         try:
             with registry.cursor() as log_cr:
-                log_env = api.Environment(log_cr, uid, {})
+                log_env = api.Environment(log_cr, SUPERUSER_ID, {})
                 log_env["integration.exchange"].sudo().create(
                     {
                         **vals,

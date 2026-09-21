@@ -1,5 +1,5 @@
 import json
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
@@ -74,6 +74,80 @@ class TestInboundExchangeRecording(TransactionCase):
         row = self._rows()
         self.assertEqual(row.state, "failed")
         self.assertEqual(row.error_message, "handler raised")
+
+    def _admit(self, body=b'{"probe": 1}', event_type="probe"):
+        from odoo.addons.integration.tools.admission import Admission
+
+        httprequest = MagicMock()
+        httprequest.method = "POST"
+        httprequest.path = "/probe"
+        httprequest.headers = {"User-Agent": "probe"}
+        mocked = MagicMock()
+        mocked.httprequest = httprequest
+        admission = Admission(
+            gate=self.receiver,
+            subject=self.receiver,
+            body=body,
+            remote_addr="203.0.113.1",
+            event_type=event_type,
+        )
+        with patch(
+            "odoo.addons.integration.models.mixin_integration_receiver.request", mocked
+        ):
+            self.receiver._open_inbound_exchange(admission, event_type)
+        return admission
+
+    def test_an_admitted_call_is_a_row_the_handler_can_settle(self):
+        admission = self._admit()
+
+        row = self._rows()
+        self.assertEqual(admission.exchange, row)
+        self.assertEqual(
+            (row.state, row.event_type, row.request_method),
+            ("success", "probe", "POST"),
+        )
+        self.assertIn("probe", row.request_payload)
+        self.assertEqual(row.request_payload_hash, admission.payload_hash)
+
+        admission.settle("the handler could not")
+        self.assertEqual(row.state, "failed")
+        self.assertEqual(row.error_message, "the handler could not")
+
+    def test_a_copy_inside_the_window_is_refused_on_its_own_row(self):
+        from odoo.addons.integration.tools.admission import Refused
+
+        self.receiver.write({"duplicate_detection_enabled": True})
+        self._admit(b'{"probe": 1}')
+
+        # not assertRaises: the test case's rolls back to a savepoint, and
+        # the row the refusal leaves is what this test reads
+        try:
+            self._admit(b'{ "probe" : 1 }')
+        except Refused as refused:
+            self.assertEqual(
+                (refused.status, refused.error_code), (409, "duplicate_event")
+            )
+            self.assertTrue(refused.commit, "the duplicate row is kept")
+        else:
+            self.fail("a copy inside the window was admitted")
+        self.assertEqual(
+            self._rows().sorted("id").mapped("state"), ["success", "duplicate"]
+        )
+
+    def test_the_row_of_a_call_that_rolled_back_names_the_handler_s_last_word(self):
+        admission = self._admit()
+        admission.settle("OSError: connection reset")
+
+        cr = self.env.cr
+        cr.clear()
+        with self.enter_registry_test_mode():
+            cr.postrollback.run()
+
+        rows = self._rows().sorted("id")
+        kept = rows[-1]
+        self.assertEqual(kept.state, "failed")
+        self.assertEqual(kept.error_message, "OSError: connection reset")
+        self.assertEqual(kept.event_type, "probe")
 
     def test_a_scheme_method_decides_for_its_auth_type(self):
         self.receiver.write(

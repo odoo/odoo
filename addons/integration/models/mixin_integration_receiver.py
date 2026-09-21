@@ -61,6 +61,11 @@ class MixinIntegrationReceiver(models.AbstractModel):
         reader repeats every few seconds is not worth one per repetition."""
         return True
 
+    def _inbound_payload_logged(self, event_type: str | None) -> bool:
+        """Whether the row keeps the body. A conversation's content is not
+        the operator's to read; the hash of the body is kept either way."""
+        return True
+
     def _open_inbound_exchange(self, admission, event_type):
         """The row is the call: created now, in the request's transaction, so
         the handler can queue it, settle it or hand it to a worker, and so a
@@ -74,6 +79,8 @@ class MixinIntegrationReceiver(models.AbstractModel):
         if self.processing_mode == "async":
             # The row is the work item: the body is kept as received.
             payload_vals = {"request_payload": body}
+        elif not self._inbound_payload_logged(event_type):
+            payload_vals = {}
         else:
             payload_vals = self._omitted_payload_vals(
                 body

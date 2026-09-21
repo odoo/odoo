@@ -32,9 +32,8 @@ class Refused(HTTPException):
         self.commit = commit
 
     @property
-    def response(self) -> werkzeug.wrappers.Response | None:  # type: ignore[override]
-        if not self.commit:
-            return None
+    def response(self) -> werkzeug.wrappers.Response:  # type: ignore[override]
+        # Always rendered: whether the request commits is `code`'s to say.
         return self._render()
 
     @response.setter

@@ -400,6 +400,17 @@ class JsonRPCDispatcher(Dispatcher):
                 id=self.request_id,
             )
             return self._prepare_bad_request_response(exc.description or "Bad Request")
+        # An exception that carries its own response was answered by whoever
+        # raised it -- a gate refusing in the caller's protocol -- and is
+        # served as is, as the json2 dispatcher serves one.
+        if isinstance(exc, HTTPException) and exc.response is not None:
+            _debug.logic(
+                "http.jsonrpc.error",
+                code=exc.response.status_code,
+                error=type(exc).__name__,
+                id=self.request_id,
+            )
+            return Response(exc.response)
         error = {
             "code": 0,
             "message": "Odoo Server Error",
