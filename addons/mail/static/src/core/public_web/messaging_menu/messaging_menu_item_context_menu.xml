@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.MessagingMenuItemContextMenu">
-    <Dropdown state="this.props.dropdownState" manual="true" menuClass="this.store.discussDropdownMenuClass(this)" position="'right-start'">
-        <span class="d-flex position-fixed z-1" t-ref="this.anchorRef"/>
+    <Dropdown state="this.props.dropdownState" manual="true" menuClass="this.store.discussDropdownMenuClass(this)" noClasses="true" position="'right-start'">
+        <span class="o-mail-MessagingMenuItem-contextMenuAnchor d-flex position-fixed z-1" t-ref="this.anchorRef"/>
         <t t-set-slot="content">
             <ActionList actions="this.actionsList" dropdown="true"/>
         </t>
