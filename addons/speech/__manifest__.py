@@ -1,6 +1,6 @@
 {
     "name": "Speech",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "category": "Hidden",
     "sequence": 10,
     "summary": "Transcription and synthesis for every stored recording",
@@ -53,21 +53,17 @@ built-in text writer accepts any mimetype, so with no engine installed the call
 would otherwise write a UTF-8 text file and label it audio; and with two engines
 installed, the one without a key would otherwise answer.
 
-``media.segment``
------------------
-A recording arrives in pieces -- a call recorded in chunks, a long interview
-split for an engine's file-size limit -- and the pieces have to be played as one
-timeline. A segment is one attachment plus the milliseconds it covers, against
-an owner named by ``res_model``/``res_id``. Generic on purpose: upstream ties the
-same idea to one nullable foreign key per owner type behind a
-``num_nonnulls(...) = 1`` constraint, so every new owner is a schema change.
+Timelines
+---------
+Recordings are ``media`` timelines of ``media.segment``. Transcripts are not
+segments: they live on the attachment they describe, which is why no flag
+distinguishes a media artifact from a transcript and no transcript is excluded
+from the overlap check.
 
-Transcripts are NOT segments. They live on the attachment they describe, which
-is why this module needs no flag distinguishing a media artifact from a
-transcript artifact, and no exclusion of transcripts from the overlap check.
-
-``mixin.media.timeline`` gives an owner its segments, its duration, its joined
-transcript, one rolled-up state and three hooks.
+This module extends ``mixin.media.timeline`` with the joined transcript, one
+rolled-up state and three hooks, and ``media.segment`` with its attachment's
+cues and state. The ``transcript_timeline`` widget is the ``media_timeline``
+player with the words following along.
 
 No engine ships here
 --------------------
@@ -80,11 +76,9 @@ say so rather than failing at a vendor call.
     "website": "https://www.agromarin.mx",
     "license": "LGPL-3",
     "depends": [
-        "base",
-        "web",
+        "media",
     ],
     "data": [
-        "security/ir.model.access.csv",
         "views/ir_attachment_views.xml",
         "views/media_segment_views.xml",
     ],

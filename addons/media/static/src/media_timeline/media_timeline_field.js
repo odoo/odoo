@@ -7,24 +7,16 @@ import { standardFieldProps } from "@web/fields/standard_field_props";
 const RATES = [0.5, 0.75, 1, 1.25, 1.5, 2];
 
 /**
- * @typedef {Object} Cue
- * @property {number} start
- * @property {number} end
- * @property {string} text
- * @property {string} speaker
- */
-/**
  * @typedef {Object} Segment
  * @property {number} id
  * @property {number} attachmentId
  * @property {number} startMs
  * @property {number} endMs
  * @property {string} mimetype
- * @property {Cue[]} cues
  */
 
 export class MediaTimelineField extends Component {
-    static template = "speech.MediaTimelineField";
+    static template = "media.MediaTimelineField";
     static props = { ...standardFieldProps };
 
     setup() {
@@ -42,16 +34,22 @@ export class MediaTimelineField extends Component {
     get segments() {
         const records = this.props.record.data[this.props.name]?.records ?? [];
         return records
-            .map((record) => ({
-                id: record.resId,
-                attachmentId:
-                    record.data.attachment_id?.[0] ?? record.data.attachment_id,
-                startMs: record.data.start_ms ?? 0,
-                endMs: record.data.end_ms ?? 0,
-                mimetype: record.data.mimetype ?? "",
-                cues: record.data.speech_cues ?? [],
-            }))
+            .map((record) => this._toSegment(record))
             .sort((a, b) => a.startMs - b.startMs);
+    }
+
+    /**
+     * @param {any} record
+     * @returns {Segment}
+     */
+    _toSegment(record) {
+        return {
+            id: record.resId,
+            attachmentId: record.data.attachment_id?.[0] ?? record.data.attachment_id,
+            startMs: record.data.start_ms ?? 0,
+            endMs: record.data.end_ms ?? 0,
+            mimetype: record.data.mimetype ?? "",
+        };
     }
 
     /** @returns {number} */
@@ -74,20 +72,6 @@ export class MediaTimelineField extends Component {
     get source() {
         const segment = this.current;
         return segment ? `/web/content/${segment.attachmentId}` : "";
-    }
-
-    /** @returns {Cue[]} */
-    get cues() {
-        return this.current?.cues ?? [];
-    }
-
-    /**
-     * @param {Cue} cue
-     * @returns {boolean}
-     */
-    isCueActive(cue) {
-        const offset = (this.state.positionMs - (this.current?.startMs ?? 0)) / 1000;
-        return offset >= cue.start && offset < cue.end;
     }
 
     /**
@@ -149,11 +133,6 @@ export class MediaTimelineField extends Component {
         this.seek(Math.round(share * this.durationMs));
     }
 
-    /** @param {Cue} cue */
-    onCueClick(cue) {
-        this.seek((this.current?.startMs ?? 0) + Math.round(cue.start * 1000));
-    }
-
     async togglePlay() {
         const player = this.player.el;
         if (!player) {
@@ -211,14 +190,15 @@ export class MediaTimelineField extends Component {
     }
 }
 
+export const MEDIA_TIMELINE_FIELDS = [
+    { name: "start_ms", type: "integer" },
+    { name: "end_ms", type: "integer" },
+    { name: "attachment_id", type: "many2one", relation: "ir.attachment" },
+    { name: "mimetype", type: "char" },
+];
+
 registry.category("fields").add("media_timeline", {
     component: MediaTimelineField,
     supportedTypes: ["one2many"],
-    relatedFields: () => [
-        { name: "start_ms", type: "integer" },
-        { name: "end_ms", type: "integer" },
-        { name: "attachment_id", type: "many2one", relation: "ir.attachment" },
-        { name: "mimetype", type: "char" },
-        { name: "speech_cues", type: "json" },
-    ],
+    relatedFields: () => MEDIA_TIMELINE_FIELDS,
 });

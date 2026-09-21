@@ -1,51 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="media_segment_view_list" model="ir.ui.view">
-        <field name="name">media.segment.view.list</field>
+    <record id="media_segment_view_list_transcription" model="ir.ui.view">
+        <field name="name">media.segment.view.list.transcription</field>
         <field name="model">media.segment</field>
+        <field name="inherit_id" ref="media.media_segment_view_list" />
         <field name="arch" type="xml">
-            <list string="Media Segments">
-                <field name="res_model" />
-                <field name="res_id" />
-                <field name="attachment_id" />
-                <field name="start_ms" />
-                <field name="end_ms" />
-                <field name="duration_ms" />
+            <field name="duration_ms" position="after">
                 <field name="transcription_state" />
-            </list>
+            </field>
         </field>
     </record>
 
-    <record id="media_segment_view_form" model="ir.ui.view">
-        <field name="name">media.segment.view.form</field>
+    <record id="media_segment_view_form_transcription" model="ir.ui.view">
+        <field name="name">media.segment.view.form.transcription</field>
         <field name="model">media.segment</field>
+        <field name="inherit_id" ref="media.media_segment_view_form" />
         <field name="arch" type="xml">
-            <form string="Media Segment">
-                <sheet>
-                    <group>
-                        <group>
-                            <field name="res_model" />
-                            <field name="res_id" />
-                            <field name="attachment_id" />
-                            <field name="mimetype" />
-                        </group>
-                        <group>
-                            <field name="start_ms" />
-                            <field name="end_ms" />
-                            <field name="duration_ms" />
-                            <field name="transcription_state" />
-                        </group>
-                    </group>
-                </sheet>
-            </form>
+            <field name="duration_ms" position="after">
+                <field name="transcription_state" />
+            </field>
         </field>
-    </record>
-
-    <record id="media_segment_action" model="ir.actions.act_window">
-        <field name="name">Media Segments</field>
-        <field name="res_model">media.segment</field>
-        <field name="view_mode">list,form</field>
     </record>
 
 </odoo>

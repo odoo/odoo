@@ -11,7 +11,10 @@
                 <group string="Recording" invisible="not has_media">
                     <field name="transcription_state" />
                     <field name="media_duration_ms" invisible="1" />
-                    <field name="segment_ids" widget="media_timeline" nolabel="1" />
+                    <field
+                        name="segment_ids"
+                        widget="transcript_timeline"
+                        nolabel="1" />
                 </group>
             </xpath>
         </field>
