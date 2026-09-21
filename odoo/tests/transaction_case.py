@@ -1617,18 +1617,28 @@ class TransactionCase(BaseCase):
         if cls.freeze_time:
             cls.startClassPatcher(cls.freeze_time)
 
-        def forbidden(*args, **kwars):
-            _debug.logic("test.cursor.forbidden_call", test=current_test_tag())
-            traceback.print_stack()
-            raise AssertionError(
-                "Cannot commit or rollback a cursor from inside a test, this will lead to a broken cursor when trying to rollback the test. Please rollback to a specific savepoint instead or open another cursor if really necessary"
-            )
+        def forbid(operation):
+            def forbidden(*args, **kwargs):
+                _debug.logic(
+                    "test.cursor.forbidden_call",
+                    test=current_test_tag(),
+                    operation=operation,
+                )
+                traceback.print_stack()
+                raise AssertionError(
+                    f"Cannot {operation}() a cursor from inside a test: it would "
+                    "leave a broken cursor for the test's own rollback. Roll back "
+                    "to a specific savepoint instead, or open another cursor if "
+                    "one is really necessary."
+                )
 
-        cls.commit_patcher = patch.object(cls.cr, "commit", forbidden)
+            return forbidden
+
+        cls.commit_patcher = patch.object(cls.cr, "commit", forbid("commit"))
         cls.startClassPatcher(cls.commit_patcher)
-        cls.rollback_patcher = patch.object(cls.cr, "rollback", forbidden)
+        cls.rollback_patcher = patch.object(cls.cr, "rollback", forbid("rollback"))
         cls.startClassPatcher(cls.rollback_patcher)
-        cls.close_patcher = patch.object(cls.cr, "close", forbidden)
+        cls.close_patcher = patch.object(cls.cr, "close", forbid("close"))
         cls.startClassPatcher(cls.close_patcher)
 
         cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
