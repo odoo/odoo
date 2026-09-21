@@ -5,19 +5,19 @@ const { evaluationPluginRegistry } = registries;
 export class ServerDataPlugin extends OdooEvaluationPlugin {
     static getters = /** @type {const} */ (["getServerData"]);
 
+    handlers = {
+        REFRESH_ALL_DATA_SOURCES: this.onRefreshAllDataSources,
+    };
+
     constructor(config) {
         super(config);
         /** @type {import("@spreadsheet/data_sources/server_data").ServerData} */
         this._serverData = config.custom.odooDataProvider?.serverData;
     }
 
-    handle(cmd) {
-        switch (cmd.type) {
-            case "REFRESH_ALL_DATA_SOURCES":
-                this.getServerData().clearCache();
-                this.dispatch("EVALUATE_CELLS");
-                break;
-        }
+    onRefreshAllDataSources() {
+        this.getServerData().clearCache();
+        this.dispatch("EVALUATE_CELLS");
     }
 
     getServerData() {
