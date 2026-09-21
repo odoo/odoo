@@ -44,19 +44,19 @@ def resolve_mro(
 
 
 def _normalize_computed_attrs(attrs: dict) -> None:
-    if attrs.get("compute"):
-        attrs["store"] = store = attrs.get("store", False)
-        attrs["compute_sudo"] = attrs.get("compute_sudo", store)
-        if not (attrs["store"] and not attrs.get("readonly", True)):
-            attrs["copy"] = attrs.get("copy", False)
-        attrs["readonly"] = attrs.get("readonly", not attrs.get("inverse"))
     if attrs.get("related"):
-        attrs["store"] = store = attrs.get("store", False)
+        attrs["store"] = attrs.get("store", False)
         attrs["compute_sudo"] = attrs.get(
             "compute_sudo", attrs.get("related_sudo", True)
         )
         attrs["copy"] = attrs.get("copy", False)
         attrs["readonly"] = attrs.get("readonly", True)
+    elif attrs.get("compute"):
+        attrs["store"] = store = attrs.get("store", False)
+        attrs["compute_sudo"] = attrs.get("compute_sudo", store)
+        if not (attrs["store"] and not attrs.get("readonly", True)):
+            attrs["copy"] = attrs.get("copy", False)
+        attrs["readonly"] = attrs.get("readonly", not attrs.get("inverse"))
 
 
 def _warn_precompute_attrs(field: Field, attrs: dict) -> None:

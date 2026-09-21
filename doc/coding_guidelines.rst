@@ -1020,7 +1020,10 @@ precedes.
 index), ``precompute=`` on a compute without ``store=True`` (dropped with a
 warning), and
 ``compute=`` beside a truthy ``related=`` (replaced by the related path's own
-compute).
+compute). The same holds across ``_inherit``: a ``related=`` that overrides a
+field a parent declared with ``compute=`` takes a related field's defaults
+(``compute_sudo=True`` unless ``related_sudo=False``, ``readonly=True``), not
+the compute's, so it groups and sorts through the join for every user.
 
 **A boolean field attribute takes a Python bool.** ``store``, ``precompute``,
 ``copy``, ``recursive``, ``compute_sudo``, ``related_sudo``, ``required``,
