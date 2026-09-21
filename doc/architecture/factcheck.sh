@@ -60,7 +60,9 @@ sys.path.insert(0, ".")
 import odoo.init  # noqa: F401  # the interpreter floor and the native build
 from odoo.orm.models.base import BaseModel
 from odoo.orm.tests import test_architecture_pins as pins
+from odoo.db import cursor
 from odoo.orm.runtime import _registry_signaling as signaling
+from odoo.orm.runtime import transaction
 from odoo.orm.tests import test_backend_dispatch_surface as dispatch
 
 pages = pathlib.Path(sys.argv[1])
@@ -156,6 +158,27 @@ left_out = [
 cite("load_modules phases", len(phases), "scenarios.md", r"`load_modules`' @ calls")
 cite("load_modules phases tabled", len(tabled), "scenarios.md", r"(?i)@ of `load_modules`")
 cite("load_modules phases left out", len(phases) - len(tabled), "scenarios.md", r"The @ left out")
+# runtime.md states the same loader total for its own sketch, and tells the
+# reader how many scenarios.md selects. The second is a page citing a page:
+# correcting scenarios.md's table from thirteen to fourteen left runtime.md
+# saying thirteen, and a gate that reads one page cannot see that.
+cite("load_modules phases (runtime.md)", len(phases), "runtime.md", r"of the @ `loader\.\*` calls")
+cite("load_modules phases (runtime.md prose)", len(phases), "runtime.md", r"Every one of the @ is")
+cite("scenarios' selection as runtime.md cites it", len(tabled), "runtime.md", r"selects @")
+
+cite(
+    "fixpoint ceiling",
+    transaction.MAX_FIXPOINT_ITERATIONS,
+    "runtime.md",
+    r"MAX_FIXPOINT_ITERATIONS \(@\)",
+)
+cite(
+    "flush passes",
+    cursor.BaseCursor._MAX_FLUSH_PASSES,
+    "runtime.md",
+    r"_MAX_FLUSH_PASSES \(@\)",
+)
+
 unknown = sorted(set(tabled + left_out) - set(phases))
 print(
     f"OK|every phase scenarios.md names is a loader call"
