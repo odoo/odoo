@@ -3,7 +3,6 @@ from __future__ import annotations
 import contextlib
 import logging
 import os
-import random
 import signal
 import threading
 import time
@@ -23,14 +22,14 @@ from odoo.tools.misc import dumpstacks
 from . import _process_state
 from ._base_server import SIGHUP_AVAILABLE, CommonServer
 from ._cron import (
-    CRON_NOTIFY_JITTER_MAX_S,
     CRON_POLL_INTERVAL_S,
     CRON_TRIGGER_CHANNEL,
     JOB_QUEUE_CHANNEL,
     CronListener,
     CronSchedule,
     ReconnectBackoff,
-    drain_swept_database,
+    sweep_database,
+    wait_for_notifies,
 )
 from ._env import IS_POSIX, IS_WINDOWS
 from ._limits import describe_thread_work, get_graceful_stop_timeout
@@ -328,23 +327,14 @@ class ThreadedServer(CommonServer):
         )
         thread = current_worker_thread()
         for db_name in db_names:
+            # The limit monitor reads this thread's `start_time` to decide
+            # whether a sweep is over its budget, so each database is its own
+            # unit of work rather than the whole due set being one.
             thread.start_time = time.monotonic()
             try:
-                with _debug.perf(
-                    "server.process_jobs",
-                    db=db_name,
-                    kind=getattr(process_jobs, "__qualname__", None),
-                ):
-                    process_jobs(db_name)
-            except Exception:
-                cron_logger.warning(
-                    "Uncaught error for database %s", db_name, exc_info=True
-                )
-                _debug.logic("server.jobs_failed", db=db_name)
+                sweep_database(db_name, process_jobs, cron_logger, release=release)
             finally:
                 thread.start_time = None
-                if release:
-                    drain_swept_database(db_name)
 
     def _poll_cron_channel(
         self,
@@ -364,12 +354,12 @@ class ThreadedServer(CommonServer):
             poll_interval_s=CRON_POLL_INTERVAL_S + number,
         )
         while max_age <= 0 or (time.monotonic() - alive_time) <= max_age:
-            woken = listener.wait(0 if first_pass else CRON_POLL_INTERVAL_S + number)
+            wait_for_notifies(
+                listener, 0 if first_pass else CRON_POLL_INTERVAL_S + number
+            )
             first_pass = False
             if self._listener_stop.is_set():
                 return _RECYCLE_STOP
-            if woken:
-                time.sleep(random.uniform(0, CRON_NOTIFY_JITTER_MAX_S))
             try:
                 notified = listener.drain()
             except Exception as exc:

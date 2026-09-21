@@ -2,6 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from odoo.service import _cron
 from odoo.service._cron import CronSchedule
 
 from .conftest import build_worker, threaded_server
@@ -154,8 +155,8 @@ class TestBothLoopsUseIt:
         clock = iter([0.0, 0.0, 0.0, 0.0, 100.0, 100.0])
         with (
             patch.object(_threaded, "CronSchedule", return_value=schedule),
-            patch.object(_threaded, "CRON_NOTIFY_JITTER_MAX_S", 0),
-            patch.object(_threaded, "drain_swept_database"),
+            patch.object(_cron, "CRON_NOTIFY_JITTER_MAX_S", 0),
+            patch.object(_cron, "drain_swept_database"),
             patch.object(_threaded, "current_worker_thread", return_value=MagicMock()),
             patch.object(_threaded.time, "monotonic", lambda: next(clock, 100.0)),
         ):
@@ -175,7 +176,7 @@ class TestBothLoopsUseIt:
         with (
             patch.object(worker, "_run_jobs_for_database") as run_jobs,
             patch.object(worker, "setproctitle"),
-            patch.object(_worker, "drain_swept_database"),
+            patch.object(_cron, "drain_swept_database"),
         ):
             worker.process_work()
         worker.schedule.get_due_databases.assert_called_once_with({"y", "z"})
@@ -217,3 +218,52 @@ class TestBothLoopsUseIt:
             assert not hasattr(mod, "get_cron_databases"), (
                 f"{mod.__name__} imports the lister; patch it on _cron only"
             )
+
+
+class TestTheSweepStepBothLoopsShare:
+    def _sweep(self, *, release, raises=None):
+        logger = MagicMock()
+        jobs = MagicMock(side_effect=raises, __qualname__="jobs")
+        with patch.object(_cron, "drain_swept_database") as drain:
+            _cron.sweep_database("adb", jobs, logger, release=release)
+        return jobs, logger, drain
+
+    def test_it_runs_the_database(self):
+        jobs, _, _ = self._sweep(release=False)
+        jobs.assert_called_once_with("adb")
+
+    def test_a_raising_job_is_this_databases_problem_not_the_sweeps(self):
+        _, logger, drain = self._sweep(release=True, raises=RuntimeError("boom"))
+        assert logger.warning.called, "the pass must say which database failed"
+        assert drain.called, (
+            "a database whose jobs raised still has to be let go of, or the "
+            "one failing tenant keeps its pool for the rest of the sweep"
+        )
+
+    def test_it_releases_only_when_another_database_is_waiting(self):
+        assert not self._sweep(release=False)[2].called
+        assert self._sweep(release=True)[2].called
+
+
+class TestTheWaitBothLoopsShare:
+    def _wait(self, *, woken, jitter=0.5):
+        listener = MagicMock()
+        listener.wait.return_value = woken
+        with patch.object(_cron.time, "sleep") as sleep:
+            got = _cron.wait_for_notifies(listener, 7.0, jitter=jitter)
+        return got, listener, sleep
+
+    def test_it_waits_on_the_listener_for_the_timeout_it_is_given(self):
+        _, listener, _ = self._wait(woken=True)
+        listener.wait.assert_called_once_with(7.0)
+
+    def test_a_wake_is_spread_so_every_listener_does_not_sweep_at_once(self):
+        got, _, sleep = self._wait(woken=True)
+        assert got is True
+        assert sleep.called
+        assert 0.0 <= sleep.call_args.args[0] <= 0.5
+
+    def test_a_timeout_is_not_spread_because_nothing_else_was_woken(self):
+        got, _, sleep = self._wait(woken=False)
+        assert got is False
+        assert not sleep.called

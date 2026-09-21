@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import contextlib
 import logging
+import random
 import selectors
 import time
 import typing
@@ -39,6 +40,8 @@ __all__ = [
     "get_cron_databases",
     "open_cron_listener",
     "order_notified_first",
+    "sweep_database",
+    "wait_for_notifies",
 ]
 
 CRON_POLL_INTERVAL_S = 60
@@ -132,6 +135,59 @@ def get_cron_databases() -> list[str]:
         excluded=len(names) - len(exposed),
     )
     return exposed
+
+
+def wait_for_notifies(
+    listener: CronListener,
+    timeout: float,
+    *,
+    jitter: float = CRON_NOTIFY_JITTER_MAX_S,
+) -> bool:
+    """Wait for a notify, and break up the herd one `pg_notify` wakes.
+
+    Every process listening on the channel is woken by the same notify and
+    would otherwise reach for the same database in the same instant.  Both
+    loops carried these two lines separately, which is the shape the *other*
+    spread in this file -- the per-worker sweep interval -- was dead in for as
+    long as it existed.
+    """
+    woken = listener.wait(timeout)
+    if woken and jitter:
+        time.sleep(random.uniform(0, jitter))
+    return woken
+
+
+def sweep_database(
+    db_name: str,
+    process_jobs: typing.Callable[[str], object],
+    logger: logging.Logger,
+    *,
+    release: bool,
+) -> None:
+    """Run one database's due jobs, then let go of it if more are waiting.
+
+    `release` is "this pass has another database to get to": holding a swept
+    database's pool open while sweeping the next is how one tenant's idle
+    connections starve the others.  A job that raises is this database's
+    problem and not the sweep's, so the pass goes on to the next one.
+
+    Both flavours drive their own loop -- a thread sweeps the whole due set
+    between waits, a worker takes one database per pass so its own limits and
+    its master's watchdog get a turn -- but this step was the same in both,
+    down to two spellings of the release condition and two of the warning.
+    """
+    try:
+        with _debug.perf(
+            "cron.database_swept",
+            db=db_name,
+            kind=getattr(process_jobs, "__qualname__", None),
+        ):
+            process_jobs(db_name)
+    except Exception:
+        logger.warning("Uncaught error for database %s", db_name, exc_info=True)
+        _debug.logic("cron.database_failed", db=db_name)
+    if release:
+        drain_swept_database(db_name)
 
 
 def drain_swept_database(db_name: str) -> None:

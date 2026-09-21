@@ -35,13 +35,13 @@ from odoo.libs.worker_thread import as_worker_thread, current_worker_thread
 from odoo.modules.registry import Registry
 
 from ._cron import (
-    CRON_NOTIFY_JITTER_MAX_S,
     CRON_POLL_INTERVAL_S,
     CRON_TRIGGER_CHANNEL,
     JOB_QUEUE_CHANNEL,
     CronListener,
     CronSchedule,
-    drain_swept_database,
+    sweep_database,
+    wait_for_notifies,
 )
 from ._env import get_env_int
 from ._limits import describe_thread_work, empty_pipe, get_memory_over_soft_limit
@@ -568,8 +568,7 @@ class WorkerCron(Worker):
                 polling_delay_s=self.schedule.polling_delay,
                 watchdog_timeout=self.watchdog_timeout,
             )
-            if self.listener.wait(interval):
-                time.sleep(random.uniform(0, CRON_NOTIFY_JITTER_MAX_S))
+            wait_for_notifies(self.listener, interval)
             empty_pipe(self.wakeup_pipe[0])
 
     def get_max_age(self) -> int:
@@ -631,21 +630,12 @@ class WorkerCron(Worker):
             db_count=self.db_count,
         )
 
-        try:
-            with _debug.perf(
-                "worker.cron.process_jobs", kind=self.__class__.__name__, db=db_name
-            ):
-                self._run_jobs_for_database(db_name)
-        except Exception:
-            self.logger.warning(
-                "Uncaught error while processing jobs for database %s",
-                db_name,
-                exc_info=True,
-            )
-            _debug.logic("worker.cron.jobs_failed", db=db_name)
-
-        if self.db_count > 1:
-            drain_swept_database(db_name)
+        sweep_database(
+            db_name,
+            self._run_jobs_for_database,
+            self.logger,
+            release=self.db_count > 1,
+        )
 
         self.request_count += 1
         if (

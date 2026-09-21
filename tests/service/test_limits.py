@@ -304,3 +304,21 @@ class TestBothCronLoopsReleaseADatabaseTheSameWay:
             f"of a database; {offenders} call the pool primitives directly and "
             "can drift apart again"
         )
+
+    def test_neither_loop_keeps_its_own_copy_of_the_sweep(self):
+        """The release condition and the warning had two spellings each."""
+        import pathlib
+
+        import odoo
+
+        service = pathlib.Path(odoo.__file__).resolve().parent / "service"
+        offenders = sorted(
+            path.name
+            for path in (service / "_threaded.py", service / "_worker.py")
+            if "drain_swept_database(" in path.read_text()
+        )
+        assert offenders == [], (
+            "sweep_database() is the one answer to what running one database's "
+            f"jobs means -- run, warn, release; {offenders} still decide part "
+            "of it themselves"
+        )

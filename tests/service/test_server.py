@@ -17,8 +17,8 @@ import pytest
 from odoo.service import (
     _base_server,
     _cron,
-    _listener,
     _limits,
+    _listener,
     _prefork,
     _process_state,
     _reload,
