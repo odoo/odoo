@@ -747,3 +747,27 @@ def test_scale_up_replaces_capacity_still_draining(master):
     spawning.assert_called_once()
     assert set(master.workers_http) == {11, 12, 13, 14}
     assert master._retiring_workers == {11}
+
+
+def test_neither_end_of_a_request_keeps_its_own_forget_list():
+    """`forget_request()` is the one answer to what a request leaves behind.
+
+    The transport (a malformed head, so no application runs) and the
+    application (before it dispatches) both have to drop it, and both used to
+    name the attributes themselves. The shorter list is how a 400 came to be
+    logged against the previous request's database and user.
+    """
+    import pathlib
+
+    import odoo
+
+    root = pathlib.Path(odoo.__file__).resolve().parent
+    offenders = sorted(
+        str(path.relative_to(root))
+        for path in (root / "service/_transport.py", root / "http/application.py")
+        if "delattr(" in path.read_text()
+    )
+    assert offenders == [], (
+        f"{offenders} decide for themselves what a request leaves on the "
+        "thread; odoo.libs.worker_thread.REQUEST_SCOPED_ATTRIBUTES is the list"
+    )

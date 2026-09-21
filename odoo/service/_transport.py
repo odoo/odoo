@@ -32,7 +32,7 @@ from odoo.libs.http1 import (
     parse_request_head,
     prepare_response_head,
 )
-from odoo.libs.worker_thread import current_worker_thread
+from odoo.libs.worker_thread import current_worker_thread, forget_request
 from odoo.logutils import root_handler_uses_colors
 
 from ._env import get_env_float, get_env_int
@@ -244,14 +244,6 @@ def log_access(
     address = str(conn.addr[0]).replace("%", "%%")
     template = address + " - - [" + stamp + '] "%s" %s %s'
     _access_logger.log(level, template, message, status, size)
-
-
-def _reset_request_attributes() -> None:
-    worker = current_worker_thread()
-    worker.rpc_model_method = ""
-    for attr in ("query_count", "request_id"):
-        if hasattr(worker, attr):
-            delattr(worker, attr)
 
 
 @dataclass(frozen=True, slots=True)
@@ -524,7 +516,7 @@ def serve_one(
             bytes(conn.source.buffer[span[0] : span[1]]), limits.head
         )
     except ProtocolError as exc:
-        _reset_request_attributes()
+        forget_request()
         line = _first_line(conn.source.buffer)
         size = _error_response(
             conn, exc.status, exc.detail, method=line.partition(" ")[0]

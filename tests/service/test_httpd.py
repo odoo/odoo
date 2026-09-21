@@ -11,6 +11,7 @@ from unittest.mock import patch
 
 import pytest
 
+from odoo.libs.worker_thread import current_worker_thread
 from odoo.service import _transport as transport
 from odoo.service import httpd
 from odoo.service import settings as server_settings
@@ -321,6 +322,48 @@ def test_a_partial_head_times_out_with_408_without_a_worker():
         assert buf.startswith(b"HTTP/1.1 408")
         assert time.monotonic() - started < 2
         assert srv.busy_workers == 0
+
+
+def test_a_malformed_request_is_not_logged_against_the_last_ones_database():
+    """The 400 path runs no application, so nothing else clears the thread.
+
+    `serve_one` answers a malformed head itself and logs it, on the pool
+    thread that served the previous request on the same connection. Until
+    that path forgot the whole request, the error line carried the previous
+    request's database and user -- the shorter of two hand-kept lists.
+    """
+    seen = []
+
+    def app(environ, start_response):
+        current_worker_thread().dbname = "the_previous_request"
+        current_worker_thread().uid = 7
+        start_response("200 OK", [("Content-Length", "2")])
+        return [b"ok"]
+
+    def spy(conn, request_line, raw_path, status, size, **kw):
+        worker = current_worker_thread()
+        seen.append(
+            (status, getattr(worker, "dbname", None), getattr(worker, "uid", None))
+        )
+
+    with _server(app) as srv, patch.object(transport, "log_access", spy):
+        sock = socket.create_connection(("127.0.0.1", srv.server_port))
+        sock.settimeout(3.0)
+        try:
+            sock.sendall(b"GET / HTTP/1.1\r\nHost: h\r\n\r\n")
+            time.sleep(0.4)
+            sock.sendall(b"GET / HTTP/1.1\r\nCon tent-Length: x\r\n\r\n")
+            time.sleep(0.4)
+        finally:
+            sock.close()
+
+    assert seen, "the malformed head was never logged"
+    status, dbname, uid = seen[-1]
+    assert status == 400, seen
+    assert (dbname, uid) == (None, None), (
+        f"the 400 was logged against {dbname!r}/{uid!r}, which belonged to the "
+        f"request before it on this connection"
+    )
 
 
 def test_a_stream_of_empty_lines_is_answered_400_and_closed(server):

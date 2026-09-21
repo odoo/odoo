@@ -20,7 +20,7 @@ from werkzeug.wsgi import ClosingIterator
 
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.libs.debug_log import DebugLog
-from odoo.libs.worker_thread import current_worker_thread
+from odoo.libs.worker_thread import current_worker_thread, forget_request
 from odoo.modules import module as module_manager
 from odoo.tools import file_path
 from odoo.tools.misc import real_time
@@ -263,15 +263,12 @@ class Application:
         headers["Content-Security-Policy"] = "default-src 'none'"
 
     def _clear_thread_state(self) -> None:
+        forget_request()
         current_thread = current_worker_thread()
         current_thread.query_count = 0
         current_thread.query_time = 0
         current_thread.perf_t0 = real_time()
         current_thread.cursor_mode = None
-        for attr in ("dbname", "uid", "url", "request_id"):
-            if hasattr(current_thread, attr):
-                delattr(current_thread, attr)
-        current_thread.rpc_model_method = ""
 
     def _apply_proxy_fix(self, environ: dict[str, object]) -> None:
         settings = current_settings()
