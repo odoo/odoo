@@ -16,8 +16,8 @@ class GatewayMlPolicy(models.Model):
     purpose_id = fields.Many2one(
         comodel_name="gateway.ml.purpose",
         index=True,
-        ondelete="cascade",
         required=True,
+        ondelete="cascade",
     )
     provider_ids = fields.Many2many(
         comodel_name="gateway.ml.provider",

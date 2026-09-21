@@ -42,7 +42,9 @@
                     <group>
                         <group>
                             <field name="purpose_id" />
-                            <field name="company_id" groups="base.group_multi_company" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company" />
                             <field name="provider_ids" widget="many2many_tags" />
                         </group>
                         <group>
@@ -50,7 +52,9 @@
                             <field name="approved_at" />
                         </group>
                     </group>
-                    <field name="note" placeholder="Why these vendors may receive this data..." />
+                    <field
+                        name="note"
+                        placeholder="Why these vendors may receive this data..." />
                 </sheet>
             </form>
         </field>
