@@ -526,7 +526,7 @@ class L10nEsEdiTbaiDocument(models.Model):
                     .get('DetalleIVA')
                 if detalle_iva:
                     detalle_iva[-1]['CuotaRecargoEquivalencia'] = sign * float_round(values['tax_amount'], 2)
-                    detalle_iva[-1]['TipoRecargoEquivalencia'] = sign * grouping_key['applied_tax_amount']
+                    detalle_iva[-1]['TipoRecargoEquivalencia'] = grouping_key['applied_tax_amount']
             elif l10n_es_type == 'no_sujeto':
                 no_sujeta = sujeta_no_sujeta.setdefault('NoSujeta', {})
                 no_sujeta.setdefault('ImportePorArticulos7_14_Otros', 0.0)
