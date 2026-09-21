@@ -287,6 +287,7 @@ class AccountMove(models.Model):
             'triangular_transaction': '1' if 'Triangular Sale' in invoice_tag_names else '2',
             'prefiks_podatnika': bool({'K_21', 'K_12', 'Triangular Sale'} & invoice_tag_names),
             'reverse_charge': any(invoice_line_vals['P_12'] in ('np II', 'oo') for invoice_line_vals in invoice_lines_vals),
+            'mpp': self.l10n_pl_mpp,
         }
 
     def _l10n_pl_edi_render_xml(self):
@@ -558,6 +559,7 @@ class AccountMove(models.Model):
             invoice_number = get_value(invoice_node, '{*}P_2')
             currency_code = get_value(invoice_node, '{*}KodWaluty')
             move_line_nodes = invoice_node.findall("{*}FaWiersz")
+            mpp_value = get_value(invoice_node, '{*}Adnotacje/{*}P_18A')
 
             lines = []
             for line_node in move_line_nodes:
@@ -596,6 +598,7 @@ class AccountMove(models.Model):
                 'invoice_number': invoice_number,
                 'currency_code': currency_code,
                 'lines': lines,
+                'l10n_pl_mpp': mpp_value == '1',
             }
 
         def get_ksef_bill_vals(data):
@@ -637,6 +640,7 @@ class AccountMove(models.Model):
                 'invoice_date_due': data['invoice_date_due'],
                 'ref': data['invoice_number'],
                 'currency_id': currency.id,
+                'l10n_pl_mpp': data['l10n_pl_mpp'],
                 'invoice_line_ids': [],
             }
 
