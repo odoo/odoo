@@ -1115,7 +1115,7 @@ class SaleOrderLine(models.Model):
 
     def _get_domain_lines_sellable(self):
         discount_products_ids = (
-            self.env.companies.sale_config_id.sale_discount_product_id.ids
+            self.env.companies.sudo().sale_config_id.sale_discount_product_id.ids
         )
         domain = Domain("is_downpayment", "=", False)
         if discount_products_ids:
