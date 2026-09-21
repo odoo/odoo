@@ -24,7 +24,7 @@ class NemhandelRegistration(models.TransientModel):
         required=True,
     )
     contact_email = fields.Char(
-        related="company_id.nemhandel_contact_email",
+        related="company_id.l10n_dk_nemhandel_config_id.nemhandel_contact_email",
         readonly=False,
         required=True,
     )
@@ -41,12 +41,12 @@ class NemhandelRegistration(models.TransientModel):
         compute="_compute_edi_user_id",
     )
     phone_number = fields.Char(
-        related="company_id.nemhandel_phone_number",
+        related="company_id.l10n_dk_nemhandel_config_id.nemhandel_phone_number",
         inverse="_inverse_phone_number",
         readonly=False,
     )
     l10n_dk_nemhandel_proxy_state = fields.Selection(
-        related="company_id.l10n_dk_nemhandel_proxy_state",
+        related="company_id.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state",
         readonly=False,
     )
     verification_code = fields.Char(
@@ -98,7 +98,9 @@ class NemhandelRegistration(models.TransientModel):
     @api.depends("company_id.account_edi_proxy_client_ids")
     def _compute_edi_user_id(self):
         for wizard in self:
-            wizard.edi_user_id = wizard.company_id.nemhandel_edi_user
+            wizard.edi_user_id = (
+                wizard.company_id.l10n_dk_nemhandel_config_id.nemhandel_edi_user
+            )
 
     @api.depends("edi_user_id")
     def _compute_edi_mode(self):
@@ -233,7 +235,10 @@ class NemhandelRegistration(models.TransientModel):
                 },
             }
 
-        if self.company_id.l10n_dk_nemhandel_proxy_state == "receiver":
+        if (
+            self.company_id.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state
+            == "receiver"
+        ):
             return self._action_send_notification(
                 title=_("Registered to receive documents."),
                 message=_("You can now receive documents via Nemhandel."),
@@ -316,7 +321,7 @@ class NemhandelRegistration(models.TransientModel):
             )
 
         self.verification_code = False
-        company.l10n_dk_nemhandel_proxy_state = "receiver"
+        company.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state = "receiver"
         return self._action_send_notification(
             title=_("Registered to receive documents."),
             message=_("You can now receive documents via Nemhandel."),

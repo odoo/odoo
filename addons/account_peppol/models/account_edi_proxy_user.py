@@ -175,7 +175,11 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     def _cron_peppol_get_new_documents(self):
         edi_users = self.search(
             [
-                ("company_id.account_peppol_proxy_state", "=", "receiver"),
+                (
+                    "company_id.account_peppol_config_id.account_peppol_proxy_state",
+                    "=",
+                    "receiver",
+                ),
                 ("proxy_type", "=", "peppol"),
             ]
         )
@@ -185,7 +189,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         edi_users = self.search(
             [
                 (
-                    "company_id.account_peppol_proxy_state",
+                    "company_id.account_peppol_config_id.account_peppol_proxy_state",
                     "in",
                     self._get_domain_can_send(),
                 ),
@@ -200,7 +204,13 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
         # throughout the registration process, we need to check the status more frequently
         if self.search_count(
-            [("company_id.account_peppol_proxy_state", "=", "smp_registration")],
+            [
+                (
+                    "company_id.account_peppol_config_id.account_peppol_proxy_state",
+                    "=",
+                    "smp_registration",
+                )
+            ],
             limit=1,
         ):
             self.env.ref(
@@ -209,7 +219,13 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
     def _cron_peppol_webhook_keepalive(self):
         edi_users = self.search(
-            [("company_id.account_peppol_proxy_state", "in", ["sender", "receiver"])]
+            [
+                (
+                    "company_id.account_peppol_config_id.account_peppol_proxy_state",
+                    "in",
+                    ["sender", "receiver"],
+                )
+            ]
         )
         edi_users._peppol_reset_webhook()
 
@@ -250,7 +266,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             is_self_billed = True
 
         if not is_self_billed:
-            journal = journal or self.company_id.peppol_purchase_journal_id
+            journal = (
+                journal
+                or self.company_id.account_peppol_config_id.peppol_purchase_journal_id
+            )
             move_type = "in_invoice"
             if not journal:
                 return {}
@@ -301,7 +320,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         }
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
-            if not edi_user.company_id.peppol_purchase_journal_id:
+            if not edi_user.company_id.account_peppol_config_id.peppol_purchase_journal_id:
                 msg = _(
                     "Please set a journal for Peppol invoices on %s before receiving documents.",
                     edi_user.company_id.display_name,
@@ -477,7 +496,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 edi_user.sudo().company_id._reset_peppol_configuration()
                 edi_user.action_archive()
             elif local_state:
-                edi_user.company_id.account_peppol_proxy_state = local_state
+                edi_user.company_id.account_peppol_config_id.account_peppol_proxy_state = local_state
             else:
                 _logger.warning(
                     "Received unknown Peppol state '%s' for EDI proxy user id=%s",
@@ -502,13 +521,15 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         self.check_singleton()
         company = self.company_id
 
-        if company.account_peppol_proxy_state != "sender":
+        if company.account_peppol_config_id.account_peppol_proxy_state != "sender":
             # a participant can only try registering as a receiver if they are currently a sender
             peppol_states = dict(
                 self.env["ir.model.fields"].get_field_selection(
                     "res.company", "account_peppol_proxy_state"
                 )
-            )[company.account_peppol_proxy_state]  # handles translation correctly
+            )[
+                company.account_peppol_config_id.account_peppol_proxy_state
+            ]  # handles translation correctly
             raise UserError(
                 _("Cannot register a user with a %s application", peppol_states)
             )
@@ -521,7 +542,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             peppol_info["error_msg"],
         )
         if is_on_peppol:
-            company.peppol_external_provider = external_provider
+            company.account_peppol_config_id.peppol_external_provider = (
+                external_provider
+            )
             raise UserError(error_msg)
 
         self._call_peppol_proxy(
@@ -536,8 +559,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         # once we sent the migration key over, we don't need it
         # but we need the field for future in case the user decided to migrate away from Odoo
         company.sudo().account_peppol_migration_key = False
-        company.account_peppol_proxy_state = "smp_registration"
-        company.peppol_external_provider = None
+        company.account_peppol_config_id.account_peppol_proxy_state = "smp_registration"
+        company.account_peppol_config_id.peppol_external_provider = None
 
         self.env.ref("account_peppol.ir_cron_peppol_get_participant_status")._trigger(
             at=fields.Datetime.now() + timedelta(hours=1)
@@ -575,7 +598,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     def _peppol_deregister_participant_to_sender(self):
         self.check_singleton()
 
-        if self.company_id.account_peppol_proxy_state == "receiver":
+        if (
+            self.company_id.account_peppol_config_id.account_peppol_proxy_state
+            == "receiver"
+        ):
             # fetch all documents and message statuses before unlinking the edi user
             # so that the invoices are acknowledged
             self._cron_peppol_get_message_status()
@@ -584,7 +610,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 self.env.cr.commit()
 
         self._call_peppol_proxy(endpoint="/api/peppol/1/unregister_to_sender")
-        self.company_id.account_peppol_proxy_state = "sender"
+        self.company_id.account_peppol_config_id.account_peppol_proxy_state = "sender"
 
     @api.model
     def _peppol_auto_register_services(self, module):
@@ -626,8 +652,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if not url.startswith(endpoint):
                 return None
             company = self.env["res.company"].sudo().browse(id).exists()
-            if company and company.account_peppol_edi_user:
-                return company.account_peppol_edi_user
+            if company and company.account_peppol_config_id.account_peppol_edi_user:
+                return company.account_peppol_config_id.account_peppol_edi_user
             if edi_user := self.browse(id).exists():
                 # Legacy fallback: we no longer generate the token based on the proxy_user, as it does
                 # not exists yet with the new creation flow.

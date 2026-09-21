@@ -7,6 +7,7 @@ from . import account_tax
 from . import l10n_my_edi_industry_classification
 from . import myinvois_document
 from . import product_template
+from . import l10n_my_edi_config
 from . import res_company
 from . import res_config_settings
 from . import res_partner

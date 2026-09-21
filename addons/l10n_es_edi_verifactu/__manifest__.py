@@ -1,6 +1,6 @@
 {
     "name": "Spain - Veri*Factu",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Accounting/Localizations/EDI",
     "summary": "Module for sending Spanish Veri*Factu XML to the AEAT",
     "author": "Odoo S.A.",
@@ -11,6 +11,7 @@
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/l10n_es_edi_verifactu_security.xml",
         "wizards/account_move_reversal_views.xml",
         "views/account_move_views.xml",
         "views/account_tax_views.xml",

@@ -3,7 +3,7 @@
 
 {
     "name": "Spain - SII EDI Suministro de Libros",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Accounting/Localizations/EDI",
     "description": """
 This module sends the taxes information (mostly VAT) of the
@@ -32,6 +32,8 @@ You need to configure your certificate and the tax agency.
         "es",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/l10n_es_edi_sii_security.xml",
         "data/account_edi_data.xml",
         "views/account_move_views.xml",
         "views/l10n_es_edi_sii_certificate_views.xml",

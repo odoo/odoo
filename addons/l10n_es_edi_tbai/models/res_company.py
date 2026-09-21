@@ -1,13 +1,9 @@
 import re
 
-import markupsafe
-
-from odoo import api, fields, models, release
+from odoo import fields, models, release
 from odoo.tools import LazyTranslate
 
 _lt = LazyTranslate(__name__)
-
-# === TBAI license values ===
 L10N_ES_TBAI_LICENSE_DICT = {
     "production": {
         "license_name": _lt("Production license"),  # all agencies
@@ -43,106 +39,45 @@ L10N_ES_TBAI_LICENSE_DICT = {
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    l10n_es_tbai_certificate_id = fields.Many2one(
-        comodel_name="certificate.certificate",
-        string="Certificate (TicketBAI)",
-        compute="_compute_l10n_es_tbai_certificate_id",
-        store=True,
-        readonly=False,
+    l10n_es_edi_tbai_config_id = fields.Many2one(
+        comodel_name="l10n_es_edi_tbai.config",
+        compute="_compute_l10n_es_edi_tbai_config_id",
+        search="_search_l10n_es_edi_tbai_config_id",
     )
+
+    l10n_es_tbai_is_enabled = fields.Boolean(
+        related="l10n_es_edi_tbai_config_id.l10n_es_tbai_is_enabled",
+    )
+
+    # the company form shows the licence, so the company declares it
+    l10n_es_tbai_license_html = fields.Html(
+        related="l10n_es_edi_tbai_config_id.l10n_es_tbai_license_html",
+    )
+
+    # the company's own certificates, whose inverse names the company: a
+    # collection it owns, not a setting the configuration keeps
     l10n_es_tbai_certificate_ids = fields.One2many(
         comodel_name="certificate.certificate",
         inverse_name="company_id",
         domain=[("scope", "=", "tbai")],
     )
 
-    # === TBAI config ===
-    l10n_es_tbai_tax_agency = fields.Selection(
-        selection=[
-            ("araba", "Hacienda Foral de Araba"),  # es-vi (region code)
-            ("bizkaia", "Hacienda Foral de Bizkaia"),  # es-bi
-            ("gipuzkoa", "Hacienda Foral de Gipuzkoa"),  # es-ss
-        ],
-        string="Tax Agency for TBAI",
-    )
-    l10n_es_tbai_license_html = fields.Html(
-        string="TicketBAI license",
-        compute="_compute_l10n_es_tbai_license_html",
-    )
+    def _search_l10n_es_edi_tbai_config_id(self, operator, value):
+        return self._search_config_link("l10n_es_edi_tbai.config", operator, value)
 
-    # === TBAI CHAIN HEAD ===
-    l10n_es_tbai_chain_sequence_id = fields.Many2one(
-        comodel_name="ir.sequence",
-        string="TicketBai account.move chain sequence",
-        copy=False,
-        readonly=True,
-    )
-
-    l10n_es_tbai_test_env = fields.Boolean(
-        string="TBAI Test Mode",
-        default=True,
-        help="Use the test environment for TicketBAI",
-    )
-
-    l10n_es_tbai_is_enabled = fields.Boolean(compute="_compute_l10n_es_tbai_is_enabled")
-
-    @api.depends("country_id", "l10n_es_tbai_tax_agency")
-    def _compute_l10n_es_tbai_is_enabled(self):
+    def _compute_l10n_es_edi_tbai_config_id(self):
+        configs = self.env["l10n_es_edi_tbai.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
         for company in self:
-            company.l10n_es_tbai_is_enabled = (
-                company.country_code == "ES" and company.l10n_es_tbai_tax_agency
-            )
-
-    @api.depends("country_id", "l10n_es_tbai_certificate_ids")
-    def _compute_l10n_es_tbai_certificate_id(self):
-        for company in self:
-            if company.country_code == "ES":
-                company.l10n_es_tbai_certificate_id = self.env[  # noqa: E8507 - one lookup per company, on its own certificates
-                    "certificate.certificate"
-                ].search(
-                    [
-                        ("company_id", "=", company.id),
-                        ("is_valid", "=", True),
-                        ("scope", "=", "tbai"),
-                    ],
-                    order="date_end desc",
-                    limit=1,
-                )
-            else:
-                company.l10n_es_tbai_certificate_id = False
-
-    @api.depends("country_id", "l10n_es_tbai_test_env", "l10n_es_tbai_tax_agency")
-    def _compute_l10n_es_tbai_license_html(self):
-        for company in self:
-            license_dict = company._get_l10n_es_tbai_license_dict()
-            if license_dict:
-                license_dict.update(
-                    {
-                        "tr_nif": self.env._("Licence NIF"),
-                        "tr_number": self.env._("Licence number"),
-                        "tr_name": self.env._("Software name"),
-                        "tr_version": self.env._("Software version"),
-                    }
-                )
-                company.l10n_es_tbai_license_html = markupsafe.Markup("""
-<strong>{license_name}</strong><br/>
-<p>
-<strong>{tr_nif}: </strong>{license_nif}<br/>
-<strong>{tr_number}: </strong>{license_number}<br/>
-<strong>{tr_name}: </strong>{software_name}<br/>
-<strong>{tr_version}: </strong>{software_version}<br/>
-</p>""").format(**license_dict)
-            else:
-                company.l10n_es_tbai_license_html = markupsafe.Markup("""
-<strong>{tr_no_license}</strong>""").format(
-                    tr_no_license=self.env._("TicketBAI is not configured")
-                )
+            company.l10n_es_edi_tbai_config_id = by_company.get(company.id, False)
 
     def _get_l10n_es_tbai_license_dict(self):
         self.check_singleton()
-        if self.l10n_es_tbai_is_enabled:
-            if self.l10n_es_tbai_test_env:  # test env: each agency has its test license
-                license_key = self.l10n_es_tbai_tax_agency
+        if self.l10n_es_edi_tbai_config_id.l10n_es_tbai_is_enabled:
+            if (
+                self.l10n_es_edi_tbai_config_id.l10n_es_tbai_test_env
+            ):  # test env: each agency has its test license
+                license_key = self.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency
             else:  # production env: only one license
                 license_key = "production"
             license = L10N_ES_TBAI_LICENSE_DICT[license_key]
@@ -153,9 +88,9 @@ class ResCompany(models.Model):
             return {}
 
     def _get_l10n_es_tbai_next_chain_index(self):
-        if not self.l10n_es_tbai_chain_sequence_id:
+        if not self.l10n_es_edi_tbai_config_id.l10n_es_tbai_chain_sequence_id:
             self_sudo = self.sudo()
-            self_sudo.l10n_es_tbai_chain_sequence_id = self_sudo.env[
+            self_sudo.l10n_es_edi_tbai_config_id.l10n_es_tbai_chain_sequence_id = self_sudo.env[
                 "ir.sequence"
             ].create(
                 {
@@ -165,7 +100,9 @@ class ResCompany(models.Model):
                     "company_id": self.id,
                 }
             )
-        return self.l10n_es_tbai_chain_sequence_id.next_by_id()
+        return (
+            self.l10n_es_edi_tbai_config_id.l10n_es_tbai_chain_sequence_id.next_by_id()
+        )
 
     def _get_l10n_es_tbai_last_chained_document(self):
         """

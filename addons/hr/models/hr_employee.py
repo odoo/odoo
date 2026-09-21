@@ -2169,7 +2169,7 @@ class HrEmployee(models.Model):
     def _compute_hr_presence_state(self):
         employee_to_check_working = self.filtered(
             lambda e: (
-                e.company_id.sudo().hr_presence_control_login
+                e.company_id.sudo().hr_config_id.hr_presence_control_login
                 and (e.user_id.sudo().presence_ids.status or "offline") == "offline"
             )
         )
@@ -2183,7 +2183,7 @@ class HrEmployee(models.Model):
         )
         for employee in self:
             state = "out_of_working_hour"
-            if employee.company_id.sudo().hr_presence_control_login:
+            if employee.company_id.sudo().hr_config_id.hr_presence_control_login:
                 presence_status = (
                     employee.user_id.sudo().presence_ids.status or "offline"
                 )
@@ -2460,11 +2460,11 @@ class HrEmployee(models.Model):
         companies_by_contract_period = defaultdict(lambda: self.env["res.company"])
         companies_by_permit_period = defaultdict(lambda: self.env["res.company"])
         for company in companies:
-            companies_by_contract_period[company.contract_expiration_notice_period] += (
-                company
-            )
+            companies_by_contract_period[
+                company.hr_config_id.contract_expiration_notice_period
+            ] += company
             companies_by_permit_period[
-                company.work_permit_expiration_notice_period
+                company.hr_config_id.work_permit_expiration_notice_period
             ] += company
 
         for notice_period, period_companies in companies_by_contract_period.items():

@@ -7,13 +7,8 @@ class ResCompany(models.Model):
 
     def _hr_presence_valid_ips(self):
         self.check_singleton()
-        raw = self.hr_presence_control_ip_list or ""
+        raw = self.hr_config_id.hr_presence_control_ip_list or ""
         return {part.strip() for part in raw.split(",") if part.strip()}
-
-    def _get_cache_invalidation_fields(self):
-        # _is_presence_ip_tracking_enabled is an ormcache, so nothing would notice a
-        # company switching IP control on until the next registry cache clear.
-        return super()._get_cache_invalidation_fields() | {"hr_presence_control_ip"}
 
     @ormcache()
     def _is_presence_ip_tracking_enabled(self):
@@ -23,7 +18,7 @@ class ResCompany(models.Model):
         database when the feature is off -- which it is for most installations.
         """
         return bool(
-            self.env["res.company"]
+            self.env["hr.config"]
             .sudo()
             .search_count([("hr_presence_control_ip", "=", True)], limit=1)
         )

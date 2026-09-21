@@ -1,0 +1,28 @@
+from odoo import fields, models
+
+
+class HrConfig(models.Model):
+    _name = "hr.config"
+    _description = "A company's hr configuration"
+    _inherit = ["mixin.company.config"]
+
+    hr_presence_control_email_amount = fields.Integer(string="# emails to send")
+    hr_presence_control_ip_list = fields.Char(string="Valid IP addresses")
+    employee_properties_definition = fields.PropertiesDefinition(
+        string="Employee Properties"
+    )
+    hr_presence_control_login = fields.Boolean(
+        string="Based on user status in system",
+        default=True,
+    )
+    hr_presence_control_email = fields.Boolean(string="Based on number of emails sent")
+    hr_presence_control_ip = fields.Boolean(string="Based on IP Address")
+    hr_presence_control_attendance = fields.Boolean(string="Based on attendances")
+    contract_expiration_notice_period = fields.Integer(
+        string="Contract Expiry Notice Period",
+        default=7,
+    )
+    work_permit_expiration_notice_period = fields.Integer(
+        string="Work Permit Expiry Notice Period",
+        default=60,
+    )

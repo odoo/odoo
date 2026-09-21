@@ -210,7 +210,7 @@ class HrAttendanceOvertimeRule(models.Model):
         employee = attendances.employee_id
         company = self.company_id or employee.company_id
         if (
-            company.absence_management
+            company.hr_attendance_config_id.absence_management
             and float_compare(overtime_amount, -self.employee_tolerance, 5) == -1
         ):
             last_attendance = max(

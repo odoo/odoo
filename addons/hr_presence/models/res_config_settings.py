@@ -24,15 +24,16 @@ class ResConfigSettings(models.TransientModel):
             {vals.get("company_id") or self.env.company.id for vals in vals_list}
         )
         before = {
-            company.id: tuple(company[name] for name in _CONTROLS)
+            company.id: tuple(company.hr_config_id[name] for name in _CONTROLS)
             for company in companies.sudo()
         }
         configs = super().create(vals_list)
-        companies.invalidate_recordset(_CONTROLS)
+        companies.sudo().hr_config_id.invalidate_recordset(_CONTROLS)
         turned_on = companies.sudo().filtered(
             lambda company: (
-                tuple(company[name] for name in _CONTROLS) != before[company.id]
-                and any(company[name] for name in _CONTROLS)
+                tuple(company.hr_config_id[name] for name in _CONTROLS)
+                != before[company.id]
+                and any(company.hr_config_id[name] for name in _CONTROLS)
             )
         )
         if turned_on:

@@ -9,10 +9,10 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     l10n_es_tbai_tax_agency = fields.Selection(
-        related="company_id.l10n_es_tbai_tax_agency",
+        related="company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency",
         readonly=False,
     )
     l10n_es_tbai_test_env = fields.Boolean(
-        related="company_id.l10n_es_tbai_test_env",
+        related="company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_test_env",
         readonly=False,
     )

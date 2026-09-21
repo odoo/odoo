@@ -6,7 +6,7 @@ class PosOrder(models.Model):
     _inherit = "pos.order"
 
     l10n_es_edi_verifactu_required = fields.Boolean(
-        related="company_id.l10n_es_edi_verifactu_required",
+        related="company_id.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_required",
         string="Veri*Factu Required",
     )
     l10n_es_edi_verifactu_document_ids = fields.One2many(
@@ -133,7 +133,7 @@ class PosOrder(models.Model):
             return False
 
         taxes = self.lines.tax_ids.flatten_taxes_hierarchy()
-        special_regime = self.company_id.l10n_es_edi_verifactu_special_vat_regime
+        special_regime = self.company_id.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_special_vat_regime
         selected_clave_regimen = (
             taxes._l10n_es_edi_verifactu_get_suggested_clave_regimen(
                 special_regime, forced_tax_applicability=tax_applicability
@@ -258,12 +258,13 @@ class PosOrder(models.Model):
         if self.l10n_es_edi_verifactu_required:
             if (
                 not self.to_invoice
-                and self.amount_total > self.company_id.l10n_es_simplified_invoice_limit
+                and self.amount_total
+                > self.company_id.l10n_es_config_id.l10n_es_simplified_invoice_limit
             ):
                 raise UserError(
                     _(
                         "The order needs to be invoiced since its total amount is above %s€.",
-                        self.company_id.l10n_es_simplified_invoice_limit,
+                        self.company_id.l10n_es_config_id.l10n_es_simplified_invoice_limit,
                     )
                 )
             refunded_order = self.refunded_order_id

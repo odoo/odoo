@@ -68,7 +68,7 @@ class AccountMoveSendWizard(models.TransientModel):
                 raise AccessError(
                     _(
                         "You are not allowed to send invoice on behalf of %s.",
-                        self.move_id.company_id.peppol_parent_company_id.sudo().name,
+                        self.move_id.company_id.account_peppol_config_id.peppol_parent_company_id.sudo().name,
                     )
                 )  # sudo needed because the current user does not have access
             if registration_action := self._do_peppol_pre_send(self.move_id):

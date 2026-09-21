@@ -633,7 +633,9 @@ class TestHrAttendanceUndertime(TransactionCase):
         self.assertEqual(attendance.validated_overtime_hours, 0)
 
     def test_no_validation_extra_hours_change(self):
-        self.company.attendance_overtime_validation = "no_validation"
+        self.company.hr_attendance_config_id.attendance_overtime_validation = (
+            "no_validation"
+        )
 
         attendance = self.env["hr.attendance"]
         with Form(attendance) as attendance_form:

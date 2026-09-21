@@ -18,46 +18,20 @@ class ResCompany(models.Model):
         "nemhandel_identifier_value",
     )
 
-    nemhandel_contact_email = fields.Char(
-        string="Nemhandel Contact email",
-        compute="_compute_nemhandel_contact_email",
-        store=True,
-        readonly=False,
-        help="Primary contact email for Nemhandel-related communication",
-    )
-    nemhandel_phone_number = fields.Char(
-        string="Nemhandel Phone number (for validation)",
-        compute="_compute_nemhandel_phone_number",
-        store=True,
-        readonly=False,
-        help="You will receive a verification code to this phone number",
-    )
-    l10n_dk_nemhandel_proxy_state = fields.Selection(
-        selection=[
-            ("not_registered", "Not registered"),
-            ("in_verification", "In verification"),
-            ("receiver", "Can send and receive"),
-            ("rejected", "Rejected"),
-        ],
-        string="Nemhandel status",
-        default="not_registered",
-        required=True,
-    )
-    nemhandel_purchase_journal_id = fields.Many2one(
-        comodel_name="account.journal",
-        compute="_compute_nemhandel_purchase_journal_id",
-        store=True,
-        readonly=False,
-        domain=[("type", "=", "purchase")],
-    )
-    nemhandel_edi_user = fields.Many2one(
-        comodel_name="account_edi_proxy_client.user",
-        compute="_compute_nemhandel_edi_user",
+    l10n_dk_nemhandel_config_id = fields.Many2one(
+        comodel_name="l10n_dk_nemhandel.config",
+        compute="_compute_l10n_dk_nemhandel_config_id",
+        search="_search_l10n_dk_nemhandel_config_id",
     )
 
-    # -------------------------------------------------------------------------
-    # HELPER METHODS
-    # -------------------------------------------------------------------------
+    def _search_l10n_dk_nemhandel_config_id(self, operator, value):
+        return self._search_config_link("l10n_dk_nemhandel.config", operator, value)
+
+    def _compute_l10n_dk_nemhandel_config_id(self):
+        configs = self.env["l10n_dk_nemhandel.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.l10n_dk_nemhandel_config_id = by_company.get(company.id, False)
 
     @api.model
     def _check_phonenumbers_import(self):
@@ -75,7 +49,9 @@ class ResCompany(models.Model):
 
         self._check_phonenumbers_import()
 
-        phone_number = phone_number or self.nemhandel_phone_number
+        phone_number = (
+            phone_number or self.l10n_dk_nemhandel_config_id.nemhandel_phone_number
+        )
         if not phone_number:
             return
 
@@ -93,83 +69,6 @@ class ResCompany(models.Model):
         ):
             raise ValidationError(error_message)
 
-    # -------------------------------------------------------------------------
-    # CONSTRAINTS
-    # -------------------------------------------------------------------------
-
-    @api.constrains("nemhandel_phone_number")
-    def _check_nemhandel_phone_number(self):
-        for company in self:
-            if company.nemhandel_phone_number:
-                company._normalize_nemhandel_phone_number()
-
-    @api.constrains("nemhandel_purchase_journal_id")
-    def _check_nemhandel_purchase_journal_id(self):
-        for company in self:
-            if (
-                company.nemhandel_purchase_journal_id
-                and company.nemhandel_purchase_journal_id.type != "purchase"
-            ):
-                raise ValidationError(
-                    _("A purchase journal must be used to receive Nemhandel documents.")
-                )
-
-    # -------------------------------------------------------------------------
-    # COMPUTE METHODS
-    # -------------------------------------------------------------------------
-
-    @api.depends("l10n_dk_nemhandel_proxy_state")
-    def _compute_nemhandel_purchase_journal_id(self):
-        for company in self:
-            if (
-                not company.nemhandel_purchase_journal_id
-                and company.l10n_dk_nemhandel_proxy_state
-                not in {"not_registered", "rejected"}
-            ):
-                company.nemhandel_purchase_journal_id = self.env[  # noqa: E8507 - one lookup per company, on its own journals
-                    "account.journal"
-                ].search(
-                    [
-                        *self.env["account.journal"]._check_company_domain(company),
-                        ("type", "=", "purchase"),
-                    ],
-                    limit=1,
-                )
-                company.nemhandel_purchase_journal_id.is_nemhandel_journal = True
-            else:
-                company.nemhandel_purchase_journal_id = (
-                    company.nemhandel_purchase_journal_id
-                )
-
-    @api.depends("email")
-    def _compute_nemhandel_contact_email(self):
-        for company in self:
-            if not company.nemhandel_contact_email:
-                company.nemhandel_contact_email = company.email
-
-    @api.depends("phone_ids")
-    def _compute_nemhandel_phone_number(self):
-        for company in self:
-            if not company.nemhandel_phone_number:
-                company_phone = company.phone_ids._primary().number
-                try:
-                    # precompute only if it's a valid phone number
-                    company._normalize_nemhandel_phone_number(company_phone)
-                    company.nemhandel_phone_number = company_phone
-                except ValidationError:
-                    continue
-
-    @api.depends("account_edi_proxy_client_ids")
-    def _compute_nemhandel_edi_user(self):
-        for company in self:
-            company.nemhandel_edi_user = company.account_edi_proxy_client_ids.filtered(
-                lambda u: u.proxy_type == "nemhandel"
-            )
-
-    # -------------------------------------------------------------------------
-    # PEPPOL PARTICIPANT MANAGEMENT
-    # -------------------------------------------------------------------------
-
     def _get_nemhandel_edi_mode(self):
         self.check_singleton()
         config_param = (
@@ -177,7 +76,11 @@ class ResCompany(models.Model):
             .sudo()
             .get_param("l10n_dk_nemhandel.edi.mode")
         )
-        return self.sudo().nemhandel_edi_user.edi_mode or config_param or "prod"
+        return (
+            self.sudo().l10n_dk_nemhandel_config_id.nemhandel_edi_user.edi_mode
+            or config_param
+            or "prod"
+        )
 
     def _get_nemhandel_webhook_endpoint(self):
         self.check_singleton()

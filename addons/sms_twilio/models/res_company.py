@@ -12,39 +12,45 @@ class ResCompany(models.Model):
         "sms_twilio_auth_token": "sms_twilio_auth_token",
     }
 
-    sms_provider = fields.Selection(
-        selection=[
-            ("iap", "Send via Odoo"),
-            ("twilio", "Send via Twilio"),
-        ],
-        string="SMS Provider",
-        default="iap",
+    sms_twilio_config_id = fields.Many2one(
+        comodel_name="sms_twilio.config",
+        compute="_compute_sms_twilio_config_id",
+        search="_search_sms_twilio_config_id",
     )
-    sms_twilio_account_sid = fields.Char(
-        string="Account SID",
-        groups="base.group_system",
-    )
+
     sms_twilio_auth_token = fields.Char(
         string="Auth Token",
         compute="_compute_credential_doors",
         inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
+
+    # the company's own Twilio numbers, whose inverse names the company: a
+    # collection it owns, not a setting the configuration keeps
     sms_twilio_number_ids = fields.One2many(
         comodel_name="sms.twilio.number",
         inverse_name="company_id",
         string="Numbers",
     )
 
+    def _search_sms_twilio_config_id(self, operator, value):
+        return self._search_config_link("sms_twilio.config", operator, value)
+
+    def _compute_sms_twilio_config_id(self):
+        configs = self.env["sms_twilio.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.sms_twilio_config_id = by_company.get(company.id, False)
+
     def _get_sms_api_class(self):
         self.check_singleton()
-        if self.sms_provider == "twilio":
+        if self.sms_twilio_config_id.sms_provider == "twilio":
             return SmsApiTwilio
         return super()._get_sms_api_class()
 
     def _assert_twilio_sid(self):
         self.check_singleton()
-        account_sid = self.sms_twilio_account_sid
+        account_sid = self.sms_twilio_config_id.sms_twilio_account_sid
         if (
             not account_sid
             or len(account_sid) != 34

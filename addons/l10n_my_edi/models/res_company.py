@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ResCompany(models.Model):
@@ -9,81 +9,33 @@ class ResCompany(models.Model):
         "l10n_my_edi_industrial_classification",
     )
 
-    # ------------------
-    # Fields declaration
-    # ------------------
-
-    l10n_my_edi_proxy_user_id = fields.Many2one(
-        comodel_name="account_edi_proxy_client.user",
-        compute="_compute_l10n_my_edi_proxy_user_id",
+    l10n_my_edi_config_id = fields.Many2one(
+        comodel_name="l10n_my_edi.config",
+        compute="_compute_l10n_my_edi_config_id",
+        search="_search_l10n_my_edi_config_id",
     )
+
     l10n_my_identification_number_placeholder = fields.Char(
-        compute="_compute_l10n_my_identification_number_placeholder"
-    )
-    l10n_my_edi_mode = fields.Selection(
-        selection=[
-            ("test", "Pre-Production"),
-            ("prod", "Production"),
-        ],
-        # Nothing will happen until the user register, so it can be set by default.
-        default="test",
-    )
-    # /!\ this was a planned feature that got scrapped due to API limitations. It may come back if their system provides better support for it.
-    l10n_my_edi_default_import_journal_id = fields.Many2one(
-        comodel_name="account.journal",
-        string="Default import journal",
-        domain="[('type', '=', 'purchase')]",
-        help="The journal on which invoices imported from MyInvois will be booked. Leave empty to use the default purchase journal.",
+        related="l10n_my_edi_config_id.l10n_my_identification_number_placeholder",
     )
 
-    # --------------------------------
-    # Compute, inverse, search methods
-    # --------------------------------
+    def _search_l10n_my_edi_config_id(self, operator, value):
+        return self._search_config_link("l10n_my_edi.config", operator, value)
 
-    @api.depends("account_edi_proxy_client_ids", "l10n_my_edi_mode")
-    def _compute_l10n_my_edi_proxy_user_id(self):
-        """Each company is expected to have at most one proxy user for malaysia for each mode.
-        Thus, we can easily find said user.
-        """
+    def _compute_l10n_my_edi_config_id(self):
+        configs = self.env["l10n_my_edi.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
         for company in self:
-            company.l10n_my_edi_proxy_user_id = (
-                company.account_edi_proxy_client_ids.filtered(
-                    lambda u, company=company: (
-                        u.proxy_type == "l10n_my_edi"
-                        and u.edi_mode == company.l10n_my_edi_mode
-                    )
-                )[:1]
-            )
-
-    @api.depends("l10n_my_identification_type")
-    def _compute_l10n_my_identification_number_placeholder(self):
-        """Computes a dynamic placeholder that depends on the selected type to help the user inputs their data.
-        The placeholders have been taken from the MyInvois doc.
-        """
-        for company in self:
-            placeholder = "N/A"
-            if company.l10n_my_identification_type == "NRIC":
-                placeholder = "830503114923"
-            elif company.l10n_my_identification_type == "BRN":
-                placeholder = "202201234565"
-            elif company.l10n_my_identification_type == "PASSPORT":
-                placeholder = "A00000000"
-            elif company.l10n_my_identification_type == "ARMY":
-                placeholder = "830805134983"
-            company.l10n_my_identification_number_placeholder = placeholder
-
-    # ----------------
-    # Business methods
-    # ----------------
+            company.l10n_my_edi_config_id = by_company.get(company.id, False)
 
     def _l10n_my_edi_create_proxy_user(self):
         """This method will create a new proxy user for the current company based on the selected mode, if no users already exists."""
         self.check_singleton()
-        if not self.l10n_my_edi_proxy_user_id:
+        if not self.l10n_my_edi_config_id.l10n_my_edi_proxy_user_id:
             self.env["account_edi_proxy_client.user"]._register_proxy_user(
-                self, "l10n_my_edi", self.l10n_my_edi_mode
+                self, "l10n_my_edi", self.l10n_my_edi_config_id.l10n_my_edi_mode
             )
 
     def _l10n_my_edi_enabled(self):
         self.check_singleton()
-        return bool(self.sudo().l10n_my_edi_proxy_user_id)
+        return bool(self.sudo().l10n_my_edi_config_id.l10n_my_edi_proxy_user_id)

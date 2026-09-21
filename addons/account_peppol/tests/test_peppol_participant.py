@@ -98,7 +98,12 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             self.assertRecordValues(wizard, [{"smp_registration": False}])
             wizard.button_register_peppol_participant()
         self.assertRecordValues(
-            self.env.company, [{"account_peppol_proxy_state": "sender"}]
+            self.env.company.account_peppol_config_id,
+            [
+                {
+                    "account_peppol_proxy_state": "sender",
+                }
+            ],
         )
 
         # sender -> receiver.
@@ -112,7 +117,12 @@ class TestPeppolParticipant(PeppolConnectorCommon):
         ):
             settings.button_peppol_register_sender_as_receiver()
         self.assertRecordValues(
-            self.env.company, [{"account_peppol_proxy_state": "receiver"}]
+            self.env.company.account_peppol_config_id,
+            [
+                {
+                    "account_peppol_proxy_state": "receiver",
+                }
+            ],
         )
 
         # receiver -> not_registered.
@@ -126,7 +136,12 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             config_wizard = self.env["peppol.config.wizard"].create({})
             config_wizard.button_peppol_unregister()
         self.assertRecordValues(
-            self.env.company, [{"account_peppol_proxy_state": "not_registered"}]
+            self.env.company.account_peppol_config_id,
+            [
+                {
+                    "account_peppol_proxy_state": "not_registered",
+                }
+            ],
         )
 
     def test_register_participant_already_exists_on_peppol_as_sender(self):
@@ -141,7 +156,12 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             self.assertRecordValues(wizard, [{"smp_registration": True}])
             wizard.button_register_peppol_participant()
         self.assertRecordValues(
-            self.env.company, [{"account_peppol_proxy_state": "sender"}]
+            self.env.company.account_peppol_config_id,
+            [
+                {
+                    "account_peppol_proxy_state": "sender",
+                }
+            ],
         )
 
     def test_register_participant_already_exists_on_peppol_as_receiver(self):
@@ -156,7 +176,12 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             self.assertRecordValues(wizard, [{"smp_registration": False}])
             wizard.button_register_peppol_participant()
         self.assertRecordValues(
-            self.env.company, [{"account_peppol_proxy_state": "sender"}]
+            self.env.company.account_peppol_config_id,
+            [
+                {
+                    "account_peppol_proxy_state": "sender",
+                }
+            ],
         )
 
     def test_register_participant_rejected(self):
@@ -176,7 +201,12 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             self.assertRecordValues(wizard, [{"smp_registration": True}])
             wizard.button_register_peppol_participant()
         self.assertRecordValues(
-            self.env.company, [{"account_peppol_proxy_state": "not_registered"}]
+            self.env.company.account_peppol_config_id,
+            [
+                {
+                    "account_peppol_proxy_state": "not_registered",
+                }
+            ],
         )
 
     def test_config_update_email(self):
@@ -189,7 +219,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             wizard = self.env["peppol.registration"].create({})
             wizard.button_register_peppol_participant()
         self.assertRecordValues(
-            self.env.company,
+            self.env.company.account_peppol_config_id,
             [
                 {
                     "account_peppol_proxy_state": "sender",
@@ -224,8 +254,15 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             settings,
             [
                 {
-                    "account_peppol_proxy_state": "not_registered",
                     "peppol_use_parent_company": False,
+                }
+            ],
+        )
+        self.assertRecordValues(
+            settings,
+            [
+                {
+                    "account_peppol_proxy_state": "not_registered",
                 }
             ],
         )
@@ -274,9 +311,16 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             branch,
             [
                 {
-                    "peppol_parent_company_id": False,
                     "peppol_eas": "0208",
                     "peppol_endpoint": "0477472701",
+                }
+            ],
+        )
+        self.assertRecordValues(
+            branch.account_peppol_config_id,
+            [
+                {
+                    "peppol_parent_company_id": False,
                     "account_peppol_contact_email": "turlututu@tsointsoin",
                     "account_peppol_phone_number": "+3236656565",
                 }
@@ -292,8 +336,15 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             settings,
             [
                 {
-                    "account_peppol_proxy_state": "sender",
                     "peppol_use_parent_company": False,
+                }
+            ],
+        )
+        self.assertRecordValues(
+            settings,
+            [
+                {
+                    "account_peppol_proxy_state": "sender",
                 }
             ],
         )
@@ -323,8 +374,15 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             settings,
             [
                 {
-                    "account_peppol_proxy_state": "not_registered",
                     "peppol_use_parent_company": False,
+                }
+            ],
+        )
+        self.assertRecordValues(
+            settings,
+            [
+                {
+                    "account_peppol_proxy_state": "not_registered",
                 }
             ],
         )
@@ -361,8 +419,15 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             settings,
             [
                 {
-                    "account_peppol_proxy_state": "not_registered",
                     "peppol_use_parent_company": False,
+                }
+            ],
+        )
+        self.assertRecordValues(
+            settings,
+            [
+                {
+                    "account_peppol_proxy_state": "not_registered",
                 }
             ],
         )
@@ -425,8 +490,15 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             settings,
             [
                 {
-                    "account_peppol_proxy_state": "receiver",
                     "peppol_use_parent_company": False,
+                }
+            ],
+        )
+        self.assertRecordValues(
+            settings,
+            [
+                {
+                    "account_peppol_proxy_state": "receiver",
                 }
             ],
         )
@@ -448,8 +520,8 @@ class TestPeppolParticipant(PeppolConnectorCommon):
                     "use_parent_connection_selection": "use_parent",
                     "peppol_eas": self.env.company.peppol_eas,
                     "peppol_endpoint": self.env.company.peppol_endpoint,
-                    "phone_number": self.env.company.account_peppol_phone_number,
-                    "contact_email": self.env.company.account_peppol_contact_email,
+                    "phone_number": self.env.company.account_peppol_config_id.account_peppol_phone_number,
+                    "contact_email": self.env.company.account_peppol_config_id.account_peppol_contact_email,
                 }
             ],
         )
@@ -467,9 +539,16 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             branch,
             [
                 {
-                    "peppol_parent_company_id": self.env.company.id,
                     "peppol_eas": "0208",
                     "peppol_endpoint": "0239843188",
+                }
+            ],
+        )
+        self.assertRecordValues(
+            branch.account_peppol_config_id,
+            [
+                {
+                    "peppol_parent_company_id": self.env.company.id,
                 }
             ],
         )
@@ -483,8 +562,15 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             settings,
             [
                 {
-                    "account_peppol_proxy_state": "sender",
                     "peppol_use_parent_company": True,
+                }
+            ],
+        )
+        self.assertRecordValues(
+            settings,
+            [
+                {
+                    "account_peppol_proxy_state": "sender",
                 }
             ],
         )
@@ -514,8 +600,15 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             settings,
             [
                 {
-                    "account_peppol_proxy_state": "not_registered",
                     "peppol_use_parent_company": False,
+                }
+            ],
+        )
+        self.assertRecordValues(
+            settings,
+            [
+                {
+                    "account_peppol_proxy_state": "not_registered",
                 }
             ],
         )
@@ -537,8 +630,8 @@ class TestPeppolParticipant(PeppolConnectorCommon):
                     "use_parent_connection_selection": "use_parent",
                     "peppol_eas": self.env.company.peppol_eas,
                     "peppol_endpoint": self.env.company.peppol_endpoint,
-                    "phone_number": self.env.company.account_peppol_phone_number,
-                    "contact_email": self.env.company.account_peppol_contact_email,
+                    "phone_number": self.env.company.account_peppol_config_id.account_peppol_phone_number,
+                    "contact_email": self.env.company.account_peppol_config_id.account_peppol_contact_email,
                 }
             ],
         )
@@ -556,7 +649,8 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             self.assertTrue(wizard.smp_registration)
             wizard.button_register_peppol_participant()
         self.assertEqual(
-            self.env.company.account_peppol_proxy_state, "smp_registration"
+            self.env.company.account_peppol_config_id.account_peppol_proxy_state,
+            "smp_registration",
         )
 
         config_wizard = self.env["peppol.config.wizard"].create({})
@@ -566,4 +660,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             config_wizard.button_peppol_unregister()
 
         # Should successfully deregister despite Exception
-        self.assertEqual(self.env.company.account_peppol_proxy_state, "not_registered")
+        self.assertEqual(
+            self.env.company.account_peppol_config_id.account_peppol_proxy_state,
+            "not_registered",
+        )

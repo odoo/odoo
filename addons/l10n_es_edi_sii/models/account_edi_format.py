@@ -595,7 +595,9 @@ class AccountEdiFormat(models.Model):
         # === Call the web service ===
 
         # Get connection data.
-        l10n_es_sii_tax_agency = company.mapped("l10n_es_sii_tax_agency")[0]
+        l10n_es_sii_tax_agency = company.l10n_es_edi_sii_config_id.mapped(
+            "l10n_es_sii_tax_agency"
+        )[0]
         connection_vals = getattr(
             self, f"_l10n_es_edi_web_service_{l10n_es_sii_tax_agency}_vals"
         )(invoices)
@@ -610,7 +612,7 @@ class AccountEdiFormat(models.Model):
         }
 
         session = self.env["ir.egress"].session(purpose="l10n_es_sii", max_bytes=None)
-        session.cert = company.l10n_es_sii_certificate_id
+        session.cert = company.l10n_es_edi_sii_config_id.l10n_es_sii_certificate_id
         session.mount("https://", CertificateAdapter(ciphers=EUSKADI_CIPHERS))
 
         # `timeout` bounds WSDL/XSD loading, `operation_timeout` the POST/GET
@@ -623,12 +625,18 @@ class AccountEdiFormat(models.Model):
             service_name = "SuministroFactEmitidas"
         else:
             service_name = "SuministroFactRecibidas"
-        if company.l10n_es_sii_test_env and not connection_vals.get("test_url"):
+        if (
+            company.l10n_es_edi_sii_config_id.l10n_es_sii_test_env
+            and not connection_vals.get("test_url")
+        ):
             service_name += "Pruebas"
 
         # Establish the connection.
         serv = client.bind("siiService", service_name)
-        if company.l10n_es_sii_test_env and connection_vals.get("test_url"):
+        if (
+            company.l10n_es_edi_sii_config_id.l10n_es_sii_test_env
+            and connection_vals.get("test_url")
+        ):
             serv._binding_options["address"] = connection_vals["test_url"]
 
         error_msg = None
@@ -865,7 +873,9 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_es_edi_sii_send(self, invoices, cancel=False):
         # Ensure a certificate is available.
-        certificate = invoices.company_id.l10n_es_sii_certificate_id
+        certificate = (
+            invoices.company_id.l10n_es_edi_sii_config_id.l10n_es_sii_certificate_id
+        )
         if not certificate:
             return {
                 inv: {
@@ -876,7 +886,9 @@ class AccountEdiFormat(models.Model):
             }
 
         # Ensure a tax agency is available.
-        l10n_es_sii_tax_agency = invoices.company_id.mapped("l10n_es_sii_tax_agency")[0]
+        l10n_es_sii_tax_agency = invoices.company_id.l10n_es_edi_sii_config_id.mapped(
+            "l10n_es_sii_tax_agency"
+        )[0]
         if not l10n_es_sii_tax_agency:
             return {
                 inv: {

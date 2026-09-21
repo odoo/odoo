@@ -30,14 +30,14 @@ class ResConfigSettings(models.TransientModel):
     )
     expense_journal_id = fields.Many2one(
         comodel_name="account.journal",
-        related="company_id.expense_journal_id",
+        related="company_id.hr_expense_config_id.expense_journal_id",
         readonly=False,
         domain="[('type', '=', 'purchase')]",
         check_company=True,
     )
     company_expense_allowed_payment_channel_ids = fields.Many2many(
         comodel_name="account.payment.channel",
-        related="company_id.company_expense_allowed_payment_channel_ids",
+        related="company_id.hr_expense_config_id.company_expense_allowed_payment_channel_ids",
         readonly=False,
         check_company=True,
     )

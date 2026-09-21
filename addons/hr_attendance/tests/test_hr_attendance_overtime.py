@@ -903,7 +903,9 @@ class TestHrAttendanceOvertime(HttpCase):
         self.assertEqual(sum(attendances.mapped("validated_overtime_hours")), 0)
 
     def test_no_validation_extra_hours_change(self):
-        self.company.attendance_overtime_validation = "no_validation"
+        self.company.hr_attendance_config_id.attendance_overtime_validation = (
+            "no_validation"
+        )
 
         attendance = self.env["hr.attendance"]
         with Form(attendance) as attendance_form:
@@ -1149,7 +1151,7 @@ class TestHrAttendanceOvertime(HttpCase):
                     "duration": 5,
                 }
             )
-        token = self.employee.company_id.attendance_kiosk_key
+        token = self.employee.company_id.hr_attendance_config_id.attendance_kiosk_key
         response = self.call_jsonrpc(
             "/hr_attendance/attendance_employee_data",
             {"token": token, "employee_id": self.employee.id},
@@ -1356,7 +1358,7 @@ class TestHrAttendanceOvertime(HttpCase):
 
     def test_employee_tolerance_multiple_attendances(self):
         self.employee.ruleset_id.rule_ids.employee_tolerance = 0.25
-        self.employee.company_id.absence_management = True
+        self.employee.company_id.hr_attendance_config_id.absence_management = True
         self.employee.ruleset_id.rule_ids.company_id = self.employee.company_id
         (
             attendance_1,

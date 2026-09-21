@@ -3,7 +3,7 @@
 
 {
     "name": "Spain - TicketBAI",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Accounting/Localizations/EDI",
     "description": """
 This module sends invoices and vendor bills to the "Diputaciones

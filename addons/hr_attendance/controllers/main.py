@@ -48,7 +48,7 @@ class HrAttendance(http.Controller):
         tidiness. Every kiosk route is `auth="public"` and takes its token from
         the client, so a caller can send `null`, `false` or `""` -- and an Odoo
         domain turns all three into `attendance_kiosk_key IS NULL`. Against a
-        company whose key was NULL, `/hr_attendance/attendance_employee_data`
+        configuration whose key was NULL, `/hr_attendance/attendance_employee_data`
         with `"token": null` returned that company's employee names, avatars
         and hours to an unauthenticated caller, and the sibling routes would
         have checked them in, created employees and assigned badges.
@@ -63,9 +63,10 @@ class HrAttendance(http.Controller):
             dbg.logic.debug("[kiosk] refusing a falsy token")
             return request.env["res.company"].sudo().browse()
         company = (
-            request.env["res.company"]
+            request.env["hr_attendance.config"]
             .sudo()
             .search([("attendance_kiosk_key", "=", token)])
+            .company_id
         )
         dbg.pipeline.debug(
             "[kiosk:%s] token resolves to %s",
@@ -108,15 +109,16 @@ class HrAttendance(http.Controller):
                 "total_overtime": float_round(
                     employee.total_overtime, precision_digits=2
                 ),
-                "kiosk_delay": employee.company_id.attendance_kiosk_delay * 1000,
+                "kiosk_delay": employee.company_id.hr_attendance_config_id.attendance_kiosk_delay
+                * 1000,
                 "attendance": {
                     "check_in": employee.last_attendance_id.check_in,
                     "check_out": employee.last_attendance_id.check_out,
                 },
                 "overtime_today": HrAttendance._get_overtime_today(employee),
-                "use_pin": employee.company_id.attendance_kiosk_use_pin,
-                "display_overtime": employee.company_id.hr_attendance_display_overtime,
-                "device_tracking_enabled": employee.company_id.attendance_device_tracking,
+                "use_pin": employee.company_id.hr_attendance_config_id.attendance_kiosk_use_pin,
+                "display_overtime": employee.company_id.hr_attendance_config_id.hr_attendance_display_overtime,
+                "device_tracking_enabled": employee.company_id.hr_attendance_config_id.attendance_device_tracking,
             }
         return response
 
@@ -161,7 +163,9 @@ class HrAttendance(http.Controller):
             if self.has_password():
                 request.session.logout(keep_db=True)
             return request.redirect(
-                request.env["res.company"].browse(company_id).attendance_kiosk_url
+                request.env["res.company"]
+                .browse(company_id)
+                .hr_attendance_config_id.attendance_kiosk_url
             )
         else:
             return request.prepare_not_found_error()
@@ -250,7 +254,7 @@ class HrAttendance(http.Controller):
             if from_trial_mode or (not has_password and not request.env.user.is_public):
                 kiosk_mode = "settings"
             else:
-                kiosk_mode = company.attendance_kiosk_mode
+                kiosk_mode = company.hr_attendance_config_id.attendance_kiosk_mode
             version_info = exp_version()
             return request.render(
                 "hr_attendance.public_kiosk_mode",
@@ -262,8 +266,8 @@ class HrAttendance(http.Controller):
                         "departments": department_list,
                         "kiosk_mode": kiosk_mode,
                         "from_trial_mode": from_trial_mode,
-                        "barcode_source": company.attendance_barcode_source,
-                        "device_tracking_enabled": company.attendance_device_tracking,
+                        "barcode_source": company.hr_attendance_config_id.attendance_barcode_source,
+                        "device_tracking_enabled": company.hr_attendance_config_id.attendance_device_tracking,
                         "lang": py_to_js_locale(
                             company.partner_id.lang or company.env.lang
                         ),
@@ -302,7 +306,7 @@ class HrAttendance(http.Controller):
         employee._attendance_action_change(
             self._get_geoip_response(
                 "kiosk",
-                device_tracking_enabled=company.attendance_device_tracking,
+                device_tracking_enabled=company.hr_attendance_config_id.attendance_device_tracking,
             )
         )
         return self._get_employee_info_response(employee)
@@ -320,8 +324,9 @@ class HrAttendance(http.Controller):
         if not employee:
             return self._refuse()
         company = employee.company_id
-        if company.attendance_kiosk_use_pin and not employee._check_attendance_pin(
-            pin_code
+        if (
+            company.hr_attendance_config_id.attendance_kiosk_use_pin
+            and not employee._check_attendance_pin(pin_code)
         ):
             return self._refuse()
         employee._attendance_action_change(
@@ -329,7 +334,7 @@ class HrAttendance(http.Controller):
                 "kiosk",
                 latitude=latitude,
                 longitude=longitude,
-                device_tracking_enabled=company.attendance_device_tracking,
+                device_tracking_enabled=company.hr_attendance_config_id.attendance_device_tracking,
             )
         )
         return self._get_employee_info_response(employee)
@@ -397,7 +402,7 @@ class HrAttendance(http.Controller):
             mode="systray",
             latitude=latitude,
             longitude=longitude,
-            device_tracking_enabled=employee.company_id.attendance_device_tracking,
+            device_tracking_enabled=employee.company_id.hr_attendance_config_id.attendance_device_tracking,
         )
         employee._attendance_action_change(geo_ip_response)
         return self._get_employee_info_response(employee)
@@ -427,12 +432,16 @@ class HrAttendance(http.Controller):
         if not company:
             return self._refuse()
         modes = dict(
-            request.env["res.company"]._fields["attendance_kiosk_mode"].selection
+            request.env["hr_attendance.config"]
+            ._fields["attendance_kiosk_mode"]
+            .selection
         )
         if mode not in modes:
             return self._refuse(_("Unknown kiosk mode."))
         try:
-            request.env["res.company"].browse(company.id).attendance_kiosk_mode = mode
+            request.env["res.company"].browse(
+                company.id
+            ).hr_attendance_config_id.attendance_kiosk_mode = mode
         except AccessError:
             return self._refuse(_("You are not allowed to change the kiosk settings."))
         return {"status": "success"}

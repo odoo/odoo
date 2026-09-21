@@ -66,7 +66,7 @@ def _mock_call_peppol_proxy(func, self, endpoint, params=None):
         }
 
     def _mock_unregister_to_sender(user):
-        user.company_id.account_peppol_proxy_state = "sender"
+        user.company_id.account_peppol_config_id.account_peppol_proxy_state = "sender"
         return True
 
     endpoint = endpoint.rsplit("/", 1)[-1]
@@ -137,7 +137,9 @@ def _mock_create_connection(func, self, *args, **kwargs):
             "private_key_id": private_key_sudo.id,
         }
     )
-    company.account_peppol_proxy_state = dummy_response["peppol_state"]
+    company.account_peppol_config_id.account_peppol_proxy_state = dummy_response[
+        "peppol_state"
+    ]
 
     content = b64encode(file_open(DEMO_PRIVATE_KEY, "rb").read())
     attachments = self.env["ir.attachment"].search(

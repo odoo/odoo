@@ -36,7 +36,7 @@ class PosOrder(models.Model):
     )
 
     l10n_es_tbai_is_required = fields.Boolean(
-        related="company_id.l10n_es_tbai_is_enabled",
+        related="company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_is_enabled",
         string="TicketBAI required",
     )
 
@@ -80,12 +80,13 @@ class PosOrder(models.Model):
 
         if (
             not self.to_invoice
-            and self.amount_total > self.company_id.l10n_es_simplified_invoice_limit
+            and self.amount_total
+            > self.company_id.l10n_es_config_id.l10n_es_simplified_invoice_limit
         ):
             raise UserError(
                 self.env._(
                     "Please create an invoice for an amount over %s.",
-                    self.company_id.l10n_es_simplified_invoice_limit,
+                    self.company_id.l10n_es_config_id.l10n_es_simplified_invoice_limit,
                 )
             )
 

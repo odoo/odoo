@@ -84,7 +84,7 @@ class HrEmployee(models.Model):
         compute_sudo=True,
     )
     display_extra_hours = fields.Boolean(
-        related="company_id.hr_attendance_display_overtime"
+        related="company_id.hr_attendance_config_id.hr_attendance_display_overtime"
     )
 
     attendance_pin_failure_count = fields.Integer(
@@ -414,8 +414,8 @@ class HrEmployee(models.Model):
             ),
             "last_check_in": employee.last_check_in,
             "attendance_state": employee.attendance_state,
-            "display_systray": employee.company_id.attendance_from_systray,
-            "device_tracking_enabled": employee.company_id.attendance_device_tracking,
+            "display_systray": employee.company_id.hr_attendance_config_id.attendance_from_systray,
+            "device_tracking_enabled": employee.company_id.hr_attendance_config_id.attendance_device_tracking,
         }
 
     @dbg.timed
@@ -507,7 +507,7 @@ class HrEmployee(models.Model):
                 employee.hr_presence_state = "present"
             elif (
                 employee.id in working_now
-                and employee.company_id.hr_presence_control_attendance
+                and employee.company_id.hr_config_id.hr_presence_control_attendance
             ):
                 employee.hr_presence_state = "absent"
 
@@ -515,7 +515,7 @@ class HrEmployee(models.Model):
         res = super()._compute_presence_icon()
         for employee in self:
             employee.show_hr_icon_display = (
-                employee.company_id.hr_presence_control_attendance
+                employee.company_id.hr_config_id.hr_presence_control_attendance
                 or bool(employee.user_id)
             )
         return res

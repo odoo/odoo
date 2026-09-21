@@ -7,13 +7,15 @@ from odoo.addons.l10n_dk_nemhandel.tools.demo_utils import handle_demo
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    nemhandel_edi_user = fields.Many2one(related="company_id.nemhandel_edi_user")
+    nemhandel_edi_user = fields.Many2one(
+        related="company_id.l10n_dk_nemhandel_config_id.nemhandel_edi_user"
+    )
     nemhandel_edi_mode = fields.Selection(
         related="nemhandel_edi_user.edi_mode",
         string="Nemhandel EDI operating mode",
     )
     nemhandel_contact_email = fields.Char(
-        related="company_id.nemhandel_contact_email",
+        related="company_id.l10n_dk_nemhandel_config_id.nemhandel_contact_email",
         readonly=False,
     )
     nemhandel_identifier_type = fields.Selection(
@@ -29,15 +31,15 @@ class ResConfigSettings(models.TransientModel):
         string="Nemhandel identification",
     )
     nemhandel_phone_number = fields.Char(
-        related="company_id.nemhandel_phone_number",
+        related="company_id.l10n_dk_nemhandel_config_id.nemhandel_phone_number",
         readonly=False,
     )
     l10n_dk_nemhandel_proxy_state = fields.Selection(
-        related="company_id.l10n_dk_nemhandel_proxy_state",
+        related="company_id.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state",
         readonly=False,
     )
     nemhandel_purchase_journal_id = fields.Many2one(
-        related="company_id.nemhandel_purchase_journal_id",
+        related="company_id.l10n_dk_nemhandel_config_id.nemhandel_purchase_journal_id",
         readonly=False,
     )
 

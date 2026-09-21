@@ -283,9 +283,11 @@ class TestSmsTwilio(MockSmsTwilio):
             )
             composer_twilio._action_send_sms()
 
-            # should call twilio 4 times (4 partners, one number at a time) and IAP 1 time (batch, even different companies)
+            # twilio 4 times (4 partners, one number at a time) and IAP once
+            # per company: `sms._split_by_api` groups by company so that each
+            # one's SMS resolve against its own scoped IAP account
             self.assertEqual(self._sms_twilio_send_mock.call_count, 4)
-            self.assertEqual(self._sms_api_contact_iap_mock.call_count, 1)
+            self.assertEqual(self._sms_api_contact_iap_mock.call_count, 2)
 
             # check SMS statuses
             # TDE FIXME: in mass mode without mailing, no sms_tracker are created hence

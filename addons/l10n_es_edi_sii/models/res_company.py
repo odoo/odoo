@@ -1,50 +1,28 @@
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    l10n_es_sii_certificate_id = fields.Many2one(
-        comodel_name="certificate.certificate",
-        string="Certificate (SII)",
-        compute="_compute_l10n_es_sii_certificate_id",
-        store=True,
-        readonly=False,
+    l10n_es_edi_sii_config_id = fields.Many2one(
+        comodel_name="l10n_es_edi_sii.config",
+        compute="_compute_l10n_es_edi_sii_config_id",
+        search="_search_l10n_es_edi_sii_config_id",
     )
+
+    # the company's own certificates, whose inverse names the company: a
+    # collection it owns, not a setting the configuration keeps
     l10n_es_sii_certificate_ids = fields.One2many(
         comodel_name="certificate.certificate",
         inverse_name="company_id",
         domain=[("scope", "=", "sii")],
     )
-    l10n_es_sii_tax_agency = fields.Selection(
-        selection=[
-            ("aeat", "Agencia Tributaria española"),
-            ("gipuzkoa", "Hacienda Foral de Gipuzkoa"),
-            ("bizkaia", "Hacienda Foral de Bizkaia"),
-        ],
-        string="Tax Agency for SII",
-        default=False,
-    )
-    l10n_es_sii_test_env = fields.Boolean(
-        string="SII Test Mode",
-        default=True,
-        help="Use the test environment for SII",
-    )
 
-    @api.depends("country_id", "l10n_es_sii_certificate_ids")
-    def _compute_l10n_es_sii_certificate_id(self):
+    def _search_l10n_es_edi_sii_config_id(self, operator, value):
+        return self._search_config_link("l10n_es_edi_sii.config", operator, value)
+
+    def _compute_l10n_es_edi_sii_config_id(self):
+        configs = self.env["l10n_es_edi_sii.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
         for company in self:
-            if company.country_code == "ES":
-                company.l10n_es_sii_certificate_id = self.env[  # noqa: E8507 - one lookup per company, on its own certificates
-                    "certificate.certificate"
-                ].search(
-                    [
-                        ("company_id", "=", company.id),
-                        ("is_valid", "=", True),
-                        ("scope", "=", "sii"),
-                    ],
-                    order="date_end desc",
-                    limit=1,
-                )
-            else:
-                company.l10n_es_sii_certificate_id = False
+            company.l10n_es_edi_sii_config_id = by_company.get(company.id, False)

@@ -22,7 +22,10 @@ class MixinAccountMoveSend(models.AbstractModel):
     def _is_applicable_to_company(self, method, company):
         # EXTENDS 'account'
         if method == "nemhandel":
-            return company.l10n_dk_nemhandel_proxy_state != "rejected"
+            return (
+                company.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state
+                != "rejected"
+            )
         return super()._is_applicable_to_company(method, company)
 
     def _is_applicable_to_move(self, method, move, **move_data):
@@ -132,7 +135,9 @@ class MixinAccountMoveSend(models.AbstractModel):
         if not params["documents"]:
             return
 
-        edi_user = next(iter(invoices_data)).company_id.nemhandel_edi_user
+        edi_user = next(
+            iter(invoices_data)
+        ).company_id.l10n_dk_nemhandel_config_id.nemhandel_edi_user
 
         try:
             response = edi_user._call_nemhandel_proxy(

@@ -91,7 +91,9 @@ class ResPartner(models.Model):
     @api.depends_context("allowed_company_ids")
     @api.depends("invoice_edi_format")
     def _compute_is_using_nemhandel(self):
-        nemhandel_user = self.env.company.sudo().nemhandel_edi_user
+        nemhandel_user = (
+            self.env.company.sudo().l10n_dk_nemhandel_config_id.nemhandel_edi_user
+        )
         for partner in self:
             partner.is_using_nemhandel = (
                 nemhandel_user and partner.invoice_edi_format == "oioubl_21"
@@ -139,7 +141,9 @@ class ResPartner(models.Model):
         endpoint_participant = parse.quote_plus(
             f"iso6523-actorid-upis::{edi_identification}"
         )
-        nemhandel_user = self.env.company.sudo().nemhandel_edi_user
+        nemhandel_user = (
+            self.env.company.sudo().l10n_dk_nemhandel_config_id.nemhandel_edi_user
+        )
         edi_mode = (nemhandel_user and nemhandel_user.edi_mode) or self.env[
             "ir.config_parameter"
         ].sudo().get_param("l10n_dk_nemhandel.edi.mode")
@@ -262,7 +266,9 @@ class ResPartner(models.Model):
             if service_metadata is not None:
                 service_href = service_metadata.attrib.get("href", "")
 
-        nemhandel_user = self.env.company.sudo().nemhandel_edi_user
+        nemhandel_user = (
+            self.env.company.sudo().l10n_dk_nemhandel_config_id.nemhandel_edi_user
+        )
         edi_mode = (nemhandel_user and nemhandel_user.edi_mode) or self.env[
             "ir.config_parameter"
         ].sudo().get_param("l10n_dk_nemhandel.edi.mode")

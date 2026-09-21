@@ -233,7 +233,7 @@ class TestEmailEvidence(HrPresenceCase):
         posted = self._post_emails(writer, 1)
         self._assert_authored(writer, posted, 1, internal=False, message_type="comment")
         self.assertEqual(
-            self.company.hr_presence_control_email_amount,
+            self.company.hr_config_id.hr_presence_control_email_amount,
             2,
             "fixture: one message must be under the threshold",
         )
@@ -253,7 +253,7 @@ class TestEmailEvidence(HrPresenceCase):
     def test_a_threshold_of_zero_is_met_by_writing_nothing(self):
         """An Integer with no default: turning the control on without setting an
         amount asks for zero emails, and must be answered uniformly."""
-        self.company.hr_presence_control_email_amount = 0
+        self.company.hr_config_id.hr_presence_control_email_amount = 0
         silent = self._make_employee("silent")
         self.env["hr.employee"]._check_presence()
         self.assertEqual(silent.hr_presence_email_date, self._today_for(silent))
@@ -321,8 +321,8 @@ class TestComputeDeclaresWhatItReads(HrPresenceCase):
     REQUIRED = frozenset(
         {
             "active",
-            "company_id.hr_presence_control_email",
-            "company_id.hr_presence_control_ip",
+            "company_id.hr_config_id.hr_presence_control_email",
+            "company_id.hr_config_id.hr_presence_control_ip",
             "hr_presence_email_date",
             "hr_presence_ip_date",
             "hr_presence_manual_date",
@@ -881,7 +881,7 @@ class TestSettingsTriggerTheSweep(HrPresenceCase):
             "fixture: the stored mirror starts at its default",
         )
         self._save_settings(company, hr_presence_control_ip=True)
-        self.assertTrue(company.hr_presence_control_ip)
+        self.assertTrue(company.hr_config_id.hr_presence_control_ip)
         self.assertEqual(
             employee.hr_presence_state_display,
             "absent",
@@ -914,7 +914,7 @@ class TestSettingsTriggerTheSweep(HrPresenceCase):
         employee = self._make_employee("switching", company=company, calendar=calendar)
         employee.hr_presence_state_display = "present"
         self._save_settings(company, hr_presence_control_ip=False)
-        self.assertFalse(company.hr_presence_control_ip)
+        self.assertFalse(company.hr_config_id.hr_presence_control_ip)
         self.assertEqual(employee.hr_presence_state_display, "present")
 
 
@@ -1167,20 +1167,22 @@ class TestWebsocketGate(HrPresenceCase):
     def test_the_gate_follows_the_setting(self):
         Company = self.env["res.company"]
         self.assertTrue(Company._is_presence_ip_tracking_enabled())
-        self.env["res.company"].search([]).hr_presence_control_ip = False
+        self.env["res.company"].search([]).hr_config_id.hr_presence_control_ip = False
         self.assertFalse(
             Company._is_presence_ip_tracking_enabled(),
             "the ormcache must be invalidated by the field it answers about",
         )
-        self.company.hr_presence_control_ip = True
+        self.company.hr_config_id.hr_presence_control_ip = True
         self.assertTrue(Company._is_presence_ip_tracking_enabled())
 
     def test_the_valid_ip_list_tolerates_the_spacing_people_type(self):
-        self.company.hr_presence_control_ip_list = " 10.0.0.1 ,10.0.0.2 ,, "
+        self.company.hr_config_id.hr_presence_control_ip_list = (
+            " 10.0.0.1 ,10.0.0.2 ,, "
+        )
         self.assertEqual(
             self.company._hr_presence_valid_ips(), {"10.0.0.1", "10.0.0.2"}
         )
-        self.company.hr_presence_control_ip_list = False
+        self.company.hr_config_id.hr_presence_control_ip_list = False
         self.assertEqual(self.company._hr_presence_valid_ips(), set())
 
 

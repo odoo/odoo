@@ -30,7 +30,8 @@ class AccountMove(models.Model):
         for move in self:
             if all(
                 [
-                    move.company_id.l10n_dk_nemhandel_proxy_state == "receiver",
+                    move.company_id.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state
+                    == "receiver",
                     move.commercial_partner_id.nemhandel_verification_state == "valid",
                     move.state == "posted",
                     move.is_sale_document(include_receipts=True),

@@ -1,3 +1,4 @@
+from . import mixin_document_default_folder
 from . import mixin_document_unlink
 from . import mixin_document
 

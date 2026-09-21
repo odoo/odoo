@@ -542,7 +542,7 @@ class TestContractSyncSelectsTheMatchingContract(TestHrCommon):
 class TestExpiringContractNotice(TestHrCommon):
     def test_a_contract_that_starts_today_is_still_notified(self):
         company = self.env.company
-        company.contract_expiration_notice_period = 30
+        company.hr_config_id.contract_expiration_notice_period = 30
         employee = self.env["hr.employee"].create(
             {"name": "Starts Today", "company_id": company.id}
         )

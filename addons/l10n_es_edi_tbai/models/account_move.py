@@ -110,12 +110,13 @@ class AccountMove(models.Model):
     def _compute_l10n_es_tbai_is_required(self):
         for move in self:
             move.l10n_es_tbai_is_required = (
-                move.company_id.l10n_es_tbai_is_enabled
+                move.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_is_enabled
                 and (
                     move.is_sale_document()
                     or (
                         move.is_purchase_document()
-                        and move.company_id.l10n_es_tbai_tax_agency == "bizkaia"
+                        and move.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency
+                        == "bizkaia"
                     )
                 )
                 and any(
@@ -171,7 +172,8 @@ class AccountMove(models.Model):
         ) and not self.env.context.get("batuz_correction"):
             return _("This entry has already been posted.")
         if (
-            self.company_id.l10n_es_tbai_tax_agency == "bizkaia"
+            self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency
+            == "bizkaia"
             and self.is_purchase_document()
             and not self.ref
         ):
@@ -200,7 +202,11 @@ class AccountMove(models.Model):
         )
 
     def _l10n_es_tbai_post_document_in_chatter(self, message, cancel=False):
-        test_suffix = "(test mode)" if self.company_id.l10n_es_tbai_test_env else ""
+        test_suffix = (
+            "(test mode)"
+            if self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_test_env
+            else ""
+        )
         self.message_post(
             body=Markup(
                 "<pre>TicketBAI: posted {document_type} XML {test_suffix}\n{message}</pre>"
@@ -339,7 +345,10 @@ class AccountMove(models.Model):
         if values["is_sale"]:
             values.update(self._l10n_es_tbai_get_invoice_values(cancel=cancel))
 
-        elif self.company_id.l10n_es_tbai_tax_agency == "bizkaia":
+        elif (
+            self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency
+            == "bizkaia"
+        ):
             values.update(self._l10n_es_tbai_get_vendor_bill_values_batuz())
 
         return values

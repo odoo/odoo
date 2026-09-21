@@ -4,6 +4,7 @@ from . import certificate
 from . import mixin_account_move_send
 from . import l10n_es_edi_tbai_agencies
 from . import l10n_es_edi_tbai_document
+from . import l10n_es_edi_tbai_config
 from . import res_company
 from . import res_config_settings
 from . import xml_utils

@@ -73,7 +73,7 @@ class SmsSms(models.Model):
         for sms in self:
             sms_by_company[sms._get_sms_company()] += sms
         for company, company_sms in sms_by_company.items():
-            if company.sms_provider == "twilio":
+            if company.sms_twilio_config_id.sms_provider == "twilio":
                 sms_api = company._get_sms_api_class()(self.env)
                 sms_api._set_company(company)
                 yield sms_api, company_sms
@@ -91,7 +91,10 @@ class SmsSms(models.Model):
 
     def _get_send_batch_size(self):
         companies = self._get_sms_company()
-        if companies and any(company.sms_provider == "twilio" for company in companies):
+        if companies and any(
+            company.sms_twilio_config_id.sms_provider == "twilio"
+            for company in companies
+        ):
             return self.env["ir.config_parameter"]._get_positive_int_param(
                 "sms_twilio.session.batch.size", 10
             )
@@ -107,7 +110,7 @@ class SmsSms(models.Model):
         }, ...]
         """
         twilio_sms = self.filtered(
-            lambda s: s._get_sms_company().sms_provider == "twilio"
+            lambda s: s._get_sms_company().sms_twilio_config_id.sms_provider == "twilio"
         )
         grouped_twilio_sms = twilio_sms.grouped("uuid")
         for result in results:

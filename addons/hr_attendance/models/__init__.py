@@ -6,5 +6,6 @@ from . import hr_attendance_overtime_ruleset
 from . import hr_employee
 from . import hr_version
 from . import ir_http
+from . import hr_attendance_config
 from . import res_company
 from . import res_users

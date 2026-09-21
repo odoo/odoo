@@ -131,11 +131,15 @@ def _mock_deregister_participant(func, self, *args, **kwargs):
         ]
     ).unlink()
 
-    if "nemhandel_edi_user" in self._fields:
-        self.nemhandel_edi_user.unlink()
+    # called on a company as well as on the registration wizard; the company
+    # keeps neither the proxy user nor the state, its configuration does
+    if "l10n_dk_nemhandel_config_id" in self._fields:
+        config = self.l10n_dk_nemhandel_config_id
+        config.nemhandel_edi_user.unlink()
+        config.l10n_dk_nemhandel_proxy_state = "not_registered"
     else:
         self.edi_user_id.unlink()
-    self.l10n_dk_nemhandel_proxy_state = "not_registered"
+        self.l10n_dk_nemhandel_proxy_state = "not_registered"
     if "nemhandel_edi_mode" in self._fields:
         self.nemhandel_edi_mode = "demo"
 

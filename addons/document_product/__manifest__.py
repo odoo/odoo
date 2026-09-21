@@ -1,6 +1,6 @@
 {
     "name": "Documents - Product",
-    "version": "1.2",
+    "version": "1.3",
     "category": "Productivity/Documents",
     "summary": "Products from Documents",
     "description": """
@@ -15,6 +15,8 @@ option to send products' attachments to the documents app.
         "product",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/document_product_security.xml",
         "data/document_folder_data.xml",
         "data/document_tag_data.xml",
         "data/res_company_data.xml",

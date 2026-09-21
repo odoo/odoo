@@ -284,7 +284,7 @@ class TestEsEdiTbaiCommonBizkaia(TestEsEdiTbaiCommon):
             "A request exception"
         )
 
-        cls.company.l10n_es_tbai_tax_agency = "bizkaia"
+        cls.company.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency = "bizkaia"
 
     RESPONSE_HEADERS_SUCCESS = {
         "eus-bizkaia-n3-tipo-respuesta": "Correcto",

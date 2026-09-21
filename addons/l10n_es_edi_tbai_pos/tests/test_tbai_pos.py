@@ -25,7 +25,7 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
             )
         )
         with patch(
-            "odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request",
+            "requests.Session.request",
             return_value=None
             if with_error
             else self.mock_response_post_invoice_success,

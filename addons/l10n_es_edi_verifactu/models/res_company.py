@@ -4,44 +4,37 @@ from odoo import _, fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
+    l10n_es_edi_verifactu_config_id = fields.Many2one(
+        comodel_name="l10n_es_edi_verifactu.config",
+        compute="_compute_l10n_es_edi_verifactu_config_id",
+        search="_search_l10n_es_edi_verifactu_config_id",
+    )
+
+    l10n_es_edi_verifactu_required = fields.Boolean(
+        related="l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_required",
+    )
+
+    # the company's own certificates, whose inverse names the company: a
+    # collection it owns, not a setting the configuration keeps
     l10n_es_edi_verifactu_certificate_ids = fields.One2many(
         comodel_name="certificate.certificate",
         inverse_name="company_id",
         string="Veri*Factu Certificates",
     )
-    l10n_es_edi_verifactu_required = fields.Boolean(
-        string="Enable Veri*Factu",
-        copy=False,
-    )
-    l10n_es_edi_verifactu_test_environment = fields.Boolean(
-        string="Veri*Factu Test Environment",
-        default=True,
-        copy=False,
-    )
-    l10n_es_edi_verifactu_chain_sequence_id = fields.Many2one(
-        comodel_name="ir.sequence",
-        string="Veri*Factu Document Chain Sequence",
-        copy=False,
-        readonly=True,
-    )
-    l10n_es_edi_verifactu_next_batch_time = fields.Datetime(
-        string="Veri*Factu Next Batch Time",
-        copy=False,
-        readonly=True,
-        help="The Datetime at which the next submission to the AEAT can be made.",
-    )
+
     l10n_es_edi_verifactu_special_vat_regime = fields.Selection(
-        selection=[
-            ("simplified", "Simplified Regime"),
-            (
-                "reagyp",
-                "REAGYP (Special Regime for Agriculture, Livestock and Fisheries)",
-            ),
-            ("recargo", "Recargo de Equivalencia"),
-        ],
-        string="Veri*Factu VAT Regime",
-        help="Leave empty for the normal regimen.",
+        related="l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_special_vat_regime",
+        readonly=False,
     )
+
+    def _search_l10n_es_edi_verifactu_config_id(self, operator, value):
+        return self._search_config_link("l10n_es_edi_verifactu.config", operator, value)
+
+    def _compute_l10n_es_edi_verifactu_config_id(self):
+        configs = self.env["l10n_es_edi_verifactu.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.l10n_es_edi_verifactu_config_id = by_company.get(company.id, False)
 
     def _l10n_es_edi_verifactu_get_endpoints(self):
         """
@@ -55,7 +48,7 @@ class ResCompany(models.Model):
             "registration": "RegFactuSistemaFacturacion",
             "port": None,
         }
-        if self.l10n_es_edi_verifactu_test_environment:
+        if self.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_test_environment:
             endpoints = {
                 "wsdl": wsdl_base | {"port": "SistemaVerifactuPruebas"},
                 "verifactu": "https://prewww1.aeat.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP",
@@ -79,9 +72,9 @@ class ResCompany(models.Model):
 
     def _l10n_es_edi_verifactu_get_chain_sequence(self):
         self.check_singleton()
-        if not self.l10n_es_edi_verifactu_chain_sequence_id:
+        if not self.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_chain_sequence_id:
             self_sudo = self.sudo()
-            self_sudo.l10n_es_edi_verifactu_chain_sequence_id = self_sudo.env[
+            self_sudo.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_chain_sequence_id = self_sudo.env[
                 "ir.sequence"
             ].create(
                 {
@@ -95,7 +88,9 @@ class ResCompany(models.Model):
                     "company_id": self.id,
                 }
             )
-        return self.l10n_es_edi_verifactu_chain_sequence_id
+        return (
+            self.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_chain_sequence_id
+        )
 
     def _l10n_es_edi_verifactu_get_last_document(self):
         self.check_singleton()

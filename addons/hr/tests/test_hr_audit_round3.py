@@ -402,8 +402,8 @@ class TestHrAuditRound3(TestHrCommon):
 
     def test_expiry_cron_is_idempotent(self):
         company = self.env.company
-        company.work_permit_expiration_notice_period = 5
-        company.contract_expiration_notice_period = 5
+        company.hr_config_id.work_permit_expiration_notice_period = 5
+        company.hr_config_id.contract_expiration_notice_period = 5
         today = date.today()
         employee = self.Employee.create(
             {
@@ -439,7 +439,7 @@ class TestHrAuditRound3(TestHrCommon):
     @freeze_time("2026-07-13")
     def test_expiry_cron_still_notifies_after_missing_a_day(self):
         company = self.env.company
-        company.contract_expiration_notice_period = 7
+        company.hr_config_id.contract_expiration_notice_period = 7
         today = date(2026, 7, 13)
         inside = self.Employee.create(
             {

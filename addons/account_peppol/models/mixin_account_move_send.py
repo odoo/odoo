@@ -88,7 +88,8 @@ class MixinAccountMoveSend(models.AbstractModel):
         )
         always_on_companies = moves.company_id.filtered(
             lambda c: (
-                c.country_code in info_always_on_countries and not c.peppol_can_send
+                c.country_code in info_always_on_countries
+                and not c.account_peppol_config_id.peppol_can_send
             )
         )
         if all(
@@ -143,7 +144,7 @@ class MixinAccountMoveSend(models.AbstractModel):
 
     def _do_peppol_pre_send(self, moves):
         if len(moves.company_id) == 1:
-            if not moves.company_id.peppol_can_send:
+            if not moves.company_id.account_peppol_config_id.peppol_can_send:
                 return (
                     self.env["peppol.registration"]
                     .with_context(default_company_id=moves.company_id.id)
@@ -159,7 +160,8 @@ class MixinAccountMoveSend(models.AbstractModel):
         if method == "peppol":
             return (
                 company.country_code in PEPPOL_LIST
-                and company.account_peppol_proxy_state != "rejected"
+                and company.account_peppol_config_id.account_peppol_proxy_state
+                != "rejected"
             )
         else:
             return super()._is_applicable_to_company(method, company)
@@ -182,7 +184,8 @@ class MixinAccountMoveSend(models.AbstractModel):
                     partner.country_code in PEPPOL_LIST,
                     self._is_applicable_to_company(method, move.company_id),
                     partner.peppol_verification_state == "valid",
-                    move.company_id.account_peppol_proxy_state != "rejected",
+                    move.company_id.account_peppol_config_id.account_peppol_proxy_state
+                    != "rejected",
                     move._is_ubl_cii_xml_required(invoice_edi_format)
                     or (
                         move.ubl_cii_xml_id
@@ -265,7 +268,9 @@ class MixinAccountMoveSend(models.AbstractModel):
         if not params["documents"]:
             return
 
-        edi_user = next(iter(invoices_data)).company_id.account_peppol_edi_user
+        edi_user = next(
+            iter(invoices_data)
+        ).company_id.account_peppol_config_id.account_peppol_edi_user
 
         if not self.env["res.company"]._with_locked_records(
             to_lock_peppol_invoices, allow_raising=False
@@ -365,7 +370,10 @@ class MixinAccountMoveSend(models.AbstractModel):
 
     def action_what_is_peppol_activate(self, moves):
         companies = moves.company_id
-        if len(companies) == 1 and not companies.peppol_can_send:
+        if (
+            len(companies) == 1
+            and not companies.account_peppol_config_id.peppol_can_send
+        ):
             action = self.env["peppol.registration"]._action_view_peppol_form()
             action["context"] = {
                 "active_model": "account.move",

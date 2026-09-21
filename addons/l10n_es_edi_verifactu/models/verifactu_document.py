@@ -644,7 +644,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
                     # We chain all the created documents per company in generation order.
                     # (indexed by `chain_index`).
                     # Thus we can not generate multiple documents for the same company at the same time.
-                    # Function `next_by_id` effectively locks `company.l10n_es_edi_verifactu_chain_sequence_id`
+                    # Function `next_by_id` effectively locks `company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_chain_sequence_id`
                     # to prevent different transactions from chaining documents at the same time.
                     errors = [_("Error while chaining the document: %s", e)]
                     document_vals["errors"] = self._format_errors(error_title, errors)
@@ -1165,7 +1165,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
             if not next_batch:
                 continue
 
-            next_batch_time = company.l10n_es_edi_verifactu_next_batch_time
+            next_batch_time = company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time
             if not next_batch_time or fields.Datetime.now() >= next_batch_time:
                 next_batch.with_company(company)._send_as_batch()
             else:
@@ -1181,7 +1181,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         # (or at the next batch time if the 60s is earlier)
         for company, documents in documents_per_company:
             unsent_documents = documents.filtered_domain(unsent_domain)
-            next_batch_time = company.l10n_es_edi_verifactu_next_batch_time
+            next_batch_time = company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time
             if unsent_documents:
                 # Trigger in 60s or at the next batch time (except if there is an earlier trigger already)
                 in_60_seconds = fields.Datetime.now() + timedelta(seconds=60)
@@ -1444,7 +1444,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         if waiting_time_seconds:
             now = fields.Datetime.to_datetime(fields.Datetime.now())
             next_batch_time = now + timedelta(seconds=waiting_time_seconds)
-            self.env.company.l10n_es_edi_verifactu_next_batch_time = next_batch_time
+            self.env.company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time = next_batch_time
 
         self._cancel_after_sending(info)
 

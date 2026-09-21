@@ -213,7 +213,9 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         }
         self.assertDictEqual(info, expected_response_info | info)
 
-        self.assertFalse(self.company.l10n_es_edi_verifactu_next_batch_time)
+        self.assertFalse(
+            self.company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time
+        )
 
         expected_document_values = {
             "document_type": "submission",
@@ -258,7 +260,9 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         }
         self.assertDictEqual(info, expected_response_info | info)
 
-        self.assertFalse(self.company.l10n_es_edi_verifactu_next_batch_time)
+        self.assertFalse(
+            self.company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time
+        )
 
         expected_document_values = {
             "document_type": "submission",
@@ -303,7 +307,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         self.assertDictEqual(info, expected_response_info | info)
 
         self.assertEqual(
-            self.company.l10n_es_edi_verifactu_next_batch_time,
+            self.company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time,
             datetime.datetime(2024, 12, 5, 0, 1, 0),
         )
 
@@ -359,7 +363,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         self.assertDictEqual(info, expected_response_info | info)
 
         self.assertEqual(
-            self.company.l10n_es_edi_verifactu_next_batch_time,
+            self.company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time,
             datetime.datetime(2024, 12, 5, 0, 1, 0),
         )
 
@@ -408,7 +412,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         self.assertDictEqual(info, expected_response_info | info)
 
         self.assertEqual(
-            self.company.l10n_es_edi_verifactu_next_batch_time,
+            self.company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time,
             datetime.datetime(2024, 12, 5, 0, 1, 0),
         )
 
@@ -456,7 +460,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         self.assertDictEqual(info, expected_response_info | info)
 
         self.assertEqual(
-            self.company.l10n_es_edi_verifactu_next_batch_time,
+            self.company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time,
             datetime.datetime(2024, 12, 5, 0, 1, 0),
         )
 
@@ -507,7 +511,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         self.assertDictEqual(info, expected_response_info | info)
 
         self.assertEqual(
-            self.company.l10n_es_edi_verifactu_next_batch_time,
+            self.company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time,
             datetime.datetime(2024, 12, 5, 0, 1, 0),
         )
 
@@ -564,7 +568,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         self.assertDictEqual(info, expected_response_info | info)
 
         self.assertEqual(
-            self.company.l10n_es_edi_verifactu_next_batch_time,
+            self.company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time,
             datetime.datetime(2024, 12, 5, 0, 1, 0),
         )
 
@@ -612,7 +616,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         # Since we received a "waiting time" we still update the time for the next batch
         self.assertEqual(
-            self.company.l10n_es_edi_verifactu_next_batch_time,
+            self.company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time,
             datetime.datetime(2024, 12, 5, 0, 1, 0),
         )
 
@@ -643,7 +647,9 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
     def test_mark_for_next_batch(self):
         # Check that we can send immediately
-        self.assertFalse(self.company.l10n_es_edi_verifactu_next_batch_time)
+        self.assertFalse(
+            self.company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time
+        )
         mock_accept = self._mock_zeep_registration_operation(
             "l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json"
         )
@@ -673,7 +679,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         # The last response indicated a waiting time of 60 seconds.
         # So the next batch should only be sent at self.fakenow + 60s
         self.assertEqual(
-            self.company.l10n_es_edi_verifactu_next_batch_time,
+            self.company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time,
             datetime.datetime(2024, 12, 5, 0, 1, 0),
         )
 
@@ -702,7 +708,9 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
     def test_response_issue(self):
         # We can send immediately
-        self.assertFalse(self.company.l10n_es_edi_verifactu_next_batch_time)
+        self.assertFalse(
+            self.company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time
+        )
 
         # Note: The record identifier of `invoice` is different than the one found in the response
         invoice = self._create_dummy_invoice(
@@ -718,7 +726,9 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         # We failed to send the document and there was no waiting time in the response since we got an access denied error
         self.assertFalse(document.state)
-        self.assertFalse(self.company.l10n_es_edi_verifactu_next_batch_time)
+        self.assertFalse(
+            self.company.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_next_batch_time
+        )
         # So the cron has to be retriggered
         self.assertEqual(
             cron_trigger_result_dict["at"], datetime.datetime(2024, 12, 5, 0, 1, 0)

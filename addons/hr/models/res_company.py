@@ -4,23 +4,25 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    hr_presence_control_email_amount = fields.Integer(string="# emails to send")
-    hr_presence_control_ip_list = fields.Char(string="Valid IP addresses")
+    hr_config_id = fields.Many2one(
+        comodel_name="hr.config",
+        compute="_compute_hr_config_id",
+        search="_search_hr_config_id",
+    )
+
+    # fields.Properties resolves its `definition` as one hop and one field, so
+    # hr.employee cannot reach the configuration through the link: the company
+    # declares the definition and the configuration stores it
     employee_properties_definition = fields.PropertiesDefinition(
-        string="Employee Properties"
+        related="hr_config_id.employee_properties_definition",
+        readonly=False,
     )
-    hr_presence_control_login = fields.Boolean(
-        string="Based on user status in system",
-        default=True,
-    )
-    hr_presence_control_email = fields.Boolean(string="Based on number of emails sent")
-    hr_presence_control_ip = fields.Boolean(string="Based on IP Address")
-    hr_presence_control_attendance = fields.Boolean(string="Based on attendances")
-    contract_expiration_notice_period = fields.Integer(
-        string="Contract Expiry Notice Period",
-        default=7,
-    )
-    work_permit_expiration_notice_period = fields.Integer(
-        string="Work Permit Expiry Notice Period",
-        default=60,
-    )
+
+    def _search_hr_config_id(self, operator, value):
+        return self._search_config_link("hr.config", operator, value)
+
+    def _compute_hr_config_id(self):
+        configs = self.env["hr.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.hr_config_id = by_company.get(company.id, False)

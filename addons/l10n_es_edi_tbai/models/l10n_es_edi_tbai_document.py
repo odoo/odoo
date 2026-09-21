@@ -341,11 +341,11 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
 
     def _check_can_post(self, values):
         # Ensure a certificate is available.
-        if not self.company_id.l10n_es_tbai_certificate_id:
+        if not self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_certificate_id:
             return _("Please configure the certificate for TicketBAI.")
 
         # Ensure a tax agency is available.
-        if not self.company_id.l10n_es_tbai_tax_agency:
+        if not self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency:
             return _("Please specify a tax agency on your company for TicketBAI.")
 
         # Ensure a vat is available.
@@ -353,7 +353,8 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             return _("Please configure the Tax ID on your company for TicketBAI.")
 
         if (
-            self.company_id.l10n_es_tbai_tax_agency == "bizkaia"
+            self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency
+            == "bizkaia"
             and self.company_id._l10n_es_freelancer()
             and not self.env["ir.config_parameter"]
             .sudo()
@@ -481,7 +482,10 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                 error = self.env._("No XML response received.")
             return response.headers, response_xml, [error] if error else []
 
-        if self.company_id.l10n_es_tbai_tax_agency in ("araba", "gipuzkoa"):
+        if self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency in (
+            "araba",
+            "gipuzkoa",
+        ):
             params = self._prepare_post_params_ar_gi()
             _response_headers, response_xml, errors = _send_request_to_agency(
                 timeout=10, **params
@@ -490,7 +494,10 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                 return False, errors
             return self._process_post_response_xml_ar_gi(env, response_xml)
 
-        elif self.company_id.l10n_es_tbai_tax_agency == "bizkaia":
+        elif (
+            self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency
+            == "bizkaia"
+        ):
             params = self._prepare_post_params_bi(is_sale)
             response_headers, response_xml, errors = _send_request_to_agency(
                 timeout=10, **params
@@ -508,12 +515,12 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         company = self.company_id
         return {
             "url": get_key(
-                self.company_id.l10n_es_tbai_tax_agency,
+                self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency,
                 "cancel_url_" if self.is_cancel else "post_url_",
-                company.l10n_es_tbai_test_env,
+                company.l10n_es_edi_tbai_config_id.l10n_es_tbai_test_env,
             ),
             "headers": {"Content-Type": "application/xml; charset=utf-8"},
-            "pkcs12_data": company.l10n_es_tbai_certificate_id,
+            "pkcs12_data": company.l10n_es_edi_tbai_config_id.l10n_es_tbai_certificate_id,
             "data": self.xml_attachment_id.raw,
         }
 
@@ -548,9 +555,9 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
 
         return {
             "url": get_key(
-                company.l10n_es_tbai_tax_agency,
+                company.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency,
                 "cancel_url_" if self.is_cancel else "post_url_",
-                company.l10n_es_tbai_test_env,
+                company.l10n_es_edi_tbai_config_id.l10n_es_tbai_test_env,
             ),
             "headers": {
                 "Accept-Encoding": "gzip",
@@ -578,7 +585,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                     }
                 ),
             },
-            "pkcs12_data": company.l10n_es_tbai_certificate_id,
+            "pkcs12_data": company.l10n_es_edi_tbai_config_id.l10n_es_tbai_certificate_id,
             "data": lroe_bytes,
         }
 
@@ -672,7 +679,10 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             )
             xml_doc = self._generate_sale_document_xml(values)
 
-        elif self.company_id.l10n_es_tbai_tax_agency == "bizkaia":
+        elif (
+            self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency
+            == "bizkaia"
+        ):
             company = self.company_id
             freelancer = company._l10n_es_freelancer()
             values.update({"freelancer": freelancer})
@@ -1096,7 +1106,9 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         self.check_singleton()
 
         company = self.company_id
-        certificate_sudo = company.sudo().l10n_es_tbai_certificate_id
+        certificate_sudo = (
+            company.sudo().l10n_es_edi_tbai_config_id.l10n_es_tbai_certificate_id
+        )
         if not certificate_sudo:
             raise UserError(_("No certificate found"))
 
@@ -1125,10 +1137,12 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                 "sigproperties_id": sigproperties_id,
                 "reference_uri": "Reference-" + document_id,
                 "sigpolicy_url": get_key(
-                    company.l10n_es_tbai_tax_agency, "sigpolicy_url"
+                    company.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency,
+                    "sigpolicy_url",
                 ),
                 "sigpolicy_digest": get_key(
-                    company.l10n_es_tbai_tax_agency, "sigpolicy_digest"
+                    company.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency,
+                    "sigpolicy_digest",
                 ),
                 "sigcertif_digest": certificate_sudo._get_fingerprint_bytes(
                     formatting="base64"
@@ -1203,7 +1217,11 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             if vals["sequence"] and vals["number"]:
                 return vals["sequence"], vals["number"]
 
-        sequence = "TEST" if self.company_id.l10n_es_tbai_test_env else ""
+        sequence = (
+            "TEST"
+            if self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_test_env
+            else ""
+        )
         return sequence, self.name
 
     @api.model
@@ -1226,7 +1244,11 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             r"\s+", " ", sequence
         )  # no more than one consecutive whitespace allowed
         # NOTE (optional) not recommended to use chars out of ([0123456789ABCDEFGHJKLMNPQRSTUVXYZ.\_\-\/ ])
-        sequence += "TEST" if self.company_id.l10n_es_tbai_test_env else ""
+        sequence += (
+            "TEST"
+            if self.company_id.l10n_es_edi_tbai_config_id.l10n_es_tbai_test_env
+            else ""
+        )
         return sequence[-20:], number
 
     def _get_tbai_sequence_and_number(self):
@@ -1282,9 +1304,9 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         sequence, number = self._get_tbai_sequence_and_number()
         tbai_qr_no_crc = (
             get_key(
-                company.l10n_es_tbai_tax_agency,
+                company.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency,
                 "qr_url_",
-                company.l10n_es_tbai_test_env,
+                company.l10n_es_edi_tbai_config_id.l10n_es_tbai_test_env,
             )
             + "?"
             + "&".join(

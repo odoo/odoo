@@ -12,4 +12,4 @@ class TestGenericESTbai(TestGenericLocalization):
     @AccountTestInvoicingCommon.setup_country("es")
     def setUpClass(cls):
         super().setUpClass()
-        cls.company.l10n_es_tbai_tax_agency = "bizkaia"
+        cls.company.l10n_es_edi_tbai_config_id.l10n_es_tbai_tax_agency = "bizkaia"

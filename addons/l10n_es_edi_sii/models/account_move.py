@@ -37,7 +37,7 @@ class AccountMove(models.Model):
             move.l10n_es_edi_is_required = (
                 move.is_invoice()
                 and move.country_code == "ES"
-                and move.company_id.l10n_es_sii_tax_agency
+                and move.company_id.l10n_es_edi_sii_config_id.l10n_es_sii_tax_agency
                 and has_tax
             )
 

@@ -13,6 +13,7 @@ from . import calendar
 from . import digest
 from . import utm_campaign
 from . import utm_source
+from . import hr_recruitment_config
 from . import res_company
 from . import res_partner
 from . import res_users

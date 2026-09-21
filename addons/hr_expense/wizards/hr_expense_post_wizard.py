@@ -11,13 +11,13 @@ class HrExpensePostWizard(models.TransientModel):
 
     @api.model
     def _default_employee_journal_id(self):
-        company_journal_id = self.env.company.expense_journal_id
+        company_journal_id = self.env.company.hr_expense_config_id.expense_journal_id
         if company_journal_id:
             _debug.logic("post_journal", by="company", journal=company_journal_id)
             return company_journal_id.id
         closest_parent_company_journal = self.env.company.parent_ids[
             ::-1
-        ].expense_journal_id[:1]
+        ].hr_expense_config_id.expense_journal_id[:1]
         if closest_parent_company_journal:
             _debug.logic(
                 "post_journal",
@@ -84,13 +84,15 @@ class HrExpensePostWizard(models.TransientModel):
             )
         moves_sudo.action_post()
 
-        if not self.company_id.expense_journal_id:
+        if not self.company_id.hr_expense_config_id.expense_journal_id:
             _debug.lifecycle(
                 "company_expense_journal_set",
                 company=self.company_id,
                 journal=self.employee_journal_id,
             )
-            self.sudo().company_id.expense_journal_id = self.employee_journal_id.id
+            self.sudo().company_id.hr_expense_config_id.expense_journal_id = (
+                self.employee_journal_id.id
+            )
 
         moves_ids = moves_sudo.ids + self.env.context.get("company_paid_move_ids", ())
 

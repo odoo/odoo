@@ -270,13 +270,14 @@ class ResPartner(models.Model):
                     "account_edi_proxy_client.user"
                 ]._get_domain_can_send()
                 all_companies = (
-                    self.env["res.company"]
+                    self.env["account_peppol.config"]
                     .sudo()
                     .search(  # noqa: E8507 - computed once, on first need
                         [
                             ("account_peppol_proxy_state", "in", can_send),
                         ]
                     )
+                    .company_id
                 )
 
             for company in all_companies:

@@ -90,7 +90,11 @@ class AccountEdiProxyClientUser(models.Model):
         edi_users = self.search(
             [
                 ("proxy_type", "=", "nemhandel"),
-                ("company_id.l10n_dk_nemhandel_proxy_state", "=", "receiver"),
+                (
+                    "company_id.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state",
+                    "=",
+                    "receiver",
+                ),
             ]
         )
         edi_users._nemhandel_get_new_documents(skip_no_journal=True)
@@ -99,7 +103,11 @@ class AccountEdiProxyClientUser(models.Model):
         edi_users = self.search(
             [
                 ("proxy_type", "=", "nemhandel"),
-                ("company_id.l10n_dk_nemhandel_proxy_state", "=", "receiver"),
+                (
+                    "company_id.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state",
+                    "=",
+                    "receiver",
+                ),
             ]
         )
         edi_users._nemhandel_get_message_status()
@@ -112,7 +120,11 @@ class AccountEdiProxyClientUser(models.Model):
         edi_users = self.search(
             [
                 ("proxy_type", "=", "nemhandel"),
-                ("company_id.l10n_dk_nemhandel_proxy_state", "=", "receiver"),
+                (
+                    "company_id.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state",
+                    "=",
+                    "receiver",
+                ),
             ]
         )
         edi_users._nemhandel_reset_webhook()
@@ -196,7 +208,10 @@ class AccountEdiProxyClientUser(models.Model):
         :return: `True` if the document was saved, `False` if it was not
         """
         self.check_singleton()
-        journal = journal or self.company_id.nemhandel_purchase_journal_id
+        journal = (
+            journal
+            or self.company_id.l10n_dk_nemhandel_config_id.nemhandel_purchase_journal_id
+        )
         if not journal:
             return False
 
@@ -233,7 +248,7 @@ class AccountEdiProxyClientUser(models.Model):
         }
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
-            journal = edi_user.company_id.nemhandel_purchase_journal_id
+            journal = edi_user.company_id.l10n_dk_nemhandel_config_id.nemhandel_purchase_journal_id
             if not journal:
                 msg = _(
                     "Please set a journal for Nemhandel invoices on %s before receiving documents.",
@@ -293,7 +308,9 @@ class AccountEdiProxyClientUser(models.Model):
         self.check_singleton()
         processed_uuids = []
         moves = self.env["account.move"]
-        journal = self.company_id.nemhandel_purchase_journal_id
+        journal = (
+            self.company_id.l10n_dk_nemhandel_config_id.nemhandel_purchase_journal_id
+        )
         for uuid, content in messages.items():
             if content["document_type"] == "ApplicationResponse":
                 # l10n_dk_nemhandel_response handles these. Acknowledged here as well,
@@ -318,7 +335,9 @@ class AccountEdiProxyClientUser(models.Model):
 
     def _nemhandel_post_process_new_messages(self, moves):
         self.check_singleton()
-        self.company_id.nemhandel_purchase_journal_id._notify_einvoices_received(moves)
+        self.company_id.l10n_dk_nemhandel_config_id.nemhandel_purchase_journal_id._notify_einvoices_received(
+            moves
+        )
         for partner in moves.partner_id.filtered(
             lambda partner: (
                 partner.nemhandel_verification_state in ("not_verified", False)
@@ -427,7 +446,7 @@ class AccountEdiProxyClientUser(models.Model):
                 "receiver",
                 "rejected",
             }:
-                edi_user.company_id.l10n_dk_nemhandel_proxy_state = proxy_user[
+                edi_user.company_id.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state = proxy_user[
                     "nemhandel_state"
                 ]
 
@@ -439,8 +458,8 @@ class AccountEdiProxyClientUser(models.Model):
             if self.company_id.vat[:2].isalpha()
             else self.company_id.vat,
             "nemhandel_country_code": self.company_id.country_id.code,
-            "nemhandel_phone_number": self.company_id.nemhandel_phone_number,
-            "nemhandel_contact_email": self.company_id.nemhandel_contact_email,
+            "nemhandel_phone_number": self.company_id.l10n_dk_nemhandel_config_id.nemhandel_phone_number,
+            "nemhandel_contact_email": self.company_id.l10n_dk_nemhandel_config_id.nemhandel_contact_email,
             "nemhandel_webhook_endpoint": self.company_id._get_nemhandel_webhook_endpoint(),
             "nemhandel_webhook_token": self._generate_nemhandel_webhook_token(),
         }
@@ -450,11 +469,16 @@ class AccountEdiProxyClientUser(models.Model):
 
         company = self.company_id
 
-        if company.l10n_dk_nemhandel_proxy_state != "in_verification":
+        if (
+            company.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state
+            != "in_verification"
+        ):
             # a participant can only try registering as a receiver if they are not registered
             nemhandel_state_translated = dict(
-                company._fields["l10n_dk_nemhandel_proxy_state"].selection
-            )[company.l10n_dk_nemhandel_proxy_state]
+                company.l10n_dk_nemhandel_config_id._fields[
+                    "l10n_dk_nemhandel_proxy_state"
+                ].selection
+            )[company.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state]
             raise UserError(
                 _(
                     "Cannot register a user with a %s application",
@@ -480,12 +504,15 @@ class AccountEdiProxyClientUser(models.Model):
         self._check_user_on_alternative_service()
 
         self._call_nemhandel_proxy(endpoint="/api/nemhandel/1/register_participant")
-        company.l10n_dk_nemhandel_proxy_state = "receiver"
+        company.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state = "receiver"
 
     def _nemhandel_deregister_participant(self):
         self.check_singleton()
 
-        if self.company_id.l10n_dk_nemhandel_proxy_state == "receiver":
+        if (
+            self.company_id.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state
+            == "receiver"
+        ):
             # fetch all documents and message statuses before unlinking the edi user
             # so that the invoices are acknowledged
             self._cron_nemhandel_get_message_status()
@@ -493,7 +520,10 @@ class AccountEdiProxyClientUser(models.Model):
             if not tools.config["test_enable"] and not modules.module.current_test:
                 self.env.cr.commit()
 
-        if self.company_id.l10n_dk_nemhandel_proxy_state != "not_registered":
+        if (
+            self.company_id.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state
+            != "not_registered"
+        ):
             try:
                 self._call_nemhandel_proxy(
                     endpoint="/api/nemhandel/1/cancel_nemhandel_registration"
@@ -502,7 +532,9 @@ class AccountEdiProxyClientUser(models.Model):
                 if e.args and e.args[0] != "The user doesn't exist on the proxy":
                     raise
 
-        self.company_id.l10n_dk_nemhandel_proxy_state = "not_registered"
+        self.company_id.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state = (
+            "not_registered"
+        )
         self.unlink()
 
     def _generate_nemhandel_webhook_token(self):

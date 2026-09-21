@@ -5,7 +5,7 @@ class AccountJournal(models.Model):
     _inherit = "account.journal"
 
     account_peppol_proxy_state = fields.Selection(
-        related="company_id.account_peppol_proxy_state"
+        related="company_id.account_peppol_config_id.account_peppol_proxy_state"
     )
     is_peppol_journal = fields.Boolean(
         string="Account used for Peppol",
@@ -44,7 +44,11 @@ class AccountJournal(models.Model):
         super().button_fetch_in_einvoices()
         edi_users = self.env["account_edi_proxy_client.user"].search(
             [
-                ("company_id.account_peppol_proxy_state", "=", "receiver"),
+                (
+                    "company_id.account_peppol_config_id.account_peppol_proxy_state",
+                    "=",
+                    "receiver",
+                ),
                 ("company_id", "in", self.company_id.ids),
                 ("proxy_type", "=", "peppol"),
             ]
@@ -57,7 +61,11 @@ class AccountJournal(models.Model):
         can_send = self.env["account_edi_proxy_client.user"]._get_domain_can_send()
         edi_users = self.env["account_edi_proxy_client.user"].search(
             [
-                ("company_id.account_peppol_proxy_state", "in", can_send),
+                (
+                    "company_id.account_peppol_config_id.account_peppol_proxy_state",
+                    "in",
+                    can_send,
+                ),
                 ("company_id", "in", self.company_id.ids),
                 ("proxy_type", "=", "peppol"),
             ]

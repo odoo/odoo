@@ -34,17 +34,19 @@ class PeppolConfigWizard(models.TransientModel):
         required=True,
     )
     account_peppol_edi_user = fields.Many2one(
-        related="company_id.account_peppol_edi_user"
+        related="company_id.account_peppol_config_id.account_peppol_edi_user"
     )
     account_peppol_edi_identification = fields.Char(
         related="account_peppol_edi_user.edi_identification"
     )
     account_peppol_proxy_state = fields.Selection(
-        related="company_id.account_peppol_proxy_state",
+        related="company_id.account_peppol_config_id.account_peppol_proxy_state",
         readonly=False,
     )
     account_peppol_contact_email = fields.Char(
-        default=lambda self: self.env.company.account_peppol_contact_email,
+        default=lambda self: (
+            self.env.company.account_peppol_config_id.account_peppol_contact_email
+        ),
         required=True,
     )
     account_peppol_migration_key = fields.Char(
@@ -61,7 +63,7 @@ class PeppolConfigWizard(models.TransientModel):
     )
     # Deprecated
     peppol_self_billing_reception_journal_id = fields.Many2one(
-        related="company_id.peppol_self_billing_reception_journal_id",
+        related="company_id.account_peppol_config_id.peppol_self_billing_reception_journal_id",
         readonly=False,
     )
 
@@ -149,19 +151,17 @@ class PeppolConfigWizard(models.TransientModel):
             else:
                 wizard.service_ids = None
 
-    @api.depends("company_id.peppol_activate_self_billing_sending")
+    @api.depends(
+        "company_id.account_peppol_config_id.peppol_activate_self_billing_sending"
+    )
     def _compute_peppol_activate_self_billing(self):
         for wizard in self:
-            wizard.peppol_activate_self_billing = (
-                wizard.company_id.peppol_activate_self_billing_sending
-            )
+            wizard.peppol_activate_self_billing = wizard.company_id.account_peppol_config_id.peppol_activate_self_billing_sending
 
     @api.onchange("peppol_activate_self_billing")
     def _inverse_peppol_activate_self_billing(self):
         for wizard in self:
-            wizard.company_id.peppol_activate_self_billing_sending = (
-                wizard.peppol_activate_self_billing
-            )
+            wizard.company_id.account_peppol_config_id.peppol_activate_self_billing_sending = wizard.peppol_activate_self_billing
 
             # When setting the 'Activate self-billing' field, automatically enable/disable the self-billing reception services.
             self_billing_services = wizard.service_ids.filtered(
@@ -181,9 +181,9 @@ class PeppolConfigWizard(models.TransientModel):
         # Update company details
         if (
             self.account_peppol_contact_email
-            != self.company_id.account_peppol_contact_email
+            != self.company_id.account_peppol_config_id.account_peppol_contact_email
         ):
-            self.company_id.account_peppol_contact_email = (
+            self.company_id.account_peppol_config_id.account_peppol_contact_email = (
                 self.account_peppol_contact_email
             )
             params = {

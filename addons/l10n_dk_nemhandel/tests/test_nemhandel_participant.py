@@ -94,10 +94,16 @@ class TestNemhandelParticipant(TransactionCase):
         company = self.env.company
         wizard = self.env["nemhandel.registration"].create(self._get_participant_vals())
         wizard.button_nemhandel_registration_sms()
-        self.assertEqual(company.l10n_dk_nemhandel_proxy_state, "in_verification")
+        self.assertEqual(
+            company.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state,
+            "in_verification",
+        )
         wizard.verification_code = "888888"
         wizard.button_nemhandel_receiver_registration()
-        self.assertEqual(company.l10n_dk_nemhandel_proxy_state, "receiver")
+        self.assertEqual(
+            company.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state,
+            "receiver",
+        )
 
     def test_nemhandel_create_reject_participant(self):
         # the l10n_dk_nemhandel_proxy_state should change to rejected
@@ -110,7 +116,10 @@ class TestNemhandelParticipant(TransactionCase):
             self.env[
                 "account_edi_proxy_client.user"
             ]._cron_nemhandel_get_participant_status()
-            self.assertEqual(company.l10n_dk_nemhandel_proxy_state, "rejected")
+            self.assertEqual(
+                company.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state,
+                "rejected",
+            )
 
     def test_nemhandel_create_duplicate_participant(self):
         """If you create a duplicate participant, it will take over the previous one"""
@@ -121,7 +130,8 @@ class TestNemhandelParticipant(TransactionCase):
         wizard.l10n_dk_nemhandel_proxy_state = "not_registered"
         wizard.button_nemhandel_registration_sms()
         self.assertEqual(
-            self.env.company.l10n_dk_nemhandel_proxy_state, "in_verification"
+            self.env.company.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state,
+            "in_verification",
         )
 
         # The participant is still a receiver on IAP
@@ -129,4 +139,7 @@ class TestNemhandelParticipant(TransactionCase):
             self.env[
                 "account_edi_proxy_client.user"
             ]._cron_nemhandel_get_participant_status()
-            self.assertEqual(self.env.company.l10n_dk_nemhandel_proxy_state, "receiver")
+            self.assertEqual(
+                self.env.company.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state,
+                "receiver",
+            )

@@ -5,7 +5,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     sms_provider = fields.Selection(
-        related="company_id.sms_provider",
+        related="company_id.sms_twilio_config_id.sms_provider",
         readonly=False,
         required=True,
     )

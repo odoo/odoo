@@ -89,7 +89,7 @@ class TestKioskPinRouteThrottle(HttpCase):
                     "jsonrpc": "2.0",
                     "method": "call",
                     "params": {
-                        "token": self.company.sudo().attendance_kiosk_key,
+                        "token": self.company.sudo().hr_attendance_config_id.attendance_kiosk_key,
                         "employee_id": self.employee.id,
                         "pin_code": pin,
                     },
@@ -114,5 +114,5 @@ class TestKioskPinRouteThrottle(HttpCase):
         self.assertTrue(self.employee.sudo().attendance_pin_retry_after)
 
     def test_the_route_still_works_without_pins_configured(self):
-        self.company.sudo().attendance_kiosk_use_pin = False
+        self.company.sudo().hr_attendance_config_id.attendance_kiosk_use_pin = False
         self.assertTrue(self._attempt(""))

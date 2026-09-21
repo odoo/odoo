@@ -169,7 +169,7 @@ class HrAttendance(models.Model):
         aggregator="sum",
     )
     device_tracking_enabled = fields.Boolean(
-        related="employee_id.company_id.attendance_device_tracking"
+        related="employee_id.company_id.hr_attendance_config_id.attendance_device_tracking"
     )
     linked_overtime_ids = fields.One2many(
         comodel_name="hr.attendance.overtime.line",
@@ -896,7 +896,7 @@ class HrAttendance(models.Model):
         return (
             self.get_base_url()
             + "/hr_attendance/"
-            + self.env.company.attendance_kiosk_key
+            + self.env.company.hr_attendance_config_id.attendance_kiosk_key
         )
 
     @api.model
@@ -942,7 +942,8 @@ class HrAttendance(models.Model):
         return {
             "type": "ir.actions.act_url",
             "target": "self",
-            "url": self.env.company.attendance_kiosk_url + "?from_trial_mode=True",
+            "url": self.env.company.hr_attendance_config_id.attendance_kiosk_url
+            + "?from_trial_mode=True",
         }
 
     def _read_group_employee_id(self, resources, domain):
@@ -1101,7 +1102,11 @@ class HrAttendance(models.Model):
         to_verify = self.env["hr.attendance"].search(
             [
                 ("check_out", "=", False),
-                ("employee_id.company_id.auto_check_out", "=", True),
+                (
+                    "employee_id.company_id.hr_attendance_config_id.auto_check_out",
+                    "=",
+                    True,
+                ),
                 ("employee_id.resource_calendar_id.flexible_hours", "=", False),
             ]
         )
@@ -1124,7 +1129,7 @@ class HrAttendance(models.Model):
                 local_day = attendance._local_check_in().date()
                 budget = (
                     attendance._scheduled_hours_on(local_day)
-                    + employee.company_id.auto_check_out_tolerance
+                    + employee.company_id.hr_attendance_config_id.auto_check_out_tolerance
                     - already_closed[employee.id][local_day]
                 )
                 worked = attendance._worked_hours_between(attendance.check_in, now)
@@ -1172,7 +1177,11 @@ class HrAttendance(models.Model):
     @dbg.timed
     def _cron_absence_detection(self):
         yesterday = fields.Date.today() - relativedelta(days=1)
-        companies = self.env["res.company"].search([("absence_management", "=", True)])
+        companies = (
+            self.env["hr_attendance.config"]
+            .search([("absence_management", "=", True)])
+            .company_id
+        )
         dbg.lifecycle.debug(
             "_cron_absence_detection: %s, %d company/companies manage absence",
             yesterday,

@@ -35,10 +35,10 @@ class SmsApiTwilio(SmsApiBase):
         }
         try:
             return session.post(
-                f"https://api.twilio.com/2010-04-01/Accounts/{company_sudo.sms_twilio_account_sid}/Messages.json",
+                f"https://api.twilio.com/2010-04-01/Accounts/{company_sudo.sms_twilio_config_id.sms_twilio_account_sid}/Messages.json",
                 data=data,
                 auth=(
-                    company_sudo.sms_twilio_account_sid,
+                    company_sudo.sms_twilio_config_id.sms_twilio_account_sid,
                     company_sudo.sms_twilio_auth_token,
                 ),
                 timeout=5,

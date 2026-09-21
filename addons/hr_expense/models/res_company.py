@@ -4,16 +4,17 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    expense_journal_id = fields.Many2one(
-        comodel_name="account.journal",
-        string="Default Expense Journal",
-        domain="[('type', '=', 'purchase')]",
-        check_company=True,
-        help="The company's default journal used when an employee expense is created.",
+    hr_expense_config_id = fields.Many2one(
+        comodel_name="hr_expense.config",
+        compute="_compute_hr_expense_config_id",
+        search="_search_hr_expense_config_id",
     )
-    company_expense_allowed_payment_channel_ids = fields.Many2many(
-        comodel_name="account.payment.channel",
-        string="Payment methods available for expenses paid by company",
-        domain="[('payment_type', '=', 'outbound'), ('journal_id', '!=', False), ('journal_id.active', '=', True)]",
-        check_company=True,
-    )
+
+    def _search_hr_expense_config_id(self, operator, value):
+        return self._search_config_link("hr_expense.config", operator, value)
+
+    def _compute_hr_expense_config_id(self):
+        configs = self.env["hr_expense.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.hr_expense_config_id = by_company.get(company.id, False)

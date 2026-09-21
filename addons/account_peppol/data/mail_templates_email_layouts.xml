@@ -35,7 +35,8 @@
             <field name="model_id" ref="account.model_res_company" />
             <field name="subject">Welcome to Peppol</field>
             <field name="email_from">{{ object.email_formatted }}</field>
-            <field name="email_to">{{ object.account_peppol_contact_email }}</field>
+            <field
+                name="email_to">{{ object.account_peppol_config_id.account_peppol_contact_email }}</field>
             <field name="use_default_to" eval="False" />
             <field name="auto_delete" eval="True" />
             <field name="body_html" type="html">
@@ -113,7 +114,7 @@
 
                                                     <p>We have successfully added your company to the <strong>Peppol Network</strong>.</p>
 
-                                                    <p>You can now <strong>send<t t-if="object.account_peppol_proxy_state == 'receiver'"> and receive</t></strong> electronic invoices via Odoo — completely free of charge.</p>
+                                                    <p>You can now <strong>send<t t-if="object.account_peppol_config_id.account_peppol_proxy_state == 'receiver'"> and receive</t></strong> electronic invoices via Odoo — completely free of charge.</p>
 
                                                     <p>Best regards,</p>
 

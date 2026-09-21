@@ -1,6 +1,6 @@
 {
     "name": "Malaysia - E-invoicing",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Accounting/Localizations/EDI",
     "summary": "E-invoicing using MyInvois",
     "description": """
@@ -21,6 +21,7 @@
         "data/ir_cron.xml",
         "data/l10n_my_edi.industry_classification.csv",
         "security/ir.model.access.csv",
+        "security/l10n_my_edi_security.xml",
         "security/myinvois_security.xml",
         "views/account_move_view.xml",
         "views/account_tax_view.xml",

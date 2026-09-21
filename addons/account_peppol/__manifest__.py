@@ -1,6 +1,6 @@
 {
     "name": "Peppol",
-    "version": "1.3",
+    "version": "1.4",
     "category": "Accounting/Accounting",
     "summary": "This module is used to send/receive documents with PEPPOL",
     "description": """
@@ -57,6 +57,7 @@
         "data/mail_templates_email_layouts.xml",
         "data/res_partner_data.xml",
         "security/ir.model.access.csv",
+        "security/account_peppol_security.xml",
         "views/account_move_views.xml",
         "views/account_portal_templates.xml",
         "views/peppol_authentication_views.xml",

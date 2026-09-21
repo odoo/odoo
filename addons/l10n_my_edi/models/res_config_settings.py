@@ -10,15 +10,15 @@ class ResConfigSettings(models.TransientModel):
     # ------------------
 
     l10n_my_edi_mode = fields.Selection(
-        related="company_id.l10n_my_edi_mode",
+        related="company_id.l10n_my_edi_config_id.l10n_my_edi_mode",
         readonly=False,
     )
     l10n_my_edi_default_import_journal_id = fields.Many2one(
-        related="company_id.l10n_my_edi_default_import_journal_id",
+        related="company_id.l10n_my_edi_config_id.l10n_my_edi_default_import_journal_id",
         readonly=False,
     )
     l10n_my_edi_proxy_user_id = fields.Many2one(
-        related="company_id.l10n_my_edi_proxy_user_id"
+        related="company_id.l10n_my_edi_config_id.l10n_my_edi_proxy_user_id"
     )
     l10n_my_edi_company_vat = fields.Char(related="company_id.vat")
     l10n_my_accept_processing = fields.Boolean()
@@ -51,7 +51,7 @@ class ResConfigSettings(models.TransientModel):
         """Send a notification to the proxy to free the ID (vat) of the user, and archive the local proxy user.
         Useful if there has been a misconfiguration or the user wishes to use a new database/...
         """
-        proxy_user = self.env.company.l10n_my_edi_proxy_user_id
+        proxy_user = self.env.company.l10n_my_edi_config_id.l10n_my_edi_proxy_user_id
         if not proxy_user:
             return
 

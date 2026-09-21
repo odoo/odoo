@@ -769,7 +769,7 @@ class HrExpense(models.Model):
     def _compute_selectable_payment_channel_ids(self):
         for company, expenses in self.grouped("company_id").items():
             allowed_method_line_ids = (
-                company.company_expense_allowed_payment_channel_ids
+                company.hr_expense_config_id.company_expense_allowed_payment_channel_ids
             )
             if allowed_method_line_ids:
                 expenses.selectable_payment_channel_ids = allowed_method_line_ids
@@ -2067,7 +2067,7 @@ class HrExpense(models.Model):
         for company, expenses in employee_expenses.grouped("company_id").items():
             expenses = expenses.with_company(company)
             company_domain = self.env["account.journal"]._check_company_domain(company)
-            journal = company.expense_journal_id or expenses.env[  # noqa: E8507 - one lookup per company; expenses sharing one were merged above
+            journal = company.hr_expense_config_id.expense_journal_id or expenses.env[  # noqa: E8507 - one lookup per company; expenses sharing one were merged above
                 "account.journal"
             ].search([*company_domain, ("type", "=", "purchase")], limit=1)
             expense_receipt_vals_list = [

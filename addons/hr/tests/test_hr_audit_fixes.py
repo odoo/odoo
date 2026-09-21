@@ -212,8 +212,8 @@ class TestHrAuditCoverage(TestHrCommon):
     def test_notify_expiring_contract_and_work_permit(self):
         company = self.env.company
         today = fields.Date.from_string("2026-07-13")
-        contract_notice = company.contract_expiration_notice_period
-        wp_notice = company.work_permit_expiration_notice_period
+        contract_notice = company.hr_config_id.contract_expiration_notice_period
+        wp_notice = company.hr_config_id.work_permit_expiration_notice_period
 
         expiring = self._new_employee(
             "Expiring Contract",

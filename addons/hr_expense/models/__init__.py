@@ -8,6 +8,7 @@ from . import hr_expense
 from . import product_product
 from . import product_template
 from . import res_config_settings
+from . import hr_expense_config
 from . import res_company
 from . import analytic
 from . import ir_actions_report

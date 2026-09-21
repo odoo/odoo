@@ -34,6 +34,8 @@ def generate_twilio_sms_callback_signature(company, sms_uuid, callback_params):
     # Compute HMAC-SHA1 digest and then base64 encode
     return base64.b64encode(
         hmac.new(
-            company.sms_twilio_auth_token.encode(), data.encode(), hashlib.sha1
+            company.sms_twilio_auth_token.encode(),
+            data.encode(),
+            hashlib.sha1,
         ).digest()
     ).decode()

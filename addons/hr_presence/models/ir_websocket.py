@@ -22,7 +22,7 @@ class IrWebsocket(models.AbstractModel):
             .search([("user_id", "=", self.env.user.id)], limit=1)
         )
         company = employee.company_id
-        if not company.hr_presence_control_ip:
+        if not company.hr_config_id.hr_presence_control_ip:
             return
         req = request or wsrequest
         ip_address = req.httprequest.remote_addr

@@ -75,7 +75,7 @@ class HrAttendanceOvertimeLine(models.Model):
             if not overtime.status:
                 overtime.status = (
                     "to_approve"
-                    if overtime.employee_id.company_id.attendance_overtime_validation
+                    if overtime.employee_id.company_id.hr_attendance_config_id.attendance_overtime_validation
                     == "by_manager"
                     else "approved"
                 )

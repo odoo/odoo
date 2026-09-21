@@ -5,7 +5,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     account_peppol_edi_user = fields.Many2one(
-        related="company_id.account_peppol_edi_user"
+        related="company_id.account_peppol_config_id.account_peppol_edi_user"
     )
     account_peppol_edi_mode = fields.Selection(
         related="account_peppol_edi_user.edi_mode"
@@ -31,19 +31,19 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     account_peppol_phone_number = fields.Char(
-        related="company_id.account_peppol_phone_number",
+        related="company_id.account_peppol_config_id.account_peppol_phone_number",
         readonly=False,
     )
     account_peppol_proxy_state = fields.Selection(
-        related="company_id.account_peppol_proxy_state",
+        related="company_id.account_peppol_config_id.account_peppol_proxy_state",
         readonly=False,
     )
     account_peppol_purchase_journal_id = fields.Many2one(
-        related="company_id.peppol_purchase_journal_id",
+        related="company_id.account_peppol_config_id.peppol_purchase_journal_id",
         readonly=False,
     )
     peppol_external_provider = fields.Char(
-        related="company_id.peppol_external_provider",
+        related="company_id.account_peppol_config_id.peppol_external_provider",
         readonly=False,
     )
     peppol_use_parent_company = fields.Boolean(
@@ -69,25 +69,26 @@ class ResConfigSettings(models.TransientModel):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends("company_id.peppol_parent_company_id")
+    @api.depends("company_id.account_peppol_config_id.peppol_parent_company_id")
     def _compute_peppol_use_parent_company(self):
         for setting in self:
             setting.peppol_use_parent_company = (
-                setting.company_id != setting.company_id.peppol_parent_company_id
-                and setting.company_id.peppol_can_send
-                and setting.company_id.peppol_parent_company_id.peppol_can_send
+                setting.company_id
+                != setting.company_id.account_peppol_config_id.peppol_parent_company_id
+                and setting.company_id.account_peppol_config_id.peppol_can_send
+                and setting.company_id.account_peppol_config_id.peppol_parent_company_id.account_peppol_config_id.peppol_can_send
             )
             if setting.peppol_use_parent_company:
-                setting.peppol_parent_company_name = (
-                    setting.company_id.peppol_parent_company_id.name
-                )
+                setting.peppol_parent_company_name = setting.company_id.account_peppol_config_id.peppol_parent_company_id.name
             else:
                 setting.peppol_parent_company_name = None
 
     @api.depends("account_peppol_proxy_state")
     def _compute_peppol_participation_role(self):
         for record in self:
-            state = record.company_id.account_peppol_proxy_state
+            state = (
+                record.company_id.account_peppol_config_id.account_peppol_proxy_state
+            )
             if state == "sender":
                 record.peppol_participation_role = "sending_only"
             elif state in ("smp_registration", "receiver"):
@@ -113,11 +114,11 @@ class ResConfigSettings(models.TransientModel):
                     record.account_peppol_edi_user._peppol_register_sender_as_receiver()
                     record.account_peppol_edi_user._peppol_get_participant_status()
 
-    @api.depends("company_id.account_peppol_contact_email")
+    @api.depends("company_id.account_peppol_config_id.account_peppol_contact_email")
     def _compute_account_peppol_contact_email(self):
         for record in self:
             record.account_peppol_contact_email = (
-                record.company_id.account_peppol_contact_email
+                record.company_id.account_peppol_config_id.account_peppol_contact_email
             )
 
     def _inverse_account_peppol_contact_email(self):
@@ -125,12 +126,14 @@ class ResConfigSettings(models.TransientModel):
             company = record.company_id
             if (
                 record.account_peppol_contact_email
-                == company.account_peppol_contact_email
+                == company.account_peppol_config_id.account_peppol_contact_email
             ):
                 continue
 
             # Update company field
-            company.account_peppol_contact_email = record.account_peppol_contact_email
+            company.account_peppol_config_id.account_peppol_contact_email = (
+                record.account_peppol_contact_email
+            )
 
             # Sync with IAP (Peppol proxy)
             params = {
@@ -170,7 +173,9 @@ class ResConfigSettings(models.TransientModel):
 
     def button_peppol_disconnect_branch_from_parent(self):
         self.check_singleton()
-        previous_parent_company_name = self.company_id.peppol_parent_company_id.name
+        previous_parent_company_name = (
+            self.company_id.account_peppol_config_id.peppol_parent_company_id.name
+        )
         self.account_peppol_edi_user._peppol_deregister_participant()
         return {
             "type": "ir.actions.client",

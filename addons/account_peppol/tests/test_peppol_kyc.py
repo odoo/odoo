@@ -65,9 +65,12 @@ class TestPeppolKYC(PeppolConnectorCommon, HttpCase):
             self.assertFalse(wizard.display_itsme_login)
             self.assertTrue(wizard.display_no_auth_buttons)
             wizard.button_register_peppol_participant()
-        self.assertEqual(company.account_peppol_proxy_state, "smp_registration")
+        self.assertEqual(
+            company.account_peppol_config_id.account_peppol_proxy_state,
+            "smp_registration",
+        )
         self.assertRecordValues(
-            company.account_peppol_edi_user,
+            company.account_peppol_config_id.account_peppol_edi_user,
             [
                 {
                     "edi_identification": peppol_identifier,
@@ -119,7 +122,10 @@ class TestPeppolKYC(PeppolConnectorCommon, HttpCase):
                 "target": "new",
             },
         )
-        self.assertEqual(company.account_peppol_proxy_state, "not_registered")
+        self.assertEqual(
+            company.account_peppol_config_id.account_peppol_proxy_state,
+            "not_registered",
+        )
 
         # a window is opened with the url above, the KYC flow happens and calls back
         with (
@@ -139,9 +145,12 @@ class TestPeppolKYC(PeppolConnectorCommon, HttpCase):
         # callback-action closes the window opened for the authentication and displays a notification
         self.assertIn("/odoo/peppol-auth-callback-action?success=True", response.url)
         connect_mock.assert_called_once()
-        self.assertEqual(company.account_peppol_proxy_state, "smp_registration")
+        self.assertEqual(
+            company.account_peppol_config_id.account_peppol_proxy_state,
+            "smp_registration",
+        )
         self.assertRecordValues(
-            company.account_peppol_edi_user,
+            company.account_peppol_config_id.account_peppol_edi_user,
             [
                 {
                     "edi_identification": f"{eas}:{endpoint}",
@@ -187,8 +196,11 @@ class TestPeppolKYC(PeppolConnectorCommon, HttpCase):
                 UserError, "You need to authenticate to continue."
             ):
                 wizard.button_register_peppol_participant()
-        self.assertEqual(company.account_peppol_proxy_state, "not_registered")
-        self.assertFalse(company.account_peppol_edi_user)
+        self.assertEqual(
+            company.account_peppol_config_id.account_peppol_proxy_state,
+            "not_registered",
+        )
+        self.assertFalse(company.account_peppol_config_id.account_peppol_edi_user)
 
     @mute_logger("odoo.addons.account_peppol.controllers.authentication")
     def test_connect_with_itsme_failed_auth_case_2(self):
@@ -226,7 +238,10 @@ class TestPeppolKYC(PeppolConnectorCommon, HttpCase):
                 "target": "new",
             },
         )
-        self.assertEqual(company.account_peppol_proxy_state, "not_registered")
+        self.assertEqual(
+            company.account_peppol_config_id.account_peppol_proxy_state,
+            "not_registered",
+        )
 
         with self._mock_create_connection_method() as connect_mock:
             response = self.url_open(
@@ -242,8 +257,11 @@ class TestPeppolKYC(PeppolConnectorCommon, HttpCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("/odoo/peppol-auth-callback-action?success=False", response.url)
         connect_mock.assert_not_called()
-        self.assertEqual(company.account_peppol_proxy_state, "not_registered")
-        self.assertFalse(company.account_peppol_edi_user)
+        self.assertEqual(
+            company.account_peppol_config_id.account_peppol_proxy_state,
+            "not_registered",
+        )
+        self.assertFalse(company.account_peppol_config_id.account_peppol_edi_user)
 
     def test_connector_fails_in_demo(self):
         company = self.env.company

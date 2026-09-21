@@ -228,7 +228,7 @@ class AccountMove(models.Model):
         """
         self.check_singleton()
         company = self.company_id or self.env.company
-        return company.sudo().l10n_my_edi_proxy_user_id
+        return company.sudo().l10n_my_edi_config_id.l10n_my_edi_proxy_user_id
 
     def _l10n_my_edi_cancel_moves(self):
         """Try to cancel the moves in self if allowed by the lock date."""

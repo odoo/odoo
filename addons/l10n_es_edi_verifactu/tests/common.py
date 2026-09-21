@@ -1,4 +1,5 @@
 import base64
+import datetime
 import json
 from unittest import mock
 
@@ -214,7 +215,12 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
         )
 
     def _mock_create_date(self, date):
-        return mock.patch.object(self.env.cr, "now", lambda: date)
+        # a datetime, not the string it is written from: the cursor's clock is
+        # read as one by anything the fixture happens to reach -- a cash-details
+        # message on an opening session goes through `sms` to
+        # `_is_notification_scheduled`, which asks it for a `tzinfo`
+        frozen = datetime.datetime.fromisoformat(date)
+        return mock.patch.object(self.env.cr, "now", lambda: frozen)
 
     def _create_dummy_invoice(self, name=None, invoice_date=None):
         # The only values we care about are the ones relevant for the record identifier.

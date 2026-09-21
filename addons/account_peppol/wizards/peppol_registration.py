@@ -84,19 +84,19 @@ class PeppolRegistration(models.TransientModel):
         compute="_compute_edi_user_id",
     )
     account_peppol_proxy_state = fields.Selection(
-        related="company_id.account_peppol_proxy_state"
+        related="company_id.account_peppol_config_id.account_peppol_proxy_state"
     )
     peppol_warnings = fields.Json(
         string="Peppol warnings",
         compute="_compute_peppol_warnings",
     )
     contact_email = fields.Char(
-        related="selected_company_id.account_peppol_contact_email",
+        related="selected_company_id.account_peppol_config_id.account_peppol_contact_email",
         readonly=False,
         required=True,
     )
     phone_number = fields.Char(
-        related="selected_company_id.account_peppol_phone_number",
+        related="selected_company_id.account_peppol_config_id.account_peppol_phone_number",
         readonly=False,
     )
     peppol_eas = fields.Selection(
@@ -157,7 +157,8 @@ class PeppolRegistration(models.TransientModel):
     def _compute_parent_company_id(self):
         for wizard in self:
             wizard.parent_company_id = (
-                wizard.company_id.peppol_parent_company_id or wizard.company_id
+                wizard.company_id.account_peppol_config_id.peppol_parent_company_id
+                or wizard.company_id
             )
 
     @api.depends("parent_company_id")
@@ -173,7 +174,7 @@ class PeppolRegistration(models.TransientModel):
             if wizard.display_use_parent_connection_selection:
                 wizard.use_parent_connection_selection = (
                     "use_parent"
-                    if wizard.parent_company_id.peppol_can_send
+                    if wizard.parent_company_id.account_peppol_config_id.peppol_can_send
                     else "use_self"
                 )
             else:
@@ -313,7 +314,10 @@ class PeppolRegistration(models.TransientModel):
             raise ValidationError(_("Peppol Address should be provided."))
         if self._branch_with_same_address():
             raise ValidationError(_("Peppol ID should be different from main company."))
-        if self.company_id.account_peppol_proxy_state != "not_registered":
+        if (
+            self.company_id.account_peppol_config_id.account_peppol_proxy_state
+            != "not_registered"
+        ):
             raise ValidationError(
                 _(
                     "Cannot register a user with a %s application",
@@ -485,10 +489,12 @@ class PeppolRegistration(models.TransientModel):
                 "refresh_token": response["refresh_token"],
             }
         )
-        company.account_peppol_proxy_state = response["peppol_state"]
+        company.account_peppol_config_id.account_peppol_proxy_state = response[
+            "peppol_state"
+        ]
         if self.env["account.move"]._can_commit():
             self.env.cr.commit()
-        if company.account_peppol_proxy_state == "sender":
+        if company.account_peppol_config_id.account_peppol_proxy_state == "sender":
             company._account_peppol_send_welcome_email()
         return edi_user
 
@@ -501,8 +507,8 @@ class PeppolRegistration(models.TransientModel):
             "peppol_company_city": company.city,
             "peppol_company_zip": company.zip,
             "peppol_country_code": company.country_id.code,
-            "peppol_phone_number": company.account_peppol_phone_number,
-            "peppol_contact_email": company.account_peppol_contact_email,
+            "peppol_phone_number": company.account_peppol_config_id.account_peppol_phone_number,
+            "peppol_contact_email": company.account_peppol_config_id.account_peppol_contact_email,
             "peppol_migration_key": company.sudo().account_peppol_migration_key,
             "peppol_webhook_endpoint": company._get_peppol_webhook_endpoint(),
             "peppol_webhook_token": self.env[
@@ -584,7 +590,7 @@ class PeppolRegistration(models.TransientModel):
         }
         return self._action_send_notification(
             title=None,
-            message=notifications[self.company_id.account_peppol_proxy_state][
-                "message"
-            ],
+            message=notifications[
+                self.company_id.account_peppol_config_id.account_peppol_proxy_state
+            ]["message"],
         )

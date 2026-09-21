@@ -13,5 +13,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         invoice = vals["invoice"]
         company = invoice.company_id
 
-        if parent_peppol_company := company.peppol_parent_company_id:
+        if (
+            parent_peppol_company
+            := company.account_peppol_config_id.peppol_parent_company_id
+        ):
             vals["supplier"] = parent_peppol_company.partner_id.commercial_partner_id

@@ -22,11 +22,11 @@ class SmsTwilioAccountManage(models.TransientModel):
         required=True,
     )
     sms_provider = fields.Selection(
-        related="company_id.sms_provider",
+        related="company_id.sms_twilio_config_id.sms_provider",
         readonly=False,
     )
     sms_twilio_account_sid = fields.Char(
-        related="company_id.sms_twilio_account_sid",
+        related="company_id.sms_twilio_config_id.sms_twilio_account_sid",
         readonly=False,
     )
     sms_twilio_auth_token = fields.Char(
@@ -45,10 +45,10 @@ class SmsTwilioAccountManage(models.TransientModel):
         try:
             response = self.env["ir.egress"].request(
                 "GET",
-                f"https://api.twilio.com/2010-04-01/Accounts/{self.company_id.sms_twilio_account_sid}/IncomingPhoneNumbers.json",
+                f"https://api.twilio.com/2010-04-01/Accounts/{self.company_id.sms_twilio_config_id.sms_twilio_account_sid}/IncomingPhoneNumbers.json",
                 purpose="sms_twilio",
                 auth=(
-                    self.company_id.sms_twilio_account_sid,
+                    self.company_id.sms_twilio_config_id.sms_twilio_account_sid,
                     self.company_id.sms_twilio_auth_token,
                 ),
                 timeout=5,

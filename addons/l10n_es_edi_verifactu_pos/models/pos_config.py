@@ -5,7 +5,7 @@ class PosConfig(models.Model):
     _inherit = "pos.config"
 
     l10n_es_edi_verifactu_required = fields.Boolean(
-        related="company_id.l10n_es_edi_verifactu_required",
+        related="company_id.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_required",
         string="Veri*Factu Required",
     )
 

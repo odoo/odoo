@@ -412,7 +412,7 @@ class MyInvoisDocument(models.Model):
         self.check_singleton()
         company = self.company_id or self.env.company
 
-        proxy_user = company.sudo().l10n_my_edi_proxy_user_id
+        proxy_user = company.sudo().l10n_my_edi_config_id.l10n_my_edi_proxy_user_id
         if not proxy_user:
             raise UserError(
                 self.env._(

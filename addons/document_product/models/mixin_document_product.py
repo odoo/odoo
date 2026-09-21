@@ -36,7 +36,7 @@ class MixinDocumentsProduct(models.AbstractModel):
 
     def _get_document_tags(self):
         company = self.company_id or self.env.company
-        return company.product_tag_ids
+        return company.document_product_config_id.product_tag_ids
 
     def _get_document_folder(self):
         # `documents_product_settings` chooses a dedicated folder; it does not
@@ -47,11 +47,13 @@ class MixinDocumentsProduct(models.AbstractModel):
         if _debug.logic.enabled:
             _debug.logic(
                 "product_folder",
-                by="company" if company.product_folder_id else "seeded",
+                by="company"
+                if company.document_product_config_id.product_folder_id
+                else "seeded",
                 company=company,
             )
         return (
-            company.product_folder_id
+            company.document_product_config_id.product_folder_id
             or self.env.ref(
                 "document_product.document_product_folder",
                 raise_if_not_found=False,

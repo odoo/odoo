@@ -68,7 +68,7 @@ class TestEdiWebServices(TestEsEdiCommon):
         cls.moves = cls.out_invoice + cls.in_invoice
 
     def test_edi_gipuzkoa(self):
-        self.env.company.l10n_es_sii_tax_agency = "gipuzkoa"
+        self.env.company.l10n_es_edi_sii_config_id.l10n_es_sii_tax_agency = "gipuzkoa"
 
         self.moves.action_process_edi_web_services(with_commit=False)
         generated_files = self._process_documents_web_services(self.moves, {"es_sii"})
@@ -77,7 +77,7 @@ class TestEdiWebServices(TestEsEdiCommon):
         self.assertRecordValues(self.in_invoice, [{"edi_state": "sent"}])
 
     def test_edi_bizkaia(self):
-        self.env.company.l10n_es_sii_tax_agency = "bizkaia"
+        self.env.company.l10n_es_edi_sii_config_id.l10n_es_sii_tax_agency = "bizkaia"
 
         self.moves.action_process_edi_web_services(with_commit=False)
         generated_files = self._process_documents_web_services(self.moves, {"es_sii"})

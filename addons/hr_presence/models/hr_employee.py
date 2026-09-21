@@ -73,8 +73,8 @@ class HrEmployee(models.Model):
         # the batch size, and the same population the sweep covers.
         controlled = employees.filtered(
             lambda employee: (
-                employee.company_id.hr_presence_control_email
-                or employee.company_id.hr_presence_control_ip
+                employee.company_id.hr_config_id.hr_presence_control_email
+                or employee.company_id.hr_config_id.hr_presence_control_ip
             )
         )
         if controlled:
@@ -124,7 +124,7 @@ class HrEmployee(models.Model):
         """
         with _debug.perf("check_presence", cr=self.env.cr) as span:
             companies = (
-                self.env["res.company"]
+                self.env["hr.config"]
                 .sudo()
                 .search(
                     [
@@ -133,6 +133,7 @@ class HrEmployee(models.Model):
                         ("hr_presence_control_ip", "=", True),
                     ]
                 )
+                .company_id
             )
             employees = (
                 self.env["hr.employee"]
@@ -160,7 +161,7 @@ class HrEmployee(models.Model):
         distinct timezone is a query in a loop however few timezones there are.
         """
         by_email_control = employees.filtered(
-            lambda e: e.company_id.hr_presence_control_email
+            lambda e: e.company_id.hr_config_id.hr_presence_control_email
         )
         if not by_email_control:
             return
@@ -210,7 +211,9 @@ class HrEmployee(models.Model):
             for employee in candidates:
                 start, end = window_by_employee[employee.id]
                 count = sum(1 for date in dates if start <= date < end)
-                threshold = employee.company_id.hr_presence_control_email_amount
+                threshold = (
+                    employee.company_id.hr_config_id.hr_presence_control_email_amount
+                )
                 today = today_by_employee[employee.id]
                 if count >= threshold and employee.hr_presence_email_date != today:
                     reached_by_day[today] |= employee
@@ -368,8 +371,8 @@ class HrEmployee(models.Model):
     # --------------------------------------------------------------- compute
     @api.depends(
         "active",
-        "company_id.hr_presence_control_email",
-        "company_id.hr_presence_control_ip",
+        "company_id.hr_config_id.hr_presence_control_email",
+        "company_id.hr_config_id.hr_presence_control_ip",
         "hr_presence_email_date",
         "hr_presence_ip_date",
         "hr_presence_manual_date",
@@ -386,8 +389,8 @@ class HrEmployee(models.Model):
             lambda e: (
                 e.active
                 and (
-                    e.company_id.hr_presence_control_email
-                    or e.company_id.hr_presence_control_ip
+                    e.company_id.hr_config_id.hr_presence_control_email
+                    or e.company_id.hr_config_id.hr_presence_control_ip
                 )
             )
         )

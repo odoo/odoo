@@ -12,7 +12,7 @@ class PortalAccount(CustomerPortal):
 
     def _prepare_my_account_rendering_values(self, *args, **kwargs):
         rendering_values = super()._prepare_my_account_rendering_values(*args, **kwargs)
-        if request.env.company.peppol_can_send:
+        if request.env.company.account_peppol_config_id.peppol_can_send:
             rendering_values["invoice_sending_methods"].update(
                 {"peppol": _("by Peppol")}
             )

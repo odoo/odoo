@@ -54,6 +54,13 @@ def _is_related_through_config(value: ast.expr) -> bool:
     return False
 
 
+def _is_company_owned_collection(value: ast.expr) -> bool:
+    match value:
+        case ast.Call(func=ast.Attribute(attr="One2many"), keywords=keywords):
+            return any(keyword.arg == "inverse_name" for keyword in keywords)
+    return False
+
+
 def check(tree: ast.Module) -> Iterator[Violation]:
     for node in ast.walk(tree):
         if not isinstance(node, ast.ClassDef) or not _extends_company(node):
@@ -64,6 +71,7 @@ def check(tree: ast.Module) -> Iterator[Violation]:
                     _is_field(value)
                     and not name.endswith("_config_id")
                     and not _is_related_through_config(value)
+                    and not _is_company_owned_collection(value)
                 ):
                     yield Violation(
                         statement.lineno,

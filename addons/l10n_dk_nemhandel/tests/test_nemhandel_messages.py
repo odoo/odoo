@@ -382,7 +382,9 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
 
     def test_nemhandel_send_invalid_edi_user(self):
         # an invalid edi user should not be able to send invoices via nemhandel
-        self.env.company.l10n_dk_nemhandel_proxy_state = "rejected"
+        self.env.company.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state = (
+            "rejected"
+        )
 
         move = self.create_move(self.valid_partner)
         move.action_post()

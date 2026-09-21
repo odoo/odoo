@@ -5,7 +5,7 @@ class AccountJournal(models.Model):
     _inherit = "account.journal"
 
     l10n_dk_nemhandel_proxy_state = fields.Selection(
-        related="company_id.l10n_dk_nemhandel_proxy_state"
+        related="company_id.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state"
     )
     is_nemhandel_journal = fields.Boolean(string="Journal used for Nemhandel")
 
@@ -35,7 +35,11 @@ class AccountJournal(models.Model):
         super().button_fetch_in_einvoices()
         edi_users = self.env["account_edi_proxy_client.user"].search(
             [
-                ("company_id.l10n_dk_nemhandel_proxy_state", "=", "receiver"),
+                (
+                    "company_id.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state",
+                    "=",
+                    "receiver",
+                ),
                 ("company_id", "in", self.company_id.ids),
                 ("proxy_type", "=", "nemhandel"),
             ]
@@ -47,7 +51,11 @@ class AccountJournal(models.Model):
         super().button_refresh_out_einvoices_status()
         edi_users = self.env["account_edi_proxy_client.user"].search(
             [
-                ("company_id.l10n_dk_nemhandel_proxy_state", "=", "receiver"),
+                (
+                    "company_id.l10n_dk_nemhandel_config_id.l10n_dk_nemhandel_proxy_state",
+                    "=",
+                    "receiver",
+                ),
                 ("company_id", "in", self.company_id.ids),
                 ("proxy_type", "=", "nemhandel"),
             ]

@@ -426,7 +426,9 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
     def test_send_invalid_edi_user(self):
         # an invalid edi user should not be able to send invoices via peppol
-        self.env.company.account_peppol_proxy_state = "rejected"
+        self.env.company.account_peppol_config_id.account_peppol_proxy_state = (
+            "rejected"
+        )
 
         move = self.create_move(self.valid_partner)
         move.action_post()
@@ -470,7 +472,9 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         )
 
     def test_received_bill_notification(self):
-        peppol_purchase_journal = self.env.company.peppol_purchase_journal_id
+        peppol_purchase_journal = (
+            self.env.company.account_peppol_config_id.peppol_purchase_journal_id
+        )
         peppol_purchase_journal.incoming_einvoice_notification_email = (
             "oops_another_bill@example.com"
         )
@@ -849,7 +853,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         the company has self-billing sending activated.
         """
         # Enable self-billing sending for the company
-        self.env.company.peppol_activate_self_billing_sending = True
+        self.env.company.account_peppol_config_id.peppol_activate_self_billing_sending = True
         self.valid_partner.invoice_edi_format = "ubl_bis3"
 
         self_billing_journal = self.env["account.journal"].create(
@@ -980,7 +984,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             ],
             limit=1,
         )
-        self.env.company.peppol_self_billing_reception_journal_id = sale_journal
+        self.env.company.account_peppol_config_id.peppol_self_billing_reception_journal_id = sale_journal
         cls = self.__class__
         cls.mocked_incoming_invoice_fname = "incoming_self_billed_invoice"
 
@@ -1003,7 +1007,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 {
                     "peppol_move_state": "done",
                     "move_type": "out_invoice",
-                    "journal_id": self.env.company.peppol_self_billing_reception_journal_id.id,
+                    "journal_id": self.env.company.account_peppol_config_id.peppol_self_billing_reception_journal_id.id,
                 }
             ],
         )

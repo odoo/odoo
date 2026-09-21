@@ -5,31 +5,26 @@ from odoo.fields import Domain
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    documents_product_settings = fields.Boolean()
-    product_folder_id = fields.Many2one(
-        comodel_name="document.document",
-        compute="_compute_product_folder_id",
-        store=True,
-        readonly=False,
-        domain=[("type", "=", "folder"), ("shortcut_document_id", "=", False)],
-        check_company=True,
-    )
-    product_tag_ids = fields.Many2many(
-        comodel_name="document.tag",
-        relation="product_tags_table",
+    document_product_config_id = fields.Many2one(
+        comodel_name="document_product.config",
+        compute="_compute_document_product_config_id",
+        search="_search_document_product_config_id",
     )
 
-    @api.depends("documents_product_settings")
-    def _compute_product_folder_id(self):
-        folder_id = self.env.ref(
-            "document_product.document_product_folder", raise_if_not_found=False
-        )
-        self._reset_default_documents_folder_id(
-            "documents_product_settings", "product_folder_id", folder_id
-        )
+    def _search_document_product_config_id(self, operator, value):
+        return self._search_config_link("document_product.config", operator, value)
 
+    def _compute_document_product_config_id(self):
+        configs = self.env["document_product.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.document_product_config_id = by_company.get(company.id, False)
+
+    @api.model
     def _get_domain_used_folder_ids(self, folder_ids):
-        return super()._get_domain_used_folder_ids(folder_ids) | (
+        return super()._get_domain_used_folder_ids(folder_ids) | Domain(
+            "document_product_config_id",
+            "any",
             Domain("product_folder_id", "in", folder_ids)
-            & Domain("documents_product_settings", "=", True)
+            & Domain("documents_product_settings", "=", True),
         )

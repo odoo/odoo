@@ -13,36 +13,36 @@ class ResConfigSettings(models.TransientModel):
     module_hr_presence = fields.Boolean(string="Advanced Presence Control")
     module_hr_skills = fields.Boolean(string="Skills Management")
     hr_presence_control_login = fields.Boolean(
-        related="company_id.hr_presence_control_login",
+        related="company_id.hr_config_id.hr_presence_control_login",
         readonly=False,
     )
     hr_presence_control_email = fields.Boolean(
-        related="company_id.hr_presence_control_email",
+        related="company_id.hr_config_id.hr_presence_control_email",
         readonly=False,
     )
     hr_presence_control_ip = fields.Boolean(
-        related="company_id.hr_presence_control_ip",
+        related="company_id.hr_config_id.hr_presence_control_ip",
         readonly=False,
     )
     module_hr_attendance = fields.Boolean(
-        related="company_id.hr_presence_control_attendance",
+        related="company_id.hr_config_id.hr_presence_control_attendance",
         readonly=False,
     )
     hr_presence_control_email_amount = fields.Integer(
-        related="company_id.hr_presence_control_email_amount",
+        related="company_id.hr_config_id.hr_presence_control_email_amount",
         readonly=False,
     )
     hr_presence_control_ip_list = fields.Char(
-        related="company_id.hr_presence_control_ip_list",
+        related="company_id.hr_config_id.hr_presence_control_ip_list",
         readonly=False,
     )
     contract_expiration_notice_period = fields.Integer(
-        related="company_id.contract_expiration_notice_period",
+        related="company_id.hr_config_id.contract_expiration_notice_period",
         string="Contract Expiry Notice Period",
         readonly=False,
     )
     work_permit_expiration_notice_period = fields.Integer(
-        related="company_id.work_permit_expiration_notice_period",
+        related="company_id.hr_config_id.work_permit_expiration_notice_period",
         string="Work Permit Expiry Notice Period",
         readonly=False,
     )

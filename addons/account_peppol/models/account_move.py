@@ -55,7 +55,7 @@ class AccountMove(models.Model):
         for move in self:
             if all(
                 [
-                    move.company_id.peppol_can_send,
+                    move.company_id.account_peppol_config_id.peppol_can_send,
                     move.commercial_partner_id.peppol_verification_state == "valid",
                     move.state == "posted",
                     move.is_sale_document(include_receipts=True),
@@ -95,7 +95,10 @@ class AccountMove(models.Model):
         invoice_country = invoice.commercial_partner_id.country_code
         company_country = invoice.company_id.country_code
         can_send = self.env["account_edi_proxy_client.user"]._get_domain_can_send()
-        company_on_peppol = invoice.company_id.account_peppol_proxy_state in can_send
+        company_on_peppol = (
+            invoice.company_id.account_peppol_config_id.account_peppol_proxy_state
+            in can_send
+        )
         if (
             company_on_peppol
             and company_country in PEPPOL_MAILING_COUNTRIES

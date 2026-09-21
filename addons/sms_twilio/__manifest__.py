@@ -1,6 +1,6 @@
 {
     "name": "Twilio SMS",
-    "version": "1.2",
+    "version": "1.3",
     "category": "Hidden/Tools",
     "summary": "Send SMS messages using Twilio",
     "description": """
@@ -20,5 +20,6 @@ up their account to start sending SMS messages.
         "views/sms_sms_views.xml",
         "wizards/sms_twilio_account_manage_views.xml",
         "security/ir.model.access.csv",
+        "security/sms_twilio_security.xml",
     ],
 }

@@ -5,7 +5,7 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_es_edi_verifactu_required = fields.Boolean(
-        related="company_id.l10n_es_edi_verifactu_required",
+        related="company_id.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_required",
         string="Veri*Factu Required",
     )
     l10n_es_edi_verifactu_document_ids = fields.One2many(
@@ -155,7 +155,7 @@ class AccountMove(models.Model):
             return False
 
         taxes = self.invoice_line_ids.tax_ids.flatten_taxes_hierarchy()
-        special_regime = self.company_id.l10n_es_edi_verifactu_special_vat_regime
+        special_regime = self.company_id.l10n_es_edi_verifactu_config_id.l10n_es_edi_verifactu_special_vat_regime
         return taxes._l10n_es_edi_verifactu_get_suggested_clave_regimen(
             special_regime, forced_tax_applicability=tax_applicability
         )

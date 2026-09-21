@@ -2,5 +2,5 @@
 UPDATE account_edi_proxy_client_user
    SET active = FALSE
  WHERE proxy_type = 'l10n_my_edi';
-UPDATE res_company
+UPDATE l10n_my_edi_config
    SET l10n_my_edi_mode = 'test';
