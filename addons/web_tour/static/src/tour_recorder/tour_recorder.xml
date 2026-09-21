@@ -33,7 +33,7 @@
                                             <t t-out="step.trigger"/>
                                             <span t-if="step.run and step.run != 'click'" class="fst-italic fw-lighter"><br/>(run: <t t-out="step.run"/>) </span>
                                         </td>
-                                        <td><button class="o_button_delete_step btn btn-link oi oi-filled text-danger mx-1" data-icon="delete" t-on-click.prevent.stop="() => this.removeStep(step_index)"/></td>
+                                        <td><button class="o_button_delete_step btn btn-hover-danger oi oi-filled mx-1" data-icon="delete" t-on-click.prevent.stop="() => this.removeStep(step_index)"/></td>
                                     </tr>
                                 </t>
                             </tbody>
