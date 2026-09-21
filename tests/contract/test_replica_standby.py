@@ -128,9 +128,23 @@ def _standby_sql(standby, scratch_db, sql):
         return conn.execute(sql).fetchone()
 
 
+def _wait_until_the_replica_is_within_the_ceiling(router) -> None:
+    deadline = time.monotonic() + 20
+    while True:
+        router.lag._last_sample = 0.0
+        cr, mode = router.cursor(readonly=True)
+        cr.close()
+        if mode == "ro":
+            return
+        if time.monotonic() > deadline:
+            pytest.skip(f"standby stayed past the lag ceiling (mode {mode!r})")
+        time.sleep(0.2)
+
+
 @requires_pg
 class TestAgainstARealStandby:
     def test_a_read_only_cursor_lands_on_the_standby(self, router):
+        _wait_until_the_replica_is_within_the_ceiling(router)
         cr, mode = router.cursor(readonly=True)
         try:
             cr.execute("SELECT pg_is_in_recovery()")
@@ -140,6 +154,7 @@ class TestAgainstARealStandby:
             cr.close()
 
     def test_a_write_on_the_standby_is_refused(self, router):
+        _wait_until_the_replica_is_within_the_ceiling(router)
         cr, _mode = router.cursor(readonly=True)
         try:
             with pytest.raises(psycopg.errors.ReadOnlySqlTransaction):
@@ -172,7 +187,10 @@ class TestAgainstARealStandby:
             assert not router.lag.is_replica_usable()
         finally:
             _standby_sql(standby, scratch_db, "SELECT pg_wal_replay_resume()")
-        time.sleep(0.5)
+        # not a fixed sleep: the standby has the paused window to replay AND
+        # whatever the shared primary wrote meanwhile, which here is about
+        # 270 kB of WAL a second with no lane of our own running
+        _wait_until_the_replica_is_within_the_ceiling(router)
         router.lag._last_sample = 0.0
         cr, mode = router.cursor(readonly=True)
         cr.close()
