@@ -108,7 +108,9 @@ def _retire_seed(env, old_xmlid, new_xmlid):
     new = new_xmlid and env.ref(f"gateway_ml.{new_xmlid}", raise_if_not_found=False)
     moved_providers = env["gateway.ml.provider"]
     if new:
-        moved_providers = env["gateway.ml.provider"].search([("default_model_id", "=", old.id)])
+        moved_providers = env["gateway.ml.provider"].search(
+            [("default_model_id", "=", old.id)]
+        )
         moved_providers.write({"default_model_id": new.id})
         _carry_hops(env, old, new)
     if env["gateway.ml.provider"].search_count([("default_model_id", "=", old.id)]):

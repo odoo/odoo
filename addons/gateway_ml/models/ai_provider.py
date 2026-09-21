@@ -4,7 +4,6 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from ..tools.ai_clients import get_ai_client
-from ..tools.provider_assistant import ProviderAssistant
 
 
 class AIProvider(models.Model):
@@ -128,9 +127,6 @@ class AIProvider(models.Model):
                 )
             )
         return service
-
-    def _assistant(self, model=None, company_id=None):
-        return ProviderAssistant(self, model=model, company_id=company_id)
 
     def _get_ai_client(self, company_id=None):
         self.check_singleton()

@@ -3,7 +3,12 @@ from unittest.mock import patch
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.gateway_ml.tests.common import credential_for
-from odoo.addons.gateway_ml.tools.ai_clients import GeminiClient, OpenAICompatibleClient
+from odoo.addons.gateway_ml.tools.ai_clients import (
+    BaseAIClient,
+    ClaudeClient,
+    GeminiClient,
+    OpenAICompatibleClient,
+)
 from odoo.addons.integration.tools.exceptions import CommError
 
 _IMAGE = "aGVsbG8="
@@ -27,7 +32,7 @@ class TestVisionCompletion(TransactionCase):
                 "body": {"choices": [{"message": {"content": "an invoice"}}]},
             },
         ) as post:
-            answer = client.vision_completion("what is this?", _IMAGE, "image/png")
+            answer = client.complete("what is this?", images=((_IMAGE, "image/png"),))
 
         self.assertEqual(answer, "an invoice")
         content = post.call_args.kwargs["json"]["messages"][0]["content"]
@@ -55,14 +60,14 @@ class TestVisionCompletion(TransactionCase):
                 "body": {"choices": [{"message": {"content": "ok"}}]},
             },
         ) as post:
-            client.vision_completion("what is this?", _IMAGE)
+            client.complete("what is this?", images=((_IMAGE, "image/png"),))
 
         self.assertEqual(post.call_args.kwargs["json"]["model"], "see-model")
 
     def test_groq_reads_no_images_since_scout_shut_down(self):
         with self.assertRaises(CommError) as caught:
-            OpenAICompatibleClient(self.env, endpoint_code="groq").vision_completion(
-                "what is this?", _IMAGE
+            OpenAICompatibleClient(self.env, endpoint_code="groq").complete(
+                "what is this?", images=((_IMAGE, "image/png"),)
             )
         self.assertIn("no images", str(caught.exception))
 
@@ -81,36 +86,39 @@ class TestVisionCompletion(TransactionCase):
             },
         ):
             with self.assertRaises(CommError) as caught:
-                client.vision_completion("what is this?", _IMAGE)
+                client.complete("what is this?", images=((_IMAGE, "image/png"),))
 
-        self.assertIn("no usable answer", str(caught.exception))
+        self.assertIn("no usable content", str(caught.exception))
 
     def test_a_vendor_that_reads_no_images_says_so(self):
         client = OpenAICompatibleClient(self.env, endpoint_code="deepseek")
         with self.assertRaises(CommError) as caught:
-            client.vision_completion("what is this?", _IMAGE)
+            client.complete("what is this?", images=((_IMAGE, "image/png"),))
         self.assertIn("no images", str(caught.exception))
 
-    def test_an_empty_image_is_refused_before_the_request(self):
-        client = OpenAICompatibleClient(self.env, endpoint_code="openai")
-        with patch.object(client._client, "post") as post:
-            with self.assertRaises(CommError):
-                client.vision_completion("what is this?", "")
-        post.assert_not_called()
-
-    def test_gemini_answers_to_the_same_name(self):
-        client = GeminiClient(self.env)
+    def test_a_vendor_that_reads_no_images_still_answers_text(self):
+        client = OpenAICompatibleClient(self.env, endpoint_code="deepseek")
+        body = {"choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}]}
         with patch.object(
-            client, "multimodal_completion", return_value="a receipt"
-        ) as native:
-            answer = client.vision_completion("what is this?", _IMAGE, "image/webp")
+            client._client, "post", return_value={"status_code": 200, "body": body}
+        ):
+            self.assertEqual(client.complete("what is this?"), "ok")
+
+    def test_gemini_sends_each_image_inline(self):
+        client = GeminiClient(self.env)
+        body = {"candidates": [{"content": {"parts": [{"text": "a receipt"}]}}]}
+        with patch.object(
+            client._client, "post", return_value={"status_code": 200, "body": body}
+        ) as post:
+            answer = client.complete("what is this?", images=((_IMAGE, "image/webp"),))
 
         self.assertEqual(answer, "a receipt")
+        parts = post.call_args.kwargs["json"]["contents"][0]["parts"]
         self.assertEqual(
-            native.call_args.kwargs["image_data"], f"data:image/webp;base64,{_IMAGE}"
+            parts[1], {"inline_data": {"mime_type": "image/webp", "data": _IMAGE}}
         )
 
-    def test_every_vision_capable_client_answers_to_it(self):
-        for cls in (OpenAICompatibleClient, GeminiClient):
+    def test_every_chat_client_implements_complete(self):
+        for cls in (OpenAICompatibleClient, GeminiClient, ClaudeClient):
             with self.subTest(client=cls.__name__):
-                self.assertTrue(callable(getattr(cls, "vision_completion", None)))
+                self.assertIsNot(cls.complete, BaseAIClient.complete)

@@ -119,7 +119,9 @@ class IrAttachment(models.Model):
         self.check_singleton()
         self._transcribe(language=language)
 
-    def _transcribe(self, language: str | None = None) -> list[Cue] | None:
+    def _transcribe(
+        self, language: str | None = None, prompt: str | None = None
+    ) -> list[Cue] | None:
         self.check_singleton()
         mimetype = self.mimetype or ""
         if not can_transcribe(mimetype, self.env):
@@ -130,7 +132,7 @@ class IrAttachment(models.Model):
             )
         self.sudo().write({"speech_state": "running"})
         try:
-            cues, engine = self._speech_read(language)
+            cues, engine = self._speech_read(language, prompt)
         except Exception as error:
             _logger.warning(
                 "Could not transcribe attachment %s: %s", self.id, error, exc_info=True
@@ -160,9 +162,11 @@ class IrAttachment(models.Model):
         self._speech_notify_owner(transcribed=True)
         return cues
 
-    def _speech_read(self, language: str | None = None) -> tuple[list[Cue], str]:
+    def _speech_read(
+        self, language: str | None = None, prompt: str | None = None
+    ) -> tuple[list[Cue], str]:
         self.check_singleton()
-        document = self._speech_document(language=language)
+        document = self._speech_document(language=language, prompt=prompt)
         cues = document.cues
         failure = engine_error(document)
         if failure:

@@ -5,7 +5,7 @@ from typing import Any
 
 from odoo.libs.documents import TEXT, BaseWriter, register_writer
 
-from .selection import SYNTHESIS_KIND, pick_model, run
+from .selection import SYNTHESIS_KIND, SYNTHESIS_PURPOSE, company_id_of, pick_model, run
 
 _logger = logging.getLogger(__name__)
 
@@ -48,15 +48,21 @@ class AiSpeech(BaseWriter):
         self.mimetype = mimetype
 
     def available(self, env: Any) -> bool:
-        return bool(self._pick_model(env))
+        return bool(self._pick_model(env, env.company.id))
 
-    def _pick_model(self, env: Any) -> Any:
+    def _pick_model(self, env: Any, company_id: int) -> Any:
         writing = [
             vendor
             for vendor in _vendors(env)
             if self.mimetype in written_by(env, vendor)
         ]
-        return pick_model(env, SYNTHESIS_KIND, provider_code=writing)
+        return pick_model(
+            env,
+            SYNTHESIS_KIND,
+            company_id=company_id,
+            purpose=SYNTHESIS_PURPOSE,
+            provider_code=writing,
+        )
 
     def write(self, value: Any, **options: Any) -> bytes:
         env = options.get("env")
@@ -64,14 +70,16 @@ class AiSpeech(BaseWriter):
             raise ValueError(
                 "Speech synthesis needs an environment: pass env= to write audio"
             )
-        model = self._pick_model(env)
+        company_id = company_id_of(env, options)
+        model = self._pick_model(env, company_id)
         if not model:
             raise ValueError("No speech model is configured with a usable credential")
         return run(
             env,
             "synthesize",
             model,
-            log_metadata={"feature": "speech.synthesis"},
+            company_id=company_id,
+            purpose=SYNTHESIS_PURPOSE,
             text=str(value),
             voice=options.get("voice"),
             mimetype=self.mimetype,

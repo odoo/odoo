@@ -1,12 +1,10 @@
+import json
 import logging
 
-from ..json_payload import parse_json_response
 from odoo.addons.integration.tools.api_client import get_api_client
 from odoo.addons.integration.tools.exceptions import CommError
 
 _logger = logging.getLogger(__name__)
-
-_JSON_INSTRUCTION = "\n\nReturn your response as valid JSON."
 
 
 class BaseAIClient:
@@ -37,16 +35,18 @@ class BaseAIClient:
         self.company_id = company_id
         self._client = get_api_client(env, self.ENDPOINT_CODE, company_id)
 
-    def simple_completion(self, prompt, model=None, **kwargs):
-        raise NotImplementedError(
-            f"{type(self).__name__} must implement simple_completion",
-        )
-
-    def json_completion(self, prompt, model=None, **kwargs):
-        if "json" not in prompt.lower():
-            prompt = f"{prompt}{_JSON_INSTRUCTION}"
-        text = self.simple_completion(prompt, model=model, **kwargs)
-        return parse_json_response(text, env=self.env)
+    def complete(
+        self,
+        prompt,
+        *,
+        system="",
+        images=(),
+        response_schema=None,
+        structured_output="prompted",
+        model=None,
+        **kwargs,
+    ):
+        raise NotImplementedError(f"{type(self).__name__} must implement complete")
 
     def _resolve_model(self, model=None):
         if model:
@@ -109,20 +109,6 @@ class BaseAIClient:
             )
         return body
 
-    def _stream_lines(self, path, payload):
-        response = self._client.post(path, json=payload, stream=True, raw=True)
-        for line in response.iter_lines():
-            if not line:
-                continue
-            try:
-                yield line.decode("utf-8")
-            except UnicodeDecodeError as error:
-                _logger.warning(
-                    "%s skipped an undecodable stream chunk: %s",
-                    type(self).__name__,
-                    error,
-                )
-
     def _get_model_rows(self):
         if self._model_rows is None:
             rows = (
@@ -179,3 +165,11 @@ class BaseAIClient:
                     if model in rows
                     else "the client default",
                 )
+
+
+def with_schema_instruction(system, response_schema):
+    instruction = (
+        "Answer with one JSON object and nothing else. It follows this JSON "
+        f"schema:\n{json.dumps(response_schema, ensure_ascii=False)}"
+    )
+    return f"{system}\n\n{instruction}" if system else instruction

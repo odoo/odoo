@@ -147,6 +147,7 @@
     </record>
 
     <record id="ai_model_openai_gpt_5_6_luna" model="gateway.ml.model">
+        <field name="structured_output">json_schema</field>
         <field name="provider_id" ref="ai_provider_openai" />
         <field name="name">GPT-5.6 Luna</field>
         <field name="code">gpt-5.6-luna</field>
@@ -228,6 +229,7 @@
     </record>
 
     <record id="ai_model_deepseek_flash" model="gateway.ml.model">
+        <field name="structured_output">json_object</field>
         <field name="provider_id" ref="ai_provider_deepseek" />
         <field name="name">DeepSeek Flash</field>
         <field name="code">deepseek-flash</field>
@@ -260,6 +262,7 @@
     </record>
 
     <record id="ai_model_groq_gpt_oss_120b" model="gateway.ml.model">
+        <field name="structured_output">json_schema</field>
         <field name="provider_id" ref="ai_provider_groq" />
         <field name="name">GPT-OSS 120B</field>
         <field name="code">openai/gpt-oss-120b</field>
@@ -292,6 +295,7 @@
     </record>
 
     <record id="ai_model_moonshot_kimi_k3" model="gateway.ml.model">
+        <field name="structured_output">json_object</field>
         <field name="provider_id" ref="ai_provider_moonshot" />
         <field name="name">Kimi K3</field>
         <field name="code">kimi-k3</field>

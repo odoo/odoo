@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_gateway_ml_purpose_list" model="ir.ui.view">
+        <field name="name">gateway.ml.purpose.list</field>
+        <field name="model">gateway.ml.purpose</field>
+        <field name="arch" type="xml">
+            <list string="Purposes" editable="bottom">
+                <field name="key" />
+                <field name="name" />
+                <field name="sensitive" widget="boolean_toggle" />
+            </list>
+        </field>
+    </record>
+
+    <record id="action_gateway_ml_purpose" model="ir.actions.act_window">
+        <field name="name">Purposes</field>
+        <field name="res_model">gateway.ml.purpose</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <record id="view_gateway_ml_policy_list" model="ir.ui.view">
+        <field name="name">gateway.ml.policy.list</field>
+        <field name="model">gateway.ml.policy</field>
+        <field name="arch" type="xml">
+            <list string="Data Policies">
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="purpose_id" />
+                <field name="provider_ids" widget="many2many_tags" />
+                <field name="approved_by_id" />
+                <field name="approved_at" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gateway_ml_policy_form" model="ir.ui.view">
+        <field name="name">gateway.ml.policy.form</field>
+        <field name="model">gateway.ml.policy</field>
+        <field name="arch" type="xml">
+            <form string="Data Policy">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="purpose_id" />
+                            <field name="company_id" groups="base.group_multi_company" />
+                            <field name="provider_ids" widget="many2many_tags" />
+                        </group>
+                        <group>
+                            <field name="approved_by_id" />
+                            <field name="approved_at" />
+                        </group>
+                    </group>
+                    <field name="note" placeholder="Why these vendors may receive this data..." />
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gateway_ml_policy" model="ir.actions.act_window">
+        <field name="name">Data Policies</field>
+        <field name="res_model">gateway.ml.policy</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

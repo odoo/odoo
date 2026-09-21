@@ -18,7 +18,9 @@ def _retire_experimental_gemini(env):
     experimental = env.ref(
         "gateway_ml.ai_model_gemini_2_0_flash_exp", raise_if_not_found=False
     )
-    current = env.ref("gateway_ml.ai_model_gemini_3_5_flash_lite", raise_if_not_found=False)
+    current = env.ref(
+        "gateway_ml.ai_model_gemini_3_5_flash_lite", raise_if_not_found=False
+    )
     if not experimental or not current:
         return
     still_default = env["gateway.ml.provider"].search(

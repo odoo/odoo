@@ -142,85 +142,31 @@ class ClaudeClient(BaseAIClient):
             raise CommError(f"Claude create_message failed: {e!s}") from e
         return self._get_response_body(response)
 
-    def simple_completion(self, prompt, model=None, **kwargs):
-        return self._complete([{"role": "user", "content": prompt}], model, **kwargs)
-
-    def streaming_completion(self, messages, model=None, **kwargs):
-        model = self._resolve_model(model)
-        self._check_params(model=model, temperature=kwargs.get("temperature"))
-        return self._stream_lines(
-            "/messages", self._prepare_payload(model, messages, stream=True, **kwargs)
-        )
-
-    def vision_completion(
+    def complete(
         self,
         prompt,
-        image_data,
-        media_type="image/jpeg",
+        *,
+        system="",
+        images=(),
+        response_schema=None,
+        structured_output="prompted",
         model=None,
         **kwargs,
     ):
-        content = get_anthropic_content(prompt, [(image_data, media_type)])
-        return self._complete([{"role": "user", "content": content}], model, **kwargs)
-
-    def pdf_completion(self, prompt, pdf_data, model=None, **kwargs):
-        return self._complete(
-            self._prepare_pdf_messages(prompt, pdf_data), model, **kwargs
-        )
-
-    def pdf_with_caching(self, prompt, pdf_data, cache_pdf=True, model=None, **kwargs):
-        return self._complete(
-            self._prepare_pdf_messages(prompt, pdf_data, cache=cache_pdf),
+        messages = [{"role": "user", "content": get_anthropic_content(prompt, images)}]
+        if system:
+            kwargs["system"] = system
+        if response_schema is None:
+            return self._complete(messages, model, **kwargs)
+        answer = self._get_forced_tool_input(
+            messages,
+            "respond",
+            "Give the answer in this shape.",
+            response_schema,
             model,
             **kwargs,
         )
-
-    def structured_output(
-        self,
-        prompt,
-        schema,
-        tool_name="extract_data",
-        tool_description="Extract structured data",
-        model=None,
-        **kwargs,
-    ):
-        return self._get_forced_tool_input(
-            [{"role": "user", "content": prompt}],
-            tool_name,
-            tool_description,
-            schema,
-            model,
-            **kwargs,
-        )
-
-    def vision_structured_output(
-        self,
-        prompt,
-        image_data,
-        schema,
-        media_type="image/jpeg",
-        model=None,
-        **kwargs,
-    ):
-        content = get_anthropic_content(prompt, [(image_data, media_type)])
-        return self._get_forced_tool_input(
-            [{"role": "user", "content": content}],
-            "extract_from_image",
-            "Extract structured data from image",
-            schema,
-            model,
-            **kwargs,
-        )
-
-    def pdf_structured_output(self, prompt, pdf_data, schema, model=None, **kwargs):
-        return self._get_forced_tool_input(
-            self._prepare_pdf_messages(prompt, pdf_data),
-            "extract_from_pdf",
-            "Extract structured data from PDF document",
-            schema,
-            model,
-            **kwargs,
-        )
+        return json.dumps(answer, ensure_ascii=False)
 
     def _complete(self, messages, model, **kwargs):
         result = self.create_message(messages=messages, model=model, **kwargs)
@@ -266,91 +212,6 @@ class ClaudeClient(BaseAIClient):
                 f"{model} answered a JSON schema request with text that is not "
                 f"JSON: {error}",
             ) from error
-
-    @staticmethod
-    def _prepare_pdf_messages(prompt, pdf_data, cache=False):
-        document = {
-            "type": "document",
-            "source": {
-                "type": "base64",
-                "media_type": "application/pdf",
-                "data": pdf_data,
-            },
-        }
-        if cache:
-            document["cache_control"] = {"type": "ephemeral"}
-        return [
-            {"role": "user", "content": [{"type": "text", "text": prompt}, document]}
-        ]
-
-    def get_usage(self, response):
-        usage = response.get("usage") or {}
-        input_tokens = usage.get("input_tokens", 0)
-        output_tokens = usage.get("output_tokens", 0)
-        return {
-            "input_tokens": input_tokens,
-            "output_tokens": output_tokens,
-            "total_tokens": input_tokens + output_tokens,
-            "cache_creation_input_tokens": usage.get("cache_creation_input_tokens", 0),
-            "cache_read_input_tokens": usage.get("cache_read_input_tokens", 0),
-            "model": response.get("model", "unknown"),
-        }
-
-    def create_cacheable_content(self, text, cache=True, ttl=None):
-        content = {"type": "text", "text": text}
-        if cache:
-            content["cache_control"] = {
-                "type": "ephemeral",
-                **({"ttl": ttl} if ttl else {}),
-            }
-        return content
-
-    def create_cached_system_prompt(self, guidelines, cache_guidelines=True):
-        return [self.create_cacheable_content(guidelines, cache=cache_guidelines)]
-
-    def tool_conversation(
-        self,
-        user_message,
-        tools,
-        tool_executor,
-        max_turns=5,
-        model=None,
-        **kwargs,
-    ):
-        model = self._resolve_model(model)
-        messages = [{"role": "user", "content": user_message}]
-        response = {}
-
-        for _turn in range(max_turns):
-            response = self.create_message(
-                messages=messages, tools=tools, model=model, **kwargs
-            )
-            if response.get("stop_reason") != "tool_use":
-                return response
-
-            assistant_content = response.get("content") or []
-            tool_results = []
-            for block in assistant_content:
-                if block.get("type") != "tool_use":
-                    continue
-                try:
-                    result = {
-                        "content": str(tool_executor(block["name"], block["input"]))
-                    }
-                except Exception as e:
-                    result = {"content": f"Error: {e!s}", "is_error": True}
-                tool_results.append(
-                    {"type": "tool_result", "tool_use_id": block.get("id"), **result}
-                )
-
-            messages.append({"role": "assistant", "content": assistant_content})
-            messages.append({"role": "user", "content": tool_results})
-
-        return {
-            "error": "Max tool use turns reached",
-            "messages": messages,
-            "last_response": response,
-        }
 
 
 def get_claude_client(env, company_id=None):

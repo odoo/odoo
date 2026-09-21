@@ -25,13 +25,14 @@ class TestAiExtractors(TransactionCase):
 
     def _orchestrator(self, answer='{"total": 139.86}'):
         client = MagicMock()
-        client.simple_completion.return_value = answer
-        client.vision_completion.return_value = answer
+        client.complete.return_value = answer
 
         orchestrator = MagicMock()
         orchestrator.select_model.return_value = MagicMock(code="a-model")
         orchestrator.run.side_effect = lambda operation, request, model=None, **kw: (
-            MlResult(model, **MlRouter._dispatch(operation, request, client, model))
+            MlResult(
+                model, **MlRouter(self.env)._dispatch(operation, request, client, model)
+            )
         )
         return orchestrator, client
 
@@ -63,8 +64,8 @@ class TestAiExtractors(TransactionCase):
         result = self._run(self.text_reader, _TEXT_DOC, orchestrator)
 
         self.assertEqual(result, {"total": 139.86})
-        client.vision_completion.assert_not_called()
-        sent = client.simple_completion.call_args.args[0]
+        self.assertEqual(client.complete.call_args.kwargs["images"], ())
+        sent = client.complete.call_args.args[0]
         self.assertIn("CONSUMO 100 KWH", sent)
         self.assertIn("Expected JSON structure", sent)
 
@@ -102,18 +103,54 @@ class TestAiExtractors(TransactionCase):
 
         self._run(self.vision_reader, _IMAGE_DOC, orchestrator)
 
-        self.assertEqual(
-            client.vision_completion.call_args.kwargs["media_type"], "image/png"
-        )
+        (image,) = client.complete.call_args.kwargs["images"]
+        self.assertEqual(image[1], "image/png")
 
     def test_only_the_missing_fields_are_asked_about(self):
         orchestrator, client = self._orchestrator()
 
         self._run(self.text_reader, _TEXT_DOC, orchestrator, wanted=("total",))
 
-        sent = client.simple_completion.call_args.args[0]
+        sent = client.complete.call_args.args[0]
         self.assertIn("total", sent)
         self.assertNotIn("vendor_vat", sent)
+
+    def test_the_purpose_names_the_document_type(self):
+        orchestrator, _ = self._orchestrator()
+
+        self._run(self.text_reader, _TEXT_DOC, orchestrator, doc_type="receipt")
+
+        self.assertEqual(
+            orchestrator.select_model.call_args.kwargs["purpose"], "extract.receipt"
+        )
+        self.assertEqual(orchestrator.run.call_args.args[1].purpose, "extract.receipt")
+
+    def test_the_company_is_the_environments_by_default(self):
+        orchestrator, _ = self._orchestrator()
+
+        self._run(self.text_reader, _TEXT_DOC, orchestrator)
+
+        self.assertEqual(
+            orchestrator.select_model.call_args.kwargs["company_id"],
+            self.env.company.id,
+        )
+        self.assertEqual(
+            orchestrator.run.call_args.kwargs["company_id"], self.env.company.id
+        )
+
+    def test_a_company_named_by_the_source_is_the_one_asked(self):
+        other = self.env["res.company"].create({"name": "Other extract company"})
+        source = Document(
+            b"CONSUMO 100 KWH TOTAL 139.86", "text/plain", "bill.txt", company=other
+        )
+        orchestrator, _ = self._orchestrator()
+
+        self._run(self.text_reader, source, orchestrator)
+
+        self.assertEqual(
+            orchestrator.select_model.call_args.kwargs["company_id"], other.id
+        )
+        self.assertEqual(orchestrator.run.call_args.kwargs["company_id"], other.id)
 
     def test_the_media_type_is_read_from_the_bytes(self):
         self.assertEqual(_media_type(_PNG), "image/png")
@@ -132,7 +169,7 @@ class TestAiExtractors(TransactionCase):
         result = self._run(self.text_reader, _TEXT_DOC, orchestrator)
 
         self.assertIsNone(result)
-        client.simple_completion.assert_not_called()
+        client.complete.assert_not_called()
 
     def test_a_vendor_failure_is_not_raised_at_the_cascade(self):
         orchestrator, _ = self._orchestrator()

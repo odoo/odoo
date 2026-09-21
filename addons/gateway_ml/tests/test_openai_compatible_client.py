@@ -1,6 +1,8 @@
+import json
 import math
 from unittest.mock import Mock, patch
 
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 from odoo.addons.gateway_ml.tests.common import credential_for
@@ -108,36 +110,6 @@ class TestOpenAICompatibleClient(TransactionCase):
 
                 mock_validate.assert_called_once()
 
-    def test_get_usage_returns_token_counts(self):
-        client = get_ai_client(self.env, "deepseek")
-
-        response = {
-            "usage": {
-                "prompt_tokens": 1000,
-                "completion_tokens": 2000,
-                "total_tokens": 3000,
-            },
-            "model": "deepseek-flash",
-        }
-
-        usage = client.get_usage(response)
-
-        self.assertEqual(usage["prompt_tokens"], 1000)
-        self.assertEqual(usage["completion_tokens"], 2000)
-        self.assertEqual(usage["total_tokens"], 3000)
-        self.assertEqual(usage["model"], "deepseek-flash")
-        self.assertNotIn("estimated_cost_usd", usage)
-
-    def test_get_usage_empty_response(self):
-        client = get_ai_client(self.env, "deepseek")
-
-        response = {}
-        usage = client.get_usage(response)
-
-        self.assertEqual(usage["prompt_tokens"], 0)
-        self.assertEqual(usage["completion_tokens"], 0)
-        self.assertEqual(usage["total_tokens"], 0)
-
 
 class TestOpenAICompatibleVision(TransactionCase):
     def setUp(self):
@@ -153,10 +125,92 @@ class TestOpenAICompatibleVision(TransactionCase):
         client = get_ai_client(self.env, "deepseek")
 
         with self.assertRaises(CommError) as caught:
-            client.vision_completion(
-                prompt="What's in this image?",
-                image_data="base64_encoded_image_data",
+            client.complete(
+                "What's in this image?",
+                images=(("base64_encoded_image_data", "image/jpeg"),),
             )
 
         self.assertIn("no images", str(caught.exception))
         mock_get_client.return_value.post.assert_not_called()
+
+
+_SCHEMA = {"type": "object", "properties": {"total": {"type": "number"}}}
+
+
+@tagged("post_install", "-at_install")
+class TestOpenAICompatibleComplete(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        credential_for(cls.env, "openai", bearer_token="K")
+
+    def _sent(self, prompt="q", **kwargs):
+        client = get_ai_client(self.env, "openai")
+        body = {"choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}]}
+        with patch.object(
+            client._client, "post", return_value={"status_code": 200, "body": body}
+        ) as post:
+            self.assertEqual(
+                client.complete(prompt, model="gpt-5.6-luna", **kwargs), "ok"
+            )
+        return post.call_args.kwargs["json"]
+
+    def test_a_plain_prompt_is_one_user_message(self):
+        sent = self._sent()
+        self.assertEqual(sent["messages"], [{"role": "user", "content": "q"}])
+        self.assertNotIn("response_format", sent)
+
+    def test_the_system_prompt_leads_and_every_image_follows_the_text(self):
+        sent = self._sent(
+            "compare",
+            system="be brief",
+            images=(("QUJD", "image/png"), ("REVG", "image/jpeg")),
+        )
+        self.assertEqual(
+            sent["messages"],
+            [
+                {"role": "system", "content": "be brief"},
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": "compare"},
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": "data:image/png;base64,QUJD"},
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": "data:image/jpeg;base64,REVG"},
+                        },
+                    ],
+                },
+            ],
+        )
+
+    def test_json_schema_mode_sends_the_schema_as_the_response_format(self):
+        sent = self._sent(response_schema=_SCHEMA, structured_output="json_schema")
+        self.assertEqual(
+            sent["response_format"],
+            {
+                "type": "json_schema",
+                "json_schema": {"name": "response", "schema": _SCHEMA},
+            },
+        )
+        self.assertEqual(sent["messages"], [{"role": "user", "content": "q"}])
+
+    def test_json_object_mode_asks_for_json_and_puts_the_schema_in_the_system(self):
+        sent = self._sent(
+            system="be brief", response_schema=_SCHEMA, structured_output="json_object"
+        )
+        self.assertEqual(sent["response_format"], {"type": "json_object"})
+        system = sent["messages"][0]
+        self.assertEqual(system["role"], "system")
+        self.assertTrue(system["content"].startswith("be brief"))
+        self.assertIn(json.dumps(_SCHEMA), system["content"])
+
+    def test_prompted_mode_puts_the_schema_in_the_system_alone(self):
+        sent = self._sent(response_schema=_SCHEMA, structured_output="prompted")
+        self.assertNotIn("response_format", sent)
+        self.assertEqual(sent["messages"][0]["role"], "system")
+        self.assertIn(json.dumps(_SCHEMA), sent["messages"][0]["content"])
+        self.assertEqual(sent["messages"][1], {"role": "user", "content": "q"})

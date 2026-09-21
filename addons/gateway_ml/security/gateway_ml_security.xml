@@ -20,4 +20,10 @@
         <field name="groups" eval="[Command.set([ref('base.group_erp_manager')])]" />
     </record>
 
+    <record id="gateway_ml_policy_rule_company" model="ir.rule">
+        <field name="name">gateway.ml.policy: the reader's companies</field>
+        <field name="model_id" ref="model_gateway_ml_policy" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
 </odoo>

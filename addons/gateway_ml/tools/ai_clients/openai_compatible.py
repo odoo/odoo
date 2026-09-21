@@ -10,7 +10,7 @@ from ..wire_formats import (
     read_whisper_transcript,
     vocabulary_prompt,
 )
-from .base import BaseAIClient
+from .base import BaseAIClient, with_schema_instruction
 from odoo.addons.integration.tools.exceptions import CommError
 
 _logger = logging.getLogger(__name__)
@@ -55,10 +55,37 @@ class OpenAICompatibleClient(BaseAIClient):
                 f"{type(self).__name__} chat completion failed: {e!s}",
             ) from e
 
-    def simple_completion(self, prompt, model=None, **kwargs):
+    def complete(
+        self,
+        prompt,
+        *,
+        system="",
+        images=(),
+        response_schema=None,
+        structured_output="prompted",
+        model=None,
+        **kwargs,
+    ):
+        if images and not self._provider().has_vision:
+            raise CommError(
+                f"{type(self).__name__} reads no images: no active model of "
+                f"{self.ENDPOINT_CODE!r} reads images",
+            )
+        if response_schema is not None:
+            if structured_output == "json_schema":
+                kwargs["response_format"] = {
+                    "type": "json_schema",
+                    "json_schema": {"name": "response", "schema": response_schema},
+                }
+            else:
+                system = with_schema_instruction(system, response_schema)
+                if structured_output == "json_object":
+                    kwargs["response_format"] = {"type": "json_object"}
+        messages = [{"role": "system", "content": system}] if system else []
+        messages.append({"role": "user", "content": get_openai_content(prompt, images)})
         result = self.chat_completion(
-            messages=[{"role": "user", "content": prompt}],
-            model=model,
+            messages=messages,
+            model=model or (self._vision_model() if images else None),
             **kwargs,
         )
         content, problem = read_openai_content(result)
@@ -71,42 +98,6 @@ class OpenAICompatibleClient(BaseAIClient):
             )
             raise CommError(
                 f"{type(self).__name__} returned no usable content: {problem}",
-            )
-        return content
-
-    def vision_completion(
-        self,
-        prompt,
-        image_data,
-        media_type="image/jpeg",
-        model=None,
-        **kwargs,
-    ):
-        if not self._provider().has_vision:
-            raise CommError(
-                f"{type(self).__name__} reads no images: no active model of "
-                f"{self.ENDPOINT_CODE!r} reads images",
-            )
-        if not image_data:
-            raise CommError(f"{type(self).__name__} was given no image to send")
-
-        messages = [
-            {
-                "role": "user",
-                "content": get_openai_content(prompt, [(image_data, media_type)]),
-            }
-        ]
-        result = self.chat_completion(
-            messages=messages,
-            model=model or self._vision_model(),
-            **kwargs,
-        )
-
-        content, problem = read_openai_content(result)
-        if problem:
-            raise CommError(
-                f"{type(self).__name__} returned no usable answer for the "
-                f"image: {problem}",
             )
         return content
 
@@ -289,21 +280,3 @@ class OpenAICompatibleClient(BaseAIClient):
         if not audio:
             raise CommError(f"{type(self).__name__} returned no audio")
         return audio
-
-    def streaming_completion(self, messages, model=None, **kwargs):
-        model = self._resolve_model(model)
-        self._check_params(model=model, temperature=kwargs.get("temperature"))
-        extra = self._request_shape(model).request_extra or {}
-        return self._stream_lines(
-            self._chat_path(),
-            {"model": model, "messages": messages, "stream": True, **extra, **kwargs},
-        )
-
-    def get_usage(self, response):
-        usage = response.get("usage") or {}
-        return {
-            "prompt_tokens": usage.get("prompt_tokens", 0),
-            "completion_tokens": usage.get("completion_tokens", 0),
-            "total_tokens": usage.get("total_tokens", 0),
-            "model": response.get("model", "unknown"),
-        }

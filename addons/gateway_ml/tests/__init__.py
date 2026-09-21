@@ -9,6 +9,7 @@ from . import test_fallback_order
 from . import test_json_payload
 from . import test_migrations
 from . import test_model_selection
+from . import test_ml_policy
 from . import test_openai_transcription
 from . import test_router_event_log
 from . import test_router_run
@@ -16,6 +17,6 @@ from . import test_registry_coherence
 from . import test_vendor_wires
 from . import test_vision_completion
 from . import test_provider_services
-from . import test_provider_assistant
 from . import test_usage_recording
 from . import test_wire_formats
+from . import test_assistant_adoption

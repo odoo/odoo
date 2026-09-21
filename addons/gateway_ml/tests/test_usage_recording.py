@@ -3,6 +3,7 @@ from unittest.mock import Mock, patch
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.gateway_ml.tests.common import connect
+from odoo.addons.gateway_ml.tools import MlRequest, MlRouter
 from odoo.addons.gateway_ml.tools.ai_clients import get_ai_client
 from odoo.addons.gateway_ml.tools.usage import (
     SpendCapReached,
@@ -194,7 +195,7 @@ class TestMonthlySpendCap(TransactionCase):
         response.text = ""
         response.content = b"{}"
         with patch("requests.Session.request", return_value=response) as sent:
-            client.simple_completion("q")
+            client.complete("q")
         return sent
 
     def test_no_cap_sets_no_limit(self):
@@ -217,7 +218,7 @@ class TestMonthlySpendCap(TransactionCase):
             patch("requests.Session.request") as sent,
             self.assertRaises(SpendCapReached) as caught,
         ):
-            get_ai_client(self.env, "openai").simple_completion("q")
+            get_ai_client(self.env, "openai").complete("q")
         sent.assert_not_called()
         self.assertIn("50.00", str(caught.exception))
 
@@ -233,12 +234,18 @@ class TestMonthlySpendCap(TransactionCase):
         self.env.invalidate_all()
         self.assertTrue(self._call().called)
 
-    def test_a_reached_cap_leaves_the_assistant_quiet_rather_than_raising(self):
+    def test_a_reached_cap_stops_a_routed_chat_without_walking_the_chain(self):
         self.company.gateway_ml_config_id.gateway_ml_monthly_budget = 1
         self._spend(1)
-        with patch("requests.Session.request") as sent:
-            self.assertIsNone(
-                self.openai._assistant().chat_json("sys", "user", 100, 0.1)
+        with (
+            patch("requests.Session.request") as sent,
+            self.assertRaises(SpendCapReached),
+        ):
+            MlRouter(self.env).run(
+                "chat",
+                MlRequest(purpose="test.usage", prompt="q"),
+                model=self.openai._service_for("chat").model_id,
+                company_id=self.company.id,
             )
         sent.assert_not_called()
 

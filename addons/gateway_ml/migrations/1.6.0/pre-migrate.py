@@ -18,7 +18,9 @@ def migrate(cr, version):
         )
         return
 
-    cr.execute("ALTER TABLE gateway_ml_provider RENAME COLUMN service_id TO endpoint_id")
+    cr.execute(
+        "ALTER TABLE gateway_ml_provider RENAME COLUMN service_id TO endpoint_id"
+    )
     cr.execute(
         """
         SELECT indexname

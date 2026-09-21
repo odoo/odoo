@@ -3,16 +3,25 @@ from unittest.mock import patch
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.gateway_ml.tools import MlRouter
+from odoo.addons.gateway_ml.tools import MlRequest, MlRouter
 from odoo.addons.gateway_ml.tools.ai_clients import BaseAIClient
 from odoo.addons.integration.tools.api_client import OutboundAPIClient
 from odoo.addons.integration.tools.exceptions import CommError
+
+PURPOSE = "test.event.log"
 
 
 class _StubClient(BaseAIClient):
     ENDPOINT_CODE = "stub"
 
-    def simple_completion(self, prompt, model=None, **kwargs):
+    def complete(self, prompt, **kwargs):
+        self._client._queue_event_log(
+            "POST",
+            "https://example.invalid/v1/chat",
+            {"json": {}},
+            {"status_code": 200, "headers": {}, "body": {}, "elapsed_ms": 1},
+            "trace-complete",
+        )
         return "stub"
 
 
@@ -64,7 +73,11 @@ class TestRouterEventLog(TransactionCase):
 
     def _run(self, request_func, ai_model, **kwargs):
         return self.router.run_with_fallback(
-            primary_model=ai_model, request_func=request_func, **kwargs
+            primary_model=ai_model,
+            request_func=request_func,
+            company_id=self.env.company.id,
+            purpose=PURPOSE,
+            **kwargs,
         )
 
     def test_a_successful_call_leaves_one_row(self):
@@ -128,6 +141,21 @@ class TestRouterEventLog(TransactionCase):
         self.assertEqual(
             row.status_code, 200, "the status is the vendor's, not a constant"
         )
+
+    def test_the_row_names_the_purpose_of_the_request(self):
+        model = self._model("orch_purpose")
+
+        result = self.router.run(
+            "chat",
+            MlRequest(purpose="test.event.log.row", prompt="q"),
+            model=model,
+            company_id=self.env.company.id,
+        )
+        self.env.flush_all()
+        self.env.cr.precommit.run()
+
+        self.assertEqual(result.text, "stub")
+        self.assertIn("purpose:test.event.log.row", self._rows()[0].tags.split(","))
 
     @mute_logger("odoo.addons.gateway_ml.tools.router")
     def test_a_fallback_names_who_it_followed(self):

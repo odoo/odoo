@@ -10,6 +10,8 @@ from odoo.addons.gateway_ml.tools.ai_clients import (
 )
 from odoo.addons.integration.tools.exceptions import CommError
 
+PURPOSE = "test.router.run"
+
 
 @tagged("post_install", "-at_install")
 class TestRouterRun(TransactionCase):
@@ -35,42 +37,97 @@ class TestRouterRun(TransactionCase):
             )
         cls.router = MlRouter(cls.env)
 
-    def _run(self, operation, request, **kwargs):
+    def _run(self, operation, request, answer="an answer", **kwargs):
         client = Mock(
-            simple_completion=Mock(return_value="an answer"),
-            vision_completion=Mock(return_value="a picture"),
+            complete=Mock(return_value=answer),
             transcribe=Mock(return_value="hola"),
             transcribe_cues=Mock(return_value=[{"start": 0, "end": 1, "text": "hola"}]),
             synthesize=Mock(return_value=b"ID3"),
         )
+        kwargs.setdefault("company_id", self.env.company.id)
         with patch.object(MlRouter, "_get_client", return_value=client):
             return self.router.run(operation, request, **kwargs), client
 
     def test_a_chat_is_sent_as_a_completion_on_a_chat_model(self):
-        result, client = self._run("chat", MlRequest(prompt="q", temperature=0.1))
+        result, client = self._run(
+            "chat", MlRequest(purpose=PURPOSE, prompt="q", temperature=0.1)
+        )
 
         self.assertEqual(result.text, "an answer")
+        self.assertIsNone(result.data)
         self.assertEqual(result.model.kind, "chat")
-        client.simple_completion.assert_called_once_with(
-            "q", model=result.model.code, temperature=0.1
+        client.complete.assert_called_once_with(
+            "q",
+            system="",
+            images=(),
+            response_schema=None,
+            structured_output=result.model.structured_output,
+            model=result.model.code,
+            temperature=0.1,
         )
-        client.vision_completion.assert_not_called()
+
+    def test_a_chat_carries_its_system_prompt(self):
+        _result, client = self._run(
+            "chat", MlRequest(purpose=PURPOSE, prompt="q", system="be brief")
+        )
+
+        self.assertEqual(client.complete.call_args.kwargs["system"], "be brief")
 
     def test_a_chat_with_an_image_needs_a_model_that_sees(self):
+        images = (("QUJD", "image/png"), ("REVG", "image/jpeg"))
         result, client = self._run(
-            "chat", MlRequest(prompt="what?", images=(("QUJD", "image/png"),))
+            "chat",
+            MlRequest(purpose=PURPOSE, prompt="what?", images=images),
+            answer="a picture",
         )
 
         self.assertEqual(result.text, "a picture")
         self.assertTrue(result.model.has_vision)
-        self.assertEqual(
-            client.vision_completion.call_args.kwargs["media_type"], "image/png"
+        self.assertEqual(client.complete.call_args.kwargs["images"], images)
+
+    def test_a_chat_with_a_schema_returns_the_parsed_answer(self):
+        schema = {"type": "object", "properties": {"total": {"type": "number"}}}
+        result, client = self._run(
+            "chat",
+            MlRequest(purpose=PURPOSE, prompt="q", response_schema=schema),
+            answer='{"total": 12.5}',
         )
+
+        self.assertEqual(client.complete.call_args.kwargs["response_schema"], schema)
+        self.assertEqual(result.text, '{"total": 12.5}')
+        self.assertEqual(result.data, {"total": 12.5})
+
+    def test_a_fenced_answer_to_a_schema_is_unwrapped(self):
+        result, _client = self._run(
+            "chat",
+            MlRequest(purpose=PURPOSE, prompt="q", response_schema={"type": "object"}),
+            answer='```json\n{"a": 1}\n```',
+        )
+
+        self.assertEqual(result.data, {"a": 1})
+
+    def test_a_chat_passes_the_models_structured_output_mode(self):
+        model = self.env.ref("gateway_ml.ai_model_openai_gpt_5_6_luna")
+        _result, client = self._run(
+            "chat",
+            MlRequest(purpose=PURPOSE, prompt="q", response_schema={"type": "object"}),
+            answer="{}",
+            model=model,
+        )
+
+        self.assertEqual(
+            client.complete.call_args.kwargs["structured_output"], "json_schema"
+        )
+
+    def test_a_request_without_a_purpose_is_refused(self):
+        with self.assertRaises(ValueError):
+            self._run("chat", MlRequest(prompt="q"))
 
     def test_a_timed_transcription_carries_the_vocabulary_and_speakers(self):
         result, client = self._run(
             "transcribe_timed",
             MlRequest(
+                purpose=PURPOSE,
                 audio=b"AUDIO",
                 mimetype="audio/ogg",
                 language="es",
@@ -88,7 +145,9 @@ class TestRouterRun(TransactionCase):
 
     def test_a_named_provider_runs_its_default_model(self):
         result, _client = self._run(
-            "transcribe", MlRequest(audio=b"AUDIO"), provider=self.deepgram
+            "transcribe",
+            MlRequest(purpose=PURPOSE, audio=b"AUDIO"),
+            provider=self.deepgram,
         )
 
         self.assertEqual(result.model, self.deepgram.default_model_id)
@@ -96,7 +155,7 @@ class TestRouterRun(TransactionCase):
 
     def test_synthesis_returns_the_audio(self):
         result, client = self._run(
-            "synthesize", MlRequest(text="hola", mimetype="audio/flac")
+            "synthesize", MlRequest(purpose=PURPOSE, text="hola", mimetype="audio/flac")
         )
 
         self.assertEqual(result.audio, b"ID3")
@@ -105,12 +164,18 @@ class TestRouterRun(TransactionCase):
     def test_no_usable_model_is_a_named_error(self):
         self.deepgram.action_archive()
         with self.assertRaises(CommError) as caught:
-            self._run("transcribe", MlRequest(audio=b"A"), provider=self.deepgram)
+            self._run(
+                "transcribe",
+                MlRequest(purpose=PURPOSE, audio=b"A"),
+                provider=self.deepgram,
+            )
         self.assertIn("transcribe", str(caught.exception))
 
     def test_an_unknown_operation_is_refused(self):
         with self.assertRaises(ValueError):
-            self.router.run("dream", MlRequest())
+            self.router.run(
+                "dream", MlRequest(purpose=PURPOSE), company_id=self.env.company.id
+            )
 
     def test_audio_past_the_model_limit_goes_to_a_fallback_with_room(self):
         whisper = self.env.ref("gateway_ml.ai_model_openai_whisper_1")
@@ -119,20 +184,41 @@ class TestRouterRun(TransactionCase):
         nova.max_audio_mb = 4
         big = b"A" * (2 * 1024 * 1024)
 
-        self.assertEqual(self.router.audio_capacity(whisper), 4 * 1024 * 1024)
-        result, client = self._run("transcribe", MlRequest(audio=big), model=whisper)
+        self.assertEqual(
+            self.router.audio_capacity(
+                whisper, company_id=self.env.company.id, purpose=PURPOSE
+            ),
+            4 * 1024 * 1024,
+        )
+        result, client = self._run(
+            "transcribe", MlRequest(purpose=PURPOSE, audio=big), model=whisper
+        )
         self.assertEqual(result.model, nova)
         client.transcribe.assert_called_once()
 
         nova.max_audio_mb = 1
-        self.assertEqual(self.router.audio_capacity(whisper), 1024 * 1024)
+        self.assertEqual(
+            self.router.audio_capacity(
+                whisper, company_id=self.env.company.id, purpose=PURPOSE
+            ),
+            1024 * 1024,
+        )
         with self.assertRaises(CommError) as caught:
-            self._run("transcribe", MlRequest(audio=big), model=whisper)
+            self._run(
+                "transcribe", MlRequest(purpose=PURPOSE, audio=big), model=whisper
+            )
         self.assertIn("MiB", str(caught.exception))
 
         nova.max_audio_mb = 0
-        self.assertEqual(self.router.audio_capacity(whisper), 0)
-        result, _client = self._run("transcribe", MlRequest(audio=big), model=whisper)
+        self.assertEqual(
+            self.router.audio_capacity(
+                whisper, company_id=self.env.company.id, purpose=PURPOSE
+            ),
+            0,
+        )
+        result, _client = self._run(
+            "transcribe", MlRequest(purpose=PURPOSE, audio=big), model=whisper
+        )
         self.assertEqual(result.model, nova)
 
 

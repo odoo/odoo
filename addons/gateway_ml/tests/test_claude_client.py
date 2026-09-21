@@ -1,3 +1,4 @@
+import json
 from unittest.mock import patch
 
 from odoo.tests import TransactionCase, tagged
@@ -43,30 +44,30 @@ class TestClaudeStructuredOutput(TransactionCase):
             "stop_reason": "end_turn",
         }
         with patch.object(self.client._client, "post", return_value=_ok(body)) as post:
-            result = self.client.structured_output(
-                "read it", _SCHEMA, model="claude-fable-5-1"
+            result = self.client.complete(
+                "read it", response_schema=_SCHEMA, model="claude-fable-5-1"
             )
         sent = post.call_args.kwargs["json"]
-        self.assertEqual(result, {"total": 12.5, "lines": []})
+        self.assertEqual(json.loads(result), {"total": 12.5, "lines": []})
         self.assertNotIn("tool_choice", sent)
         self.assertNotIn("tools", sent)
         self.assertEqual(sent["output_config"]["format"]["type"], "json_schema")
 
     def test_a_model_that_can_be_forced_still_calls_the_tool(self):
         body = {
-            "content": [
-                {"type": "tool_use", "name": "extract_data", "input": {"total": 1}}
-            ],
+            "content": [{"type": "tool_use", "name": "respond", "input": {"total": 1}}],
             "stop_reason": "tool_use",
         }
         with patch.object(self.client._client, "post", return_value=_ok(body)) as post:
-            result = self.client.structured_output(
-                "read it", _SCHEMA, model="claude-opus-5"
+            result = self.client.complete(
+                "read it", response_schema=_SCHEMA, model="claude-opus-5"
             )
-        self.assertEqual(result, {"total": 1})
+        sent = post.call_args.kwargs["json"]
+        self.assertEqual(json.loads(result), {"total": 1})
+        self.assertEqual(sent["tool_choice"], {"type": "tool", "name": "respond"})
         self.assertEqual(
-            post.call_args.kwargs["json"]["tool_choice"],
-            {"type": "tool", "name": "extract_data"},
+            [(tool["name"], tool["input_schema"]) for tool in sent["tools"]],
+            [("respond", _SCHEMA)],
         )
 
     def test_a_forced_tool_choice_is_refused_before_the_wire(self):
@@ -86,7 +87,9 @@ class TestClaudeStructuredOutput(TransactionCase):
         }
         with patch.object(self.client._client, "post", return_value=_ok(body)):
             with self.assertRaises(CommError):
-                self.client.structured_output("x", _SCHEMA, model="claude-fable-5-1")
+                self.client.complete(
+                    "x", response_schema=_SCHEMA, model="claude-fable-5-1"
+                )
 
     def test_the_json_format_closes_objects_and_drops_unsupported_constraints(self):
         schema = get_json_output_config(_SCHEMA)["format"]["schema"]
@@ -122,9 +125,9 @@ class TestClaudeStructuredOutput(TransactionCase):
     def test_a_callers_output_config_is_kept_beside_the_format(self):
         body = {"content": [{"type": "text", "text": "{}"}], "stop_reason": "end_turn"}
         with patch.object(self.client._client, "post", return_value=_ok(body)) as post:
-            self.client.structured_output(
+            self.client.complete(
                 "x",
-                {"type": "object", "properties": {}},
+                response_schema={"type": "object", "properties": {}},
                 model="claude-fable-5-1",
                 output_config={"effort": "low"},
             )
@@ -135,8 +138,75 @@ class TestClaudeStructuredOutput(TransactionCase):
     def test_the_default_output_budget_leaves_room_to_think(self):
         body = {"content": [{"type": "text", "text": "ok"}], "stop_reason": "end_turn"}
         with patch.object(self.client._client, "post", return_value=_ok(body)) as post:
-            self.client.simple_completion("hi", model="claude-opus-5")
+            self.client.complete("hi", model="claude-opus-5")
         self.assertGreaterEqual(post.call_args.kwargs["json"]["max_tokens"], 16000)
+
+    def test_a_plain_prompt_sends_no_system_and_no_tool(self):
+        body = {"content": [{"type": "text", "text": "ok"}], "stop_reason": "end_turn"}
+        with patch.object(self.client._client, "post", return_value=_ok(body)) as post:
+            self.assertEqual(self.client.complete("hi", model="claude-opus-5"), "ok")
+        sent = post.call_args.kwargs["json"]
+        self.assertEqual(sent["messages"], [{"role": "user", "content": "hi"}])
+        self.assertNotIn("system", sent)
+        self.assertNotIn("tools", sent)
+
+    def test_the_system_prompt_is_top_level_and_every_image_follows_the_text(self):
+        body = {"content": [{"type": "text", "text": "ok"}], "stop_reason": "end_turn"}
+        with patch.object(self.client._client, "post", return_value=_ok(body)) as post:
+            self.client.complete(
+                "compare",
+                system="be brief",
+                images=(("QUJD", "image/png"), ("REVG", "image/jpeg")),
+                model="claude-opus-5",
+            )
+        sent = post.call_args.kwargs["json"]
+        self.assertEqual(sent["system"], "be brief")
+        self.assertEqual(
+            sent["messages"][0]["content"],
+            [
+                {"type": "text", "text": "compare"},
+                {
+                    "type": "image",
+                    "source": {
+                        "type": "base64",
+                        "media_type": "image/png",
+                        "data": "QUJD",
+                    },
+                },
+                {
+                    "type": "image",
+                    "source": {
+                        "type": "base64",
+                        "media_type": "image/jpeg",
+                        "data": "REVG",
+                    },
+                },
+            ],
+        )
+
+    def test_a_schema_with_a_system_prompt_keeps_both(self):
+        body = {
+            "content": [{"type": "tool_use", "name": "respond", "input": {}}],
+            "stop_reason": "tool_use",
+        }
+        with patch.object(self.client._client, "post", return_value=_ok(body)) as post:
+            self.client.complete(
+                "x", system="be brief", response_schema=_SCHEMA, model="claude-opus-5"
+            )
+        sent = post.call_args.kwargs["json"]
+        self.assertEqual(sent["system"], "be brief")
+        self.assertEqual(sent["tool_choice"]["name"], "respond")
+
+    def test_an_answer_without_the_tool_call_is_a_vendor_failure(self):
+        body = {
+            "content": [{"type": "text", "text": "sure"}],
+            "stop_reason": "end_turn",
+        }
+        with patch.object(self.client._client, "post", return_value=_ok(body)):
+            with self.assertRaises(CommError):
+                self.client.complete(
+                    "x", response_schema=_SCHEMA, model="claude-opus-5"
+                )
 
 
 @tagged("post_install", "-at_install")

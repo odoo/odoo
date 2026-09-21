@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="purpose_speech_transcription" model="gateway.ml.purpose">
+        <field name="key">speech.transcription</field>
+        <field name="name">Transcribing recordings</field>
+        <field name="sensitive" eval="True" />
+    </record>
+
+    <record id="purpose_speech_synthesis" model="gateway.ml.purpose">
+        <field name="key">speech.synthesis</field>
+        <field name="name">Reading text aloud</field>
+    </record>
+
+</odoo>

@@ -1,6 +1,6 @@
 {
     "name": "API AI",
-    "version": "19.0.1.22.0",
+    "version": "19.0.1.23.0",
     "category": "Hidden",
     "sequence": 10,
     "summary": "AI provider registry, orchestration and vendor clients",
@@ -23,6 +23,15 @@ Models
   follow the model name, not the API key.
 * ``ai.use.case.tag`` -- provider classification: vision, reasoning, speed,
   budget, long context, OCR, embeddings, audio
+* ``gateway.ml.purpose`` -- what a request is for, as a dotted key
+  (``speech.transcription.call``, ``extract.invoice``). A module declares the
+  purposes whose data must not leave the company by default as ``sensitive``;
+  an unknown key is recorded the first time a request names it.
+* ``gateway.ml.policy`` -- per company and purpose, the vendors that data may
+  reach, stamped with who approved them and when. The most specific policy along
+  the key's lineage decides (``speech.transcription`` governs
+  ``speech.transcription.call`` until the latter has its own); with none, a
+  sensitive purpose reaches no vendor and any other reaches every vendor.
 
 Provider operations
 -------------------
@@ -45,18 +54,23 @@ wire that both stacks use, and the Whisper form and readers sit beside them.
 
 Routing
 -------
-* ``MlRouter.run(operation, MlRequest(...))`` is the call a consumer makes:
-  ``chat`` (with ``images`` it needs a model that sees), ``transcribe``,
-  ``transcribe_timed`` (with ``vocabulary`` and ``speakers``) or ``synthesize``.
-  It selects the model, walks the fallback chain and dispatches to the wire's
-  client, and returns an ``MlResult`` with ``text``, ``cues`` and their
-  ``duration``, or ``audio``, and the model that answered. A ``provider``
-  narrows selection to that vendor, preferring its default model. Callers no
-  longer know which client class or method a vendor needs.
+* ``MlRouter.run(operation, MlRequest(purpose=...), company_id=...)`` is the
+  call a consumer makes, and the only door to a vendor: ``chat`` (``system``,
+  ``images``, and ``response_schema`` for an answer the router parses into
+  ``MlResult.data``), ``transcribe``, ``transcribe_timed`` (with ``vocabulary``
+  and ``speakers``) or ``synthesize``. The purpose and the company are required:
+  the company is the one that owns the data, not the one in the context, and
+  the purpose is what the policy is keyed on. It selects the model, walks the
+  fallback chain and dispatches to the wire's client, and returns an
+  ``MlResult`` with ``text``, ``data``, ``cues`` and their ``duration``, or
+  ``audio``, and the model that answered. A ``provider`` narrows selection to
+  that vendor, preferring its default model; a ``model`` the policy forbids is
+  not used. Callers no longer know which client class or method a vendor needs.
 * ``MlRouter.select_model`` picks a ``gateway.ml.model`` of the ``kind`` the
   caller will call -- a kind is a method, so it is required -- by cost, accuracy,
-  speed or balanced score, filtered by the model's own capability and by an
-  unexpired credential for the current company. Cost is read in the unit the
+  speed or balanced score, filtered by the model's own capability, by an
+  unexpired credential for the given company and by that company's policy for
+  the purpose. Cost is read in the unit the
   kind is priced in -- per minute for audio, a three-to-one blend of input and
   output for text -- and an unpriced model is scored at the candidates' median
   price rather than as free. A free tier breaks a tie on price; it does not
@@ -65,17 +79,18 @@ Routing
   ``gateway.ml.model.fallback`` rows, so the order is an administrator's, not the model
   list's. A hop may stay on one vendor -- a smaller model on a key already held --
   or cross to another; a hop that cannot answer for the model (an audio model
-  behind a chat model) is refused when configured, and archived or keyless hops
-  are skipped when run. A non-retryable failure is re-raised as itself. Nothing
+  behind a chat model) is refused when configured, and archived hops, keyless
+  hops and hops whose vendor the policy does not name are skipped when run, so
+  a fallback never carries data to a vendor the company did not approve. A non-retryable failure is re-raised as itself. Nothing
   seeds a chain: acceptable degradation is a deployment's to state.
 * The ``gateway.ml.model`` rows are the catalogue a client checks a model name and an
   output cap against; class constants only add to them.
 
 Clients
 -------
-Two ways to reach a vendor, both on the generic HTTP transport, so both inherit
-session pooling, retry, rate limiting, response caching, secret redaction and
-the event log.
+One way to reach a vendor, on the generic HTTP transport, so it inherits session
+pooling, retry, rate limiting, response caching, secret redaction and the event
+log.
 
 * ``tools/ai_clients/`` -- a class per wire, not per vendor:
   ``OpenAICompatibleClient``, ``ClaudeClient`` (Anthropic Messages),
@@ -84,19 +99,13 @@ the event log.
   service -- chat first -- and ``get_ai_client`` binds that wire's class to the
   provider's service, so OpenAI, Groq, Moonshot and DeepSeek are one class on
   four services. Raising, credential resolved from the company. What
-  ``MlRouter`` drives, through ``gateway.ml.provider._get_ai_client``.
-* ``tools/provider_assistant.py`` -- ``ProviderAssistant``, one class driving
-  any provider's chat and transcribe operations off its rows, built by
-  ``gateway.ml.provider._assistant(model=)``. Fail-soft, and authenticated by
-  the company's ``integration.connection`` like every other outbound call, so
-  it is configured only when the company is connected to the operation's
-  service. It is the only way to reach the ``gemini_openai`` endpoint, which
-  Gemini's chat operation uses and which no class targets -- ``GeminiClient``
-  is on ``gemini``, the native wire. ``tests/test_registry_coherence.py``
-  requires every provider to resolve a wire client, so that ``_get_ai_client``
-  can answer for whichever one the router selects. The Telegram bots'
-  assistants are its callers;
-  ``tools/assistant_adoption.py`` moved their own keys onto connections.
+  ``MlRouter`` drives, through ``gateway.ml.provider._get_ai_client``. A chat
+  client has one method, ``complete(prompt, system=, images=, response_schema=,
+  structured_output=)``; ``gateway.ml.model.structured_output`` says how an
+  OpenAI-compatible model is held to a schema (``response_format`` json_schema,
+  JSON mode plus the schema in the system prompt, or the prompt alone), Claude
+  answers a schema through a forced tool or ``output_config``, Gemini through
+  ``responseJsonSchema``.
 
 The Claude Agent SDK, which drives the Claude Code CLI as a subprocess rather
 than calling a wire, is ``ai_project``'s, its only caller.
@@ -143,6 +152,7 @@ Depends on ``integration`` alone.
         "views/ai_provider_views.xml",
         "views/ai_model_views.xml",
         "views/ai_use_case_tag_views.xml",
+        "views/gateway_ml_policy_views.xml",
         "views/ai_menu.xml",
         "views/integration_exchange_views.xml",
         "views/res_company_views.xml",

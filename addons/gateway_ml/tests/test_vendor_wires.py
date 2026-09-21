@@ -9,6 +9,8 @@ from odoo.addons.gateway_ml.tools.ai_clients import (
     OpenAICompatibleClient,
 )
 
+_SCHEMA = {"type": "object", "properties": {"total": {"type": "number"}}}
+
 
 def _ok(body):
     return {"status_code": 200, "body": body}
@@ -41,24 +43,23 @@ class TestGeminiWire(TransactionCase):
             ]
         }
         with patch.object(self.client._client, "post", return_value=_ok(body)):
-            self.assertEqual(self.client.simple_completion("q"), "the answer")
+            self.assertEqual(self.client.complete("q"), "the answer")
 
-    def test_a_system_message_is_an_instruction_not_a_model_turn(self):
+    def test_a_system_prompt_is_an_instruction_not_a_model_turn(self):
         body = {"candidates": [{"content": {"parts": [{"text": "ok"}]}}]}
         with patch.object(self.client._client, "post", return_value=_ok(body)) as post:
-            self.client.chat_completion(
-                [
-                    {"role": "system", "content": "be terse"},
-                    {"role": "user", "content": "hi"},
-                    {"role": "assistant", "content": "hello"},
-                    {"role": "user", "content": "again"},
-                ]
-            )
+            self.client.complete("again", system="be terse")
         sent = post.call_args.kwargs["json"]
         self.assertEqual(sent["systemInstruction"], {"parts": [{"text": "be terse"}]})
         self.assertEqual(
-            [turn["role"] for turn in sent["contents"]], ["user", "model", "user"]
+            sent["contents"], [{"role": "user", "parts": [{"text": "again"}]}]
         )
+
+    def test_no_system_prompt_sends_no_instruction(self):
+        body = {"candidates": [{"content": {"parts": [{"text": "ok"}]}}]}
+        with patch.object(self.client._client, "post", return_value=_ok(body)) as post:
+            self.client.complete("q")
+        self.assertNotIn("systemInstruction", post.call_args.kwargs["json"])
 
     def test_the_cap_checked_is_the_resolved_models(self):
         google = self.env["gateway.ml.provider"].search([("code", "=", "gemini")])
@@ -68,16 +69,48 @@ class TestGeminiWire(TransactionCase):
             with self.assertLogs(
                 "odoo.addons.gateway_ml.tools.ai_clients.base", "WARNING"
             ):
-                self.client.simple_completion("q", max_tokens=500)
+                self.client.complete("q", max_tokens=500)
 
     def test_a_small_image_is_still_sent(self):
         body = {"candidates": [{"content": {"parts": [{"text": "a dot"}]}}]}
         with patch.object(self.client._client, "post", return_value=_ok(body)) as post:
-            self.client.multimodal_completion("what?", image_data="aGVsbG8=")
+            self.client.complete("what?", images=(("aGVsbG8=", "image/jpeg"),))
         parts = post.call_args.kwargs["json"]["contents"][0]["parts"]
         self.assertEqual(
             parts[1], {"inline_data": {"mime_type": "image/jpeg", "data": "aGVsbG8="}}
         )
+
+    def test_several_images_follow_the_prompt_in_order(self):
+        body = {"candidates": [{"content": {"parts": [{"text": "two"}]}}]}
+        images = (("QUJD", "image/png"), ("REVG", "image/webp"))
+        with patch.object(self.client._client, "post", return_value=_ok(body)) as post:
+            self.client.complete("how many?", system="count", images=images)
+        sent = post.call_args.kwargs["json"]
+        self.assertEqual(
+            sent["contents"][0]["parts"],
+            [
+                {"text": "how many?"},
+                {"inline_data": {"mime_type": "image/png", "data": "QUJD"}},
+                {"inline_data": {"mime_type": "image/webp", "data": "REVG"}},
+            ],
+        )
+        self.assertEqual(sent["systemInstruction"], {"parts": [{"text": "count"}]})
+
+    def test_a_schema_asks_for_json_that_follows_it(self):
+        body = {"candidates": [{"content": {"parts": [{"text": '{"total": 1}'}]}}]}
+        with patch.object(self.client._client, "post", return_value=_ok(body)) as post:
+            answer = self.client.complete("q", response_schema=_SCHEMA, temperature=0.2)
+        config = post.call_args.kwargs["json"]["generationConfig"]
+        self.assertEqual(answer, '{"total": 1}')
+        self.assertEqual(config["responseMimeType"], "application/json")
+        self.assertEqual(config["responseJsonSchema"], _SCHEMA)
+        self.assertEqual(config["temperature"], 0.2)
+
+    def test_no_schema_asks_for_no_json(self):
+        body = {"candidates": [{"content": {"parts": [{"text": "ok"}]}}]}
+        with patch.object(self.client._client, "post", return_value=_ok(body)) as post:
+            self.client.complete("q")
+        self.assertNotIn("generationConfig", post.call_args.kwargs["json"])
 
 
 @tagged("post_install", "-at_install")
@@ -110,9 +143,6 @@ class TestClaudeSampling(TransactionCase):
         sent = self._sent("claude-haiku-4-5", temperature=0.2, top_p=0.9)
         self.assertEqual((sent["temperature"], sent["top_p"]), (0.2, 0.9))
 
-    def test_usage_names_no_model_the_response_did_not(self):
-        self.assertEqual(ClaudeClient.get_usage(None, {})["model"], "unknown")
-
 
 @tagged("post_install", "-at_install")
 class TestOpenAIWire(TransactionCase):
@@ -125,7 +155,7 @@ class TestOpenAIWire(TransactionCase):
         client = OpenAICompatibleClient(self.env, endpoint_code="openai")
         body = {"choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}]}
         with patch.object(client._client, "post", return_value=_ok(body)) as post:
-            client.simple_completion("q", max_tokens=500)
+            client.complete("q", max_tokens=500)
         sent = post.call_args.kwargs["json"]
         self.assertEqual(sent["model"], "gpt-5.6-luna")
         self.assertEqual(sent["max_completion_tokens"], 500)
@@ -136,5 +166,5 @@ class TestOpenAIWire(TransactionCase):
         client = OpenAICompatibleClient(self.env, endpoint_code="openai")
         body = {"choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}]}
         with patch.object(client._client, "post", return_value=_ok(body)) as post:
-            client.simple_completion("q", reasoning_effort="high")
+            client.complete("q", reasoning_effort="high")
         self.assertEqual(post.call_args.kwargs["json"]["reasoning_effort"], "high")

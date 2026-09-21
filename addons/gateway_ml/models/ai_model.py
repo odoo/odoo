@@ -86,6 +86,18 @@ class AIModel(models.Model):
         help="Accepts a tool_choice that forces a tool. A model that does not is "
         "asked for structured output through output_config instead.",
     )
+    structured_output = fields.Selection(
+        selection=[
+            ("prompted", "Asked in the prompt"),
+            ("json_object", "JSON mode"),
+            ("json_schema", "JSON schema"),
+        ],
+        default="prompted",
+        required=True,
+        help="How an OpenAI-compatible model is held to a response schema: "
+        "response_format json_schema, response_format json_object with the schema "
+        "in the system prompt, or the schema in the system prompt alone.",
+    )
     language_form_key = fields.Selection(
         selection=[("language", "language"), ("languages[]", "languages[]")],
         string="Language Form Key",

@@ -10,7 +10,6 @@ from .ai_clients import (
     get_client_class,
 )
 from .json_payload import parse_json_response, strip_json_fence
-from .provider_assistant import ProviderAssistant
 from .router import (
     NON_RETRYABLE_ERRORS,
     MlRequest,
@@ -41,7 +40,6 @@ __all__ = [
     "MlResult",
     "MlRouter",
     "OpenAICompatibleClient",
-    "ProviderAssistant",
     "audio_mimetype",
     "get_ai_client",
     "get_anthropic_content",

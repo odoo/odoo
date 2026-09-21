@@ -12,7 +12,14 @@ from odoo.libs.documents import (
     register_reader,
 )
 
-from .selection import TRANSCRIPTION_CAPABILITIES, TRANSCRIPTION_KIND, pick_model, run
+from .selection import (
+    TRANSCRIPTION_CAPABILITIES,
+    TRANSCRIPTION_KIND,
+    TRANSCRIPTION_PURPOSE,
+    company_id_of,
+    pick_model,
+    run,
+)
 from odoo.addons.speech.tools.engines import record_engine_error
 
 _logger = logging.getLogger(__name__)
@@ -37,7 +44,7 @@ class AiTranscription(BaseReader):
     cost = EXPENSIVE
 
     def available(self, env: Any) -> bool:
-        return bool(_pick_timed_model(env))
+        return bool(_pick_timed_model(env, env.company.id, TRANSCRIPTION_PURPOSE))
 
     def read(self, document: Any) -> list[Cue]:
         env = document.options.get("env")
@@ -48,7 +55,9 @@ class AiTranscription(BaseReader):
                 document.name,
             )
             return []
-        model = _pick_timed_model(env)
+        company_id = company_id_of(env, document.options)
+        purpose = document.options.get("purpose") or TRANSCRIPTION_PURPOSE
+        model = _pick_timed_model(env, company_id, purpose)
         if not model:
             return []
         language = document.options.get("language")
@@ -58,7 +67,8 @@ class AiTranscription(BaseReader):
                 env,
                 "transcribe_timed",
                 model,
-                log_metadata={"feature": "speech.transcription"},
+                company_id=company_id,
+                purpose=purpose,
                 audio=document.data,
                 filename=document.name or "audio",
                 mimetype=document.mimetype or "",
@@ -73,9 +83,13 @@ class AiTranscription(BaseReader):
         ]
 
 
-def _pick_timed_model(env: Any) -> Any:
+def _pick_timed_model(env: Any, company_id: int, purpose: str) -> Any:
     return pick_model(
-        env, TRANSCRIPTION_KIND, required_capabilities=TRANSCRIPTION_CAPABILITIES
+        env,
+        TRANSCRIPTION_KIND,
+        company_id=company_id,
+        purpose=purpose,
+        required_capabilities=TRANSCRIPTION_CAPABILITIES,
     )
 
 

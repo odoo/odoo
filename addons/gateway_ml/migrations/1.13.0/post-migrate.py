@@ -32,7 +32,9 @@ def migrate(cr, version):
         return
 
     movable = [
-        column for column in _MOVED_COLUMNS if column_exists(cr, "gateway_ml_provider", column)
+        column
+        for column in _MOVED_COLUMNS
+        if column_exists(cr, "gateway_ml_provider", column)
     ]
     assignments = ", ".join(f"{column} = p.{column}" for column in movable)
 

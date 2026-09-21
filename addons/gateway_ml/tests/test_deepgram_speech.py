@@ -3,7 +3,11 @@ from unittest.mock import Mock, patch
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.gateway_ml.tests.common import credential_for
-from odoo.addons.gateway_ml.tools.ai_clients import DeepgramClient, get_client_class
+from odoo.addons.gateway_ml.tools.ai_clients import (
+    BaseAIClient,
+    DeepgramClient,
+    get_client_class,
+)
 from odoo.addons.integration.tools.exceptions import CommError
 
 _UTTERANCES = {
@@ -112,8 +116,8 @@ class TestEveryModelKindHasItsMethod(TransactionCase):
     METHOD_OF_KIND = {
         "audio": "transcribe_cues",
         "speech": "synthesize",
-        "chat": "simple_completion",
-        "vision": "vision_completion",
+        "chat": "complete",
+        "vision": "complete",
     }
 
     def test_a_seeded_model_is_served_by_a_client_that_answers_its_kind(self):
@@ -124,8 +128,10 @@ class TestEveryModelKindHasItsMethod(TransactionCase):
             client_cls = get_client_class(model.provider_id)
             with self.subTest(model=model.code, kind=model.kind):
                 self.assertIsNotNone(client_cls)
+                implementation = getattr(client_cls, method, None)
                 self.assertTrue(
-                    callable(getattr(client_cls, method, None)),
+                    callable(implementation)
+                    and implementation is not getattr(BaseAIClient, method, None),
                     f"{model.code} is a {model.kind} model, so the router "
                     f"can select it for a {method} call, and "
                     f"{client_cls.__name__} has no {method}",

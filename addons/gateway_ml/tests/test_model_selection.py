@@ -13,6 +13,8 @@ from odoo.addons.integration.tools.exceptions import (
     ServerError,
 )
 
+PURPOSE = "test.selection"
+
 
 class _SelectionCase(TransactionCase):
     @classmethod
@@ -40,6 +42,20 @@ class _SelectionCase(TransactionCase):
             {"endpoint_id": endpoint.id, **vals}
         )
 
+    def _select(self, *args, purpose=PURPOSE, **kwargs):
+        return self.router.select_model(
+            *args, company_id=self.env.company.id, purpose=purpose, **kwargs
+        )
+
+    def _fallback(self, primary, request_func, **kwargs):
+        return self.router.run_with_fallback(
+            primary,
+            request_func,
+            company_id=self.env.company.id,
+            purpose=PURPOSE,
+            **kwargs,
+        )
+
     @classmethod
     def _model(cls, provider, code, **vals):
         return cls.env["gateway.ml.model"].create(
@@ -51,14 +67,22 @@ class _SelectionCase(TransactionCase):
 class TestSelectModel(_SelectionCase):
     def test_kind_is_required(self):
         with self.assertRaises(TypeError):
-            self.router.select_model(optimize_for="cost")
+            self.router.select_model(
+                company_id=self.env.company.id, purpose=PURPOSE, optimize_for="cost"
+            )
+
+    def test_company_and_purpose_are_required(self):
+        with self.assertRaises(TypeError):
+            self.router.select_model("chat", purpose=PURPOSE)
+        with self.assertRaises(TypeError):
+            self.router.select_model("chat", company_id=self.env.company.id)
 
     def test_several_kinds_may_be_accepted(self):
         provider = self._provider("sel_kinds")
         vision = self._model(provider, "sel-vision", kind="vision", has_vision=True)
         self._model(provider, "sel-audio2", kind="audio")
         self.assertEqual(
-            self.router.select_model(
+            self._select(
                 kind=("chat", "vision"), required_capabilities={"has_vision": True}
             ),
             vision,
@@ -70,7 +94,7 @@ class TestSelectModel(_SelectionCase):
             provider, "sel-priced", cost_per_1m_input=0.5, accuracy_rating="4"
         )
         self._model(provider, "sel-unpriced", accuracy_rating="3")
-        self.assertEqual(self.router.select_model(kind="chat"), priced)
+        self.assertEqual(self._select(kind="chat"), priced)
 
     def test_audio_is_ranked_on_its_per_minute_price(self):
         provider = self._provider("sel_audio_cost")
@@ -78,9 +102,7 @@ class TestSelectModel(_SelectionCase):
         cheap = self._model(
             provider, "sel-z-cheap", kind="audio", cost_per_audio_minute=0.004
         )
-        self.assertEqual(
-            self.router.select_model(kind="audio", optimize_for="cost"), cheap
-        )
+        self.assertEqual(self._select(kind="audio", optimize_for="cost"), cheap)
 
     def test_an_unpriced_model_is_not_ranked_behind_an_expensive_one(self):
         provider = self._provider("sel_unpriced_cost")
@@ -104,9 +126,7 @@ class TestSelectModel(_SelectionCase):
         balanced = self._model(
             provider, "sel-z-even", cost_per_1m_input=2.0, cost_per_1m_output=2.0
         )
-        self.assertEqual(
-            self.router.select_model("chat", optimize_for="cost"), balanced
-        )
+        self.assertEqual(self._select("chat", optimize_for="cost"), balanced)
 
     def test_an_expired_credential_makes_a_provider_unusable(self):
         provider = self._provider("sel_expired")
@@ -114,28 +134,28 @@ class TestSelectModel(_SelectionCase):
         self.env["credential.credential"].search(
             [("endpoint_id", "=", provider.endpoint_id.id)]
         ).date_expiration = fields.Datetime.now() - timedelta(days=1)
-        self.assertFalse(self.router.select_model(kind="chat"))
+        self.assertFalse(self._select(kind="chat"))
 
     def test_an_archived_provider_is_not_selected_even_with_a_key(self):
         provider = self._provider("sel_archived")
         self._model(provider, "sel-archived-m")
         provider.endpoint_id.active = False
-        self.assertFalse(self.router.select_model("chat"))
+        self.assertFalse(self._select("chat"))
 
     def test_an_endpoint_that_needs_no_key_is_usable_without_one(self):
         keyless = self._model(
             self._provider("sel_none", keyed=False, auth_type="none"), "sel-none-m"
         )
-        self.assertEqual(self.router.select_model("chat"), keyless)
+        self.assertEqual(self._select("chat"), keyless)
 
     def test_several_providers_may_be_named(self):
         self._model(self._provider("sel_p1"), "sel-p1-m", accuracy_rating="5")
         second = self._model(self._provider("sel_p2"), "sel-p2-m", accuracy_rating="4")
         self._model(self._provider("sel_p3"), "sel-p3-m", accuracy_rating="2")
         self.assertEqual(
-            self.router.select_model("chat", provider_code=["sel_p2", "sel_p3"]), second
+            self._select("chat", provider_code=["sel_p2", "sel_p3"]), second
         )
-        self.assertFalse(self.router.select_model("chat", provider_code=[]))
+        self.assertFalse(self._select("chat", provider_code=[]))
 
     def test_queries_do_not_grow_with_the_models_a_provider_serves(self):
         provider = self._provider("sel_queries")
@@ -146,7 +166,7 @@ class TestSelectModel(_SelectionCase):
             self.env.flush_all()
             self.env.invalidate_all()
             before = self.env.cr.sql_statement_count
-            self.router.select_model("chat")
+            self._select("chat")
             return self.env.cr.sql_statement_count - before
 
         few = count()
@@ -157,13 +177,11 @@ class TestSelectModel(_SelectionCase):
     def test_an_unknown_capability_is_a_programming_error(self):
         self._model(self._provider("sel_unknown"), "sel-unknown-m")
         with self.assertRaises(ValueError):
-            self.router.select_model(kind="chat", required_capabilities={"no_such": 1})
+            self._select(kind="chat", required_capabilities={"no_such": 1})
 
     def test_an_unknown_use_case_tag_selects_nothing_rather_than_everything(self):
         self._model(self._provider("sel_tag"), "sel-tag-m")
-        self.assertFalse(
-            self.router.select_model(kind="chat", use_case_tags=["no-such-tag"])
-        )
+        self.assertFalse(self._select(kind="chat", use_case_tags=["no-such-tag"]))
 
 
 @tagged("post_install", "-at_install")
@@ -188,7 +206,7 @@ class TestFallbackChain(_SelectionCase):
 
         with patch.object(MlRouter, "_get_client", return_value=object()):
             try:
-                result = self.router.run_with_fallback(
+                result = self._fallback(
                     self.primary, request_func, fallback_chain=chain
                 )
             except CommError as error:
@@ -221,9 +239,7 @@ class TestFallbackChain(_SelectionCase):
             return "seen"
 
         with patch.object(MlRouter, "_get_client", return_value=object()):
-            result = self.router.run_with_fallback(
-                seeing_chat, fail_first, fallback_chain=[vision]
-            )
+            result = self._fallback(seeing_chat, fail_first, fallback_chain=[vision])
         self.assertEqual((attempted, result), (["fb-see", "fb-vision"], "seen"))
 
     @mute_logger("odoo.addons.gateway_ml.tools.router")
@@ -242,9 +258,7 @@ class TestFallbackChain(_SelectionCase):
 
         with patch.object(MlRouter, "_get_client", return_value=object()):
             with self.assertRaises(CommError):
-                self.router.run_with_fallback(
-                    timed, fail, fallback_chain=[untimed, also_timed]
-                )
+                self._fallback(timed, fail, fallback_chain=[untimed, also_timed])
         self.assertEqual(attempted, ["fb-timed", "fb-also-timed"])
 
     @mute_logger("odoo.addons.gateway_ml.tools.router")

@@ -37,64 +37,42 @@ class GeminiClient(BaseAIClient):
         response = self._client.post(f"/models/{model}:generateContent", json=payload)
         return self._get_response_body(response)
 
-    def simple_completion(self, prompt, model=None, **kwargs):
-        return self._complete(prompt, model, **kwargs)
-
-    def chat_completion(self, messages, model=None, **kwargs):
-        system = "\n\n".join(
-            message["content"] for message in messages if message["role"] == "system"
-        )
-        contents = [
-            {
-                "role": "user" if message["role"] == "user" else "model",
-                "parts": [{"text": message["content"]}],
-            }
-            for message in messages
-            if message["role"] != "system"
-        ]
-        return self._complete(contents, model, system_instruction=system, **kwargs)
-
-    def vision_completion(
+    def complete(
         self,
         prompt,
-        image_data,
-        media_type="image/jpeg",
+        *,
+        system="",
+        images=(),
+        response_schema=None,
+        structured_output="prompted",
         model=None,
         **kwargs,
     ):
-        return self.multimodal_completion(
-            text=prompt,
-            image_data=f"data:{media_type};base64,{image_data}",
-            model=model,
+        parts = [
+            {"text": prompt},
+            *(
+                {"inline_data": {"mime_type": mimetype, "data": data}}
+                for data, mimetype in images
+            ),
+        ]
+        return self._complete(
+            [{"role": "user", "parts": parts}],
+            model,
+            system_instruction=system or None,
+            response_schema=response_schema,
             **kwargs,
         )
 
-    def multimodal_completion(self, text, image_data=None, model=None, **kwargs):
-        parts = [{"text": text}]
-        if image_data:
-            mime_type, data = "image/jpeg", image_data
-            if image_data.startswith("data:"):
-                header, data = image_data.split(",", 1)
-                mime_type = header[len("data:") :].split(";", 1)[0]
-            parts.append({"inline_data": {"mime_type": mime_type, "data": data}})
-        return self._complete([{"parts": parts}], model, **kwargs)
-
-    def streaming_completion(self, contents, model=None, **kwargs):
-        model = self._resolve_model(model)
-        if isinstance(contents, str):
-            contents = [{"parts": [{"text": contents}]}]
-        return self._stream_lines(
-            f"/models/{model}:streamGenerateContent",
-            {"contents": contents, **kwargs},
-        )
-
-    def _complete(self, contents, model, **kwargs):
+    def _complete(self, contents, model, response_schema=None, **kwargs):
         model = self._resolve_model(model)
         generation_config = {
             wire: kwargs.pop(name)
             for name, wire in _GENERATION_CONFIG_KEYS.items()
             if name in kwargs
         }
+        if response_schema is not None:
+            generation_config["responseMimeType"] = "application/json"
+            generation_config["responseJsonSchema"] = response_schema
         self._check_params(
             model=model,
             temperature=generation_config.get("temperature"),

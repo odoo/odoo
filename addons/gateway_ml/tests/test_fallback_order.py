@@ -36,7 +36,7 @@ class TestFallbackOrder(_SelectionCase):
 
         with patch.object(MlRouter, "_get_client", return_value=object()):
             with self.assertRaises(CommError):
-                MlRouter(self.env).run_with_fallback(self.primary, fail)
+                self._fallback(self.primary, fail)
         self.assertEqual(
             attempted, ["order-primary", "order-z-first", "order-a-second"]
         )

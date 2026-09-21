@@ -1,3 +1,4 @@
+import inspect
 from unittest.mock import patch
 
 from odoo.tests import tagged
@@ -7,6 +8,7 @@ from odoo.addons.gateway_ml.tools.ai_clients import (
     WIRE_CLIENTS,
     BaseAIClient,
     ClaudeClient,
+    GeminiClient,
     OpenAICompatibleClient,
     get_client_class,
 )
@@ -164,48 +166,35 @@ class TestValidateParams(TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestJsonCompletionContract(TransactionCase):
-    TEXT_CLIENTS = (ClaudeClient, OpenAICompatibleClient)
+class TestCompleteContract(TransactionCase):
+    CHAT_CLIENTS = (ClaudeClient, GeminiClient, OpenAICompatibleClient)
+    REMOVED = (
+        "simple_completion",
+        "vision_completion",
+        "json_completion",
+        "multimodal_completion",
+        "streaming_completion",
+        "get_usage",
+    )
 
-    def _client(self, cls, text):
-        client = cls.__new__(cls)
-        client.env = self.env
-        client.company_id = None
-        client._default_model = "stub-model"
-        client.simple_completion = lambda prompt, model=None, **kw: text
-        return client
-
-    def test_every_text_client_returns_parsed_json(self):
-        for cls in self.TEXT_CLIENTS:
+    def test_every_chat_client_takes_the_declared_signature(self):
+        declared = inspect.signature(BaseAIClient.complete)
+        for cls in self.CHAT_CLIENTS:
             with self.subTest(client=cls.__name__):
-                result = self._client(cls, '{"a": 1}').json_completion("give me json")
-                self.assertIsInstance(
-                    result, dict, f"{cls.__name__} returned a non-dict"
-                )
-                self.assertEqual(result, {"a": 1})
+                self.assertIsNot(cls.complete, BaseAIClient.complete)
+                self.assertEqual(inspect.signature(cls.complete), declared)
 
-    def test_fenced_json_is_unwrapped(self):
-        fenced = '```json\n{"a": 1}\n```'
-        for cls in self.TEXT_CLIENTS:
-            with self.subTest(client=cls.__name__):
-                self.assertEqual(
-                    self._client(cls, fenced).json_completion("give me json"),
-                    {"a": 1},
-                )
-
-    def test_no_client_defines_its_own_json_completion(self):
+    def test_no_client_keeps_a_chat_method_complete_replaced(self):
         for cls in CLIENTS:
-            self.assertNotIn(
-                "json_completion",
-                cls.__dict__,
-                f"{cls.__name__} shadows the shared json_completion",
-            )
+            for name in self.REMOVED:
+                with self.subTest(client=cls.__name__, method=name):
+                    self.assertFalse(hasattr(cls, name))
 
-    def test_simple_completion_is_the_declared_primitive(self):
+    def test_complete_is_the_declared_primitive(self):
         class Textless(BaseAIClient):
             ENDPOINT_CODE = "textless"
 
         client = Textless.__new__(Textless)
         client.env = self.env
         with self.assertRaises(NotImplementedError):
-            client.simple_completion("hi")
+            client.complete("hi")

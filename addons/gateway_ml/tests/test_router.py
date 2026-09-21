@@ -14,6 +14,8 @@ from odoo.addons.integration.tools.exceptions import (
     ValidationError,
 )
 
+PURPOSE = "test.router"
+
 
 class _FakeClient:
     pass
@@ -58,7 +60,7 @@ class TestExecuteWithFallback(TransactionCase):
         patcher = patch.object(
             MlRouter,
             "_get_usable_providers",
-            side_effect=lambda providers, company_id=None: providers,
+            side_effect=lambda providers, company_id, purpose: providers,
         )
         patcher.start()
         self.addCleanup(patcher.stop)
@@ -73,15 +75,25 @@ class TestExecuteWithFallback(TransactionCase):
         with patch.object(
             MlRouter,
             "_get_client",
-            side_effect=lambda p, company_id=None: _FakeClient(),
+            side_effect=lambda p, company_id: _FakeClient(),
         ):
             if use_assert_raises:
                 with self.assertRaises(CommError):
-                    self.router.run_with_fallback(self.primary, recording)
+                    self.router.run_with_fallback(
+                        self.primary,
+                        recording,
+                        company_id=self.env.company.id,
+                        purpose=PURPOSE,
+                    )
             else:
                 raised = None
                 try:
-                    self.router.run_with_fallback(self.primary, recording)
+                    self.router.run_with_fallback(
+                        self.primary,
+                        recording,
+                        company_id=self.env.company.id,
+                        purpose=PURPOSE,
+                    )
                 except CommError as exc:
                     raised = exc
                 self.assertIsNotNone(raised, "the chain should have raised CommError")
@@ -201,9 +213,14 @@ class TestExecuteWithFallback(TransactionCase):
         with patch.object(
             MlRouter,
             "_get_client",
-            side_effect=lambda p, company_id=None: _FakeClient(),
+            side_effect=lambda p, company_id: _FakeClient(),
         ):
-            self.result = self.router.run_with_fallback(self.primary, recording)
+            self.result = self.router.run_with_fallback(
+                self.primary,
+                recording,
+                company_id=self.env.company.id,
+                purpose=PURPOSE,
+            )
         return seen
 
 
@@ -267,7 +284,12 @@ class TestOptimizeModelSelection(TransactionCase):
 
     def test_an_unknown_strategy_is_refused(self):
         with self.assertRaises(ValueError):
-            self.router.select_model("chat", optimize_for="no-such-strategy")
+            self.router.select_model(
+                "chat",
+                company_id=self.env.company.id,
+                purpose=PURPOSE,
+                optimize_for="no-such-strategy",
+            )
 
     def test_empty_recordset_ranks_empty(self):
         self.assertFalse(

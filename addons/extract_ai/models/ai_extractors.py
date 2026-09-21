@@ -26,10 +26,10 @@ class _AiExtractor(BaseExtractor):
     def doc_types(self) -> tuple[str, ...]:
         return known_schemas()
 
-    def _get_model(self, env, doc_type: str):
+    def _get_model(self, env, company_id: int, purpose: str):
         raise NotImplementedError
 
-    def _request(self, source, prompt: str) -> MlRequest:
+    def _request(self, source, prompt: str, purpose: str) -> MlRequest:
         raise NotImplementedError
 
     def extract(
@@ -43,7 +43,9 @@ class _AiExtractor(BaseExtractor):
             _logger.debug("%s needs an environment for the company's keys", self.name)
             return None
 
-        model = self._get_model(env, doc_type)
+        company_id = (source.options.get("company") or env.company).id
+        purpose = f"extract.{doc_type}"
+        model = self._get_model(env, company_id, purpose)
         if not model:
             _logger.info(
                 "%s: no model available for %s in this company", self.name, doc_type
@@ -54,10 +56,9 @@ class _AiExtractor(BaseExtractor):
         try:
             result = get_router(env).run(
                 "chat",
-                self._request(source, prompt),
+                self._request(source, prompt, purpose),
                 model=model,
-                log_metadata={"origin_model": "document.extract"},
-                company_id=env.company.id,
+                company_id=company_id,
             )
             return parse_json_response(result.text, env, expect=(dict,))
         except Exception:
@@ -74,15 +75,17 @@ class LlmTextExtractor(_AiExtractor):
     needs = ("text",)
     confidence = 0.5
 
-    def _get_model(self, env, doc_type):
+    def _get_model(self, env, company_id, purpose):
         return get_router(env).select_model(
             "chat",
+            company_id=company_id,
+            purpose=purpose,
             optimize_for=self.optimize_for,
-            company_id=env.company.id,
         )
 
-    def _request(self, source, prompt):
+    def _request(self, source, prompt, purpose):
         return MlRequest(
+            purpose=purpose,
             prompt=f"{prompt}\n\nDocument text:\n{source.text}",
             temperature=TEMPERATURE,
         )
@@ -93,18 +96,20 @@ class LlmVisionExtractor(_AiExtractor):
     needs = ("images",)
     confidence = 0.45
 
-    def _get_model(self, env, doc_type):
+    def _get_model(self, env, company_id, purpose):
         return get_router(env).select_model(
             ("chat", "vision"),
+            company_id=company_id,
+            purpose=purpose,
             use_case_tags=["vision", "ocr"],
             required_capabilities={"has_vision": True},
             optimize_for=self.optimize_for,
-            company_id=env.company.id,
         )
 
-    def _request(self, source, prompt):
+    def _request(self, source, prompt, purpose):
         page = source.images[0]
         return MlRequest(
+            purpose=purpose,
             prompt=prompt,
             images=((base64.b64encode(page).decode("utf-8"), _media_type(page)),),
             temperature=TEMPERATURE,

@@ -6,6 +6,7 @@ from typing import Any
 
 from odoo import fields
 
+from .json_payload import parse_json_response
 from odoo.addons.integration.tools.api_client import OutboundAPIClient
 from odoo.addons.integration.tools.exceptions import (
     AuthenticationError,
@@ -31,7 +32,10 @@ OPERATION_KINDS = {
 
 @dataclass(frozen=True)
 class MlRequest:
+    purpose: str = ""
     prompt: str = ""
+    system: str = ""
+    response_schema: dict | None = None
     images: tuple = ()
     temperature: float | None = None
     max_tokens: int | None = None
@@ -52,6 +56,7 @@ class MlResult:
     cues: list = field(default_factory=list)
     duration: float = 0.0
     audio: bytes | None = None
+    data: Any = None
 
 
 def is_retryable(exc):
@@ -72,10 +77,11 @@ class MlRouter:
         self,
         kind,
         *,
+        company_id,
+        purpose,
         use_case_tags=None,
         required_capabilities=None,
         optimize_for="balanced",
-        company_id=None,
         provider_code=None,
         preferred=None,
     ):
@@ -107,15 +113,16 @@ class MlRouter:
 
         candidates = AIModel.search(domain)
         usable_providers = self._get_usable_providers(
-            candidates.provider_id, company_id
+            candidates.provider_id, company_id, purpose
         )
         usable = candidates.filtered(lambda m: m.provider_id in usable_providers)
         if not usable:
             _logger.info(
-                "No %s model is usable for company_id=%s (%s candidate(s) before "
-                "the credential check; domain %s)",
+                "No %s model is usable for %s in company_id=%s (%s candidate(s) "
+                "before the credential and policy checks; domain %s)",
                 kind,
-                company_id or self.env.company.id,
+                purpose,
+                company_id,
                 len(candidates),
                 domain,
             )
@@ -129,41 +136,51 @@ class MlRouter:
         operation,
         request,
         *,
+        company_id,
         model=None,
         provider=None,
         optimize_for="balanced",
         use_case_tags=None,
-        company_id=None,
         log_metadata=None,
     ):
+        if not request.purpose:
+            raise ValueError("A request names its purpose; the policy is keyed on it")
         if operation not in OPERATION_KINDS:
             raise ValueError(
                 f"Unknown operation {operation!r}; expected one of "
                 f"{', '.join(OPERATION_KINDS)}",
             )
+        self.env["gateway.ml.purpose"]._get_for(request.purpose)
         kinds, capabilities = self._selection_of(operation, request)
+        if model and not self._get_usable_providers(
+            model.provider_id, company_id, request.purpose
+        ):
+            model = model.browse()
         model = model or self.select_model(
             kinds,
+            company_id=company_id,
+            purpose=request.purpose,
             required_capabilities=capabilities or None,
             use_case_tags=use_case_tags,
             optimize_for=optimize_for,
-            company_id=company_id,
             provider_code=provider.code if provider else None,
             preferred=provider.default_model_id if provider else None,
         )
         if not model:
             raise CommError(
-                f"No model is usable for {operation}"
+                f"No model is usable for {operation} ({request.purpose})"
                 + (f" on {provider.code}" if provider else "")
-                + f" in company {company_id or self.env.company.id}",
+                + f" in company {company_id}: none has a credential, or the "
+                "company's policy lets this purpose reach none of them",
             )
         return self.run_with_fallback(
             model,
             lambda client, ai_model: MlResult(
                 ai_model, **self._dispatch(operation, request, client, ai_model)
             ),
-            log_metadata=log_metadata,
             company_id=company_id,
+            purpose=request.purpose,
+            log_metadata={**(log_metadata or {}), "purpose": request.purpose},
         )
 
     @staticmethod
@@ -177,8 +194,7 @@ class MlRouter:
             capabilities["has_timestamps"] = True
         return kinds, capabilities
 
-    @staticmethod
-    def _dispatch(operation, request, client, ai_model):
+    def _dispatch(self, operation, request, client, ai_model):
         sampling = {
             key: value
             for key, value in (
@@ -187,22 +203,21 @@ class MlRouter:
             )
             if value is not None
         }
-        if operation == "chat" and request.images:
-            data, media_type = request.images[0]
-            return {
-                "text": client.vision_completion(
-                    request.prompt,
-                    data,
-                    media_type=media_type,
-                    model=ai_model.code,
-                    **sampling,
-                )
-            }
         if operation == "chat":
+            text = client.complete(
+                request.prompt,
+                system=request.system,
+                images=tuple(request.images),
+                response_schema=request.response_schema,
+                structured_output=ai_model.structured_output,
+                model=ai_model.code,
+                **sampling,
+            )
+            if request.response_schema is None:
+                return {"text": text}
             return {
-                "text": client.simple_completion(
-                    request.prompt, model=ai_model.code, **sampling
-                )
+                "text": text,
+                "data": parse_json_response(text, self.env, expect=(dict,)),
             }
         limit = ai_model.max_audio_mb * MIB
         if limit and len(request.audio) > limit:
@@ -234,11 +249,10 @@ class MlRouter:
             )
         }
 
-    def audio_capacity(self, model, company_id=None):
-        """The largest audio body ``model`` or one of its runnable fallbacks takes, in bytes; 0 when unbounded."""
+    def audio_capacity(self, model, *, company_id, purpose):
         limits = [
             hop.max_audio_mb * MIB
-            for hop in self._get_runnable_chain(model, None, company_id)
+            for hop in self._get_runnable_chain(model, None, company_id, purpose)
             if hop.kind == "audio"
         ]
         return 0 if not limits or 0 in limits else max(limits)
@@ -247,11 +261,15 @@ class MlRouter:
         self,
         primary_model,
         request_func,
+        *,
+        company_id,
+        purpose,
         fallback_chain=None,
         log_metadata=None,
-        company_id=None,
     ):
-        chain = self._get_runnable_chain(primary_model, fallback_chain, company_id)
+        chain = self._get_runnable_chain(
+            primary_model, fallback_chain, company_id, purpose
+        )
         last_error = None
         previous_model = None
 
@@ -305,7 +323,7 @@ class MlRouter:
             f"All {len(chain)} AI model(s) failed. Last error: {last_error}"
         ) from last_error
 
-    def _get_runnable_chain(self, primary_model, fallback_chain, company_id):
+    def _get_runnable_chain(self, primary_model, fallback_chain, company_id, purpose):
         hops = (
             primary_model.fallback_model_ids
             if fallback_chain is None
@@ -316,17 +334,23 @@ class MlRouter:
                 m.active and m != primary_model and m._can_stand_in_for(primary_model)
             )
         )
-        usable_providers = self._get_usable_providers(hops.provider_id, company_id)
+        usable_providers = self._get_usable_providers(
+            hops.provider_id, company_id, purpose
+        )
         skipped = hops.filtered(lambda m: m.provider_id not in usable_providers)
         if skipped:
             _logger.debug(
-                "Fallback hop(s) %s have no usable credential and are skipped",
+                "Fallback hop(s) %s are skipped: no usable credential, or the "
+                "policy for %s does not name their vendor",
                 skipped.mapped("code"),
+                purpose,
             )
         return [primary_model, *(hops - skipped)]
 
-    def _get_usable_providers(self, providers, company_id=None):
-        company_id = company_id or self.env.company.id
+    def _get_usable_providers(self, providers, company_id, purpose):
+        providers = self.env["gateway.ml.policy"]._allowed_providers(
+            company_id, purpose, providers
+        )
         now = fields.Datetime.now()
         Credential = self.env["credential.credential"]
         keyless = providers.filtered(lambda p: p.auth_type == "none")
@@ -376,7 +400,7 @@ class MlRouter:
 
         return ai_models.sorted(balanced_score, reverse=True)
 
-    def _get_client(self, provider, company_id=None):
+    def _get_client(self, provider, company_id):
         return provider._get_ai_client(company_id)
 
     def _event_annotations(self, ai_model, was_fallback, previous_model, metadata=None):
