@@ -134,6 +134,7 @@ class BuilderContainer extends Component {
         onEditorLoad: Function,
         iframeLangDir: String,
         builderProps: { type: Object, optional: true },
+        config: { type: Object, optional: true },
     };
 
     setup() {
@@ -184,6 +185,7 @@ class BuilderContainer extends Component {
             Plugins: this.props.Plugins,
             config: {
                 builderOptionsTemplate: "html_builder.TestBuilderOptions",
+                ...this.props.config,
             },
             ...this.props.builderProps,
         };
@@ -207,6 +209,7 @@ class IrUiView extends models.Model {
  * @param {*} options.dropzoneSelectors
  * @param {*} options.snippets
  * @param {*} options.styleContent
+ * @param {Object} options.config
  * @returns {Promise<{
  * getEditor: () => Editor,
  * getEditableContent: () => HTMLElement,
@@ -228,6 +231,7 @@ export async function setupHTMLBuilder(
         iframeLangDir = "ltr",
         patchImages = true,
         builderProps,
+        config,
     } = {}
 ) {
     defineMailModels();
@@ -350,6 +354,7 @@ export async function setupHTMLBuilder(
             },
             iframeLangDir,
             builderProps,
+            config,
         },
     });
     await comp.iframeLoaded;
