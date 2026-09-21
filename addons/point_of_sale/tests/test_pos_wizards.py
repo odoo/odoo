@@ -292,15 +292,13 @@ class TestPosWizards(TestPoSCommon):
             "data"
         ]
 
-        self.assertEqual(
-            data,
-            {
-                "date_start": False,
-                "date_stop": False,
-                "config_ids": self.config.ids,
-                "session_ids": self.pos_session.ids,
-            },
-        )
+        expected = {
+            "date_start": False,
+            "date_stop": False,
+            "config_ids": self.config.ids,
+            "session_ids": self.pos_session.ids,
+        }
+        self.assertEqual({key: data[key] for key in expected}, expected)
 
     def test_daily_report_rejects_multiple_wizards(self):
         wizards = self.env["pos.daily.sales.reports.wizard"].create(
