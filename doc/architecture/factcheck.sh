@@ -60,6 +60,7 @@ sys.path.insert(0, ".")
 import odoo.init  # noqa: F401  # the interpreter floor and the native build
 from odoo.orm.models.base import BaseModel
 from odoo.orm.tests import test_architecture_pins as pins
+from odoo.orm.runtime import _registry_signaling as signaling
 from odoo.orm.tests import test_backend_dispatch_surface as dispatch
 
 pages = pathlib.Path(sys.argv[1])
@@ -97,6 +98,26 @@ layer1 = sum(1 for path, _ in dispatch.DISPATCH_SITES if path.startswith(("field
 cite("dispatch sites", sites, "module.md", r"\| dispatch sites \| @ across")
 cite("dispatch files", files, "module.md", r"\| dispatch sites \| \d+ across @ files")
 cite("Layer-1 dispatch sites", layer1, "module.md", r"across \d+ files, @ in Layer 1")
+
+# data.md's diagram counts the signalling tables. They are generated from a
+# cache list rather than written down, so the page cannot be read off the
+# source by eye: it said 8 from the day it was written (2026-08-07) while the
+# list moved two days later, and the comment beside the definition has said
+# "eleven watermarks" ever since.
+cite("signalling tables", len(signaling.SIGNALING_TABLES), "data.md", r"\(@ of them\)")
+
+# risks.md sizes the in-memory read_group the differential walk has to cover.
+memory_backend = ast.parse(pathlib.Path("odoo/orm/runtime/_backend_memory.py").read_text())
+in_memory = next(
+    n for n in ast.walk(memory_backend)
+    if isinstance(n, ast.ClassDef) and n.name == "_InMemoryReadGroup"
+)
+cite(
+    "_InMemoryReadGroup size",
+    in_memory.end_lineno - in_memory.lineno + 1,
+    "risks.md",
+    r"`_InMemoryReadGroup` — @ lines of",
+)
 
 # scenarios.md numbers the load it considers worth naming and says how many
 # it left out. `restore_relations_dropped_by_migrations` landed on 2026-09-20

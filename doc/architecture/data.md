@@ -13,7 +13,7 @@ Python source.**
    ┌──────────────────────── PostgreSQL (one database per tenant) ─────────────┐
    │  business tables          the meta-schema             the signalling tables│
    │  res_partner, …           ir_model, ir_model_fields,  orm_signaling_*      │
-   │  (rows the user owns)     ir_model_data, ir_ui_view…  (8 of them)          │
+   │  (rows the user owns)     ir_model_data, ir_ui_view…  (11 of them)         │
    └──────────────────────────────────────────────────────────────────────────┘
               │                          │                        │
               │ ir_attachment.store_fname│ drives DDL             │ version counter
