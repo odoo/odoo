@@ -1,7 +1,7 @@
 import { Component, onWillStart, proxy, t, usePlugin, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
-import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
+import { useSpreadsheetNotificationPlugin } from "@spreadsheet/hooks";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { Spreadsheet, Model } from "@odoo/o-spreadsheet";
@@ -19,7 +19,7 @@ export class PublicDashboard extends Component {
     debugMode = usePlugin(DebugModePlugin);
 
     setup() {
-        useSpreadsheetNotificationStore();
+        useSpreadsheetNotificationPlugin();
         this.http = useService("http");
         this.state = proxy({
             isFilterShown: false,

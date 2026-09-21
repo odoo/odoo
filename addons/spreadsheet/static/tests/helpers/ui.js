@@ -4,7 +4,7 @@ import { loadBundle } from "@web/core/assets";
 import { getFixture } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, onWillUnmount, t, useProps, xml } from "@odoo/owl";
-import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
+import { useSpreadsheetNotificationPlugin } from "@spreadsheet/hooks";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { render, useSubEnv } from "@web/owl2/utils";
@@ -18,7 +18,7 @@ class Parent extends Component {
         model: t.instanceOf(Model),
     });
     setup() {
-        useSpreadsheetNotificationStore();
+        useSpreadsheetNotificationPlugin();
     }
 }
 
