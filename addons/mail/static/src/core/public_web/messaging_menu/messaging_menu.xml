@@ -92,10 +92,10 @@
         t-on-click="() => togglesDropdown ? undefined : this.onClickAction(action)"
     >
         <span t-if="action.icon" class="d-flex align-items-center flex-shrink-0" t-att-class="{'me-1': action.text}">
-            <i class="oi" t-att-class="action.iconClass" t-att-data-icon="action.icon"/>
+            <i class="oi oi-fw" t-att-class="action.iconClass" t-att-data-icon="action.icon"/>
         </span>
         <span t-if="action.text" class="text-truncate" t-out="action.text"/>
-        <span t-if="togglesDropdown" class="oi position-absolute end-0 me-1" data-icon="keyboard_arrow_down" aria-hidden="true"/>
+        <span t-if="togglesDropdown" class="oi oi-fw position-absolute end-0 me-1" data-icon="keyboard_arrow_down" aria-hidden="true"/>
     </button>
 </t>
 
