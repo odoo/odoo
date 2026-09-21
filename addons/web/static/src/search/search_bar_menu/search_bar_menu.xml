@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.SearchBarMenu">
-        <SearchBarDropdown menuClass="'o_search_bar_menu d-flex flex-wrap flex-lg-nowrap start-50 translate-middle-x w-100 w-md-auto mx-md-auto mt-2 py-3'"
+        <SearchBarDropdown menuClass="'o_search_bar_menu d-flex flex-wrap flex-lg-nowrap align-items-stretch start-50 translate-middle-x w-100 w-md-auto mx-md-auto mt-2 p-0'"
                 position="'bottom-end'"
                 state="this.props.dropdownState"
                 t-if="this.env.searchModel.searchMenuTypes.size"
@@ -19,9 +19,9 @@
             <t t-set-slot="content">
                 <!-- Filter -->
                 <t t-if="this.env.searchModel.searchMenuTypes.has('filter')">
-                    <div class="o_dropdown_container o_filter_menu w-100 w-lg-auto h-100 px-3 mb-4 mb-lg-0 border-end">
-                        <div class="px-3 fs-5 mb-2">
-                            <i class="oi oi-filled me-2 text-primary" t-att-data-icon="this.facet_icons.filter"/>
+                    <div class="o_dropdown_container o_filter_menu w-100 w-lg-auto border-end p-3">
+                        <div class="fs-5 mb-2">
+                            <i class="o_dropdown_title_icon oi oi-filled text-primary" t-att-data-icon="this.facet_icons.filter"/>
                             <h5 class="o_dropdown_title d-inline">Filters</h5>
                         </div>
                         <t t-set="currentGroup" t-value="null"/>
@@ -64,9 +64,9 @@
                 </t>
                 <!-- GroupBy -->
                 <t t-if="this.env.searchModel.searchMenuTypes.has('groupBy')">
-                    <div class="o_dropdown_container o_group_by_menu w-100 w-lg-auto h-100 px-3 mb-4 mb-lg-0 border-end">
-                        <div class="px-3 fs-5 mb-2">
-                            <i class="oi oi-filled me-2 text-action" t-att-data-icon="this.facet_icons.groupBy"/>
+                    <div class="o_dropdown_container o_group_by_menu w-100 w-lg-auto border-end p-3">
+                        <div class="fs-5 mb-2">
+                            <i class="o_dropdown_title_icon oi oi-filled text-action" t-att-data-icon="this.facet_icons.groupBy"/>
                             <h5 class="o_dropdown_title d-inline">Group By</h5>
                         </div>
                         <t t-set="currentGroup" t-value="null"/>
@@ -114,11 +114,11 @@
                 </t>
                 <!-- Favorite -->
                 <t t-if="this.env.searchModel.searchMenuTypes.has('favorite')">
-                    <div class="o_dropdown_container o_favorite_menu w-100 w-lg-auto h-100 px-3">
+                    <div class="o_dropdown_container o_favorite_menu w-100 w-lg-auto p-3">
                         <t t-set="sharedFavoritesItems" t-value="this.sharedFavorites" />
                         <t t-set="favoriteItems" t-value="this.favorites" />
-                        <div class="px-3 fs-5 mb-2">
-                            <i class="oi oi-filled me-2 text-favourite" t-att-data-icon="this.facet_icons.favorite"/>
+                        <div class="fs-5 mb-2">
+                            <i class="o_dropdown_title_icon oi oi-filled text-favourite" t-att-data-icon="this.facet_icons.favorite"/>
                             <h5 class="o_dropdown_title d-inline">Favorites</h5>
                         </div>
                         <t t-foreach="favoriteItems" t-as="item" t-key="item.id">
@@ -178,7 +178,7 @@
 
     <t t-name="web.SearchBarMenu.FavoriteItem">
         <t t-set="item" t-value="item" />
-        <CheckboxItem class="{ 'o_menu_item o_favorite_item text-truncate': true, selected: item.isActive }"
+        <CheckboxItem class="{ 'o_menu_item o_favorite_item pe-2 text-truncate': true, selected: item.isActive }"
                             checked="item.isActive"
                             closingMode="'none'"
                             onSelected="() => this.onFavoriteSelected(item.id)"
@@ -192,7 +192,7 @@
                     t-att-class="item.isInvalid ? 'text-muted' : ''"
                     t-att-data-tooltip="item.isInvalid and invalidTooltip"
                 />
-                <i class="oi oi-filled ms-1"
+                <i class="oi oi-filled ms-1 opacity-75 opacity-100-hover"
                     data-icon="edit"
                     title="Edit favorite"
                     t-on-click.stop="() => this.editFavorite(item.id)"
