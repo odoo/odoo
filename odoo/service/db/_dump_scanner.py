@@ -27,11 +27,24 @@ _ALLOWED_PSQL_META_COMMANDS: dict[str, re.Pattern[str]] = {
 }
 
 _COPY_WORD_MAX_LEN = 5
-_SQL_WORD_MAX_LEN = len("standard_conforming_strings")
-_DOLLAR_TAG_RE = re.compile(r"\$(?:[A-Za-z_][A-Za-z0-9_]*)?\$")
+_CONFORMING_STRINGS = "STANDARD_CONFORMING_STRINGS"
+_SQL_WORD_MAX_LEN = len(_CONFORMING_STRINGS)
 
 _IDENT_START_ASCII = frozenset(string.ascii_letters + "_")
 _IDENT_CONT_ASCII = frozenset(string.ascii_letters + string.digits + "_$")
+
+# A dollar-quote tag follows the rules of an unquoted identifier except that
+# it cannot hold a dollar sign, and an unquoted identifier may hold any
+# non-ASCII letter the encoding admits.  An ASCII-only tag pattern left
+# `$café$ ... $café$` unrecognised: the body was scanned as SQL, one
+# apostrophe in it opened a string that never closed, and the scanner went
+# blind to the end of the file while psql closed the tag and ran what came
+# after.  The file is read as latin-1, so a multi-byte tag arrives as several
+# characters that are each >= \x80 -- which is why the class, not a decoded
+# codepoint, is what has to match.
+_DOLLAR_TAG_RE = re.compile(
+    r"\$(?:[A-Za-z_\x80-\U0010FFFF][A-Za-z0-9_\x80-\U0010FFFF]*)?\$"
+)
 
 _DEFAULT_MAX_SCAN_LINE = 64 * 1024 * 1024
 _MIN_MAX_SCAN_LINE = 4 * 1024 * 1024
@@ -210,13 +223,28 @@ class _PsqlSqlScanner:
         self._reset_ident_run()
         return self._setting_violation
 
-    def _setting_token(self, token: str) -> None:
+    def _setting_token(self, token: str, *, quoted: bool = False) -> None:
         """Recognize SET's bounded prefix outside comments and quoted bodies.
 
         Only explicit true values preserve the lexer's string-escape contract.
         Token state survives physical lines without retaining SQL statements.
+
+        A quoted occurrence of the setting's own name is refused outright,
+        whatever the statement around it.  `SET` is not the only way to reach
+        the parameter -- `select set_config('standard_conforming_strings',
+        'off', false)` changes it for the session, the server reports the
+        change, and psql's lexer follows it -- and recognising the call itself
+        would mean carrying every function name past this scanner's word
+        limit.  pg_dump quotes exactly one setting name, `search_path`, so
+        refusing this one costs a legitimate dump nothing.
         """
         word = token.upper()
+        if quoted and word == _CONFORMING_STRINGS:
+            self._setting_violation = (
+                self.lineno,
+                "standard_conforming_strings (named by a string literal)",
+            )
+            return
         state = self._setting_state
         if state == 0:
             self._setting_state = 1 if word == "SET" else -1
@@ -224,7 +252,7 @@ class _PsqlSqlScanner:
             if state == 1 and word in ("LOCAL", "SESSION"):
                 self._setting_state = 2
             else:
-                self._setting_state = 3 if word == "STANDARD_CONFORMING_STRINGS" else -1
+                self._setting_state = 3 if word == _CONFORMING_STRINGS else -1
         elif state == 3:
             self._setting_state = 4 if word in ("=", "TO") else -1
         elif state == 4:
@@ -311,10 +339,7 @@ class _PsqlSqlScanner:
         return close + len(tag)
 
     def _resume_single_quote(self, line: str, i: int, n: int) -> int:
-        capture = (
-            self._setting_state in (1, 2, 4)
-            and len(self._quoted_word) <= _SQL_WORD_MAX_LEN
-        )
+        capture = len(self._quoted_word) <= _SQL_WORD_MAX_LEN
         while i < n:
             ch = line[i]
             if capture and ch != "'":
@@ -331,17 +356,14 @@ class _PsqlSqlScanner:
                 else:
                     i += 1
                     self.in_single_quote = False
-                    self._setting_token(self._quoted_word)
+                    self._setting_token(self._quoted_word, quoted=True)
                     break
             else:
                 i += 1
         return i
 
     def _resume_double_quote(self, line: str, i: int, n: int) -> int:
-        capture = (
-            self._setting_state in (1, 2, 4)
-            and len(self._quoted_word) <= _SQL_WORD_MAX_LEN
-        )
+        capture = len(self._quoted_word) <= _SQL_WORD_MAX_LEN
         while i < n:
             if capture and line[i] != '"':
                 self._quoted_word += line[i]
@@ -352,7 +374,7 @@ class _PsqlSqlScanner:
                 else:
                     i += 1
                     self.in_double_quote = False
-                    self._setting_token(self._quoted_word)
+                    self._setting_token(self._quoted_word, quoted=True)
                     break
             else:
                 if line[i] == "\n":

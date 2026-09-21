@@ -42,6 +42,18 @@ ATTACKS = {
     # assumes `on` reads the escaped quote as closing the string early and
     # the real closing quote as opening a second, never-closed one, going
     # blind to everything after it.
+    # A dollar-quote tag PostgreSQL accepts and an ASCII-only tag pattern does
+    # not. The body then gets scanned as SQL, the apostrophe in it opens a
+    # string that never closes, and everything after goes unread -- while psql
+    # closes the tag and runs what follows.
+    "bang-after-nonascii-dollar-tag": "SELECT $caf\u00e9$ it's $caf\u00e9$;\n\\! touch {C}\n",
+    # `SET` is not the only way to reach the setting. The server reports a
+    # `set_config` change and psql's lexer follows it, so the string on the
+    # next line closes for the scanner and stays open for psql.
+    "bang-after-conforming-strings-off-via-set_config": (
+        "SELECT set_config('standard_conforming_strings','off',false);\n"
+        "SELECT 'a\\'b';\n\\! touch {C}\n"
+    ),
     "bang-after-plain-string-desynced-by-conforming-strings-off": (
         "SET standard_conforming_strings = off;\nSELECT 'a\\'b';\n\\! touch {C}\n"
     ),
@@ -68,6 +80,8 @@ BENIGN = {
 
 LEGIT = {
     "restrict-pair": "\\restrict abc123\nSELECT 1;\n\\unrestrict abc123\n",
+    # The fix for the tag above must not be "refuse every tag it cannot read".
+    "nonascii-dollar-quoted-body": "SELECT $caf\u00e9$ it's fine $caf\u00e9$;\n",
     "copy-block-with-null-marker": (
         "CREATE TEMP TABLE ct (a text);\n"
         "COPY ct (a) FROM stdin;\n\\N\nplain\n\\.\nSELECT 1;\n"
@@ -76,8 +90,12 @@ LEGIT = {
 
 
 def _write(tmp_path, name, template, canary):
+    # UTF-8 on disk, which is what a dump is and what psql reads it as; the
+    # scanner reads the same bytes as latin-1, exactly as production does, so
+    # a multi-byte character reaches it as several characters each >= \x80.
+    # Every ASCII case is byte-identical either way.
     path = tmp_path / f"{name}.sql"
-    path.write_text(template.format(C=canary), encoding="latin-1")
+    path.write_text(template.format(C=canary), encoding="utf-8")
     return path
 
 
