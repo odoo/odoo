@@ -482,7 +482,12 @@ class RecomputeMixin(_ModelStubs):
 
         prof = _OrmProfile(_orm_compute)
 
-        records = self.browse(tuple(id_ for id_ in ids if id_))
+        # NewIds included: a new record's stored compute is scheduled like
+        # any other, and dropping it here leaves it pending forever -- so a
+        # write to one field of a compute group survives until something
+        # reads a sibling, which recomputes the group over the write.
+        # `_expand_ids` already batches new and real ids apart.
+        records = self.browse(tuple(ids))
         _debug.pipeline(
             "recompute.field",
             model=field.model_name,

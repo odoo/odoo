@@ -103,6 +103,22 @@ class WriteMixin(_ModelStubs):
             )
             if to_compute:
                 self._recompute_recordset(to_compute)
+                # A new record's stored compute is lazy: it is neither cached
+                # nor scheduled, so `_recompute_recordset` finds nothing to
+                # settle. The group would then compute on the first read
+                # AFTER this write and assign every field of the group,
+                # overwriting what was just written. Reading it settles it
+                # now, exactly as the x2many inverses above are settled.
+                new_recs = self.browse([id_ for id_ in self._ids if not id_])
+                if new_recs:
+                    _debug.logic(
+                        "write.protected_settled_on_new_records",
+                        model=self._name,
+                        records=len(new_recs),
+                        fields=to_compute,
+                    )
+                    for fname in to_compute:
+                        new_recs.mapped(fname)
 
     def _write_apply_inverses(
         self, inverses_by_hook: dict, real_recs: Self, vals: ValuesType

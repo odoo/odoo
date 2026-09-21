@@ -864,6 +864,37 @@ class Field[T](
     ) -> typing.Any:
         return SENTINEL
 
+    def _settle_new_record_compute_group(self, records: BaseModel) -> None:
+        """Materialise this field's compute group before writing to a new one.
+
+        A stored computed field on a `new()` record is lazy: neither cached
+        nor scheduled. So a sibling of the group read AFTER this assignment
+        would run the group's compute, which assigns every field of the
+        group, over the value being written here. `write()` settles the same
+        group for the same reason (`_write_settle_protected`); this is the
+        assignment path, which does not go through it.
+        """
+        group = records.pool.field_computed.get(self)
+        if not group or len(group) == 1:
+            return
+        env = records.env
+        record_id = records._ids[0]
+        settled = 0  # debuglog
+        for sibling in group:
+            if sibling is self or not (sibling.compute and sibling.store):
+                continue
+            if record_id in sibling._get_cache(env):
+                continue
+            sibling.__get__(records)
+            settled += 1  # debuglog
+        if _debug.logic.enabled and settled:
+            _debug.logic(
+                "field.new_record.compute_group_settled",
+                model=self.model_name,
+                field=self.name,
+                siblings=settled,
+            )
+
     def __set__(self, records: BaseModel, value: typing.Any) -> None:
         record_ids = records._ids
         core = records.env.core
@@ -878,6 +909,7 @@ class Field[T](
                     records._evict_x2many_scopes_reading_through((self.name,))
                 return
             if not record_id:
+                self._settle_new_record_compute_group(records)
                 self._update_new(records, [record_id], value)
                 return
             write_value = self.convert_to_write(value, records)
