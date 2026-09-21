@@ -14,6 +14,7 @@ __all__ = [
     "is_sealed",
     "old_key_versions",
     "protects",
+    "rotated_environ",
     "seal",
     "unseal",
 ]
@@ -52,6 +53,26 @@ def old_key_versions(environ: Mapping[str, str] | None = None) -> list[int]:
             if misses >= _MISSES_BEFORE_STOP:
                 break
     return versions
+
+
+def rotated_environ(
+    key: str, environ: Mapping[str, str] | None = None
+) -> dict[str, str]:
+    """The entries that make `key` current and keep the key in force readable.
+
+    Merge them into the environment (``patch.dict(os.environ, ...)``) to seal
+    with `key` without losing what was sealed before: the key they replace
+    becomes the next numbered predecessor, as a real rotation would leave it.
+    Replacing the key outright makes every value already sealed -- the
+    database secret first -- unopenable for as long as the patch holds.
+    """
+    environ = os.environ if environ is None else environ
+    entries = {ENV_KEY: key}
+    current = environ.get(ENV_KEY)
+    if current and current != key:
+        taken = old_key_versions(environ)
+        entries[f"{ENV_KEY}_V{(taken[-1] if taken else 0) + 1}"] = current
+    return entries
 
 
 def is_configured(environ: Mapping[str, str] | None = None) -> bool:

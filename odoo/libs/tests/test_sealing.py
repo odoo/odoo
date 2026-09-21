@@ -53,3 +53,34 @@ def test_old_key_versions_stop_after_two_missing_numbers():
     }
 
     assert sealing.old_key_versions(environ) == [1, 2]
+
+
+def test_rotated_environ_keeps_what_the_replaced_key_sealed_openable():
+    real, test = _key(), _key()
+    environ = {sealing.ENV_KEY: real}
+    sealed = sealing.seal("database-secret", environ)
+
+    patched = {**environ, **sealing.rotated_environ(test, environ)}
+
+    assert patched[sealing.ENV_KEY] == test
+    assert sealing.unseal(sealed, patched) == "database-secret"
+    assert (
+        sealing.unseal(sealing.seal("new", patched), {sealing.ENV_KEY: test}) == "new"
+    )
+
+
+def test_rotated_environ_takes_the_next_free_predecessor_number():
+    real, older, test = _key(), _key(), _key()
+    environ = {sealing.ENV_KEY: real, f"{sealing.ENV_KEY}_V1": older}
+
+    entries = sealing.rotated_environ(test, environ)
+
+    assert entries == {sealing.ENV_KEY: test, f"{sealing.ENV_KEY}_V2": real}
+
+
+def test_rotated_environ_adds_nothing_when_no_key_is_in_force():
+    test = _key()
+    assert sealing.rotated_environ(test, {}) == {sealing.ENV_KEY: test}
+    assert sealing.rotated_environ(test, {sealing.ENV_KEY: test}) == {
+        sealing.ENV_KEY: test
+    }
