@@ -17,11 +17,17 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
 
+    def _company_default_of(self, field_name):
+        company = self.env["res.company"]
+        link = company._config_link_of_field(field_name)
+        owner = self.env[company._fields[link].comodel_name] if link else company
+        return owner.default_get([field_name])[field_name]
+
     def _clamp_validity_days(self, field_name, label):
         self.check_singleton()
         if self[field_name] >= 0:
             return None
-        self[field_name] = self.env["res.company"].default_get([field_name])[field_name]
+        self[field_name] = self._company_default_of(field_name)
         _debug.logic("validity_days_clamped", field=field_name, value=self[field_name])
         return {
             "warning": {

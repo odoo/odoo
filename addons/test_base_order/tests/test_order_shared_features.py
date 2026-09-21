@@ -217,6 +217,9 @@ class TestOrderSharedFeatures(TransactionCase):
         ("lock_confirmed_po", "order_lock_po"),
     )
 
+    def _company_value(self, fname):
+        return self.env.company._config_owner_of(fname)[fname]
+
     def test_negative_validity_days_is_reset_to_the_default_with_a_warning(self):
         for field, onchange in self.VALIDITY_SETTINGS:
             with self.subTest(field=field):
@@ -227,7 +230,7 @@ class TestOrderSharedFeatures(TransactionCase):
                 self.assertIn("warning", result)
                 self.assertEqual(
                     settings[field],
-                    self.env["res.company"].default_get([field])[field],
+                    settings._company_default_of(field),
                 )
 
     def test_non_negative_validity_days_is_left_alone(self):
@@ -254,17 +257,17 @@ class TestOrderSharedFeatures(TransactionCase):
                 settings._sync_order_lock(checkbox, lock_field)
 
                 self.assertEqual(settings[lock_field], "lock")
-                self.assertEqual(self.env.company[lock_field], "lock")
+                self.assertEqual(self._company_value(lock_field), "lock")
 
     def test_clearing_the_lock_checkbox_reaches_the_company_setting(self):
         for checkbox, lock_field in self.LOCK_SETTINGS:
             with self.subTest(checkbox=checkbox):
-                self.env.company[lock_field] = "lock"
+                self.env.company._config_owner_of(lock_field)[lock_field] = "lock"
                 settings = self.env["res.config.settings"].create({checkbox: False})
 
                 settings._sync_order_lock(checkbox, lock_field)
 
-                self.assertEqual(self.env.company[lock_field], "edit")
+                self.assertEqual(self._company_value(lock_field), "edit")
 
     def _invoice_lines_of(self, order):
         order.action_confirm()

@@ -50,6 +50,12 @@ class MixinOrderLineAmount(models.AbstractModel):
         help="Price from the pricelist/seller. Compared with price_unit to "
         "detect manual overrides.",
     )
+    tax_ids_auto_key = fields.Char(
+        string="Automatic Taxes Key",
+        copy=True,
+        help="The taxes the product and fiscal position would give, as a sorted "
+        "key. Compared with tax_ids to detect manual overrides.",
+    )
     discount = fields.Float(
         string="Discount (%)",
         digits="Discount",
@@ -456,10 +462,10 @@ class MixinOrderLineAmount(models.AbstractModel):
                 # Nothing to map from: keep the taxes a productless line was given,
                 # unless it just lost the product they came from.
                 if line._origin.product_id:
-                    line.tax_ids = False
+                    line._apply_auto_taxes(self.env["account.tax"])
                 continue
             if not line._is_product_taxable(line):
-                line.tax_ids = False
+                line._apply_auto_taxes(self.env["account.tax"])
                 continue
             lines_by_company[line.company_id] += line
 
@@ -472,7 +478,7 @@ class MixinOrderLineAmount(models.AbstractModel):
                     company,
                 )
                 if not taxes:
-                    line.tax_ids = False
+                    line._apply_auto_taxes(self.env["account.tax"])
                     continue
                 fiscal_position = line.order_id.fiscal_position_id
                 cache_key = (fiscal_position.id, company.id, tuple(taxes.ids))
@@ -488,7 +494,78 @@ class MixinOrderLineAmount(models.AbstractModel):
                         fiscal_position=fiscal_position,
                         taxes=result,
                     )
-                line.tax_ids = result
+                line._apply_auto_taxes(result)
+
+    def _auto_taxes(self):
+        """The taxes the product and fiscal position give this line, or none."""
+        self.check_singleton()
+        empty = self.env["account.tax"]
+        if self.display_type or not self.product_id:
+            return empty
+        if not self._is_product_taxable(self):
+            return empty
+        company = self.company_id
+        line = self.with_company(company)
+        taxes = line.product_id[line._get_product_tax_field()]._filter_taxes_by_company(
+            company
+        )
+        if not taxes:
+            return empty
+        return line.order_id.fiscal_position_id.map_tax(taxes)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super().create(vals_list)
+        # a line whose taxes arrived in `vals` never went through the compute,
+        # so it has no baseline -- and without one the next fiscal-position
+        # change would read it as automatic and overwrite the caller's choice
+        for line, vals in zip(lines, vals_list, strict=False):
+            if "tax_ids" in vals and not line.tax_ids_auto_key:
+                line.tax_ids_auto_key = line._tax_key(line._auto_taxes())
+        return lines
+
+    # a Char that was never written and one holding "" both read as False, so the
+    # empty tax set needs a spelling of its own -- otherwise "the automatic answer
+    # was no taxes" is indistinguishable from "no automatic answer recorded yet",
+    # and a line whose taxes were set by hand over an untaxed product loses them
+    _NO_TAXES_KEY = "-"
+
+    @classmethod
+    def _tax_key(cls, taxes):
+        return (
+            ",".join(str(tax_id) for tax_id in sorted(taxes.ids)) or cls._NO_TAXES_KEY
+        )
+
+    def _apply_auto_taxes(self, auto_taxes):
+        """Overwrite the line's taxes only while they still match the last
+        automatic answer, and record that answer either way.
+
+        `tax_ids` is a stored `readonly=False` compute, so without this an
+        explicit choice survives only until one of its dependencies moves -- and
+        `order_id.fiscal_position_id` is one of them, so any code that sets a
+        fiscal position silently re-taxes every line. Same shape and same remedy
+        as `price_unit` against `price_unit_auto`.
+
+        The shadow is a sorted key and NOT a computed field. Making it one would
+        drag this compute into cases it never ran in before -- a create whose
+        vals already carry `tax_ids` -- and it would then overwrite the caller's
+        own choice at the moment they made it.
+        """
+        self.check_singleton()
+        old_key = self.tax_ids_auto_key
+        auto_key = self._tax_key(auto_taxes)
+        if old_key and self._tax_key(self.tax_ids) != old_key:
+            self.tax_ids_auto_key = auto_key
+            _debug.logic(
+                "taxes_kept_manual",
+                line=self,
+                manual=self.tax_ids,
+                was_auto_key=old_key,
+                now_auto=auto_taxes,
+            )
+            return
+        self.tax_ids = auto_taxes
+        self.tax_ids_auto_key = auto_key
 
     def _is_product_taxable(self, line):
         return True
