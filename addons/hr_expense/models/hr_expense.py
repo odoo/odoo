@@ -330,6 +330,11 @@ class HrExpense(models.Model):
     # Constraints
     # --------------------------------------------
 
+    _check_date_not_draft = models.Constraint(
+        "CHECK(state = 'draft' OR date IS NOT NULL)",
+        "You cannot submit or process an expense without a date. Please set a date first.",
+    )
+
     @api.constrains('state', 'name', 'product_id', 'total_amount', 'total_amount_currency')
     def _check_required_fields(self):
         for expense in self.filtered(lambda expense: expense.state != 'draft'):
