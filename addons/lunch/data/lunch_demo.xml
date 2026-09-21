@@ -93,6 +93,10 @@
             <field name="group_ids" eval="[(3, ref('lunch.group_lunch_manager'))]"/>
         </record>
 
+        <record id="base.user_light" model="res.users">
+            <field name="group_ids" eval="[(4, ref('lunch.group_lunch_user'))]"/>
+        </record>
+
         <record id="base.default_user_group" model="res.groups">
             <field name="implied_ids" eval="[(4, ref('lunch.group_lunch_manager'))]"/>
         </record>

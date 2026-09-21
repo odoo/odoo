@@ -39,6 +39,7 @@ export function _makeUser(session) {
         home_action_id: homeActionId,
         is_admin: isAdmin,
         is_internal_user: isInternalUser,
+        is_regular_user: isRegularUser,
         is_system: isSystem,
         is_public: isPublic,
         name,
@@ -139,6 +140,9 @@ export function _makeUser(session) {
     if (isInternalUser !== undefined) {
         groupCache.cache["base.group_user"] = Promise.resolve(isInternalUser);
     }
+    if (isRegularUser !== undefined) {
+        groupCache.cache["base.group_user_regular"] = Promise.resolve(isRegularUser);
+    }
     if (isSystem !== undefined) {
         groupCache.cache["base.group_system"] = Promise.resolve(isSystem);
     }
@@ -171,6 +175,7 @@ export function _makeUser(session) {
         isAdmin,
         isSystem,
         isInternalUser,
+        isRegularUser,
         partnerId,
         homeActionId,
         showEffect,

@@ -8,6 +8,7 @@ import { Component, computed, signal, useEffect } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
 export class MessagingMenuInDropdown extends Component {
@@ -36,6 +37,12 @@ export class MessagingMenuInDropdown extends Component {
     }
 }
 
-registry
-    .category("systray")
-    .add("mail.messaging_menu", { Component: MessagingMenuInDropdown }, { sequence: 25 });
+registry.category("systray").add(
+    "mail.messaging_menu",
+    {
+        Component: MessagingMenuInDropdown,
+        // A light user does not chat: its conversations are handled for it.
+        isDisplayed: () => user.isRegularUser,
+    },
+    { sequence: 25 }
+);
