@@ -184,8 +184,8 @@ class IrAttachment(models.Model):
         copy=False,
     )
     content_released_at = fields.Datetime(
-        readonly=True,
         copy=False,
+        readonly=True,
     )
 
     raw = fields.Binary(

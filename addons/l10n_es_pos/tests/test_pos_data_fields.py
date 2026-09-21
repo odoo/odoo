@@ -1,7 +1,7 @@
 from odoo.tests import TransactionCase, tagged
 
 
-@tagged("post_install", "-at_install")
+@tagged("post_install", "post_install_l10n", "-at_install")
 class TestPosClientFields(TransactionCase):
     READ_BY_THE_CLIENT = ("is_spanish", "simplified_partner_id")
 
