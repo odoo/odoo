@@ -16,6 +16,7 @@ import pytest
 
 from odoo.service import (
     _base_server,
+    _cron,
     _limits,
     _prefork,
     _process_state,
@@ -417,6 +418,29 @@ class TestWorkerCronStartGracefulShutdown:
 
         assert sleep_calls == [2]
         assert worker_cron.alive is False
+
+    def test_start_spreads_this_workers_sweep_against_its_siblings(self, worker_cron):
+        """The jitter has to be read AFTER the fork, or it is not a jitter.
+
+        It used to be `min(CRON_POLL_INTERVAL_S + pid % 10, polling_delay)`,
+        which `polling_delay <= CRON_POLL_INTERVAL_S` always won, so every cron
+        worker swept on the same 60 s and nothing said so.  Read in `__init__`
+        instead, the pid would be the master's and identical for every sibling.
+        """
+        assert worker_cron.schedule.refresh_interval == _cron.CRON_POLL_INTERVAL_S, (
+            "before start() the schedule carries no jitter; a value set in "
+            "__init__ would have been the master's pid, shared by every worker"
+        )
+        worker_cron._selector = MagicMock()
+        worker_cron.multi.socket = None
+        with (
+            patch.object(worker_cron.listener, "connect"),
+            patch("odoo.service._worker.Worker.start"),
+            patch("odoo.service._worker.os.nice"),
+            patch("odoo.service._worker.os.getpid", return_value=12347),
+        ):
+            worker_cron.start()
+        assert worker_cron.schedule.refresh_interval == _cron.CRON_POLL_INTERVAL_S + 7
 
     def test_sleep_with_watchdog_breaks_when_alive_cleared(self, worker_cron):
         slept = []

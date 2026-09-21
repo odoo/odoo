@@ -179,14 +179,21 @@ flavours act in two steps, one budget apart:
    drop, reloads the process, logging `still on the same work … reloading`.
 
 The prefork monitor thread feeds the master's watchdog for as long as a unit
-of work is in flight, budget and grace included. The master last heard from
-the work thread before the accept, up to one beat before the work began, so
-left unfed its `limit_time_real` clock ran out first in three of eight
-measured phases — once at 4 s against a 5 s budget — and the SIGKILL replaced
-the worker's own verdict. Fed, the SIGKILL is reached only when the monitor
-stops feeding: the grace ran out (the worker exits on its own) or the process
-is wedged, and a wedge is then killed `limit_time_real` after the last beat
-it managed rather than after the last idle ping.
+of work is in flight, budget and grace alike. The master kills on the first
+supervision pass at which a worker has been silent for `limit_time_real`, and
+it samples every `SUPERVISION_BEAT_S`: with the defaults the pass at 4 s is
+under the budget and the one at 8 s is over it, so a silent worker dies two
+beats after the master last *read* a heartbeat — not after its work began.
+Unfed, the worker's own first heartbeat during a long unit is the one that
+follows its cancel, `limit_time_real` in, which is too late whenever the work
+began more than `limit_time_real - SUPERVISION_BEAT_S` after that read. So the
+master won three of eight measured beat phases, its SIGKILL landing 4.0-5.0 s
+into a 30 s stall — ahead of the worker's own 10 s verdict, and once ahead of
+the 5 s budget itself, with the master's own event reading `silent_s=8.009`.
+Fed, the SIGKILL is reached only when the monitor stops feeding: the grace ran
+out and the worker exited on its own, or the process is wedged. A request
+inside its budget was never at risk either way, because a heartbeat already
+queued when the work began is read during it.
 
 Keep `limit_time_real` at or above `SUPERVISION_BEAT_S` (4 s): an idle prefork
 worker pings the master once per beat, so a smaller budget times out idle
