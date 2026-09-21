@@ -330,11 +330,9 @@ class HrExpense(models.Model):
     # Constraints
     # --------------------------------------------
 
-    # case where an expense has an existing bill, but it's not filled in. We cannot add this condition
-    # in can_approve as can_approve is used at submission (see action_submit)
-    _check_existing_bill_set = models.Constraint(
-        "check(has_existing_bill IS NOT TRUE OR state IN ('draft', 'submitted', 'refused') OR existing_bill_id IS NOT NULL)",
-        "The existing bill must be set."
+    _check_date_not_draft = models.Constraint(
+        "CHECK(state = 'draft' OR date IS NOT NULL)",
+        "You cannot submit or process an expense without a date. Please set a date first.",
     )
 
     @api.constrains('state', 'name', 'product_id', 'total_amount', 'total_amount_currency')
