@@ -569,7 +569,8 @@ export class OdooPivot {
             .filter(
                 (dimension) =>
                     dimension.fieldName.includes(".") &&
-                    this._fields[dimension.fieldName.split(".")[0]]?.type === "property",
+                    this._fields[dimension.fieldName.split(".")[0]]?.type ===
+                        "property",
             );
         await Promise.all(
             properties.map((dimension) =>
@@ -725,7 +726,9 @@ pivotRegistry.add("ODOO", {
             field.type === "many2one") &&
         field.name !== "id" &&
         !field.name.includes(".") && // relational field path are not supported as measures (e.g. 'company_id.partner_id')
-        field.store,
+        // a related field without a column aggregates through the join: the
+        // server says so with `groupable`, `store` only says where it lives
+        (field.store || field.groupable),
     isGroupable: (field) => field.groupable,
     canHaveCustomGroup: (field) =>
         field.groupable &&
