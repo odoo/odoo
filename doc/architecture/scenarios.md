@@ -28,11 +28,12 @@ on `_ModuleLoader` and run in this order:
 | 8 | `untranslate_dropped_fields()` | data |
 | 9 | `finalize_registry_setup()` | runtime |
 | 10 | `run_end_migrations()` | data |
-| 11 | `finalize_constraints()` — SQL constraints last, once all columns exist | data |
-| 12 | `uninstall_removed_modules()` | data + module |
-| 13 | `reinit_models_to_check()` | runtime |
+| 11 | `restore_relations_dropped_by_migrations()` — re-`init()` any view-backed table a migration took down with it | data (DDL) |
+| 12 | `finalize_constraints()` — SQL constraints last, once all columns exist | data |
+| 13 | `uninstall_removed_modules()` | data + module |
+| 14 | `reinit_models_to_check()` | runtime |
 
-Thirteen of `load_modules`' 23 calls, in call order. The numbering is this
+Fourteen of `load_modules`' 24 calls, in call order. The numbering is this
 table's, not the loader's; the order is pinned against a real load by
 `tests/loading/test_load_modules_phases.py`. The ten left out split two ways:
 
@@ -49,12 +50,12 @@ loaded Python declares. Capture it after the graph converges and there is
 nothing left to compare against — the schema diff is computed from a snapshot,
 not from live state.
 
-**Constraints are finalised last (11).** A constraint can reference a column a
+**Constraints are finalised last (12).** A constraint can reference a column a
 later module in the same run adds, so applying them per module would fail on
 orderings that are otherwise legal. Same argument as the flush fixpoint, applied
 to DDL.
 
-**Uninstalling can force a second full registry build.** Phase 12 may raise
+**Uninstalling can force a second full registry build.** Phase 13 may raise
 `_UninstallRequiresReload`, caught and answered with a fresh `Registry.new(…)` —
 logged as *"Reloading registry once more after uninstalling modules"*
 (`tests/loading/test_load_modules_uninstall.py`). Uninstall is therefore the one
