@@ -501,6 +501,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                     "The expiration date should be the expiration date of the second allocation because no days will expire on carryover date")
 
     @users('enguerran')
+    @freeze_time('2024-01-01')
     def test_no_carried_over_leaves_for_flexible_resource(self):
         """
         Identical test to test_no_carried_over_leaves but with a flexible resource calendar. The test aims to verify that
@@ -580,8 +581,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                          number_of_accrued_days - leave.number_of_days,
                          "All the remaining days of the allocation will expire")
 
-        # The flexible hours algorithm creates one working-day interval per
-        # calendar day in the range [target_date, carryover_date] (inclusive).
         working_days_equivalent_needed = (allocation._get_carryover_date(target_date) - target_date).days + 1
 
         # Assert the closest allocation duration (number of working days remaining before the allocation expires)
