@@ -226,6 +226,7 @@ class IrHttp(models.AbstractModel):
             if not session_uid:
                 request.update_context(**request.env.user.context_get())
             request.session.can_save = False
+            cls._enter_api_scope(scope, uid)
         elif not request.env.uid:
             _debug.logic("bearer_auth", uid=None, reason="no_token_no_session")
             e = "User not authenticated, use an API Key with a Bearer Authorization header."
@@ -235,6 +236,19 @@ class IrHttp(models.AbstractModel):
             e = 'Missing "Authorization" or Sec-headers for interactive usage.'
             raise Unauthorized(e, www_authenticate=WWWAuthenticate("bearer"))
         cls._auth_method_user()
+
+    @classmethod
+    def _enter_api_scope(cls, scope: str, uid: int) -> None:
+        """The door's scope, for `service.model.call_kw` to enforce on every
+        call this request makes, and its budget spent for this call."""
+        scope_row = request.env["res.users.apikeys.scope"]._get_or_create(scope)
+        request.update_context(api_scope_id=scope_row.id)
+        cls._consume_api_scope_budget(scope_row, uid)
+
+    @classmethod
+    def _consume_api_scope_budget(cls, scope, uid: int) -> None:
+        """A scope's per-key budget is a rate-limit bucket, which `rate_limit`
+        provides; base has none and spends nothing."""
 
     @classmethod
     def _auth_method_user(cls) -> None:

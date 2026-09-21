@@ -64,7 +64,9 @@ odoo/
 │   │                       dump -> listing, lifecycle -> listing},
 │   │               every one of them over _checks (the db-name, master
 │   │               password and list_db guards)
-│   └── transaction (the retrying() primitive), model, security, common,
+│   └── transaction (the retrying() primitive), model, api_scope (what an API
+│       key's scope lets a call do -- models, operations, hidden fields, path
+│       depth -- as the frozen value `call_kw` enforces on every door), security, common,
 │       _dispatch (arity policy + is_db_exposed, the one host-free answer to which
 │       databases this process serves: RPC, cron and job sweeps, db management),
 │       _env, _limits (time/memory/back-off budgets),

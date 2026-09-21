@@ -269,10 +269,13 @@ class ResUsers(models.Model):
             "uid_passwd_cached", uid=uid, method=result.get("auth_method")
         )
         if result.get("auth_method") == "apikey":
-            return self.env["res.users.apikeys"]._get_key_expiration(
-                scope="rpc", key=passwd
+            return (
+                self.env["res.users.apikeys"]._get_key_expiration(
+                    scope="rpc", key=passwd
+                ),
+                True,
             )
-        return None
+        return None, False
 
     @tools.ormcache("self.id", "sid")
     def _get_session_token(self, sid: str) -> str | bool:
@@ -1265,16 +1268,23 @@ class ResUsers(models.Model):
         return auth_info
 
     @api.model
-    def _check_uid_passwd(self, uid: int, passwd: str) -> None:
+    def _check_uid_passwd(self, uid: int, passwd: str) -> int | None:
+        """Refuse, or answer the scope an RPC call runs under: the `rpc`
+        scope's id when the password was an API key, None for a password."""
         if not passwd:
             _debug.logic("uid_passwd_refused", uid=uid, reason="empty")
             raise AccessDenied
         with self._assert_can_auth(user=uid):
             passwd_hash = sha256(passwd.encode()).hexdigest()
-            key_expiration = self._check_uid_passwd_cached(uid, passwd, passwd_hash)
+            key_expiration, is_key = self._check_uid_passwd_cached(
+                uid, passwd, passwd_hash
+            )
             if key_expiration is not None and key_expiration <= fields.Datetime.now():
                 _debug.logic("uid_passwd_refused", uid=uid, reason="apikey_expired")
                 raise AccessDenied
+        if not is_key:
+            return None
+        return self.env["res.users.apikeys.scope"]._get_or_create("rpc").id
 
     def _get_fields_session_token(self) -> set[str]:
         return {"id", "login", "password", "active"}

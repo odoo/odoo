@@ -28,6 +28,7 @@ from odoo.modules.registry import Registry
 from odoo.tools import lazy
 from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES
 
+from . import api_scope
 from ._dispatch import is_db_exposed
 from .transaction import (
     PG_CONCURRENCY_ERRORS_TO_RETRY,
@@ -107,7 +108,37 @@ def get_public_method(model: BaseModel, name: str) -> Callable:
     return method
 
 
+def _scope_rules(model: BaseModel) -> api_scope.ScopeRules | None:
+    """The API key scope this call is served under, from the context the door
+    set at authentication, or the one already being enforced when a call
+    reaches `call_kw` from inside another."""
+    scope_id = model.env.context.get("api_scope_id")
+    if isinstance(scope_id, int) and scope_id:
+        return model.env["res.users.apikeys.scope"].sudo().browse(scope_id)._rules()
+    return api_scope.active_rules()
+
+
 def call_kw(model: BaseModel, name: str, args: Sequence, kwargs: Mapping) -> typing.Any:
+    rules = _scope_rules(model)
+    if rules is None:
+        return _call_kw(model, name, args, kwargs)
+    # The scope is checked before anything runs, with the caller's own words
+    # in the refusal; the call runs under it, so the ORM hooks that read the
+    # active scope see it whatever context the caller sent; the result comes
+    # back without what the scope hides.
+    api_scope.check_call(model.env, rules, model._name, name, args, kwargs)
+    kwargs = dict(kwargs)
+    kwargs["context"] = api_scope.safe_context(model.env, kwargs.get("context"))
+    with api_scope.enforcing(rules):
+        result = _call_kw(model, name, args, kwargs)
+    return api_scope.filter_result(
+        model.env, rules, model._name, name, args, kwargs, result
+    )
+
+
+def _call_kw(
+    model: BaseModel, name: str, args: Sequence, kwargs: Mapping
+) -> typing.Any:
     method = get_public_method(model, name)
     api_model = getattr(method, "_api_model", False)
 
@@ -257,10 +288,11 @@ def dispatch(dispatch_method: str, params: Sequence) -> typing.Any:
                 kw = {}
         with registry.cursor() as cr:
             with _debug.perf("rpc.dispatch.password_checked", cr=cr, db=db, uid=uid):
-                api.Environment(cr, api.SUPERUSER_ID, {})[
+                scope_id = api.Environment(cr, api.SUPERUSER_ID, {})[
                     "res.users"
                 ]._check_uid_passwd(uid, passwd)
-            res = execute_cr(cr, uid, model, model_method, args, kw)
+            context = {"api_scope_id": scope_id} if scope_id else {}
+            res = execute_cr(cr, uid, model, model_method, args, kw, context=context)
     except Exception:
         _debug.logic("rpc.dispatch.failed", db=db, model=model, method=model_method)
         with suppress(Exception):
@@ -277,9 +309,10 @@ def execute_cr(
     args: list | tuple,
     kw: dict,
     participant: RetryParticipant | None = None,
+    context: dict | None = None,
 ) -> typing.Any:
     cr.reset()
-    env = api.Environment(cr, uid, {})
+    env = api.Environment(cr, uid, context or {})
     env.transaction.default_env = env
     recs = env.get(obj)
     if recs is None:

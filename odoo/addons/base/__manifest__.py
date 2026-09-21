@@ -1,6 +1,6 @@
 {
     "name": "Base",
-    "version": "1.88",
+    "version": "1.89",
     "category": "Hidden",
     "description": """
 The kernel of Odoo, needed for all installation.
@@ -16,6 +16,7 @@ The kernel of Odoo, needed for all installation.
         "data/res_currency_data.xml",
         "data/res_company_data.xml",
         "data/res_users_data.xml",
+        "data/res_users_apikeys_scope_data.xml",
         "data/report_paperformat_data.xml",
         "data/res_country_data.xml",
         "data/ir_demo_data.xml",
@@ -67,6 +68,7 @@ The kernel of Odoo, needed for all installation.
         "views/res_groups_views.xml",
         "views/res_users_views.xml",
         "views/res_users_apikeys_views.xml",
+        "views/res_users_apikeys_scope_views.xml",
         "views/res_device_views.xml",
         "views/res_users_identitycheck_views.xml",
         "views/res_config_settings_views.xml",

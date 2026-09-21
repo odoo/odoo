@@ -1390,7 +1390,7 @@ class TestDispatchExecuteVersusExecuteKw:
     def _driven(mod, verb, params):
         seen = {}
 
-        def fake_execute_cr(cr, uid, model, method, args, kw):
+        def fake_execute_cr(cr, uid, model, method, args, kw, context=None):
             seen.update(uid=uid, model=model, method=method, args=args, kw=kw)
             return "ok"
 

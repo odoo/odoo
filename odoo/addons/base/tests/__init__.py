@@ -109,6 +109,7 @@ from . import test_res_partner_merge
 from . import test_mixin_merge
 from . import test_res_users
 from . import test_res_users_apikeys
+from . import test_res_users_apikeys_scope
 from . import test_res_users_identitycheck
 from . import test_res_users_log
 from . import test_res_users_settings

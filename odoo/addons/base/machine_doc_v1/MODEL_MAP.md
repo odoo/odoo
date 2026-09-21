@@ -1372,6 +1372,34 @@ User accounts — inherits all partner fields.
 - `action_reset_password()` — Send password reset email
 - `_default_group_ids()` — Default groups (base.group_user + implied)
 
+### models/res_users_apikeys_scope.py
+
+#### ResUsersApikeysScope — `res.users.apikeys.scope`
+
+What a door lets an API key do. A route names one (`auth="bearer", scope=`),
+a key may be bound to one, and `odoo.service.model.call_kw` enforces it on
+every door through `odoo.service.api_scope`.
+
+**Fields:** `name`, `key` (unique; the string routes declare), `active`,
+`line_ids` (One2many → .scope.line; empty reaches every model), `max_depth`,
+`budget_requests`, `budget_window_seconds`
+
+**Key Methods:**
+- `_get(key)` / `_get_or_create(key)` — the scope a key string names, made on first sight
+- `_rules()` — the frozen `api_scope.ScopeRules` the guard reads (ormcache)
+
+#### ResUsersApikeysScopeLine — `res.users.apikeys.scope.line`
+
+One model a scope reaches: `model_id`, `allow_read/create/write/unlink/call`,
+`denied_field_ids` (Many2many → ir.model.fields; hidden with every field that
+derives from them), `notes`. UNIQUE (scope_id, model_id).
+
+#### Base — `base` (AbstractModel, `_inherit`)
+
+`_search_display_name_match` and `_search_display_name_unset` drop the
+name-search fields the active scope hides, so a hidden column is not a value
+oracle through `name_search`, `display_name` or a string operator on a many2one.
+
 ### models/res_users_apikeys.py
 
 #### ResUsersApikeys — `res.users.apikeys` (`_name`, `_auto = False`)
@@ -1380,7 +1408,7 @@ API key management with custom SQL table (encrypted key storage).
 
 **Fields:**
 - `name` (Char), `user_id` (Many2one → res.users, cascade)
-- `scope` (Char), `expiration_date` (Datetime)
+- `scope_id` (Many2one → res.users.apikeys.scope, cascade; empty opens every door), `expiration_date` (Datetime)
 
 **Key Methods:**
 - `_check_credentials(*, scope, key)` — Verify API key
@@ -2101,6 +2129,7 @@ Quick lookup — file → model → primary role:
 | `res_partner_industry.py` | res.partner.industry | Industries |
 | `res_users.py` | res.users | User accounts |
 | `res_users_apikeys.py` | res.users.apikeys, .description, .show | API keys |
+| `res_users_apikeys_scope.py` | res.users.apikeys.scope, .scope.line, base | API key scopes |
 | `res_users_deletion.py` | res.users.deletion | User deletion queue |
 | `res_users_identitycheck.py` | res.users.identitycheck | Password verification |
 | `res_users_log.py` | res.users.log | Login tracking |

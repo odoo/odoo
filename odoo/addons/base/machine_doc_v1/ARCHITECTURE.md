@@ -70,7 +70,7 @@ access control, and ORM extensions that those controllers depend on.
 odoo/addons/base/
 ├── __manifest__.py              # Module metadata + asset/data file declarations
 ├── __init__.py                  # Imports models, report, wizard + post_init hook
-├── models/                      # 109 Python model files (core ORM infrastructure)
+├── models/                      # 110 Python model files (core ORM infrastructure)
 │   ├── assetsbundle/            #   Asset compilation package (bundle, JS/CSS/XML pipelines, store)
 │   ├── decimal_precision.py         #   Configurable decimal precision
 │   ├── ir_actions_act_url.py        #   URL action
@@ -174,6 +174,7 @@ odoo/addons/base/
 │   ├── res_partner_tag.py           #   Partner tags (hierarchical)
 │   ├── res_users.py                 #   Users (inherits res.partner)
 │   ├── res_users_apikeys.py         #   API key management
+│   ├── res_users_apikeys_scope.py   #   API key scopes: what a door lets a key do
 │   ├── res_users_auth.py            #   Password store: hashing and checks under _get_crypt_context
 │   ├── res_users_deletion.py        #   User deletion queue
 │   ├── res_users_identitycheck.py   #   Password verification wizard
@@ -193,11 +194,11 @@ odoo/addons/base/
 │   ├── reset_view_arch.py           #   Reset view to original arch (soft/hard)
 │   ├── server_action_history.py     #   Server-action run history (diff + restore)
 │   └── wizard_ir_model_menu_create.py #   Create menu item for custom model
-├── tests/                       # 141 Python test files + test assets
+├── tests/                       # 142 Python test files + test assets
 │   ├── common.py                #   Base test classes (demo user, portal user)
 │   └── test_*.py                #   Test modules -- counts in TEST_TAGS.md, derived by factcheck.sh
-├── views/                       # 37 XML view definition files
-├── data/                        # 20 data files (XML, CSV, SQL, JSON)
+├── views/                       # 38 XML view definition files
+├── data/                        # 21 data files (XML, CSV, SQL, JSON)
 ├── security/                    # ir.model.access.csv + groups and record-rule XML
 ├── rng/                         # RelaxNG schemas (view validation)
 ├── static/                      # CSS, JS, images, test assets
@@ -244,7 +245,7 @@ every Odoo module depends on.
 |----------|--------|---------|
 | Partners | res.partner, res.partner.tag, res.partner.industry | Contacts, companies, tags, industries |
 | Users | res.users, res.users.log, res.users.settings, res.users.deletion | User accounts, preferences, audit |
-| Auth | res.users.apikeys, res.users.identitycheck | API keys, password verification |
+| Auth | res.users.apikeys, res.users.apikeys.scope, res.users.identitycheck | API keys, their scopes, password verification |
 | Security | res.groups, res.groups.privilege | Group hierarchy, privilege categories |
 | Companies | res.company | Multi-company hierarchy (parent_store) |
 | Localization | res.country, res.country.state, res.country.group, res.lang | Geography, languages |
@@ -280,11 +281,11 @@ Derived by `factcheck.sh`, which re-measures every row against the tree.
 
 | Category | Count |
 |----------|-------|
-| Python (models) | 109 |
+| Python (models) | 110 |
 | Python (wizards) | 11 |
-| Python (tests) | 141 |
-| XML (views) | 37 |
-| Data files | 20 |
+| Python (tests) | 142 |
+| XML (views) | 38 |
+| Data files | 21 |
 | XML (reports) | 0 |
 | XML (wizard views) | 8 |
 | Security files | 3 |

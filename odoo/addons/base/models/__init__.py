@@ -123,6 +123,7 @@ from . import res_users_log
 from . import res_users_login_cooldown
 from . import res_users
 from . import res_users_identitycheck
+from . import res_users_apikeys_scope
 from . import res_users_apikeys
 from . import res_users_settings
 from . import res_users_deletion

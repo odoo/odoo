@@ -44,7 +44,14 @@ class ResUsersApikeys(models.Model):
         required=True,
         ondelete="cascade",
     )
-    scope = fields.Char(readonly=True)
+    scope_id = fields.Many2one(
+        comodel_name="res.users.apikeys.scope",
+        index=True,
+        readonly=True,
+        ondelete="cascade",
+        help="The one door this key opens; empty, it opens every door and each "
+        "door's scope applies.",
+    )
     create_date = fields.Datetime(
         string="Creation Date",
         readonly=True,
@@ -60,7 +67,7 @@ class ResUsersApikeys(models.Model):
                     id serial primary key,
                     name varchar not null,
                     user_id integer not null REFERENCES res_users(id) ON DELETE CASCADE,
-                    scope varchar,
+                    scope_id integer REFERENCES res_users_apikeys_scope(id) ON DELETE CASCADE,
                     expiration_date timestamp without time zone,
                     index varchar({INDEX_SIZE}) not null CHECK (char_length(index) = {INDEX_SIZE}),
                     key varchar not null,
@@ -98,7 +105,7 @@ class ResUsersApikeys(models.Model):
             ip = request.httprequest.environ["REMOTE_ADDR"] if request else "n/a"
             _logger.info(
                 "API key(s) removed: scope: <%s> for '%s' (#%s) from %s",
-                self.mapped("scope"),
+                self.mapped("scope_id.key"),
                 self.env.user.login,
                 self.env.uid,
                 ip,
@@ -126,12 +133,16 @@ class ResUsersApikeys(models.Model):
     def _match_key(
         self, scope: str, key: str, *, include_expired: bool
     ) -> tuple[int, datetime.datetime | None] | None:
+        # A key bound to no scope opens every door; one bound to a scope opens
+        # that door alone, whatever the door's own scope lets through.
         self.env.cr.execute(
             SQL(
                 """
-                SELECT user_id, key, expiration_date
-                FROM %s INNER JOIN res_users u ON (u.id = user_id)
-                WHERE u.active AND index = %s AND (scope IS NULL OR scope = %s) %s
+                SELECT k.user_id, k.key, k.expiration_date
+                FROM %s k
+                INNER JOIN res_users u ON (u.id = k.user_id)
+                LEFT JOIN res_users_apikeys_scope s ON (s.id = k.scope_id)
+                WHERE u.active AND k.index = %s AND (k.scope_id IS NULL OR s.key = %s) %s
                 """,
                 SQL.identifier(self._table),
                 key[:INDEX_SIZE],
@@ -139,8 +150,8 @@ class ResUsersApikeys(models.Model):
                 SQL()
                 if include_expired
                 else SQL(
-                    "AND (expiration_date IS NULL"
-                    " OR expiration_date >= now() at time zone 'utc')"
+                    "AND (k.expiration_date IS NULL"
+                    " OR k.expiration_date >= now() at time zone 'utc')"
                 ),
             )
         )
@@ -217,17 +228,22 @@ class ResUsersApikeys(models.Model):
     ) -> str:
         self._check_generate_access()
         self._check_expiration_date(expiration_date)
+        scope_id = (
+            self.env["res.users.apikeys.scope"]._get_or_create(scope).id
+            if scope
+            else None
+        )
         k = binascii.hexlify(os.urandom(API_KEY_SIZE)).decode()
         self.env.cr.execute(
             SQL(
                 """
-                INSERT INTO %s (name, user_id, scope, expiration_date, key, index)
+                INSERT INTO %s (name, user_id, scope_id, expiration_date, key, index)
                 VALUES (%s, %s, %s, %s, %s, %s)
                 """,
                 SQL.identifier(self._table),
                 name,
                 self.env.user.id,
-                scope,
+                scope_id,
                 expiration_date or None,
                 KEY_CRYPT_CONTEXT.hash(k),
                 k[:INDEX_SIZE],
@@ -311,6 +327,10 @@ class ResUsersApikeysDescription(models.TransientModel):
         string="Description",
         required=True,
     )
+    scope_id = fields.Many2one(
+        comodel_name="res.users.apikeys.scope",
+        help="Bind the key to one door; empty, it opens every door.",
+    )
     duration = fields.Selection(
         selection="_selection_duration",
         default=lambda self: self._selection_duration()[0][0],
@@ -361,7 +381,7 @@ class ResUsersApikeysDescription(models.TransientModel):
 
         description = self.sudo()
         k = self.env["res.users.apikeys"]._generate(
-            None, description.name, self.expiration_date
+            description.scope_id.key or None, description.name, self.expiration_date
         )
         _debug.lifecycle("apikey_wizard_done", uid=self.env.uid, wizard=self.id)
         description.unlink()

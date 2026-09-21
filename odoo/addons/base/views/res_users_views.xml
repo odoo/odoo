@@ -578,6 +578,10 @@
                     </h3>
                     <field name="duration" />
                     <field name="expiration_date" invisible="duration != '-1'" />
+                    <field
+                        name="scope_id"
+                        placeholder="Every door"
+                        groups="base.group_system" />
                     <p>
                         The key will be deleted once this period has elapsed.
                     </p>
@@ -815,7 +819,7 @@
             <list editable="bottom" create="0" edit="0" delete="0">
                 <field name="user_id" />
                 <field name="name" />
-                <field name="scope" />
+                <field name="scope_id" />
                 <field name="create_date" />
                 <button
                     name="remove"
