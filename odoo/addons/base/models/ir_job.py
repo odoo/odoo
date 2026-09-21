@@ -1143,7 +1143,8 @@ class IrJob(models.Model):
                 )
             ) from None
         records = model.browse(job["record_ids"] or [])
-        if _get_job_config(type(records), job["method_name"]) is None:
+        job_config = _get_job_config(type(records), job["method_name"])
+        if job_config is None:
             _debug.logic(
                 "job.terminal",
                 job=job["id"],
@@ -1159,12 +1160,21 @@ class IrJob(models.Model):
                     method=job["method_name"],
                 )
             )
+        if idle_timeout := job_config.get("idle_timeout"):
+            # transaction-local: the server-wide timeout still guards the rest
+            cr.execute(
+                SQL(
+                    "SELECT set_config('idle_in_transaction_session_timeout', %s, true)",
+                    f"{int(idle_timeout)}s",
+                )
+            )
         _debug.pipeline(
             "job.target_resolved",
             job=job["id"],
             model=job["model_name"],
             records=len(records),
             uid=job["user_id"],
+            idle_timeout=idle_timeout,
         )
         return env, records
 

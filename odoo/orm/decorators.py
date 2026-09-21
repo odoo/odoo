@@ -138,13 +138,24 @@ def job(
     priority: int = 10,
     max_retries: int = 5,
     max_defers: int = 100,
+    idle_timeout: int | None = None,
 ) -> Callable:
+    """Declare a method runnable by the job queue.
+
+    `idle_timeout`, in seconds, lets one job's transaction sit idle longer
+    than the server's idle_in_transaction_session_timeout while it waits on
+    the outside world (a browser, a remote API). The job's transaction holds
+    its liveness lock, so it cannot commit early to avoid the wait; the
+    setting is transaction-local and ends with the job.
+    """
 
     def decorate[C: Callable](func: C) -> C:
         if not func.__name__.startswith("_"):
             raise TypeError(
                 f"{func.__name__}: job methods must be private (start with '_')"
             )
+        if idle_timeout is not None and idle_timeout <= 0:
+            raise ValueError(f"{func.__name__}: idle_timeout must be positive")
         return stamp(
             func,
             _job_config={
@@ -152,6 +163,7 @@ def job(
                 "priority": priority,
                 "max_retries": max_retries,
                 "max_defers": max_defers,
+                "idle_timeout": idle_timeout,
             },
         )
 

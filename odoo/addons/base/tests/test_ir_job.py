@@ -45,6 +45,13 @@ def _ir_job_test_poll(self, ready=False, seconds=60):
         self.env["ir.job"]._defer(seconds, reason="not ready yet")
 
 
+@api.job(idle_timeout=900)
+def _ir_job_test_idle(self):
+    self.env.cr.execute("SHOW idle_in_transaction_session_timeout")
+    for record in self:
+        record.name = f"idle {self.env.cr.fetchone()[0]}"
+
+
 def _isolate_queue(env):
     env.cr.execute(
         "UPDATE ir_job SET state = 'cancelled'"
@@ -58,7 +65,12 @@ class TestIrJob(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.partner_cls = type(cls.env["res.partner"])
-        for func in (_ir_job_test_append, _ir_job_test_boom, _ir_job_test_poll):
+        for func in (
+            _ir_job_test_append,
+            _ir_job_test_boom,
+            _ir_job_test_poll,
+            _ir_job_test_idle,
+        ):
             setattr(cls.partner_cls, func.__name__, func)
             cls.addClassCleanup(delattr, cls.partner_cls, func.__name__)
         cls.partner = cls.env["res.partner"].create({"name": "job target"})
@@ -271,6 +283,22 @@ class TestIrJob(TransactionCase):
         record = self.env["ir.job"].browse(job["id"])
         self.assertEqual(record.state, "done")
         self.assertTrue(record.done_at)
+
+    def test_a_job_that_waits_outside_gets_its_own_idle_budget(self):
+        self.env.cr.execute("SHOW idle_in_transaction_session_timeout")
+        server_default = self.env.cr.fetchone()[0]
+        self.partner.delayed()._ir_job_test_idle()
+        IrJob._run_claimed(self.env.cr, self._claim())
+        self.env.invalidate_all()
+        self.assertEqual(self.partner.name, "idle 15min")
+        self.assertNotEqual(server_default, "15min")
+
+    def test_an_idle_budget_must_be_positive(self):
+        def _job(self):
+            return None
+
+        with self.assertRaises(ValueError):
+            api.job(idle_timeout=0)(_job)
 
     def test_run_claimed_refuses_undecorated_method(self):
         self.partner.delayed()._ir_job_test_append()
