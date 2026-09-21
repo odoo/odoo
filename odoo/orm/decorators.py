@@ -52,6 +52,8 @@ def constrains(*args, sudo: bool = True) -> Decorator:
         raise TypeError(
             f"constrains() arguments must be field-name strings, got {args!r}"
         )
+    else:
+        _check_field_paths("constrains", args, dotted=True)
 
     def decorator(method: C) -> C:
         return stamp(method, _constrains=args, _constrains_sudo=sudo)
@@ -68,7 +70,46 @@ def onchange(*args: str) -> Decorator:
         raise TypeError(
             f"onchange() arguments must be field-name strings, got {args!r}"
         )
+    _check_field_paths("onchange", args, dotted=False)
     return attrsetter("_onchange", args)
+
+
+def _check_field_paths(what: str, args, *, dotted: bool) -> None:
+    """Refuse the spellings that read as a field path and are not one.
+
+    `@api.depends("a, b")` is one dependency named `a, b`, which matches no
+    field and so never fires; the same goes for a stray space or an empty
+    segment. None of these raises anywhere later -- the compute simply stops
+    recomputing -- so they are refused where they are written. Zero arguments
+    stay legal: `@api.depends()` is how a compute declares it has no
+    dependencies.
+    """
+    for arg in args:
+        detail = None
+        if not arg:
+            detail = "is empty"
+        elif "," in arg:
+            # checked before whitespace: `("a, b")` is the classic typo and
+            # naming the comma says what to do about it
+            detail = "contains a comma (pass one argument per field)"
+        elif arg.strip() != arg or any(c.isspace() for c in arg):
+            detail = "contains whitespace"
+        elif not dotted and "." in arg:
+            detail = "is dotted, which this decorator does not follow"
+        else:
+            for part in arg.split("."):
+                # a field name is an attribute name; `isidentifier` is what
+                # admits the manual and Studio spellings (x_studio_Foo) that a
+                # lowercase-only pattern would refuse
+                if not part.isidentifier():
+                    detail = (
+                        "has an empty segment"
+                        if not part
+                        else f"has an invalid segment {part!r}"
+                    )
+                    break
+        if detail is not None:
+            raise ValueError(f"{what}() argument {arg!r} {detail}")
 
 
 def _check_depends_id(deps) -> None:
@@ -109,6 +150,7 @@ def depends(*args) -> Decorator:
                 "depends() arguments must be dot-separated field-name "
                 f"strings, got {args!r}"
             )
+        _check_field_paths("depends", args, dotted=True)
         _check_depends_id(args)
         marker = args
     return attrsetter("_depends", marker)
@@ -119,6 +161,7 @@ def depends_context(*args: str) -> Decorator:
         raise TypeError(
             f"depends_context() arguments must be context-key strings, got {args!r}"
         )
+    _check_field_paths("depends_context", args, dotted=False)
     return attrsetter("_depends_context", args)
 
 
