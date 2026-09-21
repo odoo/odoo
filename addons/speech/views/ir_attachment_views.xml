@@ -25,6 +25,15 @@
                         name="transcript_text"
                         widget="text"
                         invisible="transcript_state != 'done'" />
+                    <field name="speaker_ids" invisible="not speaker_ids">
+                        <list editable="bottom" create="0" delete="0">
+                            <field name="label" readonly="1" />
+                            <field name="partner_id" />
+                            <field name="name" />
+                            <field name="turns" />
+                            <field name="talk_time_s" />
+                        </list>
+                    </field>
                 </group>
             </xpath>
             <xpath expr="//sheet" position="before">

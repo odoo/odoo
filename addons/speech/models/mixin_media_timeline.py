@@ -20,6 +20,25 @@ class MixinMediaTimeline(models.AbstractModel):
         compute="_compute_timeline_transcript_state",
     )
 
+    timeline_speaker_ids = fields.Many2many(
+        comodel_name="speech.speaker",
+        string="Speakers",
+        compute="_compute_timeline_speaker_ids",
+    )
+
+    @api.depends("segment_ids.attachment_id.speaker_ids")
+    def _compute_timeline_speaker_ids(self) -> None:
+        for record in self:
+            record.timeline_speaker_ids = record.segment_ids.attachment_id.speaker_ids
+
+    def _talk_time_by_person(self) -> dict:
+        self.check_singleton()
+        totals: dict = {}
+        for speaker in self.timeline_speaker_ids:
+            person = speaker.partner_id or speaker.label
+            totals[person] = totals.get(person, 0.0) + speaker.talk_time_s
+        return totals
+
     @api.depends("segment_ids.attachment_id.transcript_cues")
     def _compute_timeline_transcript(self) -> None:
         for record in self:

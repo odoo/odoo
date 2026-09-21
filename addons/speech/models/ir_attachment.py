@@ -58,6 +58,11 @@ class IrAttachment(models.Model):
     )
     transcript_text = fields.Text(compute="_compute_transcript_text")
     can_transcribe = fields.Boolean(compute="_compute_can_transcribe")
+    speaker_ids = fields.One2many(
+        comodel_name="speech.speaker",
+        inverse_name="attachment_id",
+        string="Speakers",
+    )
 
     @api.depends("transcript_cues")
     def _compute_transcript_text(self) -> None:
@@ -164,6 +169,7 @@ class IrAttachment(models.Model):
             }
         )
         self._index_transcript(cues)
+        self.env["speech.speaker"]._sync_from_cues(self)
         self._notify_transcript_owner(transcribed=True)
         return cues
 
