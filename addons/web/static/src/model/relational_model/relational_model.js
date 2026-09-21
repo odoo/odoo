@@ -439,7 +439,7 @@ export class RelationalModel extends Model {
         config.context = "context" in params ? params.context : config.context;
         config.context = { ...config.context };
         if (currentConfig.isMonoRecord) {
-            config.resId = "resId" in params ? params.resId : config.resId;
+            config.resId = ("resId" in params ? params.resId : config.resId) || false;
             config.resIds = "resIds" in params ? params.resIds : config.resIds;
             if (!config.resIds) {
                 config.resIds = config.resId ? [config.resId] : [];

@@ -39,7 +39,7 @@ class _Record extends Component {
                 fields: this.props.fields,
                 isMonoRecord: true,
                 activeFields,
-                resId: this.props.info.resId,
+                resId: this.props.info.resId || false,
                 mode: this.props.info.mode,
                 context: this.props.info.context,
             },
@@ -142,8 +142,9 @@ class _Record extends Component {
         });
         onWillUpdateProps(async (nextProps) => {
             const params = {};
-            if (nextProps.info.resId !== this.model.root.resId) {
-                params.resId = nextProps.info.resId;
+            const nextResId = nextProps.info.resId || false;
+            if (nextResId !== this.model.root.resId) {
+                params.resId = nextResId;
             }
             if (nextProps.values) {
                 params.values = await prepareLoadWithValues(nextProps.values);
