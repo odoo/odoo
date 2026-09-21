@@ -22,7 +22,7 @@ import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { Store as StoreModel } from "@mail/model/store";
 import { toRawValue } from "@mail/utils/common/local_storage";
 
-import { describe, expect, mockPermission, test } from "@odoo/hoot";
+import { describe, expect, mockPermission, queryOne, test } from "@odoo/hoot";
 import { animationFrame, mockUserAgent } from "@odoo/hoot-mock";
 import {
     Command,
@@ -501,6 +501,20 @@ test("open chat window from preview", async () => {
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
+});
+
+test("context menu anchor does not cover messaging menu items", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "test" });
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await contains(".o-mail-MessagingMenu .o-mail-MessagingMenuItem-contextMenuAnchor");
+    const contextMenuAnchorRect = queryOne(
+        ".o-mail-MessagingMenuItem-contextMenuAnchor"
+    ).getBoundingClientRect();
+    // A sized anchor can overflow the item and intercept clicks intended for the item.
+    expect(contextMenuAnchorRect.width).toBe(0);
+    expect(contextMenuAnchorRect.height).toBe(0);
 });
 
 test("Counter is updated when receiving new message", async () => {
