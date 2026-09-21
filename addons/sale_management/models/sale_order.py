@@ -90,7 +90,11 @@ class SaleOrder(models.Model):
     @api.onchange("partner_id")
     def _onchange_partner_id(self):
         """Reload template for unsaved orders with unmodified lines & orders."""
-        if self._origin or not self.sale_order_template_id:
+        if (
+            self._origin
+            or not self.sale_order_template_id
+            or self.env.context.get("sale_onchange_first_call")
+        ):
             return
 
         def line_eqv(line, t_line):
