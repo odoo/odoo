@@ -707,15 +707,11 @@ class AccountMove(models.Model):
         return max(KSEF_FIRST_DAY, date + relativedelta(days=-days))
 
     def _l10n_pl_edi_get_last_historic_date(self, company):
-        return max(
-            fields.Date.from_string(
-                self.env['ir.config_parameter'].sudo().get_param(
-                    f'l10n_pl_edi.last_historic_date_{company.id}',
-                    self._l10n_pl_edi_move_back_date(fields.Date.today(), days=KSEF_CURRENT_WINDOW)
-                )
-            ),
-            KSEF_FIRST_DAY,
-        )
+        last_interval = self._l10n_pl_edi_move_back_date(fields.Date.today(), days=KSEF_CURRENT_WINDOW)
+        ParameterSudo = self.env['ir.config_parameter'].sudo()
+        date_param = ParameterSudo.get_param(f'l10n_pl_edi.last_historic_date_{company.id}', last_interval)
+        param_date = fields.Date.from_string(date_param)
+        return max(param_date, KSEF_FIRST_DAY)
 
     @api.model
     def _cron_l10n_pl_edi_download_bills(self):
@@ -791,6 +787,7 @@ class AccountMove(models.Model):
                 batch_number = batch_ticket['number']
                 if batch_status := service.download_batch_status(batch_number, date_from, date_to, encryption_data):
                     batch_status_json = json.dumps(batch_status, indent=4)
+                    import ipdb; ipdb.set_trace()
                     _logger.info("%s Creating batch: %s", KSEF_LOG_HEADER, f'ksef_batch_{batch_number}.json')
                     self.env['ir.attachment']._l10n_pl_edi_create_batch(batch_number, batch_status_json)
                 if self._can_commit():
@@ -836,6 +833,7 @@ class AccountMove(models.Model):
         batches = Attachment._l10n_pl_edi_get_batches()
         batch_data_map = {batch: json.loads(batch.raw.decode()) for batch in batches}
         today = today_datetime()
+        today_str = fields.Datetime.to_string(today)
 
         # Cron is retriggered if we have at least 1 batch or 1 move from today
         retriggered = any(
@@ -845,20 +843,20 @@ class AccountMove(models.Model):
         ) or bool(self.env['account.move'].search_count([
             *self.env['account.move']._check_company_domain(company),
             ('l10n_pl_edi_number', '!=', False),
-            ('move_date', '>', today),
+            ('invoice_date', '>', today_str),
         ], limit=1))
 
         # Unlink expired batches, the KSeF cloud has the files no more
-        to_delete = Attachment.union(
+        to_delete = Attachment.union(*[
             batch
             for batch, batch_data in batch_data_map.items()
             if check_expired(batch_data) or check_invalid_status(batch_data)
-        )
+        ])
         batches -= to_delete
         to_delete.unlink()
 
         def is_batch_to_be_retried(batch_data):
-            date_from, date_to = map(fields.Datetime.from_string(batch_data[x]) for x in ('date_from', 'date_to'))
+            date_from, date_to = [fields.Datetime.from_string(batch_data[x]) for x in ('date_from', 'date_to')]
             encryption_data = batch_data['encryption_data']
             if batch_status := service.download_batch_status(batch_data['number'], date_from, date_to, encryption_data):
                 batch.update({
