@@ -785,9 +785,10 @@ class AccountReportOptions(models.Model):
     def _get_domain_options_date(self, options, date_scope):
         date_from, date_to = self._get_date_bounds_info(options, date_scope)
 
-        scope_domain = Domain("date", "<=", date_to)
+        date_field = self._get_source_date_field()
+        scope_domain = Domain(date_field, "<=", date_to)
         if date_from:
-            scope_domain &= Domain("date", ">=", date_from)
+            scope_domain &= Domain(date_field, ">=", date_from)
 
         return scope_domain
 
@@ -1903,26 +1904,11 @@ class AccountReportOptions(models.Model):
             self._init_options_filters: 1500,
         }
 
-    @_debug.perf.timed
-    def _get_domain_options(self, options, date_scope) -> Domain:
-        self.check_singleton()
-
-        available_scopes = dict(
-            self.env["account.report.expression"]._fields["date_scope"].selection
-        )
-        if (
-            date_scope and date_scope not in available_scopes
-        ):  # date_scope can be passed to None explicitly to ignore the dates
-            raise UserError(_("Unknown date scope: %s", date_scope))
-
+    def _get_source_domains(self, options, date_scope):
         domains = [
             Domain("display_type", "not in", NON_ACCOUNTABLE_DISPLAY_TYPES),
-            Domain("company_id", "in", self.get_report_company_ids(options)),
             self._get_domain_options_journals(options)
             if not options.get("compute_budget")
-            else Domain.TRUE,
-            self._get_domain_options_date(options, date_scope)
-            if date_scope
             else Domain.TRUE,
             self._get_domain_options_partner(options),
             self._get_domain_options_all_entries(options),
@@ -1932,8 +1918,6 @@ class AccountReportOptions(models.Model):
             self.env["account.move.line"]._get_domain_tax_exigible()
             if self.only_tax_exigible
             else Domain.TRUE,
-            # That option key is set when splitting options between column groups
-            options.get("forced_domain") or Domain.TRUE,
         ]
         _debug.pipeline(
             "domain_options_built",
@@ -1988,7 +1972,31 @@ class AccountReportOptions(models.Model):
                 )
             # else: don't filter anything; the report has no county and should have access to all the data
 
-        return Domain.AND(domains)
+        return domains
+
+    @_debug.perf.timed
+    def _get_domain_options(self, options, date_scope) -> Domain:
+        self.check_singleton()
+
+        available_scopes = dict(
+            self.env["account.report.expression"]._fields["date_scope"].selection
+        )
+        if (
+            date_scope and date_scope not in available_scopes
+        ):  # date_scope can be passed to None explicitly to ignore the dates
+            raise UserError(_("Unknown date scope: %s", date_scope))
+
+        return Domain.AND(
+            [
+                Domain("company_id", "in", self.get_report_company_ids(options)),
+                self._get_domain_options_date(options, date_scope)
+                if date_scope
+                else Domain.TRUE,
+                # That option key is set when splitting options between column groups
+                options.get("forced_domain") or Domain.TRUE,
+                *self._get_source_domains(options, date_scope),
+            ]
+        )
 
     @api.model
     def _get_dates_previous_year(self, options, period_vals):

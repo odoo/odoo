@@ -291,6 +291,12 @@ class AccountReport(models.Model):
     def _get_source_model(self):
         return self.env["account.move.line"]
 
+    def _get_source_date_field(self):
+        return "date"
+
+    def _get_source_measure_field(self):
+        return "balance"
+
     def _get_year_bounds(self, date):
         return self.env.company.compute_fiscalyear_dates(date)
 

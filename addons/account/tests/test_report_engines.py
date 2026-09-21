@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 from odoo import Command, fields
 from odoo.tests import tagged
-from odoo.tools import frozendict
+from odoo.tools import SQL, frozendict
 
 from .common_report_engine import TestAccountReportsCommon
 
@@ -506,6 +506,71 @@ class TestReportEngines(TestAccountReportsCommon):
                 self.assertEqual(
                     move.line_ids.filtered_domain(action_dict["domain"]), expected_amls
                 )
+
+    def test_engine_domain_over_a_source_model_that_is_not_the_ledger(self):
+        plan = self.env["account.analytic.plan"].create({"name": "source plan"})
+        analytic_account = self.env["account.analytic.account"].create(
+            {"name": "source account", "plan_id": plan.id}
+        )
+        self.env["account.analytic.line"].create(
+            [
+                {
+                    "name": f"source line {amount}",
+                    "account_id": analytic_account.id,
+                    "partner_id": partner.id,
+                    "date": date,
+                    "amount": amount,
+                }
+                for partner, date, amount in (
+                    (self.partner_a, "2020-01-01", 100.0),
+                    (self.partner_a, "2020-01-01", 50.0),
+                    (self.partner_b, "2020-01-01", 25.0),
+                    (self.partner_b, "2019-12-31", 1000.0),
+                )
+            ]
+        )
+        report = self._create_report(
+            [
+                self._prepare_test_report_line(
+                    self._prepare_test_expression_domain(
+                        [("name", "like", "source line")], "sum"
+                    ),
+                    groupby="partner_id",
+                )
+            ]
+        )
+        AccountReport = self.registry["account.report"]
+        AnalyticLine = self.env["account.analytic.line"]
+        with (
+            patch.object(
+                AccountReport, "_get_source_model", lambda report: AnalyticLine
+            ),
+            patch.object(
+                AccountReport, "_get_source_measure_field", lambda report: "amount"
+            ),
+            patch.object(AccountReport, "_get_source_domains", lambda *args: []),
+            patch.object(
+                AccountReport, "_currency_table_apply_rate", lambda report, value: value
+            ),
+            patch.object(
+                AccountReport, "_currency_table_aml_join", lambda *args, **kwargs: SQL()
+            ),
+        ):
+            options = self._generate_options(
+                report, "2020-01-01", "2020-01-01", default_options={"unfold_all": True}
+            )
+            report_lines = report._get_lines(options)
+
+        self.assertLinesValues(
+            report_lines,
+            [0, 1],
+            [
+                ("test_line_1", 175.0),
+                ("partner_a", 150.0),
+                ("partner_b", 25.0),
+            ],
+            options,
+        )
 
     def test_engine_domain_batching_matches_orm_semantics(self):
         """A domain on a single many2one is evaluated through a batched query that resolves

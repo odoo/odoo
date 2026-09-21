@@ -1377,7 +1377,7 @@ class AccountReportExpressionEval(models.Model):
                 else SQL(),
                 table_references=query.from_clause,
                 balance_select=self._currency_table_apply_rate(
-                    SQL("%s.balance", SQL.identifier(source_alias))
+                    SQL.identifier(source_alias, self._get_source_measure_field())
                 ),
                 currency_table_join=self._currency_table_aml_join(options),
                 search_condition=query.where_clause,
