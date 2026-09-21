@@ -72,6 +72,22 @@ class Binary(Field[bytes | typing.Literal[False]]):
 
     bin_size_field: str = ""
 
+    @override
+    def setup(self, model: BaseModel) -> None:
+        super().setup(model)
+        if self.bin_size_field and self.store and not model._abstract:
+            # `bin_size_field` answers a human size in place of the content,
+            # and a stored field's column holds the content -- so the cache
+            # carries "5.00 bytes" where the column carries the bytes, and
+            # `CacheInvalidError` fires the moment anything refetches the row.
+            # Both users of this attribute in the workspace are non-stored,
+            # which is the only reason the combination has never bitten.
+            raise TypeError(
+                f"{self}: bin_size_field answers a size instead of the "
+                f"content, so it cannot be stored; declare store=False or "
+                f"drop bin_size_field"
+            )
+
     @functools.cached_property
     def column_type(self):
         return None if self.attachment else ("bytea", "bytea")
