@@ -41,39 +41,6 @@ class AccountReportExpressionEval(models.Model):
         include_default_vals=False,
         warnings=None,
     ):
-        """Main computation function for static lines.
-
-        :param expressions: The account.report.expression objects to evaluate.
-
-        :param options: The options dict for this report, obtained from get_options({}).
-
-        :param groupby_to_expand: The full groupby string for the grouping we want to evaluate. If None, the aggregated value will be computed.
-                                  For example, when evaluating a group by partner_id, which further will be divided in sub-groups by account_id,
-                                  then id, the full groupby string will be: 'partner_id, account_id, id'.
-
-        :param forced_all_column_groups_expression_totals: The expression totals already computed for this report, to which we will add the
-                                                           new totals we compute for expressions (or update the existing ones if some
-                                                           expressions are already in forced_all_column_groups_expression_totals). This is
-                                                           a dict in the same format as returned by this function.
-                                                           This parameter is for example used when adding manual values, where only
-                                                           the expressions possibly depending on the new manual value
-                                                           need to be updated, while we want to keep all the other values as-is.
-
-        :param col_groups_restrict: List of column group keys of the groups to compute. Other column groups will be ignored, and will
-                                    not be added to the result of this function (they can still be provided beforehand through
-                                    forced_all_column_groups_expression_totals). If not provided, all colum groups will be computed.
-
-        :param offset: The SQL offset to use when computing the result of these expressions. Used if self.load_more_limit is set, to handle
-                       the load more feature.
-
-        :param limit: The SQL limit to apply when computing these expressions' result. Used if self.load_more_limit is set, to handle
-                      the load more feature.
-
-        :return: dict(column_group_key, expressions_totals), where:
-            - column group key is string identifying each column group in a unique way ; as in options['column_groups']
-            - expressions_totals is a dict in the format returned by _compute_expression_totals_for_single_column_group
-        """
-
         def add_expressions_to_groups(
             expressions_to_add, grouped_formulas, force_date_scope=None
         ):
@@ -940,23 +907,6 @@ class AccountReportExpressionEval(models.Model):
     def _aggregation_apply_bounds(
         self, column_group_options, subformula, unbounded_value
     ):
-        """Applies the bounds of the provided aggregation expression to an unbounded value that got computed for it and returns the result.
-        Bounds can be defined as subformulas of aggregation expressions, with the following possible values:
-
-            - if_above(CUR(bound_value)):
-                                    => Result will be None if it's <= the provided bound value; else it'll be unbounded_value
-
-            - if_below(CUR(bound_value)):
-                                    => Result will be None if it's >= the provided bound value; else it'll be unbounded_value
-
-            - if_between(CUR(bound_value1), CUR(bound_value2)):
-                                    => Result will be None if it isn't between the provided bound values, both included; else it'll be unbounded_value
-
-            - round(decimal_places, rounding_method):
-                                    => Result will be the rounded unbounded_value.
-
-            (where CUR is a currency code, and bound_value* are float amounts in CUR currency)
-        """
         if not subformula:
             return unbounded_value
 
@@ -1108,36 +1058,6 @@ class AccountReportExpressionEval(models.Model):
         warnings=None,
         batch_ids_cache=None,
     ):
-        """Evaluates a batch of formulas.
-
-        :param column_group_options: The options for the column group being evaluated, as obtained from _split_options_per_column_group.
-
-        :param formula_engine: A string identifying a report engine. Must be one of account.report.expression's engine field's technical labels.
-
-        :param date_scope: The date_scope under which to evaluate the fomulas. Must be one of account.report.expression's date_scope field's
-                           technical labels.
-
-        :param formulas_dict: A dict in the dict(formula, expressions), where:
-                                - formula: a formula to be evaluated with the engine referred to by parent dict key
-                                - expressions: a recordset of all the expressions to evaluate using formula (possibly with distinct subformulas)
-
-        :param current_groupby: The groupby to evaluate, or None if there isn't any. In case of multi-level groupby, only contains the element
-                                that needs to be computed (so, if unfolding a line doing 'partner_id,account_id,id'; current_groupby will only be
-                                'partner_id'). Subsequent groupby will be in next_groupby.
-
-        :param next_groupby: Full groupby string of the groups that will have to be evaluated next for these expressions, or None if there isn't any.
-                             For example, in the case depicted in the example of current_groupby, next_groupby will be 'account_id,id'.
-
-        :param offset: The SQL offset to use when computing the result of these expressions.
-
-        :param limit: The SQL limit to apply when computing these expressions' result.
-
-        :return: The result might have two different formats depending on the situation:
-            - if we're computing a groupby: {(formula, expressions): [(grouping_key, {'result': value, 'has_sublines': boolean}), ...], ...}
-            - if we're not: {(formula, expressions): {'result': value, 'has_sublines': boolean}, ...}
-            'result' key is the default; different engines might use one or multiple other keys instead, depending of the subformulas they allow
-            (e.g. 'sum', 'sum_if_pos', ...)
-        """
         engine_function_name = f"_get_formula_batch_with_engine_{formula_engine}"
         with _debug.perf(
             "_get_formula_batch",
@@ -1173,14 +1093,6 @@ class AccountReportExpressionEval(models.Model):
         warnings=None,
         batch_ids_cache=None,
     ):
-        """Report engine.
-
-        The formulas made for this report simply consist of a tag label. When an expression using this engine is created, it also creates one
-        account.account.tag object, where the tag name is the chosen formula striped of the sign. The balance of the expressions using this engine is
-        computed by gathering all the move lines using their tags, and applying the sign of their tag to their balance.
-
-        This engine does not support any subformula.
-        """
         self._check_groupby_fields(
             (next_groupby.split(",") if next_groupby else [])
             + ([current_groupby] if current_groupby else [])
@@ -1303,22 +1215,6 @@ class AccountReportExpressionEval(models.Model):
         warnings=None,
         batch_ids_cache=None,
     ):
-        """Report engine.
-
-        Formulas made for this engine consist of a domain on account.move.line. Only those move lines will be used to compute the result.
-
-        This engine supports a few subformulas, each returning a slighlty different result:
-        - sum: the result will be sum of the matched move lines' balances
-
-        - sum_if_pos: the result will be the same as sum only if it's positive; else, it will be 0
-
-        - sum_if_neg: the result will be the same as sum only if it's negative; else, it will be 0
-
-        - count_rows: the result will be the number of sublines this expression has. If the parent report line has no groupby,
-                      then it will be the number of matching amls. If there is a groupby, it will be the number of distinct grouping
-                      keys at the first level of this groupby (so, if groupby is 'partner_id, account_id', the number of partners).
-        """
-
         def _format_result_depending_on_groupby(formula_rslt):
             if not current_groupby:
                 if formula_rslt:
@@ -1392,7 +1288,7 @@ class AccountReportExpressionEval(models.Model):
                         traversing_model_domain.append(term)
 
             if batchable and len(aml_root_fields) == 1:
-                aml_field = self.env["account.move.line"]._fields[
+                aml_field = self._get_source_model()._fields[
                     next(iter(aml_root_fields))
                 ]
                 if aml_field.type == "many2one":
@@ -1429,24 +1325,22 @@ class AccountReportExpressionEval(models.Model):
                 batch_domains[0][0] if not batch_model else None
             )  # batch_domains contains only one element if there is not batch_model/batch_aml_field
             query = self._get_report_query(options, date_scope, domain=aml_domain)
+            source_model = self._get_source_model()
+            source_alias = query.table
 
             groupby_sql = (
-                self.env["account.move.line"]._field_to_sql(
-                    "account_move_line", current_groupby, query
-                )
+                source_model._field_to_sql(source_alias, current_groupby, query)
                 if current_groupby
                 else None
             )
             batch_groupby_sql = (
-                self.env["account.move.line"]._field_to_sql(
-                    "account_move_line", batch_aml_field, query
-                )
+                source_model._field_to_sql(source_alias, batch_aml_field, query)
                 if batch_aml_field
                 else None
             )
 
-            select_count_field = self.env["account.move.line"]._field_to_sql(
-                "account_move_line",
+            select_count_field = source_model._field_to_sql(
+                source_alias,
                 next_groupby.split(",")[0] if next_groupby else "id",
                 query,
             )
@@ -1483,7 +1377,7 @@ class AccountReportExpressionEval(models.Model):
                 else SQL(),
                 table_references=query.from_clause,
                 balance_select=self._currency_table_apply_rate(
-                    SQL("account_move_line.balance")
+                    SQL("%s.balance", SQL.identifier(source_alias))
                 ),
                 currency_table_join=self._currency_table_aml_join(options),
                 search_condition=query.where_clause,
@@ -1638,20 +1532,6 @@ class AccountReportExpressionEval(models.Model):
         warnings=None,
         batch_ids_cache=None,
     ):
-        r"""Report engine.
-
-        Formulas made for this engine target account prefixes. Each prefix used in the formula is evaluated as the sum of the move
-        lines made on the accounts matching it. The formula syntax, whose elements can be freely combined
-        (as in '123D\(1235) + 56 - 416C'), is:
-
-        - 'PREFIX': sum of the balances of all accounts whose code starts with PREFIX.
-        - '+' and '-': arithmetic operations between prefix results.
-        - 'PREFIX\(SUB1,SUB2)': excludes the accounts starting with SUB1 or SUB2 from the ones matched by PREFIX.
-        - 'PREFIXD' / 'PREFIXC': keeps the total balance of PREFIX only if it is positive (D, debit)
-          respectively negative (C, credit); evaluates to 0 otherwise.
-        - 'PREFIX\': empty exclusion, used to make a trailing C or D part of the prefix rather than a
-          debit/credit match ('123D\' sums accounts starting with '123D', while '123D\C' keeps that sum only if negative).
-        """
         self._check_groupby_fields(
             (next_groupby.split(",") if next_groupby else [])
             + ([current_groupby] if current_groupby else [])
@@ -1940,16 +1820,6 @@ class AccountReportExpressionEval(models.Model):
         warnings=None,
         batch_ids_cache=None,
     ):
-        """Report engine.
-
-        This engine computes its result from the account.report.external.value objects that are linked to the expression.
-
-        Two different formulas are possible:
-        - sum: if the result must be the sum of all the external values in the period.
-        - most_recent: it the result must be the value of the latest external value in the period, which can be a number or a text
-
-        No subformula is allowed for this engine.
-        """
         self._check_groupby_fields(
             (next_groupby.split(",") if next_groupby else [])
             + ([current_groupby] if current_groupby else [])
@@ -1960,7 +1830,6 @@ class AccountReportExpressionEval(models.Model):
                 _("'external' engine does not support groupby, limit nor offset.")
             )
 
-        # Date clause
         date_from, date_to = self._get_date_bounds_info(options, date_scope)
         external_value_domain = [("date", "<=", date_to)]
         if date_from:
@@ -1973,19 +1842,16 @@ class AccountReportExpressionEval(models.Model):
             date_to=date_to,
         )
 
-        # Company clause
         external_value_domain.append(
             ("company_id", "in", self.get_report_company_ids(options))
         )
 
-        # Do the computation
         where_clause = (
             self.env["account.report.external.value"]
             ._search(external_value_domain, bypass_access=True)
             .where_clause
         )
 
-        # We have to execute two separate queries, one for text values and one for numeric values
         num_queries = []
         string_queries = []
         monetary_queries = []
@@ -2000,11 +1866,11 @@ class AccountReportExpressionEval(models.Model):
                     """,
                 )
             string_query = """
-                    SELECT %(expression_id)s, text_value
-                    FROM account_report_external_value
-                    WHERE %(where_clause)s AND target_report_expression_id = %(expression_id)s
-                    ORDER BY date DESC, id DESC
-                    LIMIT 1
+                SELECT %(expression_id)s, text_value
+                FROM account_report_external_value
+                WHERE %(where_clause)s AND target_report_expression_id = %(expression_id)s
+                ORDER BY date DESC, id DESC
+                LIMIT 1
                 """
             monetary_query = """
                 SELECT
@@ -2012,13 +1878,15 @@ class AccountReportExpressionEval(models.Model):
                     COALESCE(SUM(COALESCE(%(balance_select)s, 0)), 0)
                 FROM account_report_external_value
                     %(currency_table_join)s
-                WHERE %(where_clause)s AND target_report_expression_id = %(expression_id)s
+                WHERE %(where_clause)s
+                    AND target_report_expression_id = %(expression_id)s
                 %(query_end)s
             """
             num_query = """
-                    SELECT %(expression_id)s, SUM(COALESCE(value, 0))
-                      FROM account_report_external_value
-                     WHERE %(where_clause)s AND target_report_expression_id = %(expression_id)s
+                SELECT %(expression_id)s, SUM(COALESCE(value, 0))
+                FROM account_report_external_value
+                WHERE %(where_clause)s
+                    AND target_report_expression_id = %(expression_id)s
                %(query_end)s
             """
 
@@ -2044,7 +1912,7 @@ class AccountReportExpressionEval(models.Model):
                                 JOIN %(currency_table)s
                                 ON account_currency_table.company_id = account_report_external_value.company_id
                                 AND account_currency_table.rate_type = 'current'
-                            """,
+                                """,
                                 currency_table=self._get_currency_table(options),
                             ),
                             where_clause=where_clause,
@@ -2069,7 +1937,6 @@ class AccountReportExpressionEval(models.Model):
             string=len(string_queries),
             monetary=len(monetary_queries),
         )
-        # Convert to dict to have expression ids as keys
         query_results_dict = {}
         for query_list in (num_queries, string_queries, monetary_queries):
             if query_list:
@@ -2081,7 +1948,6 @@ class AccountReportExpressionEval(models.Model):
             "external_values_fetched", report=self, rows=len(query_results_dict)
         )
 
-        # Build result dict
         rslt = {}
         for formula, expressions in formulas_dict.items():
             for expression in expressions:
@@ -2142,12 +2008,6 @@ class AccountReportExpressionEval(models.Model):
 
     @_debug.perf.timed
     def _get_domain_expression_audit_aml(self, expression_to_audit, options):
-        """Returns the domain used to audit a single provided expression.
-
-        'account_codes' engine's D and C formulas can't be handled by a domain: we make the choice to display
-        everything for them (so, audit shows all the lines that are considered by the formula). To avoid confusion from the user
-        when auditing such lines, a default group by account can be used in the list view.
-        """
         _debug.logic(
             "audit_domain_engine",
             report=self,
@@ -2220,10 +2080,6 @@ class AccountReportExpressionEval(models.Model):
 
     @api.model
     def _currency_table_apply_rate(self, value: SQL) -> SQL:
-        """Returns an SQL term to use in a SELECT statement converting the value passed as parameter into the current company's currency, using the
-        currency table (which must be joined in the query as well ; using _currency_table_aml_join for account.move.line, or _get_currency_table for
-        other more specific uses).
-        """
         return SQL(
             "(%(value)s) * COALESCE(account_currency_table.rate, 1)", value=value
         )
@@ -2235,7 +2091,6 @@ class AccountReportExpressionEval(models.Model):
         options,
         aml_alias=SQL("account_move_line"),  # noqa: B008  SQL is immutable, one shared default is safe
     ) -> SQL:
-        """Returns the JOIN condition to the currency table in a query needing to use it to convert aml balances from one currency to another."""
         _debug.logic(
             "currency_table_join",
             table_type=options.get("currency_table", {}).get("type"),
@@ -2244,20 +2099,20 @@ class AccountReportExpressionEval(models.Model):
         if options["currency_table"]["type"] == "cta":
             return SQL(
                 """
-                    JOIN account_account aml_ct_account
-                        ON aml_ct_account.id = %(aml_table)s.account_id
-                    LEFT JOIN %(currency_table)s
-                        ON %(aml_table)s.company_id = account_currency_table.company_id
-                        AND (
-                            account_currency_table.rate_type = CASE
-                                WHEN aml_ct_account.account_type LIKE ANY (ARRAY[%(income_prefix)s, %(expense_prefix)s, 'equity_unaffected']) THEN 'average'
-                                WHEN aml_ct_account.account_type LIKE %(equity_prefix)s THEN 'historical'
-                                ELSE 'current'
-                            END
-                        )
-                        AND (account_currency_table.date_from IS NULL OR account_currency_table.date_from <= %(aml_table)s.date)
-                        AND (account_currency_table.date_next IS NULL OR account_currency_table.date_next > %(aml_table)s.date)
-                        AND (account_currency_table.period_key = %(period_key)s OR account_currency_table.period_key IS NULL)
+                JOIN account_account aml_ct_account
+                    ON aml_ct_account.id = %(aml_table)s.account_id
+                LEFT JOIN %(currency_table)s
+                    ON %(aml_table)s.company_id = account_currency_table.company_id
+                    AND (
+                        account_currency_table.rate_type = CASE
+                            WHEN aml_ct_account.account_type LIKE ANY (ARRAY[%(income_prefix)s, %(expense_prefix)s, 'equity_unaffected']) THEN 'average'
+                            WHEN aml_ct_account.account_type LIKE %(equity_prefix)s THEN 'historical'
+                            ELSE 'current'
+                        END
+                    )
+                    AND (account_currency_table.date_from IS NULL OR account_currency_table.date_from <= %(aml_table)s.date)
+                    AND (account_currency_table.date_next IS NULL OR account_currency_table.date_next > %(aml_table)s.date)
+                    AND (account_currency_table.period_key = %(period_key)s OR account_currency_table.period_key IS NULL)
                 """,
                 aml_table=aml_alias,
                 equity_prefix="equity%",
@@ -2269,9 +2124,9 @@ class AccountReportExpressionEval(models.Model):
 
         return SQL(
             """
-                JOIN %(currency_table)s
-                    ON %(aml_table)s.company_id = account_currency_table.company_id
-                    AND (account_currency_table.period_key = %(period_key)s OR account_currency_table.period_key IS NULL)
+            JOIN %(currency_table)s
+                ON %(aml_table)s.company_id = account_currency_table.company_id
+                AND (account_currency_table.period_key = %(period_key)s OR account_currency_table.period_key IS NULL)
             """,
             aml_table=aml_alias,
             currency_table=self._get_currency_table(options),
@@ -2280,7 +2135,6 @@ class AccountReportExpressionEval(models.Model):
 
     @api.model
     def _get_currency_table(self, options) -> SQL:
-        """Returns the currency table table definition to be injected in the JOIN condition of an SQL query needing to use it."""
         if options["currency_table"]["type"] == "monocurrency":
             companies = self.env["res.company"].browse(
                 self.get_report_company_ids(options)
@@ -2294,7 +2148,6 @@ class AccountReportExpressionEval(models.Model):
 
     @_debug.perf.timed
     def _get_report_query(self, options, date_scope, domain=None) -> Query:
-        """Get a Query object that references the records needed for this report."""
         _debug.logic(
             "report_query_scope",
             report=self,
@@ -2307,9 +2160,7 @@ class AccountReportExpressionEval(models.Model):
         )
 
         if options.get("compute_budget"):
-            # remove required columns that are not filled from the domain
-            # these are not in the budget table
-            domain = domain.optimize(self.env["account.move.line"])
+            domain = domain.optimize(self._get_source_model())
             aml_required_columns = {
                 "move_id",
                 "currency_id",
@@ -2324,20 +2175,17 @@ class AccountReportExpressionEval(models.Model):
                 )
             )
 
-        query = self.env["account.move.line"]._search(domain)
+        query = self._get_source_model()._search(domain)
 
         if options.get("compute_budget"):
             query._tables["account_move_line"] = (
                 self._create_aml_shadowing_query_for_budget(options)
             )
-            # add_where appends to the query's where clauses, which are already ANDed
-            # together; passing query.where_clause back in would emit the whole domain twice.
             query.add_where(SQL("budget_id = %s", options["compute_budget"]))
 
         return query
 
     def _get_engine_query_tail(self, offset, limit) -> SQL:
-        """Helper to generate the OFFSET, LIMIT and ORDER conditions of formula engines' queries."""
         query_tail = SQL()
 
         if offset:
@@ -2349,12 +2197,6 @@ class AccountReportExpressionEval(models.Model):
         return query_tail
 
     def _get_batch_model_ids(self, batch_model, domain, batch_ids_cache=None):
-        """Resolve a batched domain to the ids of the comodel records it selects.
-
-        The domain comes from the expression's formula alone, so the answer is the same
-        for every column group of a render; batch_ids_cache, when the caller provides
-        one, holds it for the duration of that render.
-        """
         if not batch_model:
             return [None]
 
@@ -2380,9 +2222,6 @@ class AccountReportExpressionEval(models.Model):
 
     @api.model
     def _is_id_positive_condition(self, operator, value):
-        """Whether (many2one_field, operator, value) keeps its meaning when rewritten as a
-        condition on the comodel's id, as the domain engine's batching does.
-        """
         if operator == "=":
             return isinstance(value, int) and not isinstance(value, bool)
         if operator == "in":
@@ -2393,12 +2232,6 @@ class AccountReportExpressionEval(models.Model):
 
     @_debug.perf.timed
     def _check_groupby_fields(self, groupby_fields_name: list[str] | str):
-        """Checks that each string in the groupby_fields_name list is a valid groupby value for an accounting report.
-        So it must be:
-        - a field from account.move.line which is (1) searchable and (2) for which _field_to_sql is implemented,
-          this includes stored and related non-stored fields, or
-        - a custom value allowed by the _get_custom_groupby_map function of the custom handler
-        """
         self.check_singleton()
         if isinstance(groupby_fields_name, str | bool):
             groupby_fields_name = (
@@ -2413,27 +2246,30 @@ class AccountReportExpressionEval(models.Model):
             custom_handler=custom_handler_name,
         )
 
+        source_model = self._get_source_model()
         for field_name in (fname.strip() for fname in groupby_fields_name):
-            groupby_field = self.env["account.move.line"]._fields.get(field_name)
+            groupby_field = source_model._fields.get(field_name)
             if groupby_field:
                 if not groupby_field._description_searchable:
                     raise UserError(
                         self.env._(
-                            "Field %s of account.move.line is not searchable and can therefore not be used in a groupby expression.",
-                            field_name,
+                            "Field %(field)s of %(model)s is not searchable and can therefore not be used in a groupby expression.",
+                            field=field_name,
+                            model=source_model._name,
                         )
                     )
                 try:
-                    self.env["account.move.line"]._field_to_sql(
-                        "account_move_line",
+                    source_model._field_to_sql(
+                        source_model._table,
                         field_name,
-                        Query(self.env, "account_move_line"),
+                        Query(self.env, source_model._table),
                     )
                 except ValueError:
                     raise UserError(
                         self.env._(
-                            "Field %s of account.move.line cannot be used in a groupby expression.",
-                            field_name,
+                            "Field %(field)s of %(model)s cannot be used in a groupby expression.",
+                            field=field_name,
+                            model=source_model._name,
                         )
                     ) from None
             elif custom_handler_name:
@@ -2443,11 +2279,16 @@ class AccountReportExpressionEval(models.Model):
                 ):
                     raise UserError(
                         _(
-                            "Field %s does not exist on account.move.line, and is not supported by this report's custom handler.",
-                            field_name,
+                            "Field %(field)s does not exist on %(model)s, and is not supported by this report's custom handler.",
+                            field=field_name,
+                            model=source_model._name,
                         )
                     )
             else:
                 raise UserError(
-                    _("Field %s does not exist on account.move.line.", field_name)
+                    _(
+                        "Field %(field)s does not exist on %(model)s.",
+                        field=field_name,
+                        model=source_model._name,
+                    )
                 )

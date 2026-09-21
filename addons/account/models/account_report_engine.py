@@ -288,6 +288,9 @@ class AccountReport(models.Model):
         "non_trade_payable": (True, "liability_payable"),
     }
 
+    def _get_source_model(self):
+        return self.env["account.move.line"]
+
     def _get_year_bounds(self, date):
         return self.env.company.compute_fiscalyear_dates(date)
 
@@ -1981,7 +1984,7 @@ class AccountReportLine(models.Model):
                 if non_relational_key is None:
                     keys_and_names_in_sequence[non_relational_key] = _("Undefined")
                 else:
-                    groupby_field = self.env["account.move.line"]._fields[
+                    groupby_field = self.report_id._get_source_model()._fields[
                         groupby_data["current_groupby"]
                     ]
                     if groupby_field.type == "selection":
@@ -2072,10 +2075,10 @@ class AccountReportLine(models.Model):
         if current_groupby in custom_groupby_map:
             groupby_model = custom_groupby_map[current_groupby]["model"]
         elif current_groupby == "id":
-            groupby_model = "account.move.line"
+            groupby_model = self.report_id._get_source_model()._name
         elif current_groupby:
             groupby_model = (
-                self.env["account.move.line"]._fields[current_groupby].comodel_name
+                self.report_id._get_source_model()._fields[current_groupby].comodel_name
             )
         else:
             groupby_model = None
