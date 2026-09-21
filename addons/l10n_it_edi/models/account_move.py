@@ -2174,18 +2174,11 @@ class AccountMove(models.Model):
                 self.sudo().message_post(body=message)
             return self
 
-    @api.model
-    def _is_prediction_enabled(self):
-        return self.env["ir.module.module"].search(
-            [("name", "=", "account_accountant"), ("state", "=", "installed")]
-        )
-
     def _l10n_it_edi_import_line(self, element, move_line, extra_info=None):
         extra_info = extra_info or {}
         company = move_line.company_id
         partner = move_line.partner_id
         message_to_log = []
-        predict_enabled = self._is_prediction_enabled()
 
         # Sequence.
         line_elements = element.xpath(".//NumeroLinea")
@@ -2232,18 +2225,17 @@ class AccountMove(models.Model):
                         break
 
         # If no product is found, try to find a product that may be fitting
-        if predict_enabled and not move_line.product_id:
+        if not move_line.product_id:
             fitting_product = move_line._predict_product()
             if fitting_product:
                 name = move_line.name
                 move_line.product_id = fitting_product
                 move_line.name = name
 
-        if predict_enabled:
-            # Fitting account for the line
-            fitting_account = move_line._predict_account()
-            if fitting_account:
-                move_line.account_id = fitting_account
+        # Fitting account for the line
+        fitting_account = move_line._predict_account()
+        if fitting_account:
+            move_line.account_id = fitting_account
 
         # Quantity.
         move_line.quantity = float(get_text(element, ".//Quantita") or "1")
@@ -2310,7 +2302,7 @@ class AccountMove(models.Model):
                 message_to_log.append(message)
 
         # If no taxes were found, try to find taxes that may be fitting
-        if predict_enabled and not move_line.tax_ids:
+        if not move_line.tax_ids:
             fitting_taxes = move_line._predict_taxes()
             if fitting_taxes:
                 move_line.tax_ids = [Command.set(fitting_taxes)]

@@ -101,10 +101,6 @@ class PosConfig(models.Model):
         string="Order Printers",
     )
     is_order_printer = fields.Boolean(string="Order Printer")
-    is_installed_account_accountant = fields.Boolean(
-        string="Is the Full Accounting Installed",
-        compute="_compute_is_installed_account_accountant",
-    )
     picking_type_id = fields.Many2one(
         comodel_name="stock.picking.type",
         string="Operation Type",
@@ -723,15 +719,6 @@ class PosConfig(models.Model):
                 config.company_id.account_config_id.chart_template,
                 root.account_config_id.chart_template,
             )
-
-    def _compute_is_installed_account_accountant(self):
-        accounting = (
-            self.env["ir.module.module"]
-            .sudo()
-            .search([("name", "=", "account"), ("state", "=", "installed")])
-        )
-        for pos_config in self:
-            pos_config.is_installed_account_accountant = bool(accounting)
 
     @api.depends(
         "journal_id.currency_id",

@@ -62,7 +62,6 @@ export class PosConfig extends models.ServerModel {
             name: "Hoot",
             printer_ids: [1],
             is_order_printer: true,
-            is_installed_account_accountant: true,
             picking_type_id: 9,
             journal_id: 1,
             invoice_journal_id: 1,

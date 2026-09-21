@@ -5,6 +5,7 @@ from . import test_account_move_send
 from . import test_edi_address
 from . import test_edi_export
 from . import test_edi_import
+from . import test_edi_import_prediction
 from . import test_edi_pa
 from . import test_edi_reverse_charge
 from . import test_it_document_type

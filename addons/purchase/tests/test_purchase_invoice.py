@@ -749,13 +749,6 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             )
 
     def test_partial_billing_interaction_with_invoicing_switch_threshold(self):
-        if not self.env["ir.module.module"].search(
-            [("name", "=", "account_accountant"), ("state", "=", "installed")]
-        ):
-            self.skipTest(
-                "This test requires the installation of the account_account module"
-            )
-
         purchase_order = (
             self.env["purchase.order"]
             .with_context(tracking_disable=True)

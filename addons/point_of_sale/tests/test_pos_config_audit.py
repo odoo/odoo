@@ -369,7 +369,6 @@ class TestPosConfigAudit(TestPoSCommon):
             "last_session_closing_cash",
             "last_session_closing_date",
             "company_has_template",
-            "is_installed_account_accountant",
             "pos_session_username",
         ):
             self.assertNotIn(excluded, fields)

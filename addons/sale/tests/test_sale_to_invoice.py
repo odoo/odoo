@@ -1652,13 +1652,6 @@ class TestSaleToInvoice(TestSaleCommon):
         )
 
     def test_partial_invoicing_interaction_with_invoicing_switch_threshold(self):
-        if not self.env["ir.module.module"].search(
-            [("name", "=", "account_accountant"), ("state", "=", "installed")]
-        ):
-            self.skipTest(
-                "This test requires the installation of the account_account module"
-            )
-
         sale_order = self.env["sale.order"].create(
             {
                 "partner_id": self.partner_a.id,
