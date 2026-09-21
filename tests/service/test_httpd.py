@@ -987,6 +987,32 @@ class TestTheListenerSurvivesAReexec:
             finally:
                 kept.close()
 
+    def test_the_serving_loop_survives_the_listener_going_out_from_under_it(self):
+        """`bequeath_listener` detaches the socket while the loop still runs.
+
+        From then on `self.socket.fileno()` is -1, and the next pass through
+        `_update_listening` registered it: `ValueError: Invalid file
+        descriptor: -1`, raised inside the serving thread, which pytest
+        surfaces only as an unhandled-thread-exception warning.
+        """
+        with _server() as srv, patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("ODOO_HTTP_SOCKET_FD", None)
+            srv.bequeath_listener()
+            assert srv.socket.fileno() == -1, "the handover detaches it"
+            srv._update_listening()
+            srv._update_listening()
+            assert srv._listening is False, (
+                "a listener that has been handed on is not one to accept from"
+            )
+
+    def test_a_closed_listener_is_not_re_registered_either(self):
+        with _server() as srv:
+            srv._update_listening()
+            srv.socket.close()
+            srv._listening = False
+            srv._update_listening()
+            assert srv._listening is False
+
     def test_a_socket_activated_listener_is_left_to_listen_fds(self):
         with _server() as srv, patch.dict(os.environ, {}, clear=False):
             os.environ.pop("ODOO_HTTP_SOCKET_FD", None)

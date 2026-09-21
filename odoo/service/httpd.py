@@ -271,6 +271,7 @@ class ThreadedHTTPServer:
         self._stopped = threading.Event()
         self._stopped.set()
         self._listening = False
+        self._listening_fd = -1
         self._accept_paused_until = 0.0
         self._resource_warned_at = -_RESOURCE_WARNING_INTERVAL
         _debug.lifecycle(
@@ -588,17 +589,28 @@ class ThreadedHTTPServer:
             return True
 
     def _update_listening(self) -> None:
+        # `bequeath_listener` hands the listening socket to the process that
+        # replaces this one by detaching it, and `server_close` closes it;
+        # either way its fileno is -1 from then on while this loop is still
+        # running. Registering that is `ValueError: Invalid file descriptor:
+        # -1` raised inside the serving thread, and unregistering it looks the
+        # selector up by a fileno the socket no longer has -- so the fd that
+        # was registered is remembered rather than asked for twice.
+        listener_alive = self.socket.fileno() != -1
         want = (
-            not self._pool.saturated
+            listener_alive
+            and not self._pool.saturated
             and not self._shutdown.is_set()
             and time.monotonic() >= self._accept_paused_until
         )
         if want and not self._listening:
+            self._listening_fd = self.socket.fileno()
             self._selector.register(self.socket, selectors.EVENT_READ, None)
             self._listening = True
             _debug.logic("httpd.listening", listening=True, busy=self._pool.busy)
         elif not want and self._listening:
-            self._selector.unregister(self.socket)
+            with contextlib.suppress(KeyError, ValueError, OSError):
+                self._selector.unregister(self._listening_fd)
             self._listening = False
             _debug.logic(
                 "httpd.listening",
@@ -606,6 +618,7 @@ class ThreadedHTTPServer:
                 saturated=self._pool.saturated,
                 shutdown=self._shutdown.is_set(),
                 accept_paused=time.monotonic() < self._accept_paused_until,
+                listener_alive=listener_alive,
                 busy=self._pool.busy,
             )
 
