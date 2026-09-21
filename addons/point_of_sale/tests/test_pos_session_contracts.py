@@ -243,6 +243,36 @@ class TestPosSessionLoadContract(TestPoSCommon):
             " many2many has to report the table of the field it follows",
         )
 
+    def test_every_key_of_a_loaded_row_is_a_field_the_client_is_told_of(self):
+        session = self._start_pos_session(self.cash_pm1, 0)
+        params = session.load_data_params()
+        data = session.load_data([])
+
+        undeclared = {
+            model: sorted(missing)
+            for model, rows in data.items()
+            if rows
+            and isinstance(rows[0], dict)
+            and (
+                missing := {
+                    key
+                    for key in set(rows[0]) - set(params[model]["relations"])
+                    # "_name" keys are the loader's own extras, read off the raw row
+                    if key != "id" and not key.startswith("_")
+                }
+            )
+        }
+        self.assertFalse(undeclared)
+
+        company = params["res.company"]["relations"]
+        self.assertEqual(
+            company["tax_calculation_rounding_method"]["type"], "selection"
+        )
+        self.assertEqual(
+            company["account_fiscal_country_id"]["relation"], "res.country"
+        )
+        self.assertEqual(company["account_fiscal_country_id"]["model"], "res.company")
+
     def test_no_loaded_many2many_reports_a_null_relation_table(self):
         session = self._start_pos_session(self.cash_pm1, 0)
         params = session.load_data_params()
@@ -695,9 +725,7 @@ class TestPosSessionDiffMoveLink(TestPoSCommon):
                 }
             ]
         )
-        session._create_diff_account_move_for_payment_method(
-            self.bank_split_pm1, 5.0
-        )
+        session._create_diff_account_move_for_payment_method(self.bank_split_pm1, 5.0)
 
         diff = self.env["account.move"].search(
             [("pos_diff_session_id", "=", session.id)]

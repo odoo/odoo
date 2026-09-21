@@ -84,6 +84,10 @@ class MixinPosLoad(models.AbstractModel):
         )
 
     @api.model
+    def _load_pos_data_projected_fields(self):
+        return {}
+
+    @api.model
     def _load_pos_data_read(self, records, config):
         if not config:
             raise ValueError("config must be provided to read PoS data.")

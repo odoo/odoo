@@ -222,38 +222,39 @@ class PosSession(models.Model):
     def _get_field_relations(self, model, field_names):
         model_fields = self.env[model]._fields
         relations = {}
-
         for name, params in model_fields.items():
             if field_names:
                 if name not in field_names:
                     continue
             elif params.manual:
                 continue
-
-            if params.comodel_name:
-                relations[name] = {
-                    "name": name,
-                    "model": params.model_name,
-                    "compute": bool(params.compute),
-                    "related": bool(params.related),
-                    "relation": params.comodel_name,
-                    "type": params.type,
-                }
-                if params.type == "many2one" and params.ondelete:
-                    relations[name]["ondelete"] = params.ondelete
-                if params.type == "one2many" and params.inverse_name:
-                    relations[name]["inverse_name"] = params.inverse_name
-                if params.type == "many2many":
-                    relations[name]["relation_table"] = self._get_relation_table(params)
-            else:
-                relations[name] = {
-                    "name": name,
-                    "type": params.type,
-                    "compute": bool(params.compute),
-                    "related": bool(params.related),
-                }
-
+            relations[name] = self._describe_field_relation(
+                params.model_name, name, params
+            )
+        projected = self.env[model]._load_pos_data_projected_fields()
+        for name, params in projected.items():
+            relations[name] = self._describe_field_relation(model, name, params)
         return relations
+
+    @api.model
+    def _describe_field_relation(self, model, name, params):
+        relation = {
+            "name": name,
+            "type": params.type,
+            "compute": bool(params.compute),
+            "related": bool(params.related),
+        }
+        if not params.comodel_name:
+            return relation
+        relation["model"] = model
+        relation["relation"] = params.comodel_name
+        if params.type == "many2one" and params.ondelete:
+            relation["ondelete"] = params.ondelete
+        if params.type == "one2many" and params.inverse_name:
+            relation["inverse_name"] = params.inverse_name
+        if params.type == "many2many":
+            relation["relation_table"] = self._get_relation_table(params)
+        return relation
 
     @api.model
     def _get_relation_table(self, field):

@@ -77,6 +77,21 @@ class ResCompany(models.Model):
         ]
 
     @api.model
+    def _load_pos_data_config_field(self, fname):
+        return next(
+            (link, self.env[field.comodel_name]._fields[fname])
+            for link, field in self._config_link_fields().items()
+            if fname in self.env[field.comodel_name]._fields
+        )
+
+    @api.model
+    def _load_pos_data_projected_fields(self):
+        return {
+            fname: self._load_pos_data_config_field(fname)[1]
+            for fname in self._load_pos_data_config_fields(self.env["pos.config"])
+        }
+
+    @api.model
     def _load_pos_data_read(self, records, config):
         rows = super()._load_pos_data_read(records, config)
         config_fields = self._load_pos_data_config_fields(config)
@@ -85,11 +100,7 @@ class ResCompany(models.Model):
         companies = self.browse([row["id"] for row in rows])
         by_link = {}
         for fname in config_fields:
-            link = next(
-                name
-                for name, field in self._config_link_fields().items()
-                if fname in self.env[field.comodel_name]._fields
-            )
+            link, _field = self._load_pos_data_config_field(fname)
             by_link.setdefault(link, []).append(fname)
         for link, fnames in by_link.items():
             configs = companies[link]

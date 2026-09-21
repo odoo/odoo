@@ -3387,6 +3387,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         pos_order_refund_id = data["pos.order"][1]["id"]
         pos_order_refund_record = self.env["pos.order"].browse(pos_order_refund_id)
         self.assertEqual(sale_order.line_ids.qty_transferred, 5)
-        for picking in pos_order_refund_record.picking_ids:
+        for picking in pos_order_refund_record.picking_ids.sorted("id"):
             picking.button_validate()
         self.assertEqual(sale_order.line_ids.qty_transferred, 2)
