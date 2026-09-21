@@ -12,7 +12,7 @@
         'account_peppol_response',
         'iap',
     ],
-    'auto_install': ['l10n_fr'],
+    'auto_install': False,
     'data': [
         'data/ir_cron.xml',
         'security/ir.model.access.csv',
