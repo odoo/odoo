@@ -117,13 +117,17 @@ clear in `ir.config_parameter`. The floor is the backlog of fields still to move
 into the vault.
 
 `receiver-fail-open` (E8528) counts routes that take calls from machines without
-resolving the caller: `auth="public"` or `"none"` with `csrf=False`, whose handler --
-following the controller's own `self.` calls -- reaches none of the inbound gate's
-entry points (`inspect_inbound_request`, `_check_inbound_request`, `check_inbound_auth`,
-`_check_webhook_request`, `admit`, `_admit_mini_app_call`). Such a route answers an
-unknown caller without refusing it, throttles nobody and records nothing. The floor
-is P3 and P5 of the external-connections plan still to do: payment provider and POS terminal callbacks, Peppol and the other EDI
-webhooks, IoT, SMS. A route that must stay open carries `# noqa: E8528 - <why>`.
+declaring who may make them: `auth="public"` or `"none"` with `csrf=False`. Since
+2026-09-21 it is a fact of the routing map, not of the handler: a route that admits
+its caller says `auth="receiver", receiver="<model>:<field or _method>"`, and
+`ir.http._auth_method_receiver` resolves the subject from the path, runs the gate's
+`admit()` and leaves `request.admission` for the handler, before the handler runs.
+The checker used to follow the controller's own `self.` calls to one of nine gate
+method names, which a superclass, a model method or a refactor could hide from it,
+and which said nothing to a reader of the routing map. The floor is the backlog
+still admitting in the handler's body: payment provider and POS terminal callbacks,
+Peppol and the other EDI webhooks, IoT, SMS -- lowered as each family declares its
+receiver. A page or a probe that must stay open carries `# noqa: E8528 - <why>`.
 
 `http-json-string` (E8515) catches `return json.dumps(...)` inside a route whose
 `type` is `"http"` or absent. The string goes out as `text/html`, and the client's

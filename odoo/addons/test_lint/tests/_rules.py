@@ -252,11 +252,11 @@ RULES: tuple[Rule, ...] = (
     Rule(
         "receiver-fail-open",
         "E8528",
-        "resolve the caller through an inbound gate before doing anything: "
-        "`InboundController.inspect_inbound_request`, or the receiver's "
-        "`_check_inbound_request`, so an unknown caller is refused, a flood is "
-        "throttled and every refusal is recorded; a route that must stay open "
-        "takes `# noqa: E8528  <why>`",
+        'declare the caller on the route: `auth="receiver", receiver="<model>:'
+        '<field or _method>"` resolves the subject from the path and admits the '
+        "request through its gate before the handler runs, so an unknown caller is "
+        "refused, a flood is throttled and every verdict is recorded; a page or a "
+        "probe that must stay open takes `# noqa: E8528  <why>`",
     ),
     Rule(
         "secret-in-environ",

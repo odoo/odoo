@@ -2339,7 +2339,10 @@ class TestReceiverFailOpenLint(BaseCase):
         tree = ast.parse(dedent(snippet).strip())
         return [v.message.split(":")[0] for v in _checker_receiver.check(tree)]
 
-    def test_an_open_route_that_reaches_no_gate_is_flagged(self):
+    def test_an_open_route_is_flagged_whatever_its_body_does(self):
+        """The gate is a fact of the route, not of the handler: a helper that
+        happens to admit the caller is invisible to a reader of the routing map,
+        and a subclass or a refactor loses it silently."""
         self.assertEqual(
             self._routes("""
             class Hooks(http.Controller):
@@ -2347,25 +2350,28 @@ class TestReceiverFailOpenLint(BaseCase):
                 def hook(self, **kw):
                     return self._handle(request.get_json_data())
 
-                def _handle(self, data):
-                    return data
+                @route("/hook/<id>", type="http", auth="none", csrf=False)
+                def resolved(self, id, **kw):
+                    device = request.env["x"].search([("id", "=", id)])
+                    device.admit()
+                    return device
             """),
-            ["hook"],
+            ["hook", "resolved"],
         )
 
-    def test_a_route_that_resolves_its_caller_through_a_helper_is_not(self):
+    def test_a_route_that_declares_its_receiver_is_not(self):
         self.assertEqual(
             self._routes("""
             class Hooks(http.Controller):
-                @route("/hook/<id>", type="http", auth="none", csrf=False)
-                def hook(self, id, **kw):
-                    device = self._resolve(id)
-                    return device
-
-                def _resolve(self, id):
-                    device = request.env["x"].search([("id", "=", id)])
-                    device.check_inbound_auth(dict(request.httprequest.headers), "1")
-                    return device
+                @route(
+                    "/hook/<uuid>",
+                    type="http",
+                    auth="receiver",
+                    receiver="automation.rule:_receiver_for_webhook",
+                    csrf=False,
+                )
+                def hook(self, uuid, **kw):
+                    return request.admission.subject
             """),
             [],
         )

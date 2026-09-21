@@ -171,7 +171,7 @@ class AutomationRule(models.Model):
             rule.credential_id = rule._create_webhook_credential(category)
         return True
 
-    def _get_webhook_auth_mode(self):
+    def _inbound_auth_mode(self):
         self.check_singleton()
         if (
             self.webhook_enforce_from
@@ -180,21 +180,19 @@ class AutomationRule(models.Model):
             return self.AUTH_MODE_AUDIT
         return self.AUTH_MODE_ENFORCE
 
+    @api.model
+    def _receiver_for_webhook(self, webhook_uuid=None, **path_args):
+        return self.search(
+            [("webhook_uuid", "=", webhook_uuid), ("trigger", "=", "on_webhook")],
+            limit=1,
+        )
+
     def _start_webhook_audit_window(self):
         self.write(
             {
                 "webhook_enforce_from": fields.Datetime.now()
                 + timedelta(days=self.WEBHOOK_AUDIT_DAYS)
             }
-        )
-
-    def _check_webhook_request(self, headers, body, remote_addr):
-        self.check_singleton()
-        return self._check_inbound_request(
-            headers,
-            body=body,
-            remote_addr=remote_addr,
-            mode=self._get_webhook_auth_mode(),
         )
 
     def _webhook_ip_allowed(self, remote_addr):

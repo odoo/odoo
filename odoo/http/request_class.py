@@ -64,6 +64,7 @@ class Request(
         self.dispatcher = _dispatchers["http"](self)
         self._params: dict[str, Any] = {}
         self._params_source: Callable[[], dict[str, Any]] | None = None
+        self.path_args: dict[str, Any] = {}
 
         self.geoip: GeoIP = GeoIP(httprequest.remote_addr, app=app)
         self.registry: Registry | None = None

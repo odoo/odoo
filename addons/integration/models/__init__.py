@@ -11,4 +11,5 @@ from . import response_cache
 from . import credential_access_log
 from . import credential_credential
 from . import ir_actions_server
+from . import ir_http
 from . import integration_egress

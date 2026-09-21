@@ -42,33 +42,33 @@ class TestWebhookSecurity(TransactionCase):
         return "sha256=" + hmac.new(key.encode(), self.body, hashlib.sha256).hexdigest()
 
     def test_hmac_valid(self):
-        ok, status, _msg = self.rule._check_webhook_request(
+        ok, status, _msg = self.rule._check_inbound_request(
             {"X-Hub-Signature-256": self._sig(self.secret)}, self.body, "1.2.3.4"
         )
         self.assertTrue(ok)
         self.assertEqual(status, 200)
 
     def test_hmac_invalid_and_missing(self):
-        bad, status, _m = self.rule._check_webhook_request(
+        bad, status, _m = self.rule._check_inbound_request(
             {"X-Hub-Signature-256": self._sig("wrong")}, self.body, "1.2.3.4"
         )
         self.assertFalse(bad)
         self.assertEqual(status, 401)
-        missing, status, _m = self.rule._check_webhook_request({}, self.body, "1.2.3.4")
+        missing, status, _m = self.rule._check_inbound_request({}, self.body, "1.2.3.4")
         self.assertFalse(missing)
         self.assertEqual(status, 401)
 
     def test_ip_allowlist(self):
         self.rule.ip_whitelist = "10.0.0.0/8, 192.168.1.5"
         sig = {"X-Hub-Signature-256": self._sig(self.secret)}
-        self.assertTrue(self.rule._check_webhook_request(sig, self.body, "10.5.5.5")[0])
-        blocked = self.rule._check_webhook_request(sig, self.body, "1.2.3.4")
+        self.assertTrue(self.rule._check_inbound_request(sig, self.body, "10.5.5.5")[0])
+        blocked = self.rule._check_inbound_request(sig, self.body, "1.2.3.4")
         self.assertFalse(blocked[0])
         self.assertEqual(blocked[1], 403)
 
     def test_payload_size_limit(self):
         self.rule.max_payload_size = 5
-        res = self.rule._check_webhook_request(
+        res = self.rule._check_inbound_request(
             {"X-Hub-Signature-256": self._sig(self.secret)}, self.body, "1.2.3.4"
         )
         self.assertFalse(res[0])
@@ -91,9 +91,9 @@ class TestWebhookSecurity(TransactionCase):
         self.assertTrue(rule.rate_limit_enabled)
         secret = rule.credential_id._use_secret("test")
         self.assertGreaterEqual(len(secret), 40)
-        self.assertFalse(rule._check_webhook_request({}, self.body, "1.2.3.4")[0])
+        self.assertFalse(rule._check_inbound_request({}, self.body, "1.2.3.4")[0])
         signed = {"X-Hub-Signature-256": self._sig(secret)}
-        self.assertTrue(rule._check_webhook_request(signed, self.body, "1.2.3.4")[0])
+        self.assertTrue(rule._check_inbound_request(signed, self.body, "1.2.3.4")[0])
 
     def test_two_rules_never_share_a_generated_secret(self):
         first, second = self._new_rule(), self._new_rule(name="other")
@@ -104,17 +104,17 @@ class TestWebhookSecurity(TransactionCase):
         rule = self._new_rule(auth_type="none")
 
         self.assertFalse(rule.credential_id)
-        self.assertTrue(rule._check_webhook_request({}, self.body, "1.2.3.4")[0])
+        self.assertTrue(rule._check_inbound_request({}, self.body, "1.2.3.4")[0])
 
     def test_unsigned_calls_run_during_the_audit_window_and_not_after(self):
         rule = self._new_rule()
         rule._start_webhook_audit_window()
 
-        self.assertTrue(rule._check_webhook_request({}, self.body, "1.2.3.4")[0])
+        self.assertTrue(rule._check_inbound_request({}, self.body, "1.2.3.4")[0])
         rule.webhook_enforce_from = fields.Datetime.subtract(
             fields.Datetime.now(), seconds=1
         )
-        self.assertFalse(rule._check_webhook_request({}, self.body, "1.2.3.4")[0])
+        self.assertFalse(rule._check_inbound_request({}, self.body, "1.2.3.4")[0])
 
     def test_a_new_secret_replaces_the_old_one(self):
         rule = self._new_rule()
@@ -125,7 +125,7 @@ class TestWebhookSecurity(TransactionCase):
         new = rule.credential_id._use_secret("test")
         self.assertNotEqual(old, new)
         stale = {"X-Hub-Signature-256": self._sig(old)}
-        self.assertFalse(rule._check_webhook_request(stale, self.body, "1.2.3.4")[0])
+        self.assertFalse(rule._check_inbound_request(stale, self.body, "1.2.3.4")[0])
 
     def test_the_upgrade_gives_open_rules_a_secret_and_thirty_days(self):
         rule = self._new_rule(auth_type="none")
@@ -141,7 +141,7 @@ class TestWebhookSecurity(TransactionCase):
         self.assertTrue(rule.credential_id)
         remaining = rule.webhook_enforce_from - fields.Datetime.now()
         self.assertEqual(round(remaining.total_seconds() / 86400), 30)
-        self.assertTrue(rule._check_webhook_request({}, self.body, "1.2.3.4")[0])
+        self.assertTrue(rule._check_inbound_request({}, self.body, "1.2.3.4")[0])
 
     def _calls(self, rule):
         self.env.cr.precommit.run()

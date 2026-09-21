@@ -179,7 +179,9 @@ class IrHttp(models.AbstractModel):
             ]
         ]
 
-    _auth_routing_keys: dict[str, tuple[str, ...]] = {"bearer": ("scope",)}
+    @classmethod
+    def _auth_routing_keys(cls) -> dict[str, tuple[str, ...]]:
+        return {"bearer": ("scope",)}
 
     @classmethod
     def _auth_method_bearer(cls, scope: str = "rpc") -> None:
@@ -266,7 +268,7 @@ class IrHttp(models.AbstractModel):
             return {}
         return {
             key: routing[key]
-            for key in cls._auth_routing_keys.get(auth, ())
+            for key in cls._auth_routing_keys().get(auth, ())
             if key in routing
         }
 

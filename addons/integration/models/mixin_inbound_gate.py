@@ -2,10 +2,12 @@ import json
 import logging
 from typing import Any
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.http import request
 from odoo.libs import redact
 
+from ..tools.admission import Admission, Refused
 from ..tools.authentication import (
     CaseInsensitiveHeaders,
     execute_signature_verification,
@@ -71,14 +73,89 @@ class MixinInboundGate(models.AbstractModel):
 
     _BODY_DEPENDENT_AUTH_TYPES = ("hmac_sha256", "hmac_sha512", "custom")
 
+    @api.model
+    def _resolve_route_receiver(self, declaration: str, path_args: dict[str, Any]):
+        model_name, _, selector = declaration.partition(":")
+        model = self.env[model_name].sudo()
+        if selector in model._fields:
+            value = path_args.get(selector)
+            subject = (
+                model.search([(selector, "=", value)], limit=1) if value else model
+            )
+        elif selector and callable(getattr(model, selector, None)):
+            subject = getattr(model, selector)(**path_args)
+        else:
+            raise ValueError(
+                f"receiver={declaration!r} names neither a field nor a method of "
+                f"{model_name}"
+            )
+        if not subject:
+            return model.browse(), model.browse()
+        if isinstance(subject, models.AbstractModel) and hasattr(subject, "admit"):
+            return subject, subject
+        return subject, self.env["integration.receiver"]._for_record(
+            subject, subject.display_name
+        )
+
+    def admit(self, subject=None, event_type: str | None = None) -> Admission:
+        self.check_singleton()
+        httprequest = request.httprequest
+        remote_addr = httprequest.remote_addr
+        content_length = httprequest.content_length
+        if content_length and content_length > self.max_payload_size:
+            self._record_inbound_verdict(
+                False,
+                413,
+                f"payload too large for {self.display_name}",
+                "payload_too_large",
+                headers=dict(httprequest.headers),
+                remote_addr=remote_addr,
+            )
+            raise Refused(
+                413,
+                f"Request exceeds maximum size of {self.max_payload_size // 1024}KB",
+                "payload_too_large",
+            )
+        body = httprequest.get_data(cache=True)
+        allowed, status, reason = self._check_inbound_request(
+            dict(httprequest.headers), body=body, remote_addr=remote_addr
+        )
+        if not allowed:
+            raise Refused(status, reason, self._refusal_code(status))
+        admission = Admission(
+            gate=self, subject=subject or self, body=body, remote_addr=remote_addr
+        )
+        self._record_inbound_exchange(
+            method=httprequest.method,
+            path=httprequest.path,
+            remote_addr=remote_addr,
+            user_agent=httprequest.headers.get("User-Agent"),
+            event_type=event_type,
+        )
+        return admission
+
+    @staticmethod
+    def _refusal_code(status: int) -> str:
+        return {
+            401: "authentication_failed",
+            403: "ip_not_allowed",
+            413: "payload_too_large",
+            429: "rate_limit_exceeded",
+        }.get(status, "refused")
+
+    def _inbound_auth_mode(self) -> str:
+        return self.AUTH_MODE_ENFORCE
+
     def _check_inbound_request(
         self,
         headers: dict[str, Any],
         body: str | bytes | None = None,
         remote_addr: str | None = None,
-        mode: str = AUTH_MODE_ENFORCE,
+        mode: str | None = None,
         caller_already_checked: bool = False,
     ) -> tuple[bool, int, str]:
+        if mode is None:
+            mode = self._inbound_auth_mode()
         allowed, status, reason, outcome = self._decide_inbound_request(
             headers,
             body=body,

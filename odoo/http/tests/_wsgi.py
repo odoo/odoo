@@ -168,6 +168,7 @@ class FakeIrHttp:
     def __init__(self, routing_map: Any) -> None:
         self._routing_map = routing_map
         self.errors_handled: list[BaseException] = []
+        self.path_args_at_authentication: dict[str, Any] = {}
 
     def routing_map(self, key: str | None = None) -> Any:
         return self._routing_map
@@ -177,6 +178,7 @@ class FakeIrHttp:
         return adapter.match(path_info=path_info, return_rule=True)
 
     def _authenticate(self, endpoint: Any) -> None:
+        self.path_args_at_authentication = dict(request.path_args)
         self._authenticate_explicit(endpoint.routing["auth"], routing=endpoint.routing)
 
     def _authenticate_explicit(

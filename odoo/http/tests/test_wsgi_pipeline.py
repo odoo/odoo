@@ -65,6 +65,10 @@ class Probe(Controller):
     def typed(self, n: int, flag: bool = False):
         return f"{n!r}:{flag!r}"
 
+    @route("/probe/thing/<int:thing_id>/<string:token>", auth="public")
+    def thing(self, thing_id, token):
+        return f"{thing_id}:{token}"
+
     @route("/probe/shape", type="json2", auth="none", typed=True)
     def shape(self, corners: list[Corner], label: str = "none") -> dict:
         return {"label": label, "area": sum(c.x * c.y for c in corners)}
@@ -238,6 +242,17 @@ def test_a_typed_route_coerces_and_refuses(harness):
     assert bad.status_code == 400
     missing = harness.serve(environ("/probe/typed"))
     assert missing.status_code == 400
+
+
+def test_the_matched_path_variables_are_on_the_request_before_authentication(harness):
+    """An auth method that resolves the caller from the path (`auth="receiver"`)
+    reads `request.path_args`; it is set before `_authenticate`, not at dispatch."""
+    ok = harness.serve(environ("/probe/thing/7/abc"))
+    assert ok.status_code == 200 and ok.body == b"7:abc"
+    assert harness.ir_http.path_args_at_authentication == {
+        "thing_id": 7,
+        "token": "abc",
+    }
 
 
 def test_a_json2_body_is_built_into_dataclasses_and_refused_when_malformed(harness):

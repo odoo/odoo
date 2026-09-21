@@ -158,6 +158,7 @@ class _RequestServeMixin(RequestState):
                 type=rule.endpoint.routing["type"],
             )
             self._update_dispatcher(rule)
+            self.path_args = args
             self.dispatcher.pre_dispatch(rule, args)
             with _debug.perf(
                 "http.serve.handler",
@@ -532,6 +533,7 @@ class _RequestServeMixin(RequestState):
     def _serve_ir_http(self, rule: Any, args: dict[str, Any]) -> Response:
         registry = self._get_bound_registry()
         ir_http = get_ir_http(registry)
+        self.path_args = args
         with _debug.perf(
             "http.serve.authenticate",
             cr=self._debug_cr,
