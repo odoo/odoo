@@ -697,6 +697,40 @@ def test_socket_activation_adopts_only_a_handover_meant_for_this_process():
     passed.close()
 
 
+def test_a_closed_pool_refuses_instead_of_queueing():
+    """The first of two refusals `submit` can make, and neither was executed.
+
+    The 503 test below patches `submit` to return False, so it pins what the
+    caller does with a refusal and says nothing about whether a refusal ever
+    happens. Measured 2026-09-21 with a line tracer: `submit` never returned
+    False anywhere in this suite.
+    """
+    pool = httpd.WorkerPool(1, lambda conn: None)
+    pool.close()
+    assert pool.submit(object()) is False
+    assert not pool._jobs, "a refused connection must not be left on the queue"
+
+
+def test_a_pool_that_cannot_start_a_thread_refuses_and_drops_the_job():
+    """Thread exhaustion, which is a real production path and untested.
+
+    `thread.start()` raises `RuntimeError` under `RLIMIT_NPROC` or memory
+    pressure. `submit` has to both answer False and take its job back off the
+    deque; keeping it there parks a connection no worker will ever pick up,
+    and the only visible effect is a socket that is never answered.
+    """
+    pool = httpd.WorkerPool(4, lambda conn: None)
+    with patch.object(
+        httpd.threading.Thread, "start", side_effect=RuntimeError("can't start")
+    ):
+        refused = pool.submit(object())
+    assert refused is False
+    assert not pool._jobs, (
+        "submit must pop the job it could not staff; left on the deque it is "
+        "a connection nobody will ever serve and nothing will report"
+    )
+
+
 def test_a_refused_worker_thread_answers_503_instead_of_silence():
     with _server() as srv:
         with patch.object(srv._pool, "submit", return_value=False):
