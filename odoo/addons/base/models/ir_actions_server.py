@@ -16,6 +16,7 @@ from odoo.libs.netguard import DestinationRefused
 from odoo.tools import _
 from odoo.tools.misc import unquote
 from odoo.tools.safe_eval import safe_eval, test_python_expr
+from odoo.tools.server_action_tools import ServerActionTools
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -1032,6 +1033,7 @@ class IrActionsServer(models.Model):
                 "records": records,
                 "log": log,
                 "_logger": _LOGGER_PROXY,
+                "tools": ServerActionTools(self.env),
             }
         )
         return eval_context
@@ -1075,18 +1077,51 @@ class IrActionsServer(models.Model):
             records = eval_context["records"]
             if records is None:
                 records = eval_context["model"]
-            action.sudo(self.env.su)._check_access_to_run(records)
-            with _debug.perf(
-                "run",
-                cr=self.env.cr,
-                action=action.id,
-                state=action.state,
-                model=records._name,
-                records=len(records),
-                uid=self.env.uid,
-            ):
-                res = action._run(records, eval_context)
+            caller = action.sudo(self.env.su)
+            caller._check_access_to_run(records)
+            res = caller._gate_run(
+                records,
+                lambda runnable, action=action, eval_context=eval_context: (
+                    action._run_on(runnable, eval_context)
+                ),
+            )
         return res
+
+    def _gate_run(
+        self, records: Any, run: Any, replayable: bool = True
+    ) -> dict[str, Any] | bool:
+        return run(records)
+
+    def _run_on(
+        self, records: Any, eval_context: dict[str, Any]
+    ) -> dict[str, Any] | bool:
+        action = self
+        if records != (eval_context["records"] or eval_context["model"]):
+            narrowed = {
+                "active_model": records._name,
+                "active_ids": records.ids,
+                "active_id": records[:1].id,
+            }
+            action = self.with_context(**narrowed)
+            env = eval_context["env"](
+                context={**eval_context["env"].context, **narrowed}
+            )
+            eval_context = {
+                **eval_context,
+                "env": env,
+                "records": records.with_env(env) or None,
+                "record": records[:1].with_env(env) or None,
+            }
+        with _debug.perf(
+            "run",
+            cr=self.env.cr,
+            action=self.id,
+            state=self.state,
+            model=records._name,
+            records=len(records),
+            uid=self.env.uid,
+        ):
+            return action._run(records, eval_context)
 
     def _log_missing_target(self, runner: Any) -> None:
         _debug.logic(

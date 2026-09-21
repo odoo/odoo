@@ -1145,7 +1145,7 @@ class ApprovalBinding(models.Model):
                     setattr(ModelClass, name, getattr(function, ORIGIN_ATTR))
 
     @api.model
-    def _gate(self, records, bindings, label: str, call):
+    def _gate(self, records, bindings, label: str, call, replayable: bool = True):
         elevation = self._elevation()
         observations = []
         wanting = {}
@@ -1162,6 +1162,16 @@ class ApprovalBinding(models.Model):
             records.env["approval.observation"].sudo().create(observations)
         if not wanting:
             return call(records)
+        if not replayable:
+            trace.REFUSAL.event("gate_not_replayable", method=label, records=records)
+            raise UserError(
+                records.env._(
+                    "%(method)s needs an approval, and this call cannot be replayed "
+                    "once it is granted: its arguments are not part of the "
+                    "request. Hold it for approval where it is made instead.",
+                    method=label,
+                ),
+            )
         if records.env.context.get(REPLAY_CONTEXT_KEY):
             trace.REFUSAL.event(
                 "replay_uncovered",

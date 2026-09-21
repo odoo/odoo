@@ -5,6 +5,7 @@ from collections import defaultdict
 
 from odoo import api, models
 from odoo.exceptions import ValidationError
+from odoo.libs.func import classproperty
 from odoo.tools.access_scan import (
     get_accessible_query,
     get_inaccessible_owners,
@@ -26,11 +27,12 @@ class MixinOwnerAccess(models.AbstractModel):
     _SEARCH_ACCESS_CHUNK_MIN = 80
     _SEARCH_ACCESS_CHUNK_MAX = 8192
 
+    @classproperty
+    def _search_visibility_fields(self) -> tuple[str, ...]:
+        return _owner_columns(self)
+
     def _access_owner_columns(self) -> tuple[str, ...]:
-        field = self._fields[self._access_owner_field]
-        if field.type == "many2one_reference":
-            return (field.model_field, field.name)
-        return (field.name,)
+        return _owner_columns(type(self))
 
     def _access_owner_rows(self, rows: list[tuple]) -> list[tuple[int, str, int]]:
         field = self._fields[self._access_owner_field]
@@ -143,3 +145,12 @@ class MixinOwnerAccess(models.AbstractModel):
         if not res_model or res_model not in self.env or not res_id:
             return None
         return self.env[res_model].browse(res_id).exists()
+
+
+def _owner_columns(model_class: type) -> tuple[str, ...]:
+    field = getattr(model_class, "_fields", {}).get(model_class._access_owner_field)
+    if field is None:
+        return ()
+    if field.type == "many2one_reference":
+        return (field.model_field, field.name)
+    return (field.name,)
