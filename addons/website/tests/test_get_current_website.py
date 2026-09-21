@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
+import threading
 
 from odoo import Command
 from odoo.addons.website.tools import MockRequest
+from odoo.http import request
 from odoo.tests import tagged
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
@@ -82,6 +84,34 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
         website2.domain = 'xn--dsseldorf-q9a.com'
         self.assertEqual(Website._get_current_website_id('xn--dsseldorf-q9a.com'), website2.id)
         self.assertEqual(Website._get_current_website_id('düsseldorf.com'), website2.id)
+
+    def test_01b_get_current_website_from_thread_url(self):
+        """Outside of a request, the website is looked up from the current
+        thread's `url`, which is a full URL (scheme, path, query...). Only its
+        domain must be used to find the matching website."""
+        self.assertFalse(request, "This test must run outside of a request")
+
+        website1 = self.website
+        website1.domain = 'my-site-1.fr'
+        website2 = self.env['website'].create({
+            'name': 'My Website 2',
+            'domain': 'my-site-2.fr',
+        })
+        self.assertLess(website1.id, website2.id, "website1 must be the fallback website")
+        # Clear the cache because `_get_current_website_id` is ormcached
+        self.env.registry.clear_cache()
+
+        current_thread = threading.current_thread()
+        missing = object()
+        thread_url = getattr(current_thread, 'url', missing)
+        current_thread.url = 'http://my-site-2.fr/some/page?a=1'
+        try:
+            self.assertEqual(self.env['website'].get_current_website(), website2)
+        finally:
+            if thread_url is missing:
+                del current_thread.url
+            else:
+                current_thread.url = thread_url
 
     def test_02_signup_user_website_id(self):
         website = self.website
