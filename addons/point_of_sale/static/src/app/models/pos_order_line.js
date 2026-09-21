@@ -139,12 +139,12 @@ export class PosOrderline extends PosOrderlineAccounting {
                 )?.custom_value || "";
 
             if (attrValue.attribute_id.display_type === "multi") {
-                if (!acc[attrValue.attribute_id.id]) {
-                    acc[attrValue.attribute_id.id] = { selected: [], custom_value: customValue };
+                if (!acc[attrValue.attribute_line_id.id]) {
+                    acc[attrValue.attribute_line_id.id] = { selected: [], custom_value: customValue };
                 }
-                acc[attrValue.attribute_id.id].selected.push(attrValue);
+                acc[attrValue.attribute_line_id.id].selected.push(attrValue);
             } else {
-                acc[attrValue.attribute_id.id] = { selected: attrValue, custom_value: customValue };
+                acc[attrValue.attribute_line_id.id] = { selected: attrValue, custom_value: customValue };
             }
             return acc;
         }, {});
