@@ -197,7 +197,7 @@ class PaymentProvider(models.Model):
 
         # Fetch the status of the merchant account
         endpoint = (
-            f"/v1/customer/partners/{const.OAUTH_ODOO_PARTNER_ID}"
+            f"/v1/customer/partners/{self._paypal_get_oauth_partner_id()}"
             f"/merchant-integrations/{self.paypal_account_id}"
         )
         response_content = self._send_api_request("GET", endpoint)
@@ -260,6 +260,16 @@ class PaymentProvider(models.Model):
         if self.is_live:
             return "https://api-m.paypal.com"
         return "https://api-m.sandbox.paypal.com"
+
+    def _paypal_get_oauth_partner_id(self):
+        if self.is_live:
+            return const.OAUTH_ODOO_PARTNER_ID
+        return const.OAUTH_ODOO_TEST_PARTNER_ID
+
+    def _paypal_get_oauth_client_id(self):
+        if self.is_live:
+            return const.OAUTH_ODOO_CLIENT_ID
+        return const.OAUTH_ODOO_TEST_CLIENT_ID
 
     def _build_request_headers(
         self,
