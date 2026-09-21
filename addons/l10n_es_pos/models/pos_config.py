@@ -19,6 +19,16 @@ class PosConfig(models.Model):
         compute="_compute_simplified_partner_id",
     )
 
+    # the till's client reads both of these, and `_load_pos_data_fields` sends a
+    # field only when it is stored or named here
+    _POS_CLIENT_COMPUTED_FIELDS = {"is_spanish", "simplified_partner_id"}
+
+    @api.model
+    def _get_pos_client_computed_fields(self):
+        return (
+            super()._get_pos_client_computed_fields() | self._POS_CLIENT_COMPUTED_FIELDS
+        )
+
     @api.depends("company_id")
     def _compute_is_spanish(self):
         for pos in self:
