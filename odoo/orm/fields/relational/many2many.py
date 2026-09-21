@@ -230,6 +230,32 @@ class Many2many(_RelationalMulti):
             records=len(records),
             filter_access=filter_access,
         )
+        if _debug.logic.enabled and not domain.is_true():
+            # The field's `domain=` is conventionally a UI restriction and is
+            # not enforced on write, yet it decides what this read returns: a
+            # row committed to the relation table whose comodel record does
+            # not satisfy it is stored, and absent from every read, with
+            # nothing raised and nothing logged. `~/Odoo/CLAUDE.md` §4 records
+            # the open question and asks for the cheap detector -- the ORM's
+            # answer and the table's side by side, because a single number is
+            # a fact and two that should agree are a finding. It costs two
+            # queries, and only when this channel is armed.
+            cols = (relation, column1, column2)  # debuglog
+            be = records.env.backend  # debuglog
+            all_q = comodel._search([], bypass_access=filter_access)  # debuglog
+            rows = be.read_m2m_groups(records, *cols, all_q)  # debuglog
+            stored = sum(len(ids) for ids in rows.values())  # debuglog
+            returned = sum(len(ids) for ids in group.values())  # debuglog
+            _debug.logic(
+                "field.many2many.read.field_domain_applied",
+                model=self.model_name,
+                field=self.name,
+                comodel=self.comodel_name,
+                records=len(records),
+                stored=stored,
+                returned=returned,
+                hidden=stored - returned,
+            )
 
         if filter_access and group:
             corecord_ids = OrderedSet(id_ for ids in group.values() for id_ in ids)
@@ -531,7 +557,14 @@ class Many2many(_RelationalMulti):
             for id_ in recs._ids:
                 new_relation[id_] = delta.get_final_ids(new_relation[id_], created_ids)
 
-        if new_relation == old_relation:
+        # order included: `OrderedSet.__eq__` ignores it, and this field
+        # carries the commands' order into the cache -- `_apply_relation_delta`
+        # stores `tuple(new_relation[id])` -- so a set() that only reorders is
+        # a change. It is observable on a non-stored many2many, whose read is
+        # not re-sorted into the comodel's order.
+        if all(
+            tuple(new_relation[key]) == tuple(old_relation[key]) for key in old_relation
+        ):
             _debug.logic(
                 "field.many2many.write_new_unchanged",
                 model=self.model_name,
