@@ -1,6 +1,6 @@
 {
     "name": "Partner Autocomplete",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Hidden/Tools",
     "summary": "Auto-complete partner companies' data",
     "description": """
@@ -20,6 +20,8 @@ Auto-complete partner companies' data
         },
     },
     "data": [
+        "security/ir.model.access.csv",
+        "security/partner_autocomplete_security.xml",
         "views/res_company_views.xml",
         "views/res_config_settings_views.xml",
         "data/iap_service_data.xml",

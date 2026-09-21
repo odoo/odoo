@@ -1,6 +1,6 @@
 {
     "name": "Web",
-    "version": "2.4",
+    "version": "2.5",
     "category": "Hidden",
     "description": """
 Odoo Web core module.

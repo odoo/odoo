@@ -58,8 +58,8 @@ class TestPartnerOrderActivity(TransactionCase):
         self.partner.invalidate_recordset(["recent_orders_count"])
         self.assertEqual(self.partner.recent_orders_count, 0)
 
-        self.company.order_cycle_count = 1
-        self.company.order_cycle_unit = "year"
+        self.company.base_order_config_id.order_cycle_count = 1
+        self.company.base_order_config_id.order_cycle_unit = "year"
         self.partner.invalidate_recordset(["recent_orders_count"])
         self.assertEqual(
             self.partner.recent_orders_count,
@@ -133,18 +133,18 @@ class TestPartnerOrderActivity(TransactionCase):
             (1, "year", relativedelta(years=1)),
         ]:
             with self.subTest(cycle=(number, unit)):
-                self.company.order_cycle_count = number
-                self.company.order_cycle_unit = unit
+                self.company.base_order_config_id.order_cycle_count = number
+                self.company.base_order_config_id.order_cycle_unit = unit
                 self.assertEqual(
                     self.company._get_order_cycle_cutoff_date(), today - expected
                 )
 
     def test_a_zero_cycle_is_allowed_and_a_negative_one_is_not(self):
-        self.company.order_cycle_count = 0
+        self.company.base_order_config_id.order_cycle_count = 0
         self.assertEqual(
             self.company._get_order_cycle_cutoff_date(),
             fields.Date.today(),
         )
 
         with self.assertRaises(ValidationError):
-            self.company.order_cycle_count = -1
+            self.company.base_order_config_id.order_cycle_count = -1

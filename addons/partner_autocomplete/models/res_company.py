@@ -6,12 +6,7 @@ from odoo.tools.mail import email_domain_extract, url_domain_extract
 from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
-
 COMPANY_AC_TIMEOUT = 5
-
-# `res.partner` fields `_enrich()` is willing to write from an IAP enrichment
-# response. Anything else matching a field name by coincidence is dropped,
-# rather than trusting every key the configured IAP endpoint happens to send.
 ENRICH_ALLOWED_FIELDS = {
     "name",
     "website",
@@ -32,14 +27,30 @@ ENRICH_ALLOWED_FIELDS = {
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    iap_enrich_auto_done = fields.Boolean(string="Enrich Done")
+    partner_autocomplete_config_id = fields.Many2one(
+        comodel_name="partner_autocomplete.config",
+        compute="_compute_partner_autocomplete_config_id",
+        search="_search_partner_autocomplete_config_id",
+    )
+    iap_enrich_auto_done = fields.Boolean(
+        related="partner_autocomplete_config_id.iap_enrich_auto_done",
+    )
+
+    def _search_partner_autocomplete_config_id(self, operator, value):
+        return self._search_config_link("partner_autocomplete.config", operator, value)
+
+    def _compute_partner_autocomplete_config_id(self):
+        configs = self.env["partner_autocomplete.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.partner_autocomplete_config_id = by_company.get(company.id, False)
 
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
         if modules.module.current_test:
             # Skip enrichment in tests so no IAP request is ever issued.
-            res.sudo().iap_enrich_auto_done = True
+            res.sudo().partner_autocomplete_config_id.iap_enrich_auto_done = True
         else:
             res.iap_enrich_auto()
         return res
@@ -61,10 +72,12 @@ class ResCompany(models.Model):
         and a protection is added to avoid doing enrich in a loop."""
         if self.env.user._is_system() and self.env.registry.ready:
             for company in self.filtered(
-                lambda company: not company.iap_enrich_auto_done
+                lambda company: (
+                    not company.partner_autocomplete_config_id.iap_enrich_auto_done
+                )
             ):
                 if company._enrich():
-                    company.iap_enrich_auto_done = True
+                    company.partner_autocomplete_config_id.iap_enrich_auto_done = True
         return True
 
     def _enrich(self):

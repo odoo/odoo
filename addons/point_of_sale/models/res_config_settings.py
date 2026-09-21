@@ -75,7 +75,7 @@ class ResConfigSettings(models.TransientModel):
     )
     barcode_nomenclature_id = fields.Many2one(
         comodel_name="barcode.nomenclature",
-        related="company_id.nomenclature_id",
+        related="company_id.barcodes_config_id.nomenclature_id",
         readonly=False,
     )
     is_kiosk_mode = fields.Boolean(default=False)

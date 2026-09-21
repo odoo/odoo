@@ -241,7 +241,7 @@ class ResPartner(models.Model):
             partner.perform_vies_validation = (
                 to_check
                 and to_check[:2].upper() != company_code
-                and self.env.company.vat_check_vies
+                and self.env.company.account_config_id.vat_check_vies
             )
 
     @api.depends("vat")
@@ -250,7 +250,7 @@ class ResPartner(models.Model):
         if (
             not self.env["res.company"]
             .sudo()
-            .search_count([("vat_check_vies", "=", True)], limit=1)
+            .search_count([("account_config_id.vat_check_vies", "=", True)], limit=1)
         ):
             self.vies_valid = False
             return

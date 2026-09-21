@@ -1,6 +1,6 @@
 {
     "name": "Snail Mail",
-    "version": "0.4",
+    "version": "0.5",
     "category": "Hidden/Tools",
     "description": """
 Allows users to send documents by post
@@ -18,6 +18,7 @@ Allows users to send documents by post
         "views/report_assets.xml",
         "views/snailmail_views.xml",
         "security/ir.model.access.csv",
+        "security/snailmail_security.xml",
         "views/snailmail_menus.xml",
     ],
     "assets": {

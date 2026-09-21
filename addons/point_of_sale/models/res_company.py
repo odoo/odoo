@@ -57,7 +57,6 @@ class ResCompany(models.Model):
             "partner_id",
             "country_id",
             "state_id",
-            "nomenclature_id",
             "point_of_sale_use_ticket_qr_code",
             "point_of_sale_ticket_unique_code",
             "point_of_sale_ticket_portal_url_display_mode",
@@ -68,9 +67,14 @@ class ResCompany(models.Model):
 
     @api.model
     def _load_pos_data_config_fields(self, config):
-        # accounting configuration the point of sale reads as if it were
-        # the company's: the record keeps the shape the client expects
-        return ["tax_calculation_rounding_method", "account_fiscal_country_id"]
+        # configuration the point of sale reads as if it were the company's:
+        # the record keeps the shape the client expects, each name read off
+        # the configuration that declares it
+        return [
+            "tax_calculation_rounding_method",
+            "account_fiscal_country_id",
+            "nomenclature_id",
+        ]
 
     @api.model
     def _load_pos_data_read(self, records, config):
@@ -79,13 +83,25 @@ class ResCompany(models.Model):
         if not rows or not config_fields:
             return rows
         companies = self.browse([row["id"] for row in rows])
-        configs = companies.account_config_id.read(config_fields, load=False)
-        by_company = dict(
-            zip(companies.account_config_id.company_id.ids, configs, strict=True)
-        )
-        for row in rows:
-            values = by_company[row["id"]]
-            row.update({fname: values[fname] for fname in config_fields})
+        by_link = {}
+        for fname in config_fields:
+            link = next(
+                name
+                for name, field in self._config_link_fields().items()
+                if fname in self.env[field.comodel_name]._fields
+            )
+            by_link.setdefault(link, []).append(fname)
+        for link, fnames in by_link.items():
+            configs = companies[link]
+            values = dict(
+                zip(
+                    configs.company_id.ids,
+                    configs.read(fnames, load=False),
+                    strict=True,
+                )
+            )
+            for row in rows:
+                row.update({fname: values[row["id"]][fname] for fname in fnames})
         return rows
 
     @api.constrains(

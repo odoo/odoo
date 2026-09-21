@@ -93,7 +93,7 @@ class ResUsersSettings(models.Model):
                 continue
             if config is None:
                 config = self._normalize_homemenu_config(
-                    self.env.company.homemenu_default_config
+                    self.env.company.web_config_id.homemenu_default_config
                 ) or {"version": 2, "order": [], "pinned": [], "hidden": []}
             if operation in ("order", "pinned_order"):
                 key = "order" if operation == "order" else "pinned"

@@ -1,6 +1,6 @@
 {
     "name": "Barcode",
-    "version": "2.0",
+    "version": "2.1",
     "category": "Supply Chain/Inventory",
     "summary": "Scan and Parse Barcodes",
     "author": "Odoo S.A.",
@@ -10,6 +10,7 @@
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/barcodes_security.xml",
         "data/barcodes_data.xml",
         "views/barcodes_view.xml",
     ],

@@ -83,8 +83,8 @@ class TestPartnerOrderActivity(TransactionCase):
         self.partner.invalidate_recordset(["recent_orders_count"])
         self.assertEqual(self.partner.recent_orders_count, 0)
 
-        self.env.company.order_cycle_count = 1
-        self.env.company.order_cycle_unit = "year"
+        self.env.company.base_order_config_id.order_cycle_count = 1
+        self.env.company.base_order_config_id.order_cycle_unit = "year"
         self.partner.invalidate_recordset(["recent_orders_count"])
         self.assertEqual(self.partner.recent_orders_count, 1)
 

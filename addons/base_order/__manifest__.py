@@ -1,6 +1,6 @@
 {
     "name": "Base Order Management",
-    "version": "19.0.3.6.5",
+    "version": "19.0.3.6.6",
     "category": "Hidden",
     "summary": "Foundation mixins for sale and purchase order types",
     "description": """
@@ -53,6 +53,8 @@ amount_taxexc_invoiced, etc.) for drop-in adoption.
         "mixin_report_sql",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/base_order_security.xml",
         "views/res_partner_tag_views.xml",
     ],
     "assets": {

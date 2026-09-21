@@ -72,14 +72,16 @@ class SnailmailLetter(models.Model):
         related="attachment_id.name",
         string="Attachment Filename",
     )
-    color = fields.Boolean(default=lambda self: self.env.company.snailmail_color)
+    color = fields.Boolean(
+        default=lambda self: self.env.company.snailmail_config_id.snailmail_color
+    )
     cover = fields.Boolean(
         string="Cover Page",
-        default=lambda self: self.env.company.snailmail_cover,
+        default=lambda self: self.env.company.snailmail_config_id.snailmail_cover,
     )
     duplex = fields.Boolean(
         string="Both side",
-        default=lambda self: self.env.company.snailmail_duplex,
+        default=lambda self: self.env.company.snailmail_config_id.snailmail_duplex,
     )
     state = fields.Selection(
         selection=[

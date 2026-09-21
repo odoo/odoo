@@ -26,7 +26,6 @@ class IrActionsReport(models.Model):
         if self.env.context.get("snailmail_layout") and res != self.env.ref(
             "l10n_de.paperformat_euro_din", False
         ):
-            paperformat_id = self.env.ref("base.paperformat_euro")
-            return paperformat_id
+            return self.env.ref("base.paperformat_euro")
         else:
             return res

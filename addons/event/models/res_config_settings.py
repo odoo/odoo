@@ -39,7 +39,7 @@ class ResConfigSettings(models.TransientModel):
     )
     barcode_nomenclature_id = fields.Many2one(
         comodel_name="barcode.nomenclature",
-        related="company_id.nomenclature_id",
+        related="company_id.barcodes_config_id.nomenclature_id",
         readonly=False,
     )
     module_website_event_sale = fields.Boolean(string="Online Ticketing")

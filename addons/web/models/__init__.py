@@ -12,6 +12,7 @@ from . import properties_base_definition
 from . import record_snapshot
 from . import report_layout
 from . import report_theme
+from . import web_config
 from . import res_company
 from . import report_config
 from . import res_config_settings

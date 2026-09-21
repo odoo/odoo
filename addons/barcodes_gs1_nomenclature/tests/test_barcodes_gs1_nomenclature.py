@@ -168,7 +168,7 @@ class TestBarcodeGS1Nomenclature(TransactionCase):
 
     def test_preprocess_gs1_search_args_product(self):
         company = self.env.company
-        company.nomenclature_id = self.env.ref(
+        company.barcodes_config_id.nomenclature_id = self.env.ref(
             "barcodes_gs1_nomenclature.default_gs1_nomenclature"
         )
         domain = [("barcode", "in", [])]

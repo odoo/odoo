@@ -142,7 +142,7 @@ class TestSessionInfo(common.HttpCase):
             "pinned": ["mail.menu_root_discuss"],
             "hidden": [],
         }
-        self.company_a.homemenu_default_config = layout
+        self.company_a.web_config_id.homemenu_default_config = layout
         response = self.url_open(
             "/web/session/get_session_info", data=self.payload, headers=self.headers
         )
@@ -150,9 +150,11 @@ class TestSessionInfo(common.HttpCase):
 
     def test_home_menu_default_uses_only_an_allowed_cookie_company(self):
         self.authenticate(self.user.login, self.user_password)
-        self.company_a.homemenu_default_config = {"pinned": ["app.a"]}
-        self.company_c.homemenu_default_config = {"pinned": ["app.c"]}
-        self.company_b.homemenu_default_config = {"pinned": ["private.app"]}
+        self.company_a.web_config_id.homemenu_default_config = {"pinned": ["app.a"]}
+        self.company_c.web_config_id.homemenu_default_config = {"pinned": ["app.c"]}
+        self.company_b.web_config_id.homemenu_default_config = {
+            "pinned": ["private.app"]
+        }
         for cookie, expected in (
             (str(self.company_c.id), "app.c"),
             (str(self.company_b.id), "app.a"),

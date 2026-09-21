@@ -2758,7 +2758,10 @@ class AccountReturn(models.Model):
         is_account_vat_installed = (
             "account_vat" in self.env["ir.module.module"]._get_installed_module_ids()
         )
-        use_vies = is_account_vat_installed and self.company_id.vat_check_vies
+        use_vies = (
+            is_account_vat_installed
+            and self.company_id.account_config_id.vat_check_vies
+        )
         _debug.logic(
             "vies_check_mode",
             tax_return=self,

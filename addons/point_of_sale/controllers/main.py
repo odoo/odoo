@@ -125,7 +125,9 @@ class PosController(PortalAccount):
             "current_company": company.id,
             "allowed_companies": {company.id: allowed_companies[company.id]},
         }
-        session_info["nomenclature_id"] = pos_session.company_id.nomenclature_id.id
+        session_info["nomenclature_id"] = (
+            pos_session.company_id.barcodes_config_id.nomenclature_id.id
+        )
         session_info["fallback_nomenclature_id"] = (
             pos_session.config_id.fallback_nomenclature_id.id
         )

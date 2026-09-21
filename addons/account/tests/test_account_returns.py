@@ -3272,7 +3272,7 @@ class TestAccountReturn(TestAccountReportsCommon):
         # needed to have the 'check_partner_vies'
         self.ensure_installed("account_vat")
         self.basic_tax_report.country_id = self.env.ref("base.be")
-        self.env.company.vat_check_vies = True
+        self.env.company.account_config_id.vat_check_vies = True
 
         partner = self.partner_a.copy({"country_id": self.env.ref("base.es").id})
         fp_vat_required = self.env["account.fiscal.position"].create(

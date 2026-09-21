@@ -9,11 +9,11 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     order_cycle_count = fields.Integer(
-        related="company_id.order_cycle_count",
+        related="company_id.base_order_config_id.order_cycle_count",
         readonly=False,
     )
     order_cycle_unit = fields.Selection(
-        related="company_id.order_cycle_unit",
+        related="company_id.base_order_config_id.order_cycle_unit",
         readonly=False,
     )
 

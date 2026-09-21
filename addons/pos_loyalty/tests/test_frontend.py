@@ -3475,7 +3475,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_admin",
         )
         # check the same flow with gs1 nomenclature
-        self.env.company.nomenclature_id = self.env.ref(
+        self.env.company.barcodes_config_id.nomenclature_id = self.env.ref(
             "barcodes_gs1_nomenclature.default_gs1_nomenclature"
         )
         self.start_tour(

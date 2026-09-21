@@ -16,17 +16,19 @@ class TestBarcodeNomenclatureLifecycle(common.TransactionCase):
             default.unlink()
 
     def test_nomenclature_in_use_cannot_be_deleted(self):
-        """Deleting it used to empty `company.nomenclature_id` silently.
+        """Deleting it used to empty `company.barcodes_config_id.nomenclature_id` silently.
 
         `ondelete` defaults to "set null", so nothing raised -- and every later
         scan parsed against no rules and came back `type: "error"` with nothing
         pointing at the deletion.
         """
         nomenclature = self.env["barcode.nomenclature"].create({"name": "In Use"})
-        self.env.company.nomenclature_id = nomenclature
+        self.env.company.barcodes_config_id.nomenclature_id = nomenclature
         with self.assertRaises(UserError):
             nomenclature.unlink()
-        self.assertEqual(self.env.company.nomenclature_id, nomenclature)
+        self.assertEqual(
+            self.env.company.barcodes_config_id.nomenclature_id, nomenclature
+        )
 
     def test_unused_nomenclature_can_be_deleted(self):
         nomenclature = self.env["barcode.nomenclature"].create({"name": "Unused"})
@@ -36,7 +38,7 @@ class TestBarcodeNomenclatureLifecycle(common.TransactionCase):
     def test_new_company_gets_the_default_nomenclature(self):
         company = self.env["res.company"].create({"name": "Barcode Co"})
         self.assertEqual(
-            company.nomenclature_id,
+            company.barcodes_config_id.nomenclature_id,
             self.env.ref("barcodes.default_barcode_nomenclature"),
         )
 

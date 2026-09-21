@@ -234,7 +234,9 @@ class TestResUsersSettings(TransactionCase):
 
     def test_launcher_empty_override_and_operation_merging(self):
         settings = self.user_settings.with_user(self.user)
-        self.user.company_id.homemenu_default_config = {"pinned": ["app.a"]}
+        self.user.company_id.web_config_id.homemenu_default_config = {
+            "pinned": ["app.a"]
+        }
         settings.update_homemenu_config(
             [{"operation": "pin", "xmlid": "app.a", "value": False}]
         )

@@ -13,7 +13,7 @@ class TestStructure(TransactionCase):
             return {"valid": vat_number == "BE0477472701"}
 
         super().setUpClass()
-        cls.env.user.company_id.vat_check_vies = False
+        cls.env.user.company_id.account_config_id.vat_check_vies = False
         cls._vies_check_func = check_vies
 
     def test_peru_ruc_format(self):
@@ -67,7 +67,7 @@ class TestStructure(TransactionCase):
         """Test the validation with company and contact"""
 
         # set an invalid vat number
-        self.env.user.company_id.vat_check_vies = False
+        self.env.user.company_id.account_config_id.vat_check_vies = False
         company = self.env["res.partner"].create(
             {
                 "name": "World Company",
@@ -82,7 +82,7 @@ class TestStructure(TransactionCase):
             "odoo.addons.account_vat.models.res_partner.check_vies",
             type(self)._vies_check_func,
         ):
-            self.env.user.company_id.vat_check_vies = True
+            self.env.user.company_id.account_config_id.vat_check_vies = True
             with self.assertRaises(ValidationError):
                 company.vat = (
                     "BE0987654321"  # VIES refused, don't fallback on other check
@@ -158,7 +158,7 @@ class TestStructure(TransactionCase):
 
     def test_no_vies_revalidation_when_creating_company_from_contact(self):
         # Test that we don't revalidate the VAT when create a company from a contact where it's already validated
-        self.env.user.company_id.vat_check_vies = True
+        self.env.user.company_id.account_config_id.vat_check_vies = True
         with patch(
             "odoo.addons.account_vat.models.res_partner.check_vies",
             type(self)._vies_check_func,
@@ -342,5 +342,5 @@ class TestStructureVIES(TestStructure):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.user.company_id.vat_check_vies = True
+        cls.env.user.company_id.account_config_id.vat_check_vies = True
         cls._vies_check_func = stdnum.eu.vat.check_vies

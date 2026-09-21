@@ -1,8 +1,6 @@
-from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import fields, models
 from odoo.libs.debug_log import DebugLog
-from odoo.tools.date_utils import get_timedelta, time_unit_selection
-from odoo.tools.translate import _
+from odoo.tools.date_utils import get_timedelta
 
 _debug = DebugLog(__name__)
 
@@ -10,44 +8,30 @@ _debug = DebugLog(__name__)
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    order_cycle_count = fields.Integer(
-        string="Order Cycle",
-        default=3,
-        help="How long a partner may go without ordering before it counts as "
-        "having gone quiet. Ordering rhythms differ by company and by "
-        "industry: a seasonal crop supplier may need twelve months where a "
-        "convenience retailer needs one.",
-    )
-    order_cycle_unit = fields.Selection(
-        selection=time_unit_selection("day", "week", "month", "year"),
-        default="month",
-        required=True,
+    base_order_config_id = fields.Many2one(
+        comodel_name="base_order.config",
+        compute="_compute_base_order_config_id",
+        search="_search_base_order_config_id",
     )
 
-    @api.constrains("order_cycle_count")
-    def _check_order_cycle_count(self):
+    def _search_base_order_config_id(self, operator, value):
+        return self._search_config_link("base_order.config", operator, value)
+
+    def _compute_base_order_config_id(self):
+        configs = self.env["base_order.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
         for company in self:
-            if company.order_cycle_count < 0:
-                _debug.logic(
-                    "order_cycle_rejected",
-                    company=company,
-                    count=company.order_cycle_count,
-                )
-                raise ValidationError(
-                    _(
-                        "The order cycle of %(company)s must be zero or more.",
-                        company=company.display_name,
-                    ),
-                )
+            company.base_order_config_id = by_company.get(company.id, False)
 
     def _get_order_cycle_cutoff_date(self):
         self.check_singleton()
         _debug.logic(
             "order_cycle_cutoff",
             company=self,
-            count=self.order_cycle_count,
-            unit=self.order_cycle_unit,
+            count=self.base_order_config_id.order_cycle_count,
+            unit=self.base_order_config_id.order_cycle_unit,
         )
         return fields.Date.today() - get_timedelta(
-            self.order_cycle_count, self.order_cycle_unit
+            self.base_order_config_id.order_cycle_count,
+            self.base_order_config_id.order_cycle_unit,
         )

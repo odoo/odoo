@@ -279,7 +279,10 @@ class IrHttp(models.AbstractModel):
             user.company_id.id,
         )
         return (
-            self.env["res.company"].browse(company_id).homemenu_default_config or None
+            self.env["res.company"]
+            .browse(company_id)
+            .web_config_id.homemenu_default_config
+            or None
         )
 
     def session_info(self) -> dict[str, Any]:

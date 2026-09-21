@@ -10,5 +10,5 @@ class IrHttp(models.AbstractModel):
         if session_info.get("is_admin"):
             session_info[
                 "iap_company_enrich"
-            ] = not self.env.user.company_id.iap_enrich_auto_done
+            ] = not self.env.user.company_id.partner_autocomplete_config_id.iap_enrich_auto_done
         return session_info

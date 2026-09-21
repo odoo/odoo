@@ -10,6 +10,7 @@ from . import mixin_order_line_match
 from . import mixin_order_document_match
 from . import account_move
 from . import account_move_line
+from . import base_order_config
 from . import res_company
 from . import res_partner
 from . import res_partner_tag
