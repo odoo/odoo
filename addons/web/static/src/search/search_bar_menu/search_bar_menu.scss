@@ -10,10 +10,16 @@ $o-search-bar-menu-max-width: calc(100vw - #{map-get($spacers, 3) * 2 });
         min-width: 200px;
     }
 
-    .o_accordion_values .o_input {
-        max-width: 17ch;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+    .o_dropdown_title_icon {
+        width: $dropdown-item-padding-x;
+    }
+
+    @include media-breakpoint-up(md) {
+        .o_accordion_values .o_input {
+            max-width: 17ch;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     }
 
     .o_favorite_item {
