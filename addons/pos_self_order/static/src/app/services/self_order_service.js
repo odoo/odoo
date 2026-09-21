@@ -27,6 +27,7 @@ import { ComboSuggestion } from "@point_of_sale/app/models/utils/combo_suggestio
 import { session } from "@web/session";
 import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
 import { PosTicketPrinterPlugin } from "@point_of_sale/app/plugins/pos_ticket_printer_plugin";
+import { TerminalError } from "@point_of_sale/app/utils/payment/payment_interface";
 
 const { DateTime } = luxon;
 
@@ -1047,6 +1048,8 @@ export class SelfOrder extends Reactive {
             return;
         } else if (typeof error === "string") {
             message = error;
+        } else if (error instanceof TerminalError) {
+            message = _t("Payment terminal error: ") + error.message;
         }
 
         this.notification.add(message, {
