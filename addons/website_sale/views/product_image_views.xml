@@ -57,14 +57,14 @@
                                 || !record.has_attribute_value.raw_value
                             )"
                         />
-                        <div t-attf-class="card flex-row h-100 border rounded-0 #{!isApplicable ? 'opacity-50' : ''}">
-                            <div class="o_website_sale_image_list_card_image ratio ratio-1x1">
+                        <div t-attf-class="card flex-row h-100 border rounded-3 rounded-bottom-0 p-2 #{!isApplicable ? 'opacity-50' : ''}">
+                            <div class="o_website_sale_image_list_card_image rounded ratio ratio-1x1 overflow-hidden">
                                 <field name="image_1920" widget="x2_many_image"/>
                             </div>
 
                             <field
                                 name="attribute_value_ids"
-                                class="overflow-y-auto p-2"
+                                class="overflow-y-auto px-2"
                                 widget="many2many_tags_color_dot"
                                 options="{'color_field': 'html_color', 'tag_limit': 11}"
                             />
