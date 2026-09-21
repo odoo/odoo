@@ -3,8 +3,7 @@ import typing
 from odoo import api, models
 from odoo.exceptions import AccessError
 from odoo.libs.debug_log import DebugLog
-
-from odoo.addons.mail.tools.access_scan import (
+from odoo.tools.access_scan import (
     get_accessible_query,
     prepare_column_fetcher,
 )

@@ -12,13 +12,13 @@ from odoo.api import DomainType, ValuesType
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import Query
-from odoo.tools.misc import clean_context
-
-from odoo.addons.mail.tools.access_scan import (
+from odoo.tools.access_scan import (
     get_accessible_query,
     prepare_column_fetcher,
     prepare_document_access_error,
 )
+from odoo.tools.misc import clean_context
+
 from odoo.addons.mail.tools.discuss import Store, StoreFieldsInput
 
 if typing.TYPE_CHECKING:

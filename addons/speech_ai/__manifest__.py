@@ -33,12 +33,6 @@ Both degrade the same way: with no credential for any audio model, selection
 returns nothing, the reader answers with no cues and ``can_transcribe`` is
 False, so the UI says the feature is unavailable instead of failing at a vendor
 call.
-
-``kind`` gains ``speech``
--------------------------
-``gateway.ml.model.kind`` already separated chat, vision, audio and embeddings. Text to
-speech is a fifth thing a model name decides, and it is added here rather than
-in ``gateway_ml`` because the concept arrives with these engines.
     """,
     "author": "AgroMarin",
     "website": "https://www.agromarin.mx",

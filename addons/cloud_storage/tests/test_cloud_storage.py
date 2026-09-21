@@ -57,7 +57,7 @@ class TestCloudStorage(TransactionCase):
         unsupported = self.env["ir.attachment"]._get_cloud_storage_unsupported_models()
         self.assertNotIn("document.document", unsupported)
 
-    def test_fetch_content_downloads_the_blob_a_provider_holds(self):
+    def test_get_content_downloads_the_blob_a_provider_holds(self):
         """A cloud attachment has no local bytes: the fetch goes and gets them."""
         remote = self.env["ir.attachment"].create({"name": "remote.pdf"})
         remote.type = "cloud_storage"
@@ -72,8 +72,8 @@ class TestCloudStorage(TransactionCase):
             def raise_for_status(self):
                 return None
 
-        def fake_get(url, timeout=None, headers=None):
-            calls.append((url, headers))
+        def fake_request(egress, method, url, *, purpose, headers=None, **kwargs):
+            calls.append((method, url, purpose, headers, kwargs.get("max_bytes")))
             return Response()
 
         with (
@@ -82,27 +82,31 @@ class TestCloudStorage(TransactionCase):
                 "_generate_cloud_storage_download_info",
                 lambda self: {"url": "https://bucket/blob", "time_to_expiry": 300},
             ),
-            patch("odoo.addons.cloud_storage.models.ir_attachment.requests.get", fake_get),
+            patch.object(type(self.env["ir.egress"]), "request", fake_request),
         ):
-            self.assertEqual(remote._fetch_content(), b"%PDF-1.7 fetched")
-            remote._fetch_content(64)
+            self.assertEqual(remote._get_content(), b"%PDF-1.7 fetched")
+            remote._get_content(64)
 
-        self.assertEqual([call[0] for call in calls], ["https://bucket/blob"] * 2)
-        self.assertEqual(calls[0][1], {}, "a whole blob asks for no range")
         self.assertEqual(
-            calls[1][1],
+            [call[:3] for call in calls],
+            [("GET", "https://bucket/blob", "cloud_storage")] * 2,
+            "the download goes through ir.egress under the module's purpose",
+        )
+        self.assertEqual(calls[0][3], {}, "a whole blob asks for no range")
+        self.assertIsNone(calls[0][4], "a whole blob is not size-capped")
+        self.assertEqual(
+            calls[1][3],
             {"Range": "bytes=0-63"},
             "a sized read asks the provider for a prefix instead of the file",
         )
+        self.assertEqual(calls[1][4], 64, "a sized read never accepts more")
 
-    def test_fetch_content_of_a_local_blob_stays_local(self):
+    def test_get_content_of_a_local_blob_stays_local(self):
         """An attachment this database stores is never fetched over the network."""
 
         def explode(*args, **kwargs):
             raise AssertionError("a local blob must not reach the provider")
 
-        with patch(
-            "odoo.addons.cloud_storage.models.ir_attachment.requests.get", explode
-        ):
-            self.assertEqual(self.attachment._fetch_content(), b"payload")
-            self.assertEqual(self.attachment._fetch_content(3), b"pay")
+        with patch.object(type(self.env["ir.egress"]), "request", explode):
+            self.assertEqual(self.attachment._get_content(), b"payload")
+            self.assertEqual(self.attachment._get_content(3), b"pay")

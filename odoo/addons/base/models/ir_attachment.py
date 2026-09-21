@@ -17,7 +17,6 @@ from odoo import _, api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import (
     AccessError,
-    MissingError,
     UserError,
     ValidationError,
 )
@@ -47,6 +46,7 @@ from odoo.tools import (
     ormcache,
     str2bool,
 )
+from odoo.tools.access_scan import get_inaccessible_owners
 from odoo.tools.misc import limited_field_access_token
 
 from odoo.addons.base.models.ir_attachment_storage import (
@@ -318,7 +318,7 @@ class IrAttachment(models.Model):
             model_and_ids[self._coerce_model_name(values.get("res_model"))].add(
                 values.get("res_id")
             )
-        if any(self._get_comodel_records_inaccessible(model_and_ids, "write")):
+        if any(get_inaccessible_owners(self.env, model_and_ids, "write")):
             _debug.logic(
                 "create_refused",
                 uid=self.env.uid,
@@ -377,7 +377,7 @@ class IrAttachment(models.Model):
                     model_and_ids[
                         new_model if "res_model" in vals else record.res_model
                     ].add(vals.get("res_id", record.res_id))
-            if any(self._get_comodel_records_inaccessible(model_and_ids, "write")):
+            if any(get_inaccessible_owners(self.env, model_and_ids, "write")):
                 _debug.logic(
                     "write_refused",
                     uid=self.env.uid,
@@ -896,7 +896,7 @@ class IrAttachment(models.Model):
                 return file.read(size)
         return b""
 
-    def _fetch_content(self, size: int | None = None) -> bytes:
+    def _get_content(self, size: int | None = None) -> bytes:
         """Bytes of this attachment, wherever the blob lives.
 
         `_get_content_prefix` reads what this database holds -- `db_datas`, the
@@ -1236,45 +1236,6 @@ class IrAttachment(models.Model):
     def _coerce_model_name(self, res_model: Any) -> str | None:
         return res_model if isinstance(res_model, str) and res_model else None
 
-    def _get_comodel_records_inaccessible(
-        self, model_and_ids: dict[Any, Collection[int]], operation: str
-    ) -> Generator[tuple[str, int]]:
-        if self.env.su:
-            return
-        for res_model, res_ids in model_and_ids.items():
-            res_ids = OrderedSet(filter(None, res_ids))
-            if not res_model or not res_ids:
-                continue
-            if res_model not in self.env:
-                _debug.logic(
-                    "comodel_unknown",
-                    model=res_model,
-                    operation=operation,
-                    count=len(res_ids),
-                )
-                for res_id in res_ids:
-                    yield res_model, res_id
-                continue
-            if res_model == "res.users" and self.env.uid in res_ids:
-                res_ids = OrderedSet(rid for rid in res_ids if rid != self.env.uid)
-                if not res_ids:
-                    continue
-            records = self.env[res_model].browse(res_ids)
-            try:
-                records = records._filtered_access(operation)
-            except MissingError:
-                _debug.logic("comodel_records_missing", model=res_model)
-                records = records.exists()._filtered_access(operation)
-            res_ids.difference_update(records._ids)
-            _debug.perf.count(
-                "comodel_access_checked",
-                model=res_model,
-                operation=operation,
-                inaccessible=len(res_ids),
-            )
-            for res_id in res_ids:
-                yield res_model, res_id
-
     @api.model
     def _get_domain_security_prefilter(self, sec_domain: Domain) -> Domain:
         model_names, capped = self._get_model_names_attached()
@@ -1488,7 +1449,7 @@ class IrAttachment(models.Model):
                     _debug.logic("create_unique_digest_collision", size=len(raw))
                     key = None
             entries.append((vals, key))
-        if any(self._get_comodel_records_inaccessible(model_and_ids, "write")):
+        if any(get_inaccessible_owners(self.env, model_and_ids, "write")):
             _debug.logic(
                 "create_unique_refused",
                 uid=self.env.uid,
@@ -2098,7 +2059,7 @@ class IrAttachment(models.Model):
                 model_ids[res_model].add(res_id)
                 att_model_ids.append((att_id, (res_model, res_id)))
         forbidden_res_model_id = set(
-            self._get_comodel_records_inaccessible(model_ids, operation)
+            get_inaccessible_owners(self.env, model_ids, operation)
         )
         forbidden_ids.update(
             att_id for att_id, res in att_model_ids if res in forbidden_res_model_id

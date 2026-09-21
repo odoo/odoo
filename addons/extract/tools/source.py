@@ -10,7 +10,7 @@ def document_of(attachment, data: bytes | None = None, **options) -> Document:
 
     `raw` holds only what this database stores, so reading it made every
     cloud-stored attachment look like an empty file to every strategy -- no
-    text, no fields, no error. `_fetch_content` answers the same bytes for a
+    text, no fields, no error. `_get_content` answers the same bytes for a
     local blob and goes and gets a remote one.
 
     `data` is for a caller that already holds the bytes -- it had to look at
@@ -19,7 +19,7 @@ def document_of(attachment, data: bytes | None = None, **options) -> Document:
     """
     attachment.check_singleton()
     if data is None:
-        data = attachment._fetch_content()
+        data = attachment._get_content()
     return Document(
         data, attachment.mimetype or "", attachment.name or "", **options
     )

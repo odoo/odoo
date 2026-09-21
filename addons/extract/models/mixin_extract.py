@@ -118,7 +118,7 @@ class MixinExtract(models.AbstractModel):
         # Not `attachment.raw`: that is empty for a blob a storage provider
         # holds, and gating on it refused to extract exactly the documents that
         # live in the cloud.
-        content = attachment._fetch_content()
+        content = attachment._get_content()
         if not content:
             return None
         return document_of(attachment, content)

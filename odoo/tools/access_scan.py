@@ -1,21 +1,23 @@
 __all__ = [
     "get_accessible_ids",
     "get_accessible_query",
+    "get_inaccessible_owners",
     "prepare_document_access_error",
     "stable_order",
 ]
 
 import functools
 import typing
-from collections.abc import Callable, Iterable, Sequence
+from collections.abc import Callable, Collection, Generator, Iterable, Sequence
 from typing import Any
 
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
+from odoo.libs.collections import OrderedSet
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import Query
+from odoo.tools.query import Query
 
 if typing.TYPE_CHECKING:
-    from odoo import models
+    from odoo import api, models
     from odoo.api import DomainType
 
 _debug = DebugLog(__name__)
@@ -157,3 +159,45 @@ def get_accessible_query(
     query.set_result_ids(scan(offset=offset, limit=limit, order=order))
     query._rescan = lambda count_limit: scan(offset=0, limit=count_limit, order=order)
     return query
+
+
+def get_inaccessible_owners(
+    env: api.Environment,
+    model_and_ids: dict[Any, Collection[int]],
+    operation: str,
+) -> Generator[tuple[str, int]]:
+    if env.su:
+        return
+    for res_model, res_ids in model_and_ids.items():
+        res_ids = OrderedSet(filter(None, res_ids))
+        if not res_model or not res_ids:
+            continue
+        if res_model not in env:
+            _debug.logic(
+                "comodel_unknown",
+                model=res_model,
+                operation=operation,
+                count=len(res_ids),
+            )
+            for res_id in res_ids:
+                yield res_model, res_id
+            continue
+        if res_model == "res.users" and env.uid in res_ids:
+            res_ids = OrderedSet(rid for rid in res_ids if rid != env.uid)
+            if not res_ids:
+                continue
+        records = env[res_model].browse(res_ids)
+        try:
+            records = records._filtered_access(operation)
+        except MissingError:
+            _debug.logic("comodel_records_missing", model=res_model)
+            records = records.exists()._filtered_access(operation)
+        res_ids.difference_update(records._ids)
+        _debug.perf.count(
+            "comodel_access_checked",
+            model=res_model,
+            operation=operation,
+            inaccessible=len(res_ids),
+        )
+        for res_id in res_ids:
+            yield res_model, res_id

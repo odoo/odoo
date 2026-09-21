@@ -1,6 +1,7 @@
 /** @odoo-module native */
 import { reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
 
@@ -40,6 +41,15 @@ export class CallRecordingService {
         if (this.state.recording || !this.isSupported) {
             return;
         }
+        const claim = await rpc("/discuss/call/recording/start", {
+            channel_id: channel.id,
+        });
+        if (claim.error) {
+            this.notification.add(_t("Someone else is already recording this call."), {
+                type: "warning",
+            });
+            return;
+        }
         this.state.channelId = channel.id;
         this.recorder = new CallRecorder({
             localTrack: () => this.rtc.state.audioTrack,
@@ -58,7 +68,9 @@ export class CallRecordingService {
         this.state.recording = false;
         await this.recorder?.stop();
         this.recorder = undefined;
+        const channelId = this.state.channelId;
         this.state.channelId = null;
+        await rpc("/discuss/call/recording/stop", { channel_id: channelId });
     }
 
     /** @returns {MediaStream[]} */

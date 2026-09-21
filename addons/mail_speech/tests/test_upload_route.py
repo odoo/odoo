@@ -63,6 +63,12 @@ class TestUploadRoute(HttpCase):
         member.sudo()._rtc_join_call()
         return member
 
+    def _start(self):
+        self.authenticate("admin", "admin")
+        return self.call_jsonrpc(
+            "/discuss/call/recording/start", {"channel_id": self.channel.id}
+        )
+
     def test_a_member_who_has_not_joined_the_call_is_refused(self):
         response = self._post()
         self.assertEqual(response.status_code, 403)
@@ -70,6 +76,7 @@ class TestUploadRoute(HttpCase):
 
     def test_a_chunk_from_a_participant_becomes_a_segment(self):
         self._join()
+        self._start()
         response = self._post()
         self.assertEqual(response.status_code, 200)
         segment = self.env["media.segment"].search([], limit=1)
@@ -81,6 +88,7 @@ class TestUploadRoute(HttpCase):
 
     def test_a_recorded_chunk_is_queued_for_transcription(self):
         self._join()
+        self._start()
         self._post()
         segment = self.env["media.segment"].search([], limit=1)
         self.assertEqual(segment.attachment_id.speech_state, "queued")
@@ -95,11 +103,28 @@ class TestUploadRoute(HttpCase):
         self.assertEqual(self._post(start=5000, end=5000).status_code, 400)
         self.assertEqual(self._post(start=9000, end=1000).status_code, 400)
 
-    def test_a_second_recorder_is_told_the_call_is_already_being_recorded(self):
+    def test_an_overlapping_chunk_is_told_the_call_is_already_being_recorded(self):
         self._join()
+        self._start()
         self.assertEqual(self._post(start=0, end=5000).status_code, 200)
         self.assertEqual(self._post(start=4000, end=9000).status_code, 409)
         self.assertEqual(len(self.env["media.segment"].search([])), 1)
+
+    def test_a_participant_who_did_not_start_recording_may_not_upload(self):
+        self._join()
+        response = self._post()
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.json(), {"error": "not_recording"})
+        self.assertFalse(self.env["media.segment"].search([]))
+
+    def test_starting_claims_the_call(self):
+        self._join()
+        self.assertEqual(self._start(), {"recording": True})
+        history = self.channel._open_call_history()
+        self.assertEqual(
+            history.recorder_session_id.channel_member_id.partner_id,
+            self.operator.partner_id,
+        )
 
     def test_a_channel_the_caller_does_not_belong_to_is_not_even_named(self):
         other = self.env["discuss.channel"]._create_channel(

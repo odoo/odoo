@@ -87,7 +87,7 @@ class MixinMediaTimeline(models.AbstractModel):
     def action_transcribe_media(self) -> bool:
         for record in self:
             for segment in record.segment_ids:
-                if can_transcribe(segment.attachment_id.mimetype or ""):
+                if can_transcribe(segment.attachment_id.mimetype or "", self.env):
                     segment.attachment_id._transcribe_later()
         return True
 

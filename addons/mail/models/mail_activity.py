@@ -15,15 +15,15 @@ from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, Query, is_html_empty
-from odoo.tools.misc import clean_context, get_lang
-
-from odoo.addons.mail.tools import activity_calendar
-from odoo.addons.mail.tools.access_scan import (
+from odoo.tools.access_scan import (
     get_accessible_query,
     prepare_column_fetcher,
     prepare_document_access_error,
     stable_order,
 )
+from odoo.tools.misc import clean_context, get_lang
+
+from odoo.addons.mail.tools import activity_calendar
 from odoo.addons.mail.tools.discuss import Store, StoreFieldsInput
 
 if typing.TYPE_CHECKING:

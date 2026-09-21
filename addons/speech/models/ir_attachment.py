@@ -132,9 +132,6 @@ class IrAttachment(models.Model):
         try:
             cues, engine = self._speech_read(language)
         except Exception as error:
-            # Recorded and not re-raised: an exception would roll back the very
-            # write that says why this failed. Retrying a transient vendor
-            # error is the orchestrator's fallback chain, one layer down.
             _logger.warning(
                 "Could not transcribe attachment %s: %s", self.id, error, exc_info=True
             )
@@ -174,7 +171,7 @@ class IrAttachment(models.Model):
 
     def _speech_document(self, language: str | None = None, **options: Any) -> Document:
         self.check_singleton()
-        raw = self.sudo().raw
+        raw = self.sudo()._get_content()
         if not raw:
             raise UserError(self.env._("This attachment holds no data to transcribe."))
         return Document(
@@ -194,9 +191,6 @@ class IrAttachment(models.Model):
             return
         limit = self._get_index_max_chars()
         indexed = text[:limit] if limit > 0 else text
-        # Written in SQL because `_check_contents` strips `index_content` from
-        # every create and write: the column is derived from the bytes, and a
-        # recording's words cannot be derived from them without a network call.
         self.env.cr.execute(
             "UPDATE ir_attachment SET index_content = %s WHERE id = %s",
             (indexed, self.id),
@@ -244,10 +238,6 @@ class IrAttachment(models.Model):
             raise UserError(
                 self.env._("No speech engine writes %(mimetype)s.", mimetype=mimetype)
             )
-        # The engine is chosen here rather than left to `Document.of`, which
-        # takes the first writer claiming the mimetype and cannot see that an
-        # engine holds no credential. With two installed, that is the
-        # difference between speaking and a vendor error.
         audio = engines[0].write(
             text,
             env=self.env,

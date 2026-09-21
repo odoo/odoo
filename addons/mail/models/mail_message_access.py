@@ -8,8 +8,7 @@ from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, Query
-
-from odoo.addons.mail.tools.access_scan import (
+from odoo.tools.access_scan import (
     get_accessible_query,
     prepare_document_access_error,
 )

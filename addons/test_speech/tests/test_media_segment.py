@@ -1,4 +1,4 @@
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.libs.documents import Cue
 from odoo.tests import tagged
 
@@ -83,10 +83,23 @@ class TestSegmentOwnership(SpeechCase):
     def _as_stranger(self):
         return self.env(user=self.stranger, su=False)
 
+    def _portal_user(self):
+        return (
+            self.env["res.users"]
+            .with_context(no_reset_password=True)
+            .create(
+                {
+                    "name": "portal",
+                    "login": "speech_portal",
+                    "group_ids": [(6, 0, [self.env.ref("base.group_portal").id])],
+                }
+            )
+        )
+
     def test_a_stranger_may_not_file_media_against_a_record_they_cannot_write(self):
         recording = self._recording()
         attachment = self._audio()
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(AccessError):
             self._as_stranger()["media.segment"].create(
                 {
                     "res_model": recording._name,
@@ -103,15 +116,28 @@ class TestSegmentOwnership(SpeechCase):
         self.assertTrue(segment.id)
         self.assertEqual(segment._owner(), recording)
 
-    def test_the_constraint_runs_at_all(self):
-        method = next(
-            check
-            for check in self.env["media.segment"]._constraint_methods
-            if check.__name__ == "_constrains_the_owner_is_writable"
+    def test_a_reader_of_the_owner_reads_its_segments(self):
+        recording = self._recording()
+        segment = recording._add_media_segment(self._audio(), 0, 1000)
+        as_stranger = segment.with_env(self._as_stranger())
+        self.assertEqual(as_stranger.start_ms, 0)
+        self.assertEqual(
+            self._as_stranger()["media.segment"].search([("id", "=", segment.id)]),
+            as_stranger,
         )
+
+    def test_someone_who_cannot_read_the_owner_cannot_read_its_transcript(self):
+        recording = self._recording()
+        segment = recording._add_media_segment(self._audio(), 0, 1000)
+        segment.attachment_id.sudo().speech_cues = [
+            {"start": 0.0, "end": 1.0, "text": "secret", "speaker": ""}
+        ]
+        portal_env = self.env(user=self._portal_user(), su=False)
+        with self.assertRaises(AccessError):
+            segment.with_env(portal_env).read(["speech_cues"])
         self.assertFalse(
-            getattr(method, "_constrains_sudo", True),
-            "the owner check must be declared sudo=False or it never runs",
+            portal_env["media.segment"].search([("id", "=", segment.id)]),
+            "a segment whose owner is unreadable is not even found",
         )
 
 

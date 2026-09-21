@@ -50,7 +50,7 @@ class IrAttachment(models.Model):
                     }
                 )
 
-    def _fetch_content(self, size=None):
+    def _get_content(self, size=None):
         """Download the blob a provider holds, so the bytes exist for a reader.
 
         `raw` and `_get_content_prefix` answer `b""` for a `cloud_storage`
@@ -64,11 +64,18 @@ class IrAttachment(models.Model):
         header does not pull a gigabyte across the network.
         """
         if self.type != "cloud_storage":
-            return super()._fetch_content(size)
+            return super()._get_content(size)
         self.check_singleton()
         url = self._generate_cloud_storage_download_info()["url"]
         headers = {"Range": f"bytes=0-{size - 1}"} if size else {}
-        response = requests.get(url, timeout=60, headers=headers)
+        response = self.env["ir.egress"].request(
+            "GET",
+            url,
+            purpose="cloud_storage",
+            timeout=60,
+            headers=headers,
+            max_bytes=size,
+        )
         response.raise_for_status()
         return response.content
 

@@ -5,10 +5,23 @@ from collections import defaultdict
 from itertools import pairwise
 
 from odoo import api, fields, models
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import ValidationError
+from odoo.tools.access_scan import (
+    get_accessible_query,
+    get_inaccessible_owners,
+    prepare_column_fetcher,
+    prepare_document_access_error,
+    stable_order,
+)
 
 if typing.TYPE_CHECKING:
+    from odoo.api import DomainType
+    from odoo.tools import Query
+
     from odoo.addons.base.models.ir_attachment import IrAttachment
+
+SEARCH_ACCESS_CHUNK_MIN = 80
+SEARCH_ACCESS_CHUNK_MAX = 8192
 
 
 class MediaSegment(models.Model):
@@ -48,6 +61,7 @@ class MediaSegment(models.Model):
     )
     speech_cues = fields.Json(related="attachment_id.speech_cues")
 
+    _owner_idx = models.Index("(res_model, res_id, start_ms)")
     _span_is_forward = models.Constraint(
         "CHECK (end_ms > start_ms)", "A media segment must end after it starts."
     )
@@ -57,42 +71,22 @@ class MediaSegment(models.Model):
     _attachment_unique = models.Constraint(
         "UNIQUE (attachment_id)", "A media file belongs to one segment only."
     )
-    _owner_idx = models.Index("(res_model, res_id, start_ms)")
 
-    @api.depends("start_ms", "end_ms")
-    def _compute_duration_ms(self) -> None:
-        for segment in self:
-            segment.duration_ms = max(segment.end_ms - segment.start_ms, 0)
-
-    @api.constrains("res_model", "res_id", sudo=False)
-    def _constrains_the_owner_is_writable(self) -> None:
-        # A segment puts audio into someone else's timeline, and its transcript
-        # into their record. Without this any internal user could file their own
-        # recording against a call they were never in.
-        if self.env.su:
-            return
+    @api.constrains("res_model", "res_id")
+    def _constrains_the_owner_exists(self) -> None:
         for res_model, res_id in {(s.res_model, s.res_id) for s in self}:
             if res_model not in self.env:
                 raise ValidationError(
                     self.env._("%(model)s is not a model.", model=res_model)
                 )
-            owner = self.env[res_model].browse(res_id).exists()
-            if not owner:
+            if not self.env[res_model].browse(res_id).exists():
                 raise ValidationError(
                     self.env._("A media segment must belong to a record.")
                 )
-            try:
-                owner.check_access("write")
-            except AccessError as error:
-                raise ValidationError(
-                    self.env._(
-                        "You may not add media to %(name)s.", name=owner.display_name
-                    )
-                ) from error
 
     @api.constrains("res_model", "res_id", "start_ms", "end_ms")
     def _constrains_segments_do_not_overlap(self) -> None:
-        siblings = self.search(
+        siblings = self.sudo().search(
             [
                 ("res_model", "in", list(set(self.mapped("res_model")))),
                 ("res_id", "in", list(set(self.mapped("res_id")))),
@@ -112,6 +106,65 @@ class MediaSegment(models.Model):
                         )
                     )
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_media(self) -> None:
+        self.attachment_id.sudo().unlink()
+
+    @api.depends("start_ms", "end_ms")
+    def _compute_duration_ms(self) -> None:
+        for segment in self:
+            segment.duration_ms = max(segment.end_ms - segment.start_ms, 0)
+
+    def _check_access(self, operation: str) -> tuple | None:
+        result = super()._check_access(operation)
+        if not self or self.env.su:
+            return result
+        candidates = self - result[0] if result else self
+        forbidden = candidates._ids_with_inaccessible_owner(operation)
+        if not forbidden:
+            return result
+        forbidden = self.browse(forbidden)
+        if result:
+            return (result[0] + forbidden, result[1])
+        return (forbidden, lambda: prepare_document_access_error(forbidden, operation))
+
+    def _ids_with_inaccessible_owner(self, operation: str) -> list[int]:
+        rows = [(s.id, s.res_model, s.res_id) for s in self.sudo()]
+        return _forbidden_ids(self.env, rows, operation)
+
+    def _search(
+        self,
+        domain: DomainType,
+        offset: int = 0,
+        limit: int | None = None,
+        order: str | None = None,
+        *,
+        bypass_access: bool = False,
+        **kwargs,
+    ) -> Query:
+        if self.env.su or bypass_access:
+            return super()._search(
+                domain, offset, limit, stable_order(order), bypass_access=True, **kwargs
+            )
+
+        def allowed(rows: list[tuple]) -> set[int]:
+            forbidden = set(_forbidden_ids(self.env, rows, "read"))
+            return {row[0] for row in rows if row[0] not in forbidden}
+
+        return get_accessible_query(
+            self,
+            domain,
+            offset,
+            limit,
+            order,
+            super()._search,
+            fetch=prepare_column_fetcher(self, ("id", "res_model", "res_id")),
+            allowed=allowed,
+            chunk_min=SEARCH_ACCESS_CHUNK_MIN,
+            chunk_max=SEARCH_ACCESS_CHUNK_MAX,
+            **kwargs,
+        )
+
     @api.model
     def _of(self, records: models.Model) -> models.Model:
         if not records:
@@ -126,6 +179,13 @@ class MediaSegment(models.Model):
             return None
         return self.env[self.res_model].browse(self.res_id).exists()
 
-    @api.ondelete(at_uninstall=False)
-    def _unlink_media(self) -> None:
-        self.attachment_id.sudo().unlink()
+
+def _forbidden_ids(env, rows, operation: str) -> list[int]:
+    owner_operation = "read" if operation == "read" else "write"
+    owners = defaultdict(set)
+    for _id, res_model, res_id in rows:
+        owners[res_model].add(res_id)
+    unreachable = set(get_inaccessible_owners(env, owners, owner_operation))
+    return [
+        id_ for id_, res_model, res_id in rows if (res_model, res_id) in unreachable
+    ]
