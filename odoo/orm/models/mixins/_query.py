@@ -234,6 +234,13 @@ class _QueryMixin(_ModelStubs):
             domain &= Domain(self._active_name, "=", True)
 
         backend = self.env.backend
+        query = backend.search_raw(
+            self, domain, offset, limit, order, check_access=check_access
+        )
+        if query is not None:
+            prof.mark("raw")
+            return query
+
         domain = domain.optimize_full(typing.cast("BaseModel", self))
         if domain.is_false():
             _debug.logic("query.search.domain_false", model=self._name)

@@ -474,6 +474,17 @@ class StorageBackend(typing.Protocol):
         prof: typing.Any = None,
     ) -> Query: ...
 
+    def search_raw(
+        self,
+        model: BaseModel,
+        domain: Domain,
+        offset: int,
+        limit: int | None,
+        order: str | None,
+        *,
+        check_access: bool = True,
+    ) -> Query | None: ...
+
     def as_query(self, model: BaseModel, ordered: bool = True) -> Query: ...
 
     def descendants(
@@ -1088,6 +1099,18 @@ class PostgresBackend:
         return _prepare_postgres_search_query(
             model, domain, offset, limit, order, check_access=check_access, prof=prof
         )
+
+    def search_raw(
+        self,
+        model: BaseModel,
+        domain: Domain,
+        offset: int,
+        limit: int | None,
+        order: str | None,
+        *,
+        check_access: bool = True,
+    ) -> Query | None:
+        return None
 
     def as_query(self, model: BaseModel, ordered: bool = True) -> Query:
         query = Query(model.env, model._table, model._table_sql)
