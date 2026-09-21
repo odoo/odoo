@@ -16,7 +16,7 @@ from ... import decorators as api
 from ..._recordset import is_recordset
 from ..._typing import DomainType
 from ...domain import Domain
-from ...parsing import regex_order
+from ...parsing import parse_order
 from ...primitives import PREFETCH_MAX
 from ._cache_scan import (
     as_scannable_cache,
@@ -360,37 +360,31 @@ class TraversalMixin(_ModelStubs):
 
     def _sorted_load_fields(self, order: str) -> None:
         _fields = self._fields
-        for part in order.split(","):
-            match = regex_order.match(part)
-            if match:
-                field = _fields.get(match["field"])
-                if field is not None:
-                    field.check_read_access(self)
-                    field.recompute_pending(self)
+        for term in parse_order(order) or ():
+            field = _fields.get(term.field)
+            if field is not None:
+                field.check_read_access(self)
+                field.recompute_pending(self)
 
     def _sorted_by_ids(self, order: str, reverse: bool) -> tuple | None:
         _PENDING = PENDING
         _fields = self._fields
         env = self.env
 
+        terms = parse_order(order)
+        if terms is None:
+            return None
         sort_specs = []
-        for part in order.split(","):
-            match = regex_order.match(part)
-            if not match:
+        for term in terms:
+            if term.property:
                 return None
-            field_name = match["field"]
-            if match["property"]:
-                return None
-            field = _fields.get(field_name)
+            field = _fields.get(term.field)
             if field is None or not can_scan_sorted(field):
                 return None
             if field.is_many2one and env[field.comodel_name]._order != "id":
                 return None
-            desc = (match["direction"] or "").upper() == "DESC"
-            nulls_raw = (match["nulls"] or "").upper()
-            nulls_first = (nulls_raw == "NULLS FIRST") if nulls_raw else desc
-            cache = None if field_name == "id" else field._get_cache(env)
-            sort_specs.append((cache, desc, nulls_first))
+            cache = None if term.field == "id" else field._get_cache(env)
+            sort_specs.append((cache, term.desc, term.nulls_first))
 
         ids = self._ids
         for field_cache, desc, nulls_first in reversed(sort_specs):
@@ -416,18 +410,11 @@ class TraversalMixin(_ModelStubs):
     ) -> Callable[[Self], typing.Any]:
         _env = self.env
 
-        def order_to_function(order_part):
-            order_match = regex_order.match(order_part)
-            if not order_match:
-                raise ValueError(f"Invalid order {order!r} to sort")
-            field_name = order_match["field"]
-            property_name = order_match["property"]
-            reverse = (order_match["direction"] or "").upper() == "DESC"
-            nulls = (order_match["nulls"] or "").upper()
-            if nulls:
-                nulls_first = nulls == "NULLS FIRST"
-            else:
-                nulls_first = reverse
+        def order_to_function(term):
+            field_name = term.field
+            property_name = term.property
+            reverse = term.desc
+            nulls_first = term.nulls_first
 
             field = self._fields[field_name]
             field_expr = (
@@ -458,7 +445,7 @@ class TraversalMixin(_ModelStubs):
 
             elif field.relational:
                 raise ValueError(
-                    f"Invalid order on relational field {order_part!r} to sort"
+                    f"Invalid order on relational field {field_name!r} to sort"
                 )
             elif field.is_boolean:
                 getter = field.get_expression_getter(field_expr)
@@ -494,7 +481,10 @@ class TraversalMixin(_ModelStubs):
             )
             return lambda rec: comparator(getter(rec))
 
-        item_makers = [order_to_function(order_part) for order_part in order.split(",")]
+        terms = parse_order(order)
+        if terms is None:
+            raise ValueError(f"Invalid order {order!r} to sort")
+        item_makers = [order_to_function(term) for term in terms]
         if len(item_makers) == 1:
             return item_makers[0]
         return lambda rec: tuple(fn(rec) for fn in item_makers)

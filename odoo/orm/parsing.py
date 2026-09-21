@@ -1,5 +1,6 @@
 import functools
 import re
+import typing
 
 _FIX_DB_ID_RE = re.compile(r"([^/])\.id(?=/|\Z)")
 _FIX_EXTERNAL_ID_RE = re.compile(r"([^/]):id(?=/|\Z)")
@@ -77,3 +78,43 @@ def fix_import_export_id_paths(fieldname: str) -> tuple[str, ...]:
     fixed_db_id = _FIX_DB_ID_RE.sub(r"\1/.id", fieldname)
     fixed_external_id = _FIX_EXTERNAL_ID_RE.sub(r"\1/id", fixed_db_id)
     return tuple(fixed_external_id.split("/"))
+
+
+class OrderTerm(typing.NamedTuple):
+    """One comma-separated term of an ORDER BY string, already decided.
+
+    `nulls_first` carries the default the three readers agreed on before this
+    existed: absent a NULLS clause, a descending term puts them first.
+    """
+
+    field: str
+    property: str | None
+    func: str | None
+    desc: bool
+    nulls_first: bool
+
+
+@functools.lru_cache(maxsize=_PARSE_CACHE_MAXSIZE)
+def parse_order(order: str) -> tuple[OrderTerm, ...] | None:
+    """Every term of `order`, or None if any of them does not parse.
+
+    Cached on the string: an order is a property of a model or of a view, so
+    the same handful of strings are parsed over and over.
+    """
+    terms = []
+    for part in order.split(","):
+        match = regex_order.match(part)
+        if match is None:
+            return None
+        desc = (match["direction"] or "").upper() == "DESC"
+        nulls = (match["nulls"] or "").upper()
+        terms.append(
+            OrderTerm(
+                field=match["field"],
+                property=match["property"],
+                func=match["func"],
+                desc=desc,
+                nulls_first=(nulls == "NULLS FIRST") if nulls else desc,
+            )
+        )
+    return tuple(terms)
