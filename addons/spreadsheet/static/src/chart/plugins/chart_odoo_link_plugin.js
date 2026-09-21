@@ -1,5 +1,5 @@
 import { OdooCorePlugin } from "@spreadsheet/plugins";
-import { coreTypes, evaluationCommandTypes, constants, corePlugins } from "@odoo/o-spreadsheet";
+import { registerCommand, constants, corePlugins } from "@odoo/o-spreadsheet";
 import { IrMenuPlugin } from "../../ir_ui_menu/ir_ui_menu_plugin";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { deepCopy } from "@web/core/utils/objects";
@@ -39,6 +39,18 @@ export class ChartOdooLinkPlugin extends OdooCorePlugin {
     ];
     static getters = /** @type {const} */ (["getChartOdooLink", "isDataSourceLinkedToChart"]);
 
+    validators = {
+        UPDATE_ODOO_LINK_TO_CHART: this.checkOdooLinkToChart,
+    };
+
+    handlers = {
+        UPDATE_ODOO_LINK_TO_CHART: this.onUpdateOdooLinkToChart,
+        DELETE_CHART: this.onDeleteChart,
+        DUPLICATE_SHEET: this.onDuplicateSheet,
+        REMOVE_PIVOT: this.onRemovePivot,
+        REMOVE_ODOO_LIST: this.onRemoveOdooList,
+    };
+
     constructor(config) {
         super(config);
         /** @type {Object.<string, OdooLink | undefined >} */
@@ -46,80 +58,62 @@ export class ChartOdooLinkPlugin extends OdooCorePlugin {
         this.globalFieldMatchingRegistry = this.getters.getGlobalFieldMatchingRegistry();
     }
 
-    allowDispatch(cmd) {
-        switch (cmd.type) {
-            case "UPDATE_ODOO_LINK_TO_CHART": {
-                if (cmd.odooLink === undefined || cmd.odooLink.type === "odooMenu") {
-                    return CommandResult.Success;
-                }
-                const { dataSourceType, dataSourceCoreId } = cmd.odooLink;
-                if (!this.globalFieldMatchingRegistry.contains(dataSourceType)) {
-                    return CommandResult.InvalidDataSourceType;
-                }
-                if (
-                    !this.globalFieldMatchingRegistry
-                        .get(dataSourceType)
-                        .getIds()
-                        .includes(dataSourceCoreId)
-                ) {
-                    return CommandResult.InvalidDataSourceId;
-                }
-                return CommandResult.Success;
-            }
-            default:
-                return CommandResult.Success;
+    checkOdooLinkToChart(cmd) {
+        if (cmd.odooLink === undefined || cmd.odooLink.type === "odooMenu") {
+            return CommandResult.Success;
         }
+        const { dataSourceType, dataSourceCoreId } = cmd.odooLink;
+        if (!this.globalFieldMatchingRegistry.contains(dataSourceType)) {
+            return CommandResult.InvalidDataSourceType;
+        }
+        if (
+            !this.globalFieldMatchingRegistry
+                .get(dataSourceType)
+                .getIds()
+                .includes(dataSourceCoreId)
+        ) {
+            return CommandResult.InvalidDataSourceId;
+        }
+        return CommandResult.Success;
+    }
+
+    onUpdateOdooLinkToChart(cmd) {
+        this.history.update("odooLinkReferences", cmd.chartId, deepCopy(cmd.odooLink));
+    }
+
+    onDeleteChart(cmd) {
+        this.history.update("odooLinkReferences", cmd.chartId, undefined);
+        this._removeLinksToDataSource("chart", cmd.chartId);
+    }
+
+    onDuplicateSheet(cmd) {
+        this.updateOnDuplicateSheet(cmd.sheetId, cmd.sheetIdTo);
+    }
+
+    onRemovePivot(cmd) {
+        this._removeLinksToDataSource("pivot", cmd.pivotId);
+    }
+
+    onRemoveOdooList(cmd) {
+        this._removeLinksToDataSource("list", cmd.listId);
     }
 
     /**
-     * Handle a spreadsheet command
-     * @param {Object} cmd Command
+     * Drop the links of every chart pointing to the given data source.
+     *
+     * @param {string} dataSourceType
+     * @param {string} dataSourceCoreId
      */
-    handle(cmd) {
-        switch (cmd.type) {
-            case "UPDATE_ODOO_LINK_TO_CHART":
-                this.history.update("odooLinkReferences", cmd.chartId, deepCopy(cmd.odooLink));
-                break;
-            case "DELETE_CHART":
-                this.history.update("odooLinkReferences", cmd.chartId, undefined);
-                for (const chartId in this.odooLinkReferences) {
-                    const { type, ...odooLink } = this.odooLinkReferences[chartId];
-                    if (
-                        type === "dataSource" &&
-                        odooLink.dataSourceType === "chart" &&
-                        odooLink.dataSourceCoreId === cmd.chartId
-                    ) {
-                        this.history.update("odooLinkReferences", chartId, undefined);
-                    }
-                }
-                break;
-            case "DUPLICATE_SHEET":
-                this.updateOnDuplicateSheet(cmd.sheetId, cmd.sheetIdTo);
-                break;
-            case "REMOVE_PIVOT":
-                for (const chartId in this.odooLinkReferences) {
-                    const { type, ...odooLink } = this.odooLinkReferences[chartId];
-                    if (
-                        type === "dataSource" &&
-                        odooLink.dataSourceType === "pivot" &&
-                        odooLink.dataSourceCoreId === cmd.pivotId
-                    ) {
-                        this.history.update("odooLinkReferences", chartId, undefined);
-                    }
-                }
-                break;
-            case "REMOVE_ODOO_LIST":
-                for (const chartId in this.odooLinkReferences) {
-                    const { type, ...odooLink } = this.odooLinkReferences[chartId];
-                    if (
-                        type === "dataSource" &&
-                        odooLink.dataSourceType === "list" &&
-                        odooLink.dataSourceCoreId === cmd.listId
-                    ) {
-                        this.history.update("odooLinkReferences", chartId, undefined);
-                    }
-                }
-                break;
+    _removeLinksToDataSource(dataSourceType, dataSourceCoreId) {
+        for (const chartId in this.odooLinkReferences) {
+            const { type, ...odooLink } = this.odooLinkReferences[chartId];
+            if (
+                type === "dataSource" &&
+                odooLink.dataSourceType === dataSourceType &&
+                odooLink.dataSourceCoreId === dataSourceCoreId
+            ) {
+                this.history.update("odooLinkReferences", chartId, undefined);
+            }
         }
     }
 
@@ -179,10 +173,4 @@ export class ChartOdooLinkPlugin extends OdooCorePlugin {
     }
 }
 
-coreTypes.add("UPDATE_ODOO_LINK_TO_CHART");
-
-// `evaluationCommandTypes` is a snapshot of `coreTypes` taken when o-spreadsheet
-// is loaded, so every core type added here has to be registered again for
-// evaluation plugins to receive it.
-// TODO: remove once `isEvaluationCommand` also checks `coreTypes` at call time.
-evaluationCommandTypes.add("UPDATE_ODOO_LINK_TO_CHART");
+registerCommand("UPDATE_ODOO_LINK_TO_CHART", { category: "core" });

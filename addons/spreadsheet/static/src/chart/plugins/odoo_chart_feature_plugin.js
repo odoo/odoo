@@ -8,20 +8,20 @@ export class OdooChartFeaturePlugin extends OdooUIPlugin {
     overwrittenGranularities = {};
     granularityOptionsCache = {};
 
-    handle(cmd) {
-        switch (cmd.type) {
-            case "SET_GLOBAL_FILTER_VALUE": {
-                if (this.getters.isDashboard()) {
-                    this._onGlobalFilterChange(cmd);
-                }
-                break;
-            }
-            case "UPDATE_CHART_GRANULARITY": {
-                this._updateChartGranularity(cmd.chartId, cmd.granularity);
-                this.overwrittenGranularities[cmd.chartId] = cmd.granularity;
-                break;
-            }
+    handlers = {
+        SET_GLOBAL_FILTER_VALUE: this.onSetGlobalFilterValue,
+        UPDATE_CHART_GRANULARITY: this.onUpdateChartGranularity,
+    };
+
+    onSetGlobalFilterValue(cmd) {
+        if (this.getters.isDashboard()) {
+            this._onGlobalFilterChange(cmd);
         }
+    }
+
+    onUpdateChartGranularity(cmd) {
+        this._updateChartGranularity(cmd.chartId, cmd.granularity);
+        this.overwrittenGranularities[cmd.chartId] = cmd.granularity;
     }
 
     getAvailableChartGranularities(chartId) {

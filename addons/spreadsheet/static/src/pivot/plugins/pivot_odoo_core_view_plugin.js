@@ -1,5 +1,5 @@
 import { OdooEvaluationPlugin } from "@spreadsheet/plugins";
-import { links, isCoreCommand } from "@odoo/o-spreadsheet";
+import { links } from "@odoo/o-spreadsheet";
 import { isDataSourceUrl, parseDataSourceUrl } from "../../data_sources/data_source_link";
 
 const { isMarkdownLink, parseMarkdownLink } = links;
@@ -7,14 +7,14 @@ const { isMarkdownLink, parseMarkdownLink } = links;
 export class PivotOdooCoreViewPlugin extends OdooEvaluationPlugin {
     static getters = /** @type {const} */ (["isPivotUsedInHyperlinks"]);
 
-    /**
-     * Handle a spreadsheet command
-     * @param {Object} cmd Command
-     */
-    handle(cmd) {
-        if (isCoreCommand(cmd) || cmd.type === "UNDO" || cmd.type === "REDO") {
-            this.unusedPivots = undefined;
-        }
+    handlers = {
+        "*coreCommands": this.clearUnusedPivots,
+        UNDO: this.clearUnusedPivots,
+        REDO: this.clearUnusedPivots,
+    };
+
+    clearUnusedPivots() {
+        this.unusedPivots = undefined;
     }
 
     _getUnusedPivots() {
