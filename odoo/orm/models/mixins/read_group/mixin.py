@@ -9,7 +9,6 @@ from odoo.tools import SQL, Query, unique
 
 from .... import decorators as api
 from ...._typing import DomainType
-from ....constants import READ_GROUP_AGGREGATE
 from ....domain import Domain
 from ....helpers import get_tuple_itemgetter
 from ....parsing import parse_read_group_spec, regex_field_agg
@@ -541,20 +540,8 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
         for spec in aggregates:
             if spec == "__count":
                 continue
-            fname, property_name, func = parse_read_group_spec(spec)
-            if property_name:
-                raise ValueError(
-                    f"Invalid {spec!r}, this dot notation is not supported"
-                )
-            if fname not in self._fields:
-                raise ValueError(
-                    f"Invalid field {fname!r} on model {self._name!r} for {spec!r}."
-                )
-            if not func:
-                raise ValueError(f"Aggregate method is mandatory for {fname!r}")
-            if func != "sum_currency" and func not in READ_GROUP_AGGREGATE:
-                raise ValueError(f"Invalid aggregate method {func!r} for {spec!r}.")
-            self._check_spec_field_read_access(self._fields[fname])
+            _fname, _func, field = self._parse_aggregate_spec(spec)
+            self._check_spec_field_read_access(field)
 
     def _check_spec_field_read_access(self, field) -> None:
         if field.related and not field.store:

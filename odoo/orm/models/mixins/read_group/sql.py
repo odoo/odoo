@@ -28,6 +28,34 @@ _debug = DebugLog(__name__)
 
 
 class _ReadGroupSQLMixin(_ModelStubs):
+    """SQL for read_group's groupby and aggregate specs."""
+
+    def _parse_aggregate_spec(self, aggregate_spec: str) -> tuple[str, str, Field]:
+        """The field and function an aggregate spec names, or a ValueError.
+
+        One reader compiles the spec to SQL and another checks it against the
+        caller's access before any of that, and they used to spell these four
+        refusals separately, in the same words. A rule stated twice is a rule
+        free to drift.
+        """
+        fname, property_name, func = parse_read_group_spec(aggregate_spec)
+        if property_name:
+            raise ValueError(
+                f"Invalid {aggregate_spec!r}, this dot notation is not supported"
+            )
+        if fname not in self._fields:
+            raise ValueError(
+                f"Invalid field {fname!r} on model {self._name!r} for "
+                f"{aggregate_spec!r}."
+            )
+        if not func:
+            raise ValueError(f"Aggregate method is mandatory for {fname!r}")
+        if func != "sum_currency" and func not in READ_GROUP_AGGREGATE:
+            raise ValueError(
+                f"Invalid aggregate method {func!r} for {aggregate_spec!r}."
+            )
+        return fname, func, self._fields[fname]
+
     __slots__ = ()
 
     def _read_group_select_sum_currency(self, field, fname: str, query: Query) -> SQL:
@@ -94,21 +122,7 @@ class _ReadGroupSQLMixin(_ModelStubs):
         if aggregate_spec == "__count":
             return SQL("COUNT(*)")
 
-        fname, property_name, func = parse_read_group_spec(aggregate_spec)
-
-        if property_name:
-            raise ValueError(
-                f"Invalid {aggregate_spec!r}, this dot notation is not supported"
-            )
-
-        if fname not in self._fields:
-            raise ValueError(
-                f"Invalid field {fname!r} on model {self._name!r} for {aggregate_spec!r}."
-            )
-        if not func:
-            raise ValueError(f"Aggregate method is mandatory for {fname!r}")
-
-        field = self._fields[fname]
+        fname, func, field = self._parse_aggregate_spec(aggregate_spec)
         self._check_field_access(field, "read")
         if self._aggregates_through_records(field, func):
             _debug.logic(
@@ -121,11 +135,6 @@ class _ReadGroupSQLMixin(_ModelStubs):
             )
         if func == "sum_currency":
             return self._read_group_select_sum_currency(field, fname, query)
-
-        if func not in READ_GROUP_AGGREGATE:
-            raise ValueError(
-                f"Invalid aggregate method {func!r} for {aggregate_spec!r}."
-            )
 
         if func == "recordset" and not (field.relational or fname == "id"):
             raise ValueError(
