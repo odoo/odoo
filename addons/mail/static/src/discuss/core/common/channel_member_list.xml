@@ -3,13 +3,13 @@
 
     <t t-name="discuss.ChannelMemberList">
         <ActionPanel close="this.props.close" title.translate="Members" minWidth="200" initialWidth="this.env.inMeetingView ? 400 : 250" icon="'group'">
-            <div class="o-discuss-ChannelMemberList-search d-flex flex-nowrap gap-1">
+            <div class="o-discuss-ChannelMemberList-search d-flex flex-nowrap gap-1 mb-1">
                 <SearchInput search="this.search" placeholder.translate="Search members"/>
                 <button name="inviteButton" t-on-click="() => this.openChannelInvitationDialog(this.env, this.props.channel)" class="btn btn-sm btn-primary rounded-3 text-nowrap o-my-0_5" title="Add People" aria-label="Add People"><i class="oi oi-fw me-1 opacity-75" data-icon="person_add"/>Add People</button>
             </div>
             <t t-foreach="this.groupedCategories(this.categories())" t-as="group" t-key="group_index">
                 <t t-set="groupHasMembers" t-value="group.categories.some((c) => c.filtered.length > 0)"/>
-                <div t-if="group.sequenceGroup and groupHasMembers" class="o-discuss-ChannelMemberList-group border rounded-4 mt-2 p-2">
+                <div t-if="group.sequenceGroup and groupHasMembers" class="o-discuss-ChannelMemberList-group border bg-100 rounded-4 mt-2 p-2">
                     <t t-foreach="group.categories" t-as="category" t-key="category_index">
                         <t t-call="discuss.ChannelMemberList.category"/>
                     </t>
@@ -43,7 +43,7 @@
 
     <t t-name="discuss.ChannelMemberList.section">
         <h6 class="text-uppercase o-xsmaller opacity-75 d-flex align-items-center gap-1" t-att-class="category.headerClass or 'text-muted pt-3'">
-            <i t-if="category.icon" class="me-1 opacity-75" t-att-class="category.icon" role="img"/>
+            <i t-if="category.icon" class="oi ms-1 o-me-0_5" t-att-data-icon="category.icon" aria-hidden="true"/>
             <span t-out="category.showCount ? `${category.label} - ${category.filtered.length}` : category.label"/>
         </h6>
     </t>
