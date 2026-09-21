@@ -84,7 +84,7 @@ class PageUrlField extends UrlField {
         return value;
     }
     get isTranslatable() {
-        return this.props.record.fields[this.props.name].translate;
+        return this.props.record.isFieldTranslatable(this.props.name);
     }
 }
 

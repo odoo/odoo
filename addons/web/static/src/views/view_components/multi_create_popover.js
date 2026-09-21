@@ -31,6 +31,7 @@ export class MultiCreatePopover extends Component {
         this.multiCreateArchInfo = this.props.multiCreateArchInfo;
         this.multiCreateRecordProps = {
             ...this.props.multiCreateRecordProps,
+            allowTranslate: false,
             hooks: {
                 onRootLoaded: (record) => {
                     this.multiCreateData.record = record;

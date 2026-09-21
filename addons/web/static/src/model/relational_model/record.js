@@ -275,6 +275,13 @@ export class Record extends DataPoint {
         return this._invalidFields.has(fieldName);
     }
 
+    /**
+     * @param {string} fieldName
+     */
+    isFieldTranslatable(fieldName) {
+        return this.model.allowTranslate && !!this.fields[fieldName].translate;
+    }
+
     load() {
         if (arguments.length > 0) {
             throw new Error("Record.load() does not accept arguments");
