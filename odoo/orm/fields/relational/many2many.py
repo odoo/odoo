@@ -183,7 +183,6 @@ class Many2many(_RelationalMulti):
     def update_db_foreign_keys(self, model: BaseModel) -> None:
         _ddl.update_db_foreign_keys(self, model)
 
-    @override
     def _relation_siblings(self, records: BaseModel) -> list[str]:
         # every many2many of the model that reads the same relation table:
         # a link written through one of them is read through the others

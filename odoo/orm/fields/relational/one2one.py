@@ -113,7 +113,7 @@ class One2one(One2many):
                     )
                 )
             for line_id, vals in delta.updated:
-                comodel.browse(line_id).write(vals)
+                comodel.browse((line_id,)).write(vals)
             if delta.deleted:
                 comodel.browse(list(delta.deleted)).unlink()
             for record in recs:
