@@ -251,13 +251,19 @@ Transient wizard for live-preview report customization (colors, fonts, logos).
 
 ### models/res_company.py — ResCompany (`_inherit = 'res.company'`)
 
-Regenerate the report stylesheet, and hold the company's default home menu layout. The document-layout fields this file used to declare live on `report.config` since web 2.4 (see `report_config.py`); the company reads them as `report_config_id.x`.
+Regenerate the report stylesheet, and reach the company's web configuration. The document-layout fields this file used to declare live on `report.config` since web 2.4 (see `report_config.py`) and the default home menu layout on `web.config` since web 2.5 (see `web_config.py`); the company reads them as `report_config_id.x` and `web_config_id.x`.
 
-**Fields:** `homemenu_default_config` (Json): the home menu layout a user of the company sees until they save one of their own, the same `{version, order, pinned, hidden}` shape as `res.users.settings.homemenu_config`. Surfaced in `session_info` and written from the home menu's edit mode by an admin ("Set as company default"); a user's own layout replaces it whole, never merges with it.
+**Fields:** `web_config_id` (Many2one `web.config`, computed, searchable): the company's row of `web.config`, the `mixin.company.config` link every company configuration model gets.
 
 **Key Methods:**
 - `_get_asset_style_b64()` — Renders `web.styles_company_report` QWeb template, returns base64 CSS.
 - `_update_asset_style()` — Updates `web.asset_styles_company_report` attachment if content changed.
+
+### models/web_config.py — WebConfig (`_name = 'web.config'`)
+
+A company's web configuration (`_inherit = ['mixin.company.config']`, one row per company), extracted from `res.company` at web 2.5; the 2.5 migrations move the column's values across.
+
+**Fields:** `homemenu_default_config` (Json): the home menu layout a user of the company sees until they save one of their own, the same `{version, order, pinned, hidden}` shape as `res.users.settings.homemenu_config`. Surfaced in `session_info` and written from the home menu's edit mode by an admin ("Set as company default"); a user's own layout replaces it whole, never merges with it.
 
 ### models/report_config.py — ReportConfig (`_inherit = 'report.config'`)
 
@@ -464,7 +470,8 @@ Quick lookup — file → model → primary role:
 | `ir_actions_report.py` | ir.actions.report | PDF engine, layouts, attachments (the action type is base's) |
 | `report_layout.py` | report.layout | External layout catalogue |
 | `base_document_layout.py` | base.document.layout | Report layout wizard |
-| `res_company.py` | res.company | Report stylesheet regeneration, default home menu |
+| `res_company.py` | res.company | Report stylesheet regeneration, link to the web configuration |
+| `web_config.py` | web.config | Per-company web configuration: default home menu layout |
 | `report_config.py` | report.config | Document layout: external layout view, font, colours, background, theme |
 | `report_theme.py` | report.theme | Report layout theme records |
 | `properties_base_definition.py` | properties.base.definition | Property field definitions |
