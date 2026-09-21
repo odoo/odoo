@@ -14,6 +14,7 @@ from decimal import Decimal
 from itertools import product
 
 from psycopg.errors import (
+    CheckViolation,
     ForeignKeyViolation,
     NotNullViolation,
     UniqueViolation,
@@ -32,6 +33,7 @@ from ..fields.temporal import Date
 from ..models.table_objects import Constraint
 from ..parsing import parse_read_group_spec, regex_order_part_read_group
 from ..primitives import MODULE_UNINSTALL_FLAG, NewId
+from ._check_constraints import violates_check
 from ._search_flush import flush_search_dependencies
 from .backend import (
     ColumnStore,
@@ -233,6 +235,25 @@ def _check_table_constraints(storage, model: BaseModel, rows: list[dict]) -> Non
                 raise NotNullViolation(
                     f'null value in column "{name}" of relation '
                     f'"{model._table}" violates not-null constraint'
+                )
+    checks = [
+        (obj.get_full_name(model), definition)
+        for obj in model._table_objects.values()
+        if isinstance(obj, Constraint)
+        and (definition := obj.get_definition(registry))
+        and definition.strip().upper().startswith("CHECK")
+    ]
+    for conname, definition in checks:
+        for row in rows:
+            # an UPDATE carries only the columns it writes, so the stored row
+            # supplies the rest; a column neither supplies is unknown, and an
+            # unknown CHECK passes in SQL
+            stored = storage.get_row(model._table, row["id"]) if "id" in row else None
+            candidate = {**(stored or {}), **row}
+            if violates_check(definition, candidate):
+                raise CheckViolation(
+                    f'new row for relation "{model._table}" violates check '
+                    f'constraint "{conname}"'
                 )
     uniques = [
         (obj.get_full_name(model), tuple(c.strip() for c in match[1].split(",")))
