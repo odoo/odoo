@@ -20,6 +20,14 @@ class ConnectionUnavailable(requests.ConnectionError):
     """
 
 
+class CircuitOpen(ConnectionUnavailable):
+    """The connection is paused after repeated failures."""
+
+
+class BudgetSpent(ConnectionUnavailable):
+    """The service's rate limit or the connection's call budget is used up."""
+
+
 class _BreakerRegistry:
     def __init__(self) -> None:
         self._lock = threading.Lock()

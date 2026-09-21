@@ -98,10 +98,10 @@ class TestRateLimitScoping(TransactionCase):
         )
         client = get_api_client(self.env, endpoint.code, company_id=self.company_a.id)
 
-        client.check_rate_limit()
-        client.check_rate_limit()
+        client.admit()
+        client.admit()
         with self.assertRaises(RateLimitError):
-            client.check_rate_limit()
+            client.admit()
 
         buckets = (
             self.env["rate.limit.bucket"]

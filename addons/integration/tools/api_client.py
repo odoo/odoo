@@ -16,10 +16,12 @@ from urllib3.util.retry import Retry
 from odoo import _, fields
 from odoo.exceptions import UserError
 from odoo.libs import netguard, redact
-from odoo.libs.guarded_http import GuardedSession
+from odoo.libs.guarded_http import DEFAULT_MAX_BYTES, GuardedSession
 
+from .connection_gate import BudgetSpent, CircuitOpen
 from .exceptions import (
     AuthenticationError,
+    CircuitOpenError,
     ClientError,
     CommError,
     CommTimeoutError,
@@ -251,6 +253,11 @@ class OutboundAPIClient:
                 _("Credentials have expired on %s") % self.credential.date_expiration,
             )
 
+        if not self.connection:
+            self.connection = connections._resolve(
+                self.service, company=self.company_id, user=self.user_id
+            ) or connections._shared(self.service, company=self.company_id)
+
         self._credential_usable = bool(self.credential) and (
             self.connection.credential_id == self.credential
         )
@@ -302,7 +309,7 @@ class OutboundAPIClient:
         session = self.env["ir.egress"].session(
             purpose=f"integration:{self.endpoint_code}",
             policy=self.egress_policy,
-            max_bytes=None,
+            max_bytes=self.service.max_response_bytes or DEFAULT_MAX_BYTES,
             max_redirects=requests.models.DEFAULT_REDIRECT_LIMIT,
             session_class=_CredentialSession,
             pool_connections=10,
@@ -347,7 +354,6 @@ class OutboundAPIClient:
         method = method.upper()
         trace_id = kwargs.pop("trace_id", str(uuid.uuid4()))
         skip_cache = kwargs.pop("skip_cache", False)
-        skip_rate_limit = kwargs.pop("skip_rate_limit", False)
         skip_logging = kwargs.pop("skip_logging", False)
         raise_for_status = kwargs.pop("raise_for_status", True)
 
@@ -364,9 +370,7 @@ class OutboundAPIClient:
                 return cached
 
         self.service.sudo()._check_before_request(self.company_id)
-
-        if not skip_rate_limit:
-            self.check_rate_limit()
+        self.admit()
 
         self._update_request_kwargs(url, kwargs)
         self._check_credential_host(url, kwargs)
@@ -375,11 +379,7 @@ class OutboundAPIClient:
 
         try:
             _logger.info("API Request: %s %s", method, redact.mask_url(url))
-            response = self.session.request(
-                method=method,
-                url=url,
-                **kwargs,
-            )
+            response = self._send(method, url, kwargs)
 
             elapsed_ms = (datetime.now() - start_time).total_seconds() * 1000
 
@@ -862,12 +862,25 @@ class OutboundAPIClient:
             ),
         )
 
-    def check_rate_limit(self):
-        if not self.service.check_rate_limit(company_id=self.company_id):
-            raise RateLimitError(
-                _("Rate limit exceeded for service '%s'. Please try again later.")
-                % self.endpoint_code,
-            )
+    def admit(self):
+        try:
+            self.connection._admit_call()
+        except BudgetSpent as error:
+            raise RateLimitError(str(error)) from error
+        except CircuitOpen as error:
+            raise CircuitOpenError(str(error)) from error
+
+    def _send(self, method, url, kwargs):
+        try:
+            response = self.session.request(method=method, url=url, **kwargs)
+        except requests.RequestException as error:
+            self.connection._settle_call(error=error)
+            raise
+        self.connection._settle_call(response=response)
+        return response
+
+    def zeep_transport(self, url, timeout=30):
+        return _zeep_transport_class()(self, url, timeout=timeout)
 
     def _log_request(
         self,
@@ -1103,3 +1116,64 @@ def get_api_client(
         egress_policy=egress_policy,
         connection_id=connection_id,
     )
+
+
+def _zeep_transport_class():
+    from contextlib import closing  # pylint: disable=import-outside-toplevel
+
+    from zeep.transports import Transport  # pylint: disable=import-outside-toplevel
+
+    class ClientTransport(Transport):
+        def __init__(self, client, url, timeout=30):
+            super().__init__(
+                session=client.session, timeout=timeout, operation_timeout=timeout
+            )
+            self._api_client = client
+            self._logged_url = url
+
+        def _load_remote_data(self, url):
+            client = self._api_client
+            client.admit()
+            try:
+                response = self.session.get(url, timeout=self.load_timeout)
+            except requests.RequestException as error:
+                client.connection._settle_call(error=error)
+                raise
+            client.connection._settle_call(response=response)
+            with closing(response):
+                response.raise_for_status()
+                return response.content
+
+        def post(self, address, message, headers):
+            client = self._api_client
+            client.admit()
+            started = datetime.now()
+            error = None
+            response = None
+            try:
+                response = super().post(address, message, headers)
+            except requests.RequestException as exc:
+                error = exc
+                client.connection._settle_call(error=exc)
+                raise
+            except Exception as exc:
+                error = exc
+                raise
+            else:
+                client.connection._settle_call(response=response)
+                return response
+            finally:
+                try:
+                    client.log_external_exchange(
+                        "POST",
+                        address or self._logged_url,
+                        status_code=getattr(response, "status_code", None),
+                        elapsed_ms=(datetime.now() - started).total_seconds() * 1000,
+                        error=str(error) if error is not None else None,
+                    )
+                except Exception:
+                    _logger.exception(
+                        "Could not record the SOAP exchange with %s", address
+                    )
+
+    return ClientTransport

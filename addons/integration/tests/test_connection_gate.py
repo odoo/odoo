@@ -160,3 +160,139 @@ class TestConnectionGate(TransactionCase):
             [("tags", "=", "egress:probe_gate")], order="id desc", limit=1
         )
         self.assertEqual(row.connection_id, self.connection)
+
+
+@tagged("post_install", "-at_install", "integration")
+class TestClientPassesTheConnectionGate(TransactionCase):
+    """`get_api_client` used to open its own egress session and never touch the
+    connection it had resolved, so a service's client ran without the breaker,
+    the budget and the response cap that `_egress_request` callers had."""
+
+    def setUp(self):
+        super().setUp()
+        self.service = self.env["integration.service"].create(
+            {
+                "name": "Gate Probe Service",
+                "code": "gate_probe",
+                "category": "other",
+                "endpoint_url": "https://api.example.com",
+                "allowed_hosts": "api.example.com",
+                "environment": "production",
+                "auth_type": "none",
+                "rate_limit_enabled": False,
+                "retry_enabled": False,
+            }
+        )
+
+    def _client(self):
+        from odoo.addons.integration.tools.api_client import get_api_client
+
+        return get_api_client(self.env, "gate_probe")
+
+    def _ok(self):
+        response = MagicMock(status_code=200)
+        response.headers = {"Content-Type": "application/json"}
+        response.json.return_value = {}
+        response.text = "{}"
+        response.content = b"{}"
+        return response
+
+    def test_a_credential_less_service_gets_one_shared_connection(self):
+        client = self._client()
+
+        self.assertTrue(client.connection)
+        self.assertEqual(client.connection.service_id, self.service)
+        self.assertEqual(client.connection.company_id, self.env.company)
+        self.assertFalse(client.connection.credential_id)
+        self.assertEqual(self._client().connection, client.connection)
+
+    def test_a_spent_connection_budget_refuses_the_client_call(self):
+        from odoo.addons.integration.tools.exceptions import RateLimitError
+
+        client = self._client()
+        client.connection.write({"budget_requests": 1, "budget_window_seconds": 3600})
+
+        with patch.object(GuardedSession, "request", return_value=self._ok()) as sent:
+            client.request("GET", "/one", raw=True)
+            with self.assertRaises(RateLimitError):
+                client.request("GET", "/two", raw=True)
+
+        self.assertEqual(sent.call_count, 1)
+
+    def test_the_vendor_rate_limit_is_enforced_on_the_same_gate(self):
+        from odoo.addons.integration.tools.exceptions import RateLimitError
+
+        self.service.write({"rate_limit_enabled": True, "rate_limit_requests": 1})
+        client = self._client()
+        bucket = (
+            self.env["rate.limit.bucket"]
+            .sudo()
+            .get_or_create_bucket(self.service, self.env.company.id)
+        )
+        bucket.write({"tokens": 0.0})
+
+        with patch.object(GuardedSession, "request", return_value=self._ok()) as sent:
+            with self.assertRaises(RateLimitError):
+                client.request("GET", "/one", raw=True)
+
+        sent.assert_not_called()
+
+    def test_an_open_breaker_refuses_the_client_call_without_sending(self):
+        from odoo.addons.integration.tools.exceptions import (
+            CircuitOpenError,
+            CommError,
+        )
+
+        client = self._client()
+        client.connection.write(
+            {
+                "breaker_failure_threshold": 1,
+                "breaker_failure_window": 60,
+                "breaker_max_cooldown": 60,
+            }
+        )
+        with patch.object(
+            GuardedSession,
+            "request",
+            side_effect=requests.ConnectionError("refused"),
+        ):
+            with self.assertRaises(CommError):
+                client.request("GET", "/one", raw=True)
+
+        with patch.object(GuardedSession, "request", return_value=self._ok()) as sent:
+            with self.assertRaises(CircuitOpenError):
+                client.request("GET", "/two", raw=True)
+
+        sent.assert_not_called()
+        self.env.cr.precommit.run()
+        self.assertEqual(client.connection.circuit_state, "open")
+
+    def test_the_client_keeps_the_pipeline_response_cap(self):
+        from odoo.libs.guarded_http import DEFAULT_MAX_BYTES
+
+        session = self._client()._create_session()
+        self.assertEqual(
+            {adapter.max_bytes for adapter in session.adapters.values()},
+            {DEFAULT_MAX_BYTES},
+        )
+
+        self.service.max_response_bytes = 5
+        session = self._client()._create_session()
+        self.assertEqual(
+            {adapter.max_bytes for adapter in session.adapters.values()}, {5}
+        )
+
+    def test_the_zeep_transport_admits_the_wsdl_fetch_and_the_post(self):
+        from odoo.addons.integration.tools.exceptions import RateLimitError
+
+        client = self._client()
+        client.connection.write({"budget_requests": 2, "budget_window_seconds": 3600})
+        transport = client.zeep_transport("https://api.example.com/soap")
+
+        with patch.object(GuardedSession, "request", return_value=self._ok()) as sent:
+            transport._load_remote_data("https://api.example.com/x.wsdl")
+            transport.post("https://api.example.com/soap", b"<e/>", {})
+            with self.assertRaises(RateLimitError):
+                transport.post("https://api.example.com/soap", b"<e/>", {})
+
+        self.assertEqual(sent.call_count, 2)

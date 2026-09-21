@@ -13,7 +13,8 @@ from odoo.libs import redact
 from ..tools.api_client import is_private_host
 from ..tools.connection_gate import (
     CONNECTION_CONTEXT_KEY,
-    ConnectionUnavailable,
+    BudgetSpent,
+    CircuitOpen,
     breaker_for,
     is_failure,
 )
@@ -357,6 +358,45 @@ class IntegrationConnection(models.Model):
         return headers
 
     @api.model
+    @api.model
+    def _shared(self, service, company=None) -> Self:
+        connections = self.sudo().with_context(active_test=False)
+        company_id = getattr(company, "id", company) or self.env.company.id
+        domain = [
+            ("service_id", "=", service.id),
+            ("company_id", "=", company_id),
+            ("environment", "=", service.environment),
+            ("user_id", "=", False),
+            ("res_model", "=", False),
+        ]
+        connection = connections.search(
+            [*domain, ("active", "=", True)], order="sequence, id", limit=1
+        )
+        if connection:
+            return connection
+        connection = connections.search(
+            [*domain, ("credential_id", "=", False)], order="sequence, id", limit=1
+        )
+        if connection:
+            connection.active = True
+            return connection
+        connection, _created = get_or_create_row(
+            self.env.cr,
+            lambda: connections.create(
+                {
+                    "name": service.name,
+                    "service_id": service.id,
+                    "company_id": company_id,
+                    "environment": service.environment,
+                }
+            ),
+            lambda: connections.search(
+                [*domain, ("credential_id", "=", False)], order="sequence, id", limit=1
+            ),
+            conflict=f"integration.connection shared for {service.code},{company_id}",
+        )
+        return connection
+
     def _for_record(self, record, service_code: str, service_name: str, category: str):
         record.check_singleton()
         connections = self.sudo().with_context(active_test=False)
@@ -432,11 +472,22 @@ class IntegrationConnection(models.Model):
     def _admit_call(self) -> None:
         self.check_singleton()
         if not breaker_for(self.env, self).acquire_attempt():
-            raise ConnectionUnavailable(
+            raise CircuitOpen(
                 self.env._(
                     "%(connection)s is paused after repeated failures; it will be "
                     "tried again shortly.",
                     connection=self.display_name,
+                )
+            )
+        service = self.service_id.sudo()
+        if service.rate_limit_enabled and not service.check_rate_limit(
+            company_id=self.company_id.id or None
+        ):
+            raise BudgetSpent(
+                self.env._(
+                    "Rate limit exceeded for service '%(service)s'. Please try again "
+                    "later.",
+                    service=service.code,
                 )
             )
         if self.budget_requests > 0 and not self.env[
@@ -449,7 +500,7 @@ class IntegrationConnection(models.Model):
             window_seconds=max(self.budget_window_seconds, 1),
             company_id=self.company_id.id or None,
         ):
-            raise ConnectionUnavailable(
+            raise BudgetSpent(
                 self.env._(
                     "%(connection)s has used its call budget of %(budget)s calls per "
                     "%(window)s seconds.",

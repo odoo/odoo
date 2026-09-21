@@ -6,6 +6,7 @@ from .api_client import (
 )
 from .exceptions import (
     AuthenticationError,
+    CircuitOpenError,
     ClientError,
     CommError,
     CommTimeoutError,
@@ -25,6 +26,7 @@ from .payload import (
 
 __all__ = [
     "AuthenticationError",
+    "CircuitOpenError",
     "ClientError",
     "CommError",
     "CommTimeoutError",

@@ -19,6 +19,15 @@ class RateLimitError(CommError):
         super().__init__(message, status_code)
 
 
+class CircuitOpenError(CommError):
+    def __init__(
+        self,
+        message: str = "Connection paused after repeated failures",
+        status_code: int | None = None,
+    ):
+        super().__init__(message, status_code)
+
+
 class CommTimeoutError(CommError):
     def __init__(
         self, message: str = "Request timed out", status_code: int | None = None

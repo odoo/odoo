@@ -208,6 +208,12 @@ class IntegrationService(models.Model):
     oauth_token_endpoint = fields.Char()
     oauth_scope = fields.Char(default="read write")
 
+    max_response_bytes = fields.Integer(
+        string="Max Response (bytes)",
+        default=0,
+        help="Largest response body accepted from this service; 0 keeps the "
+        "server-wide cap of the outbound pipeline.",
+    )
     timeout_connect = fields.Integer(default=10)
     timeout_read = fields.Integer(default=30)
 
