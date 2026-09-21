@@ -208,8 +208,8 @@ class ResUsers(models.Model):
             except InvalidSyncToken:
                 events, next_sync_token, default_reminders = calendar_service.get_events(token=token, calendar=calendar)
                 full_sync = True
-        if next_sync_token:
-            calendar.google_sync_token = next_sync_token
+        if (calendar_user := calendar.calendar_user_id) and next_sync_token:
+            calendar_user.sudo().google_sync_token = next_sync_token
         return events, default_reminders, full_sync
 
     @api.model

@@ -36,8 +36,9 @@ class TestMultiCalendarSync(TestSyncGoogle):
         """A successful events request must persist the returned nextSyncToken on that calendar."""
         # get_events returns (events, next_sync_token, default_reminders).
         mock_get_events.return_value = (GoogleEvent([]), "token-123", ())
-        calendar = self.organizer_user.primary_calendar_id
+        calendar = self.organizer_user.with_user(self.organizer_user).primary_calendar_id
         self.organizer_user.with_user(self.organizer_user)._sync_request(self.google_service, calendar)
+        calendar.invalidate_recordset()
         self.assertEqual(calendar.google_sync_token, "token-123")
 
     def test_stop_sync_only_clears_users_calendar_tokens(self):
