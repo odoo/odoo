@@ -87,9 +87,14 @@ class _FieldDescriptionMixin(_FieldStubs):
         registry, the language and the superuser flag: an aggregator that
         needs a query the user may not be allowed to run. Subclasses add a
         callable selection or domain."""
-        if self.aggregator and not self.is_column:
-            return frozenset({"aggregator"})
-        return frozenset()
+        if self.is_column:
+            return frozenset()
+        # a non-column field sorts and groups through SQL the user must be
+        # allowed to build, which `_is_field_sortable` keys on their groups
+        dynamic = {"sortable", "groupable"}
+        if self.aggregator:
+            dynamic.add("aggregator")
+        return frozenset(dynamic)
 
     def _description_depends(self, env: Environment) -> Collection[str]:
         return env.registry.field_depends[self]

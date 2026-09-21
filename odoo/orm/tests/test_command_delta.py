@@ -176,3 +176,15 @@ def test_new_records_fold_the_same_way():
         assert node.line_ids.mapped("name") == ["l1", "l2"]
         node.line_ids = [Command.clear()]
         assert node.line_ids._ids == ()
+
+
+def test_a_link_after_a_delete_keeps_the_row_and_a_delete_after_a_link_drops_it():
+    later_link = _fold(Command.delete(5), Command.link(5))
+    assert set(later_link.linked) == {5}
+    assert set(later_link.deleted) == set()
+    assert set(later_link.get_final_ids([5])) == {5}
+
+    later_delete = _fold(Command.link(5), Command.delete(5))
+    assert set(later_delete.linked) == set()
+    assert set(later_delete.deleted) == {5}
+    assert set(later_delete.get_final_ids([5])) == set()

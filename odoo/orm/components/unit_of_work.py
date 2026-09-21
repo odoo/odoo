@@ -14,7 +14,41 @@ STALL_REPEATS = 16
 
 SNAPSHOT_AFTER = 3
 
+# distinct snapshots remembered per convergence loop: a cycle longer than
+# this is reported by the iteration cap, not by the detector
+STALL_MEMORY = 64
+
 _debug = DebugLog(__name__)
+
+
+class _StallDetector:
+    """Counts how often a pending/dirty snapshot recurs. A compute cycle of
+    period two never shows the same snapshot twice in a row, so the detector
+    keys on the snapshot itself, not on the previous iteration."""
+
+    __slots__ = ("_seen",)
+
+    def __init__(self) -> None:
+        self._seen: dict[Any, int] = {}
+
+    def observe(self, snapshot: Any) -> int:
+        key = _freeze(snapshot)
+        seen = self._seen
+        repeats = seen.get(key)
+        if repeats is None:
+            if len(seen) >= STALL_MEMORY:
+                del seen[next(iter(seen))]
+            seen[key] = 0
+            return 0
+        repeats += 1
+        seen[key] = repeats
+        return repeats
+
+
+def _freeze(snapshot: Any) -> Any:
+    if isinstance(snapshot, tuple):
+        return tuple(_freeze(part) for part in snapshot)
+    return frozenset(snapshot.items())
 
 
 @dataclass(slots=True)
@@ -79,8 +113,7 @@ class UnitOfWork[F: FieldKey = FieldKey]:
         if callable(order):
             order = order()
 
-        previous: dict[Any, frozenset] | None = None
-        repeats = 0
+        detector = _StallDetector()
         for iteration in range(self.max_iterations):
             fields = self.engine.get_pending_fields_with_real_ids()
             if not fields:
@@ -91,7 +124,7 @@ class UnitOfWork[F: FieldKey = FieldKey]:
 
             if iteration >= SNAPSHOT_AFTER:
                 snapshot = self._get_pending_snapshot()
-                repeats = repeats + 1 if snapshot == previous else 0
+                repeats = detector.observe(snapshot)
                 if _debug.logic.enabled and (iteration == SNAPSHOT_AFTER or repeats):
                     _debug.logic(
                         "unit_of_work.recompute.slow_convergence",
@@ -111,7 +144,6 @@ class UnitOfWork[F: FieldKey = FieldKey]:
                         stalled=result.stalled_fields,
                     )
                     break
-                previous = snapshot
 
             if order:
                 _max = len(order)
@@ -139,8 +171,7 @@ class UnitOfWork[F: FieldKey = FieldKey]:
     ) -> ConvergenceResult:
         result = ConvergenceResult()
 
-        previous: tuple[dict[Any, frozenset], dict[Any, frozenset]] | None = None
-        repeats = 0
+        detector = _StallDetector()
         for iteration in range(self.max_iterations):
             recompute_result = self.recompute_until_converged(recompute_fn)
             if not recompute_result.converged:
@@ -160,7 +191,7 @@ class UnitOfWork[F: FieldKey = FieldKey]:
 
             if iteration >= SNAPSHOT_AFTER:
                 snapshot = (self._get_dirty_snapshot(), self._get_pending_snapshot())
-                repeats = repeats + 1 if snapshot == previous else 0
+                repeats = detector.observe(snapshot)
                 if _debug.logic.enabled and (iteration == SNAPSHOT_AFTER or repeats):
                     _debug.logic(
                         "unit_of_work.flush.slow_convergence",
@@ -182,7 +213,6 @@ class UnitOfWork[F: FieldKey = FieldKey]:
                         stalled=result.stalled_fields,
                     )
                     break
-                previous = snapshot
 
             _debug.pipeline(
                 "unit_of_work.flush.iteration",

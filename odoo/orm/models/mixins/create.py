@@ -573,7 +573,7 @@ class CreateMixin(_ModelStubs):
 
                 records.modified([field.name for field in other_fields], create=True)
 
-        if self._constrained_projection_names:
+        if _debug.logic.enabled and self._constrained_projection_names:
             _debug.logic(
                 "create.projection_constraints",
                 model=self._name,

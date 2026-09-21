@@ -129,3 +129,22 @@ def test_a_related_through_a_one2one_converts_to_sql():
         from_clause = query.from_clause.code
         assert from_clause.count("LEFT JOIN") == 2
         assert sql.code.endswith('."id"')
+
+def test_linking_another_seat_releases_the_one_held():
+    from odoo.fields import Command
+
+    with model_test_env(Seat, Holder) as env:
+        first, second = env["o.seat"].create([{"name": "1"}, {"name": "2"}])
+        holder = env["o.holder"].create(
+            {"name": "h", "seat_id": [Command.link(first.id)]}
+        )
+        assert first.holder_id == holder
+
+        holder.write({"seat_id": [Command.link(second.id)]})
+        env.flush_all()
+        assert holder.seat_id == second
+        assert second.holder_id == holder
+        assert not first.holder_id, "the seat held before must be released"
+        env.invalidate_all()
+        assert not first.holder_id
+        assert second.holder_id == holder

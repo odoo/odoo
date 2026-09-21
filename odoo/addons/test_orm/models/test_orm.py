@@ -799,6 +799,9 @@ class TestOrmCompany(models.Model):
     date = fields.Date(company_dependent=True)
     moment = fields.Datetime(company_dependent=True)
     tag_id = fields.Many2one("test_orm.multi.tag", company_dependent=True)
+    kept_tag_id = fields.Many2one(
+        "test_orm.multi.tag", company_dependent=True, ondelete="restrict"
+    )
     truth = fields.Boolean(company_dependent=True)
     count = fields.Integer(company_dependent=True)
     phi = fields.Float(company_dependent=True, digits=(2, 5))

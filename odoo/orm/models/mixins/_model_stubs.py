@@ -73,9 +73,6 @@ class _ModelStubs:
 
         def _is_table_inheritance_root(self) -> bool: ...
         def _get_root_model_name(self) -> str: ...
-        def _invalidate_table_inheritance_siblings(
-            self, fnames: Collection[str]
-        ) -> None: ...
         def _flush_table_inheritance_siblings(
             self,
             fnames: Collection[str] | None,

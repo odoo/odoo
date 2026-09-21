@@ -608,7 +608,7 @@ class _RelationalMulti(_Relational):
             if verdicts[key]:
                 evicted += len(slot)
                 slot.clear()
-        if evicted and _debug.logic.enabled:
+        if _debug.logic.enabled and evicted:
             _debug.logic(
                 "field.x2many.scope_evict_rule_field_written",
                 model=self.model_name,
@@ -679,7 +679,7 @@ class _RelationalMulti(_Relational):
                 continue
             slot[record_id] = tuple(id_ for id_ in ids if id_ not in removed)
             synced += 1
-        if synced and _debug.logic.enabled:
+        if _debug.logic.enabled and synced:
             _debug.logic(
                 "field.x2many.scope_sync",
                 model=self.model_name,
@@ -782,7 +782,7 @@ class _RelationalMulti(_Relational):
             if isinstance(id_, int) and id_ not in slot:
                 slot[id_] = value
                 mirrored += 1
-        if mirrored and _debug.logic.enabled:
+        if _debug.logic.enabled and mirrored:
             _debug.logic(
                 "field.x2many.read_mirrored_to_superuser",
                 model=self.model_name,
@@ -1273,7 +1273,9 @@ class PrefetchX2many(Reversible):
                 (
                     coid
                     for id_ in self.record._prefetch_ids
-                    for coid in field_cache.get(id_, ())
+                    if (coids := field_cache.get(id_)) is not None
+                    and coids is not PENDING
+                    for coid in coids
                 ),
                 self.ids,
             )
@@ -1286,7 +1288,9 @@ class PrefetchX2many(Reversible):
                 (
                     coid
                     for id_ in reversed(self.record._prefetch_ids)
-                    for coid in field_cache.get(id_, ())
+                    if (coids := field_cache.get(id_)) is not None
+                    and coids is not PENDING
+                    for coid in coids
                 ),
                 reversed(self.ids),
             )

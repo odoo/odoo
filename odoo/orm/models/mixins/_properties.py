@@ -48,7 +48,10 @@ class _PropertiesMixin(_ModelStubs):
         target_model.flush_model([definition_record_field])
         definition: dict = {}
         for _holder_id, stored in self.env.backend.columns.get_column_values(
-            target_model, definition_record_field
+            target_model,
+            definition_record_field,
+            containing=[{"name": property_name}],
+            limit=1,
         ):
             definition = next(
                 (

@@ -51,3 +51,4 @@ from . import test_projection_constraints
 from . import test_hierarchy_flush
 from . import test_many2many_shared_relation
 from . import test_company_config
+from . import test_orm_audit_regressions

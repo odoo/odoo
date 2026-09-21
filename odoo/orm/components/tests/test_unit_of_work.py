@@ -394,3 +394,65 @@ class TestConvergenceResult(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestStallDetectorPeriod(unittest.TestCase):
+    """A compute cycle of period two never shows the same snapshot twice in a
+    row; the detector must still stop it long before the iteration cap."""
+
+    def test_recompute_ping_pong_stops_long_before_the_cap(self) -> None:
+        cache = FieldCache()
+        engine = ComputeEngine()
+        uow = UnitOfWork(cache, engine, max_iterations=1000)
+        a = _field("m", "a")
+        b = _field("m", "b")
+        engine.schedule(a, [1])
+        passes = [0]
+
+        def recompute_fn(field):
+            passes[0] += 1
+            engine.mark_done(field, [1])
+            engine.schedule(b if field is a else a, [1])
+
+        result = uow.recompute_until_converged(recompute_fn)
+        self.assertFalse(result.converged)
+        self.assertIn(result.stalled_fields, (["m.a"], ["m.b"]))
+        self.assertLess(passes[0], 2 * (SNAPSHOT_AFTER + STALL_REPEATS) + 2)
+        self.assertLess(result.iterations, uow.max_iterations)
+
+    def test_flush_ping_pong_stops_long_before_the_cap(self) -> None:
+        cache = FieldCache()
+        engine = ComputeEngine()
+        uow = UnitOfWork(cache, engine, max_iterations=1000)
+        a = _field("model.a", "x")
+        b = _field("model.b", "y")
+        cache.mark_dirty(a, [1])
+        flushes = [0]
+
+        def flush_fn(model_names):
+            flushes[0] += 1
+            for name in model_names:
+                cache.pop_dirty_for_model(name)
+            cache.mark_dirty(b if "model.a" in model_names else a, [1])
+
+        result = uow.flush_until_converged(lambda field: None, flush_fn)
+        self.assertFalse(result.converged)
+        self.assertLess(flushes[0], 2 * (SNAPSHOT_AFTER + STALL_REPEATS) + 2)
+        self.assertLess(result.iterations, uow.max_iterations)
+
+    def test_a_walk_through_distinct_snapshots_is_still_not_a_stall(self) -> None:
+        cache = FieldCache()
+        engine = ComputeEngine()
+        uow = UnitOfWork(cache, engine, max_iterations=SNAPSHOT_AFTER + 40)
+        f = _field("m", "walk")
+        engine.schedule(f, [1])
+        state = {"n": 1}
+
+        def recompute_fn(field):
+            engine.mark_done(field, list(engine.get_pending_ids(field)))
+            state["n"] += 1
+            engine.schedule(field, [state["n"]])
+
+        result = uow.recompute_until_converged(recompute_fn)
+        self.assertFalse(result.converged)
+        self.assertEqual(result.iterations, uow.max_iterations)

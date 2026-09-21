@@ -47,7 +47,7 @@ def _string_from_cache(
     field: BaseString, value: typing.Any, record: BaseModel
 ) -> typing.Any:
     if callable(field.translate):
-        return field._get_uncached(record, record.env, record._ids[0])
+        return _term_translated_from_cache(field, value, record)
     return False if value is None else value
 
 
@@ -55,8 +55,19 @@ def _markup_from_cache(
     field: BaseString, value: typing.Any, record: BaseModel
 ) -> typing.Any:
     if callable(field.translate):
-        return field._get_uncached(record, record.env, record._ids[0])
+        return _term_translated_from_cache(field, value, record)
     return field.convert_to_record(value, record)
+
+
+def _term_translated_from_cache(
+    field: BaseString, value: typing.Any, record: BaseModel
+) -> typing.Any:
+    # the memo already holds the value; only a term the proxy has not got
+    # (KeyError) needs the cache-miss path
+    try:
+        return field.convert_to_record(value, record)
+    except KeyError:
+        return field._get_uncached(record, record.env, record._ids[0])
 
 
 class BaseString(Field[str | typing.Literal[False]]):

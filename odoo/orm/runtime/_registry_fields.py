@@ -335,7 +335,7 @@ class _RegistryFieldsMixin(_RegistryStubs):
             other = self.models[name]
             if other._table != root and dep_field.name in other._fields:
                 found.append(other._fields[dep_field.name])
-        if len(found) > 1:
+        if _debug.logic.enabled and len(found) > 1:
             _debug.logic(
                 "registry.field_triggers.tree_expanded",
                 field=f"{dep_field.model_name}.{dep_field.name}",

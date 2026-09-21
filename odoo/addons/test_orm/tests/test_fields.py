@@ -6185,7 +6185,7 @@ class TestUpdateDbNotNull(TransactionCase):
         )
         return self.env.cr.fetchone()
 
-    def _apply_notnull(self, default):
+    def _apply_notnull(self, default, literal=None):
         from odoo.db import schema as tools_sql
 
         model = self.env["test_orm.category"]
@@ -6199,6 +6199,7 @@ class TestUpdateDbNotNull(TransactionCase):
         with (
             patch.object(field, "required", True),
             patch.object(field, "default", new=default),
+            patch.object(field, "default_literal", new=literal),
             patch.object(
                 registry, "post_init", new=lambda func, *a, **kw: func(*a, **kw)
             ),
@@ -6214,7 +6215,15 @@ class TestUpdateDbNotNull(TransactionCase):
         self.assertIsNone(column_default)
 
     def test_good_default_applies_both(self):
-        model, field = self._apply_notnull(lambda m: 7)
+        model, field = self._apply_notnull(lambda m: 7, literal=7)
         is_nullable, column_default = self._column_state(model, field)
         self.assertEqual(is_nullable, "NO")
         self.assertEqual(column_default, "7")
+
+    def test_a_decided_default_is_not_repeated_by_the_schema(self):
+        # a callable default answers per record and per environment (the
+        # current company, the clock); the column carries no frozen copy
+        model, field = self._apply_notnull(lambda m: m.env.company.id)
+        is_nullable, column_default = self._column_state(model, field)
+        self.assertEqual(is_nullable, "NO")
+        self.assertIsNone(column_default)

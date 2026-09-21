@@ -104,7 +104,7 @@ class One2many(_RelationalMulti):
         if not root or comodel._table != root:
             return (self.comodel_name,)
         names = tuple(registry.model_names_by_inheritance_root.get(root, ()))
-        if len(names) > 1:
+        if _debug.logic.enabled and len(names) > 1:
             _debug.logic(
                 "field.one2many.inverse_paired_in_tree",
                 field=f"{self.model_name}.{self.name}",
@@ -273,7 +273,7 @@ class One2many(_RelationalMulti):
 
     def _get_orphan_lines(self, comodel, model, recs, lines, inverse):
         domain = (
-            self.get_comodel_domain(model)
+            self.get_comodel_domain(recs)
             & Domain(inverse, "in", recs.ids)
             & Domain("id", "not in", lines.ids)
         )
@@ -357,9 +357,10 @@ class One2many(_RelationalMulti):
                 linked=len(delta.linked),
                 replaced=delta.replaced,
             )
-            for line_id, vals in delta.updated:
+            if delta.updated:
                 prefetch_ids = recs[self.name]._prefetch_ids
-                comodel.browse(line_id).with_prefetch(prefetch_ids).write(vals)
+                for line_id, vals in delta.updated:
+                    comodel.browse(line_id).with_prefetch(prefetch_ids).write(vals)
             to_delete.extend(delta.deleted)
             if delta.unlinked:
                 unlink(comodel.browse(list(delta.unlinked)))

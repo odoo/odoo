@@ -56,7 +56,9 @@ def test_libc_normalization_uses_the_database_mapping_without_queries():
     env.execute_query.assert_not_called()
 
 
-def test_contextual_normalization_caches_whole_strings_per_environment():
+def test_contextual_normalization_caches_whole_strings_per_registry():
+    # the fold is a fact of the database's locale, so one round trip per
+    # distinct value serves every filter and every environment of the registry
     instance = Capabilities()
     instance._text_transforms = capabilities._TextTransforms(False, {}, None)
     instance.unaccent = capabilities._identity
@@ -65,12 +67,22 @@ def test_contextual_normalization_caches_whole_strings_per_environment():
     normalize = instance.get_ilike_normalizer(first_env)
     assert normalize("ΟΣ") == "ος"
     assert normalize("ΟΣ") == "ος"
+    assert instance.get_ilike_normalizer(first_env)("ΟΣ") == "ος"
     first_env.execute_query.assert_called_once()
 
     second_env = Mock(spec=Environment)
     second_env.execute_query.return_value = [("other",)]
-    assert instance.get_ilike_normalizer(second_env)("ΟΣ") == "other"
+    assert instance.get_ilike_normalizer(second_env)("ΟΣ") == "ος"
+    second_env.execute_query.assert_not_called()
+    assert instance.get_ilike_normalizer(second_env)("ΟΣΟΣ") == "other"
     second_env.execute_query.assert_called_once()
+
+    other = Capabilities()
+    other._text_transforms = instance._text_transforms
+    other.unaccent = capabilities._identity
+    third_env = Mock(spec=Environment)
+    third_env.execute_query.return_value = [("elsewhere",)]
+    assert other.get_ilike_normalizer(third_env)("ΟΣ") == "elsewhere"
 
 
 def test_contextual_providers_do_not_expose_a_character_case_table():

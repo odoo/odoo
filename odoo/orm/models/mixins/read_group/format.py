@@ -139,7 +139,6 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
         prefetch_ids = tuple(
             unique(id_ for ids in raw_values if ids for id_ in ids if id_)
         )
-        all_records = Model(self.env, prefetch_ids, prefetch_ids)
         if func == "sum_currency":
             currency_field = self._fields[field.get_currency_field(self)]
             to_currency = self.env.company.currency_id
@@ -214,7 +213,6 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
                 return any(values)
             raise ValueError(f"Aggregate method {func!r} cannot fold {field}")
 
-        del all_records
         return (fold(ids) for ids in raw_values)
 
     def _read_group_temporal_range(

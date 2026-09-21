@@ -123,10 +123,9 @@ class _ReadGroupFillMixin(_ReadGroupEmptyMixin):
         if value is None:
             raise ValueError(f"{bound!r} is not a date to fill a group range from")
         if granularity == "hour":
-            value = value.replace(minute=0, second=0, microsecond=0)
-        else:
-            value = date_utils.start_of(value, granularity)
-        return value - datetime.timedelta(days=days_offset)
+            return value.replace(minute=0, second=0, microsecond=0)
+        offset = datetime.timedelta(days=days_offset)
+        return date_utils.start_of(value + offset, granularity) - offset
 
     def _get_read_group_temporal_bounds(
         self,

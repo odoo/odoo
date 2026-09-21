@@ -69,7 +69,7 @@ class BaseModel(
     _register: bool = False
 
     def _is_valid_field_parameter(self, field: Field, name: str) -> bool:
-        return name == "related_sudo"
+        return False
 
     @api.model
     def _post_model_setup__(self) -> None:

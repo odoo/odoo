@@ -16,7 +16,6 @@ from ...fields._field_description import description_key
 from ...primitives import LOG_ACCESS_COLUMNS
 from ._cache_scan import can_scan_read, is_cache_detached
 from ._model_stubs import _ModelStubs
-from .access import AccessMixin
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Sequence
@@ -382,8 +381,6 @@ class ReadMixin(_ModelStubs):
             )
             if field.delegation_key_settled(self.env)
         ]
-        self._flush_inheritance_tree_before_fetch(fields_to_fetch)
-
         in_prefetch_batch = self.env.transaction.prefetch_batch == (
             self._name,
             self._ids,
@@ -454,35 +451,11 @@ class ReadMixin(_ModelStubs):
                     self.env, "read", forbidden
                 )
 
-    def _flush_inheritance_tree_before_fetch(self, fields_to_fetch) -> None:
-        if not self._is_table_inheritance_root():
-            return
-        for model_name in self.env._table_inheritance_tree(self._name):
-            # the tree shares one table: a sibling's dirty value for these rows
-            # must reach the table before this SELECT; a pending compute is
-            # not this fetch's business
-            other = self.env[model_name]
-            names = [
-                field.name for field in fields_to_fetch if field.name in other._fields
-            ]
-            if names:
-                _debug.pipeline(
-                    "read.fetch.flush_inheritance_sibling",
-                    model=self._name,
-                    sibling=model_name,
-                    fields=len(names),
-                )
-                other._flush_if_dirty([other._fields[name] for name in names])
-
     def _readable_prefetch_fields(self, prefetch: typing.Any) -> tuple[Field, ...]:
         fields = self.pool.prefetch_fields(self._name, prefetch)
         if self.env.su:
             return fields
-        if type(self)._has_field_access is not AccessMixin._has_field_access:
-            return tuple(f for f in fields if self._has_field_access(f, "read"))
-        return tuple(
-            f for f in fields if not f.groups or self._has_field_access(f, "read")
-        )
+        return tuple(f for f in fields if self._has_field_access(f, "read"))
 
     def _get_fields_to_fetch(
         self,
@@ -558,11 +531,12 @@ class ReadMixin(_ModelStubs):
             column_fields=len(column_fields),
             other_fields=len(other_fields),
         )
-        if column_fields and self._table_inheritance_root:
+        if self._table_inheritance_root:
             # a cache miss here says nothing about the other models of the
-            # tree, whose dirty values land in the rows this SELECT reads
+            # tree, whose dirty values land in the rows and relation tables
+            # this fetch reads
             self._flush_table_inheritance_siblings(
-                [field.name for field in column_fields], self._ids
+                [field.name for field in (*column_fields, *other_fields)], self._ids
             )
         return self.env.backend.fetch(self, query, column_fields, other_fields)
 

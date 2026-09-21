@@ -145,7 +145,7 @@ class Many2many(_RelationalMulti):
         shared = (
             bool(root) and root == model.env[field.model_name]._table_inheritance_root
         )
-        if shared:
+        if _debug.logic.enabled and shared:
             _debug.logic(
                 "field.many2many.relation_shared_in_tree",
                 relation=self.relation,
@@ -257,29 +257,6 @@ class Many2many(_RelationalMulti):
             links=sum(len(ids) for ids in values),
         )
 
-    def _invalidate_relation_siblings(self, records: BaseModel) -> None:
-        # Two fields of one model may read the same relation table the same way
-        # round, one of them through a domain (product.product's variant values
-        # beside its attribute values). A write through one changes what the
-        # other reads, and `create` has already cached the other as empty.
-        model = records.pool[self.model_name]
-        for mname, fname in records.pool.many2many_relations[
-            self._get_relation_triple()
-        ]:
-            if fname == self.name or mname not in (self.model_name, records._name):
-                continue
-            sibling = model._fields.get(fname)
-            if sibling is None or sibling is self:
-                continue
-            _debug.logic(
-                "field.many2many.sibling_invalidated",
-                model=self.model_name,
-                field=self.name,
-                sibling=fname,
-                records=len(records),
-            )
-            sibling._invalidate_cache(records.env, records._ids)
-
     def _apply_relation_delta(
         self,
         records: BaseModel,
@@ -297,9 +274,7 @@ class Many2many(_RelationalMulti):
                 # when the sort keys are in memory, else in the commands'
                 # order; a computed value keeps the order its compute produced
                 sorted_ids = comodel.browse(ids)._sorted_by_ids(comodel._order, False)
-                if sorted_ids is not None:
-                    ids = sorted_ids
-                elif _debug.logic.enabled:
+                if _debug.logic.enabled and sorted_ids is None:
                     _debug.logic(
                         "field.many2many.written_unsorted",
                         model=self.model_name,
@@ -307,16 +282,19 @@ class Many2many(_RelationalMulti):
                         record=record.id,
                         ids=len(ids),
                     )
+                if sorted_ids is not None:
+                    ids = sorted_ids
             self._update_cache(record, ids, created=created)
-        # a sibling reading the same relation table answers from the table
+        # Two fields of one model may read the same relation table the same
+        # way round, one of them through a domain (product.product's variant
+        # values beside its attribute values). A write through one changes
+        # what the other reads, and `create` has already cached the other as
+        # empty: the siblings answer from the table again.
         siblings = [
             name for name in self._relation_siblings(records) if name != self.name
         ]
         if siblings:
             records.invalidate_recordset(siblings)
-
-        if store:
-            self._invalidate_relation_siblings(records)
 
         modified_corecord_ids = set()
 
@@ -333,7 +311,7 @@ class Many2many(_RelationalMulti):
                 modified_corecord_ids.add(y)
             for invf in records.pool.field_inverses[self]:
                 invf = typing.cast("_RelationalMulti", invf)
-                domain = invf.get_comodel_domain(comodel)
+                domain = invf.get_comodel_domain(comodel.browse(list(y_to_xs)))
                 valid_ids = set(records.filtered_domain(domain)._ids)
                 if not valid_ids:
                     continue
@@ -425,9 +403,10 @@ class Many2many(_RelationalMulti):
                 linked=len(delta.linked),
                 replaced=delta.replaced,
             )
-            for line_id, vals in delta.updated:
+            if delta.updated:
                 prefetch_ids = recs[self.name]._prefetch_ids
-                comodel.browse(line_id).with_prefetch(prefetch_ids).write(vals)
+                for line_id, vals in delta.updated:
+                    comodel.browse(line_id).with_prefetch(prefetch_ids).write(vals)
             created_ids: tuple = ()
             if delta.created:
                 created_ids = comodel.create(

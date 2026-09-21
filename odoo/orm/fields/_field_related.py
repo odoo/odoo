@@ -52,7 +52,7 @@ def setup_related(field: Field, model: BaseModel) -> None:
 
     # A one2one reads as one record, so a many2one may end on it.
     reads_one = field.is_many2one and related_field.is_one2one
-    if reads_one:
+    if _debug.logic.enabled and reads_one:
         _debug.logic(
             "field.related.many2one_over_one2one",
             model=field.model_name,

@@ -252,7 +252,7 @@ class TranslationMixin(_ModelStubs):
     ) -> tuple[list[dict[str, str]], dict[str, typing.Any]]:
         self.check_singleton()
         field = self._fields[field_name]
-        langs = set(langs or self.env.registry.locale.installed_langs(self.env))
+        langs = sorted(set(langs or self.env.registry.locale.installed_langs(self.env)))
         self_lang = self.with_context(check_translations=True, prefetch_langs=True)
         val_en = self_lang.with_context(lang="en_US")[field_name]
         if not field.translate:

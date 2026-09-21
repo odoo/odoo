@@ -191,7 +191,7 @@ class _TriggerIndex:
     def get_trees(self, fields: list[Any] | None) -> dict[Any, TriggerTree]:
         wanted = None if fields is None else [self.field_ids[f] for f in fields]
         if _debug.perf.enabled:
-            return self._get_trees_one_by_one(wanted)
+            return self._get_trees_one_by_one(wanted)  # debuglog
         return {
             self.fields[field_id]: self._wrap(node)
             for field_id, node in _get_trigger_trees(self.payload, self.meta, wanted)

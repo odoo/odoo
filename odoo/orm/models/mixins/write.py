@@ -221,8 +221,6 @@ class WriteMixin(_ModelStubs):
             if real_recs:
                 written_names = [field.name for field, _value in field_values]
                 real_recs._evict_x2many_scopes_reading_through(written_names)
-                if self._table_inheritance_root:
-                    real_recs._invalidate_table_inheritance_siblings(written_names)
             prof.mark("dirty")
 
             self.modified(vals)

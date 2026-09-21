@@ -102,9 +102,7 @@ class RecomputeMixin(_ModelStubs):
                 records._check_fields([field.name])
 
     def _invalidate_inheritance_tree(self, fnames: Collection[str]) -> None:
-        tree = self.env._table_inheritance_tree(self._name) or (
-            self._siblings_of_inheritance_subtype()
-        )
+        tree = self.env._table_inheritance_tree(self._name)
         if not tree:
             return
         _debug.pipeline(
@@ -119,16 +117,6 @@ class RecomputeMixin(_ModelStubs):
             names = [name for name in fnames if name in other._fields]
             if names:
                 other.browse(self._ids).invalidate_recordset(names)
-
-    def _siblings_of_inheritance_subtype(self) -> tuple[str, ...]:
-        root = self._table_inheritance_root
-        if not root or root == self._table:
-            return ()
-        return tuple(
-            name
-            for name in self.env.registry.model_names_by_inheritance_root.get(root, ())
-            if name != self._name
-        )
 
     def _modified_before(self, fnames: Collection[str]) -> None:
         return self.modified(fnames, before=True)

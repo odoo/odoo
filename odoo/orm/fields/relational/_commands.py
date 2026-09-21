@@ -81,8 +81,11 @@ class CommandDelta:
         return delta
 
     def _link(self, id_: IdType) -> None:
+        # the later command wins, whichever way round: a delete after a link
+        # drops the link above, and a link after a delete keeps the row
         self.linked.add(id_)
         self.unlinked.discard(id_)
+        self.deleted.discard(id_)
 
     def _replace(self, ids: tuple[IdType, ...]) -> None:
         self.replaced = True

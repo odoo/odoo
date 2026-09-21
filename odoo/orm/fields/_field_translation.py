@@ -323,7 +323,7 @@ def update_cache(
             else:
                 sub.update(dict.fromkeys(ids, scalar))
         if field.is_column and dirty:
-            core.mark_dirty(field, (id_ for id_ in ids if id_))
+            field._mark_column_dirty(records)
         return True
     if field.translate is True:
         Field._update_cache(field, records, cache_value, dirty)

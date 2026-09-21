@@ -476,6 +476,11 @@ class _FieldSqlMixin(_FieldStubs):
         assert operator not in Domain.NEGATIVE_OPERATORS, (
             "only positive operators are implemented"
         )
+        # the SQL side checks the field before compiling; a predicate whose
+        # fast path reads the shared cache would otherwise answer for a
+        # field the user may not read
+        if self.groups:
+            self.check_read_access(records)
         getter = self.get_expression_getter(field_expr)
 
         if operator == "in":

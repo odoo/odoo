@@ -243,7 +243,7 @@ class InMemoryCursor(BaseCursor):
             rows = self._fixtures.get((key, tuple(params)))
         if rows is None:
             rows = self._fixtures.get(key)
-            if rows is not None and params is not None:
+            if _debug.logic.enabled and rows is not None and params is not None:
                 _debug.logic(
                     "test_env.sql_fixture_params_ignored",
                     query=key[:120],

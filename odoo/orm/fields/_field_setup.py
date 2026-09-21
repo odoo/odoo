@@ -47,7 +47,7 @@ def _normalize_computed_attrs(attrs: dict) -> None:
     if attrs.get("related"):
         attrs["store"] = attrs.get("store", False)
         attrs["compute_sudo"] = attrs.get(
-            "compute_sudo", attrs.get("related_sudo", True)
+            "compute_sudo", attrs.pop("related_sudo", True)
         )
         attrs["copy"] = attrs.get("copy", False)
         attrs["readonly"] = attrs.get("readonly", True)

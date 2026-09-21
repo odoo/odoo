@@ -145,3 +145,43 @@ class TestFieldGroupsInSql(TransactionCase):
         source = self.env["test_orm.model.some_access"].create({"a": 42, "d": 7})
         [vals] = source.with_user(manager).copy_data()
         self.assertEqual(vals.get("d"), 7, "the group's own members must still copy it")
+
+
+class TestFieldGroupsInPredicates(TransactionCase):
+    """filtered_domain builds Python predicates; a pattern predicate has a
+    fast path over the shared cache and must still refuse a field the user
+    may not read, as the SQL side does."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.probe_user = cls.env["res.users"].create(
+            {
+                "name": "no_erp_manager_predicates",
+                "login": "no_erp_manager_predicates",
+                "group_ids": [(6, 0, [cls.env.ref("base.group_user").id])],
+            }
+        )
+        cls.records = cls.env["test_orm.model.some_access"].create(
+            [{"a": 1, "d": 7}, {"a": 2, "d": 12}]
+        )
+
+    def test_a_pattern_predicate_on_a_restricted_field_is_denied_on_a_warm_cache(
+        self,
+    ):
+        self.records.mapped("d")  # the superuser read fills the shared slot
+        as_user = self.records.with_user(self.probe_user)
+        for domain in (
+            [("d", "like", "1")],
+            [("d", "=ilike", "12")],
+            [("d", "=~", "1")],
+            [("d", "not like", "1")],
+            [("d", "=", 12)],
+            [("d", "in", [7])],
+        ):
+            with self.subTest(domain=domain), self.assertRaises(AccessError):
+                as_user.filtered_domain(domain)
+
+    def test_a_pattern_predicate_on_a_readable_field_still_answers(self):
+        as_user = self.records.with_user(self.probe_user)
+        self.assertEqual(as_user.filtered_domain([("a", "like", "2")]).mapped("a"), [2])

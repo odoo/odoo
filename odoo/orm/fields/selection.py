@@ -278,7 +278,7 @@ class Selection[T = str | typing.Literal[False]](Field[T]):
     ) -> str | None:
         if not validate or not self.validate or self._selection is None:
             return value or None
-        if value in self._selection:
+        if isinstance(value, str) and value in self._selection:
             return value
         if not value:
             return None

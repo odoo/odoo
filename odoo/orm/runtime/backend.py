@@ -294,7 +294,12 @@ class ColumnStore(typing.Protocol):
     ) -> int: ...
 
     def get_column_values(
-        self, model: BaseModel, column: str
+        self,
+        model: BaseModel,
+        column: str,
+        *,
+        containing: typing.Any = None,
+        limit: int | None = None,
     ) -> list[tuple[int, typing.Any]]: ...
 
 
@@ -404,17 +409,30 @@ class PostgresColumnStore:
         return cr.rowcount
 
     def get_column_values(
-        self, model: BaseModel, column: str
+        self,
+        model: BaseModel,
+        column: str,
+        *,
+        containing: typing.Any = None,
+        limit: int | None = None,
     ) -> list[tuple[int, typing.Any]]:
-        # every row holding a value in the column, by id, as stored
-        return model.env.execute_query(
-            SQL(
-                "SELECT id, %s FROM %s WHERE %s IS NOT NULL ORDER BY id",
+        where = SQL("%s IS NOT NULL", SQL.identifier(column))
+        if containing is not None:
+            where = SQL(
+                "%s AND %s @> %s::jsonb",
+                where,
                 SQL.identifier(column),
-                SQL.identifier(model._table),
-                SQL.identifier(column),
+                json.dumps(containing),
             )
+        query = SQL(
+            "SELECT id, %s FROM %s WHERE %s ORDER BY id",
+            SQL.identifier(column),
+            SQL.identifier(model._table),
+            where,
         )
+        if limit is not None:
+            query = SQL("%s LIMIT %s", query, limit)
+        return model.env.execute_query(query)
 
 
 @typing.runtime_checkable
@@ -455,20 +473,6 @@ class StorageBackend(typing.Protocol):
         check_access: bool = True,
         prof: typing.Any = None,
     ) -> Query: ...
-
-    # The domain as the caller wrote it, before `optimize_full`: a backend
-    # that compiles domains itself answers here and the optimisation is
-    # skipped; None means "optimise and call search" as before.
-    def search_raw(
-        self,
-        model: BaseModel,
-        domain: Domain,
-        offset: int,
-        limit: int | None,
-        order: str | None,
-        *,
-        check_access: bool = True,
-    ) -> Query | None: ...
 
     def as_query(self, model: BaseModel, ordered: bool = True) -> Query: ...
 
@@ -1085,18 +1089,6 @@ class PostgresBackend:
             model, domain, offset, limit, order, check_access=check_access, prof=prof
         )
 
-    def search_raw(
-        self,
-        model: BaseModel,
-        domain: Domain,
-        offset: int,
-        limit: int | None,
-        order: str | None,
-        *,
-        check_access: bool = True,
-    ) -> Query | None:
-        return None
-
     def as_query(self, model: BaseModel, ordered: bool = True) -> Query:
         query = Query(model.env, model._table, model._table_sql)
         query.set_result_ids(model._ids, ordered)
@@ -1435,7 +1427,7 @@ class PostgresBackend:
             )
         ):
             on_restrict_id, field_json = res[0]
-            to_delete_id = next(iter(field_json.values()))
+            to_delete_id = next(v for v in field_json.values() if v in sub_ids)
             on_restrict_record = referrer.browse(on_restrict_id)
             to_delete_record = model.browse(to_delete_id)
             _debug.logic(

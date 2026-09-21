@@ -2,7 +2,7 @@ import threading
 import typing
 from contextlib import closing
 from dataclasses import dataclass
-from functools import lru_cache, partial
+from functools import partial
 
 from psycopg import sql as psycopg_sql
 
@@ -37,10 +37,11 @@ class _TextTransforms:
     ilike: dict[int, str] | None
 
 
+_ILIKE_FOLD_CACHE_MAX = 4096
+
+
 class _TextTables:
     by_db: dict[str, _TextTransforms] = {}
-    # one build per process and database: a cold process whose threads all
-    # meet their first ilike at once must not each scan the code points
     build_lock = threading.Lock()
 
 
@@ -133,13 +134,13 @@ class _RegistryCapabilitiesMixin(_RegistryStubs):
     unaccent: typing.Callable[..., SQL | str | psycopg_sql.Composed]
 
     _text_transforms: _TextTransforms | None
+    _ilike_folded: dict[str, str]
 
     def _probe_capabilities(self, cr: BaseCursor, db_name: str) -> None:
+        self._ilike_folded = {}
         self.has_unaccent = get_unaccent_status(cr)
         self.has_trigram = has_trigram(cr)
         self.unaccent = _unaccent if self.has_unaccent else _identity
-        # the character tables cost a scan of every code point; a process that
-        # never filters records in memory with ilike never needs them
         cached = _TextTables.by_db.get(db_name)
         self._text_transforms = (
             cached
@@ -180,9 +181,19 @@ class _RegistryCapabilitiesMixin(_RegistryStubs):
         if ilike_table is not None:
             return partial(_translate_python, table=ilike_table)
 
-        @lru_cache(maxsize=256)
+        try:
+            folded = self._ilike_folded
+        except AttributeError:
+            folded = self._ilike_folded = {}
+
         def normalize(value: str) -> str:
-            expression = self.unaccent(SQL("%s", value))
-            return env.execute_query(SQL("SELECT lower(%s)", expression))[0][0]
+            result = folded.get(value)
+            if result is None:
+                if len(folded) >= _ILIKE_FOLD_CACHE_MAX:
+                    folded.clear()
+                expression = self.unaccent(SQL("%s", value))
+                result = env.execute_query(SQL("SELECT lower(%s)", expression))[0][0]
+                folded[value] = result
+            return result
 
         return normalize

@@ -176,25 +176,25 @@ def update_db_notnull(
                 model.env.add_to_compute(current, records)
             model.flush_model([current.name])
 
+            # a callable default is a decision made per record and per
+            # environment (the current company, the clock, the language);
+            # only a declared literal may be repeated by the schema
+            value = current.default_literal
             sql_default = None
             if (
-                current.default
+                value is not None
+                and isinstance(value, (str, int, float, bool))
                 and not current.translate
                 and not current.company_dependent
             ):
-                try:
-                    value = current.default(model.browse())
-                    if isinstance(value, (str, int, float, bool)):
-                        sql_default = current.convert_to_column(
-                            value, model, validate=False
-                        )
-                except Exception:
-                    _logger.debug(
-                        "Could not derive a SQL DEFAULT for %s; "
-                        "applying NOT NULL without one",
-                        current,
-                        exc_info=True,
-                    )
+                sql_default = current.convert_to_column(value, model, validate=False)
+            _debug.logic(
+                "field.ddl.sql_default",
+                model=model._name,
+                field=current.name,
+                literal=value is not None,
+                applied=sql_default is not None,
+            )
 
             def apply_not_null(cr):
                 sql.set_not_null(cr, model._table, current.name)

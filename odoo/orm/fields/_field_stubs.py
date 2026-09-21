@@ -32,6 +32,7 @@ class _FieldStubs:
         falsy_value: typing.Any
         inherited_field: typing.Any
         is_temporal: bool
+        groups: str | None
         _column_type: tuple[str, str] | None
 
         @property
@@ -104,6 +105,7 @@ class _FieldStubs:
         ) -> typing.Any: ...
 
         def get_comodel_domain(self, model: ModelLike) -> Domain: ...
+        def check_read_access(self, record: ModelLike) -> None: ...
         def get_currency_field(self, model: ModelLike) -> str | None: ...
         def join(
             self, model: ModelLike, alias: str, query: Query

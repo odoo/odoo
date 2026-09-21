@@ -138,14 +138,6 @@ class CacheMixin(_ModelStubs):
                 flushed=flush,
             )
 
-    def _invalidate_table_inheritance_siblings(self, fnames: Collection[str]) -> None:
-        env = self.env
-        for model_name in env._table_inheritance_tree(self._name):
-            sibling = env[model_name]
-            shared = [fname for fname in fnames if fname in sibling._fields]
-            if shared:
-                sibling.browse(self._ids).invalidate_recordset(shared)
-
     def _evict_x2many_scopes_reading_through(self, fnames: Collection[str]) -> None:
         env = self.env
         for field in env.registry.fields_by_comodel.get(self._name, ()):

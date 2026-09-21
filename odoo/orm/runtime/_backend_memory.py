@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import functools
+import itertools
 import logging
 import operator as pyoperator
 import re
@@ -172,15 +173,45 @@ class InMemoryColumnStore:
         return 1
 
     def get_column_values(
-        self, model: BaseModel, column: str
+        self,
+        model: BaseModel,
+        column: str,
+        *,
+        containing: typing.Any = None,
+        limit: int | None = None,
     ) -> list[tuple[int, typing.Any]]:
         storage = self.storage
-        return [
+        rows = (
             (row_id, _load(row[column]))
             for row_id in sorted(storage.get_table_ids(model._table))
             if (row := storage.get_row(model._table, row_id)) is not None
             and row.get(column) is not None
-        ]
+        )
+        if containing is not None:
+            rows = (
+                (row_id, value)
+                for row_id, value in rows
+                if _jsonb_contains(value, containing)
+            )
+        return list(rows if limit is None else itertools.islice(rows, limit))
+
+
+def _jsonb_contains(value: typing.Any, needle: typing.Any) -> bool:
+    # PostgreSQL's jsonb @>: an object contains every key of the needle with
+    # a containing value; an array contains every needle element in some
+    # element; scalars must be equal
+    if isinstance(needle, dict):
+        return isinstance(value, dict) and all(
+            key in value and _jsonb_contains(value[key], sub)
+            for key, sub in needle.items()
+        )
+    if isinstance(needle, list):
+        if not isinstance(value, list):
+            return False
+        return all(
+            any(_jsonb_contains(element, sub) for element in value) for sub in needle
+        )
+    return value == needle
 
 
 _UNIQUE_DEFINITION = re.compile(r"^\s*unique\s*\(([^)]*)\)\s*$", re.IGNORECASE)
@@ -362,6 +393,9 @@ class _InMemoryReadGroup:
 
         first_week_day = 0
         tz = None
+        if field.is_temporal and not granularity:
+            raise ValueError(f"Granularity not set on a date(time) field: {spec!r}")
+        temporal_unit = granularity or ""
         if field.is_temporal and granularity == "week":
             first_week_day = int(get_lang(model.env).week_start) - 1
         if field.is_datetime and (tz_name := model.env.context.get("tz")):
@@ -376,9 +410,7 @@ class _InMemoryReadGroup:
             if field.is_many2one:
                 return value.id or None
             if field.is_temporal:
-                return _truncate(
-                    value or None, granularity or "day", first_week_day, tz
-                )
+                return _truncate(value or None, temporal_unit, first_week_day, tz)
             if field.is_boolean:
                 return bool(value)
             if field.is_text:
@@ -1127,18 +1159,6 @@ class InMemoryBackend:
                         # answers, not as the bytes a binary holds
                         value = field.convert_to_cache(value, records)
                     field_caches[field].setdefault(record_id, value)
-
-    def search_raw(
-        self,
-        model: BaseModel,
-        domain: Domain,
-        offset: int,
-        limit: int | None,
-        order: str | None,
-        *,
-        check_access: bool = True,
-    ) -> Query | None:
-        return None
 
     def search(
         self,

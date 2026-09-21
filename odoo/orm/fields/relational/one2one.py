@@ -116,7 +116,9 @@ class One2one(One2many):
                 )
             )
         target = targets[0] if targets else None
-        releases = delta.replaced or bool(delta.unlinked) or bool(delta.deleted)
+        releases = bool(
+            delta.replaced or delta.linked or delta.unlinked or delta.deleted
+        )
         return delta, target, releases
 
     @override

@@ -224,6 +224,9 @@ class Field[T](
     search: str | Callable[[BaseModel, str, typing.Any], DomainType] | None = None
     related: str | None = None
     default: Callable[[ModelLike], T] | T | None = None
+    # the declared default when it was a value, not a callable: the only
+    # default the schema may repeat as a column DEFAULT
+    default_literal: typing.Any = None
 
     string: str | None = None
     export_string_translation: bool = True
@@ -366,7 +369,10 @@ class Field[T](
 
         if self.default is not None and not callable(self.default):
             value = self.default
+            self.default_literal = value
             self.default = lambda model: value
+        else:
+            self.default_literal = None
 
     def reset_setup(self) -> None:
         self._setup_done = False
@@ -775,13 +781,17 @@ class Field[T](
             field_cache.update(dict.fromkeys(ids, cache_value))
 
         if self.is_column and dirty:
-            real_ids = [id_ for id_ in records._ids if id_]
-            env.core.mark_dirty(self, real_ids)
-            for many2one in env.registry.order_key_inverses.get(self, ()):
-                many2one._resort_inverses(records)
-            # the row is one: a sibling model's cached copy of it is stale now
-            for sibling in self.tree_siblings:
-                sibling._invalidate_cache(env, real_ids, keep_dirty=True)
+            self._mark_column_dirty(records)
+
+    def _mark_column_dirty(self, records: ModelLike) -> None:
+        env = records.env
+        real_ids = [id_ for id_ in records._ids if id_]
+        env.core.mark_dirty(self, real_ids)
+        for many2one in env.registry.order_key_inverses.get(self, ()):
+            many2one._resort_inverses(records)
+        # the row is one: a sibling model's cached copy of it is stale now
+        for sibling in self.tree_siblings:
+            sibling._invalidate_cache(env, real_ids, keep_dirty=True)
 
     if typing.TYPE_CHECKING:
 

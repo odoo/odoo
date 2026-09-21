@@ -587,17 +587,8 @@ class TraversalMixin(_ModelStubs):
         root = self._table_inheritance_root
         if not root or root == self._table:
             return self._table
-        root_model = next(
-            (
-                name
-                for name in self.env.registry.model_names_by_inheritance_root.get(
-                    root, ()
-                )
-                if self.env.registry[name]._table == root
-            ),
-            None,
-        )
-        if root_model and field_name in self.env.registry[root_model]._fields:
+        root_model = self._get_root_model_name()
+        if field_name in self.env.registry[root_model]._fields:
             _debug.logic(
                 "traversal.hierarchy.reads_root_table",
                 model=self._name,

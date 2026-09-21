@@ -9,6 +9,7 @@ from odoo.orm.constants import (
     READ_GROUP_TIME_GRANULARITY,
 )
 from odoo.orm.model_test_env import model_test_env
+from odoo.tools import date_utils
 
 _MOD = "test_read_group_fill_granularity"
 
@@ -51,3 +52,25 @@ def test_non_fillable_granularity_passes_rows_through_unchanged():
         group = "adate:day_of_week"
         rows = [{group: 5.0, "__count": 2}]
         assert model._read_group_fill_temporal(rows, [group], {}) == rows
+
+
+def _sql_week_start(value, days_offset):
+    # sql.py: date_trunc('week', value + offset) - offset
+    offset = datetime.timedelta(days=days_offset)
+    return date_utils.start_of(value + offset, "week") - offset
+
+
+@pytest.mark.parametrize("week_start", [1, 2, 4, 6, 7])
+@pytest.mark.parametrize("day", range(1, 15))
+def test_the_week_fill_bound_starts_the_week_the_sql_side_groups_into(week_start, day):
+    first_week_day = week_start - 1
+    days_offset = first_week_day and 7 - first_week_day
+    value = datetime.date(2024, 1, day)
+    with model_test_env(FillGranularityThing) as env:
+        model = env["fill.granularity.thing"]
+        field = model._fields["adate"]
+        bound = model._read_group_fill_temporal_bound(field, "week", days_offset, value)
+    expected = _sql_week_start(value, days_offset)
+    assert bound == expected
+    assert (bound.weekday() + 1 - week_start) % 7 == 0
+    assert bound <= value < bound + datetime.timedelta(days=7)

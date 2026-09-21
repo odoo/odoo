@@ -157,7 +157,6 @@ class AccessMixin(_ModelStubs):
             ", ".join([repr(g.display_name) for g in groups] + missing_xmlids),
         )
 
-    @api.model
     def check_access(self, operation: str) -> None:
         if not self.env.su and (result := self._check_access(operation)):
             raise result[1]()  # noqa: RSE102  result[1] builds the exception, it is not the class
