@@ -153,8 +153,14 @@ JM.registerScreen("result", {
                 if (result.mock) {
                     suffix = " (dev preview, nothing was saved)";
                 }
-                JM.dom.text(status, "Thanks, " + JM.api.visitorName()
-                    + "! Your answers are saved." + suffix);
+                /* The name is optional, so address them by it only when
+                   there is one to use. */
+                var greeting = "Thanks!";
+                var who = JM.api.visitorName();
+                if (who) {
+                    greeting = "Thanks, " + who + "!";
+                }
+                JM.dom.text(status, greeting + " Your answers are saved." + suffix);
                 return;
             }
             failed("Could not save your answers: " + JM.api.errorOf(result));

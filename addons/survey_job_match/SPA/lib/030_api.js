@@ -100,6 +100,15 @@ JM.api = {
                 values[map[questionId]] = answer.label || answer;
             }
         });
+        /* The name question is optional, so a visitor may have skipped it --
+           but the model insists on a name: a contact created without one trips
+           a constraint and the whole write is lost. Stand one in. */
+        if (JM.config.name_field) {
+            if (!values[JM.config.name_field]) {
+                values[JM.config.name_field] = JM.config.anonymous_name
+                    || "Anonymous visitor";
+            }
+        }
         values[JM.config.note_field] = JM.api.transcript();
         return JM.api.post(values);
     },

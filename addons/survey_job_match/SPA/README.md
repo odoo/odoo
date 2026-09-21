@@ -391,10 +391,16 @@ through the same check, so there is no way past. A welcome side effect: the
 all-tied-at-zero case, the only one where the tie-break difference above could
 reach first place, is no longer reachable.
 
-The contact-capture questions stay optional, as the spreadsheet asks: email,
-phone and "which activity did you join?" can all be skipped. The name is the one
-exception — it is required, because a contact with no name trips a model
-constraint and the write fails outright.
+The contact-capture questions are optional on GDPR grounds: name, email and
+phone can all be skipped, and each carries the same GDPR notice under its title.
+"Which activity did you join?" is the exception and is required — it is the one
+answer that describes the event rather than the person.
+
+A skipped name needs handling rather than just allowing: a contact with no name
+trips a model constraint and the write fails outright, losing the whole
+submission. `anonymous_name` from `data/config.json` is therefore written to the
+name field when the visitor leaves it blank, and the closing line drops the
+"Thanks, <name>" form when there is no name to use.
 
 ### The spreadsheet is the source of truth
 
