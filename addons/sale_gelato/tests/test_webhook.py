@@ -34,9 +34,15 @@ class TestGelatoWebhook(HttpCase):
 
         self.assertEqual(response.status_code, 404)
         self.assertEqual(
-            self.env["inbound.access.log"]
+            self.env["integration.exchange"]
             .sudo()
-            .search_count([("gate_model", "=", "sale.order"), ("gate_id", "=", 0)]),
+            .search_count(
+                [
+                    ("state", "=", "refused"),
+                    ("refusal_reason", "=", "endpoint_not_found"),
+                    ("channel_name", "like", "sale.order:%"),
+                ]
+            ),
             1,
         )
 

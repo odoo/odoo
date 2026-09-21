@@ -42,7 +42,7 @@ class IotBox(models.Model):
             [("identifier", "=", identifier.decode(errors="replace"))], limit=1
         )
         if not box:
-            request.env["inbound.access.log"]._record_unknown_caller(
+            request.env["integration.exchange"]._record_unknown_caller(
                 "iot.box",
                 identifier.decode(errors="replace")[:64],
                 request.httprequest.remote_addr,

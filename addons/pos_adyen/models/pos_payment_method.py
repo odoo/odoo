@@ -44,7 +44,7 @@ class PosPaymentMethod(models.Model):
                 "in Odoo: %s",
                 terminal_identifier,
             )
-            request.env["inbound.access.log"]._record_unknown_caller(
+            request.env["integration.exchange"]._record_unknown_caller(
                 self._name,
                 f"Adyen terminal {terminal_identifier}"[:64],
                 request.httprequest.remote_addr,

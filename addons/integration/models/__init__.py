@@ -1,4 +1,3 @@
-from . import inbound_access_log
 from . import mixin_inbound_gate
 from . import mixin_integration_channel
 from . import integration_exchange

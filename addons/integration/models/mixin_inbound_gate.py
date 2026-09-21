@@ -1,6 +1,7 @@
 import json
 import logging
-from typing import Any
+import time
+from typing import Any, NamedTuple
 
 from werkzeug.exceptions import RequestEntityTooLarge
 
@@ -22,6 +23,17 @@ from odoo.addons.rate_limit.tools import get_caller_rate_limiter
 _logger = logging.getLogger(__name__)
 
 _OMITTED_PAYLOAD_HEAD_CHARS = 512
+
+# (dbname, gate model, gate id, condition) -> when it was last reported
+_STANDING_CONDITIONS_REPORTED: dict[tuple, float] = {}
+
+
+class Verdict(NamedTuple):
+    allowed: bool
+    status: int
+    reason: str
+    code: str
+
 
 INBOUND_SUBJECT_KEY = "inbound_subject"
 INBOUND_VERIFY_KEY = "inbound_verify"
@@ -220,13 +232,11 @@ class MixinInboundGate(models.AbstractModel):
         # The verdict is written on its own cursor: a refusal raises, the
         # request rolls back, and the refusal must outlive that.
         with self.env.registry.cursor() as verdict_cr:
-            allowed, status, reason = gate.with_env(
-                gate.env(cr=verdict_cr)
-            )._check_inbound_request(
+            verdict = gate.with_env(gate.env(cr=verdict_cr))._inbound_verdict(
                 dict(httprequest.headers), body=body, remote_addr=remote_addr
             )
-        if not allowed:
-            raise Refused(status, reason, self._refusal_code(status))
+        if not verdict.allowed:
+            raise Refused(verdict.status, verdict.reason, verdict.code)
         admission = Admission(
             gate=self,
             subject=subject or self,
@@ -236,6 +246,7 @@ class MixinInboundGate(models.AbstractModel):
             method=httprequest.method,
             path=httprequest.path,
             user_agent=httprequest.headers.get("User-Agent"),
+            auth_mode="audit" if verdict.code == "audit_accepted" else "enforce",
         )
         admission.event_type = self._inbound_event_type(admission, event_type)
         if self._inbound_event_logged(admission.event_type):
@@ -285,7 +296,9 @@ class MixinInboundGate(models.AbstractModel):
             "event_type": event_type or False,
             "state": "success",
             "date_completed": fields.Datetime.now(),
-            "signature_verified": self.auth_type != "none",
+            "signature_verified": self.auth_type != "none"
+            and admission.auth_mode != "audit",
+            "auth_mode": admission.auth_mode,
             **self._inbound_payload_vals(admission, event_type),
             # The hash of the body as received, whatever the row keeps of it.
             "request_payload_hash_override": admission.payload_hash,
@@ -323,15 +336,6 @@ class MixinInboundGate(models.AbstractModel):
         self.check_singleton()
         return max(0, self.log_request_payload_max_bytes)
 
-    @staticmethod
-    def _refusal_code(status: int) -> str:
-        return {
-            401: "authentication_failed",
-            403: "ip_not_allowed",
-            413: "payload_too_large",
-            429: "rate_limit_exceeded",
-        }.get(status, "refused")
-
     def _inbound_auth_mode(self, parameter_key: str | None = None) -> str:
         return self.AUTH_MODE_ENFORCE
 
@@ -343,25 +347,45 @@ class MixinInboundGate(models.AbstractModel):
         mode: str | None = None,
         caller_already_checked: bool = False,
     ) -> tuple[bool, int, str]:
-        if mode is None:
-            mode = self._inbound_auth_mode()
-        allowed, status, reason, outcome = self._decide_inbound_request(
+        return self._inbound_verdict(
             headers,
             body=body,
             remote_addr=remote_addr,
             mode=mode,
             caller_already_checked=caller_already_checked,
+        )[:3]
+
+    def _inbound_verdict(
+        self,
+        headers: dict[str, Any],
+        body: str | bytes | None = None,
+        remote_addr: str | None = None,
+        mode: str | None = None,
+        caller_already_checked: bool = False,
+    ) -> Verdict:
+        """The gate's decision, recorded: `(allowed, status, reason, code)`,
+        the code being the word the caller's problem document carries."""
+        if mode is None:
+            mode = self._inbound_auth_mode()
+        verdict = Verdict(
+            *self._decide_inbound_request(
+                headers,
+                body=body,
+                remote_addr=remote_addr,
+                mode=mode,
+                caller_already_checked=caller_already_checked,
+            )
         )
         self._record_inbound_verdict(
-            allowed,
-            status,
-            reason,
-            outcome,
+            verdict.allowed,
+            verdict.status,
+            verdict.reason,
+            verdict.code,
             headers=headers,
             remote_addr=remote_addr,
             mode=mode,
         )
-        return allowed, status, reason
+        return verdict
 
     def _decide_inbound_request(
         self,
@@ -384,7 +408,7 @@ class MixinInboundGate(models.AbstractModel):
                     allowed,
                     status,
                     reason,
-                    "caller_limited" if status == 429 else "address_refused",
+                    "caller_limited" if status == 429 else "ip_not_allowed",
                 )
 
         if (
@@ -406,7 +430,7 @@ class MixinInboundGate(models.AbstractModel):
                     False,
                     429,
                     f"rate limit exceeded for {self.display_name}",
-                    "rate_limited",
+                    "rate_limit_exceeded",
                 )
             return True, 200, "", "allowed"
 
@@ -425,7 +449,7 @@ class MixinInboundGate(models.AbstractModel):
             False,
             401,
             f"unauthenticated request for {self.display_name} from {remote_addr}",
-            "unauthenticated",
+            "authentication_failed",
         )
 
     def _authenticate_inbound_identity(
@@ -593,61 +617,47 @@ class MixinInboundGate(models.AbstractModel):
             return auth_header[7:].strip()
         return (headers.get("X-Device-Token") or "").strip()
 
-    log_inbound_access = fields.Boolean(
-        string="Log Every Inbound Request",
-        default=False,
-        help="Record admitted requests as well as refused ones. Refusals are "
-        "always recorded. Turn this on only for an endpoint whose traffic you "
-        "want a row per call for — a device reporting once per position fix "
-        "will fill the table.",
-    )
-
     def _record_inbound_verdict(
         self,
         allowed: bool,
         status: int,
         reason: str,
-        outcome: str,
+        code: str,
         headers: Any = None,
         remote_addr: str | None = None,
         mode: str = AUTH_MODE_ENFORCE,
     ) -> None:
+        """A refusal is an exchange row of the gate; an admission is recorded
+        by the admission itself. An audit-mode admission and a misconfigured
+        gate are standing conditions, reported once per window."""
         if mode == self.AUTH_MODE_OFF:
             return
-        if outcome == "allowed" and not self.log_inbound_access:
+        if allowed:
+            if code == "audit_accepted" and self._standing_condition_is_news(code):
+                _logger.warning(
+                    "UNAUTHENTICATED request accepted for %s from %s (audit mode): "
+                    "%s. Provision the credential, then switch to 'enforce'.",
+                    self.display_name,
+                    remote_addr,
+                    reason,
+                )
             return
-
         try:
-            is_news = self._store_inbound_verdict(
-                outcome,
-                allowed=allowed,
-                status=status,
-                reason=reason,
+            is_news = self._store_inbound_refusal(
+                code,
+                status,
+                reason,
                 headers=headers,
                 remote_addr=remote_addr,
                 mode=mode,
             )
         except Exception:
             _logger.exception(
-                "Could not record the inbound verdict for %s; the decision "
-                "itself stands and was %s",
+                "Could not record the refusal for %s; the decision itself stands",
                 self.display_name,
-                "allow" if allowed else "refuse",
             )
             return
-
-        if not is_news:
-            return
-
-        if outcome == "audit_accepted":
-            _logger.warning(
-                "UNAUTHENTICATED request accepted for %s from %s (audit mode): "
-                "%s. Provision the credential, then switch to 'enforce'.",
-                self.display_name,
-                remote_addr,
-                reason,
-            )
-        elif outcome == "misconfigured":
+        if is_news and code == "misconfigured":
             _logger.error(
                 "%s is refusing EVERY request and will keep doing so until it "
                 "is fixed: %s. Callers see a 401, so this reads to them as "
@@ -656,18 +666,20 @@ class MixinInboundGate(models.AbstractModel):
                 reason,
             )
 
-    _COALESCED_OUTCOMES = ("caller_limited", "audit_accepted", "misconfigured")
-
-    _COUNTED_OUTCOMES = ("caller_limited",)
-
-    _COALESCED_PER_CALLER = ("caller_limited",)
+    # A caller's own limit collapses per caller and is counted; a gate's
+    # standing fault collapses per gate and is not, because counting is an
+    # UPDATE of a row every concurrent request shares.
+    _COALESCED_REFUSALS = {
+        "caller_limited": {"per_caller": True, "counted": True},
+        "misconfigured": {"per_caller": False, "counted": False},
+    }
 
     STANDING_WINDOW_PARAM = "credential.inbound_standing_window_seconds"
     STANDING_WINDOW_DEFAULT = 3600
 
-    def _get_inbound_coalesce_window(self, outcome: str) -> int:
+    def _get_inbound_coalesce_window(self, code: str) -> int:
         """Return the caller-limit or standing-condition window in seconds."""
-        if outcome == "caller_limited":
+        if code == "caller_limited":
             return self.rate_limit_window_seconds or 60
         window = (
             self.env["ir.config_parameter"]
@@ -676,59 +688,43 @@ class MixinInboundGate(models.AbstractModel):
         )
         return max(60, window)
 
-    def _store_inbound_verdict(
+    def _standing_condition_is_news(self, code: str) -> bool:
+        """Once per gate per window, without a row: the admission rows say
+        `auth_mode = audit` for themselves."""
+        key = (self.env.cr.dbname, self._name, self.id, code)
+        now = time.monotonic()
+        window = self._get_inbound_coalesce_window(code)
+        reported = _STANDING_CONDITIONS_REPORTED.get(key)
+        if reported is not None and now - reported < window:
+            return False
+        _STANDING_CONDITIONS_REPORTED[key] = now
+        return True
+
+    def _store_inbound_refusal(
         self,
-        outcome: str,
-        allowed: bool,
+        code: str,
         status: int,
         reason: str,
         headers: Any,
         remote_addr: str | None,
         mode: str,
     ) -> bool:
-        logs = self.env["inbound.access.log"].sudo()
-        now = fields.Datetime.now()
-
-        if outcome in self._COALESCED_OUTCOMES:
-            window = self._get_inbound_coalesce_window(outcome)
-            domain = [
-                ("gate_model", "=", self._name),
-                ("gate_id", "=", self.id),
-                ("outcome", "=", outcome),
-                ("timestamp", ">=", fields.Datetime.subtract(now, seconds=window)),
-            ]
-            if outcome in self._COALESCED_PER_CALLER:
-                domain.append(("source_ip", "=", remote_addr or False))
-            standing = logs.search(domain, order="timestamp desc", limit=1)
-            if standing:
-                if outcome in self._COUNTED_OUTCOMES:
-                    standing.write(
-                        {
-                            "attempt_count": standing.attempt_count + 1,
-                            "last_seen_at": now,
-                        }
-                    )
-                return False
-
-        logs.create(
-            {
-                "gate_model": self._name,
-                "gate_id": self.id,
-                "gate_name": self.display_name,
-                "company_id": self._get_inbound_company_id(),
-                "timestamp": now,
-                "last_seen_at": now,
-                "allowed": allowed,
-                "outcome": outcome,
-                "status_code": status,
-                "reason": reason or False,
-                "source_ip": remote_addr or False,
-                "user_agent": (headers or {}).get("User-Agent") or False,
-                "auth_type": self.auth_type or False,
-                "mode": mode,
-            }
+        collapse = self._COALESCED_REFUSALS.get(code, {})
+        httprequest = request.httprequest if request else None
+        return self.env["integration.exchange"]._record_refusal(
+            self,
+            code,
+            reason,
+            status,
+            remote_addr,
+            user_agent=(headers or {}).get("User-Agent"),
+            auth_mode=mode,
+            company_id=self._get_inbound_company_id(),
+            window=self._get_inbound_coalesce_window(code) if collapse else 0,
+            method=httprequest.method if httprequest else None,
+            path=httprequest.path if httprequest else None,
+            **collapse,
         )
-        return True
 
     def _get_inbound_company_id(self):
         """Return the gate's company ID, or False when no company is bound."""

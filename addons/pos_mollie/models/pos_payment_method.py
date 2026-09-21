@@ -20,7 +20,7 @@ class PosPaymentMethod(models.Model):
         decoded_payload = resolve_hash_signed(self.sudo().env, "pos_mollie", payload)
         if not decoded_payload:
             _logger.warning("Invalid payload received in Mollie webhook, ignoring")
-            request.env["inbound.access.log"]._record_unknown_caller(
+            request.env["integration.exchange"]._record_unknown_caller(
                 self._name,
                 "mollie webhook with an invalid signed payload",
                 request.httprequest.remote_addr,

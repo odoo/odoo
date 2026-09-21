@@ -83,11 +83,20 @@
         action="action_api_credential_security_report"
         sequence="20" />
 
+    <record id="action_integration_exchange_refused" model="ir.actions.act_window">
+        <field name="name">Refused Calls</field>
+        <field name="res_model">integration.exchange</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_integration_exchange_search" />
+        <field name="domain">[('state', '=', 'refused')]</field>
+        <field name="context">{'search_default_filter_today': 1}</field>
+    </record>
+
     <menuitem
         id="menu_inbound_access_logs"
-        name="Inbound Access"
+        name="Refused Calls"
         parent="credential.menu_credential_root"
-        action="action_inbound_access_log"
+        action="action_integration_exchange_refused"
         sequence="35"
         groups="credential.group_credential_admin" />
 

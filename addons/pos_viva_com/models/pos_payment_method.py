@@ -40,7 +40,7 @@ class PosPaymentMethod(models.Model):
             _logger.error(
                 _("received a message for a pos payment provider not registered.")
             )
-            request.env["inbound.access.log"]._record_unknown_caller(
+            request.env["integration.exchange"]._record_unknown_caller(
                 self._name,
                 f"viva.com company {company_id}",
                 request.httprequest.remote_addr,

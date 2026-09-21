@@ -5,7 +5,7 @@ from typing import Any
 from urllib.parse import urlparse
 
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL
 
 from odoo.addons.integration.tools import compute_payload_hash
@@ -31,8 +31,9 @@ class IntegrationExchange(models.Model):
     channel_id = fields.Reference(
         selection="_selection_channel_models",
         index=True,
-        required=True,
-        help="Reference to the channel (endpoint or service) for this event",
+        help="The channel (endpoint or service) of this event. Empty only on a "
+        "refusal of a caller no channel answers for; `channel_name` then holds "
+        "what the caller asked for.",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -71,6 +72,7 @@ class IntegrationExchange(models.Model):
         compute="_compute_channel_name",
         store=True,
         index=True,
+        readonly=False,
         help="Cached channel name for faster searches",
     )
 
@@ -194,11 +196,37 @@ class IntegrationExchange(models.Model):
             ("failed", "Failed"),
             ("duplicate", "Duplicate"),
             ("retry", "Retry Scheduled"),
+            ("refused", "Refused"),
         ],
         default="pending",
         index=True,
         required=True,
-        help="Current processing state",
+        help="Current processing state. `refused`: the gate turned the call "
+        "away before any handler ran; `refusal_reason` says why.",
+    )
+    refusal_reason = fields.Char(
+        index=True,
+        help="The gate's verdict, as the caller's problem document names it "
+        "(`authentication_failed`, `ip_not_allowed`, `payload_too_large`, "
+        "`rate_limit_exceeded`, `caller_limited`, `misconfigured`, "
+        "`endpoint_not_found`, ...). Set only on a refused row.",
+    )
+    attempt_count = fields.Integer(
+        default=1,
+        help="Requests this row stands for. Above 1 only where repeated "
+        "refusals from one caller were collapsed into a single row.",
+    )
+    last_seen_at = fields.Datetime(
+        help="The last request a collapsed refusal row stands for.",
+    )
+    auth_mode = fields.Char(
+        help="`enforce` or `audit`, as the gate ran for this call. An audit "
+        "row was admitted with no valid credential.",
+    )
+
+    _channel_or_refusal = models.Constraint(
+        "CHECK (channel_id IS NOT NULL OR refusal_reason IS NOT NULL)",
+        "An exchange names its channel, unless it is the refusal of a caller no channel answers for.",
     )
     is_success = fields.Boolean(
         compute="_compute_is_success",
@@ -309,12 +337,26 @@ class IntegrationExchange(models.Model):
         for record in self:
             if record.channel_id:
                 record.channel_name = record.channel_id.display_name
-            else:
-                record.channel_name = False
 
-    @api.depends("direction", "channel_name", "timestamp", "request_method")
+    @api.depends(
+        "direction",
+        "channel_name",
+        "timestamp",
+        "request_method",
+        "state",
+        "refusal_reason",
+        "source_ip",
+        "attempt_count",
+    )
     def _compute_display_name(self):
         for record in self:
+            if record.state == "refused":
+                times = f" ×{record.attempt_count}" if record.attempt_count > 1 else ""
+                record.display_name = (
+                    f"{record.channel_name or 'unknown'}: {record.refusal_reason} "
+                    f"from {record.source_ip or 'unknown source'}{times}"
+                )
+                continue
             parts = []
             if record.direction:
                 parts.append(record.direction.upper()[:2])
@@ -639,6 +681,146 @@ class IntegrationExchange(models.Model):
                 _logger.exception("Failed to queue event %d for retry", event.id)
                 event.mark_failed(str(e), schedule_retry=True)
 
+    # A refusal is the record of who was turned away; only its collapse
+    # counters move, and only the retention sweep removes it.
+    _REFUSAL_COLLAPSE_FIELDS = frozenset({"attempt_count", "last_seen_at"})
+    _CLEANUP_CONTEXT_KEY = "_exchange_cleanup_bypass"
+
+    REFUSED_CALLER_WINDOW_SECONDS = 3600
+
+    def _is_cleanup_authorized(self) -> bool:
+        return bool(self.env.context.get(self._CLEANUP_CONTEXT_KEY)) and self.env.su
+
+    def write(self, vals):
+        editable = set(vals) - self._REFUSAL_COLLAPSE_FIELDS - {"display_name"}
+        if editable and not self._is_cleanup_authorized():
+            refused = self.filtered(lambda row: row.state == "refused")
+            if refused:
+                raise UserError(
+                    self.env._(
+                        "A refusal is not editable: %(fields)s",
+                        fields=", ".join(sorted(editable)),
+                    )
+                )
+        return super().write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _refuse_delete_of_refusals_outside_cleanup(self):
+        if not self._is_cleanup_authorized() and any(
+            row.state == "refused" for row in self
+        ):
+            raise UserError(
+                self.env._(
+                    "A refusal is not deletable. The retention sweep removes it "
+                    "once it ages out."
+                )
+            )
+
+    @api.model
+    def _record_unknown_caller(
+        self,
+        receiver_model: str,
+        label: str,
+        remote_addr: str | None,
+        user_agent: str | None = None,
+        status_code: int = 404,
+    ) -> None:
+        """A call for a subject no channel answers for: the row has no
+        channel and names what the caller asked for."""
+        self._record_refusal(
+            None,
+            "endpoint_not_found",
+            f"no active {receiver_model} for {label}",
+            status_code,
+            remote_addr,
+            user_agent=user_agent,
+            channel_name=f"{receiver_model}: {label}",
+            collapse_name_like=f"{receiver_model}: %",
+            per_caller=True,
+            counted=True,
+            window=self.REFUSED_CALLER_WINDOW_SECONDS,
+        )
+
+    @api.model
+    def _record_refusal(
+        self,
+        channel,
+        code: str,
+        reason: str,
+        status_code: int,
+        remote_addr: str | None,
+        *,
+        user_agent: str | None = None,
+        auth_mode: str = "enforce",
+        channel_name: str | None = None,
+        collapse_name_like: str | None = None,
+        company_id: int | bool = False,
+        per_caller: bool = False,
+        counted: bool = False,
+        window: int = 0,
+        method: str | None = None,
+        path: str | None = None,
+    ) -> bool:
+        """Record a refusal; with a `window`, a repeat inside it collapses onto
+        the standing row (counted per caller for a caller's own limit, not
+        counted for a gate's standing condition). Returns whether the row is
+        news, which is what decides whether the log line is written."""
+        rows = self.sudo()
+        now = fields.Datetime.now()
+        channel_ref = f"{channel._name},{channel.id}" if channel else False
+        if window:
+            domain = [
+                ("state", "=", "refused"),
+                ("refusal_reason", "=", code),
+                ("channel_id", "=", channel_ref)
+                if channel
+                else ("channel_id", "=", False),
+                ("timestamp", ">=", fields.Datetime.subtract(now, seconds=window)),
+            ]
+            if not channel:
+                domain.append(
+                    ("channel_name", "like", collapse_name_like)
+                    if collapse_name_like
+                    else ("channel_name", "=", channel_name or False)
+                )
+            if per_caller:
+                domain.append(("source_ip", "=", remote_addr or False))
+            standing = rows.search(domain, order="timestamp desc", limit=1)
+            if standing:
+                if counted:
+                    standing.write(
+                        {
+                            "attempt_count": standing.attempt_count + 1,
+                            "last_seen_at": now,
+                        }
+                    )
+                return False
+        rows.create(
+            {
+                "direction": "inbound",
+                "channel_id": channel_ref,
+                "channel_name": (
+                    channel_name or (channel and channel.display_name) or ""
+                )[:128]
+                or False,
+                "company_id": company_id,
+                "timestamp": now,
+                "date_completed": now,
+                "last_seen_at": now,
+                "state": "refused",
+                "refusal_reason": code,
+                "status_code": status_code,
+                "error_message": (reason or "")[:256] or False,
+                "source_ip": remote_addr or False,
+                "user_agent": (user_agent or "")[:256] or False,
+                "auth_mode": auth_mode,
+                "request_method": (method or "").upper() or False,
+                "request_url": (path or "")[:2048] or False,
+                "signature_verified": False,
+            }
+        )
+        return True
+
     @api.autovacuum
     def _gc_old_logs(self):
         # The sweep is SQL over what the transaction has written so far.
@@ -693,7 +875,7 @@ class IntegrationExchange(models.Model):
                 DELETE FROM integration_exchange
                 WHERE %s
                   AND (
-                        (state IN ('success', 'failed', 'duplicate')
+                        (state IN ('success', 'failed', 'duplicate', 'refused')
                          AND date_completed < %s)
                      OR (state IN ('pending', 'retry') AND create_date < %s)
                   )

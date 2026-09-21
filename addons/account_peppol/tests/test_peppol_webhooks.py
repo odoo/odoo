@@ -99,13 +99,17 @@ class TestPeppolWebhooks(AccountTestInvoicingCommon, HttpCase):
         self.assertEqual(response.status_code, 204)
         self.assertEqual(self._triggers(), triggers)
         refusal = (
-            self.env["inbound.access.log"]
+            self.env["integration.exchange"]
             .sudo()
             .search(
                 [
-                    ("gate_model", "=", "account_edi_proxy_client.user"),
-                    ("outcome", "=", "unknown_receiver"),
+                    ("state", "=", "refused"),
+                    ("refusal_reason", "=", "endpoint_not_found"),
+                    ("channel_name", "like", "account_edi_proxy_client.user:%"),
                 ]
             )
         )
-        self.assertEqual(refusal.mapped("gate_name"), ["peppol_new_message"])
+        self.assertEqual(
+            refusal.mapped("channel_name"),
+            ["account_edi_proxy_client.user: peppol_new_message"],
+        )

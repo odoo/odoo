@@ -104,6 +104,7 @@ class Admission:
     method: str = "POST"
     path: str = ""
     user_agent: str | None = None
+    auth_mode: str = "enforce"
     exchange: Any = None
     extra: dict[str, Any] = field(default_factory=dict)
     error: str | None = None

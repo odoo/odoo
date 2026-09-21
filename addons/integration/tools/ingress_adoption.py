@@ -6,31 +6,18 @@ _PREVIOUS_OWNER = "credential"
 
 _ADOPTED_NAMES = (
     "model_mixin_inbound_gate",
-    "model_inbound_access_log",
     "model_inherit__mixin_inbound_gate__mixin_credential_auth",
-    "access_inbound_access_log_user",
-    "access_inbound_access_log_admin",
-    "view_inbound_access_log_list",
-    "view_inbound_access_log_search",
-    "action_inbound_access_log",
     "menu_inbound_access_logs",
-    "ir_cron_gc_inbound_access_logs",
-    "ir_cron_gc_inbound_access_logs_ir_actions_server",
 )
 
-_ADOPTED_PREFIXES = (
-    "field_mixin_inbound_gate__",
-    "field_inbound_access_log__",
-    "selection__inbound_access_log__",
-    "constraint_inbound_access_log_",
-)
+_ADOPTED_PREFIXES = ("field_mixin_inbound_gate__",)
 
 
 def adopt_ingress_from_credential(cr) -> int:
     cr.execute(
         """
         SELECT 1 FROM ir_model_data
-         WHERE module = %s AND name = 'model_inbound_access_log'
+         WHERE module = %s AND name = 'model_mixin_inbound_gate'
         """,
         (_PREVIOUS_OWNER,),
     )
@@ -61,7 +48,7 @@ def adopt_ingress_from_credential(cr) -> int:
            SET module = (SELECT id FROM ir_module_module WHERE name = 'integration')
          WHERE model IN (
                    SELECT id FROM ir_model
-                    WHERE model IN ('inbound.access.log', 'mixin.inbound.gate')
+                    WHERE model = 'mixin.inbound.gate'
                )
            AND module = (SELECT id FROM ir_module_module WHERE name = %s)
         """,

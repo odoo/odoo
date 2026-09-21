@@ -1,6 +1,6 @@
 {
     "name": "Integration",
-    "version": "19.0.1.34.0",
+    "version": "19.0.1.35.0",
     "category": "Hidden",
     "sequence": 5,
     "summary": "Inbound and outbound API transport with auth, rate limiting, retry and logging",
@@ -65,7 +65,6 @@ model by company.
         "data/ir_cron_data.xml",
         "data/api_service_data.xml",
         "views/integration_exchange_views.xml",
-        "views/inbound_access_log_views.xml",
         "views/integration_service.xml",
         "views/integration_connection_views.xml",
         "views/integration_receiver_views.xml",

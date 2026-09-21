@@ -127,23 +127,23 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         tx = self._create_transaction("redirect")
         url = self._build_url(StripeController._webhook_url)
         Receiver = type(self.env["integration.receiver"])
-        store_verdict = Receiver._store_inbound_verdict
+        store_refusal = Receiver._store_inbound_refusal
         verdicts = []
 
-        def spy(receiver, outcome, *args, **kwargs):
+        def spy(receiver, code, *args, **kwargs):
             verdicts.append(
-                (receiver.res_id, outcome, receiver.env.cr is not request.env.cr)
+                (receiver.res_id, code, receiver.env.cr is not request.env.cr)
             )
-            return store_verdict(receiver, outcome, *args, **kwargs)
+            return store_refusal(receiver, code, *args, **kwargs)
 
-        with patch.object(Receiver, "_store_inbound_verdict", spy):
+        with patch.object(Receiver, "_store_inbound_refusal", spy):
             response = self._make_json_request(url, data=self.payment_data)
 
         self.assertEqual(response.status_code, 401)
         self.assertNotEqual(tx.state, "done")
         self.assertEqual(
             verdicts,
-            [(self.stripe.id, "unauthenticated", True)],
+            [(self.stripe.id, "authentication_failed", True)],
             "the refusal is stored on its own cursor, which the request's "
             "rollback does not discard",
         )

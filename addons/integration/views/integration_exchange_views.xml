@@ -34,6 +34,10 @@
                     name="filter_pending"
                     string="Pending"
                     domain="[('state', '=', 'pending')]" />
+                <filter
+                    name="filter_refused"
+                    string="Refused"
+                    domain="[('state', '=', 'refused')]" />
 
                 <separator />
 
@@ -56,6 +60,10 @@
                         string="State"
                         context="{'group_by': 'state'}" />
                     <filter
+                        name="group_refusal_reason"
+                        string="Refusal"
+                        context="{'group_by': 'refusal_reason'}" />
+                    <filter
                         name="group_channel"
                         string="Channel"
                         context="{'group_by': 'channel_name'}" />
@@ -73,7 +81,7 @@
         <field name="model">integration.exchange</field>
         <field name="arch" type="xml">
             <list
-                decoration-danger="state == 'failed'"
+                decoration-danger="state in ('failed', 'refused')"
                 decoration-muted="state == 'duplicate'"
                 decoration-success="state == 'success'"
                 decoration-warning="state == 'pending'">
@@ -84,6 +92,9 @@
                 <field name="request_endpoint" optional="show" />
                 <field name="status_code" optional="show" />
                 <field name="state" widget="badge" />
+                <field name="refusal_reason" optional="show" />
+                <field name="source_ip" optional="hide" />
+                <field name="attempt_count" optional="hide" />
                 <field name="duration_ms" optional="show" />
                 <field name="retry_count" optional="hide" />
                 <field name="error_type" optional="hide" />
@@ -144,6 +155,22 @@
                             <field
                                 name="source_ip"
                                 invisible="direction != 'inbound'"
+                                readonly="1" />
+                            <field
+                                name="auth_mode"
+                                invisible="direction != 'inbound'"
+                                readonly="1" />
+                            <field
+                                name="refusal_reason"
+                                invisible="state != 'refused'"
+                                readonly="1" />
+                            <field
+                                name="attempt_count"
+                                invisible="attempt_count &lt;= 1"
+                                readonly="1" />
+                            <field
+                                name="last_seen_at"
+                                invisible="attempt_count &lt;= 1"
                                 readonly="1" />
                         </group>
                     </group>

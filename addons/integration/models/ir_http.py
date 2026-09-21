@@ -45,7 +45,7 @@ class IrHttp(models.AbstractModel):
         subject, gate, extra = resolution.subject, resolution.gate, resolution.extra
         if not gate:
             model_name = receiver.partition(":")[0]
-            request.env["inbound.access.log"]._record_unknown_caller(
+            request.env["integration.exchange"]._record_unknown_caller(
                 model_name,
                 resolution.claimed
                 or ", ".join(

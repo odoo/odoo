@@ -312,7 +312,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         )
         if not edi_user:
             httprequest = request.httprequest
-            self.env["inbound.access.log"]._record_unknown_caller(
+            self.env["integration.exchange"]._record_unknown_caller(
                 self._name,
                 receiver_event or httprequest.path,
                 httprequest.remote_addr,
