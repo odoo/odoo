@@ -54,9 +54,11 @@ export class SpreadsheetShareButton extends Component {
         const contentsChanged = data.revisionId !== this.lastRevisionId;
         let globalFilterChanged = this.lastGlobalFilters === undefined;
         const newCells = {};
-        for (const sheet of data.sheets) {
+        // The exported "Active Filters" sheet takes a fresh id on every export,
+        // so cells are keyed by the sheet's position, which the session keeps.
+        for (const [index, sheet] of data.sheets.entries()) {
             for (const [cellId, cellValue] of Object.entries(sheet.cells)) {
-                newCells[`${sheet.id}:${cellId}`] = cellValue;
+                newCells[`${index}:${cellId}`] = cellValue;
             }
         }
         if (this.lastGlobalFilters !== undefined) {

@@ -17,6 +17,13 @@ export class ChartDataSource extends OdooViewsDataSource {
     }
 
     /**
+     * @returns {Array<string>} groupBy of the chart definition
+     */
+    get groupBy() {
+        return this._metaData.groupBy;
+    }
+
+    /**
      * @protected
      */
     async _load() {
