@@ -408,9 +408,7 @@ class AccountReportOptions(models.Model):
             # 'single' date mode to 'range'.
             if date_filter:
                 date_to = fields.Date.from_string(period_date_to or period_date_from)
-                date_from = self.env.company.compute_fiscalyear_dates(date_to)[
-                    "date_from"
-                ]
+                date_from = self._get_year_bounds(date_to)["date_from"]
                 options_filter = "custom"
             else:
                 options_filter = default_filter
@@ -467,7 +465,7 @@ class AccountReportOptions(models.Model):
                 "fy_start_day" not in options["return_periodicity"]
                 or "fy_start_month" not in options["return_periodicity"]
             ):
-                fy_start = self.env.company.compute_fiscalyear_dates(
+                fy_start = self._get_year_bounds(
                     fields.Date.from_string(period_date_to)
                     if period_date_to
                     else fields.Date.context_today(self)
@@ -498,9 +496,7 @@ class AccountReportOptions(models.Model):
         if not date_from or not date_to:
             if options_filter == "today":
                 date_to = fields.Date.context_today(self)
-                date_from = self.env.company.compute_fiscalyear_dates(date_to)[
-                    "date_from"
-                ]
+                date_from = self._get_year_bounds(date_to)["date_from"]
                 period_type = "today"
             elif "month" in options_filter:
                 date_from, date_to = date_utils.get_month(
@@ -513,15 +509,13 @@ class AccountReportOptions(models.Model):
                 )
                 period_type = "quarter"
             elif "year" in options_filter:
-                company_fiscalyear_dates = self.env.company.compute_fiscalyear_dates(
+                company_fiscalyear_dates = self._get_year_bounds(
                     fields.Date.context_today(self)
                 )
                 curr_year = fields.Date.context_today(self).year
                 if company_fiscalyear_dates["date_from"].year < curr_year:
-                    company_fiscalyear_dates = (
-                        self.env.company.compute_fiscalyear_dates(
-                            company_fiscalyear_dates["date_to"] + relativedelta(days=1)
-                        )
+                    company_fiscalyear_dates = self._get_year_bounds(
+                        company_fiscalyear_dates["date_to"] + relativedelta(days=1)
                     )
                 date_from = company_fiscalyear_dates["date_from"]
                 date_to = company_fiscalyear_dates["date_to"]
@@ -2035,14 +2029,14 @@ class AccountReportOptions(models.Model):
 
         elif date_scope == "from_fiscalyear":
             date_tmp = fields.Date.from_string(date_to)
-            date_tmp = self.env.company.compute_fiscalyear_dates(date_tmp)["date_from"]
+            date_tmp = self._get_year_bounds(date_tmp)["date_from"]
             date_from = date_tmp.strftime("%Y-%m-%d")
 
         elif date_scope == "to_beginning_of_fiscalyear":
             date_tmp = fields.Date.from_string(date_to)
-            date_tmp = self.env.company.compute_fiscalyear_dates(date_tmp)[
-                "date_from"
-            ] - relativedelta(days=1)
+            date_tmp = self._get_year_bounds(date_tmp)["date_from"] - relativedelta(
+                days=1
+            )
             date_to = date_tmp.strftime("%Y-%m-%d")
             date_from = None
 
@@ -2158,7 +2152,7 @@ class AccountReportOptions(models.Model):
         # If no date_from or not date_to, we are unable to determine a period
         if not period_type or period_type == "custom":
             date = date_to or date_from
-            company_fiscalyear_dates = self.env.company.compute_fiscalyear_dates(date)
+            company_fiscalyear_dates = self._get_year_bounds(date)
             if match(
                 company_fiscalyear_dates["date_from"],
                 company_fiscalyear_dates["date_to"],
@@ -2185,7 +2179,7 @@ class AccountReportOptions(models.Model):
             )
         elif period_type == "fiscalyear":
             date = date_to or date_from
-            company_fiscalyear_dates = self.env.company.compute_fiscalyear_dates(date)
+            company_fiscalyear_dates = self._get_year_bounds(date)
             record = company_fiscalyear_dates.get("record")
             string = record and record.name
         elif period_type == "return_period" and options_return:
@@ -2199,8 +2193,7 @@ class AccountReportOptions(models.Model):
             )
 
         if not string:
-            fy_day = self.env.company.account_config_id.fiscalyear_last_day
-            fy_month = int(self.env.company.account_config_id.fiscalyear_last_month)
+            fy_day, fy_month = self._get_year_end()
             if mode == "single":
                 string = _("As of %s", format_date(self.env, date_to))
             elif period_type == "year" or (
@@ -2295,9 +2288,7 @@ class AccountReportOptions(models.Model):
                 date_to = (date_from if periods < 0 else date_to) + relativedelta(
                     days=periods / abs(periods)
                 )
-                company_fiscalyear_dates = self.env.company.compute_fiscalyear_dates(
-                    date_to
-                )
+                company_fiscalyear_dates = self._get_year_bounds(date_to)
                 if periods < 0:
                     date_from = company_fiscalyear_dates["date_from"]
                 else:

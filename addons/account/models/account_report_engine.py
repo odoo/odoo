@@ -281,38 +281,6 @@ class AccountReport(models.Model):
                 use_sections=asr_section_report.use_sections,
             )
 
-    ####################################################
-    # CRON
-    ####################################################
-
-    ####################################################
-    # MENU MANAGEMENT
-    ####################################################
-
-    ####################################################
-    # OPTIONS: journals
-    ####################################################
-
-    ####################################################
-    # OPTIONS: date + comparison
-    ####################################################
-
-    ####################################################
-    # OPTIONS: analytic filter
-    ####################################################
-
-    ####################################################
-    # OPTIONS: partners
-    ####################################################
-
-    ####################################################
-    # OPTIONS: all_entries
-    ####################################################
-
-    ####################################################
-    # OPTIONS: account_type
-    ####################################################
-
     ACCOUNT_TYPE_FILTER_DOMAINS = {
         "trade_receivable": (False, "asset_receivable"),
         "trade_payable": (False, "liability_payable"),
@@ -320,21 +288,12 @@ class AccountReport(models.Model):
         "non_trade_payable": (True, "liability_payable"),
     }
 
-    ####################################################
-    # OPTIONS: order column
-    ####################################################
+    def _get_year_bounds(self, date):
+        return self.env.company.compute_fiscalyear_dates(date)
 
-    ####################################################
-    # OPTIONS: hierarchy
-    ####################################################
-
-    ####################################################
-    # OPTIONS: prefix groups threshold
-    ####################################################
-
-    ####################################################
-    # OPTIONS: MULTI COMPANY
-    ####################################################
+    def _get_year_end(self):
+        config = self.env.company.account_config_id
+        return config.fiscalyear_last_day, int(config.fiscalyear_last_month)
 
     def _init_currency_table(self, options):
         """Creates the currency table temporary table if necessary, using the provided options to compute its periods.
@@ -356,14 +315,6 @@ class AccountReport(models.Model):
                 use_cta_rates=options["currency_table"]["type"] == "cta",
             )
 
-    ####################################################
-    # OPTIONS: COLUMN HEADERS
-    ####################################################
-
-    ####################################################
-    # OPTIONS: BUTTONS
-    ####################################################
-
     def _get_variants(self, report_id):
         source_report = self.env["account.report"].browse(report_id)
         if source_report.root_report_id:
@@ -373,14 +324,6 @@ class AccountReport(models.Model):
             source_report
             + source_report.with_context(active_test=False).variant_report_ids
         )
-
-    ####################################################
-    # OPTIONS: CORE
-    ####################################################
-
-    ####################################################
-    # QUERIES
-    ####################################################
 
     @_debug.perf.timed
     def _create_aml_shadowing_query_for_budget(self, options):
@@ -468,14 +411,6 @@ class AccountReport(models.Model):
             queries=len(queries),
         )
         return SQL("(%s)", SQL(" UNION ALL ").join(queries))
-
-    ####################################################
-    # CARET OPTIONS MANAGEMENT
-    ####################################################
-
-    ####################################################
-    # MISC
-    ####################################################
 
     def _get_custom_handler_model(self):
         """Check whether the current report has a custom handler and if it does, return its name.
