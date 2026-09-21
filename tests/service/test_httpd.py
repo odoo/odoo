@@ -3,6 +3,7 @@ import errno
 import json
 import logging
 import os
+import pathlib
 import socket
 import threading
 import time
@@ -818,6 +819,126 @@ def test_connection_per_request_clients_are_not_stalled_by_saturation():
         srv.shutdown()
         srv.server_close()
         loop.join(5)
+
+
+def _open_fds():
+    return {
+        int(entry.name)
+        for entry in pathlib.Path("/proc/self/fd").iterdir()
+        if entry.name.isdigit()
+    }
+
+
+def _describe_fds(fds):
+    out = []
+    for fd in sorted(fds):
+        try:
+            out.append(f"{fd}={pathlib.Path(f'/proc/self/fd/{fd}').readlink()}")
+        except OSError:
+            out.append(f"{fd}=<gone>")
+    return ", ".join(out)
+
+
+@pytest.mark.skipif(
+    not pathlib.Path("/proc/self/fd").is_dir(), reason="needs /proc to count fds"
+)
+def test_no_descriptor_survives_a_client_that_leaves_badly():
+    """Eight ways to abandon a connection, none of which may cost an fd.
+
+    A descriptor the server keeps after the client is gone is the failure
+    that does not show up in any single request: the server serves correctly
+    for days and then stops accepting with EMFILE. Every close here is on a
+    different path out of `serve_one` -- an unread body, a head that never
+    arrives, a response nobody reads, a pipeline past the inline cap, a
+    malformed head answered by the transport itself -- and each one has its
+    own cleanup.
+    """
+
+    def app(environ, start_response):
+        if environ["PATH_INFO"] == "/big":
+            start_response("200 OK", [("Content-Length", "100000")])
+            return [b"x" * 100000]
+        start_response("200 OK", [("Content-Length", "2")])
+        return [b"ok"]
+
+    def talk(payload, *, read):
+        sock = socket.create_connection(("127.0.0.1", port))
+        sock.settimeout(5.0)
+        try:
+            sock.sendall(payload)
+            if read:
+                with contextlib.suppress(OSError):
+                    sock.recv(65536)
+        finally:
+            sock.close()
+
+    GET = b"GET / HTTP/1.1\r\nHost: h\r\n\r\n"
+    patterns = {
+        "keep-alive then close": lambda: talk(GET * 3, read=True),
+        "head cut off": lambda: talk(b"GET / HTTP/1.1\r\nHo", read=False),
+        "response nobody reads": lambda: talk(
+            b"GET /big HTTP/1.1\r\nHost: h\r\n\r\n", read=False
+        ),
+        "pipeline past the cap": lambda: talk(GET * 20, read=True),
+        "malformed head": lambda: talk(
+            b"GET / HTTP/1.1\r\nHost: h\r\nX-Bad : 1\r\n\r\n", read=True
+        ),
+        "body shorter than its length": lambda: talk(
+            b"POST / HTTP/1.1\r\nHost: h\r\nContent-Length: 1000\r\n\r\nshort",
+            read=False,
+        ),
+        "100-continue never used": lambda: talk(
+            b"POST / HTTP/1.1\r\nHost: h\r\nExpect: 100-continue\r\n"
+            b"Content-Length: 10\r\n\r\n",
+            read=True,
+        ),
+        "connect and say nothing": lambda: talk(b"", read=False),
+    }
+
+    with _server(
+        app, ODOO_HTTP_KEEPALIVE_TIMEOUT="1", ODOO_HTTP_HEAD_TIMEOUT="1"
+    ) as srv:
+        port = srv.server_port
+
+        def settled():
+            deadline = time.monotonic() + 10
+            while time.monotonic() < deadline:
+                if not srv._idle and srv._pool.busy == 0:
+                    return True
+                time.sleep(0.05)
+            return False
+
+        def returned_to(baseline):
+            """Coming back is an eventual property, so ask for it that way.
+
+            A connection accepted between the settled() check and the
+            snapshot is open for as long as it takes the selector to reach
+            it -- real, and gone a moment later. A leak is the one that
+            never goes.
+            """
+            deadline = time.monotonic() + 10
+            while time.monotonic() < deadline:
+                leaked = _open_fds() - baseline
+                if not leaked:
+                    return set()
+                time.sleep(0.05)
+            return _open_fds() - baseline
+
+        talk(GET, read=True)
+        assert settled()
+        baseline = _open_fds()
+
+        for name, drive in patterns.items():
+            for _ in range(10):
+                with contextlib.suppress(OSError):
+                    drive()
+            assert settled(), f"{name} left the server busy"
+            leaked = returned_to(baseline)
+            assert not leaked, (
+                f"{name} leaked {len(leaked)} descriptor(s) "
+                f"({_describe_fds(leaked)}); a server that does this stops "
+                f"accepting with EMFILE after enough of them"
+            )
 
 
 def test_serving_a_request_leaves_no_cyclic_garbage(server):
