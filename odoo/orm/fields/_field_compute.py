@@ -202,9 +202,15 @@ def compute_value(field: Field, records: ModelLike, validate: bool = True) -> No
         sudo=bool(field.compute_sudo),
         validate=validate,
     )
+    sudo_assigned = [
+        (computed, computed._superuser_slot_snapshot(records.env, records._ids))
+        for computed in fields
+    ]
     try:
         with records.env.protecting(fields, records):
             records._compute_field_value(field, validate=validate)
+        for computed, before in sudo_assigned:
+            computed._adopt_superuser_assignments(records.env, before)
     except Exception as e:
         _debug.logic(
             "field.compute.failed_rescheduled",

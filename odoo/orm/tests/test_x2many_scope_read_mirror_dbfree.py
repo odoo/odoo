@@ -28,6 +28,21 @@ class Order(models.Model):
         for order in self:
             order.held_ids = order.line_ids
 
+    sudo_assigned_ids = fields.Many2many(
+        "mirror.line", compute="_compute_sudo_assigned_ids"
+    )
+    unassigned_ids = fields.Many2many(
+        "mirror.line", compute="_compute_unassigned_ids", readonly=False
+    )
+
+    @api.depends("line_ids")
+    def _compute_sudo_assigned_ids(self):
+        for order in self:
+            order.sudo().sudo_assigned_ids = order.line_ids
+
+    def _compute_unassigned_ids(self):
+        return
+
 
 class Line(models.Model):
     _name = "mirror.line"
@@ -339,3 +354,37 @@ class TestAStoredMany2manyWriteCachesTheComodelOrder:
             assert field._get_cache(env)[order.id] == (b.id, a.id)
             order.invalidate_recordset(["tag_ids"])
             assert order.tag_ids._ids == (a.id, b.id)
+
+
+class TestAComputeAssigningThroughSudoAnswersItsReader:
+    # account.move.line.reconciled_lines_ids: the compute runs as the reader and
+    # writes `line.sudo().field = value`, which lands in the superuser slot
+
+    def test_the_reader_slot_takes_what_its_own_compute_assigned_under_sudo(self):
+        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+            order = env["mirror.order"].create({"name": "o"})
+            shown, _hidden = env["mirror.line"].create(
+                [
+                    {"order_id": order.id, "value": 1},
+                    {"order_id": order.id, "value": 2, "secret": True},
+                ]
+            )
+            env.invalidate_all()
+            as_user = order.with_env(_user_env(env))
+            field = order._fields["sudo_assigned_ids"]
+
+            assert as_user.sudo_assigned_ids._ids == (shown.id,)
+            assert _slots(env, field)[as_user.env.get_cache_key(field)] == {
+                order.id: (shown.id,)
+            }
+
+    def test_a_value_the_superuser_slot_held_before_is_not_adopted(self):
+        with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
+            order = env["mirror.order"].create({"name": "o"})
+            hidden = env["mirror.line"].create(
+                {"order_id": order.id, "value": 2, "secret": True}
+            )
+            order.unassigned_ids = hidden
+            as_user = order.with_env(_user_env(env))
+
+            assert not as_user.unassigned_ids

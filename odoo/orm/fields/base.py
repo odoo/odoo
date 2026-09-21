@@ -969,6 +969,16 @@ class Field[T](
     def recompute(self, records: ModelLike) -> None:
         _compute.recompute(self, records)
 
+    def _superuser_slot_snapshot(
+        self, env: Environment, ids: Collection[IdType]
+    ) -> dict[IdType, typing.Any] | None:
+        return None
+
+    def _adopt_superuser_assignments(
+        self, env: Environment, before: dict[IdType, typing.Any] | None
+    ) -> None:
+        return
+
     def compute_value(self, records: ModelLike, validate: bool = True) -> None:
         _compute.compute_value(self, records, validate)
 

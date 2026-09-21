@@ -486,6 +486,45 @@ class _RelationalMulti(_Relational):
         )
         return value
 
+    @override
+    def _superuser_slot_snapshot(
+        self, env: Environment, ids: Collection[IdType]
+    ) -> dict[IdType, typing.Any] | None:
+        if env.su or self._is_superuser_scope(env, env.get_cache_key(self)):
+            return None
+        slot = (
+            env.core.get_context_data_or_none(self, self._superuser_scope_key(env))
+            or {}
+        )
+        return {id_: slot.get(id_, SENTINEL) for id_ in ids if isinstance(id_, int)}
+
+    @override
+    def _adopt_superuser_assignments(
+        self, env: Environment, before: dict[IdType, typing.Any] | None
+    ) -> None:
+        if not before:
+            return
+        slot = env.core.get_context_data_or_none(self, self._superuser_scope_key(env))
+        if not slot:
+            return
+        own = self._get_cache(env)
+        adopted = 0
+        for id_, previous in before.items():
+            value = slot.get(id_, SENTINEL)
+            if value is SENTINEL or value is PENDING or value is previous:
+                continue
+            if id_ not in own:
+                own[id_] = value
+                adopted += 1
+        if adopted and _debug.logic.enabled:
+            _debug.logic(
+                "field.x2many.sudo_assignment_adopted",
+                model=self.model_name,
+                field=self.name,
+                adopted=adopted,
+                uid=env.uid,
+            )
+
     def _is_superuser_scope(self, env: Environment, key: tuple) -> bool:
         index = env._field_depends_context[self].index("access")
         return key[index] is True or key[index] is None
