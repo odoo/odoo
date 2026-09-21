@@ -832,6 +832,18 @@ class AccountReportExport(models.Model):
         )
         return f"{sections_source.name.lower().replace(' ', '_')}_{_transform_period(period)}{_get_company_name(options['companies'])}.{extension}"
 
+    def _get_pdf_export_render_values(self, options, lines, report_info):
+        return {
+            "extra_option_labels": self._get_pdf_extra_option_labels(options),
+            "totals_below_sections": self._get_totals_below_sections(),
+        }
+
+    def _get_pdf_extra_option_labels(self, options):
+        rounding_unit_label = options["rounding_unit_names"][options["rounding_unit"]][
+            1
+        ]
+        return [rounding_unit_label] if rounding_unit_label else []
+
     def _split_line_name_for_xlsx(self, line):
         return None
 

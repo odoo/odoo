@@ -126,6 +126,7 @@ You could use this simplified accounting in case you work with an (external) acc
         "views/account_reconcile_menus.xml",
         "security/account_reports_security.xml",
         "data/pdf_export_templates.xml",
+        "data/pdf_export_templates_ledger.xml",
         "data/customer_reports_pdf_export_templates.xml",
         "data/balance_sheet.xml",
         "data/cash_flow_report.xml",

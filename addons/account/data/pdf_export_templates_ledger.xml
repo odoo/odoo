@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="pdf_export_main_ledger" inherit_id="account.pdf_export_main">
+        <xpath
+            expr="//div[hasclass('o_title')]/t[@t-out='report_title']"
+            position="before">
+            <t t-if="report.filter_show_draft and options['all_entries']">[Draft]</t>
+        </xpath>
+        <xpath expr="//colgroup" position="replace">
+            <colgroup>
+                <t t-if="show_last_annotations">
+                    <col
+                        class="table_column"
+                        t-att-span="len(options['columns']) + 1" />
+                    <col class="table_column largest_column comment_column" />
+                </t>
+                <t t-else="">
+                    <col class="table_column largest_column" />
+                    <col class="table_column" t-att-span="len(options['columns'])" />
+                </t>
+            </colgroup>
+        </xpath>
+        <xpath expr="//div[hasclass('align-items-start')]" position="after">
+            <!-- Annotations -->
+            <t t-if="not show_last_annotations">
+                <ol class="o_annotation">
+                    <t t-foreach="annotations" t-as="annotation">
+                        <li>
+                            <t t-out="annotation.get('number')" />. <em><t t-out="annotation.get('date')" /></em> - <t t-out="annotation.get('body')" />
+                        </li>
+                    </t>
+                </ol>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="company_information_ledger" inherit_id="account.company_information">
+        <xpath expr="//div[@name='company_vat']" position="replace">
+            <t t-if="options.get('tax_unit', 'company_only') == 'company_only'">
+                <t
+                    t-if="env.company.account_config_id.account_fiscal_country_id.vat_label"
+                    t-out="env.company.account_config_id.account_fiscal_country_id.vat_label+':'" />
+                <t t-else="">Tax ID:</t>
+                <t t-out="env.company.vat" />
+            </t>
+            <t t-else="">
+                Tax ID: <t t-out="env['account.tax.unit'].browse(options.get('tax_unit')).vat" />
+            </t>
+        </xpath>
+    </template>
+
+    <template id="pdf_export_filters_ledger" inherit_id="account.pdf_export_filters">
+        <xpath
+            expr="//t[@t-if=&quot;options.get('partner_ids') != None&quot;]"
+            position="before">
+            <!-- Journals -->
+            <t t-if="options.get('journals')">
+                <t
+                    t-set="journal_group_selected"
+                    t-value="options.get('selected_journal_groups')" />
+                <t t-if="journal_group_selected">
+                    <div>Multi-Ledger: <span t-out="journal_group_selected['title']" class="o_text_muted" /></div>
+                </t>
+                <t t-else="">
+                    <t
+                        t-set="journal_value"
+                        t-value="[journal.get('title') for journal in options['journals'] if journal.get('selected')]" />
+                    <t t-if="journal_value">
+                        <div>Journals: <span t-out="', '.join(journal_value)" class="o_text_muted" /></div>
+                    </t>
+                </t>
+            </t>
+        </xpath>
+        <xpath
+            expr="//t[@t-if=&quot;options.get('company_currency')&quot;]"
+            position="after">
+            <!-- Filters -->
+            <t
+                t-if="options.get('aml_ir_filters') and any(opt['selected'] for opt in options['aml_ir_filters'])"
+                name="aml_ir_filters">
+                <div class="row">
+                    <t
+                        t-set="aml_ir_filters"
+                        t-value="opt['name'] for opt in options['aml_ir_filters'] if opt['selected']" />
+                    <t t-if="aml_ir_filters">
+                        <div>Filters: <span t-out="', '.join(aml_ir_filters)" class="o_text_muted" /></div>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template
+        id="pdf_export_main_table_header_ledger"
+        inherit_id="account.pdf_export_main_table_header">
+        <xpath
+            expr="//thead/t[@t-foreach]/tr/th[@t-if=&quot;options.get('column_percent_comparison') == 'growth'&quot;]"
+            position="after">
+            <th
+                t-if="options.get('column_percent_comparison') == 'analytic_coverage' and column_header_index == 1">
+                Analytic coverage
+            </th>
+            <!-- Last comment header -->
+            <th t-if="show_last_annotations" class="o_last_comment_header">Last Comment</th>
+        </xpath>
+        <xpath expr="//thead/t[@t-if]/tr" position="inside">
+            <!-- Empty last comment column -->
+            <th t-if="show_last_annotations" />
+        </xpath>
+        <xpath expr="//thead/tr" position="inside">
+            <th t-if="show_last_annotations" />
+        </xpath>
+    </template>
+
+    <template
+        id="pdf_export_main_table_body_ledger"
+        inherit_id="account.pdf_export_main_table_body">
+        <xpath
+            expr="//t[@t-if=&quot;line_index != 0 and line['level'] == 0&quot;]/tr"
+            position="inside">
+            <t t-if="show_last_annotations">
+                <td />
+            </t>
+        </xpath>
+        <xpath expr="//td[hasclass('o_line_name_level')]" position="inside">
+            <t t-if="line.get('annotations') and not show_last_annotations">
+                <t t-foreach="annotations" t-as="annotation">
+                    <t
+                        t-if="annotation.get('number') and annotation['number'] in (line.get('annotations') or [])">
+                        <sup t-out="annotation['number']" />
+                    </t>
+                </t>
+            </t>
+            <t t-if="line.get('account_status')">
+                <t t-set="status" t-value="line['account_status'].get('status')" />
+                <span t-attf-class="o_status_badge o_status_badge_#{status}">
+                    <t t-out="status_selection.get(status)" />
+                </span>
+            </t>
+        </xpath>
+        <xpath
+            expr="//tr[@name='pdf_export_main_table_body_lines_tr']"
+            position="inside">
+            <t t-if="show_last_annotations">
+                <td class="o_cell_td o_last_comment_column">
+                    <t
+                        t-set="o_classes"
+                        t-value="'o_last_comment' + ('' if line.get('last_comment') else ' o_muted')" />
+                    <span t-att-class="o_classes" t-out="line.get('last_comment')" />
+                </td>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

@@ -24,7 +24,6 @@
                                 <div class="d-flex justify-content-end">
                                     <div>
                                         <div class="o_title text-end">
-                                            <t t-if="report.filter_show_draft and options['all_entries']">[Draft]</t>
                                             <t t-out="report_title" />
                                         </div>
                                         <!-- All filters and options -->
@@ -44,19 +43,10 @@
                                 t-attf-class="o_table  #{options.get('horizontal_split') and 'horizontal_split_page'}">
                                 <!-- Column Group -->
                                 <colgroup>
-                                    <t t-if="show_last_annotations">
-                                        <col
-                                            class="table_column"
-                                            t-att-span="len(options['columns']) + 1" />
-                                        <col
-                                            class="table_column largest_column comment_column" />
-                                    </t>
-                                    <t t-else="">
-                                        <col class="table_column largest_column" />
-                                        <col
-                                            class="table_column"
-                                            t-att-span="len(options['columns'])" />
-                                    </t>
+                                    <col class="table_column largest_column" />
+                                    <col
+                                        class="table_column"
+                                        t-att-span="len(options['columns'])" />
                                 </colgroup>
 
                                 <!-- Header -->
@@ -78,16 +68,6 @@
                         </t>
                     </div>
 
-                    <!-- Annotations -->
-                    <t t-if="not show_last_annotations">
-                        <ol class="o_annotation">
-                            <t t-foreach="annotations" t-as="annotation">
-                                <li>
-                                    <t t-out="annotation.get('number')" />. <em><t t-out="annotation.get('date')" /></em> - <t t-out="annotation.get('body')" />
-                                </li>
-                            </t>
-                        </ol>
-                    </t>
                 </div>
             </body>
         </html>
@@ -111,36 +91,10 @@
             t-field="env.company.partner_id"
             t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: True}" />
 
-        <t t-if="options.get('tax_unit', 'company_only') == 'company_only'">
-            <t
-                t-if="env.company.account_config_id.account_fiscal_country_id.vat_label"
-                t-out="env.company.account_config_id.account_fiscal_country_id.vat_label+':'" />
-            <t t-else="">Tax ID:</t>
-            <t t-out="env.company.vat" />
-        </t>
-        <t t-else="">
-            Tax ID: <t t-out="env['account.tax.unit'].browse(options.get('tax_unit')).vat" />
-        </t>
+        <div name="company_vat">Tax ID: <t t-out="env.company.vat" /></div>
     </template>
 
     <template id="pdf_export_filters">
-        <!-- Journals -->
-        <t t-if="options.get('journals')">
-            <t
-                t-set="journal_group_selected"
-                t-value="options.get('selected_journal_groups')" />
-            <t t-if="journal_group_selected">
-                <div>Multi-Ledger: <span t-out="journal_group_selected['title']" class="o_text_muted" /></div>
-            </t>
-            <t t-else="">
-                <t
-                    t-set="journal_value"
-                    t-value="[journal.get('title') for journal in options['journals'] if journal.get('selected')]" />
-                <t t-if="journal_value">
-                    <div>Journals: <span t-out="', '.join(journal_value)" class="o_text_muted" /></div>
-                </t>
-            </t>
-        </t>
 
         <!-- Partners -->
         <t t-if="options.get('partner_ids') != None">
@@ -185,73 +139,18 @@
             </div>
         </t>
 
-        <!-- Filters -->
-        <t
-            t-if="options.get('aml_ir_filters') and any(opt['selected'] for opt in options['aml_ir_filters'])"
-            name="aml_ir_filters">
-            <div class="row">
-                <t
-                    t-set="aml_ir_filters"
-                    t-value="opt['name'] for opt in options['aml_ir_filters'] if opt['selected']" />
-                <t t-if="aml_ir_filters">
-                    <div>Filters: <span t-out="', '.join(aml_ir_filters)" class="o_text_muted" /></div>
-                </t>
-            </div>
-        </t>
-
         <!-- Extra options -->
         <t
             t-call="{{custom_templates.get('pdf_export_filter_extra_options_template', 'account.pdf_export_filter_extra_options_template')}}" />
     </template>
 
     <template id="pdf_export_filter_extra_options_template">
-        <t
-            t-set="rounding_unit_display_names"
-            t-value="{k: v[1] for k, v in options['rounding_unit_names'].items() if v[1]}" />
-        <div
-            name="extra_filters"
-            t-if="(report.filter_show_draft and options['all_entries']) or                                  (report.filter_unreconciled and options['unreconciled']) or                                  options.get('include_analytic_without_aml') or                                  options['rounding_unit'] in rounding_unit_display_names">
+        <div name="extra_filters" t-if="extra_option_labels">
             Options:
             <span class="o_text_muted">
-                <t t-set="extra_options" t-value="[]" />
-
-                <!-- All entries -->
                 <t
-                    t-if="report.filter_show_draft and options['all_entries']"
-                    groups="account.group_account_readonly">
-                    <t t-set="label_draft_entries">With Draft Entries</t>
-                    <t
-                        t-set="extra_options"
-                        t-value="extra_options + [label_draft_entries]" />
-                </t>
-
-                <!-- Unreconciled -->
-                <t t-if="report.filter_unreconciled and options['unreconciled']">
-                    <t t-set="label_unreconciled_entries">Unreconciled Entries</t>
-                    <t
-                        t-set="extra_options"
-                        t-value="extra_options + [label_unreconciled_entries]" />
-                </t>
-
-                <!-- Analytic -->
-                <t
-                    t-if="options.get('include_analytic_without_aml')"
-                    name="include_analytic">
-                    <t t-set="label_analytic_simulations">Including Analytic Simulations</t>
-                    <t
-                        t-set="extra_options"
-                        t-value="extra_options + [label_analytic_simulations]" />
-                </t>
-
-                <!-- Currency Unit Amount Text -->
-                <t t-if="options['rounding_unit'] in rounding_unit_display_names">
-                    <t t-set="rounding_unit" t-value="options.get('rounding_unit')" />
-                    <t
-                        t-set="extra_options"
-                        t-value="extra_options + [rounding_unit_display_names[rounding_unit]]" />
-                </t>
-
-                <t name="options" t-out="', '.join(str(o) for o in extra_options)" />
+                    name="options"
+                    t-out="', '.join(str(o) for o in extra_option_labels)" />
             </span>
         </div>
     </template>
@@ -286,13 +185,6 @@
 
                     <th t-if="options.get('column_percent_comparison') == 'growth'">%</th>
 
-                    <th
-                        t-if="options.get('column_percent_comparison') == 'analytic_coverage' and column_header_index == 1">
-                        Analytic coverage
-                    </th>
-
-                    <!-- Last comment header -->
-                    <th t-if="show_last_annotations" class="o_last_comment_header">Last Comment</th>
 
                 </tr>
             </t>
@@ -311,8 +203,6 @@
                         </th>
                     </t>
 
-                    <!-- Empty last comment column -->
-                    <th t-if="show_last_annotations" />
                 </tr>
             </t>
             <tr>
@@ -328,7 +218,6 @@
                     <t t-out="options['columns'][0].get('name')" />
                 </th>
                 <th t-if="options.get('column_percent_comparison') == 'growth'" />
-                <th t-if="show_last_annotations" />
             </tr>
         </thead>
     </template>
@@ -366,9 +255,6 @@
                         <td />
                     </t>
 
-                    <t t-if="show_last_annotations">
-                        <td />
-                    </t>
                 </tr>
             </t>
 
@@ -384,28 +270,12 @@
                 name="pdf_export_main_table_body_lines_tr">
                 <td t-att-colspan="line.get('colspan', '1')" class="o_line_name_level">
                     <span t-out="line.get('name')" class="o_line_name" />
-                    <t t-if="line.get('annotations') and not show_last_annotations">
-                        <t t-foreach="annotations" t-as="annotation">
-                            <t
-                                t-if="annotation.get('number') and annotation['number'] in (line.get('annotations') or [])">
-                                <sup t-out="annotation['number']" />
-                            </t>
-                        </t>
-                    </t>
-                    <t t-if="line.get('account_status')">
-                        <t
-                            t-set="status"
-                            t-value="line['account_status'].get('status')" />
-                        <span t-attf-class="o_status_badge o_status_badge_#{status}">
-                            <t t-out="status_selection.get(status)" />
-                        </span>
-                    </t>
                 </td>
 
                 <t t-foreach="line.get('columns')" t-as="cell">
                     <td class="o_cell_td">
                         <t
-                            t-if="not env.company.account_config_id.totals_below_sections or options.get('ignore_totals_below_sections') or not line.get('unfolded')">
+                            t-if="not totals_below_sections or options.get('ignore_totals_below_sections') or not line.get('unfolded')">
                             <t
                                 t-call="{{custom_templates.get('pdf_export_cell', 'account.pdf_export_cell')}}" />
                         </t>
@@ -434,16 +304,6 @@
                     </td>
                 </t>
 
-                <t t-if="show_last_annotations">
-                    <td class="o_cell_td o_last_comment_column">
-                        <t
-                            t-set="o_classes"
-                            t-value="'o_last_comment' + ('' if line.get('last_comment') else ' o_muted')" />
-                        <span
-                            t-att-class="o_classes"
-                            t-out="line.get('last_comment')" />
-                    </td>
-                </t>
             </tr>
         </t>
     </template>

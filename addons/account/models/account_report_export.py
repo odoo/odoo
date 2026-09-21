@@ -322,8 +322,21 @@ class AccountReportExport(models.Model):
         )
 
         render_values["lines"] = lines
+        render_values.update(
+            self._get_pdf_export_render_values(options, lines, report_info)
+        )
 
-        # Manage annotations.
+        options["css_custom_class"] = options["custom_display_config"].get(
+            "css_custom_class", ""
+        )
+
+        # Render.
+        return self.env["ir.qweb"]._render(template, render_values)
+
+    def _get_pdf_export_render_values(self, options, lines, report_info):
+        render_values = super()._get_pdf_export_render_values(
+            options, lines, report_info
+        )
         render_values["show_last_annotations"] = options.get("show_last_annotations")
         render_values["status_selection"] = dict(
             self.env["account.audit.account.status"]
@@ -340,13 +353,21 @@ class AccountReportExport(models.Model):
                     options["date"], lines, report_info["annotations"]
                 )
             )
+        return render_values
 
-        options["css_custom_class"] = options["custom_display_config"].get(
-            "css_custom_class", ""
-        )
-
-        # Render.
-        return self.env["ir.qweb"]._render(template, render_values)
+    def _get_pdf_extra_option_labels(self, options):
+        labels = []
+        if (
+            self.filter_show_draft
+            and options["all_entries"]
+            and self.env.user.has_group("account.group_account_readonly")
+        ):
+            labels.append(_("With Draft Entries"))
+        if self.filter_unreconciled and options["unreconciled"]:
+            labels.append(_("Unreconciled Entries"))
+        if options.get("include_analytic_without_aml"):
+            labels.append(_("Including Analytic Simulations"))
+        return labels + super()._get_pdf_extra_option_labels(options)
 
     @_debug.perf.timed
     def _prepare_annotations_list_for_pdf_export(
