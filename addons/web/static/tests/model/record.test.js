@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { runAllTimers } from "@odoo/hoot-mock";
-import { Component, onError, proxy, xml } from "@odoo/owl";
+import { Component, onError, proxy, signal, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -64,6 +64,58 @@ test(`display a simple field`, async () => {
         "/web/dataset/call_kw/foo/fields_get",
         "/web/dataset/call_kw/foo/web_read",
     ]);
+});
+
+test(`resId is false when no resId is given`, async () => {
+    class Parent extends Component {
+        static components = { Record, Field };
+        static template = xml`
+            <Record resModel="'foo'" fieldNames="['foo']" t-slot-scope="data">
+                <Field name="'foo'" record="data.record"/>
+            </Record>
+        `;
+    }
+
+    const parent = await mountWithCleanup(Parent);
+    const _record = findComponent(
+        parent,
+        (component) => component instanceof Record.components._Record
+    );
+    expect(_record.model.root.resId).toBe(false);
+    expect(_record.model.root.isNew).toBe(true);
+});
+
+test(`no reload when the parent is re-rendered and no resId is given`, async () => {
+    class Parent extends Component {
+        static components = { Record, Field };
+        static template = xml`
+            <a id="increment" t-on-click="() => this.num.set(this.num() + 1)" t-out="this.num()"/>
+            <Record resModel="'foo'" fieldNames="['foo']" t-slot-scope="data">
+                <Field name="'foo'" record="data.record"/>
+            </Record>
+        `;
+
+        setup() {
+            this.num = signal(0);
+        }
+    }
+
+    onRpc(({ route }) => expect.step(route));
+    await mountWithCleanup(Parent);
+    expect.verifySteps([
+        "/web/dataset/call_kw/foo/fields_get",
+        "/web/dataset/call_kw/foo/onchange",
+    ]);
+
+    expect(`#increment`).toHaveText("0");
+    await contains(`[name='foo'] input`).edit("some value");
+    expect.verifySteps([]);
+
+    await contains(`#increment`).click();
+    expect(`#increment`).toHaveText("1");
+    // the record hasn't been reloaded, so the changes aren't lost
+    expect.verifySteps([]);
+    expect(`[name='foo'] input`).toHaveValue("some value");
 });
 
 test(`can be updated with different resId`, async () => {
