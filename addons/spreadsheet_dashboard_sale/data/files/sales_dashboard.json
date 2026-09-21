@@ -519,14 +519,14 @@
         "A7": "=_t(\"Revenue\")",
         "A8": "=_t(\"Average order amount\")",
         "B1": "=_t(\"Current\")",
-        "B2": "=PIVOT.VALUE(11,\"__count:sum\",\"state\",\"draft\")",
+        "B2": "=PIVOT.VALUE(11,\"order_reference\",\"state\",\"draft\")",
         "B3": {
           "N": "=",
           "S": ["=", "=", "sent"]
         },
         "B4": "=B2+B3",
-        "B5": "=PIVOT.VALUE(11,\"__count:sum\",\"state\",\"sale\")",
-        "B6": "=PIVOT.VALUE(11,\"__count:sum\")",
+        "B5": "=PIVOT.VALUE(11,\"order_reference\",\"state\",\"sale\")",
+        "B6": "=PIVOT.VALUE(11,\"order_reference\")",
         "B7": "=PIVOT.VALUE(11,\"price_subtotal\",\"state\",\"sale\")",
         "B8": "=IFERROR(B7/B6)",
         "C1": "=_t(\"Previous\")",
@@ -1809,7 +1809,7 @@
       ],
       "id": "11",
       "measures": [
-        { "id": "__count:sum", "fieldName": "__count", "aggregator": "sum" },
+        { "id": "order_reference", "fieldName": "order_reference" },
         { "id": "price_subtotal", "fieldName": "price_subtotal" }
       ],
       "model": "sale.report",
