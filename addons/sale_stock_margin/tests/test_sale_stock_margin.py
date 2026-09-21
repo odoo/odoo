@@ -68,6 +68,28 @@ class TestSaleStockMargin(TestStockValuationCommon):
     # TESTS #
     #########
 
+    def test_margin_split_done_move_line(self):
+        "Test margin where spliting move lines for done move keeps the stock move value consistent"
+        self._make_in_move(self.product_avco, 20, 100)
+        sale_order = self._create_sale_order()
+        order_line = self._create_sale_order_line(sale_order, self.product_avco, 10, 150)
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        picking.button_validate()
+        picking.action_toggle_is_locked()
+        picking.move_ids.write({
+            'quantity': 10,
+            'move_line_ids': [
+                Command.create({
+                    'product_id': self.product_avco.id,
+                    'quantity': 6,
+                }),
+                Command.update(picking.move_ids.move_line_ids.id, {'quantity': 4}),
+            ]
+        })
+        self.assertRecordValues(picking.move_ids, [{'quantity': 10, 'value': 1000}])
+        self.assertRecordValues(order_line, [{'qty_delivered': 10, 'purchase_price': 100, 'margin': 500}])
+
     def test_sale_stock_margin_1(self):
         sale_order = self._create_sale_order()
         product = self._create_product()
