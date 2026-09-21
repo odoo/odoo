@@ -15,8 +15,10 @@ from itertools import product
 
 from psycopg.errors import (
     CheckViolation,
+    DataError,
     ForeignKeyViolation,
     NotNullViolation,
+    NumericValueOutOfRange,
     UniqueViolation,
 )
 
@@ -314,9 +316,36 @@ def _check_m2m_foreign_keys(
         )
 
 
+_INT4_MIN = -(2**31)
+_INT4_MAX = 2**31 - 1
+
+
+def _check_column_values(model: BaseModel, rows: list[dict]) -> None:
+    # what the driver and the column type refuse before any table constraint
+    # is consulted: psycopg rejects a NUL in a text parameter, and an int4
+    # column rejects a value outside its range
+    for field in model._fields.values():
+        if not field.store or not field.column_type:
+            continue
+        kind = field.column_type[0]
+        if kind == "int4":
+            for row in rows:
+                value = row.get(field.name)
+                if type(value) is int and not _INT4_MIN <= value <= _INT4_MAX:
+                    raise NumericValueOutOfRange("integer out of range")
+        elif kind in ("varchar", "text"):
+            for row in rows:
+                value = row.get(field.name)
+                if isinstance(value, str) and "\0" in value:
+                    raise DataError(
+                        "PostgreSQL text fields cannot contain NUL (0x00) bytes"
+                    )
+
+
 def _check_table_constraints(storage, model: BaseModel, rows: list[dict]) -> None:
     # what the table refuses on PostgreSQL: a NULL in a NOT NULL column and a
     # duplicate under a unique constraint (NULLs distinct, as SQL treats them)
+    _check_column_values(model, rows)
     registry = model.env.registry
     not_null = [
         field.name
@@ -1372,6 +1401,22 @@ class InMemoryBackend:
                 f"is not stored"
             )
 
+    @staticmethod
+    def _refuse_order_sql_cannot_compile(model: BaseModel, order: str | None) -> None:
+        """An order this tier can sort by and PostgreSQL cannot.
+
+        `sorted(key=order)` reads the field through the records, so it orders
+        by a non-stored computed field that `_field_to_sql` refuses outright.
+        Which fields those are is not a property this can restate: a
+        non-stored *related* field compiles to a join and orders fine, and a
+        field with its own `to_sql` may compile to a parameter
+        (`res.partner.properties_base_definition_id` answers `%s::int4`).
+        So the compiler itself is asked, and its SQL discarded.
+        """
+        if not order:
+            return
+        model._order_to_sql(order, Query(model.env, model._table, model._table_sql))
+
     def search(
         self,
         model: BaseModel,
@@ -1384,6 +1429,7 @@ class InMemoryBackend:
         prof: typing.Any = None,
     ) -> Query:
         self._refuse_what_sql_cannot_compile(model, domain)
+        self._refuse_order_sql_cannot_compile(model, order)
         searched_fnames = flush_search_dependencies(model, domain, order)
         # a SQL search fills no field cache; the in-memory one evaluates the
         # domain and the order through the records, so what it loads to do

@@ -42,35 +42,28 @@ class DictBackend:
                 rows=sum(len(rows) for rows in self._tables.values()),
                 sequences=len(self._named_sequences),
             )
+        # the sequences are deliberately absent: `nextval` is not
+        # transactional on PostgreSQL, so a value a rolled-back savepoint
+        # drew is spent and the next row takes the one after it
         return (
             {
                 table: {id_: dict(row) for id_, row in rows.items()}
                 for table, rows in self._tables.items()
             },
-            dict(self._sequences),
-            {
-                name: NamedSequence(seq.increment, seq.last_value, seq.is_called)
-                for name, seq in self._named_sequences.items()
-            },
         )
 
     def restore(self, snapshot: tuple) -> None:
-        tables, sequences, named = snapshot
+        (tables,) = snapshot
         if _debug.lifecycle.enabled:
             _debug.lifecycle(
                 "storage.restore",
                 tables=len(tables),
                 rows=sum(len(rows) for rows in tables.values()),
-                sequences=len(named),
+                sequences=len(self._named_sequences),
             )
         self._tables = {
             table: {id_: dict(row) for id_, row in rows.items()}
             for table, rows in tables.items()
-        }
-        self._sequences = defaultdict(int, sequences)
-        self._named_sequences = {
-            name: NamedSequence(seq.increment, seq.last_value, seq.is_called)
-            for name, seq in named.items()
         }
 
     def get_row_tuples(
