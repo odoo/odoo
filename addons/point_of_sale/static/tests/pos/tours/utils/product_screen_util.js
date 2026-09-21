@@ -6,7 +6,7 @@ import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_in
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as ChoseComboPopup from "@point_of_sale/../tests/pos/tours/utils/chose_combo_popup_util";
-import { LONG_PRESS_DURATION } from "@point_of_sale/utils";
+import { LONG_PRESS_DURATION, TOUCH_DELAY } from "@point_of_sale/utils";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
@@ -868,7 +868,11 @@ export function longPressProduct(productName) {
                 const mouseDown = new MouseEvent("pointerdown", { bubbles: true });
                 const mouseUp = new MouseEvent("pointerup", { bubbles: true });
                 el.anchor.dispatchEvent(mouseDown);
-                await new Promise((resolve) => setTimeout(resolve, LONG_PRESS_DURATION + 50));
+                // A synthetic MouseEvent has no `pointerType`, so the long press
+                // hook takes its touch branch and waits LONG_PRESS_DURATION + TOUCH_DELAY.
+                await new Promise((resolve) =>
+                    setTimeout(resolve, LONG_PRESS_DURATION + TOUCH_DELAY + 50)
+                );
                 el.anchor.dispatchEvent(mouseUp);
             },
         },
