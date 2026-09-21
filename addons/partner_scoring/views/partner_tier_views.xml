@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="partner_profile_view_search" model="ir.ui.view">
-        <field name="name">partner.profile.search</field>
-        <field name="model">partner.profile</field>
+    <record id="partner_tier_view_search" model="ir.ui.view">
+        <field name="name">partner.tier.search</field>
+        <field name="model">partner.tier</field>
         <field name="arch" type="xml">
-            <search string="Search Commercial Profile">
+            <search string="Search Commercial Tier">
                 <field name="name" />
                 <separator />
                 <filter
@@ -26,11 +26,11 @@
         </field>
     </record>
 
-    <record id="partner_profile_view_list" model="ir.ui.view">
-        <field name="name">partner.profile.list</field>
-        <field name="model">partner.profile</field>
+    <record id="partner_tier_view_list" model="ir.ui.view">
+        <field name="name">partner.tier.list</field>
+        <field name="model">partner.tier</field>
         <field name="arch" type="xml">
-            <list string="Commercial Profiles" multi_edit="1">
+            <list string="Commercial Tiers" multi_edit="1">
                 <field name="sequence" widget="handle" />
                 <field name="name" />
                 <field name="min_value" />
@@ -42,15 +42,15 @@
         </field>
     </record>
 
-    <record id="partner_profile_view_form" model="ir.ui.view">
-        <field name="name">partner.profile.form</field>
-        <field name="model">partner.profile</field>
+    <record id="partner_tier_view_form" model="ir.ui.view">
+        <field name="name">partner.tier.form</field>
+        <field name="model">partner.tier</field>
         <field name="arch" type="xml">
-            <form string="Commercial Profile">
+            <form string="Commercial Tier">
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Profile Name" />
+                            <field name="name" placeholder="Tier Name" />
                         </h1>
                     </div>
                     <group>
@@ -59,7 +59,7 @@
                             <field name="max_value" />
                             <field
                                 name="factor"
-                                help="Multiplier applied to sale.target metas for partners in this profile."
+                                help="Multiplier applied to sale.target metas for partners in this tier."
                                 widget="percentage" />
                         </group>
                         <group string="Settings">
@@ -75,18 +75,18 @@
         </field>
     </record>
 
-    <record id="partner_profile_action" model="ir.actions.act_window">
-        <field name="name">Commercial Profiles</field>
-        <field name="res_model">partner.profile</field>
+    <record id="partner_tier_action" model="ir.actions.act_window">
+        <field name="name">Commercial Tiers</field>
+        <field name="res_model">partner.tier</field>
         <field name="view_mode">list,form</field>
-        <field name="search_view_id" ref="partner_profile_view_search" />
+        <field name="search_view_id" ref="partner_tier_view_search" />
         <field name="context">{'search_default_active': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new commercial profile
+                Create a new commercial tier
             </p>
             <p>
-                Profiles classify customers by their normalized score percentage
+                Tiers classify customers by their normalized score percentage
                 and apply a factor to expected revenues and commercial targets.
             </p>
         </field>

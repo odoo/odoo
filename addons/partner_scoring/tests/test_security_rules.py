@@ -47,7 +47,7 @@ class TestSecurityRules(TransactionCase):
                 "value_ids": [Command.set(cls.value.ids)],
             }
         )
-        cls.hidden._update_profile_scores()
+        cls.hidden._update_scores()
 
     def test_the_partner_itself_is_hidden(self):
         """The premise: without this the rules below prove nothing."""
@@ -57,7 +57,7 @@ class TestSecurityRules(TransactionCase):
     def test_the_score_breakdown_follows_the_partner(self):
         score_model = self.env["partner.score.line"].with_user(self.outsider)
         self.assertTrue(self.hidden.score_line_ids)
-        self.assertFalse(score_model.search([("partner_id", "=", self.hidden.id)]))
+        self.assertFalse(score_model.search([("subject_id", "=", self.hidden.id)]))
         with self.assertRaises(AccessError):
             self.hidden.score_line_ids.with_user(self.outsider).read(["source_ref"])
 
@@ -100,7 +100,7 @@ class TestSecurityRules(TransactionCase):
         self.line.with_user(insider).read(["attribute_id"])
 
     def test_a_foreign_company_scale_is_not_disclosed(self):
-        profile_model = self.env["partner.profile"]
+        profile_model = self.env["partner.tier"]
         mine = profile_model.create(
             {
                 "name": "Rules Band B",
@@ -124,7 +124,7 @@ class TestSecurityRules(TransactionCase):
 
     def test_the_overlap_check_still_sees_foreign_bands(self):
         """The company rule must not weaken the band constraint."""
-        self.env["partner.profile"].create(
+        self.env["partner.tier"].create(
             {
                 "name": "Rules Band A Wide",
                 "min_value": 0.0,
@@ -151,7 +151,7 @@ class TestSecurityRules(TransactionCase):
             }
         )
         with self.assertRaises(ValidationError):
-            self.env["partner.profile"].with_user(manager).create(
+            self.env["partner.tier"].with_user(manager).create(
                 {
                     "name": "Rules Shared Overlap",
                     "min_value": 0.0,

@@ -16,7 +16,7 @@ class TestPartnerScoringEngine(TransactionCase):
         cls.Partner = cls.env["res.partner"]
         cls.Attribute = cls.env["res.partner.attribute"]
         cls.Value = cls.env["res.partner.attribute.value"]
-        cls.Profile = cls.env["partner.profile"]
+        cls.Profile = cls.env["partner.tier"]
 
         cls.Profile.search([]).write({"active": False})
         cls.Value.search([("score_value", ">", 0)]).write({"score_value": 0.0})
@@ -48,7 +48,7 @@ class TestPartnerScoringEngine(TransactionCase):
             {"name": "High", "attribute_id": cls.single.id, "score_value": 10.0}
         )
         cls.own_ceiling = 30.0
-        cls.denominator = cls.Partner._get_score_max_possible()
+        cls.denominator = cls.Partner._get_score_max_points()
 
         # Shared bands: these tests are about the scoring engine, not about
         # company scoping, and the partner below carries no company.
@@ -99,8 +99,8 @@ class TestPartnerScoringEngine(TransactionCase):
     def test_sum_mode_adds_every_selected_value(self):
         self._set(self.multi, self.multi_a | self.multi_b)
         self.assertEqual(self.partner.score_points, 20.0)
-        self.assertEqual(self.partner.score_max_possible, self.denominator)
-        self.assertAlmostEqual(self.partner.score_pct, 20.0 / self.denominator * 100.0)
+        self.assertEqual(self.partner.score_max_points, self.denominator)
+        self.assertAlmostEqual(self.partner.score, 20.0 / self.denominator * 100.0)
 
     def test_max_mode_discards_all_but_the_best(self):
         self._set(self.single, self.single_low | self.single_high)
@@ -119,17 +119,17 @@ class TestPartnerScoringEngine(TransactionCase):
 
     def test_percentage_selects_the_profile_band(self):
         self._set(self.multi, self.multi_a)
-        self.assertLess(self.partner.score_pct, 50.0)
-        self.assertEqual(self.partner.partner_profile_id, self.profile_low)
+        self.assertLess(self.partner.score, 50.0)
+        self.assertEqual(self.partner.tier_id, self.profile_low)
 
         self._set(self.multi, self.multi_a | self.multi_b)
         self._set(self.single, self.single_high)
         expected_pct = self.own_ceiling / self.denominator * 100.0
-        self.assertAlmostEqual(self.partner.score_pct, expected_pct)
+        self.assertAlmostEqual(self.partner.score, expected_pct)
         expected_profile = (
             self.profile_high if expected_pct >= 50.0 else self.profile_low
         )
-        self.assertEqual(self.partner.partner_profile_id, expected_profile)
+        self.assertEqual(self.partner.tier_id, expected_profile)
         self.assertEqual(self.partner.factor, expected_profile.factor)
 
     def test_a_weight_edit_cascades_to_the_holders(self):
@@ -137,7 +137,7 @@ class TestPartnerScoringEngine(TransactionCase):
         self.assertEqual(self.partner.score_points, 8.0)
 
         self.multi_a.score_value = 16.0
-        self.partner._update_profile_scores()
+        self.partner._update_scores()
         self.assertEqual(self.partner.score_points, 16.0)
         self.assertEqual(
             self.Partner._score_ceiling_partner_attr()["total"],
@@ -147,7 +147,7 @@ class TestPartnerScoringEngine(TransactionCase):
     def test_the_audit_rows_reconcile_rather_than_churn(self):
         self._set(self.multi, self.multi_a)
         before = {row.id: row.source_key for row in self.partner.score_line_ids}
-        self.partner._update_profile_scores()
+        self.partner._update_scores()
         after = {row.id: row.source_key for row in self.partner.score_line_ids}
         self.assertEqual(before, after)
 
@@ -158,13 +158,13 @@ class TestPartnerScoringEngine(TransactionCase):
     def test_a_profile_move_is_recorded_in_the_chatter(self):
         self._set(self.multi, self.multi_a)
         self._flush_tracking()
-        low = self.partner.partner_profile_id
+        low = self.partner.tier_id
         self.assertEqual(low, self.profile_low)
 
         self._set(self.single, self.single_high)
         self._set(self.multi, self.multi_a | self.multi_b)
         self._flush_tracking()
-        high = self.partner.partner_profile_id
+        high = self.partner.tier_id
         self.assertEqual(
             high,
             self.profile_high,
@@ -172,7 +172,7 @@ class TestPartnerScoringEngine(TransactionCase):
             "so this test can no longer observe a tracked transition",
         )
 
-        field = self.env["ir.model.fields"]._get("res.partner", "partner_profile_id")
+        field = self.env["ir.model.fields"]._get("res.partner", "tier_id")
         tracked = (
             self.env["mail.tracking.value"]
             .sudo()
@@ -202,7 +202,7 @@ class TestPartnerScoringEngine(TransactionCase):
         self._set(self.multi, self.multi_a | self.multi_b)
         self._flush_tracking()
 
-        field = self.env["ir.model.fields"]._get("res.partner", "score_pct")
+        field = self.env["ir.model.fields"]._get("res.partner", "score")
         self.assertFalse(
             self.env["mail.tracking.value"]
             .sudo()
@@ -213,7 +213,7 @@ class TestPartnerScoringEngine(TransactionCase):
                     ("field_id", "=", field.id),
                 ]
             ),
-            "score_pct moves on every capture and every catalog edit; tracking "
+            "score moves on every capture and every catalog edit; tracking "
             "it would bury the profile transitions in noise",
         )
 
@@ -222,14 +222,14 @@ class TestPartnerScoringEngine(TransactionCase):
         self._set(self.multi, self.multi_a | self.multi_b)
         self.assertGreater(self.partner.score_points, 1.0)
         with patch.object(
-            type(self.Partner), "_get_score_max_possible", return_value=1.0
+            type(self.Partner), "_get_score_max_points", return_value=1.0
         ):
             self.partner._compute_score()
-        self.assertEqual(self.partner.score_pct, 100.0)
+        self.assertEqual(self.partner.score, 100.0)
 
     def test_a_single_partner_is_recomputed_inline(self):
         partner_class = type(self.Partner)
-        with patch.object(partner_class, "_delay_profile_scores_recompute") as queued:
+        with patch.object(partner_class, "_delay_scores_recompute") as queued:
             result = self.partner.action_partner_score_recompute()
         self.assertFalse(queued.called)
         self.assertFalse(result)
@@ -239,8 +239,8 @@ class TestPartnerScoringEngine(TransactionCase):
         selection = self.partner | other
         partner_class = type(self.Partner)
         with (
-            patch.object(partner_class, "_update_profile_scores") as inline,
-            patch.object(partner_class, "_delay_profile_scores_recompute") as queued,
+            patch.object(partner_class, "_update_scores") as inline,
+            patch.object(partner_class, "_delay_scores_recompute") as queued,
         ):
             result = selection.action_partner_score_recompute()
         self.assertTrue(queued.called)
@@ -250,18 +250,18 @@ class TestPartnerScoringEngine(TransactionCase):
     def test_a_contact_carries_its_commercial_entitys_profile(self):
         self._set(self.multi, self.multi_a | self.multi_b)
         self._set(self.single, self.single_high)
-        self.assertEqual(self.partner.partner_profile_id, self.profile_high)
+        self.assertEqual(self.partner.tier_id, self.profile_high)
         contact = self.Partner.create(
             {"name": "Engine Contact", "parent_id": self.partner.id, "type": "contact"}
         )
-        self.assertEqual(contact.score_pct, 0.0)
-        self.assertEqual(contact.partner_profile_id, self.profile_high)
+        self.assertEqual(contact.score, 0.0)
+        self.assertEqual(contact.tier_id, self.profile_high)
         self.assertEqual(contact.factor, self.profile_high.factor)
 
         self._set(self.multi, self.multi_a)
         self._set(self.single, self.single_low)
-        self.assertEqual(self.partner.partner_profile_id, self.profile_low)
-        self.assertEqual(contact.partner_profile_id, self.profile_low)
+        self.assertEqual(self.partner.tier_id, self.profile_low)
+        self.assertEqual(contact.tier_id, self.profile_low)
 
     def test_the_breakdown_labels_follow_the_reader_and_the_catalog(self):
         self._set(self.single, self.single_low | self.single_high)

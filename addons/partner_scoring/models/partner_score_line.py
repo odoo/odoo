@@ -6,10 +6,11 @@ from odoo import api, fields, models
 class PartnerScoreLine(models.Model):
     _name = "partner.score.line"
     _description = "Partner Score Line"
-    _order = "partner_id, dimension, id"
+    _order = "subject_id, dimension, id"
 
-    partner_id = fields.Many2one(
+    subject_id = fields.Many2one(
         comodel_name="res.partner",
+        string="Partner",
         index=True,
         required=True,
         ondelete="cascade",
@@ -39,7 +40,7 @@ class PartnerScoreLine(models.Model):
     max_points = fields.Float(
         help="Ceiling of the dimension/attribute group this row belongs to "
         "(context for the reader). The normalization denominator comes from "
-        "the catalog -- see res.partner._get_score_max_possible."
+        "the catalog -- see res.partner._get_score_max_points."
     )
     applied = fields.Boolean(
         default=True,
@@ -72,17 +73,17 @@ class PartnerScoreLine(models.Model):
                 row.dimension, row.source_key, row.applied
             )
 
-    _SCORE_ROW_KEY = ("partner_id", "dimension", "source_key")
+    _SCORE_ROW_KEY = ("subject_id", "dimension", "source_key")
     _SCORE_ROW_VALUES = ("points", "max_points", "applied")
 
     @api.model
     def _reconcile_rows(self, partners, rows):
         score_model = self.env(su=True)[self._name]
-        existing = score_model.search([("partner_id", "in", partners.ids)])
+        existing = score_model.search([("subject_id", "in", partners.ids)])
 
         by_key = {}
         for row in existing:
-            key = (row.partner_id.id, row.dimension, row.source_key)
+            key = (row.subject_id.id, row.dimension, row.source_key)
             by_key.setdefault(key, []).append(row)
 
         to_create = []

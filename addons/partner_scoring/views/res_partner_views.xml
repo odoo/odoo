@@ -25,13 +25,13 @@
                             <group
                                 name="scoring_classification"
                                 string="Commercial Classification">
-                                <field name="partner_profile_id" readonly="1" />
+                                <field name="tier_id" readonly="1" />
                                 <field name="factor" readonly="1" />
                                 <field name="score_line_count" invisible="1" />
-                                <label for="score_pct" />
+                                <label for="score" />
                                 <div class="o_row">
                                     <field
-                                        name="score_pct"
+                                        name="score"
                                         readonly="1"
                                         class="oe_inline"
                                         style="max-width: 7rem;" />
@@ -50,11 +50,11 @@
                             groups="partner_scoring.group_partner_scoring_manager">
                             <div class="d-flex align-items-center gap-2">
                                 <label
-                                    for="date_last_score_update"
+                                    for="score_date"
                                     string="Last calculated on"
                                     class="text-muted" />
                                 <field
-                                    name="date_last_score_update"
+                                    name="score_date"
                                     nolabel="1"
                                     readonly="1"
                                     class="oe_inline" />

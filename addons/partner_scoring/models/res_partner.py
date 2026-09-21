@@ -25,53 +25,53 @@ class ResPartner(models.Model):
         store=True,
         help="Sum of the applied audit rows (see the score breakdown).",
     )
-    score_max_possible = fields.Float(
-        compute="_compute_score_max_possible",
+    score_max_points = fields.Float(
+        compute="_compute_score_max_points",
         compute_sudo=True,
         help="Normalization denominator: the maximum points reachable "
         "across all active scoring dimensions with configured weights. A "
         "property of the catalog, read live rather than stored per partner.",
     )
-    score_pct = fields.Float(
+    score = fields.Float(
         string="Score (%)",
         compute="_compute_score",
         precompute=True,
         compute_sudo=True,
         store=True,
         help="Normalized score percentage (0-100) used to classify the "
-        "partner into a commercial profile.",
+        "partner into a commercial tier.",
     )
-    date_last_score_update = fields.Datetime(
+    score_date = fields.Datetime(
         string="Score Last Updated",
         readonly=True,
         help="When the score audit rows were last regenerated. A catalog "
         "weight change queues an async recompute (see "
-        "_delay_profile_scores_recompute) -- this timestamp is how to tell "
+        "_delay_scores_recompute) -- this timestamp is how to tell "
         "the score is current versus still pending that background job.",
     )
-    partner_profile_id = fields.Many2one(
-        comodel_name="partner.profile",
-        string="Commercial Profile",
-        compute="_compute_partner_profile_id",
+    tier_id = fields.Many2one(
+        comodel_name="partner.tier",
+        string="Commercial Tier",
+        compute="_compute_tier_id",
         compute_sudo=True,
         recursive=True,
         store=True,
         tracking=True,
-        help="First active profile whose score range contains the partner's "
-        "score percentage. A contact carries its commercial entity's profile: "
+        help="First active tier whose score range contains the partner's "
+        "score percentage. A contact carries its commercial entity's tier: "
         "the score describes the customer, not the person. Tracked, so the "
-        "chatter carries the band history. score_pct is deliberately not "
+        "chatter carries the band history. score is deliberately not "
         "tracked: it moves on every catalog edit and every attribute capture, "
         "and would bury the transitions that carry commercial meaning.",
     )
     factor = fields.Float(
-        related="partner_profile_id.factor",
-        string="Profile Factor",
+        related="tier_id.factor",
+        string="Tier Factor",
         readonly=True,
     )
     score_line_ids = fields.One2many(
         comodel_name="partner.score.line",
-        inverse_name="partner_id",
+        inverse_name="subject_id",
         string="Score Breakdown",
     )
     score_line_count = fields.Count(
@@ -94,13 +94,13 @@ class ResPartner(models.Model):
             if any(field in vals for field in self._SCORE_TRIGGERS)
         ]
         if to_score_ids:
-            self.browse(to_score_ids)._update_profile_scores()
+            self.browse(to_score_ids)._update_scores()
         return partners
 
     def write(self, vals):
         result = super().write(vals)
         if any(field in vals for field in self._SCORE_TRIGGERS):
-            self._update_profile_scores()
+            self._update_scores()
         if any(field in vals for field in self._COMMERCIAL_FIELDS):
             self.env["res.partner.attribute.line"]._follow_commercial_partner(self)
         return result
@@ -110,30 +110,30 @@ class ResPartner(models.Model):
         "score_line_ids.applied",
     )
     def _compute_score(self):
-        max_possible = self._get_score_max_possible()
+        max_possible = self._get_score_max_points()
         for partner in self:
             applied_rows = partner.score_line_ids.filtered("applied")
             partner.score_points = sum(applied_rows.mapped("points"))
             # Clamped: a stored row can outlive the weight that produced it
             # until the queued rescore lands, so a stale numerator degrades to
             # a capped score rather than a band above the scale.
-            partner.score_pct = (
+            partner.score = (
                 min(partner.score_points / max_possible * 100.0, 100.0)
                 if max_possible
                 else 0.0
             )
 
-    def _compute_score_max_possible(self):
-        self.score_max_possible = self._get_score_max_possible()
+    def _compute_score_max_points(self):
+        self.score_max_points = self._get_score_max_points()
 
     @api.depends(
-        "score_pct",
+        "score",
         "company_id",
         "commercial_partner_id",
-        "commercial_partner_id.partner_profile_id",
+        "commercial_partner_id.tier_id",
     )
-    def _compute_partner_profile_id(self):
-        profile_model = self.env["partner.profile"]
+    def _compute_tier_id(self):
+        tier_model = self.env["partner.tier"]
         scales = {}
         commercial = self.filtered(lambda p: p.commercial_partner_id == p)
         for partner in commercial:
@@ -143,22 +143,20 @@ class ResPartner(models.Model):
             # be in. A company-less partner resolves against company-less bands.
             company = partner.company_id
             if company.id not in scales:
-                scales[company.id] = profile_model.search(
-                    [("active", "=", True)] + profile_model._scale_domain(company),
+                scales[company.id] = tier_model.search(
+                    [("active", "=", True)] + tier_model._scale_domain(company),
                     order="sequence, id",
                 )
-            partner.partner_profile_id = next(
+            partner.tier_id = next(
                 (
-                    profile
-                    for profile in scales[company.id]
-                    if profile._is_covering(partner.score_pct)
+                    tier
+                    for tier in scales[company.id]
+                    if tier._is_covering(partner.score)
                 ),
-                profile_model,
+                tier_model,
             )
         for partner in self - commercial:
-            partner.partner_profile_id = (
-                partner.commercial_partner_id.partner_profile_id
-            )
+            partner.tier_id = partner.commercial_partner_id.tier_id
 
     def action_partner_score_recompute(self):
         """Score inline for one partner, in the background for a selection.
@@ -168,9 +166,9 @@ class ResPartner(models.Model):
         goes to the queue the module already owns for exactly this work.
         """
         if len(self) <= 1:
-            self._update_profile_scores()
+            self._update_scores()
             return None
-        self._delay_profile_scores_recompute()
+        self._delay_scores_recompute()
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
@@ -201,7 +199,7 @@ class ResPartner(models.Model):
         }
 
     @api.model
-    def _get_score_max_possible(self):
+    def _get_score_max_points(self):
         return sum(
             ceiling["total"] for ceiling in self._get_score_ceiling_data().values()
         )
@@ -211,7 +209,7 @@ class ResPartner(models.Model):
         return self.env["res.partner.attribute"]._score_ceilings([])
 
     @api.job(channel="partner_scoring.recompute")
-    def _update_profile_scores(self):
+    def _update_scores(self):
         env = self.env(su=True)
         ceilings = self._get_score_ceiling_data()
         dimensions = self._get_score_dimensions()
@@ -223,7 +221,7 @@ class ResPartner(models.Model):
                     ceilings[dimension]
                 )
         self.env["partner.score.line"]._reconcile_rows(self, rows)
-        for field_name in ("score_points", "score_pct", "partner_profile_id"):
+        for field_name in ("score_points", "score", "tier_id"):
             self.env.add_to_compute(self._fields[field_name], self)
         self.flush_recordset()
         # Raw SQL, deliberately: this is a bookkeeping stamp, not an edit of the
@@ -233,22 +231,22 @@ class ResPartner(models.Model):
         # re-enter res.partner.write. The ORM cache is kept coherent by hand on
         # the line below.
         env.cr.execute(
-            "UPDATE res_partner SET date_last_score_update = %s WHERE id = ANY(%s)",
+            "UPDATE res_partner SET score_date = %s WHERE id = ANY(%s)",
             (fields.Datetime.now(), self.ids),
         )
-        self.invalidate_recordset(["date_last_score_update"])
+        self.invalidate_recordset(["score_date"])
 
     @api.job(channel="partner_scoring.recompute")
-    def _reclassify_profile_bands(self):
+    def _reclassify_tiers(self):
         """Re-run the classification only, leaving the audit rows alone."""
-        self.env.add_to_compute(self._fields["partner_profile_id"], self)
+        self.env.add_to_compute(self._fields["tier_id"], self)
         self.flush_recordset()
 
     @api.model
-    def _notify_score_bands_changed(self):
-        """Queue a reclassification after a change to the profile scale.
+    def _notify_tier_scale_changed(self):
+        """Queue a reclassification after a change to the tier scale.
 
-        Nothing depends on partner.profile itself, so an edited, archived or
+        Nothing depends on partner.tier itself, so an edited, archived or
         deleted band never reached the partners it governs and the stored
         classification drifted away from the configured scale. Cheaper than
         _notify_score_ceiling_changed: the audit rows and the percentage do
@@ -267,7 +265,7 @@ class ResPartner(models.Model):
             batch = partners[start : start + _RECOMPUTE_BATCH_SIZE]
             batch.delayed(
                 identity_key=batch._score_job_identity_key("reclassify")
-            )._reclassify_profile_bands()
+            )._reclassify_tiers()
 
     def _score_job_identity_key(self, kind):
         """Deterministic key for a queued wave over exactly these partners.
@@ -284,12 +282,12 @@ class ResPartner(models.Model):
         ).hexdigest()
         return f"partner_scoring.{kind}:{digest}"
 
-    def _delay_profile_scores_recompute(self):
+    def _delay_scores_recompute(self):
         for start in range(0, len(self), _RECOMPUTE_BATCH_SIZE):
             batch = self[start : start + _RECOMPUTE_BATCH_SIZE]
             batch.delayed(
                 identity_key=batch._score_job_identity_key("recompute")
-            )._update_profile_scores()
+            )._update_scores()
 
     @api.model
     def _notify_score_ceiling_changed(self):
@@ -300,7 +298,7 @@ class ResPartner(models.Model):
         # ones and the ones the editing user's company rule hides.
         self.env(su=True)["res.partner"].with_context(active_test=False).search(
             [("score_line_ids", "!=", False)]
-        )._delay_profile_scores_recompute()
+        )._delay_scores_recompute()
 
     def _score_rows_partner_attr(self, ceiling):
         self.check_singleton()
@@ -353,7 +351,7 @@ class ResPartner(models.Model):
     ):
         self.check_singleton()
         return {
-            "partner_id": self.id,
+            "subject_id": self.id,
             "dimension": dimension,
             "source_key": source_key,
             "points": points,

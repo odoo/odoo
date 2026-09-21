@@ -54,11 +54,11 @@ msgid "Acquisition source"
 msgstr "Origen de captación"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_profile__active
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__active
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__active
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_line__active
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_value__active
-#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_profile_view_search
+#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_tier_view_search
 msgid "Active"
 msgstr "Activo"
 
@@ -148,18 +148,18 @@ msgid "Commercial Classification"
 msgstr "Clasificación comercial"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_res_partner__partner_profile_id
+#: model:ir.model.fields,field_description:partner_scoring.field_res_partner__tier_id
 #: model:ir.model.fields,field_description:partner_scoring.field_res_users__partner_profile_id
-#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_profile_view_form
-msgid "Commercial Profile"
-msgstr "Perfil comercial"
+#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_tier_view_form
+msgid "Commercial Tier"
+msgstr "Nivel comercial"
 
 #. module: partner_scoring
-#: model:ir.actions.act_window,name:partner_scoring.partner_profile_action
-#: model:ir.ui.menu,name:partner_scoring.partner_profile_menu
-#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_profile_view_list
-msgid "Commercial Profiles"
-msgstr "Perfiles comerciales"
+#: model:ir.actions.act_window,name:partner_scoring.partner_tier_action
+#: model:ir.ui.menu,name:partner_scoring.partner_tier_menu
+#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_tier_view_list
+msgid "Commercial Tiers"
+msgstr "Niveles comerciales"
 
 #. module: partner_scoring
 #: model:res.partner.attribute,name:partner_scoring.partner_attribute_commercial_profile
@@ -172,8 +172,8 @@ msgid "Communication openness"
 msgstr "Apertura a comunicación"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_profile__company_id
-#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_profile_view_search
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__company_id
+#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_tier_view_search
 msgid "Company"
 msgstr "Compañía"
 
@@ -203,9 +203,9 @@ msgid "Corteva"
 msgstr ""
 
 #. module: partner_scoring
-#: model_terms:ir.actions.act_window,help:partner_scoring.partner_profile_action
-msgid "Create a new commercial profile"
-msgstr "Cree un perfil comercial"
+#: model_terms:ir.actions.act_window,help:partner_scoring.partner_tier_action
+msgid "Create a new commercial tier"
+msgstr "Cree un nivel comercial"
 
 #. module: partner_scoring
 #: model_terms:ir.actions.act_window,help:partner_scoring.res_partner_attribute_action
@@ -213,7 +213,7 @@ msgid "Create an attribute"
 msgstr "Cree un atributo"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_profile__create_uid
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__create_uid
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__create_uid
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__create_uid
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_line__create_uid
@@ -222,7 +222,7 @@ msgid "Created by"
 msgstr "Creado por"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_profile__create_date
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__create_date
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__create_date
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__create_date
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_line__create_date
@@ -258,7 +258,7 @@ msgstr "Descartado: solo cuenta el valor más alto."
 
 #. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_mixin_score_catalog__display_name
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_profile__display_name
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__display_name
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__display_name
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner__display_name
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__display_name
@@ -314,7 +314,7 @@ msgid "Facebook"
 msgstr ""
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_profile__factor
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__factor
 msgid "Factor"
 msgstr ""
 
@@ -324,7 +324,7 @@ msgid "Field visit"
 msgstr "Visita de campo"
 
 #. module: partner_scoring
-#: model:ir.model.fields,help:partner_scoring.field_res_partner__partner_profile_id
+#: model:ir.model.fields,help:partner_scoring.field_res_partner__tier_id
 #: model:ir.model.fields,help:partner_scoring.field_res_users__partner_profile_id
 msgid ""
 "First active profile whose score range contains the partner's score "
@@ -419,7 +419,7 @@ msgstr ""
 
 #. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_mixin_score_catalog__id
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_profile__id
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__id
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__id
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner__id
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__id
@@ -429,9 +429,9 @@ msgid "ID"
 msgstr "Identificación"
 
 #. module: partner_scoring
-#: model:ir.model.fields,help:partner_scoring.field_partner_profile__active
-msgid "If unchecked, the profile will not appear in default views"
-msgstr "Si se desmarca, el perfil no aparecerá en las vistas por defecto"
+#: model:ir.model.fields,help:partner_scoring.field_partner_tier__active
+msgid "If unchecked, the tier will not appear in default views"
+msgstr "Si se desmarca, el nivel no aparecerá en las vistas por defecto"
 
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_succession_transition
@@ -444,7 +444,7 @@ msgid "In-house advisor"
 msgstr "Asesor propio"
 
 #. module: partner_scoring
-#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_profile_view_search
+#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_tier_view_search
 msgid "Inactive"
 msgstr "Inactivo"
 
@@ -464,7 +464,7 @@ msgid "Instagram"
 msgstr ""
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_profile__write_uid
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__write_uid
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__write_uid
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__write_uid
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_line__write_uid
@@ -473,7 +473,7 @@ msgid "Last Updated by"
 msgstr "Última actualización por"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_profile__write_date
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__write_date
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__write_date
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__write_date
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_line__write_date
@@ -503,7 +503,7 @@ msgid "Low influence"
 msgstr "Baja influencia"
 
 #. module: partner_scoring
-#: model:ir.model.fields,help:partner_scoring.field_partner_profile__min_value
+#: model:ir.model.fields,help:partner_scoring.field_partner_tier__min_value
 msgid "Lower bound of the normalized score percentage, inclusive."
 msgstr "Límite inferior del porcentaje de puntaje normalizado, inclusive."
 
@@ -523,7 +523,7 @@ msgid "Max Points"
 msgstr "Puntos máximos"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_profile__max_value
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__max_value
 msgid "Maximum Score (%)"
 msgstr "Puntaje máximo (%)"
 
@@ -545,7 +545,7 @@ msgid "Medium influence"
 msgstr "Influencia media"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_profile__min_value
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__min_value
 msgid "Minimum Score (%)"
 msgstr "Puntaje mínimo (%)"
 
@@ -561,14 +561,14 @@ msgid "Moderate"
 msgstr "Moderado"
 
 #. module: partner_scoring
-#: model:ir.model.fields,help:partner_scoring.field_partner_profile__factor
+#: model:ir.model.fields,help:partner_scoring.field_partner_tier__factor
 #: model:ir.model.fields,help:partner_scoring.field_res_partner__factor
 #: model:ir.model.fields,help:partner_scoring.field_res_users__factor
 msgid "Multiplicative percentage factor (e.g., 1.2 for 120%)"
 msgstr "Factor porcentual multiplicativo (por ejemplo, 1.2 para 120%)"
 
 #. module: partner_scoring
-#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_profile_view_form
+#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_tier_view_form
 msgid "Multiplier applied to sale.target metas for partners in this profile."
 msgstr ""
 "Multiplicador aplicado a las metas de sale.target de los contactos de este "
@@ -581,15 +581,15 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: partner_scoring
-#: model:ir.model.fields,help:partner_scoring.field_partner_profile__name
-msgid "Name of the customer profile"
-msgstr "Nombre del perfil de cliente"
+#: model:ir.model.fields,help:partner_scoring.field_partner_tier__name
+msgid "Name of the customer tier"
+msgstr "Nombre del nivel de cliente"
 
 #. module: partner_scoring
 #. odoo-python
 #: code:addons/partner_scoring/models/partner_profile.py:0
-msgid "New Profile"
-msgstr "Perfil nuevo"
+msgid "New Tier"
+msgstr "Nivel nuevo"
 
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_advisor_none
@@ -618,7 +618,7 @@ msgid "None"
 msgstr "Ninguno"
 
 #. module: partner_scoring
-#: model:ir.model.fields,help:partner_scoring.field_res_partner__score_max_possible
+#: model:ir.model.fields,help:partner_scoring.field_res_partner__score_max_points
 #: model:ir.model.fields,help:partner_scoring.field_res_users__score_max_possible
 msgid ""
 "Normalization denominator: the maximum points reachable across all active "
@@ -628,7 +628,7 @@ msgstr ""
 "dimensiones de puntaje activas con pesos configurados."
 
 #. module: partner_scoring
-#: model:ir.model.fields,help:partner_scoring.field_res_partner__score_pct
+#: model:ir.model.fields,help:partner_scoring.field_res_partner__score
 #: model:ir.model.fields,help:partner_scoring.field_res_users__score_pct
 msgid ""
 "Normalized score percentage (0-100) used to classify the partner into a "
@@ -663,7 +663,7 @@ msgid "Other"
 msgstr "Otro"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__partner_id
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__subject_id
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_line__partner_id
 msgid "Partner"
 msgstr "Contacto"
@@ -694,9 +694,9 @@ msgid "Contact Attributes"
 msgstr "Atributos de contacto"
 
 #. module: partner_scoring
-#: model:ir.model,name:partner_scoring.model_partner_profile
-msgid "Partner Commercial Profile"
-msgstr "Perfil comercial del contacto"
+#: model:ir.model,name:partner_scoring.model_partner_tier
+msgid "Partner Commercial Tier"
+msgstr "Nivel comercial del contacto"
 
 #. module: partner_scoring
 #: model:ir.model,name:partner_scoring.model_partner_score_line
@@ -756,14 +756,14 @@ msgstr "Atributos del perfil"
 #. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner__factor
 #: model:ir.model.fields,field_description:partner_scoring.field_res_users__factor
-msgid "Profile Factor"
-msgstr "Factor del perfil"
+msgid "Tier Factor"
+msgstr "Factor del nivel"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_profile__name
-#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_profile_view_form
-msgid "Profile Name"
-msgstr "Nombre del perfil"
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__name
+#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_tier_view_form
+msgid "Tier Name"
+msgstr "Nombre del nivel"
 
 #. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner__attribute_line_ids
@@ -782,7 +782,7 @@ msgstr ""
 "%(commercial)s, no en su contacto %(contact)s."
 
 #. module: partner_scoring
-#: model_terms:ir.actions.act_window,help:partner_scoring.partner_profile_action
+#: model_terms:ir.actions.act_window,help:partner_scoring.partner_tier_action
 msgid ""
 "Profiles classify customers by their normalized score percentage\n"
 "                and apply a factor to expected revenues and commercial targets."
@@ -817,7 +817,7 @@ msgid "Reseller"
 msgstr "Revendedor"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_res_partner__score_pct
+#: model:ir.model.fields,field_description:partner_scoring.field_res_partner__score
 #: model:ir.model.fields,field_description:partner_scoring.field_res_users__score_pct
 msgid "Score (%)"
 msgstr "Puntaje (%)"
@@ -831,13 +831,13 @@ msgid "Score Breakdown"
 msgstr "Desglose del puntaje"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_res_partner__date_last_score_update
+#: model:ir.model.fields,field_description:partner_scoring.field_res_partner__score_date
 #: model:ir.model.fields,field_description:partner_scoring.field_res_users__date_last_score_update
 msgid "Score Last Updated"
 msgstr "Última actualización del puntaje"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_res_partner__score_max_possible
+#: model:ir.model.fields,field_description:partner_scoring.field_res_partner__score_max_points
 #: model:ir.model.fields,field_description:partner_scoring.field_res_users__score_max_possible
 msgid "Score Max Possible"
 msgstr "Puntaje máximo posible"
@@ -856,7 +856,7 @@ msgid "Score Rows"
 msgstr "Filas de puntaje"
 
 #. module: partner_scoring
-#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_profile_view_form
+#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_tier_view_form
 msgid "Score range (%)"
 msgstr "Rango de puntaje (%)"
 
@@ -887,12 +887,12 @@ msgid "Scoring is managed on the commercial entity:"
 msgstr "El puntaje se gestiona en la entidad comercial:"
 
 #. module: partner_scoring
-#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_profile_view_search
-msgid "Search Commercial Profile"
-msgstr "Buscar perfil comercial"
+#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_tier_view_search
+msgid "Search Commercial Tier"
+msgstr "Buscar nivel comercial"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_profile__sequence
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__sequence
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__sequence
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_line__sequence
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_value__sequence
@@ -900,7 +900,7 @@ msgid "Sequence"
 msgstr "Secuencia"
 
 #. module: partner_scoring
-#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_profile_view_form
+#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_tier_view_form
 msgid "Settings"
 msgstr "Configuración"
 
@@ -1014,7 +1014,7 @@ msgstr ""
 "ejemplo, no es el valor más alto bajo 'máximo')."
 
 #. module: partner_scoring
-#: model:ir.model.fields,help:partner_scoring.field_partner_profile__max_value
+#: model:ir.model.fields,help:partner_scoring.field_partner_tier__max_value
 msgid ""
 "Upper bound of the normalized score percentage, exclusive -- it is the lower"
 " bound of the next profile. 0 means no upper limit, which the top profile "
@@ -1026,9 +1026,9 @@ msgstr ""
 "clasificando."
 
 #. module: partner_scoring
-#: model:ir.model.fields,help:partner_scoring.field_partner_profile__sequence
-msgid "Used to order profiles. Lower values have higher precedence."
-msgstr ""
+#: model:ir.model.fields,help:partner_scoring.field_partner_tier__sequence
+msgid "Used to order tiers. Lower values have higher precedence."
+msgstr "Se usa para ordenar los niveles. Un valor menor tiene precedencia."
 "Se usa para ordenar los perfiles. Los valores más bajos tienen mayor "
 "precedencia."
 
@@ -1066,7 +1066,7 @@ msgid "WhatsApp"
 msgstr ""
 
 #. module: partner_scoring
-#: model:ir.model.fields,help:partner_scoring.field_res_partner__date_last_score_update
+#: model:ir.model.fields,help:partner_scoring.field_res_partner__score_date
 #: model:ir.model.fields,help:partner_scoring.field_res_users__date_last_score_update
 msgid ""
 "When the score audit rows were last regenerated. A catalog weight change "

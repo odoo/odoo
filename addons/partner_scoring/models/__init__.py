@@ -1,6 +1,6 @@
 from . import (
     mixin_score_catalog,
-    partner_profile,
+    partner_tier,
     partner_score_line,
     res_partner,
     res_partner_attribute,

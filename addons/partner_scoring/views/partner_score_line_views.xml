@@ -21,8 +21,8 @@
         <field name="res_model">partner.score.line</field>
         <field name="view_mode">list</field>
         <field name="view_id" ref="partner_score_line_view_list" />
-        <field name="domain">[('partner_id', '=', active_id)]</field>
-        <field name="context">{'default_partner_id': active_id}</field>
+        <field name="domain">[('subject_id', '=', active_id)]</field>
+        <field name="context">{'default_subject_id': active_id}</field>
     </record>
 
 </odoo>

@@ -113,7 +113,7 @@ class TestResPartnerAttributeLine(TransactionCase):
                 "value_ids": [(6, 0, self.val_a.ids)],
             }
         )
-        with patch.object(type(self.Partner), "_update_profile_scores") as rescored:
+        with patch.object(type(self.Partner), "_update_scores") as rescored:
             line.sequence = 7
             self.assertFalse(rescored.called)
             line.value_ids = [(6, 0, self.val_b.ids)]

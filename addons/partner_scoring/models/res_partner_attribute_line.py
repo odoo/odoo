@@ -44,7 +44,7 @@ class ResPartnerAttributeLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         lines = super().create(vals_list)
-        lines.partner_id._update_profile_scores()
+        lines.partner_id._update_scores()
         return lines
 
     def write(self, vals):
@@ -52,13 +52,13 @@ class ResPartnerAttributeLine(models.Model):
             return super().write(vals)
         partners_before = self.partner_id
         result = super().write(vals)
-        (partners_before | self.partner_id)._update_profile_scores()
+        (partners_before | self.partner_id)._update_scores()
         return result
 
     def unlink(self):
         partners = self.partner_id
         result = super().unlink()
-        partners._update_profile_scores()
+        partners._update_scores()
         return result
 
     @api.constrains("partner_id")

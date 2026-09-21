@@ -6,11 +6,11 @@ from odoo.tests.common import TransactionCase
 
 
 @tagged("post_install", "-at_install", "partner_scoring")
-class TestProfileScale(TransactionCase):
+class TestTierScale(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.Profile = cls.env["partner.profile"]
+        cls.Profile = cls.env["partner.tier"]
         cls.Partner = cls.env["res.partner"]
         cls.Profile.search([]).write({"active": False})
         cls.company_a = cls.env.company
@@ -38,8 +38,8 @@ class TestProfileScale(TransactionCase):
                 "company_id": self.company_a.id,
             }
         )
-        self.assertEqual(partner.partner_profile_id, band_a)
-        self.assertNotEqual(partner.partner_profile_id, band_b)
+        self.assertEqual(partner.tier_id, band_a)
+        self.assertNotEqual(partner.tier_id, band_b)
 
     def test_a_shared_band_classifies_every_company(self):
         shared = self._band("Shared all", 0.0, 0.0, None)
@@ -50,7 +50,7 @@ class TestProfileScale(TransactionCase):
                 "company_id": self.company_b.id,
             }
         )
-        self.assertEqual(partner.partner_profile_id, shared)
+        self.assertEqual(partner.tier_id, shared)
 
     def test_a_shared_band_still_cannot_overlap_a_company_band(self):
         self._band("A all", 0.0, 0.0, self.company_a)
@@ -79,14 +79,14 @@ class TestProfileScale(TransactionCase):
         partner = self.Partner.create(
             {"name": "Scale Probe Nobody", "is_company": True, "company_id": False}
         )
-        self.assertFalse(partner.partner_profile_id)
+        self.assertFalse(partner.tier_id)
 
     def test_a_company_less_partner_classifies_on_a_shared_band(self):
         shared = self._band("Shared all", 0.0, 0.0, None, sequence=1)
         partner = self.Partner.create(
             {"name": "Scale Probe Shared Only", "is_company": True, "company_id": False}
         )
-        self.assertEqual(partner.partner_profile_id, shared)
+        self.assertEqual(partner.tier_id, shared)
 
     def test_the_scale_of_a_company_less_partner_is_stable(self):
         """Same partner, two acting companies, one answer."""
@@ -95,9 +95,9 @@ class TestProfileScale(TransactionCase):
         partner = self.Partner.create(
             {"name": "Scale Probe Stable", "is_company": True, "company_id": False}
         )
-        as_a = partner.partner_profile_id
-        partner.with_company(self.company_b)._compute_partner_profile_id()
-        self.assertEqual(partner.partner_profile_id, as_a)
+        as_a = partner.tier_id
+        partner.with_company(self.company_b)._compute_tier_id()
+        self.assertEqual(partner.tier_id, as_a)
 
     def test_a_band_starting_above_100_is_rejected(self):
         """A band no percentage can reach is a dead row, not a valid scale."""
@@ -105,10 +105,10 @@ class TestProfileScale(TransactionCase):
             self._band("Unreachable", 150.0, 0.0, self.company_a)
 
     def test_a_scale_edit_queues_a_reclassification(self):
-        """Nothing depends on partner.profile, so the band must push."""
+        """Nothing depends on partner.tier, so the band must push."""
         band = self._band("Notify band", 0.0, 0.0, self.company_a)
         partner_class = type(self.Partner)
-        with patch.object(partner_class, "_notify_score_bands_changed") as notified:
+        with patch.object(partner_class, "_notify_tier_scale_changed") as notified:
             band.min_value = 5.0
             self.assertTrue(notified.called)
 
@@ -125,7 +125,7 @@ class TestProfileScale(TransactionCase):
         partner = self.Partner.create(
             {"name": "Scale Probe Orphan", "is_company": True, "company_id": False}
         )
-        self.assertFalse(partner.partner_profile_id)
+        self.assertFalse(partner.tier_id)
         self.assertFalse(partner.score_line_ids)
 
         self._band("Late whole scale", 0.0, 0.0, None)
@@ -141,26 +141,26 @@ class TestProfileScale(TransactionCase):
         partner = self.Partner.create(
             {"name": "Scale Probe Mover", "is_company": True, "company_id": False}
         )
-        self.assertEqual(partner.partner_profile_id, low)
+        self.assertEqual(partner.tier_id, low)
 
         low.action_archive()
-        partner._reclassify_profile_bands()
-        self.assertFalse(partner.partner_profile_id)
+        partner._reclassify_tiers()
+        self.assertFalse(partner.tier_id)
 
         low.action_unarchive()
-        partner._reclassify_profile_bands()
-        self.assertEqual(partner.partner_profile_id, low)
+        partner._reclassify_tiers()
+        self.assertEqual(partner.tier_id, low)
 
         low.min_value = 10.0
-        partner._reclassify_profile_bands()
-        self.assertFalse(partner.partner_profile_id)
+        partner._reclassify_tiers()
+        self.assertFalse(partner.tier_id)
 
     def test_the_display_name_placeholder_survives_an_unsaved_record(self):
         """_rec_name is the ORM default; the compute is not, so it stays."""
         self.assertEqual(self.Profile._rec_name, "name")
         saved = self._band("Named band", 0.0, 0.0, self.company_a)
         self.assertEqual(saved.display_name, "Named band")
-        self.assertEqual(self.Profile.new({}).display_name, "New Profile")
+        self.assertEqual(self.Profile.new({}).display_name, "New Tier")
 
     def test_a_foreign_company_profile_cannot_be_stored(self):
         """The classification is computed; a hand-written band does not stick."""
@@ -172,11 +172,11 @@ class TestProfileScale(TransactionCase):
                 "company_id": self.company_a.id,
             }
         )
-        partner.partner_profile_id = band_b
+        partner.tier_id = band_b
         self.env.flush_all()
-        self.assertFalse(partner.partner_profile_id)
+        self.assertFalse(partner.tier_id)
         self.env.cr.execute(
-            "SELECT partner_profile_id FROM res_partner WHERE id = %s", (partner.id,)
+            "SELECT tier_id FROM res_partner WHERE id = %s", (partner.id,)
         )
         self.assertIsNone(self.env.cr.fetchone()[0])
 
@@ -189,7 +189,7 @@ class TestProfileScale(TransactionCase):
                 "company_id": self.company_a.id,
             }
         )
-        self.assertEqual(company.partner_profile_id, band_a)
+        self.assertEqual(company.tier_id, band_a)
         contact = self.Partner.create(
             {
                 "name": "Scale Guard Contact",
@@ -197,7 +197,7 @@ class TestProfileScale(TransactionCase):
                 "company_id": False,
             }
         )
-        self.assertEqual(contact.partner_profile_id, band_a)
+        self.assertEqual(contact.tier_id, band_a)
 
     def test_a_shared_profile_is_accepted_by_the_guard(self):
         shared = self._band("Guard shared", 0.0, 0.0, None)
@@ -208,8 +208,8 @@ class TestProfileScale(TransactionCase):
                 "company_id": self.company_a.id,
             }
         )
-        partner.partner_profile_id = shared
-        self.assertEqual(partner.partner_profile_id, shared)
+        partner.tier_id = shared
+        self.assertEqual(partner.tier_id, shared)
 
 
 @tagged("post_install", "-at_install", "partner_scoring")
@@ -226,7 +226,7 @@ class TestAScaleClassifiesItsPartners(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.Profile = cls.env["partner.profile"]
+        cls.Profile = cls.env["partner.tier"]
         cls.Partner = cls.env["res.partner"]
         cls.Profile.search([]).write({"active": False})
 
@@ -246,7 +246,7 @@ class TestAScaleClassifiesItsPartners(TransactionCase):
         partner = self.Partner.create({"name": "No company"})
 
         self.assertFalse(partner.company_id)
-        self.assertEqual(partner.partner_profile_id.name, "Whole scale")
+        self.assertEqual(partner.tier_id.name, "Whole scale")
         self.assertEqual(partner.factor, 1.5)
 
     def test_a_scoped_scale_still_leaves_a_company_less_partner_alone(self):
@@ -261,7 +261,7 @@ class TestAScaleClassifiesItsPartners(TransactionCase):
         partner = self.Partner.create({"name": "No company either"})
 
         self.assertFalse(
-            partner.partner_profile_id,
+            partner.tier_id,
             "a deliberately scoped scale measures that company's partners and "
             "no one else -- that part was always right, and is what made the "
             "accidental scoping invisible",

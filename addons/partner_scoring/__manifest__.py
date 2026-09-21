@@ -1,8 +1,8 @@
 {
     "name": "Partner Scoring",
-    "version": "19.0.1.5.0",
+    "version": "19.0.1.6.0",
     "category": "Sales/CRM",
-    "summary": "Weighted attribute scoring for customers, with commercial profile bands",
+    "summary": "Weighted attribute scoring for customers, with commercial tiers",
     "description": """
 Configurable customer scoring engine on ``res.partner``.
 
@@ -10,7 +10,7 @@ Partners are described by an EAV taxonomy (``res.partner.attribute`` and its
 values), each value can carry a weight, and every attribute says how its values
 combine (sum, highest, or not scored). The weighted total is normalized against
 the catalog ceiling into a 0-100 percentage, which classifies the partner into a
-``partner.profile`` — a half-open score band carrying a commercial ``factor``
+``partner.tier`` — a half-open score band carrying a commercial ``factor``
 applied downstream to revenue targets.
 
 The shipped catalog is a taxonomy, not a working scale: of the 15 seeded
@@ -47,7 +47,7 @@ lead scoring (``crm.lead.scoring.frequency``).
         "data/res_partner_attribute_data.xml",
         "data/res_partner_attribute_value_data.xml",
         "views/res_partner_attribute_views.xml",
-        "views/partner_profile_views.xml",
+        "views/partner_tier_views.xml",
         "views/partner_score_line_views.xml",
         "views/res_partner_views.xml",
         "views/partner_scoring_menus.xml",
