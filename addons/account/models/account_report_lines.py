@@ -15,10 +15,7 @@ from odoo.tools import float_repr, get_lang, html2plaintext
 from odoo.tools.formatting import ROUNDING_UNIT_MAPPING
 from odoo.tools.misc import format_date, formatLang
 
-from .account_report_engine import (
-    LINE_ID_HIERARCHY_DELIMITER,
-    NUMBER_FIGURE_TYPES,
-)
+from .account_report import LINE_ID_HIERARCHY_DELIMITER, NUMBER_FIGURE_TYPES
 
 _debug = DebugLog(__name__)
 

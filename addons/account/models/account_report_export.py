@@ -24,12 +24,10 @@ from odoo.tools.misc import file_path, format_date
 
 from .account_report import (
     ACCOUNT_CODES_ENGINE_SPLIT_REGEX,
+    ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX,
     ACCOUNT_CODES_ENGINE_TERM_REGEX,
 )
-from .account_report_engine import (
-    ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX,
-    AccountReportFileDownloadException,
-)
+from .account_report_custom_handler import AccountReportFileDownloadException
 
 _debug = DebugLog(__name__)
 

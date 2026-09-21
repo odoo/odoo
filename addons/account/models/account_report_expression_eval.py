@@ -13,7 +13,7 @@ from odoo.libs.numbers import float_round
 from odoo.tools import SQL, Query
 from odoo.tools.safe_eval import expr_eval, safe_eval
 
-from .account_report_engine import (
+from .account_report import (
     ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX,
     NO_NEXT_GROUPBY_ENGINES,
 )

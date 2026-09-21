@@ -11,7 +11,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils
 from odoo.tools.misc import format_date
 
-from .account_report_engine import CURRENCIES_USING_LAKH
+from .account_report import CURRENCIES_USING_LAKH
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
 
 _debug = DebugLog(__name__)

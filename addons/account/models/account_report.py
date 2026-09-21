@@ -5,8 +5,10 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
+from odoo.tools import LazyTranslate
 
 _debug = DebugLog(__name__)
+_lt = LazyTranslate(__name__)
 
 FIGURE_TYPE_SELECTION_VALUES = [
     ("monetary", "Monetary"),
@@ -54,6 +56,21 @@ IF_OTHER_EXPR_SUBFORMULA_REGEX = re.compile(
 AUDITABLE_ENGINES = frozenset(
     {"tax_tags", "domain", "account_codes", "external", "aggregation"}
 )
+
+ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX = re.compile(
+    r"tag\(((?P<id>\d+)|(?P<ref>\w+\.\w+))\)"
+)
+
+# Performance optimisation: those engines always will receive None as their next_groupby, allowing more efficient batching.
+NO_NEXT_GROUPBY_ENGINES = {"tax_tags", "account_codes"}
+
+NUMBER_FIGURE_TYPES = ("float", "integer", "monetary", "percentage")
+
+LINE_ID_HIERARCHY_DELIMITER = "|"
+
+CURRENCIES_USING_LAKH = {"AFN", "BDT", "INR", "MMK", "NPR", "PKR", "LKR"}
+
+UNDISTR_LINE_NAME = _lt("Result Brought Forward")
 
 REPORT_OPTION_FILTER_DEPENDS = ("root_report_id", "section_main_report_ids")
 

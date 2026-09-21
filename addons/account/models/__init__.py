@@ -102,7 +102,10 @@ from . import res_config_settings_reconcile
 from . import res_partner_reports
 from . import res_company_reports
 from . import account
-from . import account_report_engine
+from . import account_report_annotation
+from . import account_report_horizontal_group
+from . import account_report_custom_handler
+from . import account_report_ledger
 from . import account_report_export
 from . import account_report_options
 from . import account_report_expression_eval

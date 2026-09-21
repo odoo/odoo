@@ -7,7 +7,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import html_escape
 
 from odoo.addons.account.controllers.download_docs import _get_headers
-from odoo.addons.account.models.account_report_engine import (
+from odoo.addons.account.models.account_report_custom_handler import (
     AccountReportFileDownloadException,
 )
 
