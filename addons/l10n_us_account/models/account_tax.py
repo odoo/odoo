@@ -86,11 +86,11 @@ class AccountTax(models.Model):
                 raise ValidationError(_("An exempt or nontaxable tax cannot have exempt or nontaxable taxes of its own."))
 
     def _prepare_base_line_tax_repartition_grouping_key(self, base_line, base_line_grouping_key, tax_data, tax_rep_data):
-        # Override. Keep $0 tax lines to report exempt/nontaxable for US tax report
+        # Override. Keep $0 tax lines for the US tax report
         res = super()._prepare_base_line_tax_repartition_grouping_key(base_line, base_line_grouping_key, tax_data, tax_rep_data)
         tax = tax_data['tax']
         if tax.country_id.code == 'US' and (
-            tax.l10n_us_jurisdiction_type
+            tax.company_id.chart_template == 'us'
             or tax.l10n_us_exempt_parent_tax_id
             or tax.l10n_us_nontaxable_parent_tax_id
         ):
