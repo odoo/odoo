@@ -41,8 +41,10 @@ class TestPoSSaleReport(TestPoSCommon, TestPointOfSaleHttpCommon):
         orders.append(self.create_ui_order_data([(self.product0, 3)]))
         orders.append(self.create_ui_order_data([(self.product0, 1)]))
         self.env["pos.order"].sync_from_ui(orders)
-        # Duplicate the first line of the first order
-        session.order_ids[0].lines.copy()
+        # Duplicate the line of the three-unit order. Not order_ids[0]: both orders
+        # share a date_order, so pos.order's _order falls through to the generated
+        # name and which one comes first changes from run to run.
+        session.order_ids.lines.filtered(lambda line: line.qty == 3).copy()
 
         session.action_pos_session_closing_control()
 

@@ -10,6 +10,7 @@ class PurchaseOrder(models.Model):
     on_time_rate_perc = fields.Float(
         string="OTD",
         compute="_compute_on_time_rate_perc",
+        groups="purchase.group_purchase_user",
     )
 
     @api.depends("on_time_rate")

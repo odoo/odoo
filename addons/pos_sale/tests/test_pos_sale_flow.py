@@ -1454,7 +1454,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 "zip": "1105AA",
                 "state_id": False,
                 "email": "acme.corp82@example.com",
-                "phone": "(603)-996-3829",
             }
         )
 

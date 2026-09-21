@@ -33,7 +33,7 @@
                 <field name="is_shipped" invisible="1" />
             </xpath>
             <xpath expr="//div[@name='date_commitment_div']" position="inside">
-                <div>
+                <div groups="purchase.group_purchase_user">
                     <button
                         name="%(action_purchase_vendor_delay_report)d"
                         type="action"
