@@ -110,22 +110,15 @@ def _move_drive_groups(env):
 
 
 def _retire_dead_app(env):
-    """The module's code is gone, so its menu and client action only error."""
-    data = (
-        env["ir.model.data"]
-        .sudo()
-        .search(
-            [
-                ("module", "=", DRIVE_MODULE),
-                ("model", "in", ("ir.ui.menu", "ir.actions.client")),
-            ]
-        )
-    )
-    for record in data:
-        target = env[record.model].sudo().browse(record.res_id).exists()
-        if target:
-            target.unlink()
-    data.unlink()
+    """The module's code is gone, so every record it installed is debris.
+
+    Uninstall its data the way a module uninstall does, not by a hand-picked
+    list: picking menus and client actions left its window actions, views,
+    groups, selections and constraint behind. A record something still needs
+    (the drive credential's category is ON DELETE RESTRICT) is kept, xmlid
+    and all, by the routine itself.
+    """
+    env["ir.model.data"].sudo()._uninstall_module_data([DRIVE_MODULE])
     env.cr.execute(
         "UPDATE ir_module_module SET state = 'uninstalled' "
         "WHERE name = %s AND state != 'uninstalled'",
