@@ -87,7 +87,11 @@ export class ProductTemplateAccounting extends Base {
 
         if (original_line && original_line.isLotTracked() && product) {
             related_lines.push(
-                ...original_line.order_id.lines.filter((line) => line.product_id.id == product.id)
+                ...original_line.order_id.lines.filter(
+                    (line) =>
+                        line.product_id.id == product.id &&
+                        line.product_uom_id.id === original_line.product_uom_id.id
+                )
             );
             quantity = related_lines.reduce((sum, line) => sum + line.getQuantity(), 0);
         }
