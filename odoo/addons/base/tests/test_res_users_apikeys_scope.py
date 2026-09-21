@@ -1,3 +1,4 @@
+import time
 from datetime import timedelta
 
 from odoo import fields
@@ -225,6 +226,22 @@ class TestComputedDerivationsAreHidden(ScopeCase):
         # rows would leak if it did.
         self.assertIn("email", self._hidden("res.users"))
         self.assertIn("email_formatted", self._hidden("res.users"))
+
+    def test_the_closure_is_one_pass_over_the_registry(self):
+        # A closure taken per model recursed into every model a dependency
+        # path crossed, again for every path and every iteration, and on a
+        # registry of several hundred models a search timed out; one
+        # fixpoint over the registry answers every model at once.
+        rules = self.scope._rules()
+        started = time.monotonic()
+        self._hidden("res.partner")
+        self.assertLess(time.monotonic() - started, 2.0)
+        self.assertIn("res.users", rules._hidden, "every model, in the one pass")
+        started = time.monotonic()
+        self._hidden("res.company")
+        self.assertLess(
+            time.monotonic() - started, 0.01, "the second model is a lookup"
+        )
 
     def test_the_rules_follow_a_write(self):
         before = self.scope._rules()

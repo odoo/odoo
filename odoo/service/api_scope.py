@@ -183,63 +183,57 @@ def hidden_field_names(
     `same_vat_partner_id` answers whether a `vat` is taken. The registry has
     resolved every one of those through the depends map, so the walk reads it
     and reaches every field whose value derives from a hidden column, on this
-    model or across a relation. Across a relation the other model's closure is
-    consulted; two models hiding through each other fall back to the raw
-    denylist rather than recursing.
+    model or across a relation. The closure is one fixpoint over every model
+    of the registry, taken once per scope: a field is hidden as soon as any
+    of its dependency paths crosses a hidden field of any model, and a path
+    that crosses a relation reads the other model's set as it stands.
     """
     cache = rules._hidden
-    if model_name not in cache:
-        cache[model_name] = _closed_field_names(
-            env, rules, model_name, frozenset({model_name})
-        )
-    return cache[model_name]
+    if not cache:
+        cache.update(_closed_field_names(env, rules))
+        cache.setdefault("", frozenset())
+    return cache.get(model_name, frozenset())
 
 
 def _closed_field_names(
-    env: Environment, rules: ScopeRules, model_name: str, closing: frozenset[str]
-) -> frozenset[str]:
-    own = rules.denied(model_name)
-    if not own and rules.models is None:
-        return frozenset()
-    if model_name not in env:
-        return own
-    model_fields = env[model_name]._fields
-    depends = env.registry.field_depends
-    hidden = set(own)
+    env: Environment, rules: ScopeRules
+) -> dict[str, frozenset[str]]:
+    registry = env.registry
+    hidden: dict[str, set[str]] = {}
+    for model_name in registry:
+        own = rules.denied(model_name)
+        if own:
+            hidden[model_name] = set(own)
+    if not hidden:
+        return {}
+    depends = registry.field_depends
     grew = True
     while grew:
         grew = False
-        for name, model_field in model_fields.items():
-            if name in hidden or name in NEVER_HIDDEN:
-                continue
-            if any(
-                _touches_hidden(env, rules, model_name, hidden, path, closing)
-                for path in depends.get(model_field, ())
-            ):
-                hidden.add(name)
-                grew = True
-    return frozenset(hidden)
+        for model_name in registry:
+            model_fields = env[model_name]._fields
+            own_hidden = hidden.get(model_name, ())
+            for name, model_field in model_fields.items():
+                if name in own_hidden or name in NEVER_HIDDEN:
+                    continue
+                if any(
+                    _touches_hidden(env, hidden, model_name, path)
+                    for path in depends.get(model_field, ())
+                ):
+                    hidden.setdefault(model_name, set()).add(name)
+                    own_hidden = hidden[model_name]
+                    grew = True
+    return {model: frozenset(names) for model, names in hidden.items()}
 
 
 def _touches_hidden(
-    env: Environment,
-    rules: ScopeRules,
-    model_name: str,
-    hidden: set[str],
-    path: str,
-    closing: frozenset[str],
+    env: Environment, hidden: dict[str, set[str]], model_name: str, path: str
 ) -> bool:
     model = model_name
     for token in str(path).split("."):
         if model is None or model not in env:
             return False
-        if model == model_name:
-            names: frozenset[str] | set[str] = hidden
-        elif model in closing:
-            names = rules.denied(model)
-        else:
-            names = _closed_field_names(env, rules, model, closing | {model})
-        if token in names:
+        if token in hidden.get(model, ()):
             return True
         model_field = env[model]._fields.get(token)
         if model_field is None:
