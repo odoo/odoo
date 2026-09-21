@@ -1,5 +1,3 @@
-import json
-
 from odoo import Command
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -122,23 +120,10 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
         )
         self.assertTrue(user.website_id == user.partner_id.website_id == website)
 
-    @mute_logger("odoo.addons.rpc.controllers.jsonrpc")
+    @mute_logger("odoo.addons.rpc.controllers.xmlrpc")
     def test_03_rpc_signin_user_website_id(self):
         def rpc_login_user_demo():
-            response = self.url_open(
-                "/jsonrpc",
-                data=json.dumps(
-                    {
-                        "params": {
-                            "service": "common",
-                            "method": "login",
-                            "args": [self.env.cr.dbname, "demo", "demo"],
-                        },
-                    }
-                ),
-                headers={"Content-Type": "application/json"},
-            )
-            return response.json()["result"]
+            return self.xmlrpc_common.login(self.env.cr.dbname, "demo", "demo")
 
         website1 = self.website
         website1.domain = self.base_url()

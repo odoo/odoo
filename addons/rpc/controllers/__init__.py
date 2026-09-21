@@ -2,11 +2,10 @@ import odoo.release
 from odoo.http import request, route
 
 from . import common, json2
-from .jsonrpc import JSONRPC
 from .xmlrpc import XMLRPC
 
 
-class RPC(XMLRPC, JSONRPC):
+class RPC(XMLRPC):
     @route(["/web/version", "/json/version"], type="http", auth="none", readonly=True)
     def version(self):
         return request.prepare_json_response(

@@ -37,10 +37,6 @@ class TestXMLRPC(common.HttpCase):
         ml_xml.__enter__()
         self.addCleanup(ml_xml.__exit__)
 
-        ml_json = mute_logger("odoo.addons.rpc.controllers.jsonrpc")
-        ml_json.__enter__()
-        self.addCleanup(ml_json.__exit__)
-
     def xmlrpc(self, model, method, *args, **kwargs):
         return self.xmlrpc_object.execute_kw(
             common.get_db_name(), self.admin_uid, "admin", model, method, args, kwargs
@@ -160,39 +156,6 @@ class TestXMLRPC(common.HttpCase):
         self.assertEqual(record.name, "bob with a control character: \x03")
         [record_data] = self.xmlrpc("res.users", "read", record.id, ["name"])
         self.assertEqual(record_data["name"], "bob with a control character: ")
-
-    def test_jsonrpc_read_group(self):
-        self._json_call(
-            common.get_db_name(),
-            self.admin_uid,
-            "admin",
-            "res.partner",
-            "formatted_read_group",
-            [],
-            ["parent_id"],
-            ["color:sum"],
-        )
-
-    def test_jsonrpc_name_search(self):
-        self._json_call(
-            common.get_db_name(),
-            self.admin_uid,
-            "admin",
-            "res.partner",
-            "name_search",
-            "admin",
-        )
-
-    def _json_call(self, *args):
-        self.url_open(
-            f"{self.base_url()}/jsonrpc",
-            json={
-                "jsonrpc": "2.0",
-                "id": None,
-                "method": "call",
-                "params": {"service": "object", "method": "execute", "args": args},
-            },
-        )
 
     def test_xmlrpc_attachment_raw(self):
         ids = self.env["ir.attachment"].create({"name": "n", "raw": b"\x01\x09"}).ids

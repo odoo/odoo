@@ -4,7 +4,7 @@ from collections import OrderedDict
 from odoo.http import request
 
 RPC_DEPRECATION_NOTICE = """\
-The /xmlrpc, /xmlrpc/2 and /jsonrpc endpoints are deprecated in Odoo 19 \
+The /xmlrpc and /xmlrpc/2 endpoints are deprecated in Odoo 19 \
 and scheduled for removal in Odoo 20. Please report the problem to the \
 client making the request: %s, %s.
 Mute this logger: --log-handler %s:ERROR

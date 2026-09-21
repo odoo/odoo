@@ -11,6 +11,7 @@ from werkzeug.wrappers import Request
 import odoo
 from odoo import http
 from odoo.http import prepare_content_disposition_header, rewind_uploaded_files, root
+from odoo.http.constants import DEFAULT_ALLOWED_METHODS
 from odoo.tests import tagged
 from odoo.tests.common import HOST, BaseCase, get_db_name, new_test_user
 from odoo.tools import config, file_path, mute_logger
@@ -152,43 +153,35 @@ class TestHttpMisc(TestHttpBase):
         jack = new_test_user(self.env, "jackoneill", context={"lang": "en_US"})
         milky_way = self.env.ref("test_http.milky_way")
 
-        payload = json.dumps(
-            {
-                "jsonrpc": "2.0",
-                "method": "call",
-                "id": None,
-                "params": {
-                    "service": "object",
-                    "method": "execute",
-                    "args": [
-                        get_db_name(),
-                        jack.id,
-                        "jackoneill",
-                        "test_http.galaxy",
-                        "render",
-                        milky_way.id,
-                    ],
-                },
-            }
-        )
+        def render():
+            return self.xmlrpc_object.execute(
+                get_db_name(),
+                jack.id,
+                "jackoneill",
+                "test_http.galaxy",
+                "render",
+                milky_way.id,
+            )
 
-        for method in (self.db_url_open, self.nodb_url_open):
-            with self.subTest(method=method.__name__):
-                with mute_logger("odoo.addons.rpc.controllers.jsonrpc"):
-                    res = method("/jsonrpc", data=payload, headers=CT_JSON)
-                res.raise_for_status()
+        with (
+            self.subTest(served="db"),
+            mute_logger("odoo.addons.rpc.controllers.xmlrpc"),
+        ):
+            odoo.http.invalidate_db_catalog_cache()
+            self.assertIn(
+                milky_way.name, render(), "QWeb template was correctly rendered"
+            )
 
-                res_rpc = res.json()
-                self.assertNotIn(
-                    "error",
-                    res_rpc.keys(),
-                    res_rpc.get("error", {}).get("data", {}).get("message"),
-                )
-                self.assertIn(
-                    milky_way.name,
-                    res_rpc["result"],
-                    "QWeb template was correctly rendered",
-                )
+        with (
+            self.subTest(served="nodb"),
+            mute_logger("odoo.addons.rpc.controllers.xmlrpc"),
+            patch("odoo.http.Application.get_dbs_served", return_value=[]),
+            patch("odoo.http.Application.filter_dbs_served", return_value=[]),
+        ):
+            odoo.http.invalidate_db_catalog_cache()
+            self.assertIn(
+                milky_way.name, render(), "QWeb template was correctly rendered"
+            )
 
     def test_misc5_geoip(self):
         res = self.nodb_url_open("/test_http/geoip")
@@ -278,7 +271,9 @@ class TestHttpCors(TestHttpBase):
         self.assertIn(res_opt.status_code, (200, 204))
         self.assertEqual(res_opt.headers.get("Access-Control-Allow-Origin"), "*")
         self.assertEqual(
-            res_opt.headers.get("Access-Control-Allow-Methods"), "GET, POST"
+            res_opt.headers.get("Access-Control-Allow-Methods"),
+            ", ".join(DEFAULT_ALLOWED_METHODS),
+            "a route with no methods= serves every verb, and says so",
         )
         self.assertEqual(res_opt.headers.get("Access-Control-Max-Age"), "86400")
         self.assertEqual(
@@ -290,7 +285,8 @@ class TestHttpCors(TestHttpBase):
         self.assertEqual(res_get.status_code, 200)
         self.assertEqual(res_get.headers.get("Access-Control-Allow-Origin"), "*")
         self.assertEqual(
-            res_get.headers.get("Access-Control-Allow-Methods"), "GET, POST"
+            res_get.headers.get("Access-Control-Allow-Methods"),
+            ", ".join(DEFAULT_ALLOWED_METHODS),
         )
 
     def test_cors1_http_methods(self):
@@ -375,7 +371,10 @@ class TestHttpCors(TestHttpBase):
             "*",
             "the error response lost the CORS headers set by pre_dispatch",
         )
-        self.assertEqual(res.headers.get("Access-Control-Allow-Methods"), "GET, POST")
+        self.assertEqual(
+            res.headers.get("Access-Control-Allow-Methods"),
+            ", ".join(DEFAULT_ALLOWED_METHODS),
+        )
 
 
 @tagged("post_install", "-at_install")

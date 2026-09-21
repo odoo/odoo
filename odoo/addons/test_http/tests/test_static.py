@@ -449,7 +449,7 @@ class TestHttpStatic(TestHttpStaticCommon):
                 assert_status_code=200,
                 assert_headers={
                     "Content-Length": str(attachment.file_size),
-                    "Content-Type": "application/javascript; charset=utf-8",
+                    "Content-Type": "text/javascript; charset=utf-8",
                     "Content-Disposition": "inline; filename=web.assets_web.min.js",
                 },
                 assert_content=attachment.raw,
@@ -466,7 +466,7 @@ class TestHttpStatic(TestHttpStaticCommon):
                 assert_headers={
                     "X-Accel-Redirect": x_accel_redirect,
                     "Content-Length": "0",
-                    "Content-Type": "application/javascript; charset=utf-8",
+                    "Content-Type": "text/javascript; charset=utf-8",
                     "Content-Disposition": "inline; filename=web.assets_web.min.js",
                 },
             )
@@ -494,7 +494,7 @@ class TestHttpStatic(TestHttpStaticCommon):
                 assert_status_code=200,
                 assert_headers={
                     "Content-Length": str(attachment.file_size),
-                    "Content-Type": "application/javascript; charset=utf-8",
+                    "Content-Type": "text/javascript; charset=utf-8",
                     "Content-Disposition": "inline; filename=web.assets_web.min.js",
                 },
                 assert_content=attachment.raw,
@@ -511,7 +511,7 @@ class TestHttpStatic(TestHttpStaticCommon):
                 assert_headers={
                     "X-Accel-Redirect": x_accel_redirect,
                     "Content-Length": "0",
-                    "Content-Type": "application/javascript; charset=utf-8",
+                    "Content-Type": "text/javascript; charset=utf-8",
                     "Content-Disposition": "inline; filename=web.assets_web.min.js",
                 },
             )
@@ -630,7 +630,7 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
         self.assertDownloadLogoDefault(user=self.user_company2)
 
     def test_set_logo_company_of_superuser(self):
-        self.company_of_superuser.logo = self.gizeh_data_b64
+        self.company_of_superuser.image_1920 = self.gizeh_data_b64
         self.assertDownloadLogoGizeh()
         self.assertDownloadLogoGizeh(company=self.company_of_superuser)
         self.assertDownloadLogoGizeh(user=self.user_of_company_of_superuser)
@@ -638,7 +638,7 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
         self.assertDownloadLogoDefault(user=self.user_company2)
 
     def test_set_logo_other_company(self):
-        self.company2.logo = self.gizeh_data_b64
+        self.company2.image_1920 = self.gizeh_data_b64
         self.assertDownloadLogoDefault()
         self.assertDownloadLogoGizeh(company=self.company2)
         self.assertDownloadLogoGizeh(user=self.user_company2)
@@ -646,7 +646,7 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
         self.assertDownloadLogoDefault(user=self.user_of_company_of_superuser)
 
     def test_set_no_logo_company_of_superuser(self):
-        self.company_of_superuser.logo = None
+        self.company_of_superuser.image_1920 = None
         self.assertDownloadLogoNoLogo()
         self.assertDownloadLogoNoLogo(company=self.company_of_superuser)
         self.assertDownloadLogoNoLogo(user=self.user_of_company_of_superuser)
@@ -654,7 +654,7 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
         self.assertDownloadLogoDefault(user=self.user_company2)
 
     def test_set_no_logo_other_company(self):
-        self.company2.logo = None
+        self.company2.image_1920 = None
         self.assertDownloadLogoDefault()
         self.assertDownloadLogoNoLogo(company=self.company2)
         self.assertDownloadLogoNoLogo(user=self.user_company2)
@@ -662,7 +662,7 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
         self.assertDownloadLogoDefault(user=self.user_of_company_of_superuser)
 
     def test_company_param_win_on_current_user(self):
-        self.company_of_superuser.logo = self.gizeh_data_b64
+        self.company_of_superuser.image_1920 = self.gizeh_data_b64
         self.assertDownloadLogoGizeh(
             company=self.company_of_superuser, user=self.user_company2
         )

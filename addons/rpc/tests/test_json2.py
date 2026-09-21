@@ -31,6 +31,20 @@ class TestJson2(common.HttpCase):
         self.assertEqual(response.status_code, 200)
         self.assertGreaterEqual(response.json(), 1)
 
+    def test_json2_read_group_serializes(self):
+        response = self._rpc(
+            "res.partner",
+            "formatted_read_group",
+            {"domain": [], "groupby": ["parent_id"], "aggregates": ["color:sum"]},
+        )
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertIsInstance(response.json(), list)
+
+    def test_json2_name_search_serializes(self):
+        response = self._rpc("res.partner", "name_search", {"name": "admin"})
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertTrue(response.json())
+
     def test_json2_unknown_model_is_404(self):
         response = self._rpc("does.not.exist", "read", {})
         self.assertEqual(response.status_code, 404)

@@ -71,31 +71,6 @@ class TestRpcPath(HttpCaseWithUserDemo):
             ],
         )
 
-    @mute_logger("odoo.addons.rpc.controllers.jsonrpc")
-    def test_rpc_path_jsonrpc(self):
-        with self.assertLogs("odoo.service.http.access", logging.INFO) as capture:
-            self.call_jsonrpc(
-                "/jsonrpc",
-                {
-                    "service": "object",
-                    "method": "execute_kw",
-                    "args": [
-                        get_db_name(),
-                        self.user_demo.id,
-                        "demo",
-                        "res.users",
-                        "read",
-                        [self.user_demo.id, ["login"]],
-                    ],
-                },
-            )
-        self.assertEqual(
-            capture.output,
-            [
-                Like("...POST /jsonrpc#res.users.read HTTP/..."),
-            ],
-        )
-
     @mute_logger("odoo.addons.rpc.controllers.xmlrpc")
     def test_rpc_path_xmlrpc(self):
         with self.assertLogs("odoo.service.http.access", logging.INFO) as capture:

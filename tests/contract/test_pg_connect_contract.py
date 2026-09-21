@@ -40,7 +40,7 @@ class TestPoolConnectFailureTranslation:
 
         assert exp_authenticate(MISSING_DB, "admin", "x", None) is False, (
             "authenticate against a non-existent database no longer returns "
-            "False -- /jsonrpc and /xmlrpc/common are auth=none, so a "
+            "False -- /xmlrpc/common is auth=none, so a "
             "distinguishable answer here is a database existence oracle"
         )
 
