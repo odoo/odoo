@@ -1,6 +1,6 @@
 {
     "name": "Partner Scoring",
-    "version": "19.0.1.7.0",
+    "version": "19.0.1.8.0",
     "category": "Sales/CRM",
     "summary": "Weighted attribute scoring for customers, with commercial tiers",
     "description": """
@@ -14,10 +14,12 @@ the catalog ceiling into a 0-100 percentage, which classifies the partner into a
 applied downstream to revenue targets.
 
 The shipped catalog is a taxonomy, not a working scale: of the 15 seeded
-attributes only ``Commercial profile``, ``Loyalty`` and ``Technology level``
-carry any weight, so out of the box those three are the only ones that move the
-score and the only ones that appear in the breakdown. Weighting the rest is the
-operator's first configuration task.
+attributes only ``Commercial profile``, ``Loyalty``, ``Technology level`` and
+``Growth outlook`` carry weight -- the four that were being captured when the
+scale was calibrated -- so out of the box those four are the only ones that
+move the score and appear in the breakdown. A weighted attribute nobody
+captures scores everyone zero over a larger ceiling, so weight the rest only as
+they start being captured.
 
 Every point is explained: ``partner.score.line`` holds one audit row per source,
 including the ones that scored zero and the ones an aggregation mode discarded.

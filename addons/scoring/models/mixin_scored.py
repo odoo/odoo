@@ -114,7 +114,10 @@ class MixinScored(models.AbstractModel):
     )
     def _compute_score(self):
         for subject in self:
-            rows = subject.score_line_ids.filtered("applicable")
+            # A row without its dimension is mid-migration: it is not a fact yet.
+            rows = subject.score_line_ids.filtered(
+                lambda row: row.applicable and row.dimension_id
+            )
             groups = {
                 (row.dimension_id.id, row.grouping_key): row.max_points for row in rows
             }
