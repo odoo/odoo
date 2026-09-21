@@ -4,7 +4,7 @@
 
 // Base snippet rules
 %o-we-background-layer-parent {
-    &, & > * {
+    &, & > *:not(.stretched-link) {
         // Allow background layers to be placed accordingly and snippet content
         // to be displayed on top. Note: we cannot just position the layers
         // with z-index: -1, otherwise it would go under the snippet own
