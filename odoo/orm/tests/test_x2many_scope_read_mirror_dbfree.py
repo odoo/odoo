@@ -220,7 +220,7 @@ class TestTheWriterSlotListsWhatTheWriterWrote:
             as_user = _user_env(env)["mirror.order"]
             order = as_user.create({"name": "o"})
             held = order._fields["held_ids"]
-            assert as_user.env.get_cache_key(held) == ((2, None),)
+            assert as_user.env.get_cache_key(held) == ((2, (1,)),)
             assert not order.held_ids
             line = (
                 env["mirror.line"]
