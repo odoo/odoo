@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from . import (
     _checker_auth_method,
+    _checker_band_range,
     _checker_batch,
     _checker_company_config,
     _checker_config_patch,
@@ -162,6 +163,13 @@ RULES: tuple[Rule, ...] = (
         "n-plus-one-query",
         "E8507",
         "hoist the query out of the loop and index the result in memory",
+    ),
+    Rule(
+        "hand-rolled-range",
+        "E8532",
+        "a numeric <x>_min/<x>_max pair that classifies a value is a mixin.band: "
+        "half-open, overlap-checked, scoped; a tolerance or a filter bound stays "
+        "and is banked in the floor",
     ),
     Rule(
         "company-field-outside-config",
@@ -401,6 +409,12 @@ def _tax_company(unit: Unit) -> Iterable[object]:
     return _checker_tax_company.check(unit.tree, unit.nodes)
 
 
+def _band_range(unit: Unit) -> Iterable[object]:
+    if "/addons/base/" in unit.path:
+        return ()
+    return _checker_band_range.check(unit.tree)
+
+
 def _company_config(unit: Unit) -> Iterable[object]:
     if "/addons/base/" in unit.path:
         return ()
@@ -494,6 +508,7 @@ CHECKERS: tuple[Checker, ...] = (
         _in_an_addon_outside_tests,
         frozenset({"company-field-outside-config"}),
     ),
+    Checker(_band_range, _in_an_addon_outside_tests, frozenset({"hand-rolled-range"})),
     Checker(_http_json, _in_an_addon_outside_tests, frozenset({"http-json-string"})),
     Checker(_row_counter, _in_tests, frozenset({"row-counter-in-test"})),
     Checker(

@@ -27,14 +27,15 @@ it fails until the floor is lowered in the same change.
 This module was edited as a shared ledger: 24 of its last 40 commits changed
 nothing in it but an integer and the comment above it.
 
-Five gates carry a floor: `lint_docstring` (a one-sided ratchet that
+Six gates carry a floor: `lint_docstring` (a one-sided ratchet that
 reads 32 only on a fuller install), `bundle_double_eval` (ESM bundles that
 evaluate twice), the migration ledger `lint_credential_storage`, whose floor
 is the columns still to move into the vault, `lint_stored_related`, the stored
 copies of a related value still to convert, and
 `lint_company_field_outside_config`, the fields still bolted onto
 `res.company` outside base instead of an application's `mixin.company.config`
-model -- the two AST rules with a floor. `lint_receiver_fail_open` carried one
+model, and `lint_hand_rolled_range`, the numeric min/max pairs declared outside
+`mixin.band` -- the three AST rules with a floor. `lint_receiver_fail_open` carried one
 for the six hours between the rule's rewrite and the last family's conversion. Everything else -- every other AST rule,
 every XML rule, the manifest and record-order gates -- is a hard zero. `n-plus-one-query` reached
 zero on 2026-09-12 by reading each of its 295 sites: a loop over the records
@@ -69,6 +70,7 @@ database, and `test_checkers.py` does exactly that.
 | `_checker_credential_storage.py` | `credential-storage` |
 | `_checker_receiver.py` | `receiver-fail-open` |
 | `_checker_auth_method.py` | `auth-method-outside-owner` |
+| `_checker_band_range.py` | `hand-rolled-range` |
 | `_checker_row_counter.py` | `row-counter-in-test` |
 | `_checker_field_declaration.py` | `field-redeclared`, `default-evaluated-at-import`, `selection-duplicate-key`, `field-hook-prefix`, `field-positional-argument`, `field-attribute-order`, `dead-field-attribute`, `stored-related` |
 
@@ -123,6 +125,7 @@ owners: base defines `user`, `none`, `public` and `bearer`, integration defines
 one, website's `public`, is not a new scheme). An identity is a scheme on a receiver
 row or a resolver's verifier, never a fourth method -- `mail_plugin`'s `outlook` and
 `calendar`'s attendee token were the two that went that way before the rule.
+`hand-rolled-range` (E8532) counts models that declare a numeric `<x>_min`/`<x>_max` (or `min_<x>`/`max_<x>`) pair without `mixin.band` or a `mixin.score.*` scale. A range that classifies a value belongs on the mixin -- half-open, overlap-checked, scoped -- because a pair rolled by hand is inclusive in one model and half-open in the next, and `credit.grade`'s integer pair over a float score proposed no grade between 79 and 80. Ratcheted: a tolerance, a slider or a filter bound is a pair and not a scale, so the floor names the debt and moving a scale onto the mixin lowers it.
 `receiver-fail-open` (E8528) counts routes that take calls from machines without
 declaring who may make them: `auth="public"` or `"none"` with `csrf=False`. Since
 2026-09-21 it is a fact of the routing map, not of the handler: a route that admits

@@ -7,6 +7,7 @@ from odoo.tests.common import BaseCase, no_retry
 
 from . import (
     _checker_auth_method,
+    _checker_band_range,
     _checker_batch,
     _checker_config_patch,
     _checker_credential_storage,
@@ -2419,6 +2420,58 @@ class TestReceiverFailOpenLint(BaseCase):
                 @http.route("/form", type="http", auth="public")
                 def form(self):
                     return ""
+            """),
+            [],
+        )
+
+
+@no_retry
+class TestHandRolledRangeLint(BaseCase):
+    def _check(self, snippet):
+        return [
+            v.message.split(" ")[0]
+            for v in _checker_band_range.check(ast.parse(dedent(snippet).strip()))
+        ]
+
+    def test_a_numeric_min_max_pair_outside_the_mixin_is_flagged(self):
+        self.assertEqual(
+            self._check("""
+        class Grade(models.Model):
+            _name = "x.grade"
+            score_min = fields.Integer()
+            score_max = fields.Integer()
+            min_age = fields.Float()
+            max_age = fields.Float()
+            """),
+            ["score_min/score_max", "min_age/max_age"],
+        )
+
+    def test_a_pair_on_a_band_or_a_scale_is_not(self):
+        self.assertEqual(
+            self._check("""
+        class Tier(models.Model):
+            _name = "x.tier"
+            _inherit = ["mixin.catalog", "mixin.band"]
+            min_value = fields.Float()
+            max_value = fields.Float()
+
+        class Grade(models.Model):
+            _name = "x.grade"
+            _inherit = ["mixin.score.scale"]
+            min_value = fields.Float()
+            max_value = fields.Float()
+            """),
+            [],
+        )
+
+    def test_a_lone_bound_or_a_non_numeric_pair_is_not(self):
+        self.assertEqual(
+            self._check("""
+        class Rule(models.Model):
+            _name = "x.rule"
+            amount_min = fields.Float()
+            date_min = fields.Date()
+            date_max = fields.Date()
             """),
             [],
         )
