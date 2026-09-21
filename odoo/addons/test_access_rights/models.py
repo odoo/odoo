@@ -99,14 +99,16 @@ class Test_Access_RightTicket(models.Model):
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    currency_id = fields.Many2one(
+    # named for this module: account declares res.partner.currency_id and its
+    # _compute_currency_id too, and the two would merge into one field
+    test_access_currency_id = fields.Many2one(
         comodel_name="res.currency",
-        compute="_compute_currency_id",
+        compute="_compute_test_access_currency_id",
         readonly=True,
     )
-    monetary = fields.Monetary()
+    test_access_monetary = fields.Monetary(currency_field="test_access_currency_id")
 
     @api.depends("company_id.currency_id")
-    def _compute_currency_id(self):
+    def _compute_test_access_currency_id(self):
         for partner in self:
-            partner.currency_id = partner.sudo().company_id.currency_id
+            partner.test_access_currency_id = partner.sudo().company_id.currency_id
