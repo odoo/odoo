@@ -77,6 +77,7 @@ class DeliveryCarrier(models.Model):
         return {
             "integration_level": "rate",
             "allow_cash_on_delivery": False,
+            "delivery_calendar_id": False,  # In-store estimates use the hours of the store.
             "country_ids": False,
             "state_ids": False,
             "zip_prefix_ids": False,
@@ -152,6 +153,24 @@ class DeliveryCarrier(models.Model):
             "country_data": country_values,
             "pickup_location_data": sorted(pickup_locations, key=lambda k: k["distance"]),
         }
+
+    def _get_calendar_for_estimate(self, order=None):
+        """Override of `website_sale` to use the opening hours of the store to collect from.
+
+        The store is the one that the customer selected, or the store of the delivery method when
+        it has only one. A store without opening hours is open every day.
+        """
+        self.ensure_one()
+        if self.delivery_type != "in_store":
+            return super()._get_calendar_for_estimate(order=order)
+
+        warehouse = self.env["stock.warehouse"]
+        if order and order.carrier_id == self and order.partner_shipping_id.pickup_location_data:
+            warehouse = order.warehouse_id  # The store that the customer selected
+        elif len(self.warehouse_ids) == 1:
+            warehouse = self.warehouse_ids  # The store selected by default
+
+        return warehouse.opening_hours, bool(warehouse)
 
     def in_store_rate_shipment(self, *_args):
         return {
