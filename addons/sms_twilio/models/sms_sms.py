@@ -1,10 +1,62 @@
+import hmac
+import logging
+import re
 from collections import defaultdict
 
+from werkzeug.exceptions import NotFound
+
 from odoo import api, fields, models
+from odoo.http import request
+
+from odoo.addons.sms_twilio.tools.sms_twilio import (
+    generate_twilio_sms_callback_signature,
+)
+
+_logger = logging.getLogger(__name__)
 
 
 class SmsSms(models.Model):
     _inherit = "sms.sms"
+
+    @api.model
+    def _receiver_for_twilio_status(self, uuid=None, **path_args):
+        if not uuid or not re.match(r"^[0-9a-f]{32}$", uuid):
+            _logger.warning(
+                "Twilio SMS: update_sms_status received a non-valid uuid='%s'", uuid
+            )
+            raise NotFound
+        sms = self.sudo().search([("uuid", "=", uuid)], limit=1)
+        if not sms:
+            _logger.warning(
+                "Twilio SMS: update_sms_status found no SMS for uuid='%s'", uuid
+            )
+            raise NotFound
+        return sms
+
+    def _inbound_gate_owner(self):
+        company = self._get_sms_company().sudo()
+        return (
+            company,
+            self.env._("%(company)s Twilio SMS status callbacks", company=company.name),
+            "sms_twilio_status",
+        )
+
+    def _verify_inbound_request(self, headers, body):
+        self.check_singleton()
+        computed_signature = generate_twilio_sms_callback_signature(
+            self._get_sms_company().sudo(),
+            self.uuid,
+            request.httprequest.form.to_dict(),
+        )
+        x_twilio_signature = headers.get("X-Twilio-Signature", "")
+        if not hmac.compare_digest(computed_signature, x_twilio_signature):
+            _logger.warning(
+                "Twilio SMS: update_sms_status could not validate Twilio signature "
+                "with uuid='%s'",
+                self.uuid,
+            )
+            return False
+        return True
 
     sms_twilio_sid = fields.Char(
         related="sms_tracker_id.sms_twilio_sid",

@@ -10,6 +10,7 @@ from odoo.exceptions import LockError, UserError
 from odoo.http import request
 
 from .account_edi_proxy_auth import OdooEdiProxyAuth
+from odoo.addons.integration.tools.admission import Acknowledged
 
 _logger = logging.getLogger(__name__)
 
@@ -236,7 +237,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 server_url = self._get_server_url(proxy_type, edi_mode)
                 response = self._prepare_request(
                     f"{server_url}/iap/account_edi/2/create_user",
-                    params=self._prepare_iap_params(company, proxy_type, private_key_sudo),
+                    params=self._prepare_iap_params(
+                        company, proxy_type, private_key_sudo
+                    ),
                 )
             except AccountEdiProxyError as e:
                 raise UserError(e.message) from e
@@ -302,26 +305,34 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         )
 
     @api.model
-    def _admit_proxy_webhook(self, edi_user, event_type):
-        httprequest = request.httprequest
+    def _receiver_for_proxy_webhook(self, receiver_event=None, **path_args):
+        token = request.get_http_params().get("token") or ""
+        edi_user = self._get_proxy_user_from_webhook_token(
+            token, url=request.httprequest.url
+        )
         if not edi_user:
+            httprequest = request.httprequest
             self.env["inbound.access.log"]._record_unknown_caller(
                 self._name,
-                event_type,
+                receiver_event or httprequest.path,
                 httprequest.remote_addr,
                 user_agent=httprequest.headers.get("User-Agent"),
                 status_code=204,
             )
-            return False
-        edi_user = edi_user.sudo()
-        receiver = self.env["integration.receiver"]._for_record(
-            edi_user,
-            self.env._("%(user)s proxy webhooks", user=edi_user.display_name),
-        )
-        return receiver._admit_checked_request(
-            _signed_token_was_resolved, event_type=event_type
+            raise Acknowledged("", 204)
+        return edi_user.sudo()
+
+    @api.model
+    def _get_proxy_user_from_webhook_token(self, token, url):
+        return self.browse()
+
+    def _inbound_gate_owner(self):
+        return (
+            self,
+            self.env._("%(user)s proxy webhooks", user=self.display_name),
+            None,
         )
 
-
-def _signed_token_was_resolved():
-    return None
+    def _verify_inbound_request(self, headers, body):
+        self.check_singleton()
+        return True

@@ -76,7 +76,12 @@ class MixinInboundGate(models.AbstractModel):
     _BODY_DEPENDENT_AUTH_TYPES = ("hmac_sha256", "hmac_sha512", "custom")
 
     @api.model
-    def _resolve_route_receiver(self, declaration: str, path_args: dict[str, Any]):
+    def _resolve_route_receiver(
+        self,
+        declaration: str,
+        path_args: dict[str, Any],
+        event_type: str | None = None,
+    ):
         """``(subject, gate, extra)`` for a route's ``receiver=`` declaration.
 
         ``<model>:<field>`` searches the subject by the path variable of that
@@ -84,7 +89,8 @@ class MixinInboundGate(models.AbstractModel):
         it answers a record or ``(record, extra)`` -- what it parsed on the way,
         handed to the handler on ``request.admission.extra``. The gate is the
         subject itself when it carries this mixin, else the receiver row of the
-        record its ``_inbound_gate_owner()`` names (itself by default)."""
+        record its ``_inbound_gate_owner()`` names (itself by default; a
+        ``(record, name, purpose)`` tuple names the receiver's purpose too)."""
         model_name, _, selector = declaration.partition(":")
         model = self.env[model_name].sudo()
         extra: dict[str, Any] = {}
@@ -94,7 +100,9 @@ class MixinInboundGate(models.AbstractModel):
                 model.search([(selector, "=", value)], limit=1) if value else model
             )
         elif selector and callable(getattr(model, selector, None)):
-            subject = getattr(model, selector)(**path_args)
+            subject = getattr(model, selector)(
+                **path_args, **({"receiver_event": event_type} if event_type else {})
+            )
             if isinstance(subject, tuple):
                 subject, extra = subject
         else:
@@ -108,11 +116,16 @@ class MixinInboundGate(models.AbstractModel):
             return subject, subject, extra
         owner = getattr(subject, "_inbound_gate_owner", None)
         owner = owner() if owner is not None else subject
+        name, purpose = None, None
+        if isinstance(owner, tuple):
+            owner, name, purpose = owner
         if hasattr(owner, "admit"):
             return subject, owner, extra
         return (
             subject,
-            self.env["integration.receiver"]._for_record(owner, owner.display_name),
+            self.env["integration.receiver"]._for_record(
+                owner, name or owner.display_name, purpose
+            ),
             extra,
         )
 

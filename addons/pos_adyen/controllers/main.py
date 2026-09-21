@@ -3,11 +3,8 @@ import logging
 import pprint
 from urllib.parse import parse_qs
 
-from werkzeug.exceptions import Forbidden
-
 from odoo import http
 from odoo.http import request
-from odoo.tools import consteq
 
 _logger = logging.getLogger(__name__)
 
@@ -17,72 +14,16 @@ class PosAdyenController(http.Controller):
         "/pos_adyen/notification",
         type="jsonrpc",
         methods=["POST"],
-        auth="public",
+        auth="receiver",
+        receiver="pos.payment.method:_receiver_for_adyen_terminal",
+        receiver_event="adyen_terminal",
         csrf=False,
         save_session=False,
     )
     def notification(self):
-        data = json.loads(request.httprequest.data)
-
-        # ignore if it's not a response to a sales request
-        if not data.get("SaleToPOIResponse"):
-            return None
-
+        adyen_pm_sudo = request.admission.subject
+        data = request.admission.extra["data"]
         _logger.info("notification received from adyen:\n%s", pprint.pformat(data))
-
-        msg_header = data["SaleToPOIResponse"].get("MessageHeader")
-        if (
-            not msg_header
-            or msg_header.get("ProtocolVersion") != "3.0"
-            or msg_header.get("MessageClass") != "Service"
-            or msg_header.get("MessageType") != "Response"
-            or msg_header.get("MessageCategory") != "Payment"
-            or not msg_header.get("POIID")
-        ):
-            _logger.warning("Received an unexpected Adyen notification")
-            return None
-
-        terminal_identifier = msg_header["POIID"]
-        adyen_pm_sudo = (
-            request.env["pos.payment.method"]
-            .sudo()
-            .search([("adyen_terminal_identifier", "=", terminal_identifier)], limit=1)
-        )
-        if not adyen_pm_sudo:
-            _logger.warning(
-                "Received an Adyen event notification for a terminal not registered in Odoo: %s",
-                terminal_identifier,
-            )
-            return None
-
-        def check_hmac():
-            pos_hmac = PosAdyenController._get_additional_data_from_unparsed(
-                data["SaleToPOIResponse"]["PaymentResponse"]["Response"][
-                    "AdditionalResponse"
-                ],
-                "metadata.pos_hmac",
-            )
-            expected = adyen_pm_sudo._get_hmac(
-                msg_header["SaleID"],
-                msg_header["ServiceID"],
-                msg_header["POIID"],
-                data["SaleToPOIResponse"]["PaymentResponse"]["SaleData"][
-                    "SaleTransactionID"
-                ]["TransactionID"],
-            )
-            if not pos_hmac or not consteq(pos_hmac, expected):
-                raise Forbidden
-
-        receiver = request.env["integration.receiver"]._for_record(
-            adyen_pm_sudo, f"{adyen_pm_sudo.name} notifications"
-        )
-        if not receiver._admit_checked_request(check_hmac, event_type="adyen_terminal"):
-            _logger.warning(
-                "Received an invalid Adyen event notification (invalid hmac): \n%s",
-                pprint.pformat(data),
-            )
-            return None
-
         # The HMAC is removed to prevent anyone from using it in place of Adyen.
         adyen_additional_response = data["SaleToPOIResponse"]["PaymentResponse"][
             "Response"
@@ -96,7 +37,6 @@ class PosAdyenController(http.Controller):
         ] = adyen_additional_response.replace("&" + pos_hmac_metadata_raw, "").replace(
             pos_hmac_metadata_raw, ""
         )
-
         return self._process_payment_response(data, adyen_pm_sudo)
 
     @staticmethod

@@ -276,7 +276,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
 
         response = self.url_open(api_url, data={"RtnCode": "1"})
 
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 401)
         self.assertEqual(self.basic_invoice.l10n_tw_edi_refund_state, state)
 
     def test_07_fail_data_validation(self):

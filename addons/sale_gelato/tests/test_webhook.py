@@ -28,11 +28,11 @@ class TestGelatoWebhook(HttpCase):
             headers={"Content-Type": "application/json", "signature": signature},
         )
 
-    @mute_logger("odoo.addons.sale_gelato.controlers.main", "odoo.http")
+    @mute_logger("odoo.addons.sale_gelato.models.sale_order", "odoo.http")
     def test_an_unknown_order_is_refused_and_logged(self):
         response = self._post(self.order.id + 100000, "gelato-secret")
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 404)
         self.assertEqual(
             self.env["inbound.access.log"]
             .sudo()
@@ -41,14 +41,14 @@ class TestGelatoWebhook(HttpCase):
         )
 
     @mute_logger(
-        "odoo.addons.sale_gelato.controlers.main",
+        "odoo.addons.sale_gelato.models.sale_order",
         "odoo.addons.integration.models.mixin_inbound_gate",
         "odoo.http",
     )
     def test_a_wrong_signature_is_refused(self):
         response = self._post(self.order.id, "forged")
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 401)
 
     def test_a_signed_update_is_admitted_through_the_company_receiver(self):
         response = self._post(self.order.id, "gelato-secret")

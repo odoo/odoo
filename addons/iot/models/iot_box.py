@@ -6,6 +6,8 @@ from urllib.parse import urlsplit
 from odoo import api, fields, models
 from odoo.http import request
 
+from odoo.addons.integration.tools.admission import Acknowledged
+
 _logger = logging.getLogger(__name__)
 
 IOT_TOKEN_VALIDITY = timedelta(minutes=15)
@@ -14,6 +16,58 @@ IOT_TOKEN_VALIDITY = timedelta(minutes=15)
 class IotBox(models.Model):
     _name = "iot.box"
     _description = "IoT Box"
+
+    @api.model
+    def _receiver_for_handlers(self, **path_args):
+        identifier = request.get_http_params().get("identifier")
+        if not identifier:
+            return self.browse()
+        return self.sudo().search([("identifier", "=", identifier)], limit=1)
+
+    IOT_LOG_ELEMENT_SEPARATOR = b"<log/>\n"
+    IOT_LOG_IDENTIFIER_PREFIX = b"identifier "
+
+    @api.model
+    def _receiver_for_logs(self, **path_args):
+        data = request.httprequest.get_data(cache=True)
+        if data.endswith(self.IOT_LOG_ELEMENT_SEPARATOR):
+            data = data[: -len(self.IOT_LOG_ELEMENT_SEPARATOR)]
+        elements = data.split(self.IOT_LOG_ELEMENT_SEPARATOR)
+        if len(elements) < 2 or not elements[0].startswith(
+            self.IOT_LOG_IDENTIFIER_PREFIX
+        ):
+            raise Acknowledged()
+        identifier = elements[0][len(self.IOT_LOG_IDENTIFIER_PREFIX) :]
+        box = self.sudo().search(
+            [("identifier", "=", identifier.decode(errors="replace"))], limit=1
+        )
+        if not box:
+            request.env["inbound.access.log"]._record_unknown_caller(
+                "iot.box",
+                identifier.decode(errors="replace")[:64],
+                request.httprequest.remote_addr,
+                user_agent=request.httprequest.headers.get("User-Agent"),
+                status_code=200,
+            )
+            raise Acknowledged()
+        return box, {"log_elements": elements[1:], "purpose": "logs"}
+
+    def _inbound_gate_owner(self):
+        purpose = "handlers"
+        if request and request.httprequest.path == "/iot/log":
+            purpose = "logs"
+        label = (
+            self.env._("%(box)s logs", box=self.name)
+            if purpose == "logs"
+            else self.env._("%(box)s handler downloads", box=self.name)
+        )
+        return self, label, purpose
+
+    def _verify_inbound_request(self, headers, body):
+        # A box asks for its handlers by identifier alone, before it holds a
+        # token; the identifier is the identity this route has.
+        self.check_singleton()
+        return True
 
     name = fields.Char(required=True)
     identifier = fields.Char(readonly=True)

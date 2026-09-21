@@ -4,6 +4,10 @@ import requests
 
 from odoo import _, api, fields, models, modules
 from odoo.exceptions import AccessError, UserError
+from odoo.http import request
+from odoo.tools import consteq
+
+from odoo.addons.integration.tools.admission import Acknowledged
 
 _logger = logging.getLogger(__name__)
 TIMEOUT = 10
@@ -11,6 +15,50 @@ TIMEOUT = 10
 
 class PosPaymentMethod(models.Model):
     _inherit = ["pos.payment.method", "mixin.integration.connected"]
+
+    @api.model
+    def _receiver_for_viva_com_notification(self, **path_args):
+        params = request.get_http_params()
+        token = params.get("token") or ""
+        try:
+            company_id = int(params.get("company_id") or 0)
+        except ValueError:
+            company_id = 0
+        methods = self.sudo().search(
+            [("use_payment_terminal", "=", "viva_com"), ("company_id", "=", company_id)]
+        )
+        method = next(
+            (
+                pm
+                for pm in methods
+                if pm.viva_com_webhook_verification_key
+                and consteq(pm.viva_com_webhook_verification_key, token)
+            ),
+            None,
+        )
+        if method is None:
+            _logger.error(
+                _("received a message for a pos payment provider not registered.")
+            )
+            request.env["inbound.access.log"]._record_unknown_caller(
+                self._name,
+                f"viva.com company {company_id}",
+                request.httprequest.remote_addr,
+                user_agent=request.httprequest.headers.get("User-Agent"),
+            )
+            raise Acknowledged.json(None)
+        return method
+
+    def _inbound_gate_owner(self):
+        return self, f"{self.name} notifications", None
+
+    def _verify_inbound_request(self, headers, body):
+        if self.use_payment_terminal != "viva_com":
+            return super()._verify_inbound_request(headers, body)
+        token = request.get_http_params().get("token") or ""
+        return bool(self.viva_com_webhook_verification_key) and consteq(
+            self.viva_com_webhook_verification_key, token
+        )
 
     def _integration_connection_service(self):
         if self.use_payment_terminal == "viva_com":

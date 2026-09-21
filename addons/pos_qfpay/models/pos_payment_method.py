@@ -1,15 +1,62 @@
 import base64
 import hashlib
+import json
+import logging
 
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessDenied, UserError
+from odoo.http import request
+from odoo.tools import consteq
+
+from odoo.addons.integration.tools.admission import Acknowledged
+
+_logger = logging.getLogger(__name__)
 
 
 class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
+
+    @api.model
+    def _receiver_for_qfpay_notification(self, **path_args):
+        raw_body = request.httprequest.get_data(cache=True)
+        try:
+            data = json.loads(raw_body.decode("utf-8"))
+        except ValueError, UnicodeDecodeError:
+            _logger.warning("QFPay notification is not JSON")
+            raise Acknowledged.json(None) from None
+        # The trade number is `<payment uuid>--<session>--<method>`; the
+        # signature is checked against the method it names, once resolved.
+        trade_no = data.get("orig_out_trade_no", data.get("out_trade_no")) or ""
+        try:
+            payment_uuid, session_id, pm_id = trade_no.split("--")
+            pm_id = int(pm_id)
+            session_id = int(session_id)
+        except ValueError:
+            _logger.warning("QFpay invalid out_trade_no format")
+            raise Acknowledged.json(None) from None
+        method = self.sudo().browse(pm_id).exists()
+        if not method or not method.qfpay_notification_key:
+            _logger.warning("QFPay payment method does not have a notification key set")
+            raise Acknowledged.json(None)
+        return method, {
+            "data": data,
+            "payment_uuid": payment_uuid,
+            "session_id": session_id,
+        }
+
+    def _inbound_gate_owner(self):
+        return self, f"{self.name} notifications", None
+
+    def _verify_inbound_request(self, headers, body):
+        if self.use_payment_terminal != "qfpay":
+            return super()._verify_inbound_request(headers, body)
+        sign_str = (body or b"") + self.qfpay_notification_key.encode()
+        computed_sign = hashlib.md5(sign_str).hexdigest().upper()
+        return consteq(computed_sign, headers.get("X-QF-SIGN") or "")
+
     _CREDENTIAL_FIELDS = {
         "qfpay_pos_key": "qfpay_pos_key",
         "qfpay_notification_key": "qfpay_notification_key",

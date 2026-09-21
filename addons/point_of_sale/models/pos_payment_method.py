@@ -139,6 +139,12 @@ class PosPaymentMethod(models.Model):
     )
     hide_qr_code_method = fields.Boolean(compute="_compute_hide_qr_code_method")
 
+    def _verify_inbound_request(self, headers, body):
+        """Whether a terminal notification that resolved this method is the
+        vendor's -- each terminal integration decides how."""
+        self.check_singleton()
+        return False
+
     @api.model
     def get_provider_status(self, modules_list):
         return {

@@ -96,7 +96,7 @@ class TestHandlerShipping(HttpCase):
         self.assertFalse([n for n in names if n.endswith("_W.py")])
 
     def test_an_unknown_box_gets_nothing(self):
-        self.assertEqual(self._fetch(identifier="no-such-box").status_code, 401)
+        self.assertEqual(self._fetch(identifier="no-such-box").status_code, 404)
 
     def test_auto_update_off_refuses_an_automatic_request(self):
         self._box(auto_update=False)

@@ -40,10 +40,6 @@ def get_unique_name(name):
     return name
 
 
-def _known_box_identifier():
-    return None
-
-
 class IoTBoxLookup:
     def _search_box(self, identifier):
         return (
@@ -73,24 +69,20 @@ class IoTController(IoTBoxLookup, http.Controller):
 
         return sorted(modules | {"iot_drivers"})
 
-    @http.route("/iot/get_handlers", type="http", auth="public", csrf=False)
+    @http.route(
+        "/iot/get_handlers",
+        type="http",
+        auth="receiver",
+        receiver="iot.box:_receiver_for_handlers",
+        receiver_event="iot_handlers",
+        csrf=False,
+    )
     def get_handlers(self, identifier, auto):
-        box = self._search_box(identifier)
-        if not box or (auto == "True" and not box.drivers_auto_update):
+        box = request.admission.subject
+        if auto == "True" and not box.drivers_auto_update:
             raise Unauthorized(
-                description="No IoT box found with identifier '%s' or auto update disabled on the box."
-                % identifier
+                description="Auto update is disabled on the box '%s'." % identifier
             )
-        receiver = request.env["integration.receiver"]._for_record(
-            box, request.env._("%(box)s handler downloads", box=box.name), "handlers"
-        )
-        if not receiver._admit_checked_request(
-            _known_box_identifier, event_type="iot_handlers"
-        ):
-            raise Unauthorized(
-                description="The handler download for this box was refused."
-            )
-
         # '_L.py' files for Linux and '_W.py' for Windows
         incompatible_filename = "_L.py" if box.version[0] == "W" else "_W.py"
         modules = self._get_handler_modules(box)
@@ -377,11 +369,16 @@ class IoTLogController(IoTBoxLookup, http.Controller):
             .get_param("iot.should_log_iot_logs", True)
         )
 
-    @http.route("/iot/log", type="http", auth="public", csrf=False)
+    @http.route(
+        "/iot/log",
+        type="http",
+        auth="receiver",
+        receiver="iot.box:_receiver_for_logs",
+        receiver_event="iot_log",
+        csrf=False,
+    )
     def receive_iot_log(self):
-        IOT_ELEMENT_SEPARATOR = b"<log/>\n"
         IOT_LOG_LINE_SEPARATOR = b","
-        IOT_IDENTIFIER_PREFIX = b"identifier "
 
         def log_line_transformation(log_line):
             split = log_line.split(IOT_LOG_LINE_SEPARATOR, 1)
@@ -404,37 +401,8 @@ class IoTLogController(IoTBoxLookup, http.Controller):
         if not self._is_iot_log_enabled():
             return finish_request()
 
-        request_data = request.httprequest.get_data()
-        if request_data.endswith(IOT_ELEMENT_SEPARATOR):
-            # Do not use rstrip as some characters of the separator might be at the end of the log line
-            request_data = request_data[: -len(IOT_ELEMENT_SEPARATOR)]
-        request_data_split = request_data.split(IOT_ELEMENT_SEPARATOR)
-        if len(request_data_split) < 2:
-            return finish_request()
-
-        identifier_details = request_data_split.pop(0)
-        if not identifier_details.startswith(IOT_IDENTIFIER_PREFIX):
-            return finish_request()
-
-        identifier = identifier_details[len(IOT_IDENTIFIER_PREFIX) :]
-        iot_box = self._search_box(identifier)
-        if not iot_box:
-            request.env["inbound.access.log"]._record_unknown_caller(
-                "iot.box",
-                identifier.decode(errors="replace")[:64],
-                request.httprequest.remote_addr,
-                user_agent=request.httprequest.headers.get("User-Agent"),
-                status_code=200,
-            )
-            return finish_request()
-        receiver = request.env["integration.receiver"]._for_record(
-            iot_box, request.env._("%(box)s logs", box=iot_box.name), "logs"
-        )
-        if not receiver._admit_checked_request(
-            _known_box_identifier, event_type="iot_log"
-        ):
-            return finish_request()
-
+        iot_box = request.admission.subject
+        request_data_split = request.admission.extra["log_elements"]
         log_details = map(log_line_transformation, request_data_split)
         init_log_message = "IoT box log '%s' #%d received:" % (iot_box.name, iot_box.id)
 

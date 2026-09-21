@@ -3,6 +3,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
+from odoo.http import request
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import (
     AccountEdiProxyError,
@@ -643,6 +644,12 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             self.sudo().env, "account_peppol_webhook", msg, expiration_hours=expiration
         )
         return payload
+
+    @api.model
+    def _get_proxy_user_from_webhook_token(self, token, url):
+        if request and request.httprequest.path.startswith("/peppol/"):
+            return self._get_user_from_token(token, url)
+        return super()._get_proxy_user_from_webhook_token(token, url)
 
     @api.model
     def _get_user_from_token(self, token: str, url: str):

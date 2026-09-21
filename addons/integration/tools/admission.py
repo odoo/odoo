@@ -13,27 +13,39 @@ class Refused(HTTPException):
     verdict and the body a problem document, so every open route refuses the
     same way whatever it serves once admitted."""
 
-    def __init__(self, status: int, reason: str, code: str) -> None:
+    def __init__(
+        self, status: int, reason: str, code: str, *, commit: bool = False
+    ) -> None:
         super().__init__(description=reason)
-        self.code = status
+        self.status = status
         self.reason = reason
         self.error_code = code
+        # A refusal rolls the request back, which is what a failed
+        # authentication wants. One that must commit -- an unknown subject whose
+        # unknown-caller row is the point -- is a status-less HTTPException
+        # carrying its response, which the serving layer commits.
+        self.code = None if commit else status
+        if commit:
+            self.response = self._problem_response()
 
-    def get_response(self, environ=None, scope=None) -> werkzeug.wrappers.Response:  # type: ignore[override]
+    def _problem_response(self) -> werkzeug.wrappers.Response:
         return werkzeug.wrappers.Response(
             json.dumps(
                 {
                     "type": f"urn:odoo:inbound:{self.error_code}",
                     "title": self.error_code.replace("_", " "),
-                    "status": self.code,
+                    "status": self.status,
                     "detail": self.reason,
                     "error": self.error_code,
                     "message": self.reason,
                 }
             ),
-            status=self.code,
+            status=self.status,
             content_type="application/problem+json; charset=utf-8",
         )
+
+    def get_response(self, environ=None, scope=None) -> werkzeug.wrappers.Response:  # type: ignore[override]
+        return self.response or self._problem_response()
 
 
 class Acknowledged(HTTPException):
@@ -41,7 +53,11 @@ class Acknowledged(HTTPException):
     were -- a vendor that retries and disables the endpoint on a non-2xx --
     so the resolver answers it here and no handler runs."""
 
-    code = 200
+    # No `code`: the status lives on the response, and a status-less
+    # HTTPException carrying one is successful control flow to the serving
+    # layer, so the transaction -- and the unknown-caller row a resolver
+    # recorded -- commits.
+    code = None
 
     def __init__(
         self, body: str = "", status: int = 200, content_type: str = "text/plain"
@@ -51,7 +67,6 @@ class Acknowledged(HTTPException):
                 body, status=status, content_type=content_type
             )
         )
-        self.code = status
 
     @classmethod
     def json(cls, value: Any, status: int = 200) -> Acknowledged:

@@ -2,6 +2,7 @@ import logging
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
+from odoo.http import request
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import (
     AccountEdiProxyError,
@@ -548,6 +549,12 @@ class AccountEdiProxyClientUser(models.Model):
             expiration_hours=expiration,
         )
         return payload
+
+    @api.model
+    def _get_proxy_user_from_webhook_token(self, token, url):
+        if request and request.httprequest.path.startswith("/nemhandel/"):
+            return self._get_nemhandel_user_from_token(token, url)
+        return super()._get_proxy_user_from_webhook_token(token, url)
 
     @api.model
     def _get_nemhandel_user_from_token(self, token: str, url: str):

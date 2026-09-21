@@ -15,10 +15,15 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _auth_routing_keys(cls) -> dict[str, tuple[str, ...]]:
-        return {**super()._auth_routing_keys(), "receiver": ("receiver",)}
+        return {
+            **super()._auth_routing_keys(),
+            "receiver": ("receiver", "receiver_event"),
+        }
 
     @classmethod
-    def _auth_method_receiver(cls, receiver: str | None = None) -> None:
+    def _auth_method_receiver(
+        cls, receiver: str | None = None, receiver_event: str | None = None
+    ) -> None:
         cls._auth_method_public()
         if not receiver:
             _logger.error(
@@ -29,7 +34,7 @@ class IrHttp(models.AbstractModel):
             raise NotFound
         gate_model = request.env["mixin.inbound.gate"]
         subject, gate, extra = gate_model._resolve_route_receiver(
-            receiver, request.path_args
+            receiver, request.path_args, event_type=receiver_event
         )
         if not gate:
             model_name = receiver.partition(":")[0]
@@ -38,7 +43,11 @@ class IrHttp(models.AbstractModel):
                 ", ".join(f"{k}={str(v)[:16]}" for k, v in request.path_args.items()),
                 request.httprequest.remote_addr,
                 user_agent=request.httprequest.headers.get("User-Agent"),
+                status_code=404,
             )
-            raise Refused(404, "Endpoint not found or inactive", "endpoint_not_found")
-        request.admission = gate.admit(subject=subject)
+            # Committed, so the row above is kept: nothing else ran.
+            raise Refused(
+                404, "Endpoint not found or inactive", "endpoint_not_found", commit=True
+            )
+        request.admission = gate.admit(subject=subject, event_type=receiver_event)
         request.admission.extra = extra

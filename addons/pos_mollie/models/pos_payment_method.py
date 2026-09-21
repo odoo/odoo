@@ -1,12 +1,50 @@
+import logging
+
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import hash_sign
+from odoo.http import request
+from odoo.tools import hash_sign, resolve_hash_signed
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.payment_mollie import const
+
+_logger = logging.getLogger(__name__)
 
 
 class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
+
+    @api.model
+    def _receiver_for_mollie_terminal(self, **path_args):
+        payload = request.get_http_params().get("payload") or ""
+        decoded_payload = resolve_hash_signed(self.sudo().env, "pos_mollie", payload)
+        if not decoded_payload:
+            _logger.warning("Invalid payload received in Mollie webhook, ignoring")
+            request.env["inbound.access.log"]._record_unknown_caller(
+                self._name,
+                "mollie webhook with an invalid signed payload",
+                request.httprequest.remote_addr,
+                user_agent=request.httprequest.headers.get("User-Agent"),
+                status_code=200,
+            )
+            raise Acknowledged("OK")
+        method = self.sudo().browse(decoded_payload["payment_method_id"]).exists()
+        if not method:
+            _logger.warning("No payment method found matching Mollie webhook, ignoring")
+            raise Acknowledged("OK")
+        return method, {"payload": decoded_payload}
+
+    def _inbound_gate_owner(self):
+        return self, f"{self.name} notifications", None
+
+    def _verify_inbound_request(self, headers, body):
+        if self.use_payment_terminal != "mollie":
+            return super()._verify_inbound_request(headers, body)
+        # The payload is signed by this database (hash_sign) and names the
+        # method: resolving it is the verification.
+        payload = request.get_http_params().get("payload") or ""
+        decoded = resolve_hash_signed(self.sudo().env, "pos_mollie", payload)
+        return bool(decoded) and decoded.get("payment_method_id") == self.id
 
     def _selection_payment_terminals(self):
         return super()._selection_payment_terminals() + [("mollie", "Mollie")]

@@ -27,15 +27,15 @@ it fails until the floor is lowered in the same change.
 This module was edited as a shared ledger: 24 of its last 40 commits changed
 nothing in it but an integer and the comment above it.
 
-Six gates carry a floor: `lint_docstring` (a one-sided ratchet that
+Five gates carry a floor: `lint_docstring` (a one-sided ratchet that
 reads 32 only on a fuller install), `bundle_double_eval` (ESM bundles that
 evaluate twice), the migration ledger `lint_credential_storage`, whose floor
-is the columns still to move into the vault, `lint_receiver_fail_open`, whose
-floor is the machine routes still to put behind an inbound gate,
-`lint_stored_related`, the stored copies of a related value still to convert,
-and `lint_company_field_outside_config`, the fields still bolted onto
+is the columns still to move into the vault, `lint_stored_related`, the stored
+copies of a related value still to convert, and
+`lint_company_field_outside_config`, the fields still bolted onto
 `res.company` outside base instead of an application's `mixin.company.config`
-model -- the two AST rules with a floor. Everything else -- every other AST rule,
+model -- the two AST rules with a floor. `lint_receiver_fail_open` carried one
+for the six hours between the rule's rewrite and the last family's conversion. Everything else -- every other AST rule,
 every XML rule, the manifest and record-order gates -- is a hard zero. `n-plus-one-query` reached
 zero on 2026-09-12 by reading each of its 295 sites: a loop over the records
 is hoisted, a loop that runs one query per distinct key (company, model,
@@ -124,10 +124,11 @@ its caller says `auth="receiver", receiver="<model>:<field or _method>"`, and
 `admit()` and leaves `request.admission` for the handler, before the handler runs.
 The checker used to follow the controller's own `self.` calls to one of nine gate
 method names, which a superclass, a model method or a refactor could hide from it,
-and which said nothing to a reader of the routing map. The floor is the backlog
-still admitting in the handler's body: payment provider and POS terminal callbacks,
-Peppol and the other EDI webhooks, IoT, SMS -- lowered as each family declares its
-receiver. A page or a probe that must stay open carries `# noqa: E8528 - <why>`.
+and which said nothing to a reader of the routing map. The backlog that the rewrite
+surfaced -- 39 routes admitting in the handler's body: the seventeen payment providers,
+five POS terminals, Peppol and Nemhandel, IoT, Gelato, Twilio, ECPay -- was converted the
+same day, and the floor is zero. A page or a probe that must stay open carries
+`# noqa: E8528 - <why>`.
 
 `http-json-string` (E8515) catches `return json.dumps(...)` inside a route whose
 `type` is `"http"` or absent. The string goes out as `text/html`, and the client's

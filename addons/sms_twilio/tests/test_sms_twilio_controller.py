@@ -133,7 +133,7 @@ class TestSmsTwilioController(MockSmsTwilio, HttpCase):
                     "X-Twilio-Signature": "WrongSignature",
                 },
             )
-            self.assertEqual(response.status_code, 404)
+            self.assertEqual(response.status_code, 401)
             # SMS not updated
             self.assertRecordValues(
                 sms.sms_tracker_id.mail_notification_id,

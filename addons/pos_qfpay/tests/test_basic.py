@@ -32,5 +32,9 @@ class TestQFPayPoS(TestPointOfSaleHttpCommon):
         )
 
     def test_tour_qfpay_order_and_refund(self):
-        with patch("odoo.addons.pos_qfpay.controllers.main.consteq", lambda a, b: True):
+        with patch.object(
+            type(self.env["pos.payment.method"]),
+            "_verify_inbound_request",
+            lambda self, headers, body: True,
+        ):
             self.start_pos_tour("qfpay_order_and_refund")

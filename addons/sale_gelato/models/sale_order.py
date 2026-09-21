@@ -1,11 +1,14 @@
+import hmac
 import logging
 import pprint
 from functools import partial, wraps
 
-from odoo import _, models
+from odoo import _, api, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.http import request
 from odoo.libs.debug_log import DebugLog
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.sale_gelato import const, utils
 
 _logger = logging.getLogger(__name__)
@@ -25,6 +28,43 @@ def post_commit(func):
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
+
+    @api.model
+    def _receiver_for_gelato_webhook(self, **path_args):
+        event_data = request.get_json_data()
+        if not isinstance(event_data, dict) or (
+            event_data.get("event") != "order_status_updated"
+        ):
+            raise Acknowledged.json("")
+        try:
+            order_id = int(event_data["orderReferenceId"])
+        except KeyError, TypeError, ValueError:
+            raise Acknowledged.json("") from None
+        return self.sudo().browse(order_id).exists(), {"event": event_data}
+
+    def _inbound_gate_owner(self):
+        company = self.company_id.sudo()
+        return (
+            company,
+            _("%(company)s Gelato order updates", company=company.name),
+            "gelato_webhook",
+        )
+
+    def _verify_inbound_request(self, headers, body):
+        self.check_singleton()
+        company_sudo = self.company_id.sudo()
+        expected_signature = company_sudo.gelato_webhook_secret
+        if not expected_signature:
+            _logger.warning(
+                "gelato_webhook_secret not set for this company %s (id: %s)",
+                company_sudo.name,
+                company_sudo.id,
+            )
+            return False
+        if not hmac.compare_digest(headers.get("signature", ""), expected_signature):
+            _logger.warning("Received notification with invalid signature.")
+            return False
+        return True
 
     def _prevent_mixing_gelato_and_non_gelato_products(self):
         for order in self:

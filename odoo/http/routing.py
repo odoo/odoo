@@ -40,6 +40,7 @@ _KNOWN_ROUTING_PARAMETERS: set[str] = {
     "max_content_length",
     "readonly",
     "receiver",
+    "receiver_event",
     "save_session",
     "scope",
     "statement_timeout",

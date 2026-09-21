@@ -5,7 +5,10 @@ from urllib.parse import parse_qs
 
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessDenied, UserError, ValidationError
-from odoo.tools import hmac
+from odoo.http import request
+from odoo.tools import consteq, hmac
+
+from odoo.addons.integration.tools.admission import Acknowledged
 
 _logger = logging.getLogger(__name__)
 
@@ -14,6 +17,70 @@ UNPREDICTABLE_ADYEN_DATA = object()  # sentinel
 
 class PosPaymentMethod(models.Model):
     _inherit = ["pos.payment.method", "mixin.integration.connected"]
+
+    @api.model
+    def _receiver_for_adyen_terminal(self, **path_args):
+        data = request.get_json_data()
+        if not isinstance(data, dict) or not data.get("SaleToPOIResponse"):
+            # Not a response to a sales request.
+            raise Acknowledged.json(None)
+        msg_header = data["SaleToPOIResponse"].get("MessageHeader") or {}
+        if (
+            msg_header.get("ProtocolVersion") != "3.0"
+            or msg_header.get("MessageClass") != "Service"
+            or msg_header.get("MessageType") != "Response"
+            or msg_header.get("MessageCategory") != "Payment"
+            or not msg_header.get("POIID")
+        ):
+            _logger.warning("Received an unexpected Adyen notification")
+            raise Acknowledged.json(None)
+        terminal_identifier = msg_header["POIID"]
+        method = self.sudo().search(
+            [("adyen_terminal_identifier", "=", terminal_identifier)], limit=1
+        )
+        if not method:
+            _logger.warning(
+                "Received an Adyen event notification for a terminal not registered "
+                "in Odoo: %s",
+                terminal_identifier,
+            )
+            request.env["inbound.access.log"]._record_unknown_caller(
+                self._name,
+                f"Adyen terminal {terminal_identifier}"[:64],
+                request.httprequest.remote_addr,
+                user_agent=request.httprequest.headers.get("User-Agent"),
+                status_code=200,
+            )
+            raise Acknowledged.json(None)
+        return method, {"data": data}
+
+    def _inbound_gate_owner(self):
+        return self, f"{self.name} notifications", None
+
+    @staticmethod
+    def _adyen_additional_data(adyen_additional_response, data_key):
+        values = parse_qs(adyen_additional_response).get(data_key)
+        return values[0] if values and len(values) == 1 else None
+
+    def _verify_inbound_request(self, headers, body):
+        if self.use_payment_terminal != "adyen":
+            return super()._verify_inbound_request(headers, body)
+        data = request.get_json_data()
+        try:
+            response = data["SaleToPOIResponse"]["PaymentResponse"]
+            msg_header = data["SaleToPOIResponse"]["MessageHeader"]
+            pos_hmac = self._adyen_additional_data(
+                response["Response"]["AdditionalResponse"], "metadata.pos_hmac"
+            )
+            expected = self._get_hmac(
+                msg_header["SaleID"],
+                msg_header["ServiceID"],
+                msg_header["POIID"],
+                response["SaleData"]["SaleTransactionID"]["TransactionID"],
+            )
+        except KeyError, TypeError:
+            return False
+        return bool(pos_hmac) and consteq(pos_hmac, expected)
 
     def _integration_connection_service(self):
         if self.use_payment_terminal == "adyen":

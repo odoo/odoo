@@ -42,7 +42,11 @@ class TestAdyenPoS(TestPointOfSaleHttpCommon):
 
         with (
             patch.object(GuardedSession, "request", post),
-            patch("odoo.addons.pos_adyen.controllers.main.consteq", lambda a, b: True),
+            patch.object(
+                type(self.env["pos.payment.method"]),
+                "_verify_inbound_request",
+                lambda self, headers, body: True,
+            ),
         ):
             self.start_pos_tour("PosAdyenTour")
 
@@ -69,7 +73,7 @@ class TestAdyenPoS(TestPointOfSaleHttpCommon):
         connection = method._get_integration_connection()
         self.assertEqual(connection.service_id.code, "pos_adyen")
         self.assertTrue(
-            self.env["integration.exchange"].sudo().search_count(
-                [("connection_id", "=", connection.id)]
-            )
+            self.env["integration.exchange"]
+            .sudo()
+            .search_count([("connection_id", "=", connection.id)])
         )

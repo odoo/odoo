@@ -5,13 +5,31 @@ from urllib.parse import urljoin
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_round
+from odoo.http import request
+from odoo.tools import consteq, float_round
 
 from odoo.addons.l10n_tw_edi_ecpay.utils import call_ecpay_api, transfer_time
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
+
+    @api.model
+    def _receiver_for_ecpay_allowance(self, invoice_id=None, **path_args):
+        return self.sudo().browse(invoice_id).exists()
+
+    def _inbound_gate_owner(self):
+        company = self.company_id.sudo()
+        return (
+            company,
+            self.env._("%(company)s ECPay allowance callbacks", company=company.name),
+            "ecpay_allowance",
+        )
+
+    def _verify_inbound_request(self, headers, body):
+        self.check_singleton()
+        token = request.get_http_params().get("access_token") or ""
+        return bool(self.access_token) and consteq(self.access_token, token)
 
     # ------------------
     # Fields declaration
