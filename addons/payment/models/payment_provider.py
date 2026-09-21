@@ -870,6 +870,12 @@ class PaymentProvider(models.Model):
         )
         return f"payment_{self.code}", self.env._("Payments: %s", label), "payment"
 
+    def _verify_inbound_request(self, headers, body):
+        """Whether the notification that resolved this provider is its own --
+        each provider decides how."""
+        self.check_singleton()
+        return False
+
     def _send_api_request(
         self,
         method,

@@ -1,10 +1,4 @@
-import base64
-import binascii
-import hashlib
-import hmac
 import pprint
-
-from werkzeug.exceptions import Forbidden
 
 from odoo import _, http, release
 from odoo.exceptions import ValidationError
@@ -243,7 +237,8 @@ class AdyenController(http.Controller):
     @http.route(
         "/payment/adyen/return",
         type="http",
-        auth="public",
+        auth="receiver",
+        receiver="payment.transaction:_receiver_for_adyen_return",
         csrf=False,
         save_session=False,
     )
@@ -261,17 +256,7 @@ class AdyenController(http.Controller):
         :param dict data: The authentication result data. May include custom params sent to Adyen in
                           the request to allow matching the transaction when redirected here.
         """
-        # Retrieve the transaction based on the reference included in the return url
-        tx_sudo = (
-            request.env["payment.transaction"]
-            .sudo()
-            ._search_by_reference("adyen", data)
-        )
-        if not tx_sudo:
-            return request.redirect("/payment/status")
-        payment_utils.admit_notification(
-            tx_sudo.provider_id, payment_utils.verified_by_vendor_api
-        )
+        tx_sudo = request.admission.subject
 
         # Overwrite the operation to force the flow to 'redirect'. This is necessary because even
         # though Adyen is implemented as a direct payment provider, it will redirect the user out
@@ -298,7 +283,14 @@ class AdyenController(http.Controller):
         # Redirect the user to the status page
         return request.redirect("/payment/status")
 
-    @http.route(_webhook_url, type="http", methods=["POST"], auth="public", csrf=False)
+    @http.route(
+        _webhook_url,
+        type="http",
+        methods=["POST"],
+        auth="receiver",
+        receiver="payment.provider:_receiver_for_adyen_webhook",
+        csrf=False,
+    )
     def adyen_webhook(self):
         """Process the data sent by Adyen to the webhook based on the event code.
 
@@ -308,136 +300,27 @@ class AdyenController(http.Controller):
         :return: The '[accepted]' string to acknowledge the notification
         :rtype: str
         """
-        data = request.get_json_data()
-        for notification_item in data["notificationItems"]:
-            payment_data = notification_item["NotificationRequestItem"]
-
+        for tx_sudo, payment_data in request.admission.extra["items"]:
             _logger.info(
                 "notification received from Adyen with data:\n%s",
                 pprint.pformat(payment_data),
             )
-            # Check the integrity of the notification.
-            tx_sudo = (
-                request.env["payment.transaction"]
-                .sudo()
-                ._search_by_reference("adyen", payment_data)
-            )
-            if tx_sudo:
-                payment_utils.admit_notification(
-                    tx_sudo.provider_id,
-                    lambda data=payment_data, tx=tx_sudo: self._check_signature(
-                        data, tx
-                    ),
-                )
-
-                # Check whether the event of the notification succeeded and reshape the notification
-                # data for parsing
-                success = payment_data["success"] == "true"
-                event_code = payment_data["eventCode"]
-                if event_code == "AUTHORISATION" and success:
-                    payment_data["resultCode"] = "Authorised"
-                elif event_code == "CANCELLATION":
-                    payment_data["resultCode"] = "Cancelled" if success else "Error"
-                elif event_code in ["REFUND", "CAPTURE"]:
-                    payment_data["resultCode"] = "Authorised" if success else "Error"
-                elif event_code == "CAPTURE_FAILED" and success:
-                    # The capture failed after a capture notification with success = True was sent
-                    payment_data["resultCode"] = "Error"
-                else:
-                    continue  # Don't handle unsupported event codes and failed events
-                tx_sudo._process("adyen", payment_data)
+            # Check whether the event of the notification succeeded and reshape the notification
+            # data for parsing
+            success = payment_data["success"] == "true"
+            event_code = payment_data["eventCode"]
+            if event_code == "AUTHORISATION" and success:
+                payment_data["resultCode"] = "Authorised"
+            elif event_code == "CANCELLATION":
+                payment_data["resultCode"] = "Cancelled" if success else "Error"
+            elif event_code in ["REFUND", "CAPTURE"]:
+                payment_data["resultCode"] = "Authorised" if success else "Error"
+            elif event_code == "CAPTURE_FAILED" and success:
+                # The capture failed after a capture notification with success = True was sent
+                payment_data["resultCode"] = "Error"
+            else:
+                continue  # Don't handle unsupported event codes and failed events
+            tx_sudo._process("adyen", payment_data)
         return request.prepare_json_response(
             "[accepted]"
         )  # Acknowledge the notification
-
-    @staticmethod
-    def _check_signature(payment_data, tx_sudo):
-        """Check that the received signature matches the expected one.
-
-        :param dict payment_data: The payment data containing the received signature.
-        :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
-        :return: None
-        :raise Forbidden: If the signatures don't match.
-        """
-        # Retrieve the received signature from the payload
-        received_signature = payment_data.get("additionalData", {}).get("hmacSignature")
-        if not received_signature:
-            _logger.warning("received payment data with missing signature")
-            raise Forbidden()
-
-        # Compare the received signature with the expected signature computed from the payload
-        hmac_key = tx_sudo.provider_id.adyen_hmac_key
-        expected_signature = AdyenController._compute_signature(payment_data, hmac_key)
-        if not hmac.compare_digest(received_signature, expected_signature):
-            _logger.warning("received payment data with invalid signature")
-            raise Forbidden()
-
-    @staticmethod
-    def _compute_signature(payload, hmac_key):
-        """Compute the signature from the payload.
-
-        See https://docs.adyen.com/development-resources/webhooks/verify-hmac-signatures
-
-        :param dict payload: The notification payload
-        :param str hmac_key: The HMAC key of the provider handling the transaction
-        :return: The computed signature
-        :rtype: str
-        """
-
-        def _flatten_dict(_value, _path_base="", _separator="."):
-            """Recursively generate a flat representation of a dict.
-
-            :param Object _value: The value to flatten. A dict or an already flat value
-            :param str _path_base: They base path for keys of _value, including preceding separators
-            :param str _separator: The string to use as a separator in the key path
-            """
-            if isinstance(_value, dict):  # The inner value is a dict, flatten it
-                _path_base = _path_base if not _path_base else _path_base + _separator
-                for _key in _value:
-                    yield from _flatten_dict(_value[_key], _path_base + str(_key))
-            else:  # The inner value cannot be flattened, yield it
-                yield _path_base, _value
-
-        def _to_escaped_string(_value):
-            """Escape payload values that are using illegal symbols and cast them to string.
-
-            String values containing `\\` or `:` are prefixed with `\\`.
-            Empty values (`None`) are replaced by an empty string.
-
-            :param Object _value: The value to escape
-            :return: The escaped value
-            :rtype: string
-            """
-            if isinstance(_value, str):
-                return _value.replace("\\", "\\\\").replace(":", "\\:")
-            elif _value is None:
-                return ""
-            else:
-                return str(_value)
-
-        signature_keys = [
-            "pspReference",
-            "originalReference",
-            "merchantAccountCode",
-            "merchantReference",
-            "amount.value",
-            "amount.currency",
-            "eventCode",
-            "success",
-        ]
-        # Flatten the payload to allow accessing inner dicts naively
-        flattened_payload = {k: v for k, v in _flatten_dict(payload)}
-        # Build the list of signature values as per the list of required signature keys
-        signature_values = [flattened_payload.get(key) for key in signature_keys]
-        # Escape values using forbidden symbols
-        escaped_values = [_to_escaped_string(value) for value in signature_values]
-        # Concatenate values together with ':' as delimiter
-        signing_string = ":".join(escaped_values)
-        # Convert the HMAC key to the binary representation
-        binary_hmac_key = binascii.a2b_hex(hmac_key.encode("ascii"))
-        # Calculate the HMAC with the binary representation of the signing string with SHA-256
-        binary_hmac = hmac.new(
-            binary_hmac_key, signing_string.encode("utf-8"), hashlib.sha256
-        )
-        # Calculate the signature by encoding the result with Base64
-        return base64.b64encode(binary_hmac.digest()).decode()

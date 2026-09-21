@@ -1,4 +1,5 @@
-from odoo import _, models
+from odoo import _, api, models
+from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -9,6 +10,25 @@ _logger = get_payment_logger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
+
+    @api.model
+    def _receiver_for_custom_process(self, **path_args):
+        post = request.get_http_params()
+        tx = self.sudo()._search_by_reference("custom", post)
+        return tx, {"post": post}
+
+    def _verify_inbound_request(self, headers, body):
+        if self.provider_code != "custom":
+            return super()._verify_inbound_request(headers, body)
+        post = request.get_http_params() if request else {}
+        if not payment_utils.is_access_token_valid(
+            post.get("access_token"), self.reference, self.amount
+        ):
+            _logger.warning(
+                "Refused custom processing of %s: invalid access token.", self.reference
+            )
+            return False
+        return True
 
     def _prepare_redirect_form_values(self, processing_values):
         """Override of payment to return custom-specific rendering values.

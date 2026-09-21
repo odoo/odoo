@@ -1,14 +1,10 @@
-import hmac
 import json
 import pprint
-
-from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 
 _logger = get_payment_logger(__name__)
@@ -46,54 +42,28 @@ class FlutterwaveController(http.Controller):
         data = json.loads(response) if response else {}
         return self.flutterwave_return_from_checkout(**data)
 
-    @http.route(_webhook_url, type="http", methods=["POST"], auth="public", csrf=False)
+    @http.route(
+        _webhook_url,
+        type="http",
+        methods=["POST"],
+        auth="receiver",
+        receiver="payment.transaction:_receiver_for_flutterwave_webhook",
+        csrf=False,
+    )
     def flutterwave_webhook(self):
         """Process the payment data sent by Flutterwave to the webhook.
 
         :return: An empty string to acknowledge the notification.
         :rtype: str
         """
-        data = request.get_json_data()
         _logger.info(
             "Notification received from Flutterwave with data:\n%s",
-            pprint.pformat(data),
+            pprint.pformat(request.get_json_data()),
         )
-
-        if data["event"] == "charge.completed":
-            payment_data = data["data"]
-            tx_sudo = (
-                request.env["payment.transaction"]
-                .sudo()
-                ._search_by_reference("flutterwave", payment_data)
-            )
-            if tx_sudo:
-                signature = request.httprequest.headers.get("verif-hash")
-                payment_utils.admit_notification(
-                    tx_sudo.provider_id,
-                    lambda: self._check_signature(signature, tx_sudo),
-                )
-            tx_sudo._process("flutterwave", payment_data)
+        request.admission.subject._process(
+            "flutterwave", request.admission.extra["data"]
+        )
         return request.prepare_json_response("")
-
-    @staticmethod
-    def _check_signature(received_signature, tx_sudo):
-        """Check that the received signature matches the expected one.
-
-        :param dict received_signature: The signature received with the payment data.
-        :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
-        :return: None
-        :raise Forbidden: If the signatures don't match.
-        """
-        # Check for the received signature.
-        if not received_signature:
-            _logger.warning("Received payment data with missing signature.")
-            raise Forbidden()
-
-        # Compare the received signature with the expected signature.
-        expected_signature = tx_sudo.provider_id.flutterwave_webhook_secret
-        if not hmac.compare_digest(received_signature, expected_signature):
-            _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden()
 
     @staticmethod
     def _check_and_process(data):

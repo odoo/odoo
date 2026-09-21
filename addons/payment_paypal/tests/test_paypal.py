@@ -33,20 +33,20 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
             customer_payload["address"]["country_code"], self.company.country_id.code
         )
 
-    @mute_logger("odoo.addons.payment_paypal.controllers.main")
+    @mute_logger("odoo.addons.payment_paypal.models.payment_transaction")
     def test_complete_order_confirms_transaction(self):
         """Test the processing of a webhook notification."""
         tx = self._create_transaction("direct")
-        normalized_data = PaypalController._normalize_paypal_data(
-            self, self.completed_order
+        normalized_data = self.env["payment.transaction"]._normalize_paypal_data(
+            self.completed_order
         )
         self.env["payment.transaction"]._process("paypal", normalized_data)
         self.assertEqual(tx.state, "done")
         self.assertEqual(tx.provider_reference, normalized_data["id"])
 
     def test_feedback_processing(self):
-        normalized_data = PaypalController._normalize_paypal_data(
-            self, self.payment_data.get("resource"), from_webhook=True
+        normalized_data = self.env["payment.transaction"]._normalize_paypal_data(
+            self.payment_data.get("resource"), from_webhook=True
         )
 
         # Confirmed transaction
@@ -68,27 +68,26 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         self.assertEqual(tx.state, "pending")
         self.assertEqual(tx.state_message, payload["pending_reason"])
 
-    @mute_logger("odoo.addons.payment_paypal.controllers.main")
+    @mute_logger("odoo.addons.payment_paypal.models.payment_transaction")
     def test_webhook_notification_confirms_transaction(self):
         """Test the processing of a webhook notification."""
         tx = self._create_transaction("direct")
         url = self._build_url(PaypalController._webhook_url)
         with patch(
-            "odoo.addons.payment_paypal.controllers.main.PaypalController"
-            "._check_notification_origin"
+            "odoo.addons.payment_paypal.models.payment_transaction.PaymentTransaction"
+            "._verify_inbound_request"
         ):
             self._make_json_request(url, data=self.payment_data)
         self.assertEqual(tx.state, "done")
 
-    @mute_logger("odoo.addons.payment_paypal.controllers.main")
+    @mute_logger("odoo.addons.payment_paypal.models.payment_transaction")
     def test_webhook_notification_triggers_origin_check(self):
         """Test that receiving a webhook notification triggers an origin check."""
         self._create_transaction("direct")
         url = self._build_url(PaypalController._webhook_url)
         with (
             patch(
-                "odoo.addons.payment_paypal.controllers.main.PaypalController"
-                "._check_notification_origin"
+                "odoo.addons.payment_paypal.models.payment_transaction.PaymentTransaction._verify_inbound_request"
             ) as origin_check_mock,
             patch(
                 "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"

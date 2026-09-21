@@ -4,7 +4,6 @@ from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 
 _logger = get_payment_logger(__name__)
@@ -17,7 +16,8 @@ class MollieController(http.Controller):
     @http.route(
         _return_url,
         type="http",
-        auth="public",
+        auth="receiver",
+        receiver="payment.transaction:_receiver_for_mollie_notification",
         methods=["GET", "POST"],
         csrf=False,
         save_session=False,
@@ -42,7 +42,14 @@ class MollieController(http.Controller):
         self._check_and_process(data)
         return request.redirect("/payment/status")
 
-    @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
+    @http.route(
+        _webhook_url,
+        type="http",
+        auth="receiver",
+        receiver="payment.transaction:_receiver_for_mollie_notification",
+        methods=["POST"],
+        csrf=False,
+    )
     def mollie_webhook(self, **data):
         """Process the payment data sent by Mollie to the webhook.
 
@@ -59,22 +66,12 @@ class MollieController(http.Controller):
 
     @staticmethod
     def _check_and_process(data):
-        """Verify and process the payment data sent by Mollie.
+        """Process the payment data sent by Mollie, fetched back from its API.
 
         :param dict data: The payment data.
         :return: None
         """
-        tx_sudo = (
-            request.env["payment.transaction"]
-            .sudo()
-            ._search_by_reference("mollie", data)
-        )
-        if not tx_sudo:
-            return
-        payment_utils.admit_notification(
-            tx_sudo.provider_id, payment_utils.verified_by_vendor_api
-        )
-
+        tx_sudo = request.admission.subject
         try:
             verified_data = tx_sudo._send_api_request(
                 "GET", f"/payments/{tx_sudo.provider_reference}"

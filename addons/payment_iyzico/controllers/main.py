@@ -4,7 +4,6 @@ from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_iyzico import const
 
@@ -15,7 +14,8 @@ class IyzicoController(http.Controller):
     @http.route(
         const.PAYMENT_RETURN_ROUTE,
         type="http",
-        auth="public",
+        auth="receiver",
+        receiver="payment.transaction:_receiver_for_iyzico_return",
         methods=["POST"],
         csrf=False,
         save_session=False,
@@ -37,15 +37,16 @@ class IyzicoController(http.Controller):
         _logger.info(
             "Handling redirection from Iyzico with data:\n%s", pprint.pformat(data)
         )
-        if token := data.get("token"):
-            self._check_and_process(tx_ref, token)
-        else:
-            _logger.warning("Received payment data with missing token.")
-
+        self._check_and_process()
         return request.redirect("/payment/status")
 
     @http.route(
-        const.WEBHOOK_ROUTE, type="http", auth="public", methods=["POST"], csrf=False
+        const.WEBHOOK_ROUTE,
+        type="http",
+        auth="receiver",
+        receiver="payment.transaction:_receiver_for_iyzico_webhook",
+        methods=["POST"],
+        csrf=False,
     )
     def iyzico_webhook(self):
         """Process the payment data sent by Iyzico to the webhook.
@@ -59,32 +60,14 @@ class IyzicoController(http.Controller):
         _logger.info(
             "Notification received from Iyzico with data:\n%s", pprint.pformat(data)
         )
-
-        if token := data.get("token"):
-            self._check_and_process(data["paymentConversationId"], token)
-        else:
-            _logger.warning("Received webhook data with missing token.")
-
+        self._check_and_process()
         return request.prepare_json_response("")  # Acknowledge the notification.
 
     @staticmethod
-    def _check_and_process(tx_ref, token):
-        """Verify and process the payment data sent by Iyzico.
-
-        :param str tx_ref: The reference of the transaction.
-        :param str token: The iyzico transaction token to fetch transaction details.
-        :return: None
-        """
-        tx_sudo = (
-            request.env["payment.transaction"]
-            .sudo()
-            ._search_by_reference("iyzico", {"reference": tx_ref})
-        )
-        if not tx_sudo:
-            return
-        payment_utils.admit_notification(
-            tx_sudo.provider_id, payment_utils.verified_by_vendor_api
-        )
+    def _check_and_process():
+        """Process the admitted transaction's payment, fetched back from Iyzico's API."""
+        tx_sudo = request.admission.subject
+        token = request.admission.extra["token"]
         try:
             verified_payment_data = tx_sudo._send_api_request(
                 "POST",

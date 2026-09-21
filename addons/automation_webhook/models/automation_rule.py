@@ -171,7 +171,7 @@ class AutomationRule(models.Model):
             rule.credential_id = rule._create_webhook_credential(category)
         return True
 
-    def _inbound_auth_mode(self):
+    def _inbound_auth_mode(self, parameter_key=None):
         self.check_singleton()
         if (
             self.webhook_enforce_from

@@ -28,7 +28,9 @@ class IrHttp(models.AbstractModel):
             )
             raise NotFound
         gate_model = request.env["mixin.inbound.gate"]
-        subject, gate = gate_model._resolve_route_receiver(receiver, request.path_args)
+        subject, gate, extra = gate_model._resolve_route_receiver(
+            receiver, request.path_args
+        )
         if not gate:
             model_name = receiver.partition(":")[0]
             request.env["inbound.access.log"]._record_unknown_caller(
@@ -39,3 +41,4 @@ class IrHttp(models.AbstractModel):
             )
             raise Refused(404, "Endpoint not found or inactive", "endpoint_not_found")
         request.admission = gate.admit(subject=subject)
+        request.admission.extra = extra

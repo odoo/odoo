@@ -4,7 +4,6 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
-from odoo.addons.payment_paymob.controllers.main import PaymobController
 from odoo.addons.payment_paymob.tests.common import PaymobCommon
 
 
@@ -38,18 +37,18 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
             tx._process("paymob", self.redirection_data)
             self.assertEqual(tx.state, "done")
 
-    @mute_logger("odoo.addons.payment_paymob.controllers.main")
+    @mute_logger("odoo.addons.payment_paymob.models.payment_transaction")
     def test_compute_signature(self):
         """Test the computation of the signature sent by paymob"""
-        computed_hmac = PaymobController._compute_signature(
+        computed_hmac = self.env["payment.transaction"]._compute_paymob_signature(
             self.redirection_data, self.provider.paymob_hmac_key
         )
         self.assertEqual(computed_hmac, self.hmac_signature)
 
-    @mute_logger("odoo.addons.payment_paymob.controllers.main")
+    @mute_logger("odoo.addons.payment_paymob.models.payment_transaction")
     def test_normalize_webhook_data(self):
         """Test the normalization of the paymob webhook data"""
-        normalized_data = PaymobController._normalize_response(
+        normalized_data = self.env["payment.transaction"]._normalize_paymob_response(
             self.webhook_data, self.hmac_signature
         )
         self.assertDictEqual(normalized_data, self.redirection_data)

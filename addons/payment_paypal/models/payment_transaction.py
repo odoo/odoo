@@ -1,8 +1,11 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.http import request
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
+from odoo.addons.payment_paypal import const
 from odoo.addons.payment_paypal import utils as paypal_utils
 from odoo.addons.payment_paypal.const import PAYMENT_STATUS_MAPPING
 
@@ -11,6 +14,68 @@ _logger = get_payment_logger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
+
+    @api.model
+    def _receiver_for_paypal_webhook(self, **path_args):
+        data = request.get_json_data()
+        if data.get("event_type") not in const.HANDLED_WEBHOOK_EVENTS:
+            raise Acknowledged.json("")
+        normalized_data = self._normalize_paypal_data(
+            data.get("resource"), from_webhook=True
+        )
+        return self._resolve_notification(
+            "paypal", normalized_data, Acknowledged.json("")
+        )
+
+    def _verify_inbound_request(self, headers, body):
+        if self.provider_code != "paypal":
+            return super()._verify_inbound_request(headers, body)
+        # See https://developer.paypal.com/docs/api/webhooks/v1/#verify-webhook-signature_post.
+        data = {
+            "transmission_id": headers.get("PAYPAL-TRANSMISSION-ID"),
+            "transmission_time": headers.get("PAYPAL-TRANSMISSION-TIME"),
+            "cert_url": headers.get("PAYPAL-CERT-URL"),
+            "auth_algo": headers.get("PAYPAL-AUTH-ALGO"),
+            "transmission_sig": headers.get("PAYPAL-TRANSMISSION-SIG"),
+            "webhook_id": self.provider_id.paypal_webhook_id,
+            "webhook_event": request.get_json_data(),
+        }
+        try:
+            verification = self._send_api_request(
+                "POST", "/v1/notifications/verify-webhook-signature", json=data
+            )
+        except ValidationError:
+            # PayPal could not be asked: the transaction records the failure
+            # and the notification is still processed, as before.
+            self._set_error(_("Unable to verify the payment data"))
+            return True
+        if verification.get("verification_status") != "SUCCESS":
+            _logger.warning("Received payment data that was not verified by PayPal.")
+            return False
+        return True
+
+    @api.model
+    def _normalize_paypal_data(self, data, from_webhook=False):
+        """One shape for the payment request's response and the webhook's resource."""
+        purchase_unit = data["purchase_units"][0]
+        result = {
+            "payment_source": data["payment_source"].keys(),
+            "reference_id": purchase_unit.get("reference_id"),
+        }
+        if from_webhook:
+            result.update(
+                {
+                    **purchase_unit,
+                    "txn_type": data.get("intent"),
+                    "id": data.get("id"),
+                    "status": data.get("status"),
+                }
+            )
+        elif captured := purchase_unit.get("payments", {}).get("captures"):
+            result.update({**captured[0], "txn_type": "CAPTURE"})
+        else:
+            _logger.warning(_("Invalid response format, can't normalize."))
+        return result
 
     # See https://developer.paypal.com/docs/api-basics/notifications/ipn/IPNandPDTVariables/
     # this field has no use in Odoo except for debugging

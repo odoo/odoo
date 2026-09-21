@@ -36,6 +36,34 @@ class Refused(HTTPException):
         )
 
 
+class Acknowledged(HTTPException):
+    """The request is not for any subject of ours but must be answered as if it
+    were -- a vendor that retries and disables the endpoint on a non-2xx --
+    so the resolver answers it here and no handler runs."""
+
+    code = 200
+
+    def __init__(
+        self, body: str = "", status: int = 200, content_type: str = "text/plain"
+    ) -> None:
+        super().__init__(
+            response=werkzeug.wrappers.Response(
+                body, status=status, content_type=content_type
+            )
+        )
+        self.code = status
+
+    @classmethod
+    def json(cls, value: Any, status: int = 200) -> Acknowledged:
+        return cls(json.dumps(value), status, "application/json; charset=utf-8")
+
+    @classmethod
+    def redirect(cls, location: str, status: int = 303) -> Acknowledged:
+        acknowledged = cls("", status)
+        acknowledged.response.headers["Location"] = location
+        return acknowledged
+
+
 @dataclass
 class Admission:
     gate: Any

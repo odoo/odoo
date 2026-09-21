@@ -11,6 +11,9 @@ from odoo.tools.urls import urljoin as url_join
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_stripe import const
 from odoo.addons.payment_stripe.controllers.main import StripeController
+from odoo.addons.payment_stripe.models.payment_transaction import (
+    PaymentTransaction,
+)
 from odoo.addons.payment_stripe.tests.common import StripeCommon
 
 
@@ -91,7 +94,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         tx = self._create_transaction("redirect")
         url = self._build_url(StripeController._webhook_url)
         with patch(
-            "odoo.addons.payment_stripe.controllers.main.StripeController._check_signature"
+            "odoo.addons.payment_stripe.models.payment_transaction.PaymentTransaction._verify_inbound_request"
         ):
             self._make_json_request(url, data=self.payment_data)
         self.assertEqual(tx.state, "done")
@@ -101,7 +104,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         self._create_transaction("redirect")
         url = self._build_url(StripeController._webhook_url)
         with patch(
-            "odoo.addons.payment_stripe.controllers.main.StripeController._check_signature"
+            "odoo.addons.payment_stripe.models.payment_transaction.PaymentTransaction._verify_inbound_request"
         ):
             self._make_json_request(url, data=self.payment_data)
         receiver = self.env["integration.receiver"].search(
@@ -136,7 +139,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         with patch.object(Receiver, "_store_inbound_verdict", spy):
             response = self._make_json_request(url, data=self.payment_data)
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 401)
         self.assertNotEqual(tx.state, "done")
         self.assertEqual(
             verdicts,
@@ -200,7 +203,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         payment_method_response = data["object"] = self._mock_setup_intent_request()
         with (
             patch(
-                "odoo.addons.payment_stripe.controllers.main.StripeController._check_signature"
+                "odoo.addons.payment_stripe.models.payment_transaction.PaymentTransaction._verify_inbound_request"
             ),
             patch(
                 "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
@@ -222,7 +225,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         url = self._build_url(StripeController._webhook_url)
         with (
             patch(
-                "odoo.addons.payment_stripe.controllers.main.StripeController._check_signature"
+                "odoo.addons.payment_stripe.models.payment_transaction.PaymentTransaction._verify_inbound_request"
             ) as signature_check_mock,
             patch(
                 "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
@@ -242,7 +245,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         payload["data"]["object"]["description"] = None
 
         with patch(
-            "odoo.addons.payment_stripe.controllers.main.StripeController._check_signature"
+            "odoo.addons.payment_stripe.models.payment_transaction.PaymentTransaction._verify_inbound_request"
         ) as signature_check_mock:
             self._make_json_request(url, data=payload)
             self.assertEqual(signature_check_mock.call_count, 0)
@@ -255,7 +258,9 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         url = self._build_url(StripeController._return_url)
         PaymentProvider = self.env.registry["payment.provider"]
         with (
-            patch.object(StripeController, "_check_signature"),
+            patch.object(
+                PaymentTransaction, "_verify_inbound_request", return_value=True
+            ),
             patch.object(
                 PaymentProvider, "_send_api_request", self._mock_setup_intent_request
             ),
@@ -272,7 +277,9 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         secret = "seti_123_secret_ReturnUrlSecret987"
         PaymentProvider = self.env.registry["payment.provider"]
         with (
-            patch.object(StripeController, "_check_signature"),
+            patch.object(
+                PaymentTransaction, "_verify_inbound_request", return_value=True
+            ),
             patch.object(
                 PaymentProvider, "_send_api_request", self._mock_setup_intent_request
             ),

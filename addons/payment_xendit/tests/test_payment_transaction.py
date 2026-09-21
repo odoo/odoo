@@ -186,7 +186,7 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         tx._apply_updates(self.webhook_payment_data)
         self.assertEqual(tx.state, "done")
 
-    @mute_logger("odoo.addons.payment_xendit.controllers.main")
+    @mute_logger("odoo.addons.payment_xendit.models.payment_transaction")
     def test_apply_updates_tokenizes_transaction(self):
         """Test that the transaction is tokenized when a charge request is successfully made on a
         transaction that saves payment details."""

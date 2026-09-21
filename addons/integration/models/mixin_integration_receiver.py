@@ -213,7 +213,9 @@ class MixinIntegrationReceiver(models.AbstractModel):
         return is_valid
 
     @api.model
-    def _inbound_auth_mode(self, parameter_key: str) -> str:
+    def _inbound_auth_mode(self, parameter_key: str | None = None) -> str:
+        if not parameter_key:
+            return super()._inbound_auth_mode()
         mode = (
             self.env["ir.config_parameter"]
             .sudo()

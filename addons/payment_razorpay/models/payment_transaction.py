@@ -1,3 +1,4 @@
+import hmac
 import re
 import time
 from datetime import datetime
@@ -7,11 +8,14 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.http import request
 from odoo.tools.urls import urljoin as url_join
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_razorpay import const
+from odoo.addons.payment_razorpay.const import HANDLED_WEBHOOK_EVENTS
 from odoo.addons.payment_razorpay.controllers.main import RazorpayController
 
 _logger = get_payment_logger(__name__)
@@ -19,6 +23,63 @@ _logger = get_payment_logger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
+
+    @api.model
+    def _receiver_for_razorpay_return(self, reference=None, **path_args):
+        data = request.get_http_params()
+        if not all(
+            f"razorpay_{key}" in data for key in ("order_id", "payment_id", "signature")
+        ):
+            # The customer cancelled the payment or the payment failed: there is
+            # no payment to process.
+            raise Acknowledged.redirect("/payment/status")
+        # The same key as for webhook notifications' data.
+        tx, _extra = self._resolve_notification(
+            "razorpay",
+            {"description": reference},
+            Acknowledged.redirect("/payment/status"),
+        )
+        return tx, {"data": data}
+
+    @api.model
+    def _receiver_for_razorpay_webhook(self, **path_args):
+        data = request.get_json_data()
+        event_type = data.get("event")
+        if event_type not in HANDLED_WEBHOOK_EVENTS:
+            raise Acknowledged.json("")
+        entity_type = "payment" if "payment" in event_type else "refund"
+        entity_data = data["payload"].get(entity_type, {}).get("entity", {})
+        entity_data.update(entity_type=entity_type)
+        return self._resolve_notification(
+            "razorpay", entity_data, Acknowledged.json("")
+        )
+
+    def _verify_inbound_request(self, headers, body):
+        if self.provider_code != "razorpay":
+            return super()._verify_inbound_request(headers, body)
+        if request.httprequest.method == "POST" and request.httprequest.is_json:
+            return self._verify_razorpay_signature(
+                body, headers.get("X-Razorpay-Signature"), is_redirect=False
+            )
+        data = request.get_http_params()
+        return self._verify_razorpay_signature(data, data.get("razorpay_signature"))
+
+    def _verify_razorpay_signature(
+        self, payment_data, received_signature, is_redirect=True
+    ):
+        self.check_singleton()
+        if not received_signature:
+            _logger.warning("Received payment data with missing signature.")
+            return False
+        expected_signature = self.provider_id._get_razorpay_signature(
+            payment_data, is_redirect=is_redirect
+        )
+        if expected_signature is None or not hmac.compare_digest(
+            received_signature, expected_signature
+        ):
+            _logger.warning("Received payment data with invalid signature.")
+            return False
+        return True
 
     def _prepare_provider_processing_values(self, processing_values):
         """Override of `payment` to return razorpay-specific processing values.

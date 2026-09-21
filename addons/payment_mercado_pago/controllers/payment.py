@@ -60,7 +60,13 @@ class MercadoPagoPaymentController(http.Controller):
             dict(response_content, merchantReference=reference, token=token),
         )
 
-    @http.route(const.PAYMENT_RETURN_ROUTE, type="http", methods=["GET"], auth="public")
+    @http.route(
+        const.PAYMENT_RETURN_ROUTE,
+        type="http",
+        methods=["GET"],
+        auth="receiver",
+        receiver="payment.transaction:_receiver_for_mercado_pago_return",
+    )
     def mercado_pago_return_from_checkout(self, **data):
         """Process the payment data sent by Mercado Pago after redirection from checkout.
 
@@ -70,18 +76,15 @@ class MercadoPagoPaymentController(http.Controller):
             "Handling redirection from Mercado Pago with data:\n%s",
             pprint.pformat(data),
         )
-        if data.get("payment_id") != "null":
-            self._check_and_process(data)
-        else:  # The customer cancelled the payment by clicking on the return button.
-            pass  # Don't try to process this case because the payment id was not provided.
-
+        self._check_and_process()
         # Redirect the user to the status page.
         return request.redirect("/payment/status")
 
     @http.route(
         f"{const.WEBHOOK_ROUTE}/<reference>",
         type="http",
-        auth="public",
+        auth="receiver",
+        receiver="payment.transaction:_receiver_for_mercado_pago_webhook",
         methods=["POST"],
         csrf=False,
     )
@@ -93,44 +96,19 @@ class MercadoPagoPaymentController(http.Controller):
         :return: An empty string to acknowledge the notification.
         :rtype: str
         """
-        data = request.get_json_data()
         _logger.info(
             "Notification received from Mercado Pago with data:\n%s",
-            pprint.pformat(data),
+            pprint.pformat(request.get_json_data()),
         )
-
-        # Mercado Pago sends two types of asynchronous notifications: webhook notifications and
-        # IPNs which are very similar to webhook notifications but are sent later and contain less
-        # information. Therefore, we filter the notifications we receive based on the 'action'
-        # (type of event) key as it is not populated for IPNs, and we don't want to process the
-        # other types of events.
-        if data.get("action") in ("payment.created", "payment.updated"):
-            self._check_and_process(
-                {
-                    "external_reference": reference,
-                    "payment_id": data.get("data", {}).get("id"),
-                }
-            )  # Use 'external_reference' as the reference key like in the redirect data.
+        self._check_and_process()
         return ""  # Acknowledge the notification.
 
     @staticmethod
-    def _check_and_process(data):
-        """Verify and process the payment data sent by Mercado Pago.
-
-        :param dict data: The payment data.
-        :return: None
-        """
-        tx_sudo = (
-            request.env["payment.transaction"]
-            .sudo()
-            ._search_by_reference("mercado_pago", data)
-        )
-        if not tx_sudo:
-            return
-        payment_utils.admit_notification(
-            tx_sudo.provider_id, payment_utils.verified_by_vendor_api
-        )
-
+    def _check_and_process():
+        """Process the admitted transaction's payment, fetched back from Mercado
+        Pago's API."""
+        tx_sudo = request.admission.subject
+        data = request.admission.extra["data"]
         try:
             verified_data = tx_sudo._send_api_request(
                 "GET", f"/v1/payments/{data.get('payment_id')}"

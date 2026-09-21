@@ -1,9 +1,14 @@
+import hashlib
+import hmac
+from datetime import UTC, datetime
 from urllib.parse import urlencode as url_encode
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.http import request
 from odoo.tools.urls import urljoin as url_join
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_stripe import const
@@ -15,6 +20,62 @@ _logger = get_payment_logger(__name__, const.SENSITIVE_KEYS)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
+
+    WEBHOOK_AGE_TOLERANCE = 10 * 60  # seconds
+
+    @api.model
+    def _receiver_for_stripe_notification(self, **path_args):
+        event = request.get_json_data()
+        if event.get("type") not in const.HANDLED_WEBHOOK_EVENTS:
+            raise Acknowledged
+        stripe_object = event["data"]["object"]
+        data = {
+            "reference": stripe_object.get("description"),
+            "event_type": event["type"],
+            "object_id": stripe_object["id"],
+        }
+        tx = self.sudo()._search_by_reference("stripe", data)
+        if not tx:
+            raise Acknowledged
+        return tx, {"event": event, "stripe_object": stripe_object, "data": data}
+
+    def _verify_inbound_request(self, headers, body):
+        if self.provider_code != "stripe":
+            return super()._verify_inbound_request(headers, body)
+        webhook_secret = stripe_utils.get_webhook_secret(self.provider_id)
+        if not webhook_secret:
+            _logger.warning(
+                "refused a webhook event: provider %s has no webhook secret to check it",
+                self.provider_id.name,
+            )
+            return False
+        signature_header = headers.get("Stripe-Signature") or ""
+        signature_data = dict(
+            entry.split("=", 1) for entry in signature_header.split(",") if "=" in entry
+        )
+        event_timestamp = int(signature_data.get("t", "0") or 0)
+        if not event_timestamp:
+            _logger.warning("Received payment data with missing timestamp")
+            return False
+        if datetime.now(UTC).timestamp() - event_timestamp > self.WEBHOOK_AGE_TOLERANCE:
+            _logger.warning(
+                "Received payment data with outdated timestamp: %s", event_timestamp
+            )
+            return False
+        received_signature = signature_data.get("v1")
+        if not received_signature:
+            _logger.warning("Received payment data with missing signature")
+            return False
+        payload = body.decode("utf-8") if isinstance(body, bytes) else (body or "")
+        expected_signature = hmac.new(
+            webhook_secret.encode("utf-8"),
+            f"{event_timestamp}.{payload}".encode(),
+            hashlib.sha256,
+        ).hexdigest()
+        if not hmac.compare_digest(received_signature, expected_signature):
+            _logger.warning("Received payment data with invalid signature")
+            return False
+        return True
 
     def _prepare_provider_processing_values(self, processing_values):
         """Override of payment to return Stripe-specific processing values.

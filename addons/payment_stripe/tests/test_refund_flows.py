@@ -41,7 +41,7 @@ class TestRefundFlows(StripeCommon, PaymentHttpCommon):
         url = self._build_url(StripeController._webhook_url)
         with (
             patch(
-                "odoo.addons.payment_stripe.controllers.main.StripeController._check_signature"
+                "odoo.addons.payment_stripe.models.payment_transaction.PaymentTransaction._verify_inbound_request"
             ),
             patch(
                 "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"

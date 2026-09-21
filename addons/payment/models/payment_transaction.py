@@ -9,6 +9,7 @@ from markupsafe import Markup
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.http import request
 from odoo.tools import email_normalize_all, float_round
 
 from odoo.addons.payment import utils as payment_utils
@@ -924,6 +925,35 @@ class PaymentTransaction(models.Model):
         return tx
 
     @api.model
+    def _inbound_gate_owner(self):
+        return self.provider_id
+
+    @api.model
+    def _resolve_notification(self, provider_code, payment_data, acknowledged):
+        """The route's receiver: the transaction the notification names, or
+        the answer to give when it names none we know (a provider that retries
+        on anything but a 2xx must not be told 404)."""
+        tx = self.sudo()._search_by_reference(provider_code, payment_data)
+        if not tx:
+            raise acknowledged
+        return tx, {"data": payment_data}
+
+    def _verify_inbound_request(self, headers, body):
+        """Whether the notification that resolved this transaction is the
+        provider's: by default its signature over the data it sent."""
+        self.check_singleton()
+        return self._verify_notification_signature(
+            self._inbound_notification_data(headers, body)
+        )
+
+    def _inbound_notification_data(self, headers, body):
+        return request.get_http_params() if request else {}
+
+    def _verify_notification_signature(self, payment_data):
+        """Each provider verifies its own; an unverifiable notification is refused."""
+        self.check_singleton()
+        return False
+
     def _search_by_reference(self, provider_code, payment_data):
         """Search the transaction based on the payment data.
 

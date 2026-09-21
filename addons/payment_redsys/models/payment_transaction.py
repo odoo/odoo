@@ -1,9 +1,12 @@
 import base64
+import hmac
 import json
 
 from odoo import _, api, fields, models
+from odoo.http import request
 from odoo.tools.urls import urljoin
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import COUNTRY_NUMERIC_CODES
 from odoo.addons.payment.logging import get_payment_logger
@@ -15,6 +18,52 @@ _logger = get_payment_logger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
+
+    @api.model
+    def _decode_redsys_notification(self, encoded_data):
+        encoded = encoded_data.get("Ds_MerchantParameters")
+        if not encoded:
+            return None
+        try:
+            return json.loads(base64.b64decode(encoded).decode())
+        except ValueError, TypeError:
+            return None
+
+    @api.model
+    def _receiver_for_redsys_notification(self, acknowledged):
+        encoded_data = request.get_http_params()
+        data = self._decode_redsys_notification(encoded_data)
+        if data is None:
+            raise acknowledged
+        tx, extra = self._resolve_notification("redsys", data, acknowledged)
+        return tx, {**extra, "encoded_data": encoded_data}
+
+    @api.model
+    def _receiver_for_redsys_return(self, **path_args):
+        return self._receiver_for_redsys_notification(
+            Acknowledged.redirect("/payment/status")
+        )
+
+    @api.model
+    def _receiver_for_redsys_webhook(self, **path_args):
+        return self._receiver_for_redsys_notification(Acknowledged(""))
+
+    def _verify_notification_signature(self, payment_data):
+        if self.provider_code != "redsys":
+            return super()._verify_notification_signature(payment_data)
+        received_signature = payment_data.get("Ds_Signature")
+        if not received_signature:
+            _logger.warning("Received notification with missing signature.")
+            return False
+        expected_signature = self.provider_id._get_redsys_signature(
+            payment_data.get("Ds_MerchantParameters"),
+            self.reference,
+            self.provider_id.redsys_secret_key,
+        )
+        if not hmac.compare_digest(received_signature, expected_signature):
+            _logger.warning("Received notification with invalid signature.")
+            return False
+        return True
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -1,12 +1,8 @@
-import hmac
 import pprint
-
-from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.http import request
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 
 _logger = get_payment_logger(__name__)
@@ -19,7 +15,8 @@ class BuckarooController(http.Controller):
     @http.route(
         _return_url,
         type="http",
-        auth="public",
+        auth="receiver",
+        receiver="payment.transaction:_receiver_for_buckaroo_return",
         methods=["POST"],
         csrf=False,
         save_session=False,
@@ -41,23 +38,17 @@ class BuckarooController(http.Controller):
             "handling redirection from Buckaroo with data:\n%s",
             pprint.pformat(raw_data),
         )
-        data = self._normalize_data_keys(raw_data)
-
-        received_signature = data.get("brq_signature")
-        tx_sudo = (
-            request.env["payment.transaction"]
-            .sudo()
-            ._search_by_reference("buckaroo", data)
-        )
-        if tx_sudo:
-            payment_utils.admit_notification(
-                tx_sudo.provider_id,
-                lambda: self._check_signature(raw_data, received_signature, tx_sudo),
-            )
-            tx_sudo._process("buckaroo", data)
+        request.admission.subject._process("buckaroo", request.admission.extra["data"])
         return request.redirect("/payment/status")
 
-    @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
+    @http.route(
+        _webhook_url,
+        type="http",
+        auth="receiver",
+        receiver="payment.transaction:_receiver_for_buckaroo_webhook",
+        methods=["POST"],
+        csrf=False,
+    )
     def buckaroo_webhook(self, **raw_data):
         """Process the payment data sent by Buckaroo to the webhook.
 
@@ -71,54 +62,5 @@ class BuckarooController(http.Controller):
             "notification received from Buckaroo with data:\n%s",
             pprint.pformat(raw_data),
         )
-        data = self._normalize_data_keys(raw_data)
-        received_signature = data.get("brq_signature")
-        tx_sudo = (
-            request.env["payment.transaction"]
-            .sudo()
-            ._search_by_reference("buckaroo", data)
-        )
-        if tx_sudo:
-            # Check the integrity of the payment data
-            payment_utils.admit_notification(
-                tx_sudo.provider_id,
-                lambda: self._check_signature(raw_data, received_signature, tx_sudo),
-            )
-            tx_sudo._process("buckaroo", data)
+        request.admission.subject._process("buckaroo", request.admission.extra["data"])
         return ""
-
-    @staticmethod
-    def _normalize_data_keys(data):
-        """Set all keys of a dictionary to lower-case.
-
-        As Buckaroo parameters names are case insensitive, we can convert everything to lower-case
-        to easily detected the presence of a parameter by checking the lower-case key only.
-
-        :param dict data: The dictionary whose keys must be set to lower-case
-        :return: A copy of the original data with all keys set to lower-case
-        :rtype: dict
-        """
-        return {key.lower(): val for key, val in data.items()}
-
-    @staticmethod
-    def _check_signature(payment_data, received_signature, tx_sudo):
-        """Check that the received signature matches the expected one.
-
-        :param dict payment_data: The payment data.
-        :param str received_signature: The signature received with the payment data.
-        :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
-        :return: None
-        :raise Forbidden: If the signatures don't match.
-        """
-        # Check for the received signature
-        if not received_signature:
-            _logger.warning("Received payment data with missing signature")
-            raise Forbidden
-
-        # Compare the received signature with the expected signature computed from the data
-        expected_signature = tx_sudo.provider_id._get_buckaroo_signature(
-            payment_data, incoming=True
-        )
-        if not hmac.compare_digest(received_signature, expected_signature):
-            _logger.warning("Received payment data with invalid signature")
-            raise Forbidden

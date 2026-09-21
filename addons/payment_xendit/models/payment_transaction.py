@@ -2,9 +2,11 @@ from urllib.parse import urlencode
 
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
-from odoo.tools import float_round
+from odoo.http import request
+from odoo.tools import consteq, float_round
 from odoo.tools.urls import urljoin
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_xendit import const
@@ -15,6 +17,29 @@ _logger = get_payment_logger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
+
+    @api.model
+    def _receiver_for_xendit_webhook(self, **path_args):
+        return self._resolve_notification(
+            "xendit", request.get_json_data(), Acknowledged.json(["accepted"])
+        )
+
+    def _verify_inbound_request(self, headers, body):
+        if self.provider_code != "xendit":
+            return super()._verify_inbound_request(headers, body)
+        return self._verify_xendit_token(headers.get("x-callback-token"))
+
+    def _verify_xendit_token(self, received_token):
+        self.check_singleton()
+        if not received_token:
+            _logger.warning("Received payment data with missing token.")
+            return False
+        if not consteq(self.provider_id.xendit_webhook_token, received_token):
+            _logger.warning(
+                "Received payment data with invalid callback token %r.", received_token
+            )
+            return False
+        return True
 
     def _prepare_provider_processing_values(self, processing_values):
         """Override of payment to return Xendit-specific processing values.

@@ -4,9 +4,11 @@ from urllib.parse import urlsplit as url_parse
 
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
+from odoo.http import request
 from odoo.tools import float_round
 from odoo.tools.urls import urljoin
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 from odoo.addons.payment.logging import get_payment_logger
@@ -17,6 +19,39 @@ _logger = get_payment_logger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
+
+    @api.model
+    def _receiver_for_mercado_pago_return(self, **path_args):
+        data = request.get_http_params()
+        if data.get("payment_id") == "null":
+            # The customer cancelled the payment by clicking on the return
+            # button; there is no payment to look up.
+            raise Acknowledged.redirect("/payment/status")
+        return self.sudo()._search_by_reference("mercado_pago", data), {"data": data}
+
+    @api.model
+    def _receiver_for_mercado_pago_webhook(self, reference=None, **path_args):
+        notification = request.get_json_data()
+        # Mercado Pago sends two types of asynchronous notifications: webhook
+        # notifications and IPNs, which carry no 'action'; only the former are
+        # processed, the rest acknowledged.
+        if notification.get("action") not in ("payment.created", "payment.updated"):
+            raise Acknowledged
+        data = {
+            "external_reference": reference,
+            "payment_id": notification.get("data", {}).get("id"),
+        }
+        tx = self.sudo()._search_by_reference("mercado_pago", data)
+        if not tx:
+            raise Acknowledged
+        return tx, {"data": data}
+
+    def _verify_inbound_request(self, headers, body):
+        if self.provider_code != "mercado_pago":
+            return super()._verify_inbound_request(headers, body)
+        # Nothing in the notification is trusted: the handler fetches the
+        # payment from Mercado Pago's API and processes that answer.
+        return True
 
     def _prepare_redirect_form_values(self, processing_values):
         """Override of `payment` to return Mercado Pago-specific rendering values.

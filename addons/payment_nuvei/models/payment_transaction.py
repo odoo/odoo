@@ -3,8 +3,10 @@ from uuid import uuid4
 
 from odoo import _, api, models
 from odoo.exceptions import UserError
-from odoo.tools import float_round
+from odoo.http import request
+from odoo.tools import consteq, float_round
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_nuvei import const
@@ -15,6 +17,56 @@ _logger = get_payment_logger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
+
+    @api.model
+    def _receiver_for_nuvei_return(self, **path_args):
+        params = request.get_http_params()
+        tx_ref = params.pop("tx_ref", None)
+        error_access_token = params.pop("error_access_token", None)
+        tx_data = params or {"invoice_id": tx_ref}
+        tx, _extra = self._resolve_notification(
+            "nuvei", tx_data, Acknowledged.redirect("/payment/status")
+        )
+        return tx, {"data": params, "error_access_token": error_access_token}
+
+    @api.model
+    def _receiver_for_nuvei_webhook(self, **path_args):
+        return self._resolve_notification(
+            "nuvei", request.get_http_params(), Acknowledged("OK")
+        )
+
+    def _inbound_notification_data(self, headers, body):
+        if self.provider_code != "nuvei":
+            return super()._inbound_notification_data(headers, body)
+        params = request.get_http_params()
+        params.pop("tx_ref", None)
+        return params
+
+    def _verify_notification_signature(self, payment_data, error_access_token=None):
+        if self.provider_code != "nuvei":
+            return super()._verify_notification_signature(payment_data)
+        error_access_token = error_access_token or payment_data.pop(
+            "error_access_token", None
+        )
+        if error_access_token:
+            # The access token is not included when the payment goes through.
+            if not payment_utils.is_access_token_valid(
+                error_access_token, self.reference
+            ):
+                _logger.warning("Received cancel/error with invalid access token.")
+                return False
+            return True
+        received_signature = payment_data.get("advanceResponseChecksum")
+        if not received_signature:
+            _logger.warning("Received payment data with missing signature")
+            return False
+        expected_signature = self.provider_id._get_nuvei_signature(
+            payment_data, incoming=True
+        )
+        if not consteq(received_signature, expected_signature):
+            _logger.warning("Received payment data with invalid signature")
+            return False
+        return True
 
     def _prepare_redirect_form_values(self, processing_values):
         """Override of `payment` to return Nuvei-specific rendering values.

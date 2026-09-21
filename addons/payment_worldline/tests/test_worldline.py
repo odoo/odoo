@@ -4,8 +4,6 @@ import json
 from base64 import b64encode
 from unittest.mock import patch
 
-from werkzeug.exceptions import Forbidden
-
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -16,12 +14,12 @@ from odoo.addons.payment_worldline.tests.common import WorldlineCommon
 
 @tagged("post_install", "-at_install")
 class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
-    @mute_logger("odoo.addons.payment_worldline.controllers.main")
+    @mute_logger("odoo.addons.payment_worldline.models.payment_transaction")
     def _webhook_notification_flow(self, payload):
         """Send a notification to the webhook, ignore the signature, and check the response."""
         url = self._build_url(WorldlineController._webhook_url)
         with patch(
-            "odoo.addons.payment_worldline.controllers.main.WorldlineController._check_signature"
+            "odoo.addons.payment_worldline.models.payment_transaction.PaymentTransaction._verify_inbound_request"
         ):
             response = self._make_json_request(url, data=payload)
         self.assertEqual(
@@ -30,7 +28,7 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
             msg="The webhook should always respond ''.",
         )
 
-    @mute_logger("odoo.addons.payment_worldline.controllers.main")
+    @mute_logger("odoo.addons.payment_worldline.models.payment_transaction")
     def test_webhook_notification_confirms_transaction(self):
         """Test the processing of a webhook notification."""
         tx = self._create_transaction("redirect")
@@ -40,7 +38,7 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
         self.assertEqual(tx.state, "done")
         self.assertEqual(tx.provider_reference, "1234567890")
 
-    @mute_logger("odoo.addons.payment_worldline.controllers.main")
+    @mute_logger("odoo.addons.payment_worldline.models.payment_transaction")
     def test_webhook_notification_creates_token(self):
         """Test the processing of a webhook notification when creating a token."""
         tx = self._create_transaction("redirect", tokenize=True)
@@ -54,7 +52,7 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
         self.assertEqual(tx.token_id.provider_ref, "whateverToken")
         self.assertEqual(tx.token_id.payment_details, "4242")
 
-    @mute_logger("odoo.addons.payment_worldline.controllers.main")
+    @mute_logger("odoo.addons.payment_worldline.models.payment_transaction")
     def test_failed_webhook_notification_set_tx_as_error_1(self):
         """Test the processing of a webhook notification for a failed transaction."""
         tx = self._create_transaction("redirect")
@@ -66,7 +64,7 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
             "Transaction declined with error code 30511001.",
         )
 
-    @mute_logger("odoo.addons.payment_worldline.controllers.main")
+    @mute_logger("odoo.addons.payment_worldline.models.payment_transaction")
     def test_failed_webhook_notification_set_tx_as_error_2(self):
         """Test the processing of a webhook notification for a failed transaction."""
         tx = self._create_transaction("redirect")
@@ -78,7 +76,7 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
             "Transaction declined with error code 30331001.",
         )
 
-    @mute_logger("odoo.addons.payment_worldline.controllers.main")
+    @mute_logger("odoo.addons.payment_worldline.models.payment_transaction")
     def test_failed_webhook_notification_set_tx_as_cancel(self):
         """Test the processing of a webhook notification for a cancelled transaction."""
         tx = self._create_transaction("redirect")
@@ -105,14 +103,14 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
             "Transaction cancelled with error code 30171001.",
         )
 
-    @mute_logger("odoo.addons.payment_worldline.controllers.main")
+    @mute_logger("odoo.addons.payment_worldline.models.payment_transaction")
     def test_webhook_notification_triggers_signature_check(self):
         """Test that receiving a webhook notification triggers a signature check."""
         self._create_transaction("redirect")
         url = self._build_url(WorldlineController._webhook_url)
         with (
             patch(
-                "odoo.addons.payment_worldline.controllers.main.WorldlineController._check_signature"
+                "odoo.addons.payment_worldline.models.payment_transaction.PaymentTransaction._verify_inbound_request"
             ) as signature_check_mock,
             patch(
                 "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
@@ -130,34 +128,26 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
             hashlib.sha256,
         ).digest()
         expected_signature = b64encode(unencoded_result)
-        self._assert_does_not_raise(
-            Forbidden,
-            WorldlineController._check_signature,
-            json.dumps(self.payment_data).encode(),
-            expected_signature,
-            tx,
+        self.assertTrue(
+            tx._verify_worldline_signature(
+                json.dumps(self.payment_data).encode(), expected_signature
+            )
         )
 
-    @mute_logger("odoo.addons.payment_worldline.controllers.main")
+    @mute_logger("odoo.addons.payment_worldline.models.payment_transaction")
     def test_reject_notification_with_missing_signature(self):
         """Test the verification of a notification with a missing signature."""
         tx = self._create_transaction("redirect")
-        self.assertRaises(
-            Forbidden,
-            WorldlineController._check_signature,
-            json.dumps(self.payment_data).encode(),
-            None,
-            tx,
+        self.assertFalse(
+            tx._verify_worldline_signature(json.dumps(self.payment_data).encode(), None)
         )
 
-    @mute_logger("odoo.addons.payment_worldline.controllers.main")
+    @mute_logger("odoo.addons.payment_worldline.models.payment_transaction")
     def test_reject_notification_with_invalid_signature(self):
         """Test the verification of a notification with an invalid signature."""
         tx = self._create_transaction("redirect")
-        self.assertRaises(
-            Forbidden,
-            WorldlineController._check_signature,
-            json.dumps(self.payment_data).encode(),
-            "dummy",
-            tx,
+        self.assertFalse(
+            tx._verify_worldline_signature(
+                json.dumps(self.payment_data).encode(), "dummy"
+            )
         )

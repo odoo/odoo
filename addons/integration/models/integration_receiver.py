@@ -8,6 +8,8 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from .mixin_inbound_gate import INBOUND_SUBJECT_KEY
+
 CALLER_CHECK_KEY = "inbound_caller_check"
 
 _logger = logging.getLogger(__name__)
@@ -90,12 +92,26 @@ class IntegrationReceiver(models.Model):
     ) -> bool:
         check = self.env.context.get(CALLER_CHECK_KEY)
         if check is None:
-            raise ValidationError(
-                self.env._(
-                    "Receiver %s is checked by its controller, which passed no check.",
-                    self.display_name,
-                )
+            subject_ref = self.env.context.get(INBOUND_SUBJECT_KEY)
+            subject = (
+                self.env[subject_ref[0]].sudo().browse(subject_ref[1])
+                if subject_ref
+                else None
             )
+            verify = getattr(subject, "_verify_inbound_request", None)
+            if verify is None:
+                raise ValidationError(
+                    self.env._(
+                        "Receiver %s is checked by its subject, and the request "
+                        "resolved none that can verify it.",
+                        self.display_name,
+                    )
+                )
+
+            def check(verify=verify):
+                if not verify(headers, body):
+                    raise Forbidden
+
         try:
             check()
         except Forbidden:

@@ -1,7 +1,5 @@
 from unittest.mock import patch
 
-from werkzeug.exceptions import Forbidden
-
 from odoo import Command, release
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -593,7 +591,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         """Send a notification to the webhook, ignore the signature, and check the response."""
         url = self._build_url(AdyenController._webhook_url)
         with patch(
-            "odoo.addons.payment_adyen.controllers.main.AdyenController._check_signature"
+            "odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._verify_inbound_request"
         ):
             response = self._make_json_request(url, data=payload).json()
         self.assertEqual(
@@ -609,7 +607,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         url = self._build_url(AdyenController._webhook_url)
         with (
             patch(
-                "odoo.addons.payment_adyen.controllers.main.AdyenController._check_signature"
+                "odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._verify_inbound_request"
             ) as signature_check_mock,
             patch(
                 "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
@@ -621,30 +619,29 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
     def test_accept_webhook_notification_with_valid_signature(self):
         """Test the verification of a webhook notification with a valid signature."""
         tx = self._create_transaction("direct")
-        self._assert_does_not_raise(
-            Forbidden,
-            AdyenController._check_signature,
-            self.webhook_notification_payload,
-            tx,
+        self.assertTrue(
+            tx.provider_id._verify_adyen_notification_item(
+                self.webhook_notification_payload
+            )
         )
 
-    @mute_logger("odoo.addons.payment_adyen.controllers.main")
+    @mute_logger("odoo.addons.payment_adyen.models.payment_provider")
     def test_reject_webhook_notification_with_missing_signature(self):
         """Test the verification of a webhook notification with a missing signature."""
         payload = dict(
             self.webhook_notification_payload, additionalData={"hmacSignature": None}
         )
         tx = self._create_transaction("direct")
-        self.assertRaises(Forbidden, AdyenController._check_signature, payload, tx)
+        self.assertFalse(tx.provider_id._verify_adyen_notification_item(payload))
 
-    @mute_logger("odoo.addons.payment_adyen.controllers.main")
+    @mute_logger("odoo.addons.payment_adyen.models.payment_provider")
     def test_reject_webhook_notification_with_invalid_signature(self):
         """Test the verification of a webhook notification with an invalid signature."""
         payload = dict(
             self.webhook_notification_payload, additionalData={"hmacSignature": "dummy"}
         )
         tx = self._create_transaction("direct")
-        self.assertRaises(Forbidden, AdyenController._check_signature, payload, tx)
+        self.assertFalse(tx.provider_id._verify_adyen_notification_item(payload))
 
     @mute_logger("odoo.addons.payment_adyen.models.payment_transaction")
     def test_no_information_missing_from_partner_address(self):

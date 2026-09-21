@@ -1,11 +1,15 @@
+import hmac
 import json
 import re
 
 from odoo import api, fields, models
+from odoo.http import request
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_adyen import const
+from odoo.addons.payment_adyen import utils as adyen_utils
 
 _logger = get_payment_logger(__name__)
 
@@ -58,6 +62,69 @@ class PaymentProvider(models.Model):
     )
 
     # === CRUD METHODS === #
+
+    @api.model
+    def _receiver_for_adyen_webhook(self, **path_args):
+        data = request.get_json_data()
+        items = []
+        for notification_item in data.get("notificationItems", []):
+            payment_data = notification_item["NotificationRequestItem"]
+            tx = (
+                self.env["payment.transaction"]
+                .sudo()
+                ._search_by_reference("adyen", payment_data)
+            )
+            if tx:
+                items.append((tx, payment_data))
+        if not items:
+            raise Acknowledged.json("[accepted]")
+        provider = items[0][0].provider_id
+        own = [
+            (tx, payment_data)
+            for tx, payment_data in items
+            if tx.provider_id == provider
+        ]
+        if len(own) != len(items):
+            _logger.warning(
+                "an Adyen notification batch names transactions of %d providers; "
+                "only %s's are processed",
+                len({tx.provider_id for tx, _ in items}),
+                provider.name,
+            )
+        return provider, {"items": own}
+
+    def _verify_inbound_request(self, headers, body):
+        if self.code != "adyen":
+            return super()._verify_inbound_request(headers, body)
+        data = request.get_json_data()
+        verified = 0
+        for notification_item in data.get("notificationItems", []):
+            payment_data = notification_item["NotificationRequestItem"]
+            tx = (
+                self.env["payment.transaction"]
+                .sudo()
+                ._search_by_reference("adyen", payment_data)
+            )
+            if tx.provider_id != self:
+                continue
+            if not self._verify_adyen_notification_item(payment_data):
+                return False
+            verified += 1
+        return verified > 0
+
+    def _verify_adyen_notification_item(self, payment_data):
+        self.check_singleton()
+        received_signature = payment_data.get("additionalData", {}).get("hmacSignature")
+        if not received_signature:
+            _logger.warning("received payment data with missing signature")
+            return False
+        expected_signature = adyen_utils.compute_notification_signature(
+            payment_data, self.adyen_hmac_key
+        )
+        if not hmac.compare_digest(received_signature, expected_signature):
+            _logger.warning("received payment data with invalid signature")
+            return False
+        return True
 
     @api.model_create_multi
     def create(self, vals_list):

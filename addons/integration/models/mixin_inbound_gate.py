@@ -19,6 +19,8 @@ from odoo.addons.rate_limit.tools import get_caller_rate_limiter
 
 _logger = logging.getLogger(__name__)
 
+INBOUND_SUBJECT_KEY = "inbound_subject"
+
 
 class MixinInboundGate(models.AbstractModel):
     _name = "mixin.inbound.gate"
@@ -75,8 +77,17 @@ class MixinInboundGate(models.AbstractModel):
 
     @api.model
     def _resolve_route_receiver(self, declaration: str, path_args: dict[str, Any]):
+        """``(subject, gate, extra)`` for a route's ``receiver=`` declaration.
+
+        ``<model>:<field>`` searches the subject by the path variable of that
+        name; ``<model>:_method`` calls the method with the path variables, and
+        it answers a record or ``(record, extra)`` -- what it parsed on the way,
+        handed to the handler on ``request.admission.extra``. The gate is the
+        subject itself when it carries this mixin, else the receiver row of the
+        record its ``_inbound_gate_owner()`` names (itself by default)."""
         model_name, _, selector = declaration.partition(":")
         model = self.env[model_name].sudo()
+        extra: dict[str, Any] = {}
         if selector in model._fields:
             value = path_args.get(selector)
             subject = (
@@ -84,21 +95,34 @@ class MixinInboundGate(models.AbstractModel):
             )
         elif selector and callable(getattr(model, selector, None)):
             subject = getattr(model, selector)(**path_args)
+            if isinstance(subject, tuple):
+                subject, extra = subject
         else:
             raise ValueError(
                 f"receiver={declaration!r} names neither a field nor a method of "
                 f"{model_name}"
             )
         if not subject:
-            return model.browse(), model.browse()
-        if isinstance(subject, models.AbstractModel) and hasattr(subject, "admit"):
-            return subject, subject
-        return subject, self.env["integration.receiver"]._for_record(
-            subject, subject.display_name
+            return model.browse(), model.browse(), extra
+        if hasattr(subject, "admit"):
+            return subject, subject, extra
+        owner = getattr(subject, "_inbound_gate_owner", None)
+        owner = owner() if owner is not None else subject
+        if hasattr(owner, "admit"):
+            return subject, owner, extra
+        return (
+            subject,
+            self.env["integration.receiver"]._for_record(owner, owner.display_name),
+            extra,
         )
 
     def admit(self, subject=None, event_type: str | None = None) -> Admission:
         self.check_singleton()
+        gate = self
+        if subject is not None and subject is not self:
+            gate = self.with_context(
+                **{INBOUND_SUBJECT_KEY: (subject._name, subject.id)}
+            )
         httprequest = request.httprequest
         remote_addr = httprequest.remote_addr
         content_length = httprequest.content_length
@@ -117,9 +141,14 @@ class MixinInboundGate(models.AbstractModel):
                 "payload_too_large",
             )
         body = httprequest.get_data(cache=True)
-        allowed, status, reason = self._check_inbound_request(
-            dict(httprequest.headers), body=body, remote_addr=remote_addr
-        )
+        # The verdict is written on its own cursor: a refusal raises, the
+        # request rolls back, and the refusal must outlive that.
+        with self.env.registry.cursor() as verdict_cr:
+            allowed, status, reason = gate.with_env(
+                gate.env(cr=verdict_cr)
+            )._check_inbound_request(
+                dict(httprequest.headers), body=body, remote_addr=remote_addr
+            )
         if not allowed:
             raise Refused(status, reason, self._refusal_code(status))
         admission = Admission(
@@ -143,7 +172,7 @@ class MixinInboundGate(models.AbstractModel):
             429: "rate_limit_exceeded",
         }.get(status, "refused")
 
-    def _inbound_auth_mode(self) -> str:
+    def _inbound_auth_mode(self, parameter_key: str | None = None) -> str:
         return self.AUTH_MODE_ENFORCE
 
     def _check_inbound_request(

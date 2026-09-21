@@ -1,4 +1,5 @@
 from odoo import _, api, models, release
+from odoo.http import request
 from odoo.tools import format_amount
 
 from odoo.addons.payment import utils as payment_utils
@@ -11,6 +12,18 @@ _logger = get_payment_logger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
+
+    @api.model
+    def _receiver_for_adyen_return(self, **path_args):
+        data = request.get_http_params()
+        return self.sudo()._search_by_reference("adyen", data), {"data": data}
+
+    def _verify_inbound_request(self, headers, body):
+        if self.provider_code != "adyen":
+            return super()._verify_inbound_request(headers, body)
+        # The return carries nothing to verify: the handler asks Adyen's API
+        # for the result and processes that answer, never the redirect's data.
+        return True
 
     # === BUSINESS METHODS - PRE-PROCESSING === #
 

@@ -1,9 +1,14 @@
+import hashlib
+import hmac
+from base64 import b64encode
 from urllib.parse import urlencode as url_encode
 
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
+from odoo.http import request
 from odoo.tools import urls
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_worldline import const
@@ -14,6 +19,33 @@ _logger = get_payment_logger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
+
+    @api.model
+    def _receiver_for_worldline_webhook(self, **path_args):
+        return self._resolve_notification(
+            "worldline", request.get_json_data(), Acknowledged.json("")
+        )
+
+    def _verify_inbound_request(self, headers, body):
+        if self.provider_code != "worldline":
+            return super()._verify_inbound_request(headers, body)
+        return self._verify_worldline_signature(body, headers.get("X-GCS-Signature"))
+
+    def _verify_worldline_signature(self, request_data, received_signature):
+        self.check_singleton()
+        if not received_signature:
+            _logger.warning("Received payment data with missing signature.")
+            return False
+        if isinstance(received_signature, str):
+            received_signature = received_signature.encode()
+        webhook_secret = self.provider_id.worldline_webhook_secret
+        expected_signature = b64encode(
+            hmac.new(webhook_secret.encode(), request_data, hashlib.sha256).digest()
+        )
+        if not hmac.compare_digest(received_signature, expected_signature):
+            _logger.warning("Received payment data with invalid signature.")
+            return False
+        return True
 
     def _get_unique_reference(
         self, provider_code, prefix=None, separator="-", **kwargs

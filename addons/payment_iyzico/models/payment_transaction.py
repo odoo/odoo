@@ -1,9 +1,11 @@
 from urllib.parse import parse_qsl, urlencode, urlsplit
 
-from odoo import models
+from odoo import api, models
 from odoo.exceptions import ValidationError
+from odoo.http import request
 from odoo.tools.urls import urljoin
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_iyzico import const
@@ -13,6 +15,39 @@ _logger = get_payment_logger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
+
+    @api.model
+    def _receiver_for_iyzico_return(self, **path_args):
+        params = request.get_http_params()
+        token = params.get("token")
+        if not token:
+            _logger.warning("Received payment data with missing token.")
+            raise Acknowledged.redirect("/payment/status")
+        tx = self.sudo()._search_by_reference(
+            "iyzico", {"reference": params.get("tx_ref", "")}
+        )
+        return tx, {"token": token}
+
+    @api.model
+    def _receiver_for_iyzico_webhook(self, **path_args):
+        data = request.get_json_data()
+        token = data.get("token")
+        if not token:
+            _logger.warning("Received webhook data with missing token.")
+            raise Acknowledged.json("")
+        tx = self.sudo()._search_by_reference(
+            "iyzico", {"reference": data.get("paymentConversationId")}
+        )
+        if not tx:
+            raise Acknowledged.json("")
+        return tx, {"token": token}
+
+    def _verify_inbound_request(self, headers, body):
+        if self.provider_code != "iyzico":
+            return super()._verify_inbound_request(headers, body)
+        # The token alone proves nothing: the handler asks Iyzico's API for
+        # the payment behind it and processes that answer.
+        return True
 
     # === BUSINESS METHODS - PRE-PROCESSING === #
 

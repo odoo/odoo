@@ -1,7 +1,5 @@
 from unittest.mock import patch
 
-from werkzeug.exceptions import Forbidden
-
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -12,7 +10,7 @@ from odoo.addons.payment_asiapay.tests.common import AsiaPayCommon
 
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(AsiaPayCommon, PaymentHttpCommon):
-    @mute_logger("odoo.addons.payment_asiapay.controllers.main")
+    @mute_logger("odoo.addons.payment_asiapay.models.payment_transaction")
     def test_webhook_notification_triggers_processing(self):
         """Test that receiving a valid webhook notification triggers the processing of the
         payment data."""
@@ -20,7 +18,7 @@ class TestProcessingFlows(AsiaPayCommon, PaymentHttpCommon):
         url = self._build_url(AsiaPayController._webhook_url)
         with (
             patch(
-                "odoo.addons.payment_asiapay.controllers.main.AsiaPayController._check_signature"
+                "odoo.addons.payment_asiapay.models.payment_transaction.PaymentTransaction._verify_notification_signature"
             ),
             patch(
                 "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
@@ -29,14 +27,14 @@ class TestProcessingFlows(AsiaPayCommon, PaymentHttpCommon):
             self._make_http_post_request(url, data=self.webhook_payment_data)
         self.assertEqual(process_mock.call_count, 1)
 
-    @mute_logger("odoo.addons.payment_asiapay.controllers.main")
+    @mute_logger("odoo.addons.payment_asiapay.models.payment_transaction")
     def test_webhook_notification_triggers_signature_check(self):
         """Test that receiving a webhook notification triggers a signature check."""
         self._create_transaction("redirect")
         url = self._build_url(AsiaPayController._webhook_url)
         with (
             patch(
-                "odoo.addons.payment_asiapay.controllers.main.AsiaPayController._check_signature"
+                "odoo.addons.payment_asiapay.models.payment_transaction.PaymentTransaction._verify_notification_signature"
             ) as signature_check_mock,
             patch(
                 "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
@@ -48,23 +46,18 @@ class TestProcessingFlows(AsiaPayCommon, PaymentHttpCommon):
     def test_accept_webhook_notification_with_valid_signature(self):
         """Test the verification of a webhook notification with a valid signature."""
         tx = self._create_transaction("redirect")
-        self._assert_does_not_raise(
-            Forbidden,
-            AsiaPayController._check_signature,
-            self.webhook_payment_data,
-            tx,
-        )
+        self.assertTrue(tx._verify_notification_signature(self.webhook_payment_data))
 
-    @mute_logger("odoo.addons.payment_asiapay.controllers.main")
+    @mute_logger("odoo.addons.payment_asiapay.models.payment_transaction")
     def test_reject_notification_with_missing_signature(self):
         """Test the verification of a notification with a missing signature."""
         tx = self._create_transaction("redirect")
         payload = dict(self.webhook_payment_data, secureHash="dummy")
-        self.assertRaises(Forbidden, AsiaPayController._check_signature, payload, tx)
+        self.assertFalse(tx._verify_notification_signature(payload))
 
-    @mute_logger("odoo.addons.payment_asiapay.controllers.main")
+    @mute_logger("odoo.addons.payment_asiapay.models.payment_transaction")
     def test_reject_notification_with_invalid_signature(self):
         """Test the verification of a notification with an invalid signature."""
         tx = self._create_transaction("redirect")
         payload = dict(self.webhook_payment_data, secureHash="dummy")
-        self.assertRaises(Forbidden, AsiaPayController._check_signature, payload, tx)
+        self.assertFalse(tx._verify_notification_signature(payload))

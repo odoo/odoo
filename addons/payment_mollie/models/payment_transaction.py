@@ -3,6 +3,7 @@ from urllib.parse import urlsplit as url_parse
 
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
+from odoo.http import request
 from odoo.tools import urls
 
 from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
@@ -15,6 +16,18 @@ _logger = get_payment_logger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
+
+    @api.model
+    def _receiver_for_mollie_notification(self, **path_args):
+        data = request.get_http_params()
+        return self.sudo()._search_by_reference("mollie", data), {"data": data}
+
+    def _verify_inbound_request(self, headers, body):
+        if self.provider_code != "mollie":
+            return super()._verify_inbound_request(headers, body)
+        # Nothing in the notification is trusted: the handler fetches the
+        # payment from Mollie's API and processes that answer.
+        return True
 
     def _prepare_redirect_form_values(self, processing_values):
         """Override of payment to return Mollie-specific rendering values.

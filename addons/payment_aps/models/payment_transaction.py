@@ -1,6 +1,10 @@
+import hmac
+
 from odoo import _, api, models
+from odoo.http import request
 from odoo.tools import urls
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_aps import utils as aps_utils
@@ -12,6 +16,33 @@ _logger = get_payment_logger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
+
+    @api.model
+    def _receiver_for_aps_return(self, **path_args):
+        return self._resolve_notification(
+            "aps", request.get_http_params(), Acknowledged.redirect("/payment/status")
+        )
+
+    @api.model
+    def _receiver_for_aps_webhook(self, **path_args):
+        return self._resolve_notification(
+            "aps", request.get_http_params(), Acknowledged("")
+        )
+
+    def _verify_notification_signature(self, payment_data):
+        if self.provider_code != "aps":
+            return super()._verify_notification_signature(payment_data)
+        received_signature = payment_data.get("signature")
+        if not received_signature:
+            _logger.warning("Received payment data with missing signature.")
+            return False
+        expected_signature = self.provider_id._get_aps_signature(
+            payment_data, incoming=True
+        )
+        if not hmac.compare_digest(received_signature, expected_signature):
+            _logger.warning("Received payment data with invalid signature.")
+            return False
+        return True
 
     @api.model
     def _get_unique_reference(

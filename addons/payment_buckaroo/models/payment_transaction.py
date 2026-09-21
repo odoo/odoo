@@ -1,6 +1,10 @@
+import hmac
+
 from odoo import _, api, models
+from odoo.http import request
 from odoo.tools import urls
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_buckaroo import const
 from odoo.addons.payment_buckaroo.controllers.main import BuckarooController
@@ -10,6 +14,49 @@ _logger = get_payment_logger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
+
+    @api.model
+    def _receiver_for_buckaroo_notification(self, acknowledged):
+        raw_data = request.get_http_params()
+        data = self._normalize_buckaroo_keys(raw_data)
+        tx, extra = self._resolve_notification("buckaroo", data, acknowledged)
+        return tx, {**extra, "raw_data": raw_data}
+
+    @api.model
+    def _receiver_for_buckaroo_return(self, **path_args):
+        return self._receiver_for_buckaroo_notification(
+            Acknowledged.redirect("/payment/status")
+        )
+
+    @api.model
+    def _receiver_for_buckaroo_webhook(self, **path_args):
+        return self._receiver_for_buckaroo_notification(Acknowledged(""))
+
+    @staticmethod
+    def _normalize_buckaroo_keys(data):
+        # Buckaroo's parameter names are case-insensitive.
+        return {key.lower(): val for key, val in data.items()}
+
+    def _verify_notification_signature(self, payment_data):
+        if self.provider_code != "buckaroo":
+            return super()._verify_notification_signature(payment_data)
+        received_signature = self._normalize_buckaroo_keys(payment_data).get(
+            "brq_signature"
+        )
+        return self._verify_buckaroo_signature(payment_data, received_signature)
+
+    def _verify_buckaroo_signature(self, payment_data, received_signature):
+        self.check_singleton()
+        if not received_signature:
+            _logger.warning("Received payment data with missing signature")
+            return False
+        expected_signature = self.provider_id._get_buckaroo_signature(
+            payment_data, incoming=True
+        )
+        if not hmac.compare_digest(received_signature, expected_signature):
+            _logger.warning("Received payment data with invalid signature")
+            return False
+        return True
 
     def _prepare_redirect_form_values(self, processing_values):
         """Override of payment to return Buckaroo-specific rendering values.

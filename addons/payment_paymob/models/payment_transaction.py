@@ -1,9 +1,16 @@
+import hashlib
+import hmac
+import json
+
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
+from odoo.http import request
 from odoo.tools import urls
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
+from odoo.addons.payment_paymob import const
 from odoo.addons.payment_paymob.controllers.main import PaymobController
 
 _logger = get_payment_logger(__name__)
@@ -13,7 +20,91 @@ class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
     @api.model
-    def _get_unique_reference(self, provider_code, prefix=None, separator="-", **kwargs):
+    def _receiver_for_paymob_return(self, **path_args):
+        return self._resolve_notification(
+            "paymob",
+            request.get_http_params(),
+            Acknowledged.redirect("/payment/status"),
+        )
+
+    @api.model
+    def _receiver_for_paymob_webhook(self, **path_args):
+        payment_data = request.get_json_data().get("obj") or {}
+        normalized_data = self._normalize_paymob_response(
+            payment_data, request.get_http_params().get("hmac")
+        )
+        tx, extra = self._resolve_notification(
+            "paymob", normalized_data, Acknowledged("")
+        )
+        if normalized_data["order"] != tx.provider_reference:
+            # The order the notification names is not the transaction's own.
+            raise Acknowledged("", 403)
+        return tx, extra
+
+    def _inbound_notification_data(self, headers, body):
+        if self.provider_code != "paymob":
+            return super()._inbound_notification_data(headers, body)
+        params = request.get_http_params()
+        if request.httprequest.method == "GET":
+            return params
+        return self._normalize_paymob_response(
+            request.get_json_data().get("obj") or {}, params.get("hmac")
+        )
+
+    def _verify_notification_signature(self, payment_data):
+        if self.provider_code != "paymob":
+            return super()._verify_notification_signature(payment_data)
+        received_signature = payment_data.get("hmac", "")
+        if not received_signature:
+            _logger.warning("Received payment data with missing signature.")
+            return False
+        expected_signature = self._compute_paymob_signature(
+            payment_data, self.provider_id.paymob_hmac_key
+        )
+        if not hmac.compare_digest(received_signature, expected_signature):
+            _logger.warning("Received payment data with invalid signature.")
+            return False
+        return True
+
+    @staticmethod
+    def _normalize_paymob_response(payment_data, hmac_sig):
+        """Webhook data (parsed values) and redirect data (strings, JSON-formatted
+        booleans) in one shape."""
+        response = {}
+        for field in const.SIGNATURE_FIELDS:
+            if isinstance(payment_data.get(field), bool):
+                response[field] = json.dumps(payment_data.get(field))
+            else:
+                response[field] = str(payment_data.get(field, "false"))
+        order_data = payment_data.get("order", {})
+        response.update(
+            {
+                "data.message": payment_data.get("data", {}).get("message"),
+                "hmac": hmac_sig,
+                "order": str(order_data.get("id")),
+                "merchant_order_id": order_data.get("merchant_order_id"),
+                "source_data.pan": payment_data.get("source_data", {}).get("pan"),
+                "source_data.sub_type": payment_data.get("source_data", {}).get(
+                    "sub_type"
+                ),
+                "source_data.type": payment_data.get("source_data", {}).get("type"),
+            }
+        )
+        return response
+
+    @staticmethod
+    def _compute_paymob_signature(payload, hmac_key):
+        # See https://developers.paymob.com/pak/manage-callback/hmac-calculation.
+        signing_string = "".join(
+            payload.get(field, "false") for field in const.SIGNATURE_FIELDS
+        ).encode("utf-8")
+        signed_hmac = hmac.new(hmac_key.encode("utf-8"), signing_string, hashlib.sha512)
+        return signed_hmac.hexdigest()
+
+    @api.model
+    def _get_unique_reference(
+        self, provider_code, prefix=None, separator="-", **kwargs
+    ):
         """Override of `payment` to ensure that Paymob references are unique.
 
         :param str provider_code: The code of the provider handling the transaction.
@@ -29,9 +120,7 @@ class PaymentTransaction(models.Model):
                 # empty. We call it manually here because singularizing the prefix would generate a
                 # default value if it was empty, hence preventing the method from ever being called
                 # and the transaction from receiving a reference named after the related document.
-                prefix = (
-                    self.sudo()._get_reference_prefix(separator, **kwargs) or None
-                )
+                prefix = self.sudo()._get_reference_prefix(separator, **kwargs) or None
             prefix = payment_utils.singularize_reference_prefix(
                 prefix=prefix, separator=separator
             )

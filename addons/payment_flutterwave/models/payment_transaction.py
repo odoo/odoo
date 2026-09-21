@@ -1,7 +1,11 @@
+import hmac
+
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
+from odoo.http import request
 from odoo.tools import urls
 
+from odoo.addons.integration.tools.admission import Acknowledged
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_flutterwave import const
@@ -12,6 +16,31 @@ _logger = get_payment_logger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
+
+    @api.model
+    def _receiver_for_flutterwave_webhook(self, **path_args):
+        data = request.get_json_data()
+        if data.get("event") != "charge.completed":
+            raise Acknowledged.json("")
+        return self._resolve_notification(
+            "flutterwave", data.get("data") or {}, Acknowledged.json("")
+        )
+
+    def _verify_inbound_request(self, headers, body):
+        if self.provider_code != "flutterwave":
+            return super()._verify_inbound_request(headers, body)
+        return self._verify_flutterwave_signature(headers.get("verif-hash"))
+
+    def _verify_flutterwave_signature(self, received_signature):
+        self.check_singleton()
+        if not received_signature:
+            _logger.warning("Received payment data with missing signature.")
+            return False
+        expected_signature = self.provider_id.flutterwave_webhook_secret
+        if not hmac.compare_digest(received_signature, expected_signature):
+            _logger.warning("Received payment data with invalid signature.")
+            return False
+        return True
 
     @api.model
     def _get_unique_reference(
