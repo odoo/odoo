@@ -110,6 +110,24 @@ class Query:
             self._joins[alias] = (sql_kind, table, condition)
             self._invalidate_ids()
 
+    def copy(self) -> Query:
+        """A query with this one's state, sharing none of its mutable parts.
+
+        A `Query` handed to a domain -- `("line_ids", "in", query)` -- is still
+        the caller's object, so a field that has to narrow it by its own
+        `domain=` narrows this copy instead. Without it the caller's query is
+        filtered for every later use of it.
+        """
+        other = Query.__new__(Query)
+        for slot in Query.__slots__:
+            value = getattr(self, slot)
+            if type(value) is dict:
+                value = dict(value)
+            elif type(value) is list:
+                value = list(value)
+            setattr(other, slot, value)
+        return other
+
     def add_where(self, where_clause: SQL) -> None:
         self._where_clauses.append(where_clause)
         self._invalidate_ids()

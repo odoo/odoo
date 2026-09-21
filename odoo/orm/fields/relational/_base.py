@@ -1254,15 +1254,20 @@ class _RelationalMulti(_Relational):
             return query
         if isinstance(value, Query):
             domain = field_domain.optimize_full(comodel)
-            if not domain.is_true():
-                _debug.logic(
-                    "field.x2many.subquery.field_domain_added",
-                    model=self.model_name,
-                    field=self.name,
-                    operator=operator,
-                )
-                value.add_where(domain._to_sql(comodel, value.table, value))
-            return value
+            if domain.is_true():
+                return value
+            _debug.logic(
+                "field.x2many.subquery.field_domain_added",
+                model=self.model_name,
+                field=self.name,
+                operator=operator,
+            )
+            # the caller still owns `value`: a Query written into a domain is
+            # an argument, not a workspace, and narrowing it in place applies
+            # this field's `domain=` to every later use the caller makes of it
+            narrowed = value.copy()
+            narrowed.add_where(domain._to_sql(comodel, narrowed.table, narrowed))
+            return narrowed
         raise NotImplementedError(f"Cannot build query for {value}")
 
     def _condition_to_sql_relational(

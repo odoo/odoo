@@ -171,3 +171,71 @@ class TestMany2oneSortMatchesSql(TransactionCase):
                 self.env.invalidate_all()
                 self.messages.mapped("discussion")
                 self.assertEqual(self.messages.sorted(order).ids, expected)
+
+
+class TestAQueryInADomainIsNotMutated(TransactionCase):
+    """`("field", "in", query)` hands the field a Query the caller still owns.
+    A field with its own `domain=` has to narrow it, and used to narrow the
+    caller's object -- so every later use of that Query carried the field's
+    domain."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Discussion = cls.env["test_orm.discussion"]
+        cls.Message = cls.env["test_orm.message"]
+        cls.with_important = cls.Discussion.create(
+            {"name": "with", "participants": [Command.set([cls.env.uid])]}
+        )
+        cls.without = cls.Discussion.create(
+            {"name": "without", "participants": [Command.set([cls.env.uid])]}
+        )
+        cls.messages = cls.Message.create(
+            [
+                {
+                    "discussion": cls.with_important.id,
+                    "body": "a",
+                    "author": cls.env.uid,
+                    "important": True,
+                },
+                {
+                    "discussion": cls.without.id,
+                    "body": "b",
+                    "author": cls.env.uid,
+                    "important": False,
+                },
+            ]
+        )
+        cls.env.flush_all()
+
+    def test_the_field_carries_a_domain(self):
+        self.assertTrue(
+            self.Discussion._fields["important_messages"].domain, "test premise"
+        )
+
+    def test_the_callers_query_still_answers_what_it_did(self):
+        query = self.Message._search([("id", "in", self.messages.ids)])
+        before = set(query.get_result_ids())
+
+        self.Discussion.search([("important_messages", "in", query)])
+
+        self.assertEqual(
+            set(query.get_result_ids()),
+            before,
+            "the field's domain was written into the caller's query",
+        )
+
+    def test_the_search_still_applies_the_field_domain(self):
+        query = self.Message._search([("id", "in", self.messages.ids)])
+        found = self.Discussion.search(
+            [("id", "in", (self.with_important | self.without).ids)],
+        ).filtered_domain([("important_messages", "in", query)])
+        self.assertEqual(found, self.with_important)
+
+    def test_the_same_query_gives_the_same_answer_twice(self):
+        query = self.Message._search([("id", "in", self.messages.ids)])
+        scope = [("id", "in", (self.with_important | self.without).ids)]
+        first = self.Discussion.search([*scope, ("important_messages", "in", query)])
+        second = self.Discussion.search([*scope, ("important_messages", "in", query)])
+        self.assertEqual(first, second)
+        self.assertEqual(first, self.with_important)
