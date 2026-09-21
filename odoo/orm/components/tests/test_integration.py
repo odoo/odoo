@@ -263,6 +263,7 @@ class _MockSchedulableField(NamedTuple):
     name: str
     recursive: bool
     is_stored_computed: bool
+    tree_siblings: tuple = ()
 
 
 class TestRecomputeSchedulerIntegration(unittest.TestCase):

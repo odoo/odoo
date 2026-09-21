@@ -5,14 +5,22 @@ from odoo.orm.components.recompute import RecomputeScheduler
 
 
 class _MockField:
-    __slots__ = ("is_stored_computed", "name", "recursive")
+    __slots__ = ("is_stored_computed", "name", "recursive", "tree_siblings")
 
     def __init__(
-        self, name: str, *, stored_computed: bool = False, recursive: bool = False
+        self,
+        name: str,
+        *,
+        stored_computed: bool = False,
+        recursive: bool = False,
+        tree_siblings: tuple = (),
     ) -> None:
         self.name = name
         self.is_stored_computed = stored_computed
         self.recursive = recursive
+        # a field that shares no table with another stands alone, which is
+        # what `Field.tree_siblings` defaults to
+        self.tree_siblings = tree_siblings
 
     def __repr__(self) -> str:
         return f"<MockField {self.name}>"
