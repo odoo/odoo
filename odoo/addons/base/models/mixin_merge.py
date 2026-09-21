@@ -98,6 +98,35 @@ class MixinMerge(models.AbstractModel):
         )
         return bool(self.env.cr.fetchone())
 
+    def _get_unconstrained_references(self, model: str) -> list[tuple[str, str]]:
+        """Many2one columns into `model`'s table-inheritance tree.
+
+        The ORM gives such columns no foreign key -- a key on the root table
+        cannot see the rows its child tables hold -- so the catalog query in
+        _get_foreign_keys_on_table never finds them, and a merge that trusts
+        it alone leaves every one of them pointing at the absorbed record.
+        """
+        target = self.env[model]
+        root_table = target._table_inheritance_root
+        if not root_table:
+            return []
+        tree = set(self.pool.model_names_by_inheritance_root.get(root_table, ()))
+        tree.add(model)
+        references = set()
+        for other in self.env.values():
+            if other._abstract or not other._is_an_ordinary_table():
+                continue
+            for field in other._fields.values():
+                if (
+                    field.type == "many2one"
+                    and field.store
+                    and field.column_type
+                    and not field.company_dependent
+                    and field.comodel_name in tree
+                ):
+                    references.add((other._table, field.name))
+        return sorted(references)
+
     def _get_relations_to_repoint(self, model: str) -> list[tuple[str, str]]:
         skipped_tables = self._get_merge_tables_excluded(model)
         foreign_keys = self._get_foreign_keys_on_table(self.env[model]._table)
@@ -105,6 +134,11 @@ class MixinMerge(models.AbstractModel):
             (table, column)
             for table, column in foreign_keys
             if table not in skipped_tables
+        ]
+        relations += [
+            relation
+            for relation in self._get_unconstrained_references(model)
+            if relation[0] not in skipped_tables and relation not in relations
         ]
         _debug.perf.count(
             "relations_to_repoint",

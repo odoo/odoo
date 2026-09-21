@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.tools import SQL
 
 
 class TabA(models.Model):
@@ -51,3 +52,21 @@ class TabActionComputed(models.Model):
     def _compute_action_id(self) -> None:
         for record in self:
             record.action_id = record.holder_id.action_id
+
+
+class TabActionView(models.Model):
+    """A SQL view over the holders: it derives its rows, so none can dangle."""
+
+    _name = "tab.action.view"
+    _description = "tab.action.view"
+    _auto = False
+
+    action_id = fields.Many2one(comodel_name="ir.actions.actions", readonly=True)
+
+    def init(self) -> None:
+        self.env.cr.execute(
+            SQL(
+                "CREATE OR REPLACE VIEW %s AS SELECT id, action_id FROM tab_action_holder",
+                SQL.identifier(self._table),
+            )
+        )

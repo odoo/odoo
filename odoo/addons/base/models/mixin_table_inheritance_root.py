@@ -44,6 +44,17 @@ class MixinTableInheritanceRoot(models.AbstractModel):
             if model._table == root._table
         )
 
+    def _holds_referencing_rows(self, model_name: str) -> bool:
+        """Whether rows of `model_name` can point at a deleted record.
+
+        Only an ordinary table does. A view or a table query derives its rows,
+        so nothing there dangles, and searching one can cost a full scan -- a
+        view over the GPS foreign table held an asset unlink for minutes. A
+        foreign table carries its own delete guard as a trigger.
+        """
+        model = self.env[model_name]
+        return not model._abstract and model._is_an_ordinary_table()
+
     @api.model
     @tools.ormcache(cache="stable")
     def _get_fields_ondelete_unenforced(self) -> tuple[tuple[str, str, str], ...]:
@@ -53,7 +64,7 @@ class MixinTableInheritanceRoot(models.AbstractModel):
             sorted(
                 (model_name, field.name, field.ondelete)
                 for model_name, model in self.env.registry.items()
-                if not model._abstract
+                if self._holds_referencing_rows(model_name)
                 for field in model._fields.values()
                 if field.type == "many2one"
                 and field.store
@@ -73,7 +84,7 @@ class MixinTableInheritanceRoot(models.AbstractModel):
                 {
                     (model_name, field.name, field.relation, column)
                     for model_name, model in self.env.registry.items()
-                    if not model._abstract
+                    if self._holds_referencing_rows(model_name)
                     for field in model._fields.values()
                     if field.type == "many2many" and field.store
                     for column, end in (
@@ -93,7 +104,7 @@ class MixinTableInheritanceRoot(models.AbstractModel):
             sorted(
                 (model_name, field.name)
                 for model_name, model in self.env.registry.items()
-                if not model._abstract
+                if self._holds_referencing_rows(model_name)
                 for field in model._fields.values()
                 if field.type == "reference"
                 and field.store

@@ -96,8 +96,62 @@ class TestUnenforcedOndeleteOwnership(TransactionCase):
                 if not (
                     (field := self.env[model_name]._fields[field_name]).store
                     and not field.related
+                    and self.env[model_name]._is_an_ordinary_table()
                 )
             },
         )
         self.assertIn(("tab.action.mirror", "action_id"), dropped)
         self.assertIn(("tab.action.computed", "action_id"), dropped)
+
+
+@tagged("post_install", "-at_install")
+class TestUnenforcedOndeleteSkipsDerivedRows(TransactionCase):
+    def test_a_view_is_not_swept(self):
+        swept = {
+            (model_name, field_name)
+            for model_name, field_name, __ in self.env[
+                "ir.actions.actions"
+            ]._get_fields_ondelete_unenforced()
+        }
+        self.assertIn(("tab.action.holder", "action_id"), swept)
+        self.assertNotIn(("tab.action.view", "action_id"), swept)
+
+    def test_unlinking_an_action_leaves_the_view_consistent(self):
+        action = self.env["ir.actions.act_window"].create(
+            {"name": "tab-view", "res_model": "res.currency"}
+        )
+        self.env["tab.action.holder"].create({"action_id": action.id})
+        self.env.flush_all()
+        self.assertEqual(
+            self.env["tab.action.view"].search_count([("action_id", "=", action.id)]),
+            1,
+        )
+        action.unlink()
+        self.env.flush_all()
+        self.assertEqual(
+            self.env["tab.action.view"].search_count([("action_id", "=", action.id)]),
+            0,
+        )
+
+
+@tagged("post_install", "-at_install")
+class TestMergeRepointsReferencesWithoutForeignKeys(TransactionCase):
+    def test_a_reference_into_an_inheritance_tree_is_found(self):
+        relations = self.env["mixin.merge"]._get_relations_to_repoint(
+            "ir.actions.act_window"
+        )
+        self.assertIn(("tab_action_holder", "action_id"), relations)
+        # a view derives its rows: nothing there to repoint
+        self.assertNotIn(("tab_action_view", "action_id"), relations)
+
+    def test_merging_repoints_a_reference_the_catalog_does_not_know(self):
+        windows = self.env["ir.actions.act_window"]
+        source = windows.create({"name": "tab-src", "res_model": "res.currency"})
+        target = windows.create({"name": "tab-dst", "res_model": "res.currency"})
+        holder = self.env["tab.action.holder"].create({"action_id": source.id})
+        self.env.flush_all()
+        self.env["mixin.merge"]._update_foreign_keys_generic(
+            "ir.actions.act_window", source, target
+        )
+        holder.invalidate_recordset()
+        self.assertEqual(holder.action_id.id, target.id)
