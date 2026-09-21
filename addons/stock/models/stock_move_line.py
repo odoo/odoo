@@ -715,6 +715,13 @@ class StockMoveLine(models.Model):
     def action_send_recall_email(self):
         partners = self.picking_partner_id
         if partners:
+            pickings = self.picking_id
+            for picking in pickings:
+                picking_ml = picking.move_line_ids & self
+                picking.write({
+                        'recall_lot_names': ", ".join(picking_ml.mapped('lot_id.name')),
+                        'recall_product_names': ", ".join(picking_ml.mapped('product_id.display_name')),
+                    })
             return {
                 'name': _('Send Email'),
                 'type': 'ir.actions.act_window',
@@ -725,7 +732,7 @@ class StockMoveLine(models.Model):
                     'default_composition_mode': 'mass_mail' if len(partners) > 1 else 'comment',
                     'default_partner_ids': partners.ids,
                     'default_model': 'stock.picking',
-                    'default_res_ids': self.picking_id.ids,
+                    'default_res_ids': pickings.ids,
                 }
             }
 
