@@ -528,6 +528,17 @@ class ResCompany(models.Model):
             and getattr(self.env[field.comodel_name], "_company_config", False)
         }
 
+    def _config_owner_of(self, fname: str) -> models.Model:
+        # the record a field named on the company is written to: the company
+        # itself, or the configuration that declares the field
+        self.check_singleton()
+        if fname in self._fields:
+            return self
+        for link, field in self._config_link_fields().items():
+            if fname in self.env[field.comodel_name]._fields:
+                return self[link]
+        raise KeyError(fname)
+
     def _get_cache_invalidation_fields(self) -> set[str]:
         return {
             "active",

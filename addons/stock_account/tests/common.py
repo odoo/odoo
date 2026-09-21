@@ -434,7 +434,9 @@ class TestStockValuationCommon(BaseCommon):
         )
 
         cls.account_expense = cls.company.account_config_id.expense_account_id
-        cls.account_stock_valuation = cls.company.account_stock_valuation_id
+        cls.account_stock_valuation = (
+            cls.company.stock_config_id.account_stock_valuation_id
+        )
         cls.account_stock_variation = (
             cls.account_stock_valuation.account_stock_variation_id
         )

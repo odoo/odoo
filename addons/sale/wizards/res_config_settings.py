@@ -19,10 +19,10 @@ class ResConfigSettings(models.TransientModel):
 
     lock_confirmed_so = fields.Boolean(
         string="Lock Confirmed Sales Orders",
-        default=lambda self: self.env.company.order_lock_so == "lock",
+        default=lambda self: self.env.company.sale_config_id.order_lock_so == "lock",
     )
     order_lock_so = fields.Selection(
-        related="company_id.order_lock_so",
+        related="company_id.sale_config_id.order_lock_so",
         string="Sale Order Modification *",
         readonly=False,
     )
@@ -53,7 +53,7 @@ class ResConfigSettings(models.TransientModel):
         implied_group="sale.group_sale_app_menu",
     )
     company_so_template_id = fields.Many2one(
-        related="company_id.sale_order_template_id",
+        related="company_id.sale_config_id.sale_order_template_id",
         string="Default Template",
         readonly=False,
         domain="[('company_id', 'in', [False, company_id])]",
@@ -76,23 +76,23 @@ class ResConfigSettings(models.TransientModel):
         help="Email sent to the customer once the invoice is available.",
     )
     quotation_validity_days = fields.Integer(
-        related="company_id.quotation_validity_days",
+        related="company_id.sale_config_id.quotation_validity_days",
         readonly=False,
     )
     portal_confirmation_sign = fields.Boolean(
-        related="company_id.portal_confirmation_sign",
+        related="company_id.sale_config_id.portal_confirmation_sign",
         readonly=False,
     )
     portal_confirmation_pay = fields.Boolean(
-        related="company_id.portal_confirmation_pay",
+        related="company_id.sale_config_id.portal_confirmation_pay",
         readonly=False,
     )
     prepayment_percent = fields.Float(
-        related="company_id.prepayment_percent",
+        related="company_id.sale_config_id.prepayment_percent",
         readonly=False,
     )
     downpayment_account_id = fields.Many2one(
-        related="company_id.downpayment_account_id",
+        related="company_id.sale_config_id.downpayment_account_id",
         readonly=False,
     )
 
@@ -154,7 +154,7 @@ class ResConfigSettings(models.TransientModel):
             companies = (
                 self.env["res.company"]
                 .sudo()
-                .search([("sale_order_template_id", "!=", False)])
+                .search([("sale_config_id.sale_order_template_id", "!=", False)])
             )
             if companies:
                 _debug.lifecycle(
@@ -162,7 +162,7 @@ class ResConfigSettings(models.TransientModel):
                     companies=companies,
                     reason="templates_feature_off",
                 )
-                companies.sale_order_template_id = False
+                companies.sale_config_id.sale_order_template_id = False
         super().set_values()
         _debug.lifecycle(
             "sale_settings_saved",

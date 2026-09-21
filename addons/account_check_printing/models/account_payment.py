@@ -32,7 +32,7 @@ class AccountPayment(models.Model):
         string="Has Check Layout",
         default=lambda self: (
             len(
-                self.env["res.company"]
+                self.env["account.config"]
                 ._fields["account_check_printing_layout"]
                 .selection
             )
@@ -250,7 +250,7 @@ class AccountPayment(models.Model):
     def do_print_checks(self):
         check_layout = (
             self.journal_id.bank_check_printing_layout
-            or self.company_id.account_check_printing_layout
+            or self.company_id.account_config_id.account_check_printing_layout
         )
         redirect_action = self.env.ref("account.action_account_config")
         if not check_layout or check_layout == "disabled":
@@ -278,7 +278,7 @@ class AccountPayment(models.Model):
         return (amount_str and (amount_str + " ").ljust(200, "*")) or ""
 
     def _check_build_page_info(self, i, p):
-        multi_stub = self.company_id.account_check_printing_multi_stub
+        multi_stub = self.company_id.account_config_id.account_check_printing_multi_stub
         return {
             "sequence_number": self.check_number,
             "manual_sequencing": self.journal_id.check_manual_sequencing,
@@ -413,7 +413,7 @@ class AccountPayment(models.Model):
                     remaining -= current_amount
 
         # Crop the stub lines or split them on multiple pages
-        if not self.company_id.account_check_printing_multi_stub:
+        if not self.company_id.account_config_id.account_check_printing_multi_stub:
             # If we need to crop the stub, leave place for an ellipsis line
             num_stub_lines = (
                 len(stub_lines) > INV_LINES_PER_STUB and INV_LINES_PER_STUB - 1

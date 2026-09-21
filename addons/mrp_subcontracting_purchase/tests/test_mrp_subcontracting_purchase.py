@@ -621,7 +621,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
             limit=1,
         )
 
-        self.company.days_to_purchase = 2
+        self.company.purchase_config_id.days_to_purchase = 2
         seller = self.env["product.supplierinfo"].create(
             {
                 "product_tmpl_id": self.finished.product_tmpl_id.id,
@@ -635,7 +635,8 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.bom.days_to_prepare_mo = 4
         delays, _ = rule._get_lead_days(self.finished, supplierinfo=seller)
         self.assertEqual(
-            delays["total_delay"], seller.delay + self.company.days_to_purchase
+            delays["total_delay"],
+            seller.delay + self.company.purchase_config_id.days_to_purchase,
         )
         self.bom.produce_delay = 5
         self.bom.days_to_prepare_mo = 6
@@ -644,11 +645,11 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
             delays["total_delay"],
             self.bom.produce_delay
             + self.bom.days_to_prepare_mo
-            + self.company.days_to_purchase,
+            + self.company.purchase_config_id.days_to_purchase,
         )
 
     def test_subcontracting_lead_days_on_overview(self):
-        self.company.days_to_purchase = 5
+        self.company.purchase_config_id.days_to_purchase = 5
         self.comp2.bom_ids.unlink()
 
         self.finished.seller_ids.write(

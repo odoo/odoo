@@ -36,10 +36,10 @@ class TestAssetIntegrity(TestAccountAssetCommon):
         self.assertEqual(visible, shared)
 
     def test_book_value_follows_the_state(self):
-        self.env.company.gain_account_id = self.company_data[
+        self.env.company.account_config_id.gain_account_id = self.company_data[
             "default_account_revenue"
         ].copy()
-        self.env.company.loss_account_id = self.company_data[
+        self.env.company.account_config_id.loss_account_id = self.company_data[
             "default_account_expense"
         ].copy()
         asset = self.create_asset(
@@ -168,10 +168,10 @@ class TestAssetIntegrity(TestAccountAssetCommon):
         self.assertNotIn(self.company_data["default_account_expense"], posted_accounts)
 
     def test_disposal_moves_are_typed_not_inferred(self):
-        self.env.company.gain_account_id = self.company_data[
+        self.env.company.account_config_id.gain_account_id = self.company_data[
             "default_account_revenue"
         ].copy()
-        self.env.company.loss_account_id = self.company_data[
+        self.env.company.account_config_id.loss_account_id = self.company_data[
             "default_account_expense"
         ].copy()
         asset = self.create_asset(value=1000, periodicity="yearly", periods=5)

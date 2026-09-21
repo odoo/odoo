@@ -1,8 +1,8 @@
 from odoo import fields, models
 
 
-class ResCompany(models.Model):
-    _inherit = "res.company"
+class AccountConfig(models.Model):
+    _inherit = "account.config"
 
     gain_account_id = fields.Many2one(
         comodel_name="account.account",

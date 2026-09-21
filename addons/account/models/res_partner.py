@@ -1257,7 +1257,10 @@ class ResPartner(models.Model):
                 else _("not applicable")
             )
 
-    @api.depends("country_id.code", "ref_company_ids.account_config_id.account_fiscal_country_id.code")
+    @api.depends(
+        "country_id.code",
+        "ref_company_ids.account_config_id.account_fiscal_country_id.code",
+    )
     def _compute_company_registry_placeholder(self):
         super()._compute_company_registry_placeholder()
         for partner in self:

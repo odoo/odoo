@@ -1,6 +1,6 @@
 {
     "name": "Inventory",
-    "version": "1.18",
+    "version": "1.19",
     "category": "Supply Chain/Inventory",
     "sequence": 25,
     "summary": "Manage your stock and logistics activities",

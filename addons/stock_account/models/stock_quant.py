@@ -37,7 +37,7 @@ class StockQuant(models.Model):
                 quant.product_categ_id.with_company(
                     quant.company_id
                 ).property_cost_method
-                or (quant.company_id or self.env.company).cost_method
+                or (quant.company_id or self.env.company).stock_config_id.cost_method
             )
 
     def _is_excluded_from_valuation(self):

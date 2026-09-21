@@ -299,7 +299,10 @@ class StockMovePicking(models.Model):
 
     def _get_partner_id(self):
         self.check_singleton()
-        if self.location_id == self.company_id.internal_transit_location_id:
+        if (
+            self.location_id
+            == self.company_id.stock_config_id.internal_transit_location_id
+        ):
             return self.location_dest_id.warehouse_id.partner_id.id
         return self.partner_id.id
 

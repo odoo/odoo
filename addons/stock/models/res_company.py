@@ -1,7 +1,6 @@
 from collections import defaultdict
 
 from odoo import _, api, fields, models, modules
-from odoo.exceptions import ValidationError
 
 from ..tools import debug_log as dbg
 
@@ -10,68 +9,20 @@ class ResCompany(models.Model):
     _inherit = "res.company"
     _check_company_auto = True
 
-    internal_transit_location_id = fields.Many2one(
-        comodel_name="stock.location",
-        ondelete="restrict",
-        check_company=True,
-        help="Used for resupply routes between warehouses that belong to this company",
-    )
-    stock_move_email_validation = fields.Boolean(string="Email Confirmation picking")
-    stock_mail_confirmation_template_id = fields.Many2one(
-        comodel_name="mail.template",
-        string="Email Template confirmation picking",
-        default=lambda self: self._default_stock_mail_confirmation_template_id(),
-        domain="[('model', '=', 'stock.picking')]",
-        help="Email sent to the customer once the order is done.",
-    )
-    annual_inventory_month = fields.Selection(
-        selection=[
-            ("1", "January"),
-            ("2", "February"),
-            ("3", "March"),
-            ("4", "April"),
-            ("5", "May"),
-            ("6", "June"),
-            ("7", "July"),
-            ("8", "August"),
-            ("9", "September"),
-            ("10", "October"),
-            ("11", "November"),
-            ("12", "December"),
-        ],
-        default="12",
-        help="Annual inventory month for products not in a location with a cyclic inventory date. Set to no month if no automatic annual inventory.",
-    )
-    annual_inventory_day = fields.Integer(
-        string="Day of the month",
-        default=31,
-        help="""Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.
-        If greater than the last day of a month, then the last day of the month will be selected instead.""",
-    )
-    horizon_days = fields.Integer(
-        string="Replenishment Horizon",
-        default=365,
-        required=True,
-        help="""Configure your horizon to trigger reordering rules earlier to get
-         a head start on replenishment and avoid delays, or trigger it just-in-time
-         ('0 days') to avoid overstocking.""",
+    stock_config_id = fields.Many2one(
+        comodel_name="stock.config",
+        compute="_compute_stock_config_id",
+        search="_search_stock_config_id",
     )
 
-    stock_text_confirmation = fields.Boolean()
-    stock_confirmation_type = fields.Selection(
-        selection=[("sms", "SMS")],
-        string="Confirmation Channel",
-        default="sms",
-        help="Channel used to send the delivery text confirmation to the customer.",
-    )
+    def _search_stock_config_id(self, operator, value):
+        return self._search_config_link("stock.config", operator, value)
 
-    @api.constrains("horizon_days")
-    def _check_horizon_days(self):
+    def _compute_stock_config_id(self):
+        configs = self.env["stock.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
         for company in self:
-            if company.horizon_days < 0:
-                raise ValidationError(
-                    _("The replenishment horizon cannot be negative.")
-                )
+            company.stock_config_id = by_company.get(company.id, False)
 
     @dbg.timed
     @api.model_create_multi
@@ -132,7 +83,7 @@ class ResCompany(models.Model):
             dbg.lifecycle.debug(
                 "[company:%s] transit location %s", company.id, location.id
             )
-            company.internal_transit_location_id = location.id
+            company.stock_config_id.internal_transit_location_id = location.id
             company.partner_id.with_company(company)._update_stock_property_locations(
                 location
             )
@@ -230,7 +181,7 @@ class ResCompany(models.Model):
     @api.model
     def create_missing_transit_location(self):
         company_without_transit = self._get_all_companies().filtered(
-            lambda company: not company.internal_transit_location_id
+            lambda company: not company.stock_config_id.internal_transit_location_id
         )
         company_without_transit._create_transit_location()
 
@@ -259,12 +210,16 @@ class ResCompany(models.Model):
 
     @api.model
     def create_missing_mail_template(self):
-        template_id = self._default_stock_mail_confirmation_template_id()
+        template_id = self.env[
+            "stock.config"
+        ]._default_stock_mail_confirmation_template_id()
         if not template_id:
             return
         self._get_all_companies().filtered(
-            lambda company: not company.stock_mail_confirmation_template_id
-        ).stock_mail_confirmation_template_id = template_id
+            lambda company: (
+                not company.stock_config_id.stock_mail_confirmation_template_id
+            )
+        ).stock_config_id.stock_mail_confirmation_template_id = template_id
 
     def _create_per_company_locations(self):
         self._create_transit_location()
@@ -300,15 +255,9 @@ class ResCompany(models.Model):
                     other_company
                 )._update_stock_property_locations(inter_company_location)
 
-    def _default_stock_mail_confirmation_template_id(self):
-        template = self.env.ref(
-            "stock.mail_template_data_delivery_confirmation", raise_if_not_found=False
-        )
-        return template.id if template else False
-
     def _is_text_confirmation_enabled(self, confirmation_type):
         self.check_singleton()
         return bool(
-            self.stock_text_confirmation
-            and self.stock_confirmation_type == confirmation_type
+            self.stock_config_id.stock_text_confirmation
+            and self.stock_config_id.stock_confirmation_type == confirmation_type
         )

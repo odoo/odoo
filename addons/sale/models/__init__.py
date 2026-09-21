@@ -16,6 +16,7 @@ from . import (
     product_attribute_custom_value,
     product_template,
     res_company,
+    sale_config,
     res_partner,
     sale_order,
     sale_order_line,

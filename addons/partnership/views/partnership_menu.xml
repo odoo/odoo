@@ -4,7 +4,7 @@
     <record id="crm_menu_partners" model="ir.ui.menu">
         <field
             name="name"
-            eval="obj().env.company.partnership_label"
+            eval="obj().env.company.partnership_config_id.partnership_label"
             model="res.company" />
         <field name="parent_id" ref="crm.crm_menu_config" />
         <field name="sequence">16</field>

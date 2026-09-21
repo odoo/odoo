@@ -6,16 +6,18 @@ class ResConfigSettings(models.TransientModel):
 
     lock_confirmed_po = fields.Boolean(
         string="Lock Confirmed Purchase Orders",
-        default=lambda self: self.env.company.order_lock_po == "lock",
+        default=lambda self: (
+            self.env.company.purchase_config_id.order_lock_po == "lock"
+        ),
     )
     order_lock_po = fields.Selection(
-        related="company_id.order_lock_po",
+        related="company_id.purchase_config_id.order_lock_po",
         string="Purchase Order Modification *",
         readonly=False,
     )
 
     po_quotation_validity_days = fields.Integer(
-        related="company_id.po_quotation_validity_days",
+        related="company_id.purchase_config_id.po_quotation_validity_days",
         readonly=False,
     )
 

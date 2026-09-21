@@ -713,8 +713,8 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             }
         )
 
-        company_1.days_to_purchase = 0
-        company_2.days_to_purchase = 0
+        company_1.purchase_config_id.days_to_purchase = 0
+        company_2.purchase_config_id.days_to_purchase = 0
 
         components = (
             self.component_a
@@ -749,8 +749,8 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         bom_kit_parent.action_compute_bom_days()
         self.assertEqual(bom_kit_parent.days_to_prepare_mo, 1)
 
-        company_1.days_to_purchase = 10
-        company_2.days_to_purchase = 20
+        company_1.purchase_config_id.days_to_purchase = 10
+        company_2.purchase_config_id.days_to_purchase = 20
 
         bom_kit_parent.action_compute_bom_days()
         self.assertEqual(bom_kit_parent.days_to_prepare_mo, 10 + 1)
@@ -764,7 +764,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.assertEqual(bom_kit_parent.days_to_prepare_mo, 1)
 
     def test_orderpoint_with_manufacture_security_lead_time(self):
-        self.env.company.horizon_days = 0
+        self.env.company.stock_config_id.horizon_days = 0
 
         product = self.env["product.product"].create(
             {

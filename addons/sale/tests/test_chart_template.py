@@ -38,7 +38,7 @@ class TestSaleChartTemplate(AccountTestInvoicingCommon):
         company = self._create_company(name="Downpayment company")
 
         self.assertEqual(
-            company.downpayment_account_id,
+            company.sale_config_id.downpayment_account_id,
             self._template_downpayment_account(company),
         )
 
@@ -55,7 +55,7 @@ class TestSaleChartTemplate(AccountTestInvoicingCommon):
                 }
             )
         )
-        company.downpayment_account_id = chosen
+        company.sale_config_id.downpayment_account_id = chosen
 
         self.env["account.chart.template"].try_loading(
             company.account_config_id.chart_template,
@@ -63,14 +63,14 @@ class TestSaleChartTemplate(AccountTestInvoicingCommon):
             install_demo=False,
         )
 
-        self.assertEqual(company.downpayment_account_id, chosen)
+        self.assertEqual(company.sale_config_id.downpayment_account_id, chosen)
 
     def test_a_branch_takes_the_downpayment_account_of_its_chart(self):
         company = self._create_company(name="Downpayment company")
         branch = self._create_company(name="Downpayment branch", parent_id=company.id)
 
         self.assertEqual(
-            branch.downpayment_account_id,
+            branch.sale_config_id.downpayment_account_id,
             self._template_downpayment_account(company),
         )
 
@@ -85,4 +85,4 @@ class TestSaleChartTemplate(AccountTestInvoicingCommon):
             .create({"name": "Unrelated company"})
         )
 
-        self.assertFalse(unrelated.downpayment_account_id)
+        self.assertFalse(unrelated.sale_config_id.downpayment_account_id)

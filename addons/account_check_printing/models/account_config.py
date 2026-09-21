@@ -1,11 +1,9 @@
 from odoo import fields, models
 
 
-class ResCompany(models.Model):
-    _inherit = "res.company"
+class AccountConfig(models.Model):
+    _inherit = "account.config"
 
-    # This field needs to be overridden with `selection_add` in the modules which intends to add report layouts.
-    # The xmlID of all the report actions which are actually Check Layouts has to be kept as key of the selection.
     account_check_printing_layout = fields.Selection(
         selection=[
             ("disabled", "None"),

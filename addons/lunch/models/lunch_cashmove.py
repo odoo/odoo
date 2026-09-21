@@ -43,5 +43,5 @@ class LunchCashmove(models.Model):
             precision_digits=2,
         )
         if include_config:
-            result += user.company_id.lunch_minimum_threshold
+            result += user.company_id.lunch_config_id.lunch_minimum_threshold
         return result

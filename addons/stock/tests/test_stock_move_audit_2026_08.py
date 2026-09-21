@@ -422,7 +422,7 @@ class TestStockMoveAudit202608(TransactionCase):
                     "company_id": other.id,
                     "product_id": product.id,
                     "product_uom_qty": 1,
-                    "location_id": other.internal_transit_location_id.id,
+                    "location_id": other.stock_config_id.internal_transit_location_id.id,
                     "location_dest_id": warehouse.lot_stock_id.id,
                     "partner_id": self.env["res.partner"]
                     .create({"name": "Move partner"})

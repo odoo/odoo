@@ -1,6 +1,6 @@
 {
     "name": "Stock - SMS",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Supply Chain/Inventory",
     "summary": "Send text messages when final stock move",
     "description": "Send text messages when final stock move",

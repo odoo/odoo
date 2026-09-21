@@ -54,7 +54,7 @@ class TestReviewCompoundingFixes(TestStockCommon):
 
     def test_deadline_date_counts_two_step_receipt(self):
         company = self.env.company
-        company.horizon_days = 60
+        company.stock_config_id.horizon_days = 60
         wh = self.warehouse_1
         wh.reception_steps = "two_steps"
         self.env.flush_all()

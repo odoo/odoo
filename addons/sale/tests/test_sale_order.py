@@ -256,14 +256,14 @@ class TestSaleOrder(SaleCommon):
         self.assertIn("Terms &amp; Conditions: ", sale_order.notes)
 
     def test_validity_days(self):
-        self.env.company.quotation_validity_days = 5
+        self.env.company.sale_config_id.quotation_validity_days = 5
         with freeze_time("2020-05-02"):
             sale_order = self._create_sale_order()
 
             self.assertEqual(
                 sale_order.date_validity, fields.Date.today() + timedelta(days=5)
             )
-        self.env.company.quotation_validity_days = 0
+        self.env.company.sale_config_id.quotation_validity_days = 0
         sale_order = self._create_sale_order()
         self.assertFalse(
             sale_order.date_validity,

@@ -8,7 +8,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     partnership_label = fields.Char(
-        related="company_id.partnership_label",
+        related="company_id.partnership_config_id.partnership_label",
         readonly=False,
         required=True,
     )

@@ -124,7 +124,7 @@ class TestLeadTime(TestSalePurchaseCommon):
         self.assertEqual(pol.product_qty, 4)
 
     def test_dynamic_lead_time_delay(self):
-        self.env.company.horizon_days = 0
+        self.env.company.stock_config_id.horizon_days = 0
         self.product_a.write(
             {
                 "seller_ids": [

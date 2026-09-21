@@ -144,7 +144,9 @@ class AccountMove(models.Model):
                 expense=True,
             )
             return self.company_id.account_config_id.generate_deferred_expense_entries_method
-        return self.company_id.account_config_id.generate_deferred_revenue_entries_method
+        return (
+            self.company_id.account_config_id.generate_deferred_revenue_entries_method
+        )
 
     @api.depends("deferred_original_move_ids")
     def _compute_deferred_entry_type(self):

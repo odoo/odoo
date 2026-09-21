@@ -154,22 +154,22 @@ class SaleOrderDiscount(models.TransientModel):
     def _get_or_create_discount_product(self):
         self.check_singleton()
         company = self.company_id
-        discount_product = company.sale_discount_product_id
+        discount_product = company.sale_config_id.sale_discount_product_id
         if not discount_product:
             if (
                 self.env["product.product"].has_access("create")
-                and company.has_access("write")
-                and company._has_field_access(
-                    company._fields["sale_discount_product_id"], "write"
+                and company.sale_config_id.has_access("write")
+                and company.sale_config_id._has_field_access(
+                    company.sale_config_id._fields["sale_discount_product_id"], "write"
                 )
             ):
-                company.sale_discount_product_id = self.env["product.product"].create(
-                    self._prepare_discount_product_values()
-                )
+                company.sale_config_id.sale_discount_product_id = self.env[
+                    "product.product"
+                ].create(self._prepare_discount_product_values())
                 _debug.lifecycle(
                     "discount_product_created",
                     company=company,
-                    product=company.sale_discount_product_id,
+                    product=company.sale_config_id.sale_discount_product_id,
                 )
             else:
                 _debug.logic(
@@ -182,7 +182,7 @@ class SaleOrderDiscount(models.TransientModel):
                         " discount the first time.",
                     ),
                 )
-            discount_product = company.sale_discount_product_id
+            discount_product = company.sale_config_id.sale_discount_product_id
         return discount_product
 
     def _create_discount_lines(self):

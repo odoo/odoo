@@ -324,7 +324,10 @@ class StockMove(models.Model):
         self.check_singleton()
         if accounts is None:
             accounts = self._get_valuation_accounts()
-        return accounts["stock_journal"] or self.company_id.account_stock_journal_id
+        return (
+            accounts["stock_journal"]
+            or self.company_id.stock_config_id.account_stock_journal_id
+        )
 
     def _create_account_move(self):
         accounts_cache = {}

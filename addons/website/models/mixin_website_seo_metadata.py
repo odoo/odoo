@@ -82,9 +82,9 @@ class MixinWebsiteSeoMetadata(models.AbstractModel):
                 request.website, img_field, size="300x300"
             ),
         }
-        if company.social_twitter:
+        if company.social_media_config_id.social_twitter:
             default_twitter["twitter:site"] = (
-                "@%s" % company.social_twitter.split("/")[-1]
+                "@%s" % company.social_media_config_id.social_twitter.split("/")[-1]
             )
 
         return {

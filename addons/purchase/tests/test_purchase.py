@@ -1252,13 +1252,13 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertFalse(po.locked)
         po.action_lock()
         self.assertTrue(po.locked)
-        self.assertNotEqual(po.company_id.order_lock_po, "lock")
+        self.assertNotEqual(po.company_id.purchase_config_id.order_lock_po, "lock")
         po.action_unlock()
         self.assertFalse(po.locked)
 
         po.action_lock()
         self.assertTrue(po.locked)
-        po.company_id.order_lock_po = "lock"
+        po.company_id.purchase_config_id.order_lock_po = "lock"
         po.action_unlock()
         self.assertFalse(po.locked)
 

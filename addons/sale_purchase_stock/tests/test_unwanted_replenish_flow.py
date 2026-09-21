@@ -10,7 +10,7 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.env.company.horizon_days = 0
+        cls.env.company.stock_config_id.horizon_days = 0
         cls.buy_route = cls.env.ref("purchase_stock.route_warehouse0_buy")
 
         cls.vendor = cls.env["res.partner"].create({"name": "Vendor"})
@@ -129,7 +129,7 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
             self.orderpoint_B.unwanted_replenish,
             "Orderpoint B is set to unwanted_replenish",
         )
-        self.env.company.horizon_days = 20
+        self.env.company.stock_config_id.horizon_days = 20
         self.orderpoint_A.invalidate_recordset(fnames=["lead_horizon_date"])
         self.orderpoint_A._compute_qty_to_order_computed()
         self.assertFalse(

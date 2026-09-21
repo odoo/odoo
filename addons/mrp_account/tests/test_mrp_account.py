@@ -292,12 +292,12 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_overhead_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_overhead_account_id.id,
                     "debit": 0.0,
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
                     "debit": 0.0,
                     "credit": 0.0,
                 },
@@ -307,12 +307,12 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_overhead_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_overhead_account_id.id,
                     "debit": 0.0,
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
                     "debit": 0.0,
                     "credit": 0.0,
                 },
@@ -351,12 +351,12 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_overhead_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_overhead_account_id.id,
                     "debit": 0.0,
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
                     "debit": 0.0,
                     "credit": 0.0,
                 },
@@ -366,12 +366,12 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_overhead_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_overhead_account_id.id,
                     "debit": 0.0,
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
                     "debit": 0.0,
                     "credit": 0.0,
                 },
@@ -428,12 +428,12 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_overhead_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_overhead_account_id.id,
                     "debit": 100.0,
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
                     "debit": 0.0,
                     "credit": 100.0 + total_component_price,
                 },
@@ -443,12 +443,12 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
                     "credit": total_component_price,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_overhead_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_overhead_account_id.id,
                     "debit": 0.0,
                     "credit": 100.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
                     "debit": 100.0 + total_component_price,
                     "credit": 0.0,
                 },
@@ -494,12 +494,12 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_overhead_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_overhead_account_id.id,
                     "debit": 100.0,
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
                     "debit": 0.0,
                     "credit": 100.0 + total_component_price,
                 },
@@ -509,12 +509,12 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
                     "credit": total_component_price,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_overhead_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_overhead_account_id.id,
                     "debit": 0.0,
                     "credit": 100.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
                     "debit": 100.0 + total_component_price,
                     "credit": 0.0,
                 },
@@ -561,12 +561,12 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_overhead_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_overhead_account_id.id,
                     "debit": 100.0,
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
                     "debit": 0.0,
                     "credit": 100.0 + total_component_price,
                 },
@@ -576,12 +576,12 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
                     "credit": total_component_price,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_overhead_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_overhead_account_id.id,
                     "debit": 0.0,
                     "credit": 100.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
                     "debit": 100.0 + total_component_price,
                     "credit": 0.0,
                 },
@@ -629,12 +629,12 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_overhead_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_overhead_account_id.id,
                     "debit": 100.0,
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
                     "debit": 0.0,
                     "credit": 100.0 + total_component_price,
                 },
@@ -644,12 +644,12 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
                     "credit": total_component_price,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_overhead_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_overhead_account_id.id,
                     "debit": 0.0,
                     "credit": 100.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
                     "debit": 100.0 + total_component_price,
                     "credit": 0.0,
                 },
@@ -687,12 +687,12 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_overhead_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_overhead_account_id.id,
                     "debit": 0.0,
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
                     "debit": 0.0,
                     "credit": 0.0,
                 },
@@ -702,12 +702,12 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_overhead_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_overhead_account_id.id,
                     "debit": 0.0,
                     "credit": 0.0,
                 },
                 {
-                    "account_id": self.env.company.account_production_wip_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
                     "debit": 0.0,
                     "credit": 0.0,
                 },

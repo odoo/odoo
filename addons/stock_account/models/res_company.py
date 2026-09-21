@@ -8,64 +8,12 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 
-from odoo.addons.stock_account.models.constants import (
-    COST_METHOD_SELECTION,
-    VALUATION_SELECTION,
-)
-
 _logger = logging.getLogger(__name__)
-
-
 _debug = DebugLog(__name__)
 
 
 class ResCompany(models.Model):
     _inherit = "res.company"
-
-    account_stock_journal_id = fields.Many2one(
-        comodel_name="account.journal",
-        string="Stock Journal",
-        check_company=True,
-    )
-
-    account_stock_valuation_id = fields.Many2one(
-        comodel_name="account.account",
-        string="Stock Valuation Account",
-        check_company=True,
-    )
-
-    account_production_wip_account_id = fields.Many2one(
-        comodel_name="account.account",
-        string="Production WIP Account",
-        check_company=True,
-    )
-    account_production_wip_overhead_account_id = fields.Many2one(
-        comodel_name="account.account",
-        string="Production WIP Overhead Account",
-        check_company=True,
-    )
-
-    inventory_period = fields.Selection(
-        selection=[
-            ("manual", "Manual"),
-            ("daily", "Daily"),
-            ("monthly", "Monthly"),
-        ],
-        default="manual",
-        required=True,
-    )
-
-    inventory_valuation = fields.Selection(
-        selection=VALUATION_SELECTION,
-        string="Valuation",
-        default="periodic",
-    )
-
-    cost_method = fields.Selection(
-        selection=COST_METHOD_SELECTION,
-        default="standard",
-        required=True,
-    )
 
     def action_close_stock_valuation(self, at_date=None, auto_post=False):
         self.check_singleton()
@@ -144,13 +92,13 @@ class ResCompany(models.Model):
 
         if not aml_vals_list:
             return self.env["account.move"]
-        if not self.account_stock_journal_id:
+        if not self.stock_config_id.account_stock_journal_id:
             raise UserError(
                 self.env._(
                     "Please set the Journal for Inventory Valuation in the settings."
                 )
             )
-        if not self.account_stock_valuation_id:
+        if not self.stock_config_id.account_stock_valuation_id:
             raise UserError(
                 self.env._(
                     "Please set the Valuation Account for Inventory Valuation in the settings."
@@ -158,7 +106,7 @@ class ResCompany(models.Model):
             )
 
         moves_vals = {
-            "journal_id": self.account_stock_journal_id.id,
+            "journal_id": self.stock_config_id.account_stock_journal_id.id,
             "date": at_date or fields.Date.today(),
             "ref": _("Stock Closing"),
             "is_stock_valuation_closing": True,
@@ -249,8 +197,8 @@ class ResCompany(models.Model):
             periods.append("monthly")
         domain = Domain(
             [
-                ("inventory_period", "in", periods),
-                ("inventory_valuation", "!=", "real_time"),
+                ("stock_config_id.inventory_period", "in", periods),
+                ("stock_config_id.inventory_valuation", "!=", "real_time"),
             ]
         )
         companies = self.env["res.company"].search(domain)
@@ -355,14 +303,14 @@ class ResCompany(models.Model):
         for location, category, value in value_into_location:
             stock_valuation_acc = (
                 category.property_stock_valuation_account_id
-                or self.account_stock_valuation_id
+                or self.stock_config_id.account_stock_valuation_id
             )
             account_balance[location.valuation_account_id, stock_valuation_acc] += value
 
         for location, category, value in value_out_of_location:
             stock_valuation_acc = (
                 category.property_stock_valuation_account_id
-                or self.account_stock_valuation_id
+                or self.stock_config_id.account_stock_valuation_id
             )
             account_balance[location.valuation_account_id, stock_valuation_acc] -= value
 
@@ -543,27 +491,27 @@ class ResCompany(models.Model):
                 IrDefault.set(
                     "product.category",
                     "property_valuation",
-                    company.inventory_valuation,
+                    company.stock_config_id.inventory_valuation,
                     company_id=company.id,
                 )
             if changed_fields is None or "cost_method" in changed_fields:
                 IrDefault.set(
                     "product.category",
                     "property_cost_method",
-                    company.cost_method,
+                    company.stock_config_id.cost_method,
                     company_id=company.id,
                 )
             if changed_fields is None or "account_stock_journal_id" in changed_fields:
                 IrDefault.set(
                     "product.category",
                     "property_stock_journal",
-                    company.account_stock_journal_id.id,
+                    company.stock_config_id.account_stock_journal_id.id,
                     company_id=company.id,
                 )
             if changed_fields is None or "account_stock_valuation_id" in changed_fields:
                 IrDefault.set(
                     "product.category",
                     "property_stock_valuation_account_id",
-                    company.account_stock_valuation_id.id,
+                    company.stock_config_id.account_stock_valuation_id.id,
                     company_id=company.id,
                 )

@@ -382,7 +382,7 @@ class TestAuditOrderpointFixes(TransactionCase):
         counted = (
             nullcontext()
             if is_module_installed(self.env, "purchase_stock")
-            else self.assertQueryCount(__system__=17)
+            else self.assertQueryCount(__system__=18)
         )
         with counted:
             orderpoints._compute_qty_to_order_computed()

@@ -565,7 +565,7 @@ class TestAMissingMailTemplateDoesNotBlockDelivery(PickingAuditCase):
         cls.customer = cls.env["res.partner"].create(
             {"name": "Audit customer", "email": "audit@example.invalid"},
         )
-        cls.env.company.stock_move_email_validation = True
+        cls.env.company.stock_config_id.stock_move_email_validation = True
 
     def _ready_delivery(self):
         picking = self.env["stock.picking"].create(
@@ -586,7 +586,7 @@ class TestAMissingMailTemplateDoesNotBlockDelivery(PickingAuditCase):
         return picking
 
     def test_a_deleted_template_does_not_block_validation(self):
-        self.env.company.stock_mail_confirmation_template_id = False
+        self.env.company.stock_config_id.stock_mail_confirmation_template_id = False
         picking = self._ready_delivery()
 
         picking.with_context(skip_backorder=True).button_validate()
@@ -599,7 +599,9 @@ class TestAMissingMailTemplateDoesNotBlockDelivery(PickingAuditCase):
         )
 
     def test_the_confirmation_is_still_sent_when_the_template_is_there(self):
-        self.assertTrue(self.env.company.stock_mail_confirmation_template_id)
+        self.assertTrue(
+            self.env.company.stock_config_id.stock_mail_confirmation_template_id
+        )
         picking = self._ready_delivery()
         before = len(picking.message_ids)
 

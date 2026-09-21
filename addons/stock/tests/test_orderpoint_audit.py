@@ -247,7 +247,7 @@ class TestOrderpointAudit(TransactionCase):
                 )
 
     def test_the_report_horizon_never_reaches_a_stored_column(self):
-        self.env.company.horizon_days = 365
+        self.env.company.stock_config_id.horizon_days = 365
         product = self._product("Audit Horizon", suppliable=False)
         self._outgoing(product, 500, days_out=500)
         orderpoint = self._orderpoint(
@@ -282,7 +282,7 @@ class TestOrderpointAudit(TransactionCase):
         )
 
     def test_the_report_horizon_still_changes_what_the_report_shows(self):
-        self.env.company.horizon_days = 365
+        self.env.company.stock_config_id.horizon_days = 365
         product = self._product("Audit Horizon View", suppliable=False)
         self._outgoing(product, 500, days_out=500)
         orderpoint = self._orderpoint(
@@ -564,7 +564,7 @@ class TestOrderpointAudit(TransactionCase):
             trigger="auto",
             route_id=self.supply_route.id,
         )
-        self.env.company.horizon_days = 5
+        self.env.company.stock_config_id.horizon_days = 5
         self.env.flush_all()
         self.env.invalidate_all()
         planned = orderpoint._prepare_procurements({})[0].values["date_planned"]
@@ -642,7 +642,7 @@ class TestOrderpointAudit(TransactionCase):
 
     def test_a_late_arrival_does_not_hide_an_earlier_shortage(self):
         self.stock_location.replenish_location = True
-        self.env.company.horizon_days = 30
+        self.env.company.stock_config_id.horizon_days = 30
         cases = {
             "no arrival at all": None,
             "arrival past the horizon": 90,

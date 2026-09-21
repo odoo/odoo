@@ -1,6 +1,6 @@
 {
     "name": "Sales",
-    "version": "1.9",
+    "version": "1.10",
     "category": "Sales/Sales",
     "sequence": 5,
     "summary": "From quotations to invoices",
@@ -44,6 +44,7 @@ that reach sales orders only through another application.
     "data": [
         "security/res_groups.xml",
         "security/ir.model.access.csv",
+        "security/sale_security.xml",
         "security/ir_rules.xml",
         "reports/ir_actions_report_templates.xml",
         "reports/ir_actions_report.xml",

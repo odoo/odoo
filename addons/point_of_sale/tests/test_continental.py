@@ -15,7 +15,7 @@ class TestContinentalPerpetualFlow(TestContinentalCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.company.inventory_valuation = "real_time"
+        cls.env.company.stock_config_id.inventory_valuation = "real_time"
         cls.category.property_valuation = "real_time"
         cls.product.write(
             {

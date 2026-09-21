@@ -3,7 +3,6 @@ from . import (
     account_move_line,
     product_product,
     product_template,
-    res_company,
     res_partner,
     sale_order,
     sale_order_line,
@@ -15,3 +14,4 @@ from . import (
     stock_route,
     stock_rule,
 )
+from . import sale_config

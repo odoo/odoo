@@ -41,7 +41,7 @@ class TestMrpReplenish(TestMrpCommon):
             )
 
     def test_mrp_orderpoint_leadtime(self):
-        self.env.company.horizon_days = 0
+        self.env.company.stock_config_id.horizon_days = 0
         route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
         route_manufacture.supplied_wh_id = self.warehouse_1
         route_manufacture.supplier_wh_id = self.warehouse_1

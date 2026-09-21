@@ -407,8 +407,8 @@ class AccountMove(models.Model):
         excluded = (
             asset.account_asset_id
             + asset.account_depreciation_id
-            + asset.company_id.gain_account_id
-            + asset.company_id.loss_account_id
+            + asset.company_id.account_config_id.gain_account_id
+            + asset.company_id.account_config_id.loss_account_id
         )
         return self.line_ids.filtered(
             lambda line: (

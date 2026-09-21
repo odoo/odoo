@@ -129,8 +129,8 @@ class AssetModify(models.TransientModel):
     @api.depends("company_id")
     def _compute_accounts(self):
         for record in self:
-            record.gain_account_id = record.company_id.gain_account_id
-            record.loss_account_id = record.company_id.loss_account_id
+            record.gain_account_id = record.company_id.account_config_id.gain_account_id
+            record.loss_account_id = record.company_id.account_config_id.loss_account_id
 
     @api.depends("date", "asset_id")
     def _compute_value_depreciable_residual(self):
@@ -141,11 +141,15 @@ class AssetModify(models.TransientModel):
 
     def _inverse_gain_account(self):
         for record in self:
-            record.company_id.sudo().gain_account_id = record.gain_account_id
+            record.company_id.sudo().account_config_id.gain_account_id = (
+                record.gain_account_id
+            )
 
     def _inverse_loss_account(self):
         for record in self:
-            record.company_id.sudo().loss_account_id = record.loss_account_id
+            record.company_id.sudo().account_config_id.loss_account_id = (
+                record.loss_account_id
+            )
 
     @api.onchange("modify_action")
     def _onchange_action(self):

@@ -1114,7 +1114,9 @@ class SaleOrderLine(models.Model):
         )
 
     def _get_domain_lines_sellable(self):
-        discount_products_ids = self.env.companies.sale_discount_product_id.ids
+        discount_products_ids = (
+            self.env.companies.sale_config_id.sale_discount_product_id.ids
+        )
         domain = Domain("is_downpayment", "=", False)
         if discount_products_ids:
             domain &= Domain("product_id", "not in", discount_products_ids)
@@ -1537,7 +1539,8 @@ class SaleOrderLine(models.Model):
         return (
             self.order_id._can_be_edited_on_portal()
             and not self.combo_item_id
-            and self.product_id != self.company_id.sale_discount_product_id
+            and self.product_id
+            != self.company_id.sale_config_id.sale_discount_product_id
             and self._is_line_optional()
         )
 
@@ -1554,7 +1557,10 @@ class SaleOrderLine(models.Model):
 
     def _can_be_invoiced_alone(self):
         self.check_singleton()
-        return self.product_id.id != self.company_id.sale_discount_product_id.id
+        return (
+            self.product_id.id
+            != self.company_id.sale_config_id.sale_discount_product_id.id
+        )
 
     def _has_taxes(self):
         self.check_singleton()
@@ -1575,7 +1581,9 @@ class SaleOrderLine(models.Model):
 
     def _is_discount_line(self):
         self.check_singleton()
-        return self.product_id in self.company_id.sale_discount_product_id
+        return (
+            self.product_id in self.company_id.sale_config_id.sale_discount_product_id
+        )
 
     def _is_global_discount(self):
         self.check_singleton()

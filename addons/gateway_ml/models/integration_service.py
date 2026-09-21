@@ -46,7 +46,7 @@ class IntegrationService(models.Model):
         if not wire:
             return
         company = self.env["res.company"].browse(company_id or self.env.company.id)
-        cap = company.gateway_ml_monthly_budget
+        cap = company.gateway_ml_config_id.gateway_ml_monthly_budget
         if not cap:
             return
         spent = company._gateway_ml_spend_this_month()

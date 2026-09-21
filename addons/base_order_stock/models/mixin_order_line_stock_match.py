@@ -333,7 +333,7 @@ class MixinOrderLineStockMatch(models.AbstractModel):
             ol.id AS order_line_id,
             NULL::INTEGER AS move_id,
             NULL::INTEGER AS picking_id,
-            ol.company_id,
+            o.company_id,
             ol.partner_id,
             ol.product_id,
             ol.product_qty AS line_qty,

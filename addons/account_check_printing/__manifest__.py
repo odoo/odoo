@@ -1,6 +1,6 @@
 {
     "name": "Check Printing Base",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Accounting/Accounting",
     "summary": "Check printing basic features",
     "description": """

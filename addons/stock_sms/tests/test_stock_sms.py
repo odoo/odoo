@@ -12,7 +12,8 @@ class TestStockSms(TransactionCase):
     def test_default_confirmation_template_is_delivery_template(self):
         expected = self.env.ref("stock_sms.sms_template_data_stock_delivery")
         self.assertEqual(
-            self.company._default_stock_sms_confirmation_template_id(), expected.id
+            self.env["stock.config"]._default_stock_sms_confirmation_template_id(),
+            expected.id,
         )
 
     def test_get_pickings_to_warn_sms_is_disabled_during_tests(self):

@@ -82,7 +82,7 @@ class StockRule(models.Model):
                 delay_description.append(
                     (_("Vendor Lead Time"), _("+ %d day(s)", supplier_delay)),
                 )
-        days_to_order = buy_rule.company_id.days_to_purchase
+        days_to_order = buy_rule.company_id.purchase_config_id.days_to_purchase
         delays["total_delay"] += days_to_order
         if not bypass_delay_description:
             delay_description.append((_("Order Deadline"), days_to_order))

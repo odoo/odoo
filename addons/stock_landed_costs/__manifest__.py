@@ -1,6 +1,6 @@
 {
     "name": "WMS Landed Costs",
-    "version": "1.2",
+    "version": "1.3",
     "category": "Supply Chain/Inventory",
     "sequence": 16,
     "summary": "Landed Costs",

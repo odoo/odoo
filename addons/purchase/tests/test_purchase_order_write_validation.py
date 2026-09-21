@@ -98,7 +98,7 @@ class TestPurchaseOrderWriteValidation(AccountTestInvoicingCommon):
         self.assertTrue(po.locked)
 
     def test_auto_lock_on_confirm_not_self_blocked(self):
-        self.env.company.order_lock_po = "lock"
+        self.env.company.purchase_config_id.order_lock_po = "lock"
         po = self._new_po()
         po.action_confirm()
         self.assertEqual(po.state, "done")

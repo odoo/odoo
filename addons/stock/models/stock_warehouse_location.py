@@ -228,7 +228,7 @@ class StockWarehouseLocation(models.Model):
 
     def _get_transit_locations(self):
         return (
-            self.company_id.internal_transit_location_id,
+            self.company_id.stock_config_id.internal_transit_location_id,
             self.env.ref("stock.stock_location_inter_company", raise_if_not_found=False)
             or self.env["stock.location"],
         )
@@ -278,7 +278,7 @@ class StockWarehouseLocation(models.Model):
             if company_id
             else self.env.company
         )
-        transit_location = company.internal_transit_location_id
+        transit_location = company.stock_config_id.internal_transit_location_id
         if not transit_location:
             return
         dbg.logic.debug(

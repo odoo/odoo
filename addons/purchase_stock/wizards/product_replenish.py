@@ -112,7 +112,7 @@ class ProductReplenish(models.TransientModel):
         if not show_vendor or not supplier:
             return date
 
-        delay = supplier.delay + self.env.company.days_to_purchase
+        delay = supplier.delay + self.env.company.purchase_config_id.days_to_purchase
 
         return fields.Datetime.add(date, days=delay)
 

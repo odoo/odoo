@@ -53,7 +53,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
     def test_00_product_company_level_delays(self):
         company = self.env.ref("base.main_company")
 
-        company.security_lead = 3
+        company.sale_config_id.security_lead = 3
 
         order_form = Form(self.env["sale.order"])
         order_form.partner_id = self.partner_1
@@ -74,7 +74,9 @@ class TestSaleMrpLeadTime(TestStockCommon):
         deadline_picking = fields.Datetime.from_string(order.date_order) + timedelta(
             days=self.product_1.sale_delay
         )
-        out_date = deadline_picking - timedelta(days=company.security_lead)
+        out_date = deadline_picking - timedelta(
+            days=company.sale_config_id.security_lead
+        )
         self.assertAlmostEqual(
             order.picking_ids[0].date_planned,
             out_date,

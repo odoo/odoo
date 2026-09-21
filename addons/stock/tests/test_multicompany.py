@@ -71,7 +71,7 @@ class TestCompanyProvisioning(TransactionCase):
 
     def test_backfill_covers_archived_company(self):
         company = self.env["res.company"].create({"name": "Archived Co"})
-        company.internal_transit_location_id = False
+        company.stock_config_id.internal_transit_location_id = False
         company.active = False
         self.assertIn(
             company,
@@ -81,7 +81,7 @@ class TestCompanyProvisioning(TransactionCase):
         self.env["res.company"].create_missing_transit_location()
         company.invalidate_recordset()
         self.assertTrue(
-            company.internal_transit_location_id,
+            company.stock_config_id.internal_transit_location_id,
             "an archived company without a transit location must still be backfilled",
         )
 
@@ -90,7 +90,7 @@ class TestCompanyStockProvisioning(TransactionCase):
     def test_create_provisions_locations_sequence_and_partner(self):
         company = self.env["res.company"].create({"name": "Prov Co"})
         self.assertTrue(
-            company.internal_transit_location_id,
+            company.stock_config_id.internal_transit_location_id,
             "create() must provision a transit location",
         )
         default = self.env["ir.default"]
@@ -116,18 +116,18 @@ class TestCompanyStockProvisioning(TransactionCase):
         partner = company.partner_id.with_company(company)
         self.assertEqual(
             partner.property_stock_customer,
-            company.internal_transit_location_id,
+            company.stock_config_id.internal_transit_location_id,
             "the company partner's customer location must point at the transit location",
         )
         self.assertEqual(
             partner.property_stock_supplier,
-            company.internal_transit_location_id,
+            company.stock_config_id.internal_transit_location_id,
             "the company partner's supplier location must point at the transit location",
         )
 
     def test_set_stock_property_locations_helper(self):
         company = self.env["res.company"].create({"name": "Helper Co"})
-        transit = company.internal_transit_location_id
+        transit = company.stock_config_id.internal_transit_location_id
         partner = self.env["res.partner"].create({"name": "Prop Partner"})
         partner.with_company(company)._update_stock_property_locations(transit)
         self.assertEqual(partner.with_company(company).property_stock_customer, transit)
@@ -150,7 +150,7 @@ class TestCompanyStockProvisioning(TransactionCase):
         self.env["res.company"].create_missing_transit_location()
         self.assertFalse(
             self.env["res.company"].search(
-                [("internal_transit_location_id", "=", False)]
+                [("stock_config_id.internal_transit_location_id", "=", False)]
             ),
             "every company must own a transit location and the backfill adds none twice",
         )
@@ -166,14 +166,14 @@ class TestCompanyStockProvisioning(TransactionCase):
 
     def test_get_text_validation_gate(self):
         company = self.env["res.company"].create({"name": "Text Co"})
-        company.stock_text_confirmation = True
-        company.stock_confirmation_type = "sms"
+        company.stock_config_id.stock_text_confirmation = True
+        company.stock_config_id.stock_confirmation_type = "sms"
         self.assertTrue(company._is_text_confirmation_enabled("sms"))
         self.assertFalse(
             company._is_text_confirmation_enabled("whatsapp"),
             "a channel other than the configured one must not validate",
         )
-        company.stock_text_confirmation = False
+        company.stock_config_id.stock_text_confirmation = False
         self.assertFalse(
             company._is_text_confirmation_enabled("sms"),
             "text confirmation disabled must never validate",
@@ -182,38 +182,38 @@ class TestCompanyStockProvisioning(TransactionCase):
     def test_horizon_days_rejects_negative(self):
         company = self.env["res.company"].create({"name": "Horizon Co"})
         with self.assertRaises(ValidationError):
-            company.horizon_days = -1
+            company.stock_config_id.horizon_days = -1
 
     def test_horizon_days_allows_zero(self):
         company = self.env["res.company"].create({"name": "Horizon Zero Co"})
-        company.horizon_days = 0
-        self.assertEqual(company.horizon_days, 0)
+        company.stock_config_id.horizon_days = 0
+        self.assertEqual(company.stock_config_id.horizon_days, 0)
 
     def test_create_missing_mail_template_backfills_and_is_idempotent(self):
         template = self.env.ref("stock.mail_template_data_delivery_confirmation")
         active = self.env["res.company"].create({"name": "Tmpl Active"})
         archived = self.env["res.company"].create({"name": "Tmpl Archived"})
-        (active + archived).stock_mail_confirmation_template_id = False
+        (active + archived).stock_config_id.stock_mail_confirmation_template_id = False
         archived.active = False
 
         self.env["res.company"].create_missing_mail_template()
 
         self.assertEqual(
-            active.stock_mail_confirmation_template_id,
+            active.stock_config_id.stock_mail_confirmation_template_id,
             template,
             "an active company without the template must be backfilled",
         )
         self.assertEqual(
-            archived.stock_mail_confirmation_template_id,
+            archived.stock_config_id.stock_mail_confirmation_template_id,
             template,
             "an archived company without the template must still be backfilled",
         )
 
         custom = template.copy({"name": "Custom Confirmation"})
-        active.stock_mail_confirmation_template_id = custom
+        active.stock_config_id.stock_mail_confirmation_template_id = custom
         self.env["res.company"].create_missing_mail_template()
         self.assertEqual(
-            active.stock_mail_confirmation_template_id,
+            active.stock_config_id.stock_mail_confirmation_template_id,
             custom,
             "the backfill must not overwrite a company's existing template",
         )
@@ -272,8 +272,8 @@ class TestMultiCompany(TransactionCase):
         )
 
     def test_orderpoint_lead_horizon_uses_own_company_horizon(self):
-        self.company_a.horizon_days = 10
-        self.company_b.horizon_days = 40
+        self.company_a.stock_config_id.horizon_days = 10
+        self.company_b.stock_config_id.horizon_days = 40
         product = self.env["product.product"].create(
             {"name": "horizon prod", "is_storable": True}
         )
@@ -356,8 +356,8 @@ class TestMultiCompany(TransactionCase):
 
     def test_company_1(self):
         with self.assertRaises(UserError):
-            self.company_a.internal_transit_location_id = (
-                self.company_b.internal_transit_location_id
+            self.company_a.stock_config_id.internal_transit_location_id = (
+                self.company_b.stock_config_id.internal_transit_location_id
             )
 
     def test_partner_1(self):

@@ -10,7 +10,9 @@ class L10nLatamCheckTest(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.chart_template = cls.company_data["company"].account_config_id.chart_template
+        cls.chart_template = cls.company_data[
+            "company"
+        ].account_config_id.chart_template
         cls.company_data_3 = cls.setup_other_company(
             name="company_3_data", country_id=cls.env.ref("base.ar").id
         )
@@ -63,5 +65,5 @@ class L10nLatamCheckTest(AccountTestInvoicingCommon):
                 {"company_ids": [Command.set(company.ids)]}
             )
             cls.bank_journal.outbound_payment_channel_ids.filtered(
-                lambda m: m.company_id == company
+                lambda m, company=company: m.company_id == company
             ).payment_account_id = outstanding_account

@@ -8,7 +8,9 @@ class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
     partners_count = fields.Integer(compute="_compute_partners_count")
-    partners_label = fields.Char(related="company_id.partnership_label")
+    partners_label = fields.Char(
+        related="company_id.partnership_config_id.partnership_label"
+    )
 
     def _compute_partners_count(self):
         partners_data = self.env["res.partner"]._read_group(

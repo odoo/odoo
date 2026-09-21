@@ -464,7 +464,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         )
 
     def test_reordering_days_to_purchase(self):
-        self.company.horizon_days = 0
+        self.company.stock_config_id.horizon_days = 0
         self.patcher = patch(
             "odoo.addons.stock.models.stock_orderpoint.fields.Date", wraps=fields.Date
         )
@@ -473,7 +473,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         vendor = self.env["res.partner"].create({"name": "Colruyt"})
         vendor2 = self.env["res.partner"].create({"name": "Delhaize"})
 
-        self.company.days_to_purchase = 2.0
+        self.company.purchase_config_id.days_to_purchase = 2.0
 
         prod = self.env["product.product"].create(
             {
@@ -534,7 +534,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         orderpoint_form = Form(self.env["stock.warehouse.orderpoint"])
         orderpoint_form.product_id = product
         orderpoint_form.product_min_qty = 0.0
-        self.company.horizon_days = 1
+        self.company.stock_config_id.horizon_days = 1
         orderpoint_form.save()
 
         orderpoint_form = Form(

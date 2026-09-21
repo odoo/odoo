@@ -1,6 +1,6 @@
 {
     "name": "Social Media",
-    "version": "0.1",
+    "version": "0.2",
     "category": "Marketing/Social Marketing",
     "summary": "Social media connectors for company settings.",
     "description": """
@@ -13,6 +13,8 @@ social media configuration for any other module that might need it.
         "base",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/social_media_security.xml",
         "views/res_company_views.xml",
     ],
     "demo": [

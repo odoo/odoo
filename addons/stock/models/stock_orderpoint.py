@@ -664,7 +664,7 @@ class StockWarehouseOrderpoint(models.Model):
         "location_id",
         "rule_ids",
         "product_id.seller_ids.delay",
-        "company_id.horizon_days",
+        "company_id.stock_config_id.horizon_days",
     )
     @dbg.timed
     def _compute_qty_to_order_computed(self):

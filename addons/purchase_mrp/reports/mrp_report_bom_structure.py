@@ -16,7 +16,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 supplier = product._select_seller(quantity=None, uom_id=product.uom_id)
             parent_bom = self.env.context.get("parent_bom")
             purchase_lead = (
-                parent_bom.company_id.days_to_purchase
+                parent_bom.company_id.purchase_config_id.days_to_purchase
                 if parent_bom and parent_bom.company_id
                 else 0
             )

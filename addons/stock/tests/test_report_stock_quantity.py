@@ -70,7 +70,7 @@ class TestReportStockQuantity(tests.TransactionCase):
 
     def test_report_stock_quantity_stansit(self):
         wh2 = self.env["stock.warehouse"].create({"name": "WH2", "code": "WH2"})
-        transit_loc = self.wh.company_id.internal_transit_location_id
+        transit_loc = self.wh.company_id.stock_config_id.internal_transit_location_id
 
         self.move_transit_out = self.env["stock.move"].create(
             {
@@ -309,7 +309,7 @@ class TestReportStockQuantity(tests.TransactionCase):
                 }
             ),
         )
-        transit_loc = self.wh.company_id.internal_transit_location_id
+        transit_loc = self.wh.company_id.stock_config_id.internal_transit_location_id
         warehouse.write(
             {
                 "resupply_wh_ids": [Command.set(warehouse_2.ids)],

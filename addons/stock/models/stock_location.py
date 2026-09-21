@@ -770,11 +770,11 @@ class StockLocation(models.Model):
 
     def _get_company_annual_inventory_date(self):
         self.check_singleton()
-        if not self.company_id.annual_inventory_month:
+        if not self.company_id.stock_config_id.annual_inventory_month:
             return False
         today = fields.Date.today()
-        month = int(self.company_id.annual_inventory_month)
-        day = max(self.company_id.annual_inventory_day, 1)
+        month = int(self.company_id.stock_config_id.annual_inventory_month)
+        day = max(self.company_id.stock_config_id.annual_inventory_day, 1)
         day = min(day, calendar.monthrange(today.year, month)[1])
         annual_date = today.replace(month=month, day=day)
         if annual_date <= today:

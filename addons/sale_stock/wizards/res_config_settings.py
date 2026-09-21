@@ -8,7 +8,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     security_lead = fields.Float(
-        related="company_id.security_lead",
+        related="company_id.sale_config_id.security_lead",
         string="Security Lead Time",
         readonly=False,
     )

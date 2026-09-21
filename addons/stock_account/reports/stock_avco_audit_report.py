@@ -101,6 +101,8 @@ LEFT JOIN
     product_category pc ON pt.categ_id = pc.id
 LEFT JOIN
     res_company company ON sm.company_id = company.id
+LEFT JOIN
+    stock_config stock_config ON stock_config.company_id = company.id
 WHERE
     sm.state = 'done'
     -- Dropship moves are deliberately absent: `_run_average_batch` replays them
@@ -114,7 +116,7 @@ WHERE
     -- AND tighter than OR, which silently let every category-less product through.
     AND COALESCE(
         pc.property_cost_method ->> company.id::text,
-        company.cost_method
+        stock_config.cost_method
     ) IN ('fifo', 'average')
 UNION ALL
 SELECT

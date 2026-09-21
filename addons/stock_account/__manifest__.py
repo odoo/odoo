@@ -1,6 +1,6 @@
 {
     "name": "WMS Accounting",
-    "version": "1.2",
+    "version": "1.3",
     "category": "Supply Chain/Inventory",
     "sequence": 16,
     "summary": "Inventory, Logistic, Valuation, Accounting",

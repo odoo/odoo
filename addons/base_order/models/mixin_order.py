@@ -646,7 +646,8 @@ class MixinOrder(models.AbstractModel):
 
     def _is_lock_required(self):
         self.check_singleton()
-        if self.company_id[self._get_lock_setting_field()] == "lock":
+        lock_field = self._get_lock_setting_field()
+        if self.company_id._config_owner_of(lock_field)[lock_field] == "lock":
             _debug.logic("lock_required", order=self, by="company_setting")
             return True
         group = self._auto_lock_group

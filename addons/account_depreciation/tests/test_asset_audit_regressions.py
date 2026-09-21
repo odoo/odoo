@@ -21,8 +21,8 @@ class TestAssetAuditRegressions(TestAccountAssetCommon):
         cls.loss_account = cls.company_data["default_account_expense"].copy(
             {"code": "699950", "name": "Audit loss"}
         )
-        cls.company.gain_account_id = cls.gain_account
-        cls.company.loss_account_id = cls.loss_account
+        cls.company.account_config_id.gain_account_id = cls.gain_account
+        cls.company.account_config_id.loss_account_id = cls.loss_account
 
     def _running_asset(self, **kwargs):
         asset = self.create_asset(1200, "yearly", 4, **kwargs)

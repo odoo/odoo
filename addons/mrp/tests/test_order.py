@@ -5148,7 +5148,7 @@ class TestMrpOrder(TestMrpCommon):
         )
 
     def test_manufacture_lead_days(self):
-        self.env.company.horizon_days = 0
+        self.env.company.stock_config_id.horizon_days = 0
         warehouse = self.warehouse_1
         rule = warehouse.manufacture_pull_id
 

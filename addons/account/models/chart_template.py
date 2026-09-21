@@ -420,7 +420,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _pre_reload_data(self, company, template_data, data, force_create=True):
         for prop, model in self._get_property_accounts().items():
             if model == "res.company":
-                is_set = bool(company[prop])
+                is_set = bool(company._config_owner_of(prop)[prop])
             else:
                 is_set = self.env["ir.default"]._get(model, prop, company_id=company.id)
             if is_set:
@@ -846,29 +846,37 @@ class AccountChartTemplate(models.AbstractModel):
         return True
 
     def _split_company_config_data(self, company, data):
-        # a template describes a company's accounting as one dict; the
-        # keys the company does not carry are its account.config's
-        config = company.account_config_id
+        # a template describes a company's accounting as one dict; the keys
+        # the company does not carry belong to the configuration that
+        # declares each of them, loaded right after the company and before
+        # the journals and taxes that read prefixes and fiscal country
         company_data = data.get("res.company", {}).get(company.id, {})
-        if "account.config" not in data:
-            # loaded right after the company, before the journals and taxes
-            # that read its prefixes and fiscal country
+        links = company._config_link_fields()
+        config_models = [field.comodel_name for field in links.values()]
+        if any(model not in data for model in config_models):
             ordered = {}
             for model, records in data.items():
+                if model in config_models:
+                    continue
                 ordered[model] = records
                 if model == "res.company":
-                    ordered["account.config"] = {}
-            if "account.config" not in ordered:
-                ordered["account.config"] = {}
+                    for config_model in config_models:
+                        ordered[config_model] = data.get(config_model, {})
+            for config_model in config_models:
+                ordered.setdefault(config_model, {})
             data.clear()
             data.update(ordered)
-        config_data = data["account.config"].setdefault(config.id, {})
         for key in list(company_data):
             base_key = key.split("@")[0]
             if base_key in company._fields or base_key == "__translation_module__":
                 continue
-            if base_key in config._fields:
-                config_data[key] = company_data.pop(key)
+            for link, field in links.items():
+                config = company[link]
+                if base_key in config._fields:
+                    data[field.comodel_name].setdefault(config.id, {})[key] = (
+                        company_data.pop(key)
+                    )
+                    break
 
     def _pre_load_account_config_vals(self, company, template_data):
         config = company.account_config_id
@@ -879,6 +887,27 @@ class AccountChartTemplate(models.AbstractModel):
         }
         vals.setdefault("anglo_saxon_accounting", False)
         return vals
+
+    def _pre_load_other_config_vals(self, company, template_data):
+        # the template values that neither the company nor account.config
+        # carry, keyed by the configuration link that declares each
+        vals_by_link = {}
+        property_accounts = self._get_property_accounts()
+        for link, field in company._config_link_fields().items():
+            if field.comodel_name == "account.config":
+                continue
+            config_fields = self.env[field.comodel_name]._fields
+            vals = {
+                key: val
+                for key, val in template_data.items()
+                if key in config_fields
+                and key not in company._fields
+                and key not in self.env["account.config"]._fields
+                and key not in property_accounts
+            }
+            if vals:
+                vals_by_link[link] = vals
+        return vals_by_link
 
     def _pre_load_company_vals(self, company, template_data, fiscal_country):
         property_accounts = self._get_property_accounts()
@@ -973,6 +1002,10 @@ class AccountChartTemplate(models.AbstractModel):
             self._pre_load_company_vals(company, template_data, fiscal_country)
         )
         config.write(self._pre_load_account_config_vals(company, template_data))
+        for link, vals in self._pre_load_other_config_vals(
+            company, template_data
+        ).items():
+            company[link].write(vals)
         self._pre_load_report_config_vals(company, template_data)
 
         code_digits = int(template_data.get("code_digits", 6))
@@ -1355,7 +1388,9 @@ class AccountChartTemplate(models.AbstractModel):
         _debug.lifecycle("_post_load_defaults", records=self)
         for field, model in self._get_property_accounts().items():
             value = template_data.get(field)
-            if not value or field not in self.env[model]._fields:
+            if not value or (
+                model != "res.company" and field not in self.env[model]._fields
+            ):
                 continue
             _debug.logic(
                 "property_default_set",
@@ -1365,10 +1400,7 @@ class AccountChartTemplate(models.AbstractModel):
                 ref=value,
             )
             if model == "res.company":
-                owner = (
-                    company if field in company._fields else company.account_config_id
-                )
-                owner[field] = self.ref(value)
+                company._config_owner_of(field)[field] = self.ref(value)
             else:
                 self.env["ir.default"].set(
                     model, field, self.ref(value).id, company_id=company.id

@@ -58,7 +58,7 @@ class TestSearchValuation(TestStockValuationCommon):
 
     def test_falls_back_to_company_inventory_valuation(self):
         self.assertFalse(self.category_no_valuation.property_valuation)
-        self.assertEqual(self.company.inventory_valuation, "periodic")
+        self.assertEqual(self.company.stock_config_id.inventory_valuation, "periodic")
         found = self.env["product.template"].search(
             [
                 ("id", "=", self.product_company_fallback.id),

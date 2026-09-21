@@ -317,7 +317,7 @@ class StockWarehouseOrderpointReplenish(models.Model):
 
     def _get_canonical_horizon_days(self, company=None):
         company = company or self.company_id or self.env.company
-        return company.horizon_days
+        return company.stock_config_id.horizon_days
 
     def _with_canonical_horizon(self):
         if "global_horizon_days" not in self.env.context:

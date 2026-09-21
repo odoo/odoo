@@ -1849,8 +1849,8 @@ class AccountDepreciationBoard(models.Model):
                     and (
                         account
                         not in (
-                            asset.company_id.gain_account_id,
-                            asset.company_id.loss_account_id,
+                            asset.company_id.account_config_id.gain_account_id,
+                            asset.company_id.account_config_id.loss_account_id,
                         )
                     ),
                 },
@@ -1893,9 +1893,9 @@ class AccountDepreciationBoard(models.Model):
             ]
             difference = -initial_amount - depreciated_amount - invoice_amount
             difference_account = (
-                asset.company_id.gain_account_id
+                asset.company_id.account_config_id.gain_account_id
                 if difference > 0
-                else asset.company_id.loss_account_id
+                else asset.company_id.account_config_id.loss_account_id
             )
             line_datas = (
                 [
@@ -2070,7 +2070,10 @@ class AccountDepreciationBoard(models.Model):
 
     def _check_disposal_accounts(self):
         company = self.company_id.sudo()
-        if not (company.gain_account_id and company.loss_account_id):
+        if not (
+            company.account_config_id.gain_account_id
+            and company.account_config_id.loss_account_id
+        ):
             _debug.logic("disposal.refused", reason="no_gain_loss_account", board=self)
             raise UserError(
                 _(

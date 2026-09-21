@@ -98,7 +98,7 @@ class StockWarehouseOrderpointLeadTime(models.Model):
         "product_id.stock_move_ids.state",
         "product_id.seller_ids",
         "product_id.seller_ids.delay",
-        "company_id.horizon_days",
+        "company_id.stock_config_id.horizon_days",
     )
     @dbg.timed
     def _compute_deadline_date(self):
@@ -121,7 +121,7 @@ class StockWarehouseOrderpointLeadTime(models.Model):
                 lambda c, company=company: c.company_id == company,
             )
             horizon_date = fields.Date.today() + relativedelta.relativedelta(
-                days=company.horizon_days,
+                days=company.stock_config_id.horizon_days,
             )
             moves_by_product = company_orderpoints._read_pending_moves_by_product(
                 horizon_date,
@@ -266,7 +266,7 @@ class StockWarehouseOrderpointLeadTime(models.Model):
         "rule_ids",
         "product_id.seller_ids",
         "product_id.seller_ids.delay",
-        "company_id.horizon_days",
+        "company_id.stock_config_id.horizon_days",
     )
     @api.depends_context("global_horizon_days")
     def _compute_lead_time(self):

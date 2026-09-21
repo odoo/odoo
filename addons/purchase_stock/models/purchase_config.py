@@ -1,8 +1,8 @@
 from odoo import fields, models
 
 
-class ResCompany(models.Model):
-    _inherit = "res.company"
+class PurchaseConfig(models.Model):
+    _inherit = "purchase.config"
 
     days_to_purchase = fields.Float(
         string="Days to Purchase",

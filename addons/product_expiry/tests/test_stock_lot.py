@@ -872,7 +872,7 @@ class TestStockLot(TestStockCommon):
                 "product_min_qty": 5,
             }
         )
-        self.assertEqual(self.env.company.horizon_days, 365)
+        self.assertEqual(self.env.company.stock_config_id.horizon_days, 365)
         self.assertRecordValues(
             reordering_rule, [{"qty_forecast": 10, "qty_to_order": 0}]
         )

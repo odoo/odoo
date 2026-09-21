@@ -366,10 +366,12 @@ class AccountDeferredReportHandler(models.AbstractModel):
         )
         if (
             self._get_deferred_report_type() == "expense"
-            and self.env.company.account_config_id.generate_deferred_expense_entries_method == "manual"
+            and self.env.company.account_config_id.generate_deferred_expense_entries_method
+            == "manual"
         ) or (
             self._get_deferred_report_type() == "revenue"
-            and self.env.company.account_config_id.generate_deferred_revenue_entries_method == "manual"
+            and self.env.company.account_config_id.generate_deferred_revenue_entries_method
+            == "manual"
         ):
             options["buttons"].append(
                 {
@@ -564,10 +566,12 @@ class AccountDeferredReportHandler(models.AbstractModel):
     ):
         if (
             self._get_deferred_report_type() == "expense"
-            and self.env.company.account_config_id.generate_deferred_expense_entries_method == "manual"
+            and self.env.company.account_config_id.generate_deferred_expense_entries_method
+            == "manual"
         ) or (
             self._get_deferred_report_type() == "revenue"
-            and self.env.company.account_config_id.generate_deferred_revenue_entries_method == "manual"
+            and self.env.company.account_config_id.generate_deferred_revenue_entries_method
+            == "manual"
         ):
             already_generated = self.env["account.move"].search_count(
                 report._get_domain_generated_deferral_entries(options)

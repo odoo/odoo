@@ -376,11 +376,9 @@ class SaleOrderLine(models.Model):
                             line.product_uom_id,
                         )
                     )
-                    line.qty_free_today = (
-                        line.product_id.uom_id._get_quantity_estimate(
-                            line.qty_free_today,
-                            line.product_uom_id,
-                        )
+                    line.qty_free_today = line.product_id.uom_id._get_quantity_estimate(
+                        line.qty_free_today,
+                        line.product_uom_id,
                     )
                     line.qty_available_virtual_at_date = (
                         line.product_id.uom_id._get_quantity_estimate(
@@ -599,7 +597,7 @@ class SaleOrderLine(models.Model):
         self.check_singleton()
         date_deadline = self.order_id.date_commitment or self._get_date_planned()
         date_planned = date_deadline - timedelta(
-            days=self.order_id.company_id.security_lead,
+            days=self.order_id.company_id.sale_config_id.security_lead,
         )
         values.update(
             {

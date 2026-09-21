@@ -307,7 +307,7 @@ class TestValuationAuditFixes(TestStockValuationCommon):
     def test_missing_valuation_account_raises_user_error(self):
         self._use_inventory_location_accounting()
         self.category_avco_auto.property_stock_valuation_account_id = False
-        self.company.account_stock_valuation_id = False
+        self.company.stock_config_id.account_stock_valuation_id = False
         self.env.flush_all()
         self.assertFalse(
             self.product_avco_auto._get_product_accounts()["stock_valuation"]

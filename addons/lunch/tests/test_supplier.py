@@ -82,7 +82,7 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""",
             (self.saturday_8pm, 20.0, "sat"),
         ]
 
-        for value, rvalue, dayname in tests:
+        for value, _rvalue, dayname in tests:
             with self.subTest(value=value), freeze_time(value):
                 self.assertEqual(
                     list(Supplier._search_available_today("in", [True])),
@@ -317,7 +317,7 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""",
     def test_lunch_order_with_minimum_threshold(self):
         """Test that lunch order is allowed within the overdraft threshold."""
 
-        self.env.company.lunch_minimum_threshold = 200.0
+        self.env.company.lunch_config_id.lunch_minimum_threshold = 200.0
         order = self.env["lunch.order"].create(
             {
                 "product_id": self.product_pizza.id,

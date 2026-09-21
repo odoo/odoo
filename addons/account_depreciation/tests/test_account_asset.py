@@ -70,10 +70,10 @@ class TestAccountAsset(TestAccountReportsCommon):
             }
         )
 
-        cls.env.company.loss_account_id = cls.company_data[
+        cls.env.company.account_config_id.loss_account_id = cls.company_data[
             "default_account_expense"
         ].copy()
-        cls.env.company.gain_account_id = cls.company_data[
+        cls.env.company.account_config_id.gain_account_id = cls.company_data[
             "default_account_revenue"
         ].copy()
         cls.assert_counterpart_account_id = (
@@ -415,7 +415,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 {
                     "debit": 11900,
                     "credit": 0,
-                    "account_id": self.env.company.loss_account_id.id,
+                    "account_id": self.env.company.account_config_id.loss_account_id.id,
                 },
             ],
         )
@@ -555,7 +555,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 {
                     "debit": 11733.33,
                     "credit": 0,
-                    "account_id": self.env.company.loss_account_id.id,
+                    "account_id": self.env.company.account_config_id.loss_account_id.id,
                 },
             ],
         )
@@ -724,7 +724,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 {
                     "debit": 1900,
                     "credit": 0,
-                    "account_id": CEO_car.company_id.loss_account_id.id,
+                    "account_id": CEO_car.company_id.account_config_id.loss_account_id.id,
                 },
             ],
         )
@@ -805,7 +805,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 {
                     "debit": 0,
                     "credit": 100,
-                    "account_id": CEO_car.company_id.gain_account_id.id,
+                    "account_id": CEO_car.company_id.account_config_id.gain_account_id.id,
                 },
             ],
         )
@@ -890,7 +890,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 {
                     "debit": 400,
                     "credit": 0,
-                    "account_id": CEO_car.company_id.loss_account_id.id,
+                    "account_id": CEO_car.company_id.account_config_id.loss_account_id.id,
                 },
             ],
         )
@@ -970,7 +970,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 {
                     "debit": 700,
                     "credit": 0,
-                    "account_id": CEO_car.company_id.loss_account_id.id,
+                    "account_id": CEO_car.company_id.account_config_id.loss_account_id.id,
                 },
             ],
         )
@@ -1915,7 +1915,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "ref": "truck: Sale",
                     "debit": 0,
                     "credit": 100,
-                    "account_id": self.env.company.gain_account_id.id,
+                    "account_id": self.env.company.account_config_id.gain_account_id.id,
                 },
             ],
         )
@@ -1966,7 +1966,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "ref": "truck: Sale",
                     "debit": 100,
                     "credit": 0,
-                    "account_id": self.env.company.loss_account_id.id,
+                    "account_id": self.env.company.account_config_id.loss_account_id.id,
                 },
             ],
         )
@@ -2021,7 +2021,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "ref": "truck: Sale",
                     "debit": 100,
                     "credit": 0,
-                    "account_id": self.env.company.loss_account_id.id,
+                    "account_id": self.env.company.account_config_id.loss_account_id.id,
                 },
             ],
         )
@@ -2062,7 +2062,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "ref": "truck: Disposal",
                     "debit": 5500,
                     "credit": 0,
-                    "account_id": self.env.company.loss_account_id.id,
+                    "account_id": self.env.company.account_config_id.loss_account_id.id,
                 },
             ],
         )
@@ -3682,7 +3682,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                 {
                     "debit": 3000,
                     "credit": 0,
-                    "account_id": self.env.company.loss_account_id.id,
+                    "account_id": self.env.company.account_config_id.loss_account_id.id,
                 },
             ],
         )
@@ -4978,7 +4978,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "ref": "truck: Sale",
                     "debit": 0.0,
                     "credit": 100.0,
-                    "account_id": self.env.company.gain_account_id.id,
+                    "account_id": self.env.company.account_config_id.gain_account_id.id,
                 },
             ],
         )
@@ -5031,7 +5031,7 @@ class TestAccountAsset(TestAccountReportsCommon):
                     "ref": "truck: Sale",
                     "debit": 100.0,
                     "credit": 0.0,
-                    "account_id": self.env.company.loss_account_id.id,
+                    "account_id": self.env.company.account_config_id.loss_account_id.id,
                 },
             ],
         )

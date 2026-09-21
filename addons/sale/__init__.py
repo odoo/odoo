@@ -35,4 +35,6 @@ def _setup_downpayment_account(env):
                 .ref(template_data["downpayment_account_id"], raise_if_not_found=False)
             )
             if property_downpayment_account:
-                company.downpayment_account_id = property_downpayment_account
+                company.sale_config_id.downpayment_account_id = (
+                    property_downpayment_account
+                )

@@ -84,21 +84,21 @@ class SaleOrderTemplate(models.Model):
         for order in self:
             order.require_signature = (
                 order.company_id or order.env.company
-            ).portal_confirmation_sign
+            ).sale_config_id.portal_confirmation_sign
 
     @api.depends("company_id")
     def _compute_require_payment(self):
         for order in self:
             order.require_payment = (
                 order.company_id or order.env.company
-            ).portal_confirmation_pay
+            ).sale_config_id.portal_confirmation_pay
 
     @api.depends("company_id", "require_payment")
     def _compute_prepayment_percent(self):
         for template in self:
             template.prepayment_percent = (
                 template.company_id or template.env.company
-            ).prepayment_percent
+            ).sale_config_id.prepayment_percent
 
     @api.onchange("prepayment_percent")
     def _onchange_prepayment_percent(self):
@@ -195,14 +195,14 @@ class SaleOrderTemplate(models.Model):
             companies = (
                 self.env["res.company"]
                 .sudo()
-                .search([("sale_order_template_id", "in", self.ids)])
+                .search([("sale_config_id.sale_order_template_id", "in", self.ids)])
             )
             _debug.lifecycle(
                 "company_default_template_cleared",
                 templates=self,
                 companies=companies,
             )
-            companies.sale_order_template_id = None
+            companies.sale_config_id.sale_order_template_id = None
         _debug.lifecycle("write", templates=self, fields=list(vals))
         result = super().write(vals)
         if "sale_order_template_line_ids" in vals:

@@ -689,7 +689,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         exp = self.product_1._get_product_accounts()["expense"]
         cogs_journal = (
             self.product_1.categ_id.property_stock_journal
-            or self.company.account_stock_journal_id
+            or self.company.stock_config_id.account_stock_journal_id
         )
         aml = current_session._get_related_account_moves().line_ids
         aml_output = aml.filtered(

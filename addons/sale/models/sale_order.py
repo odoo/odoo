@@ -384,7 +384,7 @@ class SaleOrder(models.Model):
 
     def _compute_sale_order_template_id(self):
         for order in self:
-            company_template = order.company_id.sale_order_template_id
+            company_template = order.company_id.sale_config_id.sale_order_template_id
             if company_template and order.sale_order_template_id != company_template:
                 if "website_id" in self._fields and order.website_id:
                     continue
@@ -396,7 +396,9 @@ class SaleOrder(models.Model):
             if order.sale_order_template_id:
                 order.require_payment = order.sale_order_template_id.require_payment
             else:
-                order.require_payment = order.company_id.portal_confirmation_pay
+                order.require_payment = (
+                    order.company_id.sale_config_id.portal_confirmation_pay
+                )
 
     @api.depends("company_id", "require_payment", "sale_order_template_id")
     def _compute_prepayment_percent(self):
@@ -406,7 +408,9 @@ class SaleOrder(models.Model):
                     order.sale_order_template_id.prepayment_percent
                 )
             else:
-                order.prepayment_percent = order.company_id.prepayment_percent
+                order.prepayment_percent = (
+                    order.company_id.sale_config_id.prepayment_percent
+                )
 
     @api.depends("company_id", "sale_order_template_id")
     def _compute_date_validity(self):
@@ -428,7 +432,9 @@ class SaleOrder(models.Model):
             if order.sale_order_template_id:
                 order.require_signature = order.sale_order_template_id.require_signature
             else:
-                order.require_signature = order.company_id.portal_confirmation_sign
+                order.require_signature = (
+                    order.company_id.sale_config_id.portal_confirmation_sign
+                )
 
     @api.depends("partner_id", "sale_order_template_id")
     def _compute_notes(self):
@@ -1111,7 +1117,7 @@ class SaleOrder(models.Model):
         self.check_singleton()
         if self.sale_order_template_id.number_of_days > 0:
             return self.sale_order_template_id.number_of_days
-        return self.company_id.quotation_validity_days
+        return self.company_id.sale_config_id.quotation_validity_days
 
     def _get_confirmed_type_name(self):
         return _("Sale Order")

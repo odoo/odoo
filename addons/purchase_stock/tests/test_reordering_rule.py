@@ -1020,7 +1020,7 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(po_line.product_qty, 5)
 
     def test_change_of_date_planned(self):
-        self.env.company.horizon_days = 0
+        self.env.company.stock_config_id.horizon_days = 0
         delivery_form = Form(self.env["stock.picking"])
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.env.ref("stock.picking_type_out")
@@ -1196,7 +1196,7 @@ class TestReorderingRule(TransactionCase):
         )
 
     def test_reordering_rule_horizon_days(self):
-        self.env.company.horizon_days = 4
+        self.env.company.stock_config_id.horizon_days = 4
         wh = self.env["stock.warehouse"].search(
             [("company_id", "=", self.env.user.id)], limit=1
         )
@@ -1237,7 +1237,7 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(op.qty_to_order, 1, "sale order is ignored")
 
     def test_reordering_rule_horizon_days_display(self):
-        self.env.company.horizon_days = 3
+        self.env.company.stock_config_id.horizon_days = 3
         today = dt.today()
         warehouse = self.env["stock.warehouse"].search(
             [("company_id", "=", self.env.user.id)], limit=1

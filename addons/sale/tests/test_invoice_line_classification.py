@@ -88,7 +88,9 @@ class TestInvoiceLineClassification(TransactionCase):
         discount_product = self.env["product.product"].create(
             {"name": "Discount", "type": "service"}
         )
-        self.env.company.sudo().sale_discount_product_id = discount_product
+        self.env.company.sudo().sale_config_id.sale_discount_product_id = (
+            discount_product
+        )
         invoice = self.env["account.move"].create(
             {
                 "move_type": "out_invoice",
@@ -103,7 +105,7 @@ class TestInvoiceLineClassification(TransactionCase):
         self.assertEqual(discount_lines.product_id, discount_product)
 
     def test_other_products_are_not_discounts(self):
-        self.env.company.sudo().sale_discount_product_id = False
+        self.env.company.sudo().sale_config_id.sale_discount_product_id = False
         invoice = self.env["account.move"].create(
             {
                 "move_type": "out_invoice",

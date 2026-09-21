@@ -27,9 +27,12 @@ class StockLandedCost(models.Model):
 
     def _default_account_journal_id(self):
         ProductCategory = self.env["product.category"]
-        return self.env.company.lc_journal_id or ProductCategory._fields[
-            "property_stock_journal"
-        ].get_company_dependent_fallback(ProductCategory)
+        return (
+            self.env.company.stock_config_id.lc_journal_id
+            or ProductCategory._fields[
+                "property_stock_journal"
+            ].get_company_dependent_fallback(ProductCategory)
+        )
 
     name = fields.Char(
         default=lambda self: _("New"),

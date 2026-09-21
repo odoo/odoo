@@ -18,7 +18,7 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
         cls.test_product_order.sale_delay = 5.0
 
     def test_00_product_company_level_delays(self):
-        self.env.company.security_lead = 3.00
+        self.env.company.sale_config_id.security_lead = 3.00
 
         order = self.env["sale.order"].create(
             {
@@ -49,7 +49,7 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
         out_date = (
             order.date_order
             + timedelta(days=self.test_product_order.sale_delay)
-            - timedelta(days=self.env.company.security_lead)
+            - timedelta(days=self.env.company.sale_config_id.security_lead)
         )
         min_date = order.picking_ids[0].date_planned
         self.assertTrue(
@@ -125,7 +125,7 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
 
     def test_02_delivery_date_propagation(self):
 
-        self.env.company.security_lead = 2.00
+        self.env.company.sale_config_id.security_lead = 2.00
         warehouse = self.warehouse_3_steps_pull
 
         warehouse.delivery_route_id.rule_ids.write({"delay": 5})
@@ -173,7 +173,7 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
             msg="Deadline date of ship type picking should be equal to: order date + Customer Lead Time - pull rule delay.",
         )
         out_date_planned = deadline_date - timedelta(
-            days=self.env.company.security_lead
+            days=self.env.company.sale_config_id.security_lead
         )
         self.assertAlmostEqual(
             out.date_planned,
@@ -266,7 +266,7 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
         out_date = (
             order.date_order
             + timedelta(days=self.test_product_order.sale_delay)
-            - timedelta(days=self.env.company.security_lead)
+            - timedelta(days=self.env.company.sale_config_id.security_lead)
         )
         min_date = order.picking_ids[0].date_planned
         self.assertTrue(

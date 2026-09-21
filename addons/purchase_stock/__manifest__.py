@@ -1,6 +1,6 @@
 {
     "name": "Purchase Stock",
-    "version": "1.5",
+    "version": "1.6",
     "category": "Supply Chain/Purchase",
     "sequence": 60,
     "summary": "Purchase Orders, Receipts, Vendor Bills for Stock",

@@ -28,8 +28,8 @@ class TestValuationCloseLock(TestStockValuationCommon):
     def test_the_cron_skips_a_company_being_closed_rather_than_failing(self):
         product = self.product_avco.with_company(self.company)
         self._make_in_move(product, 10, unit_cost=10)
-        self.company.inventory_period = "daily"
-        self.company.inventory_valuation = "periodic"
+        self.company.stock_config_id.inventory_period = "daily"
+        self.company.stock_config_id.inventory_valuation = "periodic"
         self._held_elsewhere()
 
         self.env["res.company"]._cron_post_stock_valuation()

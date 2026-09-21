@@ -169,7 +169,7 @@ class PurchaseOrder(models.Model):
 
     def _get_validity_days(self):
         self.check_singleton()
-        return self.company_id.po_quotation_validity_days
+        return self.company_id.purchase_config_id.po_quotation_validity_days
 
     def _get_default_user_from_partner(self):
         self.check_singleton()
@@ -739,9 +739,7 @@ class PurchaseOrder(models.Model):
             if seller.currency_id != self.currency_id:
                 price = seller.currency_id._convert(price, self.currency_id)
             if seller.product_uom_id != product_uom_id:
-                price = product_uom_id._get_price_report(
-                    price, seller.product_uom_id
-                )
+                price = product_uom_id._get_price_report(price, seller.product_uom_id)
                 product_infos.update(
                     uomFactor=seller.product_uom_id.factor / product_uom_id.factor
                 )

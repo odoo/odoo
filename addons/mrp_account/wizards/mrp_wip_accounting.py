@@ -176,7 +176,7 @@ class MrpAccountWipAccounting(models.TransientModel):
                         orders_list=productions.mapped("name") or _("Manual Entry"),
                     ),
                     "debit": compo_value + overhead_value,
-                    "account_id": self.env.company.account_production_wip_account_id.id,
+                    "account_id": self.env.company.stock_config_id.account_production_wip_account_id.id,
                 }
             ),
         ]

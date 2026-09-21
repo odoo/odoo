@@ -202,13 +202,15 @@ class TestMonthlySpendCap(TransactionCase):
         self.assertTrue(self._call().called)
 
     def test_spend_under_the_cap_still_calls(self):
-        self.company.gateway_ml_monthly_budget = 50
+        self.company.gateway_ml_config_id.gateway_ml_monthly_budget = 50
         self._spend(49.5)
         self.assertTrue(self._call().called)
-        self.assertAlmostEqual(self.company.gateway_ml_spend_this_month, 49.5)
+        self.assertAlmostEqual(
+            self.company.gateway_ml_config_id.gateway_ml_spend_this_month, 49.5
+        )
 
     def test_a_reached_cap_stops_the_call_before_it_is_sent(self):
-        self.company.gateway_ml_monthly_budget = 50
+        self.company.gateway_ml_config_id.gateway_ml_monthly_budget = 50
         self._spend(30)
         self._spend(20)
         with (
@@ -220,7 +222,7 @@ class TestMonthlySpendCap(TransactionCase):
         self.assertIn("50.00", str(caught.exception))
 
     def test_last_months_spend_does_not_count(self):
-        self.company.gateway_ml_monthly_budget = 50
+        self.company.gateway_ml_config_id.gateway_ml_monthly_budget = 50
         self._spend(80)
         self.env.flush_all()
         self.env.cr.execute(
@@ -232,7 +234,7 @@ class TestMonthlySpendCap(TransactionCase):
         self.assertTrue(self._call().called)
 
     def test_a_reached_cap_leaves_the_assistant_quiet_rather_than_raising(self):
-        self.company.gateway_ml_monthly_budget = 1
+        self.company.gateway_ml_config_id.gateway_ml_monthly_budget = 1
         self._spend(1)
         with patch("requests.Session.request") as sent:
             self.assertIsNone(
@@ -241,7 +243,7 @@ class TestMonthlySpendCap(TransactionCase):
         sent.assert_not_called()
 
     def test_a_service_no_provider_rides_ignores_the_cap(self):
-        self.company.gateway_ml_monthly_budget = 1
+        self.company.gateway_ml_config_id.gateway_ml_monthly_budget = 1
         self._spend(5)
         service = self.env["integration.service"].create(
             {

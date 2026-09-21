@@ -686,11 +686,11 @@ class TestInventory(TransactionCase):
         )
         self.assertEqual(
             quant_non_cyclic_loc.inventory_date.month,
-            int(no_cyclic_loc.company_id.annual_inventory_month),
+            int(no_cyclic_loc.company_id.stock_config_id.annual_inventory_month),
         )
         next_annual_inventory_day = min(
             (today + relativedelta(years=1)).day,
-            no_cyclic_loc.company_id.annual_inventory_day,
+            no_cyclic_loc.company_id.stock_config_id.annual_inventory_day,
         )
         self.assertEqual(
             quant_non_cyclic_loc.inventory_date.day, next_annual_inventory_day

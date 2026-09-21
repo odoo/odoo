@@ -185,7 +185,7 @@ class LunchOrder(models.Model):
             price = 0
             if user_new_orders:
                 user_new_orders = user_new_orders.filtered(
-                    lambda lunch_order: lunch_order.date == order.date
+                    lambda lunch_order, order=order: lunch_order.date == order.date
                 )
                 price = sum(order.price for order in user_new_orders)
             wallet_amount = (
@@ -261,7 +261,7 @@ class LunchOrder(models.Model):
                 availability = line["available_toppings_%s" % index]
                 quantity = line["topping_quantity_%s" % index]
                 toppings = line["topping_ids_%s" % index].filtered(
-                    lambda x: x.topping_category == index
+                    lambda x, index=index: x.topping_category == index
                 )
                 label = line["topping_label_%s" % index]
 
@@ -441,10 +441,9 @@ class LunchOrder(models.Model):
                 "state": "ordered",
             }
         )
-        action = self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
+        return self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "lunch.lunch_order_action"
         )
-        return action
 
     def action_confirm(self):
         self.write({"state": "confirmed"})
@@ -464,7 +463,7 @@ class LunchOrder(models.Model):
             return
         notified_users = set()
         # (company, lang): (subject, body)
-        translate_cache = dict()
+        translate_cache = {}
         for order in self:
             user = order.user_id
             if user in notified_users:
@@ -474,7 +473,9 @@ class LunchOrder(models.Model):
                 context = {"lang": user.lang}
                 translate_cache[_key] = (
                     _("Lunch notification"),
-                    order.company_id.with_context(lang=user.lang).lunch_notify_message,
+                    order.company_id.with_context(
+                        lang=user.lang
+                    ).lunch_config_id.lunch_notify_message,
                 )
                 del context
             subject, body = translate_cache[_key]

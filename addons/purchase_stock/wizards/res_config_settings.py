@@ -6,7 +6,7 @@ class ResConfigSettings(models.TransientModel):
 
     module_stock_dropshipping = fields.Boolean(string="Dropshipping")
     days_to_purchase = fields.Float(
-        related="company_id.days_to_purchase",
+        related="company_id.purchase_config_id.days_to_purchase",
         readonly=False,
     )
     is_installed_sale = fields.Boolean(string="Is the Sale Module Installed")

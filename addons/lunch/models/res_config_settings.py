@@ -9,12 +9,12 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.currency_id",
     )
     company_lunch_minimum_threshold = fields.Float(
-        related="company_id.lunch_minimum_threshold",
+        related="company_id.lunch_config_id.lunch_minimum_threshold",
         string="Maximum Allowed Overdraft",
         readonly=False,
     )
     company_lunch_notify_message = fields.Html(
-        related="company_id.lunch_notify_message",
+        related="company_id.lunch_config_id.lunch_notify_message",
         string="Lunch notification message",
         readonly=False,
     )

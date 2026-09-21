@@ -148,7 +148,9 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
             )
         )
         new_order.action_confirm()
-        security_delay = timedelta(days=new_order.company_id.security_lead)
+        security_delay = timedelta(
+            days=new_order.company_id.sale_config_id.security_lead
+        )
         commitment_date = fields.Datetime.from_string(new_order.date_commitment)
         right_date = commitment_date - security_delay
         for line in new_order.line_ids:

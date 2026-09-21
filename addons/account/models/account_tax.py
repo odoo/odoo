@@ -158,7 +158,9 @@ class AccountTax(models.Model):
 
     @api.depends_context("company")
     def _compute_hide_tax_exigibility(self):
-        self.hide_tax_exigibility = self._get_settings_company().account_config_id.tax_exigibility
+        self.hide_tax_exigibility = (
+            self._get_settings_company().account_config_id.tax_exigibility
+        )
 
     @api.depends_context("company")
     @api.depends("fiscal_position_ids")

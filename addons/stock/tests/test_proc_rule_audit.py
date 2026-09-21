@@ -401,7 +401,7 @@ class TestProcurementContract(ProcRuleAuditCommon):
 
 class TestTransitPartner(ProcRuleAuditCommon):
     def test_the_transit_partner_is_stamped_on_every_waiting_move_at_once(self):
-        transit = self.env.company.internal_transit_location_id
+        transit = self.env.company.stock_config_id.internal_transit_location_id
         route = self.env["stock.route"].create({"name": "Transit route"})
         rule = self._rule("Transit rule", route, self.stock_location, transit)
         supplier_partner = self.warehouse.partner_id or self.env.company.partner_id

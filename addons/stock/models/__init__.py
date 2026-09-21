@@ -1,6 +1,7 @@
 from . import (
     home_menu_badge,
     res_company,
+    stock_config,
     res_partner,
     res_users,
     uom_uom,

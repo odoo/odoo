@@ -44,12 +44,15 @@ class StockWarehouseOrderpoint(models.Model):
             return res
         orderpoints_to_compute = self.filtered(
             lambda orderpoint: (
-                orderpoint.days_to_order != orderpoint.company_id.days_to_purchase
+                orderpoint.days_to_order
+                != orderpoint.company_id.purchase_config_id.days_to_purchase
             ),
         )
         for orderpoint in orderpoints_to_compute:
             if orderpoint.rule_ids._has_buy_action():
-                orderpoint.days_to_order = orderpoint.company_id.days_to_purchase
+                orderpoint.days_to_order = (
+                    orderpoint.company_id.purchase_config_id.days_to_purchase
+                )
         return res
 
     @api.depends("product_id.seller_ids")

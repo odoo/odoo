@@ -89,7 +89,7 @@ class AccountMoveLine(models.Model):
         lines = super()._filtered_discount_lines()
         discount_line_ids = []
         for company, company_lines in self.grouped("company_id").items():
-            discount_product = company.sudo().sale_discount_product_id
+            discount_product = company.sudo().sale_config_id.sale_discount_product_id
             if discount_product:
                 discount_line_ids.extend(
                     company_lines.filtered(

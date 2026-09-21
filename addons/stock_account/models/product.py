@@ -60,12 +60,12 @@ class ProductTemplate(models.Model):
                 "|",
                 ("categ_id.property_valuation", "=", False),
                 ("categ_id", "=", False),
-                ("company_id.inventory_valuation", operator, value),
+                ("company_id.stock_config_id.inventory_valuation", operator, value),
             ]
         )
         if (
-            self.env.company.inventory_valuation
-            and self.env.company.inventory_valuation == value
+            self.env.company.stock_config_id.inventory_valuation
+            and self.env.company.stock_config_id.inventory_valuation == value
         ):
             domain_company = Domain(
                 [
@@ -73,7 +73,7 @@ class ProductTemplate(models.Model):
                     ("categ_id.property_valuation", "=", False),
                     ("categ_id", "=", False),
                     "|",
-                    ("company_id.inventory_valuation", operator, value),
+                    ("company_id.stock_config_id.inventory_valuation", operator, value),
                     ("company_id", "=", False),
                 ]
             )
@@ -93,7 +93,9 @@ class ProductTemplate(models.Model):
                 product_template.categ_id.with_company(
                     product_template.company_id
                 ).property_cost_method
-                or (product_template.company_id or self.env.company).cost_method
+                or (
+                    product_template.company_id or self.env.company
+                ).stock_config_id.cost_method
             )
 
     @api.depends_context("company")
@@ -104,7 +106,7 @@ class ProductTemplate(models.Model):
                 product_template.categ_id.with_company(
                     product_template.company_id
                 ).property_valuation
-                or self.env.company.inventory_valuation
+                or self.env.company.stock_config_id.inventory_valuation
             )
 
     def write(self, vals):
@@ -118,7 +120,10 @@ class ProductTemplate(models.Model):
         )
         if "categ_id" in vals:
             category = self.env["product.category"].browse(vals["categ_id"])
-            cost_method = category.property_cost_method or self.env.company.cost_method
+            cost_method = (
+                category.property_cost_method
+                or self.env.company.stock_config_id.cost_method
+            )
             for product in self:
                 if product.cost_method != cost_method:
                     product_ids_to_update.update(product.product_variant_ids.ids)
@@ -198,7 +203,7 @@ class ProductTemplate(models.Model):
             or self.categ_id._fields[
                 "property_stock_valuation_account_id"
             ].get_company_dependent_fallback(self.categ_id)
-            or self.env.company.account_stock_valuation_id
+            or self.env.company.stock_config_id.account_stock_valuation_id
         )
         accounts.update(
             self._map_product_accounts(
@@ -214,7 +219,7 @@ class ProductTemplate(models.Model):
             or self.categ_id._fields[
                 "property_stock_journal"
             ].get_company_dependent_fallback(self.categ_id)
-            or self.env.company.account_stock_journal_id
+            or self.env.company.stock_config_id.account_stock_journal_id
         )
         return accounts
 
@@ -1041,7 +1046,7 @@ class ProductCategory(models.Model):
     property_cost_method = fields.Selection(
         selection=COST_METHOD_SELECTION,
         string="Costing Method",
-        default=lambda self: self.env.company.cost_method,
+        default=lambda self: self.env.company.stock_config_id.cost_method,
         copy=True,
         company_dependent=True,
         tracking=True,

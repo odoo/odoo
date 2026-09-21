@@ -413,7 +413,7 @@ class TestWarehouse(TestStockCommon):
                     (
                         "location_id",
                         "=",
-                        self.env.company.internal_transit_location_id.id,
+                        self.env.company.stock_config_id.internal_transit_location_id.id,
                     ),
                     ("partner_id", "=", distribution_partner.id),
                 ]
@@ -425,7 +425,7 @@ class TestWarehouse(TestStockCommon):
                     (
                         "location_dest_id",
                         "=",
-                        self.env.company.internal_transit_location_id.id,
+                        self.env.company.stock_config_id.internal_transit_location_id.id,
                     ),
                     ("partner_id", "=", distribution_partner.id),
                 ]
@@ -706,7 +706,7 @@ class TestWarehouse(TestStockCommon):
         )
         self.assertTrue(move, "No move created from WH_A/Stock")
 
-        inter_wh_loc = self.env.company.internal_transit_location_id
+        inter_wh_loc = self.env.company.stock_config_id.internal_transit_location_id
         step_location_ids = [
             (
                 warehouse_A.lot_stock_id.id,
@@ -771,7 +771,8 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(len(resupply_rules), 2)
         stock_A_to_transit = resupply_rules.filtered(
             lambda r: (
-                r.location_dest_id == self.env.company.internal_transit_location_id
+                r.location_dest_id
+                == self.env.company.stock_config_id.internal_transit_location_id
             )
         )
         self.assertEqual(stock_A_to_transit.location_src_id, warehouse_A.lot_stock_id)
@@ -1680,7 +1681,7 @@ class TestWarehouse(TestStockCommon):
         vendor.with_company(self.env.company)._update_stock_property_locations(
             supplier_location
         )
-        self.env.company.internal_transit_location_id = False
+        self.env.company.stock_config_id.internal_transit_location_id = False
         self.env.flush_all()
 
         self.env["stock.warehouse"].create(

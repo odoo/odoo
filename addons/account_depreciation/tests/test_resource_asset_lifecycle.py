@@ -112,8 +112,10 @@ class TestResourceAssetLifecycle(TestAccountAssetCommon):
 
     def test_disposing_an_asset_without_the_wizard_books_the_disposal(self):
         company = self.env.company
-        company.gain_account_id = self.company_data["default_account_revenue"]
-        company.loss_account_id = self.loss_account
+        company.account_config_id.gain_account_id = self.company_data[
+            "default_account_revenue"
+        ]
+        company.account_config_id.loss_account_id = self.loss_account
         date = self.today + relativedelta(days=-2)
         asset = self._running_board()
         asset._dispose(date)
@@ -135,8 +137,8 @@ class TestResourceAssetLifecycle(TestAccountAssetCommon):
 
     def test_disposing_a_depreciating_asset_needs_the_gain_and_loss_accounts(self):
         company = self.env.company
-        company.gain_account_id = False
-        company.loss_account_id = False
+        company.account_config_id.gain_account_id = False
+        company.account_config_id.loss_account_id = False
         asset = self._running_board()
         with self.assertRaises(UserError):
             asset._dispose(self.today)

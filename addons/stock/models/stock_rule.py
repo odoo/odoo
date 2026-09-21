@@ -556,7 +556,7 @@ class StockRule(models.Model):
             partner
             or not dest_moves
             or procurement.location_id
-            != procurement.company_id.internal_transit_location_id
+            != procurement.company_id.stock_config_id.internal_transit_location_id
         ):
             return partner
         partners = dest_moves.location_dest_id.warehouse_id.partner_id
@@ -569,7 +569,7 @@ class StockRule(models.Model):
             dest_moves = procurement.values.get("move_dest_ids")
             if not dest_moves or (
                 procurement.location_id
-                != procurement.company_id.internal_transit_location_id
+                != procurement.company_id.stock_config_id.internal_transit_location_id
             ):
                 continue
             partner = (

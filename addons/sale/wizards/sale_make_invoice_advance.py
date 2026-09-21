@@ -266,7 +266,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     self._prepare_down_payment_invoice_line_values(
                         order,
                         so_line,
-                        self.company_id.downpayment_account_id or account,
+                        self.company_id.sale_config_id.downpayment_account_id
+                        or account,
                     )
                 )
                 for so_line, account in zip(so_lines, accounts, strict=True)

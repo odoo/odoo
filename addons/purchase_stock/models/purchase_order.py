@@ -599,7 +599,9 @@ class PurchaseOrder(models.Model):
                 precision_digits=0,
             ),
         )
-        result["days_to_purchase"] = self.env.company.days_to_purchase
+        result["days_to_purchase"] = (
+            self.env.company.purchase_config_id.days_to_purchase
+        )
         return result
 
     def _prepare_grouped_data(self, rfq):

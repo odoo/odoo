@@ -1,6 +1,6 @@
 {
     "name": "DIN 5008",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Accounting/Localizations",
     "description": "This is the base module that defines the DIN 5008 standard in Odoo.",
     "author": "Odoo S.A.",

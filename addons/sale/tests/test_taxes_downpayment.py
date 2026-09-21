@@ -13,7 +13,7 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
     def setUpClass(cls):
         super().setUpClass()
         cls.other_currency = cls.setup_other_currency("EUR")
-        cls.company_data["company"].downpayment_account_id = cls.env[
+        cls.company_data["company"].sale_config_id.downpayment_account_id = cls.env[
             "account.account"
         ].create(
             {
@@ -302,7 +302,7 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
                 }
             ],
         )
-        account_id = dp_invoice.company_id.downpayment_account_id.id
+        account_id = dp_invoice.company_id.sale_config_id.downpayment_account_id.id
         self.assertRecordValues(
             dp_invoice.line_ids,
             [
@@ -1322,12 +1322,12 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
         self.assertEqual(len(invoice.invoice_line_ids), 1)
         self.assertEqual(
             invoice.invoice_line_ids.account_id.id,
-            self.company_data["company"].downpayment_account_id.id,
+            self.company_data["company"].sale_config_id.downpayment_account_id.id,
         )
         self.assertEqual(invoice.amount_total, 840)
 
     def test_down_payment_with_global_discount(self):
-        self.env.company.downpayment_account_id = self.company_data[
+        self.env.company.sale_config_id.downpayment_account_id = self.company_data[
             "default_account_assets"
         ]
         product = self.company_data["product_order_cost"]
@@ -1399,7 +1399,7 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
         self.assertAlmostEqual(dp_lines[0]["price_unit"], 1000.0, 2)
 
     def test_down_payment_account_prediction(self):
-        self.company_data["company"].downpayment_account_id = None
+        self.company_data["company"].sale_config_id.downpayment_account_id = None
         new_partner = self.env["res.partner"].create(
             {
                 "name": "Arthur Morgan",

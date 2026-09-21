@@ -353,7 +353,7 @@ class TestReplenishWizard(PurchaseTestCommon):
                 "delay": 0,
             }
         )
-        self.env.company.days_to_purchase = 0
+        self.env.company.purchase_config_id.days_to_purchase = 0
 
         with freeze_time("2023-01-01"):
             wizard = self.env["product.replenish"].create(
@@ -370,7 +370,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             self.assertEqual(
                 fields.Datetime.from_string("2023-01-01 00:00:00"), wizard.date_planned
             )
-            self.env.company.days_to_purchase = 5
+            self.env.company.purchase_config_id.days_to_purchase = 5
             wizard.supplier_id = supplier2
             self.assertEqual(
                 fields.Datetime.from_string("2023-01-06 00:00:00"), wizard.date_planned
@@ -396,7 +396,7 @@ class TestReplenishWizard(PurchaseTestCommon):
                 "delay": 2,
             }
         )
-        self.env.company.days_to_purchase = 5
+        self.env.company.purchase_config_id.days_to_purchase = 5
 
         with freeze_time("2023-01-01"):
             wizard = self.env["product.replenish"].create(

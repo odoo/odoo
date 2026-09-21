@@ -1134,7 +1134,7 @@ class TestProcRule(TransactionCase):
         self.assertEqual(orderpoint_0.deadline_date, delivery_date_0.date())
         self.assertEqual(orderpoint_1.deadline_date, delivery_date_2.date())
         self.assertEqual(orderpoint_2.deadline_date, delivery_date_1.date())
-        self.env.company.horizon_days = 30
+        self.env.company.stock_config_id.horizon_days = 30
         self.assertEqual(orderpoint_0.deadline_date, delivery_date_0.date())
         self.assertEqual(orderpoint_1.deadline_date, False)
         self.assertEqual(orderpoint_2.deadline_date, delivery_date_1.date())

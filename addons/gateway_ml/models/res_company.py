@@ -4,24 +4,28 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    gateway_ml_monthly_budget = fields.Float(
-        string="Monthly ML Budget (USD)",
-        groups="base.group_system",
-        help="Once this company's machine learning exchanges of the current month "
-        "have cost this much at the model rows' prices, no further call to a "
-        "machine learning vendor is made until the month turns. Zero sets no cap.",
-    )
-    gateway_ml_spend_this_month = fields.Float(
-        string="ML Spend This Month (USD)",
-        compute="_compute_gateway_ml_spend_this_month",
-        groups="base.group_system",
-        help="What this company's machine learning exchanges since the first of "
-        "the month cost, as recorded on their exchange rows.",
+    gateway_ml_config_id = fields.Many2one(
+        comodel_name="gateway_ml.config",
+        compute="_compute_gateway_ml_config_id",
+        search="_search_gateway_ml_config_id",
     )
 
-    def _compute_gateway_ml_spend_this_month(self):
+    gateway_ml_monthly_budget = fields.Float(
+        related="gateway_ml_config_id.gateway_ml_monthly_budget",
+        readonly=False,
+    )
+    gateway_ml_spend_this_month = fields.Float(
+        related="gateway_ml_config_id.gateway_ml_spend_this_month",
+    )
+
+    def _search_gateway_ml_config_id(self, operator, value):
+        return self._search_config_link("gateway_ml.config", operator, value)
+
+    def _compute_gateway_ml_config_id(self):
+        configs = self.env["gateway_ml.config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
         for company in self:
-            company.gateway_ml_spend_this_month = company._gateway_ml_spend_this_month()
+            company.gateway_ml_config_id = by_company.get(company.id, False)
 
     def _gateway_ml_spend_this_month(self):
         self.check_singleton()

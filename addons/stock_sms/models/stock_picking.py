@@ -27,7 +27,7 @@ class StockPicking(models.Model):
             if (
                 is_delivery
                 and not modules.module.current_test
-                and not picking.company_id.has_received_warning_stock_sms
+                and not picking.company_id.stock_config_id.has_received_warning_stock_sms
                 and picking.company_id._is_text_confirmation_enabled("sms")
             ):
                 warn_sms_pickings |= picking
@@ -63,7 +63,7 @@ class StockPicking(models.Model):
                 )
             )
             for picking in pickings:
-                template = picking.company_id.sudo().stock_sms_confirmation_template_id
+                template = picking.company_id.sudo().stock_config_id.stock_sms_confirmation_template_id
                 picking._message_sms_with_template(
                     template=template,
                     partner_ids=picking.partner_id.ids,

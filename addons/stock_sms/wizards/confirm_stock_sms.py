@@ -17,7 +17,7 @@ class ConfirmStockSms(models.TransientModel):
         _debug.lifecycle("sms_confirmed", wizards=self)
         self.check_singleton()
         for company in self.pick_ids.company_id:
-            if not company.has_received_warning_stock_sms:
+            if not company.stock_config_id.has_received_warning_stock_sms:
                 company.sudo().write({"has_received_warning_stock_sms": True})
         pickings_to_validate = self.env["stock.picking"].browse(
             self.env.context.get("button_validate_picking_ids")
@@ -28,7 +28,7 @@ class ConfirmStockSms(models.TransientModel):
         _debug.lifecycle("sms_declined", wizards=self)
         self.check_singleton()
         for company in self.pick_ids.company_id:
-            if not company.has_received_warning_stock_sms:
+            if not company.stock_config_id.has_received_warning_stock_sms:
                 company.sudo().write(
                     {
                         "has_received_warning_stock_sms": True,

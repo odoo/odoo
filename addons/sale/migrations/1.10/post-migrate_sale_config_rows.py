@@ -1,0 +1,33 @@
+from odoo import SUPERUSER_ID, api
+from odoo.db.schema import column_exists
+
+COLUMNS = (
+    "order_lock_so",
+    "portal_confirmation_sign",
+    "portal_confirmation_pay",
+    "prepayment_percent",
+    "quotation_validity_days",
+    "sale_discount_product_id",
+    "sale_onboarding_payment_method",
+    "sale_order_template_id",
+    "downpayment_account_id",
+)
+
+
+def migrate(cr, version):
+    if not version:
+        return
+    present = [column for column in COLUMNS if column_exists(cr, "res_company", column)]
+    if not present:
+        return
+    # the rows through the ORM, so every default and required value is
+    # applied; the values by SQL, straight from the company's columns
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    companies = env["res.company"].with_context(active_test=False).search([])
+    env["sale.config"]._for_each(companies)
+    env.flush_all()
+    assignments = ", ".join(f"{column} = c.{column}" for column in present)
+    cr.execute(
+        f"UPDATE sale_config x SET {assignments} FROM res_company c WHERE c.id = x.company_id"
+    )
+    env.invalidate_all()

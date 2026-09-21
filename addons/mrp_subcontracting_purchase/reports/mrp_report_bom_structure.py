@@ -16,7 +16,9 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             route_info, components
         )
         if route_info.get("route_type") == "subcontract" and resupply_delay:
-            extra_delay = route_info["bom"].company_id.days_to_purchase
+            extra_delay = route_info[
+                "bom"
+            ].company_id.purchase_config_id.days_to_purchase
             route_info["lead_time"] += extra_delay
             route_info["manufacture_delay"] += extra_delay
             subcontract_delay = resupply_delay + extra_delay

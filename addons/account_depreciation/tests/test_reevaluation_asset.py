@@ -2610,10 +2610,10 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
         bill.action_post()
         asset = bill.capitalised_board_ids
 
-        self.env.company.loss_account_id = self.company_data[
+        self.env.company.account_config_id.loss_account_id = self.company_data[
             "default_account_expense"
         ].copy()
-        self.env.company.gain_account_id = self.company_data[
+        self.env.company.account_config_id.gain_account_id = self.company_data[
             "default_account_revenue"
         ].copy()
         self.asset_counterpart_account_id = (
@@ -2647,7 +2647,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                     "asset_id": gross_increase.id,
                     "date": fields.Date.to_date("2022-06-30"),
                     "modify_action": "dispose",
-                    "loss_account_id": self.env.company.loss_account_id.id,
+                    "loss_account_id": self.env.company.account_config_id.loss_account_id.id,
                 }
             )
             .action_sell_dispose()
@@ -2677,7 +2677,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                 "asset_id": asset.id,
                 "modify_action": "sell",
                 "invoice_line_ids": closing_invoice.invoice_line_ids,
-                "gain_account_id": self.env.company.gain_account_id.id,
+                "gain_account_id": self.env.company.account_config_id.gain_account_id.id,
                 "date": fields.Date.to_date("2022-06-30"),
             }
         ).action_sell_dispose()
@@ -2709,7 +2709,7 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
                     "credit": 0,
                 },
                 {
-                    "account_id": self.env.company.gain_account_id.id,
+                    "account_id": self.env.company.account_config_id.gain_account_id.id,
                     "debit": 0,
                     "credit": 1000,
                 },
@@ -2744,7 +2744,9 @@ class TestAccountAssetReevaluation(TestAccountAssetCommon):
             closing_invoice.invoice_line_ids.account_id.current_balance, 31000
         )
         self.env.invalidate_all()
-        self.assertEqual(self.env.company.gain_account_id.current_balance, -1000)
+        self.assertEqual(
+            self.env.company.account_config_id.gain_account_id.current_balance, -1000
+        )
 
     def test_linear_reevaluation_increase_constant_periods(self):
         asset = self.create_asset(

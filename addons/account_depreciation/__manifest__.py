@@ -1,6 +1,6 @@
 {
     "name": "Assets Management",
-    "version": "1.6",
+    "version": "1.7",
     "category": "Accounting/Accounting",
     "sequence": 32,
     "description": """

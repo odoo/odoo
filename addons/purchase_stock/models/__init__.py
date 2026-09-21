@@ -1,5 +1,4 @@
 from . import (
-    res_company,
     res_partner,
     product_product,
     product_supplierinfo,
@@ -20,3 +19,4 @@ from . import (
     purchase_order,
     purchase_order_line,
 )
+from . import purchase_config

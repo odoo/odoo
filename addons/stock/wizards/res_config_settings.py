@@ -52,7 +52,7 @@ class ResConfigSettings(models.TransientModel):
     module_stock_barcode = fields.Boolean(string="Barcode Scanner")
     module_stock_barcode_barcodelookup = fields.Boolean(string="Stock Barcode Database")
     stock_move_email_validation = fields.Boolean(
-        related="company_id.stock_move_email_validation",
+        related="company_id.stock_config_id.stock_move_email_validation",
         readonly=False,
     )
     module_stock_sms = fields.Boolean(string="SMS Confirmation")
@@ -75,11 +75,11 @@ class ResConfigSettings(models.TransientModel):
         help="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.",
     )
     annual_inventory_month = fields.Selection(
-        related="company_id.annual_inventory_month",
+        related="company_id.stock_config_id.annual_inventory_month",
         readonly=False,
     )
     annual_inventory_day = fields.Integer(
-        related="company_id.annual_inventory_day",
+        related="company_id.stock_config_id.annual_inventory_day",
         readonly=False,
     )
     group_stock_reception_report = fields.Boolean(
@@ -99,17 +99,17 @@ class ResConfigSettings(models.TransientModel):
         inverse="_inverse_replenish_on_order",
     )
     stock_text_confirmation = fields.Boolean(
-        related="company_id.stock_text_confirmation",
+        related="company_id.stock_config_id.stock_text_confirmation",
         string="Stock Text Validation with stock move",
         readonly=False,
     )
     stock_confirmation_type = fields.Selection(
-        related="company_id.stock_confirmation_type",
+        related="company_id.stock_config_id.stock_confirmation_type",
         string="Stock Text Validation type",
         readonly=False,
     )
     horizon_days = fields.Integer(
-        related="company_id.horizon_days",
+        related="company_id.stock_config_id.horizon_days",
         readonly=False,
     )
 
