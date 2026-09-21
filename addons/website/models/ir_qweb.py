@@ -36,6 +36,11 @@ class IrQWeb(models.AbstractModel):
         """ Return the list of context keys to use for caching ``_compile``. """
         return super()._get_template_cache_keys() + ['website_id', 'cookies_allowed']
 
+    def _compile_node(self, el, compile_context, level):
+        if el.tag == 'template' and 's_embed_code_saved' in el.get('class', '').split():
+            compile_context = dict(compile_context, preserve_comments=True)
+        return super()._compile_node(el, compile_context, level)
+
     def _prepare_frontend_environment(self, values):
         """ Update the values and context with website specific value
             (required to render website layout template)
