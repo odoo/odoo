@@ -95,7 +95,12 @@ test("Message scheduled by another user can't be edited but can be canceled", as
         res_id: partnerId,
         scheduled_date: "2024-10-20 12:00:00",
     });
-    await start({ authenticateAs: false });
+    pyEnv["res.users"].create({
+        login: "viewer",
+        password: "viewer",
+        partner_id: pyEnv["res.partner"].create({ name: "Viewer" }),
+    });
+    await start({ authenticateAs: { login: "viewer", password: "viewer" } });
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message-author:text('Mitchell Admin')");
     await contains(".o-mail-Message-bubble.bg-info-light");
