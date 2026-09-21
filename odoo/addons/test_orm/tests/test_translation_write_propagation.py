@@ -147,3 +147,58 @@ class TestTranslationWritePropagation(odoo.tests.TransactionCase):
             {"en_US": "Sans Langue", "es_ES": "Cuchillo", "fr_FR": "Couteau"},
             "the authored Spanish term must survive a write to the source key",
         )
+
+    def test_one_installed_language_costs_no_mirroring_read(self):
+        """A follower is another INSTALLED language holding the same term, so
+        with one language there is nobody to follow. The read that looks for
+        one used to run per write, which made a loop writing one record at a
+        time cost one SELECT per record."""
+        records = self.Model.create([{"name": f"n{i}"} for i in range(20)])
+        self.env.flush_all()
+
+        english_only = self.env["res.lang"].search([("code", "!=", "en_US")])
+        english_only.write({"active": False})
+        self.env.registry.clear_all_caches()
+        self.assertEqual(
+            self.env["res.lang"].get_installed(),
+            [("en_US", "English (US)")],
+            "test premise: one language installed",
+        )
+
+        before = self.env.cr.sql_statement_count
+        for index, record in enumerate(records):
+            record.with_context(lang="en_US").name = f"edited{index}"
+        self.env.flush_all()
+        statements = self.env.cr.sql_statement_count - before
+
+        self.assertLess(
+            statements,
+            len(records),
+            f"{len(records)} single-record writes cost {statements} statements; "
+            f"a per-record mirroring read is back",
+        )
+        self.assertEqual(self.stored(records[0]), {"en_US": "edited0"})
+
+    def test_a_second_language_still_follows_the_edit(self):
+        """The single-language short-circuit must not reach a database that
+        has a second language.
+
+        Only the follower half is asserted here: that a language holding the
+        same term still follows. The other half, that an authored translation
+        survives a source write, is `test_authored_translation_survives_a_
+        source_write` above, and it exercises the same code path.
+        """
+        follower = self.Model.with_context(lang="fr_FR").create({"name": "Same"})
+        self.assertEqual(
+            self.stored(follower),
+            {"en_US": "Same", "fr_FR": "Same"},
+            "sanity: creating in fr_FR materialises both keys, equal",
+        )
+
+        follower.with_context(lang="en_US").name = "Edited"
+
+        self.assertEqual(
+            self.stored(follower),
+            {"en_US": "Edited", "fr_FR": "Edited"},
+            "a language holding the same term still follows the edit",
+        )
