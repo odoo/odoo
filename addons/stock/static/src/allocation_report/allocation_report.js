@@ -356,11 +356,18 @@ export class AllocationReport extends Component {
     async onClickPrintLabels() {
         const docids = [];
         const movesQty = [];
-        for (const productLine of this.data.product_lines) {
-            for (const need of productLine.needs) {
-                if (need.state === "is_waiting" || need.is_reserved) {
-                    docids.push(need.id);
-                    movesQty.push(need.reserved_quantity || need.quantity);
+        for (const productLine of this.productLines) {
+            const needMoves = productLine.needs.reduce(
+                (list, need) => {
+                    list.push(...need.moves);
+                    return list;
+                },
+                []
+            );
+            for (const move of needMoves) {
+                if (move.state === "waiting" || move.is_reserved) {
+                    docids.push(move.id);
+                    movesQty.push(move.reserved_quantity || move.quantity);
                 }
             }
         }
