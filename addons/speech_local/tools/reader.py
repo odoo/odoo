@@ -16,10 +16,7 @@ from odoo.tools import config
 
 from .engine import LocalEngine
 from odoo.addons.media.tools.audio import decode_audio
-from odoo.addons.speech.tools.engines import (
-    record_engine_error,
-    transcription_engines,
-)
+from odoo.addons.speech.tools.engines import record_engine_error
 
 _logger = logging.getLogger(__name__)
 
@@ -60,6 +57,7 @@ class LocalTranscription(BaseReader):
     mimetypes = RECORDING_MIMETYPES
     yields = (CUES,)
     cost = EXPENSIVE
+    defers = True
 
     def available(self, env: Any) -> bool:
         return local_engine(env) is not None
@@ -67,9 +65,6 @@ class LocalTranscription(BaseReader):
     def read(self, document: Any) -> list[Cue] | None:
         env = document.options.get("env")
         if env is None:
-            return None
-        company = document.options.get("company") or env.company
-        if self._a_vendor_serves(document.mimetype, company):
             return None
         engine = local_engine(env)
         if engine is None:
@@ -81,13 +76,6 @@ class LocalTranscription(BaseReader):
         except Exception as error:
             record_engine_error(document, error)
             raise
-
-    def _a_vendor_serves(self, mimetype: str, company: Any) -> bool:
-        company_env = company.with_company(company).env
-        return any(
-            engine is not self
-            for engine in transcription_engines(mimetype, company_env)
-        )
 
 
 register_reader(LocalTranscription())

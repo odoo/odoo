@@ -6,6 +6,7 @@ from . import ir_model_fields
 
 from . import mixin_hierarchy
 from . import mixin_company_config
+from . import mixin_owner_access
 from . import report_config
 from . import ir_model_fields_selection
 from . import ir_model_reflection

@@ -49,3 +49,22 @@ class SpeechTestCallWithItsOwnTranscript(models.Model):
         selection=[("pending", "Pending"), ("done", "Done")],
         default="pending",
     )
+
+
+class SpeechTestMeeting(models.Model):
+    _name = "speech.test.meeting"
+    _inherit = ["mixin.speech.analysis"]
+    _description = "Speech Test Meeting"
+
+    name = fields.Char(
+        default="meeting",
+        required=True,
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+    )
+    finished = fields.Boolean(default=True)
+
+    def _speech_analysis_ready(self) -> bool:
+        return self.finished

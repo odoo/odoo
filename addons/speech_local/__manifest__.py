@@ -8,11 +8,11 @@ Speech - Local Engine
 =====================
 
 A transcription reader of the document layer that runs on this server's CPU:
-nothing leaves it. It answers only where no other engine may serve the
-recording's company -- the company's ``gateway_ml`` policy denies the
-``speech.transcription`` purpose, or no vendor credential is held -- so a
-company that denies vendors still transcribes, and one that allows them keeps
-its vendor.
+nothing leaves it. It registers at ``EXPENSIVE`` and defers to its peers there,
+so it reads a recording only when every other engine answered nothing -- the
+company's ``gateway_ml`` policy denies the ``speech.transcription`` purpose, no
+vendor credential is held, or the vendor call failed. A company that denies
+vendors still transcribes, and one that allows them keeps its vendor.
 
 The recording is decoded to 16 kHz mono, cut into utterances by a voice
 activity detector, and each utterance is recognised by Whisper through

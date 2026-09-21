@@ -3,27 +3,16 @@ from __future__ import annotations
 import typing
 
 from odoo import api, fields, models
-from odoo.tools.access_scan import (
-    get_accessible_query,
-    get_inaccessible_owners,
-    prepare_column_fetcher,
-    prepare_document_access_error,
-    stable_order,
-)
 
 if typing.TYPE_CHECKING:
-    from odoo.api import DomainType
-    from odoo.tools import Query
-
     from odoo.addons.base.models.ir_attachment import IrAttachment
-
-SEARCH_ACCESS_CHUNK_MIN = 80
-SEARCH_ACCESS_CHUNK_MAX = 8192
 
 
 class SpeechSpeaker(models.Model):
     _name = "speech.speaker"
+    _inherit = ["mixin.owner.access"]
     _description = "Speaker"
+    _access_owner_field = "attachment_id"
     _order = "attachment_id, first_spoke_s, id"
 
     attachment_id: IrAttachment = fields.Many2one(
@@ -119,65 +108,4 @@ class SpeechSpeaker(models.Model):
                 {"attachment_id": attachment.id, "label": label}
                 for label in sorted(labels - known)
             ]
-        )
-
-    def _check_access(self, operation: str) -> tuple | None:
-        result = super()._check_access(operation)
-        if not self or self.env.su:
-            return result
-        candidates = self - result[0] if result else self
-        attachments = {s.attachment_id.id for s in candidates.sudo()}
-        owner_operation = "read" if operation == "read" else "write"
-        unreachable = {
-            res_id
-            for _model, res_id in get_inaccessible_owners(
-                self.env, {"ir.attachment": attachments}, owner_operation
-            )
-        }
-        forbidden = candidates.sudo().filtered(
-            lambda s: s.attachment_id.id in unreachable
-        )
-        if not forbidden:
-            return result
-        forbidden = self.browse(forbidden.ids)
-        if result:
-            return (result[0] + forbidden, result[1])
-        return (forbidden, lambda: prepare_document_access_error(forbidden, operation))
-
-    def _search(
-        self,
-        domain: DomainType,
-        offset: int = 0,
-        limit: int | None = None,
-        order: str | None = None,
-        *,
-        bypass_access: bool = False,
-        **kwargs,
-    ) -> Query:
-        if self.env.su or bypass_access:
-            return super()._search(
-                domain, offset, limit, stable_order(order), bypass_access=True, **kwargs
-            )
-
-        def allowed(rows: list[tuple]) -> set[int]:
-            unreachable = {
-                res_id
-                for _model, res_id in get_inaccessible_owners(
-                    self.env, {"ir.attachment": {row[1] for row in rows}}, "read"
-                )
-            }
-            return {row[0] for row in rows if row[1] not in unreachable}
-
-        return get_accessible_query(
-            self,
-            domain,
-            offset,
-            limit,
-            order,
-            super()._search,
-            fetch=prepare_column_fetcher(self, ("id", "attachment_id")),
-            allowed=allowed,
-            chunk_min=SEARCH_ACCESS_CHUNK_MIN,
-            chunk_max=SEARCH_ACCESS_CHUNK_MAX,
-            **kwargs,
         )

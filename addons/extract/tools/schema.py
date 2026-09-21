@@ -5,7 +5,9 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field, replace
 from typing import Any
 
-from odoo.libs.documents import to_date, to_float
+from odoo.libs.documents import to_date, to_datetime, to_float
+
+OPTIMIZE_FOR = ("balanced", "cost", "accuracy", "speed")
 
 TYPES: dict[str, type | tuple[type, ...]] = {
     "str": str,
@@ -13,6 +15,7 @@ TYPES: dict[str, type | tuple[type, ...]] = {
     "int": int,
     "bool": bool,
     "date": (datetime.date, str),
+    "datetime": (datetime.datetime, str),
     "list": list,
     "dict": dict,
 }
@@ -24,6 +27,7 @@ class FieldSpec:
     required: bool = False
     help: str = ""
     items: dict[str, FieldSpec] | None = None
+    choices: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if self.type not in TYPES:
@@ -31,6 +35,8 @@ class FieldSpec:
                 f"Unknown field type {self.type!r}; expected one of "
                 f"{', '.join(sorted(TYPES))}"
             )
+        if self.choices and self.type != "str":
+            raise ValueError(f"Only a str offers choices; this one is a {self.type!r}")
         if self.items is None:
             return
         if self.type != "list":
@@ -54,6 +60,10 @@ class FieldSpec:
     def coerce(self, value: Any) -> Any:
         if value is None:
             return None
+        if self.type == "datetime":
+            return _as_utc(to_datetime(value)).isoformat(sep=" ", timespec="seconds")
+        if self.choices:
+            return self._choice(value)
         if self.type == "date":
             # Never short-circuited on `accepts`, which passes any str -- that
             # looseness is the whole reason a date needs coercing, and
@@ -80,6 +90,15 @@ class FieldSpec:
             # list satisfies a requirement while carrying nothing.
             return rows or None
         return value
+
+    def _choice(self, value: Any) -> str:
+        if not isinstance(value, str):
+            raise ValueError(f"{value!r} is not one of {', '.join(self.choices)}")
+        wanted = value.strip().casefold()
+        for choice in self.choices:
+            if choice.casefold() == wanted:
+                return choice
+        raise ValueError(f"{value!r} is not one of {', '.join(self.choices)}")
 
     def _coerce_row(self, row: Any) -> dict[str, Any] | None:
         # A row that cannot be read is dropped and the rest of the list is kept.
@@ -133,6 +152,20 @@ class Schema:
     name: str
     fields: dict[str, FieldSpec] = field(default_factory=dict)
     rules: tuple[Rule, ...] = ()
+    instructions: str = ""
+    optimize_for: str = "cost"
+    purpose: str = ""
+
+    def __post_init__(self) -> None:
+        if self.optimize_for not in OPTIMIZE_FOR:
+            raise ValueError(
+                f"Unknown optimization {self.optimize_for!r}; expected one of "
+                f"{', '.join(OPTIMIZE_FOR)}"
+            )
+
+    @property
+    def ml_purpose(self) -> str:
+        return self.purpose or f"extract.{self.name}"
 
     @property
     def required(self) -> tuple[str, ...]:
@@ -145,6 +178,57 @@ class Schema:
         return tuple(rule.name for rule in self.rules if not rule.holds(values))
 
 
+JSON_TYPES = {
+    "str": "string",
+    "int": "integer",
+    "float": "number",
+    "bool": "boolean",
+    "date": "string",
+    "datetime": "string",
+    "list": "array",
+    "dict": "object",
+}
+JSON_FORMATS = {"date": "date", "datetime": "date-time"}
+
+
+def json_schema(schema: Schema, names: Iterable[str] = ()) -> dict[str, Any]:
+    return _json_object(
+        {name: schema.fields[name] for name in select_fields(schema, names)},
+        nullable_required=True,
+    )
+
+
+def select_fields(schema: Schema, names: Iterable[str] = ()) -> tuple[str, ...]:
+    known = tuple(name for name in names if name in schema.fields)
+    return known or tuple(schema.fields)
+
+
+def _json_object(specs: dict[str, FieldSpec], nullable_required: bool) -> dict:
+    return {
+        "type": "object",
+        "properties": {
+            name: _json_node(spec, nullable=nullable_required or not spec.required)
+            for name, spec in specs.items()
+        },
+        "required": list(specs),
+        "additionalProperties": False,
+    }
+
+
+def _json_node(spec: FieldSpec, nullable: bool) -> dict[str, Any]:
+    kind = JSON_TYPES[spec.type]
+    node: dict[str, Any] = {"type": [kind, "null"] if nullable else kind}
+    if spec.type in JSON_FORMATS:
+        node["format"] = JSON_FORMATS[spec.type]
+    if spec.choices:
+        node["enum"] = [*spec.choices, None] if nullable else list(spec.choices)
+    if spec.items:
+        node["items"] = _json_object(spec.items, nullable_required=False)
+    if spec.help:
+        node["description"] = spec.help
+    return node
+
+
 _SCHEMAS: dict[str, Schema] = {}
 
 
@@ -152,10 +236,21 @@ def register_schema(
     name: str,
     fields: dict[str, FieldSpec],
     rules: Iterable[Rule] = (),
+    *,
+    instructions: str = "",
+    optimize_for: str = "cost",
+    purpose: str = "",
 ) -> Schema:
     if name in _SCHEMAS:
         raise ValueError(f"Schema {name!r} is already registered")
-    _SCHEMAS[name] = Schema(name=name, fields=dict(fields), rules=tuple(rules))
+    _SCHEMAS[name] = Schema(
+        name=name,
+        fields=dict(fields),
+        rules=tuple(rules),
+        instructions=instructions,
+        optimize_for=optimize_for,
+        purpose=purpose,
+    )
     return _SCHEMAS[name]
 
 
@@ -227,3 +322,9 @@ def _as_date(value: datetime.date | str) -> datetime.date:
     if isinstance(value, datetime.date):
         return value
     return datetime.date.fromisoformat(str(value)[:10])
+
+
+def _as_utc(value: datetime.datetime) -> datetime.datetime:
+    if value.tzinfo is None:
+        return value
+    return value.astimezone(datetime.UTC).replace(tzinfo=None)

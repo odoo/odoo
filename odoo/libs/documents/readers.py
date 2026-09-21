@@ -4,7 +4,6 @@ import csv
 import io
 import json
 from collections.abc import Callable
-from operator import attrgetter
 from typing import Any, Protocol, runtime_checkable
 
 from .formats import RECORDING_EXTENSIONS, mimetypes_for
@@ -41,6 +40,7 @@ __all__ = [
     "BaseReader",
     "get_known_reader_names",
     "get_readers",
+    "reader_rank",
     "register_reader",
     "registered_readers",
     "unregister_reader",
@@ -62,6 +62,7 @@ class BaseReader:
     mimetypes: frozenset[str] = frozenset()
     yields: tuple[str, ...] = ()
     cost: int = FREE
+    defers: bool = False
 
     def read(self, document: Any) -> Any:
         raise NotImplementedError
@@ -117,8 +118,11 @@ def get_readers(mimetype: str, representation: str) -> tuple[BaseReader, ...]:
                 fallback.append(reader)
         elif reader.applies_to(mimetype):
             named.append(reader)
-    key = attrgetter("cost")
-    return (*sorted(named, key=key), *sorted(fallback, key=key))
+    return (*sorted(named, key=reader_rank), *sorted(fallback, key=reader_rank))
+
+
+def reader_rank(reader: BaseReader) -> tuple[int, bool]:
+    return (reader.cost, getattr(reader, "defers", False))
 
 
 def registered_readers() -> tuple[BaseReader, ...]:

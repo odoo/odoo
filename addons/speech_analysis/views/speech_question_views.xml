@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="speech_question_view_list" model="ir.ui.view">
+        <field name="name">speech.question.view.list</field>
+        <field name="model">speech.question</field>
+        <field name="arch" type="xml">
+            <list string="Questions" create="0">
+                <field name="name" />
+                <field name="speaker_id" />
+                <field name="partner_id" optional="show" />
+                <field name="answered" />
+                <field name="answer" optional="show" />
+                <field name="at_s" optional="hide" />
+                <field name="res_model" optional="hide" />
+                <field name="res_id" optional="hide" />
+            </list>
+        </field>
+    </record>
+
+    <record id="speech_question_view_search" model="ir.ui.view">
+        <field name="name">speech.question.view.search</field>
+        <field name="model">speech.question</field>
+        <field name="arch" type="xml">
+            <search string="Questions">
+                <field name="name" />
+                <field name="partner_id" />
+                <filter
+                    name="mine"
+                    string="Mine"
+                    domain="[('partner_id.user_ids', 'in', [uid])]" />
+            </search>
+        </field>
+    </record>
+
+    <record id="speech_question_action" model="ir.actions.act_window">
+        <field name="name">Questions</field>
+        <field name="res_model">speech.question</field>
+        <field name="view_mode">list</field>
+    </record>
+
+</odoo>

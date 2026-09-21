@@ -1,7 +1,8 @@
-# `get_readers` orders by cost and `_derive` falls through a reader that
-# answered nothing, so the registry decides between readers that DIFFER. Neither
-# decides between two claiming one mimetype for one representation at one cost:
-# `sorted` is stable, so module load order wins and nothing declares it.
+# `get_readers` orders by `reader_rank` -- cost, then whether the reader defers
+# to its peers -- and `_derive` falls through a reader that answered nothing, so
+# the registry decides between readers that DIFFER. Neither decides between two
+# claiming one mimetype for one representation at one rank: `sorted` is stable,
+# so module load order wins and nothing declares it.
 # `extract` reads a PDF with pymupdf and `attachment_indexation` with
 # pdfminer.six, which is the pair this exists for.
 
@@ -10,6 +11,7 @@ from collections import defaultdict
 from odoo.libs.documents import (
     TEXT,
     BaseReader,
+    reader_rank,
     register_reader,
     registered_readers,
     registered_writers,
@@ -24,7 +26,9 @@ def reader_claims(readers):
     for reader in readers:
         for mimetype in reader.mimetypes:
             for representation in reader.yields:
-                claims[(mimetype, representation, reader.cost)].append(reader.name)
+                claims[(mimetype, representation, reader_rank(reader))].append(
+                    reader.name
+                )
     return {key: names for key, names in claims.items() if len(names) > 1}
 
 
@@ -48,11 +52,12 @@ class TestRegistryIsUnambiguous(BaseCase):
             ambiguous,
             "these readers are chosen by module load order:\n  "
             + "\n  ".join(
-                f"{mimetype} {representation} at cost {cost}: "
+                f"{mimetype} {representation} at rank {rank}: "
                 + ", ".join(sorted(names))
-                for (mimetype, representation, cost), names in sorted(ambiguous.items())
+                for (mimetype, representation, rank), names in sorted(ambiguous.items())
             )
-            + "\nGive one of them a higher cost, or decide which owns the format.",
+            + "\nGive one of them a higher cost, let one defer to the other, "
+            "or decide which owns the format.",
         )
 
     def test_no_two_writers_claim_one_mimetype(self):
@@ -95,6 +100,27 @@ class TestRegistryIsUnambiguous(BaseCase):
 
         found = reader_claims(registered_readers())
 
-        self.assertIn(("application/pdf", TEXT, 0), found)
-        self.assertIn("test_second_pdf_text", found[("application/pdf", TEXT, 0)])
-        self.assertIn("pdf_text", found[("application/pdf", TEXT, 0)])
+        self.assertIn(("application/pdf", TEXT, (0, False)), found)
+        clashing = found[("application/pdf", TEXT, (0, False))]
+        self.assertIn("test_second_pdf_text", clashing)
+        self.assertIn("pdf_text", clashing)
+
+    def test_a_reader_that_defers_is_not_a_collision(self):
+        deferring = type(
+            "_DeferringPdf",
+            (BaseReader,),
+            {
+                "name": "test_deferring_pdf_text",
+                "mimetypes": frozenset({"application/pdf"}),
+                "yields": (TEXT,),
+                "cost": 0,
+                "defers": True,
+                "read": lambda self, document: "",
+            },
+        )()
+        register_reader(deferring)
+        self.addCleanup(unregister_reader, deferring)
+
+        self.assertNotIn(
+            ("application/pdf", TEXT, (0, False)), reader_claims(registered_readers())
+        )

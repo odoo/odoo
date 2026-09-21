@@ -8,7 +8,7 @@
 Speech Tests
 ============
 
-A recording owner with no business meaning, so ``mixin.media.timeline`` and the
+Recording owners with no business meaning, so ``mixin.media.timeline`` and the
 transcription pipeline are tested against a consumer that exists only to be one.
 The engines are stubbed at the document layer, which is the same seam the real
 ones register on, so a suite proves the wiring without a key or a network call.
@@ -20,6 +20,7 @@ ones register on, so a suite proves the wiring without a key or a network call.
         "speech",
         "mail_speech",
         "speech_ai",
+        "speech_analysis",
     ],
     "data": [
         "security/ir.model.access.csv",

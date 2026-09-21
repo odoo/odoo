@@ -15,7 +15,10 @@ from odoo.libs.documents import (
 )
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.speech.tools.engines import transcription_engines
+from odoo.addons.speech.tools.engines import (
+    record_engine_error,
+    transcription_engines,
+)
 from odoo.addons.speech_local.tools import reader as local
 from odoo.addons.speech_local.tools.engine import (
     REQUIRED,
@@ -43,14 +46,19 @@ class VendorStub(BaseReader):
     yields = (CUES,)
     cost = EXPENSIVE
 
-    def __init__(self, usable):
+    def __init__(self, usable, cues=None, error=None):
         self.usable = usable
+        self.cues = cues
+        self.error = error
 
     def available(self, env):
         return self.usable
 
     def read(self, document):
-        return None
+        if self.error:
+            record_engine_error(document, self.error)
+            raise self.error
+        return self.cues
 
 
 def _utterance(start, end):
@@ -81,8 +89,8 @@ class TestLocalTranscription(TransactionCase):
         for name in REQUIRED:
             (self.models / name).write_bytes(b"")
 
-    def _vendor(self, usable):
-        vendor = VendorStub(usable)
+    def _vendor(self, usable, **answer):
+        vendor = VendorStub(usable, **answer)
         register_reader(vendor)
         self.addCleanup(unregister_reader, vendor)
         return vendor
@@ -117,14 +125,33 @@ class TestLocalTranscription(TransactionCase):
         self.assertEqual(engine_name, "local_transcription")
         self.assertEqual(engine.calls[0][1], "es_MX")
 
-    def test_stands_down_where_a_vendor_serves(self):
+    def test_a_vendor_that_answers_is_never_second_guessed(self):
         self._complete_models()
-        self._vendor(usable=True)
+        vendor_cues = [Cue(0.0, 1.0, "from the vendor", "SPEAKER_0")]
+        self._vendor(usable=True, cues=vendor_cues)
         engine = FakeEngine(self.cues)
         with patch(f"{READER}.local_engine", return_value=engine):
-            document = self._audio()._transcript_document()
-            self.assertIsNone(self.reader.read(document))
+            cues, engine_name = self._audio()._read_transcript()
+        self.assertEqual((cues, engine_name), (vendor_cues, "vendor_stub"))
         self.assertFalse(engine.calls)
+
+    def test_a_vendor_that_fails_is_covered_by_the_local_engine(self):
+        self._complete_models()
+        self._vendor(usable=True, error=RuntimeError("vendor down"))
+        attachment = self._audio()
+        with (
+            patch(f"{READER}.local_engine", return_value=FakeEngine(self.cues)),
+            patch(f"{READER}.decode_audio", return_value=np.zeros(8)),
+        ):
+            attachment._transcribe()
+        self.assertEqual(attachment.transcript_state, "done")
+        self.assertEqual(attachment.transcript_engine, "local_transcription")
+        self.assertFalse(attachment.transcript_error)
+
+    def test_it_is_offered_after_its_peers_whenever_it_registered(self):
+        vendor = self._vendor(usable=True)
+        names = [r.name for r in get_readers("audio/mpeg", CUES)]
+        self.assertGreater(names.index("local_transcription"), names.index(vendor.name))
 
     def test_an_engine_failure_is_reported_on_the_document(self):
         self._complete_models()

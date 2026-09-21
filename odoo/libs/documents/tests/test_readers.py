@@ -133,6 +133,22 @@ class TestRegistry(unittest.TestCase):
         finally:
             _forget(first, second)
 
+    def test_a_reader_that_defers_comes_after_its_peers_whenever_it_registered(self):
+        deferring = _Stub("deferring", {"a/b"}, (TEXT,), "d", cost=EXPENSIVE)
+        deferring.defers = True
+        peer = _Stub("peer", {"a/b"}, (TEXT,), "p", cost=EXPENSIVE)
+        cheaper = _Stub("cheaper", {"a/b"}, (TEXT,), "c", cost=CHEAP)
+        register_reader(deferring)
+        register_reader(peer)
+        register_reader(cheaper)
+        try:
+            self.assertEqual(
+                [r.name for r in get_readers("a/b", TEXT)],
+                ["cheaper", "peer", "deferring"],
+            )
+        finally:
+            _forget(deferring, peer, cheaper)
+
     def test_a_free_fallback_never_displaces_a_reader_that_named_the_mimetype(self):
         named = _Stub("named", {"a/b"}, (TEXT,), "named", cost=EXPENSIVE)
         fallback = _Stub("fallback", {ANY}, (TEXT,), "fallback", cost=FREE)

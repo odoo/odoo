@@ -9,6 +9,7 @@ from odoo.addons.extract.tools.schema import (
     Schema,
     extend_schema,
     get_schema,
+    json_schema,
     known_schemas,
     not_after,
     register_schema,
@@ -334,3 +335,101 @@ def _forget(name):
     from odoo.addons.extract.tools import schema as schema_mod
 
     schema_mod._SCHEMAS.pop(name, None)
+
+
+@tagged("post_install", "-at_install")
+class TestDeclarations(BaseCase):
+    def test_a_choice_is_read_whatever_its_case_and_kept_as_declared(self):
+        spec = FieldSpec("str", choices=("objection", "agreement"))
+
+        self.assertEqual(spec.coerce(" Objection "), "objection")
+        with self.assertRaises(ValueError):
+            spec.coerce("complaint")
+
+    def test_only_text_offers_choices(self):
+        with self.assertRaises(ValueError):
+            FieldSpec("int", choices=("1", "2"))
+
+    def test_a_row_drops_a_value_outside_its_choices_and_keeps_the_row(self):
+        spec = FieldSpec(
+            "list",
+            items={
+                "quote": FieldSpec("str", required=True),
+                "kind": FieldSpec("str", choices=("risk",)),
+            },
+        )
+
+        rows = spec.coerce([{"quote": "we may lose it", "kind": "gossip"}])
+
+        self.assertEqual(rows, [{"quote": "we may lose it"}])
+
+    def test_a_datetime_is_kept_in_utc_to_the_second(self):
+        spec = FieldSpec("datetime")
+
+        self.assertEqual(
+            spec.coerce("2026-09-21T10:15:30.500-06:00"), "2026-09-21 16:15:30"
+        )
+        self.assertEqual(spec.coerce("2026-09-21 10:15"), "2026-09-21 10:15:00")
+        with self.assertRaises(ValueError):
+            spec.coerce("next tuesday")
+
+    def test_an_unknown_optimization_is_refused(self):
+        with self.assertRaises(ValueError):
+            Schema(name="x", optimize_for="cheapest")
+
+    def test_the_purpose_defaults_to_the_document_type(self):
+        self.assertEqual(Schema(name="invoice").ml_purpose, "extract.invoice")
+        self.assertEqual(
+            Schema(name="call", purpose="speech.analysis").ml_purpose,
+            "speech.analysis",
+        )
+
+    def test_extending_a_schema_keeps_its_instructions_and_purpose(self):
+        name = "test_declared_schema"
+        self.addCleanup(_forget, name)
+        register_schema(
+            name,
+            {"a": FieldSpec("str")},
+            instructions="Read carefully.",
+            optimize_for="accuracy",
+            purpose="test.purpose",
+        )
+        extended = extend_schema(name, {"b": FieldSpec("int")})
+
+        self.assertEqual(extended.instructions, "Read carefully.")
+        self.assertEqual(extended.optimize_for, "accuracy")
+        self.assertEqual(extended.ml_purpose, "test.purpose")
+
+    def test_the_json_schema_declares_every_field_and_allows_null(self):
+        schema = Schema(
+            name="x",
+            fields={
+                "when": FieldSpec("datetime", required=True, help="When it began"),
+                "mood": FieldSpec("str", choices=("calm", "tense")),
+                "rows": FieldSpec(
+                    "list",
+                    items={
+                        "text": FieldSpec("str", required=True),
+                        "at": FieldSpec("float"),
+                    },
+                ),
+            },
+        )
+
+        shape = json_schema(schema)
+
+        self.assertEqual(shape["required"], ["when", "mood", "rows"])
+        self.assertFalse(shape["additionalProperties"])
+        when = shape["properties"]["when"]
+        self.assertEqual(when["type"], ["string", "null"])
+        self.assertEqual(when["format"], "date-time")
+        self.assertEqual(when["description"], "When it began")
+        self.assertEqual(shape["properties"]["mood"]["enum"], ["calm", "tense", None])
+        row = shape["properties"]["rows"]["items"]
+        self.assertEqual(row["properties"]["text"]["type"], "string")
+        self.assertEqual(row["properties"]["at"]["type"], ["number", "null"])
+
+    def test_the_json_schema_narrows_to_the_fields_asked_for(self):
+        shape = json_schema(get_schema("invoice"), ("total", "made_up"))
+
+        self.assertEqual(list(shape["properties"]), ["total"])

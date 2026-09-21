@@ -187,7 +187,7 @@ class IrAttachment(models.Model):
         document = self._transcript_document(language=language, prompt=prompt)
         cues = document.cues
         failure = engine_error(document)
-        if failure:
+        if failure and not cues:
             raise UserError(failure)
         return cues, document.read_by(CUES)
 

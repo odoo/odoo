@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="speech_moment_view_list" model="ir.ui.view">
+        <field name="name">speech.moment.view.list</field>
+        <field name="model">speech.moment</field>
+        <field name="arch" type="xml">
+            <list string="Moments" create="0">
+                <field name="name" />
+                <field name="speaker_id" />
+                <field name="partner_id" optional="show" />
+                <field name="kind" />
+                <field name="at_s" optional="hide" />
+                <field name="res_model" optional="hide" />
+                <field name="res_id" optional="hide" />
+            </list>
+        </field>
+    </record>
+
+    <record id="speech_moment_view_search" model="ir.ui.view">
+        <field name="name">speech.moment.view.search</field>
+        <field name="model">speech.moment</field>
+        <field name="arch" type="xml">
+            <search string="Moments">
+                <field name="name" />
+                <field name="partner_id" />
+                <filter
+                    name="mine"
+                    string="Mine"
+                    domain="[('partner_id.user_ids', 'in', [uid])]" />
+            </search>
+        </field>
+    </record>
+
+    <record id="speech_moment_action" model="ir.actions.act_window">
+        <field name="name">Moments</field>
+        <field name="res_model">speech.moment</field>
+        <field name="view_mode">list</field>
+    </record>
+
+</odoo>

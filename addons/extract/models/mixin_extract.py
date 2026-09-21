@@ -114,7 +114,10 @@ class MixinExtract(models.AbstractModel):
             )
         if not attachment:
             return None
-        return attachment._as_document()
+        document = attachment._as_document()
+        if document is not None and "company_id" in self._fields and self.company_id:
+            document.options["company"] = self.company_id
+        return document
 
     def _update_from_extraction(self, result) -> None:
         self.check_singleton()

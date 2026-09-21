@@ -4,6 +4,7 @@ from odoo.libs.documents.cues import (
     Cue,
     cues_as_text,
     format_offset,
+    parse_offset,
     parse_srt,
     parse_vtt,
     render_srt,
@@ -142,6 +143,18 @@ class TestWriting(unittest.TestCase):
         self.assertEqual(format_offset(75.9), "01:15")
         self.assertEqual(format_offset(3725), "1:02:05")
         self.assertEqual(format_offset(-3), "00:00")
+
+    def test_a_stamp_reads_back_as_the_offset_it_shows(self):
+        for seconds in (0, 75, 3725):
+            with self.subTest(seconds=seconds):
+                self.assertEqual(parse_offset(format_offset(seconds)), seconds)
+        self.assertEqual(parse_offset("[03:12]"), 192.0)
+        self.assertEqual(parse_offset(12.5), 12.5)
+
+    def test_a_stamp_that_is_not_one_reads_as_nothing(self):
+        for stamp in (None, "", "soon", "1:2:3:4", "01:75", "-1:00", True):
+            with self.subTest(stamp=stamp):
+                self.assertIsNone(parse_offset(stamp))
 
 
 class TestDocument(unittest.TestCase):

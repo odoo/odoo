@@ -65,9 +65,10 @@ class TestAiExtractors(TransactionCase):
 
         self.assertEqual(result, {"total": 139.86})
         self.assertEqual(client.complete.call_args.kwargs["images"], ())
-        sent = client.complete.call_args.args[0]
-        self.assertIn("CONSUMO 100 KWH", sent)
-        self.assertIn("Expected JSON structure", sent)
+        sent = client.complete.call_args
+        self.assertIn("CONSUMO 100 KWH", sent.args[0])
+        self.assertIn("total", sent.kwargs["response_schema"]["properties"])
+        self.assertIn("Never invent a value", sent.kwargs["system"])
 
     def test_the_text_reader_asks_for_no_vision_capability(self):
         orchestrator, _ = self._orchestrator()
@@ -111,9 +112,9 @@ class TestAiExtractors(TransactionCase):
 
         self._run(self.text_reader, _TEXT_DOC, orchestrator, wanted=("total",))
 
-        sent = client.complete.call_args.args[0]
-        self.assertIn("total", sent)
-        self.assertNotIn("vendor_vat", sent)
+        sent = client.complete.call_args
+        self.assertEqual(list(sent.kwargs["response_schema"]["properties"]), ["total"])
+        self.assertNotIn("vendor_vat", sent.args[0])
 
     def test_the_purpose_names_the_document_type(self):
         orchestrator, _ = self._orchestrator()
@@ -181,3 +182,23 @@ class TestAiExtractors(TransactionCase):
         orchestrator, _ = self._orchestrator(answer="I think the total is about 140")
 
         self.assertIsNone(self._run(self.text_reader, _TEXT_DOC, orchestrator))
+
+    def test_the_schema_chooses_the_optimization_and_the_purpose(self):
+        from odoo.addons.extract.tools import schema as schema_mod
+
+        name = "test_declared_for_ai"
+        schema_mod.register_schema(
+            name,
+            {"total": schema_mod.FieldSpec("float")},
+            optimize_for="accuracy",
+            purpose="test.reading",
+        )
+        self.addCleanup(schema_mod._SCHEMAS.pop, name, None)
+        orchestrator, _ = self._orchestrator()
+
+        self._run(self.text_reader, _TEXT_DOC, orchestrator, doc_type=name)
+
+        chosen = orchestrator.select_model.call_args.kwargs
+        self.assertEqual(chosen["optimize_for"], "accuracy")
+        self.assertEqual(chosen["purpose"], "test.reading")
+        self.assertEqual(orchestrator.run.call_args.args[1].purpose, "test.reading")

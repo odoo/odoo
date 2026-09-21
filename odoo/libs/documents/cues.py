@@ -179,3 +179,26 @@ def format_offset(seconds: float) -> str:
     minutes, secs = divmod(int(max(seconds, 0.0)), 60)
     hours, minutes = divmod(minutes, 60)
     return f"{hours}:{minutes:02d}:{secs:02d}" if hours else f"{minutes:02d}:{secs:02d}"
+
+
+def parse_offset(stamp: str | float | None) -> float | None:
+    if stamp is None or isinstance(stamp, bool):
+        return None
+    if isinstance(stamp, int | float):
+        return max(float(stamp), 0.0)
+    text = str(stamp).strip().strip("[]").strip()
+    if not text:
+        return None
+    parts = text.split(":")
+    if len(parts) > 3:
+        return None
+    try:
+        values = [float(part) for part in parts]
+    except ValueError:
+        return None
+    if any(value < 0 for value in values) or any(v >= 60 for v in values[1:]):
+        return None
+    seconds = 0.0
+    for value in values:
+        seconds = seconds * 60 + value
+    return seconds
