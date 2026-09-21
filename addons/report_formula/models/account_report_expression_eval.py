@@ -1,5 +1,3 @@
-import bisect
-import itertools
 import re
 from ast import literal_eval
 from collections import defaultdict, deque
@@ -13,10 +11,7 @@ from odoo.libs.numbers import float_round
 from odoo.tools import SQL, Query
 from odoo.tools.safe_eval import expr_eval, safe_eval
 
-from odoo.addons.report_formula.models.account_report import (
-    ACCOUNT_CODES_ENGINE_SPLIT_REGEX,
-    ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX,
-    ACCOUNT_CODES_ENGINE_TERM_REGEX,
+from .account_report import (
     NO_NEXT_GROUPBY_ENGINES,
 )
 
@@ -1079,128 +1074,6 @@ class AccountReportExpressionEval(models.Model):
             )
 
     @_debug.perf.timed
-    def _get_formula_batch_with_engine_tax_tags(
-        self,
-        options,
-        date_scope,
-        formulas_dict,
-        current_groupby,
-        next_groupby,
-        offset=0,
-        limit=None,
-        warnings=None,
-        batch_ids_cache=None,
-    ):
-        self._check_groupby_fields(
-            (next_groupby.split(",") if next_groupby else [])
-            + ([current_groupby] if current_groupby else [])
-        )
-        all_expressions = self.env["account.report.expression"]
-        for expressions in formulas_dict.values():
-            all_expressions |= expressions
-        tags = all_expressions._get_matching_tags()
-        _debug.pipeline(
-            "tax_tags_matched",
-            report=self,
-            date_scope=date_scope,
-            formulas=len(formulas_dict),
-            expressions=len(all_expressions),
-            tags=len(tags),
-            groupby=current_groupby,
-            offset=offset,
-            limit=limit,
-        )
-
-        query = self._get_report_query(options, date_scope)
-        groupby_sql = (
-            self.env["account.move.line"]._field_to_sql(
-                "account_move_line", current_groupby, query
-            )
-            if current_groupby
-            else None
-        )
-        tail_query = self._get_engine_query_tail(offset, limit)
-        acc_tag_name = (
-            self.with_context(lang="en_US")
-            .env["account.account.tag"]
-            ._field_to_sql("acc_tag", "name")
-        )
-        sql = SQL(
-            """
-            SELECT
-                %(acc_tag_name)s AS formula,
-                SUM(%(balance_select)s) AS balance,
-                COUNT(account_move_line.id) AS aml_count
-                %(select_groupby_sql)s
-
-            FROM %(table_references)s
-
-            JOIN account_account_tag_account_move_line_rel aml_tag
-                ON aml_tag.account_move_line_id = account_move_line.id
-            JOIN account_account_tag acc_tag
-                ON aml_tag.account_account_tag_id = acc_tag.id
-            %(currency_table_join)s
-
-            WHERE %(search_condition)s
-              AND aml_tag.account_account_tag_id IN %(tag_ids)s
-
-            GROUP BY %(groupby_clause)s
-
-            ORDER BY %(groupby_clause)s
-
-            %(tail_query)s
-            """,
-            acc_tag_name=acc_tag_name,
-            select_groupby_sql=SQL(", %s AS grouping_key", groupby_sql)
-            if groupby_sql
-            else SQL(),
-            table_references=query.from_clause,
-            tag_ids=tuple(tags.ids),
-            balance_select=self._currency_table_apply_rate(
-                SQL("account_move_line.balance")
-            ),
-            currency_table_join=self._currency_table_aml_join(options),
-            search_condition=query.where_clause,
-            # Ordinals, not the alias and not the expression: the joins can carry
-            # a `formula` column (account_tax has one) and PostgreSQL resolves a
-            # GROUP BY name to an input column first, while the expression holds
-            # a bound parameter, so a second spelling of it is a second parameter.
-            groupby_clause=SQL("1, 4") if groupby_sql else SQL("1"),
-            tail_query=tail_query,
-        )
-
-        rslt = {
-            (formula_str.lstrip("-"), formula_expr): []
-            if current_groupby
-            else {"result": 0, "has_sublines": False}
-            for formula_str, formula_expr in formulas_dict.items()
-        }
-        tag_rows = 0  # debuglog
-        for tax_tag, balance, aml_count, *grouping_key in self.env.execute_query(sql):
-            tag_rows += 1  # debuglog
-            if expression := formulas_dict.get(f"-{tax_tag}"):
-                balance *= -1
-            else:
-                expression = formulas_dict[tax_tag]
-            rslt_dict = {"result": balance, "has_sublines": aml_count > 0}
-            if current_groupby:
-                rslt[tax_tag, expression].append((grouping_key[0], rslt_dict))
-            else:
-                rslt[tax_tag, expression] = rslt_dict
-        _debug.perf.count("tax_tag_rows_fetched", rows=tag_rows)
-
-        if _debug.pipeline.enabled:
-            _debug.pipeline(
-                "tax_tags_results",
-                report=self,
-                results=len(rslt),
-                groups=sum(len(v) for v in rslt.values() if isinstance(v, list))
-                if current_groupby
-                else None,
-            )
-        return rslt
-
-    @_debug.perf.timed
     def _get_formula_batch_with_engine_domain(
         self,
         options,
@@ -1286,7 +1159,7 @@ class AccountReportExpressionEval(models.Model):
                         traversing_model_domain.append(term)
 
             if batchable and len(aml_root_fields) == 1:
-                aml_field = self._get_source_model()._fields[
+                aml_field = self._get_required_source_model()._fields[
                     next(iter(aml_root_fields))
                 ]
                 if aml_field.type == "many2one":
@@ -1323,7 +1196,7 @@ class AccountReportExpressionEval(models.Model):
                 batch_domains[0][0] if not batch_model else None
             )  # batch_domains contains only one element if there is not batch_model/batch_aml_field
             query = self._get_report_query(options, date_scope, domain=aml_domain)
-            source_model = self._get_source_model()
+            source_model = self._get_required_source_model()
             source_alias = query.table
 
             groupby_sql = (
@@ -1518,294 +1391,6 @@ class AccountReportExpressionEval(models.Model):
         return rslt
 
     @_debug.perf.timed
-    def _get_formula_batch_with_engine_account_codes(
-        self,
-        options,
-        date_scope,
-        formulas_dict,
-        current_groupby,
-        next_groupby,
-        offset=0,
-        limit=None,
-        warnings=None,
-        batch_ids_cache=None,
-    ):
-        self._check_groupby_fields(
-            (next_groupby.split(",") if next_groupby else [])
-            + ([current_groupby] if current_groupby else [])
-        )
-        prefilter = self.env["account.account"]._check_company_domain(
-            self.get_report_company_ids(options)
-        )
-
-        all_accounts = (
-            self.env["account.account"]
-            .with_context(active_test=False)
-            .search([*prefilter])
-        )
-        accounts = []
-
-        for account in all_accounts:
-            account_code = account.code
-            if not account_code:
-                for company in account.company_ids:
-                    account_code = account.with_company(company).code
-                    if account_code:
-                        break
-            accounts.append(
-                {
-                    "id": account.id,
-                    "code": account_code,
-                    "tag_ids": account.tag_ids.ids,
-                }
-            )
-
-        accounts.sort(key=lambda acc: acc["code"])
-        tags_map = defaultdict(list)
-        for acc in accounts:
-            # If an account has no tags, map it to the pseudo-tag `False` such
-            # that a ref which does not exist matches it, otherwise DK balance
-            # fails in `test_generate_all_export_files`
-            for tag in acc["tag_ids"] or [False]:
-                tags_map[tag].append(acc)
-
-        accounts_prefix_map = defaultdict(set)
-        # Gather the account code prefixes to compute the total from
-        prefix_details_by_formula = {}  # in the form {formula: [(1, prefix1), (-1, prefix2)]}
-        for formula in formulas_dict:
-            prefix_details_by_formula[formula] = []
-            for token in filter(
-                None, ACCOUNT_CODES_ENGINE_SPLIT_REGEX.split(formula.replace(" ", ""))
-            ):
-                token_match = ACCOUNT_CODES_ENGINE_TERM_REGEX.match(token)
-
-                if not token_match:
-                    raise UserError(
-                        _(
-                            "Invalid token '%(token)s' in account_codes formula '%(formula)s'",
-                            token=token,
-                            formula=formula,
-                        )
-                    )
-
-                multiplicator = -1 if token_match["sign"] == "-" else 1
-                excluded_prefixes_match = token_match["excluded_prefixes"]
-                excluded_prefixes = (
-                    tuple(excluded_prefixes_match.split(","))
-                    if excluded_prefixes_match
-                    else ()
-                )
-                prefix = token_match["prefix"]
-
-                # We group using both prefix and excluded_prefixes as keys, for the case where two expressions would
-                # include the same prefix, but exlcude different prefixes (example 104\(1041) and 104\(1042))
-                prefix_key = (prefix, *excluded_prefixes)
-                prefix_details_by_formula[formula].append(
-                    (multiplicator, prefix_key, token_match["balance_character"])
-                )
-
-                if tag := ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX.match(prefix):
-                    if tag["ref"]:
-                        tag_id = self.env["ir.model.data"]._xmlid_to_res_id(tag["ref"])
-                    else:
-                        tag_id = int(tag["id"])
-                    accs = tags_map[tag_id]
-                else:
-                    idx = bisect.bisect_left(
-                        accounts, prefix, key=lambda acc: acc["code"]
-                    )
-                    accs = itertools.takewhile(
-                        lambda acc, prefix=prefix: acc["code"].startswith(prefix),
-                        itertools.islice(accounts, idx, None),
-                    )
-
-                for account in accs:
-                    if excluded_prefixes and account["code"].startswith(
-                        excluded_prefixes
-                    ):
-                        continue
-                    accounts_prefix_map[account["id"]].add(prefix_key)
-
-        _debug.pipeline(
-            "account_prefixes_mapped",
-            report=self,
-            date_scope=date_scope,
-            groupby=current_groupby,
-            formulas=len(prefix_details_by_formula),
-            accounts=len(accounts),
-            tags=len(tags_map),
-            matched_accounts=len(accounts_prefix_map),
-        )
-
-        # Run main query
-        query = self._get_report_query(options, date_scope)
-
-        current_groupby_aml_sql = (
-            self.env["account.move.line"]._field_to_sql(
-                "account_move_line", current_groupby, query
-            )
-            if current_groupby
-            else None
-        )
-        tail_query = self._get_engine_query_tail(offset, limit)
-        if current_groupby_aml_sql and tail_query:
-            tail_query_additional_groupby_where_sql = SQL(
-                """
-                AND %(current_groupby_aml_sql)s IN (
-                    SELECT DISTINCT %(current_groupby_aml_sql)s
-                    FROM %(table_references)s
-                    WHERE %(search_condition)s
-                    ORDER BY %(current_groupby_aml_sql)s
-                    %(tail_query)s
-                )
-                """,
-                current_groupby_aml_sql=current_groupby_aml_sql,
-                # Must be the same FROM as the outer query: under budget reporting the
-                # query shadows account_move_line with a budget-item subquery, and naming
-                # the real table here would pick the load-more window from journal items
-                # while the outer query aggregates budget rows.
-                table_references=query.from_clause,
-                search_condition=query.where_clause,
-                tail_query=tail_query,
-            )
-        else:
-            tail_query_additional_groupby_where_sql = SQL()
-        _debug.logic(
-            "account_codes_pagination",
-            report=self,
-            offset=offset,
-            limit=limit,
-            groupby_subquery=bool(tail_query_additional_groupby_where_sql),
-        )
-
-        extra_groupby_sql = (
-            SQL(", %s", current_groupby_aml_sql) if current_groupby_aml_sql else SQL()
-        )
-        extra_select_sql = (
-            SQL(", %s AS grouping_key", current_groupby_aml_sql)
-            if current_groupby_aml_sql
-            else SQL()
-        )
-
-        query = SQL(
-            """
-            SELECT
-                account_move_line.account_id AS account_id,
-                SUM(%(balance_select)s) AS sum
-                %(extra_select_sql)s
-            FROM %(table_references)s
-            %(currency_table_join)s
-            WHERE %(search_condition)s
-            %(tail_query_additional_groupby_where_sql)s
-            GROUP BY account_move_line.account_id%(extra_groupby_sql)s
-            %(order_by_sql)s
-            %(tail_query)s
-            """,
-            extra_select_sql=extra_select_sql,
-            table_references=query.from_clause,
-            balance_select=self._currency_table_apply_rate(
-                SQL("account_move_line.balance")
-            ),
-            currency_table_join=self._currency_table_aml_join(options),
-            search_condition=query.where_clause,
-            extra_groupby_sql=extra_groupby_sql,
-            tail_query_additional_groupby_where_sql=tail_query_additional_groupby_where_sql,
-            order_by_sql=SQL("ORDER BY %s", current_groupby_aml_sql)
-            if current_groupby_aml_sql
-            else SQL(),
-            tail_query=tail_query
-            if not tail_query_additional_groupby_where_sql
-            else SQL(),
-        )
-        self.env.cr.execute(query)
-
-        # Parse result
-        rslt = {}
-
-        res_by_prefix_account_id = {}
-        for query_res in self.env.cr.dictfetchall():
-            # Done this way so that we can run similar code for groupby and non-groupby
-            grouping_key = query_res["grouping_key"] if current_groupby else None
-            account_id = query_res["account_id"]
-            for prefix_key in accounts_prefix_map[account_id]:
-                res_by_prefix_account_id.setdefault(prefix_key, {}).setdefault(
-                    account_id, []
-                ).append(
-                    (
-                        grouping_key,
-                        {
-                            "result": query_res["sum"],
-                            # A grouped row exists only where at least one line does,
-                            # so its presence is the sublines flag.
-                            "has_sublines": True,
-                        },
-                    )
-                )
-        _debug.perf.count("account_codes_rows_fetched", rows=self.env.cr.rowcount)
-        _debug.pipeline(
-            "account_codes_rows_parsed",
-            report=self,
-            prefixes_with_results=len(res_by_prefix_account_id),
-        )
-
-        for formula, prefix_details in prefix_details_by_formula.items():
-            rslt_key = (formula, formulas_dict[formula])
-            rslt_destination = rslt.setdefault(
-                rslt_key,
-                [] if current_groupby else {"result": 0, "has_sublines": False},
-            )
-            rslt_groups_by_grouping_keys = {}
-            for multiplicator, prefix_key, balance_character in prefix_details:
-                res_by_account_id = res_by_prefix_account_id.get(prefix_key, {})
-
-                for account_results in res_by_account_id.values():
-                    account_total_value = sum(
-                        group_val["result"]
-                        for (group_key, group_val) in account_results
-                    )
-                    comparator = self.env.company.currency_id.compare_amounts(
-                        account_total_value, 0.0
-                    )
-
-                    # Manage balance_character.
-                    if (
-                        not balance_character
-                        or (balance_character == "D" and comparator >= 0)
-                        or (balance_character == "C" and comparator < 0)
-                    ):
-                        for group_key, group_val in account_results:
-                            rslt_group = {
-                                **group_val,
-                                "result": multiplicator * group_val["result"],
-                            }
-                            if not current_groupby:
-                                rslt_destination["result"] += rslt_group["result"]
-                                rslt_destination["has_sublines"] = (
-                                    rslt_destination["has_sublines"]
-                                    or rslt_group["has_sublines"]
-                                )
-                            elif group_key in rslt_groups_by_grouping_keys:
-                                # Will happen if the same grouping key is used on move lines with different accounts.
-                                # This comes from the GROUPBY in the SQL query, which uses both grouping key and account.
-                                # When this happens, we want to aggregate the results of each grouping key, to avoid duplicates in the end result.
-                                already_treated_rslt_group = (
-                                    rslt_groups_by_grouping_keys[group_key]
-                                )
-                                already_treated_rslt_group["has_sublines"] = (
-                                    already_treated_rslt_group["has_sublines"]
-                                    or rslt_group["has_sublines"]
-                                )
-                                already_treated_rslt_group["result"] += rslt_group[
-                                    "result"
-                                ]
-                            else:
-                                rslt_groups_by_grouping_keys[group_key] = rslt_group
-                                rslt_destination.append((group_key, rslt_group))
-
-        _debug.pipeline("account_codes_results", report=self, results=len(rslt))
-        return rslt
-
-    @_debug.perf.timed
     def _get_formula_batch_with_engine_external(
         self,
         options,
@@ -1905,13 +1490,8 @@ class AccountReportExpressionEval(models.Model):
                             balance_select=self._currency_table_apply_rate(
                                 SQL("CAST(value AS numeric)")
                             ),
-                            currency_table_join=SQL(
-                                """
-                                JOIN %(currency_table)s
-                                ON account_currency_table.company_id = account_report_external_value.company_id
-                                AND account_currency_table.rate_type = 'current'
-                                """,
-                                currency_table=self._get_currency_table(options),
+                            currency_table_join=self._currency_table_external_value_join(
+                                options
                             ),
                             where_clause=where_clause,
                             query_end=query_end,
@@ -2004,145 +1584,14 @@ class AccountReportExpressionEval(models.Model):
         )
         return rslt
 
-    @_debug.perf.timed
-    def _get_domain_expression_audit_aml(self, expression_to_audit, options):
-        _debug.logic(
-            "audit_domain_engine",
-            report=self,
-            expression=expression_to_audit,
-            engine=expression_to_audit.engine,
-            supported=expression_to_audit.engine
-            in ("account_codes", "tax_tags", "domain"),
-        )
-        if expression_to_audit.engine == "account_codes":
-            formula = expression_to_audit.formula.replace(" ", "")
-
-            account_codes_domains = []
-            for token in ACCOUNT_CODES_ENGINE_SPLIT_REGEX.split(
-                formula.replace(" ", "")
-            ):
-                if token:
-                    match_dict = ACCOUNT_CODES_ENGINE_TERM_REGEX.match(
-                        token
-                    ).groupdict()
-                    tag_match = ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX.match(
-                        match_dict["prefix"]
-                    )
-                    account_codes_domain = []
-
-                    if tag_match:
-                        if tag_match["ref"]:
-                            tag_id = self.env["ir.model.data"]._xmlid_to_res_id(
-                                tag_match["ref"]
-                            )
-                        else:
-                            tag_id = int(tag_match["id"])
-
-                        account_codes_domain.append(
-                            ("account_id.tag_ids", "in", [tag_id])
-                        )
-                    else:
-                        account_codes_domain.append(
-                            ("account_id.code", "=like", f"{match_dict['prefix']}%")
-                        )
-
-                    excluded_prefix_str = match_dict["excluded_prefixes"]
-                    if excluded_prefix_str:
-                        for excluded_prefix in excluded_prefix_str.split(","):
-                            # "'not like', prefix%" doesn't work
-                            account_codes_domain += [
-                                "!",
-                                ("account_id.code", "=like", f"{excluded_prefix}%"),
-                            ]
-
-                    account_codes_domains.append(account_codes_domain)
-
-            _debug.pipeline(
-                "account_codes_audit_domain",
-                expression=expression_to_audit,
-                tokens=len(account_codes_domains),
-            )
-            return Domain.OR(account_codes_domains)
-
-        if expression_to_audit.engine == "tax_tags":
-            tags = self.env["account.account.tag"]._get_tax_tags(
-                expression_to_audit.formula,
-                expression_to_audit.report_line_id.report_id.country_id.id,
-            )
-            return [("tax_tag_ids", "in", tags.ids)]
-
-        if expression_to_audit.engine == "domain":
-            return literal_eval(expression_to_audit.formula)
-
-        return None
-
-    @api.model
     def _currency_table_apply_rate(self, value: SQL) -> SQL:
-        return SQL(
-            "(%(value)s) * COALESCE(account_currency_table.rate, 1)", value=value
-        )
+        return value
 
-    @api.model
-    @_debug.perf.timed
-    def _currency_table_aml_join(
-        self,
-        options,
-        aml_alias=SQL("account_move_line"),  # noqa: B008  SQL is immutable, one shared default is safe
-    ) -> SQL:
-        _debug.logic(
-            "currency_table_join",
-            table_type=options.get("currency_table", {}).get("type"),
-            period_key=options.get("date", {}).get("currency_table_period_key"),
-        )
-        if options["currency_table"]["type"] == "cta":
-            return SQL(
-                """
-                JOIN account_account aml_ct_account
-                    ON aml_ct_account.id = %(aml_table)s.account_id
-                LEFT JOIN %(currency_table)s
-                    ON %(aml_table)s.company_id = account_currency_table.company_id
-                    AND (
-                        account_currency_table.rate_type = CASE
-                            WHEN aml_ct_account.account_type LIKE ANY (ARRAY[%(income_prefix)s, %(expense_prefix)s, 'equity_unaffected']) THEN 'average'
-                            WHEN aml_ct_account.account_type LIKE %(equity_prefix)s THEN 'historical'
-                            ELSE 'current'
-                        END
-                    )
-                    AND (account_currency_table.date_from IS NULL OR account_currency_table.date_from <= %(aml_table)s.date)
-                    AND (account_currency_table.date_next IS NULL OR account_currency_table.date_next > %(aml_table)s.date)
-                    AND (account_currency_table.period_key = %(period_key)s OR account_currency_table.period_key IS NULL)
-                """,
-                aml_table=aml_alias,
-                equity_prefix="equity%",
-                income_prefix="income%",
-                expense_prefix="expense%",
-                currency_table=self._get_currency_table(options),
-                period_key=options["date"]["currency_table_period_key"],
-            )
+    def _currency_table_aml_join(self, options, aml_alias=None) -> SQL:
+        return SQL()
 
-        return SQL(
-            """
-            JOIN %(currency_table)s
-                ON %(aml_table)s.company_id = account_currency_table.company_id
-                AND (account_currency_table.period_key = %(period_key)s OR account_currency_table.period_key IS NULL)
-            """,
-            aml_table=aml_alias,
-            currency_table=self._get_currency_table(options),
-            period_key=options["date"]["currency_table_period_key"],
-        )
-
-    @api.model
-    def _get_currency_table(self, options) -> SQL:
-        if options["currency_table"]["type"] == "monocurrency":
-            companies = self.env["res.company"].browse(
-                self.get_report_company_ids(options)
-            )
-            # No CTA rates here by construction: this branch is the monocurrency one.
-            return self.env["res.currency"]._get_monocurrency_currency_table_sql(
-                companies, use_cta_rates=False
-            )
-
-        return SQL("account_currency_table")
+    def _currency_table_external_value_join(self, options) -> SQL:
+        return SQL()
 
     @_debug.perf.timed
     def _get_report_query(self, options, date_scope, domain=None) -> Query:
@@ -2157,31 +1606,17 @@ class AccountReportExpressionEval(models.Model):
             domain or Domain.TRUE
         )
 
-        if options.get("compute_budget"):
-            domain = domain.optimize(self._get_source_model())
-            aml_required_columns = {
-                "move_id",
-                "currency_id",
-                "journal_id",
-                "display_type",
-            }
-            domain = domain.map_conditions(
-                lambda condition: (
-                    Domain.TRUE
-                    if condition.field_expr in aml_required_columns
-                    else condition
-                )
-            )
+        domain = self._adapt_report_query_domain(options, domain)
+        query = self._get_required_source_model()._search(domain)
 
-        query = self._get_source_model()._search(domain)
-
-        if options.get("compute_budget"):
-            query._tables["account_move_line"] = (
-                self._create_aml_shadowing_query_for_budget(options)
-            )
-            query.add_where(SQL("budget_id = %s", options["compute_budget"]))
-
+        self._adapt_report_query(options, query)
         return query
+
+    def _adapt_report_query_domain(self, options, domain):
+        return domain
+
+    def _adapt_report_query(self, options, query):
+        return
 
     def _get_engine_query_tail(self, offset, limit) -> SQL:
         query_tail = SQL()
@@ -2244,7 +1679,7 @@ class AccountReportExpressionEval(models.Model):
             custom_handler=custom_handler_name,
         )
 
-        source_model = self._get_source_model()
+        source_model = self._get_required_source_model()
         for field_name in (fname.strip() for fname in groupby_fields_name):
             groupby_field = source_model._fields.get(field_name)
             if groupby_field:

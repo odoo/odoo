@@ -24,7 +24,7 @@ class AccountReport(models.AbstractModel):
         sequence_map = super()._get_options_initializers_forced_sequence_map()
         # Sequenced between _init_options_column_headers and _init_options_columns, so the
         # column headers are already generated but the columns are not.
-        sequence_map[self._init_options_analytic_groupby] = 995
+        sequence_map["_init_options_analytic_groupby"] = 995
         return sequence_map
 
     @_debug.perf.timed

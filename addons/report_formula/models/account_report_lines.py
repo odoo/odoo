@@ -14,7 +14,7 @@ from odoo.tools import float_repr, get_lang, html2plaintext
 from odoo.tools.formatting import ROUNDING_UNIT_MAPPING
 from odoo.tools.misc import format_date, formatLang
 
-from odoo.addons.report_formula.models.account_report import (
+from .account_report import (
     LINE_ID_HIERARCHY_DELIMITER,
     NUMBER_FIGURE_TYPES,
 )
@@ -121,22 +121,10 @@ class AccountReportLines(models.Model):
     @api.model
     @_debug.perf.timed
     def _prepare_line_id(self, current):
-        """Build a generic line id string from its list representation, converting
-        the None values for model and value to empty strings.
-        :param current (list<tuple>): list of tuple(markup, model, value)
-        """
-
         def convert_none(x):
             return x if x is not None and x is not False else ""
 
         def check_segment(part):
-            # The format escapes nothing, so a markup or a non-relational groupby
-            # value carrying either delimiter builds an id that cannot be parsed
-            # back. Fail here, where the offending value is still in hand, rather
-            # than somewhere downstream with an id nobody can trace. The id is not
-            # stored anywhere -- it is rebuilt on every render -- but it round-trips
-            # to the client and back on fold, expand and audit, and those calls
-            # parse it.
             if "~" in part or LINE_ID_HIERARCHY_DELIMITER in part:
                 raise UserError(
                     _(
@@ -204,10 +192,6 @@ class AccountReportLines(models.Model):
         line_cache = {}  # {report_line: report line dict}
         hide_if_zero_lines = self.env["account.report.line"]
 
-        # There are two types of lines:
-        # - static lines: the ones generated from self.line_ids
-        # - dynamic lines: the ones generated from a call to the functions referred to by self.dynamic_lines_generator
-        # This loops combines both types of lines together within the lines list
         for line in self.line_ids:  # _order ensures the sequence of the lines
             # Inject all the dynamic lines whose sequence is inferior to the next static line to add
             while dynamic_lines and line.sequence > dynamic_lines[0][0]:
@@ -348,8 +332,7 @@ class AccountReportLines(models.Model):
         # Unfold lines (static or dynamic) if necessary and add totals below section to dynamic lines
         lines = self._fully_unfold_lines_if_needed(lines, options)
 
-        if self.allow_account_audit_status_on_lines:
-            lines = self._add_account_status_on_lines(lines, options)
+        lines = self._add_account_status_on_lines(lines, options)
 
         self._update_line_names_for_consolidation(lines)
 
@@ -679,31 +662,6 @@ class AccountReportLines(models.Model):
     @api.readonly
     @_debug.perf.timed
     def sort_lines(self, lines, options, result_as_index=False):
-        """Sort report lines based on the 'order_column' key inside the options.
-        The value of options['order_column'] is a dict with keys 'expression_label' (the column to sort on)
-        and 'direction' ('ASC' or 'DESC').
-        If this key is missing or falsy, lines is returned directly.
-
-        This method has some limitations:
-
-            - The selected_column must have 'sortable' in its classes.
-            - All lines are sorted except:
-
-                - lines having the 'total' class
-                - lines with the 'load_more' markup
-                - static lines (lines with model 'account.report.line')
-
-            - This only works when each line has an unique id.
-            - All lines inside the selected_column must have a 'no_format' value.
-
-        Sorting is hierarchical: sibling children are sorted within their parent, and the
-        parents themselves are sorted relative to each other, total lines staying last.
-
-        :param lines:   The report lines.
-        :param options: The report options.
-        :return:        Lines sorted by the selected column.
-        """
-
         def is_bottom_placement_required(line_elem):
             return self._get_markup(line_elem.get("id")) in ("total", "load_more")
 
@@ -1088,22 +1046,6 @@ class AccountReportLines(models.Model):
         groupby=None,
         parent_line_dict_id=None,
     ):
-        """Postprocesses a list of report line dictionaries in order to regroup them by name prefix and reduce the overall number of lines
-        if their number is above a provided threshold (set in the report configuration).
-
-        The lines regrouped under a common prefix will be removed from the returned list of lines; only the prefix line will stay, folded.
-        Its expand function must ensure the right sublines are reloaded when unfolding it.
-
-        :param options: Option dict for this report.
-        :param lines_to_group: The lines list to regroup by prefix if necessary. They must all have the same parent line (which might be no line at all).
-        :param expand_function_name: Name of the expand function to be called on created prefix group lines, when unfolding them
-        :param parent_level: Level of the parent line, which generated the lines in lines_to_group. It will be used to compute the level of the prefix group lines.
-        :param matched_prefix: A string containing the parent prefix that's already matched. For example, when computing prefix 'ABC', matched_prefix will be 'AB'.
-        :param groupby: groupby value of the parent line, which generated the lines in lines_to_group.
-        :param parent_line_dict_id: id of the parent line, which generated the lines in lines_to_group.
-
-        :return: lines_to_group, grouped by prefix if it was necessary.
-        """
         threshold = options["prefix_groups_threshold"]
 
         # When grouping by prefix, we ignore the totals
@@ -2323,8 +2265,7 @@ class AccountReportLines(models.Model):
         expanded_count = len(lines)  # debuglog
         lines = self._fully_unfold_lines_if_needed(lines, options)
 
-        if self.allow_account_audit_status_on_lines:
-            lines = self._add_account_status_on_lines(lines, options)
+        lines = self._add_account_status_on_lines(lines, options)
 
         self._update_line_names_for_consolidation(lines)
 

@@ -1,6 +1,6 @@
 {
     "name": "Invoicing",
-    "version": "1.28",
+    "version": "1.29",
     "category": "Accounting/Accounting",
     "sequence": 10,
     "summary": "Invoices & Payments",

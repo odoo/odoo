@@ -10,13 +10,40 @@ from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils
 from odoo.tools.misc import format_date
 
-from odoo.addons.report_formula.models.account_report import CURRENCIES_USING_LAKH
+from .account_report import CURRENCIES_USING_LAKH
 
 _debug = DebugLog(__name__)
 
 
 class AccountReportOptions(models.Model):
     _inherit = "account.report"
+
+    def _normalize_date_filter(self, options, options_filter, period_date_to):
+        return options_filter
+
+    def _get_custom_period_bounds(
+        self, options, options_filter, period_date_from, period_date_to, current
+    ):
+        return current
+
+    def _convert_custom_period_filter(
+        self, options, options_filter, date, period_date_to, date_to
+    ):
+        return options_filter
+
+    def _finalize_custom_period_options(self, options, options_filter):
+        return
+
+    def _get_custom_period_name(self, period_type, date_from, date_to, options_return):
+        return None
+
+    def _get_shifted_custom_period(
+        self, options, periods, return_period, period_type, mode, date_from
+    ):
+        return None
+
+    def _get_custom_date_scope_bounds(self, options, date_scope, date_from, date_to):
+        return date_from, date_to
 
     @_debug.perf.timed
     def _init_options_date(self, options, previous_options):
@@ -81,47 +108,9 @@ class AccountReportOptions(models.Model):
             filter=options_filter,
             has_dates=bool(date_from and date_to),
         )
-        # In case if the return_period is asked but not return type exist for this report
-        if "return_period" in options_filter and not options.get("return_periodicity"):
-            _debug.logic("return_period_fallback", report=self, filter=options_filter)
-            options_filter = "this_month"
-        elif (
-            "return_period" in options_filter
-        ):  # In case if the return_period is asked but it is not shown as it is a similar period than those from the default filters, we fallback
-            months_per_period = options["return_periodicity"]["months_per_period"]
-            start_day = options["return_periodicity"]["start_day"]
-            start_month = options["return_periodicity"]["start_month"]
-
-            if (
-                "fy_start_day" not in options["return_periodicity"]
-                or "fy_start_month" not in options["return_periodicity"]
-            ):
-                fy_start = self._get_year_bounds(
-                    fields.Date.from_string(period_date_to)
-                    if period_date_to
-                    else fields.Date.context_today(self)
-                )["date_from"]
-                options["return_periodicity"]["fy_start_day"] = fy_start.day
-                options["return_periodicity"]["fy_start_month"] = fy_start.month
-
-            if start_day == 1 and start_month == 1 and months_per_period in (1, 3):
-                match months_per_period:
-                    case 1:
-                        options_filter = (
-                            "custom_month" if period_date_to else "previous_month"
-                        )
-                    case 3:
-                        options_filter = (
-                            "custom_quarter" if period_date_to else "previous_quarter"
-                        )
-            elif (
-                start_day == options["return_periodicity"]["fy_start_day"]
-                and start_month == options["return_periodicity"]["fy_start_month"]
-                and months_per_period == 12
-            ):
-                options_filter = "custom_year" if period_date_to else "previous_year"
-            else:
-                options["return_periodicity"]["is_filter_visible"] = True
+        options_filter = self._normalize_date_filter(
+            options, options_filter, period_date_to
+        )
 
         # Compute 'date_from' / 'date_to'.
         if not date_from or not date_to:
@@ -150,51 +139,18 @@ class AccountReportOptions(models.Model):
                     )
                 date_from = company_fiscalyear_dates["date_from"]
                 date_to = company_fiscalyear_dates["date_to"]
-            elif "return_period" in options_filter:
-                if period_date_from and "custom_return_period" in options_filter:
-                    date_from = fields.Date.to_date(period_date_from)
-                    date_to = fields.Date.to_date(period_date_to)
-                else:
-                    if "custom_return_period" in options_filter:
-                        base_date = fields.Date.to_date(period_date_to)
-                    else:
-                        base_date = fields.Date.context_today(self)
-                    return_type = self.env["account.return.type"].browse(
-                        options["return_periodicity"]["return_type_id"]
-                    )
-                    date_from, date_to = return_type._get_period_boundaries(
-                        self.env.company, base_date
-                    )
-                period_type = "return_period"
-
-        # When the return period matches a standard date filter, fallback to the standard. This way, we can avoid displaying the return period
-        # filter in the UI, and only rely on the standard ones. This condition ensures the conversion from one filter to the other.
-        if options_filter in {"custom_month", "custom_quarter", "custom_year"}:
-            options_date = fields.Date.from_string(period_date_to)
-            diff_years = options_date.year - date_to.year
-            offsetted_date = options_date + relativedelta(years=diff_years)
-            diff_months = offsetted_date.month - date_to.month
-            diff_months += diff_years * 12
-
-            months_per_period = options["return_periodicity"]["months_per_period"]
-
-            if options_date > date_to:
-                prefix = "next"
-            elif options_date < date_to:
-                prefix = "previous"
             else:
-                prefix = "this"
+                date_from, date_to, period_type = self._get_custom_period_bounds(
+                    options,
+                    options_filter,
+                    period_date_from,
+                    period_date_to,
+                    (date_from, date_to, period_type),
+                )
 
-            match months_per_period:
-                case 1:
-                    date["period"] = diff_months
-                    options_filter = f"{prefix}_month"
-                case 3:
-                    date["period"] = diff_months // months_per_period
-                    options_filter = f"{prefix}_quarter"
-                case 12:
-                    date["period"] = diff_months // months_per_period
-                    options_filter = f"{prefix}_year"
+        options_filter = self._convert_custom_period_filter(
+            options, options_filter, date, period_date_to, date_to
+        )
 
         _debug.logic(
             "date_scope_chosen",
@@ -230,20 +186,7 @@ class AccountReportOptions(models.Model):
             # This line is useful for the export and tax closing so that the period is set in the options.
             options["date"]["period"] = new_period
 
-        if "custom_return_period" in options_filter:
-            # In case we use a custom period we still use the return_period filter. In that case we still need the shift so we need to compute it manually.
-            return_type = self.env["account.return.type"].browse(
-                options["return_periodicity"]["return_type_id"]
-            )
-            current_date_to = return_type._get_period_boundaries(
-                self.env.company, fields.Date.context_today(self)
-            )[1]
-            delta = relativedelta(
-                fields.Date.from_string(options["date"]["date_to"]), current_date_to
-            )
-            months = delta.years * 12 + delta.months
-            diffs = months // options["return_periodicity"]["months_per_period"]
-            options["date"]["period"] = diffs
+        self._finalize_custom_period_options(options, options_filter)
 
         options["date"]["filter"] = options_filter
         _debug.pipeline(
@@ -353,9 +296,7 @@ class AccountReportOptions(models.Model):
         ):
             options["column_percent_comparison"] = "analytic_coverage"
 
-        if self.filter_budgets and any(
-            budget["selected"] for budget in options.get("budgets", [])
-        ):
+        if any(budget["selected"] for budget in options.get("budgets", [])):
             options["column_percent_comparison"] = "budget"
         _debug.logic(
             "percent_comparison_chosen",
@@ -468,19 +409,8 @@ class AccountReportOptions(models.Model):
     # OPTIONS: HORIZONTAL GROUP
     ####################################################
     def _init_options_horizontal_groups(self, options, previous_options):
-        options["available_horizontal_groups"] = [
-            {
-                "id": horizontal_group.id,
-                "name": horizontal_group.name,
-            }
-            for horizontal_group in self.horizontal_group_ids
-        ]
-        previous_selected = previous_options.get("selected_horizontal_group_id")
-        options["selected_horizontal_group_id"] = (
-            previous_selected
-            if previous_selected in self.horizontal_group_ids.ids
-            else None
-        )
+        options["available_horizontal_groups"] = []
+        options["selected_horizontal_group_id"] = None
 
     ####################################################
     # OPTIONS: SEARCH BAR
@@ -664,18 +594,6 @@ class AccountReportOptions(models.Model):
             },
         ]
 
-        if self.return_type_ids and self.env.user.has_group(
-            "account.group_account_user"
-        ):
-            options["buttons"].append(
-                {
-                    "name": _("Returns"),
-                    "action": "action_view_returns",
-                    "sequence": 110,
-                    "always_show": True,
-                    "branch_allowed": True,
-                }
-            )
         _debug.pipeline("buttons_built", report=self, buttons=len(options["buttons"]))
 
     def _init_options_section_buttons(self, options, previous_options):
@@ -761,7 +679,7 @@ class AccountReportOptions(models.Model):
         ):
             options["selected_variant_id"] = previous_opt_report_id
         elif allowed_country_variant_ids:
-            country_id = self.env.company.account_config_id.account_fiscal_country_id.id
+            country_id = self._get_variant_preferred_country().id
             report_id = (
                 allowed_country_variant_ids.get(country_id)
                 or next(iter(allowed_country_variant_ids.values()))
@@ -907,8 +825,14 @@ class AccountReportOptions(models.Model):
     ####################################################
     # OPTIONS: FILTERS
     ####################################################
+    def _init_options_export_mode(self, options, previous_options):
+        options["export_mode"] = previous_options.get("export_mode")
+
     def _get_options_companies(self, options, previous_options):
         return self.env.companies
+
+    def _get_variant_preferred_country(self):
+        return self.env.company.country_id
 
     def _init_options_filters(self, options, previous_options):
         options["filters"] = {
@@ -1044,7 +968,9 @@ class AccountReportOptions(models.Model):
         # Order them in a dependency-compliant way
         forced_sequence_map = self._get_options_initializers_forced_sequence_map()
         initializers.sort(
-            key=lambda x: forced_sequence_map.get(x, forced_sequence_map.get("default"))
+            key=lambda x: forced_sequence_map.get(
+                x.__name__, forced_sequence_map["default"]
+            )
         )
 
         return initializers
@@ -1055,36 +981,30 @@ class AccountReportOptions(models.Model):
         This function allows giving them a sequence number. It can be overridden
         to make filters depend on each other.
 
-        :return: dict(str, int): str is the filter name, int is its sequence (lowest = first).
-                                 Multiple filters may share the same sequence, their relative order is then not guaranteed.
+        :return: dict(str, int): the initializer's method name and its sequence (lowest first);
+                                 "default" is the sequence of every initializer the map does not name.
+                                 Initializers sharing a sequence run in the alphabetical order of their names.
         """
         return {
-            self._init_options_companies: 10,
-            self._init_options_variants: 15,
-            self._init_options_sections: 16,
-            self._init_options_report_id: 17,
-            self._init_options_return_periodicity: 29,
-            self._init_options_date: 30,
-            self._init_options_horizontal_groups: 40,
-            self._init_options_comparison: 50,
-            self._init_options_export_mode: 60,
-            self._init_options_integer_rounding: 70,
-            self._init_options_consolidation: 75,
-            self._init_options_journals: 80,
-            self._init_options_journals_names: 90,
-            self._init_options_audit: 100,
+            "_init_options_companies": 10,
+            "_init_options_variants": 15,
+            "_init_options_sections": 16,
+            "_init_options_report_id": 17,
+            "_init_options_date": 30,
+            "_init_options_horizontal_groups": 40,
+            "_init_options_comparison": 50,
+            "_init_options_export_mode": 60,
+            "_init_options_integer_rounding": 70,
+            "_init_options_consolidation": 75,
             "default": 200,
-            self._init_options_column_headers: 990,
-            self._init_options_columns: 1000,
-            self._init_options_column_percent_comparison: 1010,
-            self._init_options_order_column: 1020,
-            self._init_options_hierarchy: 1030,
-            self._init_options_prefix_groups_threshold: 1040,
-            self._init_options_custom: 1050,
-            self._init_options_currency_table: 1055,
-            self._init_options_section_buttons: 1060,
-            self._init_options_readonly_query: 1070,
-            self._init_options_filters: 1500,
+            "_init_options_column_headers": 990,
+            "_init_options_columns": 1000,
+            "_init_options_column_percent_comparison": 1010,
+            "_init_options_order_column": 1020,
+            "_init_options_prefix_groups_threshold": 1040,
+            "_init_options_custom": 1050,
+            "_init_options_section_buttons": 1060,
+            "_init_options_filters": 1500,
         }
 
     @_debug.perf.timed
@@ -1161,37 +1081,9 @@ class AccountReportOptions(models.Model):
             date_to = date_tmp.strftime("%Y-%m-%d")
             date_from = None
 
-        elif date_scope == "previous_return_period":
-            return_types = self.return_type_ids  # Might be empty ; if so, we'll call the functions on an empty recordset and fallback to company periodicity
-
-            _debug.logic(
-                "previous_return_period_scope",
-                report=self,
-                return_types=return_types,
-            )
-            if len(return_types) > 1:
-                if len(set(return_types.mapped("deadline_periodicity"))) > 1:
-                    raise UserError(
-                        _(
-                            "'%s' date scope cannot be evaluated for a report used by multiple return types using different periodicities.",
-                            dict(
-                                self.env["account.report.expression"]
-                                ._fields["date_scope"]
-                                ._description_selection(self.env)
-                            )["previous_return_period"],
-                        )
-                    )
-                return_types = return_types[0]
-
-            current_period_start, _current_period_end = (
-                return_types._get_period_boundaries(
-                    self.env.company,
-                    fields.Date.from_string(options["date"]["date_from"]),
-                )
-            )
-            eve_of_period_start = current_period_start - relativedelta(days=1)
-            date_from, date_to = return_types._get_period_boundaries(
-                self.env.company, eve_of_period_start
+        else:
+            date_from, date_to = self._get_custom_date_scope_bounds(
+                options, date_scope, date_from, date_to
             )
 
         _debug.logic(
@@ -1303,14 +1195,9 @@ class AccountReportOptions(models.Model):
             company_fiscalyear_dates = self._get_year_bounds(date)
             record = company_fiscalyear_dates.get("record")
             string = record and record.name
-        elif period_type == "return_period" and options_return:
-            day = options_return["start_day"]
-            month = options_return["start_month"]
-            string = self.env["account.return.type"]._get_period_name(
-                period_from=fields.Date.to_string(date_from),
-                period_to=fields.Date.to_string(date_to),
-                start_day=day,
-                start_month=month,
+        else:
+            string = self._get_custom_period_name(
+                period_type, date_from, date_to, options_return
             )
 
         if not string:
@@ -1384,22 +1271,11 @@ class AccountReportOptions(models.Model):
             periods=periods,
             return_period=return_period,
         )
-        if return_period or "return_period" in period_type:
-            month_per_period = options["return_periodicity"]["months_per_period"]
-            return_type = self.env["account.return.type"].browse(
-                options["return_periodicity"]["return_type_id"]
-            )
-            date_from, date_to = return_type._get_period_boundaries(
-                self.env.company,
-                date_from + relativedelta(months=month_per_period * periods),
-            )
-            return self._get_dates_period(
-                date_from,
-                date_to,
-                mode,
-                period_type="return_period",
-                options_return=options["return_periodicity"],
-            )
+        custom_period = self._get_shifted_custom_period(
+            options, periods, return_period, period_type, mode, date_from
+        )
+        if custom_period is not None:
+            return custom_period
         if period_type in ("fiscalyear", "today"):
             # Don't pass the period_type to _get_dates_period to be able to retrieve the account.fiscal.year record if
             # necessary.

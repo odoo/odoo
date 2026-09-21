@@ -4,7 +4,7 @@ import re
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import LazyTranslate
+from odoo.tools import LazyTranslate, date_utils
 
 _debug = DebugLog(__name__)
 _lt = LazyTranslate(__name__)
@@ -152,6 +152,22 @@ class AccountReport(models.Model):
         store=True,
         readonly=False,
     )
+    custom_handler_model_id = fields.Many2one(comodel_name="ir.model")
+    custom_handler_model_name = fields.Char(
+        related="custom_handler_model_id.model",
+        string="Custom Handler Model Name",
+    )
+    source_model = fields.Char(
+        help="Technical name of the model the report's 'domain' expressions search "
+        "and its lines group by. Empty: the module that owns the report decides.",
+    )
+    source_date_field = fields.Char(
+        help="Date field of the source model the report's period filters on. "
+        "Empty: 'date'.",
+    )
+    source_measure_field = fields.Char(
+        help="Numeric field of the source model a 'domain' expression sums.",
+    )
     load_more_limit = fields.Integer()
     search_bar = fields.Boolean()
     prefix_groups_threshold = fields.Integer(default=4000)
@@ -203,8 +219,173 @@ class AccountReport(models.Model):
         fields.Boolean, "filter_growth_comparison", "Growth Comparison", default=True
     )
 
+    def _get_custom_handler_model(self):
+        return (
+            self.custom_handler_model_name
+            or self.root_report_id.custom_handler_model_name
+            or None
+        )
+
+    def _get_variants(self, report_id):
+        source_report = self.env["account.report"].browse(report_id)
+        if source_report.root_report_id:
+            # We need to get the root report in order to get all variants
+            source_report = source_report.root_report_id
+        return (
+            source_report
+            + source_report.with_context(active_test=False).variant_report_ids
+        )
+
+    @api.model
+    def get_report_company_ids(self, options):
+        return [comp_data["id"] for comp_data in options["companies"]]
+
+    @api.constrains("custom_handler_model_id")
+    @_debug.perf.timed
+    def _check_custom_handler_model_id(self):
+        for report in self:
+            if report.custom_handler_model_id:
+                custom_handler_model = self.env.registry[
+                    "account.report.custom.handler"
+                ]
+                current_model = self.env[report.custom_handler_model_name]
+                if not isinstance(current_model, custom_handler_model):
+                    raise ValidationError(
+                        _(
+                            "Field 'Custom Handler Model' can only reference records inheriting from [%s].",
+                            custom_handler_model._name,
+                        )
+                    )
+
+    def _get_required_source_model(self):
+        source_model = self._get_source_model()
+        if source_model is None:
+            raise UserError(
+                _(
+                    "Report '%(report)s' has no source model, so it can neither "
+                    "evaluate a 'domain' expression nor group its lines.",
+                    report=self.display_name,
+                )
+            )
+        return source_model
+
+    def _get_source_date_field(self):
+        return self.source_date_field or self.root_report_id.source_date_field or "date"
+
+    def _get_source_measure_field(self):
+        """The numeric field a `domain` expression sums; None when the report has none."""
+        return (
+            self.source_measure_field
+            or self.root_report_id.source_measure_field
+            or None
+        )
+
+    @api.constrains("source_model", "source_date_field", "source_measure_field")
+    def _check_source_fields(self):
+        for report in self:
+            if not report.source_model:
+                continue
+            if report.source_model not in self.env:
+                raise ValidationError(
+                    _(
+                        "Report '%(report)s' names the source model '%(model)s', "
+                        "which does not exist.",
+                        report=report.name,
+                        model=report.source_model,
+                    )
+                )
+            source_fields = self.env[report.source_model]._fields
+            for fname in (report.source_date_field, report.source_measure_field):
+                if fname and fname not in source_fields:
+                    raise ValidationError(
+                        _(
+                            "Report '%(report)s': '%(field)s' is not a field of "
+                            "'%(model)s'.",
+                            report=report.name,
+                            field=fname,
+                            model=report.source_model,
+                        )
+                    )
+
+    def _get_source_domains(self, options, date_scope):
+        return []
+
+    def _get_year_bounds(self, date):
+        date_from, date_to = date_utils.get_fiscal_year(date)
+        return {"date_from": date_from, "date_to": date_to}
+
+    def _get_year_end(self):
+        return 31, 12
+
+    def _get_totals_below_sections(self):
+        return False
+
+    def _init_currency_table(self, options):
+        return
+
+    def _add_common_warnings(self, options, warnings):
+        return
+
+    def _add_account_status_on_lines(self, lines, options):
+        return lines
+
+    def _create_hierarchy(self, lines, options):
+        return lines
+
+    def _update_line_names_for_consolidation(self, lines):
+        return
+
+    def _postprocess_chatter_for_annotations(self, lines):
+        return
+
+    def _set_budget_column_comparisons(self, options, line):
+        return
+
+    def _prepare_editable_cell_data(
+        self, options, col_group_key, groupby_model, column_expression, column_value
+    ):
+        return None
+
+    def _prepare_info_popup_data(
+        self,
+        options,
+        col_group_key,
+        column_expr_label,
+        target_line_res_dict,
+        line_expressions_map,
+    ):
+        return {}
+
+    def _is_available_for(self, options):
+        """Among these variants, those the options' companies may use."""
+        countries = (
+            self.env["res.company"]
+            .browse(self.get_report_company_ids(options))
+            .country_id
+        )
+        return self.filtered(
+            lambda report: (
+                report.availability_condition == "always"
+                or (
+                    report.availability_condition == "country"
+                    and (not report.country_id or report.country_id in countries)
+                )
+            )
+        )
+
+    def _caret_options_initializer_default(self):
+        return {}
+
+    def _apply_branch_rules_to_buttons(self, options):
+        return
+
+    def get_annotations(self, options, lines):
+        return {}
+
     def _get_source_model(self):
         """The model a `domain` expression searches; None when the report has none."""
+        source_model = self.source_model or self.root_report_id.source_model
+        return self.env[source_model] if source_model else None
 
     @_debug.perf.timed
     def _compute_report_option_filter(self, field_name, default_value=False):

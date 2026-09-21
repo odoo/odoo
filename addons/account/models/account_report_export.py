@@ -136,9 +136,6 @@ class AccountReportExport(models.Model):
     ####################################################
     # OPTIONS: EXPORT
     ####################################################
-    def _init_options_export_mode(self, options, previous_options):
-        options["export_mode"] = previous_options.get("export_mode")
-
     def _init_options_export(self, options, previous_options):
         options["report_title"] = previous_options.get("report_title")
 
