@@ -162,7 +162,7 @@ Linter and formatter config, with the rationale for every suppression.
 
 The fork's own AST checkers and registry gates: SQL built from non-constant values, gettext misuse, N+1 queries, ORM-facade imports, XML/manifest canonical form, the XML data-file rules (`tests/_xml_rules.py`: dead duplicate fields, orphan data files, unresolvable references, expressions that do not parse, `<tree>`, `attrs=`, `t-esc`, legacy x2many tuples), asset bundles that do not assemble, UNIQUE declared over a translated (jsonb) column.
 
-Each is an exact-match ratchet, so an undone fix fails as loudly as a new offence. The AST and XML rules run at the narrow scope below; the registry-dependent classes need a fuller install. The AST rules run `E8501`–`E8529`; none is advisory and none fails outright — the floor decides.
+Each is an exact-match ratchet, so an undone fix fails as loudly as a new offence. The AST and XML rules run at the narrow scope below; the registry-dependent classes need a fuller install. The AST rules run `E8501`–`E8530`; none is advisory and none fails outright — the floor decides.
 
 **The floors are defined at the narrow scope**, which is `--addons-path=odoo/addons,addons` with only `test_lint` installed. Harvest and verify them there, not against a workspace that also carries `enterprise/` — the two measure different trees, and floors taken from the larger one cannot pass at the narrow scope:
 
