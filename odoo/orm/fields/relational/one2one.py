@@ -116,8 +116,15 @@ class One2one(One2many):
                 )
             )
         target = targets[0] if targets else None
+        # any command naming a different target releases the seat the record
+        # holds now, a create included: the database checks the unique index
+        # per UPDATE, so the previous holder must be let go first
         releases = bool(
-            delta.replaced or delta.linked or delta.unlinked or delta.deleted
+            delta.replaced
+            or delta.linked
+            or delta.created
+            or delta.unlinked
+            or delta.deleted
         )
         return delta, target, releases
 

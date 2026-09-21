@@ -148,3 +148,22 @@ def test_linking_another_seat_releases_the_one_held():
         env.invalidate_all()
         assert not first.holder_id
         assert second.holder_id == holder
+
+
+def test_creating_another_seat_releases_the_one_held():
+    from odoo.fields import Command
+
+    with model_test_env(Seat, Holder) as env:
+        first = env["o.seat"].create({"name": "1"})
+        holder = env["o.holder"].create(
+            {"name": "h", "seat_id": [Command.link(first.id)]}
+        )
+        env.flush_all()
+        assert first.holder_id == holder
+
+        holder.write({"seat_id": [Command.create({"name": "2"})]})
+        env.flush_all()
+        assert holder.seat_id.name == "2"
+        assert not first.holder_id, "the seat held before must be released"
+        env.invalidate_all()
+        assert len(env["o.seat"].search([("holder_id", "=", holder.id)])) == 1

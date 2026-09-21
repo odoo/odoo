@@ -456,3 +456,25 @@ class TestStallDetectorPeriod(unittest.TestCase):
         result = uow.recompute_until_converged(recompute_fn)
         self.assertFalse(result.converged)
         self.assertEqual(result.iterations, uow.max_iterations)
+
+
+class TestStallDetectorDoesNotFireEarly(unittest.TestCase):
+    def test_an_alternation_that_converges_is_not_a_stall(self) -> None:
+        # the detector keys on a recurring snapshot, so a period-two cycle
+        # that ends of its own accord must be left alone
+        cache = FieldCache()
+        engine = ComputeEngine()
+        uow = UnitOfWork(cache, engine, max_iterations=1000)
+        a, b = _field("m", "a"), _field("m", "b")
+        engine.schedule(a, [1])
+        rounds = [0]
+
+        def recompute_fn(field):
+            rounds[0] += 1
+            engine.mark_done(field, [1])
+            if rounds[0] < 2 * STALL_REPEATS:
+                engine.schedule(b if field is a else a, [1])
+
+        result = uow.recompute_until_converged(recompute_fn)
+        self.assertTrue(result.converged)
+        self.assertEqual(result.stalled_fields, [])

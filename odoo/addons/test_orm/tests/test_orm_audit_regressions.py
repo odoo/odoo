@@ -1,4 +1,5 @@
 from odoo.exceptions import AccessError, UserError
+from odoo.fields import Command
 from odoo.service.model import call_kw
 from odoo.tests.common import TransactionCase
 
@@ -65,3 +66,61 @@ class TestCompanyDependentRestrictGuard(TransactionCase):
         free = self.env["test_orm.multi.tag"].create({"name": "free"})
         free.unlink()
         self.assertFalse(free.exists())
+
+
+class TestOne2oneAgainstTheRealIndex(TransactionCase):
+    """A One2one is held by a unique index in the database, and the DB-free
+    tier does not enforce `index="unique"` -- so the release must be pinned
+    where the index exists."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Seat = cls.env["test_orm.seat"]
+        cls.Holder = cls.env["test_orm.seat.holder"]
+
+    def test_the_inverse_column_really_carries_a_unique_index(self):
+        self.env.cr.execute(
+            """SELECT indexdef FROM pg_indexes
+               WHERE tablename = 'test_orm_seat' AND indexdef ILIKE '%%holder_id%%'"""
+        )
+        defs = [row[0] for row in self.env.cr.fetchall()]
+        self.assertTrue(
+            any("UNIQUE" in d.upper() for d in defs),
+            f"test premise: no unique index on holder_id, got {defs}",
+        )
+
+    def test_linking_another_seat_releases_the_held_one(self):
+        first, second = self.Seat.create([{"name": "1"}, {"name": "2"}])
+        holder = self.Holder.create({"name": "h", "seat_id": [Command.link(first.id)]})
+        self.env.flush_all()
+
+        holder.write({"seat_id": [Command.link(second.id)]})
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        self.assertEqual(holder.seat_id, second)
+        self.assertFalse(first.holder_id)
+        self.assertEqual(self.Seat.search_count([("holder_id", "=", holder.id)]), 1)
+
+    def test_creating_another_seat_releases_the_held_one(self):
+        first = self.Seat.create({"name": "1"})
+        holder = self.Holder.create({"name": "h", "seat_id": [Command.link(first.id)]})
+        self.env.flush_all()
+
+        holder.write({"seat_id": [Command.create({"name": "2"})]})
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        self.assertEqual(holder.seat_id.name, "2")
+        self.assertFalse(first.holder_id)
+        self.assertEqual(self.Seat.search_count([("holder_id", "=", holder.id)]), 1)
+
+    def test_two_holders_cannot_share_a_seat(self):
+        seat = self.Seat.create({"name": "1"})
+        first = self.Holder.create({"name": "a", "seat_id": [Command.link(seat.id)]})
+        self.env.flush_all()
+        second = self.Holder.create({"name": "b"})
+        with self.assertRaises(UserError):
+            second.write({"seat_id": [Command.link(seat.id)]})
+        self.assertEqual(seat.holder_id, first)

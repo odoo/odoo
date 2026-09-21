@@ -790,6 +790,24 @@ class TestOrmOrderLine(models.Model):
         return super().unlink()
 
 
+class TestOrmSeat(models.Model):
+    _name = "test_orm.seat"
+    _description = "Test ORM One2one Seat"
+
+    name = fields.Char()
+    holder_id = fields.Many2one(
+        "test_orm.seat.holder", index="unique", ondelete="cascade"
+    )
+
+
+class TestOrmSeatHolder(models.Model):
+    _name = "test_orm.seat.holder"
+    _description = "Test ORM One2one Holder"
+
+    name = fields.Char()
+    seat_id = fields.One2one("test_orm.seat", "holder_id")
+
+
 class TestOrmCompany(models.Model):
     _name = "test_orm.company"
     _description = "Test ORM Company"
@@ -3227,3 +3245,22 @@ class CompanyConfig(models.Model):
     _inherit = ["mixin.company.config"]
 
     limit = fields.Integer(default=3)
+
+
+class ResCompany(models.Model):
+    _inherit = "res.company"
+
+    test_orm_company_config_id = fields.Many2one(
+        comodel_name="test_orm.company_config",
+        compute="_compute_test_orm_company_config_id",
+        search="_search_test_orm_company_config_id",
+    )
+
+    def _search_test_orm_company_config_id(self, operator, value):
+        return self._search_config_link("test_orm.company_config", operator, value)
+
+    def _compute_test_orm_company_config_id(self):
+        configs = self.env["test_orm.company_config"]._for_each(self)
+        by_company = dict(zip(configs.mapped("company_id").ids, configs, strict=True))
+        for company in self:
+            company.test_orm_company_config_id = by_company.get(company.id, False)
