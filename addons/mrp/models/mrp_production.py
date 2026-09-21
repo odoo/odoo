@@ -1946,6 +1946,11 @@ class MrpProduction(models.Model):
         ])
         for order in self:
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
+            # Total finished demand: in sync it equals the quantity to produce, so distributing
+            # the produced qty by each finished move's share of it reproduces the former behaviour
+            # while staying correct when a quantity change left a finished move's demand out of
+            # sync with product_qty.
+            total_finished_qty = sum(finish_moves.mapped('product_uom_qty'))
             # the finish move can already be completed by the workorder.
             for move in finish_moves:
                 if move.product_id.tracking in ['lot', 'serial'] and not move.lot_ids:
@@ -1954,7 +1959,15 @@ class MrpProduction(models.Model):
                     lines_without_lot = move.move_line_ids.filtered(lambda ml: not ml.lot_id and not ml.lot_name)
                     lines_without_lot.lot_id = order.lot_producing_ids[:1]
                 # Distribute the produced qty across the finished moves (there can be several, exemple: after a split/merge)
+<<<<<<< 3e529e8db499c075099eea7f648648baf2463d80
                 move.quantity = order.uom_id.round((order.qty_producing - order.qty_produced) * move.unit_factor, rounding_method='HALF-UP')
+||||||| dd153b3cb418c2e4d4302ac62398ef95d51c9891
+                move.quantity = order.product_uom_id.round((order.qty_producing - order.qty_produced) * move.unit_factor, rounding_method='HALF-UP')
+=======
+                move.quantity = order.product_uom_id.round(
+                    (order.qty_producing - order.qty_produced) * move.product_uom_qty / (total_finished_qty or 1),
+                    rounding_method='HALF-UP')
+>>>>>>> 627897227d1db446afd6a069f54afe0cd100321f
                 extra_vals = order._prepare_finished_extra_vals()
                 if extra_vals:
                     move.move_line_ids.write(extra_vals)
