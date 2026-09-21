@@ -53,7 +53,8 @@ registry.category("web_tour.tours").add("google_analytics_view_item", {
             // radio follows the active one": that adjacency depends on the
             // admin-editable `product_template_value_ids` sequence, not on a
             // stable hook.
-            trigger: 'ul.js_add_cart_variants input[data-value-name="Pink"]:not(:visible)',
+            trigger:
+                'ul.js_add_cart_variants input[data-value-name="Pink"]:not(:visible)',
             run: "click",
         },
         {

@@ -12,9 +12,12 @@
     width: auto;
 
     @for $i from 1 through length($o-web-calendar-colors) {
-        .popover-header.o_gantt_color_#{$i - 1}{
+        .popover-header.o_gantt_color_#{$i - 1} {
             $-calendar-colors-map: nth($o-web-calendar-colors, $i);
-            background-color: map-get($-calendar-colors-map, "popover-background-color");
+            background-color: map-get(
+                $-calendar-colors-map,
+                "popover-background-color"
+            );
             color: map-get($-calendar-colors-map, "popover-color");
         }
     }

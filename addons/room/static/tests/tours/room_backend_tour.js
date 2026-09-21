@@ -29,7 +29,8 @@ registry.category("web_tour.tours").add("room_backend_tour", {
         },
         {
             trigger: ":is(.o_calendar_view, .o_gantt_view)",
-            content: "Bookings open on the calendar, or the gantt when room_gantt is installed",
+            content:
+                "Bookings open on the calendar, or the gantt when room_gantt is installed",
         },
         {
             trigger: ".o_switch_view.o_list",

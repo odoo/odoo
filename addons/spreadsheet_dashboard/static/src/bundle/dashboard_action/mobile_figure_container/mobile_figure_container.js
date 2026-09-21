@@ -27,7 +27,9 @@ export class MobileFigureContainer extends Component {
         const sheetId = this.props.spreadsheetModel.getters.getActiveSheetId();
         const sortedFigures = this.props.spreadsheetModel.getters
             .getFigures(sheetId)
-            .sort((f1, f2) => (this.isBefore(f1, f2) ? -1 : this.isBefore(f2, f1) ? 1 : 0));
+            .sort((f1, f2) =>
+                this.isBefore(f1, f2) ? -1 : this.isBefore(f2, f1) ? 1 : 0,
+            );
 
         const figureRows = [];
         for (let i = 0; i < sortedFigures.length; i++) {

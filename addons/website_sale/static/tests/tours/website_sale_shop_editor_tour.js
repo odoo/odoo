@@ -51,7 +51,8 @@ registerWebsitePreviewTour(
     () => [
         {
             content: "Click on the test product",
-            trigger: ':iframe .oe_product:has(.oe_product_cart[aria-label="Test Product"])',
+            trigger:
+                ':iframe .oe_product:has(.oe_product_cart[aria-label="Test Product"])',
             run: "click",
         },
         {

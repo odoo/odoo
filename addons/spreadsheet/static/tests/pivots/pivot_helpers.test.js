@@ -301,9 +301,9 @@ describe("domainHasNoRecordAtThisPosition", () => {
     });
 
     test("is false for a domain with no sentinel", () => {
-        expect(domainHasNoRecordAtThisPosition([{ field: "x", value: "some_value" }])).toBe(
-            false,
-        );
+        expect(
+            domainHasNoRecordAtThisPosition([{ field: "x", value: "some_value" }]),
+        ).toBe(false);
         expect(domainHasNoRecordAtThisPosition([])).toBe(false);
     });
 });

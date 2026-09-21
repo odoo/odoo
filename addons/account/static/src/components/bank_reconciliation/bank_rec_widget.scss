@@ -53,20 +53,29 @@
                     }
 
                     .activity-badge {
-                        margin-right: -.5em;
-                        padding: ($o-navbar-badge-padding * .5) $o-navbar-badge-padding;
-                        background-color: var(--o-navbar-badge-bg, #{$o-navbar-badge-bg});
+                        margin-right: -0.5em;
+                        padding: ($o-navbar-badge-padding * 0.5) $o-navbar-badge-padding;
+                        background-color: var(
+                            --o-navbar-badge-bg,
+                            #{$o-navbar-badge-bg}
+                        );
                         font-size: $o-navbar-badge-size;
                         color: var(--o-navbar-badge-color, $o-navbar-badge-color);
-                        text-shadow: var(--o-navbar-badge-text-shadow, #{$o-navbar-badge-text-shadow});
+                        text-shadow: var(
+                            --o-navbar-badge-text-shadow,
+                            #{$o-navbar-badge-text-shadow}
+                        );
                         transform: translate(-0.6em, -30%);
                     }
 
                     .suggestion-dot {
                         position: absolute;
-                        margin-right: -.5em;
-                        padding: ($o-navbar-badge-padding * .5) $o-navbar-badge-padding;
-                        text-shadow: var(--o-navbar-badge-text-shadow, #{$o-navbar-badge-text-shadow});
+                        margin-right: -0.5em;
+                        padding: ($o-navbar-badge-padding * 0.5) $o-navbar-badge-padding;
+                        text-shadow: var(
+                            --o-navbar-badge-text-shadow,
+                            #{$o-navbar-badge-text-shadow}
+                        );
                         transform: translate(-0.6em, -30%);
                         height: 12px;
                     }
@@ -183,7 +192,8 @@
 
             .o_kanban_record:not(.o_kanban_ghost) {
                 border: 0;
-                border-bottom: $border-width solid o-token(--border-color, $border-color);
+                border-bottom: $border-width solid
+                    o-token(--border-color, $border-color);
                 margin: 0;
                 width: 100%;
 
@@ -206,7 +216,8 @@
     }
 
     &:where(:has(.o_bank_rec_widget_chatter_container)) {
-        .o_kanban_record:focus, .o_kanban_record:has(.o_selected_statement_line) {
+        .o_kanban_record:focus,
+        .o_kanban_record:has(.o_selected_statement_line) {
             outline: none;
             box-shadow: inset 0 0 0 $border-width o-token(--primary, $primary);
         }

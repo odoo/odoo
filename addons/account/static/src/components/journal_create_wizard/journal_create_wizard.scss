@@ -1,6 +1,6 @@
 .journal-create-wizard-card {
     .card-body {
-        background: linear-gradient(to right, $card-bg, rgba($card-bg, .95));
+        background: linear-gradient(to right, $card-bg, rgba($card-bg, 0.95));
     }
 
     &:hover {
@@ -8,7 +8,8 @@
     }
 
     .o_tile {
-        background: url('/account/static/src/img/journal_create_wizard/tile.svg') center no-repeat;
+        background: url("/account/static/src/img/journal_create_wizard/tile.svg") center
+            no-repeat;
         background-size: contain;
         aspect-ratio: 1 / 1;
         inset: 0;
@@ -22,7 +23,8 @@
             background-position: right center;
 
             img {
-                transform: rotateY(45deg) rotateZ(22deg) rotateX(20deg) translate(50%, -25%);
+                transform: rotateY(45deg) rotateZ(22deg) rotateX(20deg)
+                    translate(50%, -25%);
             }
         }
     }

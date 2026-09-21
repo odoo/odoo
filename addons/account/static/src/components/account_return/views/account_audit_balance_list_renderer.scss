@@ -2,7 +2,9 @@
     // Dont use transition here, the recalculation of the width of the columns of the table is only done after
     // the width stabilizes, so the transition will not be smooth.
     border-left: 1px solid var(--border-color);
-    max-width: calc(#{$o-mail-Chatter-minWidth} + 20px + var(--Chatter-asideExtraWidth));
+    max-width: calc(
+        #{$o-mail-Chatter-minWidth} + 20px + var(--Chatter-asideExtraWidth)
+    );
 
     .o-mail-Chatter-topbar {
         padding-top: 0.25rem;
@@ -12,7 +14,8 @@
         max-width: 0;
         height: 0 !important;
 
-        .o-mail-Chatter-top, .o-mail-Chatter-content{
+        .o-mail-Chatter-top,
+        .o-mail-Chatter-content {
             --Chatter-default-padding-x: 0;
             --ChatterAsideForm-padding-left: 0;
         }
@@ -24,7 +27,10 @@
 
     // We need to have this instead of using the default one with the :focus-within selector
     // since we want to detect when a row is selected to open the chatter.
-    $-focus-bg: rgba(var(--#{$variable-prefix}emphasis-color-rgb), #{$table-hover-bg-factor * 2});
+    $-focus-bg: rgba(
+        var(--#{$variable-prefix}emphasis-color-rgb),
+        #{$table-hover-bg-factor * 2}
+    );
 
     --#{$variable-prefix}table-accent-bg: #{$-focus-bg};
     --#{$variable-prefix}table-striped-bg: #{$-focus-bg};
@@ -38,7 +44,7 @@
         width: 3px;
         background-color: rgba(var(--link-color-rgb), 0.7);
     }
-    
+
     td:focus-within {
         // To prevent --table-accent-bg and --table-striped-bg to be set to none which removes the background color of the selected row.
         --#{$variable-prefix}table-accent-bg: #{$-focus-bg} !important;
@@ -50,6 +56,7 @@
     }
 }
 
-th[data-name=last_message], td[name=last_message] {
+th[data-name="last_message"],
+td[name="last_message"] {
     max-width: 300px;
 }

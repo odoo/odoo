@@ -98,7 +98,12 @@ export function assertCartContains({
  * Asserts the add-to-cart toast notification shows the given product, qty
  * and price (and, optionally, a selected no-variant/custom attribute line).
  */
-export function assertToastNotification({ productName, qty, price, combinationName = false }) {
+export function assertToastNotification({
+    productName,
+    qty,
+    price,
+    combinationName = false,
+}) {
     const steps = [
         {
             content: `check that ${qty} ${productName} was added`,

@@ -988,8 +988,7 @@ test("the error silencing a finished tour installs is dropped when the next tour
             return nativeRemove(type, listener, options);
         },
     });
-    const lastInstalledPair = () =>
-        calls.filter((call) => call.op === "add").slice(-2);
+    const lastInstalledPair = () => calls.filter((call) => call.op === "add").slice(-2);
     // Scoped to the calls made after `mark`: an earlier test in this page has
     // already been through an install/remove cycle of the very same pair (the
     // silencing is page-scoped, which is the point), so an unscoped search
@@ -1018,10 +1017,7 @@ test("the error silencing a finished tour installs is dropped when the next tour
     await odoo.startTour("silencer_tour_1", { mode: "auto" });
     await waitForMacro();
     const firstPair = lastInstalledPair();
-    expect(firstPair.map(({ type }) => type)).toEqual([
-        "error",
-        "unhandledrejection",
-    ]);
+    expect(firstPair.map(({ type }) => type)).toEqual(["error", "unhandledrejection"]);
     const installed = calls.length;
     expect(firstPair.map((entry) => removedSince(installed, entry))).toEqual([
         false,

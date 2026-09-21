@@ -11,7 +11,8 @@
 
 /*                 Backend Template Cards
  **********************************************************/
-.o_appointment_template_picker, .o_appointment_helper {
+.o_appointment_template_picker,
+.o_appointment_helper {
     .o_appointment_template_card {
         min-height: 15vh;
 
@@ -28,12 +29,13 @@
         .o_appointment_kanban_card > div {
             margin-right: 0 !important;
         }
-        .o_kanban_group:not(.o_column_folded){
+        .o_kanban_group:not(.o_column_folded) {
             @include media-breakpoint-up(sm) {
                 min-width: 380px;
             }
         }
-        .row:not(.o_appointment_helper_templates):not(.o_appointment_template_card) > div {
+        .row:not(.o_appointment_helper_templates):not(.o_appointment_template_card)
+            > div {
             flex: 1 1 100% !important;
             max-width: 100% !important;
             margin: 5px 0 !important;
@@ -140,7 +142,6 @@
                 justify-content: flex-end;
                 text-align: right;
             }
-
         }
     }
 }
@@ -149,7 +150,7 @@
  **********************************************************/
 .o_appointment_slots_list {
     th.o_list_button {
-        width: 2.4em!important;
+        width: 2.4em !important;
     }
 
     button.fa-long-arrow-right {
@@ -157,7 +158,7 @@
     }
 }
 
-.o_appointment_capacity input:not(:focus){
+.o_appointment_capacity input:not(:focus) {
     border-color: $o-input-border-required;
 }
 

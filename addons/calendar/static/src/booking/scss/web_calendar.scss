@@ -1,16 +1,24 @@
 .o_calendar_container {
-    --Calendar__slotSelection-background: #{o-palette-token-alpha(--o-gray-400, $gray-400, .5)};
+    --Calendar__slotSelection-background: #{o-palette-token-alpha(
+            --o-gray-400,
+            $gray-400,
+            0.5
+        )};
 
     .o_calendar_renderer .fc-view {
         .fc-bg-event.o_calendar_slot {
             opacity: 1;
         }
-        .fc-day-past.o_calendar_slot_selection, .fc-day-today.fc-daygrid-day.o_calendar_slot_selection, .o_calendar_slot_selection_now {
+        .fc-day-past.o_calendar_slot_selection,
+        .fc-day-today.fc-daygrid-day.o_calendar_slot_selection,
+        .o_calendar_slot_selection_now {
             background-color: var(--Calendar__slotSelection-background);
         }
         .o_event.o_calendar_slot {
             border-color: o-palette-token(--success, $o-success);
-            background: #{unquote("color-mix(in srgb, #{o-palette-token(--success, $o-success)} 50%, #{o-token(--o-bg-view, $o-view-background-color)})")};
+            background: #{unquote(
+                    "color-mix(in srgb, #{o-palette-token(--success, $o-success)} 50%, #{o-token(--o-bg-view, $o-view-background-color)})"
+                )};
         }
     }
     .fc-dayGridYear-view .o_calendar_slot_selection .fc-daygrid-day-frame,

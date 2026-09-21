@@ -199,7 +199,7 @@ const odooDayOfWeekAdapter = {
     },
     increment(normalizedValue, step) {
         // day-of-week is 1-based (1-7): shift to 0-based before wrapping, then back.
-        return (((normalizedValue - 1 + step) % 7) + 7) % 7 + 1;
+        return ((((normalizedValue - 1 + step) % 7) + 7) % 7) + 1;
     },
 };
 

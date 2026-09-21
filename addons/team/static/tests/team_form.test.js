@@ -75,9 +75,7 @@ test("team form activate multi-team option via alert", async () => {
 
     // Clicking the button activates the option; the reload re-reads
     // is_membership_multi, which is what hides the alert
-    await webContains(
-        ".alert button[name='team_activate_multi_membership']",
-    ).click();
+    await webContains(".alert button[name='team_activate_multi_membership']").click();
     await contains(".alert:visible", { count: 0 });
     expect.verifySteps(["action_activate_multi_membership"]);
 });
@@ -101,9 +99,7 @@ test("team form keeps unsaved edits when activating the multi-team option", asyn
         confirm: false,
     });
 
-    await webContains(
-        ".alert button[name='team_activate_multi_membership']",
-    ).click();
+    await webContains(".alert button[name='team_activate_multi_membership']").click();
     await contains(".alert:visible", { count: 0 });
     expect(".o_field_widget[name='name'] input").toHaveValue("Renamed draft");
     expect.verifySteps(["action_activate_multi_membership"]);
@@ -121,9 +117,7 @@ test("team form keeps the alert when activation is refused", async () => {
     await openFormView("team.team", teamIds[0], { arch: ARCH });
     await contains(".alert:visible", { count: 1 });
 
-    await webContains(
-        ".alert button[name='team_activate_multi_membership']",
-    ).click();
+    await webContains(".alert button[name='team_activate_multi_membership']").click();
     // the option is still off, so the alert must survive
     await contains(".alert:visible", { count: 1 });
     expect.verifySteps(["action_activate_multi_membership"]);

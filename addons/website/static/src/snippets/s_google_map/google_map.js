@@ -89,7 +89,11 @@ export class GoogleMap extends Interaction {
         const map = new google.maps.Map(mapC, myOptions);
 
         const p = this.el.dataset.mapGps.substring(1).slice(0, -1).split(",");
-        if (p.length !== 2 || !Number.isFinite(Number(p[0])) || !Number.isFinite(Number(p[1]))) {
+        if (
+            p.length !== 2 ||
+            !Number.isFinite(Number(p[0])) ||
+            !Number.isFinite(Number(p[1]))
+        ) {
             return;
         }
 

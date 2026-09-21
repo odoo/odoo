@@ -11,7 +11,9 @@ export class TeamFormController extends FormController {
         }
         const record = this.model.root;
         const teamId =
-            this.props.resModel === "team.team" ? record.resId : record.data.team_id?.id;
+            this.props.resModel === "team.team"
+                ? record.resId
+                : record.data.team_id?.id;
         const flags = Object.fromEntries(
             Object.entries(record.data).filter(([name]) => name.startsWith("use_")),
         );

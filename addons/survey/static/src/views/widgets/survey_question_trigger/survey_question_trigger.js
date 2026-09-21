@@ -17,56 +17,61 @@ export class SurveyQuestionTriggerWidget extends Component {
             surveyIconWarning: false,
             triggerTooltip: "",
         });
-        useEffect(() => {
-            if (
-                this.button?.el &&
-                this.props.record.data.triggering_question_ids.records?.length !== 0
-            ) {
-                const { triggerError, misplacedTriggerQuestionRecords } =
-                    this.surveyQuestionTriggerError;
-                if (triggerError === "MISPLACED_TRIGGER_WARNING") {
-                    this.state.surveyIconWarning = true;
-                    this.state.triggerTooltip =
-                        "⚠ " +
-                        _t(
-                            'Triggers based on the following questions will not work because they are positioned after this question:\n"%s".',
-                            misplacedTriggerQuestionRecords
-                                .map((question) => question.data.title)
+        useEffect(
+            () => {
+                if (
+                    this.button?.el &&
+                    this.props.record.data.triggering_question_ids.records?.length !== 0
+                ) {
+                    const { triggerError, misplacedTriggerQuestionRecords } =
+                        this.surveyQuestionTriggerError;
+                    if (triggerError === "MISPLACED_TRIGGER_WARNING") {
+                        this.state.surveyIconWarning = true;
+                        this.state.triggerTooltip =
+                            "⚠ " +
+                            _t(
+                                'Triggers based on the following questions will not work because they are positioned after this question:\n"%s".',
+                                misplacedTriggerQuestionRecords
+                                    .map((question) => question.data.title)
+                                    .join('", "'),
+                            );
+                    } else if (triggerError === "WRONG_QUESTIONS_SELECTION_WARNING") {
+                        this.state.surveyIconWarning = true;
+                        this.state.triggerTooltip =
+                            "⚠ " +
+                            _t(
+                                "Conditional display is not available when questions are randomly picked.",
+                            );
+                    } else if (triggerError === "MISSING_TRIGGER_ERROR") {
+                        // This case must be handled to not temporarily render the "normal" icon if previously
+                        // on an error state, which would cause a flicker as the trigger itself will be removed
+                        // at next save (auto on survey form and primary list view).
+                    } else {
+                        this.state.surveyIconWarning = false;
+                        this.state.triggerTooltip = _t(
+                            'Displayed if "%s".',
+                            this.props.record.data.triggering_answer_ids.records
+                                .map((answer) => answer.data.display_name)
                                 .join('", "'),
                         );
-                } else if (triggerError === "WRONG_QUESTIONS_SELECTION_WARNING") {
-                    this.state.surveyIconWarning = true;
-                    this.state.triggerTooltip =
-                        "⚠ " +
-                        _t(
-                            "Conditional display is not available when questions are randomly picked.",
-                        );
-                } else if (triggerError === "MISSING_TRIGGER_ERROR") {
-                    // This case must be handled to not temporarily render the "normal" icon if previously
-                    // on an error state, which would cause a flicker as the trigger itself will be removed
-                    // at next save (auto on survey form and primary list view).
+                    }
                 } else {
                     this.state.surveyIconWarning = false;
-                    this.state.triggerTooltip = _t(
-                        'Displayed if "%s".',
-                        this.props.record.data.triggering_answer_ids.records
-                            .map((answer) => answer.data.display_name)
-                            .join('", "'),
-                    );
+                    this.state.triggerTooltip = "";
                 }
-            } else {
-                this.state.surveyIconWarning = false;
-                this.state.triggerTooltip = "";
-            }
-        }, () => [
-            this.props.record.data.triggering_question_ids.records.map((r) => r.resId).join(","),
-            this.props.record.data.questions_selection,
-            this.props.record.data.sequence,
-            this.props.record.resId,
-            this.props.record.model.root.data.question_and_page_ids.records
-                .map((r) => `${r.resId}:${r.data.sequence}`)
-                .join(","),
-        ]);
+            },
+            () => [
+                this.props.record.data.triggering_question_ids.records
+                    .map((r) => r.resId)
+                    .join(","),
+                this.props.record.data.questions_selection,
+                this.props.record.data.sequence,
+                this.props.record.resId,
+                this.props.record.model.root.data.question_and_page_ids.records
+                    .map((r) => `${r.resId}:${r.data.sequence}`)
+                    .join(","),
+            ],
+        );
     }
 
     /**

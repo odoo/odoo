@@ -64,9 +64,12 @@ async function get_session(request) {
         });
         return { store_data: store.get_result(), channel_id: -1 };
     }
-    const channelVals = LivechatChannel._prepare_livechat_discuss_channel_vals(channel_id, {
-        agent: agent,
-    });
+    const channelVals = LivechatChannel._prepare_livechat_discuss_channel_vals(
+        channel_id,
+        {
+            agent: agent,
+        },
+    );
     channelVals.country_id = country_id;
     const channelId = DiscussChannel.create(channelVals);
     const store = new mailDataHelpers.Store();

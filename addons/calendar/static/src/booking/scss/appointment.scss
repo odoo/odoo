@@ -6,7 +6,7 @@
         #appointment_type_id {
             height: 2.5rem;
             &:disabled {
-                background-color: #FAFAFA;
+                background-color: #fafafa;
             }
         }
     }
@@ -21,19 +21,25 @@
             content: "";
             @include o-position-absolute($left: 50%);
             width: 2.5em;
-            height: .16em;
+            height: 0.16em;
             bottom: map-get($spacers, 1);
             transform: translateX(-50%);
-            background-color: o-token(--danger, map-get($theme-colors, 'danger'));
+            background-color: o-token(--danger, map-get($theme-colors, "danger"));
             border-radius: $border-radius-pill;
             transition: $btn-transition;
         }
 
-        & .o_day_wrapper.active::after, .o_slot_button:hover::after {
-            $-danger-hue: hue(map-get($theme-colors, 'danger'));
-            $-primary-hue: hue(map-get($theme-colors, 'primary'));
+        & .o_day_wrapper.active::after,
+        .o_slot_button:hover::after {
+            $-danger-hue: hue(map-get($theme-colors, "danger"));
+            $-primary-hue: hue(map-get($theme-colors, "primary"));
 
-            background-color: if($-primary-hue > ($-danger-hue + 70) or $-primary-hue < ($-danger-hue - 70), map-get($theme-colors, 'danger'), currentColor);
+            background-color: if(
+                $-primary-hue > ($-danger-hue + 70) or $-primary-hue <
+                    ($-danger-hue - 70),
+                map-get($theme-colors, "danger"),
+                currentColor
+            );
         }
     }
 }
@@ -43,7 +49,7 @@
 }
 
 .o_appointment_add_to_calendar_btns a {
-    border: 1px solid #DEE2E6;
+    border: 1px solid #dee2e6;
     &:hover {
         background-color: o-palette-token(--o-gray-200, $gray-200);
     }
@@ -65,7 +71,7 @@
 }
 
 .o_appointment_avatar_background {
-    background-color: mix(map-get($theme-colors, 'primary'), $body-bg, 20%);
+    background-color: mix(map-get($theme-colors, "primary"), $body-bg, 20%);
 }
 
 .o_appointment_user_avatar {

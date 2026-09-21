@@ -2,7 +2,7 @@
     @extend .o_status;
 
     @for $size from 2 through length($o-colors) {
-               &.o_color_bubble_#{$size - 1} {
+        &.o_color_bubble_#{$size - 1} {
             background-color: unquote("var(--o-record-color-#{$size})");
         }
     }

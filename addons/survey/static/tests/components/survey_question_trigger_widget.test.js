@@ -184,7 +184,8 @@ test("deleting the trigger question does not flip the icon to normal before save
     await contains(`${firstDataRow} .o_list_record_remove`).click();
 
     // Only Question 2 remains, now re-indexed to row 0.
-    const q2TriggerDiv = ".o_data_row:eq(0) td.o_data_cell div.o_widget_survey_question_trigger";
+    const q2TriggerDiv =
+        ".o_data_row:eq(0) td.o_data_cell div.o_widget_survey_question_trigger";
 
     expect(".o_data_row").toHaveCount(1);
     // The trigger reference on Question 2 now points to a deleted, unsaved

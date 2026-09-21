@@ -6,7 +6,11 @@
 function simulateBarCode(chars) {
     for (const char of chars) {
         document.body.dispatchEvent(
-            new KeyboardEvent("keydown", { key: char, bubbles: true, cancelable: true }),
+            new KeyboardEvent("keydown", {
+                key: char,
+                bubbles: true,
+                cancelable: true,
+            }),
         );
     }
 }

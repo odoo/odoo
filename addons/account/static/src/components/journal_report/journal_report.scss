@@ -1,18 +1,29 @@
 .journal_report {
-    .sheet { min-width: 1140px }
+    .sheet {
+        min-width: 1140px;
+    }
 
-    table.striped > tbody > tr:not(.line_level_0):not(.empty) > td:nth-child(2n+3) { background: inherit }
-
+    table.striped > tbody > tr:not(.line_level_0):not(.empty) > td:nth-child(2n + 3) {
+        background: inherit;
+    }
 
     .table > tbody > tr {
-        &.accent_header { background-color: $o-gray-200 }
+        &.accent_header {
+            background-color: $o-gray-200;
+        }
         &.accent_line {
             background-color: o-palette-token(--o-gray-100, $o-gray-100);
-            > td.muted { color: $o-gray-300 }
+            > td.muted {
+                color: $o-gray-300;
+            }
         }
         &.subtable {
-            > td { border-bottom: none }
-            &:hover > * { --table-accent-bg: none }
+            > td {
+                border-bottom: none;
+            }
+            &:hover > * {
+                --table-accent-bg: none;
+            }
         }
     }
 
@@ -30,9 +41,13 @@
                 background-color: o-palette-token(--o-gray-100, $o-gray-100);
                 text-align: left;
 
-                .btn_action { opacity: 1 }
+                .btn_action {
+                    opacity: 1;
+                }
             }
-            :not(caption) > *:not(.btn_action) > *:not(.btn_action) { padding: 0.5rem 0.3rem }
+            :not(caption) > *:not(.btn_action) > *:not(.btn_action) {
+                padding: 0.5rem 0.3rem;
+            }
             td.name {
                 text-wrap: nowrap;
                 max-width: 250px;
