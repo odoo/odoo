@@ -1804,17 +1804,42 @@ class TestPublicApiSurface:
         )
 
 
-class TestDispatchInvariants:
-    def test_master_password_set_is_subset_of_dispatch(self, db_mod):
-        missing = db_mod.rpc._REQUIRES_MASTER_PASSWORD - set(db_mod.rpc._DISPATCH)
-        assert not missing, (
-            f"_REQUIRES_MASTER_PASSWORD references non-existent dispatch keys: "
-            f"{missing}. Either add the handler to _DISPATCH or remove from the "
-            f"auth set."
-        )
+class TestTheUnauthenticatedEndpointsActuallyRun:
+    """The public half of `_DISPATCH`, executed rather than merely classified.
 
-    def test_known_admin_methods_require_master_password(self, db_mod):
-        must_require_auth = {
+    `TestDispatchInvariants` pins which endpoints need the master password and
+    which do not. It never calls them. Measured 2026-09-21 with a line tracer
+    over this whole suite, `list_lang` and `server_version` had **no statement
+    executed by any test** while being reachable without credentials, so an
+    exception in either was a 500 that only a client would find.
+
+    These are deliberately shallow. The point is that the handler runs at all.
+    """
+
+    def test_list_lang_returns_code_and_name_pairs(self, db_mod):
+        langs = db_mod.rpc.exp_list_lang()
+        assert langs, "the language list is empty, so the picker would be too"
+        assert all(isinstance(row, (list, tuple)) and len(row) == 2 for row in langs), (
+            f"expected (code, name) pairs, got {langs[:3]}"
+        )
+        codes = {row[0] for row in langs}
+        assert "en_US" in codes, f"en_US missing from {len(codes)} language codes"
+
+    def test_server_version_is_the_release_string(self, db_mod):
+        import odoo.release
+
+        assert db_mod.rpc.exp_server_version() == odoo.release.version
+
+    def test_both_are_reachable_without_a_master_password(self, db_mod):
+        """What makes the two above worth having rather than trivia."""
+        for name in ("list_lang", "server_version"):
+            assert name in db_mod.rpc._DISPATCH
+            assert name not in db_mod.rpc._REQUIRES_MASTER_PASSWORD
+
+
+class TestDispatchInvariants:
+    MUST_REQUIRE_AUTH = frozenset(
+        {
             "create_database",
             "duplicate_database",
             "drop",
@@ -1824,22 +1849,53 @@ class TestDispatchInvariants:
             "change_admin_password",
             "migrate_databases",
         }
-        missing_auth = must_require_auth - db_mod.rpc._REQUIRES_MASTER_PASSWORD
+    )
+    PUBLIC = frozenset(
+        {"db_exist", "list", "list_lang", "server_version", "list_countries"}
+    )
+
+    def test_master_password_set_is_subset_of_dispatch(self, db_mod):
+        missing = db_mod.rpc._REQUIRES_MASTER_PASSWORD - set(db_mod.rpc._DISPATCH)
+        assert not missing, (
+            f"_REQUIRES_MASTER_PASSWORD references non-existent dispatch keys: "
+            f"{missing}. Either add the handler to _DISPATCH or remove from the "
+            f"auth set."
+        )
+
+    def test_known_admin_methods_require_master_password(self, db_mod):
+        missing_auth = self.MUST_REQUIRE_AUTH - db_mod.rpc._REQUIRES_MASTER_PASSWORD
         assert not missing_auth, (
             f"Methods that must require master password but don't: {missing_auth}"
         )
 
-    def test_public_methods_not_password_gated(self, db_mod):
-        public_methods = frozenset(
-            {
-                "db_exist",
-                "list",
-                "list_lang",
-                "server_version",
-                "list_countries",
-            }
+    def test_every_dispatch_entry_is_classified(self, db_mod):
+        """The three guards above are lower bounds, so they leave a hole.
+
+        Each says "these must be gated" or "these must not be"; none says
+        what the table may contain. A method added to `_DISPATCH` and not to
+        `_REQUIRES_MASTER_PASSWORD` is neither, so it dispatches with no
+        master password and all three still pass -- measured 2026-09-21 with
+        a fourteenth entry, 3 of 3 green.
+
+        An equality forces the author of a new endpoint to say which it is.
+        `tests/service/test_common.py` already pins its sibling table this
+        way; this is the table where getting it wrong hands out a database.
+        """
+        classified = self.MUST_REQUIRE_AUTH | self.PUBLIC
+        unclassified = set(db_mod.rpc._DISPATCH) - classified
+        assert not unclassified, (
+            f"dispatch endpoints classified by nothing: {sorted(unclassified)}. "
+            f"Each is reachable over RPC; add it to MUST_REQUIRE_AUTH here and "
+            f"to _REQUIRES_MASTER_PASSWORD, or to PUBLIC if it is genuinely "
+            f"unauthenticated and reads nothing sensitive"
         )
-        gated = public_methods & db_mod.rpc._REQUIRES_MASTER_PASSWORD
+        gone = classified - set(db_mod.rpc._DISPATCH)
+        assert not gone, (
+            f"this test classifies endpoints that no longer exist: {sorted(gone)}"
+        )
+
+    def test_public_methods_not_password_gated(self, db_mod):
+        gated = self.PUBLIC & db_mod.rpc._REQUIRES_MASTER_PASSWORD
         assert not gated, (
             f"Public dispatch endpoints incorrectly listed in "
             f"_REQUIRES_MASTER_PASSWORD: {sorted(gated)}. These read "
