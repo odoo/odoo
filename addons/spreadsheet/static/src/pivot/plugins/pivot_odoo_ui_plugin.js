@@ -7,18 +7,10 @@ UNDO_REDO_PIVOT_COMMANDS.push("UPDATE_ODOO_PIVOT_DOMAIN");
 export class PivotOdooUIPlugin extends OdooUIPlugin {
     static getters = /** @type {const} */ ([]);
 
-    /**
-     * Handle a spreadsheet command
-     * @param {Object} cmd Command
-     */
-    handle(cmd) {
-        switch (cmd.type) {
-            case "UPDATE_LOCALE":
-            case "REFRESH_ALL_DATA_SOURCES":
-                this.refreshAllPivots();
-                break;
-        }
-    }
+    handlers = {
+        UPDATE_LOCALE: this.refreshAllPivots,
+        REFRESH_ALL_DATA_SOURCES: this.refreshAllPivots,
+    };
 
     /**
      * Refresh the cache of all the pivots
