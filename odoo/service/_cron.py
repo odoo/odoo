@@ -8,13 +8,12 @@ import typing
 from collections.abc import Iterable, Iterator, Sized
 
 from odoo import db
-from odoo.db import is_maintenance_db
 from odoo.libs import backoff
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, OrderedSet
 from odoo.tools.constants import CRON_TRIGGER_CHANNEL, JOB_QUEUE_CHANNEL
 
-from ._dispatch import get_static_dbfilter
+from ._dispatch import is_db_exposed
 from ._limits import BACKOFF_BASE_S, BACKOFF_CEILING_S
 from .db import list_dbs
 from .settings import current
@@ -124,22 +123,15 @@ def get_cron_databases() -> list[str]:
     if configured:
         _debug.logic("cron.databases", source="db_name", databases=len(configured))
         return list(configured)
-    names = [name for name in list_dbs(True) if not is_maintenance_db(name)]
-    dbfilter = get_static_dbfilter()
-    if dbfilter is None:
-        _debug.logic(
-            "cron.databases", source="catalog", databases=len(names), filtered=False
-        )
-        return names
-    matched = [name for name in names if dbfilter.match(name)]
+    names = list_dbs(True)
+    exposed = [name for name in names if is_db_exposed(name)]
     _debug.logic(
         "cron.databases",
         source="catalog",
-        databases=len(matched),
-        filtered=True,
-        excluded=len(names) - len(matched),
+        databases=len(exposed),
+        excluded=len(names) - len(exposed),
     )
-    return matched
+    return exposed
 
 
 def drain_swept_database(db_name: str) -> None:

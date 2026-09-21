@@ -316,3 +316,81 @@ class TestDbExistDoesNotPayForWhatTheListingProved:
         ):
             assert listing._rpc_db_exist("patched") is True
             assert seam.called
+
+
+class TestManagementOpsAskTheProcessLevelExposure:
+    """One config, one answer: what RPC serves is what management may touch.
+
+    `list_dbs(True)` answers from the catalogue whenever a dbfilter is set,
+    so before `check_db_exposed` also asked `is_db_exposed`, a master-password
+    holder could drop, dump or rename a database this process refused every
+    RPC and cron sweep for.  Measured 2026-09-21 with dbfilter `^(alpha|beta)$`
+    over a catalogue of alpha, beta, gamma: RPC and cron answered alpha, beta;
+    management answered all three.
+    """
+
+    CATALOGUE = ["alpha", "beta", "gamma"]
+
+    def _catalogue(self, **config):
+        from odoo.service import _dispatch
+        from odoo.tools import config as live
+
+        _dispatch._compile_static_dbfilter.cache_clear()
+        return (
+            live.patch(**{"list_db": True, "db_name": [], "dbfilter": "", **config}),
+            patch.object(listing, "_get_catalog_cached", return_value=self.CATALOGUE),
+        )
+
+    def _accepted(self):
+        accepted = []
+        for name in self.CATALOGUE:
+            try:
+                listing.check_db_exposed(name)
+            except odoo.exceptions.AccessDenied:
+                continue
+            accepted.append(name)
+        return accepted
+
+    def test_a_static_dbfilter_scopes_management_too(self):
+        cfg, cat = self._catalogue(dbfilter="^(alpha|beta)$")
+        with cfg, cat:
+            assert self._accepted() == ["alpha", "beta"]
+
+    def test_db_name_scopes_management_even_beside_a_dbfilter(self):
+        cfg, cat = self._catalogue(db_name=["alpha"], dbfilter=".*")
+        with cfg, cat:
+            assert self._accepted() == ["alpha"]
+
+    def test_a_host_placeholder_cannot_scope_and_admits_every_owned_database(
+        self,
+    ):
+        cfg, cat = self._catalogue(dbfilter="^%d$")
+        with cfg, cat:
+            assert self._accepted() == self.CATALOGUE
+
+    @pytest.mark.parametrize(
+        "config",
+        [
+            {},
+            {"db_name": ["alpha"]},
+            {"dbfilter": "^(alpha|beta)$"},
+            {"db_name": ["alpha"], "dbfilter": ".*"},
+            {"db_name": ["beta"], "dbfilter": "^%d$"},
+        ],
+    )
+    def test_rpc_cron_and_management_agree(self, config):
+        from odoo.service import _cron
+        from odoo.service._dispatch import is_db_exposed
+
+        cfg, cat = self._catalogue(**config)
+        with cfg, cat:
+            rpc = [name for name in self.CATALOGUE if is_db_exposed(name)]
+            cron = _cron.get_cron_databases()
+            management = self._accepted()
+        assert rpc == cron == management, config
+
+    def test_db_exist_answers_only_for_a_served_database(self):
+        cfg, cat = self._catalogue(dbfilter="^(alpha|beta)$")
+        with cfg, cat:
+            assert listing._rpc_db_exist("alpha") is True
+            assert listing._rpc_db_exist("gamma") is False

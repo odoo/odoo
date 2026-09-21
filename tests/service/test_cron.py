@@ -30,7 +30,6 @@ class TestCronDatabaseList:
             patch(
                 "odoo.service._cron.list_dbs", return_value=["db1", "db2"]
             ) as mock_list,
-            patch("odoo.service._cron.is_maintenance_db", return_value=False),
         ):
             result = _cron.get_cron_databases()
         mock_list.assert_called_once_with(True)

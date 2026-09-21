@@ -63,7 +63,8 @@ odoo/
 │   │               every one of them over _checks (the db-name, master
 │   │               password and list_db guards)
 │   └── transaction (the retrying() primitive), model, security, common,
-│       _dispatch (arity policy + db-name exposure for the common/db RPC tables),
+│       _dispatch (arity policy + is_db_exposed, the one host-free answer to which
+│       databases this process serves: RPC, cron and job sweeps, db management),
 │       _env, _limits (time/memory/back-off budgets),
 │       _sdnotify (READY/RELOADING/STOPPING/WATCHDOG to the service manager),
 │       metrics (the Prometheus exposition web serves at /web/metrics)

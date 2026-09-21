@@ -1,5 +1,6 @@
 import contextlib
 import io
+import itertools
 import logging
 import os
 import pathlib
@@ -16,6 +17,8 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 
+import odoo.tools
+
 from .conftest import fake_pg_connection, fake_pg_cursor
 
 
@@ -27,7 +30,27 @@ def db_mod():
     return mod
 
 
+_REAL_CONFIG = odoo.tools.config
+_mock_generations = itertools.count(1_000_000)
+
+
 class _MockConfig(dict):
+    """The live config with these keys overridden.
+
+    `ServerSettings` is derived from `odoo.tools.config` and memoized on its
+    `generation`, and `check_db_exposed` reads it, so a fake that replaces the
+    whole object must still answer every option (from the real config) and
+    carry a generation no other fake shares, or one test's settings serve the
+    next.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.generation = next(_mock_generations)
+
+    def __missing__(self, key):
+        return _REAL_CONFIG[key]
+
     def filestore(self, name: str) -> str:
         return f"/nonexistent/filestore/{name}"
 
@@ -1126,11 +1149,13 @@ class TestListDbsConfiguredNamesAreAnAssertion:
             patch.object(
                 odoo.tools,
                 "config",
-                {
-                    "list_db": True,
-                    "dbfilter": "",
-                    "db_name": ["definitely_not_a_db_xyz"],
-                },
+                _MockConfig(
+                    {
+                        "list_db": True,
+                        "dbfilter": "",
+                        "db_name": ["definitely_not_a_db_xyz"],
+                    }
+                ),
             ),
             patch.object(odoo.db, "db_connect") as connect,
         ):
@@ -1146,11 +1171,13 @@ class TestListDbsConfiguredNamesAreAnAssertion:
             patch.object(
                 odoo.tools,
                 "config",
-                {
-                    "list_db": True,
-                    "dbfilter": "",
-                    "db_name": ["definitely_not_a_db_xyz"],
-                },
+                _MockConfig(
+                    {
+                        "list_db": True,
+                        "dbfilter": "",
+                        "db_name": ["definitely_not_a_db_xyz"],
+                    }
+                ),
             ),
             patch.object(odoo.db, "db_connect") as connect,
         ):
@@ -1166,12 +1193,14 @@ class TestListDbsConfiguredNamesAreAnAssertion:
             patch.object(
                 odoo.tools,
                 "config",
-                {
-                    "list_db": True,
-                    "dbfilter": "",
-                    "db_name": ["definitely_not_a_db_xyz"],
-                    "db_template": "template0",
-                },
+                _MockConfig(
+                    {
+                        "list_db": True,
+                        "dbfilter": "",
+                        "db_name": ["definitely_not_a_db_xyz"],
+                        "db_template": "template0",
+                    }
+                ),
             ),
             patch.object(db_mod.listing, "exp_db_exist", return_value=False) as exists,
         ):
@@ -1505,9 +1534,9 @@ class TestValidateDbNameLengthBoundary:
 class TestRpcDbExposedGate:
     @pytest.fixture
     def gate(self):
-        from odoo.service._dispatch import is_db_rpc_exposed
+        from odoo.service._dispatch import is_db_exposed
 
-        return is_db_rpc_exposed
+        return is_db_exposed
 
     @pytest.mark.parametrize(
         "db_name", [None, 42, 4.0, True, b"bytes", ["db"], {"db": 1}, object()]

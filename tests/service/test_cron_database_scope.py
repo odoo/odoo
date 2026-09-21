@@ -19,7 +19,7 @@ def catalogue(monkeypatch):
     names = ["alpha_prod", "alpha_test", "beta_prod", "postgres", "tpl"]
     monkeypatch.setattr(_cron, "list_dbs", lambda force: list(names))
     monkeypatch.setattr(
-        _cron, "is_maintenance_db", lambda n: n in {"postgres", "template1", "tpl"}
+        _dispatch, "is_maintenance_db", lambda n: n in {"postgres", "template1", "tpl"}
     )
     return names
 

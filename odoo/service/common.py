@@ -11,7 +11,7 @@ from odoo.exceptions import AccessDenied
 from odoo.libs.debug_log import DebugLog
 from odoo.modules.registry import Registry
 
-from ._dispatch import dispatch_through_table, is_db_rpc_exposed
+from ._dispatch import dispatch_through_table, is_db_exposed
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -53,7 +53,7 @@ def exp_authenticate(
     elif not isinstance(user_agent_env, dict):
         _debug.logic("rpc.authenticate.rejected", reason="user_agent_env_type", db=db)
         return False
-    if not is_db_rpc_exposed(db):
+    if not is_db_exposed(db):
         _debug.logic("rpc.authenticate.db_not_exposed", db=db)
         return False
     try:

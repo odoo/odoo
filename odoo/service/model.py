@@ -28,7 +28,7 @@ from odoo.modules.registry import Registry
 from odoo.tools import lazy
 from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES
 
-from ._dispatch import is_db_rpc_exposed
+from ._dispatch import is_db_exposed
 from .transaction import (
     PG_CONCURRENCY_ERRORS_TO_RETRY,
     PG_CONCURRENCY_EXCEPTIONS_TO_RETRY,
@@ -208,7 +208,7 @@ def dispatch(dispatch_method: str, params: Sequence) -> typing.Any:
     if not passwd:
         _debug.logic("rpc.dispatch.refused", reason="empty_password", db=db, uid=uid)
         raise AccessDenied
-    if not is_db_rpc_exposed(db):
+    if not is_db_exposed(db):
         _logger.warning(
             "RPC %s refused: database %r is not exposed by this instance",
             dispatch_method,

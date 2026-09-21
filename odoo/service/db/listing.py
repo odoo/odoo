@@ -14,11 +14,11 @@ import odoo.db
 import odoo.exceptions
 import odoo.release
 import odoo.tools
-from odoo.db import is_maintenance_db
 from odoo.db import schema as _db_schema
 from odoo.libs.debug_log import DebugLog
 from odoo.release import version_info
 
+from .._dispatch import is_db_exposed
 from .._env import get_env_float
 from ._checks import check_db_name
 
@@ -61,8 +61,11 @@ def invalidate_catalog_caches() -> None:
 
 
 def check_db_exposed(db_name: str) -> None:
+    # `list_dbs` answers from the catalogue whenever a dbfilter is set, so on
+    # its own it would let a management operation reach a database neither
+    # RPC nor cron serves: the process-level predicate has the last word.
     _debug.pipeline("database.exposure_checked", db=db_name)
-    if db_name not in list_dbs(True):
+    if db_name not in list_dbs(True) or not is_db_exposed(db_name):
         _logger.warning(
             "DB management op on %s rejected, not in the list of exposed databases",
             db_name,
@@ -102,8 +105,8 @@ def _rpc_db_exist(db_name: str) -> bool:
     except TypeError, ValueError:
         _debug.logic("database.exist_rpc_refused", reason="invalid_name")
         return False
-    if is_maintenance_db(db_name):
-        _debug.logic("database.exist_rpc_refused", db=db_name, reason="maintenance")
+    if not is_db_exposed(db_name):
+        _debug.logic("database.exist_rpc_refused", db=db_name, reason="not_exposed")
         return False
     if db_name not in list_dbs(True):
         _debug.logic("database.exist_rpc_refused", db=db_name, reason="not_listed")

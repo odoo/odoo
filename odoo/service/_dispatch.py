@@ -20,7 +20,7 @@ __all__ = (
     "dispatch_through_table",
     "get_positional_bounds",
     "get_static_dbfilter",
-    "is_db_rpc_exposed",
+    "is_db_exposed",
 )
 
 
@@ -61,11 +61,14 @@ def get_static_dbfilter(pattern: str | None = None) -> re.Pattern[str] | None:
     return _compile_static_dbfilter(pattern) if pattern else None
 
 
-def is_db_rpc_exposed(db_name: object) -> bool:
+def is_db_exposed(db_name: object) -> bool:
+    # The one answer for every caller that has no request host to resolve
+    # a %h/%d dbfilter against: RPC, the cron and job sweeps, and database
+    # management.  The HTTP layer narrows it further by host.
     if not isinstance(db_name, str) or not db_name:
         return False
     if is_maintenance_db(db_name):
-        _debug.logic("rpc.db_not_exposed", db=db_name, reason="maintenance")
+        _debug.logic("db.not_exposed", db=db_name, reason="maintenance")
         return False
     settings = current()
     exposed = settings.db_name
@@ -77,7 +80,7 @@ def is_db_rpc_exposed(db_name: object) -> bool:
         allowed = dbfilter is None or dbfilter.match(db_name) is not None
         reason = "dbfilter"
     if _debug.logic.enabled and not allowed:
-        _debug.logic("rpc.db_not_exposed", db=db_name, reason=reason)
+        _debug.logic("db.not_exposed", db=db_name, reason=reason)
     return allowed
 
 
