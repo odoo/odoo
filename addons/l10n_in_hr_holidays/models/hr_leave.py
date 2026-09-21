@@ -79,20 +79,20 @@ class HrLeave(models.Model):
             )
 
     def _l10n_in_is_working(self, on_date, public_holiday_dates, resource_calendar):
-        if self.work_entry_type_id.l10n_in_sandwich_policy == "public_holiday":
-            return on_date not in public_holiday_dates
-        elif self.work_entry_type_id.l10n_in_sandwich_policy == "weekend":
-            return resource_calendar._works_on_date(on_date)
         return on_date not in public_holiday_dates and resource_calendar._works_on_date(on_date)
 
     def _l10n_in_count_adjacent_non_working(self, start_date, public_holiday_dates, resource_calendar, reverse=False, include_start=False):
         step = -1 if reverse else 1
-        current = start_date if include_start else start_date + timedelta(days=step)
-        count = 0
-        while not self._l10n_in_is_working(current, public_holiday_dates, resource_calendar) and count < 30:
-            count += 1
+        first_day = start_date if include_start else start_date + timedelta(days=step)
+        current = first_day
+        for _ in range(30):
+            if self._l10n_in_is_working(current, public_holiday_dates, resource_calendar):
+                break
             current += timedelta(days=step)
-        return count
+        if current == first_day:
+            return 0
+        date_from, date_to = sorted((first_day, current - timedelta(days=step)))
+        return self._l10n_in_count_days_by_sandwich_policy(date_from, date_to, public_holiday_dates)
 
     def _l10n_in_find_linked_leave(self, start_date, public_holiday_dates, resource_calendar, leaves_by_date, reverse=False):
         step = -1 if reverse else 1
