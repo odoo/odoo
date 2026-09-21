@@ -2064,7 +2064,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'use_fast_payment': True,
             'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
             'iface_print_auto': True,
-            'other_devices': True,
             'receipt_printer_ids': [Command.set(pos_printer.ids)],
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
