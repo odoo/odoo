@@ -21,3 +21,22 @@ test("showCreateProductButtonWithNonAdmin", async () => {
     const comp = await mountWithCleanup(Navbar, {});
     expect(comp.showCreateProductButton).toBe(false);
 });
+
+test("showCloseSessionForCashierWhoOpenedTheSession", async () => {
+    const store = await setupPosEnv();
+    const emp = store.models["hr.employee"].get(3);
+    store.setCashier(emp);
+    const comp = await mountWithCleanup(Navbar, {});
+    expect(comp.showCloseSession).toBe(false);
+    store.session.user_id = emp.user_id;
+    expect(emp.user_id.id).toBe(3);
+    expect(comp.showCloseSession).toBe(true);
+});
+
+test("showCloseSessionWithoutUser", async () => {
+    const store = await setupPosEnv();
+    store.setCashier(store.models["hr.employee"].get(4));
+    store.session.user_id = undefined;
+    const comp = await mountWithCleanup(Navbar, {});
+    expect(comp.showCloseSession).toBe(false);
+});
