@@ -131,8 +131,10 @@ class HrLeaveReportCalendar(models.Model):
                 ON rc.id = v.resource_calendar_id
             LEFT JOIN res_company co
                 ON co.id = em.company_id
+            LEFT JOIN resource_config rcfg
+                ON rcfg.company_id = co.id
             LEFT JOIN resource_calendar cc
-                ON cc.id = co.resource_calendar_id
+                ON cc.id = rcfg.resource_calendar_id
         WHERE
             hl.state IN ('confirm', 'validate', 'validate1', 'refuse')
         );
