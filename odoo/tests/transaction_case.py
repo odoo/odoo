@@ -524,6 +524,12 @@ class BaseCase(TestCase):
     def _open_class_cursor(cls) -> None:
         cls.cr = cast("Cursor", cls.registry.cursor())
         cls.addClassCleanup(cls.cr.close)
+        # the class holds one transaction for all its tests, which may wait on
+        # a browser or compute for minutes: the server's idle timeout is not
+        # for them (transaction-local, gone with the class's rollback)
+        cls.cr.execute(
+            "SELECT set_config('idle_in_transaction_session_timeout', '0', true)"
+        )
         _debug.lifecycle(
             "test.case.class_cursor", cls=cls.__qualname__, db=cls.cr.dbname
         )

@@ -805,6 +805,13 @@ class _PackageLoader:
             module=self.name,
             tests=suite.countTestCases(),
         )
+        # A suite may compute for minutes without a query (test_lint scans every
+        # source file) while this transaction stays open, and the server's
+        # idle-in-transaction timeout would kill the loader mid-run. Local to
+        # this transaction: the module's commit restores the server setting.
+        self.cr.execute(
+            "SELECT set_config('idle_in_transaction_session_timeout', '0', true)"
+        )
         self.test_results = loader.run_suite(suite, global_report=self.report)
         if self.report is None:
             raise RuntimeError("Missing report during tests")
