@@ -1,4 +1,4 @@
-import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
+import { useSpreadsheetNotificationPlugin } from "@spreadsheet/hooks";
 import { Spreadsheet, Model, stores } from "@odoo/o-spreadsheet";
 import { Component, t, useProps } from "@odoo/owl";
 
@@ -21,7 +21,7 @@ export class SpreadsheetComponent extends Component {
         return this.props.model;
     }
     setup() {
-        useSpreadsheetNotificationStore();
+        useSpreadsheetNotificationPlugin();
 
         if (this.props.registerStoreProvider) {
             const stores = useStoreProvider();

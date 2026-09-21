@@ -3,11 +3,12 @@ import { useService } from "@web/core/utils/hooks";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-import { stores } from "@odoo/o-spreadsheet";
+import { owlPlugins } from "@odoo/o-spreadsheet";
+import { providePlugins, usePlugin } from "@odoo/owl";
 
-const { useStore, useStoreProvider, NotificationStore } = stores;
+const { NotificationPlugin } = owlPlugins;
 
-export function useSpreadsheetNotificationStore() {
+export function useSpreadsheetNotificationPlugin() {
     /**
      * Open a dialog to ask a confirmation to the user.
      *
@@ -59,9 +60,9 @@ export function useSpreadsheetNotificationStore() {
     }
     const dialog = useService("dialog");
     const notifications = useService("notification");
-    useStoreProvider();
-    const notificationStore = useStore(NotificationStore);
-    notificationStore.updateNotificationCallbacks({
+    providePlugins([NotificationPlugin]);
+    const notificationPlugin = usePlugin(NotificationPlugin);
+    notificationPlugin.updateNotificationCallbacks({
         notifyUser: notifyUser,
         raiseError: raiseError,
         askConfirmation: askConfirmation,
