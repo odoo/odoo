@@ -140,7 +140,7 @@ class IrAccess(models.Model):
         xids = self._get_external_ids()
         for access in self:
             access.is_standard = any(
-                not xid.startswith(('__export__', '__custom__'))
+                not xid.startswith(('__export__', '__custom__', 'studio_customization'))
                 for xid in xids[access.id]
             )
 
@@ -152,7 +152,7 @@ class IrAccess(models.Model):
                     WHERE d.model = %s AND d.res_id = %s AND d.module NOT IN %s
                 )
             """,
-            table._model._name, table.id, ('__export__', '__custom__'),
+            table._model._name, table.id, ('__export__', '__custom__', 'studio_customization'),
         )
 
     def _compute_for(self, operation: str):
