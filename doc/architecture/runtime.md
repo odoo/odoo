@@ -398,9 +398,12 @@ was written — the verdict may have changed, and the next read searches. None
 of it fetches mid-write (`Many2one._update_inverses` documents why there must
 be none). Three shapes are structural, not special cases: a *pending* record
 (`NewId`) has no search to decide anything, so `_ScopedSlot` routes it to one
-slot shared by every scope (and `RecordCache` peeks there too); a *computed*
-x2many is what its compute produced (under sudo for `compute_sudo`), so its slot
-is scope-less; and a model that *delegates its fetch to sudo* after its own
+slot shared by every scope (and `RecordCache` peeks there too); a `compute_sudo`
+x2many is what its compute produced under sudo, one value for every reader, so
+its slot is scope-less — while a compute that runs *as the reader* (every
+delegated or related x2many: `product.product.taxes_id`, `res.users.child_ids`)
+produces that reader's rule-filtered read and is scoped like one; and a model
+that *delegates its fetch to sudo* after its own
 access check (`mail.message.fetch`) fills the superuser slot, so a read that
 finds no value after such a fetch is served from there once
 (`_value_after_delegated_fetch`). The events `field.x2many.scope_sync`,

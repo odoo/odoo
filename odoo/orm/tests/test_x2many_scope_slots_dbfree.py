@@ -18,6 +18,14 @@ class Host(models.Model):
         for host in self:
             host.computed_ids = host.child_ids
 
+    sudo_computed_ids = fields.Many2many(
+        "scope.child", compute="_compute_sudo_computed_ids", compute_sudo=True
+    )
+
+    def _compute_sudo_computed_ids(self):
+        for host in self:
+            host.sudo_computed_ids = host.child_ids
+
 
 class Child(models.Model):
     _name = "scope.child"
@@ -54,7 +62,7 @@ def _slots(env, field):
     }
 
 
-def test_the_access_key_is_the_scope_and_none_for_a_computed_field():
+def test_the_access_key_is_the_scope_and_none_only_for_a_compute_sudo_field():
     with model_test_env(Host, Child, Note, HostWithNotes) as env:
         host = env["scope.host"].create({"name": "h"})
         as_user = host.with_env(env(user=2, su=False))
@@ -62,8 +70,11 @@ def test_the_access_key_is_the_scope_and_none_for_a_computed_field():
         computed = host._fields["computed_ids"]
         assert env.get_cache_key(child_ids) == (True,)
         assert as_user.env.get_cache_key(child_ids) == ((2, None),)
-        assert env.get_cache_key(computed) == (None,)
-        assert as_user.env.get_cache_key(computed) == (None,)
+        assert env.get_cache_key(computed) == (True,)
+        assert as_user.env.get_cache_key(computed) == ((2, None),)
+        sudo_computed = host._fields["sudo_computed_ids"]
+        assert env.get_cache_key(sudo_computed) == (None,)
+        assert as_user.env.get_cache_key(sudo_computed) == (None,)
 
 
 def test_a_full_value_set_in_one_scope_evicts_the_other_scopes():

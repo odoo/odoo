@@ -535,7 +535,9 @@ class Environment(Mapping[str, "BaseModel"]):
             elif key == "uid":
                 return self.uid if field.compute_sudo else (self.uid, self.su)
             elif key == "access":
-                return None if field.compute else self._access_scope()
+                if field.compute and field.compute_sudo:
+                    return None
+                return self._access_scope()
             elif key == "lang":
                 return get_context("lang") or "en_US"
             elif key == "active_test":
@@ -566,10 +568,6 @@ class Environment(Mapping[str, "BaseModel"]):
         return {}
 
     def _derive(self, *, su: bool | None = None, **overrides) -> Environment:
-        # sudo().with_context(key=value) as the ORM's own hot paths spell it
-        # (trigger traversal, monetary rounding): the answer for a given
-        # environment never changes, and each lookup would hash a fresh
-        # context, so it is memoized per environment
         key = (su, tuple(sorted(overrides.items())))
         env = self._derived_envs.get(key)
         if env is None:

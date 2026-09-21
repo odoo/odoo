@@ -200,15 +200,12 @@ class TestTheWriterSlotListsWhatTheWriterWrote:
             }
             assert len(order.line_ids) == 2
 
-    def test_a_computed_inverse_has_one_slot_and_no_scope_to_evict(self):
-        # a computed one2many naming the same inverse keeps one slot for every
-        # scope (its access key is None): the writer's addition is not judged
-        # against a reader, there is none to name
+    def test_a_computed_inverse_is_scoped_by_its_reader_and_recomputes_for_sudo(self):
         with model_test_env(Order, Line, Tag, IrModelAccess, IrRuleOnLines) as env:
             as_user = _user_env(env)["mirror.order"]
             order = as_user.create({"name": "o"})
             held = order._fields["held_ids"]
-            assert as_user.env.get_cache_key(held) == (None,)
+            assert as_user.env.get_cache_key(held) == ((2, None),)
             assert not order.held_ids
             line = (
                 env["mirror.line"]

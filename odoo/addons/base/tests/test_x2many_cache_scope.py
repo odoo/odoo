@@ -46,6 +46,24 @@ class TestX2manyCacheScope(TransactionCase):
         self.assertEqual(self._as_user().child_ids, self.visible)
         self.assertEqual(self.parent.sudo().child_ids, self.visible | self.hidden)
 
+    def _delegating_user(self):
+        owner = new_test_user(self.env, login="scope_x2many_owner")
+        (self.visible | self.hidden).parent_id = owner.partner_id
+        self.env.invalidate_all()
+        return owner
+
+    def test_a_sudo_read_of_a_delegated_x2many_does_not_hand_the_user_the_hidden_child(
+        self,
+    ):
+        owner = self._delegating_user()
+        self.assertEqual(owner.sudo().child_ids, self.visible | self.hidden)
+        self.assertEqual(owner.with_user(self.user).child_ids, self.visible)
+
+    def test_a_user_read_of_a_delegated_x2many_does_not_starve_the_superuser(self):
+        owner = self._delegating_user()
+        self.assertEqual(owner.with_user(self.user).child_ids, self.visible)
+        self.assertEqual(owner.sudo().child_ids, self.visible | self.hidden)
+
     def test_a_write_in_one_scope_is_seen_by_the_other(self):
         self.assertEqual(self._as_user().child_ids, self.visible)
         self.assertEqual(self.parent.sudo().child_ids, self.visible | self.hidden)
