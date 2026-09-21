@@ -1,5 +1,4 @@
 /** @odoo-module native */
-import { useSubEnv } from "@odoo/owl";
 import {
     ProductCatalogKanbanRecord,
     productCatalogOrderLines,
@@ -11,20 +10,16 @@ import { ProductCatalogAccountMoveLine } from "./account_move_line.js";
 productCatalogOrderLines.add("account.move", ProductCatalogAccountMoveLine);
 
 patch(ProductCatalogKanbanRecord.prototype, {
-    setup() {
-        super.setup();
-
-        useSubEnv({
-            selectedSectionId: this.env.searchModel.selectedSection.sectionId,
-        });
+    get sectionIdOfPendingUpdate() {
+        return this._sectionIdOfPendingUpdate === undefined
+            ? this.env.searchModel.selectedSection.sectionId
+            : this._sectionIdOfPendingUpdate;
     },
 
     _getUpdateQuantityAndGetPriceParams() {
         return {
             ...super._getUpdateQuantityAndGetPriceParams(),
-            section_id:
-                this.env.selectedSectionId ??
-                this.env.searchModel.selectedSection.sectionId,
+            section_id: this.sectionIdOfPendingUpdate,
         };
     },
 
@@ -39,6 +34,7 @@ patch(ProductCatalogKanbanRecord.prototype, {
     },
 
     updateQuantity(quantity) {
+        this._sectionIdOfPendingUpdate = this.env.searchModel.selectedSection.sectionId;
         if (!this.productCatalogData.readOnly) {
             const lineCountChange =
                 (quantity > 0) - (this.productCatalogData.quantity > 0);
@@ -52,7 +48,7 @@ patch(ProductCatalogKanbanRecord.prototype, {
 
     notifyLineCountChange(lineCountChange) {
         this.env.searchModel.trigger("section-line-count-change", {
-            sectionId: this.env.selectedSectionId,
+            sectionId: this.sectionIdOfPendingUpdate,
             lineCountChange: lineCountChange,
         });
     },

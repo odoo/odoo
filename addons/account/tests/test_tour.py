@@ -152,3 +152,39 @@ class TestUi(AccountTestInvoicingHttpCommon):
             "test_add_section_from_product_catalog_on_invoice",
             login="admin",
         )
+
+    def test_a_product_added_after_creating_a_section_lands_in_that_section(self):
+        # with a line already on the invoice the catalog opens on "no section";
+        # the card must follow the section the user then creates and selects
+        self.product.write({"is_favorite": True})
+        # the tour logs in as admin, so the invoice lives in admin's company
+        invoice = (
+            self.env["account.move"]
+            .with_user(self.env.ref("base.user_admin"))
+            .create(
+                {
+                    "move_type": "out_invoice",
+                    "partner_id": self.partner_a.id,
+                    "invoice_line_ids": [
+                        Command.create(
+                            {
+                                "product_id": self.product_b.id,
+                                "quantity": 1,
+                                "price_unit": 10,
+                            }
+                        )
+                    ],
+                }
+            )
+        )
+        self.start_tour(
+            f"/odoo/customer-invoices/{invoice.id}",
+            "test_product_lands_in_the_section_created_from_the_catalog",
+            login="admin",
+        )
+        self.assertEqual(
+            invoice.invoice_line_ids.sorted("sequence").mapped(
+                lambda line: line.product_id.name or line.name
+            ),
+            [self.product_b.name, "Section A", self.product.name],
+        )
