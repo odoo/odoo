@@ -8,7 +8,6 @@ import markupsafe
 
 from odoo import _, api, models
 from odoo.exceptions import UserError
-from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_compare, float_is_zero, float_round
 from odoo.tools import float_repr, get_lang, html2plaintext
@@ -441,7 +440,7 @@ class AccountReportLines(models.Model):
                     continue
                 # In case total below section, some line don't have the value displayed
                 if (
-                    self.env.company.account_config_id.totals_below_sections
+                    self._get_totals_below_sections()
                     and not options.get("ignore_totals_below_sections")
                     and line_dict["unfolded"]
                 ):
@@ -502,45 +501,13 @@ class AccountReportLines(models.Model):
             )
             figure_type = column_expression.figure_type or column_data["figure_type"]
 
-            # Handle info popup
-            info_popup_data = {}
-
-            # Check carryover
-            carryover_expr_label = "_carryover_%s" % column_expr_label
-            carryover_value = target_line_res_dict.get(carryover_expr_label, {}).get(
-                "value", 0
+            info_popup_data = self._prepare_info_popup_data(
+                options,
+                col_group_key,
+                column_expr_label,
+                target_line_res_dict,
+                line_expressions_map,
             )
-            if self.env.company.currency_id.compare_amounts(0, carryover_value) != 0:
-                info_popup_data["carryover"] = self._format_value(
-                    options, carryover_value, "monetary"
-                )
-
-                carryover_expression = line_expressions_map[carryover_expr_label]
-                if carryover_expression.carryover_target:
-                    info_popup_data["carryover_target"] = (
-                        carryover_expression._get_carryover_target_expression(
-                            options
-                        ).report_line_name
-                    )
-                # If it's not set, it means the carryover needs to target the same expression
-
-            applied_carryover_value = target_line_res_dict.get(
-                "_applied_carryover_%s" % column_expr_label, {}
-            ).get("value", 0)
-            if (
-                self.env.company.currency_id.compare_amounts(0, applied_carryover_value)
-                != 0
-            ):
-                info_popup_data["applied_carryover"] = self._format_value(
-                    options, applied_carryover_value, "monetary"
-                )
-                info_popup_data["allow_carryover_audit"] = self.env.user.has_group(
-                    "base.group_no_one"
-                )
-                info_popup_data["expression_id"] = line_expressions_map[
-                    "_applied_carryover_%s" % column_expr_label
-                ]["id"]
-                info_popup_data["column_group_key"] = col_group_key
 
             # Handle manual edition popup
             edit_popup_data = {}
@@ -1650,11 +1617,11 @@ class AccountReportLines(models.Model):
             _debug.logic(
                 "totals_below_sections_checked",
                 report=self,
-                company_setting=self.env.company.account_config_id.totals_below_sections,
+                company_setting=self._get_totals_below_sections(),
                 ignored=bool(options.get("ignore_totals_below_sections")),
                 lines=len(lines),
             )
-        if not self.env.company.account_config_id.totals_below_sections or options.get(
+        if not self._get_totals_below_sections() or options.get(
             "ignore_totals_below_sections"
         ):
             return lines
@@ -2403,80 +2370,6 @@ class AccountReportLines(models.Model):
             offset,
             horizontal_split_side,
         )
-
-    @_debug.perf.timed
-    def get_annotations(self, options, lines):
-        """Return the annotations to display on the report, based on its dates and their display mode.
-
-        :param dict options: options used to generate the report.
-        :param list lines: report lines, used to build the domain for the annotations.
-        :return: for each annotated line_id, the list of annotations linked to it.
-        :rtype: dict
-        """
-        self.check_singleton()
-        annotations_by_line = defaultdict(list)
-        line_dict_ids_by_record = defaultdict(set)
-        model_ids_map = defaultdict(set)
-        for line in lines:
-            if line.get("chatter"):
-                line_dict_ids_by_record[
-                    line["chatter"]["model"], line["chatter"]["id"]
-                ].add(line["id"])
-                model_ids_map[line["chatter"]["model"]].add(line["chatter"]["id"])
-
-        domain = Domain.OR(
-            [
-                Domain("message_id.model", "=", model)
-                & Domain("message_id.res_id", "in", ids)
-                for model, ids in model_ids_map.items()
-            ]
-        )
-        if options.get("date"):
-            period_date_from = self._get_annotations_domain_date_from(options)
-            period_date_from = self._adjust_date_for_joined_comparison(
-                options, period_date_from
-            )
-            dates_domain = Domain("date", ">=", period_date_from) & Domain(
-                "date", "<=", options["date"]["date_to"]
-            )
-            dates_domain = self._adjust_domain_for_unjoined_comparison(
-                options, dates_domain
-            )
-            domain &= dates_domain
-
-        order = "create_date ASC" if options["export_mode"] else ""
-        _debug.logic(
-            "annotations_scope_decided",
-            report=self,
-            models=len(model_ids_map),
-            records=len(line_dict_ids_by_record),
-            dated=bool(options.get("date")),
-            order=order,
-        )
-        report_annotations = self.env["account.report.annotation"].search(
-            domain, order=order
-        )
-        for annotation in report_annotations:
-            message = annotation.message_id
-            for line_id in line_dict_ids_by_record[message.model, message.res_id]:
-                annotations_by_line[line_id].append(
-                    {
-                        "id": message.id,
-                        "model": message.model,
-                        "res_id": message.res_id,
-                        "date": annotation.date,
-                        "body": message.body,
-                        "line_id": line_id,
-                    }
-                )
-        _debug.pipeline(
-            "annotations_fetched",
-            report=self,
-            lines=len(lines),
-            annotations=len(report_annotations),
-            annotated_lines=len(annotations_by_line),
-        )
-        return annotations_by_line
 
     def _get_last_comments_by_line(self, options, lines):
         annotations_by_line = self.get_annotations(options, lines)
