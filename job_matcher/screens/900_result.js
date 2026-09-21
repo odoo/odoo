@@ -58,8 +58,6 @@ JM.registerScreen("result", {
         JM.dom.text(JM.dom.role("result", "best_percent"),
             best.percentage + "% match");
         JM.dom.role("result", "best_bar").style.width = best.percentage + "%";
-        JM.dom.html(JM.dom.role("result", "best_description"),
-            best.profile.description_html);
 
         var cta = JM.dom.role("result", "cta");
         JM.dom.show(cta, !!best.profile.posting_url);
@@ -68,7 +66,20 @@ JM.registerScreen("result", {
             JM.dom.text(cta, config.cta_label || "See the job");
         }
 
-        JM.screens.result.renderRunners(results.slice(1, (config.runners_count || 2) + 1));
+        JM.screens.result.renderRunners(JM.screens.result.runners(results));
+    },
+
+    /* The runners-up worth printing: the next few after the best match, minus
+       any that scored too low to recommend. A weak role at the bottom of the
+       list reads as "we found nothing for you", which is the opposite of what
+       the runners are for, so runners_min_percentage drops it. */
+    runners: function (results) {
+        var config = JM.config.result || {};
+        var floor = config.runners_min_percentage || 0;
+        return results.slice(1, (config.runners_count || 2) + 1)
+            .filter(function (runner) {
+                return runner.percentage >= floor;
+            });
     },
 
     renderNoMatch: function () {
@@ -153,14 +164,7 @@ JM.registerScreen("result", {
                 if (result.mock) {
                     suffix = " (dev preview, nothing was saved)";
                 }
-                /* The name is optional, so address them by it only when
-                   there is one to use. */
-                var greeting = "Thanks!";
-                var who = JM.api.visitorName();
-                if (who) {
-                    greeting = "Thanks, " + who + "!";
-                }
-                JM.dom.text(status, greeting + " Your answers are saved." + suffix);
+                JM.dom.text(status, "Your answers are saved." + suffix);
                 return;
             }
             failed("Could not save your answers: " + JM.api.errorOf(result));

@@ -45,7 +45,8 @@
                     "profile_bizdev_intern",
                     "profile_dev_intern",
                     "profile_hr",
-                    "profile_marketing"
+                    "profile_marketing",
+                    "profile_webdesign_intern"
                 ]
             },
             {
@@ -107,7 +108,8 @@
                     "profile_partner_manager",
                     "profile_product_owner",
                     "profile_support_analyst",
-                    "profile_web_designer"
+                    "profile_web_designer",
+                    "profile_webdesign_intern"
                 ]
             },
             {
@@ -147,8 +149,9 @@
                 "id": "q2_e",
                 "label": "English and (Italian, German or Arabic)",
                 "points": {
+                    "profile_partner_manager": 3,
                     "profile_support_analyst": 3,
-                    "profile_partner_manager": 3
+                    "profile_webdesign_intern": 3
                 },
                 "eliminates": [
                     "profile_account_manager",
@@ -178,7 +181,8 @@
                     "profile_partner_manager",
                     "profile_product_owner",
                     "profile_support_analyst",
-                    "profile_web_designer"
+                    "profile_web_designer",
+                    "profile_webdesign_intern"
                 ]
             }
         ]
@@ -197,19 +201,21 @@
                     "profile_dev_intern": 3,
                     "profile_developer": 3,
                     "profile_product_owner": 2,
-                    "profile_support_analyst": 1
+                    "profile_support_analyst": 1,
+                    "profile_webdesign_intern": 3
                 }
             },
             {
                 "id": "q3_b",
                 "label": "Helping people and explaining solutions",
                 "points": {
-                    "profile_support_analyst": 3,
-                    "profile_business_analyst": 3,
-                    "profile_bizdev_rep": 2,
-                    "profile_bizdev_nordic": 2,
                     "profile_bizdev_horeca": 2,
-                    "profile_bizdev_intern": 2
+                    "profile_bizdev_intern": 2,
+                    "profile_bizdev_nordic": 2,
+                    "profile_bizdev_rep": 2,
+                    "profile_business_analyst": 3,
+                    "profile_support_analyst": 3,
+                    "profile_webdesign_intern": 3
                 }
             },
             {
@@ -251,8 +257,9 @@
                 "label": "Writing code",
                 "points": {
                     "profile_developer": 3,
+                    "profile_product_owner": 1,
                     "profile_web_designer": 1,
-                    "profile_product_owner": 1
+                    "profile_webdesign_intern": 3
                 }
             },
             {
@@ -260,29 +267,32 @@
                 "label": "Configuring software for a client",
                 "points": {
                     "profile_business_analyst": 3,
-                    "profile_support_analyst": 2
+                    "profile_support_analyst": 2,
+                    "profile_webdesign_intern": 2
                 }
             },
             {
                 "id": "q4_c",
                 "label": "Helping a client solve an issue",
                 "points": {
-                    "profile_support_analyst": 3,
-                    "profile_business_analyst": 1,
-                    "profile_bizdev_rep": 1,
-                    "profile_bizdev_nordic": 1,
                     "profile_bizdev_horeca": 1,
-                    "profile_bizdev_intern": 1
+                    "profile_bizdev_intern": 1,
+                    "profile_bizdev_nordic": 1,
+                    "profile_bizdev_rep": 1,
+                    "profile_business_analyst": 1,
+                    "profile_support_analyst": 3,
+                    "profile_webdesign_intern": 1
                 }
             },
             {
                 "id": "q4_d",
                 "label": "Pitching to new customers",
                 "points": {
-                    "profile_bizdev_rep": 3,
-                    "profile_bizdev_nordic": 3,
                     "profile_bizdev_horeca": 3,
-                    "profile_bizdev_intern": 3
+                    "profile_bizdev_intern": 3,
+                    "profile_bizdev_nordic": 3,
+                    "profile_bizdev_rep": 3,
+                    "profile_webdesign_intern": 1
                 }
             },
             {
@@ -292,7 +302,10 @@
                     "profile_bizdev_rep": 3,
                     "profile_bizdev_nordic": 3,
                     "profile_bizdev_horeca": 3
-                }
+                },
+                "eliminates": [
+                    "profile_webdesign_intern"
+                ]
             },
             {
                 "id": "q4_f",
@@ -300,7 +313,10 @@
                 "points": {
                     "profile_account_manager": 3,
                     "profile_partner_manager": 3
-                }
+                },
+                "eliminates": [
+                    "profile_webdesign_intern"
+                ]
             },
             {
                 "id": "q4_g",
@@ -336,14 +352,15 @@
                 "id": "q5_b",
                 "label": "Lots of client interaction",
                 "points": {
-                    "profile_support_analyst": 3,
-                    "profile_bizdev_rep": 3,
-                    "profile_bizdev_nordic": 3,
+                    "profile_account_manager": 2,
                     "profile_bizdev_horeca": 3,
                     "profile_bizdev_intern": 3,
-                    "profile_account_manager": 2,
+                    "profile_bizdev_nordic": 3,
+                    "profile_bizdev_rep": 3,
+                    "profile_hr": 1,
+                    "profile_support_analyst": 3,
                     "profile_web_designer": 2,
-                    "profile_hr": 1
+                    "profile_webdesign_intern": 1
                 }
             },
             {
@@ -354,16 +371,20 @@
                     "profile_bizdev_horeca": 3,
                     "profile_bizdev_intern": 2,
                     "profile_hr": 3
-                }
+                },
+                "eliminates": [
+                    "profile_webdesign_intern"
+                ]
             },
             {
                 "id": "q5_d",
                 "label": "Designing and creating new things",
                 "points": {
-                    "profile_web_designer": 3,
-                    "profile_marketing": 2,
+                    "profile_dev_intern": 2,
                     "profile_developer": 2,
-                    "profile_dev_intern": 2
+                    "profile_marketing": 2,
+                    "profile_web_designer": 3,
+                    "profile_webdesign_intern": 3
                 }
             }
         ]

@@ -6,8 +6,8 @@ A job-fair game: "Which Odoo job fits you?". A visitor answers ten questions on
 their phone — name, email, phone, which activity they joined, then six about
 what they are looking for, which languages they work in and how they like to
 work — and lands on a result screen naming the role that fits them best, with a
-match percentage, two runner-up roles and a link to each real job posting.
-Fourteen roles compete; answers both add points and eliminate roles outright, so
+match percentage, up to two runner-up roles and a link to each real job posting.
+Fifteen roles compete; answers both add points and eliminate roles outright, so
 "I want an internship" or a missing language rules roles out whatever else was
 scored.
 
@@ -91,14 +91,16 @@ inert in edit mode, so test on the published page.
 5. Results rank by score, then percentage. A role that scored zero is still a
    valid result if nothing eliminated it.
 
-The result screen shows the top role with image, percentage and meter, then the
-next two, then one closing line. Two endings replace part of it: any answer may
-carry a **closing message**, appended below the recommendations (the case it
-exists for is the student-job seeker, pointed at internships and a recruitment
-mailbox while still seeing their fit), and it replaces the **no-match screen**,
-which otherwise appears when every role was eliminated. One answer — "None of
-the options above" on the languages question — eliminates all fourteen on its
-own, so that screen is not optional polish.
+The result screen shows the top role with its percentage and meter, then up to
+two runners-up — one scoring under `runners_min_percentage` is dropped rather
+than printed as a weak suggestion — then one closing line. Two endings replace
+part of it: any answer may carry a **closing message**, appended below the
+recommendations (the case it exists for is the student-job seeker, pointed at
+internships and a recruitment mailbox while still seeing their fit), and it
+replaces the **no-match screen**, which otherwise appears when every role was
+eliminated. One answer — "None of the options above" on the languages
+question — eliminates all fifteen on its own, so that screen is not optional
+polish.
 
 The six scoring questions are mandatory. The four capture questions are optional
 except "Which activity did you join?", which describes the event rather than the

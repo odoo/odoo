@@ -18,17 +18,6 @@ JM.api = {
         return JM.config.field_map || {};
     },
 
-    visitorName: function () {
-        var map = JM.api.fieldMap();
-        var answer = "";
-        Object.keys(map).forEach(function (questionId) {
-            if (map[questionId] === JM.config.name_field) {
-                answer = JM.state.answers[questionId] || answer;
-            }
-        });
-        return answer;
-    },
-
     post: function (values) {
         if (JM.config.mock) {
             return JM.api.mock(values);
