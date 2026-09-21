@@ -2305,6 +2305,7 @@ class SaleOrderLine(models.Model):
             self.order_id._can_be_edited_on_portal()
             and not self.combo_item_id
             and not self._is_discount_line()
+            and not self._is_analytic_reinvoice_line()
         )
 
     def _is_analytic_reinvoice_line(self):
