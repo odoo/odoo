@@ -201,13 +201,15 @@ class PosOrder(models.Model):
         }]]
 
     @api.model
-    def _get_self_order_floating_name(self, pos_config, order, device_type, table, tracking_number, prefix=""):
+    def _get_self_order_floating_name(self, pos_config, order, device_type, table, tracking_number):
         if device_type == 'kiosk':
             return f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else f"Kiosk Order {tracking_number}"
-        if not table:
+        if not table and order.get('floating_order_name'):
+            return order.get('floating_order_name')
+        elif not table:
             return f"Self-Order {tracking_number}"
         if pos_config.self_ordering_service_mode == 'dynamic_qr':
-            return f"T {table.table_number} - {prefix}{tracking_number}"
+            return f"T {table.table_number} - {tracking_number}"
         return f"Self-Order T {table.table_number}"
 
     @api.model
@@ -236,22 +238,6 @@ class PosOrder(models.Model):
                 _logger.warning("pos_self_order: Lock not available while opening a session for future orders.")
                 raise UserError(_("Error while creating the order. Please try again."))
             order['session_id'] = pos_config.current_session_id.id
-
-        existing_order = pos_config.env['pos.order']._get_open_order(order)
-        if not existing_order.exists():
-            pos_reference, tracking_number = pos_config._get_next_order_refs()
-            prefix = f"K{pos_config.id}-" if device_type == "kiosk" else "S"
-
-            if not floating_order_name:
-                floating_order_name = self._get_self_order_floating_name(pos_config, order, device_type, table, tracking_number, prefix)
-
-            tracking_number = f"{prefix}{tracking_number}"
-        else:
-            pos_reference = existing_order.pos_reference
-            floating_order_name = existing_order.floating_order_name
-            tracking_number = existing_order.tracking_number
-            if not floating_order_name:
-                floating_order_name = self._get_self_order_floating_name(pos_config, order, device_type, table, tracking_number)
 
         fiscal_position_id = preset_id.fiscal_position_id if preset_id else pos_config.default_fiscal_position_id
         pricelist_id = preset_id.pricelist_id if preset_id else pos_config.pricelist_id
@@ -287,7 +273,6 @@ class PosOrder(models.Model):
             'fiscal_position_id': fiscal_position_id.id if fiscal_position_id else False,
             'preset_id': preset_id.id if preset_id else False,
             'preset_time': order.get('preset_time'),
-            'tracking_number': tracking_number,
             'source': 'kiosk' if device_type == 'kiosk' else 'mobile',
             'email': partner.email if partner else order.get('email'),
             'mobile': partner.phone if partner else order.get('mobile'),
@@ -295,7 +280,6 @@ class PosOrder(models.Model):
             'floating_order_name': floating_order_name,
             'general_customer_note': order.get('general_customer_note'),
             'nb_print': order.get('nb_print'),
-            'pos_reference': pos_reference,
             'to_invoice': order.get('to_invoice'),
             'is_tipped': order.get('is_tipped'),
             'tip_amount': order.get('tip_amount'),
@@ -306,6 +290,9 @@ class PosOrder(models.Model):
             'payment_ids': payment_lines,
             'relations_uuid_mapping': order.get('relations_uuid_mapping', {}),
         }
+
+        if pos_config.self_ordering_mode == 'kiosk':
+            result['table_stand_number'] = order.get('table_stand_number')
 
         if (table and pos_config.self_ordering_service_mode == 'table'):
             result['table_stand_number'] = order.get('table_stand_number')
