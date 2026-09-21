@@ -110,6 +110,24 @@ export class FieldChangeReplicationPlugin extends Plugin {
                             touchedEls.add(targetEl);
                         }
                     }
+                    if (
+                        targetEl.getAttribute("data-oe-model") === "ir.ui.view" &&
+                        targetEl.getAttribute("data-oe-field") === "arch"
+                    ) {
+                        // Remove pre-existing attributes from the target element
+                        while (targetEl.attributes.length > 0) {
+                            targetEl.removeAttribute(targetEl.attributes[0].name);
+                        }
+
+                        [...cloneEl.attributes].forEach((attr) => {
+                            targetEl.setAttribute(attr.nodeName, attr.nodeValue);
+                        });
+
+                        // Remove o_dirty to minimize save events when multiple elements are
+                        // modified
+                        targetEl.classList.remove("o_dirty");
+                        touchedEls.add(targetEl);
+                    }
                     this.dispatchTo("after_replication_handlers", { sourceEl, targetEl });
                 }
             }
