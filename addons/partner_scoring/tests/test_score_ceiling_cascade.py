@@ -37,10 +37,10 @@ class TestScoreCeilingCascade(TransactionCase):
         cls.bystander = cls.Partner.create(
             {"name": "Cascade Bystander", "is_company": True}
         )
-        cls.bystander._update_scores()
+        cls.bystander._score_refresh()
 
     def _refresh_queued(self):
-        self.Partner.search([("score_line_ids", "!=", False)])._update_scores()
+        self.Partner.search([("score_line_ids", "!=", False)])._score_refresh()
         self.env.flush_all()
 
     def test_a_new_weighted_value_moves_the_denominator(self):
@@ -145,20 +145,25 @@ class TestScoreCeilingCascade(TransactionCase):
         )._get_score_max_points()
         self.assertEqual(as_archived_list, as_default)
         self.assertNotIn(
-            spare.id, dict(self.Partner._score_ceiling_partner_attr()["attributes"])
+            spare.id,
+            dict(
+                self.Partner._score_ceiling(
+                    self.env.ref("partner_scoring.scorecard_dimension_partner_attr")
+                )["attributes"]
+            ),
         )
         self.assertEqual(self.Partner._get_score_max_points(), as_default)
 
     def test_a_bare_attribute_create_queues_nothing(self):
         """An attribute with no values moves no ceiling and rewrites no row."""
         partner_class = type(self.Partner)
-        with patch.object(partner_class, "_notify_score_ceiling_changed") as notified:
+        with patch.object(partner_class, "_score_notify_scorecard_changed") as notified:
             self.Attribute.create({"name": "Cascade Bare", "value_type": "single"})
         self.assertFalse(notified.called)
 
     def test_an_irrelevant_attribute_write_does_not_requeue(self):
         partner_class = type(self.Partner)
-        with patch.object(partner_class, "_notify_score_ceiling_changed") as notified:
+        with patch.object(partner_class, "_score_notify_scorecard_changed") as notified:
             self.attribute.sequence = 42
             self.assertFalse(notified.called)
 
@@ -193,14 +198,14 @@ class TestScoreCeilingCascade(TransactionCase):
                 "company_id": self.env.ref("base.main_company").id,
             }
         )
-        hidden._update_scores()
+        hidden._score_refresh()
         archived = self.Partner.create({"name": "Cascade Archived", "is_company": True})
-        archived._update_scores()
+        archived._score_refresh()
         archived.action_archive()
 
         partner_class = type(self.Partner)
         with patch.object(
-            partner_class, "_delay_scores_recompute", autospec=True
+            partner_class, "_delay_score_refresh", autospec=True
         ) as delayed:
             self.value.with_user(editor).score_value = 21.0
         requeued = delayed.call_args[0][0]
@@ -210,14 +215,14 @@ class TestScoreCeilingCascade(TransactionCase):
     def test_a_second_wave_collapses_onto_the_queued_job(self):
         """Ten weight edits in one sitting must not queue ten full rescores."""
         job_model = self.env["ir.job"]
-        queued = [("identity_key", "=like", "partner_scoring.recompute:%")]
+        queued = [("identity_key", "=like", "scoring.refresh:res.partner:%")]
         before = job_model.search_count(queued)
 
         scored = self.Partner.search([("score_line_ids", "!=", False)])
         self.assertTrue(scored)
-        scored._delay_scores_recompute()
+        scored._delay_score_refresh()
         after_first = job_model.search_count(queued)
         self.assertEqual(after_first, before + 1)
 
-        scored._delay_scores_recompute()
+        scored._delay_score_refresh()
         self.assertEqual(job_model.search_count(queued), after_first)

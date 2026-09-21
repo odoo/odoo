@@ -6,11 +6,13 @@
         <field name="model">partner.score.line</field>
         <field name="arch" type="xml">
             <list string="Score Breakdown" create="0" edit="0" delete="0">
-                <field name="dimension" />
+                <field name="dimension_id" />
+                <field name="value" optional="hide" />
                 <field name="source_ref" />
                 <field name="points" sum="Total" />
                 <field name="max_points" sum="Total" />
                 <field name="applied" />
+                <field name="applicable" optional="hide" />
                 <field name="note" optional="hide" />
             </list>
         </field>

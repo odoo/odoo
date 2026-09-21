@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="scorecard_partner" model="scorecard">
+        <field name="name">Customer Scorecard</field>
+        <field name="res_model">res.partner</field>
+    </record>
+
+    <record id="scorecard_dimension_partner_attr" model="scorecard.dimension">
+        <field name="scorecard_id" ref="scorecard_partner" />
+        <field name="code">partner_attr</field>
+        <field name="name">Contact Attributes</field>
+        <field name="kind">catalog</field>
+        <field name="catalog_model">res.partner.attribute</field>
+        <field name="missing">zero</field>
+        <field name="sequence" eval="100" />
+    </record>
+
+</odoo>

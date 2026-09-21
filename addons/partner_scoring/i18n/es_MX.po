@@ -6,32 +6,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-29 03:29+0000\n"
-"PO-Revision-Date: 2026-08-29 03:29+0000\n"
+"POT-Creation-Date: 2026-09-21 16:34+0000\n"
+"PO-Revision-Date: 2026-09-21 16:34+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: es_MX\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: partner_scoring
 #. odoo-python
-#: code:addons/partner_scoring/models/res_partner.py:0
-msgid "%(count)s partners queued for recomputation."
-msgstr "%(count)s contactos encolados para recálculo."
-
-#. module: partner_scoring
-#. odoo-python
-#: code:addons/partner_scoring/models/partner_profile.py:0
+#: code:addons/partner_scoring/models/partner_tier.py:0
 msgid ""
 "%(name)s ends at exactly 100, which excludes a perfect score: the bounds are"
-" half-open. Leave the maximum at 0 on the highest profile to make it open-"
+" half-open. Leave the maximum at 0 on the highest tier to make it open-"
 "ended."
 msgstr ""
 "%(name)s termina exactamente en 100, lo que excluye un puntaje perfecto: los"
-" límites son semiabiertos. Deje el máximo en 0 en el perfil más alto para "
-"dejarlo abierto."
+" límites son semiabiertos. Deje el máximo en 0 en el nivel más alto para que"
+" quede abierto."
 
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_generation_1
@@ -47,6 +42,16 @@ msgstr "2da generación"
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_generation_3plus
 msgid "3rd+ generation"
 msgstr "3ra+ generación"
+
+#. module: partner_scoring
+#: model:ir.model.constraint,message:partner_scoring.constraint_res_partner_attribute_value_score_value_not_negative
+msgid ""
+"A score weight cannot be negative: the ceiling only counts positive weights,"
+" so a penalty would lower a score against a denominator that never saw it."
+msgstr ""
+"Un peso de puntaje no puede ser negativo: el techo sólo cuenta pesos "
+"positivos, así que una penalización bajaría un puntaje contra un denominador"
+" que nunca la vio."
 
 #. module: partner_scoring
 #: model:res.partner.attribute,name:partner_scoring.partner_attribute_acquisition_source
@@ -73,6 +78,11 @@ msgid "Aggregation Mode"
 msgstr "Modo de agregación"
 
 #. module: partner_scoring
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__applicable
+msgid "Applicable"
+msgstr "Aplicable"
+
+#. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__applied
 msgid "Applied"
 msgstr "Aplicado"
@@ -96,21 +106,21 @@ msgstr "Atributo"
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_competitor_basf
 msgid "BASF"
-msgstr ""
+msgstr "BASF"
 
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_competitor_bayer
 msgid "Bayer"
-msgstr ""
+msgstr "Bayer"
 
 #. module: partner_scoring
 #: model:res.groups,comment:partner_scoring.group_partner_scoring_manager
 msgid ""
 "Can configure the contact attributes, their scoring weights and the "
-"commercial profile bands."
+"commercial tiers."
 msgstr ""
-"Puede configurar los atributos de contacto, sus pesos de puntaje y las bandas"
-" del perfil comercial."
+"Puede configurar los atributos de contacto, sus pesos de puntuación y los "
+"niveles comerciales."
 
 #. module: partner_scoring
 #: model_terms:ir.ui.view,arch_db:partner_scoring.res_partner_view_form_inherit_scoring
@@ -124,13 +134,11 @@ msgstr ""
 #. module: partner_scoring
 #: model:ir.model.fields,help:partner_scoring.field_partner_score_line__max_points
 msgid ""
-"Ceiling of the dimension/attribute group this row belongs to (context for "
-"the reader). The normalization denominator comes from the catalog — see "
-"res.partner._get_score_max_possible."
+"Ceiling of the group this row belongs to: the attribute's, or the measured "
+"dimension's weight."
 msgstr ""
-"Techo del grupo de dimensión o atributo al que pertenece esta fila (contexto"
-" para quien lee). El denominador de normalización viene del catálogo — vea "
-"res.partner._get_score_max_possible."
+"Techo del grupo al que pertenece esta fila: el del atributo, o el peso de la"
+" dimensión medida."
 
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_openness_closed
@@ -138,9 +146,15 @@ msgid "Closed"
 msgstr "Cerrado"
 
 #. module: partner_scoring
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__dimension_code
+#: model:ir.model.fields,field_description:partner_scoring.field_scorecard_dimension__code
+msgid "Code"
+msgstr "Código"
+
+#. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_value__color
 msgid "Color"
-msgstr ""
+msgstr "Color"
 
 #. module: partner_scoring
 #: model_terms:ir.ui.view,arch_db:partner_scoring.res_partner_view_form_inherit_scoring
@@ -148,8 +162,10 @@ msgid "Commercial Classification"
 msgstr "Clasificación comercial"
 
 #. module: partner_scoring
+#: model:ir.model.fields,field_description:partner_scoring.field_res_bank__tier_id
+#: model:ir.model.fields,field_description:partner_scoring.field_res_company__tier_id
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner__tier_id
-#: model:ir.model.fields,field_description:partner_scoring.field_res_users__partner_profile_id
+#: model:ir.model.fields,field_description:partner_scoring.field_res_users__tier_id
 #: model_terms:ir.ui.view,arch_db:partner_scoring.partner_tier_view_form
 msgid "Commercial Tier"
 msgstr "Nivel comercial"
@@ -188,6 +204,43 @@ msgid "Contact"
 msgstr "Contacto"
 
 #. module: partner_scoring
+#: model:ir.model,name:partner_scoring.model_res_partner_attribute
+#: model:ir.model.fields.selection,name:partner_scoring.selection__scorecard_dimension__code__partner_attr
+#: model_terms:ir.ui.view,arch_db:partner_scoring.res_partner_attribute_view_form
+msgid "Contact Attribute"
+msgstr "Atributo de contacto"
+
+#. module: partner_scoring
+#: model:ir.model,name:partner_scoring.model_res_partner_attribute_line
+msgid "Contact Attribute Line"
+msgstr "Línea de atributo de contacto"
+
+#. module: partner_scoring
+#: model:ir.model,name:partner_scoring.model_res_partner_attribute_value
+msgid "Contact Attribute Value"
+msgstr "Valor de atributo de contacto"
+
+#. module: partner_scoring
+#: model:ir.actions.act_window,name:partner_scoring.res_partner_attribute_action
+#: model:ir.ui.menu,name:partner_scoring.res_partner_attribute_menu
+#: model:scorecard.dimension,name:partner_scoring.scorecard_dimension_partner_attr
+#: model_terms:ir.ui.view,arch_db:partner_scoring.res_partner_attribute_view_list
+#: model_terms:ir.ui.view,arch_db:partner_scoring.res_partner_attribute_view_search
+msgid "Contact Attributes"
+msgstr "Atributos de contacto"
+
+#. module: partner_scoring
+#: model_terms:ir.actions.act_window,help:partner_scoring.res_partner_attribute_action
+msgid ""
+"Contact attributes (EAV) define the dimensions of a contact's\n"
+"                commercial profile -- customer type, price sensitivity, social\n"
+"                networks and so on. Each attribute carries its own set of values."
+msgstr ""
+"Los atributos de contacto (EAV) definen las dimensiones del perfil comercial"
+" de un contacto: tipo de cliente, sensibilidad al precio, redes sociales y "
+"demás. Cada atributo lleva su propio conjunto de valores."
+
+#. module: partner_scoring
 #: model:res.partner.attribute,name:partner_scoring.partner_attribute_language
 msgid "Contact language"
 msgstr "Idioma de contacto"
@@ -200,7 +253,7 @@ msgstr "En contracción"
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_competitor_corteva
 msgid "Corteva"
-msgstr ""
+msgstr "Corteva"
 
 #. module: partner_scoring
 #: model_terms:ir.actions.act_window,help:partner_scoring.partner_tier_action
@@ -213,8 +266,8 @@ msgid "Create an attribute"
 msgstr "Cree un atributo"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__create_uid
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__create_uid
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__create_uid
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__create_uid
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_line__create_uid
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_value__create_uid
@@ -222,13 +275,20 @@ msgid "Created by"
 msgstr "Creado por"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__create_date
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__create_date
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__create_date
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__create_date
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_line__create_date
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_value__create_date
 msgid "Created on"
-msgstr "Creado en"
+msgstr "Creado el"
+
+#. module: partner_scoring
+#: model:ir.actions.act_window,name:partner_scoring.scorecard_partner_action
+#: model:ir.ui.menu,name:partner_scoring.scorecard_partner_menu
+#: model:scorecard,name:partner_scoring.scorecard_partner
+msgid "Customer Scorecard"
+msgstr "Scorecard de clientes"
 
 #. module: partner_scoring
 #: model:res.partner.attribute,name:partner_scoring.partner_attribute_partner_type
@@ -246,26 +306,20 @@ msgid "Digital/social"
 msgstr "Digital/redes"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__dimension
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__dimension_id
 msgid "Dimension"
 msgstr "Dimensión"
 
 #. module: partner_scoring
-#. odoo-python
-#: code:addons/partner_scoring/models/res_partner.py:0
-msgid "Discarded: only the highest value counts."
-msgstr "Descartado: solo cuenta el valor más alto."
-
-#. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_mixin_score_catalog__display_name
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__display_name
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__display_name
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__display_name
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner__display_name
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__display_name
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_line__display_name
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_value__display_name
+#: model:ir.model.fields,field_description:partner_scoring.field_scorecard_dimension__display_name
 msgid "Display Name"
-msgstr "Nombre en pantalla"
+msgstr "Nombre mostrado"
 
 #. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__display_type
@@ -306,17 +360,17 @@ msgstr "Asesor externo"
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_competitor_fmc
 msgid "FMC"
-msgstr ""
+msgstr "FMC"
 
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_social_facebook
 msgid "Facebook"
-msgstr ""
+msgstr "Facebook"
 
 #. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__factor
 msgid "Factor"
-msgstr ""
+msgstr "Factor"
 
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_acquisition_field_visit
@@ -324,21 +378,26 @@ msgid "Field visit"
 msgstr "Visita de campo"
 
 #. module: partner_scoring
+#: model:ir.model.fields,help:partner_scoring.field_res_bank__tier_id
+#: model:ir.model.fields,help:partner_scoring.field_res_company__tier_id
 #: model:ir.model.fields,help:partner_scoring.field_res_partner__tier_id
-#: model:ir.model.fields,help:partner_scoring.field_res_users__partner_profile_id
+#: model:ir.model.fields,help:partner_scoring.field_res_users__tier_id
 msgid ""
-"First active profile whose score range contains the partner's score "
-"percentage (lower sequence wins). Tracked, so the chatter carries the band "
-"history. score_pct is deliberately not tracked: it moves on every catalog "
-"edit and every attribute capture, and would bury the transitions that carry "
-"commercial meaning."
+"First active tier whose score range contains the partner's score. A partner "
+"that was never scored carries no tier: a tier means a measurement was taken."
+" A contact carries its commercial entity's tier: the score describes the "
+"customer, not the person. Tracked, so the chatter carries the band history. "
+"score is deliberately not tracked: it moves on every catalog edit and every "
+"attribute capture, and would bury the transitions that carry commercial "
+"meaning."
 msgstr ""
-"Primer perfil activo cuyo rango contiene el porcentaje de puntaje del "
-"contacto (gana la secuencia más baja). Se registra en el historial, para que"
-" el chatter lleve el histórico de bandas. score_pct deliberadamente no se "
-"registra: se mueve con cada edición del catálogo y cada captura de "
-"atributos, y enterraría las transiciones que sí tienen significado "
-"comercial."
+"Primer nivel activo cuyo rango contiene el puntaje del contacto. Un contacto"
+" nunca puntuado no lleva nivel: un nivel significa que se tomó una medición."
+" Un contacto lleva el nivel de su entidad comercial: el puntaje describe al "
+"cliente, no a la persona. Con seguimiento, para que el chatter lleve el "
+"historial de bandas. score deliberadamente no tiene seguimiento: se mueve "
+"con cada edición del catálogo y cada captura de atributo, y sepultaría las "
+"transiciones con sentido comercial."
 
 #. module: partner_scoring
 #: model:res.partner.attribute,name:partner_scoring.partner_attribute_farmer_generation
@@ -349,6 +408,11 @@ msgstr "Generación"
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_type_gobierno
 msgid "Government/Institution"
 msgstr "Gobierno/Institución"
+
+#. module: partner_scoring
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__grouping_key
+msgid "Grouping Key"
+msgstr "Clave de agrupación"
 
 #. module: partner_scoring
 #: model:res.partner.attribute,name:partner_scoring.partner_attribute_growth_outlook
@@ -367,6 +431,8 @@ msgid "Highest value"
 msgstr "Valor más alto"
 
 #. module: partner_scoring
+#: model:ir.model.fields,help:partner_scoring.field_res_bank__score_line_count
+#: model:ir.model.fields,help:partner_scoring.field_res_company__score_line_count
 #: model:ir.model.fields,help:partner_scoring.field_res_partner__score_line_count
 #: model:ir.model.fields,help:partner_scoring.field_res_users__score_line_count
 msgid ""
@@ -408,30 +474,24 @@ msgstr ""
 #. module: partner_scoring
 #: model:ir.model.fields,help:partner_scoring.field_partner_score_line__source_ref
 msgid ""
-"Human-readable source of the points, e.g. the crop, bucket or attribute "
-"value that produced them. A label, not an identity: it follows the reader's "
-"language and is rewritten in place when it changes (see source_key)."
+"Human-readable source of the points, resolved from source_key in the "
+"reader's language: the crop, bucket, band or attribute value that produced "
+"them."
 msgstr ""
-"Origen legible de los puntos, por ejemplo el cultivo, el rango o el valor de"
-" atributo que los produjo. Es una etiqueta, no una identidad: sigue el "
-"idioma de quien lee y se reescribe en su sitio cuando cambia (vea "
-"source_key)."
+"Origen legible de los puntos, resuelto desde source_key en el idioma del "
+"lector: el cultivo, el rango, la banda o el valor de atributo que los "
+"produjo."
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_mixin_score_catalog__id
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__id
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__id
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__id
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner__id
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__id
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_line__id
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_value__id
+#: model:ir.model.fields,field_description:partner_scoring.field_scorecard_dimension__id
 msgid "ID"
-msgstr "Identificación"
-
-#. module: partner_scoring
-#: model:ir.model.fields,help:partner_scoring.field_partner_tier__active
-msgid "If unchecked, the tier will not appear in default views"
-msgstr "Si se desmarca, el nivel no aparecerá en las vistas por defecto"
+msgstr "ID"
 
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_succession_transition
@@ -461,11 +521,11 @@ msgstr "Innovador"
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_social_instagram
 msgid "Instagram"
-msgstr ""
+msgstr "Instagram"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__write_uid
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__write_uid
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__write_uid
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__write_uid
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_line__write_uid
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_value__write_uid
@@ -473,8 +533,8 @@ msgid "Last Updated by"
 msgstr "Última actualización por"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__write_date
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__write_date
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__write_date
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__write_date
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_line__write_date
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_value__write_date
@@ -485,6 +545,19 @@ msgstr "Última actualización el"
 #: model_terms:ir.ui.view,arch_db:partner_scoring.res_partner_view_form_inherit_scoring
 msgid "Last calculated on"
 msgstr "Calculado por última vez el"
+
+#. module: partner_scoring
+#: model:ir.model.fields,help:partner_scoring.field_partner_tier__company_id
+msgid ""
+"Leave empty for a scale every subject is measured against. Setting it "
+"narrows the scale to that company's subjects -- and to *only* those: a "
+"subject with no company of its own resolves against company-less bands, so a"
+" scale that is scoped by accident classifies nobody."
+msgstr ""
+"Déjelo vacío para una escala contra la que se mide todo sujeto. Fijarlo "
+"restringe la escala a los sujetos de esa compañía -- y *sólo* a ellos: un "
+"sujeto sin compañía propia se resuelve contra bandas sin compañía, así que "
+"una escala acotada por accidente no clasifica a nadie."
 
 #. module: partner_scoring
 #: model:res.partner.attribute,name:partner_scoring.partner_attribute_local_influence
@@ -504,8 +577,8 @@ msgstr "Baja influencia"
 
 #. module: partner_scoring
 #: model:ir.model.fields,help:partner_scoring.field_partner_tier__min_value
-msgid "Lower bound of the normalized score percentage, inclusive."
-msgstr "Límite inferior del porcentaje de puntaje normalizado, inclusive."
+msgid "Lower bound of the normalized score, inclusive."
+msgstr "Límite inferior del puntaje normalizado, inclusive."
 
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_loyalty_loyal
@@ -529,7 +602,7 @@ msgstr "Puntaje máximo (%)"
 
 #. module: partner_scoring
 #. odoo-python
-#: code:addons/partner_scoring/models/partner_profile.py:0
+#: code:addons/partner_scoring/models/partner_tier.py:0
 msgid "Maximum score cannot exceed 100 (percentage scale)."
 msgstr "El puntaje máximo no puede exceder 100 (escala porcentual)."
 
@@ -551,7 +624,7 @@ msgstr "Puntaje mínimo (%)"
 
 #. module: partner_scoring
 #. odoo-python
-#: code:addons/partner_scoring/models/partner_profile.py:0
+#: code:addons/partner_scoring/models/partner_tier.py:0
 msgid "Minimum score cannot exceed 100 (percentage scale)."
 msgstr "El puntaje mínimo no puede exceder 100 (escala porcentual)."
 
@@ -562,6 +635,8 @@ msgstr "Moderado"
 
 #. module: partner_scoring
 #: model:ir.model.fields,help:partner_scoring.field_partner_tier__factor
+#: model:ir.model.fields,help:partner_scoring.field_res_bank__factor
+#: model:ir.model.fields,help:partner_scoring.field_res_company__factor
 #: model:ir.model.fields,help:partner_scoring.field_res_partner__factor
 #: model:ir.model.fields,help:partner_scoring.field_res_users__factor
 msgid "Multiplicative percentage factor (e.g., 1.2 for 120%)"
@@ -569,10 +644,10 @@ msgstr "Factor porcentual multiplicativo (por ejemplo, 1.2 para 120%)"
 
 #. module: partner_scoring
 #: model_terms:ir.ui.view,arch_db:partner_scoring.partner_tier_view_form
-msgid "Multiplier applied to sale.target metas for partners in this profile."
+msgid "Multiplier applied to sale.target metas for partners in this tier."
 msgstr ""
-"Multiplicador aplicado a las metas de sale.target de los contactos de este "
-"perfil."
+"Multiplicador aplicado a las metas de sale.target de los contactos en este "
+"nivel."
 
 #. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute__name
@@ -587,7 +662,7 @@ msgstr "Nombre del nivel de cliente"
 
 #. module: partner_scoring
 #. odoo-python
-#: code:addons/partner_scoring/models/partner_profile.py:0
+#: code:addons/partner_scoring/models/partner_tier.py:0
 msgid "New Tier"
 msgstr "Nivel nuevo"
 
@@ -595,12 +670,6 @@ msgstr "Nivel nuevo"
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_advisor_none
 msgid "No advisor"
 msgstr "Sin asesor"
-
-#. module: partner_scoring
-#. odoo-python
-#: code:addons/partner_scoring/models/res_partner.py:0
-msgid "No data captured."
-msgstr "Sin datos capturados."
 
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_succession_none
@@ -619,23 +688,23 @@ msgstr "Ninguno"
 
 #. module: partner_scoring
 #: model:ir.model.fields,help:partner_scoring.field_res_partner__score_max_points
-#: model:ir.model.fields,help:partner_scoring.field_res_users__score_max_possible
 msgid ""
-"Normalization denominator: the maximum points reachable across all active "
-"scoring dimensions with configured weights."
+"Normalization denominator: each applicable group of the audit rows counted "
+"once. Equal to the scorecard's ceiling when every dimension scores a missing"
+" observation as zero."
 msgstr ""
-"Denominador de normalización: los puntos máximos alcanzables en todas las "
-"dimensiones de puntaje activas con pesos configurados."
+"Denominador de normalización: cada grupo aplicable de las filas de auditoría"
+" contado una vez. Igual al techo del scorecard cuando toda dimensión puntúa "
+"cero una observación ausente."
 
 #. module: partner_scoring
 #: model:ir.model.fields,help:partner_scoring.field_res_partner__score
-#: model:ir.model.fields,help:partner_scoring.field_res_users__score_pct
 msgid ""
-"Normalized score percentage (0-100) used to classify the partner into a "
-"commercial profile."
+"Normalized score (0-100): the applied points over the ceiling of every "
+"applicable group of the audit rows."
 msgstr ""
-"Porcentaje de puntaje normalizado (0-100) usado para clasificar al contacto "
-"en un perfil comercial."
+"Puntaje normalizado (0-100): los puntos aplicados sobre el techo de cada "
+"grupo aplicable de las filas de auditoría."
 
 #. module: partner_scoring
 #: model:ir.model.fields.selection,name:partner_scoring.selection__res_partner_attribute__aggregation_mode__none
@@ -669,31 +738,6 @@ msgid "Partner"
 msgstr "Contacto"
 
 #. module: partner_scoring
-#: model:ir.model,name:partner_scoring.model_res_partner_attribute
-#: model:ir.model.fields.selection,name:partner_scoring.selection__partner_score_line__dimension__partner_attr
-#: model_terms:ir.ui.view,arch_db:partner_scoring.res_partner_attribute_view_form
-msgid "Contact Attribute"
-msgstr "Atributo de contacto"
-
-#. module: partner_scoring
-#: model:ir.model,name:partner_scoring.model_res_partner_attribute_line
-msgid "Contact Attribute Line"
-msgstr "Línea de atributo de contacto"
-
-#. module: partner_scoring
-#: model:ir.model,name:partner_scoring.model_res_partner_attribute_value
-msgid "Contact Attribute Value"
-msgstr "Valor de atributo de contacto"
-
-#. module: partner_scoring
-#: model:ir.actions.act_window,name:partner_scoring.res_partner_attribute_action
-#: model:ir.ui.menu,name:partner_scoring.res_partner_attribute_menu
-#: model_terms:ir.ui.view,arch_db:partner_scoring.res_partner_attribute_view_list
-#: model_terms:ir.ui.view,arch_db:partner_scoring.res_partner_attribute_view_search
-msgid "Contact Attributes"
-msgstr "Atributos de contacto"
-
-#. module: partner_scoring
 #: model:ir.model,name:partner_scoring.model_partner_tier
 msgid "Partner Commercial Tier"
 msgstr "Nivel comercial del contacto"
@@ -709,17 +753,6 @@ msgid "Partner Scoring"
 msgstr "Puntaje de contactos"
 
 #. module: partner_scoring
-#: model_terms:ir.actions.act_window,help:partner_scoring.res_partner_attribute_action
-msgid ""
-"Contact attributes (EAV) define the dimensions of a contact's\n"
-"                commercial profile -- customer type, price sensitivity, social\n"
-"                networks and so on. Each attribute carries its own set of values."
-msgstr ""
-"Los atributos de contacto (EAV) definen las dimensiones del perfil comercial "
-"de un contacto: tipo de cliente, sensibilidad al precio, redes sociales y "
-"demás. Cada atributo lleva su propio conjunto de valores."
-
-#. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__points
 msgid "Points"
 msgstr "Puntos"
@@ -727,7 +760,7 @@ msgstr "Puntos"
 #. module: partner_scoring
 #: model:ir.model.fields,help:partner_scoring.field_partner_score_line__points
 msgid "Points contributed by this source."
-msgstr "Puntos aportados por esta fuente."
+msgstr "Puntos que aporta esta fuente."
 
 #. module: partner_scoring
 #: model:ir.model.fields,help:partner_scoring.field_res_partner_attribute_value__score_value
@@ -754,18 +787,8 @@ msgid "Profile Attributes"
 msgstr "Atributos del perfil"
 
 #. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_res_partner__factor
-#: model:ir.model.fields,field_description:partner_scoring.field_res_users__factor
-msgid "Tier Factor"
-msgstr "Factor del nivel"
-
-#. module: partner_scoring
-#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__name
-#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_tier_view_form
-msgid "Tier Name"
-msgstr "Nombre del nivel"
-
-#. module: partner_scoring
+#: model:ir.model.fields,field_description:partner_scoring.field_res_bank__attribute_line_ids
+#: model:ir.model.fields,field_description:partner_scoring.field_res_company__attribute_line_ids
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner__attribute_line_ids
 #: model:ir.model.fields,field_description:partner_scoring.field_res_users__attribute_line_ids
 msgid "Profile attributes"
@@ -780,16 +803,6 @@ msgid ""
 msgstr ""
 "Los atributos del perfil solo se pueden establecer en la entidad comercial "
 "%(commercial)s, no en su contacto %(contact)s."
-
-#. module: partner_scoring
-#: model_terms:ir.actions.act_window,help:partner_scoring.partner_tier_action
-msgid ""
-"Profiles classify customers by their normalized score percentage\n"
-"                and apply a factor to expected revenues and commercial targets."
-msgstr ""
-"Los perfiles clasifican a los clientes por su porcentaje de puntaje "
-"normalizado y aplican un factor a los ingresos esperados y a las metas "
-"comerciales."
 
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_cprofile_programmatic
@@ -818,12 +831,13 @@ msgstr "Revendedor"
 
 #. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner__score
-#: model:ir.model.fields,field_description:partner_scoring.field_res_users__score_pct
 msgid "Score (%)"
 msgstr "Puntaje (%)"
 
 #. module: partner_scoring
 #: model:ir.actions.act_window,name:partner_scoring.action_partner_score_line_from_partner
+#: model:ir.model.fields,field_description:partner_scoring.field_res_bank__score_line_ids
+#: model:ir.model.fields,field_description:partner_scoring.field_res_company__score_line_ids
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner__score_line_ids
 #: model:ir.model.fields,field_description:partner_scoring.field_res_users__score_line_ids
 #: model_terms:ir.ui.view,arch_db:partner_scoring.partner_score_line_view_list
@@ -832,24 +846,23 @@ msgstr "Desglose del puntaje"
 
 #. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner__score_date
-#: model:ir.model.fields,field_description:partner_scoring.field_res_users__date_last_score_update
 msgid "Score Last Updated"
 msgstr "Última actualización del puntaje"
 
 #. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner__score_max_points
-#: model:ir.model.fields,field_description:partner_scoring.field_res_users__score_max_possible
-msgid "Score Max Possible"
-msgstr "Puntaje máximo posible"
+msgid "Score Max Points"
+msgstr "Puntos máximos del puntaje"
 
 #. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner__score_points
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_value__score_value
-#: model:ir.model.fields,field_description:partner_scoring.field_res_users__score_points
 msgid "Score Points"
-msgstr "Puntos de puntaje"
+msgstr "Puntos del puntaje"
 
 #. module: partner_scoring
+#: model:ir.model.fields,field_description:partner_scoring.field_res_bank__score_line_count
+#: model:ir.model.fields,field_description:partner_scoring.field_res_company__score_line_count
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner__score_line_count
 #: model:ir.model.fields,field_description:partner_scoring.field_res_users__score_line_count
 msgid "Score Rows"
@@ -861,25 +874,19 @@ msgid "Score range (%)"
 msgstr "Rango de puntaje (%)"
 
 #. module: partner_scoring
-#: model:ir.model,name:partner_scoring.model_mixin_score_catalog
-msgid "Scored Catalog Mixin"
-msgstr "Mixin de catálogo puntuado"
+#: model:ir.model.fields,field_description:partner_scoring.field_res_partner__scorecard_id
+msgid "Scorecard"
+msgstr "Scorecard"
+
+#. module: partner_scoring
+#: model:ir.model,name:partner_scoring.model_scorecard_dimension
+msgid "Scorecard Dimension"
+msgstr "Dimensión del scorecard"
 
 #. module: partner_scoring
 #: model_terms:ir.ui.view,arch_db:partner_scoring.res_partner_view_form_inherit_scoring
 msgid "Scoring"
-msgstr "Puntaje"
-
-#. module: partner_scoring
-#: model:ir.model.fields,help:partner_scoring.field_partner_score_line__dimension
-msgid "Scoring dimension this row belongs to."
-msgstr "Dimensión de puntaje a la que pertenece esta fila."
-
-#. module: partner_scoring
-#. odoo-python
-#: code:addons/partner_scoring/models/res_partner.py:0
-msgid "Scoring in the background"
-msgstr "Recalculando en segundo plano"
+msgstr "Puntuación"
 
 #. module: partner_scoring
 #: model_terms:ir.ui.view,arch_db:partner_scoring.res_partner_view_form_inherit_scoring
@@ -917,7 +924,7 @@ msgstr "Clave de origen"
 #. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__source_ref
 msgid "Source Ref"
-msgstr "Referencia de origen"
+msgstr "Origen"
 
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_language_es
@@ -936,10 +943,10 @@ msgid ""
 "'partner_attr:5:19'. This is what the refresh matches on, so a row survives "
 "a rename, a translation and a rescore from a session in another language."
 msgstr ""
-"Identidad estable del origen de la fila, como ids de registro — por ejemplo "
-"'crop:12' o 'partner_attr:5:19'. Es contra esto que empareja el refresco, de"
-" modo que una fila sobrevive a un renombrado, a una traducción y a un "
-"recálculo desde una sesión en otro idioma."
+"Identidad estable del origen de la fila, como ids de registro -- p. ej. "
+"'crop:12' o 'partner_attr:5:19'. Es lo que el refresco empareja, así que una"
+" fila sobrevive a un cambio de nombre, una traducción y un recálculo desde "
+"una sesión en otro idioma."
 
 #. module: partner_scoring
 #: model:res.partner.attribute,name:partner_scoring.partner_attribute_succession
@@ -948,10 +955,9 @@ msgstr "Sucesión"
 
 #. module: partner_scoring
 #: model:ir.model.fields,help:partner_scoring.field_res_partner__score_points
-#: model:ir.model.fields,help:partner_scoring.field_res_users__score_points
 msgid "Sum of the applied audit rows (see the score breakdown)."
 msgstr ""
-"Suma de las filas de auditoría aplicadas (vea el desglose del puntaje)."
+"Suma de las filas de auditoría aplicadas (ver el desglose del puntaje)."
 
 #. module: partner_scoring
 #: model:ir.model.fields.selection,name:partner_scoring.selection__res_partner_attribute__aggregation_mode__sum
@@ -961,7 +967,7 @@ msgstr "Suma de valores"
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_competitor_syngenta
 msgid "Syngenta"
-msgstr ""
+msgstr "Syngenta"
 
 #. module: partner_scoring
 #: model:res.partner.attribute,name:partner_scoring.partner_attribute_technical_advisor
@@ -974,10 +980,33 @@ msgid "Technology level"
 msgstr "Nivel de tecnología"
 
 #. module: partner_scoring
+#: model:ir.model.fields,help:partner_scoring.field_res_partner__scorecard_id
+msgid "The active scorecard for the subject's company, or the shared one."
+msgstr "El scorecard activo de la compañía del sujeto, o el compartido."
+
+#. module: partner_scoring
 #. odoo-python
-#: code:addons/partner_scoring/models/partner_profile.py:0
+#: code:addons/partner_scoring/models/partner_tier.py:0
 msgid "The factor must be greater than 0. Current value: %(factor)s"
 msgstr "El factor debe ser mayor que 0. Valor actual: %(factor)s"
+
+#. module: partner_scoring
+#: model:ir.model.fields,help:partner_scoring.field_partner_score_line__grouping_key
+msgid ""
+"The group whose ceiling max_points is: one attribute of a catalog dimension,"
+" or the measured dimension itself. The denominator counts each group once, "
+"however many rows it has."
+msgstr ""
+"El grupo cuyo techo es max_points: un atributo de una dimensión de catálogo,"
+" o la dimensión medida misma. El denominador cuenta cada grupo una vez, "
+"tenga las filas que tenga."
+
+#. module: partner_scoring
+#: model:ir.model.fields,help:partner_scoring.field_partner_score_line__value
+msgid "The observation a measured dimension banded; empty for a catalog row."
+msgstr ""
+"La observación que una dimensión medida ubicó en una banda; vacío en una "
+"fila de catálogo."
 
 #. module: partner_scoring
 #: model:ir.model.constraint,message:partner_scoring.constraint_res_partner_attribute_line_partner_attribute_uniq
@@ -985,14 +1014,37 @@ msgid "This attribute is already set for the partner."
 msgstr "Este atributo ya está asignado al contacto."
 
 #. module: partner_scoring
+#: model:ir.model.fields,field_description:partner_scoring.field_res_bank__factor
+#: model:ir.model.fields,field_description:partner_scoring.field_res_company__factor
+#: model:ir.model.fields,field_description:partner_scoring.field_res_partner__factor
+#: model:ir.model.fields,field_description:partner_scoring.field_res_users__factor
+msgid "Tier Factor"
+msgstr "Factor del nivel"
+
+#. module: partner_scoring
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_tier__name
+#: model_terms:ir.ui.view,arch_db:partner_scoring.partner_tier_view_form
+msgid "Tier Name"
+msgstr "Nombre del nivel"
+
+#. module: partner_scoring
+#: model_terms:ir.actions.act_window,help:partner_scoring.partner_tier_action
+msgid ""
+"Tiers classify customers by their normalized score percentage\n"
+"                and apply a factor to expected revenues and commercial targets."
+msgstr ""
+"Los niveles clasifican a los clientes por su porcentaje de puntaje normalizado\n"
+"                y aplican un factor a los ingresos esperados y las metas comerciales."
+
+#. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_social_tiktok
 msgid "TikTok"
-msgstr ""
+msgstr "TikTok"
 
 #. module: partner_scoring
 #: model_terms:ir.ui.view,arch_db:partner_scoring.partner_score_line_view_list
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_cprofile_traditional
@@ -1002,35 +1054,48 @@ msgstr "Tradicional"
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_competitor_upl
 msgid "UPL"
+msgstr "UPL"
+
+#. module: partner_scoring
+#: model:ir.model.fields,help:partner_scoring.field_partner_score_line__applicable
+msgid ""
+"Unchecked when a dimension that skips missing observations had nothing to "
+"measure: the row explains the absence and its group leaves the denominator."
 msgstr ""
+"Desmarcado cuando una dimensión que omite observaciones ausentes no tuvo "
+"nada que medir: la fila explica la ausencia y su grupo sale del denominador."
 
 #. module: partner_scoring
 #: model:ir.model.fields,help:partner_scoring.field_partner_score_line__applied
 msgid ""
 "Unchecked when the aggregation mode discarded this contribution (e.g. not "
-"the highest value under 'max')."
+"the highest value under 'max'). A discarded row is still part of its group's"
+" ceiling."
 msgstr ""
-"Se desmarca cuando el modo de agregación descartó esta contribución (por "
-"ejemplo, no es el valor más alto bajo 'máximo')."
+"Desmarcado cuando el modo de agregación descartó esta contribución (p. ej. "
+"no es el valor más alto bajo 'max'). Una fila descartada sigue formando "
+"parte del techo de su grupo."
 
 #. module: partner_scoring
 #: model:ir.model.fields,help:partner_scoring.field_partner_tier__max_value
 msgid ""
-"Upper bound of the normalized score percentage, exclusive -- it is the lower"
-" bound of the next profile. 0 means no upper limit, which the top profile "
-"should use so a perfect score still classifies."
+"Upper bound of the normalized score, exclusive -- it is the lower bound of "
+"the next tier. 0 means no upper limit, which the top tier should use so a "
+"perfect score still classifies."
 msgstr ""
-"Límite superior del porcentaje de puntaje normalizado, exclusivo: es el "
-"límite inferior del perfil siguiente. 0 significa sin límite superior, que "
-"es lo que debe usar el perfil más alto para que un puntaje perfecto siga "
-"clasificando."
+"Límite superior del puntaje normalizado, exclusivo -- es el límite inferior "
+"del siguiente nivel. 0 significa sin límite superior, que el nivel más alto "
+"debe usar para que un puntaje perfecto también clasifique."
 
 #. module: partner_scoring
 #: model:ir.model.fields,help:partner_scoring.field_partner_tier__sequence
-msgid "Used to order tiers. Lower values have higher precedence."
-msgstr "Se usa para ordenar los niveles. Un valor menor tiene precedencia."
-"Se usa para ordenar los perfiles. Los valores más bajos tienen mayor "
-"precedencia."
+msgid "Used to order the bands. Lower values have higher precedence."
+msgstr "Se usa para ordenar las bandas. Un valor menor tiene precedencia."
+
+#. module: partner_scoring
+#: model:ir.model.fields,field_description:partner_scoring.field_partner_score_line__value
+msgid "Value"
+msgstr "Valor"
 
 #. module: partner_scoring
 #: model:ir.model.fields,field_description:partner_scoring.field_res_partner_attribute_line__value_count
@@ -1061,23 +1126,31 @@ msgid "View breakdown"
 msgstr "Ver desglose"
 
 #. module: partner_scoring
+#: model:ir.model.fields,help:partner_scoring.field_partner_score_line__dimension_code
+#: model:ir.model.fields,help:partner_scoring.field_scorecard_dimension__code
+msgid ""
+"What the subject is scored on; the host answers it with "
+"_score_observe_<code>. A module adds a code with selection_add."
+msgstr ""
+"Sobre qué se puntúa al sujeto; el modelo anfitrión lo responde con "
+"_score_observe_<code>. Un módulo añade un código con selection_add."
+
+#. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_social_whatsapp
 msgid "WhatsApp"
-msgstr ""
+msgstr "WhatsApp"
 
 #. module: partner_scoring
 #: model:ir.model.fields,help:partner_scoring.field_res_partner__score_date
-#: model:ir.model.fields,help:partner_scoring.field_res_users__date_last_score_update
 msgid ""
-"When the score audit rows were last regenerated. A catalog weight change "
-"queues an async recompute (see _delay_profile_scores_recompute) — this "
-"timestamp is how to tell the score is current versus still pending that "
-"background job."
+"When the audit rows were last regenerated. A catalog or scorecard change "
+"queues an async refresh -- this timestamp is how to tell the score is "
+"current versus still pending that background job."
 msgstr ""
-"Cuándo se regeneraron por última vez las filas de auditoría del puntaje. Un "
-"cambio de peso en el catálogo encola un recálculo asíncrono (vea "
-"_delay_profile_scores_recompute): esta marca de tiempo es la forma de saber "
-"si el puntaje está al día o sigue pendiente de ese trabajo en segundo plano."
+"Cuándo se regeneraron por última vez las filas de auditoría. Un cambio de "
+"catálogo o de scorecard encola un refresco asíncrono -- esta marca de tiempo"
+" es cómo saber si el puntaje está al día o aún espera ese trabajo en segundo"
+" plano."
 
 #. module: partner_scoring
 #: model:ir.model.fields,help:partner_scoring.field_res_partner_attribute__display_type
@@ -1087,7 +1160,7 @@ msgstr "Widget usado para elegir los valores de este atributo."
 #. module: partner_scoring
 #: model:res.partner.attribute.value,name:partner_scoring.partner_attribute_value_social_youtube
 msgid "YouTube"
-msgstr ""
+msgstr "YouTube"
 
 #. module: partner_scoring
 #: model_terms:ir.ui.view,arch_db:partner_scoring.res_partner_attribute_view_form

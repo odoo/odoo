@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_groups_privilege_scoring" model="res.groups.privilege">
+        <field name="name">Scoring</field>
+        <field name="category_id" ref="base.module_category_hidden" />
+        <field
+            name="description">Configuration of the scorecards: dimensions, weights and bands</field>
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="group_scoring_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="sequence" eval="20" />
+        <field name="privilege_id" ref="res_groups_privilege_scoring" />
+        <field
+            name="comment">Can configure the scorecards every scored model is measured against.</field>
+        <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]" />
+    </record>
+
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[Command.link(ref('group_scoring_manager'))]" />
+    </record>
+
+</odoo>

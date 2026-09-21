@@ -10,7 +10,7 @@
             name="group_ids"
             eval="[Command.link(ref('partner_scoring.group_partner_scoring_manager'))]" />
         <field name="state">code</field>
-        <field name="code">action = records.action_partner_score_recompute()</field>
+        <field name="code">action = records.action_score_refresh()</field>
     </record>
 
 </odoo>

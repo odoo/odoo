@@ -15,7 +15,9 @@
         <field name="privilege_id" ref="res_groups_privilege_partner_scoring" />
         <field
             name="comment">Can configure the contact attributes, their scoring weights and the commercial tiers.</field>
-        <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]" />
+        <field
+            name="implied_ids"
+            eval="[Command.link(ref('base.group_user')), Command.link(ref('scoring.group_scoring_manager'))]" />
     </record>
 
     <record id="base.group_system" model="res.groups">

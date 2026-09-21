@@ -47,7 +47,7 @@ class TestSecurityRules(TransactionCase):
                 "value_ids": [Command.set(cls.value.ids)],
             }
         )
-        cls.hidden._update_scores()
+        cls.hidden._score_refresh()
 
     def test_the_partner_itself_is_hidden(self):
         """The premise: without this the rules below prove nothing."""

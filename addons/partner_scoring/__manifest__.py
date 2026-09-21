@@ -1,6 +1,6 @@
 {
     "name": "Partner Scoring",
-    "version": "19.0.1.6.0",
+    "version": "19.0.1.7.0",
     "category": "Sales/CRM",
     "summary": "Weighted attribute scoring for customers, with commercial tiers",
     "description": """
@@ -22,10 +22,14 @@ operator's first configuration task.
 Every point is explained: ``partner.score.line`` holds one audit row per source,
 including the ones that scored zero and the ones an aggregation mode discarded.
 
-The scoring pipeline is extensible. A module adds a dimension by extending
-``res.partner._get_score_dimensions()`` and supplying ``_score_ceiling_<name>``
-and ``_score_rows_<name>``; see ``agro_partner_scoring``, which scores partners
-on their crops, cultivated area and surface attributes.
+The engine is ``scoring``: ``res.partner`` is a ``mixin.scored`` host, the
+``partner_scoring.scorecard_partner`` scorecard carries one catalog dimension,
+``partner_attr``, and ``partner.tier`` is the ``mixin.score.scale`` that
+classifies the score. A module adds a dimension as a record on that scorecard
+plus the host hooks its code names (``_score_observe_<code>``, and
+``_score_rows_<code>`` when the rows need a shape of their own); see
+``agro_partner_scoring``, which scores partners on their crops, cultivated area
+and surface attributes.
 
 This is deliberately not a ``crm_*`` module: it never touches ``crm.lead``. It
 scores the customer, not the opportunity, and is unrelated to Odoo's predictive
@@ -37,19 +41,21 @@ lead scoring (``crm.lead.scoring.frequency``).
     "depends": [
         "mixin_attribute",
         "partner",
+        "scoring",
     ],
     "data": [
         "security/res_groups_security.xml",
         "security/ir.model.access.csv",
         "security/ir_rule_security.xml",
         "data/ir_actions_server_data.xml",
-        "data/ir_job_channel_data.xml",
+        "data/scorecard_data.xml",
         "data/res_partner_attribute_data.xml",
         "data/res_partner_attribute_value_data.xml",
         "views/res_partner_attribute_views.xml",
         "views/partner_tier_views.xml",
         "views/partner_score_line_views.xml",
         "views/res_partner_views.xml",
+        "views/scorecard_views.xml",
         "views/partner_scoring_menus.xml",
     ],
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="scorecard_partner_action" model="ir.actions.act_window">
+        <field name="name">Customer Scorecard</field>
+        <field name="res_model">scorecard</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('res_model', '=', 'res.partner')]</field>
+        <field
+            name="context">{'default_res_model': 'res.partner', 'search_default_active': 1}</field>
+    </record>
+
+</odoo>

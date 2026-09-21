@@ -51,6 +51,19 @@ class MixinScoreCatalog(models.AbstractModel):
         )
 
     @api.model
+    def _score_catalog_models(self):
+        """The catalog models a change to this one moves the ceiling of.
+
+        A value belongs to its attribute's catalog: a dimension names the
+        attribute model, and a weight edited on a value is that ceiling moving.
+        """
+        names = [self._name]
+        attribute = self._fields.get("attribute_id")
+        if attribute is not None and attribute.comodel_name:
+            names.append(attribute.comodel_name)
+        return names
+
+    @api.model
     def _score_ceilings(self, domain):
         ceilings = []
         for attribute in self.search(domain):
@@ -75,7 +88,7 @@ class MixinScoreCatalog(models.AbstractModel):
 
     @api.model
     def _score_labels(self, keys):
-        """Resolve 'dim:<attribute>:<value|none>' keys into reader-language labels.
+        """Resolve '<code>:<attribute>:<value|none>' keys into reader-language labels.
 
         Archived records still label their rows: a row outlives the archive
         until the next refresh drops it, and a key is a worse label than the
@@ -83,7 +96,7 @@ class MixinScoreCatalog(models.AbstractModel):
         """
         parsed = {}
         for key in keys:
-            _dimension, attribute_id, value_id = key.split(":")
+            _code, attribute_id, value_id = key.split(":")
             parsed[key] = (
                 int(attribute_id),
                 None if value_id == "none" else int(value_id),
@@ -116,7 +129,7 @@ class MixinScoreCatalog(models.AbstractModel):
         return labels
 
     def _notify_score_catalog_changed(self):
-        self.env["res.partner"]._notify_score_ceiling_changed()
+        self.env["scorecard"]._notify_catalog_changed(self._score_catalog_models())
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -132,7 +145,7 @@ class MixinScoreCatalog(models.AbstractModel):
         if moved:
             self._notify_score_catalog_changed()
         if "name" in vals:
-            self.env["partner.score.line"].invalidate_model(["source_ref"])
+            self.env["scorecard"]._invalidate_line_labels()
         return result
 
     def unlink(self):

@@ -11,6 +11,11 @@ class MixinBand(models.AbstractModel):
     _name = "mixin.band"
     _description = "Numeric Band Mixin"
 
+    # A scale of scores starts at zero; a band over a measured value (days
+    # beyond terms, a Z-score) may start below it, and says so rather than
+    # have the engine clamp the observation.
+    _band_allow_negative = False
+
     min_value = fields.Float(
         default=0.0,
         help="Lower bound of the band, inclusive.",
@@ -60,7 +65,7 @@ class MixinBand(models.AbstractModel):
                         )
                     )
                 continue
-            if record.min_value < 0:
+            if record.min_value < 0 and not self._band_allow_negative:
                 _debug.logic(
                     "band_rejected",
                     model=self._name,

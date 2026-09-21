@@ -85,12 +85,21 @@ class TestPartnerScoringEngine(TransactionCase):
         )
 
     def test_the_engine_carries_its_own_dimension(self):
-        self.assertIn("partner_attr", self.Partner._get_score_dimensions())
-        ceiling = self.Partner._score_ceiling_partner_attr()
+        self.assertIn(
+            "partner_attr",
+            self.env["scorecard"]
+            ._for("res.partner", self.env.company)
+            .dimension_ids.mapped("code"),
+        )
+        ceiling = self.Partner._score_ceiling(
+            self.env.ref("partner_scoring.scorecard_dimension_partner_attr")
+        )
         self.assertEqual(ceiling["model"], "res.partner.attribute")
 
     def test_ceiling_is_the_sum_of_each_attributes_reachable_best(self):
-        ceiling = self.Partner._score_ceiling_partner_attr()
+        ceiling = self.Partner._score_ceiling(
+            self.env.ref("partner_scoring.scorecard_dimension_partner_attr")
+        )
         by_attribute = dict(ceiling["attributes"])
         self.assertEqual(by_attribute[self.multi.id], 20.0)
         self.assertEqual(by_attribute[self.single.id], 10.0)
@@ -137,17 +146,19 @@ class TestPartnerScoringEngine(TransactionCase):
         self.assertEqual(self.partner.score_points, 8.0)
 
         self.multi_a.score_value = 16.0
-        self.partner._update_scores()
+        self.partner._score_refresh()
         self.assertEqual(self.partner.score_points, 16.0)
         self.assertEqual(
-            self.Partner._score_ceiling_partner_attr()["total"],
+            self.Partner._score_ceiling(
+                self.env.ref("partner_scoring.scorecard_dimension_partner_attr")
+            )["total"],
             self.own_ceiling + 8.0,
         )
 
     def test_the_audit_rows_reconcile_rather_than_churn(self):
         self._set(self.multi, self.multi_a)
         before = {row.id: row.source_key for row in self.partner.score_line_ids}
-        self.partner._update_scores()
+        self.partner._score_refresh()
         after = {row.id: row.source_key for row in self.partner.score_line_ids}
         self.assertEqual(before, after)
 
@@ -221,16 +232,15 @@ class TestPartnerScoringEngine(TransactionCase):
         """A denominator behind the catalog must cap, not overshoot the scale."""
         self._set(self.multi, self.multi_a | self.multi_b)
         self.assertGreater(self.partner.score_points, 1.0)
-        with patch.object(
-            type(self.Partner), "_get_score_max_points", return_value=1.0
-        ):
-            self.partner._compute_score()
+        # A weight raised in the catalog reaches the rows only when the queued
+        # refresh lands; until then the stored rows carry yesterday's ceiling.
+        self.partner.score_line_ids.sudo().write({"max_points": 1.0})
         self.assertEqual(self.partner.score, 100.0)
 
     def test_a_single_partner_is_recomputed_inline(self):
         partner_class = type(self.Partner)
-        with patch.object(partner_class, "_delay_scores_recompute") as queued:
-            result = self.partner.action_partner_score_recompute()
+        with patch.object(partner_class, "_delay_score_refresh") as queued:
+            result = self.partner.action_score_refresh()
         self.assertFalse(queued.called)
         self.assertFalse(result)
 
@@ -239,10 +249,10 @@ class TestPartnerScoringEngine(TransactionCase):
         selection = self.partner | other
         partner_class = type(self.Partner)
         with (
-            patch.object(partner_class, "_update_scores") as inline,
-            patch.object(partner_class, "_delay_scores_recompute") as queued,
+            patch.object(partner_class, "_score_refresh") as inline,
+            patch.object(partner_class, "_delay_score_refresh") as queued,
         ):
-            result = selection.action_partner_score_recompute()
+            result = selection.action_score_refresh()
         self.assertTrue(queued.called)
         self.assertFalse(inline.called)
         self.assertEqual(result["tag"], "display_notification")
