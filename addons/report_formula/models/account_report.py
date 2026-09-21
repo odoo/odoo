@@ -373,9 +373,6 @@ class AccountReport(models.Model):
             )
         )
 
-    def _caret_options_initializer_default(self):
-        return {}
-
     def _apply_branch_rules_to_buttons(self, options):
         return
 

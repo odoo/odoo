@@ -30,6 +30,7 @@ depends on this module and adds the ledger to each model -- the ``tax_tags`` and
     "license": "LGPL-3",
     "depends": [
         "base",
+        "web",
     ],
     "data": [
         "security/ir.model.access.csv",

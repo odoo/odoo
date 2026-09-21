@@ -6,7 +6,7 @@ from functools import cmp_to_key
 
 import markupsafe
 
-from odoo import _, api, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_compare, float_is_zero, float_round
@@ -2322,3 +2322,85 @@ class AccountReportLines(models.Model):
                 html2plaintext(last_annotation).split("\n")
             )
         return annotations_by_line
+
+    @_debug.perf.timed
+    def get_report_information(self, options):
+        """Return the dictionary of information consumed by the AccountReport component."""
+        self.check_singleton()
+        self.env.flush_all()
+
+        warnings = {}
+        self._init_currency_table(options)
+        with _debug.perf(
+            "expression_totals",
+            cr=self.env.cr,
+            report=self,
+            expression_ids_count=len(self.line_ids.expression_ids),
+        ):
+            all_column_groups_expression_totals = (
+                self._compute_expression_totals_for_each_column_group(
+                    self.line_ids.expression_ids, options, warnings=warnings
+                )
+            )
+
+        # Convert all_column_groups_expression_totals to a json-friendly form (its keys are records)
+        json_friendly_column_group_totals = self._get_json_friendly_column_group_totals(
+            all_column_groups_expression_totals
+        )
+
+        with _debug.perf("_get_lines", cr=self.env.cr, report=self):
+            lines = self._get_lines(
+                options,
+                all_column_groups_expression_totals=all_column_groups_expression_totals,
+                warnings=warnings,
+            )
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "get_report_information",
+                report=self,
+                lines_count=len(lines),
+                warnings=sorted(warnings),
+            )
+        return {
+            "caret_options": self._get_caret_options(),
+            "column_headers_render_data": self._prepare_column_headers_render_data(
+                options
+            ),
+            "column_groups_totals": json_friendly_column_group_totals,
+            "context": self.env.context,
+            "annotations": self.get_annotations(options, lines),
+            "lines": lines,
+            "warnings": warnings,
+            "report": {
+                "company_name": self.env.company.name,
+                "company_country_code": self.env.company.country_code,
+                "company_currency_symbol": self.env.company.currency_id.symbol,
+                "name": self.name,
+                "root_report_id": self.root_report_id,
+            },
+        }
+
+    @api.readonly
+    def get_report_information_readonly(self, options):
+        """Readonly version of get_report_information, to be called from RPC when options['readonly_query'] is True,
+        to better spread the load on servers when possible.
+        """
+        return self.get_report_information(options)
+
+    def _format_lines_for_display(self, lines, options):
+        """Apply report-specific formatting to the lines before printing.
+
+        Overridden by reports needing it, such as the generic tax report for its carryover.
+
+        :param lines: A list with the lines for this report.
+        :param options: The options for this report.
+        :return: The formatted list of lines
+        """
+        return lines
+
+    def format_date(self, options, dt_filter="date"):
+        date_from = fields.Date.from_string(options[dt_filter]["date_from"])
+        date_to = fields.Date.from_string(options[dt_filter]["date_to"])
+        return self._get_dates_period(date_from, date_to, options["date"]["mode"])[
+            "string"
+        ]

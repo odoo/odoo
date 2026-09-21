@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 from odoo import Command, fields
 from odoo.tests import tagged
-from odoo.tools import SQL, frozendict
+from odoo.tools import frozendict
 
 from .common_report_engine import TestAccountReportsCommon
 
@@ -537,29 +537,15 @@ class TestReportEngines(TestAccountReportsCommon):
                     ),
                     groupby="partner_id",
                 )
-            ]
+            ],
+            source_model="account.analytic.line",
+            source_date_field="date",
+            source_measure_field="amount",
         )
-        AccountReport = self.registry["account.report"]
-        AnalyticLine = self.env["account.analytic.line"]
-        with (
-            patch.object(
-                AccountReport, "_get_source_model", lambda report: AnalyticLine
-            ),
-            patch.object(
-                AccountReport, "_get_source_measure_field", lambda report: "amount"
-            ),
-            patch.object(AccountReport, "_get_source_domains", lambda *args: []),
-            patch.object(
-                AccountReport, "_currency_table_apply_rate", lambda report, value: value
-            ),
-            patch.object(
-                AccountReport, "_currency_table_aml_join", lambda *args, **kwargs: SQL()
-            ),
-        ):
-            options = self._generate_options(
-                report, "2020-01-01", "2020-01-01", default_options={"unfold_all": True}
-            )
-            report_lines = report._get_lines(options)
+        options = self._generate_options(
+            report, "2020-01-01", "2020-01-01", default_options={"unfold_all": True}
+        )
+        report_lines = report._get_lines(options)
 
         self.assertLinesValues(
             report_lines,

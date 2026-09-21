@@ -2,7 +2,6 @@ import bisect
 import datetime
 import itertools
 import re
-from ast import literal_eval
 from collections import defaultdict
 from collections.abc import Collection
 
@@ -1206,6 +1205,8 @@ class AccountReport(models.Model):
         }
 
     def _get_source_domains(self, options, date_scope):
+        if not self._reads_ledger():
+            return super()._get_source_domains(options, date_scope)
         domains = [
             Domain("display_type", "not in", NON_ACCOUNTABLE_DISPLAY_TYPES),
             self._get_domain_options_journals(options)
@@ -1956,7 +1957,7 @@ class AccountReport(models.Model):
         return rslt
 
     @_debug.perf.timed
-    def _get_domain_expression_audit_aml(self, expression_to_audit, options):
+    def _get_domain_expression_audit(self, expression_to_audit, options):
         _debug.logic(
             "audit_domain_engine",
             report=self,
@@ -2022,13 +2023,12 @@ class AccountReport(models.Model):
             )
             return [("tax_tag_ids", "in", tags.ids)]
 
-        if expression_to_audit.engine == "domain":
-            return literal_eval(expression_to_audit.formula)
-
-        return None
+        return super()._get_domain_expression_audit(expression_to_audit, options)
 
     @api.model
     def _currency_table_apply_rate(self, value: SQL) -> SQL:
+        if not self._reads_ledger():
+            return super()._currency_table_apply_rate(value)
         return SQL(
             "(%(value)s) * COALESCE(account_currency_table.rate, 1)", value=value
         )
@@ -2040,6 +2040,8 @@ class AccountReport(models.Model):
         options,
         aml_alias=SQL("account_move_line"),  # noqa: B008  SQL is immutable, one shared default is safe
     ) -> SQL:
+        if not self._reads_ledger():
+            return super()._currency_table_aml_join(options, aml_alias)
         _debug.logic(
             "currency_table_join",
             table_type=options.get("currency_table", {}).get("type"),
@@ -2282,12 +2284,18 @@ class AccountReport(models.Model):
         )
         return annotations_by_line
 
+    def _reads_ledger(self):
+        return self[:1].source_model in {False, "account.move.line"}
+
     def _get_source_model(self):
         source_model = super()._get_source_model()
         return self.env["account.move.line"] if source_model is None else source_model
 
     def _get_source_measure_field(self):
-        return super()._get_source_measure_field() or "balance"
+        measure_field = super()._get_source_measure_field()
+        if measure_field or not self._reads_ledger():
+            return measure_field
+        return "balance"
 
     def _get_year_bounds(self, date):
         return self.env.company.compute_fiscalyear_dates(date)
@@ -2300,6 +2308,8 @@ class AccountReport(models.Model):
         """Creates the currency table temporary table if necessary, using the provided options to compute its periods.
         This function should always be called before any query invovlving the currency table is run.
         """
+        if not self._reads_ledger():
+            return
         if options["currency_table"]["type"] != "monocurrency":
             companies = self.env["res.company"].browse(
                 self.get_report_company_ids(options)
@@ -2808,70 +2818,6 @@ class AccountReport(models.Model):
         self.env["account.report.external.value"].create(external_values_create_vals)
 
     @_debug.perf.timed
-    def get_report_information(self, options):
-        """Return the dictionary of information consumed by the AccountReport component."""
-        self.check_singleton()
-        self.env.flush_all()
-
-        warnings = {}
-        self._init_currency_table(options)
-        with _debug.perf(
-            "expression_totals",
-            cr=self.env.cr,
-            report=self,
-            expression_ids_count=len(self.line_ids.expression_ids),
-        ):
-            all_column_groups_expression_totals = (
-                self._compute_expression_totals_for_each_column_group(
-                    self.line_ids.expression_ids, options, warnings=warnings
-                )
-            )
-
-        # Convert all_column_groups_expression_totals to a json-friendly form (its keys are records)
-        json_friendly_column_group_totals = self._get_json_friendly_column_group_totals(
-            all_column_groups_expression_totals
-        )
-
-        with _debug.perf("_get_lines", cr=self.env.cr, report=self):
-            lines = self._get_lines(
-                options,
-                all_column_groups_expression_totals=all_column_groups_expression_totals,
-                warnings=warnings,
-            )
-        if _debug.pipeline.enabled:
-            _debug.pipeline(
-                "get_report_information",
-                report=self,
-                lines_count=len(lines),
-                warnings=sorted(warnings),
-            )
-        return {
-            "caret_options": self._get_caret_options(),
-            "column_headers_render_data": self._prepare_column_headers_render_data(
-                options
-            ),
-            "column_groups_totals": json_friendly_column_group_totals,
-            "context": self.env.context,
-            "annotations": self.get_annotations(options, lines),
-            "lines": lines,
-            "warnings": warnings,
-            "report": {
-                "company_name": self.env.company.name,
-                "company_country_code": self.env.company.country_code,
-                "company_currency_symbol": self.env.company.currency_id.symbol,
-                "name": self.name,
-                "root_report_id": self.root_report_id,
-            },
-        }
-
-    @api.readonly
-    def get_report_information_readonly(self, options):
-        """Readonly version of get_report_information, to be called from RPC when options['readonly_query'] is True,
-        to better spread the load on servers when possible.
-        """
-        return self.get_report_information(options)
-
-    @_debug.perf.timed
     def _is_available_for(self, options):
         """Called on report variants to know whether they are available for the provided options or not, computed for their root report,
         computing their availability_condition field.
@@ -2928,24 +2874,6 @@ class AccountReport(models.Model):
             by_coa=reports_by_coa,
         )
         return reports
-
-    def _format_lines_for_display(self, lines, options):
-        """Apply report-specific formatting to the lines before printing.
-
-        Overridden by reports needing it, such as the generic tax report for its carryover.
-
-        :param lines: A list with the lines for this report.
-        :param options: The options for this report.
-        :return: The formatted list of lines
-        """
-        return lines
-
-    def format_date(self, options, dt_filter="date"):
-        date_from = fields.Date.from_string(options[dt_filter]["date_from"])
-        date_to = fields.Date.from_string(options[dt_filter]["date_to"])
-        return self._get_dates_period(date_from, date_to, options["date"]["mode"])[
-            "string"
-        ]
 
     def _get_domain_unallocated_earnings_lines(self, fiscalyear_start, company_id=None):
         domain = [
