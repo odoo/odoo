@@ -108,7 +108,7 @@ because a nameless partner fails a model constraint and loses the submission.
 ### Building it
 
 ```
-SPA/
+job_matcher/
   build.py          the compiler; standard library only
   build.json        build and deploy settings, never shipped into the app
   data/*.json       content and app config, inlined as JM.data[<filename>]
