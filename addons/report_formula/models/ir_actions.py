@@ -9,7 +9,7 @@ class Ir_Actions_Account_Report_Download(models.AbstractModel):
     # outside of the base module, the risk being completely destroying the client's db.
     _name = "ir_actions_account_report_download"
 
-    _description = "Technical model for accounting report downloads"
+    _description = "Technical model for report downloads"
 
     def _get_fields_readable(self):
         # data is not a stored field, but is used to give the parameters to generate the report

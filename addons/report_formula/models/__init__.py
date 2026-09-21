@@ -9,3 +9,4 @@ from . import account_report_expression_eval
 from . import account_report_lines
 from . import account_report_actions
 from . import account_report_export
+from . import ir_actions

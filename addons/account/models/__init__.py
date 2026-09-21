@@ -117,7 +117,6 @@ from . import account_aged_partner_balance
 from . import account_partner_ledger
 from . import res_config_settings_reports
 from . import account_journal_dashboard_reports
-from . import ir_actions
 from . import ir_ui_menu_reports
 from . import account_sales_report
 from . import account_move_reports

@@ -245,3 +245,31 @@ test("can execute account report download actions", async function () {
 
     expect.verifySteps(["/account_reports"]);
 });
+
+test("a download that fails with a report error opens the error wizard", async () => {
+    patchWithCleanup(download, {
+        _download: () => {
+            const error = new Error("report error");
+            error.exceptionName = "AccountReportFileDownloadException";
+            error.data = { arguments: [{ some_error: {} }, { file_name: "f.xml" }] };
+            return Promise.reject(error);
+        },
+    });
+    onRpc(
+        "account.report",
+        "open_account_report_file_download_error_wizard",
+        ({ args }) => {
+            expect.step("open wizard");
+            expect(args).toEqual([14, { some_error: {} }, { file_name: "f.xml" }]);
+            return { type: "ir.actions.act_window_close" };
+        },
+    );
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        data: { options: JSON.stringify({ report_id: 14 }) },
+        type: "ir_actions_account_report_download",
+    });
+
+    expect.verifySteps(["open wizard"]);
+});
