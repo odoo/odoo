@@ -556,7 +556,7 @@ class HrEmployee(models.Model):
             field_expr = 'current_version_id'
         return super()._field_to_sql(alias, field_expr, query)
 
-    def _get_version(self, date=fields.Date.today()):
+    def _get_version(self, date=fields.Date.today(), with_contract=False):
         """
         Return the version that should be used for the given date.
         If no valid version is found, we return the very first version of the employee.
@@ -565,7 +565,9 @@ class HrEmployee(models.Model):
         versions = self.version_ids.filtered(lambda v: v.active) or self.with_context(active_test=False).version_ids
         if not versions:
             return self.env['hr.version']
-        filtered_versions = versions.filtered_domain([('date_version', '<=', date)])
+        filtered_versions = versions.sudo().filtered_domain(
+            [('date_version', '<=', date), ('contract_date_start', '<=', date)] if with_contract else [('date_version', '<=', date)]
+        )
         return max(filtered_versions, key=lambda v: v.date_version) if filtered_versions else versions[0]
 
     def create_version(self, values):
