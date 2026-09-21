@@ -102,14 +102,6 @@
             eval="[Command.clear(), Command.create({'user_id': ref('user_approval_manager'), 'sequence': 10, 'required': True})]" />
     </record>
 
-    <record id="partner_acme_corp" model="res.partner">
-        <field name="name">Acme Corporation</field>
-        <field name="email">contact@acmecorp.com</field>
-        <field
-            name="phone_ids"
-            eval="[Command.create({'number': '+1-555-0123', 'type': 'landline'})]" />
-    </record>
-
     <record id="partner_tech_solutions" model="res.partner">
         <field name="name">Tech Solutions Inc.</field>
         <field name="email">info@techsolutions.com</field>
@@ -245,7 +237,7 @@
         <field name="name">CON-00001</field>
         <field name="category_id" ref="approval_category_data_contract_approval" />
         <field name="request_owner_id" ref="user_employee" />
-        <field name="partner_id" ref="partner_acme_corp" />
+        <field name="partner_id" ref="base.res_partner_2" />
         <field name="reference">CONTRACT-2025-ACME-001</field>
         <field name="amount">250000.00</field>
         <field
@@ -272,7 +264,7 @@
         <field
             name="date"
             eval="(datetime.now() + timedelta(days=5)).strftime('%Y-%m-%d')" />
-        <field name="partner_id" ref="partner_acme_corp" />
+        <field name="partner_id" ref="base.res_partner_2" />
         <field name="amount">12500.00</field>
         <field name="reference">INV-2025-0123</field>
         <field
