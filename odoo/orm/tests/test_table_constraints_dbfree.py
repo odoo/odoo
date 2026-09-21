@@ -1,5 +1,5 @@
 import pytest
-from psycopg.errors import NotNullViolation, UniqueViolation
+from psycopg.errors import CheckViolation, NotNullViolation, UniqueViolation
 
 from odoo import fields, models
 from odoo.orm.model_test_env import model_test_env
@@ -69,3 +69,53 @@ def test_nulls_are_distinct_under_a_unique_constraint(env):
     booked = Slot_.create({"name": "b", "room": "c", "hour": 9})
     booked.note = "a write on another column keeps its own row out of the check"
     env.flush_all()
+
+
+class Reading(models.Model):
+    _name = "tc.reading"
+    _module = _MOD
+    _description = "a reading whose colour and rating a CHECK bounds"
+    _log_access = False
+
+    name = fields.Char()
+    color = fields.Integer()
+    rating = fields.Integer()
+    _color_positive = models.Constraint("CHECK(color >= 0)", "a colour is not negative")
+    _rating_bounded = models.Constraint(
+        "check(rating >= 0 and rating <= 5)", "a rating is 0 to 5"
+    )
+
+
+@pytest.fixture
+def reading_env():
+    with model_test_env(Reading, check_cache=False) as env:
+        yield env
+
+
+def test_a_row_a_check_constraint_refuses_is_refused_on_create(reading_env):
+    with pytest.raises(CheckViolation, match="tc_reading_color_positive"):
+        reading_env["tc.reading"].create({"name": "a", "color": -1})
+    with pytest.raises(CheckViolation, match="tc_reading_rating_bounded"):
+        reading_env["tc.reading"].create({"name": "b", "rating": 6})
+
+
+def test_a_row_a_check_constraint_refuses_is_refused_on_write(reading_env):
+    reading = reading_env["tc.reading"].create({"name": "a", "color": 1, "rating": 3})
+    with pytest.raises(CheckViolation, match="tc_reading_color_positive"):
+        reading.color = -1
+        reading_env.flush_all()
+
+
+def test_a_write_is_judged_against_the_columns_it_does_not_carry(reading_env):
+    # the UPDATE carries `rating` alone, and the stored `color` supplies the
+    # rest, so a row already inside both bounds stays acceptable
+    reading = reading_env["tc.reading"].create({"name": "a", "color": 2, "rating": 1})
+    reading.rating = 5
+    reading_env.flush_all()
+    assert reading.rating == 5
+
+
+def test_a_row_both_checks_accept_is_stored(reading_env):
+    reading = reading_env["tc.reading"].create({"name": "a", "color": 0, "rating": 5})
+    reading_env.flush_all()
+    assert (reading.color, reading.rating) == (0, 5)

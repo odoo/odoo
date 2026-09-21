@@ -88,3 +88,16 @@ def test_a_custom_domain_with_a_python_predicate_is_never_compiled(env):
     ) & fields.Domain("id", "in", items.ids)
 
     assert env["compile.item"].search(domain) == items
+
+
+def test_a_negated_custom_domain_is_never_compiled_either(env):
+    # the walk descends through `child` as well as `children`, so a custom
+    # domain under a NOT is found too
+    def sql_only(model, alias, query):
+        raise AssertionError("the Python adapter must not compile custom SQL")
+
+    items = env["compile.item"].search([])
+    negated = ~fields.Domain.custom(
+        to_sql=sql_only, predicate=lambda record: record["code"] != "a"
+    )
+    assert env["compile.item"].search(negated) == items
