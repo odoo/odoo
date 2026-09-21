@@ -1,6 +1,7 @@
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
+from odoo.fields import Command
 from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, new_test_user
 
 
 @tagged("post_install", "-at_install")
@@ -79,3 +80,45 @@ class TestAccountConfig(TransactionCase):
             self.env.company._get_user_lock_date("fiscalyear_lock_date"),
             config.fiscalyear_lock_date,
         )
+
+    def test_a_configuration_is_read_under_the_readers_access(self):
+        mine = self.env["res.company"].create({"name": "reader co"})
+        theirs = self.env["res.company"].create({"name": "other reader co"})
+        mine.account_config_id.write({"invoice_terms": "mine terms"})
+        theirs.account_config_id.write(
+            {"invoice_terms": "their terms", "fiscalyear_lock_date": "2024-06-30"}
+        )
+        portal = new_test_user(
+            self.env,
+            login="ac_portal",
+            groups="base.group_portal",
+            company_id=mine.id,
+            company_ids=[Command.set([mine.id])],
+        )
+        employee = new_test_user(
+            self.env,
+            login="ac_employee",
+            groups="base.group_user",
+            company_id=mine.id,
+            company_ids=[Command.set([mine.id])],
+        )
+        for user in (portal, employee):
+            with self.subTest(user=user.login):
+                Company = self.env["res.company"].with_user(user)
+                Company = Company.with_context(allowed_company_ids=mine.ids)
+                self.assertIn(
+                    "mine terms",
+                    Company.browse(mine.id).account_config_id.invoice_terms,
+                )
+                self.assertEqual(
+                    Company.search(
+                        [("account_config_id.invoice_terms", "ilike", "terms")]
+                    ),
+                    mine,
+                    "a search through the link is bounded by the reader's rules",
+                )
+                Config = self.env["account.config"].with_user(user)
+                Config = Config.with_context(allowed_company_ids=mine.ids)
+                self.assertEqual(Config.search([]).company_id, mine)
+                with self.assertRaises(AccessError):
+                    Config._for(theirs).fiscalyear_lock_date

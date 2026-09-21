@@ -21,8 +21,6 @@ class AccountMove(models.Model):
     )
     depreciation_asset_id = fields.Many2one(
         related="depreciation_board_id.asset_id",
-        store=True,
-        index="btree_not_null",
     )
     asset_remaining_value = fields.Monetary(
         string="Depreciable Value",

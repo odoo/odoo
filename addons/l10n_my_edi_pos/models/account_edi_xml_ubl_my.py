@@ -130,7 +130,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             "tax_amount_currency",
             "tax_amount",
         )
-        for index, orders in enumerate(orders_per_line):
+        for orders in orders_per_line:
             base_lines = []
             for order in orders:
                 order_base_lines = order._prepare_tax_base_line_values()
@@ -259,6 +259,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
 
         vals["total_grouping_function"] = total_grouping_function
         vals["tax_grouping_function"] = tax_grouping_function
+        return None
 
     def _add_consolidated_invoice_header_nodes(self, document_node, vals):
         utc_now = datetime.now(tz=UTC)
@@ -413,10 +414,8 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             return super()._get_address_node(vals)
 
         partner = vals["partner"]
-        country_key = "country" if partner._name == "res.bank" else "country_id"
-        state_key = "state" if partner._name == "res.bank" else "state_id"
-        country = partner[country_key]
-        state = partner[state_key]
+        country = partner.country_id
+        state = partner.state_id
 
         subentity_code = partner.state_id.code or ""
         # The API does not expect the country code inside the state code, only the number part.

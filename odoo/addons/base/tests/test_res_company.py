@@ -272,6 +272,30 @@ class TestCompany(TransactionCase):
             self.assertEqual(company.name, "one row co")
             self.assertEqual(company.email, False)
 
+    def test_identity_is_written_by_whoever_writes_the_company(self):
+        company = self.env["res.company"].create({"name": "writable identity co"})
+        manager = new_test_user(
+            self.env,
+            login="af_erp_manager",
+            groups="base.group_erp_manager",
+            company_ids=[Command.set([self.env.company.id, company.id])],
+        )
+        self.assertFalse(manager.has_group("base.group_partner_manager"))
+        as_manager = company.with_user(manager)
+        as_manager.write({"name": "renamed identity co", "email": "co@example.com"})
+        self.assertEqual(company.partner_id.name, "renamed identity co")
+        self.assertEqual(company.partner_id.email, "co@example.com")
+        with self.assertRaises(AccessError):
+            as_manager.partner_id.write({"comment": "not identity"})
+        employee = new_test_user(
+            self.env,
+            login="af_employee",
+            groups="base.group_user",
+            company_ids=[Command.set([self.env.company.id, company.id])],
+        )
+        with self.assertRaises(AccessError):
+            company.with_user(employee).write({"name": "not allowed"})
+
     def test_company_partner_has_no_contact_parent(self):
         company = (
             self.env["res.company"]

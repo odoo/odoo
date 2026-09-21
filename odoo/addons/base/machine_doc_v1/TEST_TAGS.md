@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (3984 methods, 808 classes, 140 files)
+# All base tests (3994 methods, 809 classes, 141 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -102,7 +102,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 
 ## Test File Reference
 
-### Tagged Files (80 files, 476 classes)
+### Tagged Files (81 files, 477 classes)
 
 | File | Tags | Classes | Tests | Base Class |
 |------|------|---------|-------|------------|
@@ -163,7 +163,8 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_profiler.py` | `post_install`, `-at_install`, `profiling`, `-standard`, `profiling_performance`, `profiling_memory` | 7 | 39 | TransactionCase, BaseCase, HttpCase |
 | `test_qweb.py` | `post_install`, `-at_install` | 27 | 227 | TransactionCase, TransactionCaseWithUserDemo |
 | `test_report_paperformat_audit.py` | `post_install`, `-at_install` | 1 | 10 | TransactionCase |
-| `test_res_company.py` | `post_install`, `-at_install` | 4 | 22 | TransactionCase |
+| `test_res_bank.py` | `post_install`, `-at_install` | 1 | 5 | TransactionCase |
+| `test_res_company.py` | `post_install`, `-at_install` | 4 | 27 | TransactionCase |
 | `test_res_config.py` | `post_install`, `-at_install` | 3 | 12 | TransactionCase |
 | `test_res_config_install.py` | `post_install`, `-at_install` | 1 | 2 | TransactionCase |
 | `test_res_country.py` | `-at_install`, `post_install` | 2 | 4 | TransactionCase |
@@ -256,12 +257,12 @@ These run in **both** at_install and post_install phases by default.
 
 | Metric | Value |
 |--------|-------|
-| Total test files | 140 |
-| Total test classes | 808 |
-| Total test methods | 3984 |
-| Files with @tagged | 80 (57%) |
+| Total test files | 141 |
+| Total test classes | 809 |
+| Total test methods | 3994 |
+| Files with @tagged | 81 (57%) |
 | Files without @tagged | 60 (43%) |
-| Classes using post_install | 271 |
+| Classes using post_install | 272 |
 | Unique tags | 28 |
 | Largest test file | test_db_cursor.py (117 classes, 389 tests) |
 

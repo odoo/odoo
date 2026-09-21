@@ -275,7 +275,6 @@ class AccountDepreciationBoard(models.Model):
     )
     increased_asset_id = fields.Many2one(
         related="increased_board_id.asset_id",
-        store=True,
     )
     increase_ids = fields.One2many(
         comodel_name="account.depreciation.board",

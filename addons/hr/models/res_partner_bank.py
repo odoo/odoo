@@ -24,11 +24,11 @@ class ResPartnerBank(models.Model):
         readonly=False,
     )
     bank_state = fields.Many2one(
-        related="bank_id.state",
+        related="bank_id.state_id",
         readonly=False,
     )
     bank_country = fields.Many2one(
-        related="bank_id.country",
+        related="bank_id.country_id",
         readonly=False,
     )
     bank_email = fields.Char(

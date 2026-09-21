@@ -94,6 +94,7 @@ from . import test_user_has_group
 from . import test_views
 from . import test_view_provenance
 from . import test_view_payload
+from . import test_res_bank
 from . import test_res_company
 from . import test_res_currency
 from . import test_res_country

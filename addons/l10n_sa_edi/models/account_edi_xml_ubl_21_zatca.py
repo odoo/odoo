@@ -291,8 +291,8 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
 
     def _get_address_node(self, vals):
         partner = vals["partner"]
-        country = partner["country" if partner._name == "res.bank" else "country_id"]
-        state = partner["state" if partner._name == "res.bank" else "state_id"]
+        country = partner.country_id
+        state = partner.state_id
         building_number = (
             partner.l10n_sa_edi_building_number
             if partner._name == "res.partner"
@@ -485,6 +485,7 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
                     if grouping_key
                 ],
             }
+        return None
 
     # -------------------------------------------------------------------------
     # EXPORT: Templates for document line nodes

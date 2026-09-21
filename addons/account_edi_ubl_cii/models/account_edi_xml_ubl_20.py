@@ -665,10 +665,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _get_address_node(self, vals):
         """Generic helper to generate the Address node for a res.partner or res.bank."""
         partner = vals["partner"]
-        country_key = "country" if partner._name == "res.bank" else "country_id"
-        state_key = "state" if partner._name == "res.bank" else "state_id"
-        country = partner[country_key]
-        state = partner[state_key]
+        country = partner.country_id
+        state = partner.state_id
 
         return {
             "cbc:StreetName": {"_text": partner.street},

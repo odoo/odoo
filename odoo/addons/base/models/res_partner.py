@@ -443,6 +443,12 @@ class ResPartner(models.Model):
         compute="_compute_is_public",
         compute_sudo=True,
     )
+    is_bank = fields.Boolean(
+        string="Is a Bank",
+        compute="_compute_is_bank",
+        search="_search_is_bank",
+        compute_sudo=True,
+    )
     partner_share = fields.Boolean(
         string="Share Partner",
         compute="_compute_partner_share",
@@ -498,6 +504,18 @@ class ResPartner(models.Model):
                     "company_name_duplicate", partner=party.id, name=party.name
                 )
                 raise ValidationError(_("The company name must be unique!"))
+
+    def _compute_is_bank(self) -> None:
+        bank_partner_ids = self.env["res.bank"]._get_bank_partner_ids()
+        for partner in self:
+            partner.is_bank = partner.id in bank_partner_ids
+
+    def _search_is_bank(self, operator: str, value: Any) -> fields.Domain:
+        if operator not in ("in", "not in"):
+            return NotImplemented
+        wants_bank = (True in value) != (operator == "not in")
+        bank_partner_ids = list(self.env["res.bank"]._get_bank_partner_ids())
+        return fields.Domain("id", "in" if wants_bank else "not in", bank_partner_ids)
 
     @api.constrains("company_id")
     def _check_partner_company(self) -> None:

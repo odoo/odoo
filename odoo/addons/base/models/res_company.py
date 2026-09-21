@@ -703,7 +703,7 @@ class ResCompany(models.Model):
     def _search_config_link(
         self, comodel_name: str, operator: str, value: Any
     ) -> list[tuple[str, str, Any]]:
-        Config = self.env[comodel_name].sudo()
+        Config = self.env[comodel_name]
         if operator in ("any", "not any"):
             # a path through the link: the configuration's own domain
             configs = Config.search(value)

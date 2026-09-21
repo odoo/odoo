@@ -23,6 +23,9 @@ class ResCompany(models.Model):
         "l10n_hu_edi_replacement_key": "l10n_hu_edi_replacement_key",
     }
 
+    account_fiscal_country_id = fields.Many2one(
+        related="account_config_id.account_fiscal_country_id",
+    )
     l10n_hu_tax_regime = fields.Selection(
         selection=[
             ("ie", "Individual Exemption"),

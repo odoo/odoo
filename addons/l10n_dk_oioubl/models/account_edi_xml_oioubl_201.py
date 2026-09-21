@@ -247,9 +247,8 @@ class AccountEdiXmlOioubl_201(models.AbstractModel):
     def _get_address_node(self, vals):
         # https://www.oioubl.info/Classes/en/Address.html
         partner = vals["partner"]
-        model = vals.get("model", "res.partner")
-        country = partner["country" if model == "res.bank" else "country_id"]
-        state = partner["state" if model == "res.bank" else "state_id"]
+        country = partner.country_id
+        state = partner.state_id
         address = tools.street_split(partner.street)
 
         return {

@@ -164,7 +164,7 @@ RULES: tuple[Rule, ...] = (
     ),
     Rule(
         "company-field-outside-config",
-        "E8529",
+        "E8530",
         "declare the field on the application's mixin.company.config model and "
         "link it from res.company through one <app>_config_id field",
     ),

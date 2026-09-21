@@ -139,11 +139,11 @@ class TestSearchAge(TransactionCase):
         groups = self.Partner._read_group(
             [("id", "in", adults.ids)], ["age_range_id"], ["age:avg"]
         )
-        by_range = dict(groups)
-        self.assertEqual(
-            sum(by_range.values()) / len(by_range),
-            sum(adults.mapped("age")) / len(adults),
-        )
+        self.assertTrue(groups)
+        for age_range, average in groups:
+            members = adults.filtered(lambda p, r=age_range: p.age_range_id == r)
+            self.assertTrue(members)
+            self.assertAlmostEqual(average, sum(members.mapped("age")) / len(members))
 
 
 @tagged("post_install", "-at_install")

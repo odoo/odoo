@@ -176,8 +176,8 @@ class TestUBLROCommon(TestUBLCommon):
         cls.bank = cls.env["res.bank"].create(
             {
                 "name": "Banca Trimitere EDI Global",
-                "country": cls.env.ref("base.ro").id,
-                "state": cls.env.ref("base.RO_CJ").id,
+                "country_id": cls.env.ref("base.ro").id,
+                "state_id": cls.env.ref("base.RO_CJ").id,
                 "city": "Cluj-Napoca",
                 "zip": "400000",
                 "street": "Strada Global EDI Test",

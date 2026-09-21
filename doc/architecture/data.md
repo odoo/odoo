@@ -155,6 +155,7 @@ The question to ask of any change: *if these disagreed, which one wins?*
 | An attachment's bytes | `store_fname` **xor** `db_datas` | either alone |
 | The identity of a record across upgrades | `ir_model_data` XML id | the numeric `id` |
 | A company's name, address, identifiers and image | `res_partner`, through `res_company.partner_id` (`_inherits`) | a column on `res_company` — there is none |
+| A bank's name, address, email and phones | `res_partner`, through `res_bank.partner_id` (`_inherits`) | a column on `res_bank` — there is none but `bic` |
 
 ### The tenant and its party
 
@@ -176,8 +177,14 @@ application's `mixin.company.config` model, one row per company (`report.config`
 computed and searchable, so a domain reads `("account_config_id.chart_template", "!=",
 False)`; a company create or write that names a configuration field is routed to that
 configuration (`_split_config_vals`), while a read of the field on the company raises. A branch
-takes its root's delegated configuration at create and is held to it. See
-`agromarin-knowledge/plans/2026-09-19-company-tenant-party-architecture.md`.
+takes its root's delegated configuration at create and is held to it. A configuration is read
+under the reader's own access: the mixin's lookup finds or creates the row as superuser and
+hands it back in the caller's scope, the link's search runs in the caller's scope, and every
+configuration model ships a record rule keyed on `company_id` (`test_orm`'s `TestCompanyConfig`
+asserts it for every model on the mixin), so a user reads the configuration of the companies it
+may read and nothing of the others. The identity fields a tenant reads under its own access are
+written under it too (`_inherits_sudo_fields`, both directions). Audit and plan of record:
+`agromarin-knowledge/research/2026-09-20-company-party-integration-audit.md`.
 
 ## Lifecycle and the operations that cross stores
 

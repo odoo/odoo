@@ -1446,27 +1446,50 @@ Per-user settings storage.
 
 ### models/res_company.py
 
-#### ResCompany — `res.company` (`_name`, `_parent_store = True`)
+#### ResCompany — `res.company` (`_name`, `_inherits` res.partner through `partner_id`, `_parent_store = True`)
 
-Company hierarchy with branch support.
+The tenant: the row `env.company`, the access scope, `company_dependent` storage and every
+`company_id` key on. Its identity (name, address, email, phones, vat, image) is its party's,
+read and written under the company's own access (`_inherits_rules = False`,
+`_inherits_sudo_fields`).
 
 **Fields:**
-- `name` (Char, related → partner.name, required, stored, readonly=False)
-- `active` (Boolean, default=True), `sequence` (Integer)
+- `partner_id` (Many2one → res.partner, required, restrict), `code` (Char, unique)
+- `active` (Boolean, default=True), `sequence` (Integer), `complete_name` (stored)
 - `parent_id` (Many2one → self), `child_ids`, `all_child_ids` (One2many)
-- `root_id` (Many2one, computed) — Root company
-- `partner_id` (Many2one → res.partner, required)
-- `currency_id` (Many2one → res.currency, required)
-- `user_ids` (Many2many → res.users)
-- Address fields (computed from partner with inverses)
-- `paperformat_id` (Many2one → report.paperformat)
+- `root_id`, `parent_ids` (computed) — hierarchy
+- `currency_id` (Many2one → res.currency, required, delegated to the root)
+- `user_ids` (Many2many → res.users), `logo_web`, `uses_default_logo` (stored computes)
+- `report_config_id` (Many2one → report.config, computed) — one `<app>_config_id` link per application
 
 **Key Methods:**
 - `_get_field_names_delegated_to_root()` — Fields synced from root (currency_id)
 - `_get_accessible_branches()` — Browse accessible branches for current user
 - `_get_public_user()` — Get/create public user for company
-- `create(vals_list)` — Auto-create partner, sync delegated fields, install l10n
+- `_config_link_fields()`, `_split_config_vals()`, `_search_config_link()` — a company is
+  created, written and searched through its applications' configurations
+- `create(vals_list)` — the party is created by the delegation, delegated fields synced, l10n installed
 - `write(vals)` — Enforce hierarchy, copy delegated fields to branches
+
+---
+
+### models/mixin_company_config.py
+
+#### MixinCompanyConfig — `mixin.company.config` (`_name`, abstract, `_company_config = True`)
+
+What an application configures per company: one record per company (`company_id` required,
+UNIQUE, cascade). `_for(company)` / `_for_each(companies)` find the rows and create the missing
+ones as superuser, then hand them back in the caller's scope; `create()` upserts a company
+already configured. Every model on it ships a record rule on `company_id`.
+
+---
+
+### models/report_config.py
+
+#### ReportConfig — `report.config` (`_name`, on mixin.company.config)
+
+A company's report layout: `report_header`, `report_footer`, `company_details`,
+`is_company_details_empty`, `paperformat_id`. `web` extends it with the external layout.
 
 ---
 
@@ -1590,9 +1613,14 @@ Language management and formatting.
 
 ### models/res_bank.py
 
-#### ResBank — `res.bank` (`_name`)
+#### ResBank — `res.bank` (`_name`, `_inherits` res.partner through `partner_id`)
 
-**Fields:** `name` (Char, required), `bic` (Char, indexed), address fields, `active` (Boolean)
+A bank's identity (name, address, email, phones, `active`) is its party's, read and written
+under the bank's own access (`_inherits_rules = False`, `_inherits_sudo_fields`), exactly as
+`res.company` does. The bank's own row holds `partner_id` (required, restrict) and `bic`
+(Char, indexed). `_get_bank_partner_ids()` (ormcache) backs `res.partner.is_bank`.
+
+### models/res_partner_bank.py
 
 #### ResPartnerBank — `res.partner.bank` (`_name`, `_rec_name = acc_number`)
 

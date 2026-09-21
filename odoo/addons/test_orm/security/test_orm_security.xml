@@ -2,6 +2,25 @@
 <odoo>
 
     <data noupdate="1">
+        <record id="test_orm_company_config_rule_company" model="ir.rule">
+            <field name="name">test_orm.company_config: the reader's companies</field>
+            <field name="model_id" ref="test_orm.model_test_orm_company_config" />
+            <field name="global" eval="False" />
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field
+                name="groups"
+                eval="[Command.set([ref('base.group_user'), ref('base.group_portal'), ref('base.group_public')])]" />
+        </record>
+        <record id="test_orm_company_config_rule_erp_manager" model="ir.rule">
+            <field
+                name="name">test_orm.company_config: every company for an access-rights manager</field>
+            <field name="model_id" ref="test_orm.model_test_orm_company_config" />
+            <field name="global" eval="False" />
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field
+                name="groups"
+                eval="[Command.set([ref('base.group_erp_manager')])]" />
+        </record>
         <record id="ir_rule_test_orm_model_shared_cache_compute_line" model="ir.rule">
             <field name="name">model_shared_cache_compute_line: See own lines</field>
             <field

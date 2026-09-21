@@ -1,6 +1,6 @@
 {
     "name": "Maintenance",
-    "version": "1.9",
+    "version": "1.10",
     "category": "Supply Chain/Maintenance",
     "summary": "Maintain assets and resources with orders and plans",
     "description": """

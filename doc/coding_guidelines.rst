@@ -33,7 +33,7 @@ Each rule carries a bracketed label naming what catches it.
    * - ``[ruff CODE]``
      - ``ruff check`` reports it.
    * - ``[test_lint CODE]``
-     - A ``test_lint`` rule fails on it. ``E8501``--``E8529`` are the Python
+     - A ``test_lint`` rule fails on it. ``E8501``--``E8530`` are the Python
        AST checkers; the XML rules are named by rule (``data-root``,
        ``duplicate-field``, ...) and every other ``test_lint`` gate by test.
    * - ``[fixer NAME]``
@@ -8755,6 +8755,14 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.59
+     - 2026-09-20
+     - ``company-field-outside-config`` is ``E8530``: it shared ``E8529`` with
+       ``stored-related``, so one ``noqa`` named both and ``test_checkers``'
+       shared-code test was red. A company's configuration is read under the
+       reader's own access (record rule on ``company_id``, the link's search in
+       the caller's scope), and a tenant's identity fields are written under the
+       tenant's access.
    * - 6.58
      - 2026-09-20
      - §2.3: a boolean field attribute takes a Python bool; the ORM raises

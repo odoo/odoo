@@ -230,11 +230,11 @@ class TestSQL(BaseCase):
 
 class TestSqlTools(TransactionCase):
     def test_add_constraint(self):
-        definition = "CHECK (name !~ '%')"
+        definition = "CHECK (bic !~ '%')"
         sql.add_constraint(self.env.cr, "res_bank", "test_constraint_dummy", definition)
 
         with self.assertRaises(CheckViolation), mute_logger("odoo.db"):
-            self.env["res.bank"].create({"name": r"10% bank"})
+            self.env["res.bank"].create({"name": "bank", "bic": r"10%BANK"})
 
         db_definition = sql.get_constraint_definition(
             self.env.cr, "res_bank", "test_constraint_dummy"
@@ -242,7 +242,7 @@ class TestSqlTools(TransactionCase):
         self.assertEqual(db_definition, definition)
 
     def test_add_index(self):
-        definition = "(name, id)"
+        definition = "(bic, id)"
         sql.add_index(
             self.env.cr,
             "res_bank_test_name",
@@ -258,7 +258,7 @@ class TestSqlTools(TransactionCase):
         self.assertIs(db_comment, None)
 
     def test_add_index_escape(self):
-        definition = "(id) WHERE name ~ '%'"
+        definition = "(id) WHERE bic ~ '%'"
         comment = r"some%comment"
         sql.add_index(
             self.env.cr,

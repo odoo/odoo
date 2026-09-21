@@ -7,10 +7,6 @@ _debug = DebugLog(__name__)
 
 
 class MaintenanceProfile(models.Model):
-    """What maintenance knows about one resource: who maintains it, since when,
-    and what its failures say. A facet of the resource, one per resource,
-    created the first time a host writes one of its facts."""
-
     _name = "maintenance.profile"
     _description = "Maintenance Profile"
     _rec_name = "resource_id"
@@ -23,8 +19,6 @@ class MaintenanceProfile(models.Model):
     )
     company_id = fields.Many2one(
         related="resource_id.company_id",
-        precompute=True,
-        store=True,
     )
     date_in_service = fields.Date(
         string="In Service Since",

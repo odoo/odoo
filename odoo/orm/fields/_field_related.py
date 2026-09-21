@@ -212,10 +212,12 @@ def inverse_related(field: Field, records: BaseModel) -> None:
         groups=len(groups),
         ungrouped=len(ungrouped),
     )
+    as_owner = field.inherited and field.compute_sudo
     for target, target_field, value, ids in groups.values():
-        target.browse(ids)[target_field.name] = value
+        target = target.browse(ids)
+        (target.sudo() if as_owner else target)[target_field.name] = value
     for target, target_field, value in ungrouped:
-        target[target_field.name] = value
+        (target.sudo() if as_owner else target)[target_field.name] = value
 
 
 def search_related(
