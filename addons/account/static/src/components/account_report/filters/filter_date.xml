@@ -100,44 +100,6 @@
                 </t>
 
                 <t t-if="controller.cachedFilterOptions.date.mode === 'range'">
-                    <DropdownItem
-                        t-if="shouldDisplayReturnPeriod"
-                        tag="'div'"
-                        class="{
-                            'd-flex justify-content-between date_filter date_filter_tax_period': true,
-                            'selected': this.isPeriodSelected('return_period'),
-                        }"
-                        attrs="{
-                            'data-period-type': 'return_period',
-                            'data-mode': this.dateFilter.editing === 'return_period' ? 'edit' : 'view',
-                        }"
-                        onSelected="() => this.selectDateFilter('return_period', controller.cachedFilterOptions.date.period_type != 'return_period')"
-                        closingMode="'none'"
-                    >
-                        <div class="filter_name pe-3">
-                            Return Period
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <button
-                                class="btn_previous_date fa-solid fa-caret-left"
-                                t-on-click="() => this.selectPreviousPeriod('return_period')"
-                            />
-                            <input
-                                class="o_input input_current_date"
-                                type="text"
-                                t-att-data-value="this.displayPeriod('return_period')"
-                                t-att-value="this.displayPeriod('return_period')"
-                                t-att="{'readonly': this.dateFilter.editing !== 'return_period'}"
-                                t-on-change="ev => this.saveDateFilter('return_period', ev.target)"
-                                t-on-click="ev => this.dateFilter.editing !== 'return_period' and this.isPeriodSelected('return_period') and this.editDateFilter('return_period', ev.target)"
-                            />
-                            <button
-                                class="btn_next_date fa-solid fa-caret-right"
-                                t-on-click="() => this.selectNextPeriod('return_period')"
-                            />
-                        </div>
-
-                    </DropdownItem>
                     <t t-call="account.AccountReportFilterDateSelection"/>
 
                     <div id="filter_date_divider_range" class="dropdown-divider"/>

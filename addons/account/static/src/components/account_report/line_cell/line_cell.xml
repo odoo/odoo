@@ -13,12 +13,6 @@
         >
             <div class="wrapper">
                 <t t-if="!controller.filters.show_totals or !props.line.unfolded">
-                    <t t-if="props.cell.info_popup_data">
-                        <a
-                            class="fa-solid fa-question-circle cursor-pointer me-2"
-                            t-on-click="(ev) => this.carryoverPopover(ev)"
-                        />
-                    </t>
 
                     <t t-if="props.cell.edit_popup_data">
                         <button

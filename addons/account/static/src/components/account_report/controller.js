@@ -1,6 +1,6 @@
 /** @odoo-module native */
 
-import { markRaw, markup, useState } from "@odoo/owl";
+import { markRaw, markup } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { makeLogger } from "@web/core/debug/debug_logger";
 import { user } from "@web/core/user";
@@ -15,12 +15,10 @@ export class AccountReportController {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
         this.ui = useService("ui");
-        this.chatterState = useState({
-            model: undefined,
-            id: undefined,
-            lineId: undefined, // To identify the line when editing / deleting a message
-        });
+        this.setup();
     }
+
+    setup() {}
 
     async load(env) {
         this.env = env;
@@ -69,16 +67,14 @@ export class AccountReportController {
 
         this.reportLoadingPromise = this.displayReport(mainReportOptions["report_id"]);
         this.preLoadClosedSections();
-
-        if (!this.ui.isSmall) {
-            const chatterState = JSON.parse(
-                browser.sessionStorage.getItem(this.sessionChatterStateID()),
-            );
-            this.chatterState.model = chatterState?.model;
-            this.chatterState.id = chatterState?.id;
-            this.chatterState.lineId = chatterState?.lineId;
-        }
+        this.onLoaded();
     }
+
+    onLoaded() {}
+
+    onReportDisplayed() {}
+
+    onLinesUnfolded(lineStartIndex, lineEndIndex) {}
 
     getCacheKey(sectionsSourceId, reportId) {
         return `${sectionsSourceId}_${reportId}`;
@@ -137,7 +133,7 @@ export class AccountReportController {
                 await this.sortLines();
             }
             this.setLineVisibility(this.lines);
-            this.refreshVisibleAnnotations();
+            this.onReportDisplayed();
             this.saveSessionOptions(this.options);
         }
     }
@@ -382,10 +378,6 @@ export class AccountReportController {
         return this.cachedFilterOptions.filters;
     }
 
-    get annotations() {
-        return this.data.annotations;
-    }
-
     get userGroups() {
         return this.options.user_groups;
     }
@@ -413,10 +405,6 @@ export class AccountReportController {
     //------------------------------------------------------------------------------------------------------------------
     // Generic data setters
     //------------------------------------------------------------------------------------------------------------------
-    set annotations(value) {
-        this.data.annotations = value;
-    }
-
     set columnGroupsTotals(value) {
         this.data.column_groups_totals = value;
     }
@@ -692,7 +680,7 @@ export class AccountReportController {
                         this.lines.splice(lineIndex + 1, numberOfChildren);
 
                         const lastLineIndex = applyNewLines(result);
-                        this.loadAnnotations(lineIndex + 1, lastLineIndex);
+                        this.onLinesUnfolded(lineIndex + 1, lastLineIndex);
                         this.setLineVisibility(
                             this.lines.slice(lineIndex + 1, lastLineIndex),
                         );
@@ -775,7 +763,7 @@ export class AccountReportController {
             lastLineIndex = await this.unfoldLoadedLine(lineIndex);
         } else if (targetLine.expand_function) {
             lastLineIndex = await this.unfoldNewLine(lineIndex);
-            this.loadAnnotations(lineIndex + 1, lastLineIndex);
+            this.onLinesUnfolded(lineIndex + 1, lastLineIndex);
         }
 
         this.setLineVisibility(this.lines.slice(lineIndex + 1, lastLineIndex));
@@ -876,92 +864,8 @@ export class AccountReportController {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    // Chatter
-    //------------------------------------------------------------------------------------------------------------------
-    sessionChatterStateID() {
-        return this.sessionOptionsID() + user.activeCompany.id.toString() + ".chatter";
-    }
-
-    async loadAnnotations(lineStartIndex = 0, lineEndIndex = this.lines.length) {
-        const new_annotations = await this.orm.call(
-            "account.report",
-            "get_annotations",
-            [
-                this.action.context.report_id,
-                this.options,
-                this.lines.slice(lineStartIndex, lineEndIndex),
-            ],
-        );
-        for (const [key, value] of Object.entries(new_annotations)) {
-            this.annotations[key] = value;
-        }
-
-        this.refreshVisibleAnnotations(lineStartIndex, lineEndIndex);
-    }
-
-    addAnnotation(messageId, resModel, resId, body) {
-        this.lines.forEach((line) => {
-            if (line.chatter?.model === resModel && line.chatter?.id === resId) {
-                this.annotations[line.id] = this.annotations[line.id] || [];
-                this.annotations[line.id].push({
-                    id: messageId,
-                    model: resModel,
-                    res_id: resId,
-                    body: body,
-                });
-                line.visible_annotations = true;
-            }
-        });
-    }
-
-    removeAnnotation(messageId) {
-        this.lines.forEach((line) => {
-            this.annotations[line.id] = (this.annotations[line.id] || []).filter(
-                (annotation) => annotation.id !== messageId,
-            );
-        });
-        this.refreshVisibleAnnotations();
-    }
-
-    async toggleLineChatter(annotation) {
-        if (
-            this.chatterState.model === annotation.resModel &&
-            this.chatterState.id === annotation.resId &&
-            this.chatterState.lineId === annotation.line_id
-        ) {
-            this.closeChatter();
-        } else {
-            this.chatterState.model = annotation.resModel;
-            this.chatterState.id = annotation.resId;
-            this.chatterState.lineId = annotation.line_id;
-            browser.sessionStorage.setItem(
-                this.sessionChatterStateID(),
-                JSON.stringify({
-                    model: this.chatterState.model,
-                    id: this.chatterState.id,
-                    lineId: this.chatterState.lineId,
-                }),
-            );
-        }
-    }
-
-    closeChatter() {
-        this.chatterState.model = undefined;
-        this.chatterState.id = undefined;
-        this.chatterState.lineId = undefined;
-        browser.sessionStorage.removeItem(this.sessionChatterStateID());
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
     // Visibility
     //------------------------------------------------------------------------------------------------------------------
-
-    refreshVisibleAnnotations(lineStartIndex = 0, lineEndIndex = this.lines.length) {
-        this.lines.slice(lineStartIndex, lineEndIndex).forEach((line) => {
-            line.visible_annotations =
-                this.annotations[line.id] && this.annotations[line.id].length > 0;
-        });
-    }
 
     /**
      * Define which of the provided lines should be visible, depending on what is folded.
@@ -1097,18 +1001,5 @@ export class AccountReportController {
         return dispatchReportAction
             ? this.actionService.doAction(dispatchReportAction)
             : null;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // Budget
-    // -----------------------------------------------------------------------------------------------------------------
-
-    async openBudget(budget) {
-        this.actionService.doAction({
-            type: "ir.actions.act_window",
-            res_model: "account.report.budget",
-            res_id: budget.id,
-            views: [[false, "form"]],
-        });
     }
 }

@@ -5,7 +5,7 @@
     </t>
 
     <t t-name="account.AccountReportCustomizable">
-        <div class="o_action account_report" t-att-class="cssCustomClass" t-ref="root" t-on-keydown="onKeydown" t-on-click="onClick">
+        <div class="o_action account_report" t-att-class="cssCustomClass" t-ref="root">
             <ControlPanel display="{ adaptToScroll: False }">
                 <!-- Buttons bar -->
                 <t t-set-slot="control-panel-create-button">
@@ -26,15 +26,6 @@
                    </div>
                 </t>
 
-                <t t-set-slot="control-panel-navigation-additional" t-if="controller.chatterState.lineId">
-                    <button
-                        t-on-click="() => controller.closeChatter()"
-                        data-tooltip="Chatter"
-                        class="btn btn-secondary o_switch_view o_kanban d-inline"
-                        t-att-class="{'active': controller.chatterState.model}">
-                            <i t-attf-class="fa-fw {{ controller.chatterState.model ? 'fa-solid fa-xmark' : 'fa-regular fa-comments' }} mt-1"/>
-                    </button>
-                </t>
             </ControlPanel>
 
             <div class="d-flex h-100 o_content" t-att-class="{'flex-column': ui.isSmall, 'flex-row': !ui.isSmall }">
@@ -122,31 +113,8 @@
                         </div>
                     </t>
 
-                    <t t-if="ui.isSmall"> <!-- Spacer to avoid chatter overlapping content on small devices due to the fixed position of the chatter -->
-                        <div
-                            style="transition: height 0.2s ease-in-out;"
-                            t-att-style="controller.chatterState.id ? 'height: 60vh;' : 'height: 0;'"
-                        />
-                    </t>
                 </div>
 
-                <div t-att-class="{
-                        'o_account_report_chatter o-mail-ChatterContainer h-100 o-aside d-flex flex-column': !ui.isSmall,
-                        'o_account_report_chatter_hidden': !ui.isSmall &amp;&amp; !controller.chatterState.id,
-                        'o_account_report_mobile_chatter': ui.isSmall,
-                        'o_account_report_mobile_chatter_hidden': ui.isSmall &amp;&amp; !controller.chatterState.id,
-                    }"
-                >
-                    <t t-if="controller.chatterState.model">
-                        <AccountReportChatter
-                            threadModel="controller.chatterState.model"
-                            threadId="controller.chatterState.id"
-                            isChatterAside="!ui.isSmall"
-                            reportController="controller"
-                            date_to="controller.options.date.date_to"
-                        />
-                    </t>
-                </div>
             </div>
         </div>
     </t>

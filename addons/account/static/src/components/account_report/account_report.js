@@ -9,7 +9,6 @@ import { AccountReportLine } from "@account/components/account_report/line/line"
 import { AccountReportLineCell } from "@account/components/account_report/line_cell/line_cell";
 import { AccountReportLineName } from "@account/components/account_report/line_name/line_name";
 import { AccountReportSearchBar } from "@account/components/account_report/search_bar/search_bar";
-import { AccountReportChatter } from "@account/components/mail/chatter";
 import {
     Component,
     onWillDestroy,
@@ -36,7 +35,6 @@ export class AccountReport extends Component {
         AccountReportButtonsBar,
         AccountReportCogMenu,
         AccountReportSearchBar,
-        AccountReportChatter,
     };
 
     static customizableComponents = [
@@ -143,31 +141,6 @@ export class AccountReport extends Component {
         }
 
         return classes;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // Chatter
-    // -----------------------------------------------------------------------------------------------------------------
-    /**
-     * @param {KeyboardEvent} ev
-     */
-    onKeydown(ev) {
-        if (ev.key === "Escape") {
-            this.controller.closeChatter();
-        }
-    }
-
-    /**
-     * @param {MouseEvent} ev
-     */
-    onClick(ev) {
-        if (
-            this.ui.isSmall &&
-            this.controller.chatterState.id &&
-            !ev.target.closest(".o_account_report_mobile_chatter")
-        ) {
-            this.controller.closeChatter();
-        }
     }
 }
 

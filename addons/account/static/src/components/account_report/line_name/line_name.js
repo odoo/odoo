@@ -1,11 +1,8 @@
 /** @odoo-module native */
 import { parseLineId } from "@account/js/util";
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
 import { Dropdown, DropdownItem } from "@web/components/dropdown";
 import { useService } from "@web/core/utils/hooks";
-import { RelationalModel } from "@web/model/relational_model";
-
-import { AccountReturnSelectionBadge } from "../../account_return/widgets/account_return_selection_badge.js";
 
 export class AccountReportLineName extends Component {
     static template = "account.AccountReportLineName";
@@ -16,7 +13,6 @@ export class AccountReportLineName extends Component {
     static components = {
         Dropdown,
         DropdownItem,
-        AccountReturnSelectionBadge,
     };
 
     setup() {
@@ -26,81 +22,6 @@ export class AccountReportLineName extends Component {
         this.controller = useState(this.env.controller);
 
         this.lineNameCell = useRef("lineNameCell");
-
-        this.accountStatus = useState({ record: false });
-        useEffect(
-            () => {
-                this.loadAuditStatus();
-            },
-            () => [this.props.line],
-        );
-    }
-
-    async loadAuditStatus() {
-        if (this.props.line.account_status) {
-            if (
-                this.accountStatus.record &&
-                this.props.line.account_status.id === this.accountStatus.record.resId
-            ) {
-                return;
-            }
-
-            const fields = {
-                status: {
-                    selection: [
-                        ["todo", "To Review"],
-                        ["reviewed", "Reviewed"],
-                        ["supervised", "Supervised"],
-                        ["anomaly", "Anomaly"],
-                    ],
-                    required: false,
-                },
-            };
-
-            const model = new RelationalModel(
-                this.env,
-                {
-                    config: {
-                        resModel: "account.audit.account.status",
-                        fields: fields,
-                        activeFields: fields,
-                        openGroupsByDefault: true,
-                        isMonoRecord: true,
-                    },
-                    groupsLimit: Number.MAX_SAFE_INTEGER,
-                    limit: 1,
-                    countLimit: 1,
-                },
-                { orm: this.orm },
-            );
-
-            this.accountStatus.record = new model.constructor.Record(
-                model,
-                {
-                    context: this.env.controller.context,
-                    activeFields: fields,
-                    fields: fields,
-                    resModel: "account.audit.account.status",
-                    resId: this.props.line.account_status.id,
-                    resIds: [this.props.line.account_status.id],
-                    isMonoRecord: true,
-                    mode: "readonly",
-                },
-                this.props.line.account_status,
-                { manuallyAdded: !this.props.line.account_status.id },
-            );
-        } else if (this.accountStatus.record) {
-            this.accountStatus.record = false;
-        }
-    }
-
-    get accountStatusBadgeOptions() {
-        return {
-            todo: { decoration: "info" },
-            reviewed: { decoration: "success" },
-            supervised: { decoration: "success" },
-            anomaly: { decoration: "danger" },
-        };
     }
 
     get modelName() {
@@ -220,30 +141,5 @@ export class AccountReportLineName extends Component {
                 this.controller.unfoldLine(this.props.lineIndex);
             }
         }
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // Chatter
-    // -----------------------------------------------------------------------------------------------------------------
-    get isChatterAnnotated() {
-        return this.props.line.visible_annotations;
-    }
-
-    get isChatterSelected() {
-        return this.controller.chatterState.lineId === this.props.line.id;
-    }
-
-    async openChatter(ev) {
-        ev.stopPropagation();
-
-        if (!this.props.line.chatter) {
-            return;
-        }
-
-        this.controller.toggleLineChatter({
-            resModel: this.props.line.chatter.model,
-            resId: this.props.line.chatter.id,
-            line_id: this.props.line.id,
-        });
     }
 }

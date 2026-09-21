@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
-    <t t-name="account.common_warning_tax_unit">
-        This company is part of a tax unit. You're currently not viewing the whole unit.
-    </t>
-
-    <t t-name="account.common_warning_draft_in_period">
-        There are
-        <a type="button" t-on-click="(ev) => controller.reportAction(ev, 'open_unposted_moves', {})">unposted Journal Entries</a>
-        prior or included in this period.
-    </t>
-
-    <t t-name="account.common_possibly_unbalanced_because_cta">
-        This report uses the CTA conversion method to consolidate multiple companies using different currencies,
-        which can lead the report to be unbalanced.
-    </t>
     <t t-name="account.report_info_being_loaded">
         Report is being loaded in the background. Presented data were cached and may not be accurate.
     </t>

@@ -46,16 +46,6 @@
                             maxCharacters: 80,
                         }"/>
 
-                        <AccountReturnSelectionBadge
-                            t-if="this.accountStatus.record"
-                            options="this.accountStatusBadgeOptions"
-                            record="this.accountStatus.record"
-                            readonly="false"
-                            name="'status'"
-                            class="'ms-2'"
-                            size="'small'"
-                            />
-
                         <t t-if="hasCaretOptions">
                             <!-- Caret options -->
                             <Dropdown position="'right-start'">
@@ -73,19 +63,6 @@
                                 </t>
                             </Dropdown>
                         </t>
-
-                        <button
-                            tabindex="-1"
-                            class="btn btn_annotation"
-                            t-on-click="openChatter"
-                            t-if="this.props.line.chatter"
-                            t-att-class="{
-                                'o_account_report_chatter_selected': isChatterSelected,
-                                'o_account_report_chatter_annoted': isChatterAnnotated,
-                            }">
-                            <i class="fa-solid fa-comment-dots" t-if="isChatterSelected || isChatterAnnotated"/>
-                            <i class="fa-regular fa-comment-dots" t-else=""/>
-                        </button>
 
                         <t data-id="line_buttons" t-if="!props.line['hide_line_buttons']"/>
                     </div>
