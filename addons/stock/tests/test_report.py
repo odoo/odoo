@@ -1091,12 +1091,7 @@ class TestReports(TestReportsCommon):
 
     def test_report_forecast_5_multi_warehouse(self):
         wh_2 = self.wh_2
-        picking_type_out_2 = self.env["stock.picking.type"].search(
-            [
-                ("code", "=", "outgoing"),
-                ("warehouse_id", "=", wh_2.id),
-            ]
-        )
+        picking_type_out_2 = wh_2.out_type_id
 
         delivery_form = Form(
             self.env["stock.picking"], view="stock.view_stock_picking_form"
@@ -2274,12 +2269,7 @@ class TestReports(TestReportsCommon):
                 "code": "OTHER",
             }
         )
-        picking_type_out_2 = self.env["stock.picking.type"].search(
-            [
-                ("code", "=", "outgoing"),
-                ("warehouse_id", "=", wh_2.id),
-            ]
-        )
+        picking_type_out_2 = wh_2.out_type_id
 
         delivery_form = Form(
             self.env["stock.picking"], view="stock.view_stock_picking_form"

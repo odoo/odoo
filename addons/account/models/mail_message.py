@@ -136,6 +136,7 @@ class MailMessage(models.Model):
             ]
         )
 
+    @api.depends("model", "res_id")
     def _compute_account_audit_log_move_id(self):
         self._compute_audit_log_related_record_id(
             "account.move", "account_audit_log_move_id"
@@ -145,6 +146,7 @@ class MailMessage(models.Model):
     def _search_account_audit_log_move_id(self, operator, value):
         return self._search_audit_log_related_record_id("account.move", operator, value)
 
+    @api.depends("model", "res_id")
     def _compute_account_audit_log_account_id(self):
         self._compute_audit_log_related_record_id(
             "account.account", "account_audit_log_account_id"
@@ -156,6 +158,7 @@ class MailMessage(models.Model):
             "account.account", operator, value
         )
 
+    @api.depends("model", "res_id")
     def _compute_account_audit_log_tax_id(self):
         self._compute_audit_log_related_record_id(
             "account.tax", "account_audit_log_tax_id"
@@ -165,6 +168,7 @@ class MailMessage(models.Model):
     def _search_account_audit_log_tax_id(self, operator, value):
         return self._search_audit_log_related_record_id("account.tax", operator, value)
 
+    @api.depends("model", "res_id")
     def _compute_account_audit_log_company_id(self):
         # a company's configuration tracks on its own chatter; its messages
         # are the company's in the audit trail
@@ -195,6 +199,7 @@ class MailMessage(models.Model):
         )
         return company_domain | config_domain
 
+    @api.depends("model", "res_id")
     def _compute_account_audit_log_partner_id(self):
         self._compute_audit_log_related_record_id(
             "res.partner", "account_audit_log_partner_id"

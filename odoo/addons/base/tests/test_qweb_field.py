@@ -852,7 +852,9 @@ class TestQwebFieldMonetaryCurrencyFallback(common.TransactionCase):
         ranked = self.env["ir.qweb.field.monetary"]._get_currency_field_names(
             self.env["res.company"], "id"
         )
-        self.assertEqual(ranked, ["currency_id"])
+        # an installed module may give the company other currency fields
+        # (purchase adds one through the partner): the claim is the rank
+        self.assertEqual(ranked[0], "currency_id")
 
     def test_the_ranking_does_not_depend_on_field_dict_order(self):
         class Fake:

@@ -612,6 +612,7 @@ class AccountConfig(models.Model):
             )
         }
 
+    @api.depends("company_id")
     def _compute_multi_vat_foreign_country_ids(self):
         countries_per_company = self._get_foreign_vat_countries_per_company(
             self.company_id
