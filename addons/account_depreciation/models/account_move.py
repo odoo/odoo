@@ -19,9 +19,6 @@ class AccountMove(models.Model):
         domain="[('company_id', '=', company_id)]",
         ondelete="cascade",
     )
-    depreciation_asset_id = fields.Many2one(
-        related="depreciation_board_id.asset_id",
-    )
     asset_remaining_value = fields.Monetary(
         string="Depreciable Value",
         compute="_compute_depreciation_cumulative_value",

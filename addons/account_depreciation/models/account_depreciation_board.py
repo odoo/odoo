@@ -273,9 +273,6 @@ class AccountDepreciationBoard(models.Model):
         index="btree_not_null",
         help="The board whose value this one increases, and whose life caps its depreciation",
     )
-    increased_asset_id = fields.Many2one(
-        related="increased_board_id.asset_id",
-    )
     increase_ids = fields.One2many(
         comodel_name="account.depreciation.board",
         inverse_name="increased_board_id",
