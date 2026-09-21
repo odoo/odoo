@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.MessagingMenuCallParticipants">
-        <div class="o-mail-MessagingMenuCallParticipants rounded-bottom d-flex bg-inherit px-3 p-1">
-            <button class="o-mail-MessagingMenuCallParticipants-expandBtn btn btn-link p-1 my-n1 ms-n1 me-0 align-self-start d-flex rounded-circle" t-on-click.stop="this.toggleFn(this.expanded)">
-                <i class="oi o-xsmaller text-muted text-dark" t-att-data-icon="this.expanded() ? 'keyboard_arrow_down' : 'chevron_forward'" t-att-title="this.title"/>
+        <div class="o-mail-MessagingMenuCallParticipants rounded-bottom d-flex bg-inherit p-1">
+            <button class="o-mail-MessagingMenuCallParticipants-expandBtn btn btn-link p-1 my-n1 ms-n1 me-0 align-self-start d-flex rounded-circle" t-att-class="{ 'invisible': !this.canToggle() }" t-on-click.stop="this.toggleFn(this.expanded)">
+                <i class="oi o-xsmaller text-muted text-dark" t-att-data-icon="this.isExpanded() ? 'keyboard_arrow_down' : 'chevron_forward'" t-att-title="this.title"/>
             </button>
             <AvatarStack
-                t-if="!this.expanded()"
+                t-if="!this.isExpanded()"
                 personas="this.personas()"
                 size="30"
                 max="10"
@@ -18,13 +18,13 @@
                 <t t-foreach="this.sessions" t-as="session" t-key="session.localId">
                     <div class="o-mail-MessagingMenuCallParticipants-participant d-flex text-reset overflow-hidden align-items-center" t-att-class="this.participantClass(session)" t-on-click.stop="(ev) => this.onClickParticipant(ev, session)">
                         <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:30px;height:30px;margin: 1.5px;">
-                            <img class="w-100 h-100 rounded-circle object-fit-cover" t-att-src="session.channel_member_id?.avatarUrl" alt="Participant avatar" t-att-title="session.channel_member_id?.name"/>
+                            <img t-if="session.channel_member_id" class="w-100 h-100 rounded object-fit-cover" t-att-src="session.channel_member_id.avatarUrl" alt="Participant avatar" t-att-title="session.channel_member_id.name"/>
                         </div>
                         <span class="o-mail-MessagingMenuCallParticipants-name mx-1 text-truncate fw-bold smaller user-select-none" t-att-title="session.channel_member_id?.name" t-att-class="{ 'o-isTalking': session.isActuallyTalking }">
                             <t t-out="session.channel_member_id?.name"/>
                         </span>
                         <div class="flex-grow-1"/>
-                        <div class="o-mail-MessagingMenuCallParticipants-status small ms-1 d-flex gap-1 align-items-center justify-content-center">
+                        <div class="o-mail-MessagingMenuCallParticipants-status small mx-1 d-flex gap-1 align-items-center justify-content-center">
                             <TalkingAudioBars t-if="session.isActuallyTalking" session="session"/>
                             <span t-if="session.is_deaf" class="p-1 oi opacity-75" t-att-data-icon="this.CALL_ICON_DEAFEN"/>
                             <span t-elif="session.is_muted" class="p-1 oi opacity-75" t-att-data-icon="this.CALL_ICON_MUTED"/>

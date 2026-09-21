@@ -13,7 +13,7 @@ patch(MessagingMenuCallParticipants.prototype, {
     participantClass(session) {
         return {
             ...super.participantClass(session),
-            "o-active cursor-pointer rounded-4": Boolean(session.persona?.main_user_id),
+            "o-active cursor-pointer rounded-3": Boolean(session.persona?.main_user_id),
         };
     },
     /**
