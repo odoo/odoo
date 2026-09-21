@@ -100,12 +100,14 @@ export class FloorPlan extends FloorPlanBase {
         if (!this.selectedFloor || this.isKanban) {
             return;
         }
-        const size = this.selectedFloor.getSize();
+        const scrollContainer = this.containerRef.el;
+        if (!scrollContainer) {
+            return;
+        }
 
+        const size = this.selectedFloor.getSize();
         let canvasWidth = size.width;
         let canvasHeight = size.height;
-
-        const scrollContainer = this.containerRef.el;
 
         // Add some padding if overflow
         if (canvasWidth > scrollContainer.clientWidth) {
