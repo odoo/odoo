@@ -365,24 +365,11 @@ class SaleOrderTemplateLine(models.Model):
             "collapse_prices": self.collapse_prices,
             "display_type": self.display_type,
             "is_optional": self.is_optional,
-            "product_id": self.product_id.id,
             "product_uom_qty": self.product_uom_qty,
             "product_uom_id": self.product_uom_id.id,
             "sequence": self.sequence,
             "section_qty": self.section_qty,
             "section_uom_id": self.section_uom_id.id,
-            "product_no_variant_attribute_value_ids": [
-                Command.set(self.product_no_variant_attribute_value_ids.ids)
-            ],
-            "product_custom_attribute_value_ids": [
-                Command.create({
-                    "custom_product_template_attribute_value_id": (
-                        pacv.custom_product_template_attribute_value_id.id
-                    ),
-                    "custom_value": pacv.custom_value,
-                })
-                for pacv in self.product_custom_attribute_value_ids
-            ],
         }
         if self.name:
             vals["name"] = self.name
@@ -399,6 +386,22 @@ class SaleOrderTemplateLine(models.Model):
                 "price_unit": self.sale_order_template_id.currency_id._convert(
                     from_amount=self.price_unit, to_currency=currency
                 ),
+            })
+        else:
+            vals.update({
+                "product_id": self.product_id.id,
+                "product_no_variant_attribute_value_ids": [
+                    Command.set(self.product_no_variant_attribute_value_ids.ids)
+                ],
+                "product_custom_attribute_value_ids": [
+                    Command.create({
+                        "custom_product_template_attribute_value_id": (
+                            pacv.custom_product_template_attribute_value_id.id
+                        ),
+                        "custom_value": pacv.custom_value,
+                    })
+                    for pacv in self.product_custom_attribute_value_ids
+                ],
             })
 
         return vals
