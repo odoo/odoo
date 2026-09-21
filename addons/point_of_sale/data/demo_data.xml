@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <record id="base.user_light" model="res.users">
+            <field name="group_ids" eval="[(4, ref('point_of_sale.group_pos_user'))]"/>
+        </record>
+
         <function model="pos.config" name="load_onboarding_furniture_scenario" />
         <function model="pos.config" name="load_onboarding_clothes_scenario" />
         <function model="pos.config" name="load_onboarding_bakery_scenario" />
