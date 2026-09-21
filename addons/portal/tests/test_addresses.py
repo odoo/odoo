@@ -213,6 +213,7 @@ class TestPortalAddresses(BaseCommon, HttpCase):
     def test_addtional_identifiers_update(self):
         self.authenticate(self.portal_user.login, self.portal_user.login)
         csrf_token = self.csrf_token()
+        self.patch(self.env.registry['res.partner'], '_get_portal_additional_identifiers_whitelist', lambda self, company=None, country=None: ['MA_ICE'])
 
         res = self._submit_address_values({
             **self.default_address_values,
@@ -229,6 +230,11 @@ class TestPortalAddresses(BaseCommon, HttpCase):
     def test_addtional_identifiers_update_on_child_addresses(self):
         self.authenticate(self.account_a.login, self.account_a.login)
         csrf_token = self.csrf_token()
+        self.patch(
+            self.env.registry['res.partner'],
+            '_get_portal_additional_identifiers_whitelist',
+            lambda self, company=None, country=None: ['MA_ICE'],
+        )
 
         res = self._submit_address_values({
             **self.default_address_values,
@@ -241,6 +247,11 @@ class TestPortalAddresses(BaseCommon, HttpCase):
     def test_additional_identifiers_with_invalid_value(self):
         self.authenticate(self.account_a.login, self.account_a.login)
         csrf_token = self.csrf_token()
+        self.patch(
+            self.env.registry['res.partner'],
+            '_get_portal_additional_identifiers_whitelist',
+            lambda self, company=None, country=None: ['MA_ICE'],
+        )
         address_values = {
             **self.default_address_values,
             "MA_ICE": "Invalid ICE",
