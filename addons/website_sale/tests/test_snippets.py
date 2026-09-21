@@ -124,6 +124,7 @@ class TestSnippets(HttpCase):
                 "name": "Floating Snippets Product B",
                 "website_published": True,
                 "sale_ok": True,
+                "website_sequence": 1,
             },
         ])
         self.start_tour(
