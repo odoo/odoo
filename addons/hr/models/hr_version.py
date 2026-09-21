@@ -563,9 +563,21 @@ class HrVersion(models.Model):
                     ),
                 )
                 vals.update({**contract_vals, **vals})
+            if "resource_calendar_id" not in vals:
+                vals["resource_calendar_id"] = self._get_default_calendar(vals).id
         versions = super().create(vals_list)
         dbg.lifecycle.debug("hr.version.create: created %s", dbg.rec(versions))
         return versions
+
+    @api.model
+    def _get_default_calendar(self, vals):
+        if vals.get("company_id"):
+            company = self.env["res.company"].browse(vals["company_id"])
+        elif vals.get("employee_id"):
+            company = self.env["hr.employee"].browse(vals["employee_id"]).company_id
+        else:
+            company = self.env.company
+        return company.resource_calendar_id
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_last_version(self):
@@ -621,11 +633,12 @@ class HrVersion(models.Model):
 
     @api.depends("company_id")
     def _compute_resource_calendar_id(self):
+        # An empty calendar is a value, not a gap: it is what makes a version
+        # fully flexible. The default for a create that names none is given in
+        # create(); here only a calendar of another company is replaced.
         for version in self:
             calendar = version.resource_calendar_id
-            if not calendar or (
-                calendar.company_id and calendar.company_id != version.company_id
-            ):
+            if calendar.company_id and calendar.company_id != version.company_id:
                 dbg.logic.debug(
                     "[version:%s] calendar %s -> company %s default %s",
                     version.id,

@@ -397,11 +397,6 @@ class HrEmployee(models.Model):
         related="private_address_id.marital",
         string="Marital Status",
         readonly=False,
-        # No default and not required here: the facet carries the value, it
-        # exists only once the employee is saved, and a default on this side
-        # would be written onto the facet after every create -- a second
-        # employment of the same person would reset the first one's answer.
-        # res.partner defaults it to single when the facet is created.
         tracking=True,
         groups="hr.group_hr_user",
     )
@@ -1495,14 +1490,11 @@ class HrEmployee(models.Model):
         changed._sync_resource_calendar_with_current_version()
 
     def _sync_resource_calendar_with_current_version(self):
-        # the resource works the current version's calendar; the version's
-        # own inverse keeps them together while that version stays current,
-        # and this keeps them together when another version takes over,
-        # whether a contract starts, a version goes, or the day comes
         for employee in self.filtered("id"):
             resource = employee.resource_id
-            calendar = employee.current_version_id.resource_calendar_id
-            if resource and calendar and resource.calendar_id != calendar:
+            version = employee.current_version_id
+            calendar = version.resource_calendar_id
+            if resource and version and resource.calendar_id != calendar:
                 dbg.pipeline.debug(
                     "[employee:%s] resource %s calendar %s -> %s on version change",
                     employee.id,

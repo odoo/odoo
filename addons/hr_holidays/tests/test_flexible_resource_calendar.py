@@ -304,7 +304,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
                     .search([("holiday_id", "in", leaves.ids)])
                     .calendar_id
                 )
-                self.assertEqual(len(calendar), 1)
+                self.assertEqual(calendar, employee.resource_id.calendar_id)
 
                 self.assertEqual(
                     self._leave_intervals_on(calendar, employee, date(2025, 7, 28)),

@@ -1321,12 +1321,6 @@ Versions:
         return holidays
 
     def _follow_up_on_creation(self):
-        """Subscribe whoever the request concerns, then approve or chase it.
-
-        Grouped by audience and by what happens next rather than walked one
-        request at a time: a wizard generating a company's leaves creates
-        hundreds at once, and every step here takes a recordset.
-        """
         leaves_by_audience = defaultdict(self.browse)
         for leave in self:
             partners = leave.employee_id.user_id.partner_id
@@ -1463,19 +1457,19 @@ Versions:
             "holiday_id": self.id,
             "date_to": self.date_to,
             "resource_id": self.employee_id.resource_id.id,
-            "calendar_id": self.resource_calendar_id.id,
+            "calendar_id": self._get_schedule_exception_calendar().id,
             "time_type_id": self.holiday_status_id.time_type_id.id,
             "eligible_for_accrual_rate": self.holiday_status_id.eligible_for_accrual_rate,
         }
 
-    def _sync_resource_leave(self, vals_list_by_leave=None):
-        """Reconcile each leave's schedule exception with what it should be.
+    def _get_schedule_exception_calendar(self):
+        self.check_singleton()
+        if not (self.employee_id and self.request_date_from):
+            return self.resource_calendar_id
+        calendars = self.employee_id._get_calendars(self.request_date_from)
+        return calendars.get(self.employee_id.id) or self.env["resource.calendar"]
 
-        Through resource's ledger mixin, so an exception that is already right
-        is left alone and one that moved is rewritten in place: its id stays
-        valid for the work entries and timesheets that point at it, and the
-        schedule-change hook hears one change rather than a delete and a create.
-        """
+    def _sync_resource_leave(self, vals_list_by_leave=None):
         exceptions = self.env["resource.schedule.exception"].sudo()
         synced = exceptions.browse()
         for leave in self:
@@ -1494,15 +1488,6 @@ Versions:
         return self._sync_resource_leave(vals_list_by_leave={})
 
     def _apply_leave_request(self):
-        """Make the calendar reflect these leaves: block the working time and
-        raise the meeting.
-
-        Idempotent, because it is not only called once at validation: a
-        working-schedule or contract change re-applies an already approved
-        leave, and a second `resource.schedule.exception` row would have the
-        working-time engine subtract the period twice. The ledger reconciles
-        rather than appends, so re-applying rewrites the row it already has.
-        """
         holidays = self.filtered("employee_id")
         holidays.meeting_id.write({"active": False})
         holidays._sync_resource_leave()
