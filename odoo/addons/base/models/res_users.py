@@ -487,12 +487,63 @@ class ResUsers(models.Model):
         for user in self.filtered(lambda user: user.name and is_html_empty(user.signature)):
             user.signature = Markup('<div>%s</div>') % user['name']
 
-    @api.depends('all_group_ids')
+    # To avoid a cache memory error, we do not use @api.depends('all_group_ids').
+    # This update is made manually during group implying updates.
+    @api.depends('group_ids')
     def _compute_share(self):
         user_group_id = self.env['ir.model.data']._xmlid_to_res_id('base.group_user')
         internal_users = self.filtered_domain([('all_group_ids', 'in', [user_group_id])])
         internal_users.share = False
         (self - internal_users).share = True
+
+    @api.model
+    def _recompute_user_share(self):
+        """ Recalculate ``res.users.share`` and ``res.partner.partner_share`` in bulk via SQL.
+
+        Changes in group relations or group hierarchy invalidate the share status of users
+        and their associated partners. Resolving this dependency through standard ORM
+        recordsets requires loading every user of every modified group, which causes
+        memory overhead and poor performance O(N).
+
+        This method executes a direct bulk SQL update in set-based queries, followed
+        by ORM cache invalidation to ensure consistency across the environment.
+        """
+        internal_group_ids = list(self.env['res.groups']._get_internal_group_ids())
+
+        # Invalidating the ORM cache to force reloading of SQL data
+        self.env['res.users'].invalidate_model(['share'])
+        self.env['res.partner'].invalidate_model(['partner_share'])
+
+        # Update res_users: share = False if the user belongs to at least one internal group
+        self.env.cr.execute("""
+            WITH _share AS (
+                SELECT u.id, any_value(r.gid) is null as share
+                FROM res_users u
+                LEFT JOIN res_groups_users_rel r
+                    ON r.uid = u.id AND r.gid = ANY(%s)
+                GROUP BY u.id
+            )
+            UPDATE res_users u
+            SET share = s.share
+            FROM _share s
+            WHERE s.id = u.id AND s.share IS DISTINCT FROM u.share
+        """, [internal_group_ids])
+
+        # Update res_partner: partner_share IS NOT TRUE if the partner is linked to at least one internal user.
+        self.env.cr.execute("""
+            WITH _share AS (
+                SELECT p.id, any_value(u.id) IS NULL as partner_share
+                    FROM res_partner p
+                LEFT JOIN res_users u
+                    ON u.partner_id = p.id
+                    AND u.share IS NOT TRUE
+                GROUP BY p.id
+            )
+            UPDATE res_partner p
+            SET partner_share = s.partner_share
+            FROM _share s
+            WHERE s.id = p.id AND s.partner_share IS DISTINCT FROM p.partner_share
+        """)
 
     @api.depends('company_id')
     def _compute_companies_count(self):
