@@ -85,7 +85,7 @@
 <t t-name="mail.MessagingMenu-action">
     <t t-set="togglesDropdown" t-value="action.subActions?.length"/>
     <button
-        class="btn btn-sm btn-primary rounded-2 py-1 d-flex align-items-center justify-content-center"
+        class="btn btn-sm btn-primary rounded-3 py-1 o-my-0_5 d-flex align-items-center justify-content-center"
         t-att-class="togglesDropdown ? 'w-100 position-relative pe-4' : 'flex-shrink-0'"
         t-att-disabled="action.isDisabled?.()"
         t-att-title="action.title"
