@@ -17,22 +17,30 @@ export class FieldChangeReplicationPlugin extends Plugin {
     };
 
     setup() {
-        this.fieldsToReplicate = new Set();
+        this.mutationsBySource = new Map();
     }
 
     /**
      * @param { import("@html_editor/core/history_plugin").HistoryMutationRecord[] } records
      */
     handleMutations(records) {
-        records
-            .filter((r) => !(r.type === "attributes" && r.attributeName.startsWith("data-oe-t")))
-            .map((r) =>
-                closestElement(r.target, "[data-oe-model], [data-oe-translation-source-sha]")
-            )
-            .filter(Boolean)
+        for (const record of records) {
+            if (record.type === "attributes" && record.attributeName.startsWith("data-oe-t")) {
+                continue;
+            }
+            const fieldEl = closestElement(
+                record.target,
+                "[data-oe-model], [data-oe-translation-source-sha]"
+            );
             // Do not forward "unstyled" copies to other nodes.
-            .filter((fieldEl) => !fieldEl.classList.contains("o_translation_without_style"))
-            .forEach((fieldEl) => this.fieldsToReplicate.add(fieldEl));
+            if (!fieldEl || fieldEl.classList.contains("o_translation_without_style")) {
+                continue;
+            }
+            if (!this.mutationsBySource.has(fieldEl)) {
+                this.mutationsBySource.set(fieldEl, []);
+            }
+            this.mutationsBySource.get(fieldEl).push(record);
+        }
     }
 
     /**
@@ -40,13 +48,13 @@ export class FieldChangeReplicationPlugin extends Plugin {
      * @param { "original"|"undo"|"redo"|"restore" } stepState
      */
     normalizeHandler(commonAncestor, stepState) {
-        const fields = this.fieldsToReplicate;
-        this.fieldsToReplicate = new Set();
+        const mutationsBySource = this.mutationsBySource;
+        this.mutationsBySource = new Map();
         if (stepState !== "original") {
             return;
         }
         const touchedEls = new Set();
-        for (const sourceEl of fields) {
+        for (const sourceEl of mutationsBySource.keys()) {
             const same = (attribute, quote = '"') =>
                 `[${attribute}=${quote}${sourceEl.getAttribute(attribute)}${quote}]`;
             let selector = "";
@@ -108,6 +116,30 @@ export class FieldChangeReplicationPlugin extends Plugin {
                         if (targetEl.innerHTML !== cloneEl.innerHTML) {
                             targetEl.replaceChildren(...cloneEl.cloneNode(true).childNodes);
                             touchedEls.add(targetEl);
+                        }
+                    }
+                    if (
+                        targetEl.getAttribute("data-oe-model") === "ir.ui.view" &&
+                        targetEl.getAttribute("data-oe-field") === "arch"
+                    ) {
+                        for (const mutation of mutationsBySource.get(sourceEl)) {
+                            if (mutation.target !== sourceEl) {
+                                continue;
+                            }
+                            if (mutation.type === "classList") {
+                                targetEl.classList.toggle(mutation.className, mutation.value);
+                            } else if (
+                                mutation.type === "attributes" &&
+                                (this.config.allowedRootAttrs || []).includes(
+                                    mutation.attributeName
+                                )
+                            ) {
+                                if (mutation.value === null) {
+                                    targetEl.removeAttribute(mutation.attributeName);
+                                } else {
+                                    targetEl.setAttribute(mutation.attributeName, mutation.value);
+                                }
+                            }
                         }
                     }
                     this.dispatchTo("after_replication_handlers", { sourceEl, targetEl });

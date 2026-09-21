@@ -130,6 +130,7 @@ class BuilderContainer extends Component {
         headerContent: String,
         Plugins: Array,
         onEditorLoad: Function,
+        config: { type: Object, optional: true },
     };
 
     setup() {
@@ -175,6 +176,7 @@ class BuilderContainer extends Component {
             iframeLoaded: this.iframeLoaded,
             isMobile: this.state.isMobile,
             Plugins: this.props.Plugins,
+            config: this.props.config,
         };
     }
 }
@@ -196,6 +198,7 @@ class IrUiView extends models.Model {
  * @param {*} options.dropzoneSelectors
  * @param {*} options.snippets
  * @param {*} options.styleContent
+ * @param {Object} options.config
  * @returns {Promise<{
  * getEditor: () => Editor,
  * getEditableContent: () => HTMLElement,
@@ -214,6 +217,7 @@ export async function setupHTMLBuilder(
         dropzoneSelectors,
         snippets,
         styleContent,
+        config,
     } = {}
 ) {
     defineMailModels();
@@ -332,6 +336,7 @@ export async function setupHTMLBuilder(
             onEditorLoad: (editor) => {
                 attachedEditor = editor;
             },
+            config,
         },
     });
     await comp.iframeLoaded;
