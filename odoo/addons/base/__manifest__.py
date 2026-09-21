@@ -1,6 +1,6 @@
 {
     "name": "Base",
-    "version": "1.84",
+    "version": "1.85",
     "category": "Hidden",
     "description": """
 The kernel of Odoo, needed for all installation.
