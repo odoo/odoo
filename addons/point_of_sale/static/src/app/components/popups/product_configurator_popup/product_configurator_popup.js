@@ -103,7 +103,7 @@ export class ProductConfiguratorPopup extends Component {
             attributes:
                 this.props.line?.selectedAttributes ||
                 this.props.productTemplate.attribute_line_ids.reduce((acc, attribute) => {
-                    acc[attribute.attribute_id.id] = {
+                    acc[attribute.id] = {
                         selected: [],
                         custom_value: "",
                     };
@@ -122,7 +122,7 @@ export class ProductConfiguratorPopup extends Component {
 
     get selectedValues() {
         return this.props.productTemplate.attribute_line_ids
-            .map((attrLine) => this.state.attributes[attrLine.attribute_id.id]?.selected || [])
+            .map((attrLine) => this.state.attributes[attrLine.id]?.selected || [])
             .flat();
     }
 
@@ -157,7 +157,8 @@ export class ProductConfiguratorPopup extends Component {
                               (att) => att.attribute_line_id.id == value.attribute_line_id.id
                           )
                         : false;
-                    this.state.attributes[value.attribute_id.id].selected = forceVariant || value;
+                    this.state.attributes[value.attribute_line_id.id].selected =
+                        forceVariant || value;
                 });
                 break;
             }
@@ -195,25 +196,25 @@ export class ProductConfiguratorPopup extends Component {
 
     setSelected(attribute) {
         return (selected) => {
-            if (!this.state.attributes[attribute.attribute_id.id]) {
-                this.state.attributes[attribute.attribute_id.id] = {
+            if (!this.state.attributes[attribute.id]) {
+                this.state.attributes[attribute.id] = {
                     selected: {},
                     custom_value: "",
                 };
             }
-            this.state.attributes[attribute.attribute_id.id].selected = selected;
+            this.state.attributes[attribute.id].selected = selected;
         };
     }
 
     setCustomValue(attribute) {
         return (custom_value) => {
-            if (!this.state.attributes[attribute.attribute_id.id]) {
-                this.state.attributes[attribute.attribute_id.id] = {
+            if (!this.state.attributes[attribute.id]) {
+                this.state.attributes[attribute.id] = {
                     selected: {},
                     custom_value: "",
                 };
             }
-            this.state.attributes[attribute.attribute_id.id].custom_value = custom_value;
+            this.state.attributes[attribute.id].custom_value = custom_value;
         };
     }
 
