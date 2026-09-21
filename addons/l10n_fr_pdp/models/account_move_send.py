@@ -63,7 +63,7 @@ class AccountMoveSend(models.AbstractModel):
         french_regulated_moves = relevant_moves.filtered(
             lambda m: (
                 m.company_id._peppol_is_french_company()
-                and m.partner_id.commercial_partner_id.with_company(self.company_id).l10n_fr_is_pdp
+                and m.partner_id.commercial_partner_id.routing_scheme == '0225'
             )
         )
         if french_regulated_moves:
