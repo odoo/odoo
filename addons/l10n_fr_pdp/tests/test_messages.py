@@ -196,6 +196,17 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         self.assertTrue(wizard.sending_method_checkboxes['peppol']['readonly'])  # can't select peppol
         self.assertFalse(wizard.alerts)  # there is no alerts
 
+    def test_batch_send_pdp_partner(self):
+        """ Test that the batch sending wizard computes the alerts of french invoices """
+        self.env.company.account_peppol_proxy_state = 'sender'  # can send but not through the PDP
+        self.partner_a.invoice_sending_method = 'email'
+        moves = self._create_french_invoice() + self._create_french_invoice()
+        moves.action_post()
+        wizard = self.env['account.move.send.batch.wizard'].create({
+            'move_ids': [Command.set(moves.ids)],
+        })
+        self.assertTrue('account_peppol_partner_want_peppol' in wizard.alerts)  # the alert is computed
+
     def test_resend_error_pdp_message(self):
         # should be able to resend error invoices
         move = self._create_french_invoice()
