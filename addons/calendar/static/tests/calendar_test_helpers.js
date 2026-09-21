@@ -13,6 +13,7 @@ import { findFilterPanelSection } from "@web/../tests/views/calendar/calendar_te
 
 import { animationFrame } from "@odoo/hoot";
 import { click, fill, queryFirst } from "@odoo/hoot-dom";
+import { runAllTimers } from "@odoo/hoot-mock";
 
 export const calendarModels = {
     CalendarAttendee,
@@ -55,7 +56,7 @@ export async function togglePartnerFilter(sectionName, partnerName) {
         await click(input);
         await animationFrame();
         await fill(partnerName);
-        await animationFrame();
+        await runAllTimers(); // let the debounced name_search resolve.
         await click(`a:contains(${partnerName})`);
         await animationFrame();
     }
