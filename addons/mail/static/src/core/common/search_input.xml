@@ -6,7 +6,7 @@
             <label
                 t-att-id="`${this.uniqueId}-icon`"
                 t-att-for="`${this.uniqueId}-input`"
-                class="position-absolute top-50 px-2 translate-middle-y smaller opacity-50"
+                class="position-absolute top-50 px-3 translate-middle-y smaller opacity-50"
                 role="status"
             >
                 <t t-if="this.spinner()">
@@ -19,7 +19,7 @@
                 t-att-id="`${this.uniqueId}-input`"
                 t-ref="this.inputRef"
                 type="text"
-                class="form-control ps-4 rounded-pill"
+                class="form-control o-ps-4_5 rounded-pill"
                 t-att-class="{ 'pe-4': this.props.onClear }"
                 t-att-placeholder="this.props.placeholder"
                 t-att-aria-label="this.props.placeholder"
