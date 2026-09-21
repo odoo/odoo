@@ -64,6 +64,19 @@ class AuthOauthProvider(models.Model):
     )
     scope = fields.Char(default='openid profile email')  # OAUth user data desired to access
     validation_endpoint = fields.Char(string='UserInfo URL', required=True)  # OAuth provider URL to get user information
+    access_token_method = fields.Selection(
+        selection=[
+            ('param', "Query Parameter"),
+            ('header', "Authorization Header"),
+        ],
+        string='Access Token Sent As',
+        default='param',
+        required=True,
+        help="How the access token reaches the UserInfo and data endpoints.\n"
+             "Query Parameter: as an access_token field of the query string.\n"
+             "Authorization Header: as a Bearer credential, which "
+             "is the form modern providers are expected to support.",
+    )
     data_endpoint = fields.Char()
     enabled = fields.Boolean(string='Allowed')
     icon = fields.Char(string='Custom Material Symbols Icon', default='login')
