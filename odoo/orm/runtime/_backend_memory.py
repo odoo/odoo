@@ -220,6 +220,100 @@ def _jsonb_contains(value: typing.Any, needle: typing.Any) -> bool:
 _UNIQUE_DEFINITION = re.compile(r"^\s*unique\s*\(([^)]*)\)\s*$", re.IGNORECASE)
 
 
+def _foreign_key_targets(model: BaseModel) -> list[tuple[str, str]]:
+    # the same conditions as _field_ddl.update_db_foreign_key, read off the
+    # fields: the DDL never runs on this tier, so the registry's
+    # add_foreign_key is never called and the declaration has to be derived
+    if not model._is_an_ordinary_table():
+        return []
+    targets = []
+    for field in model._fields.values():
+        if not (field.is_many2one and field.store and field.column_type):
+            continue
+        if field.company_dependent or field.comodel_name not in model.env.registry:
+            # a field whose comodel is absent is degraded, and the DDL that
+            # would declare its constraint never runs for it either
+            continue
+        comodel = model.env[field.comodel_name]
+        if not comodel._is_an_ordinary_table() or not comodel._auto:
+            continue
+        if comodel._is_table_inheritance_root():
+            continue
+        targets.append((field.name, comodel._table))
+    return targets
+
+
+def _check_foreign_keys(storage, model: BaseModel, rows: list[dict]) -> None:
+    # a create allocates its ids inside create_rows, after these values were
+    # built, so no row of a batch can name a sibling of it: every reference
+    # here is to a row that must already be stored, as it must be for the
+    # INSERT PostgreSQL would run
+    for column, table in _foreign_key_targets(model):
+        for row in rows:
+            value = row.get(column)
+            if type(value) is not int:
+                # False is stored as NULL and SQL checks no NULL reference;
+                # anything else is a value this tier cannot resolve to a row
+                continue
+            if not storage.get_existing_ids(table, [value]):
+                _debug.logic(
+                    "backend.memory.foreign_key_violated",
+                    model=model._name,
+                    column=column,
+                    table=table,
+                    value=value,
+                )
+                raise ForeignKeyViolation(
+                    f"insert or update on table {model._table!r} violates "
+                    f"foreign key constraint on column {column!r}: "
+                    f"key ({column})=({value}) is not present in table {table!r}"
+                )
+
+
+def _check_m2m_foreign_keys(
+    storage,
+    model: BaseModel,
+    relation: str,
+    column1: str,
+    column2: str,
+    pairs: typing.Iterable[tuple[int, ...]],
+) -> None:
+    # the comodel side of the pair of constraints update_db_foreign_keys
+    # declares; the model side references the rows this call already holds
+    field = next(
+        (
+            candidate
+            for candidate in model._fields.values()
+            if candidate.is_many2many
+            and candidate.store
+            and candidate.relation == relation
+            and candidate.column1 == column1
+            and candidate.column2 == column2
+        ),
+        None,
+    )
+    if field is None or field.comodel_name not in model.env.registry:
+        return
+    comodel = model.env[field.comodel_name]
+    if not comodel._is_an_ordinary_table() or comodel._is_table_inheritance_root():
+        return
+    wanted = {pair[1] for pair in pairs if type(pair[1]) is int}
+    missing = wanted - storage.get_existing_ids(comodel._table, list(wanted))
+    if missing:
+        _debug.logic(
+            "backend.memory.foreign_key_violated",
+            model=model._name,
+            column=f"{relation}.{column2}",
+            table=comodel._table,
+            value=min(missing),
+        )
+        raise ForeignKeyViolation(
+            f"insert or update on table {relation!r} violates foreign key "
+            f"constraint on column {column2!r}: key ({column2})="
+            f"({min(missing)}) is not present in table {comodel._table!r}"
+        )
+
+
 def _check_table_constraints(storage, model: BaseModel, rows: list[dict]) -> None:
     # what the table refuses on PostgreSQL: a NULL in a NOT NULL column and a
     # duplicate under a unique constraint (NULLs distinct, as SQL treats them)
@@ -236,6 +330,7 @@ def _check_table_constraints(storage, model: BaseModel, rows: list[dict]) -> Non
                     f'null value in column "{name}" of relation '
                     f'"{model._table}" violates not-null constraint'
                 )
+    _check_foreign_keys(storage, model, rows)
     checks = [
         (obj.get_full_name(model), definition)
         for obj in model._table_objects.values()
@@ -1764,6 +1859,9 @@ class InMemoryBackend:
                 existing.add(key)
                 to_insert.append(key)
         if to_insert:
+            _check_m2m_foreign_keys(
+                self.storage, model, relation, column1, column2, to_insert
+            )
             self.storage.insert_rows(relation, [column1, column2], to_insert)
 
     def unlink_m2m_pairs(

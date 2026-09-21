@@ -69,9 +69,9 @@ def test_the_access_key_is_the_scope_and_none_only_for_a_compute_sudo_field():
         child_ids = host._fields["child_ids"]
         computed = host._fields["computed_ids"]
         assert env.get_cache_key(child_ids) == (True,)
-        assert as_user.env.get_cache_key(child_ids) == ((2, None),)
+        assert as_user.env.get_cache_key(child_ids) == ((2, (1,)),)
         assert env.get_cache_key(computed) == (True,)
-        assert as_user.env.get_cache_key(computed) == ((2, None),)
+        assert as_user.env.get_cache_key(computed) == ((2, (1,)),)
         sudo_computed = host._fields["sudo_computed_ids"]
         assert env.get_cache_key(sudo_computed) == (None,)
         assert as_user.env.get_cache_key(sudo_computed) == (None,)
@@ -87,10 +87,10 @@ def test_a_full_value_set_in_one_scope_evicts_the_other_scopes():
         field._update_cache(as_user, (a.id,), keep_other_scopes=True)
         assert _slots(env, field) == {
             (True,): {host.id: (a.id, b.id)},
-            ((2, None),): {host.id: (a.id,)},
+            ((2, (1,)),): {host.id: (a.id,)},
         }
         field._update_cache(as_user, (b.id,))
-        assert _slots(env, field) == {(True,): {}, ((2, None),): {host.id: (b.id,)}}
+        assert _slots(env, field) == {(True,): {}, ((2, (1,)),): {host.id: (b.id,)}}
 
 
 def test_a_removal_reaches_every_scope_and_an_addition_only_the_superuser():
@@ -104,16 +104,16 @@ def test_a_removal_reaches_every_scope_and_an_addition_only_the_superuser():
 
         field._sync_other_scopes(as_user.env, host.id, removed={b.id})
         assert _slots(env, field)[(True,)] == {host.id: (a.id,)}
-        assert _slots(env, field)[((2, None),)] == {host.id: (a.id, b.id)}
+        assert _slots(env, field)[((2, (1,)),)] == {host.id: (a.id, b.id)}
 
         field._sync_other_scopes(env, host.id, added=(c.id,))
-        assert _slots(env, field)[((2, None),)] == {}
+        assert _slots(env, field)[((2, (1,)),)] == {}
         assert _slots(env, field)[(True,)] == {host.id: (a.id,)}
 
         field._update_cache(as_user, (a.id,), keep_other_scopes=True)
         field._sync_other_scopes(as_user.env, host.id, added=(c.id,))
         assert _slots(env, field)[(True,)] == {host.id: (a.id, c.id)}
-        assert _slots(env, field)[((2, None),)] == {host.id: (a.id,)}
+        assert _slots(env, field)[((2, (1,)),)] == {host.id: (a.id,)}
 
 
 def test_the_inverse_write_of_a_many2one_keeps_both_scopes_coherent():
@@ -127,12 +127,12 @@ def test_the_inverse_write_of_a_many2one_keeps_both_scopes_coherent():
 
         b = env["scope.child"].create({"name": "b", "host_id": host.id})
         assert _slots(env, field)[(True,)] == {host.id: (a.id, b.id)}
-        assert host.id not in _slots(env, field)[((2, None),)]
+        assert host.id not in _slots(env, field)[((2, (1,)),)]
 
         field._update_cache(as_user, (a.id, b.id), keep_other_scopes=True)
         b.write({"host_id": False})
         assert _slots(env, field)[(True,)] == {host.id: (a.id,)}
-        assert _slots(env, field)[((2, None),)] == {host.id: (a.id,)}
+        assert _slots(env, field)[((2, (1,)),)] == {host.id: (a.id,)}
 
 
 def test_a_many2one_reference_create_reaches_every_scope():
@@ -145,7 +145,7 @@ def test_a_many2one_reference_create_reaches_every_scope():
 
         note = env["scope.note"].create({"res_model": "scope.host", "res_id": host.id})
         assert _slots(env, field)[(True,)] == {host.id: (note.id,)}
-        assert host.id not in _slots(env, field)[((2, None),)]
+        assert host.id not in _slots(env, field)[((2, (1,)),)]
 
 
 def test_a_pending_record_shares_one_slot_across_scopes():
@@ -173,7 +173,7 @@ def test_a_fetch_delegated_to_the_superuser_is_served_to_the_requesting_scope():
         assert field._value_after_delegated_fetch(as_user.env, host.id) is SENTINEL
         field._update_cache(host, (a.id,))
         assert field._value_after_delegated_fetch(as_user.env, host.id) == (a.id,)
-        assert _slots(env, field)[((2, None),)] == {host.id: (a.id,)}
+        assert _slots(env, field)[((2, (1,)),)] == {host.id: (a.id,)}
         assert field._value_after_delegated_fetch(env, host.id) is SENTINEL
 
 

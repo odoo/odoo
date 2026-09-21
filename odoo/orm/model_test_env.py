@@ -810,10 +810,24 @@ def _create_fixtures(storage: DictBackend, registry: ModelRegistry) -> None:
                 "partner_id": 1,
             },
         )
+        # every database carries a second user beside the superuser, and a
+        # DB-free test asking for `env(user=2)` names it; its create_uid would
+        # break the foreign key of every row it writes if it did not exist
+        _insert_row(
+            "res_users",
+            2,
+            {
+                "name": "Admin User",
+                "login": "admin_user",
+                "active": True,
+                "company_id": 1,
+                "partner_id": 1,
+            },
+        )
         field = registry["res.users"]._fields.get("company_ids")
         if field is not None and field.is_many2many and field.store and field.relation:
             relation, column1, column2 = field._get_relation_triple()
-            storage.insert_rows(relation, [column1, column2], [(1, 1)])
+            storage.insert_rows(relation, [column1, column2], [(1, 1), (2, 1)])
         xmlids.append(("user_root", "res.users"))
 
     if "res.groups" in registry:
