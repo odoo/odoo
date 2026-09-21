@@ -9,7 +9,9 @@ class SaleReport(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
-    order_reference = fields.Reference(selection_add=[("pos.order", "POS Order")])
+    order_reference = fields.Reference(
+        selection_add=[("pos.order", "POS Order")],
+    )
     state = fields.Selection(
         selection_add=[
             ("paid", "Paid"),
@@ -34,11 +36,6 @@ class SaleReport(models.Model):
 
     @property
     def _table_query(self) -> SQL:
-        """Override to add UNION ALL with POS orders.
-
-        :return: sale orders UNION ALL pos orders
-        :rtype: SQL
-        """
         sale_query = super()._table_query
 
         # Build POS query using registries
@@ -62,7 +59,6 @@ class SaleReport(models.Model):
     # ------------------------------------------------------------
 
     def _select_pos(self) -> SQL:
-        """Build SELECT clause for POS orders from field registry."""
         fields = self._get_fields_pos_select()
         columns = list(self._get_fields_select())
         if unmatched := set(columns).symmetric_difference(fields):
@@ -77,7 +73,6 @@ class SaleReport(models.Model):
         )
 
     def _from_pos(self) -> SQL:
-        """Build FROM clause for POS orders from table registry."""
         tables = self._get_pos_from_tables()
 
         from_parts = []
@@ -109,12 +104,10 @@ class SaleReport(models.Model):
         return SQL("\n    ").join(from_parts)
 
     def _where_pos(self) -> SQL:
-        """Build WHERE clause for POS orders from condition registry."""
         conditions = self._get_pos_where_conditions()
         return SQL("\n    AND ").join([SQL(cond) for cond in conditions])
 
     def _group_by_pos(self) -> SQL:
-        """Build GROUP BY clause for POS orders from field registry."""
         fields = self._get_fields_pos_group_by()
         return SQL(",\n    ").join([SQL(field) for field in fields])
 
@@ -123,11 +116,6 @@ class SaleReport(models.Model):
     # ------------------------------------------------------------
 
     def _get_fields_pos_select(self) -> dict:
-        """Registry of fields for POS SELECT clause.
-
-        :return: mapping of {field_name: sql_expression}
-        :rtype: dict
-        """
         currency_rate_pos = self._case_value_or_one("pos.currency_rate")
         currency_rate_table = self._case_value_or_one("account_currency_table.rate")
 
@@ -206,23 +194,6 @@ class SaleReport(models.Model):
             "nbr_lines": "COUNT(*)",
         }
 
-        # Add additional fields from hooks (with POS-specific mappings).
-        # _get_fields_select() returns the FULL base sale-side field dict,
-        # not just extension fields (sale_stock's warehouse_id is added by
-        # overriding _get_fields_select() itself, not _select_additional_
-        # fields()), so only the keys genuinely absent from the POS `fields`
-        # dict built above are passed through _get_pos_field_expressions(); otherwise
-        # every real POS column already built above would be overwritten
-        # with the literal SQL "NULL" for any key _available_additional_
-        # pos_fields() doesn't recognize.
-        #
-        # Iterate `additional_fields` itself rather than differencing the two
-        # key views: UNION ALL matches the two branches by *position*, and a
-        # set difference orders its result by hash, which Python randomises per
-        # process. Every worker would emit these trailing columns in a
-        # different order from the sale branch -- silently swapping values when
-        # the types happen to be compatible, and raising `UNION types boolean
-        # and integer cannot be matched` when they are not.
         additional_fields = self._get_fields_select()
         additional_fields_info = self._get_pos_field_expressions(
             {
@@ -236,11 +207,6 @@ class SaleReport(models.Model):
         return fields
 
     def _get_pos_from_tables(self) -> list:
-        """Registry of tables and JOINs for POS FROM clause.
-
-        :return: list of tuples (table_name, alias, join_type, on_condition)
-        :rtype: list
-        """
         currency_table = self.env["res.currency"]._get_simple_currency_table(
             self.env.companies,
         )
@@ -274,21 +240,11 @@ class SaleReport(models.Model):
         ]
 
     def _get_pos_where_conditions(self) -> list:
-        """Registry of conditions for POS WHERE clause.
-
-        :return: SQL condition strings that will be AND'ed together
-        :rtype: list
-        """
         return [
             "l.sale_order_line_id IS NULL",  # Exclude lines linked to sale orders
         ]
 
     def _get_fields_pos_group_by(self) -> list:
-        """Registry of fields for POS GROUP BY clause.
-
-        :return: field expressions for GROUP BY clause
-        :rtype: list
-        """
         return [
             "l.order_id",
             "l.product_id",
@@ -317,27 +273,12 @@ class SaleReport(models.Model):
             "picking.warehouse_id",
         ]
 
-    # ------------------------------------------------------------
-    # POS FIELD MAPPING HOOKS
-    # ------------------------------------------------------------
-
     def _available_additional_pos_fields(self):
-        """Hook to map additional sale.report fields to POS equivalents.
-
-        :return: mapping of {field_name: pos_sql_expression}
-        :rtype: dict
-        """
         return {
             "warehouse_id": "picking.warehouse_id",
         }
 
     def _get_pos_field_expressions(self, additional_fields):
-        """Map additional sale.report fields to their POS equivalent or NULL.
-
-        :param additional_fields: sale.report field names to resolve for POS
-        :return: mapping of {field_name: pos_sql_expression_or_NULL}
-        :rtype: dict
-        """
         filled_fields = {}
 
         # Only include fields that are in the additional_fields from sale.report

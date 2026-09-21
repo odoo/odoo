@@ -6,8 +6,8 @@ class SaleReport(models.Model):
 
     margin = fields.Float()
 
-    def _select_additional_fields(self):
-        res = super()._select_additional_fields()
+    def _get_fields_select(self):
+        res = super()._get_fields_select()
         res["margin"] = f"""SUM(l.margin
             / {self._case_value_or_one("o.currency_rate")}
             * {self._case_value_or_one("account_currency_table.rate")})

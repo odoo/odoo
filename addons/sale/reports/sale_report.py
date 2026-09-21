@@ -149,7 +149,7 @@ class SaleReport(models.Model):
         currency_rate_o = self._case_value_or_one("o.currency_rate")
         currency_rate_table = self._case_value_or_one("account_currency_table.rate")
 
-        fields = {
+        return {
             "id": "MIN(l.id)",
             "order_reference": "CONCAT('sale.order', ',', o.id)",
             "company_id": "o.company_id",
@@ -270,16 +270,6 @@ class SaleReport(models.Model):
             "nbr_lines": "COUNT(*)",
         }
 
-        additional_fields = self._select_additional_fields()
-        fields.update(additional_fields)
-        _debug.pipeline(
-            "report_fields_select",
-            columns=len(fields),
-            additional=len(additional_fields),
-        )
-
-        return fields
-
     def _get_from_tables(self) -> list:
         currency_table = self.env["res.currency"]._get_simple_currency_table(
             self.env.companies,
@@ -333,6 +323,3 @@ class SaleReport(models.Model):
             "o.id",
             "account_currency_table.rate",
         ]
-
-    def _select_additional_fields(self):
-        return {}
