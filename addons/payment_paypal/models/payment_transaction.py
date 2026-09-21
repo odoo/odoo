@@ -288,27 +288,19 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         card_data = {"experience_context": {"return_url": return_url, "cancel_url": cancel_url}}
-        verification_method = {"verification": {"method": self._get_paypal_3ds_policy()}}
 
         if self.token_id:
             card_data["vault_id"] = self.token_id.provider_ref
-            card_data["stored_credential"] = {"usage": "SUBSEQUENT"}
-            if self.operation == "offline":
-                card_data["stored_credential"].update({
-                    "payment_initiator": "MERCHANT",
-                    "payment_type": "UNSCHEDULED",
-                })
-            else:
-                card_data["attributes"] = verification_method
-                card_data["stored_credential"].update({
-                    "payment_initiator": "CUSTOMER",
-                    "payment_type": "ONE_TIME",
-                })
+            card_data["stored_credential"] = {
+                "payment_initiator": "MERCHANT",
+                "payment_type": "UNSCHEDULED",
+                "usage": "SUBSEQUENT",
+            }
             return card_data
 
         card_data["name"] = self.partner_name
         card_data["billing_address"] = invoice_address_vals.get("address", {})
-        card_data["attributes"] = verification_method
+        card_data["attributes"] = {"verification": {"method": self._get_paypal_3ds_policy()}}
 
         if self.tokenize:
             card_data["stored_credential"] = {
@@ -396,7 +388,10 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         payment_status = payment_data.get("status")
 
-        if payment_status in const.PAYMENT_STATUS_MAPPING["pending"]:
+        if payment_status == "PAYER_ACTION_REQUIRED":
+            self._set_pending()
+            self.landing_route = payment_data.get("landing_route")
+        elif payment_status in const.PAYMENT_STATUS_MAPPING["pending"]:
             self._set_pending(state_message=payment_data.get("pending_reason"))
         elif payment_status in const.PAYMENT_STATUS_MAPPING["done"]:
             self._set_done()

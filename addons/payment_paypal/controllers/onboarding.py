@@ -31,8 +31,8 @@ class PaypalOnboardingController(Controller):
         action = self.env.ref("payment.action_payment_provider")
         redirect_url = f"/odoo/action-{action.id}/{provider_id}"
         params = {
-            "partnerId": const.OAUTH_ODOO_PARTNER_ID,
-            "partnerClientId": const.OAUTH_ODOO_CLIENT_ID,
+            "partnerId": provider._paypal_get_oauth_partner_id(),
+            "partnerClientId": provider._paypal_get_oauth_client_id(),
             "product": "ppcp",
             "secondaryProducts": "payment_methods,advanced_vaulting",
             "capabilities": "paypal_wallet_vaulting_advanced",
@@ -88,7 +88,7 @@ class PaypalOnboardingController(Controller):
         # Fetch the API credentials of the merchant account
         response_content = provider._send_api_request(
             "GET",
-            f"/v1/customer/partners/{const.OAUTH_ODOO_PARTNER_ID}"
+            f"/v1/customer/partners/{provider._paypal_get_oauth_partner_id()}"
             "/merchant-integrations/credentials",
             paypal_onboarding_access_token=access_token,
         )
