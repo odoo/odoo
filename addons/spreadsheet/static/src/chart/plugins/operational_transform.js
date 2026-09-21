@@ -1,9 +1,5 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
-const { inverseCommandRegistry, otRegistry } = spreadsheet.registries;
-
-function identity(cmd) {
-    return [cmd];
-}
+const { otRegistry } = spreadsheet.registries;
 
 otRegistry.addTransformation(
     "DELETE_CHART",
@@ -43,5 +39,3 @@ otRegistry.addTransformation(
         return toTransform;
     }
 );
-
-inverseCommandRegistry.add("UPDATE_ODOO_LINK_TO_CHART", identity);

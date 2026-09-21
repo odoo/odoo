@@ -12,6 +12,20 @@ import { OdooCorePlugin } from "@spreadsheet/plugins";
 
 export class ListCoreGlobalFilterPlugin extends OdooCorePlugin {
     static getters = /** @type {const} */ (["getListFieldMatch", "getListFieldMatching"]);
+    validators = {
+        ADD_GLOBAL_FILTER: this.checkListFieldMatching,
+        EDIT_GLOBAL_FILTER: this.checkListFieldMatching,
+    };
+
+    handlers = {
+        INSERT_ODOO_LIST: this.onInsertOdooList,
+        REMOVE_ODOO_LIST: this.onRemoveOdooList,
+        DUPLICATE_ODOO_LIST: this.onDuplicateOdooList,
+        ADD_GLOBAL_FILTER: this.onAddOrEditGlobalFilter,
+        EDIT_GLOBAL_FILTER: this.onAddOrEditGlobalFilter,
+        REMOVE_GLOBAL_FILTER: this.onRemoveGlobalFilter,
+    };
+
     constructor(config) {
         super(config);
 
@@ -19,52 +33,35 @@ export class ListCoreGlobalFilterPlugin extends OdooCorePlugin {
         this.fieldMatchings = {};
     }
 
-    /**
-     * @param {AllCoreCommand} cmd
-     *
-     * @returns {string | string[]}
-     */
-    allowDispatch(cmd) {
-        switch (cmd.type) {
-            case "ADD_GLOBAL_FILTER":
-            case "EDIT_GLOBAL_FILTER":
-                if (cmd.list) {
-                    return checkFilterFieldMatching(cmd.list);
-                }
+    checkListFieldMatching(cmd) {
+        if (cmd.list) {
+            return checkFilterFieldMatching(cmd.list);
         }
         return CommandResult.Success;
     }
 
-    /**
-     * @param {AllCoreCommand} cmd
-     *
-     */
-    handle(cmd) {
-        switch (cmd.type) {
-            case "INSERT_ODOO_LIST": {
-                this._addList(cmd.listId);
-                break;
-            }
-            case "REMOVE_ODOO_LIST": {
-                this.history.update("fieldMatchings", cmd.listId, undefined);
-                break;
-            }
-            case "DUPLICATE_ODOO_LIST": {
-                const { listId, newListId } = cmd;
-                const fieldMatch = deepCopy(this.fieldMatchings[listId]);
-                this._addList(newListId, fieldMatch);
-                break;
-            }
-            case "ADD_GLOBAL_FILTER":
-            case "EDIT_GLOBAL_FILTER":
-                if (cmd.list) {
-                    this._setListFieldMatching(cmd.filter.id, cmd.list);
-                }
-                break;
-            case "REMOVE_GLOBAL_FILTER":
-                this._onFilterDeletion(cmd.id);
-                break;
+    onInsertOdooList(cmd) {
+        this._addList(cmd.listId);
+    }
+
+    onRemoveOdooList(cmd) {
+        this.history.update("fieldMatchings", cmd.listId, undefined);
+    }
+
+    onDuplicateOdooList(cmd) {
+        const { listId, newListId } = cmd;
+        const fieldMatch = deepCopy(this.fieldMatchings[listId]);
+        this._addList(newListId, fieldMatch);
+    }
+
+    onAddOrEditGlobalFilter(cmd) {
+        if (cmd.list) {
+            this._setListFieldMatching(cmd.filter.id, cmd.list);
         }
+    }
+
+    onRemoveGlobalFilter(cmd) {
+        this._onFilterDeletion(cmd.id);
     }
 
     // -------------------------------------------------------------------------

@@ -3,12 +3,18 @@ declare module "@spreadsheet" {
     import { CommandResult as CR } from "@spreadsheet/o_spreadsheet/cancelled_reason";
     type OdooCommandResult = CommandResult | typeof CR;
 
+    /**
+     * Keys are either a command type or a command set name (prefixed with `*`).
+     */
+    type OdooCommandHandlers<Cmd> = Record<string, (command: Cmd) => void>;
+    type OdooCommandValidators<Cmd> = Record<string, (command: Cmd) => string | string[]>;
+
     export interface OdooCorePlugin extends CorePlugin {
         getters: OdooCoreGetters;
         dispatch: OdooCoreDispatch;
-        allowDispatch(command: AllCoreCommand): string | string[];
-        beforeHandle(command: AllCoreCommand): void;
-        handle(command: AllCoreCommand): void;
+        validators: OdooCommandValidators<AllCoreCommand>;
+        preHandlers: OdooCommandHandlers<AllCoreCommand>;
+        handlers: OdooCommandHandlers<AllCoreCommand>;
     }
 
     export interface OdooCorePluginConstructor {
@@ -18,9 +24,9 @@ declare module "@spreadsheet" {
     export interface OdooUIPlugin extends UIPlugin {
         getters: OdooGetters;
         dispatch: OdooDispatch;
-        allowDispatch(command: AllCommand): string | string[];
-        beforeHandle(command: AllCommand): void;
-        handle(command: AllCommand): void;
+        validators: OdooCommandValidators<AllCommand>;
+        preHandlers: OdooCommandHandlers<AllCommand>;
+        handlers: OdooCommandHandlers<AllCommand>;
     }
 
     export interface OdooUIPluginConstructor {

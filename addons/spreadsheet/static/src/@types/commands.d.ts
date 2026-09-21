@@ -1,5 +1,7 @@
 import { FieldMatching } from "./global_filter.d";
 import {
+    Command,
+    CoreCommand,
     CorePlugin,
     UIPlugin,
     DispatchResult,
@@ -12,8 +14,6 @@ import * as OdooCancelledReason from "@spreadsheet/o_spreadsheet/cancelled_reaso
 
 type CoreDispatch = CorePlugin["dispatch"];
 type UIDispatch = UIPlugin["dispatch"];
-type CoreCommand = Parameters<CorePlugin["allowDispatch"]>[0];
-type Command = Parameters<UIPlugin["allowDispatch"]>[0];
 
 // TODO look for a way to remove this and use the real import * as OdooCancelledReason
 type OdooCancelledReason = string;
