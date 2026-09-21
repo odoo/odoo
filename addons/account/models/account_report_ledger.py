@@ -15,12 +15,14 @@ from odoo.tools import SQL, date_utils
 from odoo.tools.misc import format_date
 
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
-from odoo.addons.report_formula.models.account_report import (
+from odoo.addons.account.tools.report_engines import (
     ACCOUNT_CODES_ENGINE_SPLIT_REGEX,
     ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX,
     ACCOUNT_CODES_ENGINE_TERM_REGEX,
-    LEDGER_AUDITABLE_ENGINES,
+    LEDGER_ENGINES,
     UNDISTR_LINE_NAME,
+)
+from odoo.addons.report_formula.models.account_report import (
     report_option_filter_field,
 )
 
@@ -113,6 +115,16 @@ class AccountReport(models.Model):
     )
     filter_budgets = report_option_filter_field(
         fields.Boolean, "filter_budgets", "Budgets"
+    )
+    default_opening_date_filter = fields.Selection(
+        selection_add=[
+            ("this_return_period", "This Return Period"),
+            ("previous_return_period", "Last Return Period"),
+        ],
+        ondelete={
+            "this_return_period": "set null",
+            "previous_return_period": "set null",
+        },
     )
     availability_condition = fields.Selection(
         selection_add=[
@@ -2284,6 +2296,11 @@ class AccountReport(models.Model):
         )
         return annotations_by_line
 
+    def _get_engines_without_next_groupby(self):
+        # These engines always receive None as their next_groupby, which lets
+        # their expressions be batched together.
+        return super()._get_engines_without_next_groupby() | LEDGER_ENGINES
+
     def _reads_ledger(self):
         return self[:1].source_model in {False, "account.move.line"}
 
@@ -3638,6 +3655,10 @@ class AccountReportExpression(models.Model):
         ],
         ondelete={"tax_tags": "cascade", "account_codes": "cascade"},
     )
+    date_scope = fields.Selection(
+        selection_add=[("previous_return_period", "From previous return period")],
+        ondelete={"previous_return_period": "set default"},
+    )
     carryover_target = fields.Char(
         string="Carry Over To",
         help="Formula in the form line_code.expression_label. This allows setting the target of the carryover for this expression "
@@ -3645,7 +3666,7 @@ class AccountReportExpression(models.Model):
     )
 
     def _get_auditable_engines(self):
-        return super()._get_auditable_engines() | LEDGER_AUDITABLE_ENGINES
+        return super()._get_auditable_engines() | LEDGER_ENGINES
 
     @api.constrains("formula")
     def _check_formula_account_codes(self):

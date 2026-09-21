@@ -11,10 +11,6 @@ from odoo.libs.numbers import float_round
 from odoo.tools import SQL, Query
 from odoo.tools.safe_eval import expr_eval, safe_eval
 
-from .account_report import (
-    NO_NEXT_GROUPBY_ENGINES,
-)
-
 _debug = DebugLog(__name__)
 
 
@@ -34,6 +30,8 @@ class AccountReportExpressionEval(models.Model):
         include_default_vals=False,
         warnings=None,
     ):
+        engines_without_next_groupby = self._get_engines_without_next_groupby()
+
         def add_expressions_to_groups(
             expressions_to_add, grouped_formulas, force_date_scope=None
         ):
@@ -56,7 +54,7 @@ class AccountReportExpressionEval(models.Model):
 
                 next_groupby = (
                     groupby_data["next_groupby"]
-                    if engine not in NO_NEXT_GROUPBY_ENGINES
+                    if engine not in engines_without_next_groupby
                     else None
                 )
                 grouping_key = (
@@ -1583,6 +1581,9 @@ class AccountReportExpressionEval(models.Model):
             results=len(rslt),
         )
         return rslt
+
+    def _get_engines_without_next_groupby(self):
+        return frozenset()
 
     def _currency_table_apply_rate(self, value: SQL) -> SQL:
         return value

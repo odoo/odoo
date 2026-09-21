@@ -12,7 +12,7 @@ from odoo.libs.numbers import float_round
 from odoo.tools import SQL
 
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
-from odoo.addons.report_formula.models.account_report import (
+from odoo.addons.account.tools.report_engines import (
     ACCOUNT_CODES_ENGINE_SPLIT_REGEX,
     ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX,
     ACCOUNT_CODES_ENGINE_TERM_REGEX,

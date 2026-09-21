@@ -15,7 +15,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.tools import html2plaintext
 from odoo.tools.misc import format_date
 
-from odoo.addons.report_formula.models.account_report import (
+from odoo.addons.account.tools.report_engines import (
     ACCOUNT_CODES_ENGINE_SPLIT_REGEX,
     ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX,
     ACCOUNT_CODES_ENGINE_TERM_REGEX,
@@ -109,7 +109,7 @@ class AccountReportExport(models.Model):
             job_count=job_count,
         )
         if need_retrigger:
-            self.env.ref("account.ir_cron_account_report_send")._trigger()
+            self.env["ir.cron"]._trigger_ref("account.ir_cron_account_report_send")
 
     @api.model
     def _get_sender_company_for_export(self, options):

@@ -4,10 +4,9 @@ import re
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import LazyTranslate, date_utils
+from odoo.tools import date_utils
 
 _debug = DebugLog(__name__)
-_lt = LazyTranslate(__name__)
 
 FIGURE_TYPE_SELECTION_VALUES = [
     ("monetary", "Monetary"),
@@ -22,14 +21,6 @@ FIGURE_TYPE_SELECTION_VALUES = [
 
 DOMAIN_REGEX = re.compile(r"(-?sum)\((.*)\)")
 CROSS_REPORT_REGEX = re.compile(r"^cross_report\((.+)\)$")
-
-ACCOUNT_CODES_ENGINE_SPLIT_REGEX = re.compile(r"(?=[+-])")
-ACCOUNT_CODES_ENGINE_TERM_REGEX = re.compile(
-    r"^(?P<sign>[+-]?)"
-    r"(?P<prefix>([A-Za-z\d.]*|tag\([\w.]+\))((?=\\)|(?<=[^CD])))"
-    r"(\\\((?P<excluded_prefixes>([A-Za-z\d.]+,)*[A-Za-z\d.]*)\))?"
-    r"(?P<balance_character>[DC]?)$"
-)
 
 NUMBER_REGEX = r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?"
 REPORT_LINE_CODE_REGEX = r"[+-]?[\s(]*[^().\s*/+\-]+\.[^().\s*/+\-]+"
@@ -53,22 +44,12 @@ IF_OTHER_EXPR_SUBFORMULA_REGEX = re.compile(
 )
 
 AUDITABLE_ENGINES = frozenset({"domain", "external", "aggregation"})
-LEDGER_AUDITABLE_ENGINES = frozenset({"tax_tags", "account_codes"})
-
-ACCOUNT_CODES_ENGINE_TAG_ID_PREFIX_REGEX = re.compile(
-    r"tag\(((?P<id>\d+)|(?P<ref>\w+\.\w+))\)"
-)
-
-# Performance optimisation: those engines always will receive None as their next_groupby, allowing more efficient batching.
-NO_NEXT_GROUPBY_ENGINES = {"tax_tags", "account_codes"}
 
 NUMBER_FIGURE_TYPES = ("float", "integer", "monetary", "percentage")
 
 LINE_ID_HIERARCHY_DELIMITER = "|"
 
 CURRENCIES_USING_LAKH = {"AFN", "BDT", "INR", "MMK", "NPR", "PKR", "LKR"}
-
-UNDISTR_LINE_NAME = _lt("Result Brought Forward")
 
 REPORT_OPTION_FILTER_DEPENDS = ("root_report_id", "section_main_report_ids")
 
@@ -187,8 +168,6 @@ class AccountReport(models.Model):
             ("previous_month", "Last Month"),
             ("previous_quarter", "Last Quarter"),
             ("previous_year", "Last Year"),
-            ("this_return_period", "This Return Period"),
-            ("previous_return_period", "Last Return Period"),
         ],
     )
 
