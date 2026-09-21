@@ -423,6 +423,7 @@
             <field name="arch" type="xml">
                 <form string="Users" edit="1">
                     <sheet>
+                        <field name="role" invisible="1" readonly="1"/> <!-- drives the "invisible" modifier of the calendar page -->
                         <widget name="notification_alert"/>
                         <div class="d-flex flex-column flex-md-row align-items-center gap-3">
                             <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128'}"/>
@@ -466,7 +467,7 @@
                                     <group name="other_preferences"/>
                                 </group>
                             </page>
-                            <page name="calendar" string="Calendar">
+                            <page name="calendar" string="Calendar" invisible="role == 'light_user'">
                                 <group>
                                     <group name="calendar_preferences">
                                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>

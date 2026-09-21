@@ -70,7 +70,9 @@ class IrUiMenu(models.Model):
     def _visible_menu_ids(self, debug=False):
         """ Return the ids of the menu items visible to the user. """
         group_ids = set(self.env.user._get_group_ids())
-        if not debug:
+        # "Technical Features" is a developer tool: it is only effective in debug
+        # mode, and a light user has no technical menu at all.
+        if not debug or not self.env.user._is_regular():
             group_ids.discard(self.env['ir.model.data']._xmlid_to_res_id('base.group_no_one', raise_if_not_found=False))
 
         # retrieve menus with a domain to filter out menus with groups the user does not have.

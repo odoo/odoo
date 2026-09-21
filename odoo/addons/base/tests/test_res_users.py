@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 from types import SimpleNamespace
 from unittest.mock import patch
 
+from lxml import etree
+
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
@@ -657,9 +659,12 @@ class TestUsers2(UsersCommonCase):
         hr_manager = self.env['res.groups'].create({'name': 'HR Manager', 'privilege_id': hr.id})
         hr_manager.implied_ids += hr_user
 
-        light_groups = ('base.group_user', hr_interviewer.id)
+        # Converted the HR group to a light group
+        light_groups = self.env['res.groups']._get_light_group_xmlids() + (hr_interviewer.id,)
         with patch.object(ResGroups, '_get_light_group_xmlids', lambda s: light_groups):
+            hr_interviewer.implied_ids = []
 
+        with patch.object(ResGroups, '_get_light_group_xmlids', lambda s: light_groups):
             self.assertEqual(hr_manager._reduce_to_light_groups().mapped('name'), hr_interviewer.mapped('name'))
 
             user = self.user_internal
@@ -989,3 +994,23 @@ class TestResUsersForm(TransactionCase):
         user_form.login = 'a user login'
         user_form.name = 'a user name'
         user_form.save()
+
+    def test_light_user_preferences(self):
+        """ A light user has no calendar settings in its preferences. """
+        light_user = self.env['res.users'].create({
+            'login': 'light_preferences',
+            'name': 'Light Preferences',
+            'group_ids': [Command.set(self.env.ref('base.group_user').ids)],
+        })
+        self.assertEqual(light_user.role, 'light_user')
+        arch = self.env['res.users'].with_user(light_user).get_view(
+            self.env.ref('base.view_users_form_simple_modif').id, 'form')['arch']
+        tree = etree.fromstring(arch)
+        calendar_page = tree.xpath('//page[@name="calendar"]')
+        self.assertTrue(calendar_page, "the calendar page should still be in the preferences view")
+        self.assertEqual(calendar_page[0].get('invisible'), "role == 'light_user'")
+        # the phone and the security settings stay available to a light user
+        for xpath in ('//div[@name="phone"]', '//page[@name="page_security"]'):
+            node = tree.xpath(xpath)
+            self.assertTrue(node, f"{xpath} should be in the preferences view")
+            self.assertFalse(node[0].get('invisible'))

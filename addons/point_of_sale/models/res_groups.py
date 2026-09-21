@@ -9,6 +9,5 @@ class ResGroups(models.Model):
     def _get_light_group_xmlids(self):
         return (
             *super()._get_light_group_xmlids(),
-            'point_of_sale.group_pos_user',
             'point_of_sale.group_pos_preset',
         )

@@ -563,6 +563,17 @@ def load_modules(
             except Exception as e:  # noqa: BLE001
                 _logger.warning('invalid custom view(s) for model %s: %s', model, e)
 
+    # STEP 7: compute the groups as light or regular
+    # When `_apply_group_regular()` runs, thes groups already exists in the
+    # database, but the overrides of `_get_light_group_xmlids` is not yet in the
+    # registry (Modules load one by one, models first then data).
+    # As a result, the group is categorized as regular and linked to
+    # `base.group_user_regular`, and no subsequent process runs to update it.
+    # Redo the classification now that every module is in.
+    if update_module:
+        env['res.groups']._apply_group_regular()
+        env.flush_all()
+
     if not registry._assertion_report or registry._assertion_report.wasSuccessful():
         _logger.info('Modules loaded.')
     else:
