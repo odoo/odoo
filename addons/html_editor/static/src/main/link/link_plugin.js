@@ -619,6 +619,17 @@ export class LinkPlugin extends Plugin {
                     if (relValue) {
                         link.setAttribute("rel", relValue);
                     }
+                    if (!isImage) {
+                        if (classes) {
+                            link.className = classes;
+                        }
+                        if (customStyle) {
+                            link.setAttribute("style", customStyle);
+                        }
+                    }
+                    if (linkTarget) {
+                        link.setAttribute("target", linkTarget);
+                    }
                     const image = isImage && findInSelection(selection, "img");
                     const figure =
                         image?.parentElement?.matches("figure[contenteditable=false]") &&
