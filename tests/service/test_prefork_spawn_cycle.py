@@ -259,6 +259,7 @@ def _fake_worker():
     w = MagicMock()
     w.watchdog_pipe = os.pipe()
     w.wakeup_pipe = os.pipe()
+    w.pipe_fds = (*w.watchdog_pipe, *w.wakeup_pipe)
     return w
 
 

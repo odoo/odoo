@@ -454,14 +454,32 @@ class TestTheWorkerCancelsItsOwnOverrun:
         assert not worker.alive
         multi.ping_pipe.assert_called_once()
 
-    def test_work_within_budget_is_left_alone(self, multi):
+    def test_work_within_budget_is_not_cancelled_but_the_master_is_fed(self, multi):
         worker = self._worker(multi, budget=60)
         thread = self._thread(alive_for=3)
         thread.start_time = time.monotonic() - 1
         with patch("odoo.db.cancel_queries_of") as cancel:
             worker._supervise_work_thread(thread)
         cancel.assert_not_called()
-        multi.ping_pipe.assert_not_called()
+        assert multi.ping_pipe.call_count == 3, (
+            "the master last heard from the work thread before the accept, up "
+            "to a beat before this unit began; unfed, its clock runs out before "
+            "this monitor's own verdict"
+        )
+
+    def test_an_idle_work_thread_does_not_feed_the_master_from_here(self, multi):
+        worker = self._worker(multi, budget=60)
+        thread = self._thread(alive_for=3)
+        thread.start_time = None
+        with patch("odoo.db.cancel_queries_of"):
+            worker._supervise_work_thread(thread)
+        (
+            multi.ping_pipe.assert_not_called(),
+            (
+                "between units the work thread feeds the master itself; a second "
+                "feeder would hide a work loop that stopped"
+            ),
+        )
 
     def test_no_budget_means_no_monitor(self, multi):
         worker = self._worker(multi, budget=None)

@@ -186,7 +186,7 @@ class TestBothLoopsUseIt:
         """Both take the default, so there is nothing left to keep in step."""
         from odoo.service._cron import CRON_POLL_INTERVAL_S, CronSchedule
 
-        assert CronSchedule()._refresh_interval == CRON_POLL_INTERVAL_S
+        assert CronSchedule().refresh_interval == CRON_POLL_INTERVAL_S
 
     def test_one_seam_now_reaches_both_loops(self, monkeypatch):
         """Patching `_cron.get_cron_databases` must scope every sweep.

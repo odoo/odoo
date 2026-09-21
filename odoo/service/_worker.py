@@ -84,9 +84,8 @@ class Worker:
     _CPU_LIMIT_JOIN_GRACE_S = 1.0
 
     _CANCEL_GRACE_S = 5.0
-    """How long the main thread keeps the master's watchdog fed after it has
-    cancelled the work thread's queries, so the cancel gets to land before
-    the master's SIGKILL does."""
+    """How long the main thread waits for the work thread to return after
+    cancelling its queries before it ends the worker itself."""
 
     _listener_ready = True
     """Whether the last `sleep()` was woken by a watched fd other than its own
@@ -132,6 +131,10 @@ class Worker:
     def setproctitle(self, title: str = "") -> None:
         setproctitle(f"odoo: {self.__class__.__name__} {self.pid} {title}")
 
+    @property
+    def pipe_fds(self) -> tuple[int, int, int, int]:
+        return (*self.watchdog_pipe, *self.wakeup_pipe)
+
     def close(self) -> None:
         _debug.lifecycle(
             "worker.closed",
@@ -139,12 +142,7 @@ class Worker:
             pid=self.pid,
             requests=self.request_count,
         )
-        for fd in (
-            self.watchdog_pipe[0],
-            self.watchdog_pipe[1],
-            self.wakeup_pipe[0],
-            self.wakeup_pipe[1],
-        ):
+        for fd in self.pipe_fds:
             with contextlib.suppress(OSError):
                 os.close(fd)
 
@@ -325,11 +323,17 @@ class Worker:
     def _supervise_work_thread(self, work: threading.Thread) -> bool:
         # The main thread has nothing to do but wait, so it is the worker's
         # own budget monitor: a unit of work over `watchdog_timeout` has its
-        # queries cancelled here, from inside the process, and the master's
-        # watchdog is fed through the grace so the cancel gets to land.
-        # Work still stuck after the grace -- a stall in Python, not in a
-        # query -- ends the worker itself, a clean exit the master replaces
-        # at once instead of a SIGKILL a full timeout later.
+        # queries cancelled here, from inside the process.  Work still stuck
+        # after the grace -- a stall in Python, not in a query -- ends the
+        # worker itself, a clean exit the master replaces at once instead of
+        # a SIGKILL a full timeout later.
+        #
+        # The master's clock is fed the whole way through: it last heard from
+        # the work thread before the accept, up to a beat before the work
+        # began, so left alone it ran out first in three of eight measured
+        # phases, once before the budget itself had elapsed.  Fed from here,
+        # its SIGKILL is reached only when this thread stops feeding it: the
+        # grace ran out (the worker exits on its own) or the process is wedged.
         worker = as_worker_thread(work)
         cancelled_for: float | None = None
         grace_until = 0.0
@@ -344,14 +348,10 @@ class Worker:
                 cancelled_for = started
                 grace_until = now + self._CANCEL_GRACE_S
                 self._cancel_work_thread_queries(work, now - started, budget)
-                # The master's clock has run since the work began; feed it
-                # now, not a poll later.
-                self.multi.ping_pipe(self.watchdog_pipe)
-            elif cancelled_for == started:
-                if now >= grace_until:
-                    self.alive = False
-                    return True
-                self.multi.ping_pipe(self.watchdog_pipe)
+            elif cancelled_for == started and now >= grace_until:
+                self.alive = False
+                return True
+            self.multi.ping_pipe(self.watchdog_pipe)
         return False
 
     def _cancel_work_thread_queries(
@@ -556,9 +556,7 @@ class WorkerCron(Worker):
                 )
                 return
 
-            interval: float = CRON_POLL_INTERVAL_S + os.getpid() % 10
-            interval = min(interval, self.schedule.polling_delay)
-
+            interval = self.schedule.polling_delay
             if self.watchdog_timeout:
                 interval = min(interval, max(self.watchdog_timeout / 2, 1))
 
@@ -674,6 +672,9 @@ class WorkerCron(Worker):
         Worker.start(self)
         if self.multi.socket:
             self.multi.socket.close()
+        # Spread the sweeps of sibling cron workers, as the threaded server
+        # does with its thread number; the pid is the child's only here.
+        self.schedule.refresh_interval = CRON_POLL_INTERVAL_S + os.getpid() % 10
         registries_size = get_env_int(
             "ODOO_REGISTRY_LRU_SIZE_CRON", 0, minimum=0, logger=self.logger
         )

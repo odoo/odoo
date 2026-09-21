@@ -308,7 +308,7 @@ class CronSchedule:
         clock: typing.Callable[[], float] | None = None,
     ) -> None:
         self._list_databases = list_databases
-        self._refresh_interval = refresh_interval
+        self.refresh_interval = refresh_interval
         self._clock = clock or time.monotonic
         self._known: OrderedSet[str] = OrderedSet()
         self._listed_at = float("-inf")
@@ -319,12 +319,12 @@ class CronSchedule:
         return self._known
 
     def _is_stale(self) -> bool:
-        return self._clock() - self._listed_at >= self._refresh_interval
+        return self._clock() - self._listed_at >= self.refresh_interval
 
     @property
     def polling_delay(self) -> float:
         """Bound listener sleep by the next sweep, including the first one."""
-        return max(0.0, self._listed_at + self._refresh_interval - self._clock())
+        return max(0.0, self._listed_at + self.refresh_interval - self._clock())
 
     def _list_known_databases(self, reason: str) -> OrderedSet[str]:
         previous = self._known

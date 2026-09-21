@@ -178,6 +178,16 @@ flavours act in two steps, one budget apart:
    thread is itself wedged. The threaded server, which has no worker to
    drop, reloads the process, logging `still on the same work … reloading`.
 
+The prefork monitor thread feeds the master's watchdog for as long as a unit
+of work is in flight, budget and grace included. The master last heard from
+the work thread before the accept, up to one beat before the work began, so
+left unfed its `limit_time_real` clock ran out first in three of eight
+measured phases — once at 4 s against a 5 s budget — and the SIGKILL replaced
+the worker's own verdict. Fed, the SIGKILL is reached only when the monitor
+stops feeding: the grace ran out (the worker exits on its own) or the process
+is wedged, and a wedge is then killed `limit_time_real` after the last beat
+it managed rather than after the last idle ping.
+
 Keep `limit_time_real` at or above `SUPERVISION_BEAT_S` (4 s): an idle prefork
 worker pings the master once per beat, so a smaller budget times out idle
 workers before they serve anything.

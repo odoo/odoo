@@ -203,19 +203,9 @@ class PreforkServer(CommonServer):
             self.ping_pipe(self.pipe)
 
     def _close_inherited_pipe_fds_in_child(self, new_worker: Worker) -> None:
-        keep = {
-            new_worker.watchdog_pipe[0],
-            new_worker.watchdog_pipe[1],
-            new_worker.wakeup_pipe[0],
-            new_worker.wakeup_pipe[1],
-        }
+        keep = set(new_worker.pipe_fds)
         for sibling in self.workers.values():
-            for fd in (
-                sibling.watchdog_pipe[0],
-                sibling.watchdog_pipe[1],
-                sibling.wakeup_pipe[0],
-                sibling.wakeup_pipe[1],
-            ):
+            for fd in sibling.pipe_fds:
                 if fd not in keep:
                     with contextlib.suppress(OSError):
                         os.close(fd)
@@ -301,12 +291,6 @@ class PreforkServer(CommonServer):
             )
             return worker
         else:
-            for _sig in (signal.SIGINT, signal.SIGTERM, signal.SIGHUP):
-                with contextlib.suppress(OSError, ValueError):
-                    signal.signal(_sig, signal.SIG_DFL)
-            for _sig in (signal.SIGCHLD, signal.SIGTTIN, signal.SIGTTOU):
-                with contextlib.suppress(OSError, ValueError):
-                    signal.signal(_sig, signal.SIG_IGN)
             self._close_inherited_pipe_fds_in_child(worker)
             exit_code = 0
             try:

@@ -152,6 +152,24 @@ class TestPreforkLimits:
         assert _get(srv.port, "/probe/slow/0")[0] == 200
         assert "holding respawn" not in srv.log_text()
 
+    @pytest.mark.parametrize("phase", [0.0, 2.0, 3.5])
+    def test_the_verdict_is_the_workers_own_whatever_the_beat_phase(self, probe, phase):
+        # The master last hears from an idle worker up to one 4 s beat before
+        # a request begins. Unfed during the request, its 5 s clock ran out
+        # first at some phases (measured: three of eight, one before the
+        # budget itself), and the SIGKILL replaced the worker's own cancel.
+        srv = probe("--workers", "1", "--limit-time-real", "5")
+        assert srv.wait_until(lambda: len(srv.http_workers()) == 1, timeout=60)
+        assert _get(srv.port, "/probe/slow/0")[0] == 200
+        time.sleep(phase)
+        status, seconds = _get(srv.port, "/probe/slow/30")
+        assert status is None and 9 < seconds < 14, (status, seconds)
+        assert srv.wait_until(lambda: "did not return" in srv.log_text())
+        assert "timeout after" not in srv.log_text(), (
+            "the master's SIGKILL is the backstop for a wedged worker, not a "
+            "second verdict racing the worker's own"
+        )
+
     def test_memory_soft_limit_recycles_cleanly(self, probe):
         srv = probe("--workers", "1", "--limit-memory-soft", str(256 * 1024 * 1024))
         assert srv.wait_until(lambda: len(srv.http_workers()) == 1, timeout=60)
