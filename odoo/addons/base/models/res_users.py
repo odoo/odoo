@@ -427,17 +427,20 @@ class ResUsers(models.Model):
             else:
                 user.password = user.new_password
 
-    @api.depends('group_ids')
+    @api.depends('all_group_ids')
     def _compute_role(self):
         group_system = self.env.ref('base.group_system', raise_if_not_found=False)
         group_user = self.env.ref('base.group_user', raise_if_not_found=False)
 
         for user in self:
-            groups = user.group_ids._origin
+            # A group is almost never held directly: ``base.group_user`` and the
+            # light/regular tier both come from the application groups the user
+            # is given, so the role is determined on the implied groups.
+            all_groups = user.group_ids._origin.all_implied_ids
             user.role = (
-                'group_system' if group_system and group_system in groups else
-                'light_user' if group_user and group_user in groups and groups._is_light_groups() else
-                'regular_user' if group_user and group_user in groups else
+                'group_system' if group_system and group_system in all_groups else
+                'light_user' if group_user and group_user in all_groups and all_groups._is_light_groups() else
+                'regular_user' if group_user and group_user in all_groups else
                 False
             )
 
@@ -464,8 +467,12 @@ class ResUsers(models.Model):
         if operator != 'in':
             return NotImplemented
 
+        group_definitions = self.env['res.groups']._get_group_definitions()
+        light_group_ids = {group_definitions.get_id(xid) for xid in self.env['res.groups']._get_light_group_xmlids()}
+        regular_group_ids = set(group_definitions.get_all_ids()) - light_group_ids
+
         is_system = Domain('all_group_ids', 'in', [self.env.ref('base.group_system').id])
-        is_user_regular = Domain('all_group_ids', 'in', [self.env.ref('base.group_user_regular').id])
+        is_user_regular = Domain('all_group_ids', 'in', regular_group_ids)
         is_user = Domain('all_group_ids', 'in', [self.env.ref('base.group_user').id])
         domains_by_role = {
             'light_user': is_user & ~is_user_regular,
@@ -1264,6 +1271,11 @@ class ResUsers(models.Model):
     def _is_internal(self):
         self.ensure_one()
         return self.sudo().has_group('base.group_user')
+
+    def _is_regular(self):
+        """ An internal user that is not a light one. """
+        self.ensure_one()
+        return self.sudo().role in ('regular_user', 'group_system')
 
     def _is_portal(self):
         self.ensure_one()
