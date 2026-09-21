@@ -12,8 +12,10 @@ from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 from odoo.tools.misc import file_path
 
-from .account_report_export import PDF_PAPERFORMAT_ARGS
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
+from odoo.addons.report_formula.models.account_report_export import (
+    PDF_PAPERFORMAT_ARGS,
+)
 
 _debug = DebugLog(__name__)
 

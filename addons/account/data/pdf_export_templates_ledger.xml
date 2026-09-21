@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="pdf_export_main_ledger" inherit_id="account.pdf_export_main">
+    <template id="pdf_export_main_ledger" inherit_id="report_formula.pdf_export_main">
         <xpath
             expr="//div[hasclass('o_title')]/t[@t-out='report_title']"
             position="before">
@@ -35,7 +35,9 @@
         </xpath>
     </template>
 
-    <template id="company_information_ledger" inherit_id="account.company_information">
+    <template
+        id="company_information_ledger"
+        inherit_id="report_formula.company_information">
         <xpath expr="//div[@name='company_vat']" position="replace">
             <t t-if="options.get('tax_unit', 'company_only') == 'company_only'">
                 <t
@@ -50,7 +52,9 @@
         </xpath>
     </template>
 
-    <template id="pdf_export_filters_ledger" inherit_id="account.pdf_export_filters">
+    <template
+        id="pdf_export_filters_ledger"
+        inherit_id="report_formula.pdf_export_filters">
         <xpath
             expr="//t[@t-if=&quot;options.get('partner_ids') != None&quot;]"
             position="before">
@@ -93,7 +97,7 @@
 
     <template
         id="pdf_export_main_table_header_ledger"
-        inherit_id="account.pdf_export_main_table_header">
+        inherit_id="report_formula.pdf_export_main_table_header">
         <xpath
             expr="//thead/t[@t-foreach]/tr/th[@t-if=&quot;options.get('column_percent_comparison') == 'growth'&quot;]"
             position="after">
@@ -115,7 +119,7 @@
 
     <template
         id="pdf_export_main_table_body_ledger"
-        inherit_id="account.pdf_export_main_table_body">
+        inherit_id="report_formula.pdf_export_main_table_body">
         <xpath
             expr="//t[@t-if=&quot;line_index != 0 and line['level'] == 0&quot;]/tr"
             position="inside">

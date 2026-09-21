@@ -202,3 +202,12 @@ class TestEngineWithoutAccount(TransactionCase):
         export = self.report.dispatch_report_action(options, "export_to_xlsx")
         self.assertEqual(export["file_type"], "xlsx")
         self.assertTrue(export["file_content"].startswith(b"PK"))
+
+    def test_the_report_renders_its_pdf_body(self):
+        options = self._options("2020-01-01", "2020-01-31", export_mode="print")
+        html = str(
+            self.report._get_pdf_export_html(options, self.report._get_lines(options))
+        )
+        self.assertIn("All entries", html)
+        self.assertIn("175.00", html)
+        self.assertIn("report_formula.assets_pdf_export", html)

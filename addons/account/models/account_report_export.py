@@ -4,7 +4,6 @@ import io
 import re
 from ast import literal_eval
 from collections import defaultdict
-from itertools import groupby
 
 import markupsafe
 
@@ -25,17 +24,6 @@ from odoo.addons.report_formula.models.account_report_custom_handler import (
 )
 
 _debug = DebugLog(__name__)
-
-# Side margins are explicit: a company paperformat with margin_left/right at 0 lets a
-# table wider than the sheet bleed into the printer's non-printable edge and lose the
-# last digit of its widest column. No data-report-header-spacing: WeasyPrint has no
-# equivalent and logs a warning per render.
-PDF_PAPERFORMAT_ARGS = {
-    "data-report-margin-top": 10,
-    "data-report-margin-left": 7,
-    "data-report-margin-right": 7,
-    "data-report-margin-bottom": 15,
-}
 
 
 class AccountReportExport(models.Model):
@@ -148,190 +136,6 @@ class AccountReportExport(models.Model):
         ):
             return self.env[custom_handler_model]._get_report_send_recipients(options)
         return self.env["res.partner"]
-
-    @_debug.perf.timed
-    def export_to_pdf(self, options):
-        self.check_singleton()
-
-        base_url = self.env["ir.config_parameter"].sudo().get_param(
-            "report.url"
-        ) or self.env["ir.config_parameter"].sudo().get_param("web.base.url")
-        rcontext = {
-            "mode": "print",
-            "base_url": base_url,
-            "company": self.env.company,
-        }
-
-        print_options = self.get_options(
-            previous_options={**options, "export_mode": "print"}
-        )
-        if print_options["sections"]:
-            reports_to_print = self.env["account.report"].browse(
-                [section["id"] for section in print_options["sections"]]
-            )
-        else:
-            reports_to_print = self
-        _debug.logic(
-            "pdf_reports_selected",
-            report=self,
-            by_sections=bool(print_options["sections"]),
-            reports=reports_to_print,
-        )
-
-        reports_options = []
-        reports_options.extend(
-            report.get_options(
-                previous_options={**print_options, "selected_section_id": report.id}
-            )
-            for report in reports_to_print
-        )
-
-        grouped_reports_by_format = groupby(
-            zip(reports_to_print, reports_options, strict=False),
-            key=lambda report: (
-                len(report[1]["columns"]) > 5 or report[1].get("horizontal_split")
-            ),
-        )
-
-        footer = self._get_layout_footer(rcontext)
-
-        action_report = self.env["ir.actions.report"].with_context(
-            account_report_pdf_export=True
-        )
-        files_stream = []
-        for is_landscape, reports_with_options in grouped_reports_by_format:
-            bodies = []
-
-            for report, report_options in reports_with_options:
-                # Use custom handler's PDF export method if available
-                custom_handler_model = report._get_custom_handler_model()
-                handler = (
-                    self.env[custom_handler_model]
-                    if (
-                        custom_handler_model
-                        and hasattr(
-                            self.env[custom_handler_model], "_get_pdf_export_html"
-                        )
-                    )
-                    else report
-                )
-                _debug.logic(
-                    "pdf_handler_chosen",
-                    report=report,
-                    custom_handler=custom_handler_model,
-                    handler=handler,
-                )
-                bodies.append(
-                    handler._get_pdf_export_html(
-                        report_options,
-                        report._filter_out_folded_children(
-                            report._get_lines(report_options)
-                        ),
-                        additional_context={"base_url": base_url},
-                    )
-                )
-
-            bodies_list = [
-                action_report._get_html_with_header_footer(body, footer=footer)
-                if footer
-                else body
-                for body in bodies
-            ]
-            with _debug.perf(
-                "pdf_render",
-                cr=self.env.cr,
-                report=self,
-                bodies_list_count=len(bodies_list),
-                landscape=is_landscape,
-            ):
-                files_stream.append(
-                    io.BytesIO(
-                        action_report._render_html_to_pdf(
-                            bodies_list,
-                            landscape=is_landscape
-                            or self.env.context.get("force_landscape_printing"),
-                            specific_paperformat_args=PDF_PAPERFORMAT_ARGS,
-                        )
-                    )
-                )
-
-        _debug.pipeline(
-            "pdf_streams_rendered",
-            report=self,
-            streams=len(files_stream),
-            merged=len(files_stream) > 1,
-            has_footer=bool(footer),
-        )
-        if len(files_stream) > 1:
-            result_stream = action_report._merge_pdfs(files_stream)
-            result = result_stream.getvalue()
-            # Close the different stream
-            result_stream.close()
-            for file_stream in files_stream:
-                file_stream.close()
-        else:
-            result = files_stream[0].read()
-
-        return {
-            "file_name": self.get_default_report_filename(options, "pdf"),
-            "file_content": result,
-            "file_type": "pdf",
-        }
-
-    @_debug.perf.timed
-    def _get_pdf_export_html(
-        self, options, lines, additional_context=None, template=None
-    ):
-        report_info = self.get_report_information(options)
-
-        custom_print_templates = options["custom_display_config"].get("pdf_export", {})
-        template = custom_print_templates.get(
-            "pdf_export_main", "account.pdf_export_main"
-        )
-
-        render_values = {
-            "report": self,
-            "report_title": options.get("report_title") or self.name,
-            "options": options,
-            "table_start": markupsafe.Markup("<tbody>"),
-            "table_end": markupsafe.Markup("""
-                </tbody></table></div>
-                <div style="page-break-after: always"></div>
-                <div class="d-flex align-items-start">
-                <table class="o_table">
-            """),
-            "column_headers_render_data": self._prepare_column_headers_render_data(
-                options
-            ),
-            "custom_templates": custom_print_templates,
-        }
-        if additional_context:
-            render_values.update(additional_context)
-
-        if options.get("order_column"):
-            lines = self.sort_lines(lines, options)
-
-        lines = self._format_lines_for_display(lines, options)
-        _debug.pipeline(
-            "pdf_html_lines_formatted",
-            report=self,
-            template=template,
-            lines=len(lines),
-            sorted=bool(options.get("order_column")),
-            last_annotations=bool(options.get("show_last_annotations")),
-        )
-
-        render_values["lines"] = lines
-        render_values.update(
-            self._get_pdf_export_render_values(options, lines, report_info)
-        )
-
-        options["css_custom_class"] = options["custom_display_config"].get(
-            "css_custom_class", ""
-        )
-
-        # Render.
-        return self.env["ir.qweb"]._render(template, render_values)
 
     def _get_pdf_export_render_values(self, options, lines, report_info):
         render_values = super()._get_pdf_export_render_values(
@@ -1077,21 +881,6 @@ class AccountReportExport(models.Model):
             )
         return coverage_lines
 
-    def _get_layout_footer(self, rcontext):
-        if self.env.context.get("exclude_page_footer"):
-            return None
-        else:
-            footer_html = self.env["ir.actions.report"]._render_template(
-                "account.internal_layout", values=rcontext
-            )
-            footer_html = self.env["ir.actions.report"]._render_template(
-                "web.minimal_layout",
-                values=dict(
-                    rcontext, subst=True, body=markupsafe.Markup(footer_html.decode())
-                ),
-            )
-            return footer_html.decode()
-
     @_debug.perf.timed
     def _generate_file_data_with_error_check(
         self, options, content_generator, generator_params, errors
@@ -1199,3 +988,6 @@ class AccountReportExport(models.Model):
             )
         )
         return filters
+
+    def _get_pdf_footer_template(self):
+        return "account.internal_layout"

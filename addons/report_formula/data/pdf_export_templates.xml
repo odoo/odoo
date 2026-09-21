@@ -7,7 +7,7 @@
                 <base t-att-href="base_url" />
                 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
                 <t
-                    t-call-assets="account.assets_pdf_export"
+                    t-call-assets="report_formula.assets_pdf_export"
                     t-js="False"
                     t-autoprefix="true" />
             </head>
@@ -18,7 +18,7 @@
                             <div class="col-8">
                                 <!-- All company information (name, address, vat, ...) -->
                                 <t
-                                    t-call="{{custom_templates.get('company_information', 'account.company_information')}}" />
+                                    t-call="{{custom_templates.get('company_information', 'report_formula.company_information')}}" />
                             </div>
                             <div class="col-4">
                                 <div class="d-flex justify-content-end">
@@ -28,7 +28,7 @@
                                         </div>
                                         <!-- All filters and options -->
                                         <t
-                                            t-call="{{custom_templates.get('pdf_export_filters', 'account.pdf_export_filters')}}" />
+                                            t-call="{{custom_templates.get('pdf_export_filters', 'report_formula.pdf_export_filters')}}" />
                                     </div>
                                 </div>
                             </div>
@@ -51,13 +51,13 @@
 
                                 <!-- Header -->
                                 <t
-                                    t-call="{{custom_templates.get('pdf_export_main_table_header', 'account.pdf_export_main_table_header')}}" />
+                                    t-call="{{custom_templates.get('pdf_export_main_table_header', 'report_formula.pdf_export_main_table_header')}}" />
 
                                 <!-- Body -->
                                 <tbody>
                                     <t t-if="lines">
                                         <t
-                                            t-call="{{custom_templates.get('pdf_export_main_table_body', 'account.pdf_export_main_table_body')}}">
+                                            t-call="{{custom_templates.get('pdf_export_main_table_body', 'report_formula.pdf_export_main_table_body')}}">
                                             <t
                                                 t-set="lines"
                                                 t-value="filter(lambda x: not split_side or split_side == x.get('horizontal_split_side', 'left'), lines)" />
@@ -141,7 +141,7 @@
 
         <!-- Extra options -->
         <t
-            t-call="{{custom_templates.get('pdf_export_filter_extra_options_template', 'account.pdf_export_filter_extra_options_template')}}" />
+            t-call="{{custom_templates.get('pdf_export_filter_extra_options_template', 'report_formula.pdf_export_filter_extra_options_template')}}" />
     </template>
 
     <template id="pdf_export_filter_extra_options_template">
@@ -232,7 +232,7 @@
 
                 <!-- Append table header -->
                 <t
-                    t-call="{{custom_templates.get('pdf_export_main_table_header', 'account.pdf_export_main_table_header')}}" />
+                    t-call="{{custom_templates.get('pdf_export_main_table_header', 'report_formula.pdf_export_main_table_header')}}" />
 
                 <!-- Start new table -->
                 <t t-out="table_start" />
@@ -277,7 +277,7 @@
                         <t
                             t-if="not totals_below_sections or options.get('ignore_totals_below_sections') or not line.get('unfolded')">
                             <t
-                                t-call="{{custom_templates.get('pdf_export_cell', 'account.pdf_export_cell')}}" />
+                                t-call="{{custom_templates.get('pdf_export_cell', 'report_formula.pdf_export_cell')}}" />
                         </t>
                     </td>
                 </t>

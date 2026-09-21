@@ -1,6 +1,6 @@
 {
     "name": "Invoicing",
-    "version": "1.29",
+    "version": "1.30",
     "category": "Accounting/Accounting",
     "sequence": 10,
     "summary": "Invoices & Payments",
@@ -125,7 +125,6 @@ You could use this simplified accounting in case you work with an (external) acc
         "wizards/account_reconcile_wizard_views.xml",
         "views/account_reconcile_menus.xml",
         "security/account_reports_security.xml",
-        "data/pdf_export_templates.xml",
         "data/pdf_export_templates_ledger.xml",
         "data/customer_reports_pdf_export_templates.xml",
         "data/balance_sheet.xml",
@@ -180,21 +179,7 @@ You could use this simplified accounting in case you work with an (external) acc
         "demo/account_reconcile_demo.xml",
     ],
     "assets": {
-        "account.assets_pdf_export": [
-            (
-                "include",
-                "web._assets_helpers",
-            ),
-            "web/static/src/scss/pre_variables.scss",
-            "web/static/lib/bootstrap/scss/_variables.scss",
-            "web/static/lib/bootstrap/scss/_variables-dark.scss",
-            "web/static/lib/bootstrap/scss/_maps.scss",
-            (
-                "include",
-                "web._assets_bootstrap_backend",
-            ),
-            "web/static/fonts/fonts.scss",
-            "web/static/src/webclient/actions/reports/report_paged_media.css",
+        "report_formula.assets_pdf_export": [
             "account/static/src/scss/**/*",
         ],
         "web._assets_primary_variables": [
@@ -246,7 +231,6 @@ You could use this simplified accounting in case you work with an (external) acc
         ],
         "web.report_assets_common": [
             "account/static/src/css/report_invoice.css",
-            "account/static/src/scss/account_pdf_export_template.scss",
         ],
         "web.report_assets_pdf": [
             "account/static/src/css/report_invoice.css",
@@ -255,7 +239,6 @@ You could use this simplified accounting in case you work with an (external) acc
     "esm": {
         "bundles": [
             "account.assets_financial_report",
-            "account.assets_pdf_export",
         ],
     },
     "application": True,

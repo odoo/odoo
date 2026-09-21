@@ -34,14 +34,40 @@ depends on this module and adds the ledger to each model -- the ``tax_tags`` and
     ],
     "data": [
         "security/ir.model.access.csv",
+        "data/pdf_export_templates.xml",
     ],
     "assets": {
+        "report_formula.assets_pdf_export": [
+            (
+                "include",
+                "web._assets_helpers",
+            ),
+            "web/static/src/scss/pre_variables.scss",
+            "web/static/lib/bootstrap/scss/_variables.scss",
+            "web/static/lib/bootstrap/scss/_variables-dark.scss",
+            "web/static/lib/bootstrap/scss/_maps.scss",
+            (
+                "include",
+                "web._assets_bootstrap_backend",
+            ),
+            "web/static/fonts/fonts.scss",
+            "web/static/src/webclient/actions/reports/report_paged_media.css",
+            "report_formula/static/src/scss/pdf_export_template.scss",
+        ],
+        "web.report_assets_common": [
+            "report_formula/static/src/scss/pdf_export_template.scss",
+        ],
         "web.assets_backend": [
             "report_formula/static/src/components/**/*",
             "report_formula/static/src/js/**/*",
         ],
         "web.assets_unit_tests": [
             "report_formula/static/tests/**/*",
+        ],
+    },
+    "esm": {
+        "bundles": [
+            "report_formula.assets_pdf_export",
         ],
     },
 }

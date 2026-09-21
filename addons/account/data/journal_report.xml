@@ -119,7 +119,7 @@
                         http-equiv="content-type"
                         content="text/html; charset=utf-8" />
                     <t
-                        t-call-assets="account.assets_pdf_export"
+                        t-call-assets="report_formula.assets_pdf_export"
                         t-js="False"
                         t-autoprefix="true" />
                     </head>
@@ -129,7 +129,7 @@
                         <header>
                             <div class="row align-items-center">
                                 <div class="col-4 o_header_font">
-                                    <t t-call="account.company_information" />
+                                    <t t-call="report_formula.company_information" />
                                 </div>
                                 <div class="col-8 text-end">
                                     <div class="o_title">
