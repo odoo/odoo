@@ -1357,7 +1357,7 @@ class SaleOrder(models.Model):
         # DO NOT ADD the `pricelist_id` as dependency to the order lines compute methods as it
         # would trigger unwanted recomputations as the orm recomputes all depending fields
         # regardless of whether the field was effectively modified.
-        if self.order_line:
+        if self.order_line and not self.env.context.get("sale_onchange_first_call"):
             self._recompute_prices()
 
     @api.onchange("prepayment_amount")
