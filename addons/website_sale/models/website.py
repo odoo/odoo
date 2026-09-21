@@ -1006,19 +1006,17 @@ class Website(models.Model):
         self.ensure_one()
 
         ExtraField = self.env["website.sale.extra.field"]
-        empty_attribute_lines = self.env["product.template.attribute.line"]
-        attribute_categories = product_template.valid_product_template_attribute_line_ids._prepare_categories_for_display()
-        extra_fields = ExtraField.search([("website_id", "=", self.id)])
+        ProductTemplateAttributeLine = self.env["product.template.attribute.line"]
+        attribute_lines = product_template.valid_product_template_attribute_line_ids
+        attribute_categories = attribute_lines._prepare_categories_for_display()
+        extra_fields = ExtraField.search_fetch(
+            [("website_id", "=", self.id)], ["field_id", "category_id"]
+        )
         extra_field_values = extra_fields._get_values_for_display(product_variant, product_template)
-        visible_extra_fields_by_category = {}
-
         # Keep only extra fields with a value, grouped by their display category.
-        for extra_field in extra_fields:
-            if extra_field not in extra_field_values:
-                continue
-            category = extra_field.category_id
-            visible_extra_fields_by_category.setdefault(category, ExtraField)
-            visible_extra_fields_by_category[category] |= extra_field
+        visible_extra_fields_by_category = extra_fields.filtered(
+            lambda extra_field: extra_field in extra_field_values
+        ).grouped("category_id")
 
         spec_groups = []
         # Merge extra fields into existing attribute categories first to preserve category order.
@@ -1033,9 +1031,12 @@ class Website(models.Model):
         for category, visible_extra_fields in visible_extra_fields_by_category.items():
             spec_groups.append({
                 "category": category,
-                "attribute_lines": empty_attribute_lines,
+                "attribute_lines": ProductTemplateAttributeLine,
                 "extra_fields": visible_extra_fields,
             })
+
+        # Render uncategorized specs last
+        spec_groups.sort(key=lambda spec_group: not spec_group["category"])
 
         return {"spec_groups": spec_groups, "extra_field_values": extra_field_values}
 

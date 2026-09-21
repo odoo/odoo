@@ -790,10 +790,12 @@
         <t t-set="has_content" t-value="bool(spec_groups) or has_more_information"/>
 
         <t t-if="has_content or editable">
+            <!-- The specifications container is replaced when the selected combination changes -->
             <div
                 t-if="show_specs or has_more_information"
                 id="product_accordion"
-                t-attf-class="o_wsale_specs #{has_content and 'o_accordion_not_initialized' or ''} accordion accordion-flush my-4"
+                t-attf-class="o_wsale_specs #{show_specs and 'o_wsale_specs_container' or ''}
+                    #{has_content and 'o_accordion_not_initialized' or ''} accordion accordion-flush my-4"
                 t-attf-style="#{not has_content and editable and 'min-height: 50px;' or ''}"
             >
                 <div
@@ -1443,9 +1445,10 @@
         <t t-set="spec_groups" t-value="product_specs['spec_groups']"/>
         <t t-set="extra_field_values" t-value="product_specs['extra_field_values']"/>
         <t t-if="spec_groups or editable">
+            <!-- The specifications container is replaced when the selected combination changes -->
             <section
                 id="product_full_spec"
-                t-attf-class="pt32 pb32
+                t-attf-class="o_wsale_specs_container pt32 pb32
                     #{is_view_active('website_sale.product_specifications_top') and 'o_wsale_spec_top' or ''}
                     #{not spec_groups and 'css_non_editable_mode_hidden' or ''}"
             >
@@ -1578,7 +1581,7 @@
                     <td t-attf-class="w-75 {{hide_border_bottom_classes}} pe-0 text-muted text-end">
                         <t t-if="combination">
                             <t
-                                t-foreach="ptal.product_template_value_ids._only_active().filtered(lambda ptav: ptav in combination)"
+                                t-foreach="ptal.product_template_value_ids.filtered(lambda ptav: ptav in combination)"
                                 t-as="ptav"
                             >
                                 <span t-field="ptav.name"/><t t-if="not ptav_last">, </t>
@@ -1611,25 +1614,18 @@
 
             <t t-foreach="visible_extra_fields" t-as="extra_field">
                 <t t-set="field_value" t-value="extra_field_values[extra_field]"/>
-                <tr t-att-data-extra-field-id="extra_field.id">
+                <tr class="o_wsale_extra_field" t-att-data-extra-field-id="extra_field.id">
                     <td t-attf-class="col-4 ps-0 pe-3 {{extra_field_last and is_accordion and 'border-bottom-0' or ''}}">
                         <span t-out="extra_field.label"/>
                     </td>
                     <td t-attf-class="col-8 pe-0 text-muted text-end text-break {{extra_field_last and is_accordion and 'border-bottom-0' or ''}}">
                         <t t-if="extra_field.field_id.ttype == 'binary'">
-                            <t
-                                t-set="binary_model"
-                                t-value="'product.product' if product_variant else 'product.template'"
-                            />
-                            <t
-                                t-set="binary_id"
-                                t-value="product_variant.id if product_variant else product.id"
-                            />
+                            <t t-set="binary_record" t-value="product_variant or product"/>
                             <a
                                 target="_blank"
-                                t-attf-href="/web/content/#{binary_model}/#{binary_id}/#{extra_field.name}?download=1"
+                                t-attf-href="/web/content/#{binary_record._name}/#{binary_record.id}/#{extra_field.name}?download=1"
                             >
-                                <i class="fa fa-file"/>
+                                <i class="oi" data-icon="download"/>
                             </a>
                         </t>
                         <t t-elif="extra_field.field_id.ttype == 'float'">

@@ -30,6 +30,6 @@ registerWebsitePreviewTour("website_sale_add_extra_field", {}, () => [
     {
         content: "Check that the extra field is displayed",
         trigger:
-            ":iframe tr[data-extra-field-id]:has(td:contains('Internal Reference')) td:contains('SOFA-REF')",
+            ":iframe .o_wsale_extra_field:has(td:contains('Internal Reference')) td:contains('SOFA-REF')",
     },
 ]);

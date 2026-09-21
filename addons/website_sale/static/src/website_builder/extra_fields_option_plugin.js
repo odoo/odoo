@@ -3,20 +3,14 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-class ExtraFieldsPlugin extends Plugin {
-    static id = "extraFieldsOption";
-    static shared = [
-        "clearLoadedExtraFields",
-        "getExtraFields",
-        "getCategories",
-        "loadExtraFields",
-        "getState",
-        "createAndSelectCategory",
-    ];
+export class ExtraFieldsOptionPlugin extends Plugin {
+    static id = "extraFieldsOptionPlugin";
+    static shared = ["loadSpecificationsData", "getState", "createAndSelectCategory"];
 
-    _extraFields = proxy([]);
-    _categories = proxy([]);
     _state = proxy({
+        fields: [],
+        categories: [],
+        extraFields: [],
         fieldId: false,
         categoryId: false,
         newCategoryName: "",
@@ -24,7 +18,7 @@ class ExtraFieldsPlugin extends Plugin {
         categoryCreateMode: false,
         rowCategoryCreateMode: false,
     });
-    _loadedExtraFields = null;
+    _specificationsProm = null;
 
     resources = {
         builder_actions: {
@@ -40,56 +34,37 @@ class ExtraFieldsPlugin extends Plugin {
         },
     };
 
-    getExtraFields() {
-        return this._extraFields;
-    }
-
-    getCategories() {
-        return this._categories;
-    }
-
     getState() {
         return this._state;
     }
 
-    async loadExtraFields() {
-        if (!this._loadedExtraFields) {
+    loadSpecificationsData() {
+        if (!this._specificationsProm) {
             const websiteId = this.services.website.currentWebsite.id;
-
-            const [modelFields, categories, extraFields] = await Promise.all([
+            this._specificationsProm = Promise.all([
                 this.services.orm.searchRead(
                     "ir.model.fields",
                     [
                         ["model", "=", "product.template"],
                         ["ttype", "in", ["binary", "char", "float"]],
                     ],
-                    ["id", "name", "field_description", "model"]
+                    ["id", "name", "field_description"]
                 ),
-                this.services.orm.searchRead(
-                    "product.attribute.category",
-                    [],
-                    ["id", "name"]
-                ),
+                this.services.orm.searchRead("product.attribute.category", [], ["id", "name"]),
                 this.services.orm.searchRead(
                     "website.sale.extra.field",
                     [["website_id", "=", websiteId]],
-                    ["id", "field_id", "category_id", "label", "name"]
+                    ["id", "field_id", "category_id"]
                 ),
-            ]);
-
-            this._categories.splice(0, this._categories.length, ...categories);
-            this._extraFields.splice(0, this._extraFields.length, ...extraFields);
-            this._loadedExtraFields = { fields: modelFields };
+            ]).then(([fields, categories, extraFields]) => {
+                Object.assign(this._state, { fields, categories, extraFields });
+            });
         }
-        return this._loadedExtraFields;
-    }
-
-    clearLoadedExtraFields() {
-        this._loadedExtraFields = null;
+        return this._specificationsProm;
     }
 
     async createAndSelectCategory({ selectedCategoryKey, createModeKey }) {
-        const state = this.getState();
+        const state = this._state;
         const categoryName = state.newCategoryName.trim();
         if (!categoryName) {
             return;
@@ -100,34 +75,33 @@ class ExtraFieldsPlugin extends Plugin {
             [{ name: categoryName }]
         );
 
-        this.getCategories().push({ id: newCategoryId, name: categoryName });
+        state.categories.push({ id: newCategoryId, name: categoryName });
 
         state[selectedCategoryKey] = newCategoryId;
         state.newCategoryName = "";
         state[createModeKey] = false;
-        this.clearLoadedExtraFields();
     }
 }
 
 class AddExtraFieldAction extends BuilderAction {
     static id = "addExtraField";
-    static dependencies = ["extraFieldsOption"];
+    static dependencies = ["extraFieldsOptionPlugin"];
 
     setup() {
+        // Reload so the server-rendered specifications reflect the database change
         this.reload = {};
     }
 
     async apply() {
-        const state = this.dependencies.extraFieldsOption.getState();
+        const state = this.dependencies.extraFieldsOptionPlugin.getState();
         const fieldId = state.fieldId;
-        const categoryId = state.categoryId || false;
+        const categoryId = state.categoryId;
 
         if (!fieldId) {
             return;
         }
 
-        const extraFields = this.dependencies.extraFieldsOption.getExtraFields();
-        if (extraFields.some((extraField) => extraField.field_id[0] === fieldId)) {
+        if (state.extraFields.some((extraField) => extraField.field_id[0] === fieldId)) {
             return;
         }
 
@@ -136,19 +110,15 @@ class AddExtraFieldAction extends BuilderAction {
             "website.sale.extra.field",
             [{ website_id: websiteId, field_id: fieldId, category_id: categoryId }]
         );
-
-        state.fieldId = false;
-        state.categoryId = false;
-        this.dependencies.extraFieldsOption.clearLoadedExtraFields();
     }
 }
 
 class CreateCategoryAction extends BuilderAction {
     static id = "createCategory";
-    static dependencies = ["extraFieldsOption"];
+    static dependencies = ["extraFieldsOptionPlugin"];
 
     async apply() {
-        await this.dependencies.extraFieldsOption.createAndSelectCategory({
+        await this.dependencies.extraFieldsOptionPlugin.createAndSelectCategory({
             selectedCategoryKey: "categoryId",
             createModeKey: "categoryCreateMode",
         });
@@ -157,10 +127,10 @@ class CreateCategoryAction extends BuilderAction {
 
 class CreateRowCategoryAction extends BuilderAction {
     static id = "createRowCategory";
-    static dependencies = ["extraFieldsOption"];
+    static dependencies = ["extraFieldsOptionPlugin"];
 
     async apply() {
-        await this.dependencies.extraFieldsOption.createAndSelectCategory({
+        await this.dependencies.extraFieldsOptionPlugin.createAndSelectCategory({
             selectedCategoryKey: "rowCategoryId",
             createModeKey: "rowCategoryCreateMode",
         });
@@ -169,9 +139,10 @@ class CreateRowCategoryAction extends BuilderAction {
 
 class DeleteExtraFieldAction extends BuilderAction {
     static id = "deleteExtraField";
-    static dependencies = ["extraFieldsOption"];
+    static dependencies = ["extraFieldsOptionPlugin"];
 
     setup() {
+        // Reload so the server-rendered specifications reflect the database change
         this.reload = {};
     }
 
@@ -182,15 +153,15 @@ class DeleteExtraFieldAction extends BuilderAction {
         }
 
         await this.services.orm.unlink("website.sale.extra.field", [extraFieldId]);
-        this.dependencies.extraFieldsOption.clearLoadedExtraFields();
     }
 }
 
 class ChangeExtraFieldCategoryAction extends BuilderAction {
     static id = "changeExtraFieldCategory";
-    static dependencies = ["extraFieldsOption"];
+    static dependencies = ["extraFieldsOptionPlugin"];
 
     setup() {
+        // Reload so the server-rendered specifications reflect the database change
         this.reload = {};
     }
 
@@ -198,88 +169,67 @@ class ChangeExtraFieldCategoryAction extends BuilderAction {
         const extraFieldId = parseInt(editingElement.dataset.extraFieldId);
         if (!extraFieldId) return;
 
-        const state = this.dependencies.extraFieldsOption.getState();
+        const state = this.dependencies.extraFieldsOptionPlugin.getState();
         if (state.rowCategoryId === null) return;
 
         await this.services.orm.write(
             "website.sale.extra.field",
             [extraFieldId],
-            { category_id: state.rowCategoryId || false }
+            { category_id: state.rowCategoryId }
         );
-
-        state.rowCategoryId = null;
-        this.dependencies.extraFieldsOption.clearLoadedExtraFields();
     }
-
 }
 
 class SelectExtraFieldAction extends BuilderAction {
     static id = "selectExtraField";
-    static dependencies = ["extraFieldsOption"];
+    static dependencies = ["extraFieldsOptionPlugin"];
 
     isApplied({ value }) {
-        const fieldId = this.dependencies.extraFieldsOption.getState().fieldId;
-        return String(fieldId || "") === String(value || "");
-    }
-
-    getValue() {
-        return String(this.dependencies.extraFieldsOption.getState().fieldId || "");
+        return this.dependencies.extraFieldsOptionPlugin.getState().fieldId === value;
     }
 
     apply({ value }) {
-        this.dependencies.extraFieldsOption.getState().fieldId = parseInt(value) || false;
+        this.dependencies.extraFieldsOptionPlugin.getState().fieldId = value;
     }
 }
 
 class SelectExtraFieldCategoryAction extends BuilderAction {
     static id = "selectExtraFieldCategory";
-    static dependencies = ["extraFieldsOption"];
+    static dependencies = ["extraFieldsOptionPlugin"];
 
     isApplied({ value }) {
-        const categoryId = this.dependencies.extraFieldsOption.getState().categoryId;
-        return String(categoryId || "") === String(value || "");
-    }
-
-    getValue() {
-        return String(this.dependencies.extraFieldsOption.getState().categoryId || "");
+        return this.dependencies.extraFieldsOptionPlugin.getState().categoryId === value;
     }
 
     apply({ value }) {
-        this.dependencies.extraFieldsOption.getState().categoryId = parseInt(value) || false;
+        this.dependencies.extraFieldsOptionPlugin.getState().categoryId = value;
     }
 }
 
 class SetExtraFieldCategoryNameAction extends BuilderAction {
     static id = "setExtraFieldCategoryName";
-    static dependencies = ["extraFieldsOption"];
+    static dependencies = ["extraFieldsOptionPlugin"];
 
     getValue() {
-        return this.dependencies.extraFieldsOption.getState().newCategoryName;
+        return this.dependencies.extraFieldsOptionPlugin.getState().newCategoryName;
     }
 
     apply({ value }) {
-        this.dependencies.extraFieldsOption.getState().newCategoryName = value || "";
+        this.dependencies.extraFieldsOptionPlugin.getState().newCategoryName = value || "";
     }
 }
 
 class SelectExtraFieldRowCategoryAction extends BuilderAction {
     static id = "selectExtraFieldRowCategory";
-    static dependencies = ["extraFieldsOption"];
+    static dependencies = ["extraFieldsOptionPlugin"];
 
     isApplied({ value }) {
-        const rowCategoryId = this.dependencies.extraFieldsOption.getState().rowCategoryId;
-        return rowCategoryId !== null && String(rowCategoryId || "") === String(value || "");
-    }
-
-    getValue() {
-        const rowCategoryId = this.dependencies.extraFieldsOption.getState().rowCategoryId;
-        return rowCategoryId === null ? "" : String(rowCategoryId || "");
+        return this.dependencies.extraFieldsOptionPlugin.getState().rowCategoryId === value;
     }
 
     apply({ value }) {
-        this.dependencies.extraFieldsOption.getState().rowCategoryId =
-            value === "" ? false : parseInt(value);
+        this.dependencies.extraFieldsOptionPlugin.getState().rowCategoryId = value;
     }
 }
 
-registry.category("website-plugins").add(ExtraFieldsPlugin.id, ExtraFieldsPlugin);
+registry.category("website-plugins").add(ExtraFieldsOptionPlugin.id, ExtraFieldsOptionPlugin);

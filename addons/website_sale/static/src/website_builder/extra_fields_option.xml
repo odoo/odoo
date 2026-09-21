@@ -13,15 +13,15 @@
         <BuilderSelect
             action="'selectExtraField'"
             preview="false"
-            t-key="`field-${this.sharedState.optionState.fieldId}`"
+            t-key="`field-${this.state.fieldId}`"
         >
             <t t-if="allFieldsAdded">
-                <BuilderSelectItem actionValue="''">
+                <BuilderSelectItem actionValue="false">
                     — All fields added —
                 </BuilderSelectItem>
             </t>
             <t t-foreach="availableFields" t-as="field" t-key="field.id">
-                <BuilderSelectItem actionValue="`${field.id}`">
+                <BuilderSelectItem actionValue="field.id">
                     <t t-out="field.field_description"/>
                 </BuilderSelectItem>
             </t>
@@ -32,37 +32,32 @@
         <BuilderSelect
             action="'selectExtraFieldCategory'"
             preview="false"
-            t-key="`category-${this.sharedState.optionState.categoryId}`"
+            t-key="`category-${this.state.categoryId}`"
         >
-            <BuilderSelectItem actionValue="''">No category</BuilderSelectItem>
-            <t t-foreach="this.sharedState.categories" t-as="category" t-key="category.id">
-                <BuilderSelectItem actionValue="`${category.id}`">
+            <BuilderSelectItem actionValue="false">No category</BuilderSelectItem>
+            <t t-foreach="this.state.categories" t-as="category" t-key="category.id">
+                <BuilderSelectItem actionValue="category.id">
                     <t t-out="category.name"/>
                 </BuilderSelectItem>
             </t>
         </BuilderSelect>
         <t
             t-call="website_sale.CategoryCreateToggle"
-            t-call-context="{
-                categoryCreateMode: this.sharedState.optionState.categoryCreateMode,
-                onOpenCreateMode: () => this.setCategoryCreateMode(true),
-                onCloseCreateMode: () => this.setCategoryCreateMode(false),
-            }"
+            categoryCreateMode="this.state.categoryCreateMode"
+            onOpenCreateMode="() => this.setCategoryCreateMode(true)"
+            onCloseCreateMode="() => this.setCategoryCreateMode(false)"
         />
     </BuilderRow>
 
-    <t t-if="this.sharedState.optionState.categoryCreateMode">
-        <t
-            t-call="website_sale.CategoryCreateForm"
-            t-call-context="{createActionName: 'createCategory'}"
-        />
+    <t t-if="this.state.categoryCreateMode">
+        <t t-call="website_sale.CategoryCreateForm" createActionName="'createCategory'"/>
     </t>
 
-    <t t-if="!this.sharedState.optionState.categoryCreateMode">
+    <t t-if="!this.state.categoryCreateMode">
         <BuilderRow label.translate=" ">
             <BuilderButton
                 action="'addExtraField'"
-                t-if="!allFieldsAdded and this.sharedState.optionState.fieldId"
+                t-if="!allFieldsAdded and this.state.fieldId"
                 preview="false"
                 type="'success'"
             >
@@ -80,7 +75,8 @@
     <BuilderButton
         t-if="!categoryCreateMode"
         title.translate="Create a new category"
-        className="'fa fa-plus text-success border-0'"
+        icon="'add'"
+        className="'text-success border-0'"
         style="'background-color: transparent !important;'"
         preview="false"
         t-on-click="onOpenCreateMode"
@@ -88,7 +84,8 @@
     <BuilderButton
         t-if="categoryCreateMode"
         title.translate="Cancel"
-        className="'fa fa-times text-danger border-0'"
+        icon="'close_small'"
+        className="'text-danger border-0'"
         style="'background-color: transparent !important;'"
         preview="false"
         t-on-click="onCloseCreateMode"

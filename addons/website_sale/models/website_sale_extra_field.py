@@ -6,7 +6,7 @@ from odoo import fields, models
 class WebsiteSaleExtraField(models.Model):
     _name = "website.sale.extra.field"
     _description = "E-Commerce Extra Info Shown on product page"
-    _order = "sequence"
+    _order = "sequence, id"
 
     category_id = fields.Many2one(comodel_name="product.attribute.category")
     website_id = fields.Many2one(comodel_name="website", index="btree_not_null")
@@ -25,10 +25,11 @@ class WebsiteSaleExtraField(models.Model):
 
     def _get_values_for_display(self, product_variant, product_template):
         """Return non-empty product values to show for each extra field."""
-        product_record = product_variant.sudo() if product_variant else product_template.sudo()
+        product_record = (product_variant or product_template).sudo()
         display_values = {}
         for extra_field in self:
             display_value = product_record[extra_field.name]
+            # A zero is a value worth displaying
             if not display_value and extra_field.field_id.ttype != "float":
                 continue
             display_values[extra_field] = display_value

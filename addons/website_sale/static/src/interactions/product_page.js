@@ -416,6 +416,27 @@ export class ProductPage extends Interaction {
     }
 
     /**
+     * Replace the product specifications with the ones of the selected combination.
+     *
+     * @param {Markup} productSpecifications
+     */
+    _updateProductSpecifications(productSpecifications) {
+        const specsContainerEl = this.el.querySelector('.o_wsale_specs_container');
+        const newSpecsContainerEl = createElementWithContent('div', productSpecifications)
+            .querySelector('.o_wsale_specs_container');
+        if (!specsContainerEl || !newSpecsContainerEl) return;
+
+        // Keep the accordion item opened by the customer, if it is still displayed
+        const openedCollapseId = specsContainerEl.querySelector('.accordion-collapse.show')?.id;
+        if (openedCollapseId) {
+            newSpecsContainerEl.querySelector(`#${openedCollapseId}`)?.classList.add('show');
+        }
+        this.services["public.interactions"].stopInteractions(specsContainerEl);
+        specsContainerEl.replaceWith(newSpecsContainerEl);
+        this.services["public.interactions"].startInteractions(newSpecsContainerEl);
+    }
+
+    /**
      * Toggles the disabled class on the parent element and the "add to cart" and "buy now" buttons
      * depending on whether the current combination is possible.
      *
@@ -840,38 +861,7 @@ export class ProductPage extends Interaction {
         }
 
         if (combination.product_specifications) {
-            const accordionEl = parent.querySelector("#product_accordion");
-            if (accordionEl) {
-                const openId = accordionEl.querySelector(".accordion-collapse.show")?.id;
-
-                accordionEl.insertAdjacentHTML(
-                    "beforebegin",
-                    htmlEscape(combination.product_specifications)
-                );
-                accordionEl.remove();
-
-                const replacedAccordion = parent.querySelector("#product_accordion");
-                if (replacedAccordion) {
-                    replacedAccordion.classList.remove("o_accordion_not_initialized");
-                    if (openId) {
-                        const toOpenCollapse = replacedAccordion.querySelector(`#${openId}`);
-                        toOpenCollapse?.classList.add("show");
-                        const toOpenButton = replacedAccordion.querySelector(
-                            `[data-bs-target="#${openId}"]`
-                        );
-                        toOpenButton?.classList.remove("collapsed");
-                    }
-                }
-            } else {
-                const specSection = document.querySelector("#product_full_spec");
-                if (specSection) {
-                    specSection.insertAdjacentHTML(
-                        "beforebegin",
-                        htmlEscape(combination.product_specifications)
-                    );
-                    specSection.remove();
-                }
-            }
+            this._updateProductSpecifications(combination.product_specifications);
         }
 
         const productIdElements = parent.querySelectorAll('[data-product-id]');
