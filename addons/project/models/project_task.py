@@ -427,10 +427,10 @@ class ProjectTask(models.Model):
         return [('state', 'in', searched_states)]
 
     def _get_rotting_depends_fields(self):
-        return super()._get_rotting_depends_fields() + ['is_closed']
+        return super()._get_rotting_depends_fields() + ['is_closed', 'state']
 
     def _get_rotting_domain(self):
-        return super()._get_rotting_domain() & Domain('is_closed', '=', False)
+        return super()._get_rotting_domain() & Domain([('is_closed', '=', False), ('state', '!=', '04_waiting_normal')])
 
     @property
     def OPEN_STATES(self):
