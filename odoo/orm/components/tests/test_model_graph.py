@@ -184,6 +184,25 @@ class TestModelGraphConstruction(unittest.TestCase):
         g.add_trigger(f, (), [t])
         self.assertEqual(len(g._triggers[f][()]), 1)
 
+    def test_add_trigger_rebuilds_the_trees_that_reach_the_field(self) -> None:
+        # a tree is transitive: base's tree embeds mid's buckets, so an edge
+        # added to mid makes base's cached tree stale too
+        g = ModelGraph()
+        base = _field("base")
+        mid = _field("mid", is_stored_computed=True)
+        late = _field("late", is_stored_computed=True)
+
+        g.add_trigger(base, (), [mid])
+        g.add_trigger(mid, (), [late])
+        before = g.get_field_trigger_tree(base)
+        self.assertEqual(set(before.root), {mid, late})
+
+        later = _field("later", is_stored_computed=True)
+        g.add_trigger(mid, (), [later])
+        after = g.get_field_trigger_tree(base)
+        self.assertEqual(set(after.root), {mid, late, later})
+        self.assertIsNot(before, after)
+
     def test_add_trigger_after_the_tree_was_built(self) -> None:
         g = ModelGraph()
         f = _field("price")

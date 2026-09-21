@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Any
 from odoo.libs.accel import get_trigger_trees as _get_trigger_trees
 from odoo.libs.collections import Collector
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.lru import LRU
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable, Iterator
@@ -251,7 +252,7 @@ class _TriggerState:
         self.fact_of = fact_of
         self.index: _TriggerIndex | None = None
         self.trees: dict[Any, TriggerTree] = {}
-        self.merged: dict[tuple, TriggerTree] = {}
+        self.merged: LRU[tuple, TriggerTree] = LRU(_MERGED_CACHE_MAX)
         self.modifying_relations: dict[Any, bool] = {}
         self.path_fields: frozenset | None = None
         self.recompute_order: dict[Any, int] | None = None
@@ -327,7 +328,10 @@ class ModelGraph:
                 if target not in bucket:
                     bucket.append(target)
             state.index = None
-            state.trees.pop(dep_field, None)
+            # a tree is transitive: `_get_tree` recurses into each target, so
+            # every field whose closure reaches `dep_field` embeds its buckets
+            # and is stale now, not only `dep_field`'s own tree
+            state.trees.clear()
             state.merged.clear()
             state.modifying_relations.clear()
             state.path_fields = None
@@ -441,11 +445,10 @@ class ModelGraph:
                 trees=len(trees),
                 cached=len(state.merged),
             )
-            if len(state.merged) >= _MERGED_CACHE_MAX:
-                _debug.logic(
-                    "model_graph.merged_cache_evicted", entries=len(state.merged)
-                )
-                state.merged.clear()
+            # keyed on the field SEQUENCE, not the set: `merge` builds its
+            # root in input order, so two orders of the same fields are two
+            # trees and folding them would reorder a recompute. The LRU keeps
+            # the shapes in use instead of dropping every entry at the cap.
             state.merged[key] = structure
         return structure._filtered(select)
 
