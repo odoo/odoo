@@ -17,6 +17,7 @@ Measured when this was written: 23 figures, none drifted.
 
 import os
 import pathlib
+import re
 from unittest.mock import patch
 
 import pytest
@@ -132,14 +133,39 @@ class TestThePageStatesWhatTheSourceDoes:
         for name, text in _transport_figures(limits).items():
             assert text in page, f"deployment.md and the source disagree on {name}"
 
-    def test_the_worker_exit_outcomes_it_lists(self, page):
-        """The metric grows labels; the row that explains them has to follow."""
+    # The metric's label is spelled `outcome="..."`, so the label NAME appears
+    # in the row alongside its values and is not one of them.
+    _LABEL_NAME = "outcome"
+
+    def _documented_outcomes(self, page: str) -> tuple[str, set[str]]:
         row = next(
             (l for l in page.splitlines() if "`odoo_worker_exits_total`" in l), ""
         )
         assert row, "the metrics table no longer mentions odoo_worker_exits_total"
-        missing = [o for o in _EXIT_OUTCOMES if f"`{o}`" not in row]
+        quoted = set(re.findall(r"`([a-z_]+)`", row))
+        return row, quoted - {"odoo_worker_exits_total", self._LABEL_NAME}
+
+    def test_the_worker_exit_outcomes_it_lists(self, page):
+        """The metric grows labels; the row that explains them has to follow."""
+        _, documented = self._documented_outcomes(page)
+        missing = sorted(set(_EXIT_OUTCOMES) - documented)
         assert not missing, (
             f"the metric reports outcomes the page does not explain: {missing}. "
             f"A label nobody documents is a label nobody alerts on"
+        )
+
+    def test_it_lists_no_outcome_the_metric_cannot_emit(self, page):
+        """The other direction, which the test above cannot see.
+
+        Asked separately because a one-directional check is not a check of the
+        agreement, only of one half of it: an outcome deleted from
+        `RECYCLE_CODES` leaves the page promising a label that will never
+        appear, and an operator alerting on it waits forever for a signal the
+        server stopped being able to send.
+        """
+        _, documented = self._documented_outcomes(page)
+        stale = sorted(documented - set(_EXIT_OUTCOMES))
+        assert not stale, (
+            f"the page explains outcomes the metric cannot emit: {stale}. "
+            f"An alert on one of these can never fire, and reads as quiet"
         )

@@ -22,7 +22,24 @@ runbook — most of all in whether memory is shared.
 The default is `workers = 0` — threaded, one process, debugger-friendly, and the
 shape every measurement in [`qualities.md`](qualities.md) was taken under. The
 threaded path additionally calls `_limit_malloc_arenas()`, which the forked path
-does not need.
+does not need: glibc gives a contending thread its own arena, so the count
+tracks thread count, and a prefork worker runs two threads where a threaded
+server runs one per concurrent request. Measured 2026-09-21 in isolation, with
+allocations under glibc's 128 KiB mmap threshold so they come from an arena at
+all:
+
+| threads | arenas, default | arenas, `M_ARENA_MAX=2` | RSS cost of the default |
+|---|---|---|---|
+| 2 | 3 | 2 | none measurable |
+| 4 | 5 | 2 | none measurable |
+| 16 | 17 | 2 | +2 MiB |
+| 64 | 65 | 2 | +8 MiB |
+
+The megabytes are a synthetic profile and not a prediction for Odoo's; the
+shape is the point, and it is why the call earns its place on one path and not
+the other. **A benchmark allocating above the mmap threshold shows no effect
+for either setting**, because those allocations never touch an arena — which
+reads as "this call does nothing" and is the trap to avoid before removing it.
 
 **The choice between threaded and prefork is architectural, not operational.**
 Under `workers > 0` there is no shared memory, so every registry and every cache
