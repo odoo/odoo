@@ -3279,3 +3279,14 @@ input[value*="data-oe-translation-source-sha"] {
       width: 100%;
     }
 }
+
+.s_social_media, .s_share {
+    // Draw the focus ring on the icon instead of the link so that it follows
+    // the icon layout.
+    a:focus-visible:has(.fa) {
+        outline: none;
+        .fa {
+            outline: $focus-ring-width solid $focus-ring-color;
+        }
+    }
+}
