@@ -107,6 +107,17 @@ cite("Layer-1 dispatch sites", layer1, "module.md", r"across \d+ files, @ in Lay
 # list moved two days later, and the comment beside the definition has said
 # "eleven watermarks" ever since.
 cite("signalling tables", len(signaling.SIGNALING_TABLES), "data.md", r"\(@ of them\)")
+# runtime.md states the same count as the width of the sequence read. Found by
+# asking, of every figure gated here, which other page states its value near
+# its own subject -- the generalisation of runtime.md citing scenarios.md.
+# (`_registry_signaling.py`'s own comment, "the eleven watermarks", is a third
+# statement of it, in source prose this harness does not read.)
+cite(
+    "signalling tables (runtime.md)",
+    len(signaling.SIGNALING_TABLES),
+    "runtime.md",
+    r"@ sequence reads",
+)
 
 # risks.md sizes the in-memory read_group the differential walk has to cover.
 memory_backend = ast.parse(pathlib.Path("odoo/orm/runtime/_backend_memory.py").read_text())
