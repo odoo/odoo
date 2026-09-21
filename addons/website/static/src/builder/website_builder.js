@@ -48,9 +48,10 @@ export class WebsiteBuilder extends Component {
             beforeLeave: () => this.onBeforeLeave(),
         });
         onWillStart(async () => {
-            this.translatedElements = this.props.translation
-                ? await rpc("/website/get_translated_elements")
-                : [];
+            [this.translatedElements, this.allowedRootAttrs] = await Promise.all([
+                this.props.translation ? rpc("/website/get_translated_elements") : [],
+                rpc("/website/get_allowed_root_attrs", {}, { cache: true }),
+            ]);
         });
         onMounted(() => {
             if (this.props.translation && !browser.localStorage.getItem(localStorageNoDialogKey)) {
@@ -249,6 +250,7 @@ export class WebsiteBuilder extends Component {
         };
         builderProps.config.translatedElements = this.translatedElements;
         builderProps.config.allowVideoFile = true;
+        builderProps.config.allowedRootAttrs = this.allowedRootAttrs;
         builderProps.getThemeTab = () => this.websiteService.isDesigner && ThemeTab;
         builderProps.animateThemeTabSwitch = true;
         const installSnippetModule = builderProps.installSnippetModule;
