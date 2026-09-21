@@ -61,3 +61,26 @@ class StockValuationReport(models.AbstractModel):
                 limit=1,
             )
         )
+
+
+class StockValuationReportHandler(models.AbstractModel):
+    _inherit = "stock_account.stock.valuation.report.handler"
+
+    def _report_custom_engine_stock_valuation_cost_of_production(
+        self,
+        expressions,
+        options,
+        date_scope,
+        current_groupby,
+        next_groupby,
+        offset=0,
+        limit=None,
+        warnings=None,
+    ):
+        return self._section_result("cost_of_production", options, current_groupby)
+
+    def _section_move_usages(self):
+        return {
+            **super()._section_move_usages(),
+            "SV_PRODUCTION": ("production", _("Cost of Production")),
+        }

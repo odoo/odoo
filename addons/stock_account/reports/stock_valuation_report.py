@@ -1,20 +1,27 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
+from odoo.fields import Domain
+from odoo.tools.cache import TransactionMemo
+from odoo.tools.safe_eval import safe_eval
+
+VALUATION_DATA = TransactionMemo(
+    "stock_account.stock_valuation_report.data",
+    invalidated_by=(
+        "account.move",
+        "account.move.line",
+        "product.product",
+        "stock.location",
+        "stock.move",
+        "stock.move.line",
+        "stock.quant",
+    ),
+)
 
 
 class StockValuationReport(models.AbstractModel):
     _name = "stock_account.stock.valuation.report"
     _description = "Stock Valuation"
-
-    @api.model
-    def get_report_values(self, date=False):
-        return {
-            "data": self.with_context(
-                allowed_company_ids=self.env.company.ids
-            )._get_report_data(date=date),
-            "context": {},
-        }
 
     def _get_report_data(self, date=False, product_category=False):
         company = self.env.company
@@ -176,3 +183,187 @@ class StockValuationReport(models.AbstractModel):
                 limit=1,
             )
         )
+
+
+class StockValuationReportHandler(models.AbstractModel):
+    _name = "stock_account.stock.valuation.report.handler"
+    _inherit = ["account.report.custom.handler"]
+    _description = "Stock Valuation Report Custom Handler"
+
+    def _custom_options_initializer(self, report, options, previous_options):
+        super()._custom_options_initializer(report, options, previous_options)
+        options["buttons"].append(
+            {
+                "name": _("Generate Entry"),
+                "sequence": 5,
+                "action": "action_generate_entry",
+                "always_show": True,
+            }
+        )
+
+    def _valuation_date(self, options):
+        date = fields.Date.from_string(options["date"]["date_to"])
+        return False if date >= fields.Date.context_today(self) else date
+
+    def _valuation_data(self, options):
+        date = self._valuation_date(options)
+        memo = VALUATION_DATA(self.env)
+        key = (self.env.company.id, date)
+        if key not in memo:
+            memo[key] = (
+                self.env["stock_account.stock.valuation.report"]
+                .with_context(allowed_company_ids=self.env.company.ids)
+                ._get_report_data(date=date)
+            )
+        return memo[key]
+
+    def _section_result(self, section, options, current_groupby):
+        if current_groupby not in (None, "account_id"):
+            raise NotImplementedError(
+                f"the stock valuation report groups by account only, not {current_groupby}"
+            )
+        data = self._valuation_data(options).get(section)
+        if not data:
+            return [] if current_groupby else {"value": 0, "debit": 0, "credit": 0}
+        if "lines_by_account_id" in data:
+            by_account = {
+                int(account_id): {"value": line["value"], "debit": 0, "credit": 0}
+                for account_id, line in data["lines_by_account_id"].items()
+            }
+        else:
+            by_account = {
+                line["account_id"]: {
+                    "value": 0,
+                    "debit": line["debit"],
+                    "credit": line["credit"],
+                }
+                for line in data["lines"]
+            }
+        if current_groupby:
+            return list(by_account.items())
+        return {"value": data["value"], "debit": 0, "credit": 0}
+
+    def _report_custom_engine_stock_valuation_initial_balance(
+        self,
+        expressions,
+        options,
+        date_scope,
+        current_groupby,
+        next_groupby,
+        offset=0,
+        limit=None,
+        warnings=None,
+    ):
+        return self._section_result("initial_balance", options, current_groupby)
+
+    def _report_custom_engine_stock_valuation_inventory_loss(
+        self,
+        expressions,
+        options,
+        date_scope,
+        current_groupby,
+        next_groupby,
+        offset=0,
+        limit=None,
+        warnings=None,
+    ):
+        return self._section_result("inventory_loss", options, current_groupby)
+
+    def _report_custom_engine_stock_valuation_stock_variation(
+        self,
+        expressions,
+        options,
+        date_scope,
+        current_groupby,
+        next_groupby,
+        offset=0,
+        limit=None,
+        warnings=None,
+    ):
+        return self._section_result("stock_variation", options, current_groupby)
+
+    def _report_custom_engine_stock_valuation_ending_stock(
+        self,
+        expressions,
+        options,
+        date_scope,
+        current_groupby,
+        next_groupby,
+        offset=0,
+        limit=None,
+        warnings=None,
+    ):
+        return self._section_result("ending_stock", options, current_groupby)
+
+    def action_generate_entry(self, options):
+        date = self._valuation_date(options)
+        company = self.env.company
+        if date:
+            return company.action_close_stock_valuation(date)
+        return company.action_close_stock_valuation()
+
+    def execute_action(self, options, params=None):
+        report = self.env["account.report"].browse(options["report_id"])
+        action = report.execute_action(options, params)
+        line = self._clicked_report_line(report, params)
+        if not line:
+            return action
+        return self._scope_section_action(action, line.code, options)
+
+    def _clicked_report_line(self, report, params):
+        line_id = (params or {}).get("id")
+        if not isinstance(line_id, str):
+            return self.env["account.report.line"]
+        model, record_id = report._get_model_info_from_id(line_id)
+        if model != "account.report.line":
+            return self.env["account.report.line"]
+        return self.env["account.report.line"].browse(record_id)
+
+    def _scope_section_action(self, action, code, options):
+        date = self._valuation_date(options)
+        if code == "SV_INITIAL":
+            data = self._valuation_data(options)["initial_balance"]
+            domain = Domain(self._action_domain(action))
+            account_ids = [int(a) for a in data["lines_by_account_id"]]
+            if account_ids:
+                domain &= Domain("account_id", "in", account_ids)
+            if date:
+                domain &= Domain("date", "<=", fields.Date.to_string(date))
+            action["domain"] = list(domain)
+            action["context"] = {
+                **self._action_context(action),
+                "search_default_group_by_account": 1,
+                "search_default_groupby_date": "month",
+            }
+        elif code == "SV_ENDING":
+            if date:
+                action["context"] = {
+                    **self._action_context(action),
+                    "to_date": fields.Date.to_string(date),
+                }
+        elif code in self._section_move_usages():
+            usage, name = self._section_move_usages()[code]
+            domain = [
+                "|",
+                ("location_id.usage", "=", usage),
+                ("location_dest_id.usage", "=", usage),
+            ]
+            if date:
+                domain = ["&", ("date", "<=", fields.Date.to_string(date)), *domain]
+            action.update(name=name, domain=domain)
+        return action
+
+    def _action_domain(self, action):
+        domain = action.get("domain") or []
+        if isinstance(domain, str):
+            domain = safe_eval(domain, {"uid": self.env.uid})
+        return domain
+
+    def _action_context(self, action):
+        context = action.get("context") or {}
+        if isinstance(context, str):
+            context = self.env["ir.actions.actions"]._eval_action_context(context)
+        return context
+
+    def _section_move_usages(self):
+        return {"SV_LOSS": ("inventory", _("Inventory Loss"))}

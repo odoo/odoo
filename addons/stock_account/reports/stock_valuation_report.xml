@@ -1,11 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="stock_valuation_report" model="account.report">
+        <field name="name">Inventory Valuation</field>
+        <field name="filter_date_range" eval="False" />
+        <field name="default_opening_date_filter">today</field>
+        <field name="filter_unfold_all" eval="False" />
+        <field name="availability_condition">always</field>
+        <field
+            name="custom_handler_model_id"
+            ref="model_stock_account_stock_valuation_report_handler" />
+        <field name="column_ids">
+            <record
+                id="stock_valuation_report_column_value"
+                model="account.report.column">
+                <field name="name">Value</field>
+                <field name="expression_label">value</field>
+                <field name="sequence">10</field>
+            </record>
+            <record
+                id="stock_valuation_report_column_debit"
+                model="account.report.column">
+                <field name="name">Debit</field>
+                <field name="expression_label">debit</field>
+                <field name="sequence">20</field>
+            </record>
+            <record
+                id="stock_valuation_report_column_credit"
+                model="account.report.column">
+                <field name="name">Credit</field>
+                <field name="expression_label">credit</field>
+                <field name="sequence">30</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record
+                id="stock_valuation_report_line_initial_balance"
+                model="account.report.line">
+                <field name="name">Initial Balance</field>
+                <field name="code">SV_INITIAL</field>
+                <field name="sequence">10</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False" />
+                <field name="action_id" ref="account.action_account_moves_all" />
+                <field name="expression_ids">
+                    <record
+                        id="stock_valuation_report_line_initial_balance_value"
+                        model="account.report.expression">
+                        <field name="label">value</field>
+                        <field name="engine">custom</field>
+                        <field
+                            name="formula">_report_custom_engine_stock_valuation_initial_balance</field>
+                        <field name="subformula">value</field>
+                    </record>
+                </field>
+            </record>
+            <record
+                id="stock_valuation_report_line_inventory_loss"
+                model="account.report.line">
+                <field name="name">Inventory Loss</field>
+                <field name="code">SV_LOSS</field>
+                <field name="sequence">20</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False" />
+                <field name="hide_if_zero" eval="True" />
+                <field name="action_id" ref="stock.stock_move_action" />
+                <field name="expression_ids">
+                    <record
+                        id="stock_valuation_report_line_inventory_loss_value"
+                        model="account.report.expression">
+                        <field name="label">value</field>
+                        <field name="engine">custom</field>
+                        <field
+                            name="formula">_report_custom_engine_stock_valuation_inventory_loss</field>
+                        <field name="subformula">value</field>
+                        <field name="blank_if_zero" eval="True" />
+                    </record>
+                    <record
+                        id="stock_valuation_report_line_inventory_loss_debit"
+                        model="account.report.expression">
+                        <field name="label">debit</field>
+                        <field name="engine">custom</field>
+                        <field
+                            name="formula">_report_custom_engine_stock_valuation_inventory_loss</field>
+                        <field name="subformula">debit</field>
+                        <field name="blank_if_zero" eval="True" />
+                    </record>
+                    <record
+                        id="stock_valuation_report_line_inventory_loss_credit"
+                        model="account.report.expression">
+                        <field name="label">credit</field>
+                        <field name="engine">custom</field>
+                        <field
+                            name="formula">_report_custom_engine_stock_valuation_inventory_loss</field>
+                        <field name="subformula">credit</field>
+                        <field name="blank_if_zero" eval="True" />
+                    </record>
+                </field>
+            </record>
+            <record
+                id="stock_valuation_report_line_stock_variation"
+                model="account.report.line">
+                <field name="name">Stock Variation</field>
+                <field name="code">SV_VARIATION</field>
+                <field name="sequence">30</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False" />
+                <field name="expression_ids">
+                    <record
+                        id="stock_valuation_report_line_stock_variation_value"
+                        model="account.report.expression">
+                        <field name="label">value</field>
+                        <field name="engine">custom</field>
+                        <field
+                            name="formula">_report_custom_engine_stock_valuation_stock_variation</field>
+                        <field name="subformula">value</field>
+                        <field name="blank_if_zero" eval="True" />
+                    </record>
+                    <record
+                        id="stock_valuation_report_line_stock_variation_debit"
+                        model="account.report.expression">
+                        <field name="label">debit</field>
+                        <field name="engine">custom</field>
+                        <field
+                            name="formula">_report_custom_engine_stock_valuation_stock_variation</field>
+                        <field name="subformula">debit</field>
+                        <field name="blank_if_zero" eval="True" />
+                    </record>
+                    <record
+                        id="stock_valuation_report_line_stock_variation_credit"
+                        model="account.report.expression">
+                        <field name="label">credit</field>
+                        <field name="engine">custom</field>
+                        <field
+                            name="formula">_report_custom_engine_stock_valuation_stock_variation</field>
+                        <field name="subformula">credit</field>
+                        <field name="blank_if_zero" eval="True" />
+                    </record>
+                </field>
+            </record>
+            <record
+                id="stock_valuation_report_line_ending_stock"
+                model="account.report.line">
+                <field name="name">Ending Stock</field>
+                <field name="code">SV_ENDING</field>
+                <field name="sequence">40</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="False" />
+                <field name="action_id" ref="stock.action_product_stock_view" />
+                <field name="expression_ids">
+                    <record
+                        id="stock_valuation_report_line_ending_stock_value"
+                        model="account.report.expression">
+                        <field name="label">value</field>
+                        <field name="engine">custom</field>
+                        <field
+                            name="formula">_report_custom_engine_stock_valuation_ending_stock</field>
+                        <field name="subformula">value</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
     <record id="action_report_stock_valuation" model="ir.actions.client">
         <field name="name">Inventory Valuation</field>
-        <field name="res_model">stock_account.stock.valuation.report</field>
-        <field name="tag">stock_valuation_report</field>
-        <field name="context">{'model': 'stock_account.stock.valuation.report'}</field>
+        <field name="res_model" eval="False" />
+        <field name="tag">account_report</field>
+        <field
+            name="context"
+            eval="{'report_id': ref('stock_account.stock_valuation_report')}" />
         <field name="path">stock-valuation-closing</field>
     </record>
 

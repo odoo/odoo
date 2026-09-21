@@ -9,3 +9,4 @@ from . import test_stockvaluation
 from . import test_stockvaluationlayer
 from . import test_company_scoped_valuation
 from . import test_valuation_close_lock
+from . import test_stock_valuation_report

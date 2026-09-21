@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record
+        id="stock_valuation_report_line_cost_of_production"
+        model="account.report.line">
+        <field name="name">Cost of Production</field>
+        <field name="code">SV_PRODUCTION</field>
+        <field name="report_id" ref="stock_account.stock_valuation_report" />
+        <field name="sequence">25</field>
+        <field name="groupby">account_id</field>
+        <field name="foldable" eval="False" />
+        <field name="hide_if_zero" eval="True" />
+        <field name="action_id" ref="stock.stock_move_action" />
+        <field name="expression_ids">
+            <record
+                id="stock_valuation_report_line_cost_of_production_value"
+                model="account.report.expression">
+                <field name="label">value</field>
+                <field name="engine">custom</field>
+                <field
+                    name="formula">_report_custom_engine_stock_valuation_cost_of_production</field>
+                <field name="subformula">value</field>
+                <field name="blank_if_zero" eval="True" />
+            </record>
+            <record
+                id="stock_valuation_report_line_cost_of_production_debit"
+                model="account.report.expression">
+                <field name="label">debit</field>
+                <field name="engine">custom</field>
+                <field
+                    name="formula">_report_custom_engine_stock_valuation_cost_of_production</field>
+                <field name="subformula">debit</field>
+                <field name="blank_if_zero" eval="True" />
+            </record>
+            <record
+                id="stock_valuation_report_line_cost_of_production_credit"
+                model="account.report.expression">
+                <field name="label">credit</field>
+                <field name="engine">custom</field>
+                <field
+                    name="formula">_report_custom_engine_stock_valuation_cost_of_production</field>
+                <field name="subformula">credit</field>
+                <field name="blank_if_zero" eval="True" />
+            </record>
+        </field>
+    </record>
+
+</odoo>
