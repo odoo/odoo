@@ -401,7 +401,7 @@ rendered and not listed here, or listed and no longer rendered.
 | `odoo_workers` | gauge | live worker processes by `type` (`http`, `cron`, `job`) |
 | `odoo_worker_population` | gauge | the configured HTTP worker count, after SIGTTIN/SIGTTOU |
 | `odoo_worker_generation` | gauge | workers forked since the master started |
-| `odoo_worker_exits_total` | counter | worker exits by `outcome`: `clean`, `terminated` (its SIGTERM), `timeout` (the watchdog's kill of a ready worker), `crash` — a crash loop is a rising `crash` beside a flat `clean` |
+| `odoo_worker_exits_total` | counter | worker exits by `outcome`: `clean`, `terminated` (its SIGTERM), `timeout` (the watchdog's kill of a ready worker), `crash`, and one label per policy recycle — `request_max`, `memory_soft`, `cpu_limit`, `max_age`, `parent_changed`, `stalled`. A crash loop is a rising `crash` beside a flat `clean`; a leak is a rising `memory_soft`, which used to be indistinguishable from `clean` because every policy recycle exits 0 |
 | `odoo_long_polling_alive` | gauge | 1 while the evented child runs |
 
 **Connection pool** (`db.get_pool_health()`, one series per `pool` mode)

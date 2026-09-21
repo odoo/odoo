@@ -23,6 +23,7 @@ from odoo.service import (
     _process_state,
     _reload,
     _threaded,
+    _worker,
 )
 from odoo.service import settings as server_settings
 from odoo.tools import SQL
@@ -68,6 +69,24 @@ def worker_cron(srv, multi):
 def prefork_server(srv):
     with server_settings.override(workers=4):
         return srv.PreforkServer(None)
+
+
+_FAKE_HEARTBEAT_PIPE = os.pipe2(os.O_NONBLOCK)
+"""A fake worker's heartbeat pipe, empty for the life of the module.
+
+`MagicMock.__index__` answers 1, so a mock's `watchdog_pipe[0]` is file
+descriptor 1 -- the master would drain this process's stdout looking for a
+worker's recycle reason.
+"""
+
+
+def _fake_worker_mock(**attrs):
+    worker = MagicMock()
+    worker.watchdog_pipe = _FAKE_HEARTBEAT_PIPE
+    worker.recycled_for = None
+    for name, value in attrs.items():
+        setattr(worker, name, value)
+    return worker
 
 
 class TestEmptyPipe:
@@ -918,7 +937,7 @@ class TestLongPollingPopenReconciliation:
 class TestWorkerExitsAreCountedByOutcome:
     @staticmethod
     def _exit(prefork_server, pid, status, *, ready=True, killed=False, age_s=60.0):
-        w = MagicMock()
+        w = _fake_worker_mock()
         w.__class__.__name__ = "WorkerHTTP"
         w.spawn_time = time.monotonic() - age_s
         w.ready = ready
@@ -958,10 +977,82 @@ class TestWorkerExitsAreCountedByOutcome:
         assert sum(prefork_server._get_census()["worker_exits"].values()) == 0
 
 
+class TestAPolicyRecycleIsNotJustACleanExit:
+    """Six policies stop a worker and all six exit 0, on purpose.
+
+    Exiting 0 is what keeps the master's respawn back-off out of a recycle it
+    asked for. It also made every one of them indistinguishable from an
+    ordinary retirement in `odoo_worker_exits_total`: a deployment leaking
+    memory recycled a worker every few minutes and the counter that exists to
+    show that read flat under `clean`.
+    """
+
+    @staticmethod
+    def _exit_saying(prefork_server, pid, code, status=0):
+        read_fd, write_fd = os.pipe2(os.O_NONBLOCK)
+        try:
+            if code is not None:
+                os.write(write_fd, code)
+            worker = _fake_worker_mock(watchdog_pipe=(read_fd, write_fd))
+            worker.__class__.__name__ = "WorkerHTTP"
+            worker.spawn_time = time.monotonic() - 60.0
+            worker.ready = True
+            prefork_server.workers[pid] = worker
+            prefork_server._record_worker_exit(pid, status)
+        finally:
+            os.close(read_fd)
+            os.close(write_fd)
+
+    def test_every_policy_lands_in_its_own_bucket(self, prefork_server):
+        for pid, (code, reason) in enumerate(_worker.RECYCLE_CODES.items(), 900):
+            self._exit_saying(prefork_server, pid, code)
+            assert prefork_server._exits[reason] == 1, reason
+        assert prefork_server._exits["clean"] == 0, (
+            "a recycle the master asked for is not an ordinary retirement"
+        )
+
+    def test_a_worker_that_said_nothing_is_still_a_clean_exit(self, prefork_server):
+        self._exit_saying(prefork_server, 901, None)
+        assert prefork_server._exits["clean"] == 1
+
+    def test_a_reason_does_not_dress_a_crash_up_as_a_policy(self, prefork_server):
+        self._exit_saying(prefork_server, 902, b"M", status=1 << 8)
+        assert prefork_server._exits["crash"] == 1
+        assert prefork_server._exits["memory_soft"] == 0
+
+    def test_the_reason_is_read_even_though_the_child_is_already_gone(
+        self, prefork_server
+    ):
+        """It is written just before the exit, which the master reaps first."""
+        self._exit_saying(prefork_server, 903, b"Q")
+        assert prefork_server._exits["request_max"] == 1
+
+    def test_the_census_carries_the_new_buckets_to_the_child(self, prefork_server):
+        assert set(prefork_server._get_census()["worker_exits"]) == set(
+            _prefork._EXIT_OUTCOMES
+        )
+
+
+class TestAWorkerSaysWhyItIsStopping:
+    @pytest.mark.parametrize("reason", sorted(_worker.RECYCLE_CODES.values()))
+    def test_each_reason_puts_its_own_byte_on_the_heartbeat_pipe(
+        self, worker_multi, reason
+    ):
+        worker = build_worker(_worker.WorkerHTTP, worker_multi)
+        worker.stop_for(reason)
+        assert worker.alive is False
+        assert os.read(worker.watchdog_pipe[0], 16) == _worker._RECYCLE_BYTES[reason]
+
+    def test_an_unknown_reason_still_stops_the_worker(self, worker_multi):
+        worker = build_worker(_worker.WorkerHTTP, worker_multi)
+        worker.stop_for("something new nobody mapped")
+        assert worker.alive is False
+
+
 class TestPreforkRespawnBackoff:
     @staticmethod
     def _worker(prefork_server, pid, *, age_s):
-        w = MagicMock()
+        w = _fake_worker_mock()
         w.__class__.__name__ = "WorkerHTTP"
         w.spawn_time = time.monotonic() - age_s
         prefork_server.workers[pid] = w
@@ -2573,7 +2664,7 @@ class TestAWatchdogKillOfAWorkerThatNeverGotReadyIsACrash:
 
     @staticmethod
     def _young_worker(server, pid):
-        worker = MagicMock()
+        worker = _fake_worker_mock()
         worker.__class__.__name__ = "WorkerHTTP"
         worker.spawn_time = time.monotonic() - 1.0
         worker.watchdog_timeout = 1

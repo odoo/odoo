@@ -54,7 +54,7 @@ class TestTheWorkerCensusCrossesTheFork:
             "workers": {"http": 3, "cron": 1, "job": 2},
             "worker_population": 3,
             "worker_generation": 7,
-            "worker_exits": {"clean": 0, "terminated": 0, "timeout": 0, "crash": 0},
+            "worker_exits": dict.fromkeys(_prefork._EXIT_OUTCOMES, 0),
             "long_polling_alive": True,
         }, "the census is the child's only route to the master's own numbers"
 

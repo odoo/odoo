@@ -64,6 +64,28 @@ class CpuTimeLimitExceeded(Exception):
     pass
 
 
+WORKER_READY = b"R"
+
+RECYCLE_CODES: dict[bytes, str] = {
+    b"Q": "request_max",
+    b"M": "memory_soft",
+    b"C": "cpu_limit",
+    b"A": "max_age",
+    b"P": "parent_changed",
+    b"S": "stalled",
+}
+"""Why a worker stopped, as one byte on the pipe its heartbeats already use.
+
+Every one of these exits 0, deliberately -- a policy recycle is not a crash
+and must not arm the respawn back-off -- and that is exactly why the master
+could not tell them apart: `odoo_worker_exits_total` counted all six, plus
+an ordinary clean exit, as `clean`.  A deployment leaking memory recycled a
+worker every few minutes and the metric that exists to show it read flat.
+"""
+
+_RECYCLE_BYTES: dict[str, bytes] = {v: k for k, v in RECYCLE_CODES.items()}
+
+
 _EPOLLEXCLUSIVE = getattr(select, "EPOLLEXCLUSIVE", 0)
 
 
@@ -102,6 +124,9 @@ class Worker:
     pid: int | None = None
     """The child's pid: set by the master after `fork()` and by the child in
     `start()`; None on an object no process has yet become."""
+
+    recycled_for: str | None = None
+    """Which policy stopped this worker, as the master read it off the pipe."""
 
     def __init__(self, multi: PreforkServer) -> None:
         self.multi = multi
@@ -169,37 +194,17 @@ class Worker:
         Registry._evict_idle_registries()
         if self.ppid != os.getppid():
             self.logger.info("Parent changed")
-            _debug.lifecycle(
-                "worker.recycle",
-                kind=self.__class__.__name__,
-                pid=self.pid,
-                reason="parent_changed",
-            )
-            self.alive = False
+            self.stop_for("parent_changed")
         if self.request_max > 0 and self.request_count >= self.request_max:
             self.logger.info("Max request (%s) reached.", self.request_count)
-            _debug.lifecycle(
-                "worker.recycle",
-                kind=self.__class__.__name__,
-                pid=self.pid,
-                reason="request_max",
-                requests=self.request_count,
-            )
-            self.alive = False
+            self.stop_for("request_max")
         settings = current()
         memory = get_memory_over_soft_limit(
             self._process_handle, settings.limit_memory_soft
         )
         if memory is not None:
             self.logger.info("RSS memory soft-limit reached: %s bytes.", memory)
-            _debug.lifecycle(
-                "worker.recycle",
-                kind=self.__class__.__name__,
-                pid=self.pid,
-                reason="memory_soft",
-                rss=memory,
-            )
-            self.alive = False
+            self.stop_for("memory_soft")
 
         limit_time_cpu = settings.limit_time_cpu
         if limit_time_cpu > 0:
@@ -218,6 +223,21 @@ class Worker:
                 soft_limit=soft,
                 requests=self.request_count,
             )
+
+    def stop_for(self, reason: str) -> None:
+        """Stop, and put the reason on the wire before the exit reaches the
+        master, which otherwise sees only the exit code every policy shares."""
+        self.alive = False
+        code = _RECYCLE_BYTES.get(reason)
+        _debug.lifecycle(
+            "worker.recycle",
+            kind=self.__class__.__name__,
+            pid=self.pid,
+            reason=reason,
+        )
+        if code is not None:
+            with contextlib.suppress(OSError):
+                os.write(self.watchdog_pipe[1], code)
 
     def process_work(self) -> None:
         pass
@@ -295,14 +315,7 @@ class Worker:
                 "CPU time limit (%ss) exceeded; recycling worker.",
                 current().limit_time_cpu,
             )
-            _debug.lifecycle(
-                "worker.recycle",
-                kind=self.__class__.__name__,
-                pid=self.pid,
-                reason="cpu_limit",
-                limit_s=current().limit_time_cpu,
-            )
-            self.alive = False
+            self.stop_for("cpu_limit")
             t.join(timeout=self._CPU_LIMIT_JOIN_GRACE_S)
             if t.is_alive():
                 self.logger.warning(
@@ -349,7 +362,7 @@ class Worker:
                 grace_until = now + self._CANCEL_GRACE_S
                 self._cancel_work_thread_queries(work, now - started, budget)
             elif cancelled_for == started and now >= grace_until:
-                self.alive = False
+                self.stop_for("stalled")
                 return True
             self.multi.ping_pipe(self.watchdog_pipe)
         return False
@@ -398,7 +411,7 @@ class Worker:
             )
             # Readiness means the work thread actually started. A heartbeat
             # during listener reconnect or main-thread setup cannot prove it.
-            os.write(self.watchdog_pipe[1], b"R")
+            os.write(self.watchdog_pipe[1], WORKER_READY)
             _debug.lifecycle("worker.ready", kind=self.__class__.__name__, pid=self.pid)
             worker = current_worker_thread()
             while self.alive:
@@ -580,14 +593,7 @@ class WorkerCron(Worker):
         max_age = self.get_max_age()
         if max_age > 0 and (time.monotonic() - self.alive_time) > max_age:
             self.logger.info("Max age (%ss) reached.", max_age)
-            _debug.lifecycle(
-                "worker.recycle",
-                kind=self.__class__.__name__,
-                pid=self.pid,
-                reason="max_age",
-                max_age_s=max_age,
-            )
-            self.alive = False
+            self.stop_for("max_age")
 
     def process_work(self) -> None:
         self.logger.debug("polling for jobs")

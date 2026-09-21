@@ -31,7 +31,14 @@ from ._limits import empty_pipe, get_graceful_stop_timeout
 from ._listener import acquire_listener
 from ._reload import GenerationHandoff
 from ._sdnotify import Watchdog, notify, notify_ready
-from ._worker import Worker, WorkerCron, WorkerHTTP, WorkerJob
+from ._worker import (
+    RECYCLE_CODES,
+    WORKER_READY,
+    Worker,
+    WorkerCron,
+    WorkerHTTP,
+    WorkerJob,
+)
 from .lifecycle import preload_registries
 from .settings import SD_LISTEN_FDS_START
 
@@ -62,12 +69,24 @@ def _read_process_title(pid: int) -> str:
     return words.removeprefix("odoo: ") if words.startswith("odoo: ") else ""
 
 
-_EXIT_OUTCOMES = ("clean", "terminated", "timeout", "crash")
+_EXIT_OUTCOMES = (
+    "clean",
+    "terminated",
+    "timeout",
+    "crash",
+    *RECYCLE_CODES.values(),
+)
 
 
-def _get_exit_outcome(status: int, *, policy_kill: bool) -> str:
+def _get_exit_outcome(
+    status: int, *, policy_kill: bool, recycled_for: str | None = None
+) -> str:
     if os.WIFEXITED(status):
-        return "clean" if os.WEXITSTATUS(status) == 0 else "crash"
+        if os.WEXITSTATUS(status) != 0:
+            return "crash"
+        # Every policy recycle exits 0 on purpose, so the exit code alone
+        # cannot tell a leak-driven recycle from a healthy retirement.
+        return recycled_for or "clean"
     if policy_kill:
         return "timeout"
     if os.WIFSIGNALED(status) and os.WTERMSIG(status) == signal.SIGTERM:
@@ -448,6 +467,7 @@ class PreforkServer(CommonServer):
         if self.handoff.record_exit(pid, status):
             return
         policy_kill = False
+        recycled_for: str | None = None
         if pid == self.long_polling_pid:
             name = LONG_POLLING_KIND
             lifetime = time.monotonic() - self.long_polling_spawn_time
@@ -460,12 +480,17 @@ class PreforkServer(CommonServer):
                 return
             name = worker.__class__.__name__
             lifetime = time.monotonic() - getattr(worker, "spawn_time", 0.0)
+            # A reason written just before the exit may still be in the pipe.
+            self._read_worker_pipe(worker.watchdog_pipe[0], worker)
+            recycled_for = worker.recycled_for
             # The watchdog's SIGKILL of a worker that had reported ready is a
             # policy the master applied to one long request, not a crash to
             # back off from; the same kill on a worker that never got there
             # is a worker that hangs at boot, which is what the back-off is for.
             policy_kill = killed_by_master and bool(worker.ready)
-        outcome = _get_exit_outcome(status, policy_kill=policy_kill)
+        outcome = _get_exit_outcome(
+            status, policy_kill=policy_kill, recycled_for=recycled_for
+        )
         self._exits[outcome] += 1
         _debug.lifecycle(
             "prefork.worker_exited",
@@ -692,13 +717,31 @@ class PreforkServer(CommonServer):
             fd = key.fd
             if fd in fds:
                 fds[fd].watchdog_time = time.monotonic()
-                with contextlib.suppress(BlockingIOError):
-                    while data := os.read(fd, 4096):
-                        if b"R" in data:
-                            fds[fd].ready = True
-                            _debug.lifecycle("prefork.worker_ready", pid=fds[fd].pid)
+                self._read_worker_pipe(fd, fds[fd])
             else:
                 empty_pipe(fd)
+
+    @staticmethod
+    def _read_worker_pipe(fd: int, worker: Worker) -> None:
+        """Drain a worker's heartbeats, and keep what they say.
+
+        The bytes are a beat (`.`), the one-off readiness mark, and the reason
+        a worker is about to stop.  The last has to survive being read after
+        the child is already gone, which is why it is taken here and again
+        when the exit is accounted for.
+        """
+        with contextlib.suppress(BlockingIOError, OSError):
+            while data := os.read(fd, 4096):
+                if WORKER_READY in data:
+                    if not worker.ready:
+                        _debug.lifecycle("prefork.worker_ready", pid=worker.pid)
+                    worker.ready = True
+                for code, reason in RECYCLE_CODES.items():
+                    if code in data:
+                        worker.recycled_for = reason
+                        _debug.lifecycle(
+                            "prefork.worker_recycling", pid=worker.pid, reason=reason
+                        )
 
     def start(self) -> None:
         self.pipe = self.open_pipe()
