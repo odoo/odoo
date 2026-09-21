@@ -1,7 +1,7 @@
 import logging
 import typing
 from collections import deque
-from contextlib import suppress
+from contextlib import contextmanager, suppress
 from weakref import WeakSet, WeakValueDictionary
 from weakref import ref as weakref_ref
 
@@ -82,6 +82,7 @@ class Transaction:
     __slots__ = (
         "_cache_store",
         "_compute_engine",
+        "_create_frames",
         "_last_env",
         "_recent_envs",
         "_ref_cache",
@@ -131,6 +132,7 @@ class Transaction:
 
         self.cache = Cache(self)
         self._ref_cache: dict[tuple[str, int], bool] = {}
+        self._create_frames: list[dict[str, set[int]]] = []
         self.prefetch_batch: tuple[str, tuple] | None = None
 
         self.observers: tuple[OrmObserver, ...] = enabled_observers()
@@ -140,6 +142,21 @@ class Transaction:
             backend=type(self.backend).__name__,
             observers=len(self.observers),
         )
+
+    @contextmanager
+    def create_frame(self) -> typing.Iterator[None]:
+        self._create_frames.append({})
+        try:
+            yield
+        finally:
+            self._create_frames.pop()
+
+    def note_created(self, model_name: str, ids: typing.Iterable[int]) -> None:
+        if self._create_frames:
+            self._create_frames[-1].setdefault(model_name, set()).update(ids)
+
+    def is_being_created(self, model_name: str, id_: int) -> bool:
+        return any(id_ in frame.get(model_name, ()) for frame in self._create_frames)
 
     def environment(
         self, cr: BaseCursor, uid: int | None, context: dict, su: bool = False

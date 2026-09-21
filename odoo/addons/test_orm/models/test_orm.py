@@ -3127,6 +3127,25 @@ class TestOrmPropertiesTarget(models.Model):
     )
 
 
+class TestOrmPropertiesProjector(models.Model):
+    _name = "test_orm.properties.projector"
+    _description = "test_orm.properties.projector"
+
+    holder_id = fields.Many2one("test_orm.properties.holder.b")
+    definition = fields.PropertiesDefinition(
+        related="holder_id.definition",
+        readonly=False,
+    )
+
+
+class TestOrmPropertiesProjected(models.Model):
+    _name = "test_orm.properties.projected"
+    _description = "test_orm.properties.projected"
+
+    projector_id = fields.Many2one("test_orm.properties.projector")
+    attributes = fields.Properties(definition="projector_id.definition")
+
+
 class TestOrmPropertiesSource(models.Model):
     _name = "test_orm.properties.source"
     _description = "test_orm.properties.source"

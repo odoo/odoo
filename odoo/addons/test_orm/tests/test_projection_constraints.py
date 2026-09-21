@@ -79,3 +79,16 @@ class TestAProjectedFieldFiresItsConstraints(TransactionCase):
         self.child.quantity = 0
         self.parent.state = "closed"
         self.assertEqual(other_child.parent_state, "open")
+
+    def test_a_record_inside_its_create_is_left_to_it_whoever_calls_modified(self):
+        self.env.cr.execute(
+            "UPDATE test_orm_projection_parent SET state = 'closed' WHERE id = %s",
+            [self.parent.id],
+        )
+        self.parent.invalidate_recordset(["state"])
+        transaction = self.env.transaction
+        with transaction.create_frame():
+            transaction.note_created(self.child._name, self.child.ids)
+            self.parent.modified(["state"])
+        with self.assertRaises(ValidationError):
+            self.parent.modified(["state"])

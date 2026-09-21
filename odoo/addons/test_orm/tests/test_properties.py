@@ -4669,6 +4669,21 @@ class PropertiesDefinitionColumnNamedDefinitionCase(TransactionCase):
         )
 
 
+class PropertiesDefinitionProjectedByItsContainerCase(TransactionCase):
+    def test_a_projected_definition_is_scanned_where_it_is_stored(self):
+        holder = self.env["test_orm.properties.holder.b"].create({"name": "holder"})
+        projector = self.env["test_orm.properties.projector"].create(
+            {"holder_id": holder.id}
+        )
+        projector.definition = [{"name": "size", "type": "integer", "string": "Size"}]
+        self.env.flush_all()
+
+        definition = self.env["test_orm.properties.projected"].get_property_definition(
+            "attributes.size"
+        )
+        self.assertEqual(definition.get("type"), "integer")
+
+
 class TestPropertiesBaseDefinitionReadPaths(TransactionCase):
     def setUp(self):
         super().setUp()

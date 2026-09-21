@@ -356,13 +356,14 @@ class CreateMixin(_ModelStubs):
         self._create_parent_records(data_list)
         prof.mark("parent")
 
-        records = self._create(data_list)
-        prof.mark("sql")
+        with self.env.transaction.create_frame():
+            records = self._create(data_list)
+            prof.mark("sql")
 
-        self._create_apply_inverses(data_list, inverses_by_hook)
-        prof.mark("trigger")
+            self._create_apply_inverses(data_list, inverses_by_hook)
+            prof.mark("trigger")
 
-        self._check_created(data_list)
+            self._check_created(data_list)
 
         if self._check_company_auto:
             records._check_company()
@@ -561,6 +562,7 @@ class CreateMixin(_ModelStubs):
         prof.mark("sql")
 
         records, inverses_update = self._update_create_cache(ids, data_list)
+        self.env.transaction.note_created(self._name, records._ids)
         prof.mark("cache")
 
         for field, updates in inverses_update.items():

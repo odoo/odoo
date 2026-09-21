@@ -80,16 +80,16 @@ class RecomputeMixin(_ModelStubs):
             )
             to_validate: dict = {}
             self._modified_trigger_loop(fnames, create, scheduler, to_validate)
-            # a record being created is not whole yet: `_create` checks it in its
-            # own pass, once its other fields are in
             being_created = set(self._ids) if create else ()
+            transaction = self.env.transaction
             for field, ids in to_validate.items():
                 records = (
                     self.env[field.model_name]
                     .browse(
                         id_
                         for id_ in ids
-                        if field.model_name != self._name or id_ not in being_created
+                        if not (field.model_name == self._name and id_ in being_created)
+                        and not transaction.is_being_created(field.model_name, id_)
                     )
                     .exists()
                 )

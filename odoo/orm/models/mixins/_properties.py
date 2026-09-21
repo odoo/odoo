@@ -41,10 +41,12 @@ class _PropertiesMixin(_ModelStubs):
             )
 
         target_model = self.env[self._fields[definition_record].comodel_name or ""]
-        # the first definition record, by id, whose stored definition names
-        # the property -- the column as stored, through the column store, not
-        # the field's normalised reading, so an invalid comodel written to it
-        # still surfaces as the SQL scan surfaced it
+        definition_field = target_model._fields[definition_record_field]
+        while definition_field.related and not definition_field.store:
+            *path, definition_record_field = definition_field.related.split(".")
+            for name in path:
+                target_model = self.env[target_model._fields[name].comodel_name or ""]
+            definition_field = target_model._fields[definition_record_field]
         target_model.flush_model([definition_record_field])
         definition: dict = {}
         for _holder_id, stored in self.env.backend.columns.get_column_values(
