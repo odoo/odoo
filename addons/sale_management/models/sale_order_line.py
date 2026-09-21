@@ -27,11 +27,7 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         section_lines = self.order_id.order_line.filtered(
-            lambda line: (
-                line.product_type != "combo"
-                and not line.combo_item_id
-                and self._is_line_in_section(line)
-            )
+            lambda line: line._can_be_saved_as_template() and self._is_line_in_section(line)
         )
 
         domain = (
@@ -74,6 +70,11 @@ class SaleOrderLine(models.Model):
         return new_template.read(["id", "name", "create_uid"], load="")[0]
 
     # === TOOLING ===#
+
+    def _can_be_saved_as_template(self):
+        return self.display_type or (
+            self._is_product_line() and self.product_type != "combo" and not self.combo_item_id
+        )
 
     def _is_line_optional(self):
         """Return whether the line is optional or not.

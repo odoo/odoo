@@ -151,7 +151,9 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         template_lines = [
-            Command.create(line._prepare_template_line_values()) for line in self.order_line
+            Command.create(line._prepare_template_line_values())
+            for line in self.order_line
+            if line._can_be_saved_as_template()
         ]
 
         return {
