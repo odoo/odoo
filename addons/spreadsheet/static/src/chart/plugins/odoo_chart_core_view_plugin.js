@@ -8,6 +8,23 @@ export class OdooChartCoreViewPlugin extends OdooEvaluationPlugin {
 
     shouldChartUpdateReloadDataSource = false;
 
+    preHandlers = {
+        START: this.onStart,
+        UPDATE_CHART: this.prepareChartDataSourceUpdate,
+    };
+
+    handlers = {
+        CREATE_CHART: this.onCreateChart,
+        UPDATE_CHART: this.onUpdateChart,
+        ADD_GLOBAL_FILTER: this.onGlobalFilterChange,
+        EDIT_GLOBAL_FILTER: this.onGlobalFilterChange,
+        REMOVE_GLOBAL_FILTER: this.onGlobalFilterChange,
+        SET_GLOBAL_FILTER_VALUE: this.onGlobalFilterChange,
+        UNDO: this.onUndoRedo,
+        REDO: this.onUndoRedo,
+        REFRESH_ALL_DATA_SOURCES: this.onRefreshAllDataSources,
+    };
+
     constructor(config) {
         super(config);
 
@@ -18,87 +35,74 @@ export class OdooChartCoreViewPlugin extends OdooEvaluationPlugin {
         this.charts = {};
     }
 
-    beforeHandle(cmd) {
-        switch (cmd.type) {
-            case "START":
-                for (const chartId of this.getters.getOdooChartIds()) {
-                    this._setupChartDataSource(chartId);
-                }
-                break;
-            case "UPDATE_CHART": {
-                if (cmd.definition.dataSource?.type === "odoo") {
-                    const chart = this.getters.getChart(cmd.chartId);
-                    if (this._shouldReloadDataSource(cmd.chartId, cmd.definition)) {
-                        this.shouldChartUpdateReloadDataSource = true;
-                    } else if (cmd.definition.type !== chart.type) {
-                        const dataSource = this.getChartDataSource(cmd.chartId);
-                        dataSource.changeChartType(chartTypeToDataSourceMode(cmd.definition.type));
-                    }
-                }
-                break;
-            }
+    onStart() {
+        for (const chartId of this.getters.getOdooChartIds()) {
+            this._setupChartDataSource(chartId);
         }
     }
 
     /**
-     * Handle a spreadsheet command
-     *
-     * @param {Object} cmd Command
+     * Runs before the chart is actually updated, while the current definition
+     * is still readable, to figure out whether its data source has to be
+     * reloaded once the update is applied.
      */
-    handle(cmd) {
-        switch (cmd.type) {
-            case "CREATE_CHART": {
-                if (cmd.definition.dataSource?.type === "odoo") {
-                    this._setupChartDataSource(cmd.chartId);
-                }
-                break;
+    prepareChartDataSourceUpdate(cmd) {
+        if (cmd.definition.dataSource?.type === "odoo") {
+            const chart = this.getters.getChart(cmd.chartId);
+            if (this._shouldReloadDataSource(cmd.chartId, cmd.definition)) {
+                this.shouldChartUpdateReloadDataSource = true;
+            } else if (cmd.definition.type !== chart.type) {
+                const dataSource = this.getChartDataSource(cmd.chartId);
+                dataSource.changeChartType(chartTypeToDataSourceMode(cmd.definition.type));
             }
-            case "UPDATE_CHART": {
-                if (cmd.definition.dataSource?.type === "odoo") {
-                    if (this.shouldChartUpdateReloadDataSource) {
-                        this._resetChartDataSource(cmd.chartId);
-                        this.shouldChartUpdateReloadDataSource = false;
-                    }
-                }
-                break;
-            }
-            case "ADD_GLOBAL_FILTER":
-            case "EDIT_GLOBAL_FILTER":
-            case "REMOVE_GLOBAL_FILTER":
-            case "SET_GLOBAL_FILTER_VALUE":
-                this._pendingAddDomains = true;
-                break;
-            case "UNDO":
-            case "REDO": {
-                if (
-                    cmd.commands.find((command) =>
-                        [
-                            "ADD_GLOBAL_FILTER",
-                            "EDIT_GLOBAL_FILTER",
-                            "REMOVE_GLOBAL_FILTER",
-                        ].includes(command.type)
-                    )
-                ) {
-                    this._addDomains();
-                }
-
-                const domainEditionCommands = cmd.commands.filter(
-                    (cmd) => cmd.type === "UPDATE_CHART" || cmd.type === "CREATE_CHART"
-                );
-                for (const cmd of domainEditionCommands) {
-                    if (!this.getters.getOdooChartIds().includes(cmd.chartId)) {
-                        continue;
-                    }
-                    if (this._shouldReloadDataSource(cmd.chartId, cmd.definition)) {
-                        this._resetChartDataSource(cmd.chartId);
-                    }
-                }
-                break;
-            }
-            case "REFRESH_ALL_DATA_SOURCES":
-                this._refreshOdooCharts();
-                break;
         }
+    }
+
+    onCreateChart(cmd) {
+        if (cmd.definition.dataSource?.type === "odoo") {
+            this._setupChartDataSource(cmd.chartId);
+        }
+    }
+
+    onUpdateChart(cmd) {
+        if (cmd.definition.dataSource?.type === "odoo") {
+            if (this.shouldChartUpdateReloadDataSource) {
+                this._resetChartDataSource(cmd.chartId);
+                this.shouldChartUpdateReloadDataSource = false;
+            }
+        }
+    }
+
+    onGlobalFilterChange() {
+        this._pendingAddDomains = true;
+    }
+
+    onUndoRedo(cmd) {
+        if (
+            cmd.commands.find((command) =>
+                ["ADD_GLOBAL_FILTER", "EDIT_GLOBAL_FILTER", "REMOVE_GLOBAL_FILTER"].includes(
+                    command.type
+                )
+            )
+        ) {
+            this._addDomains();
+        }
+
+        const domainEditionCommands = cmd.commands.filter(
+            (cmd) => cmd.type === "UPDATE_CHART" || cmd.type === "CREATE_CHART"
+        );
+        for (const cmd of domainEditionCommands) {
+            if (!this.getters.getOdooChartIds().includes(cmd.chartId)) {
+                continue;
+            }
+            if (this._shouldReloadDataSource(cmd.chartId, cmd.definition)) {
+                this._resetChartDataSource(cmd.chartId);
+            }
+        }
+    }
+
+    onRefreshAllDataSources() {
+        this._refreshOdooCharts();
     }
 
     finalize() {

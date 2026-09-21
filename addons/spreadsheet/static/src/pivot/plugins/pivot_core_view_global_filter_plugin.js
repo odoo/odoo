@@ -67,57 +67,57 @@ export class PivotCoreViewGlobalFilterPlugin extends OdooEvaluationPlugin {
         "getPivotComputedDomain",
         "getFiltersMatchingPivotArgs",
     ]);
+    preHandlers = {
+        // make sure the domains are correctly set before any evaluation
+        START: this.onStart,
+    };
+
+    handlers = {
+        ADD_GLOBAL_FILTER: this.onGlobalFilterChange,
+        EDIT_GLOBAL_FILTER: this.onGlobalFilterChange,
+        REMOVE_GLOBAL_FILTER: this.onGlobalFilterChange,
+        SET_GLOBAL_FILTER_VALUE: this.onGlobalFilterChange,
+        UPDATE_PIVOT: this.onUpdatePivot,
+        UPDATE_ODOO_PIVOT_DOMAIN: this.onUpdatePivot,
+        DUPLICATE_PIVOT: this.onDuplicatePivot,
+        UNDO: this.onUndoRedo,
+        REDO: this.onUndoRedo,
+    };
+
     constructor(config) {
         super(config);
         this._pendingAddDomains = false;
     }
 
-    beforeHandle(cmd) {
-        switch (cmd.type) {
-            case "START":
-                // make sure the domains are correctly set before
-                // any evaluation
-                this._addDomains();
-                break;
-        }
+    onStart() {
+        this._addDomains();
     }
 
-    /**
-     * Handle a spreadsheet command
-     * @param {Object} cmd Command
-     */
-    handle(cmd) {
-        switch (cmd.type) {
-            case "ADD_GLOBAL_FILTER":
-            case "EDIT_GLOBAL_FILTER":
-            case "REMOVE_GLOBAL_FILTER":
-            case "SET_GLOBAL_FILTER_VALUE":
-                this._pendingAddDomains = true;
-                break;
-            case "UPDATE_PIVOT":
-            case "UPDATE_ODOO_PIVOT_DOMAIN":
-                this._addDomain(cmd.pivotId);
-                break;
-            case "DUPLICATE_PIVOT":
-                this._addDomain(cmd.newPivotId);
-                break;
-            case "UNDO":
-            case "REDO": {
-                if (
-                    cmd.commands.find((command) =>
-                        [
-                            "ADD_GLOBAL_FILTER",
-                            "EDIT_GLOBAL_FILTER",
-                            "REMOVE_GLOBAL_FILTER",
-                            "UPDATE_ODOO_PIVOT_DOMAIN",
-                            "UPDATE_PIVOT",
-                        ].includes(command.type)
-                    )
-                ) {
-                    this._addDomains();
-                }
-                break;
-            }
+    onGlobalFilterChange() {
+        this._pendingAddDomains = true;
+    }
+
+    onUpdatePivot(cmd) {
+        this._addDomain(cmd.pivotId);
+    }
+
+    onDuplicatePivot(cmd) {
+        this._addDomain(cmd.newPivotId);
+    }
+
+    onUndoRedo(cmd) {
+        if (
+            cmd.commands.find((command) =>
+                [
+                    "ADD_GLOBAL_FILTER",
+                    "EDIT_GLOBAL_FILTER",
+                    "REMOVE_GLOBAL_FILTER",
+                    "UPDATE_ODOO_PIVOT_DOMAIN",
+                    "UPDATE_PIVOT",
+                ].includes(command.type)
+            )
+        ) {
+            this._addDomains();
         }
     }
 
