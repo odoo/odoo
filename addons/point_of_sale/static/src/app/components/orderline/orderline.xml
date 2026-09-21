@@ -20,7 +20,15 @@
                             <small t-if="vals.decimalPart" t-out="vals.decimalPart" class="fw-normal" style="font-size: 85%;" />
                         </span>
                         <span class="text-wrap d-inline">
-                            <t t-out="vals.name" /><br/>
+                            <t t-out="vals.name" />
+                            <i t-if="this.line.combo_line_ids?.length"
+                               class="oi cursor-pointer ps-1 align-middle text-muted"
+                               t-attf-data-icon="{{ this.line.uiState.collapsed ? 'arrow_right' : 'arrow_drop_down' }}"
+                               t-on-pointerdown.stop=""
+                               t-on-click.stop="() => this.line.toggleCollapse()"
+                               title="Toggle Combo Lines"
+                            />
+                            <br/>
                             <small t-if="vals.attributeString" t-out="vals.attributeString" class="attribute-line fst-italic" />
                         </span>
                     </div>
