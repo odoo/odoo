@@ -31,6 +31,7 @@ from odoo.tools.translate import _
 
 from ..components.storage import NamedSequence
 from ..domain import Domain
+from ..domain.ast import DomainCustom
 from ..fields.temporal import Date
 from ..models.table_objects import Constraint
 from ..parsing import parse_read_group_spec, regex_order_part_read_group
@@ -220,6 +221,21 @@ def _jsonb_contains(value: typing.Any, needle: typing.Any) -> bool:
 
 
 _UNIQUE_DEFINITION = re.compile(r"^\s*unique\s*\(([^)]*)\)\s*$", re.IGNORECASE)
+
+
+def _carries_a_python_predicate(domain: Domain) -> bool:
+    # `Domain.custom(to_sql=..., predicate=...)` is the supported way to say
+    # "this tier evaluates me in Python", and its contract is that the SQL
+    # half is never called here -- so a domain holding one is not offered to
+    # the compiler at all, and whatever else it holds goes unchecked
+    if isinstance(domain, DomainCustom):
+        return domain._filtered is not None
+    child = getattr(domain, "child", None)
+    if child is not None:
+        return _carries_a_python_predicate(child)
+    return any(
+        _carries_a_python_predicate(item) for item in getattr(domain, "children", ())
+    )
 
 
 def _foreign_key_targets(model: BaseModel) -> list[tuple[str, str]]:
@@ -1377,45 +1393,36 @@ class InMemoryBackend:
         return None
 
     @staticmethod
-    def _refuse_what_sql_cannot_compile(model: BaseModel, domain: Domain) -> None:
+    def _refuse_what_sql_cannot_compile(
+        model: BaseModel, domain: Domain, order: str | None
+    ) -> None:
         """A search this tier can answer and PostgreSQL cannot is a test that
         passes here and fails there.
 
-        This backend evaluates a domain through `filtered_domain`, in Python,
-        over the records -- so it can answer a condition on a non-stored
-        computed field that `_field_to_sql` refuses outright with "Cannot
-        convert ... to SQL because it is not stored". The recompute
-        traversal's `search(Domain(field, "in", ids))` is one caller that
-        depends on the difference, which is why the ORM warns at setup that
-        such a field "should be searchable".
-        """
-        for condition in domain.iter_conditions():
-            fname = condition.field_expr.split(".", 1)[0]
-            field = model._fields.get(fname)
-            if field is None or field.store or field.search or field.related:
-                continue
-            if field.name == "id":
-                continue
-            raise ValueError(
-                f"Cannot convert {model._name}.{field.name} to SQL because it "
-                f"is not stored"
-            )
+        This backend evaluates the domain with `filtered_domain` and sorts
+        with `sorted(key=order)`, both in Python over the records, so it
+        answers a condition or an order on a non-stored computed field that
+        `_field_to_sql` refuses outright with "Cannot convert ... to SQL
+        because it is not stored". The recompute traversal's
+        `search(Domain(field, "in", ids))` is one caller that depends on the
+        difference, which is why the ORM warns at setup that such a field
+        "should be searchable".
 
-    @staticmethod
-    def _refuse_order_sql_cannot_compile(model: BaseModel, order: str | None) -> None:
-        """An order this tier can sort by and PostgreSQL cannot.
-
-        `sorted(key=order)` reads the field through the records, so it orders
-        by a non-stored computed field that `_field_to_sql` refuses outright.
-        Which fields those are is not a property this can restate: a
-        non-stored *related* field compiles to a join and orders fine, and a
-        field with its own `to_sql` may compile to a parameter
-        (`res.partner.properties_base_definition_id` answers `%s::int4`).
-        So the compiler itself is asked, and its SQL discarded.
+        Which fields those are is not a property that can be restated here.
+        A hand-written rule got it wrong in both directions: a non-stored
+        *related* field compiles to a join and searches fine, a field with
+        its own `to_sql` may compile to a bare parameter
+        (`res.partner.properties_base_definition_id` answers `%s::int4`), and
+        reading only the first segment of `parent_id.avatar_1920` or skipping
+        an `any` sub-domain missed the field that actually refuses. So the
+        compiler is asked the same two questions `_prepare_postgres_search_query`
+        asks it, and its SQL is discarded.
         """
-        if not order:
-            return
-        model._order_to_sql(order, Query(model.env, model._table, model._table_sql))
+        query = Query(model.env, model._table, model._table_sql)
+        if not domain.is_true() and not _carries_a_python_predicate(domain):
+            query.add_where(domain._to_sql(model, model._table, query))
+        if order:
+            model._order_to_sql(order, query)
 
     def search(
         self,
@@ -1428,8 +1435,7 @@ class InMemoryBackend:
         check_access: bool = True,
         prof: typing.Any = None,
     ) -> Query:
-        self._refuse_what_sql_cannot_compile(model, domain)
-        self._refuse_order_sql_cannot_compile(model, order)
+        self._refuse_what_sql_cannot_compile(model, domain, order)
         searched_fnames = flush_search_dependencies(model, domain, order)
         # a SQL search fills no field cache; the in-memory one evaluates the
         # domain and the order through the records, so what it loads to do
