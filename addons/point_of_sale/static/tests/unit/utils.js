@@ -460,9 +460,9 @@ export function expectConfiguredChairLine(line) {
     expect(line.getFullProductName()).toBe(
         "Configurable Chair (Blue, Wood, Fabrics: Other: Azerty, Cushion, Headrest)"
     );
-    expect(line.selectedAttributes[line.attribute_value_ids[0].attribute_id.id].selected.name).toBe(
-        "Blue"
-    );
+    expect(
+        line.selectedAttributes[line.attribute_value_ids[0].attribute_line_id.id].selected.name
+    ).toBe("Blue");
     expect(line.custom_attribute_value_ids[0].custom_product_template_attribute_value_id.name).toBe(
         "Other"
     );
