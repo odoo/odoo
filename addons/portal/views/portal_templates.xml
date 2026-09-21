@@ -710,13 +710,14 @@
             :hash : signed token with the partner_id using `_sign_token` method (on mail.thread)
             :pid : identifier of the partner signing the token
             :hide_header bool (optional) : hide the chatter header
+            :display_rating bool (optional): render the chatter in its reviews layout (see `portal_rating`)
 
         NOTE: for standard portal flows, _get_page_view_values should be used to properly setup the template parameters
     -->
     <template id="message_thread">
         <h3 t-if="not hide_header">Communication History</h3>
         <div id="discussion" data-anchor="true"
-            class="d-print-none o_portal_chatter o_not_editable p-0 mx-n3"
+            t-attf-class="d-print-none o_portal_chatter o_not_editable p-0 #{'' if display_rating else 'mx-n3'}"
             t-att-data-token="token"
             t-att-data-res_model="object._name"
             t-att-data-pid="pid"

@@ -13,6 +13,21 @@
                 </button>
             </t>
         </div>
+        <t t-set="mobile_additional_action" position="replace">
+            <t
+                t-set="mobile_additional_action"
+                t-value="sale_order.with_user(env.user).sudo()._is_portal_return_allowed()"/>
+        </t>
+        <a id="mobile_feedback_button" position="before">
+            <button
+                t-if="mobile_additional_action"
+                t-attf-class="btn btn-light o_return_button#{'' if mobile_has_primary_action else ' flex-grow-1'}"
+                t-att-data-sale-order-id="sale_order.id"
+                t-att-data-access-token="access_token"
+            >
+                <i class="oi me-1" data-icon="reply"/>Return
+            </button>
+        </a>
     </template>
 
     <template
