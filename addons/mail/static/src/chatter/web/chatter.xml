@@ -29,13 +29,13 @@
                     </button>
                 </div>
                 <span class="o-mail-Chatter-topbarGrow flex-grow-1 pe-2"/>
-                <button class="btn btn-link px-1" aria-label="Search Messages" t-att-class="{ 'text-muted': this.state.activePanel !== this.CHATTER_PANEL.SEARCH }" title="Search Messages" t-on-click="this.onClickSearch">
+                <button class="btn btn-hover-action px-1" aria-label="Search Messages" title="Search Messages" t-on-click="this.onClickSearch">
                     <i class="oi oi-fw" data-icon="search" role="img"/>
                 </button>
-                <button t-if="this.hasPinnedMessages" class="btn btn-link p-1" aria-label="Pinned Messages" t-att-class="{ 'text-muted': this.state.activePanel !== this.CHATTER_PANEL.PINNED_MESSAGES }" title="Pinned Messages" t-on-click="this.onClickPinnedMessages">
+                <button t-if="this.hasPinnedMessages" class="btn btn-hover-action p-1" aria-label="Pinned Messages" title="Pinned Messages" t-on-click="this.onClickPinnedMessages">
                     <i class="oi oi-fw" data-icon="push_pin" role="img"/>
                 </button>
-                <button t-if="this.webChatterProps.hasAttachmentPreview and this.state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action px-1" t-on-click="this.popoutAttachment">
+                <button t-if="this.webChatterProps.hasAttachmentPreview and this.state.thread.attachmentsInWebClientView.length" class="btn btn-hover-action px-1" t-on-click="this.popoutAttachment">
                     <i class="oi oi-fw" data-icon="fullscreen_exit" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
                 </button>
                 <FileUploader t-if="this.attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" showUploadingText="false" multiUpload="true" onUploaded="this.onUploaded({ thread: this.state.thread })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="this.state.thread.localId">
@@ -46,7 +46,7 @@
                 <t t-else="" t-call="mail.Chatter.attachFiles"/>
                 <div class="o-mail-Followers d-flex">
                     <Dropdown position="'bottom-end'" menuClass="'o-mail-Followers-dropdown ' + this.store.discussDropdownMenuClass(this)" state="this.followerListDropdown">
-                        <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 ' + (this.state.thread.selfFollower ? 'active' : '')" t-att-disabled="this.isDisabled" t-att-title="this.followerButtonLabel">
+                        <button t-att-class="'o-mail-Followers-button btn btn-hover-action d-flex align-items-center text-action px-1 ' + (this.state.thread.selfFollower ? 'active' : '')" t-att-disabled="this.isDisabled" t-att-title="this.followerButtonLabel">
                             <i class="oi oi-fw" role="img" t-attf-class="{{ this.state.thread.selfFollower ? 'oi-filled' : '' }}" t-attf-data-icon="person"/>
                             <i t-if="this.state.thread.id and this.state.thread.followersCount === undefined" class="oi oi-spin" data-icon="autorenew"/>
                             <sup t-else="" class="o-mail-Followers-counter" t-out="this.state.thread.followersCount ?? 0"/>
