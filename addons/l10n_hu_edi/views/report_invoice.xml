@@ -46,7 +46,7 @@
         <xpath expr="//t[@name='address_not_same_as_shipping']//address" position="before">
             <strong>Customer:</strong>
         </xpath>
-        <t t-set="information_block" position="replace"/>
+        <xpath expr="//t[@t-set='information_block'][div[@name='shipping_address_block']]" position="replace"/>
         <xpath expr="//t[@name='address_not_same_as_shipping']//span[@t-field='o.partner_id.vat']/.." position="after">
             <div t-if="o.partner_id.l10n_hu_group_vat">Group Member Tax ID: <span t-field="o.partner_id.l10n_hu_group_vat"/></div>
             <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
