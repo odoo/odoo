@@ -223,11 +223,6 @@ class IntegrationExchange(models.Model):
         help="`enforce` or `audit`, as the gate ran for this call. An audit "
         "row was admitted with no valid credential.",
     )
-
-    _channel_or_refusal = models.Constraint(
-        "CHECK (channel_id IS NOT NULL OR refusal_reason IS NOT NULL)",
-        "An exchange names its channel, unless it is the refusal of a caller no channel answers for.",
-    )
     is_success = fields.Boolean(
         compute="_compute_is_success",
         store=True,
@@ -271,6 +266,11 @@ class IntegrationExchange(models.Model):
     origin_record_id = fields.Integer()
     tags = fields.Char(help="Comma-separated tags for categorization")
 
+    _channel_event_uniq = models.UniqueIndex(
+        "(channel_id, event_id_external) WHERE event_id_external IS NOT NULL "
+        "AND state NOT IN ('failed', 'refused', 'duplicate')"
+    )
+
     _duplicate_detection_idx = models.Index(
         "(channel_id, request_payload_hash, timestamp)",
     )
@@ -283,9 +283,9 @@ class IntegrationExchange(models.Model):
         "(channel_id, timestamp, company_id)",
     )
 
-    _event_external_unique = models.UniqueIndex(
-        "(channel_id, event_id_external) WHERE event_id_external IS NOT NULL",
-        "External event ID must be unique per channel!",
+    _channel_or_refusal = models.Constraint(
+        "CHECK (channel_id IS NOT NULL OR refusal_reason IS NOT NULL)",
+        "An exchange names its channel, unless it is the refusal of a caller no channel answers for.",
     )
 
     _CHANNEL_MIXINS = ("mixin.integration.channel", "mixin.inbound.gate")
@@ -584,21 +584,6 @@ class IntegrationExchange(models.Model):
         }
 
     def _enqueue_processing(self, delay: int | None = None) -> None:
-        """Hand this event to a worker, once.
-
-        `identity_key` is what stops one event being processed twice. `ir_job`
-        holds a unique index over it for queued states, and those include
-        `started`, so a job already running blocks a second enqueue as surely as
-        a pending one does. All three callers fire at moments when another may
-        already be in flight: the route that queues the event, the manual Retry
-        button, and the retry cron -- whose domain matches an event from the
-        instant it is created, since `queue_event` leaves it `pending` with
-        `date_next_retry` unset and the domain asks for exactly that. Any cron
-        run that beat the first job to the claim enqueued a second one, and
-        `_run_queued_event` neither locks the event nor checks its state, so an
-        inbound payload was handled twice -- duplicate records out of whatever
-        the endpoint's `_process_queued_event` builds.
-        """
         for event in self:
             event.delayed(
                 identity_key=f"integration.event:{event.id}",
@@ -850,7 +835,6 @@ class IntegrationExchange(models.Model):
             )
 
     def _channels_with_own_retention(self):
-        """Every channel row, of any channel model, that names a retention."""
         channels = []
         for model_name, _label in self._selection_channel_models():
             Model = self.env[model_name].sudo().with_context(active_test=False)
@@ -861,24 +845,18 @@ class IntegrationExchange(models.Model):
         return channels
 
     def _remove_logs_past_retention(self, days, scope):
-        """Delete expired exchange rows within a supplied SQL scope predicate.
-
-        Settled rows use their completion date; pending/retry rows use their
-        creation date. Execute direct SQL without ORM unlink hooks.
-
-        :rtype: None
-        """
         cutoff = fields.Datetime.now() - timedelta(days=days)
         self.env.cr.execute(
             SQL(
                 """
                 DELETE FROM integration_exchange
                 WHERE %s
-                  AND (
+                    AND (
                         (state IN ('success', 'failed', 'duplicate', 'refused')
-                         AND date_completed < %s)
-                     OR (state IN ('pending', 'retry') AND create_date < %s)
-                  )
+                        AND date_completed < %s)
+                        OR (state IN ('pending', 'processing', 'retry')
+                        AND create_date < %s)
+                    )
                 """,
                 scope,
                 cutoff,
@@ -908,14 +886,6 @@ class IntegrationExchange(models.Model):
         event_id_external: str | None = None,
         dedup_window_hours: int = 1,
     ) -> dict[str, Any]:
-        """Read duplicate metadata by external ID, then recent payload hash.
-
-        :returns: ``is_duplicate``, ``duplicate_event_id`` and ``reason``;
-            the latter two are None when no match is found
-
-        This read does not reserve an event or enforce uniqueness. Caught hash
-        lookup errors fall through to the no-match result.
-        """
         if event_id_external:
             existing_by_external_id = self.search(
                 [

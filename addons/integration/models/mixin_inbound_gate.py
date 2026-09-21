@@ -3,6 +3,7 @@ import logging
 import time
 from typing import Any, NamedTuple
 
+import psycopg.errors
 from werkzeug.exceptions import RequestEntityTooLarge
 
 from odoo import api, fields, models
@@ -271,14 +272,45 @@ class MixinInboundGate(models.AbstractModel):
         the operator's to read; the hash of the body is kept either way."""
         return True
 
+    def _inbound_event_id(
+        self, admission: Admission, event_type: str | None
+    ) -> str | None:
+        """The sender's own id for this event, when it has one (a Telegram
+        update_id, a Stripe event id): the row claims it, and a redelivery
+        is refused as a duplicate while the first is processing or once it
+        has been processed, whatever the body's bytes."""
+        return None
+
     def _open_inbound_exchange(
         self, admission: Admission, event_type: str | None
     ) -> None:
-        """The row is the call: created now, in the request's transaction, so
-        the handler can settle it, annotate it or hand it to a worker, and
+        """The row is the call: created now, in the request's transaction,
+        processing until the handler or the end of the request settles it,
         kept as a failed row when the request rolls back."""
         vals = self._inbound_exchange_vals(admission, event_type)
-        exchange = self.env["integration.exchange"].sudo().create(vals)
+        Exchange = self.env["integration.exchange"].sudo()
+        # The claim is the index's: what this transaction settled must be in
+        # the table before the insert is judged against it.
+        Exchange.flush_model()
+        try:
+            with self.env.cr.savepoint():
+                exchange = Exchange.create(vals)
+        except psycopg.errors.UniqueViolation:
+            Exchange._record_refusal(
+                self,
+                "duplicate_event",
+                f"event {vals['event_id_external']} already received",
+                409,
+                admission.remote_addr,
+                user_agent=admission.user_agent,
+                auth_mode=admission.auth_mode,
+                company_id=vals["company_id"],
+                method=admission.method,
+                path=admission.path,
+            )
+            raise Refused(
+                409, "Duplicate event detected", "duplicate_event", commit=True
+            ) from None
         keep_row_on_rollback(self.env, vals, admission)
         admission.exchange = exchange
 
@@ -294,8 +326,8 @@ class MixinInboundGate(models.AbstractModel):
             "source_ip": admission.remote_addr or False,
             "user_agent": (admission.user_agent or "")[:512] or False,
             "event_type": event_type or False,
-            "state": "success",
-            "date_completed": fields.Datetime.now(),
+            "event_id_external": self._inbound_event_id(admission, event_type) or False,
+            "state": "processing",
             "signature_verified": self.auth_type != "none"
             and admission.auth_mode != "audit",
             "auth_mode": admission.auth_mode,

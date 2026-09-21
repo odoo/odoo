@@ -87,7 +87,7 @@ class TestInboundExchangeRecording(TransactionCase):
         self.assertEqual(admission.exchange, row)
         self.assertEqual(
             (row.state, row.event_type, row.request_method),
-            ("success", "probe", "POST"),
+            ("processing", "probe", "POST"),
         )
         self.assertIn("probe", row.request_payload)
         self.assertEqual(row.request_payload_hash, admission.payload_hash)
@@ -114,7 +114,7 @@ class TestInboundExchangeRecording(TransactionCase):
         else:
             self.fail("a copy inside the window was admitted")
         self.assertEqual(
-            self._rows().sorted("id").mapped("state"), ["success", "duplicate"]
+            self._rows().sorted("id").mapped("state"), ["processing", "duplicate"]
         )
 
     def test_the_row_of_a_call_that_rolled_back_names_the_handler_s_last_word(self):
@@ -242,7 +242,9 @@ class TestGateRow(TransactionCase):
             "integration.log_retention_days", "90"
         )
         self.receiver.log_retention_days = 7
-        old = open_admission(self.receiver).exchange
+        first = open_admission(self.receiver)
+        first.settle()
+        old = first.exchange
         old.date_completed = fields.Datetime.now() - timedelta(days=30)
         recent = open_admission(self.receiver).exchange
 
@@ -250,3 +252,88 @@ class TestGateRow(TransactionCase):
 
         self.assertFalse(old.exists())
         self.assertTrue(recent.exists())
+
+
+@tagged("post_install", "-at_install", "integration")
+class TestExternalEventIds(TransactionCase):
+    """A sender's own event id is claimed by the row: a redelivery is refused
+    while the first is processing or once it succeeded, and admitted again
+    after the first failed."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.receiver = cls.env["integration.receiver"].create(
+            {
+                "name": "Id probe",
+                "code": "id_probe",
+                "auth_type": "none",
+                "duplicate_detection_enabled": False,
+            }
+        )
+
+    def _rows(self):
+        return (
+            self.env["integration.exchange"]
+            .sudo()
+            .search(
+                [("channel_id", "=", f"integration.receiver,{self.receiver.id}")],
+                order="id",
+            )
+        )
+
+    def _admit(self, body):
+        with patch.object(
+            type(self.receiver),
+            "_inbound_event_id",
+            lambda self, admission, event: str(admission.payload.get("id")),
+        ):
+            return open_admission(self.receiver, body)
+
+    def test_the_row_claims_the_id(self):
+        admission = self._admit(b'{"id": 7, "n": 1}')
+        self.assertEqual(admission.exchange.event_id_external, "7")
+
+    def test_a_redelivery_is_refused_on_a_refusal_row_while_the_first_is_processing(
+        self,
+    ):
+        from odoo.addons.integration.tools.admission import Refused
+
+        self._admit(b'{"id": 7, "n": 1}')
+        try:
+            self._admit(b'{"id": 7, "n": 2}')
+        except Refused as refused:
+            self.assertEqual(
+                (refused.status, refused.error_code, refused.commit),
+                (409, "duplicate_event", True),
+            )
+        else:
+            self.fail("a redelivery of a processing event was admitted")
+        self.assertEqual(
+            self._rows().mapped("state"), ["processing", "refused"], "the copy's row"
+        )
+        self.assertEqual(self._rows()[-1].refusal_reason, "duplicate_event")
+
+    def test_a_redelivery_after_a_success_is_refused(self):
+        from odoo.addons.integration.tools.admission import Refused
+
+        self._admit(b'{"id": 8}').settle()
+        with self.assertRaises(Refused):
+            self._admit(b'{"id": 8}')
+
+    def test_a_redelivery_after_a_failure_is_admitted(self):
+        self._admit(b'{"id": 9}').settle("the handler could not")
+        again = self._admit(b'{"id": 9}')
+        self.assertEqual(again.exchange.state, "processing")
+        self.assertEqual(self._rows().mapped("state"), ["failed", "processing"])
+
+    def test_ids_are_per_channel(self):
+        other = self.receiver.copy({"code": "id_probe_2", "name": "Other"})
+        self._admit(b'{"id": 10}')
+        with patch.object(
+            type(other),
+            "_inbound_event_id",
+            lambda self, admission, event: str(admission.payload.get("id")),
+        ):
+            twin = open_admission(other, b'{"id": 10}')
+        self.assertEqual(twin.exchange.event_id_external, "10")

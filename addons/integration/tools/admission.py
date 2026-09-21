@@ -110,6 +110,7 @@ class Admission:
     error: str | None = None
     annotations: dict[str, Any] = field(default_factory=dict)
     started: float = field(default_factory=time.monotonic)
+    settled: bool = False
     _payload: Any = field(default=None, repr=False)
     _payload_error: str | None = field(default=None, repr=False)
     _payload_read: bool = field(default=False, repr=False)
@@ -176,6 +177,7 @@ class Admission:
 
     def settle(self, error: str | None = None, *, retry: bool = False) -> None:
         self.error = error
+        self.settled = True
         if self.exchange is None:
             if error:
                 self._record_withheld_failure(error)

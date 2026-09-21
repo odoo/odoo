@@ -21,6 +21,21 @@ class IrHttp(models.AbstractModel):
         }
 
     @classmethod
+    def _post_dispatch(cls, response):
+        # The row is the call: a handler that did not settle it is settled by
+        # the answer it gave.
+        admission = getattr(request, "admission", None)
+        if admission is not None and not admission.settled:
+            status = getattr(response, "status_code", 200)
+            if status >= 400:
+                admission.annotate(status_code=status)
+                admission.settle(f"answered {status}")
+            else:
+                admission.annotate(status_code=status)
+                admission.settle()
+        super()._post_dispatch(response)
+
+    @classmethod
     def _auth_method_receiver(
         cls,
         receiver: str | None = None,
