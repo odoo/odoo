@@ -47,6 +47,7 @@ import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
  */
 
 export const CONTAINER_CLASSES = ["container", "container-fluid", "o_container_small"];
+const DYNAMIC_SNIPPET_UNMOVABLE_SELECTOR = ".s_dynamic_snippet_title, .s_dynamic_snippet_content";
 
 export class DynamicSnippetOptionPlugin extends Plugin {
     static id = "dynamicSnippetOption";
@@ -82,6 +83,11 @@ export class DynamicSnippetOptionPlugin extends Plugin {
         },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         is_unremovable_selectors: ".s_dynamic_snippet_title",
+        is_movable_selectors: {
+            exclude: DYNAMIC_SNIPPET_UNMOVABLE_SELECTOR,
+            direction: "vertical",
+        },
+        has_overlay_options: { hasOption: (el) => el.matches(DYNAMIC_SNIPPET_UNMOVABLE_SELECTOR) },
     };
     setup() {
         this.dynamicFiltersCache = new Cache(this._fetchDynamicFilters, JSON.stringify);
