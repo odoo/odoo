@@ -1,11 +1,10 @@
-import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { Tooltip } from "./tooltip";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { PopoverPlugin } from "@web/core/popover/popover_plugin";
 
-import { onWillDestroy, Plugin, usePlugin, whenReady } from "@odoo/owl";
+import { onWillDestroy, Plugin, useListener, usePlugin } from "@odoo/owl";
 
 /**
  * The tooltip service allows to display custom tooltips on every elements with
@@ -60,53 +59,34 @@ export class TooltipPlugin extends Plugin {
     target = null;
     /** @private */
     interval = null;
-    /** @private @type {[EventTarget, string, Function, object][]} */
-    listeners = [];
 
     setup() {
-        whenReady(() => {
-            this.interval = browser.setInterval(() => {
-                if (this.shouldCleanup()) {
-                    this.cleanup();
-                }
-            }, CLOSE_DELAY);
-
-            if (hasTouch()) {
-                const onTouchCancelEnd = this.onTouchCancelEnd.bind(this);
-                this.addListener(document.body, "touchstart", this.onTouchStart.bind(this));
-                this.addListener(document.body, "touchend", onTouchCancelEnd);
-                this.addListener(document.body, "touchcancel", onTouchCancelEnd);
+        this.interval = window.setInterval(() => {
+            if (this.shouldCleanup()) {
+                this.cleanup();
             }
+        }, CLOSE_DELAY);
 
-            // Listen (using event delegation) to "mouseenter" events to open the tooltip if any
-            this.addListener(document.body, "mouseenter", this.onMouseenter.bind(this), {
-                capture: true,
-            });
-            // Listen (using event delegation) to "mouseleave" events to close the tooltip if any
-            this.addListener(document.body, "mouseleave", this.cleanupTooltip.bind(this), {
-                capture: true,
-            });
-            this.addListener(document.body, "click", this.onClick.bind(this), { capture: true });
+        if (hasTouch()) {
+            const onTouchCancelEnd = this.onTouchCancelEnd.bind(this);
+            useListener(document.body, "touchstart", this.onTouchStart.bind(this));
+            useListener(document.body, "touchend", onTouchCancelEnd);
+            useListener(document.body, "touchcancel", onTouchCancelEnd);
+        }
+
+        // Listen (using event delegation) to "mouseenter" events to open the tooltip if any
+        useListener(document.body, "mouseenter", this.onMouseenter.bind(this), {
+            capture: true,
         });
+        // Listen (using event delegation) to "mouseleave" events to close the tooltip if any
+        useListener(document.body, "mouseleave", this.cleanupTooltip.bind(this), {
+            capture: true,
+        });
+        useListener(document.body, "click", this.onClick.bind(this), { capture: true });
 
         onWillDestroy(() => {
-            browser.clearInterval(this.interval);
-            this.removeListeners();
+            window.clearInterval(this.interval);
         });
-    }
-
-    /** @private */
-    addListener(target, type, listener, options) {
-        target.addEventListener(type, listener, options);
-        this.listeners.push([target, type, listener, options]);
-    }
-
-    /** @private */
-    removeListeners() {
-        for (const [target, type, listener, options] of this.listeners) {
-            target.removeEventListener(type, listener, options);
-        }
-        this.listeners = [];
     }
 
     /**
@@ -128,7 +108,7 @@ export class TooltipPlugin extends Plugin {
      */
     cleanup() {
         this.target = null;
-        browser.clearTimeout(this.openTooltipTimeout);
+        window.clearTimeout(this.openTooltipTimeout);
         this.openTooltipTimeout = null;
         if (this.closeTooltip) {
             this.closeTooltip();
@@ -180,7 +160,7 @@ export class TooltipPlugin extends Plugin {
             this.target.title = "";
         }
         const timeoutDelay = this.isHelpNode(el) ? 0 : delay;
-        this.openTooltipTimeout = browser.setTimeout(() => {
+        this.openTooltipTimeout = window.setTimeout(() => {
             // verify that the element is still in the DOM
             if (this.target.isConnected) {
                 this.closeTooltip = this.popover.add(
@@ -292,7 +272,7 @@ export class TooltipPlugin extends Plugin {
     onTouchStart(ev) {
         this.cleanup();
         const timeoutDelay = this.isHelpNode(ev.target) ? 0 : SHOW_AFTER_DELAY;
-        this.showTimer = browser.setTimeout(() => {
+        this.showTimer = window.setTimeout(() => {
             this.openElementsTooltip(ev.target, true);
         }, timeoutDelay);
     }
@@ -305,9 +285,9 @@ export class TooltipPlugin extends Plugin {
         }
         if (ev.target.closest(TOOLTIP_SELECTOR_WITH_TITLE)) {
             if (!ev.target.dataset.tooltipTouchTapToShow) {
-                browser.clearTimeout(this.showTimer);
+                window.clearTimeout(this.showTimer);
                 this.showTimer = null;
-                browser.clearTimeout(this.openTooltipTimeout);
+                window.clearTimeout(this.openTooltipTimeout);
                 this.openTooltipTimeout = null;
             }
         }
