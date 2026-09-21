@@ -10,6 +10,15 @@ class PosOrder(models.Model):
         compute="_compute_l10n_es_simplified_invoice_number",
     )
 
+    @api.model
+    def _load_pos_data_fields(self, config):
+        # the client decides this in `askBeforeValidation` and the server reads it
+        # back in `_prepare_invoice_vals`; a field absent from the payload makes
+        # the round trip silently, leaving the server's copy False
+        return super()._load_pos_data_fields(config) + [
+            "is_l10n_es_simplified_invoice",
+        ]
+
     @api.depends("account_move")
     def _compute_l10n_es_simplified_invoice_number(self):
         for order in self:
