@@ -226,6 +226,8 @@ class ResGroups(models.Model):
             if any(n_.startswith('-') for n_ in names):
                 raise UserError(self.env._('The name of the group can not start with "-"'))
 
+        internal_group_ids = self._get_internal_group_ids()
+
         # invalidate caches before updating groups, since the recomputation of
         # field 'share' depends on method has_group()
         # DLE P139
@@ -262,17 +264,29 @@ class ResGroups(models.Model):
 
         if self.env.context.get('apply_regular_group') is not REGULAR_VALUE:
             self._apply_group_regular()
+
+        # If the group implications linked to group_user are modified,
+        # `res.users.share` / `res.partner.partner_share` are recomputed.
+        if internal_group_ids != self._get_internal_group_ids():
+            self.env['res.users']._recompute_user_share()
+
         return res
 
     @api.model_create_multi
     def create(self, vals_list):
+        internal_group_ids = self._get_internal_group_ids()
         res = super().create(vals_list)
         self._apply_group_regular()
+        if internal_group_ids != self._get_internal_group_ids():
+            self.env['res.users']._recompute_user_share()
         return res
 
     def unlink(self):
+        internal_group_ids = self._get_internal_group_ids()
         res = super().unlink()
         self._apply_group_regular()
+        if internal_group_ids != self._get_internal_group_ids():
+            self.env['res.users']._recompute_user_share()
         return res
 
     def _ensure_xml_id(self):
@@ -393,6 +407,14 @@ class ResGroups(models.Model):
         """
         groups = self.all_implied_ids.filtered(lambda g: implied_group in g.implied_ids)
         groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
+
+    @api.model
+    def _get_internal_group_ids(self):
+        """ Return the ids of the groups whose members are internal users, i.e.
+        ``base.group_user`` and every group implying it. """
+        group_definitions = self._get_group_definitions()
+        group_user_id = group_definitions.get_id('base.group_user')
+        return (group_user_id, *group_definitions.get_subset_ids([group_user_id]))
 
     def _get_light_group_xmlids(self):
         """List of XML IDs of groups considered light
