@@ -143,6 +143,7 @@ class ResCompany(models.Model):
     report_config_id = fields.Many2one(
         comodel_name="report.config",
         compute="_compute_report_config_id",
+        search="_search_report_config_id",
     )
     uninstalled_l10n_module_ids = fields.Many2many(
         comodel_name="ir.module.module",
@@ -480,6 +481,9 @@ class ResCompany(models.Model):
     def _compute_display_name(self) -> None:
         for company in self:
             company.display_name = company.code or company.name
+
+    def _search_report_config_id(self, operator, value):
+        return self._search_config_link("report.config", operator, value)
 
     def _compute_report_config_id(self) -> None:
         configs = self.env["report.config"]._for_each(self)
