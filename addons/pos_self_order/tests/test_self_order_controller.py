@@ -763,3 +763,76 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.assertFalse(data['lines'])
         self.assertEqual(victim_line.qty, 3)
         self.assertEqual(victim_line.order_id, victim_order)
+
+    def _open_self_order_session(self, **config_values):
+        self.pos_config.write(config_values)
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+    def test_self_order_tracking_number_kiosk(self):
+        self._open_self_order_session(self_ordering_mode='kiosk', self_ordering_service_mode='counter')
+        lines = [{'product': self.cola, 'qty': 1}]
+
+        order_1 = self.process_self_order(lines)
+        order_2 = self.process_self_order(lines, table_stand_number='12')
+
+        self.assertTrue(order_1.tracking_number.isdigit())
+        self.assertEqual(int(order_2.tracking_number), int(order_1.tracking_number) + 1)
+        self.assertEqual(order_1.floating_order_name, f"Kiosk Order {order_1.tracking_number}")
+        self.assertEqual(order_2.floating_order_name, "Table tracker 12")
+        self.assertEqual(order_2.table_stand_number, '12')
+
+    def test_self_order_tracking_number_mobile(self):
+        self._open_self_order_session(self_ordering_mode='mobile', self_ordering_service_mode='counter')
+        lines = [{'product': self.cola, 'qty': 1}]
+
+        order_1 = self.process_self_order(lines)
+        order_2 = self.process_self_order(lines, floating_order_name='Bob')
+
+        self.assertTrue(order_1.tracking_number.isdigit())
+        self.assertEqual(int(order_2.tracking_number), int(order_1.tracking_number) + 1)
+        self.assertEqual(order_1.floating_order_name, f"Self-Order {order_1.tracking_number}")
+        self.assertEqual(order_2.floating_order_name, "Bob")
+
+    def test_self_order_tracking_number_dynamic_qr(self):
+        self._open_self_order_session(self_ordering_mode='mobile', self_ordering_service_mode='dynamic_qr')
+        staff_order = self.env['pos.order'].create({
+            'session_id': self.pos_config.current_session_id.id,
+            'amount_total': 0.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'amount_paid': 0.0,
+            'table_id': self.pos_table_1.id,
+        })
+
+        order = self.process_self_order(
+            [{'product': self.cola, 'qty': 1}],
+            uuid=staff_order.uuid,
+            access_token=staff_order.access_token,
+        )
+
+        self.assertEqual(order, staff_order)
+
+        self.assertTrue(order.tracking_number.isdigit())
+        self.assertEqual(order.floating_order_name, f"T {self.pos_table_1.table_number} - {order.tracking_number}")
+
+    def test_self_order_tracking_number_kept_on_update(self):
+        self._open_self_order_session(
+            self_ordering_mode='mobile',
+            self_ordering_service_mode='counter',
+            self_ordering_pay_after='meal',
+        )
+        order = self.process_self_order([{'product': self.cola, 'qty': 1}])
+        tracking_number, floating_order_name, pos_reference = order.tracking_number, order.floating_order_name, order.pos_reference
+
+        updated = self.process_self_order(
+            [{'product': self.fanta, 'qty': 1}],
+            id=order.id,
+            uuid=order.uuid,
+            access_token=order.access_token,
+        )
+
+        self.assertEqual(updated, order)
+        self.assertEqual(order.tracking_number, tracking_number)
+        self.assertEqual(order.floating_order_name, floating_order_name)
+        self.assertEqual(order.pos_reference, pos_reference)
