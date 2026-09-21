@@ -74,6 +74,26 @@ registerWebsitePreviewTour(
             trigger: "ul.ui-autocomplete li a:contains('#top')",
             run: "click",
         },
+        changeOption("Card", "button[data-action-id='toggleBgImage']"),
+        {
+            content: "Click on the media dialog's 'Add URL' button",
+            trigger: ".o_upload_media_url_button",
+            run: "click",
+        },
+        {
+            content: "Set the URL of the card background image",
+            trigger: ".o_we_url_input",
+            run: "edit website/static/src/img/backgrounds/city.jpg",
+        },
+        {
+            content: "Click on the media dialog's 'Add URL' button",
+            trigger: ".o_upload_media_url_button",
+            run: "click",
+        },
+        {
+            content: "Check that the background image is set on the card",
+            trigger: ":iframe .s_title .s_card.oe_img_bg",
+        },
         ...clickOnSave(),
         {
             content: "Scroll to the #bottom anchor",
