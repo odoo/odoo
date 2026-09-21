@@ -237,6 +237,7 @@ class SearchMixin(_ModelStubs):
     ) -> Domain:
         aggregator = Domain.AND if operator in Domain.NEGATIVE_OPERATORS else Domain.OR
         domains = []
+        values_dropped = 0  # debuglog
         for field_name in search_fnames:
             field = self._get_rec_names_search_field(field_name)
             if field.relational:
@@ -248,17 +249,27 @@ class SearchMixin(_ModelStubs):
                 for v in value:
                     with contextlib.suppress(ValueError, TypeError):
                         typed_value.append(field.convert_to_write(v, self))
+                values_dropped += len(value) - len(typed_value)  # debuglog
                 domains.append([(field_name, operator, typed_value)])
             else:
                 with contextlib.suppress(ValueError, TypeError):
                     typed_value = field.convert_to_write(value, self)
                     domains.append([(field_name, operator, typed_value)])
+        # A value that converts for none of the search fields leaves no branch
+        # at all, and `Domain.OR([])` is FALSE while `Domain.AND([])` is TRUE
+        # -- so a name search silently matches nothing, or everything under a
+        # negative operator. Both are defensible readings of "no field can
+        # hold this value"; neither is visible without these two counts.
         _debug.logic(
             "search.display_name.match_domain",
             model=self._name,
             operator=operator,
             search_fields=list(search_fnames),
             branches=len(domains),
+            fields_without_a_branch=len(search_fnames) - len(domains),
+            values_dropped=values_dropped,
+            matches_nothing=not domains and aggregator is Domain.OR,
+            matches_everything=not domains and aggregator is Domain.AND,
         )
         return aggregator(domains)
 
