@@ -126,7 +126,13 @@ Pillow==12.3.0
 polib==1.2.0
 protobuf>=6.31.0,<8
 psutil==7.2.2
-psycopg[binary]>=3.3.5
+# psycopg-c is the implementation production loads (psycopg.pq.__impl__ ==
+# 'c'), compiled against the host's libpq. It must be psycopg's exact version:
+# psycopg 3.3.6 over psycopg-c 3.3.3 fails every pooled connect with
+# "wait_c() got an unexpected keyword argument 'timeout'". Building it needs
+# libpq-dev (pg_config); psycopg-binary stays as the fallback.
+psycopg[binary]==3.3.6
+psycopg-c==3.3.6 ; sys_platform == 'linux'
 psycopg-pool>=3.3.1
 pyopenssl==26.4.0
 pypdf==6.18.1
