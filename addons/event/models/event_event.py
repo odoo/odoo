@@ -646,6 +646,39 @@ class EventEvent(models.Model):
             lambda c: self._search_address_search(c.operator, c.value) if c.field_expr == 'address_search' else c)
         return super()._search(domain, *a, **kw)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        events = super().create(vals_list)
+        events.filtered('event_type_id')._sync_event_ticket_translations_from_type()
+        return events
+
+    def write(self, vals):
+        events_to_sync = self.env['event.event']
+        if vals.get('event_type_id'):
+            events_to_sync = self.filtered(
+                lambda event: event.event_type_id.id != vals['event_type_id']
+            )
+        res = super().write(vals)
+        if events_to_sync:
+            events_to_sync._sync_event_ticket_translations_from_type()
+        return res
+
+    def _sync_event_ticket_translations_from_type(self):
+        """ Copy ticket translations from the event template after tickets are stored.
+
+        Translatable fields copied via Command.create only get the active language;
+        restore the other languages from the template.
+        """
+        for event in self.filtered('event_type_id'):
+            event_tickets = event.event_ticket_ids.filtered(lambda ticket: not ticket.registration_ids)
+            for template_ticket in event.event_type_id.event_type_ticket_ids:
+                event_ticket = next(
+                    (ticket for ticket in event_tickets if ticket.name == template_ticket.name), None
+                )
+                if event_ticket:
+                    template_ticket.copy_translations(event_ticket)
+                    event_tickets -= event_ticket
+
     @api.depends('event_registrations_sold_out', 'seats_limited', 'seats_max', 'seats_available')
     @api.depends_context('name_with_seats_availability')
     def _compute_display_name(self):
