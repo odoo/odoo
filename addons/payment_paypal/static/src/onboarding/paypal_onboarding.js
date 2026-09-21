@@ -45,7 +45,7 @@ async function paypalOnboardingAction(env, action) {
         let attempts = 0;
         const checkInterval = setInterval(() => {
             attempts++;
-            if (window.PAYPAL || attempts > 100) {
+            if (window.PAYPAL?.apps?.Signup || attempts > 100) {
                 clearInterval(checkInterval);
                 setTimeout(resolve, 50);
             }
