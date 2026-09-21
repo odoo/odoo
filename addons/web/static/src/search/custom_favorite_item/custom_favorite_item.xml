@@ -2,25 +2,26 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CustomFavoriteItem">
-        <AccordionItem class="'o_add_favorite text-truncate'" description.translate="Save current search">
-            <div class="px-3 py-1">
+        <AccordionItem class="'o_add_favorite text-truncate'" description.translate="Save search">
+            <div class="d-flex flex-column gap-2">
                 <input type="text"
                     class="o_input my-1"
                     t-ref="this.descriptionRef"
                     t-model.proxy="this.state.description"
                     t-on-keydown="this.onInputKeydown"
+                    placeholder="Filter name"
                     />
-                <CheckBox value="this.state.isDefault" onChange.bind="(checked) => this.state.isDefault = checked">
-                    <span data-tooltip="Use this filter by default when opening this view">Default filter</span>
+                <CheckBox value="this.state.isDefault" onChange.bind="(checked) => this.state.isDefault = checked" className="'form-switch d-flex gap-1'">
+                    <span class="small" data-tooltip="Use this filter by default when opening this view">Default filter</span>
                 </CheckBox>
-            </div>
-            <div class="px-3 pb-2 d-flex gap-2">
-                <button class="o_save_favorite btn btn-primary w-100" t-on-click="this.saveFavorite">
-                    Save
-                </button>
-                <button class="o_edit_favorite btn btn-secondary w-100" t-on-click="this.editFavorite">
-                    Edit
-                </button>
+                <div class="d-flex gap-1">
+                    <button class="o_save_favorite btn btn-primary btn-sm w-100" t-on-click="this.saveFavorite">
+                        Save
+                    </button>
+                    <button class="o_edit_favorite btn btn-secondary btn-sm w-100" t-on-click="this.editFavorite">
+                        Edit
+                    </button>
+                </div>
             </div>
         </AccordionItem>
     </t>
