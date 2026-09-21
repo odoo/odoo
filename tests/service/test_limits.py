@@ -106,21 +106,38 @@ class TestJobLimitsAreSeparableFromCron:
         assert "limit_time_real_job" in config.options
 
     def test_worker_job_overrides_the_cron_max_age(self, worker_multi):
+        """The distinction moved from an override to the worker's kind.
+
+        `WorkerJob` used to restate `get_max_age`; it now inherits the method
+        and declares a different `ListenerKind`, so what has to differ is the
+        setting that kind names. Asserting the behaviour alone would pass
+        while both workers read one setting.
+        """
         from odoo.service._worker import WorkerCron, WorkerJob
 
-        assert WorkerJob.get_max_age is not WorkerCron.get_max_age
+        assert WorkerJob.kind is not WorkerCron.kind
+        assert WorkerJob.kind.max_age_setting != WorkerCron.kind.max_age_setting
         worker = build_worker(WorkerJob, worker_multi)
         with self._with(limit_time_worker_job=900):
             assert worker.get_max_age() == 900
         with self._with(limit_time_worker_job=-1):
             assert worker.get_max_age() == 300
 
-    def test_worker_job_arms_its_watchdog_from_the_job_timeout(self, worker_multi):
+    def test_worker_job_arms_its_watchdog_from_the_job_budget(self, worker_multi):
+        """Each worker resolves its own budget from its `ListenerKind`.
+
+        This used to read two attributes the master had pre-computed one line
+        apart, `cron_timeout` and `job_timeout`; a job worker handed the cron
+        budget is killed on the wrong deadline and every test of the loop
+        itself still passes.
+        """
         from odoo.service._worker import WorkerCron, WorkerJob
 
-        worker_multi.cron_timeout, worker_multi.job_timeout = 300, 45
-        assert build_worker(WorkerCron, worker_multi).watchdog_timeout == 300
-        assert build_worker(WorkerJob, worker_multi).watchdog_timeout == 45
+        with self._with(
+            limit_time_real=120, limit_time_real_cron=300, limit_time_real_job=45
+        ):
+            assert build_worker(WorkerCron, worker_multi).watchdog_timeout == 300
+            assert build_worker(WorkerJob, worker_multi).watchdog_timeout == 45
 
 
 CRON_BUDGET_CASES = [
@@ -164,8 +181,9 @@ def test_the_prefork_watchdog_agrees_with_the_resolver(real, cron, expected):
         server_settings.override(**cfg),
     ):
         prefork = server.PreforkServer(MagicMock())
-        assert prefork.cron_timeout == (get_cron_real_time_budget() or None)
-        assert prefork.cron_timeout == (expected or None)
+        cron_timeout = prefork.listener_timeouts["cron"]
+        assert cron_timeout == (get_cron_real_time_budget() or None)
+        assert cron_timeout == (expected or None)
 
 
 def test_nothing_outside_the_resolver_reads_the_raw_cron_knob():

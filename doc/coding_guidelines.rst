@@ -4,8 +4,8 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.58
-:Date: 2026-09-16
+:Version: 6.60
+:Date: 2026-09-21
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
 
@@ -4043,9 +4043,7 @@ first** ``[review]``. A machine doc citing a method is inside the workspace and
 greppable, so a sweep sorts it into *greppable-and-rewritable* and rewrites it.
 It must not where the citation is frozen: §1.4 makes a machine-doc figure gated
 or **frozen**, and a frozen reading must not be "corrected" to a current value.
-``run_job_thread`` and ``spawn_http_server`` (``job_thread`` and
-``http_spawn`` until ``fd9562fb53e8``, which rewrote both citations with the
-names) are cited in ``addons/base/machine_doc_v1/MODEL_MAP.md`` and
+``spawn_http_server`` is cited that way in
 ``odoo/tests/machine_doc_v1/conventions.md``. **The discriminator is whether the
 document naming it may be rewritten, not whether a grep finds it** -- and the
 same phrase answers the vault: §14 makes ``research/``, ``plans/`` and
@@ -4054,6 +4052,19 @@ maintained-current, so rewrite a ``reference/`` hit and leave the others. (The
 decision register that once made an accepted record the paradigm case of this
 category was deleted; the category is carried by frozen figures and dated vault
 records alone.)
+
+**A NAME is not a FIGURE, and this paragraph used to say otherwise**
+``[measured 2026-09-21]``. It cited ``run_job_thread`` beside
+``spawn_http_server`` as a machine-doc citation that must not be rewritten.
+That was wrong: §1.4 freezes a *figure* because the argument around it rests
+on a base commit, and nothing rests on a method's spelling. The dissolution of
+``run_cron_thread``/``run_job_thread`` into one ``ListenerKind``-driven
+``run_listener_thread`` left ``addons/base/machine_doc_v1/MODEL_MAP.md``
+naming a method that no longer exists -- and its harness stayed at 1028 passed
+either way, because the name was gated by nothing. A reader opening the module's
+machine doc first, as §10 instructs, would have taken a dead name as a premise.
+**Rewrite a machine doc's citation of a live implementation; freeze only what
+carries a reading.**
 
 * **Rot is expected of a dated record; inversion is not** ``[review]``. Leaving a
   ``research/`` hit is right where the record's **verdict** still holds against
@@ -8755,6 +8766,12 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.60
+     - 2026-09-21
+     - §1.4/commit-citation: a machine doc's citation of a live method is
+       rewritten, not frozen. Freezing protects a figure whose argument rests
+       on a base commit; a name carries no argument, and a dead one misleads
+       the reader the doc exists for.
    * - 6.59
      - 2026-09-20
      - ``company-field-outside-config`` is ``E8530``: it shared ``E8529`` with

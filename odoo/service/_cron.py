@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+import dataclasses
 import logging
 import random
 import selectors
@@ -26,12 +27,16 @@ _logger = logging.getLogger("odoo.service.server")
 _debug = DebugLog(__name__)
 
 __all__ = [
+    "CRON_LISTENER",
     "CRON_NOTIFY_JITTER_MAX_S",
     "CRON_POLL_INTERVAL_S",
     "CRON_TRIGGER_CHANNEL",
+    "JOB_LISTENER",
     "JOB_QUEUE_CHANNEL",
+    "LISTENER_KINDS",
     "CronListener",
     "CronSchedule",
+    "ListenerKind",
     "ReconnectBackoff",
     "arm_cron_listen",
     "close_cron_cursor",
@@ -53,6 +58,75 @@ reload grace period, so the three could not be tuned apart.
 """
 
 CRON_NOTIFY_JITTER_MAX_S = 0.1
+
+
+def _cron_process_jobs() -> typing.Callable[[str], object]:
+    from odoo.addons.base.models.ir_cron import IrCron
+
+    return IrCron._process_jobs
+
+
+def _job_process_jobs() -> typing.Callable[[str], object]:
+    from odoo.addons.base.models.ir_job import IrJob
+
+    return IrJob._process_jobs
+
+
+@dataclasses.dataclass(frozen=True, slots=True)
+class ListenerKind:
+    """One notify-driven sweep loop, declared once for both server flavours.
+
+    A threaded server runs each kind as a thread and a prefork server runs it
+    as a worker process, and the two mechanisms have little in common -- but
+    *which* channel a kind listens on, how many of it a server runs, when its
+    PostgreSQL connection is recycled and whose `_process_jobs` it calls are
+    the same four facts either way.  They used to be stated twice, as keyword
+    arguments in `_threaded` and as class attributes in `_worker`, with
+    nothing comparing the two: a third kind, or a change to which setting
+    bounds the job connection's age, was two edits that no gate paired.
+
+    `name` is the key the rest of the process already sorts these by -- the
+    worker thread's `type`, and the argument `ServerSettings
+    .get_real_time_budget` dispatches on -- so the real-time budget is
+    derived here rather than restated.
+    """
+
+    name: str
+    channel: str
+    population_setting: str
+    max_age_setting: str
+    resolve_process_jobs: typing.Callable[[], typing.Callable[[str], object]]
+
+    def population(self, settings: typing.Any = None) -> int:
+        return int(getattr(settings or current(), self.population_setting))
+
+    def max_age(self, settings: typing.Any = None) -> int:
+        return int(getattr(settings or current(), self.max_age_setting))
+
+    def real_time_budget(self, settings: typing.Any = None) -> float:
+        return (settings or current()).get_real_time_budget(self.name)
+
+    def process_jobs(self) -> typing.Callable[[str], object]:
+        return self.resolve_process_jobs()
+
+
+CRON_LISTENER = ListenerKind(
+    name="cron",
+    channel=CRON_TRIGGER_CHANNEL,
+    population_setting="max_cron_threads",
+    max_age_setting="limit_time_worker_cron",
+    resolve_process_jobs=_cron_process_jobs,
+)
+
+JOB_LISTENER = ListenerKind(
+    name="job",
+    channel=JOB_QUEUE_CHANNEL,
+    population_setting="job_workers",
+    max_age_setting="job_max_age",
+    resolve_process_jobs=_job_process_jobs,
+)
+
+LISTENER_KINDS: tuple[ListenerKind, ...] = (CRON_LISTENER, JOB_LISTENER)
 
 
 def arm_cron_listen(

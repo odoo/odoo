@@ -26,6 +26,7 @@ from odoo.tools.misc import dumpstacks, stripped_sys_argv
 from . import _process_state
 from ._base_server import CommonServer
 from ._census import WorkerCensus
+from ._cron import LISTENER_KINDS
 from ._env import INHERITED_SOCKET_FD, INHERITED_WEBSOCKET_FD, get_env_float
 from ._limits import empty_pipe, get_graceful_stop_timeout
 from ._listener import acquire_listener
@@ -161,8 +162,17 @@ class PreforkServer(CommonServer):
         self.population = settings.workers
         self.timeout = settings.get_real_time_budget("http") or None
         self.limit_request = settings.limit_request
-        self.cron_timeout = settings.get_real_time_budget("cron") or None
-        self.job_timeout = settings.get_real_time_budget("job") or None
+        self.listener_timeouts: dict[str, float | None] = {
+            kind.name: kind.real_time_budget(settings) or None
+            for kind in LISTENER_KINDS
+        }
+        """What the master's watchdog allows each sweep loop, by kind.
+
+        One mapping rather than a `cron_timeout` and a `job_timeout`: each
+        worker asks its own `ListenerKind` for the same budget, so a pair of
+        attributes could only restate it and, being one line apart, could
+        restate it wrongly.
+        """
         self.beat: float = SUPERVISION_BEAT_S
         self.pipe: tuple[int, int] | None = None
         self.socket: socket.socket | None = None
@@ -193,8 +203,7 @@ class PreforkServer(CommonServer):
             "prefork.created",
             population=self.population,
             timeout=self.timeout,
-            cron_timeout=self.cron_timeout,
-            job_timeout=self.job_timeout,
+            listener_timeouts=self.listener_timeouts,
             limit_request=self.limit_request,
             reload_supervisor=self.handoff.supervisor,
             reload_ready_fd=self.handoff.awaits_ready,

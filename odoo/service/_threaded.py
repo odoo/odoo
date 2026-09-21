@@ -23,10 +23,10 @@ from . import _process_state
 from ._base_server import SIGHUP_AVAILABLE, CommonServer
 from ._cron import (
     CRON_POLL_INTERVAL_S,
-    CRON_TRIGGER_CHANNEL,
-    JOB_QUEUE_CHANNEL,
+    LISTENER_KINDS,
     CronListener,
     CronSchedule,
+    ListenerKind,
     ReconnectBackoff,
     sweep_database,
     wait_for_notifies,
@@ -290,26 +290,14 @@ class ThreadedServer(CommonServer):
             )
             return 0
 
-    def run_cron_thread(self, number: int) -> None:
-        from odoo.addons.base.models.ir_cron import IrCron
-
+    def run_listener_thread(self, kind: ListenerKind, number: int) -> None:
+        settings = self.settings
         self._run_listener_thread(
             number,
-            channel=CRON_TRIGGER_CHANNEL,
-            process_jobs=IrCron._process_jobs,
-            label="cron",
-            max_age=self.settings.limit_time_worker_cron,
-        )
-
-    def run_job_thread(self, number: int) -> None:
-        from odoo.addons.base.models.ir_job import IrJob
-
-        self._run_listener_thread(
-            number,
-            channel=JOB_QUEUE_CHANNEL,
-            process_jobs=IrJob._process_jobs,
-            label="job",
-            max_age=self.settings.job_max_age,
+            channel=kind.channel,
+            process_jobs=kind.process_jobs(),
+            label=kind.name,
+            max_age=kind.max_age(settings),
         )
 
     def _run_due_jobs(
@@ -509,35 +497,19 @@ class ThreadedServer(CommonServer):
             with contextlib.suppress(OSError):
                 os.close(fd)
 
-    def spawn_cron_threads(self) -> None:
-        for i in range(self.settings.max_cron_threads):
+    def spawn_listener_threads(self, kind: ListenerKind) -> None:
+        population = kind.population(self.settings)
+        for i in range(population):
             t = threading.Thread(
-                target=self.run_cron_thread,
-                args=(i,),
-                name=f"odoo.service.cron.cron{i}",
+                target=self.run_listener_thread,
+                args=(kind, i),
+                name=f"odoo.service.{kind.name}.{kind.name}{i}",
                 daemon=True,
             )
-            as_worker_thread(t).type = "cron"
+            as_worker_thread(t).type = kind.name
             self._listener_threads.append(t)
             t.start()
-        _debug.lifecycle(
-            "server.threads_spawned", kind="cron", count=self.settings.max_cron_threads
-        )
-
-    def spawn_job_threads(self) -> None:
-        for i in range(self.settings.job_workers):
-            t = threading.Thread(
-                target=self.run_job_thread,
-                args=(i,),
-                name=f"odoo.service.job.job{i}",
-                daemon=True,
-            )
-            as_worker_thread(t).type = "job"
-            self._listener_threads.append(t)
-            t.start()
-        _debug.lifecycle(
-            "server.threads_spawned", kind="job", count=self.settings.job_workers
-        )
+        _debug.lifecycle("server.threads_spawned", kind=kind.name, count=population)
 
     def spawn_http_server(self) -> None:
         try:
@@ -675,8 +647,8 @@ class ThreadedServer(CommonServer):
             if rc:
                 return rc
 
-            self.spawn_cron_threads()
-            self.spawn_job_threads()
+            for kind in LISTENER_KINDS:
+                self.spawn_listener_threads(kind)
             self.log_ready()
             notify_ready()
             watchdog = Watchdog()

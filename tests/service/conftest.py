@@ -255,8 +255,7 @@ def worker_multi():
     m = MagicMock()
     m.open_pipe.side_effect = open_pipe
     m.timeout = 60
-    m.cron_timeout = 60
-    m.job_timeout = 60
+    m.listener_timeouts = {"cron": 60, "job": 60}
     m.limit_request = 0
     m.beat = 4
     m.socket = None

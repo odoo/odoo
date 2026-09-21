@@ -1398,28 +1398,30 @@ class TestPreforkInitTimeout:
     def test_limit_time_real_zero_disables_http_watchdog(self, srv):
         s = self._make(srv, limit_time_real=0)
         assert s.timeout is None
-        assert s.cron_timeout is None
+        assert s.listener_timeouts["cron"] is None
 
     def test_default_limit_time_real_kept(self, srv):
         s = self._make(srv, limit_time_real=120)
         assert s.timeout == 120
-        assert s.cron_timeout == 120
+        assert s.listener_timeouts["cron"] == 120
 
     def test_any_negative_cron_limit_inherits_limit_time_real(self, srv):
         s = self._make(srv, limit_time_real_cron=-5)
-        assert s.cron_timeout == 120
+        assert s.listener_timeouts["cron"] == 120
 
     def test_negative_cron_limit_with_no_real_limit_disables_watchdog(self, srv):
         s = self._make(srv, limit_time_real=0, limit_time_real_cron=-5)
-        assert s.cron_timeout is None
+        assert s.listener_timeouts["cron"] is None
 
     def test_positive_cron_limit_kept(self, srv):
         s = self._make(srv, limit_time_real_cron=30)
-        assert s.cron_timeout == 30
+        assert s.listener_timeouts["cron"] == 30
 
     def test_zero_cron_limit_disables_the_cron_watchdog_alone(self, srv):
         s = self._make(srv, limit_time_real_cron=0)
-        assert s.cron_timeout is None, "--limit-time-real-cron=0 means no limit"
+        assert s.listener_timeouts["cron"] is None, (
+            "--limit-time-real-cron=0 means no limit"
+        )
         assert s.timeout == 120, "and it must not disarm the http watchdog"
 
 

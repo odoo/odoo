@@ -35,11 +35,12 @@ from odoo.libs.worker_thread import as_worker_thread, current_worker_thread
 from odoo.modules.registry import Registry
 
 from ._cron import (
+    CRON_LISTENER,
     CRON_POLL_INTERVAL_S,
-    CRON_TRIGGER_CHANNEL,
-    JOB_QUEUE_CHANNEL,
+    JOB_LISTENER,
     CronListener,
     CronSchedule,
+    ListenerKind,
     sweep_database,
     wait_for_notifies,
 )
@@ -523,19 +524,23 @@ class WorkerHTTP(Worker):
 
 
 class WorkerCron(Worker):
-    listen_channel = CRON_TRIGGER_CHANNEL
+    kind: ListenerKind = CRON_LISTENER
     _polls_wakeup_pipe = False
 
     def __init__(self, multi: PreforkServer) -> None:
         super().__init__(multi)
         self.alive_time = time.monotonic()
-        self.watchdog_timeout = multi.cron_timeout
+        self.watchdog_timeout = self.kind.real_time_budget() or None
         self.db_queue: deque[str] = deque()
         self.db_count: int = 0
         self.schedule = CronSchedule()
         self.listener = CronListener(
             self.listen_channel, self.logger, extra_read_fd=self.wakeup_pipe[0]
         )
+
+    @property
+    def listen_channel(self) -> str:
+        return self.kind.channel
 
     def _sleep_with_watchdog(self, total_seconds: float) -> None:
         tick = max(self.multi.beat / 2, 0.5)
@@ -554,9 +559,7 @@ class WorkerCron(Worker):
             remaining -= chunk
 
     def _run_jobs_for_database(self, db_name: str) -> None:
-        from odoo.addons.base.models.ir_cron import IrCron
-
-        IrCron._process_jobs(db_name)
+        self.kind.process_jobs()(db_name)
 
     def sleep(self) -> None:
         if not self.db_queue:
@@ -585,7 +588,7 @@ class WorkerCron(Worker):
             empty_pipe(self.wakeup_pipe[0])
 
     def get_max_age(self) -> int:
-        return current().limit_time_worker_cron
+        return self.kind.max_age()
 
     def check_limits(self) -> None:
         super().check_limits()
@@ -712,16 +715,11 @@ class WorkerCron(Worker):
 
 
 class WorkerJob(WorkerCron):
-    listen_channel = JOB_QUEUE_CHANNEL
+    """The same loop on the other channel.
 
-    def __init__(self, multi: PreforkServer) -> None:
-        super().__init__(multi)
-        self.watchdog_timeout = multi.job_timeout
+    Everything that differs between the two is `kind`: the channel it
+    listens on, when its connection is recycled, whose `_process_jobs` it
+    calls and the real-time budget its master's watchdog allows it.
+    """
 
-    def get_max_age(self) -> int:
-        return current().job_max_age
-
-    def _run_jobs_for_database(self, db_name: str) -> None:
-        from odoo.addons.base.models.ir_job import IrJob
-
-        IrJob._process_jobs(db_name)
+    kind: ListenerKind = JOB_LISTENER

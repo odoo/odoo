@@ -141,11 +141,8 @@ def run_server(server):
             side_effect=start or (lambda **kw: calls.append(("start", kw)))
         )
         server.stop = MagicMock(side_effect=lambda: calls.append(("stop", {})))
-        server.spawn_cron_threads = MagicMock(
-            side_effect=lambda: calls.append(("cron", {}))
-        )
-        server.spawn_job_threads = MagicMock(
-            side_effect=lambda: calls.append(("job", {}))
+        server.spawn_listener_threads = MagicMock(
+            side_effect=lambda kind: calls.append((kind.name, {}))
         )
         server.check_limits = MagicMock(
             side_effect=loop or (lambda: setattr(server, "quit_signals_received", 1))
@@ -215,8 +212,7 @@ class TestRunLimitReached:
         calls = []
         server.start = MagicMock()
         server.stop = MagicMock()
-        server.spawn_cron_threads = MagicMock()
-        server.spawn_job_threads = MagicMock()
+        server.spawn_listener_threads = MagicMock()
         passes = iter(range(1))
         server.check_limits = MagicMock(
             side_effect=lambda: (
