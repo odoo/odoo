@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="report_formula.AccountReportFilterExtraOptions">
+        <Dropdown>
+            <button class="btn btn-secondary">
+                <i class="fa-solid fa-sliders me-1"/>
+                <t t-if="selectedExtraOptions">
+                    <t t-out="selectedExtraOptions"/>
+                </t>
+                <t t-else="">
+                    Options
+                </t>
+            </button>
+
+            <t t-set-slot="content">
+                <t
+                    t-foreach="Object.entries(this.filterExtraOptionsData)"
+                    t-as="filter"
+                    t-key="filter[0]"
+                >
+                    <t t-if="!filter[1].ui_filter and this.isExtraOptionFilterShown(filter[0])">
+                        <DropdownItem
+                            class="{ 'selected': this.controller.cachedFilterOptions[filter[0]] }"
+                            onSelected="() => this.filterClicked({ optionKey: filter[0], reload: true})"
+                            closingMode="'none'"
+                        >
+                            <t t-esc="filter[1].name"/>
+                        </DropdownItem>
+                    </t>
+                </t>
+
+                <div class="dropdown-divider" t-if="hasUIFilter"/>
+
+                <t
+                    t-foreach="Object.entries(this.filterExtraOptionsData)"
+                    t-as="filter"
+                    t-key="filter[0]"
+                >
+                    <t t-if="filter[1].ui_filter and this.isExtraOptionFilterShown(filter[0])">
+                        <DropdownItem
+                            class="{ 'selected': this.controller.cachedFilterOptions[filter[0]] }"
+                            onSelected="filter[1].onSelect"
+                        >
+                            <t t-esc="filter[1].name"/>
+                        </DropdownItem>
+                    </t>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

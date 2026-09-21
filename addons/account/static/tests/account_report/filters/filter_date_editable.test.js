@@ -1,6 +1,6 @@
-import { AccountReportFilters } from "@account/components/account_report/filters/filters";
 import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
+import { AccountReportFilters } from "@report_formula/components/account_report/filters/filters";
 import {
     contains,
     defineModels,
@@ -48,7 +48,7 @@ test("can change the date filter by editing textually", async () => {
             },
             revision: 0,
         },
-        template: (name) => "account.AccountReportFiltersCustomizable",
+        template: (name) => "report_formula.AccountReportFiltersCustomizable",
         component: (name) => AccountReportFilters,
     });
 

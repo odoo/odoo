@@ -1,6 +1,6 @@
 /** @odoo-module native */
-import { AccountReportFilters } from "@account/components/account_report/filters/filters";
 import { useState } from "@odoo/owl";
+import { AccountReportFilters } from "@report_formula/components/account_report/filters/filters";
 import { formatDate, parseDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/translation";
 import { user } from "@web/core/user";

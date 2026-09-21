@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
-    <t t-inherit="account.AccountReportLineNameCustomizable" t-inherit-mode="extension">
+    <t t-inherit="report_formula.AccountReportLineNameCustomizable" t-inherit-mode="extension">
         <xpath expr="//div[@data-id='content']/t[@t-component]" position="after">
                         <AccountReturnSelectionBadge
                             t-if="this.accountStatus.record"

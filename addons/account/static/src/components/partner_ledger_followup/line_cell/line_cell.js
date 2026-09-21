@@ -1,5 +1,5 @@
 /** @odoo-module native */
-import { AccountReportLineCell } from "@account/components/account_report/line_cell/line_cell";
+import { AccountReportLineCell } from "@report_formula/components/account_report/line_cell/line_cell";
 
 export class PartnerLedgerFollowupLineCell extends AccountReportLineCell {
     static template = "account.PartnerLedgerFollowupLineCell";

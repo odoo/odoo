@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
-    <t t-name="account.MulticurrencyRevaluationReportLineName" t-inherit="account.AccountReportLineNameCustomizable">
+    <t t-name="account.MulticurrencyRevaluationReportLineName" t-inherit="report_formula.AccountReportLineNameCustomizable">
         <xpath expr="//t[@data-id='line_buttons']" position="inside">
             <t t-if="props.line.cur_revaluation_line_model === 'res.currency'">
                 <Dropdown position="'right-start'">

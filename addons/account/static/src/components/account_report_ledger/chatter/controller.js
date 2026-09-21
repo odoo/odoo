@@ -1,6 +1,6 @@
 /** @odoo-module native */
-import { AccountReportController } from "@account/components/account_report/controller";
 import { useState } from "@odoo/owl";
+import { AccountReportController } from "@report_formula/components/account_report/controller";
 import { browser } from "@web/core/browser/browser";
 import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";

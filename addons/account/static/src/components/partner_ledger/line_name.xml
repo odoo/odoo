@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
-    <t t-name="account.PartnerLedgerLineName" t-inherit="account.AccountReportLineNameCustomizable">
+    <t t-name="account.PartnerLedgerLineName" t-inherit="report_formula.AccountReportLineNameCustomizable">
         <xpath expr="//td[@data-id='line_name']" position="attributes">
             <t t-if="props.line.unfoldable">
                 <attribute name="class" add="more" separator=" "/>

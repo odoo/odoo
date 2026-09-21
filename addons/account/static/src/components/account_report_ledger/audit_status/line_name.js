@@ -1,7 +1,7 @@
 /** @odoo-module native */
-import { AccountReportLineName } from "@account/components/account_report/line_name/line_name";
 import { AccountReturnSelectionBadge } from "@account/components/account_return/widgets/account_return_selection_badge";
 import { useEffect, useState } from "@odoo/owl";
+import { AccountReportLineName } from "@report_formula/components/account_report/line_name/line_name";
 import { patch } from "@web/core/utils/patch";
 import { RelationalModel } from "@web/model/relational_model";
 

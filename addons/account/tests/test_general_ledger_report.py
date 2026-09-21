@@ -2269,7 +2269,7 @@ class TestGeneralLedgerReport(TestAccountReportsCommon, odoo.tests.HttpCase):
         res = balance_sheet.caret_option_open_general_ledger(bs_options, params)
         gl_options = res["params"]["options"]
 
-        # options are updated afterward by the search() in account/static/src/components/account_report/search_bar/search_bar.js
+        # options are updated afterward by the search() in report_formula/static/src/components/account_report/search_bar/search_bar.js
         filter_search_bar = gl_options["filter_search_bar"]
 
         # Update the date filter

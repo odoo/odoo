@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
-    <t t-name="account.JournalReportLine" t-inherit="account.AccountReportLineCustomizable">
+    <t t-name="account.JournalReportLine" t-inherit="report_formula.AccountReportLineCustomizable">
         <xpath expr="//tr[@data-id='line']" position="attributes">
             <attribute name="t-if">!('is_tax_section_line' in props.line)</attribute>
         </xpath>

@@ -1,5 +1,5 @@
 /** @odoo-module native */
-import { AccountReportController } from "@account/components/account_report/controller";
+import { AccountReportController } from "@report_formula/components/account_report/controller";
 import { patch } from "@web/core/utils/patch";
 
 patch(AccountReportController.prototype, {

@@ -1,6 +1,6 @@
 /** @odoo-module native */
-import { AccountReportLineCell } from "@account/components/account_report/line_cell/line_cell";
 import { AccountReportCarryoverPopover } from "@account/components/account_report_ledger/line_cell/carryover_popover";
+import { AccountReportLineCell } from "@report_formula/components/account_report/line_cell/line_cell";
 import { localization } from "@web/core/l10n/localization";
 import { patch } from "@web/core/utils/patch";
 

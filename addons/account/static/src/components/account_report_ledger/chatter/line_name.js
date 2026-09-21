@@ -1,5 +1,5 @@
 /** @odoo-module native */
-import { AccountReportLineName } from "@account/components/account_report/line_name/line_name";
+import { AccountReportLineName } from "@report_formula/components/account_report/line_name/line_name";
 import { patch } from "@web/core/utils/patch";
 
 patch(AccountReportLineName.prototype, {

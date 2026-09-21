@@ -35,4 +35,13 @@ depends on this module and adds the ledger to each model -- the ``tax_tags`` and
     "data": [
         "security/ir.model.access.csv",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "report_formula/static/src/components/**/*",
+            "report_formula/static/src/js/**/*",
+        ],
+        "web.assets_unit_tests": [
+            "report_formula/static/tests/**/*",
+        ],
+    },
 }

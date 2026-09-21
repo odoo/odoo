@@ -1,8 +1,8 @@
-import { AccountReportLineCellEditable } from "@account/components/account_report/line_cell_editable/line_cell_editable";
 import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import { click, press } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { AccountReportLineCellEditable } from "@report_formula/components/account_report/line_cell_editable/line_cell_editable";
 import {
     defineModels,
     makeMockEnv,

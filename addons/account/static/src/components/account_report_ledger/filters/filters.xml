@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
-    <t t-inherit="account.AccountReportFiltersCustomizable" t-inherit-mode="extension">
+    <t t-inherit="report_formula.AccountReportFiltersCustomizable" t-inherit-mode="extension">
         <xpath expr="//div[@id='filter_comparison']/.." position="after">
             <!-- Journal filter -->
             <t t-if="'journals' in controller.cachedFilterOptions">
@@ -61,9 +61,9 @@
         </xpath>
     </t>
 
-    <t t-inherit="account.AccountReportFilterDate" t-inherit-mode="extension">
+    <t t-inherit="report_formula.AccountReportFilterDate" t-inherit-mode="extension">
         <xpath
-            expr="//t[@t-if=&quot;controller.cachedFilterOptions.date.mode === 'range'&quot;]/t[@t-call='account.AccountReportFilterDateSelection']"
+            expr="//t[@t-if=&quot;controller.cachedFilterOptions.date.mode === 'range'&quot;]/t[@t-call='report_formula.AccountReportFilterDateSelection']"
             position="before"
         >
                     <DropdownItem

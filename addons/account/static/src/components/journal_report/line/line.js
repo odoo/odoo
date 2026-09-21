@@ -1,6 +1,6 @@
 /** @odoo-module native */
-import { AccountReport } from "@account/components/account_report/account_report";
-import { AccountReportLine } from "@account/components/account_report/line/line";
+import { AccountReport } from "@report_formula/components/account_report/account_report";
+import { AccountReportLine } from "@report_formula/components/account_report/line/line";
 
 export class JournalReportLine extends AccountReportLine {
     static template = "account.JournalReportLine";

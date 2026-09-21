@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
-    <t t-name="account.DeferredFilterComparison" t-inherit="account.AccountReportFilterComparison">
+    <t t-name="account.DeferredFilterComparison" t-inherit="report_formula.AccountReportFilterComparison">
         <xpath expr="//DropdownItem[contains(@attrs, 'filter_comparison_same_period_last_year')]" position="replace"/>
         <xpath expr="//DropdownItem[contains(@attrs, 'filter_comparison_custom')]" position="replace"/>
     </t>
 
-    <t t-name="account.DeferredFilters" t-inherit="account.AccountReportFiltersCustomizable">
+    <t t-name="account.DeferredFilters" t-inherit="report_formula.AccountReportFiltersCustomizable">
         <xpath expr="//div[@id='filter_comparison']/t" position="replace">
             <t t-call="account.DeferredFilterComparison"/>
         </xpath>

@@ -1,6 +1,6 @@
 /** @odoo-module native */
-import { AccountReport } from "@account/components/account_report/account_report";
 import { AccountReportChatter } from "@account/components/mail/chatter";
+import { AccountReport } from "@report_formula/components/account_report/account_report";
 import { patch } from "@web/core/utils/patch";
 
 patch(AccountReport, {

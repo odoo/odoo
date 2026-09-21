@@ -1,6 +1,6 @@
 /** @odoo-module native */
-import { AccountReport } from "@account/components/account_report/account_report";
-import { AccountReportLineCell } from "@account/components/account_report/line_cell/line_cell";
+import { AccountReport } from "@report_formula/components/account_report/account_report";
+import { AccountReportLineCell } from "@report_formula/components/account_report/line_cell/line_cell";
 
 import { DateTime } from "luxon";
 export class PartnerLedgerLineCell extends AccountReportLineCell {

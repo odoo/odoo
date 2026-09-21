@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
-    <t t-inherit="account.AccountReportCustomizable" t-inherit-mode="extension">
+    <t t-inherit="report_formula.AccountReportCustomizable" t-inherit-mode="extension">
         <xpath expr="//div[@t-ref='root']" position="attributes">
             <attribute name="t-on-keydown">onKeydown</attribute>
             <attribute name="t-on-click">onClick</attribute>
@@ -45,7 +45,7 @@
         </xpath>
     </t>
 
-    <t t-inherit="account.AccountReportLineNameCustomizable" t-inherit-mode="extension">
+    <t t-inherit="report_formula.AccountReportLineNameCustomizable" t-inherit-mode="extension">
         <xpath expr="//t[@data-id='line_buttons']" position="before">
                         <button
                             tabindex="-1"
