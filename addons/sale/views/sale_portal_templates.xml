@@ -417,7 +417,10 @@
                 <t t-set="mobile_has_to_be_signed" t-value="sale_order._has_to_be_signed() and not payment_amount"/>
                 <t t-set="mobile_has_to_be_paid" t-value="sale_order._has_to_be_paid() or (payment_amount and sale_order.amount_paid &lt; sale_order.amount_total and sale_order.state != 'cancel')"/>
                 <t t-set="mobile_can_reorder" t-value="'website_id' in env['sale.order']._fields and sale_order.with_user(env.user).sudo()._is_reorder_allowed()"/>
-                <t t-if="mobile_has_to_be_signed or mobile_has_to_be_paid or mobile_can_reorder">
+                <!-- Set by the modules contributing an action to the bar, e.g. `sale_stock` for the returns. -->
+                <t t-set="mobile_additional_action" t-value="False"/>
+                <t t-set="mobile_has_primary_action" t-value="mobile_has_to_be_signed or mobile_has_to_be_paid or mobile_can_reorder"/>
+                <t t-if="mobile_has_primary_action or mobile_additional_action">
                     <div id="mobile_action_bar" class="o_portal_mobile_action_bar d-flex d-lg-none flex-column position-fixed bottom-0 start-0 end-0 pt-1 bg-white border-top shadow d-print-none" t-att-style="'z-index: 1029;'">
 
                         <!-- Price row -->
@@ -471,7 +474,7 @@
                                 t-elif="mobile_can_reorder"
                                 class="btn btn-secondary flex-grow-1 o_wsale_reorder_button oe_website_sale"
                                 t-att-data-sale-order-id="sale_order.id">
-                                <i class="oi me-1" data-icon="refresh"/>Order Again
+                                <i class="oi me-1" data-icon="redo"/>Order Again
                             </button>
                             <a role="button"
                                 t-if="mobile_has_to_be_signed"
@@ -482,6 +485,7 @@
                                 Reject
                             </a>
                             <a role="button"
+                                id="mobile_feedback_button"
                                 class="btn btn-light"
                                 href="#provide_feedback"
                                 aria-label="Provide feedback">
