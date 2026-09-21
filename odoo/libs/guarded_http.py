@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import contextlib
-import io
 import socket
 import threading
 import time
@@ -320,8 +319,11 @@ class GuardedXmlRpcTransport(xmlrpc.client.Transport):
             timeout=self._timeout,
         )
         response.raise_for_status()
-        self.verbose = verbose
-        return self.parse_response(io.BytesIO(response.content))
+        del verbose
+        parser, unmarshaller = self.getparser()
+        parser.feed(response.content)
+        parser.close()
+        return unmarshaller.close()
 
 
 def xmlrpc_proxy(

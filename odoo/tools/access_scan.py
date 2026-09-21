@@ -105,7 +105,7 @@ def get_accessible_ids(
         got = len(rows)
         sql_offset += got
         passes += 1  # debuglog
-        if target is None or len(ordered) >= target or got < chunk:
+        if target is None or chunk is None or len(ordered) >= target or got < chunk:
             break
         chunk = min(chunk * 2, chunk_max)
 
@@ -123,6 +123,7 @@ def get_accessible_ids(
 
 class _RescannedCountQuery(Query):
     __slots__ = ("_rescan",)
+    _rescan: Callable[[int | None], list[int]]
 
     def count_matching(self, limit: int | None = None) -> int:
         return len(self._rescan(limit))
