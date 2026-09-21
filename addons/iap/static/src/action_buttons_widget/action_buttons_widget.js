@@ -9,6 +9,7 @@ class IAPActionButtonsWidget extends Component {
         ...standardWidgetProps,
         serviceName: t.string(),
         showServiceButtons: t.boolean(),
+        label: t.string().optional(),
     });
 
     setup() {
@@ -37,6 +38,7 @@ export const iapActionButtonsWidget = {
         return {
             serviceName: attrs.service_name,
             showServiceButtons: !Boolean(attrs.hide_service),
+            label: attrs.label,
         };
     },
 };
