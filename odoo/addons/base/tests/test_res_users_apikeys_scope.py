@@ -287,3 +287,15 @@ class TestKeysAndScopes(TransactionCase):
             self.env.ref("base.apikeys_scope_rpc").id,
         )
         self.assertIsNone(Users._check_uid_passwd(user.id, "scope_rpc_user"))
+
+    def test_a_key_bound_to_another_door_enters_xmlrpc_under_its_own_scope(self):
+        user = new_test_user(
+            self.env, login="scope_bound_user", groups="base.group_user"
+        )
+        mcp = self.env["res.users.apikeys.scope"].create({"name": "MCP", "key": "mcp"})
+        key = (
+            self.env["res.users.apikeys"]
+            .with_user(user)
+            ._generate("mcp", "k", fields.Datetime.now() + timedelta(hours=1))
+        )
+        self.assertEqual(self.env["res.users"]._check_uid_passwd(user.id, key), mcp.id)

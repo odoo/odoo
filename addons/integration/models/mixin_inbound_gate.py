@@ -355,6 +355,14 @@ class MixinInboundGate(models.AbstractModel):
     ) -> bool:
         self.check_singleton()
 
+        # A route's resolver may hand the gate the check itself -- a Basic
+        # login on a bearer-keyed device, a signed link, a per-user API key
+        # on a gate that holds no credential of its own -- and then that is
+        # the identity for this call, whatever the gate's own scheme.
+        verify = self.env.context.get(INBOUND_VERIFY_KEY)
+        if verify is not None:
+            return bool(verify(headers, body))
+
         scheme = getattr(self, f"_authenticate_scheme_{self.auth_type}", None)
 
         if (
@@ -383,13 +391,6 @@ class MixinInboundGate(models.AbstractModel):
             ):
                 _logger.debug("Timestamp verification failed for %s", self.display_name)
                 return False
-
-        # A route's resolver may hand the gate the check itself -- a Basic
-        # login on a bearer-keyed device, a signed link -- and then that is
-        # the identity for this call, whatever the gate's own scheme.
-        verify = self.env.context.get(INBOUND_VERIFY_KEY)
-        if verify is not None:
-            return bool(verify(headers, body))
 
         if self.auth_type == "none":
             return True

@@ -2114,7 +2114,14 @@ class TestLoginPath(TransactionCase):
             {**self.credential, "password": key}, {"interactive": False}
         )
         self.assertEqual(
-            auth, {"uid": self.user.id, "auth_method": "apikey", "mfa": "default"}
+            auth,
+            {
+                "uid": self.user.id,
+                "auth_method": "apikey",
+                "api_scope_id": self.env.ref("base.apikeys_scope_rpc").id,
+                "mfa": "default",
+            },
+            "a key logs in under its own scope",
         )
 
     def test_authenticate_records_the_base_url_for_system_users_only(self):

@@ -271,11 +271,11 @@ class ResUsers(models.Model):
         if result.get("auth_method") == "apikey":
             return (
                 self.env["res.users.apikeys"]._get_key_expiration(
-                    scope="rpc", key=passwd
+                    scope=None, key=passwd
                 ),
-                True,
+                result["api_scope_id"],
             )
-        return None, False
+        return None, None
 
     @tools.ormcache("self.id", "sid")
     def _get_session_token(self, sid: str) -> str | bool:
@@ -717,16 +717,18 @@ class ResUsers(models.Model):
                 }
 
         if not interactive:
-            if (
-                self.env["res.users.apikeys"]._check_credentials(
-                    scope="rpc", key=credential["password"]
-                )
-                == self.id
-            ):
+            # The universal door: a key bound to no scope enters under `rpc`,
+            # a key bound to another door enters under that door's rules.
+            match = self.env["res.users.apikeys"]._check_credentials_any_scope(
+                credential["password"]
+            )
+            if match and match[0] == self.id:
                 _debug.logic("apikey_checked", uid=self.id, valid=True)
                 return {
                     "uid": self.id,
                     "auth_method": "apikey",
+                    "api_scope_id": match[1]
+                    or self.env["res.users.apikeys.scope"]._get_or_create("rpc").id,
                     "mfa": "default",
                 }
 
@@ -1276,15 +1278,13 @@ class ResUsers(models.Model):
             raise AccessDenied
         with self._assert_can_auth(user=uid):
             passwd_hash = sha256(passwd.encode()).hexdigest()
-            key_expiration, is_key = self._check_uid_passwd_cached(
+            key_expiration, scope_id = self._check_uid_passwd_cached(
                 uid, passwd, passwd_hash
             )
             if key_expiration is not None and key_expiration <= fields.Datetime.now():
                 _debug.logic("uid_passwd_refused", uid=uid, reason="apikey_expired")
                 raise AccessDenied
-        if not is_key:
-            return None
-        return self.env["res.users.apikeys.scope"]._get_or_create("rpc").id
+        return scope_id
 
     def _get_fields_session_token(self) -> set[str]:
         return {"id", "login", "password", "active"}
