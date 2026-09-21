@@ -119,7 +119,7 @@ def _warn_on_non_c_template(cr, template: str) -> None:
         )
 
 
-def _create_empty_database(
+def create_empty_database(
     name: str,
     template: str | None = None,
     force_unaccent: bool = False,
@@ -287,7 +287,7 @@ def exp_create_database(
         odoo.tools.config.filestore(db_name), f"Cannot create {db_name!r}"
     )
     _logger.info("Create database `%s`.", db_name)
-    _create_empty_database(db_name, setup_if_exists=False)
+    create_empty_database(db_name, setup_if_exists=False)
     try:
         with _debug.perf(
             "database.initialized",

@@ -249,7 +249,6 @@ def log_access(
 def _reset_request_attributes() -> None:
     worker = current_worker_thread()
     worker.rpc_model_method = ""
-    worker.request_line = ""
     for attr in ("query_count", "request_id"):
         if hasattr(worker, attr):
             delattr(worker, attr)
@@ -588,10 +587,8 @@ def _run_exchange(
     )
     exchange.reader = _open_reader(conn, head, limits, exchange)
     environ = prepare_wsgi_environ(head, conn, exchange.reader, identity)
-    request_line = f"{head.method} {head.target}"
-    current_worker_thread().request_line = request_line
     if identity.on_request is not None:
-        identity.on_request(request_line)
+        identity.on_request(f"{head.method} {head.target}")
     iterable: Iterable[bytes] | None = None
     try:
         iterable = app(environ, exchange.start_response)

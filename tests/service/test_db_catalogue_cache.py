@@ -133,7 +133,7 @@ class TestTheCatalogueScanIsShared:
 class TestAnInvalidationCannotBeOutrunByAQueryInFlight:
     """`_get_catalog_uncached` runs outside the lock, so a create/drop can land mid-scan.
 
-    The scan is ~4.7ms of round trip during which `_create_empty_database`,
+    The scan is ~4.7ms of round trip during which `create_empty_database`,
     `drop_database`, `rename_database` and `duplicate_database` all call
     `invalidate_catalog_caches`.  Storing the scan's result unconditionally
     undoes that invalidation and serves the pre-change list for a full TTL --

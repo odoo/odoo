@@ -125,7 +125,7 @@ def create_configured_databases() -> None:
     for db_name in config["db_name"]:
         try:
             with _debug.perf("cli.server.create_empty_database", db=db_name):
-                db._create_empty_database(db_name)
+                db.create_empty_database(db_name)
             config["init"]["base"] = True
             _debug.lifecycle("cli.server.database_created", db=db_name, init_base=True)
         except InsufficientPrivilege as err:

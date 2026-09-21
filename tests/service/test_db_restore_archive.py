@@ -61,7 +61,7 @@ def restoring(tmp_path):
         moved = []
         with (
             patch.object(restore, "exp_db_exist", return_value=False),
-            patch.object(restore, "_create_empty_database"),
+            patch.object(restore, "create_empty_database"),
             patch.object(restore, "_rollback_new_database"),
             patch.object(restore, "_check_filestore_dest_free"),
             patch.object(restore, "_check_dump_sql_safe"),
@@ -113,7 +113,7 @@ class TestRawRestoreNeedsAPath:
         handle = io.BytesIO(b"-- not a zip\nSELECT 1;\n")
         with (
             patch.object(restore, "exp_db_exist", return_value=False),
-            patch.object(restore, "_create_empty_database"),
+            patch.object(restore, "create_empty_database"),
             patch.object(restore, "_rollback_new_database"),
             patch.object(restore, "_check_filestore_dest_free"),
             patch.object(restore, "check_db_name"),

@@ -287,7 +287,7 @@ def test_only_the_master_creates_the_configured_databases(monkeypatch, evented):
         patch.object(cli_server, "check_db_not_maintenance"),
         patch.object(cli_server, "write_pid_file"),
         patch.object(cli_server.config, "parse_config"),
-        patch.object(cli_server.db, "_create_empty_database", calls.append),
+        patch.object(cli_server.db, "create_empty_database", calls.append),
         patch.object(cli_server.server, "start", return_value=0),
         pytest.raises(SystemExit) as exit_info,
     ):

@@ -21,8 +21,8 @@ from ._dump_scanner import _check_dump_sql_safe
 from .lifecycle import (
     _announce_database,
     _check_filestore_dest_free,
-    _create_empty_database,
     _rollback_new_database,
+    create_empty_database,
 )
 from .listing import exp_db_exist
 
@@ -283,7 +283,7 @@ def restore_db(
     _check_filestore_dest_free(fs_dest, f"Cannot restore to {db!r}")
 
     _logger.info("RESTORING DB: %s", db)
-    _create_empty_database(
+    create_empty_database(
         db, template="template0", force_unaccent=True, setup_if_exists=False
     )
 

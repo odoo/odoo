@@ -83,14 +83,14 @@ class TestConcurrentCreateDatabaseSqlstate:
 @requires_createdb
 class TestCreateEmptyDatabaseAnswersUniformly:
     def test_every_losing_racer_gets_database_exists(self, race_name):
-        from odoo.service.db import DatabaseExists, _create_empty_database
+        from odoo.service.db import DatabaseExists, create_empty_database
 
         barrier = threading.Barrier(RACERS)
 
         def attempt(_):
             barrier.wait(timeout=30)
             try:
-                _create_empty_database(
+                create_empty_database(
                     race_name, template="template0", setup_if_exists=False
                 )
                 return "created"

@@ -91,7 +91,7 @@ class TestRestoreDbPreFlight:
             patch.object(
                 db_mod.restore, "exp_db_exist", return_value=True
             ) as mock_exist,
-            patch.object(db_mod.restore, "_create_empty_database") as mock_create,
+            patch.object(db_mod.restore, "create_empty_database") as mock_create,
         ):
             with pytest.raises(RuntimeError, match="already exists"):
                 db_mod.restore_db("already_there", "/dev/null")
@@ -106,7 +106,7 @@ class TestRestoreDbSubprocessFailure:
             "exp_db_exist": patch.object(
                 db_mod.restore, "exp_db_exist", return_value=False
             ),
-            "create_empty": patch.object(db_mod.restore, "_create_empty_database"),
+            "create_empty": patch.object(db_mod.restore, "create_empty_database"),
             "drop_database": patch.object(db_mod.lifecycle, "drop_database"),
             "subprocess_run": patch(
                 "odoo.service.db.restore.subprocess.run",
@@ -206,7 +206,7 @@ class TestRestoreDbCleanupOnAnyFailure:
 
             with (
                 patch.object(db_mod.restore, "exp_db_exist", return_value=False),
-                patch.object(db_mod.restore, "_create_empty_database"),
+                patch.object(db_mod.restore, "create_empty_database"),
                 patch.object(db_mod.lifecycle, "drop_database") as mock_drop,
             ):
                 with pytest.raises(RuntimeError, match="Couldn't restore database"):
@@ -219,7 +219,7 @@ class TestRestoreDbCleanupOnAnyFailure:
     ):
         with (
             patch.object(db_mod.restore, "exp_db_exist", return_value=False),
-            patch.object(db_mod.restore, "_create_empty_database"),
+            patch.object(db_mod.restore, "create_empty_database"),
             patch.object(db_mod.lifecycle, "drop_database") as mock_drop,
             patch(
                 "odoo.service.db.restore.subprocess.run",
@@ -242,7 +242,7 @@ class TestRestoreDbWallClockTimeout:
     ):
         with (
             patch.object(db_mod.restore, "exp_db_exist", return_value=False),
-            patch.object(db_mod.restore, "_create_empty_database"),
+            patch.object(db_mod.restore, "create_empty_database"),
             patch.object(db_mod.lifecycle, "drop_database") as mock_drop,
             patch(
                 "odoo.service.db.restore.subprocess.run",
@@ -257,7 +257,7 @@ class TestRestoreDbWallClockTimeout:
     def test_timeout_kwarg_passed_to_subprocess(self, db_mod, bypass_db_mgmt, zip_dump):
         with (
             patch.object(db_mod.restore, "exp_db_exist", return_value=False),
-            patch.object(db_mod.restore, "_create_empty_database"),
+            patch.object(db_mod.restore, "create_empty_database"),
             patch.object(db_mod.lifecycle, "drop_database"),
             patch(
                 "odoo.service.db.restore.subprocess.run",
@@ -319,7 +319,7 @@ class TestDbNameValidation:
         ],
     )
     def test_create_rejects_invalid_names(self, db_mod, bypass_db_mgmt, bad_name):
-        with patch.object(db_mod.lifecycle, "_create_empty_database") as mock_create:
+        with patch.object(db_mod.lifecycle, "create_empty_database") as mock_create:
             with pytest.raises(ValueError, match="Invalid database name"):
                 db_mod.exp_create_database(bad_name, False, "en_US")
         mock_create.assert_not_called()
@@ -337,7 +337,7 @@ class TestDbNameValidation:
     )
     def test_create_accepts_valid_names(self, db_mod, bypass_db_mgmt, good_name):
         with (
-            patch.object(db_mod.lifecycle, "_create_empty_database"),
+            patch.object(db_mod.lifecycle, "create_empty_database"),
             patch("odoo.modules.db.initialize_db"),
         ):
             db_mod.exp_create_database(good_name, False, "en_US")
@@ -937,7 +937,7 @@ class TestCreateEmptyDatabaseTOCTOU:
             patch("odoo.service.db.lifecycle._create_faketime_now_function"),
         ):
             with pytest.raises(db_mod.DatabaseExists, match="already exists"):
-                db_mod._create_empty_database("x")
+                db_mod.create_empty_database("x")
 
     def test_creation_is_the_first_statement_issued(self, db_mod):
         import odoo.tools
@@ -959,7 +959,7 @@ class TestCreateEmptyDatabaseTOCTOU:
             ),
             patch("odoo.service.db.lifecycle._create_faketime_now_function"),
         ):
-            db_mod._create_empty_database("x")
+            db_mod.create_empty_database("x")
 
         assert executed, "no SQL was issued at all"
         assert "CREATE DATABASE" in executed[0].upper(), (
@@ -1000,7 +1000,7 @@ class TestRestoreDbZipSlip:
     ):
         with (
             patch.object(db_mod.restore, "exp_db_exist", return_value=False),
-            patch.object(db_mod.restore, "_create_empty_database"),
+            patch.object(db_mod.restore, "create_empty_database"),
             patch.object(db_mod.lifecycle, "drop_database") as mock_drop,
             patch("odoo.service.db.restore.subprocess.run") as mock_run,
         ):
@@ -1360,7 +1360,7 @@ class TestRestoreDbCleanupHelper:
         with (
             patch.object(odoo.tools, "config", config),
             patch.object(db_mod.restore, "exp_db_exist", return_value=False),
-            patch.object(db_mod.restore, "_create_empty_database"),
+            patch.object(db_mod.restore, "create_empty_database"),
             patch.object(db_mod.lifecycle, "drop_database") as mock_drop,
             patch(
                 "odoo.service.db.restore.subprocess.run",
@@ -1379,7 +1379,7 @@ class TestRestoreDbCleanupHelper:
     def test_rollback_does_not_re_enter_the_rpc_verb(self, db_mod, zip_dump):
         with (
             patch.object(db_mod.restore, "exp_db_exist", return_value=False),
-            patch.object(db_mod.restore, "_create_empty_database"),
+            patch.object(db_mod.restore, "create_empty_database"),
             patch.object(db_mod.lifecycle, "drop_database") as mock_drop,
             patch.object(db_mod.lifecycle, "exp_drop") as mock_exp_drop,
             patch(
@@ -2184,7 +2184,7 @@ class TestRestoreDbOnErrorStop:
     ):
         with (
             patch.object(db_mod.restore, "exp_db_exist", return_value=False),
-            patch.object(db_mod.restore, "_create_empty_database"),
+            patch.object(db_mod.restore, "create_empty_database"),
             patch.object(db_mod.lifecycle, "drop_database"),
             patch(
                 "odoo.service.db.restore.subprocess.run",
@@ -2207,7 +2207,7 @@ class TestRestoreDbNameValidation:
     def test_rejects_overlong_name_before_any_side_effect(self, db_mod, bypass_db_mgmt):
         with (
             patch.object(db_mod.restore, "exp_db_exist") as mock_exist,
-            patch.object(db_mod.restore, "_create_empty_database") as mock_create,
+            patch.object(db_mod.restore, "create_empty_database") as mock_create,
         ):
             with pytest.raises(ValueError, match="63 characters"):
                 db_mod.restore_db("a" * 70, "/dev/null")
@@ -2217,7 +2217,7 @@ class TestRestoreDbNameValidation:
     def test_rejects_invalid_shape_before_any_side_effect(self, db_mod, bypass_db_mgmt):
         with (
             patch.object(db_mod.restore, "exp_db_exist") as mock_exist,
-            patch.object(db_mod.restore, "_create_empty_database") as mock_create,
+            patch.object(db_mod.restore, "create_empty_database") as mock_create,
         ):
             with pytest.raises(ValueError, match="must start with"):
                 db_mod.restore_db("../etc/passwd", "/dev/null")
@@ -2227,7 +2227,7 @@ class TestRestoreDbNameValidation:
     def test_valid_name_passes_validation(self, db_mod, bypass_db_mgmt):
         with (
             patch.object(db_mod.restore, "exp_db_exist", return_value=True),
-            patch.object(db_mod.restore, "_create_empty_database"),
+            patch.object(db_mod.restore, "create_empty_database"),
         ):
             with pytest.raises(RuntimeError, match="already exists"):
                 db_mod.restore_db("valid_db.name-1", "/dev/null")
@@ -2432,7 +2432,7 @@ class TestDatabaseDdlSetsAutocommitFirst:
                 f"opens the very transaction the flag avoids. Events: {events}"
             )
 
-    def test_create_empty_database(self, db_mod, bypass_db_mgmt):
+    def testcreate_empty_database(self, db_mod, bypass_db_mgmt):
         import odoo.tools
 
         db_connect, connections = self._recorder()
@@ -2450,9 +2450,9 @@ class TestDatabaseDdlSetsAutocommitFirst:
             ),
             patch("odoo.service.db.lifecycle._create_faketime_now_function"),
         ):
-            db_mod._create_empty_database("newdb")
+            db_mod.create_empty_database("newdb")
         self._assert_every_statement_follows_autocommit(
-            connections, "_create_empty_database"
+            connections, "create_empty_database"
         )
 
     def test_duplicate_database(self, db_mod, bypass_db_mgmt):
@@ -2562,7 +2562,7 @@ class TestCreateEmptyDatabaseHardening:
             patch("odoo.service.db.lifecycle.get_database_identifier", identifier),
             patch("odoo.service.db.lifecycle._create_faketime_now_function"),
         ):
-            db_mod._create_empty_database("newdb")
+            db_mod.create_empty_database("newdb")
 
         assert seen[:2] == ["newdb", template], (
             f"CREATE DATABASE quoted {seen[:2]}; the new database must come "
@@ -2574,7 +2574,7 @@ class TestCreateEmptyDatabaseHardening:
         cm, _conn, _cr = self._mock_pg(db_mod)
         with cm:
             with pytest.raises(ValueError, match="Invalid database name"):
-                db_mod._create_empty_database("newdb", template="bad%name")
+                db_mod.create_empty_database("newdb", template="bad%name")
 
     def test_setup_if_exists_false_skips_setup_on_collision(
         self, db_mod, bypass_db_mgmt
@@ -2593,7 +2593,7 @@ class TestCreateEmptyDatabaseHardening:
             ),
         ):
             with pytest.raises(db_mod.DatabaseExists):
-                db_mod._create_empty_database(
+                db_mod.create_empty_database(
                     "taken", template="template0", setup_if_exists=False
                 )
         assert db_connect_mock.call_args_list == [call("postgres")]
@@ -2877,7 +2877,7 @@ class TestCreateEmptyDatabaseTemplateContention:
                 _MockConfig({"list_db": True, "db_template": "tpl", "unaccent": False}),
             ),
         ):
-            db_mod._create_empty_database("newdb", setup_if_exists=False)
+            db_mod.create_empty_database("newdb", setup_if_exists=False)
         assert len(attempts) == 3, "CREATE DATABASE was not retried on ObjectInUse"
 
     def test_create_does_not_terminate_template_sessions(self, db_mod, bypass_db_mgmt):
@@ -2898,7 +2898,7 @@ class TestCreateEmptyDatabaseTemplateContention:
                 _MockConfig({"list_db": True, "db_template": "tpl", "unaccent": False}),
             ),
         ):
-            db_mod._create_empty_database("newdb", setup_if_exists=False)
+            db_mod.create_empty_database("newdb", setup_if_exists=False)
         drop_conn.assert_not_called()
 
 
@@ -3238,7 +3238,7 @@ class TestANewDatabaseIsAnnouncedToTheListeners:
     ):
         with (
             patch.object(db_mod.lifecycle, "_announce_database") as announce,
-            patch.object(db_mod.lifecycle, "_create_empty_database"),
+            patch.object(db_mod.lifecycle, "create_empty_database"),
             patch.object(db_mod.lifecycle, "_check_filestore_dest_free"),
             patch.object(db_mod.lifecycle, "_retry_terminate_then_ddl"),
             patch.object(db_mod.lifecycle, "invalidate_catalog_caches"),

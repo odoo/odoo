@@ -139,7 +139,7 @@ def test_every_submodule_target_is_real():
 
 
 def test_the_guard_would_catch_a_regression():
-    assert _STRING_TARGET.search('patch("odoo.service.db._create_empty_database")')
+    assert _STRING_TARGET.search('patch("odoo.service.db.create_empty_database")')
     db_mod_fixture = (
         "def db_mod():\n    import odoo.service.db as mod\n    return mod\n"
     )
@@ -170,5 +170,5 @@ def test_the_guard_would_catch_a_regression():
             'patch.object(db_service.lifecycle, "drop_database")'
         )
     )
-    assert _module_uses("lifecycle", "_create_empty_database")
-    assert not _module_uses("listing", "_create_empty_database")
+    assert _module_uses("lifecycle", "create_empty_database")
+    assert not _module_uses("listing", "create_empty_database")

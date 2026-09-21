@@ -10,7 +10,7 @@ from ._checks import (
 from .dump import BACKUP_FORMATS, dump_db, dump_db_manifest, exp_dump
 from .lifecycle import (
     DatabaseExists,
-    _create_empty_database,
+    create_empty_database,
     drop_database,
     duplicate_database,
     rename_database,
@@ -41,11 +41,11 @@ __all__ = (
     "DBNAME_PATTERN",
     "SYSTEM_DBS",
     "DatabaseExists",
-    "_create_empty_database",
     "check_db_exposed",
     "check_db_management_enabled",
     "check_db_name",
     "check_super",
+    "create_empty_database",
     "dispatch",
     "drop_database",
     "dump_db",
