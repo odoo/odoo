@@ -369,11 +369,13 @@ class SaleOrderTemplate(models.Model):
         :rtype: list[dict]
         """
         self.ensure_one()
+        self = self.with_company(self.company_id)  # noqa: PLW0642
+
         result = []
         fiscal_position = self.env["account.fiscal.position"].browse(fiscal_position_id)
         currency = self.env["res.currency"].browse(currency_id)
 
-        for line in self.with_company(company_id).sale_order_template_line_ids:
+        for line in self.sale_order_template_line_ids:
             onchange_values = {
                 **line._prepare_order_line_values(fiscal_position, currency),
                 **order_changes,
