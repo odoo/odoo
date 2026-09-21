@@ -42,6 +42,8 @@ _ILIKE_FOLD_CACHE_MAX = 4096
 
 class _TextTables:
     by_db: dict[str, _TextTransforms] = {}
+    # one build per process and database: a cold process whose threads all
+    # meet their first ilike at once must not each scan the code points
     build_lock = threading.Lock()
 
 
@@ -141,6 +143,8 @@ class _RegistryCapabilitiesMixin(_RegistryStubs):
         self.has_unaccent = get_unaccent_status(cr)
         self.has_trigram = has_trigram(cr)
         self.unaccent = _unaccent if self.has_unaccent else _identity
+        # the character tables cost a scan of every code point; a process that
+        # never filters records in memory with ilike never needs them
         cached = _TextTables.by_db.get(db_name)
         self._text_transforms = (
             cached
