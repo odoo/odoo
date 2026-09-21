@@ -85,8 +85,6 @@ beforeEach(async () => {
             resource_type: "user",
         },
     ]);
-    // resource_mail/models/resource_resource.py reads the stored fields and
-    // derives `phone` from the party's phone records; the mock does the same
     onRpc("resource.resource", "get_avatar_card_data", (params) => {
         const resourceIdArray = params.args[0];
         const resourceId = resourceIdArray[0];
@@ -97,7 +95,7 @@ beforeEach(async () => {
                 : [undefined];
             return {
                 name: resource.name,
-                email: resource.email,
+                email: partner?.email,
                 phone: partner?.phone,
                 user_id: resource.user_id,
             };

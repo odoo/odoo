@@ -5,6 +5,11 @@ from odoo.exceptions import UserError
 from odoo.tools import SQL
 
 
+def _has_active_column(model):
+    field = model._fields.get("active")
+    return bool(field and field.store and not field.inherited)
+
+
 class PrivacyLookupWizard(models.TransientModel):
     _name = "privacy.lookup.wizard"
     _description = "Privacy Lookup Wizard"
@@ -30,14 +35,11 @@ class PrivacyLookupWizard(models.TransientModel):
 
     def _get_query_models_blacklist(self):
         return [
-            # Already Managed
             "res.partner",
             "res.users",
-            # Ondelete Cascade
             "mail.notification",
             "mail.followers",
             "discuss.channel.member",
-            # Special case for direct messages
             "mail.message",
         ]
 
@@ -48,7 +50,6 @@ class PrivacyLookupWizard(models.TransientModel):
         if not email_normalized:
             raise UserError(_("Invalid email address “%s”", self.email))
 
-        # Step 1: Retrieve users/partners liked to email address or name
         query = SQL(
             """
             WITH indirect_references AS (
@@ -83,18 +84,14 @@ class PrivacyLookupWizard(models.TransientModel):
                 True AS is_active
             FROM mail_message
             WHERE author_id IN (SELECT id FROM indirect_references)
-        """,
-            # Indirect references CTE
+            """,
             email_normalized,
             name,
-            # Search on res.partner
             self.env["ir.model.data"]._xmlid_to_res_id("base.model_res_partner"),
-            # Search on res.users
             self.env["ir.model.data"]._xmlid_to_res_id("base.model_res_users"),
             email,
             email,
             name,
-            # Direct messages
             self.env["ir.model.data"]._xmlid_to_res_id("mail.model_mail_message"),
         )
 
@@ -174,10 +171,10 @@ class PrivacyLookupWizard(models.TransientModel):
                         %s AS is_active
                     FROM %s
                     WHERE %s
-                """,
+                    """,
                     query,
                     self.env["ir.model"].search([("model", "=", model_name)]).id,  # noqa: E8507 - one lookup per model of the lookup
-                    SQL.identifier("active") if "active" in model else True,
+                    SQL.identifier("active") if _has_active_column(model) else True,
                     SQL.identifier(table_name),
                     SQL(" OR ").join(conditions),
                 )
@@ -308,11 +305,6 @@ class PrivacyLookupWizardLine(models.TransientModel):
             else:
                 line.resource_ref = None
 
-    def _inverse_resource_ref(self):
-        for line in self:
-            if line.resource_ref:
-                line.res_id = line.resource_ref.id
-
     @api.depends("res_model_id")
     def _compute_has_active(self):
         for line in self:
@@ -331,6 +323,11 @@ class PrivacyLookupWizardLine(models.TransientModel):
                 continue
             name = record.display_name
             line.res_name = name or f"{line.res_model_id.name}/{line.res_id}"
+
+    def _inverse_resource_ref(self):
+        for line in self:
+            if line.resource_ref:
+                line.res_id = line.resource_ref.id
 
     @api.onchange("is_active")
     def _onchange_is_active(self):

@@ -108,12 +108,15 @@ class TestPrivacyWizard(TransactionCase):
 
         # Lookup
         wizard.action_lookup()
-        self.assertEqual(len(wizard.line_ids), 2)
-        self.assertEqual(wizard.line_ids[0].res_id, self.partner.id)
-        self.assertEqual(wizard.line_ids[0].res_model, self.partner._name)
-
-        self.assertEqual(wizard.line_ids[1].res_id, bank.id)
-        self.assertEqual(wizard.line_ids[1].res_model, bank._name)
+        self.assertEqual(
+            [(line.res_model, line.res_id) for line in wizard.line_ids],
+            [
+                (self.partner._name, self.partner.id),
+                (bank.partner_id._name, bank.partner_id.id),
+                (bank._name, bank.id),
+            ],
+            "a bank is a party, so its identity is found on the partner as well",
+        )
 
     def test_wizard_indirect_reference(self):
         self.env.company.partner_id = self.partner

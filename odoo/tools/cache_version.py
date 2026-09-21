@@ -57,7 +57,7 @@ def versioned_envelope(method):
             from odoo.http import request
         except ModuleNotFoundError:
             return result
-        if request:
+        if request and _is_dispatched_call(request, method):
             request._response_version = _canonical_digest(result)  # type: ignore[attr-defined]
             _debug.perf.count(
                 "cache_version.envelope_stamped", method=method.__qualname__
@@ -65,3 +65,11 @@ def versioned_envelope(method):
         return result
 
     return wrapper
+
+
+def _is_dispatched_call(request, method):
+    # the envelope's version describes the response; a versioned method called
+    # from inside another one (onchange snapshots its record through web_read)
+    # would otherwise stamp its own digest onto a response it is not
+    params = getattr(request, "params", None) or {}
+    return params.get("method") == method.__name__

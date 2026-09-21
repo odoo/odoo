@@ -41,6 +41,14 @@ class TestRelationGraph(PartnerRelationCommon):
 
         self.assertNotIn(self.stranger, related)
 
+    def test_a_contact_not_yet_saved_has_no_related_party(self):
+        unsaved = self.env["res.partner"].new({"name": "Unsaved"})
+
+        self.assertFalse(unsaved.related_partner_ids)
+        self.assertEqual(unsaved.count_related_partner, 0)
+        self.assertEqual(unsaved._get_relation_degree_map(), {unsaved.id: 0})
+        self.assertEqual(unsaved._get_relation_strength_map(), {})
+
     def test_the_related_party_group_excludes_the_contact_itself(self):
         related = self.juan._get_related_partners()
 

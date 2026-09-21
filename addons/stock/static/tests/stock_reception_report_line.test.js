@@ -25,6 +25,7 @@ async function mountLine(data = {}) {
             parentIndex: "0",
             showUom: false,
             precision: 2,
+            hasMovesIn: true,
         },
     });
     return env;

@@ -120,7 +120,7 @@ class TestAccountInvoiceImportMixin:
         self.assertDictEqual(actual_invoices, expected_invoices)
 
     @contextlib.contextmanager
-    def _patch_import_methods(self):
+    def _patch_import_methods(self, decoder_error=None):
         original_get_import_file_type = self.env.registry[
             "account.move"
         ]._get_import_file_type
@@ -144,6 +144,8 @@ class TestAccountInvoiceImportMixin:
                     if invoice.invoice_line_ids:
                         return invoice._reason_cannot_decode_has_invoice_lines()
                     decoder_calls.append((invoice, file_data, new))
+                    if decoder_error is not None:
+                        raise decoder_error
                     partner_name = file_data["xml_tree"].findtext(".//PartnerName")
                     if partner_name and (
                         partner := self.env["res.partner"].search(
@@ -1263,10 +1265,8 @@ class TestAccountIncomingSupplierInvoice(
         attachment = self.env["ir.attachment"].create(self.xml1_vals)
 
         with (
-            self._patch_import_methods(),
-            patch(
-                "odoo.addons.account.models.res_partner.ResPartner.search",
-                side_effect=ValueError("We want to test an unexpected error"),
+            self._patch_import_methods(
+                decoder_error=ValueError("We want to test an unexpected error")
             ),
             mute_logger("odoo.addons.account.models.mixin_account_document_import"),
         ):

@@ -32,7 +32,7 @@ class Home(web_home.Home):
 
         error = None
 
-        user = request.env["res.users"].browse(request.session["pre_uid"])
+        user = request.env["res.users"].sudo().browse(request.session["pre_uid"])
         if user and request.httprequest.method == "GET":
             cookies = request.cookies
             key = cookies.get(TRUSTED_DEVICE_COOKIE)

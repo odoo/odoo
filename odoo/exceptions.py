@@ -30,7 +30,7 @@ class RedirectWarning(Exception):
     def __init__(
         self,
         message: str,
-        action: int | str,
+        action: int | str | dict,
         button_text: str,
         additional_context: dict | None = None,
     ) -> None:

@@ -179,6 +179,43 @@ class TestWebReadEnvelopeVersion(HttpCase):
         v2 = self._call_web_read()["version"]
         self.assertNotEqual(v1, v2)
 
+    def test_a_method_called_from_inside_another_stamps_nothing(self):
+        self.authenticate("admin", "admin")
+        response = self.url_open(
+            "/web/dataset/call_kw/res.partner/onchange",
+            data=json.dumps(
+                {
+                    "jsonrpc": "2.0",
+                    "method": "call",
+                    "params": {
+                        "model": "res.partner",
+                        "method": "onchange",
+                        "args": [
+                            [],
+                            {},
+                            [],
+                            {
+                                "name": {},
+                                "website": {},
+                                "child_ids": {"fields": {"name": {}}},
+                            },
+                        ],
+                        "kwargs": {},
+                    },
+                }
+            ),
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(response.status_code, 200)
+        envelope = response.json()
+        self.assertIn("website", envelope["result"]["value"])
+        self.assertNotIn(
+            "version",
+            envelope,
+            "the onchange snapshots its record through web_read, whose digest "
+            "must not become the version of a response it is not",
+        )
+
 
 @tagged("web_unit", "web_search_panel")
 class TestWebReadGroupVersion(TransactionCase):
@@ -243,9 +280,7 @@ class TestSearchPanelHierarchy(TransactionCase):
                     for index, parent in enumerate(parents, 1)
                 ]
                 original = [dict(record) for record in records]
-                result = self.env[
-                    "res.partner"
-                ]._search_panel_filter_parent_hierarchy(
+                result = self.env["res.partner"]._search_panel_filter_parent_hierarchy(
                     records,
                     "parent_id",
                     [record["id"] for record in records],

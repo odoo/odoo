@@ -31,7 +31,9 @@ class ResPartner(models.Model):
         string="Related Parties",
         compute="_compute_related_partner_ids",
     )
-    count_related_partner = fields.Integer(compute="_compute_related_partner_ids")
+    count_related_partner = fields.Integer(
+        compute="_compute_related_partner_ids",
+    )
 
     @api.depends("relation_out_ids", "relation_in_ids")
     def _compute_relation_ids(self):
@@ -118,7 +120,7 @@ class ResPartner(models.Model):
         max_degree = self._get_max_relation_degree(max_degree)
         relations = self.env["res.partner.relation"]
         reach_per_source = {
-            partner_id: {partner_id: (0, None, None)} for partner_id in self.ids
+            partner.id: {partner.id: (0, None, None)} for partner in self
         }
         frontier = {partner_id: {partner_id} for partner_id in self.ids}
 
@@ -150,14 +152,10 @@ class ResPartner(models.Model):
         self.check_singleton()
         return self._get_relation_strength_maps(max_degree)[self.id]
 
-    # The strongest chain to each contact, a chain being as strong as its
-    # weakest tie. Unlike the degree walk a contact re-enters the frontier
-    # whenever a stronger chain reaches it, so the same edge query serves every
-    # source and every improvement.
     def _get_relation_strength_maps(self, max_degree=None):
         max_degree = self._get_max_relation_degree(max_degree)
         relations = self.env["res.partner.relation"]
-        strength_per_source = {partner_id: {partner_id: 1.0} for partner_id in self.ids}
+        strength_per_source = {partner.id: {partner.id: 1.0} for partner in self}
         frontier = {partner_id: {partner_id} for partner_id in self.ids}
 
         for _degree in range(max_degree):

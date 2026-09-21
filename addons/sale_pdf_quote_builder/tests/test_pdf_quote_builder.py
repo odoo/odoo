@@ -105,6 +105,7 @@ class TestPDFQuoteBuilder(SaleOrderTemplateCommon):
         self.assertEqual(self.sale_order.customizable_pdf_form_fields, False)
 
     def test_dynamic_fields_mapping_for_quotation_document(self):
+        self.sale_order.company_id.color = 7
         FormField = self.env["sale.pdf.form.field"]
         new_form_field = partial(dict, document_type="quotation_document")
         new_form_fields = FormField.create(
@@ -129,7 +130,7 @@ class TestPDFQuoteBuilder(SaleOrderTemplateCommon):
             new_form_fields[2]: "11/04/2020",
             new_form_fields[3]: "",
             new_form_fields[4]: "1.0",
-            new_form_fields[5]: "1",
+            new_form_fields[5]: "7",
             new_form_fields[6]: dict(self.sale_order._fields["state"].selection)[
                 "draft"
             ],
@@ -240,17 +241,8 @@ class TestPDFQuoteBuilder(SaleOrderTemplateCommon):
 
         product_document = self.product_document
 
-        product_document.write(
-            {
-                "attachment_id": non_pdf_att.id,
-            }
-        )
         with self.assertRaises(ValidationError):
-            with Form(
-                product_document,
-                view="document_product.view_documents_document_product_form",
-            ) as doc_form:
-                doc_form.attached_on_sale = "inside"
+            product_document.write({"attachment_id": non_pdf_att.id})
 
     def test_onchange_product_removes_previously_selected_documents(self):
 
