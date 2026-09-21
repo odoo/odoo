@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="speech_voiceprint_enroll_menu"
+        name="My voice"
+        parent="hr.menu_hr_root"
+        action="speech_voiceprint_enroll_action"
+        sequence="80" />
+
+    <menuitem
+        id="speech_voiceprint_menu"
+        name="Voiceprints"
+        parent="hr.menu_hr_root"
+        action="speech_voiceprint_action"
+        sequence="85"
+        groups="hr.group_hr_user" />
+
+</odoo>

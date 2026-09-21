@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="speech_voiceprint.Enroll">
+        <div class="o_speech_voiceprint container py-4" style="max-width: 720px;">
+            <h2>My voice</h2>
+            <t t-if="state.loading"><p class="text-muted">Loading…</p></t>
+            <t t-else="">
+                <t t-if="state.error"><div class="alert alert-danger" t-esc="state.error" /></t>
+                <t t-if="state.status">
+                    <p>
+                        <strong t-esc="state.status.employee" />
+                        <t t-if="state.status.enrolled">
+                            — voice enrolled on <t t-esc="state.status.enrolled_at and state.status.enrolled_at.slice(0, 10)" />
+                            (<t t-esc="state.status.sample_seconds" /> s of audio).
+                            <t t-if="!state.status.active"><span class="badge text-bg-warning ms-1">deactivated by a leader</span></t>
+                        </t>
+                        <t t-else=""> — no voiceprint yet.</t>
+                    </p>
+                    <t t-if="!state.status.available">
+                        <div class="alert alert-warning">Voice recognition is not installed on this server yet; ask Sistemas.</div>
+                    </t>
+                </t>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Read this phrase aloud, at your normal pace</h5>
+                        <p class="card-text fs-5" t-esc="phrase" />
+                        <p class="text-muted small">Recording stops by itself after <t t-esc="target" /> seconds. Find a quiet spot; use the phone or headset you normally call with.</p>
+                    </div>
+                </div>
+                <t t-if="!state.supported">
+                    <div class="alert alert-warning">This browser cannot record audio. Use Chrome or Edge.</div>
+                </t>
+                <t t-else="">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <button class="btn btn-primary" t-if="!state.recording" t-on-click="start" t-att-disabled="state.sending">
+                            <i class="fa fa-microphone me-1" /> Record
+                        </button>
+                        <button class="btn btn-danger" t-if="state.recording" t-on-click="stop">
+                            <i class="fa fa-stop me-1" /> Stop (<t t-esc="state.seconds" />/<t t-esc="target" /> s)
+                        </button>
+                        <audio t-if="state.blobUrl" controls="controls" t-att-src="state.blobUrl" />
+                    </div>
+                    <t t-if="state.hasBlob">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="voiceprint_consent" t-model="state.consent" />
+                            <label class="form-check-label" for="voiceprint_consent">
+                                I agree that the company stores a numeric voiceprint of my voice to recognise me in recorded work calls and meetings. The recording itself is not kept; I can delete the voiceprint at any time from this page.
+                            </label>
+                        </div>
+                        <button class="btn btn-success" t-on-click="send" t-att-disabled="!state.consent || state.sending">
+                            <i class="fa fa-cloud-upload me-1" /> Save my voiceprint
+                        </button>
+                    </t>
+                </t>
+                <t t-if="state.status and state.status.enrolled">
+                    <hr />
+                    <button class="btn btn-link text-danger p-0" t-on-click="revoke">Delete my voiceprint</button>
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

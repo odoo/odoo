@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="speech_voiceprint_view_list" model="ir.ui.view">
+        <field name="name">speech.voiceprint.view.list</field>
+        <field name="model">speech.voiceprint</field>
+        <field name="arch" type="xml">
+            <list string="Voiceprints" create="false">
+                <field name="employee_id" />
+                <field name="user_id" optional="show" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="enrolled_at" />
+                <field name="sample_seconds" />
+                <field name="model_name" optional="hide" />
+                <field name="active" widget="boolean_toggle" />
+            </list>
+        </field>
+    </record>
+
+    <record id="speech_voiceprint_view_form" model="ir.ui.view">
+        <field name="name">speech.voiceprint.view.form</field>
+        <field name="model">speech.voiceprint</field>
+        <field name="arch" type="xml">
+            <form string="Voiceprint" create="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="employee_id" readonly="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company" />
+                            <field name="active" />
+                        </group>
+                        <group>
+                            <field name="consent_at" />
+                            <field name="enrolled_at" />
+                            <field name="sample_seconds" />
+                            <field name="model_name" />
+                            <field name="dim" />
+                        </group>
+                    </group>
+                    <p class="text-muted">
+                        Only the embedding is stored: a list of numbers that cannot be turned back into a voice. The sample recording is discarded right after enrolment. The employee can re-record or revoke it from Employees › My voice.
+                    </p>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="speech_voiceprint_action" model="ir.actions.act_window">
+        <field name="name">Voiceprints</field>
+        <field name="res_model">speech.voiceprint</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No voiceprints yet</p>
+            <p>Each employee enrols their own voice from Employees › My voice.</p>
+        </field>
+    </record>
+
+    <record id="speech_voiceprint_enroll_action" model="ir.actions.client">
+        <field name="name">My voice</field>
+        <field name="tag">speech_voiceprint.enroll</field>
+    </record>
+
+</odoo>

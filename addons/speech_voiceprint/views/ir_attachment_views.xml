@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ir_attachment_view_form_voiceprint" model="ir.ui.view">
+        <field name="name">ir.attachment.view.form.voiceprint</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="speech.ir_attachment_view_form_speech" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='speaker_ids']/list/field[@name='partner_id']"
+                position="after">
+                <field name="employee_id" />
+                <field name="voice_score" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
