@@ -6,6 +6,8 @@ import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
+const allowedRootAttrsConfig = { allowedRootAttrs: ["style", "class", "target", "href"] };
+
 describe("replicate changes", () => {
     test("translated elements", async () => {
         const { getEditor } = await setupHTMLBuilder("", {
@@ -189,5 +191,68 @@ describe("replicate changes", () => {
         expect(span2).toHaveClass("o_dirty");
         expect(span3).not.toHaveClass("o_dirty");
         expect([span2, span3]).toHaveText(span1.textContent); // all the same text
+    });
+
+    test("attribute and class changes should be replicated", async () => {
+        const { getEditor } = await setupHTMLBuilder("", {
+            headerContent: `
+                <div>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="data_1">
+                                    <a class="btn btn-sm btn-primary" role="button" data-oe-model="ir.ui.view" data-oe-id="2986" data-oe-field="arch" data-oe-xpath="/data/xpath[2]/td[2]/a[1]"><span class="d-none">Pay Now</span></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="data_2">
+                                    <a class="btn btn-sm btn-primary" role="button" data-oe-model="ir.ui.view" data-oe-id="2986" data-oe-field="arch" data-oe-xpath="/data/xpath[2]/td[2]/a[1]"><span class="d-none">Pay Now</span></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `,
+            config: allowedRootAttrsConfig,
+        });
+        const button1 = queryOne(":iframe .data_1 .btn");
+        const button2 = queryOne(":iframe .data_2 .btn");
+        expect(button1).not.toHaveClass("btn-secondary");
+        expect(button2).not.toHaveClass("btn-secondary");
+        await contains(":iframe .data_1 .btn").click();
+        await contains(".o-hb-select-toggle").click();
+        await contains(".o-hb-select-dropdown-item[data-action-value='secondary']").click();
+        expect(button1).toHaveClass("btn-secondary");
+        expect(button2).toHaveClass("btn-secondary");
+        expect(button1).toHaveClass("o_dirty");
+        expect(button2).not.toHaveClass("o_dirty");
+
+        const editor = getEditor();
+        button1.setAttribute("target", "_blank");
+        editor.shared.history.addStep();
+        expect(button2).toHaveAttribute("target", "_blank");
+
+        button1.removeAttribute("target");
+        editor.shared.history.addStep();
+        expect(button2).not.toHaveAttribute("target");
+    });
+
+    test("descendant class changes should not be replicated on root", async () => {
+        const { getEditor } = await setupHTMLBuilder(
+            `
+            <div class="data_1">
+                <a class="btn" data-oe-model="ir.ui.view" data-oe-id="2986" data-oe-field="arch" data-oe-xpath="/data/a[1]"><span>Pay Now</span></a>
+            </div>
+            <div class="data_2">
+                <a class="btn" data-oe-model="ir.ui.view" data-oe-id="2986" data-oe-field="arch" data-oe-xpath="/data/a[1]"><span>Pay Now</span></a>
+            </div>
+        `,
+            { config: allowedRootAttrsConfig }
+        );
+        queryOne(":iframe .data_1 span").classList.add("text-danger");
+        getEditor().shared.history.addStep();
+        expect(":iframe .data_2 span").toHaveClass("text-danger");
+        expect(":iframe .data_1 .btn").not.toHaveClass("text-danger");
+        expect(":iframe .data_2 .btn").not.toHaveClass("text-danger");
     });
 });
