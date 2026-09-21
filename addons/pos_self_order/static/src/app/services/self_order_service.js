@@ -7,7 +7,7 @@ import { markup, usePlugin } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
-import { formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
+import { serializeDateTime } from "@web/core/l10n/dates";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
 import { NetworkConnectionLostPopup } from "@pos_self_order/app/components/network_connectionLost_popup/network_connectionLost_popup";
 import { UnavailableProductsDialog } from "@pos_self_order/app/components/unavailable_product_dialog/unavailable_product_dialog";
@@ -21,7 +21,6 @@ import {
 } from "@point_of_sale/utils";
 import { getOrderLineValues } from "./card_utils";
 import { initLNA } from "@point_of_sale/app/utils/init_lna";
-import { GeneratePrinterData } from "@point_of_sale/app/utils/printer/generate_printer_data";
 import { SnoozeTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
 import { InfoPopup } from "@pos_self_order/app/components/info_popup/info_popup";
 import { ComboSuggestion } from "@point_of_sale/app/models/utils/combo_suggestion";
@@ -1186,20 +1185,13 @@ export class SelfOrder extends Reactive {
         return this.config.self_ordering_mode === "mobile" && order.state === "paid";
     }
     async downloadReceipt(order) {
+        if (!order.id || typeof order.id !== "number") {
+            return;
+        }
+
+        const safeToken = encodeURIComponent(order.access_token);
         const link = document.createElement("a");
-        const currentDate = formatDateTime(luxon.DateTime.now(), {
-            format: "MM_dd_yyyy-HH_mm_ss",
-        });
-        const companyName = this.company.name.replaceAll(" ", "_");
-        link.download = `${companyName}-${currentDate}.png`;
-
-        const template = "point_of_sale.pos_order_receipt";
-        const generator = new GeneratePrinterData({ models: this.data.models, order });
-        const data = generator.generateReceiptData();
-        const iframe = await this.ticketPrinter.generateIframe(template, data);
-        const image = await this.ticketPrinter.generateImage(iframe);
-
-        link.href = image.toDataURL().replace("data:image/jpeg;base64,", "");
+        link.href = `/pos-self-order/receipt/${order.id}?access_token=${safeToken}`;
         link.click();
     }
 
