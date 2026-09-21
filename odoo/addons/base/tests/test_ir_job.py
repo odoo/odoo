@@ -778,6 +778,8 @@ class TestIrJob(TransactionCase):
                 "priority": 10,
                 "max_retries": 3,
                 "max_defers": 100,
+                # `@api.job` stamps every key it takes, so an unset
+                # `idle_timeout` is present and None rather than absent
                 "idle_timeout": None,
             },
             "the declaration is still reachable along the MRO",
