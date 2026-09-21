@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (3994 methods, 809 classes, 141 files)
+# All base tests (3998 methods, 809 classes, 141 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -143,7 +143,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_ir_default_audit.py` | `post_install`, `-at_install` | 1 | 5 | TransactionCase |
 | `test_ir_demo.py` | `post_install`, `-at_install` | 4 | 8 | TransactionCase |
 | `test_ir_filters.py` | `post_install`, `-at_install`, `migration` | 8 | 32 | FiltersCase, TransactionCase |
-| `test_ir_job.py` | `post_install`, `-at_install` | 8 | 114 | TransactionCase, BaseCase |
+| `test_ir_job.py` | `post_install`, `-at_install` | 8 | 116 | TransactionCase, BaseCase |
 | `test_ir_logging.py` | `post_install`, `-at_install` | 3 | 7 | TransactionCase |
 | `test_ir_model.py` | `-at_install`, `post_install`, `test_eval_context` | 14 | 140 | TransactionCase, HttpCase |
 | `test_ir_model_data.py` | `post_install`, `-at_install` | 2 | 5 | TransactionCase |
@@ -186,7 +186,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_view_payload.py` | `post_install`, `-at_install` | 1 | 3 | TransactionCase |
 | `test_view_provenance.py` | `post_install`, `-at_install` | 1 | 5 | TransactionCase |
 | `test_views.py` | `post_install`, `-at_install`, `-standard`, `migration`, `render_all_views`, `post_install_l10n`, `at_install`, `modifiers` | 57 | 309 | TransactionCase, ViewCase, BaseCase, TransactionCaseWithUserDemo |
-| `test_x2many_cache_scope.py` | `post_install`, `-at_install` | 4 | 13 | TransactionCase |
+| `test_x2many_cache_scope.py` | `post_install`, `-at_install` | 4 | 15 | TransactionCase |
 
 ### Untagged Files (60 files)
 
@@ -259,7 +259,7 @@ These run in **both** at_install and post_install phases by default.
 |--------|-------|
 | Total test files | 141 |
 | Total test classes | 809 |
-| Total test methods | 3994 |
+| Total test methods | 3998 |
 | Files with @tagged | 81 (57%) |
 | Files without @tagged | 60 (43%) |
 | Classes using post_install | 272 |

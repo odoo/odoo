@@ -27,13 +27,15 @@ it fails until the floor is lowered in the same change.
 This module was edited as a shared ledger: 24 of its last 40 commits changed
 nothing in it but an integer and the comment above it.
 
-Five gates carry a floor: `lint_docstring` (a one-sided ratchet that
+Six gates carry a floor: `lint_docstring` (a one-sided ratchet that
 reads 32 only on a fuller install), `bundle_double_eval` (ESM bundles that
 evaluate twice), the migration ledger `lint_credential_storage`, whose floor
 is the columns still to move into the vault, `lint_receiver_fail_open`, whose
-floor is the machine routes still to put behind an inbound gate, and
-`lint_stored_related`, the stored copies of a related value still to convert
--- the one AST rule with a floor. Everything else -- every other AST rule,
+floor is the machine routes still to put behind an inbound gate,
+`lint_stored_related`, the stored copies of a related value still to convert,
+and `lint_company_field_outside_config`, the fields still bolted onto
+`res.company` outside base instead of an application's `mixin.company.config`
+model -- the two AST rules with a floor. Everything else -- every other AST rule,
 every XML rule, the manifest and record-order gates -- is a hard zero. `n-plus-one-query` reached
 zero on 2026-09-12 by reading each of its 295 sites: a loop over the records
 is hoisted, a loop that runs one query per distinct key (company, model,
@@ -61,6 +63,7 @@ database, and `test_checkers.py` does exactly that.
 | `_checker_manifest.py` | the manifest value rules behind `lint_manifest_value`; not in `_rules.py`, because a manifest is a dict, not a Python unit |
 | `_checker_pep649.py` | annotation resolution, used by `test_pep649` |
 | `_checker_tax_company.py` | `tax-company-singular` |
+| `_checker_company_config.py` | `company-field-outside-config` |
 | `_checker_http_json.py` | `http-json-string` |
 | `_checker_egress.py` | `raw-egress`, `secret-in-environ` |
 | `_checker_credential_storage.py` | `credential-storage` |
@@ -85,14 +88,22 @@ the test body. Stores are skipped, so a fake cursor defining the attribute is no
 finding, and the five tests that assert the counter itself carry
 `# noqa: E8516`.
 
-`raw-egress` (E8518) counts every call that leaves Odoo without `ir.egress`, base's
-one outbound pipeline: `requests` verbs and sessions, `httpx`,
-`urllib.request.urlopen`, zeep's `Transport` and `boto3` clients, with import aliases
-followed. It skips tests and nothing else: `integration` builds its sessions on
+`raw-egress` (E8518) counts every call that dials out of Odoo without `ir.egress`,
+base's one outbound pipeline: `requests` verbs and sessions, `httpx`,
+`urllib.request.urlopen`, zeep's `Transport`, `boto3` clients, and since 2026-09-21
+the dials no HTTP session carries -- `xmlrpc.client.ServerProxy`, `http.client`
+connections, `socket.create_connection`, websocket-client, paho MQTT, pymodbus's
+network clients, paramiko, `smtplib`, `imaplib`, `poplib`, `ftplib` -- with import
+aliases followed (`import a.b` binds `a`, and the checker resolves `a.b.x` from
+that). It skips tests and nothing else: `integration` builds its sessions on
 `ir.egress` like any other addon, and the pipeline's own transport lives in
-`odoo/libs/guarded_http.py`, outside every addon. It reached zero on 2026-09-13: a call
-that cannot take an `ir.egress` session -- a script run beside the server, the IoT box,
-botocore, a zeep transport handed that session -- carries `# noqa: E8518 - <why>`.
+`odoo/libs/guarded_http.py`, outside every addon. It reached zero on 2026-09-13 and
+stayed there when the dial targets were added: an XML-RPC peer goes through
+`ir.egress.xmlrpc_proxy`; a dial the pipeline cannot carry checks its host through
+`ir.egress.check_host` (or `check_url`, which knows `ws`, `mqtt`, `modbus`, `sftp`
+and the mail schemes) and carries `# noqa: E8518 - <checked how, and why it cannot
+be pinned>`; a call that cannot take a session at all -- a script run beside the
+server, the IoT box, botocore -- carries `# noqa: E8518 - <why>`.
 `secret-in-environ` (E8519) is
 held at zero: a secret-named key written into `os.environ`, which every later
 subprocess of the worker inherits, instead of into the child's own `env=`.
