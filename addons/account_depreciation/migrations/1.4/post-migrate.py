@@ -304,6 +304,11 @@ def _copy_board_columns(cr):
 
 def _repoint_entries(cr):
     if column_exists(cr, "account_move", "legacy_depreciation_asset_id"):
+        # The field is gone, so the ORM no longer creates this column; it is
+        # the hand-off 1.5 reads to set depreciation_board_id, and 1.6 drops it.
+        cr.execute(
+            "ALTER TABLE account_move ADD COLUMN IF NOT EXISTS depreciation_asset_id int4"
+        )
         cr.execute(
             SQL(
                 """
