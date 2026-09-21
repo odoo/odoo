@@ -15,7 +15,8 @@ import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { animationFrame, describe, expect, queryAllTexts, queryFirst, test } from "@odoo/hoot";
 import { Component, onWillStart, xml } from "@odoo/owl";
-import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 
@@ -518,7 +519,7 @@ test("move back on the 'Blocks' tab if no more option match the selected element
 });
 
 test("stay on the 'Theme' tab if no more option match the selected element", async () => {
-    patchWithCleanup(Builder.prototype, {
+    patch(Builder.prototype, {
         setup() {
             super.setup();
             this.ThemeTab = class DummyThemeTab extends Component {
@@ -641,7 +642,7 @@ test("don't rerender the OptionsContainer every time you click on the same eleme
         `,
     });
 
-    patchWithCleanup(OptionsContainer.prototype, {
+    patch(OptionsContainer.prototype, {
         setup() {
             super.setup();
             onWillStart(() => {

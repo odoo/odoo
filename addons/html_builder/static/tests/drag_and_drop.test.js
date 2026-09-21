@@ -1,6 +1,7 @@
 import { expect, getFixture, test } from "@odoo/hoot";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
+import { patch } from "@web/core/utils/patch";
 import {
     getDragHelper,
     getDragMoveHelper,
@@ -45,7 +46,7 @@ test("Drag and drop basic test", async () => {
 
 test("Can drop a snippet outside a dropzone in a rtl language", async () => {
     // Simulate rtl
-    patchWithCleanup(localization, { direction: "rtl" });
+    patch(localization, { direction: "rtl" });
     // Visual styling to run the test in debug.
     getFixture().style.setProperty("direction", "rtl");
     const dropzoneSelectors = {
