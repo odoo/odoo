@@ -1097,6 +1097,10 @@ class Website(Home):
             'google_maps_api_key': request.website.google_maps_api_key or ''
         })
 
+    @http.route('/website/get_allowed_root_attrs', type='jsonrpc', auth="user", readonly=True)
+    def allowed_root_attrs(self):
+        Model = request.env['ir.ui.view'].with_context(active_test=False)
+        return list(Model._get_allowed_root_attrs())
     # ------------------------------------------------------
     # Themes
     # ------------------------------------------------------
