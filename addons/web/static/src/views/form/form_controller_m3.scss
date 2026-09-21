@@ -139,6 +139,13 @@
         .o_outlined {
             @extend %-o-field-box;
 
+            // `.o_row` pulls its content outwards to align it on the edges of
+            // the cell holding it. As the box itself, it would rather stick out
+            // of the boxes of the fields around it.
+            &.o_row {
+                margin-inline: 0;
+            }
+
             &:is(h1, h2, h3, h4, h5, h6), :is(h1, h2, h3, h4, h5, h6) {
                 font-size: inherit;
             }
