@@ -39,6 +39,7 @@ import { BorderConfigurator } from "@html_builder/plugins/border_configurator_op
 import { WebsiteBuilder } from "@website/builder/website_builder";
 import { session } from "@web/session";
 import { getTranslatedElements } from "./translated_elements_getter.hoot";
+import { getAllowedRootAttrs } from "./allowed_root_attributes_getter";
 import { BackgroundShapeOptionPlugin } from "@html_builder/plugins/background_option/background_shape_option_plugin";
 
 class Website extends models.Model {
@@ -179,6 +180,7 @@ export async function setupWebsiteBuilder(
     patchDOMParser();
 
     onRpc("/website/get_translated_elements", () => getTranslatedElements());
+    onRpc("/website/get_allowed_root_attrs", () => getAllowedRootAttrs());
 
     patchWithCleanup(WebsiteBuilderClientAction.prototype, {
         setIframeLoaded() {
