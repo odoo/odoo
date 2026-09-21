@@ -5,7 +5,6 @@ from collections import OrderedDict
 
 from odoo import api, models
 from odoo.exceptions import AccessError, MissingError
-from odoo.modules import Manifest
 
 _logger = logging.getLogger(__name__)
 
@@ -405,7 +404,7 @@ class ThemeEngine(models.AbstractModel):
             return set(items)
 
         create_count = 0
-        manifest = Manifest.for_addon(module.name)
+        manifest = module._get_manifest()
 
         # ------------------------------------------------------------
         # Configurator
@@ -438,7 +437,7 @@ class ThemeEngine(models.AbstractModel):
             # unknown here, and applying one is not a module operation, so
             # cover every installed theme.
             for theme in themes.filtered(lambda t: t.state == 'installed'):
-                if theme_manifest := Manifest.for_addon(theme.name):
+                if theme_manifest := theme._get_manifest():
                     theme_addons = theme_manifest.get('configurator_snippets_addons', {})
                     add_addons_snippets({module.name: theme_addons.get(module.name, {})})
 
@@ -511,7 +510,7 @@ class ThemeEngine(models.AbstractModel):
         """
         module = self.env['ir.module.module'].browse(module_ids).ensure_one()
         View = self.env['ir.ui.view']
-        manifest = Manifest.for_addon(module.name)
+        manifest = module._get_manifest()
         templates = manifest['new_page_templates']
 
         # TODO Find a way to create theme and other module's template patches

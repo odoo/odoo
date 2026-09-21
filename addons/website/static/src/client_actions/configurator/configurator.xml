@@ -378,16 +378,30 @@
                             </t>
                         </div>
                     </t>
+                    <t t-if="this.state.communityThemesShown">
+                        <div class="o_theme_selection_extra_grid grid gap-4 pt-4 pb-4">
+                            <t t-foreach="this.state.communityThemes" t-as="communityTheme" t-key="communityTheme.name">
+                                <t t-call="website.Configurator.ThemePreviewCard" previewTheme="communityTheme"/>
+                            </t>
+                        </div>
+                    </t>
                 </t>
             </div>
             <div
-                t-if="this.showViewMoreThemesButton"
-                class="d-flex justify-content-center align-items-center w-100 mb-3 position-absolute bottom-0 z-3"
+                t-if="this.showViewMoreThemesButton or this.showCommunityThemesButton"
+                class="d-flex justify-content-center align-items-center gap-2 w-100 mb-3 position-absolute bottom-0 z-3"
             >
                 <button
+                    t-if="this.showViewMoreThemesButton"
                     class="btn btn-secondary btn-lg px-4 py-2"
                     t-on-click="this.getMoreThemes">
                     Generate more
+                </button>
+                <button
+                    t-if="this.showCommunityThemesButton"
+                    class="btn btn-secondary btn-lg px-4 py-2"
+                    t-on-click="this.showCommunityThemes">
+                    Community themes
                 </button>
             </div>
         </div>

@@ -35,6 +35,18 @@ class IrModuleModule(models.Model):
         for module in self:
             module.is_installed_on_current_website = module == website.theme_id
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+            Override to create the images of an imported theme, which are only
+            known from its manifest, stored on the record as it has no file on
+            the file system.
+        """
+        modules = super().create(vals_list)
+        if any(module.name.startswith('theme_') and module.manifest_data for module in modules):
+            self.update_theme_images()
+        return modules
+
     def write(self, vals):
         """
             Override to load a theme on the websites using it whenever its
@@ -56,7 +68,13 @@ class IrModuleModule(models.Model):
                 for website in module._theme_get_stream_website_ids():
                     self.env['theme.engine']._theme_load(module, website)
 
-        return super().write(vals)
+        res = super().write(vals)
+
+        # A theme is being imported again: it may come with new images.
+        if vals.get('manifest_data') and any(module.name.startswith('theme_') for module in self):
+            self.update_theme_images()
+
+        return res
 
     def _theme_get_upstream(self):
         """
@@ -167,7 +185,7 @@ class IrModuleModule(models.Model):
         ], order='name')
 
         for theme in themes:
-            terp = self.get_module_info(theme.name)
+            terp = theme._get_manifest()
             images = terp.get('images', [])
             image_paths = ['/%s/%s' % (theme.name, image) for image in images]
             if all(image_path in existing_urls for image_path in image_paths):

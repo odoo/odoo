@@ -713,12 +713,13 @@ class Website(models.CachedModel):
         Prepare and return configurator_snippets by fetching theme snippets and
         inserting addon snippets at their intended positions.
         """
+        theme_manifest = self.env['ir.module.module'].search([('name', '=', theme_name)])._get_manifest()
         configurator_snippets = {
             **get_manifest('website')['configurator_snippets'],
-            **get_manifest(theme_name).get('configurator_snippets', {}),
+            **theme_manifest.get('configurator_snippets', {}),
         }
         configurator_snippets_addons = {
-            **get_manifest(theme_name).get('configurator_snippets_addons', {}),
+            **theme_manifest.get('configurator_snippets_addons', {}),
         }
 
         if not configurator_snippets_addons:
@@ -788,7 +789,31 @@ class Website(models.CachedModel):
             with file_open(preview_path):
                 return f'/{preview_path}'
         except FileNotFoundError:
+            # An imported theme has no file on disk, its static files are
+            # attachments served at the very same url.
+            if self.env['ir.attachment'].sudo().search_count([('url', '=', f'/{preview_path}')], limit=1):
+                return f'/{preview_path}'
             return None
+
+    @api.model
+    def configurator_community_themes(self):
+        """
+            Return the themes imported on the database, as opposed to the ones
+            shipped by Odoo, so that the configurator can propose them too.
+
+            Those themes have no file on the file system, which is how they are
+            told apart here.
+
+            :return: list of dicts with the name and preview url of a theme
+        """
+        Module = self.env['ir.module.module']
+        themes = Module.search(Module.get_themes_domain())
+        return [
+            {'name': theme.name, 'preview_url': preview_url}
+            for theme in themes
+            if not Module.get_module_info(theme.name)
+            and (preview_url := self._get_configurator_theme_preview_url(theme.name))
+        ]
 
     @api.model
     def configurator_recommended_themes(self, industry_id, result_nbr_max=6,
@@ -798,6 +823,8 @@ class Website(models.CachedModel):
         domain = Module.get_themes_domain()
         domain = Domain.AND([[('name', '!=', 'theme_default')], domain])
         client_themes = Module.search(domain).mapped('name')
+        # Only the themes shipped by Odoo are recommended, the imported ones
+        # are proposed apart, see ``configurator_community_themes``.
         manifests = {
             theme_name: manifest
             for theme_name in client_themes
@@ -1102,6 +1129,10 @@ class Website(models.CachedModel):
         is_dark_palette = kwargs.get('is_dark_palette')
         rendered_snippets = []
         nb_snippets = len(snippet_list)
+        # Theme specific customizations for non-website snippets
+        theme_customizations = self.env['ir.module.module'].search([
+            ('name', '=', theme_name),
+        ])._get_manifest().get('theme_customizations', {})
         for i, snippet in enumerate(snippet_list, start=1):
             try:
                 snippet_key = website._get_snippet_view_key(snippet, 'homepage')
@@ -1111,8 +1142,6 @@ class Website(models.CachedModel):
                 # for compatibility code
                 el.attrib['data-snippet'] = snippet
 
-                # Theme specific customizations for non-website snippets
-                theme_customizations = get_manifest(theme_name).get('theme_customizations', {})
                 customizations = theme_customizations.get(snippet, {})
 
                 # Configure non-website snippet with defaults and theme-level customizations.
