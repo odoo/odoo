@@ -1,6 +1,5 @@
 import contextlib
 import datetime
-from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
 
@@ -11,7 +10,6 @@ from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils
 from odoo.tools.misc import format_date
 
-from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
 from odoo.addons.report_formula.models.account_report import CURRENCIES_USING_LAKH
 
 _debug = DebugLog(__name__)
@@ -19,373 +17,6 @@ _debug = DebugLog(__name__)
 
 class AccountReportOptions(models.Model):
     _inherit = "account.report"
-
-    @_debug.perf.timed
-    def _init_options_journals(
-        self, options, previous_options, additional_journals_domain=None
-    ):
-        # additional_journals_domain allows calling this with an extra restriction on journals,
-        # to regenerate the journal options accordingly.
-        def option_value(value, selected=False, group_journals=None):
-            result = {
-                "id": value.id,
-                "model": value._name,
-                "name": value.display_name,
-                "selected": selected,
-            }
-
-            if value._name == "account.journal.group":
-                result.update(
-                    {
-                        "title": value.display_name,
-                        "journals": group_journals.ids,
-                        "journal_types": list(set(group_journals.mapped("type"))),
-                    }
-                )
-            elif value._name == "account.journal":
-                result.update(
-                    {
-                        "title": f"{value.name} - {value.code}",
-                        "type": value.type,
-                        "visible": True,
-                    }
-                )
-
-            return result
-
-        if not self.filter_journals:
-            _debug.logic("journals_skipped", report=self, reason="filter_disabled")
-            return
-
-        previous_journals = previous_options.get("journals", [])
-        previous_journal_group_action = previous_options.get(
-            "__journal_group_action", {}
-        )
-
-        all_journals = self._get_filter_journals(
-            options, additional_domain=additional_journals_domain
-        )
-        all_journal_groups = self._get_filter_journal_groups(options)
-
-        options["journals"] = []
-        options["selected_journal_groups"] = {}
-
-        groups_journals_selected = set()
-        options_journal_groups = []
-
-        # First time opening the report, and make sure it's not specifically stated that we should not reset the filter
-        is_opening_report = previous_options.get(
-            "is_opening_report"
-        )  # key from JS controller when report is being opened
-        # a key to prevent the reset of the journals filter even when is_opening_report is True
-        can_reset_journals_filter = not previous_options.get(
-            "not_reset_journals_filter"
-        )
-
-        # 1. Handle journal group selection
-        for group in all_journal_groups:
-            group_journals = all_journals - group.excluded_journal_ids
-            if group.company_id:
-                company_domain = self.env["account.journal"]._check_company_domain(
-                    group.company_id
-                )
-                group_journals = group_journals.filtered_domain(company_domain)
-
-            selected = False
-            first_group_already_selected = bool(
-                options["selected_journal_groups"]
-            )  # only one group should be selected at most
-
-            # select the first group by default when opening the report
-            if (
-                is_opening_report
-                and not first_group_already_selected
-                and can_reset_journals_filter
-            ):
-                selected = True
-            # Otherwise, select the previous selected group (if any)
-            elif group.id == previous_journal_group_action.get("id"):
-                selected = previous_journal_group_action.get("action") == "add"
-
-            group_option = option_value(
-                group, selected=selected, group_journals=group_journals
-            )
-            options_journal_groups.append(group_option)
-
-            # Select all the group journals
-            if selected:
-                options["selected_journal_groups"] = group_option
-                groups_journals_selected |= set(group_journals.ids)
-
-        # 2. Handle journals selection
-        previous_selected_journals_ids = {
-            journal["id"]
-            for journal in previous_journals
-            if journal.get("model") == "account.journal" and journal.get("selected")
-        }
-
-        company_journals_map = defaultdict(list)
-        journals_selected = set()
-
-        for journal in all_journals:
-            selected = False
-
-            if journal.id in groups_journals_selected:
-                selected = True
-
-            elif (
-                not options["selected_journal_groups"]
-                and previous_journal_group_action.get("action") != "remove"
-            ):
-                if journal.id in previous_selected_journals_ids:
-                    selected = True
-
-            if selected:
-                journals_selected.add(journal.id)
-
-            company_journals_map[journal.company_id].append(
-                option_value(journal, selected=journal.id in journals_selected)
-            )
-
-        # 3. Recompute selected groups in case the set of selected journals is equal to a group's accepted journals
-        for group in options_journal_groups:
-            if journals_selected == set(group["journals"]):
-                group["selected"] = True
-                options["selected_journal_groups"] = group
-
-        # 4. Unselect all journals if all are selected and no group is specifically selected
-        if (
-            journals_selected == set(all_journals.ids)
-            and not options["selected_journal_groups"]
-        ):
-            for journals in company_journals_map.values():
-                for journal in journals:
-                    journal["selected"] = False
-
-        # 5. Build group options
-        if all_journal_groups:
-            options["journals"] = [
-                {
-                    "id": "divider",
-                    "name": _("Multi-ledger"),
-                    "model": "account.journal.group",
-                }
-            ] + options_journal_groups
-
-        _debug.pipeline(
-            "journals_selected",
-            report=self,
-            journals=len(all_journals),
-            groups=len(all_journal_groups),
-            selected=len(journals_selected),
-            group_selected=bool(options["selected_journal_groups"]),
-            is_opening_report=is_opening_report,
-            can_reset=can_reset_journals_filter,
-            companies=len(company_journals_map),
-        )
-        if not company_journals_map:
-            options["name_journal_group"] = _("No Journal")
-            return
-
-        _debug.logic(
-            "journals_layout_chosen",
-            report=self,
-            per_company=len(company_journals_map) > 1 or bool(all_journal_groups),
-        )
-        # 6. Build journals options
-        if len(company_journals_map) > 1 or all_journal_groups:
-            for company, journals in company_journals_map.items():
-                # users may not have full access to the parent company in case they are in a branch, yet they have to see the company name
-                company_name = company.sudo().display_name
-
-                # if not is_opening_report, then gets the unfolded attribute of the company from the previous options
-                unfolded = (
-                    False
-                    if is_opening_report
-                    else next(
-                        (
-                            entry.get("unfolded")
-                            for entry in previous_journals
-                            if entry["model"] == "res.company"
-                            and entry["name"] == company_name
-                        ),
-                        False,
-                    )
-                )
-
-                for journal in journals:
-                    journal["visible"] = unfolded
-
-                options["journals"].append(
-                    {
-                        "id": "divider",
-                        "model": "res.company",
-                        "name": company_name,
-                        "unfolded": unfolded,
-                    }
-                )
-
-                options["journals"] += journals
-
-        else:
-            options["journals"].extend(next(iter(company_journals_map.values()), []))
-
-    def _init_options_audit(self, options, previous_options):
-        if not self.allow_account_audit_status_on_lines:
-            return
-
-        main_company = self._get_sender_company_for_export(options)
-
-        date_from = options["date"]["date_from"]
-        audit_return = self.env["account.return"].search_read(
-            [
-                ("return_type_category", "=", "audit"),
-                ("company_id", "=", main_company.id),
-                ("date_to", "=", options["date"]["date_to"]),
-                ("date_from", "=", date_from)
-                if date_from
-                else ("date_from", "!=", False),
-            ],
-            limit=1,
-            fields=["id"],
-        )
-
-        options.setdefault("audit", {})
-        options["audit"]["id"] = (
-            audit_return[0]["id"] if len(audit_return) > 0 else False
-        )
-
-    @_debug.perf.timed
-    def _init_options_journals_names(
-        self, options, previous_options, additional_journals_domain=None
-    ):
-        all_journals = [
-            journal
-            for journal in options.get("journals", [])
-            if journal["model"] == "account.journal"
-        ]
-        journals_selected = [j for j in all_journals if j.get("selected")]
-        # 1. Compute the name to display on the widget
-        if options.get("selected_journal_groups"):
-            names_to_display = [options["selected_journal_groups"]["name"]]
-        elif len(all_journals) == len(journals_selected) or not journals_selected:
-            names_to_display = [_("All Journals")]
-        else:
-            names_to_display = []
-            for journal in options["journals"]:
-                if journal.get("model") == "account.journal" and journal["selected"]:
-                    names_to_display += [journal["name"]]
-
-        # 2. Abbreviate the name
-        max_nb_journals_displayed = 5
-        nb_remaining = len(names_to_display) - max_nb_journals_displayed
-        _debug.logic(
-            "journal_names_chosen",
-            report=self,
-            from_group=bool(options.get("selected_journal_groups")),
-            journals=len(all_journals),
-            selected=len(journals_selected),
-            remaining=nb_remaining,
-        )
-        displayed_names = ", ".join(names_to_display[:max_nb_journals_displayed])
-        if nb_remaining == 1:
-            options["name_journal_group"] = _(
-                "%(names)s and one other", names=displayed_names
-            )
-        elif nb_remaining > 1:
-            options["name_journal_group"] = _(
-                "%(names)s and %(remaining)s others",
-                names=displayed_names,
-                remaining=nb_remaining,
-            )
-        else:
-            options["name_journal_group"] = displayed_names
-
-    @api.model
-    def _get_options_journals(self, options):
-        selected_journals = [
-            journal
-            for journal in options.get("journals", [])
-            if journal["model"] == "account.journal" and journal["selected"]
-        ]
-        if not selected_journals:
-            # If no journal is specifically selected, we actually want to select them all.
-            # This is needed, because some reports will not use ALL available journals and filter by type.
-            # Without getting them from the options, we will use them all, which is wrong.
-            selected_journals = [
-                journal
-                for journal in options.get("journals", [])
-                if journal["model"] == "account.journal"
-            ]
-        return selected_journals
-
-    @api.model
-    def _get_domain_options_journals(self, options):
-        # Make sure to return an empty array when nothing selected to handle archived journals.
-        selected_journals = self._get_options_journals(options)
-        return (
-            Domain("journal_id", "in", [j["id"] for j in selected_journals])
-            if selected_journals
-            else Domain.TRUE
-        )
-
-    # ####################################################
-    # OPTIONS: USER DEFINED FILTERS ON AML
-    ####################################################
-    def _init_options_aml_ir_filters(self, options, previous_options):
-        options["aml_ir_filters"] = []
-        if not self.filter_aml_ir_filters:
-            _debug.logic(
-                "aml_ir_filters_skipped", report=self, reason="filter_disabled"
-            )
-            return
-
-        ir_filters = self.env["ir.filters"].search(
-            [("model_id", "=", "account.move.line")]
-        )
-        if not ir_filters:
-            _debug.logic("aml_ir_filters_empty", report=self)
-            return
-
-        aml_ir_filters = [
-            {"id": x.id, "name": x.name, "selected": False} for x in ir_filters
-        ]
-        previous_options_aml_ir_filters = previous_options.get("aml_ir_filters", [])
-        previous_options_filters_map = {
-            filter_item["id"]: filter_item
-            for filter_item in previous_options_aml_ir_filters
-        }
-
-        for filter_item in aml_ir_filters:
-            if filter_item["id"] in previous_options_filters_map:
-                filter_item["selected"] = previous_options_filters_map[
-                    filter_item["id"]
-                ]["selected"]
-
-        options["aml_ir_filters"] = aml_ir_filters
-        _debug.pipeline(
-            "aml_ir_filters_built",
-            report=self,
-            filters=len(aml_ir_filters),
-            previous=len(previous_options_filters_map),
-        )
-
-    @api.model
-    def _get_options_aml_ir_filters(self, options):
-        selected_filters_ids = [
-            filter_item["id"]
-            for filter_item in options.get("aml_ir_filters", [])
-            if filter_item["selected"]
-        ]
-
-        if not selected_filters_ids:
-            return Domain.TRUE
-
-        selected_ir_filters = self.env["ir.filters"].browse(selected_filters_ids)
-        return Domain.OR(
-            filter_record._get_domain_evaluated()
-            for filter_record in selected_ir_filters
-        )
 
     @_debug.perf.timed
     def _init_options_date(self, options, previous_options):
@@ -625,56 +256,6 @@ class AccountReportOptions(models.Model):
         )
 
     @_debug.perf.timed
-    def _init_options_return_periodicity(self, options, previous_options):
-        if (
-            previous_options.get("return_periodicity")
-            and previous_options["return_periodicity"].get("return_type_id")
-            and previous_options["return_periodicity"].get("report_id")
-            in (False, self.id, options["sections_source_id"])
-        ):
-            options["return_periodicity"] = {
-                **previous_options["return_periodicity"],
-                "report_id": self.id,
-            }
-            _debug.logic(
-                "return_periodicity_kept",
-                report=self,
-                return_type_id=options["return_periodicity"].get("return_type_id"),
-            )
-        elif (
-            len(
-                return_type := self.env["account.report"]
-                .browse(options["sections_source_id"])
-                .return_type_ids
-            )
-            == 1
-            or "selected_return_type_id" in previous_options
-        ):
-            if len(return_type) > 1:
-                return_type = self.env["account.return.type"].browse(
-                    previous_options["selected_return_type_id"]
-                )
-
-            main_company = self.env.company
-            start_day, start_month = return_type._get_start_date_elements(main_company)
-            options["return_periodicity"] = {
-                "periodicity": return_type._get_periodicity(main_company),
-                "months_per_period": return_type._get_periodicity_months_delay(
-                    main_company
-                ),
-                "start_day": start_day,
-                "start_month": start_month,
-                "return_type_id": return_type.id,
-                "report_id": self.id,
-            }
-            _debug.logic(
-                "return_periodicity_from_type",
-                report=self,
-                return_type=return_type,
-                months_per_period=options["return_periodicity"]["months_per_period"],
-            )
-
-    @_debug.perf.timed
     def _init_options_comparison(self, options, previous_options):
         """Initialize the 'comparison' options key.
 
@@ -792,171 +373,6 @@ class AccountReportOptions(models.Model):
 
         return scope_domain
 
-    def _init_options_analytic(self, options, previous_options):
-        if not self.filter_analytic:
-            return
-
-        if self.env.user.has_group("analytic.group_analytic_accounting"):
-            previous_analytic_accounts = previous_options.get("analytic_accounts", [])
-            analytic_account_ids = [int(x) for x in previous_analytic_accounts]
-            selected_analytic_accounts = (
-                self.env["account.analytic.account"]
-                .with_context(active_test=False)
-                .search([("id", "in", analytic_account_ids)])
-            )
-
-            options["display_analytic"] = True
-            options["analytic_accounts"] = selected_analytic_accounts.ids
-            options["selected_analytic_account_names"] = (
-                selected_analytic_accounts.mapped("name")
-            )
-            _debug.pipeline(
-                "analytic_accounts_selected",
-                report=self,
-                requested=len(analytic_account_ids),
-                accounts=selected_analytic_accounts,
-            )
-
-    def _init_options_partner(self, options, previous_options):
-        if not self.filter_partner:
-            return
-
-        options["partner"] = True
-        previous_partner_ids = previous_options.get("partner_ids") or []
-        options["partner_categories"] = previous_options.get("partner_categories") or []
-
-        selected_partner_ids = [int(partner) for partner in previous_partner_ids]
-        # search instead of browse so that record rules apply and filter out the ones the user does not have access to
-        selected_partners = (
-            selected_partner_ids
-            and self.env["res.partner"]
-            .with_context(active_test=False)
-            .search([("id", "in", selected_partner_ids)])
-        ) or self.env["res.partner"]
-        options["selected_partner_ids"] = selected_partners.mapped("display_name")
-        options["partner_ids"] = selected_partners.ids
-
-        selected_partner_tag_ids = [
-            int(category) for category in options["partner_categories"]
-        ]
-        selected_partner_categories = (
-            selected_partner_tag_ids
-            and self.env["res.partner.tag"].browse(selected_partner_tag_ids)
-        ) or self.env["res.partner.tag"]
-        options["selected_partner_categories"] = selected_partner_categories.mapped(
-            "name"
-        )
-
-    @api.model
-    def _get_domain_options_partner(self, options):
-        domains = []
-        if options.get("partner_ids"):
-            partner_ids = [int(partner) for partner in options["partner_ids"]]
-            domains.append(Domain("partner_id", "in", partner_ids))
-        if options.get("partner_categories"):
-            partner_tag_ids = [
-                int(category) for category in options["partner_categories"]
-            ]
-            domains.append(Domain("partner_id.tag_ids", "in", partner_tag_ids))
-        return Domain.AND(domains)
-
-    @api.model
-    def _get_domain_options_all_entries(self, options):
-        if not options.get("all_entries"):
-            return Domain("parent_state", "=", "posted")
-        else:
-            return Domain("parent_state", "!=", "cancel")
-
-    ####################################################
-    # OPTIONS: not reconciled entries
-    ####################################################
-    def _init_options_reconciled(self, options, previous_options):
-        if self.filter_unreconciled:
-            options["unreconciled"] = previous_options.get("unreconciled", False)
-        else:
-            options["unreconciled"] = False
-
-    @api.model
-    def _get_domain_options_unreconciled(self, options):
-        if options.get("unreconciled"):
-            return Domain("full_reconcile_id", "=", False) & Domain(
-                "balance", "!=", "0"
-            )
-        return Domain.TRUE
-
-    @_debug.perf.timed
-    def _init_options_account_type(self, options, previous_options):
-        """Initialize a filter based on the account_type of the line (trade/non trade, payable/receivable).
-
-        The group display name is derived from the display names of the selected options.
-        """
-        if self.filter_account_type in ("disabled", False):
-            _debug.logic("account_type_skipped", report=self, reason="filter_disabled")
-            return
-
-        account_type_list = [
-            {"id": "trade_receivable", "name": _("Receivable"), "selected": True},
-            {
-                "id": "non_trade_receivable",
-                "name": _("Non Trade Receivable"),
-                "selected": False,
-            },
-            {"id": "trade_payable", "name": _("Payable"), "selected": True},
-            {
-                "id": "non_trade_payable",
-                "name": _("Non Trade Payable"),
-                "selected": False,
-            },
-        ]
-
-        if self.filter_account_type == "receivable":
-            options["account_type"] = account_type_list[:2]
-        elif self.filter_account_type == "payable":
-            options["account_type"] = account_type_list[2:]
-        else:
-            options["account_type"] = account_type_list
-
-        _debug.logic(
-            "account_type_scope_chosen",
-            report=self,
-            filter=self.filter_account_type,
-            choices=len(options["account_type"]),
-            from_previous=bool(previous_options.get("account_type")),
-        )
-        if previous_options.get("account_type"):
-            previously_selected_ids = {
-                x["id"] for x in previous_options["account_type"] if x.get("selected")
-            }
-            for opt in options["account_type"]:
-                opt["selected"] = opt["id"] in previously_selected_ids
-
-    @api.model
-    def _get_domain_options_account_type(self, options):
-        all_domains = []
-        selected_domains = []
-        for opt in options.get("account_type") or []:
-            account_type_filter = self.ACCOUNT_TYPE_FILTER_DOMAINS.get(opt["id"])
-            if not account_type_filter:
-                # options reach this method straight from the client, so an unknown id is
-                # reachable input rather than a programming error.
-                continue
-            non_trade, account_type = account_type_filter
-            domain = [
-                ("account_id.non_trade", "=", non_trade),
-                ("account_id.account_type", "=", account_type),
-            ]
-            if opt.get("selected"):
-                selected_domains.append(domain)
-            all_domains.append(domain)
-        _debug.logic(
-            "account_type_domain",
-            selected=len(selected_domains),
-            available=len(all_domains),
-        )
-        if not all_domains:
-            return Domain.TRUE
-        return Domain.OR(selected_domains or all_domains)
-
     @api.model
     def _init_options_order_column(self, options, previous_options):
         # options['order_column'] is in the form {'expression_label': expression label of the column to order, 'direction': the direction order ('ASC' or 'DESC')}
@@ -972,20 +388,6 @@ class AccountReportOptions(models.Model):
                     options["order_column"] = previous_value
                     break
 
-    def _init_options_hierarchy(self, options, previous_options):
-        company_ids = self.get_report_company_ids(options)
-        if self.filter_hierarchy != "never" and self.env["account.group"].search_count(
-            self.env["account.group"]._check_company_domain(company_ids), limit=1
-        ):
-            options["display_hierarchy_filter"] = True
-            if "hierarchy" in previous_options:
-                options["hierarchy"] = previous_options["hierarchy"]
-            else:
-                options["hierarchy"] = self.filter_hierarchy == "by_default"
-        else:
-            options["hierarchy"] = False
-            options["display_hierarchy_filter"] = False
-
     def _init_options_prefix_groups_threshold(self, options, previous_options):
         options["prefix_groups_threshold"] = self.prefix_groups_threshold
 
@@ -993,13 +395,8 @@ class AccountReportOptions(models.Model):
         if previous_options.get("forced_companies"):
             options["forced_companies"] = previous_options["forced_companies"]
             companies = self.env.company.browse(previous_options["forced_companies"])
-        elif self.filter_multi_company == "tax_units":
-            companies = self._multi_company_tax_units_init_options(
-                options, previous_options=previous_options
-            )
         else:
-            # self.filter_multi_company == 'selector'
-            companies = self.env.companies
+            companies = self._get_options_companies(options, previous_options)
 
         _debug.logic(
             "companies_resolved",
@@ -1011,80 +408,6 @@ class AccountReportOptions(models.Model):
             {"name": c.name, "id": c.id, "currency_id": c.currency_id.id}
             for c in companies
         ]
-
-    @_debug.perf.timed
-    def _multi_company_tax_units_init_options(self, options, previous_options):
-        """Initializes the companies option for reports configured to compute it from tax units."""
-        available_tax_units = self.env.company._get_available_tax_units(self)
-
-        # Filter available units to only consider the ones whose companies are all accessible to the user
-        available_tax_units = available_tax_units.filtered(
-            lambda x: all(
-                unit_company in self.env.user.company_ids
-                for unit_company in x.sudo().company_ids
-            )
-            # sudo() to avoid bypassing companies the current user does not have access to
-        )
-
-        options["available_tax_units"] = [
-            {
-                "id": tax_unit.id,
-                "name": tax_unit.name,
-                "company_ids": tax_unit.company_ids.ids,
-            }
-            for tax_unit in available_tax_units
-        ]
-
-        # Available tax_unit option values that are currently allowed by the company selector
-        # A js hack ensures the page is reloaded and the selected companies modified
-        # when clicking on a tax unit option in the UI, so we don't need to worry about that here.
-        companies_authorized_tax_unit_opt = {
-            *(
-                available_tax_units.filtered(
-                    lambda x: set(self.env.companies) == set(x.company_ids)
-                ).ids
-            ),
-            "company_only",
-        }
-
-        if previous_options.get("tax_unit") in companies_authorized_tax_unit_opt:
-            options["tax_unit"] = previous_options["tax_unit"]
-
-        # No tax_unit gotten from previous options; initialize it
-        # A tax_unit will be set by default if only one tax unit is available for the report
-        # (which should always be true for non-generic reports, which have a country), and the companies of
-        # the unit are the only ones currently selected.
-        elif companies_authorized_tax_unit_opt == {"company_only"}:
-            options["tax_unit"] = "company_only"
-        elif (
-            len(available_tax_units) == 1
-            and available_tax_units[0].id in companies_authorized_tax_unit_opt
-        ):
-            options["tax_unit"] = available_tax_units[0].id
-        else:
-            options["tax_unit"] = "company_only"
-
-        _debug.logic(
-            "tax_unit_chosen",
-            report=self,
-            tax_unit=options["tax_unit"],
-            previous_tax_unit=previous_options.get("tax_unit"),
-            available=len(available_tax_units),
-            authorized=len(companies_authorized_tax_unit_opt),
-        )
-        # Finally initialize multi_company filter
-        if options["tax_unit"] == "company_only":
-            companies = self.env.company._get_branches_with_same_vat(
-                accessible_only=True
-            )
-        else:
-            tax_unit = available_tax_units.filtered(
-                lambda x: x.id == options["tax_unit"]
-            )
-            companies = tax_unit.company_ids
-
-        _debug.pipeline("tax_unit_companies", report=self, companies=companies)
-        return companies
 
     ####################################################
     # OPTIONS: MULTI CURRENCY
@@ -1103,81 +426,12 @@ class AccountReportOptions(models.Model):
         )
 
     ####################################################
-    # OPTIONS: CURRENCY TABLE
-    ####################################################
-    @_debug.perf.timed
-    def _init_options_currency_table(self, options, previous_options):
-        companies = self.env["res.company"].browse(self.get_report_company_ids(options))
-        table_type = (
-            "monocurrency"
-            if self.env["res.currency"]._is_currency_table_monocurrency(companies)
-            else self.currency_translation
-        )
-
-        periods = {}
-        for col_group in options["column_groups"].values():
-            if col_group["forced_options"].get("no_impact_on_currency_table"):
-                # This key is used to ignore the colum group in the creation of the periods list for
-                # the currency table. This way, its dates won't influence. It's useful for groups corresponding
-                # to an initial balance of some sorts, like on the Trial Balance.
-                continue
-
-            col_group_date = col_group["forced_options"].get("date", options["date"])
-
-            col_group_date_from = (
-                col_group_date["date_from"]
-                if col_group_date["mode"] == "range"
-                else None
-            )
-            col_group_date_to = col_group_date["date_to"]
-            period_key = col_group_date["currency_table_period_key"]
-
-            already_present_period = periods.get(period_key)
-            if already_present_period:
-                # This can happen for custom reports, needing to enforce the same rates on multiple column groups with
-                # different dates (e.g. Trial Balance). In that case, the date_from and date_to of the currency table period must respectively
-                # be the lowest and highest among those groups.
-                if (
-                    col_group_date_from
-                    and already_present_period["from"] > col_group_date_from
-                ):
-                    already_present_period["from"] = col_group_date_from
-
-                already_present_period["to"] = max(
-                    already_present_period["to"], col_group_date_to
-                )
-            else:
-                periods[period_key] = {
-                    "from": col_group_date_from,
-                    "to": col_group_date_to,
-                }
-
-        options["currency_table"] = {"type": table_type, "periods": periods}
-        _debug.logic(
-            "currency_table_chosen",
-            report=self,
-            table_type=table_type,
-            companies=companies,
-            column_groups=len(options["column_groups"]),
-            periods=len(periods),
-        )
-
-    ####################################################
     # OPTIONS: ROUNDING UNIT
     ####################################################
     def _init_options_rounding_unit(self, options, previous_options):
         default = "decimals"
         options["rounding_unit"] = previous_options.get("rounding_unit", default)
         options["rounding_unit_names"] = self._get_rounding_unit_names()
-
-    # ####################################################
-    # OPTIONS: ALL ENTRIES
-    ####################################################
-    def _init_options_all_entries(self, options, previous_options):
-        if self.filter_show_draft:
-            options["all_entries"] = previous_options.get("all_entries", False)
-        else:
-            options["all_entries"] = False
 
     ####################################################
     # OPTIONS: UNFOLDED LINES
@@ -1641,36 +895,6 @@ class AccountReportOptions(models.Model):
         ] and previous_options.get("consolidation", False)
 
     ####################################################
-    # OPTIONS: BUDGETS
-    ####################################################
-    def _init_options_budgets(self, options, previous_options):
-        if self.filter_budgets:
-            previous_selection = {
-                budget_option["id"]
-                for budget_option in previous_options.get("budgets", [])
-                if budget_option.get("selected")
-            }
-
-            options["budgets"] = [
-                {
-                    "id": budget.id,
-                    "name": budget.name,
-                    "selected": budget.id in previous_selection,
-                    "company_id": budget.company_id.id,
-                }
-                # Every company the report itself has selected, not just the
-                # active one: the entries carry a company_id precisely because
-                # several companies' budgets can coexist here, and the record
-                # rule already narrows the result to what the user may see.
-                for budget in self.env["account.report.budget"].search(
-                    [("company_id", "in", self.env.companies.ids)]
-                )
-            ]
-            options["show_all_accounts"] = (
-                previous_options.get("show_all_accounts") or False
-            )
-
-    ####################################################
     # OPTIONS: LOADING CALL
     ####################################################
     def _init_options_loading_call(self, options, previous_options):
@@ -1681,14 +905,11 @@ class AccountReportOptions(models.Model):
         return options
 
     ####################################################
-    # OPTIONS: READONLY QUERY
-    ####################################################
-    def _init_options_readonly_query(self, options, previous_options):
-        options["readonly_query"] = options["currency_table"]["type"] == "monocurrency"
-
-    ####################################################
     # OPTIONS: FILTERS
     ####################################################
+    def _get_options_companies(self, options, previous_options):
+        return self.env.companies
+
     def _init_options_filters(self, options, previous_options):
         options["filters"] = {
             "show_all": self.filter_unfold_all,
@@ -1697,27 +918,11 @@ class AccountReportOptions(models.Model):
             "show_analytic_plan_groupby": options.get(
                 "display_analytic_plan_groupby", False
             ),
-            "show_draft": self.filter_show_draft,
             "show_hierarchy": options.get("display_hierarchy_filter", False),
             "show_period_comparison": self.filter_period_comparison,
-            "show_totals": self.env.company.account_config_id.totals_below_sections
+            "show_totals": self._get_totals_below_sections()
             and not options.get("ignore_totals_below_sections"),
-            "show_unreconciled": self.filter_unreconciled,
             "show_hide_0_lines": self.filter_hide_0_lines,
-        }
-
-    ####################################################
-    # OPTIONS: USER GROUPS
-    ####################################################
-    def _init_options_user_groups(self, options, previous_options):
-        options["user_groups"] = {
-            "analytic_accounting": self.env.user.has_group(
-                "analytic.group_analytic_accounting"
-            ),
-            "account_readonly": self.env.user.has_group(
-                "account.group_account_readonly"
-            ),
-            "account_user": self.env.user.has_group("account.group_account_user"),
         }
 
     @api.readonly
@@ -1794,29 +999,7 @@ class AccountReportOptions(models.Model):
                 ),
             )
 
-        options_companies = self.env["res.company"].browse(
-            self.get_report_company_ids(options)
-        )
-        # Set export buttons to 'branch_allowed' if the currently selected company branches all share the same VAT
-        # number and no unselected sub-branch of the active company has the same VAT number. Companies with an empty VAT
-        # field will be considered as having the same VAT number as their closest parent with a non-empty VAT.
-        if options.get("enable_export_buttons_for_common_vat_in_branches"):
-            report_accepted_company_ids = set(options_companies.ids)
-            same_vat_branch_ids = set(
-                self.env.company._get_branches_with_same_vat().ids
-            )
-            if report_accepted_company_ids == same_vat_branch_ids:
-                options["buttons"] = [
-                    {**button, "branch_allowed": button.get("branch_allowed", True)}
-                    for button in options["buttons"]
-                ]
-
-        # Disable buttons without branch_allowed = True if not all branches are selected
-        if not options_companies._is_every_branch_selected():
-            for button in filter(
-                lambda x: not x.get("branch_allowed"), options["buttons"]
-            ):
-                button["error_action"] = "show_error_branch_allowed"
+        self._apply_branch_rules_to_buttons(options)
 
         # Sort the buttons list by sequence, for rendering
         options["buttons"] = sorted(
@@ -1903,76 +1086,6 @@ class AccountReportOptions(models.Model):
             self._init_options_readonly_query: 1070,
             self._init_options_filters: 1500,
         }
-
-    def _get_source_domains(self, options, date_scope):
-        domains = [
-            Domain("display_type", "not in", NON_ACCOUNTABLE_DISPLAY_TYPES),
-            self._get_domain_options_journals(options)
-            if not options.get("compute_budget")
-            else Domain.TRUE,
-            self._get_domain_options_partner(options),
-            self._get_domain_options_all_entries(options),
-            self._get_domain_options_unreconciled(options),
-            self._get_domain_options_account_type(options),
-            self._get_options_aml_ir_filters(options),
-            self.env["account.move.line"]._get_domain_tax_exigible()
-            if self.only_tax_exigible
-            else Domain.TRUE,
-        ]
-        _debug.pipeline(
-            "domain_options_built",
-            report=self,
-            date_scope=date_scope,
-            journals_filtered=not options.get("compute_budget"),
-            tax_exigible_only=self.only_tax_exigible,
-            forced_domain=bool(options.get("forced_domain")),
-            foreign_vat=self.allow_foreign_vat,
-        )
-
-        # Handle foreign VAT
-        if self.allow_foreign_vat:
-            if (
-                self.country_id
-                == self.env.company.account_config_id.account_fiscal_country_id
-            ):
-                _debug.logic("foreign_vat_scope", report=self, scope="domestic")
-                # It's a domestic report
-                domains.append(
-                    [
-                        "|",
-                        "|",
-                        ("move_id.fiscal_position_id", "=", False),
-                        ("move_id.fiscal_position_id.foreign_vat", "=", False),
-                        (
-                            "tax_tag_ids.country_id",
-                            "=",
-                            self.country_id.id,
-                        ),  # To allow setting loca tags on an operation made nor another country (sometimes legally necessary)
-                    ]
-                )
-            elif self.country_id:
-                _debug.logic("foreign_vat_scope", report=self, scope="foreign")
-                # It's a foreign report
-                domains.append(
-                    [
-                        "|",
-                        (
-                            "tax_tag_ids.country_id",
-                            "=",
-                            self.country_id.id,
-                        ),  # To allow setting loca tags on an operation made nor another country (sometimes legally necessary)
-                        "&",
-                        (
-                            "move_id.fiscal_position_id.country_id",
-                            "=",
-                            self.country_id.id,
-                        ),
-                        ("move_id.fiscal_position_id.foreign_vat", "!=", False),
-                    ]
-                )
-            # else: don't filter anything; the report has no county and should have access to all the data
-
-        return domains
 
     @_debug.perf.timed
     def _get_domain_options(self, options, date_scope) -> Domain:
@@ -2321,31 +1434,6 @@ class AccountReportOptions(models.Model):
             )
         _debug.logic("shift_unsupported", period_type=period_type)
         return None
-
-    def _get_filter_journals(self, options, additional_domain=None):
-        return (
-            self.env["account.journal"]
-            .with_context(active_test=False)
-            .search(
-                [
-                    *self.env["account.journal"]._check_company_domain(
-                        self.get_report_company_ids(options)
-                    ),
-                    *(additional_domain or []),
-                ],
-                order="company_id, name",
-            )
-        )
-
-    def _get_filter_journal_groups(self, options):
-        return self.env["account.journal.group"].search(
-            [
-                *self.env["account.journal.group"]._check_company_domain(
-                    self.get_report_company_ids(options)
-                ),
-            ],
-            order="sequence",
-        )
 
     def _get_rounding_unit_names(self):
         currency_symbol = self.env.company.currency_id.symbol
