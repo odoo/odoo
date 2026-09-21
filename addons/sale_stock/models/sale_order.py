@@ -214,6 +214,12 @@ class SaleOrder(models.Model):
         self.order_line._action_launch_stock_rule()
         return super(SaleOrder, self)._action_confirm()
 
+    def action_preview_sale_order(self):
+        self.ensure_one()
+        if not self.warehouse_id and self.order_line.product_id.filtered(lambda p: p.type == 'consu'):
+            raise UserError(self.env._('Please set a warehouse on the sale order before previewing it.'))
+        return super().action_preview_sale_order()
+
     @api.depends('picking_ids')
     def _compute_picking_ids(self):
         for order in self:
