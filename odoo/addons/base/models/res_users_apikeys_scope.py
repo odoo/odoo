@@ -96,9 +96,24 @@ class ResUsersApikeysScope(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        scopes = super().create(vals_list)
+        """Upserts on `key`: a module's data record for a door that a
+        migration or `_get_or_create` already made a row for takes that row,
+        so the xml id binds to it instead of tripping the key's uniqueness."""
+        ids = [None] * len(vals_list)
+        to_create = []
+        for index, vals in enumerate(vals_list):
+            existing = self._get(vals["key"]) if vals.get("key") else None
+            if existing:
+                existing.write({k: v for k, v in vals.items() if k != "key"})
+                ids[index] = existing.id
+            else:
+                to_create.append((index, vals))
+        if to_create:
+            created = super().create([vals for _index, vals in to_create])
+            for (index, _vals), scope in zip(to_create, created, strict=True):
+                ids[index] = scope.id
         self.env.registry.clear_cache()
-        return scopes
+        return self.browse(ids)
 
     def write(self, vals):
         result = super().write(vals)

@@ -299,3 +299,25 @@ class TestKeysAndScopes(TransactionCase):
             ._generate("mcp", "k", fields.Datetime.now() + timedelta(hours=1))
         )
         self.assertEqual(self.env["res.users"]._check_uid_passwd(user.id, key), mcp.id)
+
+
+@tagged("post_install", "-at_install")
+class TestScopeRecords(TransactionCase):
+    def test_a_data_record_adopts_the_row_a_migration_made_for_its_key(self):
+        """base 1.89 makes a row per scope string keys already carry, before
+        the module that describes that door loads its data record."""
+        Scope = self.env["res.users.apikeys.scope"]
+        made = Scope._get_or_create("door.described.later")
+        self.assertEqual(made.name, "door.described.later")
+
+        described, other = Scope.create(
+            [
+                {"name": "Described", "key": "door.described.later", "max_depth": 3},
+                {"name": "Other", "key": "door.other"},
+            ]
+        )
+
+        self.assertEqual(described, made, "the same row, in the caller's order")
+        self.assertEqual((described.name, described.max_depth), ("Described", 3))
+        self.assertEqual(other.key, "door.other")
+        self.assertEqual(Scope.search_count([("key", "=", "door.described.later")]), 1)
