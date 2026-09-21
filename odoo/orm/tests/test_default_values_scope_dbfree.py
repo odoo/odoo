@@ -13,7 +13,7 @@ from odoo.orm.model_test_env import model_test_env
 
 _MOD = "test_default_values_scope_dbfree"
 
-drawn = []
+drawn: list[int] = []
 
 
 def _draw(_self):
