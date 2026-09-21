@@ -133,6 +133,7 @@ class BuilderContainer extends Component {
         onEditorLoad: t.function(),
         iframeLangDir: t.string(),
         builderProps: t.object().optional(),
+        config: t.object().optional(),
     });
 
     containerRef = signal.ref();
@@ -186,6 +187,7 @@ class BuilderContainer extends Component {
             Plugins: this.props.Plugins,
             config: {
                 builderOptionsTemplate: "html_builder.TestBuilderOptions",
+                ...this.props.config,
             },
             ...this.props.builderProps,
         };
@@ -209,6 +211,7 @@ class IrUiView extends models.Model {
  * @param {*} options.dropzoneSelectors
  * @param {*} options.snippets
  * @param {*} options.styleContent
+ * @param {Object} options.config
  * @returns {Promise<{
  * getEditor: () => Editor,
  * getEditableContent: () => HTMLElement,
@@ -230,6 +233,7 @@ export async function setupHTMLBuilder(
         iframeLangDir = "ltr",
         patchImages = true,
         builderProps,
+        config,
     } = {}
 ) {
     defineWebModels();
@@ -352,6 +356,7 @@ export async function setupHTMLBuilder(
             },
             iframeLangDir,
             builderProps,
+            config,
         },
     });
     await comp.iframeLoaded;
