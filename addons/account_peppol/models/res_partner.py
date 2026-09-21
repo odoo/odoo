@@ -9,6 +9,7 @@ from urllib import parse
 
 from odoo import api, fields, models
 from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
 
@@ -313,3 +314,10 @@ class ResPartner(models.Model):
         if not peppol_eas or not peppol_endpoint:
             return None, ""
         return 'peppol', f"{peppol_eas}:{peppol_endpoint}"
+
+    def _peppol_is_french_partner(self):
+        self.ensure_one()
+        return (
+                self.country_code in {'FR', 'GP', 'MQ', 'RE'}
+                or self.peppol_eas in EAS_MAPPING.get('FR', [])
+        )
