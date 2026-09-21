@@ -12,6 +12,7 @@ import {
     defineModels,
     fields,
     getService,
+    installLanguages,
     models,
     mountView,
     mountWithCleanup,
@@ -1096,4 +1097,23 @@ test("multi_create: selection with shift", async () => {
 
     expect(".o_selection_box").toHaveText("1\nselected");
     expect(queryAll(".fc-day.o-highlight").map((el) => el.dataset.date)).toEqual(["2019-03-13"]);
+});
+
+test.tags("desktop");
+test("multi_create: translatable field in the popover", async () => {
+    installLanguages({ en_US: "English", fr_BE: "Français" });
+    Event._fields.name.translate = true;
+
+    await mountView({
+        type: "calendar",
+        resModel: "event",
+        arch: `<calendar date_start="date_start" scales="month" multi_create_view="multi_create_form"/>`,
+    });
+
+    await selectDateRange("2019-03-04", "2019-03-05");
+    await multiCreateClickAddButton();
+
+    // the records aren't created from the popover record, so it can't be translated
+    expect(".o_multi_create_popover .o_form_view [name='name'] input").toHaveCount(1);
+    expect(".o_multi_create_popover .o_form_view [name='name'] .o-translate-button").toHaveCount(0);
 });

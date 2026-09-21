@@ -53,7 +53,7 @@ export class CharField extends Component {
         return this.props.record.fields[this.props.name].size;
     }
     get isTranslatable() {
-        return this.props.record.fields[this.props.name].translate;
+        return this.props.record.isFieldTranslatable(this.props.name);
     }
     get formattedValue() {
         return formatChar(this.props.record.data[this.props.name], {

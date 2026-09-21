@@ -44,6 +44,7 @@ class _Record extends Component {
                 context: this.props.info.context,
             },
             hooks: this.props.info.hooks,
+            allowTranslate: this.props.info.allowTranslate,
         };
         const modelServices = Object.fromEntries(
             StandaloneRelationalModel.services.map((servName) => [servName, useService(servName)])
@@ -183,6 +184,7 @@ export class Record extends Component {
         values: t.any().optional(),
         context: t.any().optional({}),
         hooks: t.any().optional(),
+        allowTranslate: t.any().optional(),
     });
     setup() {
         const { activeFields, fieldNames, fields, resModel } = this.props;
