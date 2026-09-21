@@ -460,7 +460,16 @@ class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
                 self.ormcache_lrus[container].clear()
 
     def is_an_ordinary_table(self, model) -> bool:
-        return True
+        # the live registry asks pg_class for relkind='r'. There is no
+        # catalog here, but the facts that decide it are on the model: an
+        # abstract model has no table at all, and one that is not `_auto` or
+        # carries a `_table_query` is backed by a view, which is what
+        # `_registry_schema` itself uses to decide who gets a table
+        return (
+            bool(model._auto)
+            and not model._abstract
+            and getattr(model, "_table_query", None) is None
+        )
 
     @staticmethod
     def unaccent(text):
