@@ -8,7 +8,6 @@ from odoo.libs.documents import EXPENSIVE, Document
 
 from ..tools import GENERATIVE, cascade
 from ..tools.schema import known_schemas
-from ..tools.source import document_of
 
 _logger = logging.getLogger(__name__)
 
@@ -115,13 +114,7 @@ class MixinExtract(models.AbstractModel):
             )
         if not attachment:
             return None
-        # Not `attachment.raw`: that is empty for a blob a storage provider
-        # holds, and gating on it refused to extract exactly the documents that
-        # live in the cloud.
-        content = attachment._get_content()
-        if not content:
-            return None
-        return document_of(attachment, content)
+        return attachment._as_document()
 
     def _update_from_extraction(self, result) -> None:
         self.check_singleton()

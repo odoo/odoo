@@ -5,27 +5,18 @@ from typing import Any
 from odoo.libs.documents import (
     ANY,
     CUES,
+    RECORDING_MIMETYPES,
     TEXT,
+    get_essential_mimetype,
     get_readers,
     get_writers,
-    mimetypes_for,
 )
-
-from .formats import SPEECH_EXTENSIONS
-
-SPOKEN_MIMETYPES = mimetypes_for(*SPEECH_EXTENSIONS)
-AUDIO_MIMETYPES = frozenset(m for m in SPOKEN_MIMETYPES if m.startswith("audio/"))
-VIDEO_MIMETYPES = frozenset(m for m in SPOKEN_MIMETYPES if m.startswith("video/"))
 
 DEFAULT_SPEECH_MIMETYPE = "audio/mpeg"
 
 
-def bare(mimetype: str) -> str:
-    return (mimetype or "").split(";")[0].strip().lower()
-
-
-def is_spoken(mimetype: str) -> bool:
-    return bare(mimetype) in SPOKEN_MIMETYPES
+def is_recording(mimetype: str) -> bool:
+    return get_essential_mimetype(mimetype or "") in RECORDING_MIMETYPES
 
 
 def _is_usable(engine: Any, env: Any) -> bool:
@@ -36,7 +27,7 @@ def _is_usable(engine: Any, env: Any) -> bool:
 def transcription_engines(mimetype: str, env: Any = None) -> tuple[Any, ...]:
     return tuple(
         reader
-        for reader in get_readers(bare(mimetype), CUES)
+        for reader in get_readers(get_essential_mimetype(mimetype or ""), CUES)
         if ANY not in reader.mimetypes and (env is None or _is_usable(reader, env))
     )
 
@@ -44,13 +35,13 @@ def transcription_engines(mimetype: str, env: Any = None) -> tuple[Any, ...]:
 def synthesis_engines(mimetype: str, env: Any = None) -> tuple[Any, ...]:
     return tuple(
         writer
-        for writer in get_writers(bare(mimetype), TEXT)
+        for writer in get_writers(get_essential_mimetype(mimetype or ""), TEXT)
         if writer.mimetype != ANY and (env is None or _is_usable(writer, env))
     )
 
 
 def can_transcribe(mimetype: str, env: Any = None) -> bool:
-    return is_spoken(mimetype) and bool(transcription_engines(mimetype, env))
+    return is_recording(mimetype) and bool(transcription_engines(mimetype, env))
 
 
 def can_synthesize(mimetype: str = DEFAULT_SPEECH_MIMETYPE, env: Any = None) -> bool:

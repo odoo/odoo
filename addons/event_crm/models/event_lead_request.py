@@ -63,7 +63,7 @@ class EventLeadRequest(models.Model):
                 self.env.cr.commit()
 
         if generate_requests - fulfilled_requests:
-            self.env.ref("event_crm.ir_cron_generate_leads")._trigger()
+            self.env["ir.cron"]._trigger_ref("event_crm.ir_cron_generate_leads")
 
         if fulfilled_requests:
             fulfilled_requests.unlink()

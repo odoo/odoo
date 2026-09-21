@@ -248,7 +248,9 @@ class AutomationRuntimeLine(models.Model):
         if due in triggered:
             return
         triggered.add(due)
-        self.env.ref("automation.ir_cron_data_automation_resume")._trigger(at=due)
+        self.env["ir.cron"]._trigger_ref(
+            "automation.ir_cron_data_automation_resume", at=due
+        )
 
     def _awaits_event(self):
         self.check_singleton()

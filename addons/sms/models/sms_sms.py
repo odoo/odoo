@@ -98,7 +98,7 @@ class SmsSms(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.env.ref("sms.ir_cron_sms_scheduler_action")._trigger()
+        self.env["ir.cron"]._trigger_ref("sms.ir_cron_sms_scheduler_action")
         return super().create(vals_list)
 
     @api.depends("uuid")

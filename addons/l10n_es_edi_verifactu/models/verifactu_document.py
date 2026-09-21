@@ -1198,11 +1198,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 )
 
         if next_trigger_time:
-            cron = self.env.ref(
-                "l10n_es_edi_verifactu.cron_verifactu_batch", raise_if_not_found=False
+            self.env["ir.cron"]._trigger_ref(
+                "l10n_es_edi_verifactu.cron_verifactu_batch", next_trigger_time
             )
-            if cron:
-                cron._trigger(at=next_trigger_time)
 
     @api.model
     def _send_batch(self, batch_dict):

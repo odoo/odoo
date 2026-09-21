@@ -128,7 +128,9 @@ class PaymentTransaction(models.Model):
                 # Immediately post-process the transaction if it is a refund, as the post-processing
                 # will not be triggered by a customer browsing the transaction from the portal.
                 if self.operation == "refund":
-                    self.env.ref("payment.cron_post_process_payment_tx")._trigger()
+                    self.env["ir.cron"]._trigger_ref(
+                        "payment.cron_post_process_payment_tx"
+                    )
         elif state == "cancel":
             self._set_canceled()
         else:  # Simulate an error state.

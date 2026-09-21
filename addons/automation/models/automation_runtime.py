@@ -312,7 +312,7 @@ class AutomationRuntime(models.Model):
         if requested.get("automation.dispatch_requested"):
             return
         requested["automation.dispatch_requested"] = True
-        self.env.ref("automation.ir_cron_data_automation_resume")._trigger()
+        self.env["ir.cron"]._trigger_ref("automation.ir_cron_data_automation_resume")
 
     def _advance(self):
         open_runs = self.filtered(

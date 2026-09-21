@@ -23,6 +23,7 @@ from odoo.exceptions import (
 from odoo.fields import COLLECTION_TYPES, Domain
 from odoo.http import Stream, request, root
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.documents import CHEAP, Document
 from odoo.libs.filesystem import (
     MIMETYPE_HEAD_SIZE,
     _olecf_mimetypes,
@@ -177,6 +178,14 @@ class IrAttachment(models.Model):
         copy=False,
         readonly=True,
         prefetch=False,
+    )
+    content_expires_at = fields.Datetime(
+        index="btree_not_null",
+        copy=False,
+    )
+    content_released_at = fields.Datetime(
+        readonly=True,
+        copy=False,
     )
 
     raw = fields.Binary(
@@ -914,6 +923,48 @@ class IrAttachment(models.Model):
         """
         self.check_singleton()
         return self._get_content_prefix(size)
+
+    def _as_document(self, read_up_to: int = CHEAP, **options: Any) -> Document | None:
+        self.check_singleton()
+        data = self.sudo()._get_content()
+        if not data:
+            return None
+        return Document(
+            data,
+            self.mimetype or "",
+            self.name or "",
+            env=self.env,
+            company=self.company_id or self.env.company,
+            read_up_to=read_up_to,
+            **options,
+        )
+
+    def _release_content(self) -> None:
+        self._check_serving_attachments()
+        releasable = self.sudo().filtered(
+            lambda attachment: (
+                attachment.type == "binary" and not attachment.content_released_at
+            )
+        )
+        if not releasable:
+            return
+        stored = OrderedSet(releasable.filtered("store_fname").mapped("store_fname"))
+        vals = self._prepare_content_vals(b"", "", index=False)
+        super(IrAttachment, releasable).write(
+            {**vals, "content_released_at": fields.Datetime.now()}
+        )
+        _debug.lifecycle("content_released", count=len(releasable), files=len(stored))
+        self._remove_stored_file_multi(stored)
+
+    @api.autovacuum
+    def _gc_expired_content(self) -> None:
+        expired = self.sudo().search(
+            [
+                ("content_expires_at", "<=", fields.Datetime.now()),
+                ("content_released_at", "=", False),
+            ]
+        )
+        expired._release_content()
 
     def _with_field_rows(self) -> Self:
         return self.with_context(skip_res_field_check=True)

@@ -298,8 +298,9 @@ class AccountReturnType(models.Model):
             to_treat.account_config_id.account_last_return_cron_refresh = now
 
             if len(root_companies) > 1:
-                cron = self.env.ref("account.ir_cron_generate_account_return")
-                cron._trigger()
+                self.env["ir.cron"]._trigger_ref(
+                    "account.ir_cron_generate_account_return"
+                )
 
             else:
                 self._send_submission_reminder()

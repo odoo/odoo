@@ -4,6 +4,7 @@ from odoo.exceptions import UserError
 from odoo.libs.documents import (
     CUES,
     EXPENSIVE,
+    RECORDING_MIMETYPES,
     TEXT,
     BaseReader,
     BaseWriter,
@@ -18,12 +19,11 @@ from odoo.tests import tagged
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail_speech.tools.speech import READ_ALOUD_MAX_CHARS
-from odoo.addons.speech.tools.engines import SPOKEN_MIMETYPES
 
 
 class StubTranscription(BaseReader):
     name = "stub_message_transcription"
-    mimetypes = SPOKEN_MIMETYPES
+    mimetypes = RECORDING_MIMETYPES
     yields = (CUES,)
     cost = EXPENSIVE
 

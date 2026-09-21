@@ -68,7 +68,7 @@ class EventMailSlot(models.Model):
             )
 
         next_schedule = self.filtered("scheduled_date").mapped("scheduled_date")
-        if next_schedule and (
-            cron := self.env.ref("event.event_mail_scheduler", raise_if_not_found=False)
-        ):
-            cron._trigger(next_schedule)
+        if next_schedule:
+            self.env["ir.cron"]._trigger_ref(
+                "event.event_mail_scheduler", next_schedule
+            )

@@ -1,5 +1,4 @@
 from . import readers
-from . import source
 from . import schema
 from . import candidates
 from . import extractors
@@ -37,4 +36,3 @@ from .readers import (
     PDF,
     page_count,
 )
-from .source import document_of

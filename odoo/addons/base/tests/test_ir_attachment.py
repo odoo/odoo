@@ -3917,3 +3917,65 @@ class TestFromRequestFileValsMerge(TransactionCase):
                     self._FakeFile(content, filename), name="renamed"
                 )
                 self.assertEqual(attachment.raw, content)
+
+
+@tagged("at_install", "-post_install")
+class TestContentLifecycle(TransactionCase):
+    def _stored(self, raw=b"recorded audio bytes", name="call.mp3"):
+        return self.env["ir.attachment"].create(
+            {"name": name, "raw": raw, "mimetype": "audio/mpeg"}
+        )
+
+    def test_an_attachment_reads_as_a_document_wherever_its_bytes_live(self):
+        attachment = self._stored()
+        document = attachment._as_document()
+        self.assertEqual(document.data, b"recorded audio bytes")
+        self.assertEqual(document.mimetype, "audio/mpeg")
+        self.assertEqual(document.name, "call.mp3")
+        self.assertIs(document.options["env"], self.env)
+        self.assertEqual(document.options["company"], self.env.company)
+
+    def test_an_empty_attachment_is_no_document(self):
+        empty = self.env["ir.attachment"].create({"name": "empty.txt", "raw": b""})
+        self.assertIsNone(empty._as_document())
+
+    def test_releasing_drops_the_bytes_and_keeps_the_row_and_its_index(self):
+        attachment = self._stored(raw=b"hello indexed words", name="note.txt")
+        self.env.cr.execute(
+            "UPDATE ir_attachment SET index_content = %s WHERE id = %s",
+            ("what was said", attachment.id),
+        )
+        attachment.invalidate_recordset()
+        stored = attachment.store_fname
+        attachment._release_content()
+        self.assertTrue(attachment.exists())
+        self.assertFalse(attachment.raw)
+        self.assertEqual(attachment.file_size, 0)
+        self.assertFalse(attachment.store_fname)
+        self.assertTrue(attachment.content_released_at)
+        self.assertEqual(attachment.name, "note.txt")
+        self.assertEqual(attachment.sudo().index_content, "what was said")
+        if stored:
+            self.assertFalse(
+                self.env["ir.attachment"].search([("store_fname", "=", stored)])
+            )
+
+    def test_releasing_twice_changes_nothing_the_second_time(self):
+        attachment = self._stored()
+        attachment._release_content()
+        released_at = attachment.content_released_at
+        attachment._release_content()
+        self.assertEqual(attachment.content_released_at, released_at)
+
+    def test_only_expired_content_is_released(self):
+        due = self._stored(name="due.mp3")
+        due.content_expires_at = "2000-01-01 00:00:00"
+        later = self._stored(raw=b"other bytes", name="later.mp3")
+        later.content_expires_at = "2999-01-01 00:00:00"
+        forever = self._stored(raw=b"kept bytes", name="forever.mp3")
+        self.env["ir.attachment"]._gc_expired_content()
+        self.assertTrue(due.content_released_at)
+        self.assertFalse(due.raw)
+        self.assertFalse(later.content_released_at)
+        self.assertEqual(later.raw, b"other bytes")
+        self.assertEqual(forever.raw, b"kept bytes")

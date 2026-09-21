@@ -3,10 +3,17 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from odoo.libs.documents import CUES, EXPENSIVE, BaseReader, Cue, register_reader
+from odoo.libs.documents import (
+    CUES,
+    EXPENSIVE,
+    RECORDING_MIMETYPES,
+    BaseReader,
+    Cue,
+    register_reader,
+)
 
 from .selection import TRANSCRIPTION_CAPABILITIES, TRANSCRIPTION_KIND, pick_model, run
-from odoo.addons.speech.tools.engines import SPOKEN_MIMETYPES, record_engine_error
+from odoo.addons.speech.tools.engines import record_engine_error
 
 _logger = logging.getLogger(__name__)
 
@@ -17,6 +24,7 @@ def _cue_of(span: dict) -> Cue:
         end=float(span.get("end") or 0.0),
         text=(span.get("text") or "").strip(),
         speaker=span.get("speaker") or "",
+        confidence=float(span.get("confidence") or 0.0),
     )
 
 
@@ -24,7 +32,7 @@ class AiTranscription(BaseReader):
     """The words a recording holds, read by whichever engine a key is held for."""
 
     name = "ai_transcription"
-    mimetypes = SPOKEN_MIMETYPES
+    mimetypes = RECORDING_MIMETYPES
     yields = (CUES,)
     cost = EXPENSIVE
 

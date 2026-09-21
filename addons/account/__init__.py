@@ -34,7 +34,7 @@ def _install_sepa_modules(env):
 
 
 def _load_account_return_data(env):
-    env.ref("account.ir_cron_generate_account_return")._trigger()
+    env["ir.cron"]._trigger_ref("account.ir_cron_generate_account_return")
 
     env["account.return.type"].search([])._set_default_values(
         env["res.company"].search([])

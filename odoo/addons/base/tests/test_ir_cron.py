@@ -201,6 +201,24 @@ class TestIrCron(TransactionCase, CronMixinCase):
         ready_jobs = self.registry["ir.cron"]._get_jobs_ready(self.cr)
         self.assertIn(self.cron.id, [job.id for job in ready_jobs])
 
+    def test_a_cron_is_triggered_by_its_xmlid(self):
+        self.env["ir.model.data"].create(
+            {
+                "module": "__test__",
+                "name": "trigger_ref_cron",
+                "model": "ir.cron",
+                "res_id": self.cron.id,
+            }
+        )
+        trigger = self.env["ir.cron"]._trigger_ref("__test__.trigger_ref_cron")
+        self.assertEqual(trigger.cron_id, self.cron)
+
+    def test_triggering_a_missing_cron_warns_instead_of_failing(self):
+        with self.assertLogs("odoo.addons.base.models.ir_cron", "WARNING") as logs:
+            trigger = self.env["ir.cron"]._trigger_ref("__test__.no_such_cron")
+        self.assertFalse(trigger)
+        self.assertIn("__test__.no_such_cron", logs.output[0])
+
     def test_cron_ready_by_trigger(self):
         self.cron._trigger()
         self.env["ir.cron.trigger"].flush_model()

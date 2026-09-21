@@ -7,7 +7,7 @@ from collections.abc import Callable
 from operator import attrgetter
 from typing import Any, Protocol, runtime_checkable
 
-from .formats import mimetypes_for
+from .formats import RECORDING_EXTENSIONS, mimetypes_for
 from .representations import (
     ANY,
     BARCODES,
@@ -205,7 +205,7 @@ def _read_srt_cues(document: Any) -> Any:
 def _read_cued_text(document: Any) -> str:
     from .cues import cues_as_text
 
-    return cues_as_text(document.cues)
+    return cues_as_text(document.cues, speakers=True)
 
 
 register_reader(_prepare_reader("xml", mimetypes_for("xml"), (TREE,), _read_tree))
@@ -214,5 +214,10 @@ register_reader(_prepare_reader("csv", mimetypes_for("csv"), (ROWS,), _read_csv_
 register_reader(_prepare_reader("vtt", mimetypes_for("vtt"), (CUES,), _read_vtt_cues))
 register_reader(_prepare_reader("srt", mimetypes_for("srt"), (CUES,), _read_srt_cues))
 register_reader(
-    _prepare_reader("cued_text", mimetypes_for("vtt", "srt"), (TEXT,), _read_cued_text)
+    _prepare_reader(
+        "cued_text",
+        mimetypes_for("vtt", "srt", *RECORDING_EXTENSIONS),
+        (TEXT,),
+        _read_cued_text,
+    )
 )

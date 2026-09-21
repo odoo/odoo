@@ -20,6 +20,7 @@ from .coerce import (
 from .cues import (
     Cue,
     cues_as_text,
+    format_offset,
     parse_srt,
     parse_vtt,
     render_srt,
@@ -47,6 +48,8 @@ from .format import (
     group_digits,
 )
 from .formats import (
+    RECORDING_EXTENSIONS,
+    RECORDING_MIMETYPES,
     Format,
     canonical_mimetypes,
     extension_for,
@@ -108,6 +111,8 @@ __all__ = [
     "LEAD",
     "LEFT",
     "PARENS",
+    "RECORDING_EXTENSIONS",
+    "RECORDING_MIMETYPES",
     "REPRESENTATIONS",
     "RIGHT",
     "ROWS",
@@ -130,6 +135,7 @@ __all__ = [
     "document",
     "extension_for",
     "format",
+    "format_offset",
     "formats",
     "from_bool",
     "from_date",

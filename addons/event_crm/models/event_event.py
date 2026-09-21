@@ -75,7 +75,7 @@ class EventEvent(models.Model):
                     for event in self
                 ]
             )
-            self.env.ref("event_crm.ir_cron_generate_leads")._trigger()
+            self.env["ir.cron"]._trigger_ref("event_crm.ir_cron_generate_leads")
             notification = _(
                 "Got it! We've noted your request. Your leads will be created soon!"
             )

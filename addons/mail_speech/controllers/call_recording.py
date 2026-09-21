@@ -3,10 +3,10 @@ from __future__ import annotations
 from odoo import http
 from odoo.exceptions import AccessError, ValidationError
 from odoo.http import BadRequest, Forbidden, Response, UnsupportedMediaType, request
+from odoo.libs.documents import RECORDING_MIMETYPES
 
 from odoo.addons.mail.controllers.utils import get_self_member_or_404
 from odoo.addons.mail.tools.discuss import add_guest_to_context
-from odoo.addons.speech.tools.engines import SPOKEN_MIMETYPES
 
 MAX_SEGMENT_MS = 4 * 60 * 60 * 1000
 
@@ -66,7 +66,7 @@ class CallRecordingController(http.Controller):
         if not ufile:
             raise BadRequest
         mimetype = (getattr(ufile, "content_type", "") or "").split(";")[0].strip()
-        if mimetype not in SPOKEN_MIMETYPES:
+        if mimetype not in RECORDING_MIMETYPES:
             raise UnsupportedMediaType
         try:
             start, end = int(start_ms), int(end_ms)

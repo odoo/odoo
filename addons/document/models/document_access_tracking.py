@@ -67,11 +67,7 @@ class DocumentsAccessTracking(models.Model):
             shapes=len(documents_by_changes),
             batch_size=batch_size,
         )
-        cron = self.env.ref(
-            "document.ir_cron_documents_access_tracking", raise_if_not_found=False
-        )
-        if cron:
-            cron.sudo()._trigger()
+        self.env["ir.cron"]._trigger_ref("document.ir_cron_documents_access_tracking")
 
     @api.model
     def _cron_generate_tracking(self) -> None:

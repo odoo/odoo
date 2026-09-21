@@ -4147,7 +4147,7 @@ class MixinMailThread(models.AbstractModel):
                     for device in devices
                 ]
             )
-            self.env.ref("mail.ir_cron_web_push_notification")._trigger()
+            self.env["ir.cron"]._trigger_ref("mail.ir_cron_web_push_notification")
 
     def _notify_by_web_push_prepare_payload(
         self,

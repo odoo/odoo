@@ -13,7 +13,7 @@ class PaymentTransaction(models.Model):
     def _process(self, provider_code, payment_data):
         tx = super()._process(provider_code, payment_data)
         if tx._is_self_order_payment_confirmed():
-            self.env.ref("payment.cron_post_process_payment_tx")._trigger()
+            self.env["ir.cron"]._trigger_ref("payment.cron_post_process_payment_tx")
         return tx
 
     def _is_self_order_payment_confirmed(self):

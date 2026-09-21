@@ -844,10 +844,9 @@ class MailingMailing(models.Model):
                 for m in self
                 if m.ab_testing_schedule_datetime
             )
-            ab_testing_cron = self.env.ref(
-                "mass_mailing.ir_cron_mass_mailing_ab_testing"
-            ).sudo()
-            ab_testing_cron._trigger(at=schedule_date)
+            self.env["ir.cron"]._trigger_ref(
+                "mass_mailing.ir_cron_mass_mailing_ab_testing", schedule_date
+            )
 
         return result
 
@@ -960,10 +959,12 @@ class MailingMailing(models.Model):
 
     def action_put_in_queue(self):
         self.write({"state": "in_queue"})
-        cron = self.env.ref("mass_mailing.ir_cron_mass_mailing_queue")
-        cron._trigger(
-            schedule_date or fields.Datetime.now()
-            for schedule_date in self.mapped("schedule_date")
+        self.env["ir.cron"]._trigger_ref(
+            "mass_mailing.ir_cron_mass_mailing_queue",
+            [
+                schedule_date or fields.Datetime.now()
+                for schedule_date in self.mapped("schedule_date")
+            ],
         )
 
     def action_cancel(self):

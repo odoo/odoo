@@ -484,8 +484,8 @@ class DiscussChannelMember(models.Model):
     def _notify_mute(self) -> None:
         for member in self:
             if member.mute_until_dt and member.mute_until_dt != datetime.max:  # noqa: DTZ901 - comparison against the 'muted forever' sentinel written by discuss_mute
-                self.env.ref("mail.ir_cron_discuss_channel_member_unmute")._trigger(
-                    member.mute_until_dt
+                self.env["ir.cron"]._trigger_ref(
+                    "mail.ir_cron_discuss_channel_member_unmute", member.mute_until_dt
                 )
 
     @api.model

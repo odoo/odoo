@@ -239,8 +239,9 @@ class MailScheduledMessage(models.Model):
         res = super().write(vals)
         _debug.lifecycle("write", scheduled=self.ids, fields=list(vals))
         if new_scheduled_date := vals.get("scheduled_date"):
-            self.env.ref("mail.ir_cron_post_scheduled_message")._trigger(
-                fields.Datetime.to_datetime(new_scheduled_date)
+            self.env["ir.cron"]._trigger_ref(
+                "mail.ir_cron_post_scheduled_message",
+                fields.Datetime.to_datetime(new_scheduled_date),
             )
         return res
 
@@ -398,7 +399,7 @@ class MailScheduledMessage(models.Model):
         )
 
         if self.search_count(domain, limit=1):
-            self.env.ref("mail.ir_cron_post_scheduled_message")._trigger()
+            self.env["ir.cron"]._trigger_ref("mail.ir_cron_post_scheduled_message")
 
     def _to_store_defaults(self, target: Store.Target) -> StoreFieldsInput:
         return [

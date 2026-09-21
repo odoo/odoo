@@ -1152,6 +1152,20 @@ class IrCron(models.Model):
 
         return self._add_triggers(at_list)
 
+    @api.model
+    def _trigger_ref(
+        self,
+        xmlid: str,
+        at: datetime | Iterable[datetime] | None = None,
+        *,
+        coalesce: int = 0,
+    ) -> IrCronTrigger:
+        cron = self.env.ref(xmlid, raise_if_not_found=False)
+        if not cron:
+            _logger.warning("Scheduled action %s does not exist; nothing to run", xmlid)
+            return self.env["ir.cron.trigger"]
+        return cron._trigger(at, coalesce=coalesce)
+
     def _add_triggers(self, at_list: list[datetime]) -> IrCronTrigger:
         self.check_singleton()
         now = self._get_now()

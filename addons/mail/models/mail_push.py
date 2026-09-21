@@ -129,4 +129,4 @@ class MailPush(models.Model):
             self.env["mail.push.device"].sudo().browse(devices_to_unlink).unlink()
 
         if self.sudo().search_count(self._get_domain_due(), limit=1) > 0:
-            self.env.ref("mail.ir_cron_web_push_notification")._trigger()
+            self.env["ir.cron"]._trigger_ref("mail.ir_cron_web_push_notification")

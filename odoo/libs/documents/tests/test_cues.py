@@ -3,13 +3,19 @@ import unittest
 from odoo.libs.documents.cues import (
     Cue,
     cues_as_text,
+    format_offset,
     parse_srt,
     parse_vtt,
     render_srt,
     render_vtt,
 )
 from odoo.libs.documents.document import Document
-from odoo.libs.documents.formats import extension_for, get_format, mimetype_for
+from odoo.libs.documents.formats import (
+    RECORDING_MIMETYPES,
+    extension_for,
+    get_format,
+    mimetype_for,
+)
 from odoo.libs.documents.readers import CUES, TEXT, get_readers
 from odoo.libs.documents.writers import get_writers
 
@@ -121,6 +127,22 @@ class TestWriting(unittest.TestCase):
             "Good morning\nMorning. Did the invoice go out?",
         )
 
+    def test_cues_as_text_can_say_who_spoke(self):
+        self.assertEqual(
+            cues_as_text(parse_vtt(VTT), speakers=True),
+            "Alice: Good morning\nMorning. Did the invoice go out?",
+        )
+
+    def test_a_cue_is_sure_of_nothing_until_told(self):
+        self.assertEqual(Cue(0.0, 1.0, "x").confidence, 0.0)
+        self.assertEqual(Cue(0.0, 1.0, "x", "A", 0.92).confidence, 0.92)
+
+    def test_an_offset_reads_as_minutes_until_it_needs_hours(self):
+        self.assertEqual(format_offset(0), "00:00")
+        self.assertEqual(format_offset(75.9), "01:15")
+        self.assertEqual(format_offset(3725), "1:02:05")
+        self.assertEqual(format_offset(-3), "00:00")
+
 
 class TestDocument(unittest.TestCase):
     def test_a_vtt_document_provides_cues(self):
@@ -128,10 +150,10 @@ class TestDocument(unittest.TestCase):
         self.assertTrue(document.provides(CUES))
         self.assertEqual(len(document.cues), 2)
 
-    def test_a_vtt_document_reads_as_the_words_alone(self):
+    def test_a_vtt_document_reads_as_who_said_what(self):
         document = Document(VTT.encode(), "text/vtt", "meeting.vtt")
         self.assertEqual(
-            document.text, "Good morning\nMorning. Did the invoice go out?"
+            document.text, "Alice: Good morning\nMorning. Did the invoice go out?"
         )
         self.assertNotIn("00:00:00.000", document.text)
 
@@ -166,6 +188,25 @@ class TestRegistry(unittest.TestCase):
     def test_the_text_of_a_cue_track_comes_from_a_reader_not_from_decoding(self):
         readers = get_readers("text/vtt", TEXT)
         self.assertEqual([reader.name for reader in readers], ["cued_text"])
+
+    def test_a_recording_reads_as_text_through_its_cues(self):
+        for mimetype in ("audio/mpeg", "audio/webm", "video/mp4"):
+            with self.subTest(mimetype=mimetype):
+                readers = get_readers(mimetype, TEXT)
+                self.assertEqual([reader.name for reader in readers], ["cued_text"])
+
+    def test_a_recording_with_no_transcriber_reads_as_nothing(self):
+        document = Document(b"ID3\x04\x00fake", "audio/mpeg", "call.mp3")
+        self.assertEqual(document.text, "")
+
+    def test_recordings_are_formats_whose_representation_is_cues(self):
+        self.assertIn("audio/mpeg", RECORDING_MIMETYPES)
+        self.assertIn("audio/x-m4a", RECORDING_MIMETYPES)
+        self.assertIn("video/webm", RECORDING_MIMETYPES)
+        self.assertNotIn("text/vtt", RECORDING_MIMETYPES)
+        ogg = get_format("audio/ogg")
+        assert ogg is not None
+        self.assertEqual(ogg.representation, CUES)
 
     def test_both_cue_formats_are_registered(self):
         vtt = get_format("text/vtt")

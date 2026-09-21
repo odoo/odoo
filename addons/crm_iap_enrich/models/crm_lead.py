@@ -62,11 +62,7 @@ class CrmLead(models.Model):
             .get_param("crm.iap.lead.enrich.setting", "auto")
         )
         if enrich_mode == "auto":
-            cron = self.env.ref(
-                "crm_iap_enrich.ir_cron_lead_enrichment", raise_if_not_found=False
-            )
-            if cron:
-                cron._trigger()
+            self.env["ir.cron"]._trigger_ref("crm_iap_enrich.ir_cron_lead_enrichment")
         return leads
 
     def iap_enrich(self, *, batch_size=50):
@@ -141,8 +137,9 @@ class CrmLead(models.Model):
                     "A batch of leads could not be enriched (locked): %s",
                     repr(self.browse(all_lead_ids)),
                 )
-                self.env.ref("crm_iap_enrich.ir_cron_lead_enrichment")._trigger(
-                    self.env.cr.now() + datetime.timedelta(minutes=5)
+                self.env["ir.cron"]._trigger_ref(
+                    "crm_iap_enrich.ir_cron_lead_enrichment",
+                    self.env.cr.now() + datetime.timedelta(minutes=5),
                 )
                 if from_cron:
                     self.env["ir.cron"]._commit_progress(remaining=0)

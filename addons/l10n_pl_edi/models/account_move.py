@@ -916,8 +916,10 @@ class AccountMove(models.Model):
         if not (delay := error.get("retry_after")):
             raise UserError(error.get("message"))
 
-        cron = self.env.ref("l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills")
-        cron._trigger(at=fields.Datetime.now() + relativedelta(seconds=delay))
+        self.env["ir.cron"]._trigger_ref(
+            "l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills",
+            fields.Datetime.now() + relativedelta(seconds=delay),
+        )
         return True
 
     def _get_bills_metadata(self, service):

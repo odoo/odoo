@@ -9,7 +9,6 @@ from odoo.libs.documents import EXPENSIVE, Cue, Document, cues_as_text, extensio
 
 from ..tools.engines import (
     DEFAULT_SPEECH_MIMETYPE,
-    bare,
     can_transcribe,
     engine_error,
     synthesis_engines,
@@ -82,6 +81,7 @@ class IrAttachment(models.Model):
                 end=cue.get("end", 0.0),
                 text=cue.get("text", ""),
                 speaker=cue.get("speaker", ""),
+                confidence=cue.get("confidence", 0.0),
             )
             for cue in self.speech_cues or []
         ]
@@ -147,6 +147,7 @@ class IrAttachment(models.Model):
                         "end": cue.end,
                         "text": cue.text,
                         "speaker": cue.speaker,
+                        "confidence": cue.confidence,
                     }
                     for cue in cues
                 ],
@@ -171,18 +172,14 @@ class IrAttachment(models.Model):
 
     def _speech_document(self, language: str | None = None, **options: Any) -> Document:
         self.check_singleton()
-        raw = self.sudo()._get_content()
-        if not raw:
-            raise UserError(self.env._("This attachment holds no data to transcribe."))
-        return Document(
-            raw,
-            bare(self.mimetype or ""),
-            self.name or "",
-            env=self.env,
+        document = self._as_document(
             read_up_to=EXPENSIVE,
             language=language or self.speech_language or None,
             **options,
         )
+        if document is None:
+            raise UserError(self.env._("This attachment holds no data to transcribe."))
+        return document
 
     def _speech_index(self, cues: list[Cue]) -> None:
         self.check_singleton()

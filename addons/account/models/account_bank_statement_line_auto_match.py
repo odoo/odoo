@@ -166,7 +166,9 @@ class AccountBankStatementLine(models.Model):
                 "_cron_try_auto_reconcile_statement_lines remaining line found (%s), the cron will be triggered again",
                 remaining_line_id,
             )
-            self.env.ref("account.auto_reconcile_bank_statement_line")._trigger()
+            self.env["ir.cron"]._trigger_ref(
+                "account.auto_reconcile_bank_statement_line"
+            )
 
     @api.model
     def _get_unmatched_amounts(self):

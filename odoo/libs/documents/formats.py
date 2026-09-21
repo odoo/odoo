@@ -5,6 +5,8 @@ from dataclasses import dataclass, field
 from .representations import CUES, DATA, IMAGES, REPRESENTATIONS, ROWS, TEXT, TREE
 
 __all__ = [
+    "RECORDING_EXTENSIONS",
+    "RECORDING_MIMETYPES",
     "Format",
     "canonical_mimetypes",
     "extension_for",
@@ -196,6 +198,24 @@ _BUILTIN_FORMATS = (
         "PowerPoint 97-2003 presentation",
     ),
 )
+_BUILTIN_RECORDING_FORMATS = (
+    ("audio/mpeg", "mp3", {"audio/mp3", "audio/x-mpeg"}, "MP3 audio"),
+    ("audio/ogg", "ogg", {"audio/opus", "audio/vorbis"}, "Ogg audio"),
+    ("audio/wav", "wav", {"audio/x-wav", "audio/wave"}, "WAV audio"),
+    ("audio/webm", "weba", (), "WebM audio"),
+    ("audio/mp4", "m4a", {"audio/x-m4a"}, "MPEG-4 audio"),
+    ("audio/flac", "flac", {"audio/x-flac"}, "FLAC audio"),
+    ("audio/aac", "aac", (), "AAC audio"),
+    ("video/webm", "webm", (), "WebM video"),
+    ("video/mp4", "mp4", (), "MPEG-4 video"),
+    ("video/quicktime", "mov", (), "QuickTime video"),
+    ("video/x-matroska", "mkv", (), "Matroska video"),
+    ("video/mpeg", "mpeg", (), "MPEG video"),
+    ("video/ogg", "ogv", (), "Ogg video"),
+)
+RECORDING_EXTENSIONS = tuple(
+    extension for _, extension, _, _ in _BUILTIN_RECORDING_FORMATS
+)
 _BUILTIN_EXTENSION_ALIASES = (("jpeg", "image/jpeg"),)
 
 for _mimetype, _extension, _representation, _accepts, _label in _BUILTIN_FORMATS:
@@ -208,5 +228,17 @@ for _mimetype, _extension, _representation, _accepts, _label in _BUILTIN_FORMATS
             label=_label,
         )
     )
+for _mimetype, _extension, _accepts, _label in _BUILTIN_RECORDING_FORMATS:
+    register_format(
+        Format(
+            mimetype=_mimetype,
+            extension=_extension,
+            representation=CUES,
+            accepts=frozenset(_accepts),
+            label=_label,
+        )
+    )
 for _extension, _mimetype in _BUILTIN_EXTENSION_ALIASES:
     register_extension(_extension, _mimetype)
+
+RECORDING_MIMETYPES = mimetypes_for(*RECORDING_EXTENSIONS)

@@ -155,7 +155,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         # trigger participant status update after resync to confirm token & keep state in sync
         # but run async, since sync may confirm token server-side (thus increment token_sync_version)
         # yet fail before commit, leaving unrecoverable state
-        self.env.ref("account_peppol.ir_cron_peppol_get_participant_status")._trigger()
+        self.env["ir.cron"]._trigger_ref(
+            "account_peppol.ir_cron_peppol_get_participant_status"
+        )
 
     def _peppol_out_of_sync_disconnect_this_database(self):
         self.check_singleton()
@@ -213,9 +215,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             ],
             limit=1,
         ):
-            self.env.ref(
-                "account_peppol.ir_cron_peppol_get_participant_status"
-            )._trigger(at=fields.Datetime.now() + timedelta(hours=1))
+            self.env["ir.cron"]._trigger_ref(
+                "account_peppol.ir_cron_peppol_get_participant_status",
+                at=fields.Datetime.now() + timedelta(hours=1),
+            )
 
     def _cron_peppol_webhook_keepalive(self):
         edi_users = self.search(
@@ -392,7 +395,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 )
 
         if need_retrigger:
-            self.env.ref("account_peppol.ir_cron_peppol_get_new_documents")._trigger()
+            self.env["ir.cron"]._trigger_ref(
+                "account_peppol.ir_cron_peppol_get_new_documents"
+            )
 
     def _peppol_get_message_status(self):
         # Context added to not break stable policy: useful to tweak on databases processing large invoices
@@ -451,7 +456,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             )
 
         if need_retrigger:
-            self.env.ref("account_peppol.ir_cron_peppol_get_message_status")._trigger()
+            self.env["ir.cron"]._trigger_ref(
+                "account_peppol.ir_cron_peppol_get_message_status"
+            )
 
     def _peppol_get_participant_status(self):
         for edi_user in self:
@@ -562,8 +569,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         company.account_peppol_config_id.account_peppol_proxy_state = "smp_registration"
         company.account_peppol_config_id.peppol_external_provider = None
 
-        self.env.ref("account_peppol.ir_cron_peppol_get_participant_status")._trigger(
-            at=fields.Datetime.now() + timedelta(hours=1)
+        self.env["ir.cron"]._trigger_ref(
+            "account_peppol.ir_cron_peppol_get_participant_status",
+            at=fields.Datetime.now() + timedelta(hours=1),
         )
 
     @handle_demo

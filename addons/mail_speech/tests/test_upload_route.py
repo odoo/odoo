@@ -7,6 +7,7 @@ from odoo.http import STORED_SESSION_BYTES
 from odoo.libs.documents import (
     CUES,
     EXPENSIVE,
+    RECORDING_MIMETYPES,
     BaseReader,
     Cue,
     register_reader,
@@ -14,12 +15,10 @@ from odoo.libs.documents import (
 )
 from odoo.tests import HttpCase, tagged
 
-from odoo.addons.speech.tools.engines import SPOKEN_MIMETYPES
-
 
 class StubTranscription(BaseReader):
     name = "stub_upload_transcription"
-    mimetypes = SPOKEN_MIMETYPES
+    mimetypes = RECORDING_MIMETYPES
     yields = (CUES,)
     cost = EXPENSIVE
 

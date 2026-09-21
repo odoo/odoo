@@ -674,9 +674,7 @@ class DocumentsDocument(models.Model):
 
     @api.model
     def _trigger_url_preview_cron(self) -> None:
-        cron = self.env.ref("document.ir_cron_url_preview", raise_if_not_found=False)
-        if cron:
-            cron.sudo()._trigger()
+        self.env["ir.cron"]._trigger_ref("document.ir_cron_url_preview")
 
     def _locked_by_other(self) -> DocumentsDocument:
         if self.env.su or self._is_documents_manager():

@@ -99,10 +99,10 @@ class EventMail(models.Model):
             )
 
         next_schedule = self.filtered("scheduled_date").mapped("scheduled_date")
-        if next_schedule and (
-            cron := self.env.ref("event.event_mail_scheduler", raise_if_not_found=False)
-        ):
-            cron._trigger(next_schedule)
+        if next_schedule:
+            self.env["ir.cron"]._trigger_ref(
+                "event.event_mail_scheduler", next_schedule
+            )
 
     @api.depends("error_datetime", "interval_type", "mail_done", "event_id")
     def _compute_mail_state(self):
@@ -182,7 +182,7 @@ class EventMail(models.Model):
         # there are more than planned for the cron -> reschedule
         if len(registrations) > cron_limit:
             registrations = registrations[:cron_limit]
-            self.env.ref("event.event_mail_scheduler")._trigger()
+            self.env["ir.cron"]._trigger_ref("event.event_mail_scheduler")
 
         for registrations_chunk in (
             self.env["event.registration"].browse(b)
@@ -330,7 +330,7 @@ class EventMail(models.Model):
         # there are more than planned for the cron -> reschedule
         if len(new_attendee_mails) > cron_limit:
             new_attendee_mails = new_attendee_mails[:cron_limit]
-            self.env.ref("event.event_mail_scheduler")._trigger()
+            self.env["ir.cron"]._trigger_ref("event.event_mail_scheduler")
 
         return new_attendee_mails
 

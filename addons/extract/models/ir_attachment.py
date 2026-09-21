@@ -2,7 +2,6 @@ from odoo import api, fields, models
 from odoo.libs.documents import Document
 
 from ..tools.schema import known_schemas
-from ..tools.source import document_of
 
 
 class IrAttachment(models.Model):
@@ -24,7 +23,4 @@ class IrAttachment(models.Model):
         return self.extract_document_type or ""
 
     def _get_extract_source(self) -> Document | None:
-        self.check_singleton()
-        if not self.raw:
-            return None
-        return document_of(self)
+        return self._as_document()

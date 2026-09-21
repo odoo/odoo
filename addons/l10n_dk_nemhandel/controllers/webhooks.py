@@ -51,7 +51,5 @@ class NemhandelWebhookController(http.Controller):
             token, url=request.httprequest.url
         )
         if ProxyUser._admit_proxy_webhook(edi_client, event_type):
-            cron = request.env.ref(cron_xmlid, raise_if_not_found=False)
-            if cron:
-                cron.sudo()._trigger()
+            request.env["ir.cron"]._trigger_ref(cron_xmlid)
         return http.Response(status=204)

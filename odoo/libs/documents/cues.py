@@ -7,6 +7,7 @@ from dataclasses import dataclass
 __all__ = [
     "Cue",
     "cues_as_text",
+    "format_offset",
     "parse_srt",
     "parse_vtt",
     "render_srt",
@@ -37,6 +38,7 @@ class Cue:
     end: float
     text: str
     speaker: str = ""
+    confidence: float = 0.0
 
 
 def _timestamp_to_seconds(
@@ -165,5 +167,15 @@ def render_srt(cues: Iterable[Cue]) -> str:
     return "\n\n".join(blocks) + "\n"
 
 
-def cues_as_text(cues: Iterable[Cue]) -> str:
-    return "\n".join(cue.text for cue in cues if cue.text)
+def cues_as_text(cues: Iterable[Cue], *, speakers: bool = False) -> str:
+    return "\n".join(
+        f"{cue.speaker}: {cue.text}" if speakers and cue.speaker else cue.text
+        for cue in cues
+        if cue.text
+    )
+
+
+def format_offset(seconds: float) -> str:
+    minutes, secs = divmod(int(max(seconds, 0.0)), 60)
+    hours, minutes = divmod(minutes, 60)
+    return f"{hours}:{minutes:02d}:{secs:02d}" if hours else f"{minutes:02d}:{secs:02d}"

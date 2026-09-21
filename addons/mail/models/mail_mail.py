@@ -1271,8 +1271,9 @@ class MailMail(models.Model):
             first=min(scheduled_per_mail.values()),
             last=max(scheduled_per_mail.values()),
         )
-        self.env.ref("mail.ir_cron_mail_scheduler_action")._trigger(
-            min(scheduled_per_mail.values()) + timedelta(seconds=59)
+        self.env["ir.cron"]._trigger_ref(
+            "mail.ir_cron_mail_scheduler_action",
+            min(scheduled_per_mail.values()) + timedelta(seconds=59),
         )
 
     def _split_by_delayed_batch(self, mail_server: IrMail_Server) -> Self:

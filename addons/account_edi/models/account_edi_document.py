@@ -312,7 +312,7 @@ class AccountEdiDocument(models.Model):
 
         # Mark the CRON to be triggered again asap since there is some remaining jobs to process.
         if nb_remaining_jobs > 0:
-            self.env.ref("account_edi.ir_cron_edi_network")._trigger()
+            self.env["ir.cron"]._trigger_ref("account_edi.ir_cron_edi_network")
 
     def _filter_edi_attachments_for_mailing(self):
         """

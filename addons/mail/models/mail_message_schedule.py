@@ -114,7 +114,7 @@ class MailMessageSchedule(models.Model):
                 if auto_commit:
                     self.env.cr.commit()
         if has_more:
-            self.env.ref("mail.ir_cron_send_scheduled_message")._trigger()
+            self.env["ir.cron"]._trigger_ref("mail.ir_cron_send_scheduled_message")
 
     def force_send(self) -> None:
         return self._send_notifications()
@@ -206,7 +206,9 @@ class MailMessageSchedule(models.Model):
             "rescheduled", schedules=messages_scheduled.ids, scheduled=new_datetime
         )
         messages_scheduled.scheduled_datetime = new_datetime
-        self.env.ref("mail.ir_cron_send_scheduled_message")._trigger(new_datetime)
+        self.env["ir.cron"]._trigger_ref(
+            "mail.ir_cron_send_scheduled_message", new_datetime
+        )
         return True
 
     def _grouped_by_model(self) -> dict:

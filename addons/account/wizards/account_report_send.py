@@ -419,7 +419,7 @@ class AccountReportSend(models.TransientModel):
 
             self.account_report_id.send_and_print_values = self._prepare_wizard_values()
 
-            self.env.ref("account.ir_cron_account_report_send")._trigger()
+            self.env["ir.cron"]._trigger_ref("account.ir_cron_account_report_send")
             return {
                 "type": "ir.actions.client",
                 "tag": "display_notification",
