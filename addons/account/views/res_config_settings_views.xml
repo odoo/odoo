@@ -568,14 +568,6 @@
                                 id="fiscalyear"
                                 groups="account.group_account_user"
                                 invisible="1" />
-                            <setting
-                                id="dynamic_report"
-                                help="Navigate easily through reports and see what is behind the numbers"
-                                groups="account.group_account_user">
-                                <field
-                                    name="module_account_reports"
-                                    widget="upgrade_boolean" />
-                            </setting>
                         </block>
                     </t>
                     <block
@@ -611,8 +603,7 @@
                     <block
                         id="account_reports_settings"
                         title="Reporting"
-                        groups="account.group_account_user"
-                        invisible="not module_account_reports">
+                        groups="account.group_account_user">
                         <setting
                             string="Restrictive Audit Trail"
                             help="Log changes to posted journal entries immutably"

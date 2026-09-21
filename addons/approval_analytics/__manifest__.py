@@ -8,7 +8,7 @@
 Approval Analytics
 ==================
 
-The two materialized reports the approval engine is measured by, and the
+The two SQL reports the approval engine is measured by, and the
 menu entries that open them, under the Approvals application's Reporting
 menu, which is why it follows ``approval_app`` rather than the engine.
 
@@ -19,10 +19,11 @@ Models
 * ``approver.performance`` -- per approver: response time, approval rate,
   workload
 
-Both are SQL views over ``approval.request`` and ``approval.approver``
-through ``mixin.sql.report``, which owns the materialized-view lifecycle and
-its cron. That dependency is why they are not in ``approval``: a module
-adopting ``mixin.approval`` needs the engine, not the reporting stack.
+Both are live queries over ``approval.request`` and ``approval.approver``,
+assembled by ``mixin.sql.report`` and inlined by the ORM on every read: no
+relation is stored, so nothing is refreshed and no cron exists. That dependency
+is why they are not in ``approval``: a module adopting ``mixin.approval`` needs
+the engine, not the reporting stack.
 """,
     "author": "AgroMarin",
     "license": "LGPL-3",

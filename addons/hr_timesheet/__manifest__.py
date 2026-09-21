@@ -1,6 +1,6 @@
 {
     "name": "Task Logs",
-    "version": "1.3",
+    "version": "1.4",
     "category": "Services/Timesheets",
     "sequence": 23,
     "summary": "Track employee time on tasks",

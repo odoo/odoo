@@ -64,3 +64,4 @@ from . import test_pos_session_audit
 from . import test_pos_session_closing_integrity
 from . import test_pos_session_amounts
 from . import test_pos_session_challenge
+from . import test_pos_tax_report
