@@ -27,11 +27,6 @@
                                     Buy Credit
                                 </button>
                             </div>
-                            <field name="warning_threshold"/>
-                            <field name="warning_user_ids"
-                                   invisible="warning_threshold == 0"
-                                   required="warning_threshold > 0"
-                                   widget="many2many_tags" />
                         </group>
                     </group>
                 </sheet>
@@ -42,14 +37,17 @@
         <field name="name">iap.account.list</field>
         <field name="model">iap.account</field>
         <field name="arch" type="xml">
-            <list string="IAP Accounts" duplicate="false">
-                <field name="name" />
-                <field name="service_id" />
-                <field name="company_ids" widget="many2many_tags" />
-                <field name="account_token" groups="base.group_no_one"/>
-                <field name="balance" />
-                <field name="warning_threshold" optional="hidden" />
-                <field name="description" optional="hidden" />
+            <list string="In-App Purchase Accounts" duplicate="false" multi_edit="1" editable="bottom">
+                <field name="name"/>
+                <field name="service_id"/>
+                <field name="description"/>
+                <field name="company_ids" widget="many2many_tags"/>
+                <field name="balance"/>
+                <field name="account_token" optional="hidden"/>
+                <button name="action_manage" type="object" string="Manage" class="btn btn-primary" icon="fa-gear"/>
+                <button name="action_rotate_token" type="object" string="Rotate" class="btn btn-secondary" icon="fa-lock"
+                        confirm="This is useful if you think it may have leaked. It will also deactivate auto-refill if set. Are you sure to rotate your IAP token? "
+                />
             </list>
         </field>
     </record>
