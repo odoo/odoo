@@ -118,8 +118,13 @@ class ImportOptionValidation(TransactionCase):
         self.assertIn("Start at line", self._message(self._run(skip=-2)))
 
     def test_positive_skip_still_selects_from_the_front(self):
-        """Control for the test above: the fix must not disturb the real case."""
-        result = self._run(skip=2)
+        """Control for the test above: the fix must not disturb the real case.
+
+        Not a dry run: that rolls the rows back, and their ids name nothing.
+        """
+        result = self._imp().execute_import(
+            ["value"], ["Value"], dict(self._OPTS, skip=2), dryrun=False
+        )
         self.assertFalse(result.get("messages"), result)
         self.assertEqual(
             self.env["import.char"].browse(result["ids"]).mapped("value"), ["C", "D"]
