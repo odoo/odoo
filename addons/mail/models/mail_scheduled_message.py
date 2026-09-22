@@ -1,22 +1,16 @@
 import json
 import logging
 import typing
-from collections import defaultdict
 from collections.abc import Collection
 from typing import Literal, Self
 
 from markupsafe import Markup
 
 from odoo import _, api, fields, models, modules
-from odoo.api import DomainType, ValuesType
+from odoo.api import ValuesType
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import Query
-from odoo.tools.access_scan import (
-    get_accessible_query,
-    prepare_column_fetcher,
-    prepare_document_access_error,
-)
+from odoo.tools.access_scan import prepare_document_access_error
 from odoo.tools.misc import clean_context
 
 from odoo.addons.mail.tools.discuss import Store, StoreFieldsInput
@@ -32,16 +26,13 @@ _debug = DebugLog(__name__)
 
 class MailScheduledMessage(models.Model):
     _name = "mail.scheduled.message"
+    _inherit = ["mixin.owner.access"]
     _description = "Scheduled Message"
-    _search_visibility_fields = (
-        "model",
-        "res_id",
-    )
+    _access_owner_field = "res_id"
 
     _mail_partner_fields = ()
 
     _SEARCH_ACCESS_CHUNK_MIN = 30
-    _SEARCH_ACCESS_CHUNK_MAX = 8192
 
     subject = fields.Char()
     body = fields.Html(
@@ -143,50 +134,6 @@ class MailScheduledMessage(models.Model):
         return scheduled_messages
 
     @api.model
-    def _search(
-        self,
-        domain: DomainType,
-        offset: int = 0,
-        limit: int | None = None,
-        order: str | None = None,
-        *,
-        bypass_access: bool = False,
-        **kwargs,
-    ) -> Query:
-        if self.env.is_superuser() or bypass_access:
-            return super()._search(
-                domain, offset, limit, order, bypass_access=True, **kwargs
-            )
-
-        def allowed(rows: list[tuple]) -> list[int]:
-            model_ids = defaultdict(set)
-            for __, model, res_id in rows:
-                model_ids[model].add(res_id)
-            postable_ids = {
-                model: self._get_postable_ids(model, res_ids)
-                for model, res_ids in model_ids.items()
-            }
-            return [
-                msg_id
-                for msg_id, res_model, res_id in rows
-                if res_id in postable_ids[res_model]
-            ]
-
-        return get_accessible_query(
-            self,
-            domain,
-            offset,
-            limit,
-            order,
-            super()._search,
-            fetch=prepare_column_fetcher(self, ("id", "model", "res_id")),
-            allowed=allowed,
-            chunk_min=self._SEARCH_ACCESS_CHUNK_MIN,
-            chunk_max=self._SEARCH_ACCESS_CHUNK_MAX,
-            **kwargs,
-        )
-
-    @api.model
     def _get_postable_ids(self, model: str, res_ids: Collection[int]) -> set[int]:
         if model not in self.env:
             return set()
@@ -196,38 +143,24 @@ class MailScheduledMessage(models.Model):
             ._ids
         )
 
-    def _get_forbidden_documents(self) -> Self:
-        model_ids = defaultdict(set)
-        for scheduled_message in self.sudo():
-            model_ids[scheduled_message.model].add(scheduled_message.res_id)
-        postable_ids = {
-            model: self._get_postable_ids(model, res_ids)
-            for model, res_ids in model_ids.items()
+    def _forbidden_documents(self) -> Self:
+        return self.browse(self._access_forbidden_ids(self._access_owners(), "create"))
+
+    def _access_unreachable_owners(
+        self, by_model: dict[str, set[int]], operation: str
+    ) -> set[tuple[str, int]]:
+        unreachable = {
+            (model, res_id)
+            for model, res_ids in by_model.items()
+            for res_id in set(filter(None, res_ids))
+            - self._get_postable_ids(model, res_ids)
         }
-        forbidden = self.browse(
-            scheduled_message.id
-            for scheduled_message in self.sudo()
-            if scheduled_message.res_id not in postable_ids[scheduled_message.model]
-        )
         _debug.logic(
             "documents_checked",
-            asked=len(self),
-            models=len(model_ids),
-            forbidden=len(forbidden),
+            models=len(by_model),
+            forbidden=len(unreachable),
         )
-        return forbidden
-
-    def _check_access(self, operation: str) -> tuple | None:
-        result = super()._check_access(operation)
-        if not self:
-            return result
-        remaining = self - result[0] if result else self
-        forbidden = remaining._get_forbidden_documents()
-        if not forbidden:
-            return result
-        if result:
-            return result[0] + forbidden, result[1]
-        return forbidden, lambda: prepare_document_access_error(forbidden, operation)
+        return unreachable
 
     def write(self, vals: ValuesType) -> Literal[True]:
         if vals.get("model") or vals.get("res_id"):
@@ -280,7 +213,7 @@ class MailScheduledMessage(models.Model):
             try:
                 if forbidden := scheduled_message.with_user(
                     message_creator
-                )._get_forbidden_documents():
+                )._forbidden_documents():
                     raise prepare_document_access_error(forbidden, "create")
                 message = (
                     self.env[scheduled_message.model]

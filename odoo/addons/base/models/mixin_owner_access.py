@@ -54,16 +54,27 @@ class MixinOwnerAccess(models.AbstractModel):
     def _access_forbidden_ids(
         self, owners: list[tuple[int, str, int]], operation: str
     ) -> list[int]:
-        owner_operation = "read" if operation == "read" else "write"
         by_model = defaultdict(set)
         for _id, res_model, res_id in owners:
             by_model[res_model].add(res_id)
-        unreachable = set(get_inaccessible_owners(self.env, by_model, owner_operation))
+        unreachable = self._access_unreachable_owners(by_model, operation)
         return [
             id_
             for id_, res_model, res_id in owners
             if (res_model, res_id) in unreachable
         ]
+
+    def _access_owner_operation(self, operation: str) -> str:
+        return "read" if operation == "read" else "write"
+
+    def _access_unreachable_owners(
+        self, by_model: dict[str, set[int]], operation: str
+    ) -> set[tuple[str, int]]:
+        return set(
+            get_inaccessible_owners(
+                self.env, by_model, self._access_owner_operation(operation)
+            )
+        )
 
     def _check_access(self, operation: str) -> tuple | None:
         result = super()._check_access(operation)
