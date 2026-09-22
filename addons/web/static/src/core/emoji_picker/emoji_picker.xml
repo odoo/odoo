@@ -3,7 +3,7 @@
 
 <t t-name="web.EmojiPicker">
     <div
-        t-attf-class="o-EmojiPicker d-flex flex-column justify-content-center rounded-3 {{ this.props.class }}"
+        t-attf-class="o-EmojiPicker d-flex flex-column justify-content-center {{ this.props.class }}"
         t-att-class="{ 'align-items-center': !this.emojisLoaded, 'h-100': this.props.mobile }"
         t-on-click="this.onClick"
         t-on-keydown="this.onKeydown"
