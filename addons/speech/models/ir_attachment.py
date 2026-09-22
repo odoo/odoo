@@ -118,13 +118,25 @@ class IrAttachment(models.Model):
             attachment._transcribe_later()
         return True
 
-    def _transcribe_later(self, language: str | None = None) -> Any:
+    def _transcribe_later(
+        self,
+        language: str | None = None,
+        priority: int | None = None,
+        eta: Any = None,
+    ) -> Any:
         self.check_singleton()
+        identity_key = f"speech.transcribe.{self.id}"
         job = self.delayed(
             channel=JOB_CHANNEL,
-            identity_key=f"speech.transcribe.{self.id}",
+            identity_key=identity_key,
             name=f"Transcribe {self.name or self.id}",
+            priority=priority,
+            eta=eta,
         )._job_transcribe(language=language)
+        if eta is None:
+            self.env["ir.job"].sudo().search(
+                [("identity_key", "=", identity_key), ("state", "=", "scheduled")]
+            ).write({"eta": False})
         self.sudo().write({"transcript_state": "queued", "transcript_error": False})
         return job
 
@@ -195,14 +207,33 @@ class IrAttachment(models.Model):
         self, language: str | None = None, **options: Any
     ) -> Document:
         self.check_singleton()
+        owner_options = self._transcript_owner_options()
         document = self._as_document(
             read_up_to=EXPENSIVE,
-            language=language or self.transcript_language or None,
-            **options,
+            **{
+                **owner_options,
+                **{key: value for key, value in options.items() if value},
+                "language": language
+                or self.transcript_language
+                or owner_options.get("language")
+                or None,
+            },
         )
         if document is None:
             raise UserError(self.env._("This attachment holds no data to transcribe."))
         return document
+
+    def _transcript_owner_options(self) -> dict[str, Any]:
+        self.check_singleton()
+        segment = (
+            self.env["media.segment"]
+            .sudo()
+            .search([("attachment_id", "=", self.id)], limit=1)
+        )
+        owner = segment._owner() if segment else None
+        if owner is None or not hasattr(owner, "_media_transcription_options"):
+            return {}
+        return owner._media_transcription_options()
 
     def _index_transcript(self, cues: list[Cue]) -> None:
         self.check_singleton()

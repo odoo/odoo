@@ -8,6 +8,7 @@ from typing import Any
 from odoo.libs.documents import to_date, to_datetime, to_float
 
 OPTIMIZE_FOR = ("balanced", "cost", "accuracy", "speed")
+DEFAULT_OPTIMIZATION = "cost"
 
 TYPES: dict[str, type | tuple[type, ...]] = {
     "str": str,
@@ -153,11 +154,12 @@ class Schema:
     fields: dict[str, FieldSpec] = field(default_factory=dict)
     rules: tuple[Rule, ...] = ()
     instructions: str = ""
-    optimize_for: str = "cost"
+    optimize_for: str = ""
     purpose: str = ""
+    inherits: str = ""
 
     def __post_init__(self) -> None:
-        if self.optimize_for not in OPTIMIZE_FOR:
+        if self.optimize_for and self.optimize_for not in OPTIMIZE_FOR:
             raise ValueError(
                 f"Unknown optimization {self.optimize_for!r}; expected one of "
                 f"{', '.join(OPTIMIZE_FOR)}"
@@ -166,6 +168,10 @@ class Schema:
     @property
     def ml_purpose(self) -> str:
         return self.purpose or f"extract.{self.name}"
+
+    @property
+    def optimization(self) -> str:
+        return self.optimize_for or DEFAULT_OPTIMIZATION
 
     @property
     def required(self) -> tuple[str, ...]:
@@ -238,11 +244,19 @@ def register_schema(
     rules: Iterable[Rule] = (),
     *,
     instructions: str = "",
-    optimize_for: str = "cost",
+    optimize_for: str = "",
     purpose: str = "",
+    inherits: str = "",
 ) -> Schema:
     if name in _SCHEMAS:
         raise ValueError(f"Schema {name!r} is already registered")
+    if inherits:
+        clashing = sorted(set(fields) & set(get_schema(inherits).fields))
+        if clashing:
+            raise ValueError(
+                f"Schema {name!r} inherits {inherits!r}, which already declares "
+                f"{', '.join(clashing)}"
+            )
     _SCHEMAS[name] = Schema(
         name=name,
         fields=dict(fields),
@@ -250,8 +264,9 @@ def register_schema(
         instructions=instructions,
         optimize_for=optimize_for,
         purpose=purpose,
+        inherits=inherits,
     )
-    return _SCHEMAS[name]
+    return get_schema(name)
 
 
 def extend_schema(
@@ -259,30 +274,43 @@ def extend_schema(
     fields: dict[str, FieldSpec] | None = None,
     rules: Iterable[Rule] = (),
 ) -> Schema:
-    schema = get_schema(name)
     added = dict(fields or {})
-    clashing = sorted(set(added) & set(schema.fields))
+    clashing = sorted(set(added) & set(get_schema(name).fields))
     if clashing:
         raise ValueError(
             f"Schema {name!r} already declares {', '.join(clashing)}; "
             "extend with new fields or change the declaration"
         )
+    own = _SCHEMAS[name]
     _SCHEMAS[name] = replace(
-        schema,
-        fields={**schema.fields, **added},
-        rules=schema.rules + tuple(rules),
+        own,
+        fields={**own.fields, **added},
+        rules=own.rules + tuple(rules),
     )
-    return _SCHEMAS[name]
+    return get_schema(name)
 
 
 def get_schema(name: str) -> Schema:
     try:
-        return _SCHEMAS[name]
+        own = _SCHEMAS[name]
     except KeyError:
         raise ValueError(
             f"Unknown document type {name!r}; registered: "
             f"{', '.join(sorted(_SCHEMAS)) or 'none'}"
         ) from None
+    if not own.inherits:
+        return own
+    parent = get_schema(own.inherits)
+    return replace(
+        own,
+        fields={**parent.fields, **own.fields},
+        rules=parent.rules + own.rules,
+        instructions="\n\n".join(
+            part for part in (parent.instructions, own.instructions) if part
+        ),
+        optimize_for=own.optimize_for or parent.optimize_for,
+        purpose=own.purpose or parent.purpose,
+    )
 
 
 def known_schemas() -> tuple[str, ...]:

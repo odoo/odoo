@@ -1,3 +1,6 @@
+from unittest.mock import patch
+
+from odoo import fields
 from odoo.exceptions import UserError
 from odoo.libs.documents import CHEAP, Cue
 from odoo.tests import tagged
@@ -346,3 +349,52 @@ class TestRoundTrip(SpeechCase):
         spoken._transcribe()
         self.assertEqual(spoken.transcript_text, "read this aloud")
         self.assertEqual(CUE_FIXTURE[0].text, "the invoice went out")
+
+
+@tagged("post_install", "-at_install")
+class TestOwnerTranscriptionOptions(SpeechCase):
+    def test_the_owner_says_how_its_recordings_are_transcribed(self):
+        engine = self._register(StubTranscription())
+        recording = self._recording()
+        attachment = self._audio()
+        recording._add_media_segment(attachment, 0, 3000)
+        options = {"purpose": "speech.transcription.call", "language": "es"}
+        with patch.object(
+            type(recording), "_media_transcription_options", return_value=options
+        ):
+            attachment._transcribe()
+        document = engine.calls[-1]
+        self.assertEqual(document.options["purpose"], "speech.transcription.call")
+        self.assertEqual(document.options["language"], "es")
+
+    def test_a_language_asked_for_wins_over_the_owners(self):
+        engine = self._register(StubTranscription())
+        recording = self._recording()
+        attachment = self._audio()
+        recording._add_media_segment(attachment, 0, 3000)
+        with patch.object(
+            type(recording),
+            "_media_transcription_options",
+            return_value={"language": "es"},
+        ):
+            attachment._transcribe(language="en")
+        self.assertEqual(engine.calls[-1].options["language"], "en")
+
+
+@tagged("post_install", "-at_install")
+class TestTranscriptionLater(SpeechCase):
+    def _job(self, attachment):
+        return self.env["ir.job"].search(
+            [("identity_key", "=", f"speech.transcribe.{attachment.id}")]
+        )
+
+    def test_a_recording_can_wait_and_be_pulled_forward(self):
+        self._register(StubTranscription())
+        attachment = self._audio()
+        later = fields.Datetime.add(fields.Datetime.now(), minutes=40)
+        attachment._transcribe_later(eta=later)
+        self.assertEqual(self._job(attachment).state, "scheduled")
+        attachment._transcribe_later()
+        job = self._job(attachment)
+        self.assertEqual(len(job), 1)
+        self.assertEqual(job.state, "pending")

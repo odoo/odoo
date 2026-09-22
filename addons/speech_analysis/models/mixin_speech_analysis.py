@@ -6,6 +6,7 @@ from collections import defaultdict
 from odoo import fields, models
 from odoo.libs.documents import Document, format_offset, parse_offset
 
+from ..tools.people import fold, match_person
 from ..tools.schema import DOCUMENT_TYPE
 
 if typing.TYPE_CHECKING:
@@ -64,12 +65,18 @@ class MixinSpeechAnalysis(models.AbstractModel):
         text, _voices = self._analysis_transcript()
         if not text:
             return None
+        preamble = self._analysis_preamble()
+        if preamble:
+            text = f"{preamble}\n\n{text}"
         options = {}
         if "company_id" in self._fields and self.company_id:
             options["company"] = self.company_id
         return Document(
             text.encode(), "text/plain", f"{self.display_name}.txt", **options
         )
+
+    def _analysis_preamble(self) -> str:
+        return ""
 
     def _analysis_transcript(self) -> tuple[str, dict[str, models.Model]]:
         self.check_singleton()
@@ -105,15 +112,18 @@ class MixinSpeechAnalysis(models.AbstractModel):
             {
                 "analysis_summary": values.get("summary") or False,
                 "analysis_topics": "\n".join(
-                    row["name"] for row in values.get("topics") or []
+                    f"[{row['at']}] {row['name']}" if row.get("at") else row["name"]
+                    for row in values.get("topics") or []
                 )
                 or False,
             }
         )
         for model in FINDINGS:
             self.env[model]._of(self).unlink()
+        rows = values.get("speakers") or []
+        self._name_speakers(rows, voices)
         self._create_findings(values, voices)
-        self._rate_speakers(values.get("speakers") or [], voices)
+        self._rate_speakers(rows, voices)
 
     def _create_findings(self, values: dict, voices: dict[str, models.Model]) -> None:
         owner = {"res_model": self._name, "res_id": self.id}
@@ -158,6 +168,39 @@ class MixinSpeechAnalysis(models.AbstractModel):
                 for row in values.get("moments") or []
             ]
         )
+
+    def _speech_people(self) -> models.Model:
+        return self.env["res.partner"]
+
+    def _name_speakers(self, rows: list[dict], voices: dict[str, models.Model]) -> None:
+        named = self.timeline_speaker_ids.partner_id
+        known = {
+            person.name: person
+            for person in self._speech_people() - named
+            if person.name
+        }
+        anonymous = {
+            shown: speakers
+            for shown, speakers in voices.items()
+            if not speakers.partner_id
+        }
+        guesses = {row["speaker"]: row.get("name_guess") for row in rows}
+        for shown, speakers in list(anonymous.items()):
+            person = match_person(known, guesses.get(shown))
+            if person is not None:
+                speakers.sudo().partner_id = person
+                known = {name: p for name, p in known.items() if p != person}
+                del anonymous[shown]
+        if len(anonymous) == 1 and len(known) == 1:
+            (speakers,) = anonymous.values()
+            speakers.sudo().partner_id = next(iter(known.values()))
+            anonymous.clear()
+        for shown, speakers in anonymous.items():
+            guess = (guesses.get(shown) or "").strip()
+            if guess:
+                speakers.filtered(
+                    lambda speaker: fold(speaker.name) == fold(speaker.label)
+                ).sudo().name = guess
 
     def _rate_speakers(self, rows: list[dict], voices: dict[str, models.Model]) -> None:
         self.timeline_speaker_ids.sudo().write(

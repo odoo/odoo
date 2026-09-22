@@ -12,6 +12,8 @@ MOMENT_KINDS = (
     "complaint",
     "praise",
     "next_step",
+    "fact",
+    "highlight",
 )
 SENTIMENTS = ("positive", "neutral", "negative")
 ENGAGEMENTS = ("high", "medium", "low")
@@ -38,7 +40,7 @@ register_schema(
         "topics": FieldSpec(
             "list",
             help="The subjects discussed, a few words each",
-            items={"name": FieldSpec("str", required=True)},
+            items={"name": FieldSpec("str", required=True), "at": _AT},
         ),
         "commitments": FieldSpec(
             "list",
@@ -78,6 +80,10 @@ register_schema(
             help="How each speaker took part",
             items={
                 "speaker": FieldSpec("str", required=True),
+                "name_guess": FieldSpec(
+                    "str",
+                    help="Their full name, when what is said or the context tells it",
+                ),
                 "sentiment": FieldSpec("str", choices=SENTIMENTS),
                 "engagement": FieldSpec("str", choices=ENGAGEMENTS),
                 "interruptions": FieldSpec("int", help="Times they cut someone off"),

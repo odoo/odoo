@@ -190,3 +190,58 @@ class TestSpeechAnalysis(SpeechCase):
         ]
 
         self.assertEqual(tuple(kinds), MOMENT_KINDS)
+
+
+@tagged("post_install", "-at_install")
+class TestNamingVoices(SpeechCase):
+    def setUp(self):
+        super().setUp()
+        self.meeting = self.env["speech.test.meeting"].create({"name": "Visita"})
+        self.aaron = self.env["res.partner"].create({"name": "Aarón Ramírez"})
+        self.hugo = self.env["res.partner"].create({"name": "Hugo García"})
+        self._register(
+            StubTranscription(
+                cues=[
+                    Cue(0.0, 2.0, "buenos días", "SPEAKER_0"),
+                    Cue(2.0, 4.0, "hola", "SPEAKER_1"),
+                ]
+            )
+        )
+        attachment = self._audio()
+        self.meeting._add_media_segment(attachment, 0, 5000)
+        attachment._transcribe()
+        self.voices = attachment.speaker_ids
+
+    def _voice(self, label):
+        return self.voices.filtered(lambda speaker: speaker.label == label)
+
+    def _analyse(self, speakers):
+        router = MagicMock()
+        router.select_model.return_value = MagicMock(code="a-model")
+        router.run.return_value = MlResult(
+            model=None, data={"summary": "x", "speakers": speakers}
+        )
+        with patch(ROUTER, return_value=router):
+            self.meeting._extract_document()
+
+    def test_a_guess_names_the_known_person_behind_a_voice(self):
+        lupita = self.env["res.partner"].create({"name": "Lupita Díaz"})
+        self.meeting.attendee_ids = self.aaron | self.hugo | lupita
+        self._analyse([{"speaker": "SPEAKER_0", "name_guess": "aaron"}])
+        self.assertEqual(self._voice("SPEAKER_0").partner_id, self.aaron)
+        self.assertFalse(self._voice("SPEAKER_1").partner_id)
+
+    def test_the_last_voice_is_the_last_person(self):
+        self.meeting.attendee_ids = self.aaron | self.hugo
+        self._analyse(
+            [
+                {"speaker": "SPEAKER_0", "name_guess": "Aarón Ramírez"},
+                {"speaker": "SPEAKER_1"},
+            ]
+        )
+        self.assertEqual(self._voice("SPEAKER_1").partner_id, self.hugo)
+
+    def test_a_guess_naming_nobody_known_names_the_voice(self):
+        self._analyse([{"speaker": "SPEAKER_1", "name_guess": "Doña Lupita"}])
+        self.assertEqual(self._voice("SPEAKER_1").name, "Doña Lupita")
+        self.assertFalse(self._voice("SPEAKER_1").partner_id)

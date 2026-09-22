@@ -16,6 +16,8 @@ class SpeechMoment(models.Model):
             ("complaint", "Complaint"),
             ("praise", "Praise"),
             ("next_step", "Next step"),
+            ("fact", "Fact"),
+            ("highlight", "Highlight"),
         ],
         required=True,
     )

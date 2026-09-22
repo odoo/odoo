@@ -397,7 +397,7 @@ class TestDeclarations(BaseCase):
         extended = extend_schema(name, {"b": FieldSpec("int")})
 
         self.assertEqual(extended.instructions, "Read carefully.")
-        self.assertEqual(extended.optimize_for, "accuracy")
+        self.assertEqual(extended.optimization, "accuracy")
         self.assertEqual(extended.ml_purpose, "test.purpose")
 
     def test_the_json_schema_declares_every_field_and_allows_null(self):
@@ -433,3 +433,52 @@ class TestDeclarations(BaseCase):
         shape = json_schema(get_schema("invoice"), ("total", "made_up"))
 
         self.assertEqual(list(shape["properties"]), ["total"])
+
+
+@tagged("post_install", "-at_install")
+class TestInheritedSchemas(BaseCase):
+    def setUp(self):
+        super().setUp()
+        for name in ("test_parent", "test_child"):
+            self.addCleanup(_forget, name)
+        register_schema(
+            "test_parent",
+            {"summary": FieldSpec("str", required=True)},
+            instructions="Read the conversation.",
+            optimize_for="balanced",
+            purpose="test.parent",
+        )
+        register_schema(
+            "test_child",
+            {"outcome": FieldSpec("str")},
+            instructions="It is a sales call.",
+            inherits="test_parent",
+        )
+
+    def test_a_child_reads_its_parents_fields_and_its_own(self):
+        child = get_schema("test_child")
+        self.assertEqual(list(child.fields), ["summary", "outcome"])
+        self.assertEqual(child.required, ("summary",))
+
+    def test_a_child_speaks_after_its_parent_and_takes_what_it_does_not_say(self):
+        child = get_schema("test_child")
+        self.assertEqual(
+            child.instructions, "Read the conversation.\n\nIt is a sales call."
+        )
+        self.assertEqual(child.optimization, "balanced")
+        self.assertEqual(child.ml_purpose, "test.parent")
+
+    def test_extending_the_parent_reaches_the_child(self):
+        extend_schema("test_parent", {"topics": FieldSpec("str")})
+        self.assertIn("topics", get_schema("test_child").fields)
+
+    def test_a_child_cannot_redeclare_a_field_of_its_parent(self):
+        with self.assertRaises(ValueError):
+            extend_schema("test_child", {"summary": FieldSpec("str")})
+        with self.assertRaises(ValueError):
+            register_schema(
+                "test_bad_child", {"summary": FieldSpec("int")}, inherits="test_parent"
+            )
+
+    def test_the_default_optimization_is_cost(self):
+        self.assertEqual(Schema(name="x").optimization, "cost")

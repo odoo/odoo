@@ -45,7 +45,7 @@ class _AiExtractor(BaseExtractor):
         company_id = (source.options.get("company") or env.company).id
         schema = get_schema(doc_type)
         purpose = schema.ml_purpose
-        model = self._get_model(env, company_id, purpose, schema.optimize_for)
+        model = self._get_model(env, company_id, purpose, schema.optimization)
         if not model:
             _logger.info(
                 "%s: no model available for %s in this company", self.name, doc_type

@@ -70,6 +70,9 @@ class MixinMediaTimeline(models.AbstractModel):
                     segment.attachment_id._transcribe_later()
         return True
 
+    def _media_transcription_options(self) -> dict:
+        return {}
+
     def _on_media_transcribed(self, attachment: IrAttachment) -> None:
         pass
 

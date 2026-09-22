@@ -65,6 +65,10 @@ class SpeechTestMeeting(models.Model):
         default=lambda self: self.env.company,
     )
     finished = fields.Boolean(default=True)
+    attendee_ids = fields.Many2many(comodel_name="res.partner")
 
     def _speech_analysis_ready(self) -> bool:
         return self.finished
+
+    def _speech_people(self):
+        return self.attendee_ids

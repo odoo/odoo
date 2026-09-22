@@ -21,8 +21,14 @@ class ServerActionTools:
     def like(self, text: str | None) -> str:
         return escape_psql((text or "").strip())
 
-    def find(self, model_name: str, name: str | None, domain: Any = ()) -> Any:
-        Model = self._env[model_name]
+    def find(
+        self,
+        model_name: str,
+        name: str | None,
+        domain: Any = (),
+        archived: bool = False,
+    ) -> Any:
+        Model = self._env[model_name].with_context(active_test=not archived)
         name = (name or "").strip()
         if not name:
             return Model
@@ -56,7 +62,11 @@ class ServerActionTools:
             raise UserError(self._env._("Unreadable date: %s", value)) from error
 
     def datetime(
-        self, value: Any, default_time: str = "00:00", local: bool = True
+        self,
+        value: Any,
+        default_time: str = "00:00",
+        local: bool = True,
+        tz: str | None = None,
     ) -> dt.datetime | None:
         if not value:
             return None
@@ -74,7 +84,7 @@ class ServerActionTools:
             ) from error
         if not local:
             return naive
-        zone = pytz.timezone(self._env.user.tz or "UTC")
+        zone = pytz.timezone(tz or self._env.user.tz or "UTC")
         return zone.localize(naive).astimezone(pytz.UTC).replace(tzinfo=None)
 
     def lines(self, rows: Any, extra: str = "unit") -> list[dict[str, Any]]:

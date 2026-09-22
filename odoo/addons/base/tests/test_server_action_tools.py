@@ -27,6 +27,15 @@ class TestServerActionTools(TransactionCase):
             self.tools.find("res.partner", "agro")
         self.assertIn("Agro Norte", str(caught.exception))
 
+    def test_an_archived_record_is_found_only_when_asked_for(self):
+        old = self.env["res.partner"].create(
+            {"name": "Semillera Vieja", "active": False}
+        )
+        self.assertFalse(self.tools.find("res.partner", "Semillera Vieja"))
+        self.assertEqual(
+            self.tools.find("res.partner", "Semillera Vieja", archived=True), old
+        )
+
     def test_nothing_named_is_nothing_found(self):
         self.assertFalse(self.tools.find("res.partner", "  "))
         self.assertFalse(self.tools.find("res.partner", "zzz-no-such"))
@@ -49,6 +58,10 @@ class TestServerActionTools(TransactionCase):
         self.assertEqual(
             ServerActionTools(self.env).datetime("2026-09-21", default_time="09:00"),
             datetime.datetime(2026, 9, 21, 15, 0),
+        )
+        self.assertEqual(
+            self.tools.datetime("2026-09-21 10:00", tz="Europe/Madrid"),
+            datetime.datetime(2026, 9, 21, 8, 0),
         )
         with self.assertRaises(UserError):
             self.tools.datetime("mañana")
