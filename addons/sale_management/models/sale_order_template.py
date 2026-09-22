@@ -336,8 +336,8 @@ class SaleOrderTemplate(models.Model):
 
     @api.model
     def get_section_templates(self, company_id):
-        """Return section templates created by the current user for the given company and its
-        accessible branches.
+        """Return the 10 most recently created section templates created by the current user for
+        the given company and its accessible branches.
 
         :param int company_id: ID of the company to fetch templates for
         :return: Section templates
@@ -349,7 +349,9 @@ class SaleOrderTemplate(models.Model):
             & Domain("user_has_access", "=", True)
             & self._check_company_domain(company)
         )
-        return self.search_read(domain, fields=["id", "name", "create_uid"], load="")
+        return self.search_read(
+            domain, fields=["id", "name", "create_uid"], order="id desc", limit=10, load=""
+        )
 
     def prepare_section_template_order_lines(
         self, order_changes, fiscal_position_id, company_id, currency_id, fields_spec
