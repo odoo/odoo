@@ -1,6 +1,5 @@
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
-import { rpc } from "@web/core/network/rpc";
 import { localization } from "@web/core/l10n/localization";
 import { useService } from "@web/core/utils/hooks";
 import { isValidPhone } from "@point_of_sale/utils";
@@ -50,22 +49,13 @@ export class PresetInfoPopup extends Component {
                 state_id: stateId,
                 zip: this.state.zip,
             };
-            const result = await rpc(`/pos-self-order/validate-partner`, {
-                access_token: this.selfOrder.access_token,
-                partner_id: this.state.selectedPartnerId,
-                ...partnerData,
-            });
 
-            const partnerId = result?.["res.partner"]?.[0]?.id;
-            if (!partnerId) {
-                return;
-            }
-            // The endpoint doesn't return private informations
-            partnerData.id = partnerId;
-            result["res.partner"][0] = partnerData;
-            this.selfOrder.data.synchronizeServerDataInIndexedDB(result);
-            const connectedData = this.selfOrder.models.connectNewData(result);
-            const partner = connectedData["res.partner"][0];
+            const partner = this.selfOrder.models["res.partner"].create({
+                ...partnerData,
+                country_id: countryId ? this.selfOrder.models["res.country"].get(countryId) : false,
+                state_id: stateId ? this.selfOrder.models["res.country.state"].get(stateId) : false,
+            });
+            this.selfOrder.currentOrder.uiState.partnerData = partnerData;
             this.selfOrder.currentOrder.floating_order_name = `${this.preset.name} - ${partner.name}`;
             this.selfOrder.currentOrder.partner_id = partner;
         } else {

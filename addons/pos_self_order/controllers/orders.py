@@ -8,8 +8,9 @@ from odoo.tools import consteq
 
 class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-order/<device_type>/", auth="public", type="jsonrpc", website=True)
-    def process_order(self, order, access_token, table_identifier, device_type):
+    def process_order(self, order, access_token, table_identifier, device_type, partner_data=None):
         pos_config, table = self._verify_authorization(access_token, table_identifier, order)
+        order['partner_id'] = self._get_order_partner(pos_config, order, partner_data).id if partner_data else False
 
         # Create a safe copy of the order with only the necessary fields for order creation to
         # avoid potential security issues and to reduce the payload size
@@ -61,33 +62,31 @@ class PosSelfOrderController(http.Controller):
 
         return self._generate_return_values(pos_order, pos_config)
 
-    @http.route('/pos-self-order/validate-partner', auth='public', type='jsonrpc', website=True)
-    def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None):
-        pos_config = self._verify_pos_config(access_token)
-        existing_partner = pos_config.env['res.partner'].sudo().browse(int(partner_id)) if partner_id else False
+    def _get_order_partner(self, pos_config, order, partner_data):
+        existing_order = pos_config.env['pos.order']._get_open_order(order)
+        partner = existing_order.partner_id if existing_order.exists() else pos_config.env['res.partner']
 
-        if existing_partner and existing_partner.exists():
-            return {
-                'res.partner': existing_partner.read(['id'], load=False),
-            }
-
-        state_id = pos_config.env['res.country.state'].browse(int(state_id)) if state_id else False
-        country_id = pos_config.env['res.country'].browse(int(country_id))
-        partner_sudo = request.env['res.partner'].sudo().create({
-            'name': name,
-            'email': email,
-            'phone': phone,
-            'street': street,
-            'zip': zip,
-            'city': city,
-            'country_id': country_id.id,
+        state_id = pos_config.env['res.country.state'].browse(int(partner_data['state_id'])) if partner_data.get('state_id') else False
+        # Match the pre-existing default (see PresetInfoPopup's `companyCountryId`): a partner
+        # created here always gets a country, defaulting to the company's own when none is given.
+        country_id = pos_config.env['res.country'].browse(int(partner_data['country_id'])) if partner_data.get('country_id') else pos_config.company_id.country_id
+        vals = {
+            'name': partner_data.get('name'),
+            'email': partner_data.get('email'),
+            'phone': partner_data.get('phone'),
+            'street': partner_data.get('street'),
+            'zip': partner_data.get('zip'),
+            'city': partner_data.get('city'),
+            'country_id': country_id.id if country_id else False,
             'state_id': state_id.id if state_id else False,
             'company_id': pos_config.company_id.id,
-        })
-
-        return {
-            'res.partner': partner_sudo.read(['id'], load=False),
         }
+
+        if partner:
+            partner.sudo().write(vals)
+            return partner
+
+        return pos_config.env['res.partner'].sudo().create(vals)
 
     @http.route('/pos-self-order/remove-order', auth='public', type='jsonrpc', website=True)
     def remove_order(self, access_token, order_id, order_access_token):
