@@ -105,6 +105,7 @@ class Admission:
     path: str = ""
     user_agent: str | None = None
     auth_mode: str = "enforce"
+    event_id: str | None = None
     exchange: Any = None
     extra: dict[str, Any] = field(default_factory=dict)
     error: str | None = None
@@ -208,3 +209,6 @@ class Resolution:
     gate: Any = None
     verify: Callable[[Mapping[str, Any], bytes], bool] | None = None
     claimed: str | None = None
+    # The sender's own id for the event, when the resolver read one: the
+    # row claims it, and a redelivery is refused as a duplicate.
+    event_id: str | None = None

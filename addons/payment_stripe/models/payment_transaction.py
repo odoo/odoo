@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools.urls import urljoin as url_join
 
-from odoo.addons.integration.tools.admission import Acknowledged
+from odoo.addons.integration.tools.admission import Acknowledged, Resolution
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_stripe import const
@@ -37,7 +37,19 @@ class PaymentTransaction(models.Model):
         tx = self.sudo()._search_by_reference("stripe", data)
         if not tx:
             raise Acknowledged
-        return tx, {"event": event, "stripe_object": stripe_object, "data": data}
+        return Resolution(
+            tx,
+            {"event": event, "stripe_object": stripe_object, "data": data},
+            event_id=event.get("id") or None,
+        )
+
+    @api.model
+    def _refuse_stripe_notification(self, refused):
+        """Stripe retries anything but a 2xx for days: an event already
+        received is acknowledged, every other refusal keeps its status."""
+        if refused.error_code == "duplicate_event":
+            return request.prepare_response("", status=200)
+        return refused._problem_response()
 
     def _verify_inbound_request(self, headers, body):
         if self.provider_code != "stripe":

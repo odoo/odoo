@@ -183,7 +183,11 @@ class MixinInboundGate(models.AbstractModel):
         return resolution
 
     def admit(
-        self, subject=None, event_type: str | None = None, verify=None
+        self,
+        subject=None,
+        event_type: str | None = None,
+        verify=None,
+        event_id: str | None = None,
     ) -> Admission:
         self.check_singleton()
         gate = self
@@ -248,6 +252,7 @@ class MixinInboundGate(models.AbstractModel):
             path=httprequest.path,
             user_agent=httprequest.headers.get("User-Agent"),
             auth_mode="audit" if verdict.code == "audit_accepted" else "enforce",
+            event_id=event_id,
         )
         admission.event_type = self._inbound_event_type(admission, event_type)
         if self._inbound_event_logged(admission.event_type):
@@ -278,8 +283,10 @@ class MixinInboundGate(models.AbstractModel):
         """The sender's own id for this event, when it has one (a Telegram
         update_id, a Stripe event id): the row claims it, and a redelivery
         is refused as a duplicate while the first is processing or once it
-        has been processed, whatever the body's bytes."""
-        return None
+        has been processed, whatever the body's bytes. A resolver that read
+        the id hands it over on its `Resolution`; a gate that knows its
+        sender's envelope overrides this."""
+        return admission.event_id
 
     def _open_inbound_exchange(
         self, admission: Admission, event_type: str | None

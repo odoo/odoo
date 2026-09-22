@@ -75,6 +75,9 @@ class IrHttp(models.AbstractModel):
                 404, "Endpoint not found or inactive", "endpoint_not_found", commit=True
             )
         request.admission = gate.admit(
-            subject=subject, event_type=receiver_event, verify=resolution.verify
+            subject=subject,
+            event_type=receiver_event,
+            verify=resolution.verify,
+            event_id=resolution.event_id,
         )
         request.admission.extra = extra

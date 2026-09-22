@@ -117,6 +117,29 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         self.assertEqual(len(exchange), 1)
         self.assertEqual(exchange.direction, "inbound")
 
+    @mute_logger("odoo.addons.payment_stripe.controllers.main")
+    def test_a_redelivered_event_is_acknowledged_and_not_processed_again(self):
+        tx = self._create_transaction("redirect")
+        url = self._build_url(StripeController._webhook_url)
+        event = {**self.payment_data, "id": "evt_redelivered_1"}
+        with patch(
+            "odoo.addons.payment_stripe.models.payment_transaction.PaymentTransaction._verify_inbound_request"
+        ):
+            first = self._make_json_request(url, data=event)
+            tx.state = "draft"
+            second = self._make_json_request(url, data=event)
+        self.assertEqual((first.status_code, second.status_code), (200, 200))
+        self.assertEqual(tx.state, "draft", "the redelivery did not run the handler")
+        receiver = self.env["integration.receiver"].search(
+            [("res_model", "=", "payment.provider"), ("res_id", "=", self.stripe.id)]
+        )
+        rows = self.env["integration.exchange"].search(
+            [("channel_id", "=", f"integration.receiver,{receiver.id}")], order="id"
+        )
+        self.assertEqual(rows.mapped("event_id_external"), ["evt_redelivered_1", False])
+        self.assertEqual(rows.mapped("state"), ["success", "refused"])
+        self.assertEqual(rows[-1].refusal_reason, "duplicate_event")
+
     @mute_logger(
         "odoo.addons.payment_stripe.controllers.main",
         "odoo.addons.integration.models.integration_receiver",
