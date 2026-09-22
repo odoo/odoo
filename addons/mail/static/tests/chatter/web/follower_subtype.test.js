@@ -134,6 +134,35 @@ test("follower subtype apply", async () => {
     await contains(".o_notification:text('Notification preferences updated.')");
 });
 
+test("unselecting all follower subtypes removes the follower", async () => {
+    const pyEnv = await startServer();
+    const subtypeId = pyEnv["mail.message.subtype"].create({
+        default: true,
+        name: "TestSubtype",
+    });
+    pyEnv["mail.followers"].create({
+        display_name: "Jace Beleren",
+        partner_id: serverState.partnerId,
+        res_model: "res.partner",
+        res_id: serverState.partnerId,
+        subtype_ids: [subtypeId],
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await contains(".o-mail-Followers-counter:text('1')");
+    await click(".o-mail-Followers-button");
+    await click("[title='Edit Notification Preferences']");
+    await click(
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] input[type='checkbox']`
+    );
+    await contains(
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] input[type='checkbox']:not(:checked)`
+    );
+    await click(".modal-footer button:text('Update')");
+    await contains(".o_notification:text('You are no longer following this record.')");
+    await contains(".o-mail-Followers-counter:text('0')");
+});
+
 test("internal subtypes are only listed for internal followers", async () => {
     const pyEnv = await startServer();
     const [threadId, customerId, employeeId] = pyEnv["res.partner"].create([
