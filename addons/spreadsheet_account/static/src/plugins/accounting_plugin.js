@@ -8,7 +8,7 @@ import { _t } from "@web/core/translation";
 import { deepCopy } from "@web/core/utils/collections/objects";
 
 /**
- * @typedef {import("../accounting_functions").DateRange} DateRange
+ * @typedef {import("@spreadsheet/helpers/period").DateRange} DateRange
  */
 
 export class AccountingPlugin extends OdooUIPlugin {

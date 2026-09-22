@@ -1,9 +1,9 @@
 /** @odoo-module native */
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { camelToSnakeObject } from "@spreadsheet/helpers/helpers";
+import { parsePeriod } from "@spreadsheet/helpers/period";
 import { _t } from "@web/core/translation";
 
-import { parseAccountingDate } from "./accounting_functions.js";
 import { AccountingPlugin } from "./plugins/accounting_plugin.js";
 import { getFirstAccountFunction, getNumberOfAccountFormulas } from "./utils.js";
 
@@ -47,17 +47,14 @@ cellMenuRegistry.add("move_lines_see_records", {
         const locale = env.model.getters.getLocale();
         let dateRange;
         if (date_range?.value && !isEvaluationError(date_range.value)) {
-            dateRange = parseAccountingDate(date_range, locale);
+            dateRange = parsePeriod(date_range, locale);
         } else {
             if (
                 ["ODOO.PARTNER.BALANCE", "ODOO.RESIDUAL", "ODOO.BALANCE.TAG"].includes(
                     func.functionName,
                 )
             ) {
-                dateRange = parseAccountingDate(
-                    { value: new Date().getFullYear() },
-                    locale,
-                );
+                dateRange = parsePeriod({ value: new Date().getFullYear() }, locale);
             }
         }
         offset = parseInt(offset?.value) || 0;

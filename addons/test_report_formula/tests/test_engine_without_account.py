@@ -211,3 +211,41 @@ class TestEngineWithoutAccount(TransactionCase):
         self.assertIn("All entries", html)
         self.assertIn("175.00", html)
         self.assertIn("report_formula.assets_pdf_export", html)
+
+    def _fetch(self, *requests):
+        return self.env["report.formula"].spreadsheet_fetch_report_values(
+            [
+                {
+                    "report": self.report.id,
+                    "line_code": line_code,
+                    "label": "balance",
+                    "date_range": date_range,
+                    "company_id": None,
+                    "include_unposted": False,
+                }
+                for line_code, date_range in requests
+            ]
+        )
+
+    def test_a_spreadsheet_cell_reads_a_line_over_a_period(self):
+        january = {"range_type": "month", "year": 2020, "month": 1}
+        self.assertEqual(
+            self._fetch(
+                ("ALL", january),
+                ("TWICE", january),
+                ("ALL", {"range_type": "year", "year": 2019}),
+                ("ALL", {"range_type": "quarter", "year": 2020, "quarter": 1}),
+                ("ALL", {"range_type": "day", "year": 2020, "month": 1, "day": 15}),
+            ),
+            [
+                {"value": 175.0},
+                {"value": 350.0},
+                {"value": 1000.0},
+                {"value": 175.0},
+                {"value": 125.0},
+            ],
+        )
+
+    def test_a_spreadsheet_cell_naming_no_line_gets_false(self):
+        january = {"range_type": "month", "year": 2020, "month": 1}
+        self.assertEqual(self._fetch(("NOPE", january)), [False])

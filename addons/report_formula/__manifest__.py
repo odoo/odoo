@@ -19,9 +19,8 @@ The schema of a formula report, independent of what it reports on.
 * ``report.formula.custom.handler`` -- the abstract model a report's custom
   handler inherits
 
-The models keep the names they had in ``account``, which owned them until this
-module was cut out of it: 159 data records in 97 modules and the handlers of 77
-enterprise modules name them, and a rename is a separate change.  ``account``
+The models were ``account.report*`` while ``account`` owned them, before this
+module was cut out of it.  ``account``
 depends on this module and adds the ledger to each model -- the ``tax_tags`` and
 ``account_codes`` engines, the tax-tag lifecycle, carryover, the ledger filters.
     """,

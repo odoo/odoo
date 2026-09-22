@@ -9,15 +9,16 @@ Test - Formula Reports
 
 ``report_formula`` was cut out of ``account``, and the claim that it no longer
 needs it can only be tested where ``account`` is absent: this module depends on
-``report_formula`` alone, declares a small model of dated amounts, and runs the
-options, the evaluator and the line builder over it. Install it on a database
-that does not have ``account`` -- with ``account`` present its ledger overrides
-answer for every report.
+``report_formula`` and its spreadsheet glue only, declares a small model of dated
+amounts, and runs the options, the evaluator, the line builder, the exports and
+the spreadsheet function over it. Install it on a database that does not have ``account``:
+its first test asserts that.
     """,
     "author": "AgroMarin",
     "license": "LGPL-3",
     "depends": [
         "report_formula",
+        "spreadsheet_report_formula",
     ],
     "data": [
         "security/ir.model.access.csv",

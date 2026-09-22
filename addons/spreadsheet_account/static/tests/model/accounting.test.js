@@ -5,11 +5,11 @@ import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/helpers/ge
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { camelToSnakeObject } from "@spreadsheet/helpers/helpers";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
+import { parsePeriod } from "@spreadsheet/helpers/period";
 import {
     defineSpreadsheetAccountModels,
     getAccountingData,
 } from "@spreadsheet_account/../tests/accounting_test_data";
-import { parseAccountingDate } from "@spreadsheet_account/accounting_functions";
 import { makeServerError } from "@web/../tests/web_test_helpers";
 import { sprintf } from "@web/core/utils/format/strings";
 
@@ -190,55 +190,55 @@ test("Server requests", async () => {
 
     expect.verifySteps([
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            dateRange: parsePeriod({ value: "2022" }, locale),
             codes: ["100"],
             companyId: null,
             includeUnposted: false,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "01/2022" }, locale),
+            dateRange: parsePeriod({ value: "01/2022" }, locale),
             codes: ["100"],
             companyId: null,
             includeUnposted: false,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "Q2/2022" }, locale),
+            dateRange: parsePeriod({ value: "Q2/2022" }, locale),
             codes: ["100"],
             companyId: null,
             includeUnposted: false,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2021" }, locale),
+            dateRange: parsePeriod({ value: "2021" }, locale),
             codes: ["10"],
             companyId: null,
             includeUnposted: false,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2021" }, locale),
+            dateRange: parsePeriod({ value: "2021" }, locale),
             codes: ["5"],
             companyId: 2,
             includeUnposted: false,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "05/04/2022" }, locale),
+            dateRange: parsePeriod({ value: "05/04/2022" }, locale),
             codes: ["5"],
             companyId: null,
             includeUnposted: false,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            dateRange: parsePeriod({ value: "2022" }, locale),
             codes: ["5"],
             companyId: null,
             includeUnposted: false,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "05/05/2022" }, locale),
+            dateRange: parsePeriod({ value: "05/05/2022" }, locale),
             codes: ["100"],
             companyId: null,
             includeUnposted: true,
         }),
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2019" }, locale),
+            dateRange: parsePeriod({ value: "2019" }, locale),
             codes: ["33"],
             companyId: null,
             includeUnposted: false,
@@ -266,7 +266,7 @@ test("Server requests with multiple account codes", async () => {
     expect.verifySteps([
         "spreadsheet_fetch_debit_credit",
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            dateRange: parsePeriod({ value: "2022" }, locale),
             codes: ["100", "200"],
             companyId: null,
             includeUnposted: false,
@@ -297,7 +297,7 @@ test("account group formula as input to balance formula", async () => {
     expect.verifySteps([
         "spreadsheet_fetch_debit_credit",
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            dateRange: parsePeriod({ value: "2022" }, locale),
             codes: ["100104", "200104"],
             companyId: null,
             includeUnposted: false,
@@ -335,14 +335,14 @@ test("two concurrent requests on different accounts", async () => {
     expect.verifySteps([
         "spreadsheet_fetch_debit_credit",
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            dateRange: parsePeriod({ value: "2022" }, locale),
             codes: ["100"],
             companyId: null,
             includeUnposted: false,
         }),
         "spreadsheet_fetch_debit_credit",
         camelToSnakeObject({
-            dateRange: parseAccountingDate({ value: "2022" }, locale),
+            dateRange: parsePeriod({ value: "2022" }, locale),
             codes: ["100104", "200104"],
             companyId: null,
             includeUnposted: false,
@@ -388,35 +388,35 @@ test("date with non-standard locale", async () => {
     expect.verifySteps(["spreadsheet_fetch_debit_credit"]);
 });
 
-test("parseAccountingDate", () => {
-    expect(parseAccountingDate({ value: "2022" }, locale)).toEqual({
+test("parsePeriod", () => {
+    expect(parsePeriod({ value: "2022" }, locale)).toEqual({
         rangeType: "year",
         year: 2022,
     });
-    expect(parseAccountingDate({ value: "11/10/2022" }, locale)).toEqual({
+    expect(parsePeriod({ value: "11/10/2022" }, locale)).toEqual({
         rangeType: "day",
         year: 2022,
         month: 11,
         day: 10,
     });
-    expect(parseAccountingDate({ value: "10/2022" }, locale)).toEqual({
+    expect(parsePeriod({ value: "10/2022" }, locale)).toEqual({
         rangeType: "month",
         year: 2022,
         month: 10,
     });
-    expect(parseAccountingDate({ value: "Q1/2022" }, locale)).toEqual({
+    expect(parsePeriod({ value: "Q1/2022" }, locale)).toEqual({
         rangeType: "quarter",
         year: 2022,
         quarter: 1,
     });
-    expect(parseAccountingDate({ value: "q4/2022" }, locale)).toEqual({
+    expect(parsePeriod({ value: "q4/2022" }, locale)).toEqual({
         rangeType: "quarter",
         year: 2022,
         quarter: 4,
     });
     // A number below 3000 is interpreted as a year.
     // It's interpreted as a regular spreadsheet date otherwise
-    expect(parseAccountingDate({ value: "3005" }, locale)).toEqual({
+    expect(parsePeriod({ value: "3005" }, locale)).toEqual({
         rangeType: "day",
         year: 1908,
         month: 3,

@@ -17,6 +17,26 @@ _debug = DebugLog(__name__)
 class AccountReportExpressionEval(models.Model):
     _inherit = "report.formula"
 
+    def _get_expression_values(self, options, expressions=None, warnings=None):
+        """The value of each expression in the first column group of ``options``.
+
+        :param expressions: the ``report.formula.expression`` records to evaluate,
+            all of this report's by default
+        :return: ``{expression: value}``
+        """
+        self.check_singleton()
+        if expressions is None:
+            expressions = self.line_ids.expression_ids
+        self._init_currency_table(options)
+        totals = self._compute_expression_totals_for_each_column_group(
+            expressions, options, warnings=warnings
+        )
+        first_column_group = next(iter(totals.values()), {})
+        return {
+            expression: result.get("value")
+            for expression, result in first_column_group.items()
+        }
+
     @_debug.perf.timed
     def _compute_expression_totals_for_each_column_group(
         self,

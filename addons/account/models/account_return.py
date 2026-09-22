@@ -2538,11 +2538,7 @@ class AccountReturn(models.Model):
             options = report.get_options(
                 {"aging_interval": 15}
             )  # 15-day intervals so amounts aged over 60 fall under 'Older' column
-            expression_totals = report._compute_expression_totals_for_each_column_group(
-                older_expr, options
-            )
-            expr_value = next(iter(expression_totals.values()), {}).get(older_expr, {})
-            return expr_value.get("value")
+            return report._get_expression_values(options, older_expr).get(older_expr)
 
         checks = []
         if "check_bank_reconcile" not in check_codes_to_ignore:

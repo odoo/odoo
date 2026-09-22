@@ -17,7 +17,7 @@ import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model.js";
  * @returns {object}
  */
 function pivotPeriodToFilterValue(timeRange, value) {
-    // reuse the same logic as in `parseAccountingDate`?
+    // reuse the same logic as in `parsePeriod`?
     if (typeof value === "number") {
         value = value.toString(10);
     }
@@ -206,9 +206,7 @@ export class PivotCoreViewGlobalFilterPlugin extends OdooCoreViewPlugin {
                         // value are exactly what the "not set" operator selects
                         if (value === false) {
                             transformedValue = { operator: "not set" };
-                        } else if (
-                            JSON.stringify(currentValue?.ids) !== `[${value}]`
-                        ) {
+                        } else if (JSON.stringify(currentValue?.ids) !== `[${value}]`) {
                             transformedValue = { operator: "in", ids: [value] };
                         }
                         break;
