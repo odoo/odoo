@@ -349,3 +349,46 @@ class TestAutocompleteControllerParsing(TransactionCase):
             )
         self.assertEqual(res, {"address": None})
         self.assertEqual(calls, [], "the route called Google with no key")
+
+    def test_complete_search_skips_components_without_types(self):
+        """A malformed component degrades like a malformed payload (A03).
+
+        The try/except above the loop already turns a payload with no
+        ``result``/``address_components`` into ``{"address": None}``; before
+        this, a component missing ``types`` raised ``KeyError`` and one with an
+        empty list raised ``IndexError`` three lines later, escaping the
+        jsonrpc route as a 500.
+        """
+        for label, component in (
+            ("missing key", {"long_name": "1", "short_name": "1"}),
+            ("empty list", {"long_name": "1", "short_name": "1", "types": []}),
+        ):
+            with self.subTest(label):
+                res = self._complete_search(
+                    {
+                        "result": {
+                            "adr_address": "<span>1 X St</span>, Y",
+                            "address_components": [component],
+                        }
+                    }
+                )
+                self.assertIsInstance(res, dict, "must not raise")
+
+    def test_complete_search_keeps_well_formed_components(self):
+        """The skip must not swallow usable components alongside a broken one."""
+        res = self._complete_search(
+            {
+                "result": {
+                    "adr_address": "<span>9 rue de Bourlottes</span>, Ramillies",
+                    "address_components": [
+                        {"long_name": "junk", "short_name": "junk"},
+                        {
+                            "long_name": "rue de Bourlottes",
+                            "short_name": "rue de Bourlottes",
+                            "types": ["route"],
+                        },
+                    ],
+                }
+            }
+        )
+        self.assertEqual(res.get("street"), "rue de Bourlottes")

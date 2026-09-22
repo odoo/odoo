@@ -199,10 +199,18 @@ class AutoCompleteController(http.Controller):
         except KeyError:
             return {"address": None}
 
-        # Keep only the first known type from the list of types
+        # Keep only the first known type from the list of types. A component
+        # with no usable `types` is skipped rather than raising: the
+        # try/except above degrades a malformed payload to {"address": None},
+        # and that intent ended three lines early -- a missing key raised
+        # KeyError and an empty list raised IndexError, because next()'s
+        # default argument is evaluated eagerly.
         for res in results:
-            types = res.pop("types")
+            types = res.pop("types", None)
+            if not types:
+                continue
             res["type"] = next(filter(FIELDS_MAPPING.get, types), types[0])
+        results = [res for res in results if "type" in res]
 
         # Sort the result by their priority.
         results.sort(
