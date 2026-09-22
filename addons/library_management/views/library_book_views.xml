@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="library_book_view_list" model="ir.ui.view">
+        <field name="name">library.book.list</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <list string="Books" decoration-muted="state == 'borrowed'">
+                <field name="name"/>
+                <field name="author"/>
+                <field name="category"/>
+                <field name="isbn"/>
+                <field name="member_id"/>
+                <field name="state" widget="badge" decoration-success="state == 'available'" decoration-warning="state == 'borrowed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="library_book_view_kanban" model="ir.ui.view">
+        <field name="name">library.book.kanban</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <kanban string="Books" default_group_by="state">
+                <templates>
+                    <t t-name="card">
+                        <main>
+                            <div>
+                                <field name="name" class="fw-bolder fs-5"/>
+                            </div>
+                            <div class="text-muted" t-if="record.author.raw_value">
+                                <field name="author"/>
+                            </div>
+                            <div class="small" t-if="record.member_id.raw_value">
+                                Borrowed by <field name="member_id"/>
+                            </div>
+                            <footer>
+                                <field name="state" widget="badge" decoration-success="state == 'available'" decoration-warning="state == 'borrowed'"/>
+                            </footer>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="library_book_view_form" model="ir.ui.view">
+        <field name="name">library.book.form</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <form string="Book">
+                <header>
+                    <button name="action_borrow" type="object" string="Borrow" class="oe_highlight" invisible="state == 'borrowed'"/>
+                    <button name="action_return" type="object" string="Return" invisible="state == 'available'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. The Odoo Cookbook"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="author"/>
+                            <field name="isbn"/>
+                            <field name="category"/>
+                        </group>
+                        <group>
+                            <field name="member_id" readonly="state == 'borrowed'" placeholder="Select a member to borrow this book"/>
+                            <field name="borrow_date" invisible="state == 'available'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="library_book_view_search" model="ir.ui.view">
+        <field name="name">library.book.search</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <search string="Search Books">
+                <field name="name"/>
+                <field name="author"/>
+                <field name="isbn"/>
+                <filter string="Available" name="available" domain="[('state', '=', 'available')]"/>
+                <filter string="Borrowed" name="borrowed" domain="[('state', '=', 'borrowed')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="library_book_action" model="ir.actions.act_window">
+        <field name="name">Books</field>
+        <field name="res_model">library.book</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">{'search_default_available': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new book to the library
+            </p>
+        </field>
+    </record>
+</odoo>
