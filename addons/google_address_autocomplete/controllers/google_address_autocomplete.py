@@ -81,6 +81,13 @@ class AutoCompleteController(http.Controller):
                     country = request.env["res.country"].search(  # noqa: E8507 - one lookup per field of the autocomplete response
                         [("code", "=", google_field["short_name"].upper())], limit=1
                     )
+                    if not country:
+                        # An unknown code used to yield [False, False]: a
+                        # well-formed-looking many2one pair for a record that
+                        # does not exist, which the widget writes to the field
+                        # as {id: false}. Omitting the key lets it clear the
+                        # field cleanly instead.
+                        continue
                     standard_data[field_standard] = [country.id, country.name]
                 elif field_standard == "state":
                     if "country" not in standard_data:

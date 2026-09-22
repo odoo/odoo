@@ -392,3 +392,29 @@ class TestAutocompleteControllerParsing(TransactionCase):
             }
         )
         self.assertEqual(res.get("street"), "rue de Bourlottes")
+
+    def test_translate_omits_country_when_the_code_is_unknown(self):
+        """An unknown country code must not produce a phantom many2one (A04).
+
+        ``[False, False]`` looks like a real pair to the widget, which builds
+        ``{id: false, display_name: false}`` and writes it; omitting the key
+        lets the client short-circuit to a clean ``false`` instead.
+        """
+        unknown = "ZZ"
+        self.assertFalse(
+            self.env["res.country"].search([("code", "=", unknown)], limit=1),
+            "this test needs a country code that does not exist",
+        )
+        with self._mock_request():
+            res = self.controller._translate_google_to_standard(
+                [{"type": "country", "short_name": unknown, "long_name": "Atlantis"}]
+            )
+        self.assertNotIn("country", res)
+
+    def test_translate_still_resolves_a_known_country(self):
+        """The guard must not drop countries that do resolve."""
+        with self._mock_request():
+            res = self.controller._translate_google_to_standard(
+                [{"type": "country", "short_name": "us", "long_name": "ignored"}]
+            )
+        self.assertEqual(res["country"], [self.us.id, self.us.name])
