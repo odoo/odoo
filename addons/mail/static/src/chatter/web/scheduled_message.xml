@@ -53,13 +53,13 @@
                     </div>
                 </div>
                 <div class="o-mail-Scheduled-Message-buttons ps-1 d-flex">
-                    <span class="btn btn-link btn-success p-0 me-3" t-if="this.props.scheduledMessage.editable" t-on-click="this.onClickSendNow">
+                    <span class="btn btn-hover-success p-0 me-3" t-if="this.props.scheduledMessage.editable" t-on-click="this.onClickSendNow">
                         <i class="oi oi-filled" data-icon="send"/> Send Now
                     </span>
-                    <span class="btn btn-link text-action p-0 me-3" t-if="this.props.scheduledMessage.editable" t-on-click="this.onClickEdit">
+                    <span class="btn btn-hover-action text-action p-0 me-3" t-if="this.props.scheduledMessage.editable" t-on-click="this.onClickEdit">
                         <i class="oi oi-filled" data-icon="edit"/> Edit
                     </span>
-                    <span class="btn btn-link btn-danger p-0" t-if="this.props.scheduledMessage.deletable" t-on-click="this.onClickCancel">
+                    <span class="btn btn-hover-danger p-0" t-if="this.props.scheduledMessage.deletable" t-on-click="this.onClickCancel">
                         <i class="oi" data-icon="close"/> Cancel
                     </span>
                 </div>
