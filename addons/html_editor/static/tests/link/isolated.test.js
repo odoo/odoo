@@ -426,4 +426,31 @@ describe("should position the cursor outside the link", () => {
             '<p>\ufeff<a class="btn btn-primary" href="#/">\ufefftest\ufeff</a>\ufeff[]</p>'
         );
     });
+    test("clicking inside a formated link", async () => {
+        const { el, editor } = await setupEditor(
+            '<p><a href="/fake"><strong>link</strong></a></p>'
+        );
+        const strong = el.querySelector("strong");
+        const rect = strong.getBoundingClientRect();
+        const clientX = rect.right + 1;
+        const clientY = rect.top + rect.height / 2;
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({ offsetNode: strong, offset: 2 }),
+        });
+        let called = false;
+        // We should let the browser set the selection for this case
+        const original = editor.shared.selection.setSelection.bind(editor.shared.selection);
+        editor.shared.selection.setSelection = (...args) => {
+            called = true;
+            original(...args);
+        };
+        await click(strong, { clientX, clientY });
+        await animationFrame();
+        expect(called).toBe(false);
+        // The selection is set by the browser, but since the unit test events are not trusted,
+        // the selection is not actually set. So we just check that the content is unchanged.
+        expect(getContent(el)).toBe(
+            '<p>\ufeff<a href="/fake">\ufeff<strong>link</strong>\ufeff</a>\ufeff</p>'
+        );
+    });
 });

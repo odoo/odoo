@@ -426,7 +426,7 @@ export class LinkPlugin extends Plugin {
                 caretPosition.offset = range?.startOffset;
             }
             const link = caretPosition?.offsetNode && closestElement(caretPosition.offsetNode, "A");
-            if (clickedEl.nodeName === "A" && isZwnbsp(caretPosition.offsetNode)) {
+            if (clickedEl.closest("a") && isZwnbsp(caretPosition.offsetNode)) {
                 // This handles the case of clicking at the start of the button
                 const isFirstFeff = !caretPosition.offsetNode.previousSibling;
                 if (isFirstFeff && caretPosition.offset === 0) {
@@ -436,7 +436,7 @@ export class LinkPlugin extends Plugin {
                         anchorOffset: 1,
                     });
                 }
-            } else if (clickedEl.nodeName !== "A" && link) {
+            } else if (!clickedEl.closest("a") && link) {
                 // This handles the case of clicking outside the link that is
                 // at the start/end of paragraph
                 ev.preventDefault();
