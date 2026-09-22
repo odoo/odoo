@@ -44,6 +44,7 @@ class IntegrationService(models.Model):
             ("ai", "Artificial Intelligence"),
             ("geocoding", "Geocoding & Maps"),
             ("analytics", "Analytics"),
+            ("device", "Devices"),
             ("other", "Other"),
         ],
         default="other",
@@ -358,10 +359,17 @@ class IntegrationService(models.Model):
                         record.endpoint_url,
                     )
                 elif not record.endpoint_url.startswith("https://"):
-                    if not self.env.context.get("allow_http_production"):
+                    # Plain HTTP stays on a private network: a PLC, a gateway,
+                    # a panel on the LAN -- the same line verify_tls draws.
+                    host = urlparse(record.endpoint_url).hostname or ""
+                    if not is_private_host(host) and not self.env.context.get(
+                        "allow_http_production"
+                    ):
                         raise ValidationError(
-                            self.env._("Production endpoint must use HTTPS: %s")
-                            % record.endpoint_url,
+                            self.env._(
+                                "A public endpoint must use HTTPS: %s",
+                                record.endpoint_url,
+                            )
                         )
 
     @api.depends("connection_ids", "connection_ids.active")

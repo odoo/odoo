@@ -71,6 +71,14 @@ class TestIntegrationService(TransactionCase):
                 endpoint_url="http://api.test.com",
             )
 
+    def test_plain_http_is_allowed_on_a_private_network(self):
+        service = self._create_service(
+            code="lan_service", endpoint_url="http://192.168.1.10:8080"
+        )
+        self.assertEqual(service.endpoint_url, "http://192.168.1.10:8080")
+        with self.assertRaises(ValidationError):
+            service.endpoint_url = "http://gateway.example"
+
     @mute_logger("odoo.addons.integration.models.integration_service")
     def test_https_enforcement_localhost_allowed(self):
         service = self._create_service(
@@ -91,6 +99,7 @@ class TestIntegrationService(TransactionCase):
             "ai",
             "geocoding",
             "analytics",
+            "device",
             "other",
         ]
 
