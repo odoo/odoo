@@ -294,6 +294,10 @@ class AutoCompleteController(http.Controller):
             raise AccessError(
                 _("You don't have access to the full autocomplete feature.")
             ) from e
+        if not api_key:
+            # Same guard as /autocomplete/address: with no key configured the
+            # call can only fail, so do not spend a request and a TIMEOUT on it.
+            return {"address": None}
         return self._perform_complete_place_search(
             address,
             google_place_id=google_place_id,

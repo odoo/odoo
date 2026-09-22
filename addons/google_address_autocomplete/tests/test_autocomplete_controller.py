@@ -330,3 +330,22 @@ class TestAutocompleteControllerParsing(TransactionCase):
     def test_complete_search_malformed_payload_returns_none(self):
         """A payload without result/address_components degrades gracefully."""
         self.assertEqual(self._complete_search({"status": "OK"}), {"address": None})
+
+    def test_address_full_without_a_key_makes_no_outbound_call(self):
+        """With no key configured the details route must not call Google (A02)."""
+        calls = []
+
+        def _spy(_controller, route, _params):
+            calls.append(route)
+            raise AssertionError("no outbound call should be made")
+
+        with (
+            self._mock_request(),
+            patch.object(AutoCompleteController, "_get_api_key", lambda *_a: False),
+            patch.object(AutoCompleteController, "_call_google_route", _spy),
+        ):
+            res = self.controller._autocomplete_address_full(
+                "9 rue de Bourlottes", google_place_id="abc"
+            )
+        self.assertEqual(res, {"address": None})
+        self.assertEqual(calls, [], "the route called Google with no key")
