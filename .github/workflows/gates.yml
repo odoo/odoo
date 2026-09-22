@@ -44,8 +44,13 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
-      - name: Install PostgreSQL client
-        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      # pycairo (under rlPyCairo), python-ldap and psycopg-c ship no Linux
+      # wheel and build against these headers
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client pkg-config \
+            libcairo2-dev libldap2-dev libsasl2-dev libpq-dev
 
       - name: Install the venv
         run: |
