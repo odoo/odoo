@@ -509,6 +509,19 @@ class TestUsers2(UsersCommonCase):
             "is missing from all_group_ids",
         )
 
+    def test_role_search(self):
+        for user in [
+            self.env.ref('base.user_admin'),
+            self.env.ref('base.public_user'),
+            *self.env['res.users'].create([
+                {'name': 'portal', 'login': 'test_role_portal', 'group_ids': self.env.ref('base.group_portal')},
+                {'name': 'user', 'login': 'test_role_user', 'group_ids': self.env.ref('base.group_user')},
+            ]),
+        ]:
+            with self.subTest(user_id=user.id, role=user.role):
+                found = user.with_context(active_test=False).search([('role', '=', user.role), ('id', '=', user.id)])
+                self.assertEqual(found, user)
+
     def test_selection_groups(self):
         # create 3 groups that should be in a selection
         app = self.env['res.groups.privilege'].create({'name': 'Foo'})
