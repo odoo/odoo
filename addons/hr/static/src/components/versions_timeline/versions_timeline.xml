@@ -14,6 +14,10 @@
             </div>
         </div>
 
+        <xpath expr="//i[@data-icon='chevron_forward']" position="attributes">
+            <attribute name="t-if">this.items.inline.length &gt; 1</attribute>
+        </xpath>
+
         <t t-foreach="this.items.inline" position="replace">
             <t t-foreach="this.items.inline" t-as="item" t-key="item.value">
                 <div class="o_arrow_button_wrap position-relative">

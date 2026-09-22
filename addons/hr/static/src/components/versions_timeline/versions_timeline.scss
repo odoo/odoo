@@ -17,3 +17,13 @@
         }
     }
 }
+
+.o_statusbar_buttons {
+    .dropdown-toggle-split {
+        flex: 0 0 auto !important; // avoid to stretch
+
+        &::after {
+            margin-left: 0 !important; // avoid the arrow to be pushed away
+        }
+    }
+}
