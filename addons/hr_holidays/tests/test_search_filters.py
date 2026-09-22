@@ -86,3 +86,77 @@ class TestLeaveSearchFilters(TestHrHolidaysCommon):
             missing,
             "only the request whose type asks for a document and has none should match",
         )
+
+    def test_active_employee_filter_defaults_on(self):
+        """Allocations of archived employees stay out of the way by default,
+        and can still be listed on demand."""
+        leave_type = self.env["hr.leave.type"].create(
+            {
+                "name": "Allocated Time Off",
+                "requires_allocation": True,
+                "allocation_validation_type": "no_validation",
+            }
+        )
+        leaver = self.env["hr.employee"].create(
+            {"name": "Gone Employee", "company_id": self.company.id}
+        )
+        staying, left = self.env["hr.leave.allocation"].create(
+            [
+                {
+                    "name": "still here",
+                    "employee_id": self.employee_emp_id,
+                    "holiday_status_id": leave_type.id,
+                    "number_of_days": 5,
+                },
+                {
+                    "name": "already gone",
+                    "employee_id": leaver.id,
+                    "holiday_status_id": leave_type.id,
+                    "number_of_days": 5,
+                },
+            ]
+        )
+        leaver.active = False
+
+        action = self.env.ref(
+            "hr_holidays.hr_leave_allocation_action_approve_department"
+        )
+        context = safe_eval(action.context)
+        self.assertIn(
+            "search_default_active_employee",
+            context,
+            "the allocations action should open on active employees only",
+        )
+        self.assertEqual(
+            context.get("search_default_my_team"),
+            1,
+            "the filters the action already opened with must survive",
+        )
+        self.assertEqual(context.get("search_default_approve"), 2)
+
+        scope = [("id", "in", (staying | left).ids)]
+        Allocation = self.env["hr.leave.allocation"]
+        self.assertEqual(
+            Allocation.search(
+                scope
+                + safe_eval(
+                    self._filter_domain(
+                        "hr_holidays.view_hr_leave_allocation_filter",
+                        "active_employee",
+                    )
+                )
+            ),
+            staying,
+        )
+        self.assertEqual(
+            Allocation.search(
+                scope
+                + safe_eval(
+                    self._filter_domain(
+                        "hr_holidays.view_hr_leave_allocation_filter",
+                        "archived_employee",
+                    )
+                )
+            ),
+            left,
+        )
