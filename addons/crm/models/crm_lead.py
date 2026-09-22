@@ -538,15 +538,25 @@ class CrmLead(models.Model):
     @api.depends('calendar_event_ids', 'calendar_event_ids.start')
     def _compute_meeting_display(self):
         now = fields.Datetime.now()
-        meeting_data = self.env['calendar.event'].sudo()._read_group([
-            ('opportunity_id', 'in', self.ids),
-        ], ['opportunity_id'], ['start:array_agg', 'start:max'])
-        mapped_data = {
-            lead: {
-                'last_meeting_date': last_meeting_date,
-                'next_meeting_date': min([dt for dt in meeting_start_dates if dt > now] or [False]),
-            } for lead, meeting_start_dates, last_meeting_date in meeting_data
-        }
+        meeting_data = self.env['calendar.event'].sudo()._read_group(
+            ['|', ('opportunity_id', 'in', self.ids), '&', ('res_model', '=', 'crm.lead'), ('res_id', 'in', self.ids)],
+            ['opportunity_id', 'res_id'],
+            ['start:array_agg', 'start:max'],
+        )
+        mapped_data = {}
+
+        for opportunity, res_id, meeting_start_dates, last_meeting_date in meeting_data:
+            lead = opportunity or self.browse(res_id)
+            if lead:
+                data = mapped_data.setdefault(lead, {'last_meeting_date': False, 'next_meeting_date': False})
+
+                if not data['last_meeting_date'] or last_meeting_date > data['last_meeting_date']:
+                    data['last_meeting_date'] = last_meeting_date
+
+                next_meeting_date = min([dt for dt in meeting_start_dates if dt > now] or [False])
+                if next_meeting_date and (not data['next_meeting_date'] or next_meeting_date < data['next_meeting_date']):
+                    data['next_meeting_date'] = next_meeting_date
+
         for lead in self:
             lead_meeting_info = mapped_data.get(lead)
             if not lead_meeting_info:
