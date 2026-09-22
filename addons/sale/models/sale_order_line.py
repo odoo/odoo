@@ -776,6 +776,32 @@ class SaleOrderLine(models.Model):
                 or (line.product_id.reinvoice_policy == "cost" and line.is_expense)
             ):
                 continue
+<<<<<<< d9460c28eeebd19cd55da6f085e104bb1bcc4f5d
+||||||| f4500d2604811aa3664eb51e4ea30c2e4e193b18
+
+            # If the price was manually set (!= technical_price_unit), price shouldn't be reset
+            # unless it was requested (pricelist change).
+            if not force_recompute and (manual_price := has_manual_price(line)):
+                continue
+
+            # The price of productless lines shouldn't be reset when the pricelist changes
+            if force_recompute and not line.product_id and manual_price:
+                continue
+
+=======
+
+            manual_price = has_manual_price(line)
+
+            # If the price was manually set (!= technical_price_unit), price shouldn't be reset
+            # unless it was requested (pricelist change).
+            if not force_recompute and manual_price:
+                continue
+
+            # The price of productless lines shouldn't be reset when the pricelist changes
+            if force_recompute and not line.product_id and manual_price:
+                continue
+
+>>>>>>> 6456d85676c75a472a9e857abe65798f449a0e19
             line = line.with_context(sale_write_from_compute=True)
             if not line.product_uom_id or not line.product_id:
                 line.price_unit = 0.0
