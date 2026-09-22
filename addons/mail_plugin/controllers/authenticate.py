@@ -81,8 +81,8 @@ class Authenticate(http.Controller):
             return {"error": "Invalid scope"}
         request.update_env(user=auth_message['uid'])
         scope = 'odoo.plugin.' + auth_message.get('scope', '')
-        expiration_days = int(request.env['ir.config_parameter'].sudo().get_param(
-            'mail_plugin.access_token_expiration_days', 30))
+        expiration_days = request.env['ir.config_parameter'].sudo().get_int(
+            'mail_plugin.access_token_expiration_days', 30)
         if expiration_days <= 0:
             expiration_days = 30
         # created in SUDO to ignore the limit
