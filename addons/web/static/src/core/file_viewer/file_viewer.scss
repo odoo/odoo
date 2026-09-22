@@ -32,6 +32,11 @@
     color: lighten($gray-400, 15%);
 }
 
+.o-FileViewer-toolbar {
+    bottom: map-get($spacers, 2);
+    --border-color: var(--FileViewer-toolbarBorder, #{mix($o-gray-600, $o-gray-700)});
+}
+
 .o-FileViewer-toolbarButton {
     background-color: var(--FileViewer-toolbarBgColor, #{$o-gray-800});
     color: #fff;
