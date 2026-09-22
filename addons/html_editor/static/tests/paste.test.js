@@ -22,6 +22,7 @@ import { createBaseContainer } from "@html_editor/utils/base_container";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { nodeSize } from "@html_editor/utils/position";
 import { iconClasses } from "@html_editor/utils/dom_info";
+import { Plugin } from "@html_editor/plugin";
 
 function isInline(node) {
     return ["I", "B", "U", "S", "EM", "STRONG", "IMG", "BR", "A", "FONT"].includes(node);
@@ -3769,14 +3770,25 @@ describe("Odoo editor own html", () => {
     });
 
     test("should convert unsupported base containuers", async () => {
+        class TestSystemPlugin extends Plugin {
+            static id = "x";
+            resources = {
+                system_classes: ["x"],
+                system_attributes: ["data-x"],
+            };
+        }
         await testEditor({
             contentBefore: "<p>a[]</p><p>b</p>",
             stepFunction: async (editor) => {
-                pasteOdooEditorHtml(editor, `<div>c</div><div>d</div><div>e</div>`);
+                pasteOdooEditorHtml(
+                    editor,
+                    `<div>c</div><div class="x y" data-x="system">d</div><div style="color: red">e</div>`
+                );
             },
-            contentAfter: "<p>ac</p><p>d</p><p>e[]</p><p>b</p>",
+            contentAfter: `<p>ac</p><p class="y">d</p><p style="color: red">e[]</p><p>b</p>`,
             config: {
                 baseContainers: ["P"],
+                includePlugins: [TestSystemPlugin],
             },
         });
     });
