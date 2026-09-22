@@ -54,6 +54,19 @@
                             <field name="active" />
                         </group>
                     </group>
+                    <notebook>
+                        <page name="contract" string="Contract">
+                            <group>
+                                <field name="contract_routes" readonly="1" />
+                                <field name="contract_scheme" readonly="1" />
+                                <field name="contract_limits" readonly="1" />
+                                <field
+                                    name="contract_last_call"
+                                    invisible="not contract_last_call"
+                                    readonly="1" />
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
