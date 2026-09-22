@@ -506,7 +506,7 @@ export class FormatPlugin extends Plugin {
                 this.getFormattableNodes(targetedNodes).flatMap((node) => {
                     let target;
                     for (const provider of this.getResource("formattable_node_providers")) {
-                        target = provider(node, formatName, { applyStyle, formatProps });
+                        target = provider(node, { applyStyle, formatProps, formatSpec });
                         if (target) {
                             break;
                         }

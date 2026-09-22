@@ -672,3 +672,72 @@ test("removing bold on list item should remove neutral style from its nested lis
         contentAfter: "<ul><li><p>[A]</p><ul><li>B</li></ul></li></ul>",
     });
 });
+
+test("should apply the style on the link itself (1)", async () => {
+    const { el, editor } = await setupEditor(`<p><a href="test">[abc]</a></p>`, {
+        styleContent: `a {font-weight: bolder}`,
+    });
+    bold(editor);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<a href="test" style="font-weight: normal;" class="o_link_in_selection">\ufeff[abc]\ufeff</a>\ufeff</p>`
+    );
+    bold(editor);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<a href="test" class="o_link_in_selection">\ufeff[abc]\ufeff</a>\ufeff</p>`
+    );
+});
+
+test("should apply the style on the link itself (2)", async () => {
+    const { el, editor } = await setupEditor(`<p>a[a<a href="test">bb</a>c]c</p>`, {
+        styleContent: `a {font-weight: bolder}`,
+    });
+    bold(editor);
+    expect(getContent(el)).toBe(
+        `<p>a<strong>[a</strong>\ufeff<a href="test">\ufeffbb\ufeff</a>\ufeff<strong>c]</strong>c</p>`
+    );
+    bold(editor);
+    expect(getContent(el)).toBe(
+        `<p>a[a\ufeff<a href="test" style="font-weight: normal;">\ufeffbb\ufeff</a>\ufeffc]c</p>`
+    );
+});
+
+test("should apply the style on the link itself (3)", async () => {
+    const { el, editor } = await setupEditor(`<p>aa[<a href="test">bb</a>]cc</p>`, {
+        styleContent: `a {font-weight: normal}`,
+    });
+    bold(editor);
+    expect(getContent(el)).toBe(
+        `<p>aa[\ufeff<a href="test" style="font-weight: bolder;">\ufeffbb\ufeff</a>\ufeff]cc</p>`
+    );
+    bold(editor);
+    expect(getContent(el)).toBe(`<p>aa[\ufeff<a href="test">\ufeffbb\ufeff</a>\ufeff]cc</p>`);
+});
+
+test("should apply the style on the link itself (4)", async () => {
+    const { el, editor } = await setupEditor(`<p>a[a<a href="test">bb</a>c]c</p>`, {
+        styleContent: `a {font-weight: normal}`,
+    });
+    bold(editor);
+    expect(getContent(el)).toBe(
+        `<p>a<strong>[a</strong>\ufeff<a href="test" style="font-weight: bolder;">\ufeffbb\ufeff</a>\ufeff<strong>c]</strong>c</p>`
+    );
+    bold(editor);
+    expect(getContent(el)).toBe(`<p>a[a\ufeff<a href="test">\ufeffbb\ufeff</a>\ufeffc]c</p>`);
+});
+
+test("should apply the style on the link itself (5)", async () => {
+    const { el, editor } = await setupEditor(
+        `<p><strong>a[a</strong><a href="test">bb</a><strong>c]c</strong></p>`,
+        {
+            styleContent: `a {font-weight: normal}`,
+        }
+    );
+    bold(editor);
+    expect(getContent(el)).toBe(
+        `<p><strong>a[a</strong>\ufeff<a href="test" style="font-weight: bolder;">\ufeffbb\ufeff</a>\ufeff<strong>c]c</strong></p>`
+    );
+    bold(editor);
+    expect(getContent(el)).toBe(
+        `<p><strong>a</strong>[a\ufeff<a href="test">\ufeffbb\ufeff</a>\ufeffc]<strong>c</strong></p>`
+    );
+});

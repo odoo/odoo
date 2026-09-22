@@ -28,9 +28,9 @@ class AnimatedNumberOptionPlugin extends Plugin {
         return closestElement(node, VALUE_SELECTOR);
     }
 
-    getStyleTargetElement(node, formatName) {
+    getStyleTargetElement(node, options) {
         const valueEl = this.getValueElement(node);
-        if (["underline", "strikeThrough"].includes(formatName)) {
+        if (["underline", "strikeThrough"].includes(options?.formatSpec.id)) {
             return valueEl;
         }
         const displayEl = closestElement(node, DISPLAY_SELECTOR);

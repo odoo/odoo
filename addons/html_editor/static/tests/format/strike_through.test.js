@@ -272,3 +272,15 @@ test("should not add history commit for strikethrough on collapsed selection", a
     undo(editor);
     expect(getContent(el)).toBe(`<p>abcd[]</p>`);
 });
+
+test("should not apply the style on the link itself because it can't be neutralized locally", async () => {
+    const { el, editor } = await setupEditor(`<p><a href="test">[abc]</a></p>`);
+    strikeThrough(editor);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<a href="test" class="o_link_in_selection">\ufeff<s>[abc]</s>\ufeff</a>\ufeff</p>`
+    );
+    strikeThrough(editor);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<a href="test" class="o_link_in_selection">\ufeff[abc]\ufeff</a>\ufeff</p>`
+    );
+});

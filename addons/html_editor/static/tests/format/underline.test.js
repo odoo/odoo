@@ -393,3 +393,15 @@ test("should remove underline on list item with heading", async () => {
         contentAfter: "<ul><li><h1>[test]</h1></li></ul>",
     });
 });
+
+test("should not apply the style on the link itself because it can't be neutralized locally", async () => {
+    const { el, editor } = await setupEditor(`<p><a href="test">[abc]</a></p>`);
+    underline(editor);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<a href="test" class="o_link_in_selection">\ufeff<u>[abc]</u>\ufeff</a>\ufeff</p>`
+    );
+    underline(editor);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<a href="test" class="o_link_in_selection">\ufeff[abc]\ufeff</a>\ufeff</p>`
+    );
+});
