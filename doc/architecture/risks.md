@@ -55,7 +55,13 @@ framework can distinguish a `post-` script that wanted the new schema from one
 that needed the old.
 
 **What would close it.** Nothing mechanical: the remaining half is a property of
-each migration an addon author writes. A review rule, not a gate.
+each migration an addon author writes. A review rule, not a gate. What shortens
+the loop is `odoo-bin schema_diff -d <db> -u <module>` (2026-09-22): the upgrade
+runs in a transaction the command rolls back, and its DDL, migrations and
+catalog churn are printed -- an idle `-u sale` on the four-module set reads 14
+idempotent statements in 12 s, a `-i mail` on `base` 994, and a migration that
+would stop the run stops the preview with the same error. The production-copy
+rehearsal still owns the whole answer; this is the minute before the twenty.
 
 ## R3 — The DB-free tiers cannot see behaviour
 
