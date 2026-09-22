@@ -6,7 +6,6 @@
 
  .o_setting_left_pane {
     float: left;
-    background-color: $o-view-background-color;
  }
 
  .o_setting_right_pane {
@@ -40,3 +39,13 @@
        font-size: 12px;
     }
  }
+
+.o_setting_box .o_field_boolean {
+    background-color: $o-view-background-color;
+
+    @include media-breakpoint-down(md) {
+        &:not(.o_setting_container &) {
+            background-color: var(--body-bg);
+        }
+    }
+}
