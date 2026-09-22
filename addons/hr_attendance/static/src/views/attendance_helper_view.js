@@ -1,6 +1,8 @@
 /** @odoo-module native */
+import { _t } from "@web/core/translation";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
+import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 
 import { Component, onWillStart, useState } from "@odoo/owl";
 
@@ -10,6 +12,7 @@ export class AttendanceActionHelper extends Component {
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
+        this.dialogService = useService("dialog");
         this.state = useState({
             hasDemoData: false,
         });
@@ -29,7 +32,15 @@ export class AttendanceActionHelper extends Component {
     }
 
     loadAttendanceScenario() {
-        this.actionService.doAction("hr_attendance.action_load_demo_data");
+        this.dialogService.add(ConfirmationDialog, {
+            body: _t(
+                "This creates sample employees, working schedules and attendances across several apps. Are you sure you want to proceed?",
+            ),
+            confirmLabel: _t("Load Sample Data"),
+            confirm: () =>
+                this.actionService.doAction("hr_attendance.action_load_demo_data"),
+            cancel: () => {},
+        });
     }
 
     LoadTryKiosk() {
