@@ -18,6 +18,13 @@
                         </label>
                     </div>
                 </div>
+                <hr class="my-0"/>
+                <div class="o-mail-FollowerSubtypeDialog-allSubtypes">
+                    <label class="flex-grow-1 align-items-center d-flex mb-0 p-2 cursor-pointer">
+                        <input class="form-check-input me-2" type="checkbox" t-att-checked="this.areAllSubtypesSelected" t-att-indeterminate="this.areSomeSubtypesSelected and !this.areAllSubtypesSelected" t-on-change="(ev) => this.onChangeAllCheckbox(ev)"/>
+                        All Notifications
+                    </label>
+                </div>
                 <div t-if="this.parentRecord" class="text-muted" t-out="this.parentRecordHint" t-on-click="this.onClickParentRecordLink"/>
             </t>
             <t t-set-slot="footer">
