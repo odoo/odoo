@@ -471,6 +471,7 @@ class ResUsers(models.Model):
             'light_user': is_user & ~is_user_regular,
             'regular_user': is_user & is_user_regular & ~is_system,
             'group_system': is_system,
+            False: ~is_user,
         }
         return Domain.OR([domains_by_role[v] for v in value if v in domains_by_role])
 
