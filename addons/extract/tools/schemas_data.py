@@ -112,14 +112,39 @@ register_schema(
 register_schema(
     "business_card",
     fields={
-        "full_name": FieldSpec("str", required=True),
-        "company_name": FieldSpec("str"),
-        "job_title": FieldSpec("str"),
-        "email": FieldSpec("str"),
-        "phone": FieldSpec("str"),
-        "website": FieldSpec("str"),
-        "address": FieldSpec("str"),
+        "cards": FieldSpec(
+            "list",
+            required=True,
+            help="One row per business card in the image",
+            items={
+                "person_name": FieldSpec("str"),
+                "company_name": FieldSpec("str"),
+                "job_title": FieldSpec("str"),
+                "email": FieldSpec("str", help="The main email address"),
+                "phone": FieldSpec("str", help="The main phone number"),
+                "website": FieldSpec("str"),
+                "street": FieldSpec(
+                    "str", help="The first line of the address: street and number"
+                ),
+                "street2": FieldSpec(
+                    "str", help="The second line of the address, if it has two"
+                ),
+                "city": FieldSpec("str"),
+                "zip": FieldSpec("str"),
+                "state_code": FieldSpec(
+                    "str", help="The state's code, not its name; left out if unknown"
+                ),
+                "country_code": FieldSpec(
+                    "str", help="The country's two-letter ISO code; left out if unknown"
+                ),
+            },
+        ),
     },
+    instructions=(
+        "You read the images of business cards. Report only the text printed on "
+        "a card; never guess, and leave out whatever the card does not show. A "
+        "card that names neither a person nor a company is not reported."
+    ),
 )
 
 register_schema(

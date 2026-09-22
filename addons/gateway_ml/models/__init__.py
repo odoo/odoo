@@ -4,3 +4,4 @@ from . import integration_exchange, integration_service
 from . import gateway_ml_config
 from . import res_company
 from . import gateway_ml_purpose, gateway_ml_policy
+from . import ir_egress

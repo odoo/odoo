@@ -20,3 +20,4 @@ from . import test_provider_services
 from . import test_usage_recording
 from . import test_wire_formats
 from . import test_assistant_adoption
+from . import test_egress_policy

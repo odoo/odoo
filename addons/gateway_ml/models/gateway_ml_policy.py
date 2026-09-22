@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class GatewayMlPolicy(models.Model):
@@ -62,3 +63,22 @@ class GatewayMlPolicy(models.Model):
         if Purpose._is_sensitive(key):
             return providers.browse()
         return providers
+
+    @api.model
+    def _check_allowed(self, company, purpose: str, provider=None) -> None:
+        Purpose = self.env["gateway.ml.purpose"]
+        if provider:
+            Purpose._get_for(purpose)
+            allowed = bool(self._allowed_providers(company.id, purpose, provider))
+        else:
+            allowed = not Purpose._is_sensitive(purpose)
+        if not allowed:
+            raise UserError(
+                self.env._(
+                    "The data policy of %(company)s lets no %(purpose)s request "
+                    "reach %(vendor)s.",
+                    company=company.name,
+                    purpose=purpose,
+                    vendor=provider.name if provider else self.env._("this vendor"),
+                )
+            )

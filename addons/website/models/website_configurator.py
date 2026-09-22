@@ -98,7 +98,12 @@ class Website(models.Model):
 
     def _OLG_api_rpc(self, route, params):
         return self._api_rpc(
-            route, params, "website.olg_api_endpoint", DEFAULT_OLG_ENDPOINT, timeout=45
+            route,
+            params,
+            "website.olg_api_endpoint",
+            DEFAULT_OLG_ENDPOINT,
+            timeout=45,
+            purpose="iap.olg.website",
         )
 
     def prepare_configurator_cta_data(self, website_purpose, website_type):

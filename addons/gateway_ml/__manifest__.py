@@ -1,6 +1,6 @@
 {
     "name": "API AI",
-    "version": "19.0.1.23.0",
+    "version": "19.0.1.24.0",
     "category": "Hidden",
     "sequence": 10,
     "summary": "AI provider registry, orchestration and vendor clients",
@@ -32,6 +32,11 @@ Models
   the key's lineage decides (``speech.transcription`` governs
   ``speech.transcription.call`` until the latter has its own); with none, a
   sensitive purpose reaches no vendor and any other reaches every vendor.
+* ``ir.egress`` -- an outbound session opened under a declared purpose is
+  checked before it opens, so a sender outside the vendor catalogue -- Odoo's
+  IAP text generation (``iap.olg.editor``, ``iap.olg.website``, ...) -- is
+  refused a sensitive purpose too. It names no vendor a policy could list, so
+  only sensitivity decides; marking ``iap.olg`` sensitive turns OLG off.
 
 Provider operations
 -------------------
@@ -149,6 +154,7 @@ Depends on ``integration`` alone.
         "data/ai_providers_data.xml",
         "data/ai_models_data.xml",
         "data/ai_provider_services_data.xml",
+        "data/gateway_ml_purpose_data.xml",
         "views/ai_provider_views.xml",
         "views/ai_model_views.xml",
         "views/ai_use_case_tag_views.xml",

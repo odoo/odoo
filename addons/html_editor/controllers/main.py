@@ -740,6 +740,7 @@ class HTML_Editor(http.Controller):
                 },
                 timeout=30,
                 env=request.env,
+                purpose="iap.olg.editor",
             )
             if response["status"] == "success":
                 return response["content"]

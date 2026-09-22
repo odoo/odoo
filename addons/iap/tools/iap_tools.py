@@ -309,7 +309,7 @@ class IAPServerError(Exception):
     pass
 
 
-def iap_jsonrpc(url, method="call", params=None, timeout=15, *, env):
+def iap_jsonrpc(url, method="call", params=None, timeout=15, *, env, purpose=None):
     """Call the provided JSON-RPC endpoint, unwrap the result and raise
     JSON-RPC errors as ``InsufficientCreditError`` or ``AccessError``.
     """
@@ -325,7 +325,9 @@ def iap_jsonrpc(url, method="call", params=None, timeout=15, *, env):
 
     _logger.info("iap jsonrpc %s", url)
     try:
-        with env["ir.egress"].session(purpose="iap", policy="private") as session:
+        with env["ir.egress"].session(
+            purpose=purpose or "iap", policy="private"
+        ) as session:
             req = session.post(url, json=payload, timeout=timeout)
         req.raise_for_status()
         response = req.json()
