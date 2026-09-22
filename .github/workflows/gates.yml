@@ -44,6 +44,16 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
+      # package.json carries sass-embedded, the compiler odoo/tools/sass_embedded.py
+      # drives; Tier 2 compiles through it
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install node packages
+        run: npm ci
+
       # pycairo (under rlPyCairo), python-ldap and psycopg-c ship no Linux
       # wheel and build against these headers
       - name: Install system packages
