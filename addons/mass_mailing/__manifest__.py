@@ -144,7 +144,10 @@
             ('include', 'mass_mailing.assets_iframe_style_base'),
             'html_editor/static/src/scss/css_variables.scss',
             'html_builder/static/src/scss/css_variables.scss',
-            'mass_mailing/static/src/builder/**/*.inside.css'
+            'mass_mailing/static/src/builder/**/*.inside.css',
+        ],
+        'mass_mailing.assets_mail_clients': [
+            'mass_mailing/static/src/mail_clients_css/mass_mailing_mail.css',
         ],
         'mass_mailing.iframe_add_dialog': [
             ('include', 'html_builder.iframe_add_dialog'),
@@ -166,6 +169,7 @@
             'mass_mailing/static/src/views/fields/**/*',
             'mass_mailing/static/src/views/mailing_filter*/**/*.js',
             'mass_mailing/static/src/views/mailing_template_kanban_view/**/*',
+            'mass_mailing/static/src/convert_inline/**/*',
             'mass_mailing/static/src/editor/**/*',
             'mass_mailing/static/src/fields/**/*',
             'mass_mailing/static/src/themes/*',

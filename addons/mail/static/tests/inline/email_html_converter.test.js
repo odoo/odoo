@@ -17,7 +17,8 @@ class Converter extends Component {
 test("reference iframe does not make the page scrollable", async () => {
     const { converter } = await mountWithCleanup(Converter);
     const fragment = document.createRange().createContextualFragment("<p>Hello</p>");
-    expect(await converter.convertToEmailHtml(fragment)).toInclude("Hello");
+    const template = await converter.convertToEmailHtml(fragment);
+    expect(template.innerHTML).toInclude("Hello");
     const pageHeight = document.documentElement.scrollHeight;
     // Taller than any test viewport, so it would overflow the page if it took part in its layout.
     converter.updateLayoutDimensions({ width: 1320, height: 20000 });

@@ -1,6 +1,6 @@
 import { childNodes, closestPath, findNode } from "./dom_traversal";
 
-const blockTagNames = [
+export const blockTagNames = [
     "ADDRESS",
     "ARTICLE",
     "ASIDE",
