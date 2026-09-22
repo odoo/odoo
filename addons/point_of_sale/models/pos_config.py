@@ -61,6 +61,9 @@ class PosConfig(models.Model):
     def _get_group_pos_user(self):
         return self.env.ref('point_of_sale.group_pos_user')
 
+    def _get_default_split_payment_product(self):
+        return self.env.ref('point_of_sale.product_product_split_payment', raise_if_not_found=False)
+
     def _get_default_tip_product(self):
         tip_product_id = self.env.ref("point_of_sale.product_product_tip", raise_if_not_found=False)
         if not tip_product_id or (tip_product_id.sudo().company_id and tip_product_id.sudo().company_id != self.env.company):
@@ -153,6 +156,7 @@ class PosConfig(models.Model):
     group_pos_user_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=_get_group_pos_user,
         help='This field is there to pass the id of the pos user group to the point of sale client.')
     iface_tipproduct = fields.Boolean(string="Product tips")
+    split_payment_product_id = fields.Many2one('product.product', string='Split Payment Product', default=_get_default_split_payment_product, help="This product is used as reference on receipts when an order is settled via Split and Pay.")
     tip_product_id = fields.Many2one('product.product', string='Tip Product', default=_get_default_tip_product, help="This product is used as reference on customer receipts.")
     set_tip_after_payment = fields.Boolean('Set Tip After Payment', help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.")
     tip_percentage_1 = fields.Integer(string='Tip Percentage 1', default=15)
@@ -1133,8 +1137,9 @@ class PosConfig(models.Model):
     def _get_special_products(self):
         default_tip = self.env.ref('point_of_sale.product_product_tip', raise_if_not_found=False) or self.env['product.product']
         default_fee = self.env.ref('point_of_sale.product_product_service_fee', raise_if_not_found=False) or self.env['product.product']
+        default_split_payment = self.split_payment_product_id or self.env['product.product']
         fee_products = self.env['pos.preset'].search([('service_fee', '=', True)]).mapped('service_fee_product_id')
-        return default_tip | default_fee | fee_products
+        return default_tip | default_fee | default_split_payment | fee_products
 
     def update_customer_display(self, order, identifier):
         self.ensure_one()
