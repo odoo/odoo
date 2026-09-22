@@ -56,7 +56,10 @@ unknown literal model name is an error; dynamic strings retain the base type.
 A literal lookup with missing or empty registry types reports a setup error.
 Regenerating the stub rechecks model lookups in the running mypy daemon.
 Generated methods preserve staticmethod and classmethod binding, and model
-class names avoid the stub's own imported and generated names.
+class names avoid the stub's own imported and generated names. Optional
+parameter defaults and coroutine methods retain their call semantics. The CLI
+stages the complete stub on the destination filesystem before replacing it,
+so readers and failed writes preserve the preceding complete snapshot.
 Measured on `sale/models` + `stock/models`
 against the four-module set's stubs with `check_untyped_defs`: 3 222 readings
 without the plugin, 2 854 with it -- 413 attribute complaints resolved, 56

@@ -1,4 +1,6 @@
+import stat
 import sys
+import tempfile
 from pathlib import Path
 
 from odoo.libs.debug_log import DebugLog
@@ -7,6 +9,21 @@ from odoo.orm.stubs import STUB_MODULE, render_registry
 from . import DatabaseCommand, open_environment
 
 _debug = DebugLog(__name__)
+
+
+def _write_stubs(target: Path, source: str) -> None:
+    try:
+        mode = stat.S_IMODE(target.stat().st_mode)
+    except FileNotFoundError:
+        mode = None
+    with tempfile.TemporaryDirectory(
+        dir=target.parent, prefix=f".{target.name}."
+    ) as directory:
+        temporary_path = Path(directory) / target.name
+        temporary_path.write_text(source, encoding="utf-8")
+        if mode is not None:
+            temporary_path.chmod(mode)
+        temporary_path.replace(target)
 
 
 class Stubs(DatabaseCommand):
@@ -39,7 +56,7 @@ class Stubs(DatabaseCommand):
             directory = Path(config["data_dir"]) / "stubs" / db_name
         directory.mkdir(parents=True, exist_ok=True)
         target = directory / f"{STUB_MODULE}.pyi"
-        target.write_text(source)
+        _write_stubs(target, source)
         _debug.lifecycle(
             "cli.stubs.written", db=db_name, models=models, path=str(target)
         )

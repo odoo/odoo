@@ -281,5 +281,38 @@ def test_mypy_daemon_sees_regenerated_models(tmp_path):
         assert stopped.returncode == 0, stopped.stdout + stopped.stderr
 
 
+def test_generated_methods_preserve_binding_defaults_and_awaitability(tmp_path):
+    class Signatures:
+        @staticmethod
+        def optional(value=None, /, *, self=None, cls=False):
+            return value, self, cls
+
+        def configure(self, *, cls=False):
+            return cls
+
+        async def fetch_value(self, value):
+            return value
+
+    source = render(
+        [("signature.probe", {})], classes_by_model={"signature.probe": Signatures}
+    )
+    result = _run_mypy(
+        tmp_path,
+        source,
+        "from odoo.api import Environment\n"
+        "async def valid(env: Environment) -> None:\n"
+        "    env['signature.probe'].optional()\n"
+        "    env['signature.probe'].configure()\n"
+        "    await env['signature.probe'].fetch_value(1)\n"
+        "def invalid(env: Environment) -> None:\n"
+        "    env['signature.probe'].fetch_value(1)\n",
+        check_stub=True,
+    )
+    assert result.returncode == 1, result.stdout + result.stderr
+    errors = [line for line in result.stdout.splitlines() if ": error:" in line]
+    assert len(errors) == 1, result.stdout + result.stderr
+    assert "unused-coroutine" in errors[0]
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-v"]))

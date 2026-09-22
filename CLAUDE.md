@@ -130,7 +130,7 @@ pytest tests/perf                                    # local time + count floors
 ./gates.sh --perf-counts                              # CI: counts + timing artifact
 ```
 
-`tests/perf` installs `base` into a scratch database and holds the ORM to `tests/perf/floors.json`: statement counts per flow are exact ratchets, Python time (wall minus driver) and the warm registry load are floors with a 25 % tolerance. Run it after any change under `odoo/orm/`, and move a floor in the same change that moves the count. To find *where* time goes, use a signal-based sampler on the main thread; cProfile shares and sampling threads both misattribute (`doc/architecture/qualities.md`, Scenario 0).
+`tests/perf` installs `base` into a scratch database and holds the ORM to `tests/perf/floors.json`: statement counts per flow are exact ratchets, residual wall time (wall minus SQL, distinct from thread CPU) and the warm registry load are floors with a 25 % tolerance. Run it after any change under `odoo/orm/`, and move a floor in the same change that moves the count. To find *where* time goes, use a signal-based sampler on the main thread; cProfile shares and sampling threads both misattribute (`doc/architecture/qualities.md`, Scenario 0).
 
 ### Integration — through `odoo-bin`
 

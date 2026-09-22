@@ -111,7 +111,7 @@ def _method_lines(cls: type, reserved: typing.AbstractSet[str]) -> list[str]:
         parameters = []
         star = False
         positional_only = False
-        for parameter in signature.parameters.values():
+        for index, parameter in enumerate(signature.parameters.values()):
             kind = parameter.kind
             if positional_only and kind is not parameter.POSITIONAL_ONLY:
                 parameters.append("/")
@@ -125,10 +125,10 @@ def _method_lines(cls: type, reserved: typing.AbstractSet[str]) -> list[str]:
                 star = True
             elif kind is parameter.VAR_KEYWORD:
                 text = f"**{text}: Any"
-            elif text not in ("self", "cls"):
+            elif index != 0 or isinstance(member, staticmethod):
                 text += ": Any"
-                if parameter.default is not parameter.empty:
-                    text += " = ..."
+            if parameter.default is not parameter.empty:
+                text += " = ..."
             if kind is parameter.POSITIONAL_ONLY:
                 positional_only = True
             parameters.append(text)
@@ -141,7 +141,10 @@ def _method_lines(cls: type, reserved: typing.AbstractSet[str]) -> list[str]:
             if isinstance(member, staticmethod)
             else ""
         )
-        lines.append(f"{decorator}    def {name}({', '.join(parameters)}) -> Any: ...")
+        prefix = "async def" if inspect.iscoroutinefunction(function) else "def"
+        lines.append(
+            f"{decorator}    {prefix} {name}({', '.join(parameters)}) -> Any: ..."
+        )
     return lines
 
 
