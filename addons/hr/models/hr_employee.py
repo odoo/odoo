@@ -2463,7 +2463,11 @@ class HrEmployee(models.Model):
 
     def action_new_departure(self):
         self.ensure_one()
-        if not self.is_in_contract:
+        latest_version = self.employee_id.version_ids.sorted("date_version", reverse=True)[0]
+        if self.version_id != latest_version:
+            raise UserError(self.env._("You can only end the collaboration from the latest version of the employee."))
+        today = fields.Date.context_today(self)
+        if latest_version.contract_date_end and latest_version.contract_date_end < today:
             raise UserError(self.env._("You can't end the collaboration of an employee without contract, archive it instead."))
         if self.departure_id:
             if self.departure_id.apply_date:
