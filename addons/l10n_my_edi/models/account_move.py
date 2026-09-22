@@ -190,7 +190,7 @@ class AccountMove(models.Model):
         """
         invoice_needing_new_document = self.env['account.move']
         myinvois_documents = self.env['myinvois.document']
-        for move in self.filtered(lambda m: m.state == 'posted'):
+        for move in self.filtered(lambda m: m.state == 'posted' and m.is_invoice()):
             # It already has a document active on the platform, we don't want to send it again. Invalid/cancelled
             # documents are terminal and don't block resending, they're not active on the platform anymore.
             if move.l10n_my_edi_state not in (False, 'invalid', 'cancelled'):
