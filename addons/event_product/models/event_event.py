@@ -8,5 +8,4 @@ class EventEvent(models.Model):
         comodel_name="res.currency",
         related="company_id.currency_id",
         string="Currency",
-        readonly=True,
     )
