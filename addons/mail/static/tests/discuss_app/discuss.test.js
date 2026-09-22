@@ -1437,6 +1437,132 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
     await expect.waitForSteps(["(1) Odoo"]);
 });
 
+test("no out-of-focus notif when push subscription is active", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Hagrid" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    patchWithCleanup(OutOfFocusService.prototype, {
+        async notify() {
+            await super.notify(...arguments);
+            expect.step("notification handled");
+        },
+        async hasServiceWorkInstalledAndPushSubscriptionActive() {
+            return true;
+        },
+        sendNotification() {
+            expect.step("send_notification");
+        },
+    });
+    listenStoreFetch("init_messaging");
+    await start();
+    await waitStoreFetch("init_messaging");
+    await openDiscuss();
+    await openMessagingMenu(MENU_ACTIVE_IDS.NOTIFICATION);
+    const adminId = serverState.partnerId;
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "@Michell Admin",
+                partner_ids: [adminId],
+                message_type: "comment",
+            },
+            thread_id: partnerId,
+            thread_model: "res.partner",
+        })
+    );
+    await expect.waitForSteps(["notification handled"]);
+});
+
+for (const [messageType, hasSubscription, isSelfAuthored] of [
+    ["auto_comment", true, false],
+    ["out_of_office", true, false],
+    ["email_outgoing", true, false],
+    ["comment", false, false],
+    ["comment", true, true],
+]) {
+    test(`out-of-focus notif for ${messageType} with push subscription=${hasSubscription}, self authored=${isSelfAuthored}`, async () => {
+        const pyEnv = await startServer();
+        pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+        const partnerId = pyEnv["res.partner"].create({ name: "Hagrid" });
+        const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+        const notificationHandled = Promise.withResolvers();
+        patchWithCleanup(OutOfFocusService.prototype, {
+            async notify() {
+                await super.notify(...arguments);
+                notificationHandled.resolve();
+            },
+            async hasServiceWorkInstalledAndPushSubscriptionActive() {
+                return hasSubscription;
+            },
+            sendNotification() {
+                expect.step("send_notification");
+            },
+        });
+        listenStoreFetch("init_messaging");
+        await start();
+        await waitStoreFetch("init_messaging");
+        const adminId = serverState.partnerId;
+        await withUser(isSelfAuthored ? serverState.userId : userId, () =>
+            rpc("/mail/message/post", {
+                post_data: {
+                    body: "Automated notification",
+                    partner_ids: [adminId],
+                    message_type: messageType,
+                },
+                thread_id: partnerId,
+                thread_model: "res.partner",
+            })
+        );
+        await notificationHandled.promise;
+        expect.verifySteps(["send_notification"]);
+    });
+}
+
+for (const imStatus of ["online", "busy"]) {
+    test(`chatter push notification while ${imStatus}`, async () => {
+        const pyEnv = await startServer();
+        pyEnv["res.users"].write(serverState.userId, {
+            notification_type: "inbox",
+            im_status: imStatus,
+        });
+        patchWithCleanup(parent.document, { hasFocus: () => false });
+        patchWithCleanup(navigator.serviceWorker, {
+            controller: {
+                postMessage(data) {
+                    expect.step(data);
+                },
+            },
+        });
+        await start();
+        const store = getService("mail.store");
+        await store.isReady;
+        expect(store.self_user.im_status).toBe(imStatus);
+        navigator.serviceWorker.dispatchEvent(
+            new MessageEvent("message", {
+                data: {
+                    type: "notification-display-request",
+                    payload: {
+                        correlationId: "chatter-push",
+                        model: "res.partner",
+                        res_id: serverState.partnerId,
+                    },
+                },
+            })
+        );
+        expect.verifySteps(
+            imStatus === "busy"
+                ? [
+                      {
+                          type: "notification-display-response",
+                          payload: { correlationId: "chatter-push" },
+                      },
+                  ]
+                : []
+        );
+    });
+}
+
 test("out-of-focus notif on needaction message in group chat contributes only once", async () => {
     const pyEnv = await startServer();
     patchWithCleanup(document, {
