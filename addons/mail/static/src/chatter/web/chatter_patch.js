@@ -489,7 +489,7 @@ const chatterPatch = {
 
     async unlinkAttachment(attachment) {
         await this.attachmentUploader.unlink(attachment);
-        if (this.props.hasParentReloadOnAttachmentsChanged) {
+        if (!attachment.exists() && this.props.hasParentReloadOnAttachmentsChanged) {
             this.reloadParentView();
         }
     },
