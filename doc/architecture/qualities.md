@@ -42,12 +42,12 @@ the two columns.
 > **Environment** Two scratch databases the suite installs and drops — `base`
 > (176 models) and the four-module set (127 modules, 672 models) — superuser,
 > one transaction; the in-memory tier for its two rows. About 95 s per run.
-> **Response** Statement counts as exact ratchets, Python time (wall minus the
+> **Response** Statement counts as exact ratchets, residual wall time (wall minus the
 > driver's share, median of rounds) and the warm registry load as one-sided
 > floors with 25 % tolerance, in `tests/perf/floors.json`.
 > **Measure** The readings below are that file's values when it was created.
 
-| Scenario | Statements | Python |
+| Scenario | Statements | Residual wall time |
 |---|---:|---:|
 | `res.partner.create` one record + flush | 3 | 1.84 ms |
 | `res.partner.create` 1 000 records + flush | 21 | 369.5 ms (0.37 ms/record) |
@@ -60,6 +60,13 @@ the two columns.
 | four-module set (`sale,purchase,stock,account`): `sale.order.create`, 3 lines + flush | 12 | 18.35 ms |
 | four-module set: create + `action_confirm` + flush | 43 | 44.2 ms |
 | four-module set: `res.partner.create` one record + flush | 4 | 6.83 ms |
+
+The table preserves the original readings. The 2026-09-22 counter correction
+changes the batch-create statement floor from 21 to 31: a side-by-side trace
+found ten COPY submissions omitted by the old execute-only counter. No database
+work was added. Timing artifacts now separate wall, thread CPU, SQL (including
+pipeline waits), and residual wall time; the old time limits remain unchanged.
+CI checks counts on every operation without enforcing host-specific time limits.
 
 The same suite run on the tree one commit earlier read the write loop at 69 ms
 (the gate's first red) and the single create at 2.17 ms: what

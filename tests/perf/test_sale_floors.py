@@ -2,10 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from ._bench import StatementCounter, python_ms
-from .conftest import check, requires_pg
-
-pytestmark = requires_pg
+from ._bench import StatementCounter, measure
 
 
 @pytest.fixture(scope="module")
@@ -51,24 +48,24 @@ def order_factory(env):
     return make
 
 
-def test_sale_order_create(env, counter, order_factory):
-    ms, statements = python_ms(order_factory, counter, repeat=10)
-    check("sale_order_create_3_lines", {"statements": statements, "python_ms": ms})
+def test_sale_order_create(env, counter, order_factory, check):
+    readings = measure(order_factory, counter, repeat=10)
+    check("sale_order_create_3_lines", readings)
 
 
-def test_sale_order_create_confirm(env, counter, order_factory):
+def test_sale_order_create_confirm(env, counter, order_factory, check):
     def cycle():
         order = order_factory()
         order.action_confirm()
         env.flush_all()
 
-    ms, statements = python_ms(cycle, counter, repeat=10)
-    check("sale_order_create_confirm", {"statements": statements, "python_ms": ms})
+    readings = measure(cycle, counter, repeat=10)
+    check("sale_order_create_confirm", readings)
 
 
-def test_partner_create_on_sale_set(env, counter):
+def test_partner_create_on_sale_set(env, counter, check):
     partner = env["res.partner"]
-    ms, statements = python_ms(
+    readings = measure(
         lambda: (partner.create({"name": "b"}), env.flush_all()), counter, repeat=50
     )
-    check("partner_create_one_sale_set", {"statements": statements, "python_ms": ms})
+    check("partner_create_one_sale_set", readings)

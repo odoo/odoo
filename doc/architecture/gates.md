@@ -51,7 +51,13 @@ declares `env: Environment` (the mixins keep `Any` for their own shortcuts), so
 an addon's `self.env` is typed; `odoo-bin stubs -d <db>` writes
 `odoo_registry_stubs.pyi` from a live registry and `mypy_registry_plugin.py`
 (repo root, standalone so the checker never runs the framework bootstrap)
-types every `env["<name>"]` from it. Measured on `sale/models` + `stock/models`
+types every `env["<name>"]` from it. With generated registry types loaded, an
+unknown literal model name is an error; dynamic strings retain the base type.
+A literal lookup with missing or empty registry types reports a setup error.
+Regenerating the stub rechecks model lookups in the running mypy daemon.
+Generated methods preserve staticmethod and classmethod binding, and model
+class names avoid the stub's own imported and generated names.
+Measured on `sale/models` + `stock/models`
 against the four-module set's stubs with `check_untyped_defs`: 3 222 readings
 without the plugin, 2 854 with it -- 413 attribute complaints resolved, 56
 findings that are real (a `Char` handed to `dict.get`, a recordset assigned
@@ -75,13 +81,14 @@ named: `tests/contract` (`ODOO_CONTRACT_REQUIRE_DEPS=1`; PostgreSQL + psql +
 pg_dump), `tests/process` (boots real `odoo-bin` processes), `tests/loading`
 (installs `base` into a scratch database; pins the loader phase order, the
 uninstall reload, migration ordering and migration-stage schema visibility)
-and `tests/perf` (`./gates.sh --perf`; installs `base` and the four-module set
+and `tests/perf` (`./gates.sh --perf-counts` in CI, `--perf` for local timing;
+installs `base` and the four-module set
 `sale,purchase,stock,account` into two scratch databases and reads the ORM's
 cost on them: statements per `res.partner` create, batch create, write loop,
 batch write and `search_fetch`, per `sale.order` create and create+confirm, as
-**exact ratchets**, the Python time of each — wall minus driver, median of
-rounds — and the warm `Registry loaded in` as **one-sided floors** with a 25 %
-tolerance
+**exact ratchets** for every measured operation, residual wall time — wall minus
+driver, median of rounds — and the warm `Registry loaded in` as **one-sided
+floors** with a 25 % tolerance
 (`ODOO_PERF_TOLERANCE`), plus the in-memory tier's cost per create and per
 stored compute. The floors are `tests/perf/floors.json`, one machine's,
 moved in the same change that moves the count; a reading below a time floor
@@ -177,3 +184,12 @@ that open their own cursor because they run *before* a registry exists for the
 database, so there is no `env` to route through. Both imports are deferred to
 call time (four call sites), and no override of either exists anywhere in
 `odoo`/`enterprise`/`agromarin`.
+
+Performance runs retain wall time, thread CPU time, driver time and residual wall
+time separately in the perf-results.json artifact. CI enforces statement counts against a
+PostgreSQL service; machine-specific time limits apply only with `--perf`. Missing
+PostgreSQL fails the performance run instead of skipping it.
+
+The counter measures driver submissions: one execute, executemany or COPY call
+is one statement. SQL time includes pipeline synchronization waits. Batch creation
+now counts COPY too; its baseline correction is recorded in qualities.md.

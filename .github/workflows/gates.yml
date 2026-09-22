@@ -13,6 +13,24 @@ jobs:
   gates:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U odoo"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: localhost
+      PGPORT: "5432"
+      PGUSER: odoo
+      PGPASSWORD: odoo
     steps:
       - uses: actions/checkout@v4
 
@@ -25,6 +43,9 @@ jobs:
             requirements-dev.txt
 
       - uses: dtolnay/rust-toolchain@stable
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
 
       - name: Install the venv
         run: |
@@ -39,4 +60,12 @@ jobs:
         run: maturin develop --release
 
       - name: gates.sh
-        run: ./gates.sh
+        run: ./gates.sh --perf-counts
+
+      - name: Retain performance measurements
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: orm-performance
+          path: perf-results.json
+          if-no-files-found: error

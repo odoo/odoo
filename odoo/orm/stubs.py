@@ -34,6 +34,10 @@ _VALUE_TYPES: dict[str, str] = {
     "id": "int",
 }
 
+_RESERVED_CLASSES = frozenset(
+    ("Any", "BaseModel", "Environment", "Generic", "Literal", "TypeVar")
+)
+
 _RELATIONAL = frozenset(("many2one", "one2many", "many2many", "one2one"))
 
 _HEADER = """\
@@ -62,7 +66,12 @@ class _F(Generic[_V]):
 def class_name(model_name: str) -> str:
     parts = re.split(r"[._]", model_name)
     name = "".join(part[:1].upper() + part[1:] for part in parts if part)
-    if not name or not name[0].isalpha():
+    if (
+        not name
+        or not name[0].isalpha()
+        or keyword.iskeyword(name)
+        or name in _RESERVED_CLASSES
+    ):
         name = "Model" + name
     return name
 
@@ -85,7 +94,11 @@ def _method_lines(cls: type, reserved: typing.AbstractSet[str]) -> list[str]:
     for name, member in sorted(vars_of_model(cls).items()):
         if name in reserved or not name.isidentifier() or keyword.iskeyword(name):
             continue
-        function = member.__func__ if isinstance(member, classmethod) else member
+        function = (
+            member.__func__
+            if isinstance(member, classmethod | staticmethod)
+            else member
+        )
         if not inspect.isfunction(function):
             continue
         try:
@@ -121,7 +134,13 @@ def _method_lines(cls: type, reserved: typing.AbstractSet[str]) -> list[str]:
             parameters.append(text)
         if positional_only:
             parameters.append("/")
-        decorator = "    @classmethod\n" if isinstance(member, classmethod) else ""
+        decorator = (
+            "    @classmethod\n"
+            if isinstance(member, classmethod)
+            else "    @staticmethod\n"
+            if isinstance(member, staticmethod)
+            else ""
+        )
         lines.append(f"{decorator}    def {name}({', '.join(parameters)}) -> Any: ...")
     return lines
 
@@ -155,8 +174,8 @@ def render(
         if name in classes.values():
             taken = next(m for m, c in classes.items() if c == name)
             raise ValueError(
-                f"models {taken!r} and {model_name!r} both stub as {name}; the plugin "
-                f"resolves a model by that name alone"
+                f"models {taken!r} and {model_name!r} both stub as {name}; "
+                "generated class names must be unique"
             )
         classes[model_name] = name
 
@@ -187,7 +206,8 @@ def render(
             f'    def __getitem__(self, model_name: Literal["{model_name}"]) '
             f"-> {classes[model_name]}: ..."
         )
-    out.append("    @overload")
+    if classes:
+        out.append("    @overload")
     out.append("    def __getitem__(self, model_name: str) -> BaseModel: ...")
     out.append("")
     return "\n".join(out)

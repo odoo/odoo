@@ -109,7 +109,7 @@ class SchemaDiff(DatabaseCommand):
                     real.clear()
                     real.prerollback.clear()
                     real.postrollback.clear()
-                    real.postcommit.run()
+                    real.postcommit.clear()
 
                 def recording_execute(
                     query: typing.Any, *args: typing.Any, **kw: typing.Any

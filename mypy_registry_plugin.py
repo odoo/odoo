@@ -1,10 +1,15 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from typing import TYPE_CHECKING, cast
 
 from mypy.nodes import MypyFile, StrExpr, TypeInfo
 from mypy.plugin import MethodContext, Plugin
+from mypy.server.trigger import make_trigger, make_wildcard_trigger
 from mypy.types import Instance, LiteralType, Type, get_proper_type
+
+if TYPE_CHECKING:
+    from mypy.checker import TypeChecker
 
 STUB_MODULE = "odoo_registry_stubs"
 ENVIRONMENT_GETITEM = "odoo.orm.runtime.environment.Environment.__getitem__"
@@ -25,27 +30,47 @@ def _model_name(ctx: MethodContext) -> str | None:
 
 
 class RegistryStubsPlugin(Plugin):
-    _classes: dict[str, TypeInfo] | None = None
-
-    def _class_for(self, ctx: MethodContext, model_name: str) -> TypeInfo | None:
-        if self._classes is None:
-            classes: dict[str, TypeInfo] = {}
-            module = ctx.api.modules.get(STUB_MODULE)  # type: ignore[attr-defined]
-            for symbol in module.names.values() if module is not None else ():
-                info = symbol.node
-                if not isinstance(info, TypeInfo):
-                    continue
-                name = info.names.get("_name")
-                literal = get_proper_type(name.type) if name is not None else None
-                if isinstance(literal, LiteralType) and isinstance(literal.value, str):
-                    classes[literal.value] = info
-            self._classes = classes
-        return self._classes.get(model_name)
+    def _registry_classes(self, ctx: MethodContext) -> dict[str, TypeInfo]:
+        api = cast("TypeChecker", ctx.api)
+        # Module loading dependencies do not recheck function bodies in a daemon.
+        for trigger in (
+            make_trigger(STUB_MODULE),
+            make_wildcard_trigger(STUB_MODULE),
+            make_trigger(f"{STUB_MODULE}.Environment.__getitem__"),
+        ):
+            api.tree.plugin_deps.setdefault(trigger, set()).add(
+                api.tscope.current_target()
+            )
+        # Fine-grained rechecking replaces types; keep no TypeInfo objects across calls.
+        classes: dict[str, TypeInfo] = {}
+        module = api.modules.get(STUB_MODULE)
+        for symbol in module.names.values() if module is not None else ():
+            info = symbol.node
+            if not isinstance(info, TypeInfo):
+                continue
+            name = info.names.get("_name")
+            literal = get_proper_type(name.type) if name is not None else None
+            if isinstance(literal, LiteralType) and isinstance(literal.value, str):
+                classes[literal.value] = info
+        return classes
 
     def _typed_model(self, ctx: MethodContext) -> Type:
         model_name = _model_name(ctx)
-        info = self._class_for(ctx, model_name) if model_name is not None else None
+        classes = self._registry_classes(ctx) if model_name is not None else {}
+        info = classes.get(model_name) if model_name is not None else None
         if info is None:
+            if model_name is not None and not classes:
+                ctx.api.fail(
+                    "No generated registry model types were loaded; run odoo-bin stubs "
+                    "and add the output directory to MYPYPATH",
+                    ctx.context,
+                )
+            elif model_name is not None:
+                ctx.api.fail(
+                    f"Model {model_name!r} is absent from the generated registry; "
+                    "check the name or regenerate the stubs after installing its addon",
+                    ctx.context,
+                )
             return ctx.default_return_type
         return Instance(info, [])
 

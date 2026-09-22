@@ -7,10 +7,8 @@ import time
 
 import pytest
 
-from ._bench import StatementCounter, python_ms
-from .conftest import ADDONS_PATH, REPO_ROOT, check, requires_pg
-
-pytestmark = requires_pg
+from ._bench import StatementCounter, measure
+from .conftest import ADDONS_PATH, REPO_ROOT
 
 
 @pytest.fixture(scope="module")
@@ -32,17 +30,17 @@ def counter():
         yield counter
 
 
-def test_partner_create_one(env, counter):
+def test_partner_create_one(env, counter, check):
     partner = env["res.partner"]
-    ms, statements = python_ms(
+    readings = measure(
         lambda: (partner.create({"name": "b"}), env.flush_all()), counter, repeat=50
     )
-    check("partner_create_one", {"statements": statements, "python_ms": ms})
+    check("partner_create_one", readings)
 
 
-def test_partner_create_batch(env, counter):
+def test_partner_create_batch(env, counter, check):
     partner = env["res.partner"]
-    ms, statements = python_ms(
+    readings = measure(
         lambda: (
             partner.create([{"name": f"b{i}"} for i in range(1000)]),
             env.flush_all(),
@@ -51,10 +49,10 @@ def test_partner_create_batch(env, counter):
         repeat=1,
         rounds=3,
     )
-    check("partner_create_batch_1000", {"statements": statements, "python_ms": ms})
+    check("partner_create_batch_1000", readings)
 
 
-def test_partner_write_loop(env, counter):
+def test_partner_write_loop(env, counter, check):
     partners = env["res.partner"].create([{"name": f"w{i}"} for i in range(1000)])
     env.flush_all()
     tick = [0]
@@ -65,11 +63,11 @@ def test_partner_write_loop(env, counter):
             record.ref = f"r{tick[0]}"
         env.flush_all()
 
-    ms, statements = python_ms(loop, counter, repeat=1, rounds=3)
-    check("partner_write_loop_1000", {"statements": statements, "python_ms": ms})
+    readings = measure(loop, counter, repeat=1, rounds=3)
+    check("partner_write_loop_1000", readings)
 
 
-def test_partner_write_batch(env, counter):
+def test_partner_write_batch(env, counter, check):
     partners = env["res.partner"].create([{"name": f"v{i}"} for i in range(1000)])
     env.flush_all()
     tick = [0]
@@ -79,11 +77,11 @@ def test_partner_write_batch(env, counter):
         partners.write({"ref": f"b{tick[0]}"})
         env.flush_all()
 
-    ms, statements = python_ms(batch, counter, repeat=1, rounds=3)
-    check("partner_write_batch_1000", {"statements": statements, "python_ms": ms})
+    readings = measure(batch, counter, repeat=1, rounds=3)
+    check("partner_write_batch_1000", readings)
 
 
-def test_partner_search_fetch(env, counter):
+def test_partner_search_fetch(env, counter, check):
     env["res.partner"].create([{"name": f"s{i}"} for i in range(1000)])
     env.flush_all()
 
@@ -93,11 +91,11 @@ def test_partner_search_fetch(env, counter):
             [("name", "like", "s")], ["name", "email"], limit=1000
         )
 
-    ms, statements = python_ms(fetch, counter, repeat=5)
-    check("partner_search_fetch_1000", {"statements": statements, "python_ms": ms})
+    readings = measure(fetch, counter, repeat=5)
+    check("partner_search_fetch_1000", readings)
 
 
-def test_registry_warm_load(base_db):
+def test_registry_warm_load(base_db, check):
     seconds = []
     for _ in range(3):
         proc = subprocess.run(
@@ -124,7 +122,7 @@ def test_registry_warm_load(base_db):
     check("registry_warm_load_base", {"seconds": round(min(seconds), 3)})
 
 
-def test_in_memory_floor():
+def test_in_memory_floor(check):
     from odoo import api, fields, models
     from odoo.orm.model_test_env import model_test_env
 
