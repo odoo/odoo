@@ -13,15 +13,13 @@
                 t-on-drop.prevent="this.onDrop"
             >
                 <t t-if="this.props.dragIcon and this.props.dragText">
-                    <div class="text-align-center pe-none">
-                        <img class="img-fluid" t-att-src="this.props.dragIcon"/>
-                    </div>
-                    <t t-if="this.props.visible">
-                        <div class="position-absolute upload_badge pe-none">
-                            <i class="oi oi-stack-2x text-primary" data-icon="circle"/>
+                    <div class="position-relative mb-3 pe-none">
+                        <img class="img-fluid" t-att-class="{'opacity-0': this.props.visible}" t-att-src="this.props.dragIcon"/>
+                        <div t-if="this.props.visible" class="position-absolute start-50 top-50 translate-middle oi-2x oi-stack upload_badge pe-none text-primary">
+                            <i class="oi oi-stack-2x opacity-25" data-icon="circle"/>
                             <i class="oi oi-stack-1x" data-icon="upload"/>
                         </div>
-                   </t>
+                    </div>
                     <div class="h3 pe-none" t-att-class="{'text-primary': this.props.visible}">
                         <t t-out="this.props.dragTitle"/>
                     </div>
