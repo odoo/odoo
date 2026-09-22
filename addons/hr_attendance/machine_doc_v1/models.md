@@ -10,7 +10,8 @@
 | `models/hr_attendance_overtime_ruleset.py` | `hr.attendance.overtime.ruleset` |
 | `models/hr_employee.py` | the employee's attendance state, hour totals and presence |
 | `models/hr_version.py` | `ruleset_id` on `hr.version` |
-| `models/res_company.py` | the kiosk, cron and overtime switches |
+| `models/hr_attendance_config.py` | `hr_attendance.config`, every attendance setting a company holds |
+| `models/res_company.py` | `hr_attendance_config_id`, the company's link to that record |
 | `models/res_config_settings.py` | their settings mirror |
 | `models/res_users.py` | `_clean_attendance_officers()` |
 | `models/ir_http.py` | `attendance_user_data` in the session |
@@ -107,6 +108,34 @@ identifies a line across a regeneration by `duration`, so a correction to
 `action_regenerate_overtimes()` re-prices every attendance of every employee on
 a version subject to this ruleset, from the earliest such version's date.
 
+## hr_attendance.config
+
+One company's attendance settings. It inherits `mixin.company.config`, which
+supplies `company_id` — required, `ondelete="cascade"`, and UNIQUE, so a company
+has exactly one — and the `_company_config = True` flag that gives `res.company`
+its `hr_attendance_config_id` accessor.
+
+These settings lived on `res_company` until 2.5. They are here because a column
+per setting on `res_company` makes every application's configuration share one
+table and one access rule; a record per application per company lets each own
+its own reads.
+
+| Field | Type | Notes |
+|---|---|---|
+| `attendance_kiosk_key` | Char | the kiosk's only credential; `required`, `copy=False`, defaulted to a fresh `uuid4().hex`, and UNIQUE across companies by `_attendance_kiosk_key_unique` |
+| `attendance_kiosk_url` | Char | the address that key opens |
+| `attendance_kiosk_mode` | Selection | barcode / barcode_manual / manual, default `barcode_manual` |
+| `attendance_barcode_source` | Selection | scanner / front / back, default `front` |
+| `attendance_kiosk_delay` | Integer | default 10 |
+| `attendance_kiosk_use_pin` | Boolean | whether the kiosk asks for a PIN |
+| `attendance_from_systray` | Boolean | the other entry point |
+| `attendance_device_tracking` | Boolean | what that entry point records |
+| `auto_check_out` | Boolean | with `auto_check_out_tolerance`, drives the closing cron |
+| `auto_check_out_tolerance` | Float | |
+| `absence_management` | Boolean | drives the absence cron |
+| `attendance_overtime_validation` | Selection | the approval flow |
+| `hr_attendance_display_overtime` | Boolean | whether extra hours are shown |
+
 ## hr.version (extended)
 
 | Field | Type | Notes |
@@ -137,13 +166,9 @@ did not, and were computed once and held.
 
 ## res.company (extended)
 
-`attendance_kiosk_key` and `attendance_kiosk_url` are the kiosk's address and
-its only credential. `attendance_kiosk_mode`, `attendance_barcode_source`,
-`attendance_kiosk_delay`, `attendance_kiosk_use_pin` configure the page;
-`attendance_from_systray` and `attendance_device_tracking` the other entry
-point and what it records. `auto_check_out` with `auto_check_out_tolerance`,
-`absence_management`, `attendance_overtime_validation` and
-`hr_attendance_display_overtime` drive the crons and the approval flow.
+One field: `hr_attendance_config_id`, the company's `hr_attendance.config`. Every
+setting this section used to list moved onto that record in 2.5 and is documented
+there; reaching one through the company is `company.hr_attendance_config_id.<field>`.
 
 `res.config.settings` mirrors all of them except the kiosk key, which is a
 credential and is regenerated rather than typed.

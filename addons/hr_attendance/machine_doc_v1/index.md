@@ -15,19 +15,19 @@ against this document. None of them is typed by hand here or there.
 
 | | |
 |---|---|
-| Version | 2.4 |
+| Version | 2.5 |
 | Application | yes |
 | License | LGPL-3 |
 | Dependencies | `hr`, `barcodes`, `geocoding` |
-| ORM models (new) | 4 in `models/` |
+| ORM models (new) | 5 in `models/` |
 | Models extended | `hr.employee`, `hr.version`, `ir.http`, `res.company`, `res.config.settings`, `res.users` |
-| Python model files | 10 |
+| Python model files | 11 |
 | Python test files | 21 |
 | HTTP routes | 13 |
 | Cron jobs | 2 |
 | Security groups | 5 |
 | JavaScript source files | 14 |
-| Migration script directories | 4 |
+| Migration script directories | 5 |
 
 ## What it owns
 
@@ -37,6 +37,7 @@ against this document. None of them is typed by hand here or there.
 | `hr.attendance.overtime.line` | one priced piece of overtime, attached to an attendance |
 | `hr.attendance.overtime.rule` | one rule for pricing it |
 | `hr.attendance.overtime.ruleset` | the set of rules a version is subject to |
+| `hr_attendance.config` | one company's attendance settings — the kiosk, the crons and the approval flow |
 
 `hr.version` is both declared and extended here: the module adds `ruleset_id`
 to it, which is what binds an employee's schedule period to a set of overtime
@@ -97,6 +98,7 @@ overtime deferral; the absence one deliberately does not, for a reason
 | `2.2` | reports any company that had set one of the removed overtime thresholds, before the ORM drops the columns |
 | `2.3` | fills a kiosk key for any company that had none, before the column becomes `required` and unique |
 | `2.4` | drops `hr_employee.last_check_in` and `last_check_out`: both are read off `last_attendance_id` now, and the ORM never drops the column of a field that stops being stored |
+| `2.5` | moves the twelve attendance settings off `res_company` onto `hr_attendance.config`, one row per company, and drops the columns once the rows exist |
 
 Neither drops a column it did not create. `ir.model.fields._drop_columns()`
 removes the column of a field a module stopped declaring, during the upgrade
