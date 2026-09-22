@@ -802,7 +802,7 @@ font[class*='bg-'] {
             }
         }
         // Default, if no color or background-color already selected
-        &:not([class*='bg-']) {
+        &:where(:not([class*='bg-'])) {
             color: $gray-900;
         }
         background-color: $gray-100;
