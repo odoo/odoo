@@ -83,6 +83,34 @@ class SearchMixin(_ModelStubs):
 
     @api.model
     @api.private
+    def search_iter(
+        self,
+        domain: DomainType,
+        *,
+        batch_size: int = 1000,
+        field_names: Sequence[str] | None = None,
+    ) -> typing.Iterator[Self]:
+        # each batch is its own search, keyed on the last id seen: a domain
+        # that shrinks as its rows are processed is never re-read from an
+        # offset, and no id list of the whole set is held
+        if batch_size <= 0:
+            raise ValueError(f"batch_size must be positive, got {batch_size}")
+        domain = Domain(domain)
+        last_id = 0
+        while True:
+            batch = self.search_fetch(
+                domain & Domain("id", ">", last_id),
+                field_names,
+                limit=batch_size,
+                order="id",
+            )
+            if not batch:
+                return
+            yield batch
+            last_id = batch[-1].id
+
+    @api.model
+    @api.private
     @api.readonly
     def search_fetch(
         self,

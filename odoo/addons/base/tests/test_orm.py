@@ -200,6 +200,19 @@ class TestORM(TransactionCase):
         with self.assertRaises(LockError):
             inexisting.lock_for_update(wait=True)
 
+    def test_search_iter_walks_in_batches_and_rereads_a_shrinking_domain(self):
+        partner = self.env["res.partner"]
+        created = partner.create(
+            [{"name": f"iter {i}", "ref": "iter"} for i in range(5)]
+        )
+        walked = partner.browse()
+        for batch in partner.search_iter([("ref", "=", "iter")], batch_size=2):
+            self.assertLessEqual(len(batch), 2)
+            walked |= batch
+            batch.ref = False
+        self.assertEqual(walked, created)
+        self.assertFalse(partner.search([("ref", "=", "iter")]))
+
     def test_try_lock_for_update(self):
         partner = self.env["res.partner"]
         p1, p2, *_other = recs = partner.search([], limit=4)

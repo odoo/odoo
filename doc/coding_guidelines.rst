@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.62
+:Version: 6.63
 :Date: 2026-09-22
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -8164,6 +8164,20 @@ much time is left.
 
 * Batch 100--1000 records to bound memory and lock duration. ``split_every`` is
   deprecated; use ``itertools.batched``.
+* A domain that **shrinks as its rows are processed** (``state = 'pending'``
+  and the batch sets it) walks with ``search_iter`` instead of one ``search``
+  plus ``batched``: each batch is its own search keyed on the last id seen, so
+  nothing re-reads from an offset the batch just moved and no id list of the
+  whole set is held ``[review]``:
+
+  .. code-block:: python
+
+     for orders in self.env["sale.order"].search_iter(
+         [("state", "=", "pending")], batch_size=100
+     ):
+         orders._process()
+         if not commit_progress(processed=len(orders)):
+             break
 * ``_commit_progress(processed=0, *, remaining=None, deactivate=False)`` --
   ``remaining`` is **keyword-only**. It returns the **remaining cron time in
   seconds** (``inf`` outside a cron, ``0`` at the deadline), not a record count.
@@ -8804,6 +8818,10 @@ which that test should go.
    * - Version
      - Date
      - Summary
+   * - 6.63
+     - 2026-09-22
+     - §11.7 names ``search_iter`` (new: a keyset walk, one search per batch
+       on the last id seen) for a domain that shrinks as it is processed.
    * - 6.62
      - 2026-09-22
      - §11.8 names the recordset lock verbs -- ``lock_for_update()``, its
