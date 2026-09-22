@@ -126,11 +126,54 @@ while IFS='|' read -r verdict detail; do
     [ "$verdict" = "OK" ] && ok || bad "$detail"
 done <<< "$route_report"
 
+# ------------------------------------------------------------------- client --
+# The checked-in client is a pure function of the checked-in document, so the
+# harness renders it here and needs no database to say whether it is current.
+client_report=$("$PY" - "$MOD" "$DOCUMENT" "$SCRIPT_DIR/client.ts" <<'CLIENT'
+import json
+import pathlib
+import re
+import sys
+
+mod, document, client = (pathlib.Path(p) for p in sys.argv[1:4])
+sys.path.insert(0, str(mod / "tools"))
+import openapi_client  # noqa: E402
+
+if not client.exists():
+    print(f"BAD|{client.name} is missing; no client reaches the doors")
+    raise SystemExit
+
+source = client.read_text()
+paths = json.loads(document.read_text())
+if openapi_client.render_typescript(paths) == source:
+    print("OK|client.ts is what the document renders")
+else:
+    print("BAD|client.ts is not what openapi.json renders; regenerate it")
+
+methods = set(re.findall(r"^    async (\w+)\(", source, re.MULTILINE))
+for item in paths["paths"].values():
+    for operation in item.values():
+        name = openapi_client._camel(operation["operationId"])
+        if name in methods:
+            print(f"OK|{name}")
+        else:
+            print(
+                f"BAD|{operation['operationId']} is a door no method of "
+                "client.ts calls"
+            )
+CLIENT
+)
+while IFS='|' read -r verdict detail; do
+    [ -z "$verdict" ] && continue
+    [ "$verdict" = "OK" ] && ok || bad "$detail"
+done <<< "$client_report"
+
 # --------------------------------------------------------------------- docs --
 # The document's own regeneration command and the test that holds it.
 assert_doc_cites "ODOO_WRITE_OPENAPI" "the variable that rewrites openapi.json"
 assert_doc_cites "TestOpenAPIContract" "the test that validates the document"
 assert_doc_cites "E8533" "the lint that keeps every machine route declared"
+assert_doc_cites "TestGeneratedClient" "the test that compiles the client"
 
 # Every backticked file resolves, and every backticked route is a route the
 # document describes -- a `/doc/<model>.json` is not a file and must not be
@@ -144,7 +187,7 @@ import sys
 doc_dir, mod, repo, document = (pathlib.Path(p) for p in sys.argv[1:5])
 described = set(json.loads(document.read_text())["paths"])
 ARG = re.compile(r"<(?:[a-zA-Z_]\w*:)?(\w+)>")
-TOKEN = re.compile(r"`([^`\s]+\.(?:py|json|md|sh|xml|js))`")
+TOKEN = re.compile(r"`([^`\s]+\.(?:py|json|md|sh|xml|js|ts))`")
 ROUTE = re.compile(r"`(/[^`\s]{2,})`")
 # Routes the prose names that belong to another module, and are named as
 # such: the per-database document web serves, and the door this one replaced.

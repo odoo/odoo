@@ -9,6 +9,8 @@ generator reads them from the copy beside this file.
 import json
 import os
 import re
+import subprocess
+import tempfile
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
@@ -17,12 +19,32 @@ from odoo.http import prepare_openapi_document
 from odoo.http.openapi import OPENAPI_VERSION, iter_map_routes
 from odoo.tests import common
 
+from odoo.addons.rpc.tools.openapi_client import _camel as camel
+from odoo.addons.rpc.tools.openapi_client import render_typescript
+
 DOCUMENT = Path(__file__).parent.parent / "machine_doc_v1" / "openapi.json"
 TEMPLATE_ARG = re.compile(r"{(\w+)}")
 WRITE = "ODOO_WRITE_OPENAPI"
+CLIENT = DOCUMENT.parent / "client.ts"
+USAGE = DOCUMENT.parent / "client_usage.ts"
+METHOD = re.compile(r"^    async (\w+)\(", re.MULTILINE)
+TSC_FLAGS = (
+    "--target",
+    "ESNext",
+    "--module",
+    "ESNext",
+    "--moduleResolution",
+    "bundler",
+    "--lib",
+    "ESNext,DOM",
+)
 REGENERATE = (
     f"{WRITE}=1 odoo-bin -d <db> --test-enable --test-tags "
     "/rpc:TestOpenAPIContract.test_the_checked_in_document_is_current"
+)
+REGENERATE_CLIENT = (
+    f"{WRITE}=1 odoo-bin -d <db> --test-enable --test-tags "
+    "/rpc:TestGeneratedClient.test_the_checked_in_client_is_current"
 )
 
 
@@ -124,3 +146,146 @@ class TestOpenAPIContract(common.TransactionCase):
             for content in response.get("content", {}).values():
                 if "schema" in content:
                     yield content["schema"]
+
+
+@common.tagged("post_install", "-at_install")
+class TestGeneratedClient(common.TransactionCase):
+    """The document is enough to write a client from, and stays enough.
+
+    A contract nobody compiles against is prose. The client beside it is
+    generated from the checked-in document alone, and the compiler is what
+    says the document named every parameter, every body and every door.
+    """
+
+    maxDiff = None
+
+    def test_the_checked_in_client_is_current(self):
+        document = json.loads(DOCUMENT.read_text())
+        current = render_typescript(document)
+        if os.environ.get(WRITE):
+            CLIENT.write_text(current)
+        self.assertTrue(CLIENT.exists(), f"{CLIENT} is missing; {REGENERATE_CLIENT}")
+        self.assertEqual(
+            CLIENT.read_text(),
+            current,
+            f"the document moved and the client did not; {REGENERATE_CLIENT}",
+        )
+
+    def test_every_operation_is_one_method_a_caller_can_call(self):
+        document = json.loads(DOCUMENT.read_text())
+        source = CLIENT.read_text()
+        methods = set(METHOD.findall(source))
+        operations = [
+            operation["operationId"]
+            for item in document["paths"].values()
+            for operation in item.values()
+        ]
+        self.assertEqual(
+            len(methods),
+            len(operations),
+            "two operations render as one method, so one door is unreachable",
+        )
+        for operation_id in operations:
+            with self.subTest(operation=operation_id):
+                self.assertIn(camel(operation_id), methods)
+
+    def test_the_client_compiles_against_a_caller_that_uses_it(self):
+        self._compile(
+            {"client.ts": CLIENT.read_text(), "usage.ts": USAGE.read_text()},
+        )
+
+    def test_a_call_the_document_does_not_describe_does_not_compile(self):
+        # Without this the compile proves nothing: a client whose every
+        # method took `any` would pass the test above unchanged.
+        errors = self._compile(
+            {
+                "client.ts": CLIENT.read_text(),
+                "usage.ts": 'import { OdooClient } from "./client";\n'
+                'const c = new OdooClient({ baseUrl: "x" });\n'
+                'void c.postJson2ModelMethod("res.partner");\n'
+                "void c.noSuchDoor();\n",
+            },
+            expect_failure=True,
+        )
+        self.assertIn("Expected 2 arguments", errors)
+        self.assertIn("noSuchDoor", errors)
+
+    def test_a_query_parameter_is_sent_as_one(self):
+        rendered = render_typescript(
+            {
+                "openapi": OPENAPI_VERSION,
+                "info": {"title": "Query", "version": "1"},
+                "paths": {
+                    "/probe/{ident}": {
+                        "get": {
+                            "operationId": "probe",
+                            "parameters": [
+                                {
+                                    "name": "ident",
+                                    "in": "path",
+                                    "required": True,
+                                    "schema": {"type": "integer"},
+                                },
+                                {
+                                    "name": "since",
+                                    "in": "query",
+                                    "required": True,
+                                    "schema": {"type": "string"},
+                                },
+                                {
+                                    "name": "limit",
+                                    "in": "query",
+                                    "schema": {"type": "integer"},
+                                },
+                            ],
+                            "responses": {
+                                "200": {
+                                    "content": {
+                                        "application/json": {
+                                            "schema": {"type": "array", "items": {}}
+                                        }
+                                    }
+                                }
+                            },
+                        }
+                    }
+                },
+            }
+        )
+        self.assertIn(
+            "async probe(ident: number, since: string, limit?: number)", rendered
+        )
+        self.assertIn(
+            'const suffix = this.query([["since", since], ["limit", limit]]);',
+            rendered,
+        )
+        self._compile(
+            {
+                "client.ts": rendered,
+                "usage.ts": 'import { OdooClient } from "./client";\n'
+                'void new OdooClient({ baseUrl: "x" }).probe(1, "2026-09-22");\n',
+            }
+        )
+
+    def _compile(self, files, expect_failure=False):
+        tsc = Path(__file__).parents[3] / "node_modules" / ".bin" / "tsc"
+        self.assertTrue(
+            tsc.exists(),
+            f"{tsc} is missing; the repo's own tsc gate needs it too (npm install)",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            for name, source in files.items():
+                (Path(directory) / name).write_text(source)
+            completed = subprocess.run(
+                [str(tsc), "--noEmit", "--strict", *TSC_FLAGS, *files],
+                capture_output=True,
+                cwd=directory,
+                text=True,
+                check=False,
+            )
+        output = completed.stdout + completed.stderr
+        if expect_failure:
+            self.assertNotEqual(completed.returncode, 0, "the types accept anything")
+        else:
+            self.assertEqual(completed.returncode, 0, output)
+        return output
