@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="benchmark_company_provider_copy" model="populate.blueprint">
-        <field name="name">Benchmark: Company Payment Provider Copy</field>
+
+    <record model="populate.blueprint" id="payment_providers_blueprint">
+        <field name="name">Payment: Payment providers with payment methods</field>
         <field name="definition_xml" type="xml">
+            <!-- Create providers with a single primary payment method each -->
             <create
+                id="providers_with_methods"
                 model="payment.provider"
                 count="20"
-                id="company_copy_providers"
                 parallel="False"
             >
                 <value name="counter" generator="misc.counter" start="1"/>
@@ -17,12 +19,7 @@
                     name="module_id"
                     domain="[('name', '=', 'payment'), ('state', '=', 'installed')]"
                 />
-                <value
-                    name="method_image"
-                    generator="binary.image"
-                    width="16"
-                    height="16"
-                />
+                <value name="method_image" generator="binary.image" width="16" height="16"/>
                 <field
                     name="payment_method_ids"
                     eval="[Command.create({
@@ -33,13 +30,14 @@
                 />
             </create>
 
-            <create model="payment.method" count="40" id="company_copy_brands" parallel="False">
+            <!-- Create brands spread randomly across the primary payment methods -->
+            <create model="payment.method" count="40" parallel="False">
                 <value name="counter" generator="misc.counter" start="1"/>
                 <field name="name" eval="f'Benchmark Brand {counter}'"/>
                 <field name="code" eval="f'benchmark_brand_{counter}'"/>
                 <field
                     name="primary_payment_method_id"
-                    ref="company_copy_providers.payment_method_ids"
+                    ref="providers_with_methods.payment_method_ids"
                 />
                 <field
                     name="provider_id"

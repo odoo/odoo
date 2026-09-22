@@ -11,19 +11,19 @@ class TestResCompany(PaymentCommon):
         """Ensure that installed payment providers of an existing company are correctly duplicated
         when a new company is created."""
         main_company = self.env.company
-        module_payment = self.env["ir.module.module"]._get("payment")
+        payment_module = self.env["ir.module.module"]._get("payment")
         providers = self.env["payment.provider"].create([
             {
                 "name": "Company Copy Provider 1",
                 "code": "none",
                 "company_id": main_company.id,
-                "module_id": module_payment.id,
+                "module_id": payment_module.id,
             },
             {
                 "name": "Company Copy Provider 2",
                 "code": "none",
                 "company_id": main_company.id,
-                "module_id": module_payment.id,
+                "module_id": payment_module.id,
             },
         ])
         primary_pms = self.env["payment.method"].create([
@@ -61,7 +61,6 @@ class TestResCompany(PaymentCommon):
                 {"name": "New Company 1"},
                 {"name": "New Company 2"},
             ])
-
         self.assertEqual(provider_create_batch_sizes, [2 * installed_provider_count])
 
         for new_company in new_companies:

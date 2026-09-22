@@ -15,7 +15,7 @@ class PaymentProvider(models.Model):
     website_id = fields.Many2one(
         "website",
         check_company=True,
-        copy=False,  # handled in `copy` override to prevent company inconsistencies
+        copy=False,  # handled in `copy_data` override to prevent company inconsistencies
         ondelete="restrict",
     )
 
@@ -58,10 +58,13 @@ class PaymentProvider(models.Model):
         return super().get_base_url()
 
     def copy_data(self, default=None):
+        """Override of `payment` to keep the website on copies in the same company hierarchy."""
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
         if "website_id" not in default:
             for provider, vals in zip(self, vals_list):
+                # `website_id` has `check_company` set, so the copy keeps the website only if the
+                # source provider's company is one of its own parent companies
                 company = self.env["res.company"].browse(vals["company_id"])
                 if provider.website_id and provider.company_id in company.parent_ids:
                     vals["website_id"] = provider.website_id.id
