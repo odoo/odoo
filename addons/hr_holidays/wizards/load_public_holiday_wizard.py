@@ -92,7 +92,7 @@ class LoadPublicHolidayWizard(models.TransientModel):
         )
 
     def _prepare_public_holidays(self):
-        self.ensure_one()
+        self.check_singleton()
         companies = self._companies()
         holidays_by_company = {}
         without_country = self.env["res.company"]
@@ -168,7 +168,7 @@ class LoadPublicHolidayWizard(models.TransientModel):
         }
 
     def _get_warning_messages(self, prepared):
-        self.ensure_one()
+        self.check_singleton()
         messages = []
         if prepared["already_complete"]:
             messages.append(
@@ -196,7 +196,7 @@ class LoadPublicHolidayWizard(models.TransientModel):
         return messages
 
     def _get_create_values(self):
-        self.ensure_one()
+        self.check_singleton()
         companies = self._companies()
         values_by_company = defaultdict(list)
         for line in self.line_ids:
@@ -216,7 +216,7 @@ class LoadPublicHolidayWizard(models.TransientModel):
         return values_by_company
 
     def action_add_public_holidays(self):
-        self.ensure_one()
+        self.check_singleton()
         messages = []
         for company, values in self._get_create_values().items():
             created = self.env["resource.schedule.exception"].create(values)
