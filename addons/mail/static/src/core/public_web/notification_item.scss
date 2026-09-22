@@ -9,8 +9,12 @@
         opacity: var(--mail-NotificationItem-notInterestOpacity, .875);
     }
     &:hover, &.o-active, .o-mail-MessagingMenuItem[data-right-clicking] & {
-        --border-opacity: var(--mail-NotificationItem-activeBorderOpacity, .075);
-        backdrop-filter: contrast(var(--mail-NotificationItem-activeBackdropFilterContrast, .85));
+
+        &:not(:has(.o-mail-MessagingMenu-actions button:hover)), &.o-active {
+            --border-opacity: var(--mail-NotificationItem-activeBorderOpacity, .075);
+            backdrop-filter: contrast(var(--mail-NotificationItem-activeBackdropFilterContrast, .85));
+        }
+
     }
 }
 
