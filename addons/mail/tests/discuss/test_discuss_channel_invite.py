@@ -2,6 +2,7 @@
 from datetime import timedelta
 from lxml import html
 from itertools import product
+from uuid import uuid4
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
@@ -363,13 +364,14 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
 
     def test_12_search_for_channel_invite_excludes_portal_users_unless_requested(self):
         bob = new_test_user(self.env, "bob", groups="base.group_user")
+        name = f"Joel Willis {uuid4()}"  # the demo data has its own portal user "Joel Willis"
         joel = new_test_user(
-            self.env, "joel", groups="base.group_portal", email="joel@test.com", name="Joel Willis"
+            self.env, "joel", groups="base.group_portal", email="joel@test.com", name=name
         )
         group_chat = self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
-        result = self.env["res.partner"].search_for_channel_invite("Joel", channel_id=group_chat.id)
+        result = self.env["res.partner"].search_for_channel_invite(name, channel_id=group_chat.id)
         self.assertFalse(result["partner_ids"])
         result = self.env["res.partner"].search_for_channel_invite(
-            "Joel", channel_id=group_chat.id, with_portal_users=True
+            name, channel_id=group_chat.id, with_portal_users=True
         )
         self.assertEqual(result["partner_ids"], joel.partner_id.ids)
