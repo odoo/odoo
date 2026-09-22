@@ -195,9 +195,10 @@ class ResUsers(models.Model):
         return users
 
     def write(self, vals):
-        log_portal_access = 'group_ids' in vals and not self.env.context.get('mail_create_nolog') and not self.env.context.get('mail_notrack')
+        log_portal_access = any(field in vals for field in ['active', 'group_ids']) \
+            and not self.env.context.get('mail_create_nolog') and not self.env.context.get('mail_notrack')
         user_portal_access_dict = {
-            user.id: user._is_portal()
+            user.id: user._is_portal() and user.active
             for user in self
         } if log_portal_access else {}
 
@@ -216,7 +217,7 @@ class ResUsers(models.Model):
         # log a portal status change (manual tracking)
         if log_portal_access:
             for user in self:
-                user_has_group = user._is_portal()
+                user_has_group = user._is_portal() and user.active
                 portal_access_changed = user_has_group != user_portal_access_dict[user.id]
                 if portal_access_changed:
                     body = user._get_portal_access_update_body(user_has_group)
