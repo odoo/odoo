@@ -2460,7 +2460,11 @@ class HrEmployee(models.Model):
 
     def action_new_departure(self):
         self.ensure_one()
-        if not self.is_in_contract:
+        has_valid_contract = any(
+            date_to is False or date_to >= fields.Date.context_today(self)
+            for _, date_to in self._get_all_contract_dates()
+        )
+        if not has_valid_contract:
             raise UserError(self.env._("You can't end the collaboration of an employee without contract, archive it instead."))
         if self.departure_id:
             if self.departure_id.apply_date:
