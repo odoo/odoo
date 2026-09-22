@@ -2,7 +2,8 @@
 <odoo>
     <template id="pst_external_layout">
         <li t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst">
-            PST: <span t-field="company.l10n_ca_pst"/>
+            <t t-if="'TQ' in company.l10n_ca_pst.upper()">QST: <span t-field="company.l10n_ca_pst"/></t>
+            <t t-else="">PST: <span t-field="company.l10n_ca_pst"/></t>
         </li>
     </template>
 
