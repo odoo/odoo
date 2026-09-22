@@ -12,6 +12,7 @@ import { patch } from "@web/core/utils/patch";
 import { uuid } from "@web/core/utils/strings";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
 import { useSubEnv } from "@web/owl2/utils";
+import { useSelectCreate } from "@web/views/fields/relational_utils";
 
 patch(SaleOrderLineOne2Many.prototype, {
     setup() {
@@ -22,21 +23,45 @@ patch(SaleOrderLineOne2Many.prototype, {
                 if (!this.canCreate) {
                     return [];
                 }
-                return this.orm.call("sale.order.template", "get_section_templates", [
-                    this.props.record.data.company_id.id,
-                ]);
+                // Fetch one more template than displayed to know whether to show "Search more..."
+                return this.orm.searchRead(
+                    "sale.order.template",
+                    this.getSectionTemplatesDomain(this.props.record.data.company_id.id),
+                    ["name", "create_uid"],
+                    { order: "id desc", limit: 10, load: "" }
+                );
             },
             { initial: [] }
         );
+        this.selectSectionTemplate = useSelectCreate({
+            resModel: "sale.order.template",
+            activeActions: { create: false },
+            onSelected: (resIds) => resIds.length && this.applySectionTemplate(resIds[0]),
+        });
 
         useSubEnv({
             onSaveSectionTemplate: this.saveSectionTemplate.bind(this),
             onAddSectionTemplate: this.applySectionTemplate.bind(this),
             onDeleteSectionTemplate: this.deleteSectionTemplate.bind(this),
+            onSearchMoreSectionTemplates: this.searchMoreSectionTemplates.bind(this),
             canBeSavedAsTemplate: this.canBeSavedAsTemplate.bind(this),
             getSaveAsTemplateButtonTooltip: this.getSaveAsTemplateButtonTooltip.bind(this),
             sectionTemplates: this.sectionTemplates,
         });
+    },
+
+    /**
+     * Return the domain of the section templates available for the given company.
+     *
+     * @param {number} companyId - id of the order's company
+     * @returns {Array} domain on `sale.order.template`
+     */
+    getSectionTemplatesDomain(companyId) {
+        return [
+            ["template_type", "=", "section"],
+            ["user_has_access", "=", true],
+            ["company_id", "in", [false, companyId]],
+        ];
     },
 
     /**
@@ -89,6 +114,16 @@ patch(SaleOrderLineOne2Many.prototype, {
     async deleteSectionTemplate(templateId) {
         await this.orm.call("sale.order.template", "unlink_section_template", [templateId]);
         this.sectionTemplates.refresh();
+    },
+
+    searchMoreSectionTemplates() {
+        this.selectSectionTemplate({
+            domain: this.getSectionTemplatesDomain(this.props.record.data.company_id.id),
+            context: {
+                list_view_ref: "sale_management.sale_order_template_view_tree_simplified",
+            },
+            title: _t("Search: Section Templates"),
+        });
     },
 
     /**
