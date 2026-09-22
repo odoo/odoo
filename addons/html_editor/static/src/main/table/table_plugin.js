@@ -595,6 +595,10 @@ export class TablePlugin extends Plugin {
             // It will be retriggered with selectionchange
             return;
         }
+        const documentSelection = this.document.getSelection();
+        if (documentSelection && !this.dependencies.selection.isSelectionInEditable(documentSelection)) {
+            return;
+        }
         const selection = selectionData.editableSelection;
         const startTd = closestElement(selection.startContainer, "td");
         const endTd = closestElement(selection.endContainer, "td");
