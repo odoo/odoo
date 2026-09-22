@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
+import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
@@ -12,6 +12,7 @@ import {
     isPhrasingContent,
     isProtected,
     isProtecting,
+    isTextNode,
     isVisible,
     isZwnbsp,
 } from "@html_editor/utils/dom_info";
@@ -21,6 +22,8 @@ import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { removeFormat } from "@html_editor/core/format_plugin";
+import { formatsSpecs } from "@html_editor/utils/formatting";
 import { isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_detection";
 
 /** @typedef {import("@odoo/owl").Component} Component */
@@ -306,6 +309,7 @@ export class LinkPlugin extends Plugin {
         clean_for_save_handlers: ({ root }) => this.removeEmptyLinks(root),
         normalize_handlers: this.normalizeLink.bind(this),
         after_insert_handlers: this.handleAfterInsert.bind(this),
+        format_selection_handlers: this.applyFormatToLinks.bind(this),
         on_will_remove_handlers: () => this.closeLinkTools(),
 
         /** Overrides */
@@ -506,6 +510,54 @@ export class LinkPlugin extends Plugin {
             },
         };
         return pasteAsURLCommand;
+    }
+
+    /**
+     * Apply the format on the fully selected links.
+     *
+     * @param {string} formatName
+     * @param {Object} options
+     */
+    applyFormatToLinks(formatName, { applyStyle, formatProps } = {}) {
+        const formatSpec = formatsSpecs[formatName];
+        if (!formatSpec.addNeutralStyle) {
+            return;
+        }
+        // Links often have styles applied to them by css which can only be
+        // overriden by applying the style to the link itself. Buttons are
+        // excluded as their font size only applies from inside them.
+        const links = new Set();
+        for (const node of this.dependencies.selection.getTargetedNodes()) {
+            if (!isTextNode(node)) {
+                continue;
+            }
+            const link = closestElement(node, "a:not(.btn)");
+            // Keep only the selected text that can be edited and formatted.
+            if (
+                link &&
+                isContentEditable(node) &&
+                (this.checkPredicates("is_formattable_node_predicates", node) ?? true) &&
+                !formatSpec.isFormatted(link.parentElement, formatProps) &&
+                this.dependencies.selection.areNodeContentsFullySelected(link)
+            ) {
+                links.add(link);
+            }
+        }
+        if (!links.size) {
+            return;
+        }
+        const cursors = this.dependencies.selection.preserveSelection();
+        for (const link of links) {
+            for (const node of [link, ...descendants(link).filter(isElement)]) {
+                removeFormat(node, formatSpec, cursors);
+            }
+            if (applyStyle && !formatSpec.isFormatted(link, formatProps)) {
+                formatSpec.addStyle(link, formatProps);
+            } else if (!applyStyle && formatSpec.isFormatted(link, formatProps)) {
+                formatSpec.addNeutralStyle(link);
+            }
+        }
+        cursors.restore();
     }
 
     isLinkAllowedOnSelection() {

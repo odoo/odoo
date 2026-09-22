@@ -300,6 +300,9 @@ export class FormatPlugin extends Plugin {
     }
 
     formatSelection(formatName, options) {
+        // Toggle the format based on the selection if applyStyle is not given.
+        const applyStyle = options?.applyStyle ?? !this.isSelectionFormat(formatName);
+        options = { ...options, applyStyle };
         this.dispatchTo("format_selection_handlers", formatName, options);
         if (this._formatSelection(formatName, options) && !options?.removeFormat) {
             this.dependencies.history.addStep();
@@ -321,9 +324,6 @@ export class FormatPlugin extends Plugin {
         this.dependencies.selection.selectAroundNonEditable();
         // note: does it work if selection is in opposite direction?
         const selection = this.dependencies.split.splitSelection();
-        if (typeof applyStyle === "undefined") {
-            applyStyle = !this.isSelectionFormat(formatName);
-        }
 
         let zws;
         if (selection.isCollapsed) {
@@ -770,7 +770,7 @@ function getOrCreateSpan(node, ancestors, cursor) {
         return span;
     }
 }
-function removeFormat(node, formatSpec, cursor) {
+export function removeFormat(node, formatSpec, cursor) {
     const document = node.ownerDocument;
     node = closestElement(node);
     if (formatSpec.hasStyle(node)) {
