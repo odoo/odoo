@@ -76,9 +76,10 @@
                                         <td class="text-end w-30 font-monospace" t-out="payment['amount']" />
                                     </tr>
                                 </t>
-                                <tr class="text-bold" t-if="order.get('amount_return') != 0">
+                                <tr class="text-bold" t-if="order.get('amount_return') != 0 or order.get('amount_return_currency') != 0">
                                     <td class="text-start w-70" name="change">Change:</td>
-                                    <td class="text-end w-30 change-amount font-monospace" t-out="order['amount_return']" />
+                                    <td t-if="order.get('amount_return_currency')" class="text-end w-30 change-amount font-monospace" t-out="order['amount_return_currency']" />
+                                    <td t-else="" class="text-end w-30 change-amount font-monospace" t-out="order['amount_return']" />
                                 </tr>
                             </tbody>
                         </table>

@@ -388,6 +388,10 @@ export class PaymentScreen extends Component {
             this.pos.canOpenCashdrawer
         );
     }
+
+    get orderTotalDue() {
+        return this.currentOrder.orderCurrency.convertFormatted(this.currentOrder.totalDue);
+    }
 }
 
 registry.category("pos_pages").add("PaymentScreen", {
