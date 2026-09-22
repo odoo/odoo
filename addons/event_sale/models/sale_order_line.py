@@ -42,7 +42,7 @@ class SaleOrderLine(models.Model):
     @api.constrains("event_id", "event_slot_id", "event_ticket_id", "product_id")
     def _check_event_registration_ticket(self):
         for so_line in self:
-            if so_line.product_id.service_tracking == "event" and (
+            if so_line.service_tracking == "event" and (
                 not so_line.event_id
                 or not so_line.event_ticket_id
                 or (so_line.is_multi_slots and not so_line.event_slot_id)
@@ -92,7 +92,7 @@ class SaleOrderLine(models.Model):
     @api.depends("product_id")
     def _compute_event_id(self):
         event_lines = self.filtered(
-            lambda line: line.product_id and line.product_id.service_tracking == "event"
+            lambda line: line.product_id and line.service_tracking == "event"
         )
         (self - event_lines).event_id = False
         for line in event_lines:
