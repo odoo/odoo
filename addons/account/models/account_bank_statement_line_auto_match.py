@@ -92,26 +92,12 @@ class AccountBankStatementLine(models.Model):
 
         def rollback_and_retire(st_lines, exc):
             _logger.warning("Error while processing statement lines: %s", exc)
-            retired = 0
             if not isinstance(exc, UserError) and can_commit:
                 _logger.warning(
                     "_cron_try_auto_reconcile_statement_lines will rollback the cursor"
                 )
                 self.env.cr.rollback()
-            for st_line in st_lines.exists():
-                try:
-                    with self.env.cr.savepoint():
-                        st_line._try_auto_reconcile_statement_lines(
-                            company_id=company_id
-                        )
-                except Exception as line_exc:
-                    _logger.warning(
-                        "_cron_try_auto_reconcile_statement_lines giving up on statement line %s: %s",
-                        st_line.id,
-                        line_exc,
-                    )
-                    st_line.cron_last_check = self.env.cr.now()
-                    retired += 1
+            retired = st_lines._auto_reconcile_isolating_failures(company_id=company_id)
             _debug.pipeline(
                 "cron_batch_retried_per_line",
                 automatch=st_lines,
@@ -169,6 +155,36 @@ class AccountBankStatementLine(models.Model):
             self.env["ir.cron"]._trigger_ref(
                 "account.auto_reconcile_bank_statement_line"
             )
+
+    def _auto_reconcile_isolating_failures(self, company_id=None, retire=True):
+        """Reconcile each line under its own savepoint, so one bad line costs one line.
+
+        `_try_auto_reconcile_statement_lines` works on the whole recordset and
+        aborts the run on the first line that raises. The CRON therefore falls
+        back to this loop whenever a batch blew up, stamping `cron_last_check`
+        on the lines that keep failing so the next round stops picking them up.
+
+        `retire=False` gives the same isolation without that bookkeeping, for an
+        on-demand run: the accountant asking for one extra pass must not
+        silently drop a transaction out of the nightly CRON for good.
+
+        Returns how many lines it gave up on.
+        """
+        given_up = 0
+        for st_line in self.exists():
+            try:
+                with self.env.cr.savepoint():
+                    st_line._try_auto_reconcile_statement_lines(company_id=company_id)
+            except Exception as line_exc:
+                _logger.warning(
+                    "_auto_reconcile_isolating_failures giving up on statement line %s: %s",
+                    st_line.id,
+                    line_exc,
+                )
+                if retire:
+                    st_line.cron_last_check = self.env.cr.now()
+                given_up += 1
+        return given_up
 
     @api.model
     def _get_unmatched_amounts(self):

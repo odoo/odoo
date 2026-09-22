@@ -138,3 +138,90 @@ class TestAutoReconcileRegressions(TestBankRecWidgetCommon):
             existing.filtered("cron_last_check"),
             "the import retired statement lines it was never given",
         )
+
+    def _run_on_demand(self, from_date="2019-01-01", to_date="2019-12-31"):
+        wizard = self.env["account.bank.auto.reconcile.wizard"].create(
+            {
+                "journal_id": self.bank_journal.id,
+                "from_date": from_date,
+                "to_date": to_date,
+            }
+        )
+        return wizard.action_auto_reconcile()
+
+    def test_on_demand_auto_reconcile_reaches_lines_the_cron_retired(self):
+        """The whole point of the on-demand run.
+
+        `_cron_try_auto_reconcile_statement_lines` only ever selects lines whose
+        `cron_last_check` is unset, so a reconciliation model written after the
+        fact can never be applied to an older transaction. The wizard searches
+        by journal and date instead, so a retired line is reachable again.
+        """
+        self._invoice_with_ref("LATERULEAAA", 42.0)
+        st_line = self._create_st_line(
+            42.0, payment_ref="PAY LATERULEAAA", partner_id=self.partner_a.id
+        )
+        st_line.cron_last_check = self.env.cr.now()
+
+        self.env[
+            "account.bank.statement.line"
+        ]._cron_try_auto_reconcile_statement_lines(batch_size=100)
+        self.env.invalidate_all()
+        self.assertFalse(
+            st_line.is_reconciled,
+            "the cron cannot see a line it has already stamped",
+        )
+
+        self._run_on_demand()
+        self.env.invalidate_all()
+
+        self.assertTrue(
+            st_line.is_reconciled,
+            "the on-demand run searches by journal and date, not by cron_last_check",
+        )
+
+    def test_on_demand_auto_reconcile_isolates_a_failing_line_without_retiring_it(self):
+        """One bad transaction costs one transaction, and stays in the cron's queue.
+
+        `_try_auto_reconcile_statement_lines` works on the whole recordset and
+        aborts on the first line that raises, which is why the cron retries line
+        by line. The on-demand run shares that protection but must not stamp
+        `cron_last_check`: an ad-hoc pass that happened to hit a bad line must
+        not drop it out of the nightly cron for good.
+        """
+        StatementLine = type(self.env["account.bank.statement.line"])
+        genuine = StatementLine._try_auto_reconcile_statement_lines
+
+        self._invoice_with_ref("GOODREFAAAA", 55.0)
+        good = self._create_st_line(
+            55.0, payment_ref="PAY GOODREFAAAA", partner_id=self.partner_a.id
+        )
+        bad = self._create_st_line(
+            13.0, payment_ref="EXPLODE", partner_id=self.partner_a.id
+        )
+
+        def explode(records, *args, **kwargs):
+            if "EXPLODE" in records.mapped("payment_ref"):
+                raise ValueError("boom")
+            return genuine(records, *args, **kwargs)
+
+        self.patch(StatementLine, "_try_auto_reconcile_statement_lines", explode)
+        self._run_on_demand()
+        self.env.invalidate_all()
+
+        self.assertTrue(
+            good.is_reconciled,
+            "the failing line is isolated in its own savepoint, so this one still runs",
+        )
+        self.assertFalse(
+            bad.cron_last_check,
+            "an on-demand run does not retire a line from the nightly cron",
+        )
+
+    def test_on_demand_auto_reconcile_wizard_defaults_resolve(self):
+        """The dialog opens on a one-month window; a raising default breaks it for everyone."""
+        defaults = self.env["account.bank.auto.reconcile.wizard"].default_get(
+            ["company_id", "from_date", "to_date"]
+        )
+        self.assertEqual(defaults["company_id"], self.env.company.id)
+        self.assertLess(defaults["from_date"], defaults["to_date"])
