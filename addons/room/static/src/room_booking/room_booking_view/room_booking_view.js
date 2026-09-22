@@ -262,7 +262,7 @@ export class RoomBookingView extends Component {
             this.state.currentBooking = currentBooking;
         }
         // Update the currentDate that is used in the sidebar
-        if (this.state.currentDate.day !== this.now.startOf("day").day) {
+        if (!this.state.currentDate.hasSame(this.now, "day")) {
             this.state.currentDate = this.now.startOf("day");
         }
     }
