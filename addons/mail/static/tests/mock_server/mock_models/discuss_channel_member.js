@@ -9,10 +9,10 @@ const { DateTime } = luxon;
 export class DiscussChannelMember extends models.ServerModel {
     _name = "discuss.channel.member";
 
-    is_pinned = fields.Generic({ compute: "_compute_is_pinned" });
+    is_pinned = fields.Boolean({ compute: "_compute_is_pinned" });
     is_self = fields.Boolean({ compute: "_compute_is_self" });
     unpin_dt = fields.Datetime({ string: "Unpin date" });
-    message_unread_counter = fields.Generic({ default: 0 });
+    message_unread_counter = fields.Integer({ default: 0 });
     last_interest_dt = fields.Datetime({
         default: () => serializeDateTime(today().minus({ seconds: 1 })),
     });
