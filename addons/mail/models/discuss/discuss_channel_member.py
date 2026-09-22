@@ -336,13 +336,15 @@ class DiscussChannelMember(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_notify_channel_left(self):
+        close_chat_window = self.env.context.get("close_chat_window", True)
         post_leave_message = self.env.context.get("post_leave_message") is POST_LEAVE_MESSAGE
         for member in self:
             channel = member.channel_id
             channel.message_unsubscribe(member.partner_id.ids)
-            for bus_channel in member._bus_channels():
-                custom_store = Store(bus_channel=bus_channel)
-                custom_store.add(channel, {"close_chat_window": True, "isLocallyPinned": False})
+            if close_chat_window:
+                for bus_channel in member._bus_channels():
+                    custom_store = Store(bus_channel=bus_channel)
+                    custom_store.add(channel, {"close_chat_window": True, "isLocallyPinned": False})
             if channel.channel_type != "channel" and post_leave_message:
                 notification = Markup(
                     '<div class="o_mail_notification" data-oe-type="channel-left">%s</div>',

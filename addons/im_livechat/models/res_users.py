@@ -182,7 +182,7 @@ class ResUsers(models.Model):
             create_member_params={"livechat_member_type": "visitor"},
             post_joined_message=False,
         )
-        guest_members.unlink()
+        guest_members.with_context(close_chat_window=False).unlink()
         notif = self.env._(
             "%(visitor)s authenticated as %(user)s.",
             # sudo: mail.guest - reading the name for a notification message is acceptable
