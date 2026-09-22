@@ -2,6 +2,7 @@
 
 from freezegun import freeze_time
 from lxml import etree
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.exceptions import UserError
@@ -670,3 +671,35 @@ class L10nMyEDITestConsolidatedFileGeneration(L10nMyEDITestFileGenerationCommon)
         self._assert_node_values(invoice_lines[0], 'cac:Item/cbc:Name', 'INV/2025/00001-INV/2025/00005')
         self._assert_node_values(invoice_lines[1], 'cac:Item/cbc:Name', 'INV/2025/00010-INV/2025/00012')
         self._assert_node_values(invoice_lines[2], 'cac:Item/cbc:Name', 'INV/2025/00014')
+
+    @freeze_time('2024-07-15 10:00:00')
+    def test_non_invoice_moves_are_not_submitted(self):
+        moves = self.env['account.move']
+
+        for move_type in ('in_receipt', 'out_receipt'):
+            moves |= self.init_invoice(
+                move_type=move_type,
+                products=self.product_a,
+                post=True,
+            )
+
+        lines = [
+            Command.create({
+                'account_id': self.company_data['default_account_receivable'].id,
+                'debit': 200.0,
+                'partner_id': self.partner_a.id,
+            }),
+            Command.create({
+                'account_id': self.company_data['default_account_revenue'].id,
+                'credit': 200.0,
+                'partner_id': self.partner_b.id,
+            }),
+        ]
+        moves |= self._create_invoice('entry', post=True, line_ids=lines)
+
+        with patch.object(
+            self.env.registry['myinvois.document'], 'action_submit_to_myinvois',
+        ) as submit_method:
+            for move in moves:
+                move.action_l10n_my_edi_send_invoice()
+            submit_method.assert_not_called()
