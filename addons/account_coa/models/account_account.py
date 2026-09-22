@@ -280,7 +280,7 @@ class AccountAccount(models.Model):
                     )
                 )
 
-    @api.constrains("company_ids")
+    @api.constrains("company_ids", "account_type")
     def _check_company_consistency(self):
         self.invalidate_recordset(fnames=["company_ids"])
         if accounts_without_company := self.filtered(

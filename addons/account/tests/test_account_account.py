@@ -322,6 +322,33 @@ class TestAccountAccount(TestAccountMergeCommon):
                 "default_account_revenue"
             ].company_ids = self.company_data_2["company"]
 
+    def test_a_shared_account_cannot_become_a_cash_account(self):
+        company_1 = self.company_data["company"]
+        company_2 = self.company_data_2["company"]
+        account = self.env["account.account"].create(
+            {
+                "code_mapping_ids": [
+                    Command.create({"company_id": company.id, "code": "180041"})
+                    for company in company_1 | company_2
+                ],
+                "name": "Shared Current Account",
+                "account_type": "asset_current",
+                "company_ids": [Command.set([company_1.id, company_2.id])],
+            }
+        )
+        accountant = new_test_user(
+            self.env,
+            login="accountant_of_company_1",
+            groups="base.group_user,account.group_account_manager",
+            company_id=company_1.id,
+            company_ids=[Command.set(company_1.ids)],
+        )
+        account = account.with_user(accountant).with_company(company_1)
+        self.assertEqual(account.company_ids, company_1)
+
+        with self.assertRaises(ValidationError):
+            account.account_type = "asset_cash"
+
     def test_toggle_reconcile(self):
         account = self.company_data["default_account_revenue"]
 
