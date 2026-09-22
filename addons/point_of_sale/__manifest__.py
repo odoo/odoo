@@ -255,6 +255,11 @@
                 "web/static/lib/bootstrap/scss/_functions.scss",
                 "web/static/src/scss/bs_functions_overridden.dark.scss",
             ),
+            (
+                "before",
+                "web/static/src/scss/bootstrap_overridden.scss",
+                "web/static/src/scss/bootstrap_overridden.dark.scss",
+            ),
             "web/static/src/**/*.dark.scss",
         ],
         "point_of_sale.customer_display_assets": [
