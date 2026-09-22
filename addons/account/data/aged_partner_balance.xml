@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="aged_receivable_report" model="account.report">
+    <record id="aged_receivable_report" model="report.formula">
         <field name="name">Aged Receivable</field>
         <field name="filter_date_range" eval="False" />
         <field name="filter_unfold_all" eval="True" />
@@ -18,7 +18,7 @@
         <field name="column_ids">
             <record
                 id="aged_receivable_report_invoice_date"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Invoice Date</field>
                 <field name="expression_label">invoice_date</field>
                 <field name="figure_type">date</field>
@@ -26,66 +26,66 @@
             </record>
             <record
                 id="aged_receivable_report_amount_currency"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Amount Currency</field>
                 <field name="expression_label">amount_currency</field>
             </record>
-            <record id="aged_receivable_report_currency" model="account.report.column">
+            <record id="aged_receivable_report_currency" model="report.formula.column">
                 <field name="name">Currency</field>
                 <field name="expression_label">currency</field>
                 <field name="figure_type">string</field>
             </record>
             <record
                 id="aged_receivable_report_account_name"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Account</field>
                 <field name="expression_label">account_name</field>
                 <field name="figure_type">string</field>
             </record>
-            <record id="aged_receivable_report_period0" model="account.report.column">
+            <record id="aged_receivable_report_period0" model="report.formula.column">
                 <field name="name">At Date</field>
                 <field name="expression_label">period0</field>
                 <field name="sortable" eval="True" />
             </record>
-            <record id="aged_receivable_report_period1" model="account.report.column">
+            <record id="aged_receivable_report_period1" model="report.formula.column">
                 <field name="name">Period 1</field>
                 <field name="expression_label">period1</field>
                 <field name="sortable" eval="True" />
             </record>
-            <record id="aged_receivable_report_period2" model="account.report.column">
+            <record id="aged_receivable_report_period2" model="report.formula.column">
                 <field name="name">Period 2</field>
                 <field name="expression_label">period2</field>
                 <field name="sortable" eval="True" />
             </record>
-            <record id="aged_receivable_report_period3" model="account.report.column">
+            <record id="aged_receivable_report_period3" model="report.formula.column">
                 <field name="name">Period 3</field>
                 <field name="expression_label">period3</field>
                 <field name="sortable" eval="True" />
             </record>
-            <record id="aged_receivable_report_period4" model="account.report.column">
+            <record id="aged_receivable_report_period4" model="report.formula.column">
                 <field name="name">Period 4</field>
                 <field name="expression_label">period4</field>
                 <field name="sortable" eval="True" />
             </record>
-            <record id="aged_receivable_report_period5" model="account.report.column">
+            <record id="aged_receivable_report_period5" model="report.formula.column">
                 <field name="name">Older</field>
                 <field name="expression_label">period5</field>
                 <field name="sortable" eval="True" />
             </record>
-            <record id="aged_receivable_report_total" model="account.report.column">
+            <record id="aged_receivable_report_total" model="report.formula.column">
                 <field name="name">Total</field>
                 <field name="expression_label">total</field>
                 <field name="sortable" eval="True" />
             </record>
         </field>
         <field name="line_ids">
-            <record id="aged_receivable_line" model="account.report.line">
+            <record id="aged_receivable_line" model="report.formula.line">
                 <field name="name">Aged Receivable</field>
                 <field name="groupby">partner_id, id</field>
                 <field name="expression_ids">
                     <record
                         id="aged_receivable_line_invoice_date"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">invoice_date</field>
                         <field name="engine">custom</field>
                         <field
@@ -95,7 +95,7 @@
                     </record>
                     <record
                         id="aged_receivable_line_amount_currency"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">amount_currency</field>
                         <field name="engine">custom</field>
                         <field
@@ -105,7 +105,7 @@
                     </record>
                     <record
                         id="aged_receivable_line_amount_currency_forced_currency"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">_currency_amount_currency</field>
                         <field name="engine">custom</field>
                         <field
@@ -114,7 +114,7 @@
                     </record>
                     <record
                         id="aged_receivable_line_currency"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">currency</field>
                         <field name="engine">custom</field>
                         <field
@@ -124,7 +124,7 @@
                     </record>
                     <record
                         id="aged_receivable_line_account_name"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">account_name</field>
                         <field name="engine">custom</field>
                         <field
@@ -134,7 +134,7 @@
                     </record>
                     <record
                         id="aged_receivable_line_period0"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">period0</field>
                         <field name="engine">custom</field>
                         <field
@@ -144,7 +144,7 @@
                     </record>
                     <record
                         id="aged_receivable_line_period1"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">period1</field>
                         <field name="engine">custom</field>
                         <field
@@ -154,7 +154,7 @@
                     </record>
                     <record
                         id="aged_receivable_line_period2"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">period2</field>
                         <field name="engine">custom</field>
                         <field
@@ -164,7 +164,7 @@
                     </record>
                     <record
                         id="aged_receivable_line_period3"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">period3</field>
                         <field name="engine">custom</field>
                         <field
@@ -174,7 +174,7 @@
                     </record>
                     <record
                         id="aged_receivable_line_period4"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">period4</field>
                         <field name="engine">custom</field>
                         <field
@@ -184,7 +184,7 @@
                     </record>
                     <record
                         id="aged_receivable_line_period5"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">period5</field>
                         <field name="engine">custom</field>
                         <field
@@ -194,7 +194,7 @@
                     </record>
                     <record
                         id="aged_receivable_line_total"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">total</field>
                         <field name="engine">custom</field>
                         <field
@@ -207,7 +207,7 @@
         </field>
     </record>
 
-    <record id="aged_payable_report" model="account.report">
+    <record id="aged_payable_report" model="report.formula">
         <field name="name">Aged Payable</field>
         <field name="filter_date_range" eval="False" />
         <field name="filter_unfold_all" eval="True" />
@@ -222,7 +222,7 @@
             name="custom_handler_model_id"
             ref="model_account_aged_payable_report_handler" />
         <field name="column_ids">
-            <record id="aged_payable_report_invoice_date" model="account.report.column">
+            <record id="aged_payable_report_invoice_date" model="report.formula.column">
                 <field name="name">Invoice Date</field>
                 <field name="expression_label">invoice_date</field>
                 <field name="figure_type">date</field>
@@ -230,64 +230,64 @@
             </record>
             <record
                 id="aged_payable_report_amount_currency"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Amount Currency</field>
                 <field name="expression_label">amount_currency</field>
             </record>
-            <record id="aged_payable_report_currency" model="account.report.column">
+            <record id="aged_payable_report_currency" model="report.formula.column">
                 <field name="name">Currency</field>
                 <field name="expression_label">currency</field>
                 <field name="figure_type">string</field>
             </record>
-            <record id="aged_payable_report_account_name" model="account.report.column">
+            <record id="aged_payable_report_account_name" model="report.formula.column">
                 <field name="name">Account</field>
                 <field name="expression_label">account_name</field>
                 <field name="figure_type">string</field>
             </record>
-            <record id="aged_payable_report_period0" model="account.report.column">
+            <record id="aged_payable_report_period0" model="report.formula.column">
                 <field name="name">At Date</field>
                 <field name="expression_label">period0</field>
                 <field name="sortable" eval="True" />
             </record>
-            <record id="aged_payable_report_period1" model="account.report.column">
+            <record id="aged_payable_report_period1" model="report.formula.column">
                 <field name="name">Period 1</field>
                 <field name="expression_label">period1</field>
                 <field name="sortable" eval="True" />
             </record>
-            <record id="aged_payable_report_period2" model="account.report.column">
+            <record id="aged_payable_report_period2" model="report.formula.column">
                 <field name="name">Period 2</field>
                 <field name="expression_label">period2</field>
                 <field name="sortable" eval="True" />
             </record>
-            <record id="aged_payable_report_period3" model="account.report.column">
+            <record id="aged_payable_report_period3" model="report.formula.column">
                 <field name="name">Period 3</field>
                 <field name="expression_label">period3</field>
                 <field name="sortable" eval="True" />
             </record>
-            <record id="aged_payable_report_period4" model="account.report.column">
+            <record id="aged_payable_report_period4" model="report.formula.column">
                 <field name="name">Period 4</field>
                 <field name="expression_label">period4</field>
                 <field name="sortable" eval="True" />
             </record>
-            <record id="aged_payable_report_period5" model="account.report.column">
+            <record id="aged_payable_report_period5" model="report.formula.column">
                 <field name="name">Older</field>
                 <field name="expression_label">period5</field>
                 <field name="sortable" eval="True" />
             </record>
-            <record id="aged_payable_report_total" model="account.report.column">
+            <record id="aged_payable_report_total" model="report.formula.column">
                 <field name="name">Total</field>
                 <field name="expression_label">total</field>
                 <field name="sortable" eval="True" />
             </record>
         </field>
         <field name="line_ids">
-            <record id="aged_payable_line" model="account.report.line">
+            <record id="aged_payable_line" model="report.formula.line">
                 <field name="name">Aged Payable</field>
                 <field name="groupby">partner_id, id</field>
                 <field name="expression_ids">
                     <record
                         id="aged_payable_line_invoice_date"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">invoice_date</field>
                         <field name="engine">custom</field>
                         <field name="formula">_report_custom_engine_aged_payable</field>
@@ -296,7 +296,7 @@
                     </record>
                     <record
                         id="aged_payable_line_amount_currency"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">amount_currency</field>
                         <field name="engine">custom</field>
                         <field name="formula">_report_custom_engine_aged_payable</field>
@@ -305,7 +305,7 @@
                     </record>
                     <record
                         id="aged_payable_line_amount_currency_forced_currency"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">_currency_amount_currency</field>
                         <field name="engine">custom</field>
                         <field name="formula">_report_custom_engine_aged_payable</field>
@@ -313,7 +313,7 @@
                     </record>
                     <record
                         id="aged_payable_line_currency"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">currency</field>
                         <field name="engine">custom</field>
                         <field name="formula">_report_custom_engine_aged_payable</field>
@@ -322,7 +322,7 @@
                     </record>
                     <record
                         id="aged_payable_line_account_name"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">account_name</field>
                         <field name="engine">custom</field>
                         <field name="formula">_report_custom_engine_aged_payable</field>
@@ -331,7 +331,7 @@
                     </record>
                     <record
                         id="aged_payable_line_period0"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">period0</field>
                         <field name="engine">custom</field>
                         <field name="formula">_report_custom_engine_aged_payable</field>
@@ -340,7 +340,7 @@
                     </record>
                     <record
                         id="aged_payable_line_period1"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">period1</field>
                         <field name="engine">custom</field>
                         <field name="formula">_report_custom_engine_aged_payable</field>
@@ -349,7 +349,7 @@
                     </record>
                     <record
                         id="aged_payable_line_period2"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">period2</field>
                         <field name="engine">custom</field>
                         <field name="formula">_report_custom_engine_aged_payable</field>
@@ -358,7 +358,7 @@
                     </record>
                     <record
                         id="aged_payable_line_period3"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">period3</field>
                         <field name="engine">custom</field>
                         <field name="formula">_report_custom_engine_aged_payable</field>
@@ -367,7 +367,7 @@
                     </record>
                     <record
                         id="aged_payable_line_period4"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">period4</field>
                         <field name="engine">custom</field>
                         <field name="formula">_report_custom_engine_aged_payable</field>
@@ -376,7 +376,7 @@
                     </record>
                     <record
                         id="aged_payable_line_period5"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">period5</field>
                         <field name="engine">custom</field>
                         <field name="formula">_report_custom_engine_aged_payable</field>
@@ -385,7 +385,7 @@
                     </record>
                     <record
                         id="aged_payable_line_total"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">total</field>
                         <field name="engine">custom</field>
                         <field name="formula">_report_custom_engine_aged_payable</field>

@@ -60,7 +60,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             }
         )
 
-        tax_report = cls.env["account.report"].create(
+        tax_report = cls.env["report.formula"].create(
             {
                 "name": "Tax report",
                 "country_id": cls.company_data["company"].country_id.id,
@@ -75,7 +75,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             }
         )
 
-        tax_report_line = cls.env["account.report.line"].create(
+        tax_report_line = cls.env["report.formula.line"].create(
             {
                 "name": "test_tax_report_line",
                 "report_id": tax_report.id,
@@ -93,7 +93,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         )
         cls.tax_tag = tax_report_line.expression_ids._get_matching_tags()
 
-        base_report_line = cls.env["account.report.line"].create(
+        base_report_line = cls.env["report.formula.line"].create(
             {
                 "name": "base_test_tax_report_line",
                 "report_id": tax_report.id,

@@ -7,7 +7,7 @@ _debug = DebugLog(__name__)
 
 class AccountCashFlowReportHandler(models.AbstractModel):
     _name = "account.cash.flow.report.handler"
-    _inherit = ["account.report.custom.handler"]
+    _inherit = ["report.formula.custom.handler"]
     _description = "Cash Flow Report Custom Handler"
 
     @_debug.perf.timed

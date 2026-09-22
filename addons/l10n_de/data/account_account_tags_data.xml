@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="tax_report" model="account.report">
+    <record id="tax_report" model="report.formula">
         <field name="name">Tax Report</field>
         <field name="name@de">Steuerbericht</field>
         <field name="country_id" ref="base.de" />
@@ -9,19 +9,19 @@
         <field name="allow_foreign_vat" eval="True" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="tax_report_base" model="account.report.column">
+            <record id="tax_report_base" model="report.formula.column">
                 <field name="name">Base</field>
                 <field name="name@de">Steuerpflichtiger Umsatz</field>
                 <field name="expression_label">base</field>
             </record>
-            <record id="tax_report_tax" model="account.report.column">
+            <record id="tax_report_tax" model="report.formula.column">
                 <field name="name">Tax</field>
                 <field name="name@de">Umsatzsteuer</field>
                 <field name="expression_label">tax</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="tax_report_de_section_a" model="account.report.line">
+            <record id="tax_report_de_section_a" model="report.formula.line">
                 <field
                     name="name">A. Taxable supplies, other services, and self-supplies</field>
                 <field
@@ -29,7 +29,7 @@
                 <field name="code">AGG_DE_19</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="tax_report_de_tag_81" model="account.report.line">
+                    <record id="tax_report_de_tag_81" model="report.formula.line">
                         <field name="name">81. At the tax rate of 19 %</field>
                         <field name="name@de">81. Zum Steuersatz von 19 %</field>
                         <field name="code">DE_81</field>
@@ -37,21 +37,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_81_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-81_BASE</field>
                             </record>
                             <record
                                 id="tax_report_de_tag_26_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-81_TAX</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_86" model="account.report.line">
+                    <record id="tax_report_de_tag_86" model="report.formula.line">
                         <field name="name">86. At the tax rate of 7 %</field>
                         <field name="name@de">86. Zum Steuersatz von 7 %</field>
                         <field name="code">DE_86</field>
@@ -59,21 +59,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_86_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-86_BASE</field>
                             </record>
                             <record
                                 id="tax_report_de_tag_27_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-86_TAX</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_87" model="account.report.line">
+                    <record id="tax_report_de_tag_87" model="report.formula.line">
                         <field name="name">87. At the tax rate of 0 %</field>
                         <field name="name@de">87. Zum Steuersatz von 0 %</field>
                         <field name="code">DE_87</field>
@@ -81,14 +81,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_87_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-87</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_35" model="account.report.line">
+                    <record id="tax_report_de_tag_35" model="report.formula.line">
                         <field name="name">35/36. At other tax rates</field>
                         <field name="name@de">35/36. Zu anderen Steuersätzen</field>
                         <field name="code">DE_35</field>
@@ -96,21 +96,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_35_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-35</field>
                             </record>
                             <record
                                 id="tax_report_de_tag_36_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-36</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_77" model="account.report.line">
+                    <record id="tax_report_de_tag_77" model="report.formula.line">
                         <field
                             name="name">77. Supplies of agricultural and forestry operations according to § 24 UStG to customers with VAT identification number</field>
                         <field
@@ -120,14 +120,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_77_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-77</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_76" model="account.report.line">
+                    <record id="tax_report_de_tag_76" model="report.formula.line">
                         <field
                             name="name">76/80. Transactions for which tax is payable under § 24 UStG</field>
                         <field
@@ -137,14 +137,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_76_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-76</field>
                             </record>
                             <record
                                 id="tax_report_de_tag_80_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-80</field>
@@ -155,7 +155,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_de_tag_19_base_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">base</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -163,7 +163,7 @@
                     </record>
                     <record
                         id="tax_report_de_tag_19_tax_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -171,7 +171,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_de_section_b" model="account.report.line">
+            <record id="tax_report_de_section_b" model="report.formula.line">
                 <field
                     name="name">B. Taxable supplies, other services, and self-supplies</field>
                 <field
@@ -179,7 +179,7 @@
                 <field name="code">AGG_DE_25</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="tax_report_de_tag_41" model="account.report.line">
+                    <record id="tax_report_de_tag_41" model="report.formula.line">
                         <field name="name">41. To customer with VAT number</field>
                         <field name="name@de">41. An Abnehmer mit USt-IdNr</field>
                         <field name="code">DE_41</field>
@@ -187,14 +187,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_41_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-41</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_44" model="account.report.line">
+                    <record id="tax_report_de_tag_44" model="report.formula.line">
                         <field
                             name="name">44. New vehicles to customers without VAT number</field>
                         <field
@@ -204,14 +204,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_44_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-44</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_49" model="account.report.line">
+                    <record id="tax_report_de_tag_49" model="report.formula.line">
                         <field name="name">49. New vehicles outside a company</field>
                         <field
                             name="name@de">49. Neuer Fahrzeuge außerhalb eines Unternehmens</field>
@@ -220,14 +220,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_49_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">49</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_43" model="account.report.line">
+                    <record id="tax_report_de_tag_43" model="report.formula.line">
                         <field
                             name="name">43. Other tax-exempt transactions with input tax deduction</field>
                         <field
@@ -237,14 +237,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_43_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-43</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_48" model="account.report.line">
+                    <record id="tax_report_de_tag_48" model="report.formula.line">
                         <field
                             name="name">48. Tax-exempt transactions without input tax deduction</field>
                         <field
@@ -254,7 +254,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_48_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">48</field>
@@ -265,7 +265,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_de_tag_25_base_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">base</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -273,13 +273,13 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_de_section_c" model="account.report.line">
+            <record id="tax_report_de_section_c" model="report.formula.line">
                 <field name="name">C. Intra-Community acquisitions</field>
                 <field name="name@de">C. Innergemeinschaftliche Erwerbe</field>
                 <field name="code">AGG_DE_31</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="tax_report_de_tag_91" model="account.report.line">
+                    <record id="tax_report_de_tag_91" model="report.formula.line">
                         <field
                             name="name">91. Tax-free intra-Community acquisitions</field>
                         <field
@@ -289,14 +289,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_91_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-91</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_89" model="account.report.line">
+                    <record id="tax_report_de_tag_89" model="report.formula.line">
                         <field
                             name="name">89. Taxable intra-Community acquisitions at the rate of 19 %</field>
                         <field
@@ -306,21 +306,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_89_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">89_BASE</field>
                             </record>
                             <record
                                 id="tax_report_de_tag_33_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-89_TAX</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_93" model="account.report.line">
+                    <record id="tax_report_de_tag_93" model="report.formula.line">
                         <field name="name">93. At the tax rate of 7 %</field>
                         <field name="name@de">93. Zum Steuersatz von 7 %</field>
                         <field name="code">DE_93</field>
@@ -328,21 +328,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_93_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">93_BASE</field>
                             </record>
                             <record
                                 id="tax_report_de_tag_34_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-93_TAX</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_90" model="account.report.line">
+                    <record id="tax_report_de_tag_90" model="report.formula.line">
                         <field name="name">90. At the tax rate of 0 %</field>
                         <field name="name@de">90. Zum Steuersatz von 0 %</field>
                         <field name="code">DE_90</field>
@@ -350,14 +350,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_90_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">90</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_95" model="account.report.line">
+                    <record id="tax_report_de_tag_95" model="report.formula.line">
                         <field name="name">95/98. At other tax rates</field>
                         <field name="name@de">95/98. Zu anderen Steuersätzen</field>
                         <field name="code">DE_95</field>
@@ -365,21 +365,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_95_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">95</field>
                             </record>
                             <record
                                 id="tax_report_de_tag_98_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-98</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_94" model="account.report.line">
+                    <record id="tax_report_de_tag_94" model="report.formula.line">
                         <field
                             name="name">94/96. New vehicles from suppliers without</field>
                         <field
@@ -389,14 +389,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_94_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">94</field>
                             </record>
                             <record
                                 id="tax_report_de_tag_96_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-96</field>
@@ -407,7 +407,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_de_tag_31_base_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">base</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -415,7 +415,7 @@
                     </record>
                     <record
                         id="tax_report_de_tag_31_tax_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -423,7 +423,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_de_section_d" model="account.report.line">
+            <record id="tax_report_de_section_d" model="report.formula.line">
                 <field
                     name="name">D. Recipient of the supply as tax debtor (§ 13b UStG)</field>
                 <field
@@ -431,7 +431,7 @@
                 <field name="code">AGG_DE_46</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="tax_report_de_tag_46_47" model="account.report.line">
+                    <record id="tax_report_de_tag_46_47" model="report.formula.line">
                         <field
                             name="name">46/47. Other taxable supplies by a trader established in the rest of the Community</field>
                         <field
@@ -441,21 +441,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_46_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">46</field>
                             </record>
                             <record
                                 id="tax_report_de_tag_47_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-47</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_73" model="account.report.line">
+                    <record id="tax_report_de_tag_73" model="report.formula.line">
                         <field
                             name="name">73/74. Supplies of goods transferred by way of security and transactions falling under the GrEStG</field>
                         <field
@@ -465,21 +465,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_73_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">73</field>
                             </record>
                             <record
                                 id="tax_report_de_tag_74_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-74</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_84" model="account.report.line">
+                    <record id="tax_report_de_tag_84" model="report.formula.line">
                         <field name="name">84/85. Other benefits</field>
                         <field name="name@de">84/85. Andere Leistungen</field>
                         <field name="code">DE_84</field>
@@ -487,14 +487,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_84_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">84</field>
                             </record>
                             <record
                                 id="tax_report_de_tag_85_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-85</field>
@@ -505,7 +505,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_de_tag_46_base_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">base</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -513,20 +513,20 @@
                     </record>
                     <record
                         id="tax_report_de_tag_46_tax_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">DE_46.tax + DE_73.tax + DE_84.tax</field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_de_section_e" model="account.report.line">
+            <record id="tax_report_de_section_e" model="report.formula.line">
                 <field name="name">E. Supplementary information on supplies</field>
                 <field name="name@de">E. Ergänzende Angaben zu Umsätzen</field>
                 <field name="code">AGG_DE_37</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="tax_report_de_tag_42" model="account.report.line">
+                    <record id="tax_report_de_tag_42" model="report.formula.line">
                         <field name="name">42. Triangular transactions</field>
                         <field name="name@de">42. Dreiecksgeschäften</field>
                         <field name="code">DE_42</field>
@@ -534,14 +534,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_42_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">42</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_60" model="account.report.line">
+                    <record id="tax_report_de_tag_60" model="report.formula.line">
                         <field
                             name="name">60. Other taxable transactions for which the recipient of the service is liable for the tax in accordance with Section 13b (5) UStG</field>
                         <field
@@ -552,21 +552,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_60_sale_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">sales</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-60</field>
                             </record>
                             <record
                                 id="tax_report_de_tag_60_purchase_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">purchases</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">60rc</field>
                             </record>
                             <record
                                 id="tax_report_de_tag_60_base_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -574,7 +574,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_21" model="account.report.line">
+                    <record id="tax_report_de_tag_21" model="report.formula.line">
                         <field name="name">21. Non-taxable other services</field>
                         <field
                             name="name@de">21. Nicht steuerbare sonstige Leistungen</field>
@@ -583,14 +583,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_21_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-21</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_45" model="account.report.line">
+                    <record id="tax_report_de_tag_45" model="report.formula.line">
                         <field name="name">45. Other non-taxable transactions</field>
                         <field
                             name="name@de">45. Übrige nicht steuerbare Umsätze</field>
@@ -599,14 +599,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_45_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-45_BASE</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_line_36" model="account.report.line">
+                    <record id="tax_report_de_line_36" model="report.formula.line">
                         <field name="name">Total VAT</field>
                         <field name="name@de">Umsatzsteuer insgesamt</field>
                         <field name="code">DE_LINE36</field>
@@ -614,7 +614,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_line_36_agg"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -626,7 +626,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_de_tag_37_base_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">base</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -634,7 +634,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_de_section_f" model="account.report.line">
+            <record id="tax_report_de_section_f" model="report.formula.line">
                 <field
                     name="name">F. Deductible input VAT amounts and adjustment of input VAT deduction</field>
                 <field
@@ -642,7 +642,7 @@
                 <field name="code">AGG_DE_55_TAX</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="tax_report_de_tag_66" model="account.report.line">
+                    <record id="tax_report_de_tag_66" model="report.formula.line">
                         <field
                             name="name">66. Input tax amounts from invoices from other traders</field>
                         <field
@@ -652,14 +652,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_66_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">66</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_61" model="account.report.line">
+                    <record id="tax_report_de_tag_61" model="report.formula.line">
                         <field
                             name="name">61. Input tax amounts from the intra-Community acquisition of goods</field>
                         <field
@@ -669,14 +669,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_61_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">61</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_62" model="account.report.line">
+                    <record id="tax_report_de_tag_62" model="report.formula.line">
                         <field name="name">62. Import turnover tax incurred</field>
                         <field
                             name="name@de">62. Entstandene Einfuhrumsatzsteuer</field>
@@ -685,14 +685,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_62_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">62</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_67" model="account.report.line">
+                    <record id="tax_report_de_tag_67" model="report.formula.line">
                         <field
                             name="name">67. Input tax amounts from services within the meaning of § 13b UStG</field>
                         <field
@@ -702,14 +702,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_67_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">67</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_63" model="account.report.line">
+                    <record id="tax_report_de_tag_63" model="report.formula.line">
                         <field
                             name="name">63. Input tax amounts calculated according to general average rates</field>
                         <field
@@ -719,14 +719,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_63_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">63</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_59" model="account.report.line">
+                    <record id="tax_report_de_tag_59" model="report.formula.line">
                         <field
                             name="name">59. Input tax deduction for intra-Community supplies of new vehicles outside a business</field>
                         <field
@@ -736,14 +736,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_59_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">59</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_64" model="account.report.line">
+                    <record id="tax_report_de_tag_64" model="report.formula.line">
                         <field
                             name="name">64. Adjustment of the input tax deduction</field>
                         <field
@@ -753,14 +753,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_64_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">64</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_line_44" model="account.report.line">
+                    <record id="tax_report_de_line_44" model="report.formula.line">
                         <field name="name">Remaining amount</field>
                         <field name="name@de">Verbleibender Betrag</field>
                         <field name="code">DE_LINE44</field>
@@ -768,7 +768,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_line_44_agg"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -780,7 +780,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_de_tax_tag_55_tax_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -788,12 +788,12 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_de_section_g" model="account.report.line">
+            <record id="tax_report_de_section_g" model="report.formula.line">
                 <field name="name">G. Other tax amounts</field>
                 <field name="name@de">G. Andere Steuerbeträge</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="tax_report_de_tag_65" model="account.report.line">
+                    <record id="tax_report_de_tag_65" model="report.formula.line">
                         <field
                             name="name">65. Tax due to change in the form of taxation and after-tax on taxed prepayments and similar due to change in tax rate</field>
                         <field
@@ -803,14 +803,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_65_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">65</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_69" model="account.report.line">
+                    <record id="tax_report_de_tag_69" model="report.formula.line">
                         <field
                             name="name">69. Tax amounts shown incorrectly or unjustifiably in invoices</field>
                         <field
@@ -820,7 +820,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_69_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-69</field>
@@ -829,12 +829,12 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_de_section_h" model="account.report.line">
+            <record id="tax_report_de_section_h" model="report.formula.line">
                 <field name="name">H. Tax Prepayment/Overpayment</field>
                 <field name="name@de">H. Vorauszahlung/Überschuss</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="tax_report_de_line_47" model="account.report.line">
+                    <record id="tax_report_de_line_47" model="report.formula.line">
                         <field name="name">VAT advance payment/surplus</field>
                         <field
                             name="name@de">Umsatzsteuer-Vorauszahlung/Überschuss</field>
@@ -843,7 +843,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_line_47_agg"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -851,7 +851,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_39" model="account.report.line">
+                    <record id="tax_report_de_tag_39" model="report.formula.line">
                         <field
                             name="name">39. Deduction of the special advance payment for the extension of the standing period</field>
                         <field
@@ -861,14 +861,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_39_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">39</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_83" model="account.report.line">
+                    <record id="tax_report_de_tag_83" model="report.formula.line">
                         <field
                             name="name">83. Remaining advance payment of sales tax</field>
                         <field
@@ -878,7 +878,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_83_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -888,14 +888,14 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_de_section_i" model="account.report.line">
+            <record id="tax_report_de_section_i" model="report.formula.line">
                 <field
                     name="name">I. Supplementary information on reductions according to § 17, Paragraph 1, Sentences 1 and 2 in conjunction with Paragraph 2, Number 1, Sentence 1 of the German VAT Act (UStG)</field>
                 <field
                     name="name@de">I. Ergänzende Angaben zu Minderungen nach § 17 Absatz 1 Sätze 1 und 2 in Verbindung mit Absatz 2 Nummer 1 Satz 1 UStG</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="tax_report_de_tag_50" model="account.report.line">
+                    <record id="tax_report_de_tag_50" model="report.formula.line">
                         <field name="name">50. Reduction of the tax base </field>
                         <field
                             name="name@de">50. Minderung der Bemessungsgrundlage </field>
@@ -904,14 +904,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_50_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">50</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_de_tag_37_74" model="account.report.line">
+                    <record id="tax_report_de_tag_37_74" model="report.formula.line">
                         <field
                             name="name">37. Reduction of deductible input tax amounts </field>
                         <field
@@ -921,7 +921,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_de_tag_37_74_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">37</field>

@@ -20,7 +20,7 @@ class ReportFormulaController(http.Controller):
         uid = request.env.uid
         options = json.loads(options)
 
-        allowed_company_ids = request.env["account.report"].get_report_company_ids(
+        allowed_company_ids = request.env["report.formula"].get_report_company_ids(
             options
         )
         if not allowed_company_ids:
@@ -32,7 +32,7 @@ class ReportFormulaController(http.Controller):
             ] or request.env.user.company_id.ids
 
         report = (
-            request.env["account.report"]
+            request.env["report.formula"]
             .with_user(uid)
             .with_context(allowed_company_ids=allowed_company_ids)
             .browse(options["report_id"])
@@ -94,7 +94,7 @@ class ReportFormulaController(http.Controller):
         headers = [
             (
                 "Content-Type",
-                request.env["account.report"].get_export_mime_type(file_type),
+                request.env["report.formula"].get_export_mime_type(file_type),
             ),
             ("Content-Disposition", prepare_content_disposition_header(file_name)),
         ]

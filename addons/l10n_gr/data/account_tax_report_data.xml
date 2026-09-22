@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="tax_report" model="account.report">
+    <record id="tax_report" model="report.formula">
         <field name="name">Tax Report</field>
         <field name="name@el_GR">Φορολογική έκθεση</field>
         <field name="root_report_id" ref="account.generic_tax_report" />
@@ -9,27 +9,27 @@
         <field name="allow_foreign_vat" eval="True" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="tax_report_balance" model="account.report.column">
+            <record id="tax_report_balance" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="name@el_GR">Υπόλοιπο</field>
                 <field name="expression_label">balance</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="l10n_gr_tr_table_B" model="account.report.line">
+            <record id="l10n_gr_tr_table_B" model="report.formula.line">
                 <field
                     name="name">B. TABLE OF OUTPUTS – INPUTS after the reduction (according to the VAT rates) of refunds - deductions</field>
                 <field
                     name="name@el_GR">B. ΠΙΝΑΚΑΣ ΕΚΡΟΩΝ - ΕΙΣΡΟΩΝ μετά τη μείωση (σύμφωνα με τους συντελεστές ΦΠΑ) των επιστροφών - εκπτώσεων</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="l10n_gr_tr_section_a" model="account.report.line">
+                    <record id="l10n_gr_tr_section_a" model="report.formula.line">
                         <field name="name">a. Taxable outputs - output tax</field>
                         <field
                             name="name@el_GR">a. Φορολογητέες εκροές - φόρος εκροών</field>
                         <field name="hierarchy_level">1</field>
                         <field name="children_ids">
-                            <record id="l10n_gr_tr_301" model="account.report.line">
+                            <record id="l10n_gr_tr_301" model="report.formula.line">
                                 <field name="name">301 - Sales 13%</field>
                                 <field name="name@el_GR">301 - Πωλήσεις 13%</field>
                                 <field name="code">l10n_gr_301</field>
@@ -37,7 +37,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_301_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -45,21 +45,21 @@
                                     </record>
                                     <record
                                         id="l10n_gr_tr_301_tag_sale"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">sale</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-301</field>
                                     </record>
                                     <record
                                         id="l10n_gr_tr_301_tag_purchase"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">purchase</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">301rc</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_302" model="account.report.line">
+                            <record id="l10n_gr_tr_302" model="report.formula.line">
                                 <field name="name">302 - Sales 6%</field>
                                 <field name="name@el_GR">302 - Πωλήσεις 6%</field>
                                 <field name="code">l10n_gr_302</field>
@@ -67,7 +67,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_302_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -75,21 +75,21 @@
                                     </record>
                                     <record
                                         id="l10n_gr_tr_302_tag_sale"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">sale</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-302</field>
                                     </record>
                                     <record
                                         id="l10n_gr_tr_302_tag_purchase"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">purchase</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">302rc</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_303" model="account.report.line">
+                            <record id="l10n_gr_tr_303" model="report.formula.line">
                                 <field name="name">303 - Sales 24%</field>
                                 <field name="name@el_GR">303 - Πωλήσεις 24%</field>
                                 <field name="code">l10n_gr_303</field>
@@ -97,7 +97,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_303_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -105,21 +105,21 @@
                                     </record>
                                     <record
                                         id="l10n_gr_tr_303_tag_sale"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">sale</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-303</field>
                                     </record>
                                     <record
                                         id="l10n_gr_tr_303_tag_purchase"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">purchase</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">303rc</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_304" model="account.report.line">
+                            <record id="l10n_gr_tr_304" model="report.formula.line">
                                 <field name="name">304 - Sales 9%</field>
                                 <field name="name@el_GR">304 - Πωλήσεις 9%</field>
                                 <field name="code">l10n_gr_304</field>
@@ -127,7 +127,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_304_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -135,21 +135,21 @@
                                     </record>
                                     <record
                                         id="l10n_gr_tr_304_tag_sale"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">sale</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-304</field>
                                     </record>
                                     <record
                                         id="l10n_gr_tr_304_tag_purchase"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">purchase</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">304rc</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_305" model="account.report.line">
+                            <record id="l10n_gr_tr_305" model="report.formula.line">
                                 <field name="name">305 - Sales 4%</field>
                                 <field name="name@el_GR">305 - Πωλήσεις 4%</field>
                                 <field name="code">l10n_gr_305</field>
@@ -157,7 +157,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_305_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -165,21 +165,21 @@
                                     </record>
                                     <record
                                         id="l10n_gr_tr_305_tag_sale"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">sale</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-305</field>
                                     </record>
                                     <record
                                         id="l10n_gr_tr_305_tag_purchase"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">purchase</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">305rc</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_306" model="account.report.line">
+                            <record id="l10n_gr_tr_306" model="report.formula.line">
                                 <field name="name">306 - Sales 17%</field>
                                 <field name="name@el_GR">306 - Πωλήσεις 17%</field>
                                 <field name="code">l10n_gr_306</field>
@@ -187,7 +187,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_306_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -195,21 +195,21 @@
                                     </record>
                                     <record
                                         id="l10n_gr_tr_306_tag_sale"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">sale</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-306</field>
                                     </record>
                                     <record
                                         id="l10n_gr_tr_306_tag_purchase"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">purchase</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">306rc</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_307" model="account.report.line">
+                            <record id="l10n_gr_tr_307" model="report.formula.line">
                                 <field name="name">307 - Taxable outputs</field>
                                 <field
                                     name="name@el_GR">307 - Φορολογητέες εκροές</field>
@@ -223,7 +223,7 @@
                                     l10n_gr_305.balance +
                                     l10n_gr_306.balance</field>
                             </record>
-                            <record id="l10n_gr_tr_331" model="account.report.line">
+                            <record id="l10n_gr_tr_331" model="report.formula.line">
                                 <field name="name">331 - VAT sales 13%</field>
                                 <field name="name@el_GR">331 - Πωλήσεις ΦΠΑ 13%</field>
                                 <field name="code">l10n_gr_331</field>
@@ -231,14 +231,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_331_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-331</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_332" model="account.report.line">
+                            <record id="l10n_gr_tr_332" model="report.formula.line">
                                 <field name="name">332 - VAT sales 6%</field>
                                 <field name="name@el_GR">332 - Πωλήσεις ΦΠΑ 6%</field>
                                 <field name="code">l10n_gr_332</field>
@@ -246,14 +246,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_332_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-332</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_333" model="account.report.line">
+                            <record id="l10n_gr_tr_333" model="report.formula.line">
                                 <field name="name">333 - VAT sales 24%</field>
                                 <field name="name@el_GR">333 - Πωλήσεις ΦΠΑ 24%</field>
                                 <field name="code">l10n_gr_333</field>
@@ -261,14 +261,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_333_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-333</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_334" model="account.report.line">
+                            <record id="l10n_gr_tr_334" model="report.formula.line">
                                 <field name="name">334 - VAT Sales 9%</field>
                                 <field name="name@el_GR">334 - Πωλήσεις ΦΠΑ 9%</field>
                                 <field name="code">l10n_gr_334</field>
@@ -276,14 +276,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_334_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-334</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_335" model="account.report.line">
+                            <record id="l10n_gr_tr_335" model="report.formula.line">
                                 <field name="name">335 - VAT sales 4%</field>
                                 <field name="name@el_GR">335 - Πωλήσεις ΦΠΑ 4%</field>
                                 <field name="code">l10n_gr_335</field>
@@ -291,14 +291,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_335_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-335</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_336" model="account.report.line">
+                            <record id="l10n_gr_tr_336" model="report.formula.line">
                                 <field name="name">336 - VAT sales 17%</field>
                                 <field name="name@el_GR">336 - Πωλήσεις ΦΠΑ 17%</field>
                                 <field name="code">l10n_gr_336</field>
@@ -306,14 +306,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_336_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-336</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_337" model="account.report.line">
+                            <record id="l10n_gr_tr_337" model="report.formula.line">
                                 <field name="name">337 - VAT taxable outputs</field>
                                 <field
                                     name="name@el_GR">337 - Φορολογητέες εκροές ΦΠΑ</field>
@@ -327,7 +327,7 @@
                                     l10n_gr_335.balance +
                                     l10n_gr_336.balance</field>
                             </record>
-                            <record id="l10n_gr_tr_342" model="account.report.line">
+                            <record id="l10n_gr_tr_342" model="report.formula.line">
                                 <field
                                     name="name">342 - Intra-community supplies</field>
                                 <field
@@ -336,14 +336,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_342_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-342</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_345" model="account.report.line">
+                            <record id="l10n_gr_tr_345" model="report.formula.line">
                                 <field
                                     name="name">345 - Intra-community supplies of services</field>
                                 <field
@@ -352,14 +352,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_345_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-345</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_348" model="account.report.line">
+                            <record id="l10n_gr_tr_348" model="report.formula.line">
                                 <field
                                     name="name">348 - Exports and exemptions of ships and aircrafts</field>
                                 <field
@@ -368,14 +368,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_348_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-348</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_349" model="account.report.line">
+                            <record id="l10n_gr_tr_349" model="report.formula.line">
                                 <field
                                     name="name">349 - Other outputs without VAT with right to deduct</field>
                                 <field
@@ -384,14 +384,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_349_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-349</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_310" model="account.report.line">
+                            <record id="l10n_gr_tr_310" model="report.formula.line">
                                 <field
                                     name="name">310 - Outputs exempted or excepted, without right to deduct</field>
                                 <field
@@ -400,14 +400,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_310_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-310</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_311" model="account.report.line">
+                            <record id="l10n_gr_tr_311" model="report.formula.line">
                                 <field name="name">311 - Total outputs</field>
                                 <field name="name@el_GR">311 - Συνολικές εκροές</field>
                                 <field name="code">l10n_gr_311</field>
@@ -420,7 +420,7 @@
                                     l10n_gr_349.balance +
                                     l10n_gr_310.balance</field>
                             </record>
-                            <record id="l10n_gr_tr_312" model="account.report.line">
+                            <record id="l10n_gr_tr_312" model="report.formula.line">
                                 <field name="name">312 - VAT turnover</field>
                                 <field
                                     name="name@el_GR">312 - Κύκλος εργασιών ΦΠΑ</field>
@@ -429,7 +429,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_312_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -440,13 +440,13 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_gr_tr_section_b" model="account.report.line">
+                    <record id="l10n_gr_tr_section_b" model="report.formula.line">
                         <field name="name">b. Taxable inputs - input tax</field>
                         <field
                             name="name@el_GR">b. Φορολογητέες εισροές - φόρος εισροών</field>
                         <field name="hierarchy_level">1</field>
                         <field name="children_ids">
-                            <record id="l10n_gr_tr_361" model="account.report.line">
+                            <record id="l10n_gr_tr_361" model="report.formula.line">
                                 <field
                                     name="name">361 - Purchases and expenditures within the country</field>
                                 <field
@@ -456,14 +456,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_361_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">361</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_362" model="account.report.line">
+                            <record id="l10n_gr_tr_362" model="report.formula.line">
                                 <field
                                     name="name">362 - Purchases and imports of investment goods</field>
                                 <field
@@ -473,14 +473,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_362_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">362</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_363" model="account.report.line">
+                            <record id="l10n_gr_tr_363" model="report.formula.line">
                                 <field name="name">363 - Other imports</field>
                                 <field name="name@el_GR">363 - Άλλες εισαγωγές</field>
                                 <field name="code">l10n_gr_363</field>
@@ -488,14 +488,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_363_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">363</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_364" model="account.report.line">
+                            <record id="l10n_gr_tr_364" model="report.formula.line">
                                 <field
                                     name="name">364 - Intra-community acquisitions of goods</field>
                                 <field
@@ -505,14 +505,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_364_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">364</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_365" model="account.report.line">
+                            <record id="l10n_gr_tr_365" model="report.formula.line">
                                 <field
                                     name="name">365 - Intra-community acquisitions of services art. 14.2.a</field>
                                 <field
@@ -522,14 +522,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_365_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">365</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_366" model="account.report.line">
+                            <record id="l10n_gr_tr_366" model="report.formula.line">
                                 <field
                                     name="name">366 - Other reverse charge transactions</field>
                                 <field
@@ -539,14 +539,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_366_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">366</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_367" model="account.report.line">
+                            <record id="l10n_gr_tr_367" model="report.formula.line">
                                 <field name="name">367 - Taxable inputs total</field>
                                 <field
                                     name="name@el_GR">367 - Σύνολο φορολογητέων εισροών</field>
@@ -560,7 +560,7 @@
                                     l10n_gr_365.balance +
                                     l10n_gr_366.balance</field>
                             </record>
-                            <record id="l10n_gr_tr_381" model="account.report.line">
+                            <record id="l10n_gr_tr_381" model="report.formula.line">
                                 <field
                                     name="name">381 - VAT purchases and expenditures within the country</field>
                                 <field
@@ -570,14 +570,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_381_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">381</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_382" model="account.report.line">
+                            <record id="l10n_gr_tr_382" model="report.formula.line">
                                 <field
                                     name="name">382 - VAT purchases and imports of investment goods</field>
                                 <field
@@ -587,14 +587,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_382_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">382</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_383" model="account.report.line">
+                            <record id="l10n_gr_tr_383" model="report.formula.line">
                                 <field name="name">383 - VAT other imports</field>
                                 <field
                                     name="name@el_GR">383 - ΦΠΑ λοιπών εισαγωγών</field>
@@ -603,14 +603,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_383_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">383</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_384" model="account.report.line">
+                            <record id="l10n_gr_tr_384" model="report.formula.line">
                                 <field
                                     name="name">384 - VAT intra-community acquisitions of goods</field>
                                 <field
@@ -620,14 +620,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_384_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">384</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_385" model="account.report.line">
+                            <record id="l10n_gr_tr_385" model="report.formula.line">
                                 <field
                                     name="name">385 - VAT Intra-Community Acquisitions of services art. 14.2.a</field>
                                 <field
@@ -637,14 +637,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_385_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">385</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_386" model="account.report.line">
+                            <record id="l10n_gr_tr_386" model="report.formula.line">
                                 <field
                                     name="name">386 - VAT other reverse charge transactions</field>
                                 <field
@@ -654,14 +654,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_386_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">386</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_387" model="account.report.line">
+                            <record id="l10n_gr_tr_387" model="report.formula.line">
                                 <field
                                     name="name">387 - VAT taxable inputs total</field>
                                 <field
@@ -678,14 +678,14 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_gr_tr_section_d" model="account.report.line">
+                    <record id="l10n_gr_tr_section_d" model="report.formula.line">
                         <field
                             name="name">d. Amounts added to the input tax total</field>
                         <field
                             name="name@el_GR">d. Ποσά που προστίθενται στο σύνολο του φόρου εισροών</field>
                         <field name="hierarchy_level">1</field>
                         <field name="children_ids">
-                            <record id="l10n_gr_tr_400" model="account.report.line">
+                            <record id="l10n_gr_tr_400" model="report.formula.line">
                                 <field
                                     name="name">400 - Tax refund (sales of agricultural products x 3%)</field>
                                 <field
@@ -695,7 +695,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_400_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -704,7 +704,7 @@
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_402" model="account.report.line">
+                            <record id="l10n_gr_tr_402" model="report.formula.line">
                                 <field name="name">402 - Other added amounts</field>
                                 <field
                                     name="name@el_GR">402 - Άλλα προστιθέμενα ποσά</field>
@@ -713,7 +713,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_402_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -722,7 +722,7 @@
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_407" model="account.report.line">
+                            <record id="l10n_gr_tr_407" model="report.formula.line">
                                 <field
                                     name="name">407 - Amounts of adjustments of previous tax year for deduction</field>
                                 <field
@@ -732,7 +732,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_407_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -741,7 +741,7 @@
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_410" model="account.report.line">
+                            <record id="l10n_gr_tr_410" model="report.formula.line">
                                 <field
                                     name="name">410 - Added amounts to total inputs tax</field>
                                 <field
@@ -751,7 +751,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_410_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -761,14 +761,14 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_gr_tr_section_e" model="account.report.line">
+                    <record id="l10n_gr_tr_section_e" model="report.formula.line">
                         <field
                             name="name">e. Deductible amounts from the total input tax</field>
                         <field
                             name="name@el_GR">e. Εκπιπτόμενα ποσά από το συνολικό φόρο εισροών</field>
                         <field name="hierarchy_level">1</field>
                         <field name="children_ids">
-                            <record id="l10n_gr_tr_411" model="account.report.line">
+                            <record id="l10n_gr_tr_411" model="report.formula.line">
                                 <field
                                     name="name">411 - Inputs VAT reduced under prorata scheme</field>
                                 <field
@@ -778,7 +778,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_411_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -787,7 +787,7 @@
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_422" model="account.report.line">
+                            <record id="l10n_gr_tr_422" model="report.formula.line">
                                 <field name="name">422 - Other removable amounts</field>
                                 <field
                                     name="name@el_GR">422 - Άλλα αφαιρούμενα ποσά</field>
@@ -796,7 +796,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_422_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -805,7 +805,7 @@
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_423" model="account.report.line">
+                            <record id="l10n_gr_tr_423" model="report.formula.line">
                                 <field
                                     name="name">423 - Amount of adjustments of previous tax year to be paid</field>
                                 <field
@@ -815,7 +815,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_gr_tr_423_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -824,7 +824,7 @@
                                     </record>
                                 </field>
                             </record>
-                            <record id="l10n_gr_tr_428" model="account.report.line">
+                            <record id="l10n_gr_tr_428" model="report.formula.line">
                                 <field
                                     name="name">428 - Amounts removable from total inputs tax</field>
                                 <field
@@ -840,7 +840,7 @@
                     </record>
                 </field>
             </record>
-            <record id="l10n_gr_tr_430" model="account.report.line">
+            <record id="l10n_gr_tr_430" model="report.formula.line">
                 <field name="name">430 - Remaining inputs VAT</field>
                 <field name="name@el_GR">430 - Υπόλοιπο εισροών ΦΠΑ</field>
                 <field name="code">l10n_gr_430</field>
@@ -850,14 +850,14 @@
                     l10n_gr_410.balance -
                     l10n_gr_428.balance</field>
             </record>
-            <record id="l10n_gr_tr_table_C" model="account.report.line">
+            <record id="l10n_gr_tr_table_C" model="report.formula.line">
                 <field
                     name="name">C. TABLE OF TAX SETTLEMENT to be paid, deducted or refunded</field>
                 <field
                     name="name@el_GR">C. ΠΙΝΑΚΑΣ ΦΟΡΟΛΟΓΙΚΟΥ ΔΙΑΚΑΝΟΝΙΣΜΟΥ που πρέπει να καταβληθεί, να αφαιρεθεί ή να επιστραφεί</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="l10n_gr_tr_470" model="account.report.line">
+                    <record id="l10n_gr_tr_470" model="report.formula.line">
                         <field name="name">470 - Credit balance</field>
                         <field name="name@el_GR">470 - Πιστωτικό υπόλοιπο</field>
                         <field name="code">l10n_gr_470</field>
@@ -865,7 +865,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_gr_tr_470_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -874,7 +874,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_gr_tr_480" model="account.report.line">
+                    <record id="l10n_gr_tr_480" model="report.formula.line">
                         <field name="name">480 - Debit balance</field>
                         <field name="name@el_GR">480 - Χρεωστικό υπόλοιπο</field>
                         <field name="code">l10n_gr_480</field>
@@ -882,7 +882,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_gr_tr_480_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -891,7 +891,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_gr_tr_401" model="account.report.line">
+                    <record id="l10n_gr_tr_401" model="report.formula.line">
                         <field
                             name="name">401 - Credit balance of previous taxable period</field>
                         <field
@@ -901,7 +901,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_gr_tr_401_applied_carryover"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">_applied_carryover_balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
@@ -909,14 +909,14 @@
                             </record>
                             <record
                                 id="l10n_gr_tr_401_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tag</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">401</field>
                             </record>
                             <record
                                 id="l10n_gr_tr_401_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -924,7 +924,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_gr_tr_403" model="account.report.line">
+                    <record id="l10n_gr_tr_403" model="report.formula.line">
                         <field
                             name="name">403 - Assessed amount of previous return of this taxable period (= code 511)</field>
                         <field
@@ -934,7 +934,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_gr_tr_403_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -942,7 +942,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_gr_tr_404" model="account.report.line">
+                    <record id="l10n_gr_tr_404" model="report.formula.line">
                         <field
                             name="name">404 - Tax that is committed through banks</field>
                         <field
@@ -952,7 +952,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_gr_tr_404_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -960,7 +960,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_gr_tr_483" model="account.report.line">
+                    <record id="l10n_gr_tr_483" model="report.formula.line">
                         <field
                             name="name">483 - Debit amount less than 30€ of previous taxable period</field>
                         <field
@@ -970,7 +970,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_gr_tr_483_applied_carryover"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">_applied_carryover_balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
@@ -978,14 +978,14 @@
                             </record>
                             <record
                                 id="l10n_gr_tr_483_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tag</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">483</field>
                             </record>
                             <record
                                 id="l10n_gr_tr_483_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -993,7 +993,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_gr_tr_505" model="account.report.line">
+                    <record id="l10n_gr_tr_505" model="report.formula.line">
                         <field
                             name="name">505 - Amount which has been refunded or requested to be refund</field>
                         <field
@@ -1003,7 +1003,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_gr_tr_505_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -1011,7 +1011,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_gr_tr_502" model="account.report.line">
+                    <record id="l10n_gr_tr_502" model="report.formula.line">
                         <field name="name">502 - AMOUNT for deduction</field>
                         <field name="name@el_GR">502 - ΠΟΣΟ για έκπτωση</field>
                         <field name="code">l10n_gr_502</field>
@@ -1019,7 +1019,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_gr_tr_502_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -1034,7 +1034,7 @@
                             </record>
                             <record
                                 id="l10n_gr_tr_502_carryover"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">_carryover_balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">l10n_gr_502.balance</field>
@@ -1043,7 +1043,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_gr_tr_503" model="account.report.line">
+                    <record id="l10n_gr_tr_503" model="report.formula.line">
                         <field name="name">503 - AMOUNT REQUESTED for refund</field>
                         <field
                             name="name@el_GR">503 - ΑΙΤΟΥΜΕΝΟ ΠΟΣΟ για επιστροφή χρημάτων</field>
@@ -1052,7 +1052,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_gr_tr_503_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -1060,7 +1060,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_gr_tr_511" model="account.report.line">
+                    <record id="l10n_gr_tr_511" model="report.formula.line">
                         <field name="name">511 - AMOUNT TO BE PAID</field>
                         <field name="name@el_GR">511 - ΚΑΤΑΒΛΗΤΈΟ ΠΟΣΌ</field>
                         <field name="code">l10n_gr_511</field>
@@ -1068,7 +1068,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_gr_tr_511_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -1083,7 +1083,7 @@
                             </record>
                             <record
                                 id="l10n_gr_tr_511_carryover_amount"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">_carryover_balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">l10n_gr_511.balance</field>

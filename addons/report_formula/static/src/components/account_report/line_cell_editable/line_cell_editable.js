@@ -42,7 +42,7 @@ export class AccountReportLineCellEditable extends AccountReportLineCell {
             : {};
 
         const res = await this.orm.call(
-            "account.report",
+            "report.formula",
             "action_modify_manual_value",
             [
                 this.controller.options.report_id,

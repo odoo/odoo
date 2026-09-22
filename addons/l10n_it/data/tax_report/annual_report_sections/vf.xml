@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="tax_annual_report_vat_vf" model="account.report">
+    <record id="tax_annual_report_vat_vf" model="report.formula">
         <field name="name">VF VAT Report</field>
         <field name="name@it">Rapporto IVA VF</field>
         <field name="sequence">1</field>
         <field name="country_id" ref="base.it" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="tax_annual_report_vat_balance_vf" model="account.report.column">
+            <record id="tax_annual_report_vat_balance_vf" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="name@it">Saldo</field>
                 <field name="expression_label">balance</field>
             </record>
-            <record id="tax_annual_report_vat_tax_vf" model="account.report.column">
+            <record id="tax_annual_report_vat_tax_vf" model="report.formula.column">
                 <field name="name">Tax</field>
                 <field name="name@it">Imposta</field>
                 <field name="expression_label">tax</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="tax_annual_report_line_passive_op" model="account.report.line">
+            <record id="tax_annual_report_line_passive_op" model="report.formula.line">
                 <field name="name">Passive operations and VAT deduction allowed</field>
                 <field
                     name="name@it">Operazioni passive e detrazione dell'IVA consentita</field>
@@ -28,7 +28,7 @@
                 <field name="children_ids">
                     <record
                         id="tax_annual_report_line_passive_op_1"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">Purchases (Domestic, intra-Community and imports)</field>
                         <field
@@ -37,7 +37,7 @@
                         <field name="children_ids">
                             <record
                                 id="tax_annual_report_line_VF1"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF1 - compensation percentage 2%</field>
                                 <field
@@ -46,14 +46,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF1_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf1</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF1_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">VF1.balance * 0.02</field>
@@ -62,7 +62,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF2"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF2 - compensation percentage 4%</field>
                                 <field
@@ -71,14 +71,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF2_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf2</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF2_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">VF2.balance * 0.04</field>
@@ -87,7 +87,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF3"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF3 - compensation percentage 5%</field>
                                 <field
@@ -96,14 +96,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF3_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf3</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF3_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">VF3.balance * 0.5</field>
@@ -112,7 +112,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF4"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF4 - compensation percentage 6,4%</field>
                                 <field
@@ -121,14 +121,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF4_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf4</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF4_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -138,7 +138,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF5"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF5 - compensation percentage 7%</field>
                                 <field
@@ -147,14 +147,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF5_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf5</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF5_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">VF5.balance * 0.07</field>
@@ -163,7 +163,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF6"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF6 - compensation percentage 7,3%</field>
                                 <field
@@ -172,14 +172,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF6_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf6</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF6_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -189,7 +189,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF7"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF7 - compensation percentage 7,5%</field>
                                 <field
@@ -198,14 +198,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF7_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf7</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF7_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -215,7 +215,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF8 - compensation percentage 8,3%</field>
                                 <field
@@ -224,14 +224,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf8</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF8_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -241,7 +241,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF9"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF9 - compensation percentage 8,5%</field>
                                 <field
@@ -250,14 +250,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF9_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf9</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF9_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -267,7 +267,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF10"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF10 - compensation percentage 8,8%</field>
                                 <field
@@ -276,14 +276,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF10_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf10</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF10_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -293,7 +293,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF11"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF11 - compensation percentage 10%</field>
                                 <field
@@ -302,14 +302,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF11_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf11</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF11_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -319,7 +319,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF12"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF12 - compensation percentage 12,3%</field>
                                 <field
@@ -328,14 +328,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF12_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf12</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF12_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -345,7 +345,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF13"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF13 - compensation percentage 22%</field>
                                 <field
@@ -354,14 +354,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF13_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf13</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF13_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -371,7 +371,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF17"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF17 - Purchases and imports without payment of tax, with use of the ceiling</field>
                                 <field
@@ -381,7 +381,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF18_I"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF18 - Other non-tax purchases, not subject to tax and relating to certain special regimes</field>
                                 <field
@@ -391,7 +391,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF18_II"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF18 - Exempt purchases and imports not subject to the tax</field>
                                 <field
@@ -401,7 +401,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF19"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF19 - Purchases from subjects who have made use of concessional schemes</field>
                                 <field
@@ -411,7 +411,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF20"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF20 - Purchases and imports not subject to the tax made by earthquake victims</field>
                                 <field
@@ -421,7 +421,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF21"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF21 - Purchases and imports for which the deduction is excluded or reduced (art. 19-bis1)</field>
                                 <field
@@ -431,7 +431,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF22"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF22 - Purchases and imports for which the deduction is not permitted</field>
                                 <field
@@ -441,7 +441,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF23"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF23 - Purchases recorded in the year but with tax deduction deferred to subsequent years</field>
                                 <field
@@ -451,7 +451,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF24"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF24 - Purchases recorded in previous years but with tax</field>
                                 <field
@@ -463,7 +463,7 @@
                     </record>
                     <record
                         id="tax_annual_report_line_passive_op_2"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">Total purchases and imports, total tax, purchases intra-community, imports and purchases</field>
                         <field
@@ -472,7 +472,7 @@
                         <field name="children_ids">
                             <record
                                 id="tax_annual_report_line_VF25"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF25 - Total purchases and imports</field>
                                 <field
@@ -486,7 +486,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF25_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -497,7 +497,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF26"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF26 - Tax variations and roundings (indicate with the +/- sign)</field>
                                 <field
@@ -506,7 +506,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF26_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf26</field>
@@ -515,7 +515,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF27"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF27 - Total tax on taxable purchases and imports</field>
                                 <field
@@ -524,7 +524,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF27_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -534,7 +534,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF28_I"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF28 - Intra-community purchases</field>
                                 <field
@@ -543,14 +543,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF28_I_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf28_i base</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF28_I_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf28_i tax</field>
@@ -559,21 +559,21 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF28_II"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VF28 - Imports</field>
                                 <field name="name@it">VF28 - Importazioni</field>
                                 <field name="code">VF28_II</field>
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF28_II_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf28_ii base</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF28_II_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf28_ii tax</field>
@@ -582,7 +582,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF28_III"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF28 - Purchases from San Marino</field>
                                 <field
@@ -591,14 +591,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF28_III_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf28_iii base</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF28_III_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf28_iii tax</field>
@@ -607,7 +607,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF29"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF29 - Total distribution of purchases and imports</field>
                                 <field
@@ -616,7 +616,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="tax_annual_report_line_VF29_I"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">Depreciable assets</field>
                                         <field
                                             name="name@it">Attività ammortizzabili</field>
@@ -625,7 +625,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF29_II"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Non-depreciable capital goods</field>
                                         <field
@@ -635,7 +635,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF29_III"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Goods intended for resale or for the production of goods and services</field>
                                         <field
@@ -645,7 +645,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF29_IV"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Other purchases and imports</field>
                                         <field
@@ -659,14 +659,14 @@
                     </record>
                     <record
                         id="tax_annual_report_line_passive_op_3a"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Exempt operations</field>
                         <field name="name@it">Operazioni esenti</field>
                         <field name="code">VF_3A</field>
                         <field name="children_ids">
                             <record
                                 id="tax_annual_report_line_VF31"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF31 - Purchases intended for occasional taxable transactions</field>
                                 <field
@@ -675,14 +675,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF31_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf31</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF31_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -693,7 +693,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF34"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF34 - Data for calculating the deduction percentage</field>
                                 <field
@@ -702,7 +702,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="tax_annual_report_line_VF34_I"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Exempt transactions relating to gold from investments made by the subjects referred to in the art. 19, co. 3, letter. d)</field>
                                         <field
@@ -712,7 +712,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF34_II"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Exempt operations referred to in nos. from 1 to 9 of the art. 10 not included in their own business of the company or ancillary to taxable operations</field>
                                         <field
@@ -722,7 +722,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF34_III"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Exempt operations referred to in art. 10, n. 27-quinquies</field>
                                         <field
@@ -732,7 +732,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF34_IV"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Depreciable assets and transfers interiors exempt</field>
                                         <field
@@ -742,7 +742,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF34_V"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Operations not subject</field>
                                         <field
@@ -752,7 +752,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF34_VI"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Operations not subject to art. 74, co. 1</field>
                                         <field
@@ -762,7 +762,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF34_VII"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Exempt operations art. 19, co. 3, letter. a-bis) and d-bis)</field>
                                         <field
@@ -772,7 +772,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF34_VIII"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Article operations 7 to 7-septies without right to deduction</field>
                                         <field
@@ -782,7 +782,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF34_IX"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Operations exempted by law no. 178/2020</field>
                                         <field
@@ -794,7 +794,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF35"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF35 - VAT not paid on purchases and imports indicated</field>
                                 <field
@@ -803,7 +803,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF35_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf35</field>
@@ -812,7 +812,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF36"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF36 - VAT deductible for gold purchases made by parties other than producers and transformers pursuant to art. 19, paragraph 5 bis</field>
                                 <field
@@ -821,7 +821,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF36_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf36</field>
@@ -830,7 +830,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF37"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF37 - VAT allowed as deduction</field>
                                 <field
@@ -839,7 +839,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF37_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -854,14 +854,14 @@
                     </record>
                     <record
                         id="tax_annual_report_line_passive_op_3b"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Agricultural businesses (art.34)</field>
                         <field name="name@it">Aziende agricole (art. 34)</field>
                         <field name="code">VF_3B</field>
                         <field name="children_ids">
                             <record
                                 id="tax_annual_report_line_VF38"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF38 - Reserved for mixed agricultural enterprises</field>
                                 <field
@@ -870,14 +870,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF38_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf38 Base</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF38_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf38 Tax</field>
@@ -886,7 +886,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF39"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF39 - compensation percentage 2%</field>
                                 <field
@@ -895,14 +895,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF39_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf39</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF39_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -912,7 +912,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF40"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF40 - compensation percentage 4%</field>
                                 <field
@@ -921,14 +921,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF40_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf40</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF40_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -938,7 +938,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF41"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF41 - compensation percentage 6.4%</field>
                                 <field
@@ -947,14 +947,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF41_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf41</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF41_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -964,7 +964,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF42"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF42 - compensation percentage 7%</field>
                                 <field
@@ -973,14 +973,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF42_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf42</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF42_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -990,7 +990,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF43"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF43 - compensation percentage 7,3%</field>
                                 <field
@@ -999,14 +999,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF43_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf43</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF43_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1016,7 +1016,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF44"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF44 - compensation percentage 7,5%</field>
                                 <field
@@ -1025,14 +1025,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF44_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf44</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF44_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1042,7 +1042,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF45"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF45 - compensation percentage 8,3%</field>
                                 <field
@@ -1051,14 +1051,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF45_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf45</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF45_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1068,7 +1068,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF46"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF46 - compensation percentage 8,5%</field>
                                 <field
@@ -1077,14 +1077,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF46_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf46</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF46_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1094,7 +1094,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF47"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF47 - compensation percentage 9.5%</field>
                                 <field
@@ -1103,14 +1103,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF47_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf47</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF47_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1120,7 +1120,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF48"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF48 - compensation percentage 10%</field>
                                 <field
@@ -1129,14 +1129,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF48_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf48</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF48_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1146,7 +1146,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF49"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF49 - compensation percentage 12,3%</field>
                                 <field
@@ -1155,14 +1155,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF49_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf49</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF49_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1172,7 +1172,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF51"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF51 - Tax variations and roundings (indicate with the +/- sign)</field>
                                 <field
@@ -1181,7 +1181,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF51_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf51</field>
@@ -1190,7 +1190,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF52"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF52 - TOTALS Algebraic sum of lines from VF39 to VF51</field>
                                 <field
@@ -1203,7 +1203,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF52_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1215,7 +1215,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF53"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF53 - Deductible VAT charged to the operations referred to in line VF38</field>
                                 <field
@@ -1224,7 +1224,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF53_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf53</field>
@@ -1233,7 +1233,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF54"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF54 - Deductible amount for transfers, including intra-community, of agricultural products referred to in art. 34</field>
                                 <field
@@ -1242,7 +1242,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF54_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf54</field>
@@ -1251,7 +1251,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF55"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF55 - TOTAL VAT allowed as deduction</field>
                                 <field
@@ -1260,7 +1260,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF55_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1272,14 +1272,14 @@
                     </record>
                     <record
                         id="tax_annual_report_line_passive_op_3c"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Special cases</field>
                         <field name="name@it">Casi speciali</field>
                         <field name="code">VF_3C</field>
                         <field name="children_ids">
                             <record
                                 id="tax_annual_report_line_VF62"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF62 - Reserved for agricultural businesses</field>
                                 <field
@@ -1288,14 +1288,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF62_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">vf62</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_VF62_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">VF62.balance * 0.5</field>
@@ -1306,14 +1306,14 @@
                     </record>
                     <record
                         id="tax_annual_report_line_passive_op_4"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">VAT allowed as deduction</field>
                         <field name="name@it">IVA ammessa in detrazione</field>
                         <field name="code">VF_4</field>
                         <field name="children_ids">
                             <record
                                 id="tax_annual_report_line_VF70"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF70 - TOTAL adjustments (indicate with the +/- sign)</field>
                                 <field
@@ -1322,7 +1322,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF70_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VF70</field>
@@ -1331,7 +1331,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_VF71"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VF71 - VAT allowed as deduction</field>
                                 <field
@@ -1340,7 +1340,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_VF71_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field

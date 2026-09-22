@@ -1,9 +1,9 @@
 MOVED_MODELS = (
-    "account.report",
-    "account.report.line",
-    "account.report.expression",
-    "account.report.column",
-    "account.report.external.value",
+    "report.formula",
+    "report.formula.line",
+    "report.formula.expression",
+    "report.formula.column",
+    "report.formula.external.value",
 )
 
 

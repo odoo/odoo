@@ -51,7 +51,7 @@ class TestTaxReportCarryover(TestAccountReportsCommon):
             }
         )
 
-        cls.report = cls.env["account.report"].create(
+        cls.report = cls.env["report.formula"].create(
             {
                 "name": "Test report",
                 "country_id": cls.company_1.account_config_id.account_fiscal_country_id.id,
@@ -68,7 +68,7 @@ class TestTaxReportCarryover(TestAccountReportsCommon):
             }
         )
 
-        cls.report_line = cls.env["account.report.line"].create(
+        cls.report_line = cls.env["report.formula.line"].create(
             {
                 "name": "Test carryover",
                 "code": "test_carryover",
@@ -171,7 +171,7 @@ class TestTaxReportCarryover(TestAccountReportsCommon):
             tax_return.action_validate()
 
         # There should be an external value of -1000.0
-        external_value = self.env["account.report.external.value"].search(
+        external_value = self.env["report.formula.external.value"].search(
             [("company_id", "=", self.company_1.id)]
         )
 
@@ -300,7 +300,7 @@ class TestTaxReportCarryover(TestAccountReportsCommon):
 
         # There should be no external value for company 1 at this point
         external_value_company_1 = self.env[
-            "account.report.external.value"
+            "report.formula.external.value"
         ].search_count([("company_id", "=", self.company_1.id)])
         self.assertEqual(external_value_company_1, 0)
 
@@ -332,7 +332,7 @@ class TestTaxReportCarryover(TestAccountReportsCommon):
         )
 
         # There should be two external value for company_1: -1000.0 and 1000.0
-        external_value_company_1 = self.env["account.report.external.value"].search(
+        external_value_company_1 = self.env["report.formula.external.value"].search(
             [("company_id", "=", self.company_1.id)]
         )
         external_value_company_1 = sorted(
@@ -359,7 +359,7 @@ class TestTaxReportCarryover(TestAccountReportsCommon):
 
         # There should be no external value for company_2
         external_value_company_2 = self.env[
-            "account.report.external.value"
+            "report.formula.external.value"
         ].search_count([("company_id", "=", self.company_2.id)])
         self.assertEqual(external_value_company_2, 0)
 

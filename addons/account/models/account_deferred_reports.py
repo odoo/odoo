@@ -19,7 +19,7 @@ _debug = DebugLog(__name__)
 
 class AccountDeferredReportHandler(models.AbstractModel):
     _name = "account.deferred.report.handler"
-    _inherit = ["account.report.custom.handler"]
+    _inherit = ["report.formula.custom.handler"]
     _description = "Deferred Expense Report Custom Handler"
 
     def _get_deferred_report_type(self):
@@ -411,7 +411,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
                                  `expression_label`: the expression label of the cell
         """
         _debug.lifecycle("action_audit_cell", records=self)
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         column_values = next(
             (
                 column
@@ -446,7 +446,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
             # Before period ends one day before `report_date_from`
             column_date_to = report_date_from - relativedelta(days=1)
 
-        # calling_line_dict_id is of the format `~account.report~15|~account.account~25`
+        # calling_line_dict_id is of the format `~report.formula~15|~account.account~25`
         _grouping_model, grouping_record_id = report._get_model_info_from_id(
             params.get("calling_line_dict_id")
         )
@@ -600,7 +600,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
     @_debug.perf.timed
     def open_journal_items(self, options, params):
         _debug.lifecycle("open_journal_items", records=self)
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         record_model, record_id = report._get_model_info_from_id(params.get("line_id"))
         domain = self._get_domain_deferred_lines(report, options)
         if record_model == "account.account" and record_id:
@@ -753,7 +753,7 @@ class AccountDeferredReportHandler(models.AbstractModel):
     def action_generate_entry(self, options):
         _debug.lifecycle("action_generate_entry", records=self)
         new_deferred_moves = self._generate_deferral_entry(options)
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         domain = report._get_domain_generated_deferral_entries(options)
         already_generated = self.env["account.move"].search_count(domain, limit=1)
         if new_deferred_moves or already_generated:
@@ -774,10 +774,10 @@ class AccountDeferredReportHandler(models.AbstractModel):
         options["all_entries"] = (
             False  # We only want to create deferrals for posted moves
         )
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         self.env["account.move.line"].flush_model()
         lines = self._get_lines(report, options, filter_already_generated=True)
-        deferral_entry_period = self.env["account.report"]._get_dates_period(
+        deferral_entry_period = self.env["report.formula"]._get_dates_period(
             date_from, date_to, "range", period_type="month"
         )
         ref = _("Grouped Deferral Entry of %s", deferral_entry_period["string"])

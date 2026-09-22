@@ -322,7 +322,7 @@ class TestFinancialReport(TestAccountReportsCommon):
 
         cls.report = cls.env.ref("account.balance_sheet")
 
-        cls.report_no_parent_id = cls.env["account.report"].create(
+        cls.report_no_parent_id = cls.env["report.formula"].create(
             {
                 "name": "Test report",
                 "column_ids": [
@@ -1084,7 +1084,7 @@ class TestFinancialReport(TestAccountReportsCommon):
         moves.action_post()
         moves.line_ids.flush_recordset()
 
-        report = self.env["account.report"].create(
+        report = self.env["report.formula"].create(
             {
                 "name": "test_financial_report_sum",
                 "column_ids": [
@@ -1326,11 +1326,11 @@ class TestFinancialReport(TestAccountReportsCommon):
         self.assertEqual(lines[1]["id"], lines[0]["id"] + "|" + "~account.group~")
 
     def test_parse_line_id(self):
-        line_id_1 = self.env["account.report"]._parse_line_id(
+        line_id_1 = self.env["report.formula"]._parse_line_id(
             "markup1~account.account~5|markup2~res.partner~8|markup3~~"
         )
-        line_id_2 = self.env["account.report"]._parse_line_id(
-            '~account.report~14|{"groupby_prefix_group": "~"}~account.report~21'
+        line_id_2 = self.env["report.formula"]._parse_line_id(
+            '~report.formula~14|{"groupby_prefix_group": "~"}~report.formula~21'
         )
 
         self.assertEqual(
@@ -1344,8 +1344,8 @@ class TestFinancialReport(TestAccountReportsCommon):
         self.assertEqual(
             line_id_2,
             [
-                ("", "account.report", 14),
-                ({"groupby_prefix_group": "~"}, "account.report", 21),
+                ("", "report.formula", 14),
+                ({"groupby_prefix_group": "~"}, "report.formula", 21),
             ],
         )
 

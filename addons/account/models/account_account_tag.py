@@ -11,7 +11,7 @@ class AccountAccountTag(models.Model):
     _inherit = "account.account.tag"
 
     report_expression_id = fields.Many2one(
-        comodel_name="account.report.expression",
+        comodel_name="report.formula.expression",
         compute="_compute_report_expression",
     )
     balance_negate = fields.Boolean(compute="_compute_report_expression")
@@ -119,7 +119,7 @@ class AccountAccountTag(models.Model):
                 query.add_join(
                     kind="LEFT JOIN",
                     alias=rhs_alias,
-                    table="account_report_expression",
+                    table="report_formula_expression",
                     condition=SQL(
                         "%s->>'en_US' = LTRIM(%s, '-')",
                         SQL.identifier(alias, "name"),
@@ -160,10 +160,10 @@ class AccountAccountTag(models.Model):
     def _get_related_tax_report_expressions(self):
         tags = self.with_context(lang="en_US")
         if not tags:
-            return self.env["account.report.expression"]
+            return self.env["report.formula.expression"]
 
         keys = {(tag.name, tag.country_id.id) for tag in tags}
-        candidates = self.env["account.report.expression"].search(
+        candidates = self.env["report.formula.expression"].search(
             Domain("engine", "=", "tax_tags")
             & Domain.OR(
                 (
@@ -204,8 +204,8 @@ class AccountAccountTag(models.Model):
                         %(lang)s,
                         substring(tag.name->>'en_US' FOR 1)
                             || (report_line.name->>%(lang)s))
-                  FROM account_report_line report_line
-                  JOIN account_report report
+                  FROM report_formula_line report_line
+                  JOIN report_formula report
                     ON report.id = report_line.report_id
                  WHERE tag.applicability = 'taxes'
                    AND tag.country_id = report.country_id

@@ -8,7 +8,7 @@ MAX_NAME_LENGTH = 50
 
 class AccountAssetReportHandler(models.AbstractModel):
     _name = "account.asset.report.handler"
-    _inherit = ["account.report.custom.handler"]
+    _inherit = ["report.formula.custom.handler"]
     _description = "Assets Report Custom Handler"
 
     def _dynamic_lines_generator(
@@ -101,7 +101,7 @@ class AccountAssetReportHandler(models.AbstractModel):
 
         lines = []
         company_currency = self.env.company.currency_id
-        column_expression = self.env["account.report.expression"]
+        column_expression = self.env["report.formula.expression"]
         for line_id, col_group_totals in all_lines_data.items():
             account_id, asset_id, asset_group_id = line_id
             all_columns = []
@@ -570,7 +570,7 @@ class AccountAssetReportHandler(models.AbstractModel):
             from_clause=query.from_clause,
             where_clause=query.where_clause or SQL("TRUE"),
             company_ids=tuple(
-                self.env["account.report"].get_report_company_ids(options)
+                self.env["report.formula"].get_report_company_ids(options)
             ),
             include_draft=options.get("all_entries", False),
         )
@@ -588,16 +588,16 @@ class AccountAssetReportHandler(models.AbstractModel):
         unfold_all_batch_data=None,
     ):
         matched_prefix = self.env[
-            "account.report"
+            "report.formula"
         ]._get_prefix_groups_matched_prefix_from_line_id(line_dict_id)
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
 
         lines, _totals_by_column_group = self._generate_report_lines_without_grouping(
             report,
             options,
             prefix_to_match=matched_prefix,
             parent_id=line_dict_id,
-            forced_account_id=self.env["account.report"]._get_res_id_from_line_id(
+            forced_account_id=self.env["report.formula"]._get_res_id_from_line_id(
                 line_dict_id, "account.account"
             ),
         )

@@ -15,7 +15,7 @@ _debug = DebugLog(__name__)
 
 
 class AccountReportExpressionEval(models.Model):
-    _inherit = "account.report"
+    _inherit = "report.formula"
 
     @_debug.perf.timed
     def _compute_expression_totals_for_each_column_group(
@@ -205,7 +205,7 @@ class AccountReportExpressionEval(models.Model):
         :param column_group_options: The options dict obtained from _split_options_per_column_group() for the column group to evaluate.
 
         :param grouped_formulas: A dict(engine, formula_dict), where:
-                                 - engine is a string identifying a report engine, in the same format as in account.report.expression's engine
+                                 - engine is a string identifying a report engine, in the same format as in report.formula.expression's engine
                                    field's technical labels.
                                  - formula_dict is a dict in the same format as _get_formula_batch's formulas_dict parameter,
                                    containing only aggregation formulas.
@@ -363,7 +363,7 @@ class AccountReportExpressionEval(models.Model):
         cross_report_expr_totals_by_scope = {}
         batchable_engines = [
             selection_val[0]
-            for selection_val in self.env["account.report.expression"]
+            for selection_val in self.env["report.formula.expression"]
             ._fields["engine"]
             .selection
             if selection_val[0] != "aggregation"
@@ -432,7 +432,7 @@ class AccountReportExpressionEval(models.Model):
                     aggreation_formula_dict_key = (formula, forced_date_scope)
                     aggregation_formulas_dict.setdefault(
                         aggreation_formula_dict_key,
-                        self.env["account.report.expression"],
+                        self.env["report.formula.expression"],
                     )
                     aggregation_formulas_dict[aggreation_formula_dict_key] |= expression
 
@@ -532,7 +532,7 @@ class AccountReportExpressionEval(models.Model):
         ):
             """Process an expression and its result, updating the evaluation dicts and code maps in place.
 
-            :param expression: the account.report.expression to process.
+            :param expression: the report.formula.expression to process.
             :param dict expression_res: the result computed for that expression.
             :param dict figure_types_cache: {report: {label: figure_type}}.
             :param dict current_report_eval_dict: {expression_id: value}.
@@ -1323,7 +1323,7 @@ class AccountReportExpressionEval(models.Model):
 
                 # Handle sum_if_pos, -sum_if_pos, sum_if_neg and -sum_if_neg
                 expressions_by_sign_policy = defaultdict(
-                    lambda: self.env["account.report.expression"]
+                    lambda: self.env["report.formula.expression"]
                 )
                 for expression in expressions:
                     subformula_without_sign = expression.subformula.replace(
@@ -1428,7 +1428,7 @@ class AccountReportExpressionEval(models.Model):
         )
 
         where_clause = (
-            self.env["account.report.external.value"]
+            self.env["report.formula.external.value"]
             ._search(external_value_domain, bypass_access=True)
             .where_clause
         )
@@ -1448,7 +1448,7 @@ class AccountReportExpressionEval(models.Model):
                 )
             string_query = """
                 SELECT %(expression_id)s, text_value
-                FROM account_report_external_value
+                FROM report_formula_external_value
                 WHERE %(where_clause)s AND target_report_expression_id = %(expression_id)s
                 ORDER BY date DESC, id DESC
                 LIMIT 1
@@ -1457,7 +1457,7 @@ class AccountReportExpressionEval(models.Model):
                 SELECT
                     %(expression_id)s,
                     COALESCE(SUM(COALESCE(%(balance_select)s, 0)), 0)
-                FROM account_report_external_value
+                FROM report_formula_external_value
                     %(currency_table_join)s
                 WHERE %(where_clause)s
                     AND target_report_expression_id = %(expression_id)s
@@ -1465,7 +1465,7 @@ class AccountReportExpressionEval(models.Model):
             """
             num_query = """
                 SELECT %(expression_id)s, SUM(COALESCE(value, 0))
-                FROM account_report_external_value
+                FROM report_formula_external_value
                 WHERE %(where_clause)s
                     AND target_report_expression_id = %(expression_id)s
                %(query_end)s

@@ -37,7 +37,7 @@ class L10n_InSectionAlert(models.Model):
         inverse_name="l10n_in_section_id",
         string="Taxes",
     )
-    tax_report_line_id = fields.Many2one(comodel_name="account.report.line")
+    tax_report_line_id = fields.Many2one(comodel_name="report.formula.line")
 
     _per_transaction_limit = models.Constraint(
         "CHECK(per_transaction_limit >= 0)",

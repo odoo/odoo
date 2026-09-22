@@ -2,7 +2,7 @@ from odoo import models
 
 
 class AccountReport(models.Model):
-    _inherit = "account.report"
+    _inherit = "report.formula"
 
     def _init_options_buttons(self, options, previous_options):
         super()._init_options_buttons(options, previous_options)

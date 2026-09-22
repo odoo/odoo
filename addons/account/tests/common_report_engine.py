@@ -174,7 +174,7 @@ class TestAccountReportsCommon(AccountTestInvoicingCommon):
         - expression subformula
         - expression date_scope
 
-        :param reports: (recordset of account.report) The reports to check
+        :param reports: (recordset of report.formula) The reports to check
         """
 
         def expression_to_comparable_values(expr):
@@ -388,7 +388,7 @@ class TestAccountReportsCommon(AccountTestInvoicingCommon):
                 )
             )
 
-        return cls.env["account.report.line"].create(create_vals)
+        return cls.env["report.formula.line"].create(create_vals)
 
     @classmethod
     def _get_tag_ids(cls, expressions, company=False):
@@ -467,7 +467,7 @@ class TestAccountReportsCommon(AccountTestInvoicingCommon):
 
     @classmethod
     def _fill_tax_report_line_external_value(cls, target, amount, date):
-        cls.env["account.report.external.value"].create(
+        cls.env["report.formula.external.value"].create(
             {
                 "company_id": cls.company_data["company"].id,
                 "target_report_expression_id": cls.env.ref(target).id,

@@ -46,7 +46,7 @@ class AccountReportSend(models.TransientModel):
     )
 
     account_report_id = fields.Many2one(
-        comodel_name="account.report",
+        comodel_name="report.formula",
         string="Report",
     )
     report_options = fields.Json()
@@ -275,7 +275,7 @@ class AccountReportSend(models.TransientModel):
     ):
         """Generate the report of each partner of the options, then mail and/or download it.
 
-        :param recordset report: the account.report to generate
+        :param recordset report: the report.formula to generate
         :param dict options: report options; options['partner_ids'] holds the partners to process
         :param list recipient_partner_ids: ids of the partners that will receive the mail message
         :param wizard: the account.report.send wizard; absent when sending by cron, in which

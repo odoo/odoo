@@ -6,7 +6,7 @@ import { makeLogger } from "@web/core/debug/debug_logger";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
-const log = makeLogger("account.report");
+const log = makeLogger("report.formula");
 
 export class AccountReportController {
     constructor(action) {
@@ -262,7 +262,7 @@ export class AccountReportController {
                     },
                 })
                 .call(
-                    "account.report",
+                    "report.formula",
                     options.readonly_query
                         ? "get_report_information_readonly"
                         : "get_report_information",
@@ -320,7 +320,7 @@ export class AccountReportController {
             }
 
             this.reportOptionsMap[cacheKey] = this.orm.call(
-                "account.report",
+                "report.formula",
                 "get_options",
                 [reportId, loadOptions],
                 {
@@ -517,7 +517,7 @@ export class AccountReportController {
     sessionOptionsID() {
         // Keyed by action report (the report targeted by the original action) so that navigating back to
         // it restores the section/variant last opened in this http session.
-        return `account.report:${this.actionReportId}:${user.defaultCompany.id}`;
+        return `report.formula:${this.actionReportId}:${user.defaultCompany.id}`;
     }
 
     hasSessionOptions() {
@@ -688,7 +688,7 @@ export class AccountReportController {
                 },
             })
             .call(
-                "account.report",
+                "report.formula",
                 options.readonly_query
                     ? "get_expanded_lines_readonly"
                     : "get_expanded_lines",
@@ -854,7 +854,7 @@ export class AccountReportController {
 
     async sortLines() {
         this.linesOrder = await this.orm.call(
-            "account.report",
+            "report.formula",
             "sort_lines",
             [this.lines, this.options, true],
             {
@@ -981,7 +981,7 @@ export class AccountReportController {
         }
 
         const dispatchReportAction = await this.orm.call(
-            "account.report",
+            "report.formula",
             "dispatch_report_action",
             [
                 this.cachedFilterOptions["report_id"],

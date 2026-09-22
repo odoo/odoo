@@ -4,7 +4,7 @@
     <data>
         <record id="account_report_tree" model="ir.ui.view">
             <field name="name">account.report.list</field>
-            <field name="model">account.report</field>
+            <field name="model">report.formula</field>
             <field name="arch" type="xml">
                 <list>
                     <field name="sequence" widget="handle" />
@@ -16,7 +16,7 @@
         </record>
         <record id="account_report_add_sections_tree" model="ir.ui.view">
             <field name="name">account.report.add.sections.list</field>
-            <field name="model">account.report</field>
+            <field name="model">report.formula</field>
             <field name="arch" type="xml">
                 <list
                     editable="bottom"
@@ -33,7 +33,7 @@
         </record>
         <record id="view_account_report_search" model="ir.ui.view">
             <field name="name">account.report.search</field>
-            <field name="model">account.report</field>
+            <field name="model">report.formula</field>
             <field name="priority">100</field>
             <field name="arch" type="xml">
                 <search string="Accounting Reports">
@@ -73,7 +73,7 @@
         </record>
         <record id="account_report_form" model="ir.ui.view">
             <field name="name">account.report.form</field>
-            <field name="model">account.report</field>
+            <field name="model">report.formula</field>
             <field name="arch" type="xml">
                 <form>
                     <header>
@@ -248,7 +248,7 @@
         </record>
         <record id="account_report_line_form" model="ir.ui.view">
             <field name="name">account.report.line.form</field>
-            <field name="model">account.report.line</field>
+            <field name="model">report.formula.line</field>
             <field name="arch" type="xml">
                 <form>
                     <sheet>
@@ -299,7 +299,7 @@
         </record>
         <record id="account_report_expression_form" model="ir.ui.view">
             <field name="name">account.report.expression.form</field>
-            <field name="model">account.report.expression</field>
+            <field name="model">report.formula.expression</field>
             <field name="arch" type="xml">
                 <form>
                     <sheet>
@@ -386,7 +386,7 @@
         </record>
         <record id="account_report_external_value_tree" model="ir.ui.view">
             <field name="name">account.report.external.value.list</field>
-            <field name="model">account.report.external.value</field>
+            <field name="model">report.formula.external.value</field>
             <field name="arch" type="xml">
                 <list create="0">
                     <field name="report_country_id" column_invisible="True" />
@@ -448,8 +448,8 @@
         </record>
         <record id="action_create_composite_report_list" model="ir.actions.server">
             <field name="name">Create Composite Report</field>
-            <field name="model_id" ref="model_account_report" />
-            <field name="binding_model_id" ref="model_account_report" />
+            <field name="model_id" ref="model_report_formula" />
+            <field name="binding_model_id" ref="model_report_formula" />
             <field name="binding_view_types">list,kanban</field>
             <field
                 name="group_ids"

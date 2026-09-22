@@ -8,7 +8,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 @tagged("post_install", "-at_install")
 class TestAccountReport(AccountTestInvoicingCommon):
     def test_copy_report(self):
-        report = self.env["account.report"].create(
+        report = self.env["report.formula"].create(
             {
                 "name": "Report To Copy",
                 "column_ids": [
@@ -81,8 +81,8 @@ class TestAccountReport(AccountTestInvoicingCommon):
             )
 
     def test_domain_formula_malformed_raises_validation_error(self):
-        report = self.env["account.report"].create({"name": "Domain Formula Report"})
-        line = self.env["account.report.line"].create(
+        report = self.env["report.formula"].create({"name": "Domain Formula Report"})
+        line = self.env["report.formula.line"].create(
             {"name": "dom_line", "report_id": report.id}
         )
         for bad_formula in ("summ(domain)", "just text", "sum missing parens"):
@@ -92,10 +92,10 @@ class TestAccountReport(AccountTestInvoicingCommon):
         self.assertTrue(line.expression_ids)
 
     def _create_report(self, name, **vals):
-        return self.env["account.report"].create({"name": name, **vals})
+        return self.env["report.formula"].create({"name": name, **vals})
 
     def _create_line(self, report, name, engine, formula, **vals):
-        return self.env["account.report.line"].create(
+        return self.env["report.formula.line"].create(
             {
                 "report_id": report.id,
                 "name": name,
@@ -135,7 +135,7 @@ class TestAccountReport(AccountTestInvoicingCommon):
 
     def test_formula_shortcut_on_line_without_balance_expression(self):
         report = self._create_report("Shortcut Without Balance")
-        line = self.env["account.report.line"].create(
+        line = self.env["report.formula.line"].create(
             {
                 "report_id": report.id,
                 "name": "no balance",
@@ -446,7 +446,7 @@ class TestAccountReport(AccountTestInvoicingCommon):
     def test_copying_a_report_costs_a_query_per_level_not_per_line(self):
         report = self._create_report("Batched Copy")
         parent = self._create_line(report, "root", "account_codes", "400", code="BC0")
-        self.env["account.report.line"].create(
+        self.env["report.formula.line"].create(
             [
                 {
                     "report_id": report.id,
@@ -495,12 +495,12 @@ class TestAccountReport(AccountTestInvoicingCommon):
 
     def test_user_groupby_is_seeded_once_and_never_overwritten(self):
         report = self._create_report("Groupby Seed")
-        seeded = self.env["account.report.line"].create(
+        seeded = self.env["report.formula.line"].create(
             {"report_id": report.id, "name": "seeded", "groupby": "partner_id"}
         )
         self.assertEqual(seeded.user_groupby, "partner_id")
 
-        explicit = self.env["account.report.line"].create(
+        explicit = self.env["report.formula.line"].create(
             {
                 "report_id": report.id,
                 "name": "explicit",
@@ -518,7 +518,7 @@ class TestAccountReport(AccountTestInvoicingCommon):
     def test_strip_formula_returns_instead_of_mutating(self):
         vals = {"formula": "  a   b  "}
         self.assertEqual(
-            self.env["account.report.expression"]._strip_formula(vals["formula"]),
+            self.env["report.formula.expression"]._strip_formula(vals["formula"]),
             "a b",
         )
         self.assertEqual(vals, {"formula": "  a   b  "})
@@ -646,7 +646,7 @@ class TestAccountReport(AccountTestInvoicingCommon):
 
     def test_a_formula_shortcut_owns_the_figure_type_it_wrote(self):
         report = self._create_report("Shortcut Figure")
-        line = self.env["account.report.line"].create(
+        line = self.env["report.formula.line"].create(
             {
                 "name": "shortcut",
                 "report_id": report.id,
@@ -665,7 +665,7 @@ class TestAccountReport(AccountTestInvoicingCommon):
         report = self._create_report(
             "Shortcut Copy", country_id=self.env.ref("base.us").id
         )
-        self.env["account.report.line"].create(
+        self.env["report.formula.line"].create(
             {
                 "name": "tagline",
                 "report_id": report.id,
@@ -682,7 +682,7 @@ class TestAccountReport(AccountTestInvoicingCommon):
         )
 
         self.env.invalidate_all()
-        cold = self.env["account.report"].browse(report.id).copy()
+        cold = self.env["report.formula"].browse(report.id).copy()
         self.assertEqual(
             [(x.label, x.engine, x.formula) for x in cold.line_ids.expression_ids],
             [("balance", "tax_tags", "SCTAG")],
@@ -749,7 +749,7 @@ class TestAccountReport(AccountTestInvoicingCommon):
         report = self._create_report("Label Charset")
         line = self._create_line(report, "labelled", "account_codes", "400", code="LBL")
         with self.assertRaisesRegex(ValidationError, "cannot contain"):
-            self.env["account.report.expression"].create(
+            self.env["report.formula.expression"].create(
                 {
                     "report_line_id": line.id,
                     "label": "net.total",
@@ -777,7 +777,7 @@ class TestAccountReport(AccountTestInvoicingCommon):
         report = self._create_report(
             "Engine Move", country_id=self.env.ref("base.us").id
         )
-        line = self.env["account.report.line"].create(
+        line = self.env["report.formula.line"].create(
             {"name": "tagged", "report_id": report.id, "tax_tags_formula": "ENGMOVE"}
         )
         report.flush_recordset()
@@ -801,10 +801,10 @@ class TestAccountReport(AccountTestInvoicingCommon):
         report = self._create_report(
             "Engine Move Shared", country_id=self.env.ref("base.us").id
         )
-        keeper = self.env["account.report.line"].create(
+        keeper = self.env["report.formula.line"].create(
             {"name": "keeper", "report_id": report.id, "tax_tags_formula": "SHAREDMOVE"}
         )
-        mover = self.env["account.report.line"].create(
+        mover = self.env["report.formula.line"].create(
             {"name": "mover", "report_id": report.id, "tax_tags_formula": "-SHAREDMOVE"}
         )
         report.flush_recordset()
@@ -817,6 +817,6 @@ class TestAccountReport(AccountTestInvoicingCommon):
 
     def test_a_report_column_cannot_be_orphaned(self):
         with self.assertRaises(Exception):
-            self.env["account.report.column"].create(
+            self.env["report.formula.column"].create(
                 {"name": "orphan", "expression_label": "balance"}
             )

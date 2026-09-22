@@ -33,7 +33,7 @@ class TestTaxReportDefaultPart(TestAccountReportsCommon):
     ):
         """Check the caret option of each tax line redirects to the expected journal items.
 
-        :param report: account.report record the lines were generated from
+        :param report: report.formula record the lines were generated from
         :param dict options: report options used to generate the lines
         :param list tax_lines_with_caret_options: report lines carrying the 'generic_tax_report' caret option
         :param dict expected_amls_based_on_tax_dict: report line name -> expected account.move.line recordset

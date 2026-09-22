@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="tax_report" model="account.report">
+    <record id="tax_report" model="report.formula">
         <field name="name">Tax Report</field>
         <field name="name@vi_VN">Báo cáo Thuế</field>
         <field name="root_report_id" ref="account.generic_tax_report" />
@@ -9,19 +9,19 @@
         <field name="allow_foreign_vat" eval="True" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="tax_report_amount_untaxed" model="account.report.column">
+            <record id="tax_report_amount_untaxed" model="report.formula.column">
                 <field name="name">Base Amount</field>
                 <field name="name@vi_VN">Số tiền gốc</field>
                 <field name="expression_label">amount_untaxed</field>
             </record>
-            <record id="tax_report_balance" model="account.report.column">
+            <record id="tax_report_balance" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="name@vi_VN">Số dư</field>
                 <field name="expression_label">balance</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="account_tax_report_line_01_vn" model="account.report.line">
+            <record id="account_tax_report_line_01_vn" model="report.formula.line">
                 <field name="name">Purchase of Goods and Services</field>
                 <field name="name@vi_VN">HHDV Mua vào</field>
                 <field
@@ -30,7 +30,7 @@
                 <field name="expression_ids">
                     <record
                         id="account_tax_report_line_01_vn_tag_base"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">amount_untaxed</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -40,7 +40,7 @@
                 <field name="children_ids">
                     <record
                         id="account_tax_report_line_01_01_vn"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">VAT on purchase of goods and services</field>
                         <field name="name@vi_VN">Thuế GTGT HHDV mua vào</field>
                         <field name="code">VAT_PURCHASE</field>
@@ -49,7 +49,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_01_01_vn_tag_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">amount_untaxed</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -59,7 +59,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_01_01_01_vn"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VAT on purchase of goods and services 0%</field>
                                 <field
@@ -68,7 +68,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_01_01_01_vn_tag_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -76,7 +76,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_01_01_01_vn_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -86,7 +86,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_02_01_01_vn"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VAT on purchase of goods and services 5%</field>
                                 <field
@@ -95,7 +95,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_02_01_01_vn_tag_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -103,7 +103,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_02_01_01_vn_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -113,7 +113,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_04_01_01_vn"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VAT on purchase of goods and services 8%</field>
                                 <field
@@ -122,7 +122,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_04_01_01_vn_tag_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -130,7 +130,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_04_01_01_vn_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -140,7 +140,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_03_01_01_vn"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VAT on purchase of goods and services 10%</field>
                                 <field
@@ -149,7 +149,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_03_01_01_vn_tag_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -157,7 +157,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_03_01_01_vn_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -167,7 +167,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_05_01_01_vn"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VAT on purchase of goods and services Exemption</field>
                                 <field
@@ -176,7 +176,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_05_01_01_vn_tag_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -188,7 +188,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_02_01_vn"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">VAT on purchase of imported goods</field>
                         <field name="name@vi_VN">Giá trị HHDV Mua vào</field>
                         <field name="code">VAT_PURCHASE_IMPORTED</field>
@@ -197,7 +197,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_02_01_vn_tag_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">amount_untaxed</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -207,7 +207,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_01_02_01_vn"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VAT on purchase of imported goods 0%</field>
                                 <field
@@ -216,7 +216,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_01_02_01_vn_tag_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -224,7 +224,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_01_02_01_vn_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -234,7 +234,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_02_02_01_vn"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VAT on purchase of imported goods 5%</field>
                                 <field
@@ -243,7 +243,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_02_02_01_vn_tag_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -251,7 +251,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_02_02_01_vn_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -261,7 +261,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_04_02_01_vn"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VAT on purchase of imported goods 8%</field>
                                 <field
@@ -270,7 +270,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_04_02_01_vn_tag_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -278,7 +278,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_04_02_01_vn_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -288,7 +288,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_03_02_01_vn"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VAT on purchase of imported goods 10%</field>
                                 <field
@@ -297,7 +297,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_03_02_01_vn_tag_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -305,7 +305,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_03_02_01_vn_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -317,21 +317,21 @@
                     </record>
                     <record
                         id="account_tax_report_line_03_01_vn"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Import Tax</field>
                         <field name="name@vi_VN">Thuế nhập khẩu</field>
                         <field name="code">VAT_PURCHASE_IMPORT_TAX</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_03_01_vn_tag_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">amount_untaxed</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">tax_import_base</field>
                             </record>
                             <record
                                 id="account_tax_report_line_03_01_vn_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">tax_import</field>
@@ -340,7 +340,7 @@
                     </record>
                 </field>
             </record>
-            <record id="account_tax_report_line_02_vn" model="account.report.line">
+            <record id="account_tax_report_line_02_vn" model="report.formula.line">
                 <field name="name">Sales of Goods and Services</field>
                 <field name="name@vi_VN">HHDV Bán ra</field>
                 <field name="aggregation_formula">VAT_SALES.balance</field>
@@ -348,7 +348,7 @@
                 <field name="expression_ids">
                     <record
                         id="account_tax_report_line_02_vn_tag_base"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">amount_untaxed</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">VAT_SALES.amount_untaxed</field>
@@ -357,7 +357,7 @@
                 <field name="children_ids">
                     <record
                         id="account_tax_report_line_01_02_vn"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">VAT on sales of goods and services</field>
                         <field name="name@vi_VN">Thuế GTGT HHDV bán ra</field>
                         <field name="code">VAT_SALES</field>
@@ -366,7 +366,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_01_02_vn_tag_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">amount_untaxed</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -376,7 +376,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_01_01_02_vn"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VAT on sales of goods and services 0%</field>
                                 <field
@@ -385,7 +385,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_01_01_02_vn_tag_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -393,7 +393,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_01_01_02_vn_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -403,7 +403,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_02_01_02_vn"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VAT on sales of goods and services 5%</field>
                                 <field
@@ -412,7 +412,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_02_01_02_vn_tag_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -420,7 +420,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_02_01_02_vn_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -430,7 +430,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_04_01_02_vn"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VAT on sales of goods and services 8%</field>
                                 <field
@@ -439,7 +439,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_04_01_02_vn_tag_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -447,7 +447,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_04_01_02_vn_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -457,7 +457,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_03_01_02_vn"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VAT on sales of goods and services 10%</field>
                                 <field
@@ -466,7 +466,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_03_01_02_vn_tag_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -474,7 +474,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_03_01_02_vn_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -484,7 +484,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_05_01_02_vn"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VAT on sales of goods and services Exemption</field>
                                 <field
@@ -493,7 +493,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_05_01_02_vn_tag_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">tax_tags</field>
                                         <field

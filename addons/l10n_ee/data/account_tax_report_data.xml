@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="tax_report" model="account.report">
+    <record id="tax_report" model="report.formula">
         <field name="name">KMD Report</field>
         <field name="name@et">KMD aruanne</field>
         <field name="root_report_id" ref="account.generic_tax_report" />
@@ -9,7 +9,7 @@
         <field name="allow_foreign_vat" eval="True" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="tax_report_balance" model="account.report.column">
+            <record id="tax_report_balance" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="name@et">Saldo</field>
                 <field name="expression_label">balance</field>
@@ -17,7 +17,7 @@
         </field>
         <field name="line_ids">
             <!-- Valid until 2025-06-31 -->
-            <record id="tax_report_line_1" model="account.report.line">
+            <record id="tax_report_line_1" model="report.formula.line">
                 <field
                     name="name">1 - Acts and transactions subject to tax at a rate of 22%</field>
                 <field
@@ -28,7 +28,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_1_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -36,21 +36,21 @@
                     </record>
                     <record
                         id="tax_report_line_1_tag_sale"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">sale</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-1_base</field>
                     </record>
                     <record
                         id="tax_report_line_1_tag_purchase"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">purchase</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">1_base_rc</field>
                     </record>
                     <record
                         id="tax_report_line_1_tax_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-1_tax</field>
@@ -58,7 +58,7 @@
                 </field>
             </record>
             <!-- Valid from 2025-07-01 -->
-            <record id="tax_report_line_1_24" model="account.report.line">
+            <record id="tax_report_line_1_24" model="report.formula.line">
                 <field
                     name="name">1 - Acts and transactions subject to tax at a rate of 24%</field>
                 <field
@@ -69,7 +69,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_1_24_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -77,28 +77,28 @@
                     </record>
                     <record
                         id="tax_report_line_1_24_tag_sale"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">sale</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-1_base_24</field>
                     </record>
                     <record
                         id="tax_report_line_1_24_tag_purchase"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">purchase</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">1_base_24_rc</field>
                     </record>
                     <record
                         id="tax_report_line_1_24_tax_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-1_tax_24</field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_1_1" model="account.report.line">
+            <record id="tax_report_line_1_1" model="report.formula.line">
                 <field
                     name="name">1¹ - Acts and transactions subject to tax at a rate of 20%</field>
                 <field
@@ -108,7 +108,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_1_1_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -116,21 +116,21 @@
                     </record>
                     <record
                         id="tax_report_line_1_1_tag_sale"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">sale</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-1_1_base</field>
                     </record>
                     <record
                         id="tax_report_line_1_1_tag_purchase"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">purchase</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">1_1_base_rc</field>
                     </record>
                     <record
                         id="tax_report_line_1_1_tax_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-1_1_tax</field>
@@ -138,7 +138,7 @@
                 </field>
             </record>
             <!-- Valid from 2025-07-01 -->
-            <record id="tax_report_line_1_2" model="account.report.line">
+            <record id="tax_report_line_1_2" model="report.formula.line">
                 <field
                     name="name">1² - Acts and transactions subject to tax at a rate of 22%</field>
                 <field
@@ -148,21 +148,21 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_1_2_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">1_2_base</field>
                     </record>
                     <record
                         id="tax_report_line_1_2_tax_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">1_2_tax</field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_2" model="account.report.line">
+            <record id="tax_report_line_2" model="report.formula.line">
                 <field
                     name="name">2 - Acts and transactions subject to tax at a rate of 9%</field>
                 <field
@@ -172,21 +172,21 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_2_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-2_base</field>
                     </record>
                     <record
                         id="tax_report_line_2_tax_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-2_tax</field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_2_1" model="account.report.line">
+            <record id="tax_report_line_2_1" model="report.formula.line">
                 <field
                     name="name">2¹ - Acts and transactions subject to tax at a rate of 5%</field>
                 <field
@@ -196,21 +196,21 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_2_1_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-2_1_base</field>
                     </record>
                     <record
                         id="tax_report_line_2_1_tax_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-2_1_tax</field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_2_2" model="account.report.line">
+            <record id="tax_report_line_2_2" model="report.formula.line">
                 <field
                     name="name">2² - Acts and transactions subject to tax at a rate of 13%</field>
                 <field
@@ -220,21 +220,21 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_2_2_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-2_2_base</field>
                     </record>
                     <record
                         id="tax_report_line_2_2_tax_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-2_2_tax</field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_3" model="account.report.line">
+            <record id="tax_report_line_3" model="report.formula.line">
                 <field
                     name="name">3 - Acts and transactions subject to tax at a rate of 0%, incl.</field>
                 <field
@@ -244,7 +244,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_3_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -252,14 +252,14 @@
                     </record>
                     <record
                         id="tax_report_line_3_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax_tags</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-3</field>
                     </record>
                 </field>
                 <field name="children_ids">
-                    <record id="tax_report_line_3_1" model="account.report.line">
+                    <record id="tax_report_line_3_1" model="report.formula.line">
                         <field
                             name="name">3.1 - Intra-Community supply of goods and services provided to a taxable person or taxable person with limited liability of another Member State, total, incl.</field>
                         <field
@@ -268,7 +268,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_3_1_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -276,7 +276,7 @@
                             </record>
                             <record
                                 id="tax_report_line_3_1_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_tags</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-3_1</field>
@@ -284,7 +284,7 @@
                             <!-- Not visible, but used for EC Sales Report -->
                             <record
                                 id="tax_report_line_ec_services_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">ec_services</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-3_1_S</field>
@@ -293,7 +293,7 @@
                         <field name="children_ids">
                             <record
                                 id="tax_report_line_3_1_1"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">3.1.1 - Intra-Community supply of goods</field>
                                 <field
@@ -302,7 +302,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_report_line_3_1_1_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-3_1_1</field>
@@ -310,14 +310,14 @@
                                     <!-- Not visible, but used for EC Sales Report -->
                                     <record
                                         id="tax_report_line_ec_goods_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">ec_goods</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-3_1_1_G</field>
                                     </record>
                                     <record
                                         id="tax_report_line_ec_triangular_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">ec_triangular</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-3_1_1_T</field>
@@ -326,14 +326,14 @@
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_3_2" model="account.report.line">
+                    <record id="tax_report_line_3_2" model="report.formula.line">
                         <field name="name">3.2 - Exportation of goods, incl.</field>
                         <field name="name@et">3.2 - Kauba eksport, sh</field>
                         <field name="code">l10n_ee_vat_3_2</field>
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_3_2_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -341,7 +341,7 @@
                             </record>
                             <record
                                 id="tax_report_line_3_2_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_tags</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-3_2</field>
@@ -350,7 +350,7 @@
                         <field name="children_ids">
                             <record
                                 id="tax_report_line_3_2_1"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">3.2.1 - Sale to passengers with return of value added tax</field>
                                 <field
@@ -359,7 +359,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_report_line_3_2_1_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-3_2_1</field>
@@ -370,7 +370,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_4" model="account.report.line">
+            <record id="tax_report_line_4" model="report.formula.line">
                 <field name="name">4 - Total amount of value added tax</field>
                 <field name="name@et">4 - Käibemaks kokku</field>
                 <field name="code">l10n_ee_vat_4</field>
@@ -378,7 +378,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_4_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -386,7 +386,7 @@
                     </record>
                     <record
                         id="tax_report_line_4_tag_no_rounding"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance_from_tags</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -394,7 +394,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_4_1" model="account.report.line">
+            <record id="tax_report_line_4_1" model="report.formula.line">
                 <field
                     name="name">4¹ - Value added tax payable upon the import of the goods</field>
                 <field name="name@et">4¹ - Impordilt tasumisele kuuluv käibemaks</field>
@@ -403,14 +403,14 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_4_1_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-4_1_tax</field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_5" model="account.report.line">
+            <record id="tax_report_line_5" model="report.formula.line">
                 <field
                     name="name">5 - Total amount of input VAT subject to deduction pursuant to law, incl.</field>
                 <field
@@ -420,7 +420,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_5_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -428,14 +428,14 @@
                     </record>
                     <record
                         id="tax_report_line_5_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax_tags</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">5_tax</field>
                     </record>
                 </field>
                 <field name="children_ids">
-                    <record id="tax_report_line_5_1" model="account.report.line">
+                    <record id="tax_report_line_5_1" model="report.formula.line">
                         <field name="name">5.1 - VAT paid or payable on import</field>
                         <field
                             name="name@et">5.1 - Impordilt tasutud või tasumisele kuuluv käibemaks</field>
@@ -443,14 +443,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_5_1_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">5_1_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_5_2" model="account.report.line">
+                    <record id="tax_report_line_5_2" model="report.formula.line">
                         <field
                             name="name">5.2 - VAT paid or payable on acquisition of fixed assets</field>
                         <field
@@ -459,14 +459,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_5_2_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">5_2_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_5_3" model="account.report.line">
+                    <record id="tax_report_line_5_3" model="report.formula.line">
                         <field
                             name="name">5.3 - VAT paid or payable on acquisition of a car used for business purposes (100%), and on acquisition of goods and receipt of services for such car</field>
                         <field
@@ -475,7 +475,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_5_3_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">5_3_tax</field>
@@ -484,13 +484,13 @@
                         <field name="children_ids">
                             <record
                                 id="tax_report_line_5_3_cars"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Number of cars</field>
                                 <field name="name@et">Autode arv</field>
                                 <field name="expression_ids">
                                     <record
                                         id="tax_report_line_5_3_cars_value"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">most_recent</field>
@@ -502,7 +502,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_5_4" model="account.report.line">
+                    <record id="tax_report_line_5_4" model="report.formula.line">
                         <field
                             name="name">5.4 - VAT paid or payable on acquisition of a car used partially for business purposes, and on acquisition of goods and receipt of services for such car</field>
                         <field
@@ -511,7 +511,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_5_4_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">5_4_tax</field>
@@ -520,13 +520,13 @@
                         <field name="children_ids">
                             <record
                                 id="tax_report_line_5_4_cars"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Number of cars</field>
                                 <field name="name@et">Autode arv</field>
                                 <field name="expression_ids">
                                     <record
                                         id="tax_report_line_5_4_cars_value"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">most_recent</field>
@@ -540,7 +540,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_6" model="account.report.line">
+            <record id="tax_report_line_6" model="report.formula.line">
                 <field
                     name="name">6 - Intra-Community acquisitions of goods and services received from a taxable person of another Member State, total, incl.</field>
                 <field
@@ -550,7 +550,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_6_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -558,14 +558,14 @@
                     </record>
                     <record
                         id="tax_report_line_6_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax_tags</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">6</field>
                     </record>
                 </field>
                 <field name="children_ids">
-                    <record id="tax_report_line_6_1" model="account.report.line">
+                    <record id="tax_report_line_6_1" model="report.formula.line">
                         <field
                             name="name">6.1 - Intra-Community acquisitions of goods</field>
                         <field
@@ -574,7 +574,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_6_1_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">6_1</field>
@@ -583,7 +583,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_7" model="account.report.line">
+            <record id="tax_report_line_7" model="report.formula.line">
                 <field
                     name="name">7 - Acquisition of other goods and services subject to VAT, incl.</field>
                 <field
@@ -593,7 +593,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_7_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -601,14 +601,14 @@
                     </record>
                     <record
                         id="tax_report_line_7_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax_tags</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">7</field>
                     </record>
                 </field>
                 <field name="children_ids">
-                    <record id="tax_report_line_7_1" model="account.report.line">
+                    <record id="tax_report_line_7_1" model="report.formula.line">
                         <field
                             name="name">7.1 - Acquisition of immovables, scrap metal, precious metal and metal products subject to value added tax under the special arrangements (VAT Act §41¹)</field>
                         <field
@@ -617,7 +617,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_7_1_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">7_1</field>
@@ -626,7 +626,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_8" model="account.report.line">
+            <record id="tax_report_line_8" model="report.formula.line">
                 <field name="name">8 - Supply exempt from tax</field>
                 <field name="name@et">8 - Maksuvaba käive</field>
                 <field name="code">l10n_ee_vat_8</field>
@@ -634,14 +634,14 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_8_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-8</field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_9" model="account.report.line">
+            <record id="tax_report_line_9" model="report.formula.line">
                 <field
                     name="name">9 - Supply of immovables, scrap metal, precious metal and metal products subject to value added tax under the special arrangements (VAT Act §41¹) and taxable value of goods to be installed or assembled in another Member State</field>
                 <field
@@ -651,14 +651,14 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_9_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">-9</field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_10" model="account.report.line">
+            <record id="tax_report_line_10" model="report.formula.line">
                 <field name="name">10 - Adjustments (+)</field>
                 <field name="name@et">10 - Täpsustused (+)</field>
                 <field name="code">l10n_ee_vat_10</field>
@@ -666,14 +666,14 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_10_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">10</field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_11" model="account.report.line">
+            <record id="tax_report_line_11" model="report.formula.line">
                 <field name="name">11 - Adjustments (-)</field>
                 <field name="name@et">11 - Täpsustused (-)</field>
                 <field name="code">l10n_ee_vat_11</field>
@@ -681,21 +681,21 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_11_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">11</field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_12" model="account.report.line">
+            <record id="tax_report_line_12" model="report.formula.line">
                 <field name="name">12 - Value added tax payable</field>
                 <field name="name@et">12 - Tasumisele kuuluv käibemaks</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_12_formula"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -704,14 +704,14 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_13" model="account.report.line">
+            <record id="tax_report_line_13" model="report.formula.line">
                 <field name="name">13 - Overpaid value added tax</field>
                 <field name="name@et">13 - Enammakstud käibemaks</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_13_formula"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field

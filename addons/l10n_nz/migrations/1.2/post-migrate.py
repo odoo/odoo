@@ -1,6 +1,6 @@
 def migrate(cr, version):
     cr.execute("""
-        UPDATE account_report_expression e
+        UPDATE report_formula_expression e
            SET label = 'balance'
           FROM ir_model_data d
          WHERE e.id = d.res_id

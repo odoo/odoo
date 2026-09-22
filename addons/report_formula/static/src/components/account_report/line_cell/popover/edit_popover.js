@@ -80,7 +80,7 @@ export class AccountReportEditPopover extends Component {
         }
 
         const res = await this.orm.call(
-            "account.report",
+            "report.formula",
             "action_modify_manual_value",
             [
                 this.props.controller.options.report_id,

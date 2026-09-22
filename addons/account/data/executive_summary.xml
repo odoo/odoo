@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="executive_summary" model="account.report">
+    <record id="executive_summary" model="report.formula">
         <field name="name">Executive Summary</field>
         <field name="filter_multi_company">selector</field>
         <field name="default_opening_date_filter">this_year</field>
         <field name="column_ids">
-            <record id="executive_summary_column" model="account.report.column">
+            <record id="executive_summary_column" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="expression_label">balance</field>
             </record>
@@ -14,19 +14,19 @@
         <field name="line_ids">
             <record
                 id="account_financial_report_executivesummary_cash0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Cash</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record
                         id="account_financial_report_executivesummary_cash_received0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Cash received</field>
                         <field name="code">CR</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_cash_received0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">domain</field>
                                 <field
@@ -39,13 +39,13 @@
                     </record>
                     <record
                         id="account_financial_report_executivesummary_cash_spent0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Cash spent</field>
                         <field name="code">CS</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_cash_spent0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">domain</field>
                                 <field
@@ -59,12 +59,12 @@
                     </record>
                     <record
                         id="account_financial_report_executivesummary_cash_surplus0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Cash surplus</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_cash_surplus0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">CR.balance + CS.balance</field>
@@ -74,12 +74,12 @@
                     </record>
                     <record
                         id="account_financial_report_executivesummary_closing_bank_balance0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Closing bank balance</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_closing_bank_balance0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">domain</field>
                                 <field
@@ -95,18 +95,18 @@
             </record>
             <record
                 id="account_financial_report_executivesummary_profitability0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Profitability</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record
                         id="account_financial_report_executivesummary_income0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Revenue</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_income0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">REV.balance</field>
@@ -119,13 +119,13 @@
                     </record>
                     <record
                         id="account_financial_report_executivesummary_direct_costs0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Cost of Revenue</field>
                         <field name="code">EXEC_COS</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_direct_costs0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">COS.balance</field>
@@ -139,12 +139,12 @@
                     </record>
                     <record
                         id="account_financial_report_executivesummary_gross_profit0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Gross profit</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_gross_profit0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">GRP.balance</field>
@@ -157,12 +157,12 @@
                     </record>
                     <record
                         id="account_financial_report_executivesummary_expenses0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Expenses</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_expenses0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">EXP.balance</field>
@@ -176,13 +176,13 @@
                     </record>
                     <record
                         id="account_financial_report_executivesummary_profit0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Net Profit</field>
                         <field name="code">EXEC_NEP</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_profit0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">NEP.balance</field>
@@ -197,19 +197,19 @@
             </record>
             <record
                 id="account_financial_report_executivesummary_balancesheet0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Balance Sheet</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record
                         id="account_financial_report_executivesummary_debtors0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Receivables</field>
                         <field name="code">DEB</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_debtors0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">domain</field>
                                 <field
@@ -223,13 +223,13 @@
                     </record>
                     <record
                         id="account_financial_report_executivesummary_creditors0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Payables</field>
                         <field name="code">CRE</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_creditors0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">domain</field>
                                 <field
@@ -244,13 +244,13 @@
                     </record>
                     <record
                         id="account_financial_report_executivesummary_net_assets0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Net assets</field>
                         <field name="code">EXEC_SUMMARY_NA</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_net_assets0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">TA.balance - L.balance</field>
@@ -265,20 +265,20 @@
             </record>
             <record
                 id="account_financial_report_executivesummary_performance0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Performance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record
                         id="account_financial_report_executivesummary_gpmargin0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">Gross profit margin (gross profit / operating income)</field>
                         <field name="code">GPMARGIN0</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_gpmargin0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -289,7 +289,7 @@
                             </record>
                             <record
                                 id="account_financial_report_executivesummary_gpmargin0_grp"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">grp</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">GRP.balance</field>
@@ -299,7 +299,7 @@
                             </record>
                             <record
                                 id="account_financial_report_executivesummary_gpmargin0_opinc"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">opinc</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">REV.balance</field>
@@ -311,14 +311,14 @@
                     </record>
                     <record
                         id="account_financial_report_executivesummary_npmargin0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">Net profit margin (net profit / revenue)</field>
                         <field name="code">NPMARGIN0</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_npmargin0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -329,7 +329,7 @@
                             </record>
                             <record
                                 id="account_financial_report_executivesummary_npmargin0_nep"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">nep</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">NEP.balance</field>
@@ -339,7 +339,7 @@
                             </record>
                             <record
                                 id="account_financial_report_executivesummary_npmargin0_inc"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">rev</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">REV.balance</field>
@@ -351,14 +351,14 @@
                     </record>
                     <record
                         id="account_financial_report_executivesummary_return_investment0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">Return on investments (net profit / assets)</field>
                         <field name="code">ROI</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_return_investment0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">ROI.nep / ROI.ta * 100</field>
@@ -368,7 +368,7 @@
                             </record>
                             <record
                                 id="account_financial_report_executivesummary_return_investment0_nep"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">nep</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">NEP.balance</field>
@@ -378,7 +378,7 @@
                             </record>
                             <record
                                 id="account_financial_report_executivesummary_return_investment0_ta"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">ta</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">TA.balance</field>
@@ -392,19 +392,19 @@
             </record>
             <record
                 id="account_financial_report_executivesummary_position0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Position</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record
                         id="account_financial_report_executivesummary_avdebt0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Average debtors days</field>
                         <field name="code">AVG_DEBT_DAYS</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_avdebt0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -416,7 +416,7 @@
                             </record>
                             <record
                                 id="account_financial_report_executivesummary_avdebt0_opinc"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">opinc</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">REV.balance</field>
@@ -426,7 +426,7 @@
                             </record>
                             <record
                                 id="account_financial_report_executivesummary_avdebt0_ndays"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">NDays</field>
                                 <field name="engine">custom</field>
                                 <field
@@ -437,13 +437,13 @@
                     </record>
                     <record
                         id="account_financial_report_executivesummary_avgcre0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Average creditors days</field>
                         <field name="code">AVG_CRED_DAYS</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_avgcre0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -455,7 +455,7 @@
                             </record>
                             <record
                                 id="account_financial_report_executivesummary_avgcre0_cos"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">cos</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">COS.balance</field>
@@ -465,7 +465,7 @@
                             </record>
                             <record
                                 id="account_financial_report_executivesummary_avgcre0_exp"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">exp</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">EXP.balance</field>
@@ -475,7 +475,7 @@
                             </record>
                             <record
                                 id="account_financial_report_executivesummary_avgcre0_ndays"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">NDays</field>
                                 <field name="engine">custom</field>
                                 <field
@@ -486,12 +486,12 @@
                     </record>
                     <record
                         id="account_financial_report_executivesummary_st_cash_forecast0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Short term cash forecast</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_st_cash_forecast0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">DEB.balance + CRE.balance</field>
@@ -501,13 +501,13 @@
                     </record>
                     <record
                         id="account_financial_report_executivesummary_ca_to_l0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Current assets to liabilities</field>
                         <field name="code">CATL</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_executivesummary_ca_to_l0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">CATL.ca / CATL.cl</field>
@@ -517,7 +517,7 @@
                             </record>
                             <record
                                 id="account_financial_report_executivesummary_ca_to_l0_ca"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">ca</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">CA.balance</field>
@@ -527,7 +527,7 @@
                             </record>
                             <record
                                 id="account_financial_report_executivesummary_ca_to_l0_cl"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">cl</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">CL.balance</field>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="l10n_kh_t7001" model="account.report">
+    <record id="l10n_kh_t7001" model="report.formula">
         <field name="name">Form T7001</field>
         <field name="root_report_id" ref="account.generic_tax_report" />
         <field name="country_id" ref="base.kh" />
@@ -10,23 +10,23 @@
         <field name="default_opening_date_filter">previous_return_period</field>
         <field name="only_tax_exigible" eval="True" />
         <field name="column_ids">
-            <record id="l10n_kh_t7001_balance" model="account.report.column">
+            <record id="l10n_kh_t7001_balance" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="expression_label">balance</field>
             </record>
-            <record id="l10n_kh_t7001_tax" model="account.report.column">
+            <record id="l10n_kh_t7001_tax" model="report.formula.column">
                 <field name="name">Tax Amount</field>
                 <field name="expression_label">tax</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="l10n_kh_t7001_kh_t7001_2" model="account.report.line">
+            <record id="l10n_kh_t7001_kh_t7001_2" model="report.formula.line">
                 <field name="name">II. Total Amount of Taxes</field>
                 <field name="code">KH_T7001_2</field>
                 <field name="hierarchy_level">0</field>
                 <field name="foldable" eval="False" />
                 <field name="children_ids">
-                    <record id="l10n_kh_t7001_kh_t7001_2_1" model="account.report.line">
+                    <record id="l10n_kh_t7001_kh_t7001_2_1" model="report.formula.line">
                         <field name="name">1. Value Added Tax</field>
                         <field name="code">KH_T7001_2_1</field>
                         <field name="hierarchy_level">1</field>
@@ -34,7 +34,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kh_t7001_kh_t7001_2_1_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">KH_T7001_3_2_TB.tax</field>
@@ -42,7 +42,7 @@
                             </record>
                             <record
                                 id="l10n_kh_t7001_kh_t7001_2_1_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">KH_T7001_3_2_TA.tax</field>
@@ -50,7 +50,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kh_t7001_kh_t7001_2_2" model="account.report.line">
+                    <record id="l10n_kh_t7001_kh_t7001_2_2" model="report.formula.line">
                         <field name="name">2. Value Added Tax (State Charge)</field>
                         <field name="code">KH_T7001_2_2</field>
                         <field name="hierarchy_level">1</field>
@@ -58,7 +58,7 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_kh_t7001_kh_t7001_2_2a"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Credit Carried Forward</field>
                                 <field name="code">KH_T7001_2_2A</field>
                                 <field name="hierarchy_level">3</field>
@@ -66,7 +66,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_2_2a_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -78,7 +78,7 @@
                             </record>
                             <record
                                 id="l10n_kh_t7001_kh_t7001_2_2b"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VAT State Charge</field>
                                 <field name="code">KH_T7001_2_2B</field>
                                 <field name="hierarchy_level">3</field>
@@ -86,7 +86,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_2_2b_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -98,7 +98,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kh_t7001_kh_t7001_2_3" model="account.report.line">
+                    <record id="l10n_kh_t7001_kh_t7001_2_3" model="report.formula.line">
                         <field name="name">3. Prepayment of Tax on Income</field>
                         <field name="code">KH_T7001_2_3</field>
                         <field name="hierarchy_level">1</field>
@@ -106,7 +106,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kh_t7001_kh_t7001_2_3_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">KH_T7001_3_1_4.tax</field>
@@ -114,7 +114,7 @@
                             </record>
                             <record
                                 id="l10n_kh_t7001_kh_t7001_2_3_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">KH_T7001_3_1_3.tax</field>
@@ -122,7 +122,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kh_t7001_kh_t7001_2_4" model="account.report.line">
+                    <record id="l10n_kh_t7001_kh_t7001_2_4" model="report.formula.line">
                         <field name="name">4. Public Lighting Tax</field>
                         <field name="code">KH_T7001_2_4</field>
                         <field name="hierarchy_level">1</field>
@@ -130,14 +130,14 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kh_t7001_kh_t7001_2_4_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-T7 01 PLT</field>
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kh_t7001_kh_t7001_2_5" model="account.report.line">
+                    <record id="l10n_kh_t7001_kh_t7001_2_5" model="report.formula.line">
                         <field
                             name="name">5. Specific Tax on Certain Marchandises and Services</field>
                         <field name="code">KH_T7001_2_5</field>
@@ -146,14 +146,14 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kh_t7001_kh_t7001_2_5_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-T7 01 SPT</field>
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kh_t7001_kh_t7001_2_6" model="account.report.line">
+                    <record id="l10n_kh_t7001_kh_t7001_2_6" model="report.formula.line">
                         <field name="name">6. Accomodation Tax</field>
                         <field name="code">KH_T7001_2_6</field>
                         <field name="hierarchy_level">1</field>
@@ -161,14 +161,14 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kh_t7001_kh_t7001_2_6_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-T7 01 AT</field>
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kh_t7001_kh_t7001_2_7" model="account.report.line">
+                    <record id="l10n_kh_t7001_kh_t7001_2_7" model="report.formula.line">
                         <field name="name">7. Other Taxes</field>
                         <field name="code">KH_T7001_2_7</field>
                         <field name="hierarchy_level">1</field>
@@ -176,7 +176,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kh_t7001_kh_t7001_2_7_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -186,13 +186,13 @@
                     </record>
                 </field>
             </record>
-            <record id="l10n_kh_t7001_kh_t7001_3" model="account.report.line">
+            <record id="l10n_kh_t7001_kh_t7001_3" model="report.formula.line">
                 <field name="name">III Total Transaction</field>
                 <field name="code">KH_T7001_3</field>
                 <field name="hierarchy_level">0</field>
                 <field name="foldable" eval="False" />
                 <field name="children_ids">
-                    <record id="l10n_kh_t7001_kh_t7001_3_1" model="account.report.line">
+                    <record id="l10n_kh_t7001_kh_t7001_3_1" model="report.formula.line">
                         <field name="name">1. Prepayment of Tax on Income</field>
                         <field name="code">KH_T7001_3_1</field>
                         <field name="hierarchy_level">1</field>
@@ -200,7 +200,7 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_kh_t7001_kh_t7001_3_1_1"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">Current month of Prepayment of tax on income</field>
                                 <field name="code">KH_T7001_3_1_1</field>
@@ -209,7 +209,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_1_1_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -220,7 +220,7 @@
                             </record>
                             <record
                                 id="l10n_kh_t7001_kh_t7001_3_1_2"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Credit last month</field>
                                 <field name="code">KH_T7001_3_1_2</field>
                                 <field name="hierarchy_level">3</field>
@@ -228,7 +228,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_1_2_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -239,7 +239,7 @@
                             </record>
                             <record
                                 id="l10n_kh_t7001_kh_t7001_3_1_3"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">PPI to be paid</field>
                                 <field name="code">KH_T7001_3_1_3</field>
                                 <field name="hierarchy_level">3</field>
@@ -247,7 +247,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_1_3_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -259,7 +259,7 @@
                             </record>
                             <record
                                 id="l10n_kh_t7001_kh_t7001_3_1_4"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Credit Forward</field>
                                 <field name="code">KH_T7001_3_1_4</field>
                                 <field name="hierarchy_level">3</field>
@@ -267,7 +267,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_1_4_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -279,7 +279,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kh_t7001_kh_t7001_3_2" model="account.report.line">
+                    <record id="l10n_kh_t7001_kh_t7001_3_2" model="report.formula.line">
                         <field name="name">2. Value Added Tax</field>
                         <field name="code">KH_T7001_3_2</field>
                         <field name="hierarchy_level">1</field>
@@ -287,7 +287,7 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_kh_t7001_kh_t7001_3_2_1"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">Monthly Purchases of Goods and Services</field>
                                 <field name="code">KH_T7001_3_2_1</field>
@@ -296,7 +296,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_2_1_1"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">1. Local Purchase include VAT 10% </field>
                                         <field name="code">KH_T7001_3_2_1_1</field>
@@ -305,7 +305,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_2_1_1a"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">Taxable Person</field>
                                                 <field
@@ -315,7 +315,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_2_1_1a_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -325,7 +325,7 @@
                                                     </record>
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_2_1_1a_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -338,7 +338,7 @@
                                     </record>
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_2_1_2"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">2. Import 10%</field>
                                         <field name="code">KH_T7001_3_2_1_2</field>
                                         <field name="hierarchy_level">5</field>
@@ -346,7 +346,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_2_1_2a"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">Overseas Suppliers</field>
                                                 <field
@@ -356,7 +356,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_2_1_2a_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -366,7 +366,7 @@
                                                     </record>
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_2_1_2a_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -379,7 +379,7 @@
                                     </record>
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_2_1_3"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">3. Purchase Exclusive of VAT</field>
                                         <field name="code">KH_T7001_3_2_1_3</field>
@@ -388,7 +388,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_2_1_3a"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">Taxable Person</field>
                                                 <field
@@ -398,7 +398,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_2_1_3a_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -410,7 +410,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_2_1_3b"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">Non-Taxable Person</field>
                                                 <field
@@ -420,7 +420,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_2_1_3b_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -434,7 +434,7 @@
                                     </record>
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_2_1_4"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">4. Non Creditable Purchase</field>
                                         <field name="code">KH_T7001_3_2_1_4</field>
@@ -443,7 +443,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_2_1_4a"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">Taxable Person</field>
                                                 <field
@@ -453,7 +453,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_2_1_4a_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -465,7 +465,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_2_1_4b"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">Non-Taxable Person</field>
                                                 <field
@@ -475,7 +475,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_2_1_4b_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -489,7 +489,7 @@
                                     </record>
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_2_1_t"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Total amount of input taxes</field>
                                         <field name="code">KH_T7001_3_2_1_T</field>
@@ -498,7 +498,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_2_1_t_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -510,7 +510,7 @@
                             </record>
                             <record
                                 id="l10n_kh_t7001_kh_t7001_3_2_2"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">Monthly Sales of Goods and Services</field>
                                 <field name="code">KH_T7001_3_2_2</field>
@@ -519,7 +519,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_2_2_1"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">1. Sales Include VAT 10%</field>
                                         <field name="code">KH_T7001_3_2_2_1</field>
@@ -528,7 +528,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_2_2_1a"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">Taxable Person</field>
                                                 <field
@@ -538,7 +538,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_2_2_1a_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -548,7 +548,7 @@
                                                     </record>
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_2_2_1a_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -559,7 +559,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_2_2_1b"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">Non-Taxable Person</field>
                                                 <field
@@ -569,7 +569,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_2_2_1b_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -579,7 +579,7 @@
                                                     </record>
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_2_2_1b_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -592,7 +592,7 @@
                                     </record>
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_2_2_2"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">2. Export 0%</field>
                                         <field name="code">KH_T7001_3_2_2_2</field>
                                         <field name="hierarchy_level">5</field>
@@ -600,7 +600,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_2_2_2a"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">Overseas Customer</field>
                                                 <field
@@ -610,7 +610,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_2_2_2a_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -624,7 +624,7 @@
                                     </record>
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_2_2_3"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">3. Sales Exclude of VAT</field>
                                         <field name="code">KH_T7001_3_2_2_3</field>
@@ -633,7 +633,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_2_2_3a"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">Taxable Person</field>
                                                 <field
@@ -643,7 +643,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_2_2_3a_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -655,7 +655,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_2_2_3b"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">Non-Taxable Person</field>
                                                 <field
@@ -665,7 +665,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_2_2_3b_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -679,7 +679,7 @@
                                     </record>
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_2_2_t"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Total amount of output taxes</field>
                                         <field name="code">KH_T7001_3_2_2_T</field>
@@ -688,7 +688,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_2_2_t_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -700,7 +700,7 @@
                             </record>
                             <record
                                 id="l10n_kh_t7001_kh_t7001_3_2_ta"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VAT to be paid</field>
                                 <field name="code">KH_T7001_3_2_TA</field>
                                 <field name="hierarchy_level">3</field>
@@ -708,7 +708,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_2_ta_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -720,7 +720,7 @@
                             </record>
                             <record
                                 id="l10n_kh_t7001_kh_t7001_3_2_tb"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Credit forward</field>
                                 <field name="code">KH_T7001_3_2_TB</field>
                                 <field name="hierarchy_level">3</field>
@@ -728,7 +728,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_2_tb_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -740,7 +740,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kh_t7001_kh_t7001_3_3" model="account.report.line">
+                    <record id="l10n_kh_t7001_kh_t7001_3_3" model="report.formula.line">
                         <field name="name">3. Value Added Tax (State charge)</field>
                         <field name="code">KH_T7001_3_3</field>
                         <field name="hierarchy_level">1</field>
@@ -748,7 +748,7 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_kh_t7001_kh_t7001_3_3_1"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">Monthly Purchases of Goods and Services</field>
                                 <field name="code">KH_T7001_3_3_1</field>
@@ -757,7 +757,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_3_1_1"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">1. Local Purchase include VAT 10% </field>
                                         <field name="code">KH_T7001_3_3_1_1</field>
@@ -766,7 +766,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_3_1_1a"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">Taxable Person</field>
                                                 <field
@@ -776,7 +776,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_3_1_1a_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -786,7 +786,7 @@
                                                     </record>
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_3_1_1a_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -799,7 +799,7 @@
                                     </record>
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_3_1_2"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">2. Import 10%</field>
                                         <field name="code">KH_T7001_3_3_1_2</field>
                                         <field name="hierarchy_level">5</field>
@@ -807,7 +807,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_3_1_2a"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">Overseas Suppliers</field>
                                                 <field
@@ -817,7 +817,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_3_1_2a_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -827,7 +827,7 @@
                                                     </record>
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_3_1_2a_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -840,7 +840,7 @@
                                     </record>
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_3_1_t"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Total amount of input taxes</field>
                                         <field name="code">KH_T7001_3_3_1_T</field>
@@ -849,7 +849,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_3_1_t_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -861,7 +861,7 @@
                             </record>
                             <record
                                 id="l10n_kh_t7001_kh_t7001_3_3_2"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">Monthly Sales of Goods and Services</field>
                                 <field name="code">KH_T7001_3_3_2</field>
@@ -870,7 +870,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_3_2_1"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">1. Sales Include VAT 10%</field>
                                         <field name="code">KH_T7001_3_3_2_1</field>
@@ -879,7 +879,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_3_2_1a"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">Taxable Person</field>
                                                 <field
@@ -889,7 +889,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_3_2_1a_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -899,7 +899,7 @@
                                                     </record>
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_3_2_1a_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -910,7 +910,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_3_2_1b"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">Non-Taxable Person</field>
                                                 <field
@@ -920,7 +920,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_3_2_1b_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -930,7 +930,7 @@
                                                     </record>
                                                     <record
                                                         id="l10n_kh_t7001_kh_t7001_3_3_2_1b_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -943,7 +943,7 @@
                                     </record>
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_3_2_t"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Total amount of output taxes</field>
                                         <field name="code">KH_T7001_3_3_2_T</field>
@@ -952,7 +952,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kh_t7001_kh_t7001_3_3_2_t_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -964,7 +964,7 @@
                             </record>
                             <record
                                 id="l10n_kh_t7001_kh_t7001_3_3_ta"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VAT state charge</field>
                                 <field name="code">KH_T7001_3_3_TA</field>
                                 <field name="hierarchy_level">3</field>
@@ -972,7 +972,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_3_ta_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -984,7 +984,7 @@
                             </record>
                             <record
                                 id="l10n_kh_t7001_kh_t7001_3_3_tb"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Credit forward</field>
                                 <field name="code">KH_T7001_3_3_TB</field>
                                 <field name="hierarchy_level">3</field>
@@ -992,7 +992,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kh_t7001_kh_t7001_3_3_tb_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field

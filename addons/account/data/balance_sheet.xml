@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="balance_sheet" model="account.report">
+    <record id="balance_sheet" model="report.formula">
         <field name="name">Balance Sheet</field>
         <field name="sequence">10</field>
         <!-- Ensures the correct order in the composite Annual Statements report -->
@@ -16,7 +16,7 @@
             name="custom_handler_model_id"
             ref="model_account_balance_sheet_report_handler" />
         <field name="column_ids">
-            <record id="balance_sheet_balance" model="account.report.column">
+            <record id="balance_sheet_balance" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="expression_label">balance</field>
             </record>
@@ -24,7 +24,7 @@
         <field name="line_ids">
             <record
                 id="account_financial_report_total_assets0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">ASSETS</field>
                 <field name="hierarchy_level">0</field>
                 <field name="code">TA</field>
@@ -34,7 +34,7 @@
                 <field name="children_ids">
                     <record
                         id="account_financial_report_current_assets_view0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Current Assets</field>
                         <field name="code">CA</field>
                         <field
@@ -42,7 +42,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_financial_report_bank_view0"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Bank and Cash Accounts</field>
                                 <field name="code">BA</field>
                                 <field name="groupby">account_id</field>
@@ -52,7 +52,7 @@
                             </record>
                             <record
                                 id="account_financial_report_receivable0"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Receivables</field>
                                 <field name="code">REC</field>
                                 <field name="groupby">account_id</field>
@@ -62,7 +62,7 @@
                             </record>
                             <record
                                 id="account_financial_report_current_assets0"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Current Assets</field>
                                 <field name="code">CAS</field>
                                 <field name="groupby">account_id</field>
@@ -72,7 +72,7 @@
                             </record>
                             <record
                                 id="account_financial_report_prepayements0"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Prepayments</field>
                                 <field name="code">PRE</field>
                                 <field name="groupby">account_id</field>
@@ -84,7 +84,7 @@
                     </record>
                     <record
                         id="account_financial_report_fixed_assets_view0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Plus Fixed Assets</field>
                         <field name="code">FA</field>
                         <field name="groupby">account_id</field>
@@ -94,7 +94,7 @@
                     </record>
                     <record
                         id="account_financial_report_non_current_assets_view0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Plus Non-current Assets</field>
                         <field name="code">PNCA</field>
                         <field name="groupby">account_id</field>
@@ -106,7 +106,7 @@
             </record>
             <record
                 id="account_financial_report_liabilities_view0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">LIABILITIES</field>
                 <field name="hierarchy_level">0</field>
                 <field name="code">L</field>
@@ -114,7 +114,7 @@
                 <field name="expression_ids">
                     <record
                         id="account_financial_report_liabilities_view0_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">CL.balance + NL.balance</field>
@@ -124,13 +124,13 @@
                 <field name="children_ids">
                     <record
                         id="account_financial_report_current_liabilities0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Current Liabilities</field>
                         <field name="code">CL</field>
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_current_liabilities0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">CL1.balance + CL2.balance</field>
@@ -140,7 +140,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_financial_report_current_liabilities1"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Current Liabilities</field>
                                 <field name="code">CL1</field>
                                 <field name="groupby">account_id</field>
@@ -148,7 +148,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_financial_report_current_liabilities1_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">domain</field>
                                         <field
@@ -161,7 +161,7 @@
                             </record>
                             <record
                                 id="account_financial_report_current_liabilities_payable"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Payables</field>
                                 <field name="code">CL2</field>
                                 <field name="groupby">account_id</field>
@@ -169,7 +169,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_financial_report_current_liabilities_payable_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">domain</field>
                                         <field
@@ -184,7 +184,7 @@
                     </record>
                     <record
                         id="account_financial_report_non_current_liabilities0"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Plus Non-current Liabilities</field>
                         <field name="code">NL</field>
                         <field name="groupby">account_id</field>
@@ -192,7 +192,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_financial_report_non_current_liabilities0_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">domain</field>
                                 <field
@@ -205,7 +205,7 @@
                     </record>
                 </field>
             </record>
-            <record id="account_financial_report_equity0" model="account.report.line">
+            <record id="account_financial_report_equity0" model="report.formula.line">
                 <field name="name">EQUITY (&amp; EARNINGS)</field>
                 <field name="hierarchy_level">0</field>
                 <field name="code">EQ</field>
@@ -214,7 +214,7 @@
                 <field name="children_ids">
                     <record
                         id="account_financial_report_equity1"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Equity</field>
                         <field name="code">EQU</field>
                         <field name="groupby">account_id</field>
@@ -222,7 +222,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_financial_equity1_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">domain</field>
                                 <field
@@ -235,7 +235,7 @@
                     </record>
                     <record
                         id="account_financial_report_earnings"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Earnings</field>
                         <field name="code">EAR</field>
                         <field
@@ -243,14 +243,14 @@
                         <field name="children_ids">
                             <record
                                 id="account_financial_report_current_years_earnings"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">Current Year Unallocated Earnings</field>
                                 <field name="code">CYE</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_financial_current_year_earnings_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">domain</field>
                                         <field
@@ -263,13 +263,13 @@
                             </record>
                             <record
                                 id="account_financial_report_previous_years_earnings"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Previous Years Earnings</field>
                                 <field name="code">PYE</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_financial_previous_year_earnings_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">domain</field>
                                         <field
@@ -287,7 +287,7 @@
             </record>
             <record
                 id="account_financial_report_liabilities_and_equity_view0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">LIABILITIES + EQUITY</field>
                 <field name="hierarchy_level">0</field>
                 <field name="code">LE</field>
@@ -295,7 +295,7 @@
                 <field name="expression_ids">
                     <record
                         id="account_financial_report_liabilities_and_equity_view0_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">L.balance + EQ.balance</field>
@@ -303,7 +303,7 @@
                     </record>
                 </field>
             </record>
-            <record id="account_financial_report_off_sheet" model="account.report.line">
+            <record id="account_financial_report_off_sheet" model="report.formula.line">
                 <field name="name">OFF BALANCE SHEET ACCOUNTS</field>
                 <field name="hierarchy_level">0</field>
                 <field name="code">OS</field>

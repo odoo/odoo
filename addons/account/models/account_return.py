@@ -664,7 +664,7 @@ class AccountReturn(models.Model):
 
     @api.model
     def _get_return_from_report_options(self, options):
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         sender_company = report._get_sender_company_for_export(options)
         return self.env["account.return"].search(
             [
@@ -993,7 +993,7 @@ class AccountReturn(models.Model):
                     )
                 ):
                     for company in self.company_ids:
-                        self.env["account.report"].with_company(
+                        self.env["report.formula"].with_company(
                             company
                         )._create_default_external_values(
                             self.date_from, self.date_to, True, company=company
@@ -1288,7 +1288,7 @@ class AccountReturn(models.Model):
                             )
                         )
 
-            carryover_values = self.env["account.report.external.value"].search(
+            carryover_values = self.env["report.formula.external.value"].search(
                 [
                     ("carryover_origin_report_line_id", "in", report.line_ids.ids),
                     ("date", "=", self.date_to),
@@ -1904,12 +1904,12 @@ class AccountReturn(models.Model):
             # but we choose the greatest id so that the line appears last on the entry.
             tax_group_id = line["tax_group_id"]
 
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
 
         for line in report._get_lines(options):
             model, record_id = report._get_model_info_from_id(line["id"])
 
-            if model != "account.report.line":
+            if model != "report.formula.line":
                 continue
 
             for (

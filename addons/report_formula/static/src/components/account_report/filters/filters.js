@@ -601,7 +601,7 @@ export class AccountReportFilters extends Component {
         this.controller.saveSessionOptions(this.controller.cachedFilterOptions);
 
         this.controller.lines = await this.controller.orm.call(
-            "account.report",
+            "report.formula",
             "dispatch_report_action",
             [
                 this.controller.cachedFilterOptions.report_id,

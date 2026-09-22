@@ -10,6 +10,6 @@ def migrate(cr, version):
 
     if expression_id:
         cr.execute(
-            "DELETE FROM account_report_external_value WHERE target_report_expression_id = %s",
+            "DELETE FROM report_formula_external_value WHERE target_report_expression_id = %s",
             [expression_id[0]],
         )

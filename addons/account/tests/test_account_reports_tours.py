@@ -17,7 +17,7 @@ class TestAccountReportsTours(AccountTestInvoicingHttpCommon):
         cls.report.column_ids.sortable = True
 
         # Test the root reports. We don't want to choose US variants if some are installed.
-        cls.env["account.report"].search([]).variant_report_ids.active = False
+        cls.env["report.formula"].search([]).variant_report_ids.active = False
 
         cls.account_101401 = cls.env["account.account"].search(
             [

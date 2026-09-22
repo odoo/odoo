@@ -2,7 +2,7 @@
 <odoo>
 
     <data auto_sequence="1">
-        <record id="mod_390_section_5" model="account.report">
+        <record id="mod_390_section_5" model="report.formula">
             <field name="name">Volumen de Operaciones</field>
             <field name="name@es">Volumen de Operaciones</field>
             <field name="filter_analytic" eval="False" />
@@ -11,19 +11,19 @@
             <field name="filter_journals" eval="True" />
             <field name="country_id" ref="base.es" />
             <field name="column_ids">
-                <record id="mod_390_column_sect5" model="account.report.column">
+                <record id="mod_390_column_sect5" model="report.formula.column">
                     <field name="name">Balance</field>
                     <field name="name@es">Saldo</field>
                     <field name="expression_label">balance</field>
                 </record>
             </field>
             <field name="line_ids">
-                <record id="mod_390_title_49" model="account.report.line">
+                <record id="mod_390_title_49" model="report.formula.line">
                     <field name="name">Volumen de operaciones</field>
                     <field name="name@es">Volumen de operaciones</field>
                     <field name="code">aeat_mod_390_title_49</field>
                     <field name="children_ids">
-                        <record id="mod_390_title_50" model="account.report.line">
+                        <record id="mod_390_title_50" model="report.formula.line">
                             <field
                                 name="name">Operaciones realizadas en el ejercicio</field>
                             <field
@@ -32,7 +32,7 @@
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_99"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[99] Operaciones en régimen general</field>
                                     <field
@@ -41,7 +41,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_99_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -52,7 +52,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_653"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[653] Operaciones a las que habiéndoles sido aplicado el régimen especial del criterio de caja hubieran resultado devengadas conforme a la regla general de devengo contenida en el art. 75 LIVA</field>
                                     <field
@@ -61,7 +61,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_653_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -72,7 +72,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_103"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[103] Entregas intracomunitarias exentas</field>
                                     <field
@@ -81,7 +81,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_103_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -92,7 +92,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_104"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[104] Exportaciones y otras operaciones exentas con derecho a deducción</field>
                                     <field
@@ -101,7 +101,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_104_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -112,7 +112,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_105"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[105] Operaciones exentas sin derecho a deducción</field>
                                     <field
@@ -121,7 +121,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_105_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -132,7 +132,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_110"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[110] Operaciones no sujetas por reglas de localización o con inversión del sujeto pasivo</field>
                                     <field
@@ -141,7 +141,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_110_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod390[110]</field>
@@ -150,7 +150,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_125"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[125] Operaciones sujetas con inversión del sujeto pasivo</field>
                                     <field
@@ -159,7 +159,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_125_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -171,7 +171,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_126"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[126] OSS. Operaciones no sujetas por reglas de localización acogidas a la OSS</field>
                                     <field
@@ -180,7 +180,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_126_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -192,7 +192,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_127"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[127] Operaciones sujetas y acogidas a la OSS</field>
                                     <field
@@ -201,7 +201,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_127_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -213,7 +213,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_128"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[128] Operaciones intragrupo valoradas conforme a lo dispuesto en los arts. 78 y 79 LIVA</field>
                                     <field
@@ -222,7 +222,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_128_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -233,7 +233,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_100"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[100] Operaciones en régimen simplificado</field>
                                     <field
@@ -242,7 +242,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_100_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -253,7 +253,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_101"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[101] Operaciones en régimen especial de la agricultura, ganadería y pesca</field>
                                     <field
@@ -262,7 +262,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_101_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -273,7 +273,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_102"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[102] Operaciones realizadas por sujetos pasivos acogidos al régimen especial del recargo de equivalencia</field>
                                     <field
@@ -282,7 +282,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_102_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -293,7 +293,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_227"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[227] Operaciones en Régimen especial de bienes usados, objetos de arte, antigüedades y objetos de colección</field>
                                     <field
@@ -302,7 +302,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_227_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -313,7 +313,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_228"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[228] Operaciones en régimen especial de Agencias de Viajes</field>
                                     <field
@@ -322,7 +322,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_228_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -333,7 +333,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_106"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[106] Entregas de bienes inmuebles, operaciones fi nancieras y relativas al oro de inversión no habituales</field>
                                     <field
@@ -342,7 +342,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_106_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -353,7 +353,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_107"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[107] Entregas de bienes de inversión</field>
                                     <field
@@ -362,7 +362,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_107_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -373,7 +373,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_108"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[108] Total volumen de operaciones (Art. 121 Ley IVA)</field>
                                     <field

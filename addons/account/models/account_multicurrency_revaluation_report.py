@@ -16,7 +16,7 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
     """Manage Unrealized Gains/Losses."""
 
     _name = "account.multicurrency.revaluation.report.handler"
-    _inherit = ["account.report.custom.handler"]
+    _inherit = ["report.formula.custom.handler"]
     _description = "Multicurrency Revaluation Report Custom Handler"
 
     @_debug.perf.timed
@@ -128,11 +128,11 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
         for index, line in enumerate(lines):
             res_model_name, res_id = report._get_model_info_from_id(line["id"])
 
-            if res_model_name == "account.report.line" and (
+            if res_model_name == "report.formula.line" and (
                 (
                     res_id == line_to_adjust_id
                     and report._get_model_info_from_id(lines[index + 1]["id"])
-                    == ("account.report.line", line_excluded_id)
+                    == ("report.formula.line", line_excluded_id)
                 )
                 or (res_id == line_excluded_id and index == len(lines) - 1)
             ):
@@ -206,7 +206,7 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
         _debug.lifecycle(
             "action_multi_currency_revaluation_open_general_ledger", records=self
         )
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         account_id = report._get_res_id_from_line_id(
             params["line_id"], "account.account"
         )
@@ -232,7 +232,7 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
         _debug.lifecycle(
             "action_multi_currency_revaluation_toggle_provision", records=self
         )
-        res_ids_map = self.env["account.report"]._get_res_ids_from_line_id(
+        res_ids_map = self.env["report.formula"]._get_res_ids_from_line_id(
             params["line_id"], ["res.currency", "account.account"]
         )
         account = self.env["account.account"].browse(res_ids_map["account.account"])
@@ -254,7 +254,7 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
         _debug.lifecycle(
             "action_multi_currency_revaluation_open_currency_rates", records=self
         )
-        currency_id = self.env["account.report"]._get_res_id_from_line_id(
+        currency_id = self.env["report.formula"]._get_res_id_from_line_id(
             params["line_id"], "res.currency"
         )
         return {
@@ -333,7 +333,7 @@ class AccountMulticurrencyRevaluationReportHandler(models.AbstractModel):
                 "has_sublines": True,
             }
 
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         report._check_groupby_fields(
             (next_groupby.split(",") if next_groupby else [])
             + ([current_groupby] if current_groupby else [])

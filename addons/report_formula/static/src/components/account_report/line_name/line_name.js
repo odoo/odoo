@@ -41,7 +41,7 @@ export class AccountReportLineName extends Component {
 
     async caretAction(caretOption) {
         const res = await this.orm.call(
-            "account.report",
+            "report.formula",
             "dispatch_report_action",
             [
                 this.controller.options.report_id,
@@ -86,7 +86,7 @@ export class AccountReportLineName extends Component {
     // -----------------------------------------------------------------------------------------------------------------
     async triggerAction() {
         const res = await this.orm.call(
-            "account.report",
+            "report.formula",
             "execute_action",
             [
                 this.controller.options.report_id,
@@ -108,7 +108,7 @@ export class AccountReportLineName extends Component {
     // Load more
     // -----------------------------------------------------------------------------------------------------------------
     async loadMore() {
-        const newLines = await this.orm.call("account.report", "get_expanded_lines", [
+        const newLines = await this.orm.call("report.formula", "get_expanded_lines", [
             this.controller.options.report_id,
             this.controller.options,
             this.props.line.parent_id,

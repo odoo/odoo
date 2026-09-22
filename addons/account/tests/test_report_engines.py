@@ -250,7 +250,7 @@ class TestReportEngines(TestAccountReportsCommon):
             columns = ["balance"]
 
         # Create a new report
-        report = self.env["account.report"].create(
+        report = self.env["report.formula"].create(
             {
                 "name": "_run_report",
                 "filter_date_range": True,
@@ -297,7 +297,7 @@ class TestReportEngines(TestAccountReportsCommon):
                         "external_value_generators", []
                     )
                 )
-        self.env["account.report.external.value"].create(external_values_create_list)
+        self.env["report.formula.external.value"].create(external_values_create_list)
 
         return report
 
@@ -1011,7 +1011,7 @@ class TestReportEngines(TestAccountReportsCommon):
                     ),
                 )
                 self.assertRecordValues(
-                    self.env["account.report.external.value"].search(
+                    self.env["report.formula.external.value"].search(
                         action_dict["domain"]
                     ),
                     [
@@ -1070,7 +1070,7 @@ class TestReportEngines(TestAccountReportsCommon):
                     ),
                 )
                 self.assertRecordValues(
-                    self.env["account.report.external.value"].search(
+                    self.env["report.formula.external.value"].search(
                         action_dict["domain"]
                     ),
                     expected_values,
@@ -1508,12 +1508,12 @@ class TestReportEngines(TestAccountReportsCommon):
         )
 
         # Set parent link properly for sum_children test, now that all lines are created:
-        line_12_1 = self.env["account.report.line"].search([("code", "=", "test12_1")])
-        self.env["account.report.line"].search(
+        line_12_1 = self.env["report.formula.line"].search([("code", "=", "test12_1")])
+        self.env["report.formula.line"].search(
             [("code", "in", ("test12_2", "test12_3", "test12_4"))]
         ).parent_id = line_12_1
-        line_12_4 = self.env["account.report.line"].search([("code", "=", "test12_4")])
-        self.env["account.report.line"].search(
+        line_12_4 = self.env["report.formula.line"].search([("code", "=", "test12_4")])
+        self.env["report.formula.line"].search(
             [("name", "=", "test12_5")]
         ).parent_id = line_12_4
 
@@ -2495,7 +2495,7 @@ class TestReportEngines(TestAccountReportsCommon):
         )
 
     def test_column_blank_if_zero(self):
-        """account.report.column's `blank_if_zero` option should only impact number figure types."""
+        """report.formula.column's `blank_if_zero` option should only impact number figure types."""
         test_line = self._prepare_test_report_line(
             self._prepare_test_expression_external(
                 "most_recent", [], label="monetary", figure_type="monetary"
@@ -2999,7 +2999,7 @@ class TestReportEngines(TestAccountReportsCommon):
         ).action_post()
 
         report = (
-            self.env["account.report"]
+            self.env["report.formula"]
             .with_context(context)
             .create(
                 {
@@ -3179,7 +3179,7 @@ class TestReportEngines(TestAccountReportsCommon):
         ).action_post()
 
         report = (
-            self.env["account.report"]
+            self.env["report.formula"]
             .with_context(context)
             .create(
                 {

@@ -187,7 +187,7 @@ class StockValuationReport(models.AbstractModel):
 
 class StockValuationReportHandler(models.AbstractModel):
     _name = "stock_account.stock.valuation.report.handler"
-    _inherit = ["account.report.custom.handler"]
+    _inherit = ["report.formula.custom.handler"]
     _description = "Stock Valuation Report Custom Handler"
 
     def _custom_options_initializer(self, report, options, previous_options):
@@ -303,7 +303,7 @@ class StockValuationReportHandler(models.AbstractModel):
         return company.action_close_stock_valuation()
 
     def execute_action(self, options, params=None):
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         action = report.execute_action(options, params)
         line = self._clicked_report_line(report, params)
         if not line:
@@ -313,11 +313,11 @@ class StockValuationReportHandler(models.AbstractModel):
     def _clicked_report_line(self, report, params):
         line_id = (params or {}).get("id")
         if not isinstance(line_id, str):
-            return self.env["account.report.line"]
+            return self.env["report.formula.line"]
         model, record_id = report._get_model_info_from_id(line_id)
-        if model != "account.report.line":
-            return self.env["account.report.line"]
-        return self.env["account.report.line"].browse(record_id)
+        if model != "report.formula.line":
+            return self.env["report.formula.line"]
+        return self.env["report.formula.line"].browse(record_id)
 
     def _scope_section_action(self, action, code, options):
         date = self._valuation_date(options)

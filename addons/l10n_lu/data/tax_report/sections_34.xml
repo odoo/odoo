@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="l10n_lu_tax_report_sections_3_4" model="account.report">
+    <record id="l10n_lu_tax_report_sections_3_4" model="report.formula">
         <field name="name">Sections III, IV</field>
         <field name="name@fr">Sections III, IV</field>
         <field name="name@de">Abschnitte III, IV</field>
@@ -10,7 +10,7 @@
         <field name="country_id" ref="base.lu" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="tax_report_sections_3_4_balance" model="account.report.column">
+            <record id="tax_report_sections_3_4_balance" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="name@fr">Solde</field>
                 <field name="name@de">Saldo</field>
@@ -21,7 +21,7 @@
         <field name="line_ids">
             <record
                 id="account_tax_report_line_3_assessment_deducible_tax"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">III. ASSESSMENT OF DEDUCTIBLE TAX (input tax)</field>
                 <field
                     name="name@fr">III. CALCUL DE LA TAXE DEDUCTIBLE (taxe en amont)</field>
@@ -32,7 +32,7 @@
                 <field name="children_ids">
                     <record
                         id="account_tax_report_line_3a_total_input_tax"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">093 - Total input tax</field>
                         <field name="name@fr">093 - Total de la taxe en amont</field>
                         <field name="name@de">093 - Gesamtbetrag Vorsteuer</field>
@@ -43,7 +43,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_3a_1_invoiced_by_other_taxable_person"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">458 - Invoiced by other taxable persons for goods or services supplied</field>
                                 <field
@@ -56,7 +56,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_3a_1_invoiced_by_other_taxable_person_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">458</field>
@@ -65,7 +65,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_3a_2_due_respect_intra_comm_goods"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">459 - Due in respect of intra-Community acquisitions of goods</field>
                                 <field
@@ -78,7 +78,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_3a_2_due_respect_intra_comm_goods_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">459</field>
@@ -87,7 +87,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_3a_3_due_paid_respect_importation_goods"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">460 - Due or paid in respect of importation of goods</field>
                                 <field
@@ -100,7 +100,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_3a_3_due_paid_respect_importation_goods_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">460</field>
@@ -109,7 +109,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_3a_4_due_respect_application_goods"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">090 - Due in respect of the application of goods for business purposes</field>
                                 <field
@@ -122,7 +122,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_3a_4_due_respect_application_goods_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">090</field>
@@ -131,7 +131,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_3a_5_due_under_reverse_charge"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">461 - Due under the reverse charge (see points II.E and F)</field>
                                 <field
@@ -144,7 +144,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_3a_5_due_under_reverse_charge_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">461</field>
@@ -153,7 +153,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_3a_6_paid_joint_several_guarantee"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">092 - Paid as joint and several guarantee</field>
                                 <field
@@ -166,7 +166,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_3a_6_paid_joint_several_guarantee_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">092</field>
@@ -175,7 +175,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_3a_7_adjusted_tax_special_arrangement"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">228 - Adjusted tax - special arrangement for tax suspension</field>
                                 <field
@@ -188,7 +188,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_3a_7_adjusted_tax_special_arrangement_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">228</field>
@@ -199,7 +199,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_3b_total_input_tax_nd"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">097 - Total input tax non-deductible</field>
                         <field
                             name="name@fr">097 - Total de la taxe en amont non déductible</field>
@@ -213,7 +213,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_3b1_rel_trans"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">094 - relating to transactions which are exempt pursuant to articles 44 and 56quater</field>
                                 <field
@@ -226,7 +226,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_3b1_rel_trans_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">094</field>
@@ -235,7 +235,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_3b2_ded_prop"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">095 - where the deductible proportion determined in accordance to article 50 is applied</field>
                                 <field
@@ -248,7 +248,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_3b2_ded_prop_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">095</field>
@@ -257,7 +257,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_3b2_input_tax_margin"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">096 - Non recoverable input tax in accordance with Art. 56ter-1(7) and 56ter-2(7) (when applying the margin scheme)</field>
                                 <field
@@ -270,7 +270,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_3b2_input_tax_margin_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">096</field>
@@ -281,7 +281,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_3c_total_input_tax_deductible"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">102 - Total input tax deductible</field>
                         <field
                             name="name@fr">102 - Total de la taxe en amont déductible</field>
@@ -296,7 +296,7 @@
             </record>
             <record
                 id="account_tax_report_line_4_tax_tobe_paid_or_reclaimed"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">IV. TAX TO BE PAID OR TO BE RECLAIMED</field>
                 <field name="name@fr">IV. CALCUL DE L'EXCEDENT</field>
                 <field name="name@de">IV. BERECHNUNG DES ÜBERSCHUSSES</field>
@@ -305,7 +305,7 @@
                 <field name="children_ids">
                     <record
                         id="account_tax_report_line_4a_total_tax_due"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">103 - Total tax due</field>
                         <field name="name@fr">103 - Total de la taxe en aval</field>
                         <field name="name@de">103 - Gesamtbetrag der Steuer</field>
@@ -314,7 +314,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_4a_total_tax_due_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">LUTAX_076.balance</field>
@@ -325,7 +325,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_4a_total_input_tax_deductible"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">104 - Total input tax deductible</field>
                         <field
                             name="name@fr">104 - Total de la taxe en amont déductible</field>
@@ -337,7 +337,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_4c_exceeding_amount"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">105 - Exceeding amount</field>
                         <field name="name@fr">105 - Excédent</field>
                         <field name="name@de">105 - Überschuss</field>

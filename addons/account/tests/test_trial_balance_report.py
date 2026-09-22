@@ -953,7 +953,7 @@ class TestTrialBalanceReport(TestAccountReportsCommon):
         """
         options = self._generate_options(self.report, "2017-06-01", "2017-06-01")
         parent_line_id = self.report._get_generic_line_id(
-            model_name="account.report.line",
+            model_name="report.formula.line",
             value=self.env.ref("account.trial_balance_report_all").id,
         )
         unallocated_earnings_line_id = self.report._get_generic_line_id(

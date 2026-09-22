@@ -20,7 +20,7 @@ class AccountReportHorizontalGroup(models.Model):
         required=True,
     )
     report_ids = fields.Many2many(
-        comodel_name="account.report",
+        comodel_name="report.formula",
         string="Reports",
     )
 

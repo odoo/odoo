@@ -45,7 +45,7 @@ class TestAccountReturn(TestAccountReportsCommon):
             }
         )
 
-        cls.basic_tax_report = cls.env["account.report"].create(
+        cls.basic_tax_report = cls.env["report.formula"].create(
             {
                 "root_report_id": cls.env.ref("account.generic_tax_report").id,
                 "name": "Account Returns Test Tax Report",
@@ -60,7 +60,7 @@ class TestAccountReturn(TestAccountReportsCommon):
             }
         )
 
-        cls.basic_ec_sales_report = cls.env["account.report"].create(
+        cls.basic_ec_sales_report = cls.env["report.formula"].create(
             {
                 "root_report_id": cls.env.ref("account.generic_ec_sales_report").id,
                 "name": "Account Returns Test EC Sales Report",
@@ -297,7 +297,7 @@ class TestAccountReturn(TestAccountReportsCommon):
         )
 
         # 4. Check the final fallback using a report that has no link to a return
-        basic_report_not_linked = self.env["account.report"].create(
+        basic_report_not_linked = self.env["report.formula"].create(
             {
                 "root_report_id": self.env.ref("account.generic_tax_report").id,
                 "name": "Account Returns Test Tax Report - Not Linked",
@@ -343,7 +343,7 @@ class TestAccountReturn(TestAccountReportsCommon):
         )
 
     def test_report_return_periodicity_option_multi_returns(self):
-        report = self.env["account.report"].create(
+        report = self.env["report.formula"].create(
             {
                 "root_report_id": self.env.ref("account.generic_tax_report").id,
                 "name": "Reportt",
@@ -437,7 +437,7 @@ class TestAccountReturn(TestAccountReportsCommon):
         correctly computed for a company with branches.
         """
         # We need to create a new tax report with report lines which will be used in _postprocess_vat_closing_entry_results
-        report = self.env["account.report"].create(
+        report = self.env["report.formula"].create(
             {
                 "name": "Tax report",
                 "root_report_id": self.env.ref("account.generic_tax_report").id,
@@ -463,7 +463,7 @@ class TestAccountReturn(TestAccountReportsCommon):
             ]
         )
 
-        report_lines = self.env["account.report.line"].create(
+        report_lines = self.env["report.formula.line"].create(
             [
                 {
                     "name": "test_sale_line",

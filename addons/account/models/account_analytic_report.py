@@ -9,7 +9,7 @@ _debug = DebugLog(__name__)
 
 
 class AccountReport(models.AbstractModel):
-    _inherit = "account.report"
+    _inherit = "report.formula"
 
     filter_analytic_groupby = fields.Boolean(
         string="Analytic Group By",
@@ -316,7 +316,7 @@ class AccountReport(models.AbstractModel):
             return action
         else:
             # Start by getting the domain from the options.
-            report_line = self.env["account.report.line"].browse(
+            report_line = self.env["report.formula.line"].browse(
                 params["report_line_id"]
             )
             expression = report_line.expression_ids.filtered(
@@ -435,6 +435,6 @@ class AccountMoveLine(models.Model):
             "account_report_analytic_groupby"
         ) and not self.env.context.get("account_report_cash_basis"):
             query._tables["account_move_line"] = self.env[
-                "account.report"
+                "report.formula"
             ]._create_aml_shadowing_query_for_analytic_groupby()
         return query

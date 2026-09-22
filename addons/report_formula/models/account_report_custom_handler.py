@@ -13,8 +13,8 @@ class AccountReportFileDownloadException(Exception):
 
 
 class AccountReportCustomHandler(models.AbstractModel):
-    _name = "account.report.custom.handler"
-    _description = "Account Report Custom Handler"
+    _name = "report.formula.custom.handler"
+    _description = "Formula Report Custom Handler"
 
     def _dynamic_lines_generator(
         self, report, options, all_column_groups_expression_totals, warnings=None
@@ -22,7 +22,7 @@ class AccountReportCustomHandler(models.AbstractModel):
         return []
 
     def _caret_options_initializer(self):
-        return self.env["account.report"]._caret_options_initializer_default()
+        return self.env["report.formula"]._caret_options_initializer_default()
 
     def _custom_options_initializer(self, report, options, previous_options):
         pass

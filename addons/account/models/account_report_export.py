@@ -27,7 +27,7 @@ _debug = DebugLog(__name__)
 
 
 class AccountReportExport(models.Model):
-    _inherit = "account.report"
+    _inherit = "report.formula"
 
     @api.model
     @_debug.perf.timed
@@ -36,7 +36,7 @@ class AccountReportExport(models.Model):
         :param job_count: maximum number of jobs to process if specified.
         """
         _debug.lifecycle("_cron_account_report_send", records=self)
-        to_process = self.env["account.report"].search(
+        to_process = self.env["report.formula"].search(
             [("send_and_print_values", "!=", False)],
         )
         if not to_process:
@@ -364,20 +364,20 @@ class AccountReportExport(models.Model):
         accounts_by_expressions = {}  # {expression_id: account.account objects}
         reported_account_codes = []  # [{'prefix': ..., 'balance': ..., 'exclude': ..., 'line': ...}, ...]
         non_existing_codes = defaultdict(
-            lambda: self.env["account.report.line"]
+            lambda: self.env["report.formula.line"]
         )  # {non_existing_account_code: {lines_with_that_code,}}
-        lines_per_non_linked_tag = defaultdict(lambda: self.env["account.report.line"])
+        lines_per_non_linked_tag = defaultdict(lambda: self.env["report.formula.line"])
         lines_using_bad_operator_per_tag = defaultdict(
-            lambda: self.env["account.report.line"]
+            lambda: self.env["report.formula.line"]
         )
         candidate_duplicate_codes = defaultdict(
-            lambda: self.env["account.report.line"]
+            lambda: self.env["report.formula.line"]
         )  # {candidate_duplicate_account_code: {lines_with_that_code,}}
         duplicate_codes = defaultdict(
-            lambda: self.env["account.report.line"]
+            lambda: self.env["report.formula.line"]
         )  # {verified duplicate_account_code: {lines_with_that_code,}}
         duplicate_codes_same_line = defaultdict(
-            lambda: self.env["account.report.line"]
+            lambda: self.env["report.formula.line"]
         )  # {duplicate_account_code: {line_with_that_code_multiple_times,}}
         common_account_domain = [
             *AccountAccount._check_company_domain(self.env.company),
@@ -734,7 +734,7 @@ class AccountReportExport(models.Model):
         errors_trie = {"children": {}, "lines": {}, "errors": {None}}
         for reported_code in all_reported_codes:
             current_trie = errors_trie
-            lines = self.env["account.report.line"]
+            lines = self.env["report.formula.line"]
             errors = set()
             if reported_code in non_reported_codes:
                 errors.add("NON_REPORTED")
@@ -794,7 +794,7 @@ class AccountReportExport(models.Model):
         """Regroup the codes sharing the same error under their common subcode/prefix, in place on the given trie."""
         if trie.get("children"):
             children_errors = set()
-            children_lines = self.env["account.report.line"]
+            children_lines = self.env["report.formula.line"]
             if trie.get("errors"):  # Add own error
                 children_errors |= set(trie.get("errors"))
             for child in trie["children"].values():

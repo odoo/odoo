@@ -3,7 +3,7 @@
 
     <record
         id="stock_valuation_report_line_cost_of_production"
-        model="account.report.line">
+        model="report.formula.line">
         <field name="name">Cost of Production</field>
         <field name="code">SV_PRODUCTION</field>
         <field name="report_id" ref="stock_account.stock_valuation_report" />
@@ -15,7 +15,7 @@
         <field name="expression_ids">
             <record
                 id="stock_valuation_report_line_cost_of_production_value"
-                model="account.report.expression">
+                model="report.formula.expression">
                 <field name="label">value</field>
                 <field name="engine">custom</field>
                 <field
@@ -25,7 +25,7 @@
             </record>
             <record
                 id="stock_valuation_report_line_cost_of_production_debit"
-                model="account.report.expression">
+                model="report.formula.expression">
                 <field name="label">debit</field>
                 <field name="engine">custom</field>
                 <field
@@ -35,7 +35,7 @@
             </record>
             <record
                 id="stock_valuation_report_line_cost_of_production_credit"
-                model="account.report.expression">
+                model="report.formula.expression">
                 <field name="label">credit</field>
                 <field name="engine">custom</field>
                 <field

@@ -290,7 +290,7 @@ class AccountMove(models.Model):
             move.l10n_it_edi_is_self_invoice = False
         if purchases:
             it_tax_report_vj_lines = (
-                self.env["account.report.line"]
+                self.env["report.formula.line"]
                 .sudo()
                 .search(
                     [("report_id.country_id.code", "=", "IT"), ("code", "=like", "VJ%")]
@@ -1181,7 +1181,7 @@ class AccountMove(models.Model):
         """
         self.check_singleton()
         invoice_lines_tags = self.line_ids.tax_tag_ids
-        it_tax_report_vj3_lines = self.env["account.report.line"].search(
+        it_tax_report_vj3_lines = self.env["report.formula.line"].search(
             [
                 ("report_id.country_id.code", "=", "IT"),
                 ("code", "=", "VJ3"),

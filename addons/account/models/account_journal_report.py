@@ -27,7 +27,7 @@ XLSX_FONT_SIZE_HEADING = 11
 
 class AccountJournalReportHandler(models.AbstractModel):
     _name = "account.journal.report.handler"
-    _inherit = ["account.report.custom.handler"]
+    _inherit = ["report.formula.custom.handler"]
     _description = "Journal Report Custom Handler"
 
     def _customize_warnings(
@@ -100,7 +100,7 @@ class AccountJournalReportHandler(models.AbstractModel):
             }
             return query_line["grouping_key"], result_line_dict
 
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         report._check_groupby_fields(
             (next_groupby.split(",") if next_groupby else [])
             + ([current_groupby] if current_groupby else [])
@@ -253,7 +253,7 @@ class AccountJournalReportHandler(models.AbstractModel):
 
         # If we render the first level it means that we need to render
         # the global tax summary lines
-        if report._get_model_info_from_id(lines[0]["id"])[0] == "account.report.line":
+        if report._get_model_info_from_id(lines[0]["id"])[0] == "report.formula.line":
             if self._section_has_tax(options, False):
                 # We only add the global summary line if it has taxes
                 new_lines.append(
@@ -293,14 +293,14 @@ class AccountJournalReportHandler(models.AbstractModel):
                     1 for line in new_lines if line.get("is_tax_section_line")
                 ),
                 first_level=report._get_model_info_from_id(lines[0]["id"])[0]
-                == "account.report.line",
+                == "report.formula.line",
             )
         return new_lines
 
     def format_column_values_from_client(self, options, lines):
         """Format the column values of journal reports, including tax summary sections."""
         # Reached through dispatch_report_action when the client changes the rounding unit.
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         for line_dict in lines:
             if line_dict.get("is_tax_section_line"):
                 self._format_tax_summary_line(report, options, line_dict)
@@ -374,7 +374,7 @@ class AccountJournalReportHandler(models.AbstractModel):
         self, options, lines=None, additional_context=None, template=None, report=None
     ):
         """Override to handle the journal report PDF export when used in composite reports."""
-        report = report or self.env["account.report"].browse(options["report_id"])
+        report = report or self.env["report.formula"].browse(options["report_id"])
         print_options = self._get_print_options(options, report, export_type="pdf")
         document_data = self._generate_document_data_for_export(
             report, print_options, "pdf"
@@ -394,16 +394,16 @@ class AccountJournalReportHandler(models.AbstractModel):
 
     @_debug.perf.timed
     def export_to_pdf(self, options):
-        """Override the account.report PDF export to render the journal report layout."""
+        """Override the report.formula PDF export to render the journal report layout."""
         # The journal report differs from the UI rendering, so the default lines system is bypassed.
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         base_url = report.get_base_url()
         rcontext = {
             "mode": "print",
             "base_url": base_url,
             "company": self.env.company,
         }
-        footer = self.env["account.report"]._get_layout_footer(rcontext)
+        footer = self.env["report.formula"]._get_layout_footer(rcontext)
 
         body = self._get_pdf_export_html(
             options, additional_context={"base_url": base_url}, report=report
@@ -446,7 +446,7 @@ class AccountJournalReportHandler(models.AbstractModel):
     @_debug.perf.timed
     def _write_report_to_xlsx_sheet(self, options, workbook):
         """Override to handle the journal report XLSX export when used in composite reports."""
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         # We need to use fonts to calculate column width otherwise column width would be ugly
         # Using Lato as reference font is a hack and is not recommended. Customer computers don't have this font by default and so
         # the generated xlsx wouldn't have this font. Since it is not by default, we preferred using Arial font as default and keep
@@ -643,11 +643,11 @@ class AccountJournalReportHandler(models.AbstractModel):
         return workbook
 
     def export_to_xlsx(self, options, response=None):
-        """Override the account.report XLSX generation to use a custom one."""
+        """Override the report.formula XLSX generation to use a custom one."""
         import xlsxwriter
 
         output = io.BytesIO()
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         print_options = self._get_print_options(options, report)
         with xlsxwriter.Workbook(
             output,
@@ -1791,7 +1791,7 @@ class AccountJournalReportHandler(models.AbstractModel):
     ##########################################################################
 
     def _section_has_tax(self, options, journal_id):
-        report = self.env["account.report"].browse(options.get("report_id"))
+        report = self.env["report.formula"].browse(options.get("report_id"))
         aml_has_tax_domain = Domain("tax_ids", "!=", False)
         if journal_id:
             aml_has_tax_domain &= Domain("journal_id", "=", journal_id)
@@ -1880,7 +1880,7 @@ class AccountJournalReportHandler(models.AbstractModel):
             }
         )
         tax_report_options = generic_tax_report.get_options(previous_option)
-        journal_report = self.env["account.report"].browse(options["report_id"])
+        journal_report = self.env["report.formula"].browse(options["report_id"])
         # list(...), not the Domain itself: forced_domain travels inside options,
         # which json.dumps for the export and the client. The deprecated
         # list + Domain shim also returned a list, so the type is unchanged.
@@ -2017,7 +2017,7 @@ class AccountJournalReportHandler(models.AbstractModel):
         :rtype: dict
         """
         # Specific options are forced into the tax report so that only the needed lines are computed.
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         tax_report_options = self._get_generic_tax_report_options(options, data)
         tax_report_options["account_journal_report_tax_deductibility_columns"] = True
         tax_report = self.env.ref("account.generic_tax_report")
@@ -2105,7 +2105,7 @@ class AccountJournalReportHandler(models.AbstractModel):
         """returns an action to open a list view of the account.move.line having the selected tax tag"""
         tag_ids = params.get("tag_ids")
         domain = (
-            self.env["account.report"]
+            self.env["report.formula"]
             .browse(options["report_id"])
             ._get_domain_options(options, "strict_range")
             + [("tax_tag_ids", "in", tag_ids)]
@@ -2207,7 +2207,7 @@ class AccountJournalReportHandler(models.AbstractModel):
         :param params: The params given from the report UI (journal_id, account_id, date)
         :return: act_window on journal items filtered on the current journal and the current account within a date.
         """
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         journal = self.env["account.journal"].browse(params["journal_id"])
         account = self.env["account.account"].browse(params["account_id"])
 
@@ -2228,7 +2228,7 @@ class AccountJournalReportHandler(models.AbstractModel):
         }
 
     def journal_report_open_aml_by_move(self, options, params):
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         journal = self.env["account.journal"].browse(params["journal_id"])
         review = params.get("review")
 

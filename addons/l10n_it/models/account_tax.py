@@ -104,7 +104,7 @@ class AccountTax(models.Model):
         if not tax_tags:
             return False
 
-        it_tax_report_ve38_lines = self.env["account.report.line"].search(
+        it_tax_report_ve38_lines = self.env["report.formula.line"].search(
             [
                 ("report_id.country_id.code", "=", "IT"),
                 ("code", "=", "VE38"),

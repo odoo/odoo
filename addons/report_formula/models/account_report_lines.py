@@ -23,7 +23,7 @@ _debug = DebugLog(__name__)
 
 
 class AccountReportLines(models.Model):
-    _inherit = "account.report"
+    _inherit = "report.formula"
 
     @_debug.perf.timed
     def _prepare_columns_from_column_group_vals(
@@ -115,7 +115,7 @@ class AccountReportLines(models.Model):
             line
             for line in lines
             if self._get_model_info_from_id(line["id"])
-            == ("account.report.line", report_line.id)
+            == ("report.formula.line", report_line.id)
         )
 
     @api.model
@@ -190,7 +190,7 @@ class AccountReportLines(models.Model):
 
         lines = []
         line_cache = {}  # {report_line: report line dict}
-        hide_if_zero_lines = self.env["account.report.line"]
+        hide_if_zero_lines = self.env["report.formula.line"]
 
         for line in self.line_ids:  # _order ensures the sequence of the lines
             # Inject all the dynamic lines whose sequence is inferior to the next static line to add
@@ -245,8 +245,8 @@ class AccountReportLines(models.Model):
                 green_on_positive = True
                 model, line_id = self._get_model_info_from_id(line["id"])
 
-                if model == "account.report.line" and line_id:
-                    report_line = self.env["account.report.line"].browse(line_id)
+                if model == "report.formula.line" and line_id:
+                    report_line = self.env["report.formula.line"].browse(line_id)
                     compared_expression = report_line.expression_ids.filtered(
                         lambda expr, line=line: (
                             expr.label == line["columns"][0]["expression_label"]
@@ -480,7 +480,7 @@ class AccountReportLines(models.Model):
             column_value = column_res_dict.get("value")
             column_has_sublines = column_res_dict.get("sublines_info", False)
             column_expression = line_expressions_map.get(
-                column_expr_label, self.env["account.report.expression"]
+                column_expr_label, self.env["report.formula.expression"]
             )
             figure_type = column_expression.figure_type or column_data["figure_type"]
 
@@ -597,7 +597,7 @@ class AccountReportLines(models.Model):
             return {}
 
         col_data = col_data or {}
-        column_expression = column_expression or self.env["account.report.expression"]
+        column_expression = column_expression or self.env["report.formula.expression"]
         options = options or {}
 
         blank_if_zero = column_expression.blank_if_zero or col_data.get(
@@ -690,7 +690,7 @@ class AccountReportLines(models.Model):
             b_model = self._get_model_info_from_id(b_line_dict["id"])[0]
 
             # static lines are not sorted
-            if a_model == b_model == "account.report.line":
+            if a_model == b_model == "report.formula.line":
                 return 0
 
             if a_total:
@@ -964,7 +964,7 @@ class AccountReportLines(models.Model):
         # The line we're expanding might be an inner groupby; we first need to find the report line generating it
         report_line_id = None
         for _markup, model, model_id in reversed(self._parse_line_id(line_dict_id)):
-            if model == "account.report.line":
+            if model == "report.formula.line":
                 report_line_id = model_id
                 break
 
@@ -976,7 +976,7 @@ class AccountReportLines(models.Model):
                 )
             )
 
-        line = self.env["account.report.line"].browse(report_line_id)
+        line = self.env["report.formula.line"].browse(report_line_id)
 
         if "," not in groupby and options["export_mode"] is None:
             # if ',' not in groupby, then its a terminal groupby (like 'id' in 'partner_id, id'), so we can use the 'load more' feature if necessary
@@ -1177,7 +1177,7 @@ class AccountReportLines(models.Model):
         report_line_id = None
         parent_groupby_count = 0
         for markup, model, model_id in reversed(self._parse_line_id(line_dict_id)):
-            if model == "account.report.line":
+            if model == "report.formula.line":
                 report_line_id = model_id
                 break
             if (
@@ -1193,7 +1193,7 @@ class AccountReportLines(models.Model):
                 )
             )
 
-        report_line = self.env["account.report.line"].browse(report_line_id)
+        report_line = self.env["report.formula.line"].browse(report_line_id)
 
         matched_prefix = self._get_prefix_groups_matched_prefix_from_line_id(
             line_dict_id
@@ -1407,7 +1407,7 @@ class AccountReportLines(models.Model):
         self, options, line, all_column_groups_expression_totals, parent_id=None
     ):
         line_id = self._get_generic_line_id(
-            "account.report.line", line.id, parent_line_id=parent_id
+            "report.formula.line", line.id, parent_line_id=parent_id
         )
         columns = self._prepare_static_line_columns(
             line, options, all_column_groups_expression_totals
@@ -1459,7 +1459,7 @@ class AccountReportLines(models.Model):
             # Only consider the first column group, as show_debug_column is only true if there is but one.
 
             engine_selection_labels = dict(
-                self.env["account.report.expression"]
+                self.env["report.formula.expression"]
                 ._fields["engine"]
                 ._description_selection(self.env)
             )
@@ -1858,7 +1858,7 @@ class AccountReportLines(models.Model):
         if parent_line_id:
             parent_id_list = self._parse_line_id(parent_line_id, markup_as_string=True)
         else:
-            parent_id_list = [(None, "account.report", self.id)]
+            parent_id_list = [(None, "report.formula", self.id)]
 
         # In case the markup is a dict, it must be converted to a string, but in a way such that the keys are ordered alphabetically.
         # This is useful, notably for annotations where the ids of the lines are stored, therefore requiring a consistent ordering
@@ -1996,7 +1996,7 @@ class AccountReportLines(models.Model):
         """Return a list of all children lines for specified parent_line_id.
         NB: It will return the parent_line itself!
 
-        For instance if parent_line_ids is '~account.report.line~84|{"groupby": "currency_id"}~res.currency~174'
+        For instance if parent_line_ids is '~report.formula.line~84|{"groupby": "currency_id"}~res.currency~174'
         (where | is the LINE_ID_HIERARCHY_DELIMITER), it will return every subline for this currency.
         :param lines: list of report lines
         :param parent_line_id: id of a specified line
@@ -2099,7 +2099,7 @@ class AccountReportLines(models.Model):
 
             all_column_groups_expression_totals[column_group_key] = {}
             for expr_id, expr_totals in expression_totals.items():
-                expression = self.env["account.report.expression"].browse(
+                expression = self.env["report.formula.expression"].browse(
                     int(expr_id)
                 )  # Should already be in cache, so acceptable
                 if (

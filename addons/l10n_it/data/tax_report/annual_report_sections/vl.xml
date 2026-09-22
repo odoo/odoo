@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="tax_annual_report_vat_vl" model="account.report">
+    <record id="tax_annual_report_vat_vl" model="report.formula">
         <field name="name">VL VAT Report</field>
         <field name="name@it">Rapporto IVA VL</field>
         <field name="sequence">1</field>
         <field name="country_id" ref="base.it" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="tax_annual_report_vat_balance_vl" model="account.report.column">
+            <record id="tax_annual_report_vat_balance_vl" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="name@it">Saldo</field>
                 <field name="expression_label">balance</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="tax_annual_report_line_comp_fram" model="account.report.line">
+            <record id="tax_annual_report_line_comp_fram" model="report.formula.line">
                 <field name="name">Annual tax for completed schedules</field>
                 <field name="name@it">Imposta annuale per i piani compilati</field>
                 <field name="code">VL</field>
                 <field name="children_ids">
                     <record
                         id="tax_annual_report_line_comp_fram_1"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">Determination of VAT due or credit for the tax period</field>
                         <field
@@ -31,14 +31,14 @@
                         <field name="children_ids">
                             <record
                                 id="tax_annual_report_line_vl1"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VL1 - VAT payable</field>
                                 <field name="name@it">VL1 - IVA da pagare</field>
                                 <field name="code">VL1</field>
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_vl1_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -46,7 +46,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_vl1_cross_report_ve26"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">cross_report_ve26</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">VE26.balance</field>
@@ -55,7 +55,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_vl1_cross_report_vj19"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">cross_report_vj19</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">VJ19.balance</field>
@@ -66,14 +66,14 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl2"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VL2 - VAT deductible</field>
                                 <field name="name@it">VL2 - IVA deducibile</field>
                                 <field name="code">VL2</field>
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_vl2_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">VF71.tax</field>
@@ -84,7 +84,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl3"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VL3 - Tax Due</field>
                                 <field name="name@it">VL3 - Imposta dovuta</field>
                                 <field name="code">VL3</field>
@@ -93,7 +93,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl4"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VL4 - Tax Credit</field>
                                 <field name="name@it">VL4 - Credito d'imposta</field>
                                 <field name="code">VL4</field>
@@ -104,14 +104,14 @@
                     </record>
                     <record
                         id="tax_annual_report_line_comp_fram_2"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Previous year credit</field>
                         <field name="name@it">Credito dell'anno precedente</field>
                         <field name="code">VL_2</field>
                         <field name="children_ids">
                             <record
                                 id="tax_annual_report_line_vl8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL8 - Credit resulting from the previous year's declaration</field>
                                 <field
@@ -121,7 +121,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl9"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL9 - Credit offset in the template</field>
                                 <field
@@ -131,7 +131,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl10"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL10 - Non-transferable credit surplus</field>
                                 <field
@@ -141,7 +141,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl11"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL11 - Credits art. 8, paragraph 6-quater, Presidential Decree. n. 322/98</field>
                                 <field
@@ -151,7 +151,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl12"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL12 - Periodic payments omitted</field>
                                 <field
@@ -163,7 +163,7 @@
                     </record>
                     <record
                         id="tax_annual_report_line_comp_fram_3"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">Determination of debit or credit VAT relating to all activities carried out</field>
                         <field
@@ -172,7 +172,7 @@
                         <field name="children_ids">
                             <record
                                 id="tax_annual_report_line_vl20"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL20 - Interim refunds required</field>
                                 <field
@@ -182,7 +182,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl21"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL21 - Amount of credits transferred</field>
                                 <field
@@ -192,7 +192,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl22"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL22 - VAT credit resulting from the first 3 quarters</field>
                                 <field
@@ -202,7 +202,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl23"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL23 - Interest due for quarterly payments</field>
                                 <field
@@ -212,7 +212,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl24"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL24 - Previous year transfers returned by the parent company</field>
                                 <field
@@ -222,7 +222,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl25"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL25 - Previous year credit surplus</field>
                                 <field
@@ -233,7 +233,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl26"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL26 - Credit requested for reimbursement in previous years computable as a deduction following refusal by the office</field>
                                 <field
@@ -243,7 +243,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl27"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL27 - Tax credits used in periodic payments and for the advance payment</field>
                                 <field
@@ -253,7 +253,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl28"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL28 - Credits received from savings management companies used in periodic payments and for the advance payment</field>
                                 <field
@@ -263,7 +263,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl29"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL29 - EU car payments relating to sales carried out during the year</field>
                                 <field
@@ -273,7 +273,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl30"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VL30 - Periodic VAT amount</field>
                                 <field
                                     name="name@it">VL30 - Importo IVA periodico</field>
@@ -281,7 +281,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="tax_annual_report_line_vl30_I"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">Periodic VAT due</field>
                                         <field
                                             name="name@it">IVA periodica dovuta</field>
@@ -290,7 +290,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_vl30_II"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">Periodic VAT paid</field>
                                         <field
                                             name="name@it">IVA periodica pagata</field>
@@ -299,7 +299,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_vl30_III"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Periodic VAT paid following notification of irregularities</field>
                                         <field
@@ -309,7 +309,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_vl30_IV"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">Periodic VAT paid following payment orders</field>
                                         <field
@@ -321,7 +321,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl31"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL31 - Amount of debts transferred</field>
                                 <field
@@ -331,7 +331,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl32"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VL32 - VAT DUE</field>
                                 <field name="name@it">VL32 - IVA DOVUTA</field>
                                 <field name="code">VL32</field>
@@ -343,7 +343,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl33"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VL33 - VAT CREDIT</field>
                                 <field name="name@it">VL33 - CREDITO IVA</field>
                                 <field name="code">VL33</field>
@@ -355,7 +355,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl34"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL34 - Tax credits used in the annual return</field>
                                 <field
@@ -365,7 +365,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl35"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL35 - Credits received from asset management companies used in the annual declaration</field>
                                 <field
@@ -375,7 +375,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl36"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL36 - Interest due on the annual return</field>
                                 <field
@@ -385,7 +385,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl37"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL37 - Credit transferred by savings management companies pursuant to art. 8 of the legislative decree n. 351/2001</field>
                                 <field
@@ -395,7 +395,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl38"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VL38 - TOTAL VAT DUE</field>
                                 <field name="name@it">VL38 - TOTALE IVA DOVUTA</field>
                                 <field name="code">VL38</field>
@@ -404,7 +404,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl39"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VL39 - TOTAL VAT INPUT</field>
                                 <field
                                     name="name@it">VL39 - TOTALE IVA IN ENTRATA</field>
@@ -414,7 +414,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl40"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL40 - Payments made following excess use of credit</field>
                                 <field
@@ -424,7 +424,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl41_I"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL41 - Difference between periodic VAT due and periodic VAT paid</field>
                                 <field
@@ -435,7 +435,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_vl41_II"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VL41 - Difference between credit potential and actual credit</field>
                                 <field

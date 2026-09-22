@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="account_tax_report_cd" model="account.report">
+    <record id="account_tax_report_cd" model="report.formula">
         <field name="name">VAT Report</field>
         <field name="name@fr">Déclaration TVA</field>
         <field name="root_report_id" ref="account.generic_tax_report" />
@@ -9,14 +9,14 @@
         <field name="allow_foreign_vat" eval="True" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="account_tax_report_cd_balance" model="account.report.column">
+            <record id="account_tax_report_cd_balance" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="name@fr">Solde</field>
                 <field name="expression_label">balance</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="account_tax_report_line_cd_sales" model="account.report.line">
+            <record id="account_tax_report_line_cd_sales" model="report.formula.line">
                 <field name="name">II. Operations carried out</field>
                 <field name="name@fr">II. Opérations réalisées</field>
                 <field name="code">CD_SALES</field>
@@ -24,14 +24,14 @@
                 <field name="children_ids">
                     <record
                         id="account_tax_report_line_cd_sales_taxable"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">a) Taxable Turnover</field>
                         <field name="name@fr">a) Chiffre d'affaires imposable</field>
                         <field name="code">CD_TAXABLE</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_sales_taxable_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -41,14 +41,14 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_cd_sales_taxable_goods"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">1. Goods delivery</field>
                                 <field name="name@fr">1. Livraisons de biens</field>
                                 <field name="code">CD_GOODS_BASE</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_sales_taxable_goods_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -56,14 +56,14 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_cd_sales_taxable_goods_balance_sale"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">sale</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-CD_1a</field>
                                     </record>
                                     <record
                                         id="account_tax_report_line_cd_sales_taxable_goods_balance_purchase"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">purchase</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">CD_1a_rc</field>
@@ -72,14 +72,14 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_sales_taxable_services"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">2. Services</field>
                                 <field name="name@fr">2. Prestations de services</field>
                                 <field name="code">CD_SERVICES_BASE</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_sales_taxable_services_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-CD_2a</field>
@@ -88,7 +88,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_sales_taxable_goods_self"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">3. Goods self-delivery</field>
                                 <field
                                     name="name@fr">3. Livraisons de biens à soi-même</field>
@@ -96,7 +96,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_sales_taxable_goods_self_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-CD_3a</field>
@@ -105,7 +105,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_sales_taxable_services_self"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">4. Services self-delivery</field>
                                 <field
                                     name="name@fr">4. Prestations de services à soi-même</field>
@@ -113,7 +113,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_sales_taxable_services_self_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-CD_4a</field>
@@ -122,7 +122,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_sales_taxable_public_market"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">5. Public Markets with external financing</field>
                                 <field
@@ -131,7 +131,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_sales_taxable_public_market_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-CD_5a</field>
@@ -140,7 +140,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_sales_taxable_export"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">6. Export</field>
                                 <field
                                     name="name@fr">6. Exportations et opérations assimilées</field>
@@ -148,7 +148,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_sales_taxable_export_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-CD_6a</field>
@@ -157,14 +157,14 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_sales_taxable_exempt"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">7. Exempted operations</field>
                                 <field name="name@fr">7. Opérations exonérées</field>
                                 <field name="code">CD_EXEMPT</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_sales_taxable_exempt_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-CD_7a</field>
@@ -173,7 +173,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_sales_taxable_non_imposable"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">8. Non imposable operations</field>
                                 <field
                                     name="name@fr">8. Opérations non imposables</field>
@@ -181,7 +181,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_sales_taxable_non_imposable_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-CD_8a</field>
@@ -192,14 +192,14 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_sales_tax"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">b) Tax collected</field>
                         <field name="name@fr">b) TVA collectée</field>
                         <field name="code">CD_TAX</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_sales_tax_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -209,14 +209,14 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_cd_sales_tax_goods"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">1. Goods delivery</field>
                                 <field name="name@fr">1. Livraisons de biens</field>
                                 <field name="code">CD_GOODS_TAX</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_sales_tax_goods_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-CD_1b</field>
@@ -225,14 +225,14 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_sales_tax_services"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">2. Services</field>
                                 <field name="name@fr">2. Prestations de services</field>
                                 <field name="code">CD_SERVICES_TAX</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_sales_tax_services_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-CD_2b</field>
@@ -241,7 +241,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_sales_tax_goods_self"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">3. Goods self-delivery</field>
                                 <field
                                     name="name@fr">3. Livraisons de biens à soi-même</field>
@@ -249,7 +249,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_sales_tax_goods_self_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-CD_3b</field>
@@ -258,7 +258,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_sales_tax_services_self"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">4. Services self-delivery</field>
                                 <field
                                     name="name@fr">4. Prestations de services à soi-même</field>
@@ -266,7 +266,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_sales_tax_services_self_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-CD_4b</field>
@@ -275,7 +275,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_sales_tax_public_market"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">5. Public Markets with external financing</field>
                                 <field
@@ -284,7 +284,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_sales_tax_public_market_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-CD_5b</field>
@@ -297,7 +297,7 @@
             </record>
             <record
                 id="account_tax_report_line_cd_importation_services"
-                model="account.report.line">
+                model="report.formula.line">
                 <field
                     name="name">III. Services received from providers not established in DRC</field>
                 <field
@@ -307,14 +307,14 @@
                 <field name="children_ids">
                     <record
                         id="account_tax_report_line_cd_importation_services_base"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">c) Invoice amounts</field>
                         <field name="name@fr">c) Montant des factures</field>
                         <field name="code">CD_IMP_SERVICE_BASE</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_importation_services_base_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">CD_10c</field>
@@ -323,14 +323,14 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_importation_services_tax"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">d) Tax collected</field>
                         <field name="name@fr">d) TVA collectée</field>
                         <field name="code">CD_IMP_SERVICE_TAX</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_importation_services_tax_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">CD_10d</field>
@@ -341,7 +341,7 @@
             </record>
             <record
                 id="account_tax_report_line_cd_deductible"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">IV. Deductible tax on</field>
                 <field name="name@fr">IV. Déductions/Taxe déductible sur</field>
                 <field name="code">CD_DEDUCTIBLE</field>
@@ -349,14 +349,14 @@
                 <field name="children_ids">
                     <record
                         id="account_tax_report_line_cd_deductible_assets"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">11. Assets</field>
                         <field name="name@fr">11. Immobilisations</field>
                         <field name="code">CD_ASSETS</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_deductible_assets_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -366,14 +366,14 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_cd_deductible_importations_assets"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">e) Importations</field>
                                 <field name="name@fr">e) Importations</field>
                                 <field name="code">CD_IMPORTATIONS_ASSETS</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_deductible_importations_assets_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">CD_11e</field>
@@ -382,14 +382,14 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_deductible_local_assets"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">f) local</field>
                                 <field name="name@fr">f) Local</field>
                                 <field name="code">CD_LOCAL_ASSETS</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_deductible_local_assets_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">CD_11f</field>
@@ -400,14 +400,14 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_deductible_goods"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">12. Goods</field>
                         <field name="name@fr">12. Biens</field>
                         <field name="code">CD_GOODS</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_deductible_goods_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -417,14 +417,14 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_cd_deductible_importations_goods"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">e) Importations</field>
                                 <field name="name@fr">e) Importations</field>
                                 <field name="code">CD_IMPORTATIONS_GOODS</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_deductible_importations_goods_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">CD_12e</field>
@@ -433,14 +433,14 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_deductible_local_goods"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">f) local</field>
                                 <field name="name@fr">f) Local</field>
                                 <field name="code">CD_LOCAL_GOODS</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_deductible_local_goods_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">CD_12f</field>
@@ -451,14 +451,14 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_deductible_raw_materials"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">13. Raw materials</field>
                         <field name="name@fr">13. Matières premières</field>
                         <field name="code">CD_RAW</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_deductible_raw_materials_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -468,14 +468,14 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_cd_deductible_importations_raw_materials"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">e) Importations</field>
                                 <field name="name@fr">e) Importations</field>
                                 <field name="code">CD_IMPORTATIONS_RAW</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_deductible_importations_raw_materials_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">CD_13e</field>
@@ -484,14 +484,14 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_deductible_local_raw_materials"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">f) local</field>
                                 <field name="name@fr">f) Local</field>
                                 <field name="code">CD_LOCAL_RAW</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_deductible_local_raw_materials_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">CD_13f</field>
@@ -502,14 +502,14 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_deductible_other"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">14. Other goods and services</field>
                         <field name="name@fr">14. Autres biens et services</field>
                         <field name="code">CD_OTHER</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_deductible_other_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -519,14 +519,14 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_cd_deductible_importations_other"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">e) Importations</field>
                                 <field name="name@fr">e) Importations</field>
                                 <field name="code">CD_IMPORTATIONS_OTHER</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_deductible_importations_other_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">CD_14e</field>
@@ -535,14 +535,14 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_deductible_local_other"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">f) local</field>
                                 <field name="name@fr">f) Local</field>
                                 <field name="code">CD_LOCAL_OTHER</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_cd_deductible_local_other_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">CD_14f</field>
@@ -553,14 +553,14 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_deductible_total_deductible"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">15. Total deductible VAT</field>
                         <field name="name@fr">15. Total TVA déductible</field>
                         <field name="code">CD_TOTAL_DEDUCTIBLE</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_deductible_total_deductible_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -570,7 +570,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_deductible_report"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">16. Report of last month's credit</field>
                         <field
                             name="name@fr">16. Report de crédit du mois précédent</field>
@@ -578,7 +578,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_deductible_report_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -586,7 +586,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_deductible_report_balance_carryover"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">_applied_carryover_balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
@@ -596,14 +596,14 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_deductible_deductible_amount"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">17. Deductible VAT amount</field>
                         <field name="name@fr">17. Montant de la TVA déductible</field>
                         <field name="code">CD_DEDUCTIBLE_AMOUNT</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_deductible_deductible_amount_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -615,7 +615,7 @@
             </record>
             <record
                 id="account_tax_report_line_cd_regularisations"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">V. Regularisations</field>
                 <field name="name@fr">V. Régularisations</field>
                 <field name="code">CD_REGU</field>
@@ -623,7 +623,7 @@
                 <field name="expression_ids">
                     <record
                         id="account_tax_report_line_cd_regularisations_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -633,14 +633,14 @@
                 <field name="children_ids">
                     <record
                         id="account_tax_report_line_cd_regularisations_repayments"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">18. VAT Repayments</field>
                         <field name="name@fr">18. Reversement de TVA</field>
                         <field name="code">CD_REPAYMENTS</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_regularisations_repayments_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -650,14 +650,14 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_regularisations_add_deduction"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">19. Additional Deductions</field>
                         <field name="name@fr">19. Complément de déductions</field>
                         <field name="code">CD_ADD_DEDUCTION</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_regularisations_add_deduction_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -667,7 +667,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_mining"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">20. VAT deducted at source by mining companies</field>
                         <field
@@ -676,7 +676,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_mining_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -686,7 +686,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_regularisations_recovery_pm"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">21. Recovery of deductible vat credit on externally financed public contracts</field>
                         <field
@@ -695,7 +695,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_regularisations_recovery_pm_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -707,7 +707,7 @@
             </record>
             <record
                 id="account_tax_report_line_cd_tax_calculation"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">VI. Tax calculation</field>
                 <field name="name@fr">VI. Calcul de l'impôt</field>
                 <field name="code">CD_TAX_CALC</field>
@@ -715,7 +715,7 @@
                 <field name="children_ids">
                     <record
                         id="account_tax_report_line_cd_tax_calculation_to_pay"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">22. Net VAT to pay (b9+d10+18+20-17-19-20-b5)</field>
                         <field
@@ -724,7 +724,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_tax_calculation_to_pay_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="subformula">if_above(CDF(0))</field>
@@ -735,7 +735,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_calculation_credit"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">23. VAT Credit (17+19+20+b5-b9-d10-18-20)</field>
                         <field
@@ -744,7 +744,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_calculation_credit_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="subformula">if_above(CDF(0))</field>
@@ -755,7 +755,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_calculation_repayment_asked"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">24. Repayment of VAT credit asked</field>
                         <field
                             name="name@fr">24. Remboursement de crédit de TVA demandé</field>
@@ -763,7 +763,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_calculation_repayment_asked_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -773,7 +773,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_calculation_credit_reportable"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">25. VAT Credit reportable (23 - 24)</field>
                         <field
                             name="name@fr">25. Crédit de TVA reportable (23 - 24)</field>
@@ -781,7 +781,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_calculation_credit_reportable_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -791,7 +791,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_cd_calculation_credit_reportable_carryover"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">_carryover_balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -803,7 +803,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_calculation_pm"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">26. VAT on Public Markets with external financing (b5)</field>
                         <field
@@ -812,7 +812,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_calculation_pm_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">CD_PM_TAX.balance</field>
@@ -821,14 +821,14 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_calculation_vat_third_party"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">27. VAT on behalf of third parties</field>
                         <field name="name@fr">27. TVA pour compte des tiers</field>
                         <field name="code">CD_THIRD_PARTY</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_calculation_vat_third_party_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -838,14 +838,14 @@
                     </record>
                     <record
                         id="account_tax_report_line_cd_calculation_to_pay"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">28. Amount to pay (22 + 26 + 27)</field>
                         <field name="name@fr">28. Montant à payer (22 + 26 + 27)</field>
                         <field name="code">CD_TO_PAY</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_cd_calculation_to_pay_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field

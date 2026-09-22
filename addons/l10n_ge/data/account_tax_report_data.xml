@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="tax_report_ge" model="account.report">
+    <record id="tax_report_ge" model="report.formula">
         <field name="name">VAT Report</field>
         <field name="root_report_id" ref="account.generic_tax_report" />
         <field name="country_id" ref="base.ge" />
         <field name="allow_foreign_vat" eval="True" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="tax_report_base" model="account.report.column">
+            <record id="tax_report_base" model="report.formula.column">
                 <field name="name">Base</field>
                 <field name="expression_label">base</field>
             </record>
-            <record id="tax_report_tax" model="account.report.column">
+            <record id="tax_report_tax" model="report.formula.column">
                 <field name="name">Tax</field>
                 <field name="expression_label">tax</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="tax_report_line_taxable_supplies" model="account.report.line">
+            <record id="tax_report_line_taxable_supplies" model="report.formula.line">
                 <field name="name">Annex A - Part I: Output (taxable supplies)</field>
                 <field
                     name="name@ka">დანართი A - ნაწილი I: გამომავალი (დასაბეგრი მარაგები)</field>
@@ -26,7 +26,7 @@
                 <field name="children_ids">
                     <record
                         id="tax_report_line_standard_supplies"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">1. Supply of goods and/or provision of services in exchange for remuneration</field>
                         <field
@@ -36,14 +36,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_standard_supplies_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-1(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_standard_supplies_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-1(T)</field>
@@ -52,7 +52,7 @@
                     </record>
                     <record
                         id="tax_report_line_special_scheme"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">1.1 VAT on transactions taxable under a special scheme (margin)</field>
                         <field
@@ -62,21 +62,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_special_scheme_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-2(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_special_scheme_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-2(T)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_advance" model="account.report.line">
+                    <record id="tax_report_line_advance" model="report.formula.line">
                         <field
                             name="name">2. Amount paid before delivery of goods and/or provision of services (advances)</field>
                         <field
@@ -86,14 +86,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_advance_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-3(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_advance_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-3(T)</field>
@@ -102,7 +102,7 @@
                     </record>
                     <record
                         id="tax_report_line_free_supply"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">3. Free supply of goods, if VAT is fully or partially included in the cost of these goods or the expenditure incurred on them</field>
                         <field
@@ -112,14 +112,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_free_supply_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-4(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_free_supply_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-4(T)</field>
@@ -128,7 +128,7 @@
                     </record>
                     <record
                         id="tax_report_line_inventory_shortage"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">4. Inventory shortage</field>
                         <field name="name@ka">4. საქონლის დანაკლისი</field>
                         <field name="code">ge_5</field>
@@ -136,14 +136,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_inventory_shortage_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-5(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_inventory_shortage_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-5(T)</field>
@@ -152,7 +152,7 @@
                     </record>
                     <record
                         id="tax_report_line_free_services"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">5. Providing services free of charge for the personal benefit of the hired person or for a purpose other than the purpose of his/her own work</field>
                         <field
@@ -162,21 +162,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_free_services_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-6(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_free_services_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-6(T)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_building" model="account.report.line">
+                    <record id="tax_report_line_building" model="report.formula.line">
                         <field
                             name="name">6. Use of a self-constructed building/structure as a fixed asset, where the right to input VAT deduction would be fully or partially restricted if acquired from a third party</field>
                         <field
@@ -186,14 +186,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_building_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-7(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_building_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-7(T)</field>
@@ -202,7 +202,7 @@
                     </record>
                     <record
                         id="tax_report_line_building_repairs"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">6.1 Carrying out repairs of own fixed assets (buildings/structures), where the right to input VAT deduction would be fully or partially restricted if such services were acquired from a third party</field>
                         <field
@@ -212,21 +212,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_building_repairs_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-8(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_building_repairs_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-8(T)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_barter" model="account.report.line">
+                    <record id="tax_report_line_barter" model="report.formula.line">
                         <field
                             name="name">7. Barter transaction for the exchange of goods/services</field>
                         <field
@@ -236,14 +236,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_barter_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-9(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_barter_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-9(T)</field>
@@ -252,7 +252,7 @@
                     </record>
                     <record
                         id="tax_report_line_retention_of_goods"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">7.1 Retention of goods in own ownership after cessation of economic activity, or goods remaining in stock upon deregistration for VAT, where input VAT on such goods or related expenses has been fully or partially deducted</field>
                         <field
@@ -262,14 +262,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_retention_of_goods_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-10(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_retention_of_goods_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-10(T)</field>
@@ -278,7 +278,7 @@
                     </record>
                     <record
                         id="tax_report_line_other_taxable"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">8. Other taxable transaction</field>
                         <field name="name@ka">8. სხვა დასაბეგრი ოპერაციები</field>
                         <field name="code">ge_11</field>
@@ -286,14 +286,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_other_taxable_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-11(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_other_taxable_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-11(T)</field>
@@ -302,7 +302,7 @@
                     </record>
                     <record
                         id="tax_report_line_supply_part3"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">9. Supply of goods and/or provision of services to persons specified in Part 3 of Article 172 of the Tax Code of Georgia</field>
                         <field
@@ -312,7 +312,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_supply_part3_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-12(B)</field>
@@ -321,7 +321,7 @@
                     </record>
                     <record
                         id="tax_report_line_supply_natural_gas"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">10. Supply of natural gas to thermal power plants</field>
                         <field
@@ -331,7 +331,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_supply_natural_gas_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-13(B)</field>
@@ -340,7 +340,7 @@
                     </record>
                     <record
                         id="tax_report_line_supply_part1"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">11. Supply of goods and/or provision of services in the cases provided for in Part 1 of Article 172 of the Tax Code of Georgia</field>
                         <field
@@ -350,7 +350,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_supply_part1_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-14(B)</field>
@@ -359,7 +359,7 @@
                     </record>
                     <record
                         id="tax_report_line_supply_international"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">12. The value of goods/services supplied within the framework of projects provided for by individual international agreements</field>
                         <field
@@ -369,7 +369,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_supply_international_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-15(B)</field>
@@ -378,7 +378,7 @@
                     </record>
                     <record
                         id="tax_report_line_other_exempt"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">13. Other transactions exempt from VAT on goods, identified as a result of inventory by the tax authority</field>
                         <field
@@ -388,14 +388,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_other_exempt_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-16(B)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_export" model="account.report.line">
+                    <record id="tax_report_line_export" model="report.formula.line">
                         <field
                             name="name">14. Export / re-export (customs value)</field>
                         <field
@@ -405,7 +405,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_export_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-17(B)</field>
@@ -414,7 +414,7 @@
                     </record>
                     <record
                         id="tax_report_line_financial_operations"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">14.1 Financial operations/financial services</field>
                         <field
@@ -424,7 +424,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_financial_operations_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-18(B)</field>
@@ -433,7 +433,7 @@
                     </record>
                     <record
                         id="tax_report_line_immovable_property"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">14.2 Supply of immovable property (land plot)</field>
                         <field
@@ -443,7 +443,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_immovable_property_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-19(B)</field>
@@ -452,7 +452,7 @@
                     </record>
                     <record
                         id="tax_report_line_other_exempt_no_deduction"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">14.3 Other operations exempt without the right of deduction</field>
                         <field
@@ -462,7 +462,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_other_exempt_no_deduction_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-20(B)</field>
@@ -471,7 +471,7 @@
                     </record>
                     <record
                         id="tax_report_line_total_sales"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">15. Total sales VAT</field>
                         <field name="name@ka">15. გაყიდვების დღგ-ს ჯამი</field>
                         <field name="code">ge_001</field>
@@ -479,7 +479,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_total_sales_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -487,7 +487,7 @@
                             </record>
                             <record
                                 id="tax_report_line_total_sales_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -497,7 +497,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_reverse_charge" model="account.report.line">
+            <record id="tax_report_line_reverse_charge" model="report.formula.line">
                 <field
                     name="name">Annex A - Part II: Reverse charge VAT (output)</field>
                 <field name="name@ka">უკუდაბეგვრის წესით დარიცხული დღგ</field>
@@ -505,7 +505,7 @@
                 <field name="children_ids">
                     <record
                         id="tax_report_line_reverse_charge_non_resident"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">1. Services from non-resident (no PE)</field>
                         <field
                             name="name@ka">საქართველოს ტერიტორიაზე საანგარიშო პერიოდში მიღებული მომსახურება, დასაბეგრი პირისგან, რომელიც არ არის დაფუძნებული ან ჩვეულებრივ არ ცხოვრობს საქართველოში, ან საქართველოში არ გააჩნია ფიქსირებული დაწესებულება, რომელიც მონაწილეობს ამ მომსახურების გაწევაში</field>
@@ -514,14 +514,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_reverse_charge_non_resident_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">21(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_reverse_charge_non_resident_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-21(T)</field>
@@ -530,7 +530,7 @@
                     </record>
                     <record
                         id="tax_report_line_reverse_charge_foreign_goods"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">2. Foreign goods purchased from a person in a customs warehouse</field>
                         <field
@@ -540,14 +540,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_reverse_charge_foreign_goods_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">22(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_reverse_charge_foreign_goods_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-22(T)</field>
@@ -556,7 +556,7 @@
                     </record>
                     <record
                         id="tax_report_line_reverse_charge_fiz"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">3. Foreign goods purchased from a FIZ enterprise and placed under the customs procedure</field>
                         <field
@@ -566,14 +566,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_reverse_charge_fiz_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">23(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_reverse_charge_fiz_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-23(T)</field>
@@ -582,7 +582,7 @@
                     </record>
                     <record
                         id="tax_report_line_reverse_charge_total"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">4. Total RC VAT charged</field>
                         <field name="name@ka">სულ</field>
                         <field name="code">ge_002</field>
@@ -590,7 +590,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_reverse_charge_total_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -598,7 +598,7 @@
                             </record>
                             <record
                                 id="tax_report_line_reverse_charge_total_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -608,14 +608,14 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_deductible_vat" model="account.report.line">
+            <record id="tax_report_line_deductible_vat" model="report.formula.line">
                 <field name="name">Annex A - Part III: Deductible (input) VAT</field>
                 <field name="name@ka">დღგ-ის ჩასათვლელი თანხა</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record
                         id="tax_report_line_deductible_vat_registered"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">1. Purchases from Georgian VAT-registered suppliers</field>
                         <field
@@ -625,14 +625,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_deductible_vat_registered_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">24(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_deductible_vat_registered_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">24(T)</field>
@@ -641,7 +641,7 @@
                     </record>
                     <record
                         id="tax_report_line_deductible_vat_import"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">2. VAT paid/payable on import of goods</field>
                         <field
@@ -651,14 +651,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_deductible_vat_import_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">25(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_deductible_vat_import_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">25(T)</field>
@@ -667,7 +667,7 @@
                     </record>
                     <record
                         id="tax_report_line_deductible_vat_import_tax_authority"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">3. VAT accrued on the import of goods based on the decision of the tax authority</field>
                         <field
@@ -677,14 +677,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_deductible_vat_import_tax_authority_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">26(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_deductible_vat_import_tax_authority_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">26(T)</field>
@@ -693,7 +693,7 @@
                     </record>
                     <record
                         id="tax_report_line_deductible_vat_reverse_charge"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">4. VAT, charged by reverse charge</field>
                         <field name="name@ka">დღგ, დარიცხული უკუდაბეგვრის წესით </field>
                         <field name="code">ge_27</field>
@@ -701,14 +701,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_deductible_vat_reverse_charge_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">27(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_deductible_vat_reverse_charge_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">27(T)</field>
@@ -717,7 +717,7 @@
                     </record>
                     <record
                         id="tax_report_line_deductible_vat_rc_mechanism"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">4.1 VAT reflected in the calculation of the VAT amount accrued under the reverse charge mechanism</field>
                         <field
@@ -727,7 +727,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_deductible_vat_rc_mechanism_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -736,7 +736,7 @@
                             </record>
                             <record
                                 id="tax_report_line_deductible_vat_rc_mechanism_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -747,7 +747,7 @@
                     </record>
                     <record
                         id="tax_report_line_deductible_vat_retaining_fixed_assets"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">5. In case of retaining fixed assets in one's own possession after the cessation of economic activity or cancellation of VAT payer registration</field>
                         <field
@@ -757,14 +757,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_deductible_vat_retaining_fixed_assets_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">29(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_deductible_vat_retaining_fixed_assets_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">29(T)</field>
@@ -773,7 +773,7 @@
                     </record>
                     <record
                         id="tax_report_line_deductible_vat_self_produced_building"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">6. The deductible amount of VAT accrued (payable) in case of using a self-produced building/structure as a fixed asset</field>
                         <field
@@ -783,14 +783,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_deductible_vat_self_produced_building_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">30(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_deductible_vat_self_produced_building_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">30(T)</field>
@@ -799,7 +799,7 @@
                     </record>
                     <record
                         id="tax_report_line_deductible_vat_repairs_own_means"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">6.1 The deductible amount of VAT accrued (payable) in case of repairs of one's own fixed asset (building/structure) carried out by one's own means</field>
                         <field
@@ -809,14 +809,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_deductible_vat_repairs_own_means_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">31(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_deductible_vat_repairs_own_means_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">31(T)</field>
@@ -825,7 +825,7 @@
                     </record>
                     <record
                         id="tax_report_line_deductible_vat_barter"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">7. VAT accrued in case of goods/services exchange (barter) operation</field>
                         <field
@@ -835,14 +835,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_deductible_vat_barter_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">32(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_deductible_vat_barter_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">32(T)</field>
@@ -851,7 +851,7 @@
                     </record>
                     <record
                         id="tax_report_line_deductible_vat_auction"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">8. VAT paid on goods purchased through auction or enforcement proceedings</field>
                         <field
@@ -861,14 +861,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_deductible_vat_auction_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">33(B)</field>
                             </record>
                             <record
                                 id="tax_report_line_deductible_vat_auction_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">33(T)</field>
@@ -877,7 +877,7 @@
                     </record>
                     <record
                         id="tax_report_line_deductible_vat_total"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">9. Total deductible VAT</field>
                         <field name="name@ka">სულ</field>
                         <field name="code">ge_003</field>
@@ -885,7 +885,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_deductible_vat_total_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -893,7 +893,7 @@
                             </record>
                             <record
                                 id="tax_report_line_deductible_vat_total_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -903,14 +903,14 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_net_vat" model="account.report.line">
+            <record id="tax_report_line_net_vat" model="report.formula.line">
                 <field name="name">Net VAT calculation</field>
                 <field name="name@ka">წმინდა დღგ-ს გაანგარიშება</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record
                         id="tax_report_line_total_output_vat"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">1. Total output VAT</field>
                         <field name="name@ka">მთლიანი გამომავალი დღგ</field>
                         <field name="code">ge_34</field>
@@ -918,14 +918,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_total_output_vat_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">ge_001.base+ge_002.base</field>
                             </record>
                             <record
                                 id="tax_report_line_total_output_vat_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">ge_001.tax+ge_002.tax</field>
@@ -934,7 +934,7 @@
                     </record>
                     <record
                         id="tax_report_line_net_vat_payable"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">2. Net VAT payable to budget</field>
                         <field name="name@ka">ბიუჯეტში გადასახდელი წმინდა დღგ</field>
                         <field name="code">ge_35</field>
@@ -942,14 +942,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_net_vat_payable_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">ge_34.base-ge_003.base</field>
                             </record>
                             <record
                                 id="tax_report_line_net_vat_payable_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">ge_34.tax-ge_003.tax</field>

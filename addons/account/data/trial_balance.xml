@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="trial_balance_report" model="account.report">
+    <record id="trial_balance_report" model="report.formula">
         <field name="name">Trial Balance</field>
         <field name="sequence">30</field>
         <!-- Ensures the correct order in the composite Annual Statements report -->
@@ -19,17 +19,17 @@
             name="custom_handler_model_id"
             ref="model_account_trial_balance_report_handler" />
         <field name="column_ids">
-            <record id="trial_balance_report_debit" model="account.report.column">
+            <record id="trial_balance_report_debit" model="report.formula.column">
                 <field name="name">Debit</field>
                 <field name="expression_label">debit</field>
             </record>
-            <record id="trial_balance_report_credit" model="account.report.column">
+            <record id="trial_balance_report_credit" model="report.formula.column">
                 <field name="name">Credit</field>
                 <field name="expression_label">credit</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="trial_balance_report_all" model="account.report.line">
+            <record id="trial_balance_report_all" model="report.formula.line">
                 <field name="name">Trial Balance</field>
                 <field name="code">TB</field>
                 <field name="groupby">account_id</field>
@@ -37,7 +37,7 @@
                 <field name="expression_ids">
                     <record
                         id="trial_balance_report_all_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">custom</field>
                         <field name="auditable">True</field>
@@ -47,7 +47,7 @@
                     </record>
                     <record
                         id="trial_balance_report_all_debit"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">debit</field>
                         <field name="engine">custom</field>
                         <field name="auditable">True</field>
@@ -57,7 +57,7 @@
                     </record>
                     <record
                         id="trial_balance_report_all_credit"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">credit</field>
                         <field name="engine">custom</field>
                         <field name="auditable">True</field>

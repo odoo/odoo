@@ -2,7 +2,7 @@
 <odoo>
 
     <data auto_sequence="1">
-        <record id="mod_303" model="account.report">
+        <record id="mod_303" model="report.formula">
             <field name="name">Tax Report (Mod 303)</field>
             <field name="name@es">Informe de impuestos (Mod 303)</field>
             <field name="sequence">303</field>
@@ -15,27 +15,27 @@
             <field name="filter_multi_company">tax_units</field>
             <field name="root_report_id" ref="account.generic_tax_report" />
             <field name="column_ids">
-                <record id="mod_303_column" model="account.report.column">
+                <record id="mod_303_column" model="report.formula.column">
                     <field name="name">Balance</field>
                     <field name="name@es">Saldo</field>
                     <field name="expression_label">balance</field>
                 </record>
             </field>
             <field name="line_ids">
-                <record id="mod_303_title_1" model="account.report.line">
+                <record id="mod_303_title_1" model="report.formula.line">
                     <field name="name">General regime</field>
                     <field name="name@es">Régimen general</field>
                     <field name="code">aeat_mod_303_title_1</field>
                     <field name="hierarchy_level">0</field>
                     <field name="children_ids">
-                        <record id="mod_303_title_2" model="account.report.line">
+                        <record id="mod_303_title_2" model="report.formula.line">
                             <field name="name">VAT accrued</field>
                             <field name="name@es">IVA Devengado</field>
                             <field name="code">aeat_mod_303_title_2</field>
                             <field name="children_ids">
                                 <record
                                     id="mod_303_casilla_150"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[150] Base taxable 0%</field>
                                     <field
                                         name="name@es">[150] Base imponible 0 %</field>
@@ -45,7 +45,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_150_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod303[150]</field>
@@ -54,7 +54,7 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_152"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[152] Contribution 0%</field>
                                     <field name="name@es">[152] Cuota 0 %</field>
                                     <field name="code">aeat_mod_303_152</field>
@@ -63,7 +63,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_152_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod303[152]</field>
@@ -72,7 +72,7 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_165"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[165] Base taxable 2%</field>
                                     <field
                                         name="name@es">[165] Base imponible 2 %</field>
@@ -82,7 +82,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_165_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod303[165]</field>
@@ -91,7 +91,7 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_167"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[167] Contributions 2%</field>
                                     <field name="name@es">[167] Cuota 2 %</field>
                                     <field name="code">aeat_mod_303_167</field>
@@ -100,7 +100,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_167_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod303[167]</field>
@@ -109,7 +109,7 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_01"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[01] Base taxable 4%</field>
                                     <field
                                         name="name@es">[01] Base imponible 4 %</field>
@@ -119,7 +119,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_01_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod303[01]</field>
@@ -128,7 +128,7 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_03"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[03] Contribution 4%</field>
                                     <field name="name@es">[03] Cuota 4 %</field>
                                     <field name="code">aeat_mod_303_03</field>
@@ -137,7 +137,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_03_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod303[03]</field>
@@ -146,7 +146,7 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_153"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[153] Base taxable 5%</field>
                                     <field
                                         name="name@es">[153] Base imponible 5 %</field>
@@ -156,7 +156,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_153_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod303[153]</field>
@@ -165,7 +165,7 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_155"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[155] Contributions 5%</field>
                                     <field name="name@es">[155] Cuota 5 %</field>
                                     <field name="code">aeat_mod_303_155</field>
@@ -174,7 +174,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_155_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod303[155]</field>
@@ -183,7 +183,7 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_04"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[04] Base taxable 10%</field>
                                     <field
                                         name="name@es">[04] Base imponible 10 %</field>
@@ -193,7 +193,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_04_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod303[04]</field>
@@ -202,7 +202,7 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_06"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[06] Contribution 10%</field>
                                     <field name="name@es">[06] Cuota 10 %</field>
                                     <field name="code">aeat_mod_303_06</field>
@@ -211,7 +211,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_06_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod303[06]</field>
@@ -220,7 +220,7 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_07"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[07] Base taxable 21%</field>
                                     <field
                                         name="name@es">[07] Base imponible 21 %</field>
@@ -230,7 +230,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_07_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod303[07]</field>
@@ -239,7 +239,7 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_09"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[09] Contribution 21%</field>
                                     <field name="name@es">[09] Cuota 21 %</field>
                                     <field name="code">aeat_mod_303_09</field>
@@ -248,7 +248,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_09_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod303[09]</field>
@@ -257,7 +257,7 @@
                                 </record>
                                 <record
                                     id="mod_303_title_3"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">Intra-community purchases of goods and services</field>
                                     <field
@@ -266,7 +266,7 @@
                                     <field name="children_ids">
                                         <record
                                             id="mod_303_casilla_10"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field name="name">[10] Base taxable</field>
                                             <field
                                                 name="name@es">[10] Base imponible</field>
@@ -276,7 +276,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_10_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -287,7 +287,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_11"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[11] Contributions</field>
                                             <field name="name@es">[11] Cuota</field>
@@ -297,7 +297,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_11_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -310,7 +310,7 @@
                                 </record>
                                 <record
                                     id="mod_303_title_4"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">Other operations with reverse charge (except intracom. adq.)</field>
                                     <field
@@ -319,7 +319,7 @@
                                     <field name="children_ids">
                                         <record
                                             id="mod_303_casilla_12"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field name="name">[12] Base taxable</field>
                                             <field
                                                 name="name@es">[12] Base imponible</field>
@@ -329,7 +329,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_12_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -340,7 +340,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_13"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[13] Contributions</field>
                                             <field name="name@es">[13] Cuota</field>
@@ -350,7 +350,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_13_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -363,7 +363,7 @@
                                 </record>
                                 <record
                                     id="mod_303_title_5"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">Modification bases and contributions</field>
                                     <field
@@ -372,7 +372,7 @@
                                     <field name="children_ids">
                                         <record
                                             id="mod_303_casilla_14"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field name="name">[14] Base taxable</field>
                                             <field
                                                 name="name@es">[14] Base imponible</field>
@@ -380,7 +380,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_14_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">aggregation</field>
@@ -389,7 +389,7 @@
                                                 </record>
                                                 <record
                                                     id="mod_303_casilla_14_aeat_mod_303_14_sale_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field
                                                         name="label">aeat_mod_303_14_sale_balance</field>
                                                     <field
@@ -399,7 +399,7 @@
                                                 </record>
                                                 <record
                                                     id="mod_303_casilla_14_aeat_mod_303_14_purchase_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field
                                                         name="label">aeat_mod_303_14_purchase_balance</field>
                                                     <field
@@ -411,7 +411,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_15"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[15] Contributions</field>
                                             <field name="name@es">[15] Cuota</field>
@@ -419,7 +419,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_15_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -432,14 +432,14 @@
                                 </record>
                                 <record
                                     id="mod_303_title_6"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">Surcharge equivalence</field>
                                     <field name="name@es">Recargo equivalencia</field>
                                     <field name="code">aeat_mod_303_title_6</field>
                                     <field name="children_ids">
                                         <record
                                             id="mod_303_casilla_156"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[156] Base taxable 1.75%</field>
                                             <field
@@ -450,7 +450,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_156_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -461,7 +461,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_158"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[158] Contributions 1.75%</field>
                                             <field
@@ -472,7 +472,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_158_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -483,7 +483,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_168"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[168] Base taxable 0.26%</field>
                                             <field
@@ -494,7 +494,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_168_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -505,7 +505,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_170"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[170] Contribution 0.26%</field>
                                             <field
@@ -516,7 +516,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_170_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -527,7 +527,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_16"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[16] Base taxable 1%</field>
                                             <field
@@ -538,7 +538,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_16_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -549,7 +549,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_18"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[18] Contribution 1%</field>
                                             <field name="name@es">[18] Cuota 1 %</field>
@@ -559,7 +559,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_18_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -570,7 +570,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_19"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[19] Base taxable 1.4%</field>
                                             <field
@@ -581,7 +581,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_19_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -592,7 +592,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_21"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[21] Contributions 1.4%</field>
                                             <field
@@ -603,7 +603,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_21_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -614,7 +614,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_22"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[22] Base taxable 5.2%</field>
                                             <field
@@ -625,7 +625,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_22_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -636,7 +636,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_24"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[24] Contributions 5.2%</field>
                                             <field
@@ -647,7 +647,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_24_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -660,7 +660,7 @@
                                 </record>
                                 <record
                                     id="mod_303_title_7"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">Modification bases and contributions of the equivalence surcharge</field>
                                     <field
@@ -669,7 +669,7 @@
                                     <field name="children_ids">
                                         <record
                                             id="mod_303_casilla_25"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field name="name">[25] Base taxable</field>
                                             <field
                                                 name="name@es">[25] Base imponible</field>
@@ -679,7 +679,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_25_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -690,7 +690,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_26"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[26] Contributions</field>
                                             <field name="name@es">[26] Cuotas</field>
@@ -700,7 +700,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_26_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -713,7 +713,7 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_27"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[27] Total accrual contributions</field>
                                     <field
@@ -724,14 +724,14 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_title_8" model="account.report.line">
+                        <record id="mod_303_title_8" model="report.formula.line">
                             <field name="name">VAT receivable</field>
                             <field name="name@es">IVA deducible</field>
                             <field name="code">aeat_mod_303_title_8</field>
                             <field name="children_ids">
                                 <record
                                     id="mod_303_title_9"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">For contributions supported in the current internal operations</field>
                                     <field
@@ -740,7 +740,7 @@
                                     <field name="children_ids">
                                         <record
                                             id="mod_303_casilla_28"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field name="name">[28] Base</field>
                                             <field name="name@es">[28] Base</field>
                                             <field name="code">aeat_mod_303_28</field>
@@ -749,7 +749,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_28_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -760,7 +760,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_29"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[29] Contributions</field>
                                             <field name="name@es">[29] Cuotas</field>
@@ -770,7 +770,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_29_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -783,7 +783,7 @@
                                 </record>
                                 <record
                                     id="mod_303_title_10"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">For contributions supported in internal operations with investment goods</field>
                                     <field
@@ -792,7 +792,7 @@
                                     <field name="children_ids">
                                         <record
                                             id="mod_303_casilla_30"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field name="name">[30] Base</field>
                                             <field name="name@es">[30] Base</field>
                                             <field name="code">aeat_mod_303_30</field>
@@ -801,7 +801,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_30_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -812,7 +812,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_31"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[31] Contributions</field>
                                             <field name="name@es">[31] Cuotas</field>
@@ -822,7 +822,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_31_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -835,7 +835,7 @@
                                 </record>
                                 <record
                                     id="mod_303_title_11"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">For contributions supported in imports of current goods</field>
                                     <field
@@ -844,7 +844,7 @@
                                     <field name="children_ids">
                                         <record
                                             id="mod_303_casilla_32"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field name="name">[32] Base</field>
                                             <field name="name@es">[32] Base</field>
                                             <field name="code">aeat_mod_303_32</field>
@@ -853,7 +853,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_32_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -864,7 +864,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_33"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[33] Contributions</field>
                                             <field name="name@es">[33] Cuotas</field>
@@ -874,7 +874,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_33_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -887,7 +887,7 @@
                                 </record>
                                 <record
                                     id="mod_303_title_12"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">For contributions supported in import of investment goods</field>
                                     <field
@@ -896,7 +896,7 @@
                                     <field name="children_ids">
                                         <record
                                             id="mod_303_casilla_34"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field name="name">[34] Base</field>
                                             <field name="name@es">[34] Base</field>
                                             <field name="code">aeat_mod_303_34</field>
@@ -905,7 +905,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_34_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -916,7 +916,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_35"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[35] Contributions</field>
                                             <field name="name@es">[35] Cuotas</field>
@@ -926,7 +926,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_35_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -939,7 +939,7 @@
                                 </record>
                                 <record
                                     id="mod_303_title_13"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">In intra-community purchases of current goods and services</field>
                                     <field
@@ -948,7 +948,7 @@
                                     <field name="children_ids">
                                         <record
                                             id="mod_303_casilla_36"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field name="name">[36] Base</field>
                                             <field name="name@es">[36] Base</field>
                                             <field name="code">aeat_mod_303_36</field>
@@ -957,7 +957,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_36_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -968,7 +968,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_37"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[37] Contributions</field>
                                             <field name="name@es">[37] Cuotas</field>
@@ -978,7 +978,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_37_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -991,7 +991,7 @@
                                 </record>
                                 <record
                                     id="mod_303_title_14"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">In intra-community purchases of investment goods</field>
                                     <field
@@ -1000,7 +1000,7 @@
                                     <field name="children_ids">
                                         <record
                                             id="mod_303_casilla_38"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field name="name">[38] Base</field>
                                             <field name="name@es">[38] Base</field>
                                             <field name="code">aeat_mod_303_38</field>
@@ -1009,7 +1009,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_38_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -1020,7 +1020,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_39"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[39] Contributions</field>
                                             <field name="name@es">[39] Cuotas</field>
@@ -1030,7 +1030,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_39_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -1043,7 +1043,7 @@
                                 </record>
                                 <record
                                     id="mod_303_title_15"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">Rectification of deductions</field>
                                     <field
@@ -1052,7 +1052,7 @@
                                     <field name="children_ids">
                                         <record
                                             id="mod_303_casilla_40"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field name="name">[40] Base</field>
                                             <field name="name@es">[40] Base</field>
                                             <field name="code">aeat_mod_303_40</field>
@@ -1061,7 +1061,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_40_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -1072,7 +1072,7 @@
                                         </record>
                                         <record
                                             id="mod_303_casilla_41"
-                                            model="account.report.line">
+                                            model="report.formula.line">
                                             <field
                                                 name="name">[41] Contributions</field>
                                             <field name="name@es">[41] Cuotas</field>
@@ -1082,7 +1082,7 @@
                                             <field name="expression_ids">
                                                 <record
                                                     id="mod_303_casilla_41_balance"
-                                                    model="account.report.expression">
+                                                    model="report.formula.expression">
                                                     <field name="label">balance</field>
                                                     <field
                                                         name="engine">tax_tags</field>
@@ -1095,7 +1095,7 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_42"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[42] Compensations Special Regime A. G. y P. - Purchases contributions</field>
                                     <field
@@ -1106,7 +1106,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_42_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod303[42]</field>
@@ -1115,7 +1115,7 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_43"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[43] Regularization of investment assets</field>
                                     <field
@@ -1124,7 +1124,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_43_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1135,7 +1135,7 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_44"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[44] Regularization by application of the definitive prorrata percentage</field>
                                     <field
@@ -1144,7 +1144,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_44_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1155,14 +1155,14 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_casilla_45" model="account.report.line">
+                        <record id="mod_303_casilla_45" model="report.formula.line">
                             <field name="name">[45] Total to deduct</field>
                             <field name="name@es">[45] Total a deducir</field>
                             <field name="code">aeat_mod_303_45</field>
                             <field
                                 name="aggregation_formula">aeat_mod_303_29.balance + aeat_mod_303_31.balance + aeat_mod_303_33.balance + aeat_mod_303_35.balance + aeat_mod_303_37.balance + aeat_mod_303_39.balance + aeat_mod_303_41.balance + aeat_mod_303_42.balance + aeat_mod_303_43.balance + aeat_mod_303_44.balance</field>
                         </record>
-                        <record id="mod_303_casilla_46" model="account.report.line">
+                        <record id="mod_303_casilla_46" model="report.formula.line">
                             <field name="name">[46] Result of general regime</field>
                             <field name="name@es">[46] Resultado régimen general</field>
                             <field name="code">aeat_mod_303_46</field>
@@ -1171,13 +1171,13 @@
                         </record>
                     </field>
                 </record>
-                <record id="mod_303_title_16" model="account.report.line">
+                <record id="mod_303_title_16" model="report.formula.line">
                     <field name="name">Additional information</field>
                     <field name="name@es">Información adicional</field>
                     <field name="code">aeat_mod_303_title_16</field>
                     <field name="hierarchy_level">0</field>
                     <field name="children_ids">
-                        <record id="mod_303_casilla_59" model="account.report.line">
+                        <record id="mod_303_casilla_59" model="report.formula.line">
                             <field
                                 name="name">[59] Intra-community sales of goods and services - Base sales</field>
                             <field
@@ -1188,14 +1188,14 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_59_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">tax_tags</field>
                                     <field name="formula">-mod303[59]</field>
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_casilla_60" model="account.report.line">
+                        <record id="mod_303_casilla_60" model="report.formula.line">
                             <field
                                 name="name">[60] Exportations and similar operations - Base sales</field>
                             <field
@@ -1206,14 +1206,14 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_60_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">tax_tags</field>
                                     <field name="formula">-mod303[60]</field>
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_casilla_120" model="account.report.line">
+                        <record id="mod_303_casilla_120" model="report.formula.line">
                             <field
                                 name="name">[120] Operations not subject to location rules (excepted those included in box 123)</field>
                             <field
@@ -1224,14 +1224,14 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_120_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">tax_tags</field>
                                     <field name="formula">-mod303[120]</field>
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_casilla_122" model="account.report.line">
+                        <record id="mod_303_casilla_122" model="report.formula.line">
                             <field
                                 name="name">[122] Operations subject to reverse charge</field>
                             <field
@@ -1242,14 +1242,14 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_122_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">tax_tags</field>
                                     <field name="formula">-mod303[122]</field>
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_casilla_123" model="account.report.line">
+                        <record id="mod_303_casilla_123" model="report.formula.line">
                             <field
                                 name="name">[123] Operation not subjected to rule of location covered by the special one-stop shop regime</field>
                             <field
@@ -1260,14 +1260,14 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_123_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">tax_tags</field>
                                     <field name="formula">-mod303[123]</field>
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_casilla_124" model="account.report.line">
+                        <record id="mod_303_casilla_124" model="report.formula.line">
                             <field
                                 name="name">[124] Operations subjected and covered by special regime of one-stop shop</field>
                             <field
@@ -1278,14 +1278,14 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_124_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">tax_tags</field>
                                     <field name="formula">mod303[124]</field>
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_title_17" model="account.report.line">
+                        <record id="mod_303_title_17" model="report.formula.line">
                             <field
                                 name="name">Amount of sale of goods and services to which special regime of the cash criterion ha dbeen applied would have been accrued in accordance with the general accrual rule contained in art. 75 LIVA</field>
                             <field
@@ -1294,14 +1294,14 @@
                             <field name="children_ids">
                                 <record
                                     id="mod_303_casilla_62"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[62] Base taxable</field>
                                     <field name="name@es">[62] Base imponible</field>
                                     <field name="code">aeat_mod_303_62</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_62_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1312,14 +1312,14 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_63"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[63] Contributions</field>
                                     <field name="name@es">[63] Cuotas</field>
                                     <field name="code">aeat_mod_303_63</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_63_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1332,13 +1332,13 @@
                         </record>
                     </field>
                 </record>
-                <record id="mod_303_title_18" model="account.report.line">
+                <record id="mod_303_title_18" model="report.formula.line">
                     <field name="name">Result</field>
                     <field name="name@es">Resultado</field>
                     <field name="code">aeat_mod_303_title_18</field>
                     <field name="hierarchy_level">0</field>
                     <field name="children_ids">
-                        <record id="mod_303_casilla_65" model="account.report.line">
+                        <record id="mod_303_casilla_65" model="report.formula.line">
                             <field
                                 name="name">[65] Percentage attributable to the State Administration</field>
                             <field
@@ -1347,7 +1347,7 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_65_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">external</field>
                                     <field name="formula">most_recent</field>
@@ -1357,7 +1357,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_casilla_66" model="account.report.line">
+                        <record id="mod_303_casilla_66" model="report.formula.line">
                             <field
                                 name="name">[66] Attributable to the State Administration</field>
                             <field
@@ -1366,7 +1366,7 @@
                             <field
                                 name="aggregation_formula">aeat_mod_303_65.balance/100 * aeat_mod_303_46.balance</field>
                         </record>
-                        <record id="mod_303_casilla_67" model="account.report.line">
+                        <record id="mod_303_casilla_67" model="report.formula.line">
                             <field
                                 name="name">[67] Contributions to be compensated from previous periods</field>
                             <field
@@ -1375,7 +1375,7 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_67_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">external</field>
                                     <field name="formula">sum</field>
@@ -1383,7 +1383,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_casilla_68" model="account.report.line">
+                        <record id="mod_303_casilla_68" model="report.formula.line">
                             <field
                                 name="name">[68] Result of the annual regularization</field>
                             <field
@@ -1392,7 +1392,7 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_68_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">external</field>
                                     <field name="formula">sum</field>
@@ -1400,7 +1400,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_casilla_108" model="account.report.line">
+                        <record id="mod_303_casilla_108" model="report.formula.line">
                             <field
                                 name="name">[108] Exclusively for certain cases of corrective self-assessment due to a discrepancy in administrative criteria that should not be included in other boxes. Other adjustments</field>
                             <field
@@ -1409,7 +1409,7 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_108_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">external</field>
                                     <field name="formula">sum</field>
@@ -1417,7 +1417,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_casilla_69" model="account.report.line">
+                        <record id="mod_303_casilla_69" model="report.formula.line">
                             <field name="name">[69] Result of self-liquidation</field>
                             <field
                                 name="name@es">[69] Resultado de la autoliquidación</field>
@@ -1425,7 +1425,7 @@
                             <field
                                 name="aggregation_formula">aeat_mod_303_66.balance + aeat_mod_303_77.balance - aeat_mod_303_78.balance + aeat_mod_303_68.balance + aeat_mod_303_108.balance</field>
                         </record>
-                        <record id="mod_303_casilla_70" model="account.report.line">
+                        <record id="mod_303_casilla_70" model="report.formula.line">
                             <field
                                 name="name">[70] Results to be paid from previous self-assessments or administrative liquidations corresponding to the year and period of self-assessment</field>
                             <field
@@ -1434,7 +1434,7 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_70_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">external</field>
                                     <field name="formula">sum</field>
@@ -1442,7 +1442,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_casilla_109" model="account.report.line">
+                        <record id="mod_303_casilla_109" model="report.formula.line">
                             <field
                                 name="name">[109] Refunds agreed by the Tax Agency as a consequence of the processing of previous self-assessments corresponding to the year and period of the self-assessment</field>
                             <field
@@ -1451,7 +1451,7 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_109_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">external</field>
                                     <field name="formula">sum</field>
@@ -1459,7 +1459,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_casilla_71" model="account.report.line">
+                        <record id="mod_303_casilla_71" model="report.formula.line">
                             <field name="name">[71] Result of settlement</field>
                             <field
                                 name="name@es">[71] Resultado de la liquidación</field>
@@ -1467,7 +1467,7 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_71_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">aggregation</field>
                                     <field
@@ -1475,7 +1475,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_title_19" model="account.report.line">
+                        <record id="mod_303_title_19" model="report.formula.line">
                             <field
                                 name="name">Amount of the purchases of goods and services to which the special regime of cash criterion is applicable or affected</field>
                             <field
@@ -1484,14 +1484,14 @@
                             <field name="children_ids">
                                 <record
                                     id="mod_303_casilla_74"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[74] Base taxable</field>
                                     <field name="name@es">[74] Base imponible</field>
                                     <field name="code">aeat_mod_303_74</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_74_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1502,14 +1502,14 @@
                                 </record>
                                 <record
                                     id="mod_303_casilla_75"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[75] Contributions</field>
                                     <field name="name@es">[75] Cuotas</field>
                                     <field name="code">aeat_mod_303_75</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_303_casilla_75_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1520,7 +1520,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_casilla_77" model="account.report.line">
+                        <record id="mod_303_casilla_77" model="report.formula.line">
                             <field
                                 name="name">[77] Import VAT settled by custom pending entry</field>
                             <field
@@ -1529,7 +1529,7 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_77_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">external</field>
                                     <field name="formula">sum</field>
@@ -1537,7 +1537,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_casilla_78" model="account.report.line">
+                        <record id="mod_303_casilla_78" model="report.formula.line">
                             <field
                                 name="name">[78] Contributions to be compensated from previous periods applied in this period</field>
                             <field
@@ -1546,7 +1546,7 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_78_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">external</field>
                                     <field name="formula">sum</field>
@@ -1554,7 +1554,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_303_casilla_87" model="account.report.line">
+                        <record id="mod_303_casilla_87" model="report.formula.line">
                             <field
                                 name="name">[87] Contributions to be compensated from previous periods pending for subsequent periods</field>
                             <field
@@ -1563,7 +1563,7 @@
                             <field
                                 name="aggregation_formula">aeat_mod_303_110.balance - aeat_mod_303_78.balance</field>
                         </record>
-                        <record id="mod_303_casilla_110" model="account.report.line">
+                        <record id="mod_303_casilla_110" model="report.formula.line">
                             <field
                                 name="name">[110] Contributions to be compensated pending from previous periods</field>
                             <field
@@ -1572,7 +1572,7 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_110_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">external</field>
                                     <field name="formula">sum</field>
@@ -1582,20 +1582,20 @@
                         </record>
                     </field>
                 </record>
-                <record id="mod_303_title_20" model="account.report.line">
+                <record id="mod_303_title_20" model="report.formula.line">
                     <field name="name">Rectification</field>
                     <field name="name@es">Rectificación</field>
                     <field name="code">aeat_mod_303_title_20</field>
                     <field name="hierarchy_level">0</field>
                     <field name="children_ids">
-                        <record id="mod_303_casilla_111" model="account.report.line">
+                        <record id="mod_303_casilla_111" model="report.formula.line">
                             <field name="name">[111] Rectification - Amount</field>
                             <field name="name@es">[111] Rectificación - Importe</field>
                             <field name="code">aeat_mod_303_111</field>
                             <field name="expression_ids">
                                 <record
                                     id="mod_303_casilla_111_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">external</field>
                                     <field name="formula">sum</field>

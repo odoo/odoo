@@ -2,7 +2,7 @@
 <odoo>
 
     <data auto_sequence="1">
-        <record id="mod_390_section_3" model="account.report">
+        <record id="mod_390_section_3" model="report.formula">
             <field name="name">Resultado Liquidación Anual</field>
             <field name="name@es">Resultado Liquidación Anual</field>
             <field name="filter_analytic" eval="False" />
@@ -11,21 +11,21 @@
             <field name="filter_journals" eval="True" />
             <field name="country_id" ref="base.es" />
             <field name="column_ids">
-                <record id="mod_390_column_sect3" model="account.report.column">
+                <record id="mod_390_column_sect3" model="report.formula.column">
                     <field name="name">Balance</field>
                     <field name="name@es">Saldo</field>
                     <field name="expression_label">balance</field>
                 </record>
             </field>
             <field name="line_ids">
-                <record id="mod_390_title_45" model="account.report.line">
+                <record id="mod_390_title_45" model="report.formula.line">
                     <field
                         name="name">Resultado liquidación anual (Sólo para sujetos pasivos que tributan exclusivamente en territorio común)</field>
                     <field
                         name="name@es">Resultado liquidación anual (Sólo para sujetos pasivos que tributan exclusivamente en territorio común)</field>
                     <field name="code">aeat_mod_390_title_45</field>
                     <field name="children_ids">
-                        <record id="mod_390_casilla_658" model="account.report.line">
+                        <record id="mod_390_casilla_658" model="report.formula.line">
                             <field
                                 name="name">[658] Regularización cuotas art. 80.Cinco.5ª LIVA</field>
                             <field
@@ -34,7 +34,7 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_390_casilla_658_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">external</field>
                                     <field name="formula">sum</field>
@@ -42,14 +42,14 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_casilla_84" model="account.report.line">
+                        <record id="mod_390_casilla_84" model="report.formula.line">
                             <field name="name">[84] Suma de resultados</field>
                             <field name="name@es">[84] Suma de resultados</field>
                             <field name="code">aeat_mod_390_84</field>
                             <field name="expression_ids">
                                 <record
                                     id="mod_390_casilla_84_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">aggregation</field>
                                     <field
@@ -57,7 +57,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_84_result_cross_aeat_mod_390_65"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field
                                         name="label">result_cross_aeat_mod_390_65</field>
                                     <field name="engine">aggregation</field>
@@ -68,7 +68,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_casilla_659" model="account.report.line">
+                        <record id="mod_390_casilla_659" model="report.formula.line">
                             <field
                                 name="name">[659] IVA a la importación liquidado por la Aduana (sólo sujetos pasivos con opción de diferimiento)</field>
                             <field
@@ -77,7 +77,7 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_390_casilla_659_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">aggregation</field>
                                     <field
@@ -87,7 +87,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_casilla_85" model="account.report.line">
+                        <record id="mod_390_casilla_85" model="report.formula.line">
                             <field
                                 name="name">[85] Compensación de cuotas del ejercicio anterior</field>
                             <field
@@ -96,7 +96,7 @@
                             <field name="expression_ids">
                                 <record
                                     id="mod_390_casilla_85_balance"
-                                    model="account.report.expression">
+                                    model="report.formula.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">aggregation</field>
                                     <field
@@ -106,7 +106,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_casilla_86" model="account.report.line">
+                        <record id="mod_390_casilla_86" model="report.formula.line">
                             <field name="name">[86] Suma de resultados</field>
                             <field name="name@es">[86] Suma de la liquidación</field>
                             <field name="code">aeat_mod_390_86</field>

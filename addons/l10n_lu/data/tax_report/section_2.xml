@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="l10n_lu_tax_report_section_2" model="account.report">
+    <record id="l10n_lu_tax_report_section_2" model="report.formula">
         <field name="name">Section II</field>
         <field name="name@fr">Section II</field>
         <field name="name@de">Abschnitt II</field>
@@ -10,7 +10,7 @@
         <field name="country_id" ref="base.lu" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="tax_report_section_2_balance" model="account.report.column">
+            <record id="tax_report_section_2_balance" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="name@fr">Solde</field>
                 <field name="name@de">Saldo</field>
@@ -21,7 +21,7 @@
         <field name="line_ids">
             <record
                 id="l10n_lu_tax_report_assessment_tax_due"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">II. ASSESSMENT OF TAX DUE</field>
                 <field name="name@fr">II. ÉVALUATION DE LA TAXE DUE</field>
                 <field name="name@de">II. FESTSETZUNG DER GESCHULDETEN STEUER</field>
@@ -30,7 +30,7 @@
                 <field name="children_ids">
                     <record
                         id="account_tax_report_line_2a_breakdown_taxable_turnover_base"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">037 - Breakdown of taxable turnover – base</field>
                         <field
@@ -45,7 +45,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_2a_base_17"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">701 - base 17%</field>
                                 <field name="name@fr">701 - base 17%</field>
                                 <field
@@ -56,7 +56,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2a_base_17_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-701</field>
@@ -65,7 +65,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2a_base_16"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">901 - base 16%</field>
                                 <field name="name@fr">901 - base 16%</field>
                                 <field
@@ -76,7 +76,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2a_base_16_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-901</field>
@@ -85,7 +85,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2a_base_14"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">703 - base 14%</field>
                                 <field name="name@fr">703 - base 14%</field>
                                 <field
@@ -96,7 +96,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2a_base_14_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-703</field>
@@ -105,7 +105,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2a_base_13"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">903 - base 13%</field>
                                 <field name="name@fr">903 - base 13%</field>
                                 <field
@@ -116,7 +116,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2a_base_13_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-903</field>
@@ -125,7 +125,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2a_base_8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">705 - base 8%</field>
                                 <field name="name@fr">705 - base 8%</field>
                                 <field
@@ -136,7 +136,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2a_base_8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-705</field>
@@ -145,7 +145,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2a_base_7"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">905 - base 7%</field>
                                 <field name="name@fr">905 - base 7%</field>
                                 <field
@@ -156,7 +156,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2a_base_7_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-905</field>
@@ -165,7 +165,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2a_base_3"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">031 - base 3%</field>
                                 <field name="name@fr">031 - base 3%</field>
                                 <field
@@ -176,7 +176,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2a_base_3_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-031</field>
@@ -185,7 +185,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2a_base_0"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">033 - base 0%</field>
                                 <field name="name@fr">033 - base 0%</field>
                                 <field
@@ -195,7 +195,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2a_base_0_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-033</field>
@@ -206,7 +206,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_2a_breakdown_taxable_turnover_tax"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">046 - Breakdown of taxable turnover – tax</field>
                         <field
@@ -221,7 +221,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_2a_tax_17"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">702 - tax 17%</field>
                                 <field name="name@fr">702 - taxe 17%</field>
                                 <field name="name@de">702 - MwSt. 17%</field>
@@ -231,7 +231,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2a_tax_17_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-702</field>
@@ -240,7 +240,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2a_tax_16"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">902 - tax 16%</field>
                                 <field name="name@fr">902 - taxe 16%</field>
                                 <field name="name@de">902 - MwSt. 16%</field>
@@ -250,7 +250,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2a_tax_16_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-902</field>
@@ -259,7 +259,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2a_tax_14"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">704 - tax 14%</field>
                                 <field name="name@fr">704 - taxe 14%</field>
                                 <field name="name@de">704 - MwSt. 14%</field>
@@ -269,7 +269,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2a_tax_14_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-704</field>
@@ -278,7 +278,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2a_tax_13"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">904 - tax 13%</field>
                                 <field name="name@fr">904 - taxe 13%</field>
                                 <field name="name@de">904 - MwSt. 13%</field>
@@ -288,7 +288,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2a_tax_13_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-904</field>
@@ -297,7 +297,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2a_tax_8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">706 - tax 8%</field>
                                 <field name="name@fr">706 - taxe 8%</field>
                                 <field name="name@de">706 - MwSt. 8%</field>
@@ -307,7 +307,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2a_tax_8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-706</field>
@@ -316,7 +316,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2a_tax_7"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">906 - tax 7%</field>
                                 <field name="name@fr">906 - taxe 7%</field>
                                 <field name="name@de">906 - MwSt. 7%</field>
@@ -326,7 +326,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2a_tax_7_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-906</field>
@@ -335,7 +335,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2a_tax_3"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">040 - tax 3%</field>
                                 <field name="name@fr">040 - taxe 3%</field>
                                 <field name="name@de">040 - MwSt. 3%</field>
@@ -345,7 +345,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2a_tax_3_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-040</field>
@@ -356,7 +356,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_2b_intra_community_acqui_of_goods_base"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">051 - Intra-Community acquisitions of goods – base</field>
                         <field
@@ -371,7 +371,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_2b_base_17"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">711 - base 17%</field>
                                 <field name="name@fr">711 - base 17%</field>
                                 <field
@@ -382,7 +382,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_base_17_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">711</field>
@@ -391,7 +391,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2b_base_16"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">911 - base 16%</field>
                                 <field name="name@fr">911 - base 16%</field>
                                 <field
@@ -402,7 +402,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_base_16_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">911</field>
@@ -411,7 +411,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2b_base_14"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">713 - base 14%</field>
                                 <field name="name@fr">713 - base 14%</field>
                                 <field
@@ -422,7 +422,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_base_14_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">713</field>
@@ -431,7 +431,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2b_base_13"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">913 - base 13%</field>
                                 <field name="name@fr">913 - base 13%</field>
                                 <field
@@ -442,7 +442,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_base_13_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">913</field>
@@ -451,7 +451,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2b_base_8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">715 - base 8%</field>
                                 <field name="name@fr">715 - base 8%</field>
                                 <field
@@ -462,7 +462,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_base_8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">715</field>
@@ -471,7 +471,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2b_base_7"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">915 - base 7%</field>
                                 <field name="name@fr">915 - base 7%</field>
                                 <field
@@ -482,7 +482,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_base_7_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">915</field>
@@ -491,7 +491,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2b_base_3"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">049 - base 3%</field>
                                 <field name="name@fr">049 - base 3%</field>
                                 <field
@@ -502,7 +502,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_base_3_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">049</field>
@@ -511,7 +511,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2b_base_exempt"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">194 - base exempt</field>
                                 <field name="name@fr">194 - base exonérée</field>
                                 <field
@@ -522,7 +522,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_base_exempt_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">194</field>
@@ -531,7 +531,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2b_manufactured_tobacco"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">719 - of manufactured tobacco (VAT is collected at the exit of the tax warehouse with excise duties)</field>
                                 <field
@@ -545,7 +545,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_manufactured_tobacco_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">719</field>
@@ -556,7 +556,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_2b_intra_community_acquisitions_goods_tax"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">056 - Intra-Community acquisitions of goods – tax</field>
                         <field
@@ -571,7 +571,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_2b_tax_17"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">712 - tax 17%</field>
                                 <field name="name@fr">712 - taxe 17%</field>
                                 <field name="name@de">712 - MwSt. 17%</field>
@@ -581,7 +581,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_tax_17_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-712</field>
@@ -590,7 +590,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2b_tax_16"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">912 - tax 16%</field>
                                 <field name="name@fr">912 - taxe 16%</field>
                                 <field name="name@de">912 - MwSt. 16%</field>
@@ -600,7 +600,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_tax_16_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-912</field>
@@ -609,7 +609,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2b_tax_14"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">714 - tax 14%</field>
                                 <field name="name@fr">714 - taxe 14%</field>
                                 <field name="name@de">714 - MwSt. 14%</field>
@@ -619,7 +619,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_tax_14_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-714</field>
@@ -628,7 +628,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2b_tax_13"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">914 - tax 13%</field>
                                 <field name="name@fr">914 - taxe 13%</field>
                                 <field name="name@de">914 - MwSt. 13%</field>
@@ -638,7 +638,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_tax_13_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-914</field>
@@ -647,7 +647,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2b_tax_8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">716 - tax 8%</field>
                                 <field name="name@fr">716 - taxe 8%</field>
                                 <field name="name@de">716 - MwSt. 8%</field>
@@ -657,7 +657,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_tax_8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-716</field>
@@ -666,7 +666,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2b_tax_7"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">916 - tax 7%</field>
                                 <field name="name@fr">916 - taxe 7%</field>
                                 <field name="name@de">916 - MwSt. 7%</field>
@@ -676,7 +676,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_tax_7_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-916</field>
@@ -685,7 +685,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2b_tax_3"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">054 - tax 3%</field>
                                 <field name="name@fr">054 - taxe 3%</field>
                                 <field name="name@de">054 - MwSt. 3%</field>
@@ -695,7 +695,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2b_tax_3_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-054</field>
@@ -706,7 +706,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_2c_acquisitions_triangular_transactions_base"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">152 - Acquisitions, in the context of triangular transactions – base</field>
                         <field
@@ -719,7 +719,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_2c_acquisitions_triangular_transactions_base_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">152</field>
@@ -728,7 +728,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_2d_importation_of_goods_base"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">065 - Importation of goods – base</field>
                         <field name="name@fr">065 - Importations de biens - base</field>
                         <field
@@ -740,7 +740,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_2d_1_base_17"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">721 - for business purposes: base 17%</field>
                                 <field
@@ -754,7 +754,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_base_17_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">721</field>
@@ -763,7 +763,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_1_base_16"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">921 - for business purposes: base 16%</field>
                                 <field
@@ -777,7 +777,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_base_16_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">921</field>
@@ -786,7 +786,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_1_base_14"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">723 - for business purposes: base 14%</field>
                                 <field
@@ -800,7 +800,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_base_14_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">723</field>
@@ -809,7 +809,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_1_base_13"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">923 - for business purposes: base 13%</field>
                                 <field
@@ -823,7 +823,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_base_13_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">923</field>
@@ -832,7 +832,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_1_base_8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">725 - for business purposes: base 8%</field>
                                 <field
@@ -846,7 +846,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_base_8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">725</field>
@@ -855,7 +855,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_1_base_7"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">925 - for business purposes: base 7%</field>
                                 <field
@@ -869,7 +869,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_base_7_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">925</field>
@@ -878,7 +878,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_1_base_3"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">059 - for business purposes: base 3%</field>
                                 <field
@@ -892,7 +892,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_base_3_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">059</field>
@@ -901,7 +901,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_1_base_exempt"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">195 - for business purposes: base exempt</field>
                                 <field
@@ -915,7 +915,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_base_exempt_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">195</field>
@@ -924,7 +924,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_1_manufactured_tobacco"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">729 - of manufactured tobacco (VAT is collected at the exit of the tax warehouse with excise duties)</field>
                                 <field
@@ -938,7 +938,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_manufactured_tobacco_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">729</field>
@@ -947,7 +947,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_2_base_17"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">731 - for non-business purposes: base 17%</field>
                                 <field
@@ -961,7 +961,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_2_base_17_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">731</field>
@@ -970,7 +970,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_2_base_16"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">931 - for non-business purposes: base 16%</field>
                                 <field
@@ -984,7 +984,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_2_base_16_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">931</field>
@@ -993,7 +993,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_2_base_14"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">733 - for non-business purposes: base 14%</field>
                                 <field
@@ -1007,7 +1007,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_2_base_14_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">733</field>
@@ -1016,7 +1016,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_2_base_13"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">933 - for non-business purposes: base 13%</field>
                                 <field
@@ -1030,7 +1030,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_2_base_13_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">933</field>
@@ -1039,7 +1039,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_2_base_8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">735 - for non-business purposes: base 8%</field>
                                 <field
@@ -1053,7 +1053,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_2_base_8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">735</field>
@@ -1062,7 +1062,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_2_base_7"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">935 - for non-business purposes: base 7%</field>
                                 <field
@@ -1076,7 +1076,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_2_base_7_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">935</field>
@@ -1085,7 +1085,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_2_base_3"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">063 - for non-business purposes: base 3%</field>
                                 <field
@@ -1099,7 +1099,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_2_base_3_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">063</field>
@@ -1108,7 +1108,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_2_base_exempt"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">196 - for non-business purposes: base exempt</field>
                                 <field
@@ -1122,7 +1122,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_2_base_exempt_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">196</field>
@@ -1133,7 +1133,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_2d_importation_of_goods_tax"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">407 - Importation of goods – tax</field>
                         <field name="name@fr">407 - Importations de biens - taxe</field>
                         <field
@@ -1145,7 +1145,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_2d_1_tax_17"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">722 - for business purposes: tax 17%</field>
                                 <field
@@ -1159,7 +1159,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_tax_17_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-722</field>
@@ -1168,7 +1168,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_1_tax_16"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">922 - for business purposes: tax 16%</field>
                                 <field
@@ -1182,7 +1182,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_tax_16_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-922</field>
@@ -1191,7 +1191,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_1_tax_14"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">724 - for business purposes: tax 14%</field>
                                 <field
@@ -1205,7 +1205,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_tax_14_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-724</field>
@@ -1214,7 +1214,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_1_tax_13"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">924 - for business purposes: tax 13%</field>
                                 <field
@@ -1228,7 +1228,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_tax_13_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-924</field>
@@ -1237,7 +1237,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_1_tax_8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">726 - for business purposes: tax 8%</field>
                                 <field
@@ -1251,7 +1251,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_tax_8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-726</field>
@@ -1260,7 +1260,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_1_tax_7"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">926 - for business purposes: tax 7%</field>
                                 <field
@@ -1274,7 +1274,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_tax_7_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-926</field>
@@ -1283,7 +1283,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_1_tax_3"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">068 - for business purposes: tax 3%</field>
                                 <field
@@ -1297,7 +1297,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_1_tax_3_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-068</field>
@@ -1306,7 +1306,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_2_tax_17"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">732 - for non-business purposes: tax 17%</field>
                                 <field
@@ -1320,7 +1320,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_2_tax_17_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-732</field>
@@ -1329,7 +1329,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_2_tax_16"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">932 - for non-business purposes: tax 16%</field>
                                 <field
@@ -1343,7 +1343,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_2_tax_16_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-932</field>
@@ -1352,7 +1352,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_2_tax_14"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">734 - for non-business purposes: tax 14%</field>
                                 <field
@@ -1366,7 +1366,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_2_tax_14_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-734</field>
@@ -1375,7 +1375,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_2_tax_13"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">934 - for non-business purposes: tax 13%</field>
                                 <field
@@ -1389,7 +1389,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_2_tax_13_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-934</field>
@@ -1398,7 +1398,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_2_tax_8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">736 - for non-business purposes: tax 8%</field>
                                 <field
@@ -1412,7 +1412,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_2_tax_8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-736</field>
@@ -1421,7 +1421,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_2_tax_7"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">936 - for non-business purposes: tax 7%</field>
                                 <field
@@ -1435,7 +1435,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_2_tax_7_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-936</field>
@@ -1444,7 +1444,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2d_2_tax_3"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">073 - for non-business purposes: tax 3%</field>
                                 <field
@@ -1458,7 +1458,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2d_2_tax_3_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-073</field>
@@ -1469,7 +1469,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_2e_supply_of_service_for_customer"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">409 - Supply of services for which the customer is liable for the payment of VAT – base</field>
                         <field
@@ -1484,7 +1484,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_2e_1_base"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">436 - base</field>
                                 <field name="name@fr">436 - base</field>
                                 <field
@@ -1496,7 +1496,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="account_tax_report_line_2e_1_a_base_17"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">741 - not exempt within the territory: base 17%</field>
                                         <field
@@ -1510,7 +1510,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_1_a_base_17_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">741</field>
@@ -1519,7 +1519,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_1_a_base_16"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">941 - not exempt within the territory: base 16%</field>
                                         <field
@@ -1533,7 +1533,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_1_a_base_16_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">941</field>
@@ -1542,7 +1542,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_1_a_base_14"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">743 - not exempt within the territory: base 14%</field>
                                         <field
@@ -1556,7 +1556,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_1_a_base_14_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">743</field>
@@ -1565,7 +1565,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_1_a_base_13"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">943 - not exempt within the territory: base 13%</field>
                                         <field
@@ -1579,7 +1579,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_1_a_base_13_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">943</field>
@@ -1588,7 +1588,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_1_a_base_8"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">745 - not exempt within the territory: base 8%</field>
                                         <field
@@ -1602,7 +1602,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_1_a_base_8_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">745</field>
@@ -1611,7 +1611,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_1_a_base_7"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">945 - not exempt within the territory: base 7%</field>
                                         <field
@@ -1625,7 +1625,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_1_a_base_7_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">945</field>
@@ -1634,7 +1634,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_1_a_base_3"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">431 - not exempt within the territory: base 3%</field>
                                         <field
@@ -1648,7 +1648,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_1_a_base_3_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">431</field>
@@ -1659,7 +1659,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2e_1_b_exempt"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">435 - exempt within the territory: exempt</field>
                                 <field
@@ -1673,7 +1673,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2e_1_b_exempt_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">435</field>
@@ -1682,7 +1682,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2e_2_base"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">463 - base</field>
                                 <field name="name@fr">463 - base</field>
                                 <field
@@ -1694,7 +1694,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="account_tax_report_line_2e_2_base_17"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">751 - not established or residing within the Community: base 17%</field>
                                         <field
@@ -1708,7 +1708,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_2_base_17_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">751</field>
@@ -1717,7 +1717,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_2_base_16"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">951 - not established or residing within the Community: base 16%</field>
                                         <field
@@ -1731,7 +1731,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_2_base_16_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">951</field>
@@ -1740,7 +1740,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_2_base_14"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">753 - not established or residing within the Community: base 14%</field>
                                         <field
@@ -1754,7 +1754,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_2_base_14_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">753</field>
@@ -1763,7 +1763,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_2_base_13"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">953 - not established or residing within the Community: base 13%</field>
                                         <field
@@ -1777,7 +1777,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_2_base_13_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">953</field>
@@ -1786,7 +1786,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_2_base_8"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">755 - not established or residing within the Community: base 8%</field>
                                         <field
@@ -1800,7 +1800,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_2_base_8_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">755</field>
@@ -1809,7 +1809,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_2_base_7"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">955 - not established or residing within the Community: base 7%</field>
                                         <field
@@ -1823,7 +1823,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_2_base_7_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">955</field>
@@ -1832,7 +1832,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_2_base_3"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">441 - not established or residing within the Community: base 3%</field>
                                         <field
@@ -1846,7 +1846,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_2_base_3_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">441</field>
@@ -1855,7 +1855,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_2_exempt"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">445 - not established or residing within the Community: exempt</field>
                                         <field
@@ -1869,7 +1869,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_2_exempt_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">445</field>
@@ -1880,7 +1880,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2e_3_base"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">765 - base</field>
                                 <field name="name@fr">765 - base</field>
                                 <field
@@ -1892,7 +1892,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="account_tax_report_line_2e_3_base_17"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">761 - suppliers established within the territory: base 17%</field>
                                         <field
@@ -1906,7 +1906,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_3_base_17_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">761</field>
@@ -1915,7 +1915,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_3_base_16"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">961 - suppliers established within the territory: base 16%</field>
                                         <field
@@ -1929,7 +1929,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_3_base_16_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">961</field>
@@ -1942,7 +1942,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_2e_supply_of_service_for_customer_liable_for_payment_tax"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">410 - Supply of services for which the customer is liable for the payment of VAT – tax</field>
                         <field
@@ -1957,7 +1957,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_2e_1_a_tax"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">462 - tax</field>
                                 <field name="name@fr">462 - taxe</field>
                                 <field name="name@de">462 - MwSt.</field>
@@ -1968,7 +1968,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="account_tax_report_line_2e_1_a_tax_17"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">742 - not exempt within the territory: tax 17%</field>
                                         <field
@@ -1982,7 +1982,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_1_a_tax_17_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-742</field>
@@ -1991,7 +1991,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_1_a_tax_16"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">942 - not exempt within the territory: tax 16%</field>
                                         <field
@@ -2005,7 +2005,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_1_a_tax_16_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-942</field>
@@ -2014,7 +2014,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_1_a_tax_14"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">744 - not exempt within the territory: tax 14%</field>
                                         <field
@@ -2028,7 +2028,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_1_a_tax_14_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-744</field>
@@ -2037,7 +2037,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_1_a_tax_13"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">944 - not exempt within the territory: tax 13%</field>
                                         <field
@@ -2051,7 +2051,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_1_a_tax_13_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-944</field>
@@ -2060,7 +2060,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_1_a_tax_8"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">746 - not exempt within the territory: tax 8%</field>
                                         <field
@@ -2074,7 +2074,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_1_a_tax_8_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-746</field>
@@ -2083,7 +2083,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_1_a_tax_7"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">946 - not exempt within the territory: tax 7%</field>
                                         <field
@@ -2097,7 +2097,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_1_a_tax_7_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-946</field>
@@ -2106,7 +2106,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_1_a_tax_3"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">432 - not exempt within the territory: tax 3%</field>
                                         <field
@@ -2120,7 +2120,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_1_a_tax_3_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-432</field>
@@ -2131,7 +2131,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2e_2_tax"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">464 - tax</field>
                                 <field name="name@fr">464 - taxe</field>
                                 <field name="name@de">464 - MwSt.</field>
@@ -2142,7 +2142,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="account_tax_report_line_2e_2_tax_17"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">752 - not established or residing within the Community: tax 17%</field>
                                         <field
@@ -2156,7 +2156,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_2_tax_17_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-752</field>
@@ -2165,7 +2165,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_2_tax_16"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">952 - not established or residing within the Community: tax 16%</field>
                                         <field
@@ -2179,7 +2179,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_2_tax_16_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-952</field>
@@ -2188,7 +2188,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_2_tax_14"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">754 - not established or residing within the Community: tax 14%</field>
                                         <field
@@ -2202,7 +2202,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_2_tax_14_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-754</field>
@@ -2211,7 +2211,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_2_tax_13"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">954 - not established or residing within the Community: tax 13%</field>
                                         <field
@@ -2225,7 +2225,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_2_tax_13_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-954</field>
@@ -2234,7 +2234,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_2_tax_8"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">756 - not established or residing within the Community: tax 8%</field>
                                         <field
@@ -2248,7 +2248,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_2_tax_8_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-756</field>
@@ -2257,7 +2257,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_2_tax_7"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">956 - not established or residing within the Community: tax 7%</field>
                                         <field
@@ -2271,7 +2271,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_2_tax_7_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-956</field>
@@ -2280,7 +2280,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_2_tax_3"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">442 - not established or residing within the Community: tax 3%</field>
                                         <field
@@ -2294,7 +2294,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_2_tax_3_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-442</field>
@@ -2305,7 +2305,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2e_3_tax"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">766 - tax</field>
                                 <field name="name@fr">766 - taxe</field>
                                 <field name="name@de">766 - MwSt.</field>
@@ -2316,7 +2316,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="account_tax_report_line_2e_3_tax_17"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">762 - suppliers established within the territory: tax 17%</field>
                                         <field
@@ -2330,7 +2330,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_3_tax_17_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">762</field>
@@ -2339,7 +2339,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_2e_3_tax_16"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">962 - suppliers established within the territory: tax 16%</field>
                                         <field
@@ -2353,7 +2353,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_2e_3_tax_16_tag"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">962</field>
@@ -2366,7 +2366,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_2f_supply_goods_base"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">767 - Supply of goods for which the purchaser is liable for the payment of VAT - base</field>
                         <field
@@ -2381,7 +2381,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_2f_supply_goods_base_17"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">769 - base 17%</field>
                                 <field name="name@de">769 - 17% Basis</field>
                                 <field name="name@lb">769 - Basis 17%</field>
@@ -2389,7 +2389,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2f_supply_goods_base_17_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">769</field>
@@ -2398,7 +2398,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2f_supply_goods_base_8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">763 - base 8%</field>
                                 <field
                                     name="name@de">763 - Besteuerungsgrundlage 8%</field>
@@ -2407,7 +2407,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2f_supply_goods_base_8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">763</field>
@@ -2416,7 +2416,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2f_supply_goods_base_7"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">963 - base 7%</field>
                                 <field
                                     name="name@de">963 - Besteuerungsgrundlage 7%</field>
@@ -2425,7 +2425,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2f_supply_goods_base_7_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">963</field>
@@ -2436,7 +2436,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_2f_supply_goods_tax"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">768 - Supply of goods for which the purchaser is liable for the payment of VAT - tax</field>
                         <field
@@ -2451,7 +2451,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_2f_supply_goods_tax_17"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">770 - tax 17%</field>
                                 <field name="name@fr">770 - taxe 17%</field>
                                 <field name="name@de">770 - Steuer 17%</field>
@@ -2460,7 +2460,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2f_supply_goods_tax_17_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">770</field>
@@ -2469,7 +2469,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2f_supply_goods_tax_8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">764 - tax 8%</field>
                                 <field name="name@fr">764 - taxe 8%</field>
                                 <field name="name@de">764 - MwSt. 8%</field>
@@ -2478,7 +2478,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2f_supply_goods_tax_8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">764</field>
@@ -2487,7 +2487,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_2f_supply_goods_tax_7"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">964 - tax 7%</field>
                                 <field name="name@fr">964 - taxe 7%</field>
                                 <field name="name@de">964 - MwSt. 7%</field>
@@ -2496,7 +2496,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_2f_supply_goods_tax_7_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">964</field>
@@ -2507,7 +2507,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_2g_special_arrangement"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">227 - Special arrangement for tax suspension: adjustment</field>
                         <field
@@ -2520,7 +2520,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_2g_special_arrangement_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">227</field>
@@ -2529,7 +2529,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_2h_total_tax_due"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">076 - Total tax due</field>
                         <field name="name@fr">076 - Total de la taxe en aval</field>
                         <field name="name@de">076 - Gesamtbetrag der Steuer</field>
@@ -2538,7 +2538,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_2h_total_tax_due_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field

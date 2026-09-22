@@ -627,7 +627,7 @@ class TestBalanceSheetBalanced(TestAccountReportsCommon):
             variant["id"]
             for variant in generic_balance_sheet.get_options({})["available_variants"]
         ]
-        available_reports = self.env["account.report"].browse(available_report_ids)
+        available_reports = self.env["report.formula"].browse(available_report_ids)
 
         # Don't test Balance Sheets for which the REPORT_CONFIG specifies a chart_template_refs that differs from this CoA.
         available_report_refs = available_reports.get_external_id()
@@ -637,7 +637,7 @@ class TestBalanceSheetBalanced(TestAccountReportsCommon):
             if coa
             not in REPORT_CONFIG.get(report_ref, {}).get("chart_template_refs", [coa])
         ]
-        available_reports -= self.env["account.report"].browse(report_ids_to_skip)
+        available_reports -= self.env["report.formula"].browse(report_ids_to_skip)
         available_reports = available_reports.with_company(self.env.company)
 
         # Choose an account to be a counterpart account. Every AML we generate will have a counterpart in this account.
@@ -672,7 +672,7 @@ class TestBalanceSheetBalanced(TestAccountReportsCommon):
     def _set_up_report(self, report):
         """Set-up a Balance Sheet report for testing.
 
-        :param account.report report: the Balance Sheet report to set-up
+        :param report.formula report: the Balance Sheet report to set-up
         :return: report_setup_data, holding the following keys:
             * report_ref: the XMLID of the report currently being tested
             * report: the report currently being tested
@@ -879,8 +879,8 @@ class TestBalanceSheetBalanced(TestAccountReportsCommon):
             line = next(
                 filter(
                     lambda line: (
-                        self.env["account.report"]._get_res_id_from_line_id(
-                            line["id"], "account.report.line"
+                        self.env["report.formula"]._get_res_id_from_line_id(
+                            line["id"], "report.formula.line"
                         )
                         == report_line.id
                     ),

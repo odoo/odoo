@@ -2,8 +2,8 @@ from odoo import fields, models
 
 
 class AccountReportExternalValue(models.Model):
-    _name = "account.report.external.value"
-    _description = "Accounting Report External Value"
+    _name = "report.formula.external.value"
+    _description = "Formula Report External Value"
     _check_company_auto = True
     _order = "date, id"
 
@@ -13,7 +13,7 @@ class AccountReportExternalValue(models.Model):
     date = fields.Date(required=True)
 
     target_report_expression_id = fields.Many2one(
-        comodel_name="account.report.expression",
+        comodel_name="report.formula.expression",
         string="Target Expression",
         index=True,
         required=True,
@@ -40,6 +40,6 @@ class AccountReportExternalValue(models.Model):
 
     carryover_origin_expression_label = fields.Char(string="Origin Expression Label")
     carryover_origin_report_line_id = fields.Many2one(
-        comodel_name="account.report.line",
+        comodel_name="report.formula.line",
         string="Origin Line",
     )

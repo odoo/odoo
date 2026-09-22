@@ -96,7 +96,7 @@ class TestSpreadsheetAgreesWithTheAccountCodesEngine(TestAccountReportsCommon):
         return result["debit"] - result["credit"]
 
     def _report_balance(self, prefix, *, date_range, date_scope="strict_range"):
-        report = self.env["account.report"].create(
+        report = self.env["report.formula"].create(
             {
                 "name": f"Agreement probe {prefix} {date_scope}",
                 "filter_date_range": date_range,

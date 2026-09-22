@@ -53,7 +53,7 @@ class AccountReturnType(models.Model):
         tracking=True,
     )
     report_id = fields.Many2one(
-        comodel_name="account.report",
+        comodel_name="report.formula",
         index="btree",
         tracking=True,
     )

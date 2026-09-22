@@ -308,7 +308,7 @@
         </record>
         <record id="report_external_value_comp_rule" model="ir.rule">
             <field name="name">Report External Value multi-company</field>
-            <field name="model_id" ref="model_account_report_external_value" />
+            <field name="model_id" ref="model_report_formula_external_value" />
             <field name="domain_force">[('company_id', 'in', company_ids)]</field>
         </record>
         <record id="ir_rule_res_partner_bank_billing_officers" model="ir.rule">

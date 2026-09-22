@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="account_tax_report_ga" model="account.report">
+    <record id="account_tax_report_ga" model="report.formula">
         <field name="name">VAT Report</field>
         <field name="name@fr">Déclaration TVA</field>
         <field name="root_report_id" ref="account.generic_tax_report" />
@@ -9,19 +9,19 @@
         <field name="allow_foreign_vat" eval="True" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="account_tax_report_ga_base" model="account.report.column">
+            <record id="account_tax_report_ga_base" model="report.formula.column">
                 <field name="name">Base</field>
                 <field name="name@fr">Base</field>
                 <field name="expression_label">base</field>
             </record>
-            <record id="account_tax_report_ga_tax" model="account.report.column">
+            <record id="account_tax_report_ga_tax" model="report.formula.column">
                 <field name="name">Tax</field>
                 <field name="name@fr">Taxe</field>
                 <field name="expression_label">tax</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="account_tax_report_line_ga_vat" model="account.report.line">
+            <record id="account_tax_report_line_ga_vat" model="report.formula.line">
                 <field name="name">I. Value added tax</field>
                 <field name="name@fr">I. Taxe sur la Valeur Ajoutée</field>
                 <field name="sequence">10</field>
@@ -30,7 +30,7 @@
                 <field name="children_ids">
                     <record
                         id="account_tax_report_line_ga_sales"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">1- Realized sales</field>
                         <field name="name@fr">1- Chiffre d'affaires réalisé</field>
                         <field name="sequence">20</field>
@@ -38,7 +38,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_ga_sales_non_impo"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">1. Non-imposable operations</field>
                                 <field
                                     name="name@fr">1. Opérations non imposables</field>
@@ -47,7 +47,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_ga_sales_non_impo_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-GA_non_impo</field>
@@ -56,7 +56,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_ga_sales_export"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">2. Exports</field>
                                 <field name="name@fr">2. Exportations</field>
                                 <field name="sequence">40</field>
@@ -64,7 +64,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_ga_sales_exports_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-GA_export</field>
@@ -73,7 +73,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_ga_sales_taxable"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">3. Taxable operations</field>
                                 <field name="name@fr">3. Opérations imposables</field>
                                 <field name="sequence">50</field>
@@ -81,7 +81,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_ga_sales_taxable_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">base</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -89,7 +89,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_sales_taxable_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -99,7 +99,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="account_tax_report_line_ga_sales_taxable_18"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">at 18%</field>
                                         <field name="name@fr">à 18%</field>
                                         <field name="sequence">60</field>
@@ -107,7 +107,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_ga_sales_taxable_18_base"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">base</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field
@@ -115,7 +115,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_sales_taxable_18_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field
@@ -125,7 +125,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_sales_taxable_10"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">at 10%</field>
                                         <field name="name@fr">à 10%</field>
                                         <field name="sequence">70</field>
@@ -133,7 +133,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_ga_sales_taxable_10_base"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">base</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field
@@ -141,7 +141,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_sales_taxable_10_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field
@@ -151,7 +151,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_sales_taxable_5"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">at 5%</field>
                                         <field name="name@fr">à 5%</field>
                                         <field name="sequence">80</field>
@@ -159,7 +159,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_ga_sales_taxable_5_base"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">base</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field
@@ -167,7 +167,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_sales_taxable_5_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field
@@ -179,7 +179,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_ga_sales_additional_taxable"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">5. Additional taxable operations</field>
                                 <field
@@ -189,7 +189,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_ga_sales_additional_taxable_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">base</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -197,7 +197,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_sales_additional_taxable_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -207,7 +207,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="account_tax_report_line_ga_sales_additional_taxable_18"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">at 18%</field>
                                         <field name="name@fr">à 18%</field>
                                         <field name="sequence">110</field>
@@ -216,7 +216,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_ga_sales_additional_taxable_18_base"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">base</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -224,7 +224,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_sales_additional_taxable_18_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -234,7 +234,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_sales_additional_taxable_10"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">at 10%</field>
                                         <field name="name@fr">à 10%</field>
                                         <field name="sequence">120</field>
@@ -243,7 +243,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_ga_sales_additional_taxable_10_base"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">base</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -251,7 +251,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_sales_additional_taxable_10_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -261,7 +261,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_sales_additional_taxable_5"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">at 5%</field>
                                         <field name="name@fr">à 5%</field>
                                         <field name="sequence">130</field>
@@ -270,7 +270,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_ga_sales_additional_taxable_5_base"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">base</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -278,7 +278,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_sales_additional_taxable_5_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -288,7 +288,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_sales_taxable_state"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">5a. Taxable operations with the State</field>
                                         <field
@@ -298,7 +298,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="account_tax_report_line_ga_sales_taxable_state_18"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 18%</field>
                                                 <field name="name@fr">à 18%</field>
                                                 <field name="sequence">150</field>
@@ -307,7 +307,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_sales_additional_taxable_state_18_base"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">base</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -316,7 +316,7 @@
                                                     </record>
                                                     <record
                                                         id="account_tax_report_line_ga_sales_additional_taxable_state_18_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -327,7 +327,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_sales_taxable_state_10"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 10%</field>
                                                 <field name="name@fr">à 10%</field>
                                                 <field name="sequence">160</field>
@@ -336,7 +336,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_sales_taxable_state_10_base"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">base</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -345,7 +345,7 @@
                                                     </record>
                                                     <record
                                                         id="account_tax_report_line_ga_sales_taxable_state_10_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -356,7 +356,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_sales_taxable_state_5"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 5%</field>
                                                 <field name="name@fr">à 5%</field>
                                                 <field name="sequence">170</field>
@@ -365,7 +365,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_sales_taxable_state_5_base"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">base</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -374,7 +374,7 @@
                                                     </record>
                                                     <record
                                                         id="account_tax_report_line_ga_sales_taxable_state_5_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -387,7 +387,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_sales_additional_taxable_other"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">5b. Other taxable operations</field>
                                         <field
@@ -397,7 +397,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="account_tax_report_line_ga_sales_additional_taxable_other_18"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 18%</field>
                                                 <field name="name@fr">à 18%</field>
                                                 <field name="sequence">190</field>
@@ -406,7 +406,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_sales_additional_taxable_other_18_base"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">base</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -415,7 +415,7 @@
                                                     </record>
                                                     <record
                                                         id="account_tax_report_line_ga_sales_additional_taxable_other_18_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -426,7 +426,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_sales_additional_taxable_other_10"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 10%</field>
                                                 <field name="name@fr">à 10%</field>
                                                 <field name="sequence">200</field>
@@ -435,7 +435,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_sales_additional_taxable_other_10_base"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">base</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -444,7 +444,7 @@
                                                     </record>
                                                     <record
                                                         id="account_tax_report_line_ga_sales_additional_taxable_other_10_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -455,7 +455,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_sales_additional_taxable_other_5"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 5%</field>
                                                 <field name="name@fr">à 5%</field>
                                                 <field name="sequence">210</field>
@@ -464,7 +464,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_sales_additional_taxable_other_5_base"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">base</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -473,7 +473,7 @@
                                                     </record>
                                                     <record
                                                         id="account_tax_report_line_ga_sales_additional_taxable_other_5_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -488,7 +488,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_ga_sales_total"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">4. Total of operations (line 1+2+3+5)</field>
                                 <field
@@ -498,7 +498,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_ga_sales_total_base"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">base</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -508,7 +508,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_ga_sales_gross"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">6. Gross VAT (line 3+5)</field>
                                 <field name="name@fr">6. Base TVA (lignes 3 + 5)</field>
                                 <field name="sequence">220</field>
@@ -516,7 +516,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_ga_sales_gross_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -528,7 +528,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_ga_deduction"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">2- Deductions</field>
                         <field name="name@fr">2- Déductions</field>
                         <field name="sequence">230</field>
@@ -536,7 +536,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_ga_deduction_goods_service"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">Deductions on goods and services</field>
                                 <field
@@ -546,7 +546,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="account_tax_report_line_ga_deduction_goods_service_importation"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">7a. on importation</field>
                                         <field
                                             name="name@fr">7a. sur importation</field>
@@ -556,7 +556,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="account_tax_report_line_ga_deduction_goods_service_importation_18"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 18%</field>
                                                 <field name="name@fr">à 18%</field>
                                                 <field name="sequence">260</field>
@@ -565,7 +565,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_deduction_goods_service_importation_18_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -576,7 +576,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_deduction_goods_service_importation_10"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 10%</field>
                                                 <field name="name@fr">à 10%</field>
                                                 <field name="sequence">270</field>
@@ -585,7 +585,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_deduction_goods_service_importation_10_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -596,7 +596,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_deduction_goods_service_importation_5"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 5%</field>
                                                 <field name="name@fr">à 5%</field>
                                                 <field name="sequence">280</field>
@@ -605,7 +605,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_deduction_goods_service_importation_5_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -618,7 +618,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_deduction_goods_service_domestic"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">7b. on domestic markets</field>
                                         <field
@@ -629,7 +629,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="account_tax_report_line_ga_deduction_goods_service_domestic_18"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 18%</field>
                                                 <field name="name@fr">à 18%</field>
                                                 <field name="sequence">300</field>
@@ -638,7 +638,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_deduction_goods_service_domestic_18_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -649,7 +649,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_deduction_goods_service_domestic_10"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 10%</field>
                                                 <field name="name@fr">à 10%</field>
                                                 <field name="sequence">310</field>
@@ -658,7 +658,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_deduction_goods_service_domestic_10_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -669,7 +669,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_deduction_goods_service_domestic_5"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 5%</field>
                                                 <field name="name@fr">à 5%</field>
                                                 <field name="sequence">320</field>
@@ -678,7 +678,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_deduction_goods_service_domestic_5_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -691,7 +691,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_deduction_goods_service_total"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">7. Total (7a+7b)</field>
                                         <field name="name@fr">7. Total (7a + 7b)</field>
                                         <field name="sequence">330</field>
@@ -699,7 +699,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_ga_deduction_goods_service_total_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -711,7 +711,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_ga_deduction_assets"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Deductions on assets</field>
                                 <field
                                     name="name@fr">Déductions sur immobilisations</field>
@@ -720,7 +720,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="account_tax_report_line_ga_deduction_assets_importation"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">8a. on importation</field>
                                         <field
                                             name="name@fr">8a. sur importation</field>
@@ -730,7 +730,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="account_tax_report_line_ga_deduction_assets_importation_18"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 18%</field>
                                                 <field name="name@fr">à 18%</field>
                                                 <field name="sequence">360</field>
@@ -739,7 +739,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_deduction_assets_importation_18_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -750,7 +750,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_deduction_assets_importation_10"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 10%</field>
                                                 <field name="name@fr">à 10%</field>
                                                 <field name="sequence">370</field>
@@ -759,7 +759,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_deduction_assets_importation_10_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -770,7 +770,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_deduction_assets_importation_5"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 5%</field>
                                                 <field name="name@fr">à 5%</field>
                                                 <field name="sequence">380</field>
@@ -779,7 +779,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_deduction_assets_importation_5_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -792,7 +792,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_deduction_assets_domestic"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">8b. on domestic markets</field>
                                         <field
@@ -803,7 +803,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="account_tax_report_line_ga_deduction_assets_domestic_18"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 18%</field>
                                                 <field name="name@fr">à 18%</field>
                                                 <field name="sequence">400</field>
@@ -812,7 +812,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_deduction_assets_domestic_18_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -823,7 +823,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_deduction_assets_domestic_10"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 10%</field>
                                                 <field name="name@fr">à 10%</field>
                                                 <field name="sequence">410</field>
@@ -832,7 +832,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_deduction_assets_domestic_10_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -843,7 +843,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_deduction_assets_domestic_5"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 5%</field>
                                                 <field name="name@fr">à 5%</field>
                                                 <field name="sequence">420</field>
@@ -852,7 +852,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_deduction_assets_domestic_5_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -865,7 +865,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_deduction_assets_total"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">8. Total (8a+8b)</field>
                                         <field name="name@fr">8. Total (8a + 8b)</field>
                                         <field name="sequence">430</field>
@@ -873,7 +873,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_ga_deduction_assets_total_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -885,7 +885,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_ga_regularisation"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Regularisations</field>
                                 <field name="name@fr">Régularisations </field>
                                 <field name="sequence">440</field>
@@ -893,7 +893,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="account_tax_report_line_ga_regularisation_withholding"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">9a. State withholding</field>
                                         <field name="name@fr">9a. précompte Etat</field>
                                         <field name="sequence">450</field>
@@ -902,7 +902,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="account_tax_report_line_ga_regularisation_withholding_18"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 18%</field>
                                                 <field name="name@fr">à 18%</field>
                                                 <field name="sequence">460</field>
@@ -911,7 +911,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_regularisation_withholding_18_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -922,7 +922,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_regularisation_withholding_10"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 10%</field>
                                                 <field name="name@fr">à 10%</field>
                                                 <field name="sequence">470</field>
@@ -931,7 +931,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_regularisation_withholding_10_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -942,7 +942,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_regularisation_withholding_5"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 5%</field>
                                                 <field name="name@fr">à 5%</field>
                                                 <field name="sequence">480</field>
@@ -951,7 +951,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_regularisation_withholding_5_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -964,7 +964,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_regularisation_exemptions"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">9b. VAT exemptions</field>
                                         <field
                                             name="name@fr">9b. dispenses de TVA</field>
@@ -974,7 +974,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="account_tax_report_line_ga_regularisation_exemptions_18"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 18%</field>
                                                 <field name="name@fr">à 18%</field>
                                                 <field name="sequence">500</field>
@@ -983,7 +983,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_regularisation_exemptions_18_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -994,7 +994,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_regularisation_exemptions_10"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 10%</field>
                                                 <field name="name@fr">à 10%</field>
                                                 <field name="sequence">510</field>
@@ -1003,7 +1003,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_regularisation_exemptions_10_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -1014,7 +1014,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_regularisation_exemptions_5"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 5%</field>
                                                 <field name="name@fr">à 5%</field>
                                                 <field name="sequence">520</field>
@@ -1023,7 +1023,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_regularisation_domestic_5_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -1036,7 +1036,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_regularisation_additional_deduction"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">9c. Additional deduction</field>
                                         <field
@@ -1047,7 +1047,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="account_tax_report_line_ga_regularisation_additional_deduction_18"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 18%</field>
                                                 <field name="name@fr">à 18%</field>
                                                 <field name="sequence">540</field>
@@ -1056,7 +1056,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_regularisation_additional_deduction_18_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -1067,7 +1067,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_regularisation_additional_deduction_10"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 10%</field>
                                                 <field name="name@fr">à 10%</field>
                                                 <field name="sequence">550</field>
@@ -1076,7 +1076,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_regularisation_additional_deduction_10_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -1087,7 +1087,7 @@
                                             </record>
                                             <record
                                                 id="account_tax_report_line_ga_regularisation_additional_deduction_5"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">at 5%</field>
                                                 <field name="name@fr">à 5%</field>
                                                 <field name="sequence">560</field>
@@ -1096,7 +1096,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="account_tax_report_line_ga_regularisation_additional_deduction_5_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">tax_tags</field>
@@ -1109,7 +1109,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_regularisation_total"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">9. Total (9a+9b+9c)</field>
                                         <field
                                             name="name@fr">9. Total (9a+9b+9c)</field>
@@ -1119,7 +1119,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_ga_regularisation_total_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -1129,7 +1129,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_refund_requested"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">10a. refund requested the previous month</field>
                                         <field
@@ -1139,7 +1139,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_ga_refund_requested_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">GA_10a</field>
@@ -1148,7 +1148,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_repayment"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">10b. repayment to be made</field>
                                         <field
@@ -1158,7 +1158,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_ga_repayment_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">GA_10b</field>
@@ -1167,7 +1167,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_total_payments"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">10. Total (10a+10b)</field>
                                         <field
                                             name="name@fr">10. Total (10a+10b)</field>
@@ -1176,7 +1176,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_ga_total_payments_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -1188,7 +1188,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_ga_report_credit"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">11. Credit carried over from previous month</field>
                                 <field
@@ -1198,7 +1198,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_ga_report_credit_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1206,7 +1206,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_report_credit_tax_carryover"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field
                                             name="label">_applied_carryover_tax</field>
                                         <field name="engine">external</field>
@@ -1218,7 +1218,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_ga_deduction_total"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">12. Total (7+8+9-10+11)</field>
                                 <field name="name@fr">12. Total (7+8+9-10+11)</field>
                                 <field name="sequence">620</field>
@@ -1226,7 +1226,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_ga_deduction_total_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1238,7 +1238,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_ga_settlement"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">3- Settlement of VAT payable</field>
                         <field name="name@fr">3- Décompte de la TVA à payer</field>
                         <field name="sequence">630</field>
@@ -1246,7 +1246,7 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_ga_gross_payable"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">13. Gross VAT</field>
                                 <field name="name@fr">13. TVA brute</field>
                                 <field name="sequence">640</field>
@@ -1254,7 +1254,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="account_tax_report_line_ga_gross_18"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">at 18%</field>
                                         <field name="name@fr">à 18%</field>
                                         <field name="sequence">650</field>
@@ -1262,7 +1262,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_ga_gross_18_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -1272,7 +1272,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_gross_10"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">at 10%</field>
                                         <field name="name@fr">à 10%</field>
                                         <field name="sequence">660</field>
@@ -1280,7 +1280,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_ga_gross_10_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -1290,7 +1290,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_gross_5"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">at 5%</field>
                                         <field name="name@fr">à 5%</field>
                                         <field name="sequence">670</field>
@@ -1298,7 +1298,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="account_tax_report_line_ga_gross_5_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -1310,7 +1310,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_ga_total_gross"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">14. Total gross VAT</field>
                                 <field name="name@fr">14. Total TVA brute</field>
                                 <field name="sequence">680</field>
@@ -1318,7 +1318,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_ga_total_gross_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1328,7 +1328,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_ga_deductible"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">15. Deductible VAT</field>
                                 <field name="name@fr">15. TVA déductible</field>
                                 <field name="sequence">690</field>
@@ -1336,7 +1336,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_ga_deductible_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">GA_DEDU_TOTAL.tax</field>
@@ -1345,7 +1345,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_ga_net_to_pay"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">16. Net VAT to pay (14-15)</field>
                                 <field
                                     name="name@fr">16. TVA nette à payer (14-15)</field>
@@ -1354,7 +1354,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_ga_net_to_pay_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1366,7 +1366,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_ga_credit_to_report"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">17. Credit to report (15-14)</field>
                                 <field
                                     name="name@fr">17. Crédit à reporter (15-14)</field>
@@ -1375,7 +1375,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_ga_credit_to_report_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1386,7 +1386,7 @@
                                     </record>
                                     <record
                                         id="account_tax_report_line_ga_credit_to_report_carryover"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">_carryover_tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1400,7 +1400,7 @@
                     </record>
                 </field>
             </record>
-            <record id="account_tax_report_line_ga_css" model="account.report.line">
+            <record id="account_tax_report_line_ga_css" model="report.formula.line">
                 <field name="name">II. Special solidarity contribution</field>
                 <field name="name@fr">II. Contribution Spéciale de Solidarité</field>
                 <field name="sequence">720</field>
@@ -1409,7 +1409,7 @@
                 <field name="children_ids">
                     <record
                         id="account_tax_report_line_ga_taxable"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">1. Taxable operations</field>
                         <field name="name@fr">1. Opérations imposables</field>
                         <field name="sequence">730</field>
@@ -1417,7 +1417,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_ga_css_taxable_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-GA_css</field>
@@ -1426,7 +1426,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_ga_css_taxable_state"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">2. Taxable operations with state</field>
                         <field
                             name="name@fr">2. Opérations imposables avec l’Etat</field>
@@ -1435,7 +1435,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_ga_css_taxable_state_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">GA_css_state</field>
@@ -1444,7 +1444,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_ga_css_taxable_other"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">3. Other taxable operations</field>
                         <field name="name@fr">3. Autres opérations imposables</field>
                         <field name="sequence">750</field>
@@ -1452,7 +1452,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_ga_css_taxable_other_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-GA_css_other</field>
@@ -1461,7 +1461,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_ga_css_base_taxable"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">4. Taxable base</field>
                         <field name="name@fr">4. Base imposable</field>
                         <field name="sequence">760</field>
@@ -1469,7 +1469,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_ga_css_base_taxable_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -1479,7 +1479,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_ga_css_rate"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">5. Rate: 1%</field>
                         <field name="name@fr">5. Taux: 1%</field>
                         <field name="sequence">770</field>
@@ -1487,7 +1487,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_ga_css_due"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">6. Amount due</field>
                         <field name="name@fr">6. Montant dû</field>
                         <field name="sequence">780</field>
@@ -1495,7 +1495,7 @@
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_ga_css_due_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-GA_css_tax</field>

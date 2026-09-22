@@ -20,7 +20,7 @@ class AccountChangeLockDate(models.TransientModel):
         """
         # extends account.accountant
         date_from, date_to = self._get_current_period_dates(lock_date_field)
-        self.env["account.report"]._create_default_external_values(
+        self.env["report.formula"]._create_default_external_values(
             date_from,
             date_to,
             lock_date_field == "tax_lock_date",

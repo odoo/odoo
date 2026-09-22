@@ -18,7 +18,7 @@ class TestReportSections(AccountTestInvoicingHttpCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.section_1 = cls.env["account.report"].create(
+        cls.section_1 = cls.env["report.formula"].create(
             {
                 "name": "Section 1",
                 "filter_journals": True,
@@ -49,7 +49,7 @@ class TestReportSections(AccountTestInvoicingHttpCommon):
             }
         )
 
-        cls.section_2 = cls.env["account.report"].create(
+        cls.section_2 = cls.env["report.formula"].create(
             {
                 "name": "Section 2",
                 "filter_period_comparison": True,
@@ -93,7 +93,7 @@ class TestReportSections(AccountTestInvoicingHttpCommon):
             }
         )
 
-        cls.composite_report = cls.env["account.report"].create(
+        cls.composite_report = cls.env["report.formula"].create(
             {
                 "name": "Test Sections",
                 "section_report_ids": [
@@ -264,7 +264,7 @@ class TestReportSections(AccountTestInvoicingHttpCommon):
         self.section_1.filter_journals = True
 
         with patch.object(
-            type(self.env["account.report"]),
+            type(self.env["report.formula"]),
             "_init_options_custom",
             patched_init_options_custom,
         ):
@@ -273,13 +273,13 @@ class TestReportSections(AccountTestInvoicingHttpCommon):
             )
 
     def test_exported_xlsx_unique_names(self):
-        composite_report = self.env["account.report"].create(
+        composite_report = self.env["report.formula"].create(
             {
                 "name": "Composite",
             }
         )
         for i in range(1, 13):
-            self.env["account.report"].create(
+            self.env["report.formula"].create(
                 {
                     "name": "Comprehensive Monthly Analysis Report Q%d" % i,
                     "section_main_report_ids": [Command.set([composite_report.id])],
@@ -345,7 +345,7 @@ class TestReportSections(AccountTestInvoicingHttpCommon):
     def test_composite_report_with_journal_report_pdf_export(self):
         """Test exporting to PDF a composite report containing a journal report."""
         journal_report = self.env.ref("account.journal_report")
-        composite_with_journal = self.env["account.report"].create(
+        composite_with_journal = self.env["report.formula"].create(
             {
                 "name": "Test Composite with Journal Report",
                 "section_report_ids": [Command.set([journal_report.id])],

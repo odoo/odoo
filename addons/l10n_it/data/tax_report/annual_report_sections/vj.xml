@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="tax_annual_report_vat_vj" model="account.report">
+    <record id="tax_annual_report_vat_vj" model="report.formula">
         <field name="name">VJ VAT Report</field>
         <field name="name@it">Rapporto IVA VJ</field>
         <field name="sequence">1</field>
         <field name="country_id" ref="base.it" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="tax_annual_report_vat_balance_vj" model="account.report.column">
+            <record id="tax_annual_report_vat_balance_vj" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="name@it">Saldo</field>
                 <field name="expression_label">balance</field>
@@ -17,12 +17,12 @@
         <field name="line_ids">
             <record
                 id="tax_annual_report_line_reverse_charge_iva"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Reverse Charge</field>
                 <field name="name@it">Inversione contabile</field>
                 <field name="code">VJ</field>
                 <field name="children_ids">
-                    <record id="tax_annual_report_line_vj1" model="account.report.line">
+                    <record id="tax_annual_report_line_vj1" model="report.formula.line">
                         <field
                             name="name">VJ1 - Purchases of goods from Vatican City and San Marino</field>
                         <field
@@ -30,7 +30,7 @@
                         <field name="code">VJ1</field>
                         <field name="tax_tags_formula">vj1</field>
                     </record>
-                    <record id="tax_annual_report_line_vj2" model="account.report.line">
+                    <record id="tax_annual_report_line_vj2" model="report.formula.line">
                         <field
                             name="name">VJ2 - Extraction of goods from VAT warehouses</field>
                         <field
@@ -38,7 +38,7 @@
                         <field name="code">VJ2</field>
                         <field name="tax_tags_formula">vj2</field>
                     </record>
-                    <record id="tax_annual_report_line_vj3" model="account.report.line">
+                    <record id="tax_annual_report_line_vj3" model="report.formula.line">
                         <field
                             name="name">VJ3 - Purchases of goods already in Italy or services, from non-residents</field>
                         <field
@@ -46,7 +46,7 @@
                         <field name="code">VJ3</field>
                         <field name="tax_tags_formula">vj3</field>
                     </record>
-                    <record id="tax_annual_report_line_vj4" model="account.report.line">
+                    <record id="tax_annual_report_line_vj4" model="report.formula.line">
                         <field
                             name="name">VJ4 - Fees paid to resellers of travel tickets and resellers of parking documents</field>
                         <field
@@ -54,7 +54,7 @@
                         <field name="code">VJ4</field>
                         <field name="tax_tags_formula">vj4</field>
                     </record>
-                    <record id="tax_annual_report_line_vj5" model="account.report.line">
+                    <record id="tax_annual_report_line_vj5" model="report.formula.line">
                         <field
                             name="name">VJ5 - Commissions paid by travel agents to their intermediaries</field>
                         <field
@@ -62,7 +62,7 @@
                         <field name="code">VJ5</field>
                         <field name="tax_tags_formula">vj5</field>
                     </record>
-                    <record id="tax_annual_report_line_vj6" model="account.report.line">
+                    <record id="tax_annual_report_line_vj6" model="report.formula.line">
                         <field
                             name="name">VJ6 - Purchases of scrap and other recovered materials</field>
                         <field
@@ -70,7 +70,7 @@
                         <field name="code">VJ6</field>
                         <field name="tax_tags_formula">vj6</field>
                     </record>
-                    <record id="tax_annual_report_line_vj7" model="account.report.line">
+                    <record id="tax_annual_report_line_vj7" model="report.formula.line">
                         <field
                             name="name">VJ7 - Purchases of industrial gold and pure silver made in Italy</field>
                         <field
@@ -78,7 +78,7 @@
                         <field name="code">VJ7</field>
                         <field name="tax_tags_formula">vj7</field>
                     </record>
-                    <record id="tax_annual_report_line_vj8" model="account.report.line">
+                    <record id="tax_annual_report_line_vj8" model="report.formula.line">
                         <field
                             name="name">VJ8 - Investment gold purchases made in Italy</field>
                         <field
@@ -86,7 +86,7 @@
                         <field name="code">VJ8</field>
                         <field name="tax_tags_formula">vj8</field>
                     </record>
-                    <record id="tax_annual_report_line_vj9" model="account.report.line">
+                    <record id="tax_annual_report_line_vj9" model="report.formula.line">
                         <field name="name">VJ9 - Intra-EU Purchases of Goods</field>
                         <field
                             name="name@it">VJ9 - Acquisti intracomunitari di beni</field>
@@ -95,7 +95,7 @@
                     </record>
                     <record
                         id="tax_annual_report_line_vj10"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">VJ10 - Imports of scrap and other recovered materials</field>
                         <field
@@ -105,7 +105,7 @@
                     </record>
                     <record
                         id="tax_annual_report_line_vj11"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">VJ11 - Imports of industrial gold and pure silver</field>
                         <field
@@ -115,7 +115,7 @@
                     </record>
                     <record
                         id="tax_annual_report_line_vj12"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">VJ12 - Subcontracting of services in the construction field</field>
                         <field
@@ -125,7 +125,7 @@
                     </record>
                     <record
                         id="tax_annual_report_line_vj13"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">VJ13 - Purchases of buildings or portions of buildings used for capital purposes</field>
                         <field
@@ -135,7 +135,7 @@
                     </record>
                     <record
                         id="tax_annual_report_line_vj14"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">VJ14 - Purchases of cell phones</field>
                         <field
                             name="name@it">VJ14 - Acquisti di telefoni cellulari</field>
@@ -144,7 +144,7 @@
                     </record>
                     <record
                         id="tax_annual_report_line_vj15"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">VJ15 - Purchases of electronic products</field>
                         <field
@@ -154,7 +154,7 @@
                     </record>
                     <record
                         id="tax_annual_report_line_vj16"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">VJ16 - Provision of services in the construction field</field>
                         <field
@@ -164,7 +164,7 @@
                     </record>
                     <record
                         id="tax_annual_report_line_vj17"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">VJ17 - Purchases of energy sector goods and services</field>
                         <field
@@ -174,7 +174,7 @@
                     </record>
                     <record
                         id="tax_annual_report_line_vj18"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">VJ18 - Purchases made by VAT-registered public administrations</field>
                         <field
@@ -184,7 +184,7 @@
                     </record>
                     <record
                         id="tax_annual_report_line_vj19"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">VJ19 - Total frame VJ</field>
                         <field name="name@it">VJ19 - Totale quadro VJ</field>
                         <field name="code">VJ19</field>

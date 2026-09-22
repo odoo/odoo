@@ -24,12 +24,12 @@ _debug = DebugLog(__name__)
 
 
 class AccountReportExpression(models.Model):
-    _name = "account.report.expression"
-    _description = "Accounting Report Expression"
+    _name = "report.formula.expression"
+    _description = "Formula Report Expression"
     _rec_name = "report_line_name"
 
     report_line_id = fields.Many2one(
-        comodel_name="account.report.line",
+        comodel_name="report.formula.line",
         index=True,
         required=True,
         ondelete="cascade",
@@ -211,7 +211,7 @@ class AccountReportExpression(models.Model):
         to_expand = self.filtered(lambda x: x.engine == "aggregation")
         while to_expand:
             domains = []
-            sub_expressions = self.env["account.report.expression"]
+            sub_expressions = self.env["report.formula.expression"]
 
             for candidate_expr in to_expand:
                 if candidate_expr.formula == SUM_CHILDREN_FORMULA:
@@ -243,7 +243,7 @@ class AccountReportExpression(models.Model):
                         domains.append(dependency_domain)
 
             if domains:
-                sub_expressions |= self.env["account.report.expression"].search(
+                sub_expressions |= self.env["report.formula.expression"].search(
                     Domain.OR(domains)
                 )
 
@@ -288,11 +288,11 @@ class AccountReportExpression(models.Model):
         cross_report_value = subformula_match.group(1).strip()
         if cross_report_value.isdigit():
             target_report = (
-                self.env["account.report"].browse(int(cross_report_value)).exists()
+                self.env["report.formula"].browse(int(cross_report_value)).exists()
             )
         else:
             target_report = self.env.ref(cross_report_value, raise_if_not_found=False)
-            if target_report and target_report._name != "account.report":
+            if target_report and target_report._name != "report.formula":
                 target_report = None
 
         if _debug.logic.enabled:

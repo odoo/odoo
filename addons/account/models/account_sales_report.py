@@ -9,7 +9,7 @@ _debug = DebugLog(__name__)
 
 class AccountEcSalesReportHandler(models.AbstractModel):
     _name = "account.ec.sales.report.handler"
-    _inherit = ["account.report.custom.handler"]
+    _inherit = ["report.formula.custom.handler"]
     _description = "EC Sales Report Custom Handler"
 
     @_debug.perf.timed
@@ -639,7 +639,7 @@ class AccountEcSalesReportHandler(models.AbstractModel):
         amls = self.env["account.move.line"].search(
             [
                 *aml_domains,
-                *self.env["account.report"]._get_domain_options_date(
+                *self.env["report.formula"]._get_domain_options_date(
                     options, "strict_range"
                 ),
                 (tax_or_tag_field, "in", tuple(self._get_tag_ids_filtered(options))),

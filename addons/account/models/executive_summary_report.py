@@ -6,7 +6,7 @@ _debug = DebugLog(__name__)
 
 
 class AccountReport(models.Model):
-    _inherit = "account.report"
+    _inherit = "report.formula"
 
     @_debug.perf.timed
     def _report_custom_engine_executive_summary_ndays(

@@ -24,7 +24,7 @@ _debug = DebugLog(__name__)
 
 
 class AccountReportActions(models.Model):
-    _inherit = "account.report"
+    _inherit = "report.formula"
 
     def _caret_options_initializer_default(self):
         return {
@@ -107,7 +107,7 @@ class AccountReportActions(models.Model):
             target_expression_id,
             rounding,
         )
-        return self.env["account.report.expression"].browse(
+        return self.env["report.formula.expression"].browse(
             target_expression_id
         ) + self.line_ids.expression_ids.filtered(lambda x: x.engine == "aggregation")
 
@@ -527,7 +527,7 @@ class AccountReportActions(models.Model):
             "type": "ir.actions.act_window",
             "name": _("Enable Sections"),
             "view_mode": "list,form",
-            "res_model": "account.report",
+            "res_model": "report.formula",
             "domain": [
                 ("section_main_report_ids", "in", options["sections_source_id"]),
                 ("active", "=", False),
@@ -612,7 +612,7 @@ class AccountReportActions(models.Model):
         rounding,
     ):
         _debug.lifecycle("_action_modify_manual_budget_value", records=self)
-        target_expression = self.env["account.report.expression"].browse(
+        target_expression = self.env["report.formula.expression"].browse(
             target_expression_id
         )
 

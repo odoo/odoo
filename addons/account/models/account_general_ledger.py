@@ -15,7 +15,7 @@ _debug = DebugLog(__name__)
 
 class AccountGeneralLedgerReportHandler(models.AbstractModel):
     _name = "account.general.ledger.report.handler"
-    _inherit = ["account.report.custom.handler"]
+    _inherit = ["report.formula.custom.handler"]
     _description = "General Ledger Custom Handler"
 
     @_debug.perf.timed
@@ -67,7 +67,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
         }
 
     def _caret_options_initializer(self):
-        default_caret = self.env["account.report"]._caret_options_initializer_default()
+        default_caret = self.env["report.formula"]._caret_options_initializer_default()
 
         return {
             **default_caret,
@@ -89,11 +89,11 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
     @_debug.perf.timed
     def open_unallocated_items_journal_items(self, options, params):
         _debug.lifecycle("open_unallocated_items_journal_items", records=self)
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         return report.open_unallocated_items_journal_items(options, params)
 
     def caret_option_open_record_form_custom_id_groupby(self, options, params):
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         _model, aml_key = report._get_model_info_from_id(params["line_id"])
         record_id = json.loads(aml_key)[1]
 
@@ -269,7 +269,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
     def _get_query(
         self, options, current_groupby, order_by_account=False, offset=0, limit=None
     ):
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         options_date_from = fields.Date.from_string(options["date"]["date_from"])
         current_fiscalyear_date_from = self.env.company.compute_fiscalyear_dates(
             options_date_from
@@ -300,7 +300,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
                     [
                         ("display_name", "ilike", options.get("filter_search_bar")),
                         *self.env["account.account"]._check_company_domain(
-                            self.env["account.report"].get_report_company_ids(options)
+                            self.env["report.formula"].get_report_company_ids(options)
                         ),
                     ]
                 )
@@ -460,10 +460,10 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
         offset,
         unfold_all_batch_data=None,
     ):
-        """Shadow account.report's expansion to use progress when computing the accumulated balance, so the
+        """Shadow report.formula's expansion to use progress when computing the accumulated balance, so the
         'id_with_accumulated_balance' groupby supports partial expand.
         """
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         result = report._report_expand_unfoldable_line_with_groupby(
             line_dict_id, groupby, options, progress, offset, unfold_all_batch_data
         )
@@ -566,7 +566,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
         # (e.g., not when loading more lines in a group)
         if report._parse_line_id(lines[0]["id"])[-1] == (
             "",
-            "account.report.line",
+            "report.formula.line",
             report.line_ids[0].id,
         ):
             unaffected_earning_lines = report._get_unallocated_earnings_lines(
@@ -584,7 +584,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
         for line in lines + unaffected_earning_lines:
             markup, model, res_id = report._parse_line_id(line["id"])[-1]
             if (
-                model == "account.report.line"
+                model == "report.formula.line"
                 and res_id == general_ledger_custom_engine_line.id
             ):
                 main_line_dict = line
@@ -682,9 +682,9 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
             "_report_expand_unfoldable_line_with_groupby", []
         ):
             report_line_id = report._get_res_id_from_line_id(
-                line_to_expand["id"], "account.report.line"
+                line_to_expand["id"], "report.formula.line"
             )
-            report_line = self.env["account.report.line"].browse(report_line_id)
+            report_line = self.env["report.formula.line"].browse(report_line_id)
 
             expressions = report_line.expression_ids.filtered(
                 lambda x: (
@@ -801,7 +801,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
         if len(options["column_groups"]) > 1:
             raise UserError(_("CSV export only works with one column group"))
 
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         return {
             "file_content": self._generate_csv_lazy_export(options),
             "file_type": "csv",
@@ -921,7 +921,7 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
 
             yield csv_format(header)
 
-            report = handler.env["account.report"].browse(options["report_id"])
+            report = handler.env["report.formula"].browse(options["report_id"])
             agg_lines_options = report.get_options(
                 previous_options={
                     **options,

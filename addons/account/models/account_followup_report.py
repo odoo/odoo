@@ -207,11 +207,11 @@ class AccountFollowupCustomHandler(models.AbstractModel):
         due_line_id, overdue_line_id = None, None
         for line_id in options["unfolded_lines"]:
             res_ids_map = report._get_res_ids_from_line_id(
-                line_id, ["account.report", "res.partner"]
+                line_id, ["report.formula", "res.partner"]
             )
             if (
                 "res.partner" in res_ids_map
-                and res_ids_map["account.report"] == report.id
+                and res_ids_map["report.formula"] == report.id
                 and res_ids_map["res.partner"] == partner_id
             ):
                 markup, _dummy1, _dummy2 = report._parse_line_id(line_id)[-1]

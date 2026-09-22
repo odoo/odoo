@@ -30,7 +30,7 @@ PDF_PAPERFORMAT_ARGS = {
 
 
 class AccountReportExport(models.Model):
-    _inherit = "account.report"
+    _inherit = "report.formula"
 
     def get_export_mime_type(self, file_type):
         return (
@@ -95,7 +95,7 @@ class AccountReportExport(models.Model):
                 previous_options={**options, "export_mode": "print"}
             )
             if print_options["sections"]:
-                reports_to_print = self.env["account.report"].browse(
+                reports_to_print = self.env["report.formula"].browse(
                     [section["id"] for section in print_options["sections"]]
                 )
             else:
@@ -727,7 +727,7 @@ class AccountReportExport(models.Model):
 
         if len(options_list) == 1:
             _debug.logic("options_sheet_single_report", report=self)
-            self.env["account.report"].browse(
+            self.env["report.formula"].browse(
                 options_list[0]["report_id"]
             )._write_report_options_to_xlsx_sheet(
                 options_list[0], filters_sheet, y_offset
@@ -763,7 +763,7 @@ class AccountReportExport(models.Model):
         )
 
         for report_options in options_list:
-            report = self.env["account.report"].browse(report_options["report_id"])
+            report = self.env["report.formula"].browse(report_options["report_id"])
 
             filters_sheet.write(y_offset, 0, report.name, name_style)
             y_offset += 1
@@ -833,7 +833,7 @@ class AccountReportExport(models.Model):
         period = options.get("date", {}).get("string")
         sections_source_id = options["sections_source_id"]
         if sections_source_id != self.id:
-            sections_source = self.env["account.report"].browse(sections_source_id)
+            sections_source = self.env["report.formula"].browse(sections_source_id)
         else:
             sections_source = self
 
@@ -862,7 +862,7 @@ class AccountReportExport(models.Model):
             previous_options={**options, "export_mode": "print"}
         )
         if print_options["sections"]:
-            reports_to_print = self.env["account.report"].browse(
+            reports_to_print = self.env["report.formula"].browse(
                 [section["id"] for section in print_options["sections"]]
             )
         else:

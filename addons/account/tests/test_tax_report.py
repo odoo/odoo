@@ -23,7 +23,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
             }
         )
 
-        cls.tax_report_1 = cls.env["account.report"].create(
+        cls.tax_report_1 = cls.env["report.formula"].create(
             {
                 "name": "Tax report 1",
                 "country_id": cls.test_country_1.id,
@@ -59,7 +59,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
             cls.tax_report_1, "Line 100", "100"
         )
 
-        cls.tax_report_2 = cls.env["account.report"].create(
+        cls.tax_report_2 = cls.env["report.formula"].create(
             {
                 "name": "Tax report 2",
                 "country_id": cls.test_country_1.id,
@@ -88,7 +88,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
 
     @classmethod
     def _create_basic_tax_report_line(cls, report, line_name, tag_name):
-        return cls.env["account.report.line"].create(
+        return cls.env["report.formula.line"].create(
             {
                 "name": f"[{tag_name}] {line_name}",
                 "report_id": report.id,
@@ -404,7 +404,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
         self.assertEqual(tags_after.mapped("name"), [tag_name])
 
     def test_change_engine_without_formula(self):
-        aggregation_line = self.env["account.report.line"].create(
+        aggregation_line = self.env["report.formula.line"].create(
             {
                 "name": "Je ne mange pas de graines !!!",
                 "report_id": self.tax_report_1.id,
@@ -432,7 +432,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
         self.assertEqual(tags_after.mapped("name"), ["Dudu.balance"])
 
     def test_change_engine_shared_tags(self):
-        aggregation_line = self.env["account.report.line"].create(
+        aggregation_line = self.env["report.formula.line"].create(
             {
                 "name": "Je ne mange pas de graines !!!",
                 "report_id": self.tax_report_1.id,

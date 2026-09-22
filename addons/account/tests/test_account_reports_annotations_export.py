@@ -219,10 +219,10 @@ class TestAccountReportAnnotationsExport(TestAccountReportsCommon):
         annotations = report_data["annotations"]
 
         report_line_ids = [
-            f"~account.report.line~{self.report.line_ids[i].id}" for i in range(3)
+            f"~report.formula.line~{self.report.line_ids[i].id}" for i in range(3)
         ]
         expected = {
-            f'~account.report~{self.report.id}|{"|".join(report_line_ids)}|{{"groupby": "account_id"}}~{model}~{res_id}': [
+            f'~report.formula~{self.report.id}|{"|".join(report_line_ids)}|{{"groupby": "account_id"}}~{model}~{res_id}': [
                 {
                     "model": model,
                     "res_id": res_id,

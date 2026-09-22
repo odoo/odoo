@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="l10n_kr_general_tp_vat" model="account.report">
+    <record id="l10n_kr_general_tp_vat" model="report.formula">
         <field name="name">VAT Report - General Taxpayer</field>
         <field name="name@ko_KR">일반과세자 부가가치세 신고서</field>
         <field name="root_report_id" ref="account.generic_tax_report" />
@@ -14,27 +14,27 @@
         <field name="column_ids">
             <record
                 id="l10n_kr_general_tp_vat_column_balance"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Amount</field>
                 <field name="name@ko_KR">금액</field>
                 <field name="expression_label">balance</field>
             </record>
             <record
                 id="l10n_kr_general_tp_vat_column_tax"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Tax Amount</field>
                 <field name="name@ko_KR">세액</field>
                 <field name="expression_label">tax</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="l10n_kr_general_tp_vat_fi" model="account.report.line">
+            <record id="l10n_kr_general_tp_vat_fi" model="report.formula.line">
                 <field name="name">1. Filing Information</field>
                 <field name="name@ko_KR">1. 신고내용</field>
                 <field name="code">KR_FI</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="l10n_kr_general_tp_vat_ot" model="account.report.line">
+                    <record id="l10n_kr_general_tp_vat_ot" model="report.formula.line">
                         <field name="name">Tax Base and Output Tax</field>
                         <field name="name@ko_KR">과세표준 및 매출세액</field>
                         <field name="code">KR_OT</field>
@@ -42,7 +42,7 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_otvt"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VAT Taxed</field>
                                 <field name="name@ko_KR">과세</field>
                                 <field name="code">KR_OTVT</field>
@@ -50,7 +50,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_otvttii"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(1) Tax Invoice Issued</field>
                                         <field name="name@ko_KR">(1) 세금계산서 발급분</field>
@@ -59,14 +59,14 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_otvttii_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-GT1a</field>
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_otvttii_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-GT1b</field>
@@ -75,7 +75,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_otvttip"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(2) Tax invoice issued by purchasee</field>
                                         <field name="name@ko_KR">(2) 매입자발행 세금계산서</field>
@@ -84,14 +84,14 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_otvttip_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-GT2a</field>
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_otvttip_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-GT2b</field>
@@ -100,7 +100,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_otvtc"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(3) Card or Cash Receipt Issued</field>
                                         <field
@@ -110,14 +110,14 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_otvtc_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-GT3a</field>
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_otvtc_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-GT3b</field>
@@ -126,7 +126,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_otvto"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">(4) Others</field>
                                         <field
                                             name="name@ko_KR">(4) 기타(정규영수증 외 매출분)</field>
@@ -135,14 +135,14 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_otvto_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-GT4a</field>
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_otvto_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-GT4b</field>
@@ -153,7 +153,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_otzr"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Zero Rate</field>
                                 <field name="name@ko_KR">영세율</field>
                                 <field name="code">KR_OTZR</field>
@@ -161,7 +161,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_otzrtii"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(5) Tax Invoice Issued</field>
                                         <field name="name@ko_KR">(5) 세금계산서 발급분</field>
@@ -170,14 +170,14 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_otzrtii_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-GT5a</field>
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_otzrtii_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-GT5b</field>
@@ -186,7 +186,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_otzro"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">(6) Others</field>
                                         <field name="name@ko_KR">(6) 기타</field>
                                         <field name="code">KR_OTZRO</field>
@@ -194,14 +194,14 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_otzro_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">-GT6a</field>
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_otzro_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">GT6b</field>
@@ -212,7 +212,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_otur"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(7) Taxes Unreported in the preliminary return</field>
                                 <field name="name@ko_KR">(7) 예정 신고 누락분</field>
@@ -221,14 +221,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_otur_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">KR_UTPRZRT.balance</field>
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_otur_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">KR_UTPRZRT.tax</field>
@@ -237,7 +237,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_otbd"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(8) Addition / subtraction of bad debts tax credit</field>
                                 <field name="name@ko_KR">(8) 대손세액 가감</field>
@@ -246,7 +246,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_otbd_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -255,7 +255,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_otbd_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -266,7 +266,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_ott"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(9) Total</field>
                                 <field name="name@ko_KR">(9) 합계</field>
                                 <field name="code">KR_OTT</field>
@@ -274,7 +274,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_ott_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -284,7 +284,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_ott_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -295,7 +295,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kr_general_tp_vat_it" model="account.report.line">
+                    <record id="l10n_kr_general_tp_vat_it" model="report.formula.line">
                         <field name="name">Input Tax</field>
                         <field name="name@ko_KR">매입세액</field>
                         <field name="code">KR_IT</field>
@@ -303,7 +303,7 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_itr"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">The amount for which tax invoice received</field>
                                 <field name="name@ko_KR">세금계산서 수취분</field>
@@ -312,7 +312,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_itpgs"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(10) Purchases of Goods/Services</field>
                                         <field name="name@ko_KR">(10) 일반매입</field>
@@ -321,14 +321,14 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_itpgs_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">GT10a</field>
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_itpgs_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">GT10b</field>
@@ -337,7 +337,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_itdpecig"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(10-1) Deferral of Payment for Exporting Companies for Import
                                             of Goods</field>
@@ -348,7 +348,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_itdpecig_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
                                                 <field
@@ -357,7 +357,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_itdpecig_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">external</field>
                                                 <field name="formula">sum</field>
@@ -368,7 +368,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_itpfa"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(11) Purchase of Fixed Asset</field>
                                         <field name="name@ko_KR">(11) 고정자산 매입</field>
@@ -377,14 +377,14 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_itpfa_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">GT11a</field>
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_itpfa_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">GT11b</field>
@@ -395,7 +395,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_ittupr"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(12) Taxes unreported in preliminary return</field>
                                 <field name="name@ko_KR">(12) 예정 신고 누락분</field>
@@ -404,14 +404,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_ittupr_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">KR_UTPRT.balance</field>
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_ittupr_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">KR_UTPRT.tax</field>
@@ -420,7 +420,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_ittiip"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(13) Tax invoice issued by purchaser</field>
                                 <field name="name@ko_KR">(13) 매입자발행 세금계산서</field>
@@ -429,14 +429,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_ittiip_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">GT13a</field>
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_ittiip_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">GT13b</field>
@@ -445,7 +445,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_itotdp"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(14) Other tax-deductible purchase</field>
                                 <field name="name@ko_KR">(14) 그 밖의 공제매입세액</field>
@@ -454,7 +454,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_itotdp_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -462,7 +462,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_itotdp_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -472,7 +472,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_itt"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(15) Total (10)-(10-1)+(11)+(12)+(13)+(14)</field>
                                 <field
@@ -482,7 +482,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_itt_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -491,7 +491,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_itt_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -502,7 +502,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_itndit"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(16) Non-deductible input-tax</field>
                                 <field name="name@ko_KR">(16) 공제받지 못할 매입세액</field>
                                 <field name="code">KR_ITNDIT</field>
@@ -510,14 +510,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_itndit_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">KR_NDITT.balance</field>
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_itndit_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">KR_NDITT.tax</field>
@@ -526,7 +526,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_itb"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(17) Balance (15)-(16)</field>
                                 <field name="name@ko_KR">(17) 차감계 (15)-(16)</field>
                                 <field name="code">KR_ITB</field>
@@ -534,7 +534,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_itb_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -542,7 +542,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_itb_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -552,7 +552,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kr_general_tp_vat_tp" model="account.report.line">
+                    <record id="l10n_kr_general_tp_vat_tp" model="report.formula.line">
                         <field
                             name="name">Taxes Payable (refundable) (output tax(9)-input tax(17))</field>
                         <field name="name@ko_KR">납부(환급)세액 (매출세액(가) -매입세액(나)</field>
@@ -561,7 +561,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_tp_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">KR_OTT.tax-KR_ITB.tax</field>
@@ -570,7 +570,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_tred"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Tax reduction/exemption or deduction</field>
                         <field name="name@ko_KR">경감ᆞ공제 세액</field>
                         <field name="code">KR_TRED</field>
@@ -578,7 +578,7 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_otred"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(18) Other taxes reduced/exmpted or deducted</field>
                                 <field name="name@ko_KR">(18) 그 밖의 경감ᆞ공제세액</field>
@@ -587,7 +587,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_otred_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">KR_DOTCRT.tax</field>
@@ -596,7 +596,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_ccsid"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(19) Credit card slip issuance deduction</field>
                                 <field name="name@ko_KR">(19) 신용카드매출전표등 발행공제 등</field>
@@ -605,7 +605,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_ccsid_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -614,7 +614,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_ccsid_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -625,7 +625,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_tredt"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(20) Total</field>
                                 <field name="name@ko_KR">(20) 합계</field>
                                 <field name="code">KR_TREDT</field>
@@ -633,7 +633,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_tredt_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -645,7 +645,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_sbvd"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">(20-1) Small business VAT deduction</field>
                         <field name="name@ko_KR">(20-1) 소규모 개인사업자 부가가치세 감면세액</field>
                         <field name="code">KR_SBVD</field>
@@ -653,7 +653,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_sbvd_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -661,7 +661,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_sbvd_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -671,7 +671,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_tupr"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">(21) Taxes unrefunded in preliminary return</field>
                         <field name="name@ko_KR">(21) 예정 신고 미환급 새액</field>
@@ -680,7 +680,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_tupr_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -688,7 +688,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_tupr_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -698,7 +698,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_tapr"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">(22) Taxes assessed for preliminary return</field>
                         <field name="name@ko_KR">(22) 예정고지세액</field>
@@ -707,7 +707,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_tapr_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -715,7 +715,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_tapr_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -725,7 +725,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_tpbt"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">(23) Tax paid by business transferee</field>
                         <field name="name@ko_KR">(23) 사업양수자가 대리납부한 세액</field>
                         <field name="code">KR_TPBT</field>
@@ -733,7 +733,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_tpbt_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -743,7 +743,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_ptspg"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">(24) Prepaid tax of special payments by gold ingot purchaser</field>
                         <field name="name@ko_KR">(24) 매입자 납부특례에 따라 납부한 세액</field>
@@ -752,7 +752,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_ptspg_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -762,7 +762,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_ptccc"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">(25) Prepaid tax by credit card company</field>
                         <field name="name@ko_KR">(25) 신용카드업자가 대리납부한 세액</field>
@@ -771,7 +771,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_ptccc_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -779,7 +779,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kr_general_tp_vat_tpp" model="account.report.line">
+                    <record id="l10n_kr_general_tp_vat_tpp" model="report.formula.line">
                         <field name="name">(26) Penalties</field>
                         <field name="name@ko_KR">(26) 가산세액 계</field>
                         <field name="code">KR_TPP</field>
@@ -787,21 +787,21 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_tpp_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">KR_STPVATPT.balance</field>
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_tpp_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">KR_STPVATPT.tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kr_general_tp_vat_tpt" model="account.report.line">
+                    <record id="l10n_kr_general_tp_vat_tpt" model="report.formula.line">
                         <field
                             name="name">(27) Total of tax payable (refundable)</field>
                         <field
@@ -811,7 +811,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_tpt_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -822,7 +822,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_tptmb"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">Total of tax payable(refundable) by main business place that pays VAT for all
                             other sub-business places</field>
@@ -832,7 +832,7 @@
                     </record>
                 </field>
             </record>
-            <record id="l10n_kr_general_tp_vat_batr" model="account.report.line">
+            <record id="l10n_kr_general_tp_vat_batr" model="report.formula.line">
                 <field name="name">2. Bank Account for Tax Refund</field>
                 <field name="name@ko_KR">2. 국세환급금 계좌신고</field>
                 <field name="code">KR_BATR</field>
@@ -840,7 +840,7 @@
                 <field name="expression_ids">
                     <record
                         id="l10n_kr_general_tp_vat_batr_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">external</field>
                         <field name="formula">sum</field>
@@ -848,7 +848,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_batr_tax"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">external</field>
                         <field name="formula">sum</field>
@@ -856,7 +856,7 @@
                     </record>
                 </field>
             </record>
-            <record id="l10n_kr_general_tp_vat_rbc" model="account.report.line">
+            <record id="l10n_kr_general_tp_vat_rbc" model="report.formula.line">
                 <field name="name">3. Report for Business Closure</field>
                 <field name="name@ko_KR">3. 폐업 신고</field>
                 <field name="code">KR_RBC</field>
@@ -864,7 +864,7 @@
                 <field name="expression_ids">
                     <record
                         id="l10n_kr_general_tp_vat_rbc_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">external</field>
                         <field name="formula">sum</field>
@@ -872,7 +872,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_rbc_tax"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">external</field>
                         <field name="formula">sum</field>
@@ -880,7 +880,7 @@
                     </record>
                 </field>
             </record>
-            <record id="l10n_kr_general_tp_vat_rzrt" model="account.report.line">
+            <record id="l10n_kr_general_tp_vat_rzrt" model="report.formula.line">
                 <field name="name">4. Reciprocity of Zero Rate Tax</field>
                 <field name="name@ko_KR">4. 영세율 상호주의</field>
                 <field name="code">KR_RZRT</field>
@@ -888,7 +888,7 @@
                 <field name="expression_ids">
                     <record
                         id="l10n_kr_general_tp_vat_rzrt_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">external</field>
                         <field name="formula">sum</field>
@@ -896,7 +896,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_rzrt_tax"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">external</field>
                         <field name="formula">sum</field>
@@ -904,13 +904,13 @@
                     </record>
                 </field>
             </record>
-            <record id="l10n_kr_general_tp_vat_tbi" model="account.report.line">
+            <record id="l10n_kr_general_tp_vat_tbi" model="report.formula.line">
                 <field name="name">5. Tax Base Information</field>
                 <field name="name@ko_KR">5. 과세표준 명세</field>
                 <field name="code">KR_TBI</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="l10n_kr_general_tp_vat_bt1" model="account.report.line">
+                    <record id="l10n_kr_general_tp_vat_bt1" model="report.formula.line">
                         <field name="name">(28)</field>
                         <field name="name@ko_KR">(28)</field>
                         <field name="code">KR_BT1</field>
@@ -918,14 +918,14 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_bt1_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-GT28a</field>
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kr_general_tp_vat_bt2" model="account.report.line">
+                    <record id="l10n_kr_general_tp_vat_bt2" model="report.formula.line">
                         <field name="name">(29)</field>
                         <field name="name@ko_KR">(29)</field>
                         <field name="code">KR_BT2</field>
@@ -933,14 +933,14 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_bt2_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">GT29a</field>
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kr_general_tp_vat_bt3" model="account.report.line">
+                    <record id="l10n_kr_general_tp_vat_bt3" model="report.formula.line">
                         <field name="name">(30)</field>
                         <field name="name@ko_KR">(30)</field>
                         <field name="code">KR_BT3</field>
@@ -948,14 +948,14 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_bt3_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">GT30a</field>
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kr_general_tp_vat_ime" model="account.report.line">
+                    <record id="l10n_kr_general_tp_vat_ime" model="report.formula.line">
                         <field name="name">(31) Import amount exemption</field>
                         <field name="name@ko_KR">(31) 수입금액 제외</field>
                         <field name="code">KR_IME</field>
@@ -963,14 +963,14 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_ime_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-GT31a</field>
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kr_general_tp_vat_ttb" model="account.report.line">
+                    <record id="l10n_kr_general_tp_vat_ttb" model="report.formula.line">
                         <field name="name">(32) Total</field>
                         <field name="name@ko_KR">(32) 합계</field>
                         <field name="code">KR_TTB</field>
@@ -978,7 +978,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_ttb_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -988,7 +988,7 @@
                     </record>
                 </field>
             </record>
-            <record id="l10n_kr_general_tp_vat_opt" model="account.report.line">
+            <record id="l10n_kr_general_tp_vat_opt" model="report.formula.line">
                 <field name="name">Only If Applicable</field>
                 <field name="name@ko_KR">해당 사항이 있는 경우</field>
                 <field name="code">KR_OPT</field>
@@ -996,7 +996,7 @@
                 <field name="children_ids">
                     <record
                         id="l10n_kr_general_tp_vat_utpr"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">Unreported Taxes in the preliminary return</field>
                         <field name="name@ko_KR">예정신고 누락분 명세</field>
@@ -1005,7 +1005,7 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_utprs"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Sales</field>
                                 <field name="name@ko_KR">매출</field>
                                 <field name="code">KR_UTPRS</field>
@@ -1013,7 +1013,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_utprsvt"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">VAT-Taxed</field>
                                         <field name="name@ko_KR">과세</field>
                                         <field name="code">KR_UTPRSVT</field>
@@ -1021,7 +1021,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_utprsvtti"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">(33) Tax invoice</field>
                                                 <field
@@ -1031,7 +1031,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kr_general_tp_vat_utprsvtti_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -1043,7 +1043,7 @@
                                                     </record>
                                                     <record
                                                         id="l10n_kr_general_tp_vat_utprsvtti_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">aggregation</field>
@@ -1054,7 +1054,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_utprsvtto"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">(34) VAT-Taxed Other</field>
                                                 <field name="name@ko_KR">(34) 기타</field>
@@ -1063,7 +1063,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kr_general_tp_vat_utprsvtto_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -1075,7 +1075,7 @@
                                                     </record>
                                                     <record
                                                         id="l10n_kr_general_tp_vat_utprsvtto_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">aggregation</field>
@@ -1088,7 +1088,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_utprszr"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">Zero Rate</field>
                                         <field name="name@ko_KR">영세율</field>
                                         <field name="code">KR_UTPRSZR</field>
@@ -1096,7 +1096,7 @@
                                         <field name="children_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_utprzrti"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field
                                                     name="name">(35) Tax Invoice</field>
                                                 <field
@@ -1106,7 +1106,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kr_general_tp_vat_utprzrti_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -1118,7 +1118,7 @@
                                                     </record>
                                                     <record
                                                         id="l10n_kr_general_tp_vat_utprzrti_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">external</field>
@@ -1131,7 +1131,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_utprzro"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">(36) Other</field>
                                                 <field name="name@ko_KR">(36) 기타</field>
                                                 <field name="code">KR_UTPRZRO</field>
@@ -1139,7 +1139,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kr_general_tp_vat_utprzro_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -1151,7 +1151,7 @@
                                                     </record>
                                                     <record
                                                         id="l10n_kr_general_tp_vat_utprzro_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">external</field>
@@ -1164,7 +1164,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_utprzrt"
-                                                model="account.report.line">
+                                                model="report.formula.line">
                                                 <field name="name">(37) Total</field>
                                                 <field name="name@ko_KR">(37) 합계</field>
                                                 <field name="code">KR_UTPRZRT</field>
@@ -1172,7 +1172,7 @@
                                                 <field name="expression_ids">
                                                     <record
                                                         id="l10n_kr_general_tp_vat_utprzrt_balance"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field
                                                             name="label">balance</field>
                                                         <field
@@ -1183,7 +1183,7 @@
                                                     </record>
                                                     <record
                                                         id="l10n_kr_general_tp_vat_utprzrt_tax"
-                                                        model="account.report.expression">
+                                                        model="report.formula.expression">
                                                         <field name="label">tax</field>
                                                         <field
                                                             name="engine">aggregation</field>
@@ -1199,7 +1199,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_utprp"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Purchase</field>
                                 <field name="name@ko_KR">매입</field>
                                 <field name="code">KR_UTPRP</field>
@@ -1207,7 +1207,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_utprpti"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">(38) Tax invoice</field>
                                         <field name="name@ko_KR">(38) 세금계산서</field>
                                         <field name="code">KR_UTPRPTI</field>
@@ -1215,7 +1215,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_utprpti_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
                                                 <field
@@ -1224,7 +1224,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_utprpti_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">external</field>
                                                 <field name="formula">sum</field>
@@ -1235,7 +1235,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_utprodit"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(39) Other deductible input tax</field>
                                         <field
@@ -1245,7 +1245,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_utprodit_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
                                                 <field
@@ -1254,7 +1254,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_utprodit_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">external</field>
                                                 <field name="formula">sum</field>
@@ -1265,7 +1265,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_utprt"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">(40) Total</field>
                                         <field name="name@ko_KR">(40) 합계</field>
                                         <field name="code">KR_UTPRT</field>
@@ -1273,7 +1273,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_utprt_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -1281,7 +1281,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_utprt_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -1295,7 +1295,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_odip"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Other deductible input tax</field>
                         <field name="name@ko_KR">그 밖의 공제 매입세액 명세</field>
                         <field name="code">KR_ODIP</field>
@@ -1303,7 +1303,7 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_ssrccss"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">Specification of reception such as credit card sales slip</field>
                                 <field name="name@ko_KR">그 밖의 공제 매입세액 명세</field>
@@ -1312,7 +1312,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_gs"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">(41) General Sales</field>
                                         <field name="name@ko_KR">(41) 일반매입</field>
                                         <field name="code">KR_GS</field>
@@ -1320,14 +1320,14 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_gs_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">GT41a</field>
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_gs_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">GT41b</field>
@@ -1336,7 +1336,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_fa"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">(42) Fixed Asset</field>
                                         <field name="name@ko_KR">(42) 고정자산매입</field>
                                         <field name="code">KR_FA</field>
@@ -1344,14 +1344,14 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_fa_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">GT42a</field>
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_fa_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">GT42b</field>
@@ -1362,7 +1362,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_dit"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(43) Deemed input tax</field>
                                 <field name="name@ko_KR">(43) 의제매입세액</field>
                                 <field name="code">KR_DIT</field>
@@ -1370,14 +1370,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_dit_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">GT43a</field>
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_dit_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">GT43b</field>
@@ -1386,7 +1386,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_itcrsm"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(44) Input tax credit for recycling of scrapped materials, etc</field>
                                 <field name="name@ko_KR">(44) 재활용폐자원등 매입세액</field>
@@ -1395,14 +1395,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_itcrsm_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">GT44a</field>
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_itcrsm_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1413,7 +1413,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_itcctb"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(45) Input tax credit for conversion to taxable business</field>
                                 <field name="name@ko_KR">(45) 과세사업전환 매입세액</field>
@@ -1422,7 +1422,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_itcctb_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1431,7 +1431,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_itcctb_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1442,7 +1442,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_iit"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(46) Inventory input tax</field>
                                 <field name="name@ko_KR">(46) 재고매입세액</field>
                                 <field name="code">KR_IIT</field>
@@ -1450,7 +1450,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_iit_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1459,7 +1459,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_iit_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1470,7 +1470,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_cbdt"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(47) Collected bad debt tax</field>
                                 <field name="name@ko_KR">(47) 변제대손세액</field>
                                 <field name="code">KR_CBDT</field>
@@ -1478,7 +1478,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_cbdt_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1487,7 +1487,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_cbdt_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1498,7 +1498,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_itcrft"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(48) Input tax credit for refund made to foreign tourists</field>
                                 <field name="name@ko_KR">(48) 외국인 관광객에 대한 환급세액</field>
@@ -1507,7 +1507,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_itcrft_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1516,7 +1516,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_itcrft_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1527,7 +1527,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_ssrccsst"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(49) Total</field>
                                 <field name="name@ko_KR">(49) 합계</field>
                                 <field name="code">KR_SSRCCSST</field>
@@ -1535,7 +1535,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_ssrccsst_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1544,7 +1544,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_ssrccsst_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1557,7 +1557,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_ndits"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Non-deductible input tax</field>
                         <field name="name@ko_KR">공제받지 못할 매입세액 명세</field>
                         <field name="code">KR_NDITS</field>
@@ -1565,7 +1565,7 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_ndit"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(50) Non-deductible input-tax</field>
                                 <field name="name@ko_KR">(50) 공제받지 못할 매입세액</field>
                                 <field name="code">KR_NDIT</field>
@@ -1573,14 +1573,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_ndit_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">GT50a</field>
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_ndit_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">GT50b</field>
@@ -1589,7 +1589,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_citctfb"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(51) Common input tax credit for tax-free business</field>
                                 <field
@@ -1599,7 +1599,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_citctfb_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1608,7 +1608,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_citctfb_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1619,7 +1619,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_bdta"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(52) Bad debt tax amount</field>
                                 <field name="name@ko_KR">(52) 대손처분받은 세액</field>
                                 <field name="code">KR_BDTA</field>
@@ -1627,7 +1627,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_bdta_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1636,7 +1636,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_bdta_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1647,7 +1647,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_nditt"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(53) Total</field>
                                 <field name="name@ko_KR">(53) 합계</field>
                                 <field name="code">KR_NDITT</field>
@@ -1655,7 +1655,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_nditt_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1663,7 +1663,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_nditt_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1675,7 +1675,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_dotcr"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Details of other tax credit/reduction</field>
                         <field name="name@ko_KR">그 밖의 경감ᆞ공제세액 명세</field>
                         <field name="code">KR_DOTCR</field>
@@ -1683,7 +1683,7 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_tcef"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(54) Tax credit for e-filing</field>
                                 <field name="name@ko_KR">(54) 전자신고 세액공제</field>
                                 <field name="code">KR_TCEF</field>
@@ -1691,7 +1691,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_tcef_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1702,7 +1702,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_tcetii"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(55) Tax credit for e-tax-invoice issuance</field>
                                 <field name="name@ko_KR">(55) 전자세금계산서 발급세액 공제</field>
@@ -1711,7 +1711,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_tcetii_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1722,7 +1722,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_rttsp"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(56) Reduced tax for taxi service provider</field>
                                 <field name="name@ko_KR">(56) 택시운송사업자 경감세액</field>
@@ -1731,7 +1731,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_rttsp_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1742,7 +1742,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_tcpmtp"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(57) Tax credit for payment made by third party</field>
                                 <field name="name@ko_KR">(57) 대리납부 세액공제</field>
@@ -1751,7 +1751,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_tcpmtp_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1762,7 +1762,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_tccrso"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(58) Tax credit for Cash Receipt System Operator</field>
                                 <field name="name@ko_KR">(58) 현금영수증사업자 세액공제</field>
@@ -1771,7 +1771,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_tccrso_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1782,7 +1782,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_dotcro"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(59) Others</field>
                                 <field name="name@ko_KR">(59) 기타</field>
                                 <field name="code">KR_DOTCRO</field>
@@ -1790,7 +1790,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_dotcro_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1801,7 +1801,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_dotcrt"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(60) Total</field>
                                 <field name="name@ko_KR">(60) 합계</field>
                                 <field name="code">KR_DOTCRT</field>
@@ -1809,7 +1809,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_dotcrt_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1820,7 +1820,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_kr_general_tp_vat_p" model="account.report.line">
+                    <record id="l10n_kr_general_tp_vat_p" model="report.formula.line">
                         <field name="name">Penalties</field>
                         <field name="name@ko_KR">가산세액 계</field>
                         <field name="code">KR_P</field>
@@ -1828,7 +1828,7 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_frb"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(61) Failure to register business</field>
                                 <field name="name@ko_KR">(61) 사업자미등록 등</field>
@@ -1837,7 +1837,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_frb_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -1846,7 +1846,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_frb_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -1856,7 +1856,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_fiti"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Failure to issue tax invoice</field>
                                 <field name="name@ko_KR">세금계산서</field>
                                 <field name="code">KR_FITI</field>
@@ -1864,7 +1864,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_fitidi"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(62) Delay of issuance</field>
                                         <field name="name@ko_KR">(62) 지연발급 등</field>
@@ -1873,7 +1873,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_fitidi_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
                                                 <field
@@ -1882,7 +1882,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_fitidi_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -1892,7 +1892,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_fitidr"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(63) Delay of reception</field>
                                         <field name="name@ko_KR">(63) 지연수취</field>
@@ -1901,7 +1901,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_fitidr_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
                                                 <field
@@ -1910,7 +1910,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_fitidr_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -1920,7 +1920,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_fitifi"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(64) Failure of issuance</field>
                                         <field name="name@ko_KR">(64) 미발급 등</field>
@@ -1929,7 +1929,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_fitifi_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
                                                 <field
@@ -1938,7 +1938,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_fitifi_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">external</field>
                                                 <field name="formula">sum</field>
@@ -1951,7 +1951,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_fieti"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">Failure to issue e-tax invoice</field>
                                 <field name="name@ko_KR">전자세금계산서 발급명세 전송</field>
@@ -1960,7 +1960,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_fietidi"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(65) Delay of issuance</field>
                                         <field name="name@ko_KR">(65) 지연전송</field>
@@ -1969,7 +1969,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_fietidi_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
                                                 <field
@@ -1978,7 +1978,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_fietidi_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -1988,7 +1988,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_fietifi"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(66) Failure of issuance</field>
                                         <field name="name@ko_KR">(66) 미전송</field>
@@ -1997,7 +1997,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_fietifi_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
                                                 <field
@@ -2006,7 +2006,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_fietifi_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -2018,7 +2018,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_fasticp"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">Failure to aggregate summary of tax invoices classified by
                                     purchaser</field>
@@ -2028,7 +2028,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_fasticpfs"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(67) Failure to submit</field>
                                         <field name="name@ko_KR">(67) 제출 불성실</field>
@@ -2037,7 +2037,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_fasticpfs_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
                                                 <field
@@ -2046,7 +2046,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_fasticpfs_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -2056,7 +2056,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_fasticpds"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(68) Delayed Submission</field>
                                         <field name="name@ko_KR">(68) 지연제출</field>
@@ -2065,7 +2065,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_fasticpds_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
                                                 <field
@@ -2074,7 +2074,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_fasticpds_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
                                                 <field
@@ -2086,7 +2086,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_ffrur"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">Failure to file returns/under-reporting</field>
                                 <field name="name@ko_KR">신고 불성실</field>
@@ -2095,7 +2095,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_ffrurg"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(69) Failure to submit (General)</field>
                                         <field name="name@ko_KR">(69) 무신고(일반)</field>
@@ -2104,7 +2104,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_ffrurg_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
                                                 <field
@@ -2113,7 +2113,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_ffrurg_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">external</field>
                                                 <field name="formula">sum</field>
@@ -2124,7 +2124,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_ffruri"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(70) Failure to submit (Intentional)</field>
                                         <field name="name@ko_KR">(70) 무신고(부당)</field>
@@ -2133,7 +2133,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_ffruri_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
                                                 <field
@@ -2142,7 +2142,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_ffruri_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">external</field>
                                                 <field name="formula">sum</field>
@@ -2153,7 +2153,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_ffruruerg"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(71) Understatement/Excess Report (General)</field>
                                         <field
@@ -2163,7 +2163,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_ffruruerg_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
                                                 <field
@@ -2172,7 +2172,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_ffruruerg_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">external</field>
                                                 <field name="formula">sum</field>
@@ -2183,7 +2183,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_ffrurueri"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">(72) Understatement/Excess Report (Intentional)</field>
                                         <field
@@ -2193,7 +2193,7 @@
                                         <field name="expression_ids">
                                             <record
                                                 id="l10n_kr_general_tp_vat_ffrurueri_balance"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
                                                 <field
@@ -2202,7 +2202,7 @@
                                             </record>
                                             <record
                                                 id="l10n_kr_general_tp_vat_ffrurueri_tax"
-                                                model="account.report.expression">
+                                                model="report.formula.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">external</field>
                                                 <field name="formula">sum</field>
@@ -2215,7 +2215,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_ffrurnput"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(73) Delayed Payment of tax</field>
                                 <field name="name@ko_KR">(73) 납부지연</field>
                                 <field name="code">KR_FFRURNPUT</field>
@@ -2223,7 +2223,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_ffrurnput_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -2232,7 +2232,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_ffrurnput_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -2243,7 +2243,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_ffrururzr"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(74) Failure to report or under-reporting of tax base for
                                     zero-rating</field>
@@ -2253,7 +2253,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_ffrururzr_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -2262,7 +2262,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_ffrururzr_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -2272,7 +2272,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_ffrurdcs"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(75) Failure to submit details of cash sales</field>
                                 <field name="name@ko_KR">(75) 현금매출명세서 불성실</field>
@@ -2281,7 +2281,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_ffrurdcs_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -2290,7 +2290,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_ffrurdcs_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -2300,7 +2300,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_ffrurfssp"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(76) Failure to submit details of sales of properties</field>
                                 <field name="name@ko_KR">(76) 부동산임대공급가액명세서 불성실</field>
@@ -2309,7 +2309,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_ffrurfssp_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -2318,7 +2318,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_ffrurfssp_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -2330,7 +2330,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_stpvatp"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">Special Taxation for Payment of Value-Added Tax by Purchasers</field>
                         <field name="name@ko_KR">매입자 납부특례</field>
@@ -2339,7 +2339,7 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_stpvatpfta"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(77) Failure to use transaction account</field>
                                 <field name="name@ko_KR">(77) 거래계좌 미사용</field>
@@ -2348,7 +2348,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_stpvatpfta_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field
@@ -2357,7 +2357,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_stpvatpfta_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -2368,7 +2368,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_stpvatpdpta"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(78) Delayed payment to the transaction account</field>
                                 <field name="name@ko_KR">(78) 거래계좌 지연입금</field>
@@ -2377,7 +2377,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_stpvatpdpta_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field
@@ -2386,7 +2386,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_stpvatpdpta_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
@@ -2397,7 +2397,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_stpvatpfsccs"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">(79) Failure to submit credit card sales</field>
                                 <field
@@ -2407,7 +2407,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_stpvatpfsccs_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field
@@ -2416,7 +2416,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_stpvatpfsccs_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -2426,7 +2426,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_stpvatpt"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(80) Total</field>
                                 <field name="name@ko_KR">(80) 합 계</field>
                                 <field name="code">KR_STPVATPT</field>
@@ -2434,7 +2434,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_stpvatpt_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -2445,7 +2445,7 @@
                                     </record>
                                     <record
                                         id="l10n_kr_general_tp_vat_stpvatpt_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -2459,7 +2459,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_totfb"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">Turnover of sales of VAT-free business</field>
                         <field name="name@ko_KR">면세사업 수입금액</field>
@@ -2468,7 +2468,7 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_tfbt1"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(81)</field>
                                 <field name="name@ko_KR">(81)</field>
                                 <field name="code">KR_TFBT1</field>
@@ -2476,7 +2476,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_tfbt1_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-GT81a</field>
@@ -2485,7 +2485,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_tfbt2"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(82)</field>
                                 <field name="name@ko_KR">(82)</field>
                                 <field name="code">KR_TFBT2</field>
@@ -2493,7 +2493,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_tfbt2_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">GT82a</field>
@@ -2502,7 +2502,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_tfbt3"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(83) Imported amount exmpted</field>
                                 <field name="name@ko_KR">(83) 수입금액 제외</field>
                                 <field name="code">KR_TFBT3</field>
@@ -2510,7 +2510,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_tfbt3_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-GT83a</field>
@@ -2519,7 +2519,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_tfbtt"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(84) Total</field>
                                 <field name="name@ko_KR">(84) 합계</field>
                                 <field name="code">KR_TFBTT</field>
@@ -2527,7 +2527,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_tfbtt_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -2539,7 +2539,7 @@
                     </record>
                     <record
                         id="l10n_kr_general_tp_vat_tfiir"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">Amount for which tax-free invoice issued/received</field>
                         <field name="name@ko_KR">세금계산서 수취분</field>
@@ -2548,7 +2548,7 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_kr_general_tp_vat_tfii"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(85) Invoice Issued</field>
                                 <field name="name@ko_KR">(85) 계산서 발급금액</field>
                                 <field name="code">KR_TFII</field>
@@ -2556,7 +2556,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_tfii_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-GT85a</field>
@@ -2565,7 +2565,7 @@
                             </record>
                             <record
                                 id="l10n_kr_general_tp_vat_tfir"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">(86) Invoice Received</field>
                                 <field name="name@ko_KR">(86) 계산서 수취금액</field>
                                 <field name="code">KR_TFIR</field>
@@ -2573,7 +2573,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_kr_general_tp_vat_tfir_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">GT86a</field>

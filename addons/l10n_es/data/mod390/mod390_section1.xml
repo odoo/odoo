@@ -2,7 +2,7 @@
 <odoo>
 
     <data auto_sequence="1">
-        <record id="mod_390_section_1" model="account.report">
+        <record id="mod_390_section_1" model="report.formula">
             <field name="name">IVA Devengado</field>
             <field name="name@es">IVA Devengado</field>
             <field name="filter_analytic" eval="False" />
@@ -11,26 +11,26 @@
             <field name="filter_journals" eval="True" />
             <field name="country_id" ref="base.es" />
             <field name="column_ids">
-                <record id="mod_390_column_sect1" model="account.report.column">
+                <record id="mod_390_column_sect1" model="report.formula.column">
                     <field name="name">Balance</field>
                     <field name="name@es">Saldo</field>
                     <field name="expression_label">balance</field>
                 </record>
             </field>
             <field name="line_ids">
-                <record id="mod_390_title_2" model="account.report.line">
+                <record id="mod_390_title_2" model="report.formula.line">
                     <field name="name">IVA devengado</field>
                     <field name="name@es">IVA devengado</field>
                     <field name="code">aeat_mod_390_title_2</field>
                     <field name="children_ids">
-                        <record id="mod_390_title_3" model="account.report.line">
+                        <record id="mod_390_title_3" model="report.formula.line">
                             <field name="name">Régimen ordinario</field>
                             <field name="name@es">Régimen ordinario</field>
                             <field name="code">aeat_mod_390_title_3</field>
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_700"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[700] Base imponible 0%</field>
                                     <field
                                         name="name@es">[700] Base imponible 0 %</field>
@@ -38,7 +38,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_700_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -50,7 +50,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_701"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[701] Cuota 0%</field>
                                     <field
                                         name="name@es">[701] Cuota devengada 0 %</field>
@@ -58,7 +58,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_701_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[701]</field>
@@ -67,7 +67,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_667"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[667] Base imponible 2%</field>
                                     <field
                                         name="name@es">[667] Base imponible 2 %</field>
@@ -75,7 +75,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_667_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -87,7 +87,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_668"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[668] Cuota 2%</field>
                                     <field
                                         name="name@es">[668] Cuota devengada 2 %</field>
@@ -95,7 +95,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_668_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -107,7 +107,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_01"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[01] Base imponible 4%</field>
                                     <field
                                         name="name@es">[01] Base imponible 4 %</field>
@@ -115,7 +115,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_01_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -127,7 +127,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_02"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[02] Cuota devengada 4%</field>
                                     <field
                                         name="name@es">[02] Cuota devengada 4 %</field>
@@ -135,7 +135,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_02_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -147,7 +147,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_702"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[702] Base imponible 5%</field>
                                     <field
                                         name="name@es">[702] Base imponible 5 %</field>
@@ -155,7 +155,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_702_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -167,7 +167,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_703"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[703] Cuota 5%</field>
                                     <field
                                         name="name@es">[703] Cuota devengada 5 %</field>
@@ -175,7 +175,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_703_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -187,7 +187,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_669"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[669] Base imponible 7.5%</field>
                                     <field
                                         name="name@es">[669] Base imponible 7,5 %</field>
@@ -195,7 +195,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_669_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod390[669]</field>
@@ -204,7 +204,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_670"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[670] Cuota 7.5%</field>
                                     <field
                                         name="name@es">[670] Cuota devengada 7,5 %</field>
@@ -212,7 +212,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_670_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod390[670]</field>
@@ -221,7 +221,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_03"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[03] Base imponible 10%</field>
                                     <field
                                         name="name@es">[03] Base imponible 10 %</field>
@@ -229,7 +229,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_03_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -241,7 +241,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_04"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[04] Cuota devengada 10%</field>
                                     <field
                                         name="name@es">[04] Cuota devengada 10 %</field>
@@ -249,7 +249,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_04_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -261,7 +261,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_05"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[05] Base imponible 21%</field>
                                     <field
                                         name="name@es">[05] Base imponible 21 %</field>
@@ -269,7 +269,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_05_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -281,7 +281,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_06"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[06] Cuota devengada 21%</field>
                                     <field
                                         name="name@es">[06] Cuota devengada 21 %</field>
@@ -289,7 +289,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_06_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -301,14 +301,14 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_title_4" model="account.report.line">
+                        <record id="mod_390_title_4" model="report.formula.line">
                             <field name="name">Operaciones intragrupo</field>
                             <field name="name@es">Operaciones intragrupo</field>
                             <field name="code">aeat_mod_390_title_4</field>
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_704"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[704] Base imponible 0%</field>
                                     <field
                                         name="name@es">[704] Base imponible 0 %</field>
@@ -316,7 +316,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_704_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -327,7 +327,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_705"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[705] Cuota 0%</field>
                                     <field
                                         name="name@es">[705] Cuota devengada 0 %</field>
@@ -335,7 +335,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_705_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -346,7 +346,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_671"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[671] Base imponible 2%</field>
                                     <field
                                         name="name@es">[671] Base imponible 2 %</field>
@@ -354,7 +354,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_671_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -365,7 +365,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_672"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[672] Cuota 2%</field>
                                     <field
                                         name="name@es">[672] Cuota devengada 2 %</field>
@@ -373,7 +373,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_672_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -384,7 +384,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_500"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[500] Base imponible 4%</field>
                                     <field
                                         name="name@es">[500] Base imponible 4 %</field>
@@ -392,7 +392,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_500_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -403,7 +403,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_501"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[501] Cuota devengada 4%</field>
                                     <field
                                         name="name@es">[501] Cuota devengada 4 %</field>
@@ -411,7 +411,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_501_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -422,7 +422,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_706"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[706] Base imponible 5%</field>
                                     <field
                                         name="name@es">[706] Base imponible 5 %</field>
@@ -430,7 +430,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_706_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -441,7 +441,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_707"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[707] Cuota 5%</field>
                                     <field
                                         name="name@es">[707] Cuota devengada 5 %</field>
@@ -449,7 +449,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_707_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -460,7 +460,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_673"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[673] Base imponible 7.5%</field>
                                     <field
                                         name="name@es">[673] Base imponible 7,5 %</field>
@@ -468,7 +468,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_673_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -479,7 +479,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_674"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[674] Cuota 7.5%</field>
                                     <field
                                         name="name@es">[674] Cuota devengada 7,5 %</field>
@@ -487,7 +487,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_674_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -498,7 +498,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_502"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[502] Base imponible 10%</field>
                                     <field
                                         name="name@es">[502] Base imponible 10 %</field>
@@ -506,7 +506,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_502_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -517,7 +517,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_503"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[503] Cuota devengada 10%</field>
                                     <field
                                         name="name@es">[503] Cuota devengada 10 %</field>
@@ -525,7 +525,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_503_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -536,7 +536,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_504"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[504] Base imponible 21%</field>
                                     <field
                                         name="name@es">[504] Base imponible 21 %</field>
@@ -544,7 +544,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_504_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -555,7 +555,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_505"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[505] Cuota devengada 21%</field>
                                     <field
                                         name="name@es">[505] Cuota devengada 21 %</field>
@@ -563,7 +563,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_505_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -574,7 +574,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_title_5" model="account.report.line">
+                        <record id="mod_390_title_5" model="report.formula.line">
                             <field
                                 name="name">Régimen especial del criterio de caja</field>
                             <field
@@ -583,7 +583,7 @@
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_708"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[708] Base imponible 0%</field>
                                     <field
                                         name="name@es">[708] Base imponible 0 %</field>
@@ -591,7 +591,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_708_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -602,7 +602,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_709"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[709] Cuota 0%</field>
                                     <field
                                         name="name@es">[709] Cuota devengada 0 %</field>
@@ -610,7 +610,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_709_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -621,7 +621,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_675"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[675] Base imponible 2%</field>
                                     <field
                                         name="name@es">[675] Base imponible 2 %</field>
@@ -629,7 +629,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_675_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -640,7 +640,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_676"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[676] Cuota 2%</field>
                                     <field
                                         name="name@es">[676] Cuota devengada 2 %</field>
@@ -648,7 +648,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_676_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -659,7 +659,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_643"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[643] Base imponible 4%</field>
                                     <field
                                         name="name@es">[643] Base imponible 4 %</field>
@@ -667,7 +667,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_643_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -678,7 +678,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_644"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[644] Cuota devengada 4%</field>
                                     <field
                                         name="name@es">[644] Cuota devengada 4 %</field>
@@ -686,7 +686,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_644_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -697,7 +697,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_710"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[710] Base imponible 5%</field>
                                     <field
                                         name="name@es">[710] Base imponible 5 %</field>
@@ -705,7 +705,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_710_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -716,7 +716,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_711"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[711] Cuota 5%</field>
                                     <field
                                         name="name@es">[711] Cuota devengada 5 %</field>
@@ -724,7 +724,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_711_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -735,7 +735,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_677"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[677] Base imponible 7.5%</field>
                                     <field
                                         name="name@es">[677] Base imponible 7,5 %</field>
@@ -743,7 +743,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_677_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -754,7 +754,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_678"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[678] Cuota 7.5%</field>
                                     <field
                                         name="name@es">[678] Cuota devengada 7,5 %</field>
@@ -762,7 +762,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_678_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -773,7 +773,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_645"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[645] Base imponible 10%</field>
                                     <field
                                         name="name@es">[645] Base imponible 10 %</field>
@@ -781,7 +781,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_645_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -792,7 +792,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_646"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[646] Cuota devengada 10%</field>
                                     <field
                                         name="name@es">[646] Cuota devengada 10 %</field>
@@ -800,7 +800,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_646_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -811,7 +811,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_647"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[647] Base imponible 21%</field>
                                     <field
                                         name="name@es">[647] Base imponible 21 %</field>
@@ -819,7 +819,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_647_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -830,7 +830,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_648"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[648] Cuota devengada 21%</field>
                                     <field
                                         name="name@es">[648] Cuota devengada 21 %</field>
@@ -838,7 +838,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_648_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -849,7 +849,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_title_6" model="account.report.line">
+                        <record id="mod_390_title_6" model="report.formula.line">
                             <field
                                 name="name">Régimen especial de bienes usados, objetos de arte, antigüedades y objetos de colección</field>
                             <field
@@ -858,7 +858,7 @@
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_712"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[712] Base imponible 0%</field>
                                     <field
                                         name="name@es">[712] Base imponible 0 %</field>
@@ -866,7 +866,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_712_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -877,7 +877,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_713"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[713] Cuota 0%</field>
                                     <field
                                         name="name@es">[713] Cuota devengada 0 %</field>
@@ -885,7 +885,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_713_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -896,7 +896,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_679"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[679] Base imponible 2%</field>
                                     <field
                                         name="name@es">[679] Base imponible 2 %</field>
@@ -904,7 +904,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_679_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -915,7 +915,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_680"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[680] Cuota 2%</field>
                                     <field
                                         name="name@es">[680] Cuota devengada 2 %</field>
@@ -923,7 +923,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_680_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -934,7 +934,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_07"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[07] Base imponible 4%</field>
                                     <field
                                         name="name@es">[07] Base imponible 4 %</field>
@@ -942,7 +942,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_07_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -953,7 +953,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_08"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[08] Cuota devengada 4%</field>
                                     <field
                                         name="name@es">[08] Cuota devengada 4 %</field>
@@ -961,7 +961,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_08_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -972,7 +972,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_714"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[714] Base imponible 5%</field>
                                     <field
                                         name="name@es">[714] Base imponible 5 %</field>
@@ -980,7 +980,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_714_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -991,7 +991,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_715"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[715] Cuota 5%</field>
                                     <field
                                         name="name@es">[715] Cuota devengada 5 %</field>
@@ -999,7 +999,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_715_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1010,7 +1010,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_681"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[681] Base imponible 7.5%</field>
                                     <field
                                         name="name@es">[681] Base imponible 7,5 %</field>
@@ -1018,7 +1018,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_681_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1029,7 +1029,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_682"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[682] Cuota 7.5%</field>
                                     <field
                                         name="name@es">[682] Cuota devengada 7,5 %</field>
@@ -1037,7 +1037,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_682_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1048,7 +1048,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_09"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[09] Base imponible 10%</field>
                                     <field
                                         name="name@es">[09] Base imponible 10 %</field>
@@ -1056,7 +1056,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_09_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1067,7 +1067,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_10"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[10] Cuota devengada 10%</field>
                                     <field
                                         name="name@es">[10] Cuota devengada 10 %</field>
@@ -1075,7 +1075,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_10_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1086,7 +1086,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_11"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[11] Base imponible 21%</field>
                                     <field
                                         name="name@es">[11] Base imponible 21 %</field>
@@ -1094,7 +1094,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_11_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1105,7 +1105,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_12"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[12] Cuota devengada 21%</field>
                                     <field
                                         name="name@es">[12] Cuota devengada 21 %</field>
@@ -1113,7 +1113,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_12_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1124,7 +1124,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_title_7" model="account.report.line">
+                        <record id="mod_390_title_7" model="report.formula.line">
                             <field
                                 name="name">Régimen especial de agencias de viaje</field>
                             <field
@@ -1133,7 +1133,7 @@
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_13"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[13] Base imponible 21%</field>
                                     <field
                                         name="name@es">[13] Base imponible 21 %</field>
@@ -1141,7 +1141,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_13_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1152,7 +1152,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_14"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[14] Cuota devengada 21%</field>
                                     <field
                                         name="name@es">[14] Cuota devengada 21 %</field>
@@ -1160,7 +1160,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_14_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1171,7 +1171,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_title_8" model="account.report.line">
+                        <record id="mod_390_title_8" model="report.formula.line">
                             <field
                                 name="name">Adquisiciones intracomunitarias de bienes</field>
                             <field
@@ -1180,7 +1180,7 @@
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_716"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[716] Base imponible 0%</field>
                                     <field
                                         name="name@es">[716] Base imponible 0 %</field>
@@ -1188,7 +1188,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_716_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[716]</field>
@@ -1197,7 +1197,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_717"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[717] Cuota 0%</field>
                                     <field
                                         name="name@es">[717] Cuota devengada 0 %</field>
@@ -1205,7 +1205,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_717_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[717]</field>
@@ -1214,7 +1214,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_683"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[683] Base imponible 2%</field>
                                     <field
                                         name="name@es">[683] Base imponible 2 %</field>
@@ -1222,7 +1222,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_683_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[683]</field>
@@ -1231,7 +1231,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_684"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[684] Cuota 2%</field>
                                     <field
                                         name="name@es">[684] Cuota devengada 2 %</field>
@@ -1239,7 +1239,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_684_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod390[684]</field>
@@ -1248,7 +1248,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_21"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[21] Base imponible 4%</field>
                                     <field
                                         name="name@es">[21] Base imponible 4 %</field>
@@ -1256,7 +1256,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_21_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[21]</field>
@@ -1265,7 +1265,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_22"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[22] Cuota devengada 4%</field>
                                     <field
                                         name="name@es">[22] Cuota devengada 4 %</field>
@@ -1273,7 +1273,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_22_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod390[22]</field>
@@ -1282,7 +1282,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_718"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[718] Base imponible 5%</field>
                                     <field
                                         name="name@es">[718] Base imponible 5 %</field>
@@ -1290,7 +1290,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_718_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[718]</field>
@@ -1299,7 +1299,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_719"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[719] Cuota 5%</field>
                                     <field
                                         name="name@es">[719] Cuota devengada 5 %</field>
@@ -1307,7 +1307,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_719_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod390[719]</field>
@@ -1316,7 +1316,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_685"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[685] Base imponible 7.5%</field>
                                     <field
                                         name="name@es">[685] Base imponible 7,5 %</field>
@@ -1324,7 +1324,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_685_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[685]</field>
@@ -1333,7 +1333,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_686"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[686] Cuota 7.5%</field>
                                     <field
                                         name="name@es">[686] Cuota devengada 7,5 %</field>
@@ -1341,7 +1341,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_686_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[686]</field>
@@ -1350,7 +1350,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_23"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[23] Base imponible 10%</field>
                                     <field
                                         name="name@es">[23] Base imponible 10 %</field>
@@ -1358,7 +1358,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_23_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[23]</field>
@@ -1367,7 +1367,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_24"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[24] Cuota devengada 10%</field>
                                     <field
                                         name="name@es">[24] Cuota devengada 10 %</field>
@@ -1375,7 +1375,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_24_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod390[24]</field>
@@ -1384,7 +1384,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_25"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[25] Base imponible 21%</field>
                                     <field
                                         name="name@es">[25] Base imponible 21 %</field>
@@ -1392,7 +1392,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_25_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[25]</field>
@@ -1401,7 +1401,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_26"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[26] Cuota devengada 21%</field>
                                     <field
                                         name="name@es">[26] Cuota devengada 21 %</field>
@@ -1409,7 +1409,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_26_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod390[26]</field>
@@ -1418,7 +1418,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_title_9" model="account.report.line">
+                        <record id="mod_390_title_9" model="report.formula.line">
                             <field
                                 name="name">Adquisiciones intracomunitarias de servicios</field>
                             <field
@@ -1427,7 +1427,7 @@
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_720"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[720] Base imponible 0%</field>
                                     <field
                                         name="name@es">[720] Base imponible 0 %</field>
@@ -1435,7 +1435,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_720_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[720]</field>
@@ -1444,7 +1444,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_721"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[721] Cuota 0%</field>
                                     <field
                                         name="name@es">[721] Cuota devengada 0 %</field>
@@ -1452,7 +1452,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_721_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[721]</field>
@@ -1461,7 +1461,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_687"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[687] Base imponible 2%</field>
                                     <field
                                         name="name@es">[687] Base imponible 2 %</field>
@@ -1469,7 +1469,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_687_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[687]</field>
@@ -1478,7 +1478,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_688"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[688] Cuota 2%</field>
                                     <field
                                         name="name@es">[688] Cuota devengada 2 %</field>
@@ -1486,7 +1486,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_688_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod390[688]</field>
@@ -1495,7 +1495,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_545"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[545] Base imponible 4%</field>
                                     <field
                                         name="name@es">[545] Base imponible 4 %</field>
@@ -1503,7 +1503,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_545_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[545]</field>
@@ -1512,7 +1512,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_546"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[546] Cuota devengada 4%</field>
                                     <field
                                         name="name@es">[546] Cuota devengada 4 %</field>
@@ -1520,7 +1520,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_546_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod390[546]</field>
@@ -1529,7 +1529,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_722"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[722] Base imponible 5%</field>
                                     <field
                                         name="name@es">[722] Base imponible 5 %</field>
@@ -1537,7 +1537,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_722_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[722]</field>
@@ -1546,7 +1546,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_723"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[723] Cuota 5%</field>
                                     <field
                                         name="name@es">[723] Cuota devengada 5 %</field>
@@ -1554,7 +1554,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_723_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod390[723]</field>
@@ -1563,7 +1563,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_689"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[689] Base imponible 7.5%</field>
                                     <field
                                         name="name@es">[689] Base imponible 7,5 %</field>
@@ -1571,7 +1571,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_689_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[689]</field>
@@ -1580,7 +1580,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_690"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[690] Cuota 7.5%</field>
                                     <field
                                         name="name@es">[690] Cuota devengada 7,5 %</field>
@@ -1588,7 +1588,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_690_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod390[690]</field>
@@ -1597,7 +1597,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_547"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[547] Base imponible 10%</field>
                                     <field
                                         name="name@es">[547] Base imponible 10 %</field>
@@ -1605,7 +1605,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_547_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[547]</field>
@@ -1614,7 +1614,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_548"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[548] Cuota devengada 10%</field>
                                     <field
                                         name="name@es">[548] Cuota devengada 10 %</field>
@@ -1622,7 +1622,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_548_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod390[548]</field>
@@ -1631,7 +1631,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_551"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[551] Base imponible 21%</field>
                                     <field
                                         name="name@es">[551] Base imponible 21 %</field>
@@ -1639,7 +1639,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_551_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">mod390[551]</field>
@@ -1648,7 +1648,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_552"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[552] Cuota devengada 21%</field>
                                     <field
                                         name="name@es">[552] Cuota devengada 21 %</field>
@@ -1656,7 +1656,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_552_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">tax_tags</field>
                                             <field name="formula">-mod390[552]</field>
@@ -1665,7 +1665,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_title_10" model="account.report.line">
+                        <record id="mod_390_title_10" model="report.formula.line">
                             <field
                                 name="name">IVA devengado en otros supuestos de inversión del sujeto pasivo</field>
                             <field
@@ -1674,14 +1674,14 @@
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_27"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[27] Base imponible</field>
                                     <field name="name@es">[27] Base imponible</field>
                                     <field name="code">aeat_mod_390_27</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_27_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -1693,14 +1693,14 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_28"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[28] Cuota devengada</field>
                                     <field name="name@es">[28] Cuota devengada</field>
                                     <field name="code">aeat_mod_390_28</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_28_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -1712,21 +1712,21 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_title_11" model="account.report.line">
+                        <record id="mod_390_title_11" model="report.formula.line">
                             <field name="name">Modificación de bases y cuotas</field>
                             <field name="name@es">Modificación de bases y cuotas</field>
                             <field name="code">aeat_mod_390_title_11</field>
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_29"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[29] Base imponible</field>
                                     <field name="name@es">[29] Base imponible</field>
                                     <field name="code">aeat_mod_390_29</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_29_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -1738,14 +1738,14 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_30"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[30] Cuota devengada</field>
                                     <field name="name@es">[30] Cuota devengada</field>
                                     <field name="code">aeat_mod_390_30</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_30_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -1757,7 +1757,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_title_12" model="account.report.line">
+                        <record id="mod_390_title_12" model="report.formula.line">
                             <field
                                 name="name">Modificación de bases y cuotas de operaciones intragrupo</field>
                             <field
@@ -1766,14 +1766,14 @@
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_649"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[649] Base imponible</field>
                                     <field name="name@es">[649] Base imponible</field>
                                     <field name="code">aeat_mod_390_649</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_649_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1784,14 +1784,14 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_650"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[650] Cuota devengada</field>
                                     <field name="name@es">[650] Cuota devengada</field>
                                     <field name="code">aeat_mod_390_650</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_650_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1802,7 +1802,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_title_13" model="account.report.line">
+                        <record id="mod_390_title_13" model="report.formula.line">
                             <field
                                 name="name">Modificación de bases y cuotas por auto de declaración de concurso de acreedores</field>
                             <field
@@ -1811,14 +1811,14 @@
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_31"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[31] Base imponible</field>
                                     <field name="name@es">[31] Base imponible</field>
                                     <field name="code">aeat_mod_390_31</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_31_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1829,14 +1829,14 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_32"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[32] Cuota devengada</field>
                                     <field name="name@es">[32] Cuota devengada</field>
                                     <field name="code">aeat_mod_390_32</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_32_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -1847,14 +1847,14 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_title_14" model="account.report.line">
+                        <record id="mod_390_title_14" model="report.formula.line">
                             <field name="name">Total bases y cuotas IVA</field>
                             <field name="name@es">Total bases y cuotas IVA</field>
                             <field name="code">aeat_mod_390_title_14</field>
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_33"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[33] Base imponible</field>
                                     <field name="name@es">[33] Base imponible</field>
                                     <field name="code">aeat_mod_390_33</field>
@@ -1877,7 +1877,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_34"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[34] Cuotas</field>
                                     <field name="name@es">[34] Cuota devengada</field>
                                     <field name="code">aeat_mod_390_34</field>
@@ -1900,14 +1900,14 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_title_15" model="account.report.line">
+                        <record id="mod_390_title_15" model="report.formula.line">
                             <field name="name">Recargo de equivalencia</field>
                             <field name="name@es">Recargo de equivalencia</field>
                             <field name="code">aeat_mod_390_title_15</field>
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_35"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[35] Base imponible 0.5%</field>
                                     <field
                                         name="name@es">[35] Base imponible 0,5 %</field>
@@ -1915,7 +1915,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_35_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -1927,7 +1927,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_36"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[36] Cuota devengada 0.5%</field>
                                     <field
                                         name="name@es">[36] Cuota devengada 0,5 %</field>
@@ -1935,7 +1935,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_36_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -1947,7 +1947,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_599"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[599] Base imponible 1.4%</field>
                                     <field
                                         name="name@es">[599] Base imponible 1,4 %</field>
@@ -1955,7 +1955,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_599_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -1967,7 +1967,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_600"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[600] Cuota devengada 1.4%</field>
                                     <field
@@ -1976,7 +1976,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_600_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -1988,7 +1988,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_601"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[601] Base imponible 5.2%</field>
                                     <field
                                         name="name@es">[601] Base imponible 5,2 %</field>
@@ -1996,7 +1996,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_601_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -2008,7 +2008,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_602"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[602] Cuota devengada 5.2%</field>
                                     <field
@@ -2017,7 +2017,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_602_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -2029,7 +2029,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_41"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[41] Base imponible 1.75%</field>
                                     <field
                                         name="name@es">[41] Base imponible 1,75 %</field>
@@ -2037,7 +2037,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_41_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -2048,7 +2048,7 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_42"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field
                                         name="name">[42] Cuota devengada 1.75%</field>
                                     <field
@@ -2057,7 +2057,7 @@
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_42_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -2068,7 +2068,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_title_16" model="account.report.line">
+                        <record id="mod_390_title_16" model="report.formula.line">
                             <field name="name">Modificación recargo equivalencia</field>
                             <field
                                 name="name@es">Modificación recargo equivalencia</field>
@@ -2076,14 +2076,14 @@
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_43"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[43] Base imponible</field>
                                     <field name="name@es">[43] Base imponible</field>
                                     <field name="code">aeat_mod_390_43</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_43_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -2095,14 +2095,14 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_44"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[44] Cuota devengada</field>
                                     <field name="name@es">[44] Cuota devengada</field>
                                     <field name="code">aeat_mod_390_44</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_44_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">aggregation</field>
                                             <field
@@ -2114,7 +2114,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_title_17" model="account.report.line">
+                        <record id="mod_390_title_17" model="report.formula.line">
                             <field
                                 name="name">Modificación recargo equivalencia por auto de declaraciónde concurso de acreedores</field>
                             <field
@@ -2123,14 +2123,14 @@
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_45"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[45] Base imponible</field>
                                     <field name="name@es">[45] Base imponible</field>
                                     <field name="code">aeat_mod_390_45</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_45_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -2141,14 +2141,14 @@
                                 </record>
                                 <record
                                     id="mod_390_casilla_46"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[46] Cuota devengada</field>
                                     <field name="name@es">[46] Cuota devengada</field>
                                     <field name="code">aeat_mod_390_46</field>
                                     <field name="expression_ids">
                                         <record
                                             id="mod_390_casilla_46_balance"
-                                            model="account.report.expression">
+                                            model="report.formula.expression">
                                             <field name="label">balance</field>
                                             <field name="engine">external</field>
                                             <field name="formula">sum</field>
@@ -2159,7 +2159,7 @@
                                 </record>
                             </field>
                         </record>
-                        <record id="mod_390_title_18" model="account.report.line">
+                        <record id="mod_390_title_18" model="report.formula.line">
                             <field
                                 name="name">Total cuotas IVA y recargo de equivalencia</field>
                             <field
@@ -2168,7 +2168,7 @@
                             <field name="children_ids">
                                 <record
                                     id="mod_390_casilla_47"
-                                    model="account.report.line">
+                                    model="report.formula.line">
                                     <field name="name">[47] Cuotas</field>
                                     <field name="name@es">[47] Cuota devengada</field>
                                     <field name="code">aeat_mod_390_47</field>

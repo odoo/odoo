@@ -19,7 +19,7 @@ class TestBudgetReport(TestAccountReportsCommon):
         cls.account_4 = cls.copy_account(cls.account_1)
 
         # Create a test report
-        cls.report = cls.env["account.report"].create(
+        cls.report = cls.env["report.formula"].create(
             {
                 "name": "Budget Test",
                 "filter_date_range": True,
@@ -1078,7 +1078,7 @@ class TestBudgetReport(TestAccountReportsCommon):
         Test that budget filters don't crash when a report has lines with percentage
         figure type that cannot be matched for budget comparison.
         """
-        report_with_percentage = self.env["account.report"].create(
+        report_with_percentage = self.env["report.formula"].create(
             {
                 "name": "Report with Percentage Line",
                 "filter_date_range": True,

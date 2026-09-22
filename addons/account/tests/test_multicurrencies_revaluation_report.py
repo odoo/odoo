@@ -370,7 +370,7 @@ class TestMultiCurrenciesRevaluationReport(TestAccountReportsCommon):
         )
 
         oldest_line_id = self.report._get_generic_line_id(
-            "account.report.line",
+            "report.formula.line",
             self.env.ref("account.multicurrency_revaluation_to_adjust").id,
         )
         old_line_id = self.report._get_generic_line_id(

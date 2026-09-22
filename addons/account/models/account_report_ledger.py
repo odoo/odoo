@@ -30,7 +30,7 @@ _debug = DebugLog(__name__)
 
 
 class AccountReport(models.Model):
-    _inherit = "account.report"
+    _inherit = "report.formula"
 
     chart_template = fields.Selection(
         selection=lambda self: self.env[
@@ -165,7 +165,7 @@ class AccountReport(models.Model):
             _debug.logic("tag_move_skipped", report=self, reason="no_matching_tags")
             return
 
-        reports_by_tag = defaultdict(self.env["account.report"].browse)
+        reports_by_tag = defaultdict(self.env["report.formula"].browse)
         for expression in source_tags._get_related_tax_report_expressions():
             reports_by_tag[expression._tax_tag_key()] |= (
                 expression.report_line_id.report_id
@@ -201,7 +201,7 @@ class AccountReport(models.Model):
             - destination_names
             - set(tags_to_move.mapped("name"))
         )
-        expression_model = self.env["account.report.expression"]
+        expression_model = self.env["report.formula.expression"]
         _debug.pipeline(
             "missing_tags_creating",
             report=self,
@@ -316,7 +316,7 @@ class AccountReport(models.Model):
         for report, impacted_fields in zip(reports, vals_list, strict=False):
             for field_name in impacted_fields:
                 reports_by_impacted_field.setdefault(
-                    field_name, self.env["account.report"]
+                    field_name, self.env["report.formula"]
                 )
                 reports_by_impacted_field[field_name] += report
 
@@ -344,7 +344,7 @@ class AccountReport(models.Model):
                     ):
                         # We then need to recompute the fields on the reports not setting it in the create (all the filters are also editable)
                         reports_to_recompute = reports - reports_by_impacted_field.get(
-                            name, self.env["account.report"]
+                            name, self.env["report.formula"]
                         )
                         if reports_to_recompute:
                             _debug.logic(
@@ -371,7 +371,7 @@ class AccountReport(models.Model):
 
     @_debug.perf.timed
     def _link_annual_statements(self, root_annual_statements):
-        Report = self.env["account.report"].with_context(active_test=False)
+        Report = self.env["report.formula"].with_context(active_test=False)
         existing_statements = Report.search(
             [
                 ("root_report_id", "=", root_annual_statements.id),
@@ -382,7 +382,7 @@ class AccountReport(models.Model):
         for asr_section_report in self:
             annual_statements = existing_statements.get(
                 (asr_section_report.country_id, asr_section_report.chart_template),
-                self.env["account.report"],
+                self.env["report.formula"],
             )
             if not annual_statements:
                 annual_statements = Report.create(
@@ -813,7 +813,7 @@ class AccountReport(models.Model):
             )
         elif (
             len(
-                return_type := self.env["account.report"]
+                return_type := self.env["report.formula"]
                 .browse(options["sections_source_id"])
                 .return_type_ids
             )
@@ -1522,7 +1522,7 @@ class AccountReport(models.Model):
                     _(
                         "'%s' date scope cannot be evaluated for a report used by multiple return types using different periodicities.",
                         dict(
-                            self.env["account.report.expression"]
+                            self.env["report.formula.expression"]
                             ._fields["date_scope"]
                             ._description_selection(self.env)
                         )["previous_return_period"],
@@ -1575,7 +1575,7 @@ class AccountReport(models.Model):
             (next_groupby.split(",") if next_groupby else [])
             + ([current_groupby] if current_groupby else [])
         )
-        all_expressions = self.env["account.report.expression"]
+        all_expressions = self.env["report.formula.expression"]
         for expressions in formulas_dict.values():
             all_expressions |= expressions
         tags = all_expressions._get_matching_tags()
@@ -2113,7 +2113,7 @@ class AccountReport(models.Model):
         return SQL(
             """
             JOIN %(currency_table)s
-            ON account_currency_table.company_id = account_report_external_value.company_id
+            ON account_currency_table.company_id = report_formula_external_value.company_id
             AND account_currency_table.rate_type = 'current'
             """,
             currency_table=self._get_currency_table(options),
@@ -2556,7 +2556,7 @@ class AccountReport(models.Model):
 
     @_debug.perf.timed
     def _create_carryover_external_values(self, options):
-        """Generates the account.report.external.value objects corresponding to this report's carryover under the provided options.
+        """Generates the report.formula.external.value objects corresponding to this report's carryover under the provided options.
 
         In case of multicompany setup, we need to split the carryover per company, for ease of audit, and so that the carryover isn't broken when
         a company leaves a tax unit.
@@ -2663,7 +2663,7 @@ class AccountReport(models.Model):
     def _create_default_external_values(
         self, date_from, date_to, is_tax_report=False, company=None
     ):
-        """Generates the account.report.external.value objects for the given dates.
+        """Generates the report.formula.external.value objects for the given dates.
         If is_tax_report, the values are only created for tax reports, else for all other reports.
 
         :param company: the company to seed the values for. The caller knows it -- the
@@ -2693,7 +2693,7 @@ class AccountReport(models.Model):
         }
 
         # Get all the default expressions from all reports
-        default_expressions = self.env["account.report.expression"].search(
+        default_expressions = self.env["report.formula.expression"].search(
             [("label", "=like", "_default_%")]
         )
         # Options depend on the report, also we need to filter out tax report/other reports depending on is_tax_report
@@ -2742,7 +2742,7 @@ class AccountReport(models.Model):
             # and we won't recompute expression totals for them
             targets_with_value = {
                 value.target_report_expression_id.id
-                for value in self.env["account.report.external.value"].search(  # noqa: E8507 - one query per report, over every default expression at once
+                for value in self.env["report.formula.external.value"].search(  # noqa: E8507 - one query per report, over every default expression at once
                     [
                         ("company_id", "=", company.id),
                         ("date", ">=", date_from),
@@ -2802,7 +2802,7 @@ class AccountReport(models.Model):
             company=company,
             count=len(external_values_create_vals),
         )
-        self.env["account.report.external.value"].create(external_values_create_vals)
+        self.env["report.formula.external.value"].create(external_values_create_vals)
 
     @_debug.perf.timed
     def _create_carryover_for_company(
@@ -2832,7 +2832,7 @@ class AccountReport(models.Model):
                     }
                 )
 
-        self.env["account.report.external.value"].create(external_values_create_vals)
+        self.env["report.formula.external.value"].create(external_values_create_vals)
 
     @_debug.perf.timed
     def _is_available_for(self, options):
@@ -3568,7 +3568,7 @@ class AccountReport(models.Model):
 
 
 class AccountReportLine(models.Model):
-    _inherit = "account.report.line"
+    _inherit = "report.formula.line"
 
     account_codes_formula = fields.Char(
         string="Account Codes Formula Shortcut",
@@ -3644,7 +3644,7 @@ class AccountReportLine(models.Model):
 
 
 class AccountReportExpression(models.Model):
-    _inherit = "account.report.expression"
+    _inherit = "report.formula.expression"
 
     engine = fields.Selection(
         selection_add=[
@@ -3944,7 +3944,7 @@ class AccountReportExpression(models.Model):
                 line_code=line_code,
                 expr_label=expr_label,
             )
-            return self.env["account.report.expression"].search(
+            return self.env["report.formula.expression"].search(
                 [
                     ("report_line_id.code", "=", line_code),
                     ("label", "=", expr_label),
@@ -3990,7 +3990,7 @@ class AccountReportExpression(models.Model):
         return {
             "type": "ir.actions.act_window",
             "name": _("Carryover lines for: %s", self.report_line_name),
-            "res_model": "account.report.external.value",
+            "res_model": "report.formula.external.value",
             "views": [(False, "list")],
             "domain": [
                 ("target_report_expression_id", "=", self.id),
@@ -4001,7 +4001,7 @@ class AccountReportExpression(models.Model):
 
 
 class AccountReportExternalValue(models.Model):
-    _inherit = "account.report.external.value"
+    _inherit = "report.formula.external.value"
 
     @api.model_create_multi
     @_debug.perf.timed

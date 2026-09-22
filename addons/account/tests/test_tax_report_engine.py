@@ -277,7 +277,7 @@ class TestTaxReport(TestAccountReportsCommon):
         )
 
         # Create both a domestic and foreign tax report, and some taxes for them
-        cls.domestic_tax_report = cls.env["account.report"].create(
+        cls.domestic_tax_report = cls.env["report.formula"].create(
             {
                 "name": "The Unseen Tax Report",
                 "country_id": cls.fiscal_country.id,
@@ -318,7 +318,7 @@ class TestTaxReport(TestAccountReportsCommon):
             ],
         )
 
-        cls.foreign_tax_report = cls.env["account.report"].create(
+        cls.foreign_tax_report = cls.env["report.formula"].create(
             {
                 "name": "Miller's Report",
                 "country_id": cls.foreign_country.id,
@@ -769,7 +769,7 @@ class TestTaxReport(TestAccountReportsCommon):
         #   - Tax -100%
         # /Tax difference (42% - 11%)
 
-        tax_report = self.env["account.report"].create(
+        tax_report = self.env["report.formula"].create(
             {
                 "name": "Test",
                 "country_id": company.account_config_id.account_fiscal_country_id.id,
@@ -1244,7 +1244,7 @@ class TestTaxReport(TestAccountReportsCommon):
         partner = self.env["res.partner"].create({"name": "Char Aznable"})
 
         # Create a tax report
-        tax_report = self.env["account.report"].create(
+        tax_report = self.env["report.formula"].create(
             {
                 "name": "Test",
                 "country_id": self.fiscal_country.id,
@@ -1676,7 +1676,7 @@ class TestTaxReport(TestAccountReportsCommon):
         """
         self.env.company.account_config_id.tax_exigibility = True
         # Create taxes
-        tax_report = self.env["account.report"].create(
+        tax_report = self.env["report.formula"].create(
             {
                 "name": "Sokovia Accords",
                 "country_id": self.fiscal_country.id,
@@ -1873,7 +1873,7 @@ class TestTaxReport(TestAccountReportsCommon):
         """Misc operations without payable nor receivable lines must always be exigible,
         whatever the tax_exigibility configured on their taxes.
         """
-        tax_report = self.env["account.report"].create(
+        tax_report = self.env["report.formula"].create(
             {
                 "name": "Laplace's Box",
                 "country_id": self.fiscal_country.id,
@@ -2160,7 +2160,7 @@ class TestTaxReport(TestAccountReportsCommon):
         )
 
     def test_tax_unit(self):
-        tax_unit_report = self.env["account.report"].create(
+        tax_unit_report = self.env["report.formula"].create(
             {
                 "name": "And now for something completely different",
                 "country_id": self.fiscal_country.id,
@@ -2692,7 +2692,7 @@ class TestTaxReport(TestAccountReportsCommon):
         """
         today = fields.Date.today()
         company = self.env.user.company_id
-        tax_report = self.env["account.report"].create(
+        tax_report = self.env["report.formula"].create(
             {
                 "name": "Test",
                 "country_id": self.fiscal_country.id,
@@ -2809,7 +2809,7 @@ class TestTaxReport(TestAccountReportsCommon):
         """
         self.env.company.account_config_id.tax_exigibility = True
 
-        tax_report = self.env["account.report"].create(
+        tax_report = self.env["report.formula"].create(
             {
                 "name": "CABA test",
                 "country_id": self.fiscal_country.id,
@@ -2981,7 +2981,7 @@ class TestTaxReport(TestAccountReportsCommon):
         def get_tag(report_line):
             return report_line.expression_ids._get_matching_tags()
 
-        local_tax_report, foreign_tax_report = self.env["account.report"].create(
+        local_tax_report, foreign_tax_report = self.env["report.formula"].create(
             [
                 {
                     "name": "The Local Tax Report",
@@ -3737,7 +3737,7 @@ class TestTaxReport(TestAccountReportsCommon):
             "in_invoice", invoice_date="2025-01-01", post=True, amounts=[100]
         )
 
-        report = self.env["account.report"].create(
+        report = self.env["report.formula"].create(
             {
                 "name": "Test report",
                 "column_ids": [

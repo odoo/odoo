@@ -848,7 +848,7 @@ class TestGeneralLedgerReport(TestAccountReportsCommon, odoo.tests.HttpCase):
             fields.Date.from_string("2017-12-31"),
         )
         parent_line_id = self.report._get_generic_line_id(
-            model_name="account.report.line",
+            model_name="report.formula.line",
             value=self.env.ref("account.general_ledger_custom_engine_line").id,
         )
         account_revenue_line_id = self.report._get_generic_line_id(
@@ -1018,7 +1018,7 @@ class TestGeneralLedgerReport(TestAccountReportsCommon, odoo.tests.HttpCase):
             fields.Date.from_string("2017-12-31"),
         )
         parent_line_id = self.report._get_generic_line_id(
-            model_name="account.report.line",
+            model_name="report.formula.line",
             value=self.env.ref("account.general_ledger_custom_engine_line").id,
         )
         account_revenue_line_id = self.report._get_generic_line_id(
@@ -1139,7 +1139,7 @@ class TestGeneralLedgerReport(TestAccountReportsCommon, odoo.tests.HttpCase):
 
         options = self._generate_options(self.report, "2017-02-01", "2017-03-01")
         parent_line_id = self.report._get_generic_line_id(
-            model_name="account.report.line",
+            model_name="report.formula.line",
             value=self.env.ref("account.general_ledger_custom_engine_line").id,
         )
         account_revenue_line_id = self.report._get_generic_line_id(
@@ -1807,7 +1807,7 @@ class TestGeneralLedgerReport(TestAccountReportsCommon, odoo.tests.HttpCase):
         )
 
     def assertCSVExportLinesValues(self, options, expected_vals_list):
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         lines_gen = report.dispatch_report_action(options, "generate_csv_export")[
             "file_content"
         ]

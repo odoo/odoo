@@ -22,7 +22,7 @@ class Account_ReportsExportWizard(models.TransientModel):
         string="Export to",
     )
     report_id = fields.Many2one(
-        comodel_name="account.report",
+        comodel_name="report.formula",
         string="Parent Report Id",
         required=True,
     )
@@ -168,7 +168,7 @@ class Account_ReportsExportWizardFormat(models.TransientModel):
             wizard = self.env[model].browse(model_id)
             file_name = wizard[query_params["filename_field"][0]]
             file_content = wizard[query_params["field"][0]]
-            mimetype = self.env["account.report"].get_export_mime_type(
+            mimetype = self.env["report.formula"].get_export_mime_type(
                 file_name.split(".")[-1]
             )
 

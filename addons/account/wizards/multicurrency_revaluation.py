@@ -180,7 +180,7 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
             lambda l: l.code == "multicurrency_included"
         ).id
         generic_included_line_id = report._get_generic_line_id(
-            "account.report.line", included_line_id
+            "report.formula.line", included_line_id
         )
         options = {
             **self.env.context["multicurrency_revaluation_report_options"],

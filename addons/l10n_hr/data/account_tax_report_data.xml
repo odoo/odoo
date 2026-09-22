@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="tax_report" model="account.report">
+    <record id="tax_report" model="report.formula">
         <field name="name">Tax Report</field>
         <field name="name@hr">Porezno Izvješće</field>
         <field name="root_report_id" ref="account.generic_tax_report" />
@@ -9,19 +9,19 @@
         <field name="allow_foreign_vat" eval="True" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="tax_report_tax_base" model="account.report.column">
+            <record id="tax_report_tax_base" model="report.formula.column">
                 <field name="name">Tax base</field>
                 <field name="name@hr">Porezna osnovica</field>
                 <field name="expression_label">tax_base</field>
             </record>
-            <record id="tax_report_tax_amount" model="account.report.column">
+            <record id="tax_report_tax_amount" model="report.formula.column">
                 <field name="name">Tax amount</field>
                 <field name="name@hr">Iznos poreza</field>
                 <field name="expression_label">tax_amount</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="tax_report_title_vat_calculation" model="account.report.line">
+            <record id="tax_report_title_vat_calculation" model="report.formula.line">
                 <field
                     name="name">Vat calculation of supplied goods and services - total value(i. + ii.)</field>
                 <field
@@ -31,7 +31,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_0_0_tag_column1"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax_base</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -39,14 +39,14 @@
                     </record>
                     <record
                         id="tax_report_line_0_0_tag_column2"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax_amount</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">c_II_total.tax_amount</field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_title_transactions0" model="account.report.line">
+            <record id="tax_report_title_transactions0" model="report.formula.line">
                 <field
                     name="name">I. Transactions not subject to vat and exempt - total value (1.+2.+3.+4.+5.+6.+7.+8.+9.+10.)</field>
                 <field
@@ -56,7 +56,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_I_0_tag_column1"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax_base</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -64,7 +64,7 @@
                     </record>
                 </field>
                 <field name="children_ids">
-                    <record id="tax_report_line_I_1" model="account.report.line">
+                    <record id="tax_report_line_I_1" model="report.formula.line">
                         <field
                             name="name">1. Supplies in the republic of croatia in respect of which the receiver calculates vat (domestic reverse charge)</field>
                         <field
@@ -73,14 +73,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_I_1_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-I.1_base</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_I_2" model="account.report.line">
+                    <record id="tax_report_line_I_2" model="report.formula.line">
                         <field
                             name="name">2. Supplies carried out in another member state</field>
                         <field
@@ -89,42 +89,42 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_I_2_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-I.2_base</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_I_3" model="account.report.line">
+                    <record id="tax_report_line_I_3" model="report.formula.line">
                         <field name="name">3. Supplies of goods within the eu</field>
                         <field name="name@hr">3. Isporuke robe unutar eu</field>
                         <field name="code">hr03</field>
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_I_3_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-I.3_base</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_I_4" model="account.report.line">
+                    <record id="tax_report_line_I_4" model="report.formula.line">
                         <field name="name">4. Supplies of services within the eu</field>
                         <field name="name@hr">4. Isporuka usluga unutar eu</field>
                         <field name="code">hr04</field>
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_I_4_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-I.4_base</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_I_5" model="account.report.line">
+                    <record id="tax_report_line_I_5" model="report.formula.line">
                         <field
                             name="name">5. Supplies to persons not established in the republic of croatia</field>
                         <field
@@ -133,14 +133,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_I_5_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-I.5_base</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_I_6" model="account.report.line">
+                    <record id="tax_report_line_I_6" model="report.formula.line">
                         <field
                             name="name">6. Installed and assembled goods in another member state</field>
                         <field
@@ -149,14 +149,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_I_6_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-I.6_base</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_I_7" model="account.report.line">
+                    <record id="tax_report_line_I_7" model="report.formula.line">
                         <field
                             name="name">7. Supplies of new means of transport to another member state</field>
                         <field
@@ -165,49 +165,49 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_I_7_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-I.7_base</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_I_8" model="account.report.line">
+                    <record id="tax_report_line_I_8" model="report.formula.line">
                         <field name="name">8. Domestic supplies</field>
                         <field name="name@hr">8. Domaće zalihe</field>
                         <field name="code">hr08</field>
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_I_8_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">I.8_base</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_I_9" model="account.report.line">
+                    <record id="tax_report_line_I_9" model="report.formula.line">
                         <field name="name">9. Exportation</field>
                         <field name="name@hr">9. Izvoz</field>
                         <field name="code">hr09</field>
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_I_9_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-I.9_base</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_I_10" model="account.report.line">
+                    <record id="tax_report_line_I_10" model="report.formula.line">
                         <field name="name">10. Other exemptions</field>
                         <field name="name@hr">10. Ostala izuzeća</field>
                         <field name="code">hr10</field>
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_I_10_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-I.10_base</field>
@@ -216,7 +216,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_title_transactions1" model="account.report.line">
+            <record id="tax_report_title_transactions1" model="report.formula.line">
                 <field
                     name="name">II. Taxable transactions – total amount (1.+2.+3.+4.+5.+6.+7.+8.+9.+10.+11.+12.+13.+14.+15.)</field>
                 <field
@@ -226,7 +226,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_II_0_tag_column1"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax_base</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -234,7 +234,7 @@
                     </record>
                     <record
                         id="tax_report_line_II_0_tag_column2"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax_amount</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -242,7 +242,7 @@
                     </record>
                 </field>
                 <field name="children_ids">
-                    <record id="tax_report_line_II_1" model="account.report.line">
+                    <record id="tax_report_line_II_1" model="report.formula.line">
                         <field
                             name="name">1. Supplies of goods and services in the republic of croatia at a rate 5%</field>
                         <field
@@ -251,21 +251,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_II_1_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.1_base</field>
                             </record>
                             <record
                                 id="tax_report_line_II_1_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.1_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_II_2" model="account.report.line">
+                    <record id="tax_report_line_II_2" model="report.formula.line">
                         <field
                             name="name">2. Supplies of goods and services in the republic of croatia at a rate 13%</field>
                         <field
@@ -274,21 +274,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_II_2_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.2_base</field>
                             </record>
                             <record
                                 id="tax_report_line_II_2_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.2_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_II_3" model="account.report.line">
+                    <record id="tax_report_line_II_3" model="report.formula.line">
                         <field
                             name="name">3. Supplies of goods and services in the republic of croatia at a rate 25%</field>
                         <field
@@ -297,21 +297,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_II_3_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.3_base</field>
                             </record>
                             <record
                                 id="tax_report_line_II_3_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.3_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_II_4" model="account.report.line">
+                    <record id="tax_report_line_II_4" model="report.formula.line">
                         <field
                             name="name">4. Supplies received in the republic of croatia in respect of which the receiver calculates vat (domestic reverse charge)</field>
                         <field
@@ -320,21 +320,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_II_4_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">II.4_base</field>
                             </record>
                             <record
                                 id="tax_report_line_II_4_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.4_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_II_5" model="account.report.line">
+                    <record id="tax_report_line_II_5" model="report.formula.line">
                         <field
                             name="name">5. Acquisition of goods within the eu at a rate 5%</field>
                         <field
@@ -343,21 +343,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_II_5_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">II.5_base</field>
                             </record>
                             <record
                                 id="tax_report_line_II_5_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.5_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_II_6" model="account.report.line">
+                    <record id="tax_report_line_II_6" model="report.formula.line">
                         <field
                             name="name">6. Acquisition of goods within the eu at a rate 13%</field>
                         <field
@@ -366,21 +366,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_II_6_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">II.6_base</field>
                             </record>
                             <record
                                 id="tax_report_line_II_6_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.6_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_II_7" model="account.report.line">
+                    <record id="tax_report_line_II_7" model="report.formula.line">
                         <field
                             name="name">7. Acquisition of goods within the eu at a rate 25%</field>
                         <field
@@ -389,21 +389,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_II_7_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">II.7_base</field>
                             </record>
                             <record
                                 id="tax_report_line_II_7_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.7_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_II_8" model="account.report.line">
+                    <record id="tax_report_line_II_8" model="report.formula.line">
                         <field
                             name="name">8. Services received from eu at a rate 5%</field>
                         <field
@@ -412,21 +412,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_II_8_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">II.8_base</field>
                             </record>
                             <record
                                 id="tax_report_line_II_8_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.8_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_II_9" model="account.report.line">
+                    <record id="tax_report_line_II_9" model="report.formula.line">
                         <field
                             name="name">9. Services received from eu at a rate 13%</field>
                         <field
@@ -435,21 +435,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_II_9_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">II.9_base</field>
                             </record>
                             <record
                                 id="tax_report_line_II_9_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.9_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_II_10" model="account.report.line">
+                    <record id="tax_report_line_II_10" model="report.formula.line">
                         <field
                             name="name">10. Services received from eu at a rate 25%</field>
                         <field
@@ -458,21 +458,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_II_10_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">II.10_base</field>
                             </record>
                             <record
                                 id="tax_report_line_II_10_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.10_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_II_11" model="account.report.line">
+                    <record id="tax_report_line_II_11" model="report.formula.line">
                         <field
                             name="name">11. Supplies of goods and services received from taxable persons not established in the republic of croatia at a rate 5%</field>
                         <field
@@ -481,21 +481,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_II_11_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.11_base</field>
                             </record>
                             <record
                                 id="tax_report_line_II_11_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.11_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_II_12" model="account.report.line">
+                    <record id="tax_report_line_II_12" model="report.formula.line">
                         <field
                             name="name">12. Supplies of goods and services received from taxable persons not established in the republic of croatia at a rate 13%</field>
                         <field
@@ -504,21 +504,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_II_12_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.12_base</field>
                             </record>
                             <record
                                 id="tax_report_line_II_12_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.12_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_II_13" model="account.report.line">
+                    <record id="tax_report_line_II_13" model="report.formula.line">
                         <field
                             name="name">13. Supplies of goods and services received from taxable persons not established in the republic of croatia at a rate 25%</field>
                         <field
@@ -527,21 +527,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_II_13_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.13_base</field>
                             </record>
                             <record
                                 id="tax_report_line_II_13_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.13_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_II_14" model="account.report.line">
+                    <record id="tax_report_line_II_14" model="report.formula.line">
                         <field
                             name="name">14. Subsequent exemption on exportation related to personal  passenger transportation</field>
                         <field
@@ -550,35 +550,35 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_II_14_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">II.14_base</field>
                             </record>
                             <record
                                 id="tax_report_line_II_14_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">II.14_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_II_15" model="account.report.line">
+                    <record id="tax_report_line_II_15" model="report.formula.line">
                         <field name="name">15. Vat calculated on importation</field>
                         <field name="name@hr">15. PDV obračunat pri uvozu</field>
                         <field name="code">hr25</field>
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_II_15_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">II.15_base</field>
                             </record>
                             <record
                                 id="tax_report_line_II_15_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II.15_tax</field>
@@ -587,7 +587,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_title_calculed_vat" model="account.report.line">
+            <record id="tax_report_title_calculed_vat" model="report.formula.line">
                 <field
                     name="name">III. Calculated input vat – total amount (1.+2.+3.+4.+5.+6.+7.+8.+9.+10.+11.+12.+13. +14.+15.)</field>
                 <field
@@ -597,7 +597,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_III_0_tag_column1"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax_base</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -605,7 +605,7 @@
                     </record>
                     <record
                         id="tax_report_line_III_0_tag_column2"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax_amount</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -613,7 +613,7 @@
                     </record>
                 </field>
                 <field name="children_ids">
-                    <record id="tax_report_line_III_1" model="account.report.line">
+                    <record id="tax_report_line_III_1" model="report.formula.line">
                         <field
                             name="name">1. Input vat related to supplies received in the country at a rate 5%</field>
                         <field
@@ -622,21 +622,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_III_1_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.1_base</field>
                             </record>
                             <record
                                 id="tax_report_line_III_1_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.1_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_III_2" model="account.report.line">
+                    <record id="tax_report_line_III_2" model="report.formula.line">
                         <field
                             name="name">2. Input vat related to supplies received in the country at a rate 13%</field>
                         <field
@@ -645,21 +645,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_III_2_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.2_base</field>
                             </record>
                             <record
                                 id="tax_report_line_III_2_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.2_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_III_3" model="account.report.line">
+                    <record id="tax_report_line_III_3" model="report.formula.line">
                         <field
                             name="name">3. Input vat related to supplies received in the country at a rate 25%</field>
                         <field
@@ -668,21 +668,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_III_3_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.3_base</field>
                             </record>
                             <record
                                 id="tax_report_line_III_3_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.3_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_III_4" model="account.report.line">
+                    <record id="tax_report_line_III_4" model="report.formula.line">
                         <field
                             name="name">4. Input vat related to supplies received in the country in respect of which the receiver calculates vat (domestic reverse charge)</field>
                         <field
@@ -691,21 +691,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_III_4_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.4_base</field>
                             </record>
                             <record
                                 id="tax_report_line_III_4_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.4_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_III_5" model="account.report.line">
+                    <record id="tax_report_line_III_5" model="report.formula.line">
                         <field
                             name="name">5. Input vat related to acquisition of goods within the eu at a rate 5%</field>
                         <field
@@ -714,21 +714,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_III_5_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.5_base</field>
                             </record>
                             <record
                                 id="tax_report_line_III_5_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.5_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_III_6" model="account.report.line">
+                    <record id="tax_report_line_III_6" model="report.formula.line">
                         <field
                             name="name">6. Input vat related to acquisition of goods within the eu at a rate 13%</field>
                         <field
@@ -737,21 +737,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_III_6_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.6_base</field>
                             </record>
                             <record
                                 id="tax_report_line_III_6_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.6_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_III_7" model="account.report.line">
+                    <record id="tax_report_line_III_7" model="report.formula.line">
                         <field
                             name="name">7. Input vat related to acquisition of goods within the eu at a rate 25%</field>
                         <field
@@ -760,21 +760,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_III_7_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.7_base</field>
                             </record>
                             <record
                                 id="tax_report_line_III_7_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.7_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_III_8" model="account.report.line">
+                    <record id="tax_report_line_III_8" model="report.formula.line">
                         <field
                             name="name">8. Input vat related to services received from eu at a rate 5%</field>
                         <field
@@ -783,21 +783,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_III_8_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.8_base</field>
                             </record>
                             <record
                                 id="tax_report_line_III_8_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.8_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_III_9" model="account.report.line">
+                    <record id="tax_report_line_III_9" model="report.formula.line">
                         <field
                             name="name">9. Input vat related to services received from eu at a rate 13%</field>
                         <field
@@ -806,21 +806,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_III_9_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.9_base</field>
                             </record>
                             <record
                                 id="tax_report_line_III_9_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.9_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_III_10" model="account.report.line">
+                    <record id="tax_report_line_III_10" model="report.formula.line">
                         <field
                             name="name">10. Input vat related to services received from eu at a rate 25%</field>
                         <field
@@ -829,21 +829,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_III_10_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.10_base</field>
                             </record>
                             <record
                                 id="tax_report_line_III_10_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.10_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_III_11" model="account.report.line">
+                    <record id="tax_report_line_III_11" model="report.formula.line">
                         <field
                             name="name">11. Input vat related to supplies of goods and services received from non-established taxable persons at a rate 5%</field>
                         <field
@@ -852,21 +852,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_III_11_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-III.11_base</field>
                             </record>
                             <record
                                 id="tax_report_line_III_11_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.11_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_III_12" model="account.report.line">
+                    <record id="tax_report_line_III_12" model="report.formula.line">
                         <field
                             name="name">12. Input vat related to supplies of goods and services received from non-established taxable persons at a rate 13%</field>
                         <field
@@ -875,21 +875,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_III_12_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-III.12_base</field>
                             </record>
                             <record
                                 id="tax_report_line_III_12_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.12_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_III_13" model="account.report.line">
+                    <record id="tax_report_line_III_13" model="report.formula.line">
                         <field
                             name="name">13. Input vat related to supplies of goods and services received from non-established taxable persons at a rate 25%</field>
                         <field
@@ -898,49 +898,49 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_III_13_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-III.13_base</field>
                             </record>
                             <record
                                 id="tax_report_line_III_13_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.13_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_III_14" model="account.report.line">
+                    <record id="tax_report_line_III_14" model="report.formula.line">
                         <field name="name">14. Input vat related to importation</field>
                         <field name="name@hr">14. Ulazna PDV vezana uz uvoz</field>
                         <field name="code">hr39</field>
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_III_14_tag_column1"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.14_base</field>
                             </record>
                             <record
                                 id="tax_report_line_III_14_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.14_tax</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_III_15" model="account.report.line">
+                    <record id="tax_report_line_III_15" model="report.formula.line">
                         <field name="name">15. Adjustments of deductions</field>
                         <field name="name@hr">15. Usklađivanja odbitaka</field>
                         <field name="code">hr40</field>
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_III_15_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">III.15_tax</field>
@@ -949,7 +949,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_title_vat_liab" model="account.report.line">
+            <record id="tax_report_title_vat_liab" model="report.formula.line">
                 <field
                     name="name">IV. Vat liability in the calculation period: to pay (ii. - iii.) or to refund (iii. - ii.)</field>
                 <field
@@ -959,21 +959,21 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_IV_0_tag_column2"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax_amount</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">hr41.tax_amount + hr42.tax_amount</field>
                     </record>
                 </field>
                 <field name="children_ids">
-                    <record id="tax_report_line_IV_1" model="account.report.line">
+                    <record id="tax_report_line_IV_1" model="report.formula.line">
                         <field name="name">1. To pay</field>
                         <field name="name@hr">1. Platiti</field>
                         <field name="code">hr41</field>
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_IV_1_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -982,14 +982,14 @@
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_IV_2" model="account.report.line">
+                    <record id="tax_report_line_IV_2" model="report.formula.line">
                         <field name="name">2. To refund</field>
                         <field name="name@hr">2. Za povrat novca</field>
                         <field name="code">hr42</field>
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_IV_2_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -1000,7 +1000,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_title_prev_calculation" model="account.report.line">
+            <record id="tax_report_title_prev_calculation" model="report.formula.line">
                 <field
                     name="name">V. According to the previous calculation: unpaid vat to the day of submitting of this return-overpaid-tax credit</field>
                 <field
@@ -1010,14 +1010,14 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_V_0_tag_column2"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax_amount</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">hr43.tax_amount + hr44.tax_amount </field>
                     </record>
                 </field>
                 <field name="children_ids">
-                    <record id="tax_report_line_V_1" model="account.report.line">
+                    <record id="tax_report_line_V_1" model="report.formula.line">
                         <field
                             name="name">1. Claims for the difference of higher input tax than liabilities in the taxation period</field>
                         <field
@@ -1026,14 +1026,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_V_1_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">account_codes</field>
                                 <field name="formula">1407</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_V_2" model="account.report.line">
+                    <record id="tax_report_line_V_2" model="report.formula.line">
                         <field
                             name="name">2. Liability for the difference between tax and input tax in the taxation period</field>
                         <field
@@ -1042,7 +1042,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_V_2_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">account_codes</field>
                                 <field name="formula">-2407</field>
@@ -1051,7 +1051,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_title_total_dif" model="account.report.line">
+            <record id="tax_report_title_total_dif" model="report.formula.line">
                 <field name="name">VI. Total difference: to pay/to refund</field>
                 <field name="name@hr">VI. Ukupna razlika: platiti/povratiti</field>
                 <field name="code">c_VI_total</field>
@@ -1059,21 +1059,21 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_line_VI_0_tag_column2"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax_amount</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">hr45.tax_amount + hr46.tax_amount</field>
                     </record>
                 </field>
                 <field name="children_ids">
-                    <record id="tax_report_line_VI_1" model="account.report.line">
+                    <record id="tax_report_line_VI_1" model="report.formula.line">
                         <field name="name">1. Total to pay</field>
                         <field name="name@hr">1. Ukupno za plaćanje</field>
                         <field name="code">hr45</field>
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_VI_1_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -1082,14 +1082,14 @@
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_VI_2" model="account.report.line">
+                    <record id="tax_report_line_VI_2" model="report.formula.line">
                         <field name="name">2. Total to refund</field>
                         <field name="name@hr">2. Ukupno za povrat</field>
                         <field name="code">hr46</field>
                         <field name="expression_ids">
                             <record
                                 id="tax_report_line_VI_2_tag_column2"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax_amount</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -1100,7 +1100,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_title_annual_deductible" model="account.report.line">
+            <record id="tax_report_title_annual_deductible" model="report.formula.line">
                 <field name="name">VII. Annual deductible proportion(%)</field>
                 <field name="name@hr">VII. Godišnji odbitni udio (%)</field>
             </record>

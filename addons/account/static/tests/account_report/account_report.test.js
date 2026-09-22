@@ -83,7 +83,7 @@ const getReportInformationMockResponse = {
     annotations: {},
     lines: [
         {
-            id: "~account.report~14|~res.partner~1",
+            id: "~report.formula~14|~res.partner~1",
             name: "A partner",
             columns: [
                 {
@@ -117,14 +117,14 @@ const getReportInformationMockResponse = {
         company_country_code: "US",
         company_currency_symbol: "$",
         name: "A report",
-        root_report_id: "account.report()",
+        root_report_id: "report.formula()",
     },
 };
 
 const getExpandedLinesMockResponse = [
     {
-        id: "~account.report~14|~res.partner~1|0~account.move.line~1",
-        parent_id: "~account.report~14|~res.partner~1",
+        id: "~report.formula~14|~res.partner~1|0~account.move.line~1",
+        parent_id: "~report.formula~14|~res.partner~1",
         name: "first move line",
         columns: [
             {
@@ -148,8 +148,8 @@ const getExpandedLinesMockResponse = [
         level: 3,
     },
     {
-        id: "~account.report~14|~res.partner~1|0~account.move.line~11",
-        parent_id: "~account.report~14|~res.partner~1",
+        id: "~report.formula~14|~res.partner~1|0~account.move.line~11",
+        parent_id: "~report.formula~14|~res.partner~1",
         name: "second move line",
         columns: [
             {
@@ -176,7 +176,7 @@ const getExpandedLinesMockResponse = [
 
 test("Test unfold loaded line", async () => {
     async function mockRpcReport({ method, model }) {
-        if (model === "account.report") {
+        if (model === "report.formula") {
             if (method === "get_options") {
                 return getOptionMockResponse;
             }
@@ -256,7 +256,7 @@ test("a download that fails with a report error opens the error wizard", async (
         },
     });
     onRpc(
-        "account.report",
+        "report.formula",
         "open_account_report_file_download_error_wizard",
         ({ args }) => {
             expect.step("open wizard");

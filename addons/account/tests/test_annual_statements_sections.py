@@ -4,7 +4,7 @@ from odoo.tests import TransactionCase, tagged
 @tagged("post_install", "-at_install")
 class TestAnnualStatementsSections(TransactionCase):
     def _create_localized_balance_sheet(self, name, active):
-        return self.env["account.report"].create(
+        return self.env["report.formula"].create(
             {
                 "name": name,
                 "root_report_id": self.env.ref("account.balance_sheet").id,
@@ -22,7 +22,7 @@ class TestAnnualStatementsSections(TransactionCase):
         self.env.invalidate_all()
 
         annual_statements = (
-            self.env["account.report"]
+            self.env["report.formula"]
             .with_context(active_test=False)
             .search(
                 [

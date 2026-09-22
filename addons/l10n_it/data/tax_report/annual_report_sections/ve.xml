@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="tax_annual_report_vat_ve" model="account.report">
+    <record id="tax_annual_report_vat_ve" model="report.formula">
         <field name="name">VE VAT Report</field>
         <field name="name@it">Rapporto IVA VE</field>
         <field name="sequence">1</field>
         <field name="country_id" ref="base.it" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="tax_annual_report_vat_balance_ve" model="account.report.column">
+            <record id="tax_annual_report_vat_balance_ve" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="name@it">Saldo</field>
                 <field name="expression_label">balance</field>
             </record>
-            <record id="tax_annual_report_vat_tax_ve" model="account.report.column">
+            <record id="tax_annual_report_vat_tax_ve" model="report.formula.column">
                 <field name="name">Tax</field>
                 <field name="name@it">Imposta</field>
                 <field name="expression_label">tax</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="tax_annual_report_line_turnover" model="account.report.line">
+            <record id="tax_annual_report_line_turnover" model="report.formula.line">
                 <field name="name">Turnover</field>
                 <field name="name@it">Fatturato</field>
                 <field name="code">VE</field>
                 <field name="children_ids">
                     <record
                         id="tax_annual_report_line_turnover_section_1"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">Contributions of agricultural products and transfers from exempt farmers (in case of exceeding 1/3)</field>
                         <field
@@ -37,7 +37,7 @@
                         <field name="children_ids">
                             <record
                                 id="tax_annual_report_line_ve1"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE1 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 2%</field>
                                 <field
@@ -46,14 +46,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve1_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">ve1</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve1_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">VE1.balance * 0.02</field>
@@ -62,7 +62,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve2"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE2 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 4%</field>
                                 <field
@@ -71,14 +71,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve2_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">ve2</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve2_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">VE2.balance * 0.04</field>
@@ -87,7 +87,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve3"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE3 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 6,4%</field>
                                 <field
@@ -96,14 +96,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve3_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">ve3</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve3_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -113,7 +113,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve4"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE4 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 7,3%</field>
                                 <field
@@ -122,14 +122,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve4_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">ve4</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve4_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">VE4.balance * 0.07</field>
@@ -138,7 +138,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve5"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE5 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 7,5%</field>
                                 <field
@@ -147,14 +147,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve5_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">ve5</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve5_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -164,7 +164,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve6"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE6 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 8,3%</field>
                                 <field
@@ -173,14 +173,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve6_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">ve6</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve6_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -190,7 +190,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve7"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE7 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 8,5%</field>
                                 <field
@@ -199,14 +199,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve7_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">ve7</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve7_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -216,7 +216,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE8 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 8,8%</field>
                                 <field
@@ -225,14 +225,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">ve8</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve8_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -242,7 +242,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve9"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE9 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 9,5%</field>
                                 <field
@@ -251,14 +251,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve9_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">ve9</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve9_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -268,7 +268,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve10"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE10 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 10%</field>
                                 <field
@@ -277,14 +277,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve10_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">ve10</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve10_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -294,7 +294,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve11"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE11 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 12,3%</field>
                                 <field
@@ -303,14 +303,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve11_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">ve11</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve11_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -322,7 +322,7 @@
                     </record>
                     <record
                         id="tax_annual_report_line_turnover_section_2"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">Agricultural taxable transactions (Article 34 paragraph 1) and commercial and professional taxable transactions</field>
                         <field
@@ -332,7 +332,7 @@
                         <field name="children_ids">
                             <record
                                 id="tax_annual_report_line_ve20"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE20 - Taxable transactions rate 4%</field>
                                 <field
@@ -341,14 +341,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve20_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">ve20</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve20_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">VE20.balance * 0.4</field>
@@ -357,7 +357,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve21"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE21 - Taxable transactions rate 5%</field>
                                 <field
@@ -366,14 +366,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve21_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">ve21</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve21_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">VE21.balance * 0.5</field>
@@ -382,7 +382,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve22"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE22 - Taxable transactions rate 10%</field>
                                 <field
@@ -391,14 +391,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve22_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">ve22</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve22_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -408,7 +408,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve23"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE23 - Taxable transactions rate 22%</field>
                                 <field
@@ -417,14 +417,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve23_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">ve23</field>
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve23_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -436,7 +436,7 @@
                     </record>
                     <record
                         id="tax_annual_report_line_turnover_section_3"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Total taxable income and tax</field>
                         <field name="name@it">Totale imponibile e imposta</field>
                         <field name="code">VE_section3</field>
@@ -444,7 +444,7 @@
                         <field name="children_ids">
                             <record
                                 id="tax_annual_report_line_ve24"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE24 - Total lines VE1 to VE11 and lines VE20 to VE23</field>
                                 <field
@@ -457,7 +457,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_annual_report_line_ve24_tax"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field
@@ -469,7 +469,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve25"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE25 - Variations and rounding (use +/− sign)</field>
                                 <field
@@ -479,7 +479,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve26"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VE26 - Total VE24 and VE25</field>
                                 <field name="name@it">VE26 - Totale VE24 e VE25</field>
                                 <field name="code">VE26</field>
@@ -490,7 +490,7 @@
                     </record>
                     <record
                         id="tax_annual_report_line_turnover_section_4"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Other operations</field>
                         <field name="name@it">Altre operazioni</field>
                         <field name="code">VE_section4</field>
@@ -498,7 +498,7 @@
                         <field name="children_ids">
                             <record
                                 id="tax_annual_report_line_ve30"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE30 - Transactions that contribute to the formation of the ceiling</field>
                                 <field
@@ -507,7 +507,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="tax_annual_report_line_ve30_I"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">VE30_I - Total</field>
                                         <field name="name@it">VE30_I - Totale</field>
                                         <field name="code">VE30_I</field>
@@ -516,7 +516,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve30_ii"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">VE30_II - Exports</field>
                                         <field
                                             name="name@it">VE30_II - Esportazioni</field>
@@ -525,7 +525,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve30_iii"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">VE30_III - Intra-Community supplies</field>
                                         <field
@@ -535,7 +535,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve30_iv"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">VE30_IV - Transfers to San Marino</field>
                                         <field
@@ -545,7 +545,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve30_v"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">VE30_V - Assimilated operations</field>
                                         <field
@@ -557,7 +557,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve31"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE31 - Non-taxable transactions as a result of declarations of intent</field>
                                 <field
@@ -567,7 +567,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve32"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE32 - Other non-taxable transactions</field>
                                 <field
@@ -577,7 +577,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve33"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE33 - Exempt transactions (art.10)</field>
                                 <field
@@ -587,7 +587,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve34"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE34 - Transactions not subject to the tax under Articles 7 to 7-septies</field>
                                 <field
@@ -597,7 +597,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve35"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE35 - Transactions with application of internal reverse charge</field>
                                 <field
@@ -606,7 +606,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="tax_annual_report_line_ve35_I"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">VE35_I - Total</field>
                                         <field name="name@it">VE35_I - Totale</field>
                                         <field name="code">VE35_I</field>
@@ -617,7 +617,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve35_ii"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">VE35_II - Disposal of scrap and other recovered materials</field>
                                         <field
@@ -627,7 +627,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve35_iii"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">VE35_III - Disposals of pure gold and silver</field>
                                         <field
@@ -637,7 +637,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve35_iv"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">VE35_IV - Subcontracting in the construction industry</field>
                                         <field
@@ -647,7 +647,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve35_v"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">VE35_V - Disposal of capital buildings</field>
                                         <field
@@ -657,7 +657,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve35_vi"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">VE35_VI - Disposal of cell phones</field>
                                         <field
@@ -667,7 +667,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve35_vii"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">VE35_VII - Disposal of electronic products</field>
                                         <field
@@ -677,7 +677,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve35_viii"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">VE35_VIII - Benefits construction and related industries</field>
                                         <field
@@ -687,7 +687,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve35_ix"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">VE35_IX - Energy sector operations</field>
                                         <field
@@ -699,7 +699,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve36"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE36 - Non-taxable transactions made to earthquake victims</field>
                                 <field
@@ -709,7 +709,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve37"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE37 - Transactions made during the year but with tax due in subsequent years</field>
                                 <field
@@ -718,7 +718,7 @@
                                 <field name="children_ids">
                                     <record
                                         id="tax_annual_report_line_ve37_I"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field name="name">VE37_I - Total</field>
                                         <field name="name@it">VE37_I - Totale</field>
                                         <field name="code">VE37_I</field>
@@ -726,7 +726,7 @@
                                     </record>
                                     <record
                                         id="tax_annual_report_line_ve37_ii"
-                                        model="account.report.line">
+                                        model="report.formula.line">
                                         <field
                                             name="name">VE37_II - ex art. 32-bis, DL no. 83/2012</field>
                                         <field
@@ -738,7 +738,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve38"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE38 - Transactions with parties referred to in Article 17-ter.</field>
                                 <field
@@ -748,7 +748,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve39"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE39 - (minus) Transactions made in previous years but with tax due in 2022</field>
                                 <field
@@ -758,7 +758,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve40"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">VE40 - (minus) Disposals of depreciable assets and internal transfers.</field>
                                 <field
@@ -768,7 +768,7 @@
                             </record>
                             <record
                                 id="tax_annual_report_line_ve45"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">VE50 - TURNOVER</field>
                                 <field name="name@it">VE50 - VOLUME D’AFFARI</field>
                                 <field name="code">VE50</field>

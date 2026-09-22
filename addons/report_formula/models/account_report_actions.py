@@ -15,14 +15,14 @@ _debug = DebugLog(__name__)
 
 
 class AccountReportActions(models.Model):
-    _inherit = "account.report"
+    _inherit = "report.formula"
 
     @_debug.perf.timed
     def action_view_report_form(self, options, params):
         _debug.lifecycle("action_view_report_form", records=self)
         return {
             "type": "ir.actions.act_window",
-            "res_model": "account.report",
+            "res_model": "report.formula",
             "view_mode": "form",
             "views": [(False, "form")],
             "res_id": self.id,
@@ -98,7 +98,7 @@ class AccountReportActions(models.Model):
         self.check_singleton()
 
         if on_sections_source:
-            report_to_call = self.env["account.report"].browse(
+            report_to_call = self.env["report.formula"].browse(
                 options["sections_source_id"]
             )
             # on_sections_source and sections_source_id both come from the client,
@@ -162,7 +162,7 @@ class AccountReportActions(models.Model):
     @_debug.perf.timed
     def action_audit_cell(self, options, params):
         _debug.lifecycle("action_audit_cell", records=self)
-        report_line = self.env["account.report.line"].browse(params["report_line_id"])
+        report_line = self.env["report.formula.line"].browse(params["report_line_id"])
         expression_label = params["expression_label"]
         expression = report_line.expression_ids.filtered(
             lambda x: x.label == expression_label
@@ -191,7 +191,7 @@ class AccountReportActions(models.Model):
                 external_values_domain.append(("date", ">=", date_from))
 
             if expression.formula == "most_recent":
-                query = self.env["account.report.external.value"]._search(
+                query = self.env["report.formula.external.value"]._search(
                     external_values_domain, bypass_access=True
                 )
                 rows = self.env.execute_query(
@@ -220,7 +220,7 @@ class AccountReportActions(models.Model):
             return {
                 "name": _("Manual values"),
                 "type": "ir.actions.act_window",
-                "res_model": "account.report.external.value",
+                "res_model": "report.formula.external.value",
                 "view_mode": "list",
                 "views": [(False, "list")],
                 "domain": external_values_domain,
@@ -233,7 +233,7 @@ class AccountReportActions(models.Model):
                 for col in report_line.report_id.column_ids
                 if col.expression_label == expression_label
             ),
-            self.env["account.report.column"],
+            self.env["report.formula.column"],
         )
         if column.custom_audit_action_id:
             action_dict = column.custom_audit_action_id._get_action_dict()
@@ -271,7 +271,7 @@ class AccountReportActions(models.Model):
         return {
             "name": _("All Report Variants"),
             "type": "ir.actions.act_window",
-            "res_model": "account.report",
+            "res_model": "report.formula",
             "view_mode": "list",
             "views": [(False, "list"), (False, "form")],
             "context": {
@@ -299,7 +299,7 @@ class AccountReportActions(models.Model):
         rounding,
         json_friendly_column_group_totals,
     ):
-        """Edit a manual value from the report, updating or creating the corresponding account.report.external.value object.
+        """Edit a manual value from the report, updating or creating the corresponding report.formula.external.value object.
 
         :param options: The option dict the report is evaluated with.
 
@@ -393,7 +393,7 @@ class AccountReportActions(models.Model):
         _debug.lifecycle("action_create_composite_report", records=self)
         return {
             "type": "ir.actions.act_window",
-            "res_model": "account.report",
+            "res_model": "report.formula",
             "views": [[False, "form"]],
             "context": {
                 "default_section_report_ids": self.ids,
@@ -486,7 +486,7 @@ class AccountReportActions(models.Model):
         if action_type == "ir.actions.client":
             # Check if we are opening another report. If so, generate options for it from the current options.
             if action.tag == "account_report":
-                target_report = self.env["account.report"].browse(
+                target_report = self.env["report.formula"].browse(
                     self.env["ir.actions.actions"]._eval_action_context(
                         action_read["context"]
                     )["report_id"]
@@ -502,7 +502,7 @@ class AccountReportActions(models.Model):
                 # id of the report line might directly be the id of the model we want.
                 model_id = params["id"]
             else:
-                # It can also be a generic account.report id, as defined by _get_generic_line_id
+                # It can also be a generic report.formula id, as defined by _get_generic_line_id
                 model_id = self._get_model_info_from_id(params["id"])[1]
 
             context = (
@@ -520,13 +520,13 @@ class AccountReportActions(models.Model):
     def _action_modify_manual_external_value(
         self, target_column_group_options, new_value_str, target_expression_id, rounding
     ):
-        """Edit a manual value from the report, updating or creating the corresponding account.report.external.value object.
+        """Edit a manual value from the report, updating or creating the corresponding report.formula.external.value object.
 
         :param target_column_group_options: The options dict of the column group where the modification happened.
 
         :param new_value_str: The new value to be set, as a string.
 
-        :param target_expression_id: The id of the account.report.expression the manual value belongs to.
+        :param target_expression_id: The id of the report.formula.expression the manual value belongs to.
 
         :param rounding: The number of decimal digits to round with.
         """
@@ -539,7 +539,7 @@ class AccountReportActions(models.Model):
             )
 
         # Create the manual value
-        target_expression = self.env["account.report.expression"].browse(
+        target_expression = self.env["report.formula.expression"].browse(
             target_expression_id
         )
         date_from, date_to = self._get_date_bounds_info(
@@ -553,7 +553,7 @@ class AccountReportActions(models.Model):
 
         if target_expression.formula == "most_recent":
             value_to_adjust = 0
-            existing_value_to_modify = self.env["account.report.external.value"].search(
+            existing_value_to_modify = self.env["report.formula.external.value"].search(
                 [
                     *external_values_domain,
                     ("date", "=", date_to),
@@ -568,7 +568,7 @@ class AccountReportActions(models.Model):
                     )
                 )
         else:
-            existing_external_values = self.env["account.report.external.value"].search(
+            existing_external_values = self.env["report.formula.external.value"].search(
                 [
                     *external_values_domain,
                     ("date", ">=", date_from),
@@ -634,7 +634,7 @@ class AccountReportActions(models.Model):
             existing_value_to_modify[field_name] = value_to_set
             existing_value_to_modify.flush_recordset()
         else:
-            self.env["account.report.external.value"].create(
+            self.env["report.formula.external.value"].create(
                 {
                     "name": _("Manual value"),
                     field_name: value_to_set,

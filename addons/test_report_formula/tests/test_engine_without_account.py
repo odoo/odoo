@@ -26,7 +26,7 @@ class TestEngineWithoutAccount(TransactionCase):
                 )
             ]
         )
-        cls.report = cls.env["account.report"].create(
+        cls.report = cls.env["report.formula"].create(
             {
                 "name": "Amounts",
                 "source_model": "test.report.formula.entry",
@@ -143,7 +143,7 @@ class TestEngineWithoutAccount(TransactionCase):
                 "expression_label": "balance",
                 "column_group_key": next(iter(options["column_groups"])),
                 "calling_line_dict_id": self.report._get_generic_line_id(
-                    "account.report.line", line.id
+                    "report.formula.line", line.id
                 ),
             },
         )
@@ -152,7 +152,7 @@ class TestEngineWithoutAccount(TransactionCase):
         self.assertEqual(sorted(audited.mapped("amount")), [25.0, 50.0, 100.0])
 
     def test_a_manual_value_is_stored_and_the_aggregations_follow(self):
-        manual_line = self.env["account.report.line"].create(
+        manual_line = self.env["report.formula.line"].create(
             {
                 "name": "Manual",
                 "code": "MAN",
@@ -175,7 +175,7 @@ class TestEngineWithoutAccount(TransactionCase):
         options = self._options("2020-01-01", "2020-01-31")
         information = self.report.get_report_information(options)
         result = self.report.action_modify_manual_value(
-            self.report._get_generic_line_id("account.report.line", manual_line.id),
+            self.report._get_generic_line_id("report.formula.line", manual_line.id),
             options,
             next(iter(options["column_groups"])),
             "7",
@@ -189,7 +189,7 @@ class TestEngineWithoutAccount(TransactionCase):
         self.assertEqual(values["Manual"], 7.0)
         self.assertEqual(values["Twice"], 357.0)
         self.assertEqual(
-            self.env["account.report.external.value"]
+            self.env["report.formula.external.value"]
             .search(
                 [("target_report_expression_id", "=", manual_line.expression_ids.id)]
             )

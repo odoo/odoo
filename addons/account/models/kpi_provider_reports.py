@@ -31,9 +31,9 @@ def _tax_return_grouping_key(external_ids, return_info):
     # - use the identifier of the root report if any,
     # - otherwise use the identifier of the report,
     # - otherwise use the identifier of the return type.
-    external_id = external_ids.get(("account.report", return_info["root_report_id"]))
+    external_id = external_ids.get(("report.formula", return_info["root_report_id"]))
     if not external_id:
-        external_id = external_ids.get(("account.report", return_info["report_id"]))
+        external_id = external_ids.get(("report.formula", return_info["report_id"]))
     if not external_id:
         external_id = external_ids.get(
             ("account.return.type", return_info["return_type_id"])
@@ -78,7 +78,7 @@ def get_kpi_summary(cr, uid):
         "account_return.is_completed",
         "account_return.type_id",
         "account_return_type.report_id",
-        "account_report.root_report_id",
+        "report_formula.root_report_id",
     }
     cr.execute(
         SQL(
@@ -105,7 +105,7 @@ def get_kpi_summary(cr, uid):
         SQL("""
         SELECT model, res_id, module || '.' || name
           FROM ir_model_data
-         WHERE model IN ('account.report', 'account.return.type')
+         WHERE model IN ('report.formula', 'account.return.type')
            AND module != '__export__'
     """)
     )
@@ -167,8 +167,8 @@ def get_kpi_summary(cr, uid):
           JOIN res_users u ON u.id = %(uid)s
           JOIN res_partner partner ON partner.id = u.partner_id
           JOIN account_return_type type ON return.type_id = type.id
-     LEFT JOIN account_report report ON type.report_id = report.id
-     LEFT JOIN account_report root_report ON report.root_report_id = root_report.id
+     LEFT JOIN report_formula report ON type.report_id = report.id
+     LEFT JOIN report_formula root_report ON report.root_report_id = root_report.id
          WHERE (NOT return.is_completed
                OR return.date_deadline >= %(today)s)
                AND EXISTS (

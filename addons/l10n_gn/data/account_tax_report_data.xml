@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="account_tax_report_gn" model="account.report">
+    <record id="account_tax_report_gn" model="report.formula">
         <field name="name">VAT Report</field>
         <field name="name@fr">Déclaration TVA</field>
         <field name="root_report_id" ref="account.generic_tax_report" />
@@ -9,19 +9,19 @@
         <field name="allow_foreign_vat" eval="True" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="account_tax_report_gn_balance" model="account.report.column">
+            <record id="account_tax_report_gn_balance" model="report.formula.column">
                 <field name="name">Base</field>
                 <field name="name@fr">Base</field>
                 <field name="expression_label">base</field>
             </record>
-            <record id="account_tax_report_gn_tax" model="account.report.column">
+            <record id="account_tax_report_gn_tax" model="report.formula.column">
                 <field name="name">Tax</field>
                 <field name="name@fr">Taxe</field>
                 <field name="expression_label">tax</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="account_tax_report_line_gn_sales" model="account.report.line">
+            <record id="account_tax_report_line_gn_sales" model="report.formula.line">
                 <field name="name">Outgoing</field>
                 <field name="name@fr">Sortant</field>
                 <field name="code">GN_SALES</field>
@@ -29,7 +29,7 @@
                 <field name="expression_ids">
                     <record
                         id="account_tax_report_line_gn_sales_base_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">base</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -37,7 +37,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_gn_sales_tax_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">GN_TAXABLE.tax</field>
@@ -46,21 +46,21 @@
                 <field name="children_ids">
                     <record
                         id="account_tax_report_line_gn_sales_taxable"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Taxable operations</field>
                         <field name="name@fr">Opérations taxables</field>
                         <field name="code">GN_TAXABLE</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_gn_sales_taxable_base_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-sale_base</field>
                             </record>
                             <record
                                 id="account_tax_report_line_gn_sales_taxable_tax_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-sale_tax</field>
@@ -69,14 +69,14 @@
                     </record>
                     <record
                         id="account_tax_report_line_gn_sales_sales_export"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Export</field>
                         <field name="name@fr">Exportations</field>
                         <field name="code">GN_EXPORT</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_gn_sales_export_base_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-export</field>
@@ -85,14 +85,14 @@
                     </record>
                     <record
                         id="account_tax_report_line_gn_sales_exempt"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Exempt</field>
                         <field name="name@fr">Exonéré</field>
                         <field name="code">GN_SALE_EXEMPT</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_gn_sales_exempt_base_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-sale_exempt</field>
@@ -103,7 +103,7 @@
             </record>
             <record
                 id="account_tax_report_line_gn_purchase"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Incoming</field>
                 <field name="name@fr">Entrant</field>
                 <field name="code">GN_VAT_DEDUCT</field>
@@ -111,7 +111,7 @@
                 <field name="expression_ids">
                     <record
                         id="account_tax_report_line_gn_purchase_base_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">base</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -119,7 +119,7 @@
                     </record>
                     <record
                         id="account_tax_report_line_gn_purchase_tax_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -129,14 +129,14 @@
                 <field name="children_ids">
                     <record
                         id="account_tax_report_line_gn_purchase_taxable"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Taxable</field>
                         <field name="name@fr">Taxable</field>
                         <field name="code">GN_PURC_TAXABLE</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_gn_purchase_taxable_base_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -144,7 +144,7 @@
                             </record>
                             <record
                                 id="account_tax_report_line_gn_purchase_taxable_tax_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -154,21 +154,21 @@
                         <field name="children_ids">
                             <record
                                 id="account_tax_report_line_gn_purchase_taxable_goods"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Goods</field>
                                 <field name="name@fr">Biens</field>
                                 <field name="code">GN_GOOD</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_gn_purchase_taxable_goods_base_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">goods_base</field>
                                     </record>
                                     <record
                                         id="account_tax_report_line_gn_purchase_taxable_goods_tax_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">goods_tax</field>
@@ -177,21 +177,21 @@
                             </record>
                             <record
                                 id="account_tax_report_line_gn_purchase_taxable_service"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Services</field>
                                 <field name="name@fr">Services</field>
                                 <field name="code">GN_SERVICE</field>
                                 <field name="expression_ids">
                                     <record
                                         id="account_tax_report_line_gn_purchase_taxable_service_base_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">services_base</field>
                                     </record>
                                     <record
                                         id="account_tax_report_line_gn_purchase_taxable_service_tax_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">services_tax</field>
@@ -202,21 +202,21 @@
                     </record>
                     <record
                         id="account_tax_report_line_gn_purchase_import"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Import</field>
                         <field name="name@fr">Importations</field>
                         <field name="code">GN_IMPORT</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_gn_purchase_import_base_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">import_base</field>
                             </record>
                             <record
                                 id="account_tax_report_line_gn_purchase_import_tax_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">import_tax</field>
@@ -225,14 +225,14 @@
                     </record>
                     <record
                         id="account_tax_report_line_gn_purchase_exempt"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Exempt</field>
                         <field name="name@fr">Exonéré</field>
                         <field name="code">GN_PURC_EXEMPT</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_gn_purchase_exempt_base_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">purc_exempt</field>
@@ -241,7 +241,7 @@
                     </record>
                 </field>
             </record>
-            <record id="account_tax_report_line_gn_net" model="account.report.line">
+            <record id="account_tax_report_line_gn_net" model="report.formula.line">
                 <field name="name">Net VAT</field>
                 <field name="name@fr">TVA nette</field>
                 <field name="code">GN_NET</field>
@@ -249,7 +249,7 @@
                 <field name="expression_ids">
                     <record
                         id="account_tax_report_line_gn_net_tag"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -259,14 +259,14 @@
                 <field name="children_ids">
                     <record
                         id="account_tax_report_line_gn_credit"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">VAT Credit</field>
                         <field name="name@fr">Crédit de TVA</field>
                         <field name="code">GN_VAT_CREDIT</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_gn_credit_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -277,14 +277,14 @@
                     </record>
                     <record
                         id="account_tax_report_line_gn_to_pay"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">VAT to pay</field>
                         <field name="name@fr">TVA à payer</field>
                         <field name="code">GN_VAT_TO_PAY</field>
                         <field name="expression_ids">
                             <record
                                 id="account_tax_report_line_gn_to_pay_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field

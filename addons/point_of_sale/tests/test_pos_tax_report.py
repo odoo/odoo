@@ -23,7 +23,7 @@ class POSTestTaxReport(TestAccountReportsCommon):
         cls.change_company_country(company, test_country)
 
         # Create some tax report
-        cls.tax_report = cls.env["account.report"].create(
+        cls.tax_report = cls.env["report.formula"].create(
             {
                 "name": "Test",
                 "root_report_id": cls.env.ref("account.generic_tax_report").id,

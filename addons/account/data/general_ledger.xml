@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="general_ledger_report" model="account.report">
+    <record id="general_ledger_report" model="report.formula">
         <field name="name">General Ledger</field>
         <field name="filter_journals" eval="True" />
         <field name="filter_analytic" eval="True" />
@@ -16,45 +16,45 @@
             name="custom_handler_model_id"
             ref="model_account_general_ledger_report_handler" />
         <field name="column_ids">
-            <record id="general_ledger_report_date" model="account.report.column">
+            <record id="general_ledger_report_date" model="report.formula.column">
                 <field name="name">Date</field>
                 <field name="expression_label">date</field>
                 <field name="figure_type">date</field>
             </record>
             <record
                 id="general_ledger_report_partner_name"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Partner</field>
                 <field name="expression_label">partner_name</field>
                 <field name="figure_type">string</field>
             </record>
             <record
                 id="general_ledger_report_amount_currency"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Currency</field>
                 <field name="expression_label">amount_currency</field>
             </record>
-            <record id="general_ledger_report_debit" model="account.report.column">
+            <record id="general_ledger_report_debit" model="report.formula.column">
                 <field name="name">Debit</field>
                 <field name="expression_label">debit</field>
             </record>
-            <record id="general_ledger_report_credit" model="account.report.column">
+            <record id="general_ledger_report_credit" model="report.formula.column">
                 <field name="name">Credit</field>
                 <field name="expression_label">credit</field>
             </record>
-            <record id="general_ledger_report_balance" model="account.report.column">
+            <record id="general_ledger_report_balance" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="expression_label">balance</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="general_ledger_custom_engine_line" model="account.report.line">
+            <record id="general_ledger_custom_engine_line" model="report.formula.line">
                 <field name="name">General Ledger</field>
                 <field name="groupby">account_id, id_with_accumulated_balance</field>
                 <field name="expression_ids">
                     <record
                         id="general_ledger_line_date"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">date</field>
                         <field name="engine">custom</field>
                         <field
@@ -63,7 +63,7 @@
                     </record>
                     <record
                         id="general_ledger_line_partner_name"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">partner_name</field>
                         <field name="engine">custom</field>
                         <field
@@ -72,7 +72,7 @@
                     </record>
                     <record
                         id="general_ledger_line_amount_currency"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">amount_currency</field>
                         <field name="engine">custom</field>
                         <field
@@ -81,7 +81,7 @@
                     </record>
                     <record
                         id="general_ledger_line_amount_currency_currency_id"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">_currency_amount_currency</field>
                         <field name="engine">custom</field>
                         <field
@@ -90,7 +90,7 @@
                     </record>
                     <record
                         id="general_ledger_line_debit"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">debit</field>
                         <field name="engine">custom</field>
                         <field
@@ -99,7 +99,7 @@
                     </record>
                     <record
                         id="general_ledger_line_credit"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">credit</field>
                         <field name="engine">custom</field>
                         <field
@@ -108,7 +108,7 @@
                     </record>
                     <record
                         id="general_ledger_line_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">custom</field>
                         <field

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="partner_ledger_report" model="account.report">
+    <record id="partner_ledger_report" model="report.formula">
         <field name="name">Partner Ledger</field>
         <field name="filter_show_draft" eval="True" />
         <field name="filter_account_type">both</field>
@@ -20,54 +20,54 @@
         <field name="column_ids">
             <record
                 id="partner_ledger_report_journal_code"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Journal</field>
                 <field name="expression_label">journal_code</field>
                 <field name="figure_type">string</field>
             </record>
             <record
                 id="partner_ledger_report_account_code"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Account</field>
                 <field name="expression_label">account_code</field>
                 <field name="figure_type">string</field>
             </record>
             <record
                 id="partner_ledger_report_invoicing_date"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Invoice Date</field>
                 <field name="expression_label">invoice_date</field>
                 <field name="figure_type">date</field>
             </record>
             <record
                 id="partner_ledger_report_date_maturity"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Due Date</field>
                 <field name="expression_label">date_maturity</field>
                 <field name="figure_type">date</field>
             </record>
             <record
                 id="partner_ledger_report_matching_number"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Matching</field>
                 <field name="expression_label">matching_number</field>
                 <field name="figure_type">string</field>
             </record>
-            <record id="partner_ledger_report_debit" model="account.report.column">
+            <record id="partner_ledger_report_debit" model="report.formula.column">
                 <field name="name">Debit</field>
                 <field name="expression_label">debit</field>
             </record>
-            <record id="partner_ledger_report_credit" model="account.report.column">
+            <record id="partner_ledger_report_credit" model="report.formula.column">
                 <field name="name">Credit</field>
                 <field name="expression_label">credit</field>
             </record>
             <record
                 id="partner_ledger_report_amount_currency"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Amount Currency</field>
                 <field name="expression_label">amount_currency</field>
             </record>
-            <record id="partner_ledger_report_balance" model="account.report.column">
+            <record id="partner_ledger_report_balance" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="expression_label">balance</field>
             </record>

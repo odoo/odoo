@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="tax_report" model="account.report">
+    <record id="tax_report" model="report.formula">
         <field name="name">Tax Report</field>
         <field name="name@nl">Belastingrapport</field>
         <field name="name@de">Steuerbericht</field>
@@ -11,13 +11,13 @@
         <field name="availability_condition">country</field>
         <field name="integer_rounding">DOWN</field>
         <field name="column_ids">
-            <record id="tax_report_base" model="account.report.column">
+            <record id="tax_report_base" model="report.formula.column">
                 <field name="name">Base</field>
                 <field name="name@nl">Grondslag</field>
                 <field name="name@de">Bemessungsgrundlage</field>
                 <field name="expression_label">base</field>
             </record>
-            <record id="tax_report_tax" model="account.report.column">
+            <record id="tax_report_tax" model="report.formula.column">
                 <field name="name">Tax</field>
                 <field name="name@nl">Omzetbelasting</field>
                 <field name="name@de">Umsatzsteuer</field>
@@ -25,7 +25,7 @@
             </record>
         </field>
         <field name="line_ids">
-            <record id="tax_report_rub_1" model="account.report.line">
+            <record id="tax_report_rub_1" model="report.formula.line">
                 <field name="name">Section 1: Domestic performance</field>
                 <field name="name@nl">Rubriek 1: Prestaties binnenland</field>
                 <field name="name@de">Abschnitt 1: Inländische Leistung</field>
@@ -33,7 +33,7 @@
                 <field name="hierarchy_level">0</field>
                 <field name="code">NL_VAT_1</field>
                 <field name="children_ids">
-                    <record id="tax_report_rub_1a" model="account.report.line">
+                    <record id="tax_report_rub_1a" model="report.formula.line">
                         <field
                             name="name">1a. Supplies/services taxed at high rate (turnover)</field>
                         <field
@@ -44,21 +44,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_1a_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-1a (omzet)</field>
                             </record>
                             <record
                                 id="tax_report_rub_btw_1a_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-1a (BTW)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_rub_1b" model="account.report.line">
+                    <record id="tax_report_rub_1b" model="report.formula.line">
                         <field
                             name="name">1b. Supplies/services taxed at low rate (turnover)</field>
                         <field
@@ -69,21 +69,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_1b_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-1b (omzet)</field>
                             </record>
                             <record
                                 id="tax_report_rub_btw_1b_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-1b (BTW)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_rub_1c" model="account.report.line">
+                    <record id="tax_report_rub_1c" model="report.formula.line">
                         <field
                             name="name">1c. Supplies/services taxed at other rates except 0% (turnover)</field>
                         <field
@@ -94,21 +94,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_1c_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-1c (omzet)</field>
                             </record>
                             <record
                                 id="tax_report_rub_btw_1c_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-1c (BTW)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_rub_1d" model="account.report.line">
+                    <record id="tax_report_rub_1d" model="report.formula.line">
                         <field name="name">1d. Private use (turnover)</field>
                         <field name="name@nl">1d. Privégebruik (omzet)</field>
                         <field name="name@de">1d. Private Nutzung (Umsatz)</field>
@@ -116,21 +116,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_1d_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">1d (omzet)</field>
                             </record>
                             <record
                                 id="tax_report_rub_btw_1d_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">1d (BTW)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_rub_1e" model="account.report.line">
+                    <record id="tax_report_rub_1e" model="report.formula.line">
                         <field
                             name="name">1e. Supplies/services taxed at 0% or not taxed with you (turnover)</field>
                         <field
@@ -141,14 +141,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_1e_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-1e (omzet)</field>
                             </record>
                             <record
                                 id="tax_report_rub_btw_1e_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">1e (BTW)</field>
@@ -159,7 +159,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_sec1_base_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">base</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -167,7 +167,7 @@
                     </record>
                     <record
                         id="tax_report_sec1_tax_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -175,7 +175,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_rub_2" model="account.report.line">
+            <record id="tax_report_rub_2" model="report.formula.line">
                 <field
                     name="name">Section 2: Domestic reverse charge arrangements (turnover)</field>
                 <field
@@ -186,7 +186,7 @@
                 <field name="code">NL_VAT_2</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="tax_report_rub_2a" model="account.report.line">
+                    <record id="tax_report_rub_2a" model="report.formula.line">
                         <field
                             name="name">2a. Supplies/services where the collection of turnover tax has been transferred to you (turnover)</field>
                         <field
@@ -197,14 +197,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_2a_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">2a (omzet)</field>
                             </record>
                             <record
                                 id="tax_report_rub_btw_2a_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-2a (BTW)</field>
@@ -215,21 +215,21 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_sec2_base_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">base</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">NL_VAT_2a.base</field>
                     </record>
                     <record
                         id="tax_report_sec2_tax_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">NL_VAT_2a.tax</field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_rub_3" model="account.report.line">
+            <record id="tax_report_rub_3" model="report.formula.line">
                 <field
                     name="name">Section 3: Performance to or from abroad (turnover)</field>
                 <field
@@ -240,7 +240,7 @@
                 <field name="code">NL_VAT_3</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="tax_report_rub_3a" model="account.report.line">
+                    <record id="tax_report_rub_3a" model="report.formula.line">
                         <field
                             name="name">3a. Deliveries to countries outside the EU (exports) (turnover)</field>
                         <field
@@ -251,14 +251,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_3a_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-3a (omzet)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_rub_3b" model="account.report.line">
+                    <record id="tax_report_rub_3b" model="report.formula.line">
                         <field
                             name="name">3b. Deliveries to/services in countries within the EU and A-B-C supply chain transactions (turnover)</field>
                         <field
@@ -268,7 +268,7 @@
                         <field name="aggregation_formula" />
                         <field name="code">NL_VAT_3b</field>
                         <field name="children_ids">
-                            <record id="tax_report_rub_3bg" model="account.report.line">
+                            <record id="tax_report_rub_3bg" model="report.formula.line">
                                 <field
                                     name="name">3bg. Deliveries of products to countries within the EU (turnover).</field>
                                 <field
@@ -279,14 +279,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_report_rub_3bg_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-3bg (omzet)</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="tax_report_rub_3bt" model="account.report.line">
+                            <record id="tax_report_rub_3bt" model="report.formula.line">
                                 <field
                                     name="name">3bt. A-B-C supply chain transactions within the EU (turnover)</field>
                                 <field
@@ -297,14 +297,14 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_report_rub_3bt_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-3bt (omzet)</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="tax_report_rub_3bs" model="account.report.line">
+                            <record id="tax_report_rub_3bs" model="report.formula.line">
                                 <field
                                     name="name">3bs. Services in countries within the EU (revenue)</field>
                                 <field
@@ -315,7 +315,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="tax_report_rub_3bs_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-3bs (omzet)</field>
@@ -326,7 +326,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_sec3b_base_agg"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -334,7 +334,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_rub_3c" model="account.report.line">
+                    <record id="tax_report_rub_3c" model="report.formula.line">
                         <field
                             name="name">3c. Installation/remote sales within the EU (turnover)</field>
                         <field
@@ -345,7 +345,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_3c_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-3c (omzet)</field>
@@ -356,7 +356,7 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_sec3_base_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">base</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -364,7 +364,7 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_rub_4" model="account.report.line">
+            <record id="tax_report_rub_4" model="report.formula.line">
                 <field
                     name="name">Section 4: Services provided to you from abroad (turnover)</field>
                 <field
@@ -375,7 +375,7 @@
                 <field name="code">NL_VAT_4</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="tax_report_rub_4a" model="account.report.line">
+                    <record id="tax_report_rub_4a" model="report.formula.line">
                         <field
                             name="name">4a. Supplies/services from countries outside the EU (imports) (turnover)</field>
                         <field
@@ -386,21 +386,21 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_4a_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">4a (omzet)</field>
                             </record>
                             <record
                                 id="tax_report_rub_btw_4a_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-4a (BTW)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_rub_4b" model="account.report.line">
+                    <record id="tax_report_rub_4b" model="report.formula.line">
                         <field
                             name="name">4b. Supplies/services from countries within the EU (turnover)</field>
                         <field
@@ -411,14 +411,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_4b_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">4b (omzet)</field>
                             </record>
                             <record
                                 id="tax_report_rub_btw_4b_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-4b (BTW)</field>
@@ -429,21 +429,21 @@
                 <field name="expression_ids">
                     <record
                         id="tax_report_sec4_base_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">base</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">NL_VAT_4a.base + NL_VAT_4b.base</field>
                     </record>
                     <record
                         id="tax_report_sec4_tax_agg"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">NL_VAT_4a.tax + NL_VAT_4b.tax</field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_rub_btw_5" model="account.report.line">
+            <record id="tax_report_rub_btw_5" model="report.formula.line">
                 <field
                     name="name">Section 5: Input tax, small business scheme and total (VAT)</field>
                 <field
@@ -454,7 +454,7 @@
                 <field name="code">NL_VAT_5</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="tax_report_rub_btw_5a" model="account.report.line">
+                    <record id="tax_report_rub_btw_5a" model="report.formula.line">
                         <field
                             name="name">5a. Sales tax payable (headings 1a to 4b) (VAT)</field>
                         <field
@@ -466,7 +466,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_btw_5a_agg"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -474,7 +474,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_rub_btw_5b" model="account.report.line">
+                    <record id="tax_report_rub_btw_5b" model="report.formula.line">
                         <field name="name">5b. Input tax (VAT)</field>
                         <field name="name@nl">5b. Voorbelasting (btw)</field>
                         <field name="name@de">5b. Vorsteuer (MwSt.)</field>
@@ -482,14 +482,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_btw_5b_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">5b (BTW)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_rub_btw_5c" model="account.report.line">
+                    <record id="tax_report_rub_btw_5c" model="report.formula.line">
                         <field
                             name="name">5c. Subtotal (heading 5a minus 5b) (VAT)</field>
                         <field
@@ -501,7 +501,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_btw_5c_agg"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -509,7 +509,7 @@
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_rub_btw_5d" model="account.report.line">
+                    <record id="tax_report_rub_btw_5d" model="report.formula.line">
                         <field
                             name="name">5d. Reduction according to the small business scheme (VAT)</field>
                         <field
@@ -520,14 +520,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_btw_5d_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">5d (BTW)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_rub_btw_5e" model="account.report.line">
+                    <record id="tax_report_rub_btw_5e" model="report.formula.line">
                         <field name="name">5e. Estimate previous return(s) (VAT)</field>
                         <field
                             name="name@nl">5e. Schatting vorige aangifte(n) (btw)</field>
@@ -537,14 +537,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_btw_5e_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">5e (BTW)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_rub_btw_5f" model="account.report.line">
+                    <record id="tax_report_rub_btw_5f" model="report.formula.line">
                         <field name="name">5f. Estimate this return (VAT)</field>
                         <field name="name@nl">5f. Schatting deze aangifte (btw)</field>
                         <field
@@ -553,14 +553,14 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_btw_5f_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">5f (BTW)</field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_rub_btw_5g" model="account.report.line">
+                    <record id="tax_report_rub_btw_5g" model="report.formula.line">
                         <field name="name">5g. Total payable/reclaimable (VAT)</field>
                         <field
                             name="name@nl">5g. Totaal te betalen/terug te vragen (btw)</field>
@@ -571,7 +571,7 @@
                         <field name="expression_ids">
                             <record
                                 id="tax_report_rub_btw_5g_agg"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field

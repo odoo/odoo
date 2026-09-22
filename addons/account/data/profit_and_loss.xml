@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="profit_and_loss" model="account.report">
+    <record id="profit_and_loss" model="report.formula">
         <field name="name">Profit and Loss</field>
         <field name="sequence">20</field>
         <!-- Ensures the correct order in the composite Annual Statements report -->
@@ -13,13 +13,13 @@
         <field name="allow_account_audit_status_on_lines" eval="True" />
         <field name="default_opening_date_filter">this_year</field>
         <field name="column_ids">
-            <record id="profit_and_loss_column" model="account.report.column">
+            <record id="profit_and_loss_column" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="expression_label">balance</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="account_financial_report_revenue0" model="account.report.line">
+            <record id="account_financial_report_revenue0" model="report.formula.line">
                 <field name="name">Revenue</field>
                 <field name="code">REV</field>
                 <field name="hierarchy_level">1</field>
@@ -28,7 +28,7 @@
                 <field name="expression_ids">
                     <record
                         id="account_financial_report_revenue0_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">domain</field>
                         <field
@@ -40,7 +40,7 @@
             </record>
             <record
                 id="account_financial_report_cost_sales0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Less Costs of Revenue</field>
                 <field name="code">COS</field>
                 <field name="parent_id" eval="False" />
@@ -50,7 +50,7 @@
                 <field name="expression_ids">
                     <record
                         id="account_financial_report_cost_sales0_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">domain</field>
                         <field
@@ -63,7 +63,7 @@
             </record>
             <record
                 id="account_financial_report_gross_profit0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Gross Profit</field>
                 <field name="code">GRP</field>
                 <field name="parent_id" eval="False" />
@@ -71,14 +71,14 @@
                 <field name="expression_ids">
                     <record
                         id="account_financial_report_gross_profit0_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">REV.balance - COS.balance</field>
                     </record>
                 </field>
             </record>
-            <record id="account_financial_report_expense0" model="account.report.line">
+            <record id="account_financial_report_expense0" model="report.formula.line">
                 <field name="name">Less Operating Expenses</field>
                 <field name="code">EXP</field>
                 <field name="parent_id" eval="False" />
@@ -88,7 +88,7 @@
                 <field name="expression_ids">
                     <record
                         id="account_financial_report_expense0_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">domain</field>
                         <field
@@ -101,14 +101,14 @@
             </record>
             <record
                 id="account_financial_report_operating_income0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Operating Income (or Loss)</field>
                 <field name="hierarchy_level">0</field>
                 <field name="code">INC</field>
                 <field name="expression_ids">
                     <record
                         id="account_financial_report_operating_income0_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -118,7 +118,7 @@
             </record>
             <record
                 id="account_financial_report_other_income0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Plus Other Income</field>
                 <field name="code">OIN</field>
                 <field name="parent_id" eval="False" />
@@ -128,7 +128,7 @@
                 <field name="expression_ids">
                     <record
                         id="account_financial_report_other_income0_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">domain</field>
                         <field
@@ -140,7 +140,7 @@
             </record>
             <record
                 id="account_financial_report_depreciation0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Less Other Expenses</field>
                 <field name="code">OEXP</field>
                 <field name="parent_id" eval="False" />
@@ -150,7 +150,7 @@
                 <field name="expression_ids">
                     <record
                         id="account_financial_report_depreciation0_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">domain</field>
                         <field
@@ -163,14 +163,14 @@
             </record>
             <record
                 id="account_financial_report_net_profit0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Net Profit</field>
                 <field name="hierarchy_level">0</field>
                 <field name="code">NEP</field>
                 <field name="expression_ids">
                     <record
                         id="account_financial_report_net_profit0_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -180,7 +180,7 @@
             </record>
             <record
                 id="account_financial_report_allocations_withdrawals0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Less Allocations and Plus Withdrawals</field>
                 <field name="code">ALLOC</field>
                 <field name="hierarchy_level">1</field>
@@ -189,7 +189,7 @@
                 <field name="expression_ids">
                     <record
                         id="account_financial_report_allocations_withdrawals0_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">domain</field>
                         <field
@@ -201,7 +201,7 @@
             </record>
             <record
                 id="account_financial_report_net_profit_after_allocations0"
-                model="account.report.line">
+                model="report.formula.line">
                 <field
                     name="name">Net Profit Left After Allocations and Withdrawals</field>
                 <field name="hierarchy_level">0</field>
@@ -209,7 +209,7 @@
                 <field name="expression_ids">
                     <record
                         id="account_financial_report_net_profit_after_allocations0_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">NEP.balance - ALLOC.balance</field>

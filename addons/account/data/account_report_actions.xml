@@ -136,23 +136,23 @@
         </record>
         <record
             id="account_financial_report_current_years_earnings"
-            model="account.report.line">
+            model="report.formula.line">
             <field name="action_id" ref="action_account_report_pl" />
         </record>
         <record
             id="account_financial_report_executivesummary_profitability0"
-            model="account.report.line">
+            model="report.formula.line">
             <field name="action_id" ref="action_account_report_pl" />
         </record>
         <record
             id="account_financial_report_executivesummary_balancesheet0"
-            model="account.report.line">
+            model="report.formula.line">
             <field name="action_id" ref="action_account_report_bs" />
         </record>
         <record id="action_create_report_menu" model="ir.actions.server">
             <field name="name">Create Menu Item</field>
-            <field name="model_id" ref="account.model_account_report" />
-            <field name="binding_model_id" ref="account.model_account_report" />
+            <field name="model_id" ref="account.model_report_formula" />
+            <field name="binding_model_id" ref="account.model_report_formula" />
             <field name="binding_view_types">form</field>
             <field name="state">code</field>
             <field
@@ -161,7 +161,7 @@
         </record>
         <record id="action_account_report_tree" model="ir.actions.act_window">
             <field name="name">Accounting Reports</field>
-            <field name="res_model">account.report</field>
+            <field name="res_model">report.formula</field>
             <field name="view_mode">list,form</field>
             <field name="view_id" ref="account_report_tree" />
             <field name="search_view_id" ref="view_account_report_search" />

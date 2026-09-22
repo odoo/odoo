@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="l10n_om_tax_report" model="account.report">
+    <record id="l10n_om_tax_report" model="report.formula">
         <field name="name">VAT Return</field>
         <field name="name@ar">الاقرار الضريبي</field>
         <field name="root_report_id" ref="account.generic_tax_report" />
@@ -9,26 +9,26 @@
         <field name="allow_foreign_vat" eval="1" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="l10n_om_tax_report_base" model="account.report.column">
+            <record id="l10n_om_tax_report_base" model="report.formula.column">
                 <field name="name">Base</field>
                 <field name="name@ar">القاعدة الضريبية</field>
                 <field name="expression_label">base</field>
             </record>
-            <record id="l10n_om_tax_report_tax" model="account.report.column">
+            <record id="l10n_om_tax_report_tax" model="report.formula.column">
                 <field name="name">Tax</field>
                 <field name="name@ar">الضريبة</field>
                 <field name="expression_label">tax</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="l10n_om_tax_report_vat_sale" model="account.report.line">
+            <record id="l10n_om_tax_report_vat_sale" model="report.formula.line">
                 <field name="name">1. Supplies in the Sultanate of Oman</field>
                 <field name="name@ar">1. التوريدات الخاضعة للضريبة والمعفاة منها</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record
                         id="l10n_om_tax_report_supplies_taxed_5_percent"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">1(a) Supplies of goods / services taxed at 5%</field>
                         <field
@@ -37,14 +37,14 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_supplies_taxed_5_percent_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-1a_B</field>
                             </record>
                             <record
                                 id="l10n_om_tax_report_supplies_taxed_5_percent_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-1a_T</field>
@@ -53,7 +53,7 @@
                     </record>
                     <record
                         id="l10n_om_tax_report_supplies_taxed_0_percent"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">1(b) Supplies of goods / services taxed at 0%</field>
                         <field
@@ -62,7 +62,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_supplies_taxed_0_percent_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-1b_B</field>
@@ -71,7 +71,7 @@
                     </record>
                     <record
                         id="l10n_om_tax_report_supplies_tax_exempt"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">1(c) Supplies of goods / services tax exempt</field>
                         <field
@@ -80,14 +80,14 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_supplies_tax_exempt_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-1c_B</field>
                             </record>
                         </field>
                     </record>
-                    <record id="l10n_om_tax_report_4" model="account.report.line">
+                    <record id="l10n_om_tax_report_4" model="report.formula.line">
                         <field
                             name="name">1(d) Supplies of goods, tax levy shifted to recipient inside GCC (supplies made by you that are subject to Reverse Charge Mechanism)</field>
                         <field
@@ -96,7 +96,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_4_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -106,7 +106,7 @@
                     </record>
                     <record
                         id="l10n_om_tax_report_services_gcc_rcm"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">1(e) Supplies of services, tax levy shifted to recipient inside GCC (supplies made by you that are subject to Reverse Charge Mechanism)</field>
                         <field
@@ -115,7 +115,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_services_gcc_rcm_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -125,7 +125,7 @@
                     </record>
                     <record
                         id="l10n_om_tax_report_margin_scheme"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">1(f) Supply of goods as per profit margin scheme</field>
                         <field
@@ -134,7 +134,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_margin_scheme_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -142,7 +142,7 @@
                             </record>
                             <record
                                 id="l10n_om_tax_report_margin_scheme_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">om_1f.base * 0.05</field>
@@ -151,7 +151,7 @@
                     </record>
                 </field>
             </record>
-            <record id="l10n_om_tax_report_purchases_rcm" model="account.report.line">
+            <record id="l10n_om_tax_report_purchases_rcm" model="report.formula.line">
                 <field
                     name="name">2. Purchases subject to Reverse Charge Mechanism</field>
                 <field name="name@ar">2. المشتريات الخاضعة لالية الحتساب العكسي</field>
@@ -159,7 +159,7 @@
                 <field name="children_ids">
                     <record
                         id="l10n_om_tax_report_gcc_purchases_rcm"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">2(a) Purchases from the GCC subject to Reverse Charge Mechanism</field>
                         <field
@@ -168,7 +168,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_gcc_purchases_rcm_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -176,7 +176,7 @@
                             </record>
                             <record
                                 id="l10n_om_tax_report_gcc_purchases_rcm_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -186,7 +186,7 @@
                     </record>
                     <record
                         id="l10n_om_tax_report_non_gcc_rcm"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">2(b) Purchases from outside of GCC subject to Reverse Charge Mechanism</field>
                         <field
@@ -195,14 +195,14 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_non_gcc_rcm_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">2b_B</field>
                             </record>
                             <record
                                 id="l10n_om_tax_report_non_gcc_rcm_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-2b_T</field>
@@ -213,19 +213,19 @@
             </record>
             <record
                 id="l10n_om_tax_report_foreign_supplies"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">3. Supplies to countries outside of Oman</field>
                 <field name="name@ar">3. التوريدات الى خارج السلطنة</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="l10n_om_tax_report_exports" model="account.report.line">
+                    <record id="l10n_om_tax_report_exports" model="report.formula.line">
                         <field name="name">3(a) Exports</field>
                         <field name="name@ar">3(أ) الصادرات</field>
                         <field name="code">om_3a</field>
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_exports_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-3a_B</field>
@@ -234,14 +234,14 @@
                     </record>
                 </field>
             </record>
-            <record id="l10n_om_tax_report_import_goods" model="account.report.line">
+            <record id="l10n_om_tax_report_import_goods" model="report.formula.line">
                 <field name="name">4. Import of Goods</field>
                 <field name="name@ar">4. قيمة السلع المستوردة</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record
                         id="l10n_om_tax_report_import_goods_postponed"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">4(a) Import of Goods (Postponed payment)</field>
                         <field
@@ -250,14 +250,14 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_import_goods_postponed_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">4a_B</field>
                             </record>
                             <record
                                 id="l10n_om_tax_report_import_goods_postponed_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-4a_T</field>
@@ -266,14 +266,14 @@
                     </record>
                     <record
                         id="l10n_om_tax_report_import_goods_exempt"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">4(b) Total Goods Imported</field>
                         <field name="name@ar">4(ب) اجمالي السلع المستوردة</field>
                         <field name="code">om_4b</field>
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_import_goods_exempt_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">4b_B</field>
@@ -284,14 +284,14 @@
             </record>
             <record
                 id="l10n_om_tax_report_total_vat_section"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">5. Total VAT due</field>
                 <field name="name@ar">5. اجمالي ضريبة القيمة المضافة المستحقة</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record
                         id="l10n_om_tax_report_total_vat_calculated"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">5(a) Total VAT due</field>
                         <field
                             name="name@ar">5(أ) اجمالي ضريبة القيمة المضافة المستحقة بموجب (1(أ) + 1(و) + 2(أ) + 2(ب) + 4(أ))</field>
@@ -299,7 +299,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_total_vat_calculated_expr"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -309,7 +309,7 @@
                     </record>
                     <record
                         id="l10n_om_tax_report_total_vat_manual"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">5(b) Adjustment of VAT due</field>
                         <field
                             name="name@ar">5(ب) التعديالت على الضريبة المستحقة</field>
@@ -317,7 +317,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_total_vat_manual_expr"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -329,14 +329,14 @@
             </record>
             <record
                 id="l10n_om_tax_report_input_vat_section"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">6. Input VAT credit</field>
                 <field name="name@ar">6. قيمة ضريبة المدخلات</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record
                         id="l10n_om_tax_report_input_vat_purchases"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">6(a) Purchases (except import of goods)</field>
                         <field
@@ -345,14 +345,14 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_input_vat_purchases_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">6a_B</field>
                             </record>
                             <record
                                 id="l10n_om_tax_report_input_vat_purchases_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">6a_T</field>
@@ -361,21 +361,21 @@
                     </record>
                     <record
                         id="l10n_om_tax_report_input_vat_imports"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">6(b) Import of goods</field>
                         <field name="name@ar">6(ب) السلع المستوردة</field>
                         <field name="code">om_6b</field>
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_input_vat_imports_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">6b_B</field>
                             </record>
                             <record
                                 id="l10n_om_tax_report_input_vat_imports_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">6b_T</field>
@@ -384,7 +384,7 @@
                     </record>
                     <record
                         id="l10n_om_tax_report_input_vat_fixed_assets"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field
                             name="name">6(c) VAT on acquisition of fixed assets</field>
                         <field
@@ -393,7 +393,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_input_vat_fixed_assets_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -403,7 +403,7 @@
                     </record>
                     <record
                         id="l10n_om_tax_report_input_vat_adjustments"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">6(d) Adjustment of input VAT credit</field>
                         <field
                             name="name@ar">6(د) التعديالت على ضريبة المدخلات القابلة للخصم</field>
@@ -411,7 +411,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_input_vat_adjustments_base"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">base</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -419,7 +419,7 @@
                             </record>
                             <record
                                 id="l10n_om_tax_report_input_vat_adjustments_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
@@ -431,14 +431,14 @@
             </record>
             <record
                 id="l10n_om_tax_report_liability_section"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">7. Tax liability calculation</field>
                 <field name="name@ar">7. قيمة الضريبة المستحقة</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record
                         id="l10n_om_tax_report_liability_total_vat_due"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">7(a) Total VAT due</field>
                         <field
                             name="name@ar">7(أ) اجمالي الضريبة المستحقة (5(أ) + 5(ب))</field>
@@ -446,7 +446,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_liability_total_vat_due_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">om_5a.tax + om_5b.tax</field>
@@ -455,7 +455,7 @@
                     </record>
                     <record
                         id="l10n_om_tax_report_liability_total_input_credit"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">7(b) Total input VAT Credit</field>
                         <field
                             name="name@ar">7(ب) اجمالي قيمة ضريبة المدخالت (6(أ) + 6(ب) + 6(ج) + 6(د))</field>
@@ -463,7 +463,7 @@
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_liability_total_input_credit_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -473,14 +473,14 @@
                     </record>
                     <record
                         id="l10n_om_tax_report_liability_total_net"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">7(c) Total</field>
                         <field name="name@ar">7(ج) اجمالي (7(أ) - 7(ب))</field>
                         <field name="code">om_7c</field>
                         <field name="expression_ids">
                             <record
                                 id="l10n_om_tax_report_liability_total_net_tax"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">om_7a.tax - om_7b.tax</field>

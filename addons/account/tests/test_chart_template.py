@@ -265,7 +265,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         self.assertEqual(result["res_currency_test"]["decimal_places"], -5)
 
     def test_tax_report_and_manual_tax_tag(self):
-        tax_report = self.env["account.report"].create(
+        tax_report = self.env["report.formula"].create(
             {
                 "name": "Tax report 1",
                 "country_id": self.country_be.id,
@@ -279,7 +279,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
                 ],
             }
         )
-        self.env["account.report.line"].create(
+        self.env["report.formula.line"].create(
             {
                 "name": "[TAG] Tax report line",
                 "report_id": tax_report.id,

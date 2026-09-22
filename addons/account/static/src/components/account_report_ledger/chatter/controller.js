@@ -51,7 +51,7 @@ patch(AccountReportController.prototype, {
 
     async loadAnnotations(lineStartIndex = 0, lineEndIndex = this.lines.length) {
         const new_annotations = await this.orm.call(
-            "account.report",
+            "report.formula",
             "get_annotations",
             [
                 this.action.context.report_id,

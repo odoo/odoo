@@ -11,7 +11,7 @@ async function executeAccountReportDownloadWithErrorWizard({ env, action }) {
         }
         const reportOptions = JSON.parse(action.data.options);
         const reportAction = await env.services.orm.call(
-            "account.report",
+            "report.formula",
             "open_account_report_file_download_error_wizard",
             [reportOptions.report_id, e.data.arguments[0], e.data.arguments[1]],
         );

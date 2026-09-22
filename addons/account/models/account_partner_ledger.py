@@ -13,7 +13,7 @@ _debug = DebugLog(__name__)
 
 class AccountPartnerLedgerReportHandler(models.AbstractModel):
     _name = "account.partner.ledger.report.handler"
-    _inherit = ["account.report.custom.handler"]
+    _inherit = ["report.formula.custom.handler"]
     _description = "Partner Ledger Custom Handler"
 
     def _dynamic_lines_generator(
@@ -135,7 +135,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
         offset,
         unfold_all_batch_data=None,
     ):
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         matched_prefix = report._get_prefix_groups_matched_prefix_from_line_id(
             line_dict_id
         )
@@ -284,7 +284,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
         for line_dict in lines_to_expand_by_function.get(
             "_report_expand_unfoldable_line_partner_ledger", []
         ):
-            markup, model, model_id = self.env["account.report"]._parse_line_id(
+            markup, model, model_id = self.env["report.formula"]._parse_line_id(
                 line_dict["id"]
             )[-1]
             if model == "res.partner":
@@ -344,7 +344,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
     @_debug.perf.timed
     def action_view_partner(self, options, params):
         _debug.lifecycle("action_view_partner", records=self)
-        _dummy, record_id = self.env["account.report"]._get_model_info_from_id(
+        _dummy, record_id = self.env["report.formula"]._get_model_info_from_id(
             params["id"]
         )
         return {
@@ -368,7 +368,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
             - `updated_line_ids`: a list of the impacted report lines, so the report can be updated dynamically
         """
         _debug.lifecycle("action_toggle_no_followup", records=self)
-        model, aml_id = self.env["account.report"]._get_model_info_from_id(line_id)
+        model, aml_id = self.env["report.formula"]._get_model_info_from_id(line_id)
         _debug.logic(
             "no_followup_toggle_target",
             model=model,
@@ -382,7 +382,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
 
         aml_id_to_line_id = {}
         for cur_line_id in all_line_ids:
-            model, record_id = self.env["account.report"]._get_model_info_from_id(
+            model, record_id = self.env["report.formula"]._get_model_info_from_id(
                 cur_line_id
             )
             if model == "account.move.line":
@@ -596,7 +596,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
 
     @_debug.perf.timed
     def _prepare_initial_balance_values(self, partner_ids, options):
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
 
         _debug.logic(
             "initial_balance_mode",
@@ -806,7 +806,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
         offset,
         unfold_all_batch_data=None,
     ):
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         markup, model, record_id = report._parse_line_id(line_dict_id)[-1]
 
         if model != "res.partner":
@@ -1210,7 +1210,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
             partner_data.get("debit", 0) or partner_data.get("credit", 0)
         )
         column_values = []
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         for column in options["columns"]:
             col_expr_label = column["expression_label"]
             value = (
@@ -1285,7 +1285,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
             caret_type = "account.move.line"
 
         columns = []
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         for column in options["columns"]:
             col_expr_label = column["expression_label"]
 
@@ -1348,7 +1348,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
     @_debug.perf.timed
     def _get_report_line_total(self, options, totals_by_column_group):
         column_values = []
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         for column in options["columns"]:
             col_value = totals_by_column_group[column["column_group_key"]].get(
                 column["expression_label"]
@@ -1368,7 +1368,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
     def _get_report_send_recipients(self, options):
         partners = options.get("partner_ids", [])
         if not partners:
-            report = self.env["account.report"].browse(options["report_id"])
+            report = self.env["report.formula"].browse(options["report_id"])
             self.env.cr.execute(self._get_query_sums(report, options))
             partners = [
                 row["groupby"] for row in self.env.cr.dictfetchall() if row["groupby"]
@@ -1379,7 +1379,7 @@ class AccountPartnerLedgerReportHandler(models.AbstractModel):
     def open_journal_items(self, options, params):
         _debug.lifecycle("open_journal_items", records=self)
         params["view_ref"] = "account.view_account_move_line_list_grouped_partner"
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         action = report.open_journal_items(options=options, params=params)
         action.get("context", {}).update({"search_default_group_by_account": 0})
         return action

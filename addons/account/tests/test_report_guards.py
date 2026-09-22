@@ -109,7 +109,7 @@ class TestReportAggregationGuards(TestAccountReportsCommon):
     """Malformed report configuration must be reported, never crash or hang."""
 
     def _build_report(self, lines):
-        report = self.env["account.report"].create(
+        report = self.env["report.formula"].create(
             {
                 "name": "Guard probe",
                 "filter_date_range": True,
@@ -125,7 +125,7 @@ class TestReportAggregationGuards(TestAccountReportsCommon):
             }
         )
         for sequence, (code, formula, subformula) in enumerate(lines, start=1):
-            self.env["account.report.line"].create(
+            self.env["report.formula.line"].create(
                 {
                     "name": code,
                     "code": code,
@@ -255,14 +255,14 @@ class TestReportSortLinesInput(TestAccountReportsCommon):
             with self.subTest(order_column=order_column):
                 options = {**self.options, "order_column": order_column}
                 self.assertEqual(
-                    self.env["account.report"].sort_lines(self.lines, options),
+                    self.env["report.formula"].sort_lines(self.lines, options),
                     self.lines,
                 )
 
     def test_result_as_index_keeps_its_contract_when_nothing_is_sorted(self):
         options = {**self.options, "order_column": None}
         self.assertEqual(
-            self.env["account.report"].sort_lines(
+            self.env["report.formula"].sort_lines(
                 self.lines, options, result_as_index=True
             ),
             list(range(len(self.lines))),
@@ -570,7 +570,7 @@ class TestEveryReportRenders(TestAccountReportsCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.reports = cls.env["account.report"].search([])
+        cls.reports = cls.env["report.formula"].search([])
         # The net needs lines that actually have sublines: a report line is only
         # unfoldable when its groupby resolves to something, so an empty ledger
         # leaves nothing to expand and the net would silently test nothing.
@@ -713,7 +713,7 @@ class TestAccountsCoverageReportCodelessAccounts(TestAccountReportsCommon):
         # offers the coverage tool depends on the installed localisation, and a
         # test that skips itself on a generic database guards nothing.
         root = cls.env.ref("account.balance_sheet")
-        cls.report = cls.env["account.report"].create(
+        cls.report = cls.env["report.formula"].create(
             {
                 "name": "Coverage probe",
                 "root_report_id": root.id,
@@ -1099,7 +1099,7 @@ class TestBudgetFilterIsMultiCompany(TestAccountReportsCommon):
     """
 
     def test_the_filter_lists_every_selected_companys_budgets(self):
-        report = self.env["account.report"].search(
+        report = self.env["report.formula"].search(
             [("filter_budgets", "=", True)], limit=1
         )
         self.assertTrue(report, "no report offers the budget filter; nothing tested")
@@ -1210,14 +1210,14 @@ class TestDispatchOnSectionsSource(TestAccountReportsCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.source = cls.env["account.report"].search(
+        cls.source = cls.env["report.formula"].search(
             [("section_report_ids", "!=", False)], limit=1
         )
 
     def test_a_report_that_is_not_a_section_of_the_source_is_refused(self):
         self.assertTrue(self.source, "no report has sections; nothing tested")
         section = self.source.section_report_ids[0]
-        stranger = self.env["account.report"].search(
+        stranger = self.env["report.formula"].search(
             [("id", "not in", (self.source | self.source.section_report_ids).ids)],
             limit=1,
         )
@@ -1238,9 +1238,9 @@ class TestDispatchOnSectionsSource(TestAccountReportsCommon):
     def test_a_report_dispatching_on_its_own_options_is_allowed(self):
         """_init_options_sections points sections_source_id at the report itself,
         or at its selected variant. Both are legitimate and must not be refused."""
-        for report in self.env["account.report"].search([], limit=12):
+        for report in self.env["report.formula"].search([], limit=12):
             options = report.get_options({})
-            source = self.env["account.report"].browse(options["sections_source_id"])
+            source = self.env["report.formula"].browse(options["sections_source_id"])
             with self.subTest(report=report.name, source=source.name):
                 report.dispatch_report_action(
                     options,

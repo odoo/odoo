@@ -2,7 +2,7 @@ from odoo import fields, models
 
 
 class AccountReportExpression(models.AbstractModel):
-    _inherit = "account.report.expression"
+    _inherit = "report.formula.expression"
 
     def _get_carryover_target_expression(self, options):
         if (

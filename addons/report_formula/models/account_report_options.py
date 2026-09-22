@@ -16,7 +16,7 @@ _debug = DebugLog(__name__)
 
 
 class AccountReportOptions(models.Model):
-    _inherit = "account.report"
+    _inherit = "report.formula"
 
     def _normalize_date_filter(self, options, options_filter, period_date_to):
         return options_filter
@@ -603,7 +603,7 @@ class AccountReportOptions(models.Model):
         if options["sections_source_id"] != self.id:
             # We need to re-call a full get_options in case a custom options initializer adds new buttons depending on other options.
             # This way, we're sure we always get all buttons that are needed.
-            sections_source = self.env["account.report"].browse(
+            sections_source = self.env["report.formula"].browse(
                 options["sections_source_id"]
             )
             options["buttons"] = sections_source.get_options(
@@ -619,7 +619,7 @@ class AccountReportOptions(models.Model):
 
         previous_section_source_id = previous_options.get("sections_source_id")
         if previous_section_source_id:
-            previous_section_source = self.env["account.report"].browse(
+            previous_section_source = self.env["report.formula"].browse(
                 previous_section_source_id
             )
             if self in previous_section_source.section_report_ids:
@@ -631,7 +631,7 @@ class AccountReportOptions(models.Model):
         if "variants_source_id" not in options:
             options["variants_source_id"] = (self.root_report_id or self).id
 
-        available_variants = self.env["account.report"]
+        available_variants = self.env["report.formula"]
         options["has_inactive_variants"] = False
         allowed_country_variant_ids = {}
         all_variants = self._get_variants(options["variants_source_id"])
@@ -705,12 +705,12 @@ class AccountReportOptions(models.Model):
         else:
             options["sections_source_id"] = self.id
 
-        source_report = self.env["account.report"].browse(options["sections_source_id"])
+        source_report = self.env["report.formula"].browse(options["sections_source_id"])
 
         available_sections = (
             source_report.section_report_ids
             if source_report.use_sections
-            else self.env["account.report"]
+            else self.env["report.formula"]
         )
         options["sections"] = [
             {"name": section.name, "id": section.id} for section in available_sections
@@ -731,7 +731,7 @@ class AccountReportOptions(models.Model):
             selected_section_id=options.get("selected_section_id"),
         )
         options["has_inactive_sections"] = bool(
-            self.env["account.report"]
+            self.env["report.formula"]
             .with_context(active_test=False)
             .search_count(
                 [
@@ -900,7 +900,7 @@ class AccountReportOptions(models.Model):
                     variant_options[reroute_opt_key] = opt_val
 
             return (
-                self.env["account.report"]
+                self.env["report.formula"]
                 .browse(options["report_id"])
                 .get_options(variant_options)
             )
@@ -1012,7 +1012,7 @@ class AccountReportOptions(models.Model):
         self.check_singleton()
 
         available_scopes = dict(
-            self.env["account.report.expression"]._fields["date_scope"].selection
+            self.env["report.formula.expression"]._fields["date_scope"].selection
         )
         if (
             date_scope and date_scope not in available_scopes

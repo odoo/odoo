@@ -11,7 +11,7 @@ _debug = DebugLog(__name__)
 
 class AccountTrialBalanceReportHandler(models.AbstractModel):
     _name = "account.trial.balance.report.handler"
-    _inherit = ["account.report.custom.handler"]
+    _inherit = ["report.formula.custom.handler"]
     _description = "Trial Balance Custom Handler"
 
     def _custom_options_initializer(self, report, options, previous_options):
@@ -368,7 +368,7 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
     @_debug.perf.timed
     def open_unallocated_items_journal_items(self, options, params):
         _debug.lifecycle("open_unallocated_items_journal_items", records=self)
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         return report.open_unallocated_items_journal_items(options, params)
 
     @_debug.perf.timed
@@ -383,7 +383,7 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
         limit=None,
         warnings=None,
     ):
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
 
         current_groupbys = (
             [current_groupby]
@@ -584,7 +584,7 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
         # Unaffected Earnings lines
         if report._parse_line_id(lines[0]["id"])[-1] == (
             "",
-            "account.report.line",
+            "report.formula.line",
             report.line_ids[0].id,
         ):
             unaffected_earning_lines = report._get_unallocated_earnings_lines(
@@ -711,8 +711,8 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
         offset,
         unfold_all_batch_data=None,
     ):
-        """Override the 'account.report' method to hide move lines outside the selected period."""
-        report = self.env["account.report"].browse(options["report_id"])
+        """Override the 'report.formula' method to hide move lines outside the selected period."""
+        report = self.env["report.formula"].browse(options["report_id"])
         _debug.logic(
             "initial_balance_amls_hidden",
             report=report,
@@ -772,9 +772,9 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
             "_report_expand_unfoldable_line_with_groupby", []
         ):
             report_line_id = report._get_res_id_from_line_id(
-                line_to_expand["id"], "account.report.line"
+                line_to_expand["id"], "report.formula.line"
             )
-            report_line = self.env["account.report.line"].browse(report_line_id)
+            report_line = self.env["report.formula.line"].browse(report_line_id)
 
             expressions = report_line.expression_ids.filtered(
                 lambda x: (
@@ -869,7 +869,7 @@ class AccountTrialBalanceReportHandler(models.AbstractModel):
     @_debug.perf.timed
     def action_audit_cell(self, options, params):
         _debug.lifecycle("action_audit_cell", records=self)
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         column_group_forced_options = options["column_groups"][
             params["column_group_key"]
         ]["forced_options"]

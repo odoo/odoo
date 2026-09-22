@@ -165,7 +165,7 @@ class TestJournalReport(TestAccountReportsCommon):
 
         # Set up a tax report, tax report line, and all needed to get a tax with a grid.
         cls.company_data["company"].country_id = cls.env.ref("base.us")
-        cls.tax_report = cls.env["account.report"].create(
+        cls.tax_report = cls.env["report.formula"].create(
             {
                 "name": "Tax report",
                 "root_report_id": cls.env.ref("account.generic_tax_report").id,

@@ -11,7 +11,7 @@ _debug = DebugLog(__name__)
 
 class AccountTaxReportHandler(models.AbstractModel):
     _name = "account.tax.report.handler"
-    _inherit = ["account.report.custom.handler"]
+    _inherit = ["report.formula.custom.handler"]
     _description = "Account Report Handler for Tax Reports"
 
     @_debug.perf.timed
@@ -112,7 +112,7 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
     def _get_dynamic_lines(self, report, options, grouping, warnings=None):
         """Compute the report lines for the generic tax report.
 
-        :param report:      The account.report record being rendered.
+        :param report:      The report.formula record being rendered.
         :param options:     The report options.
         :param str grouping: The requested grouping ('tax_account', 'account_tax' or none).
         :param warnings:    The warnings dictionary to fill, if any.
@@ -557,7 +557,7 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
     ):
         """Read the tax details to compute the tax amounts.
 
-        :param report:                  The account.report record being rendered.
+        :param report:                  The report.formula record being rendered.
         :param options_by_column_group: The report options, split per column group key.
         :param groupby_fields:          A list of tuple (alias, field) representing the way the amounts must be grouped.
         :return:                        A dictionary mapping each groupby key (e.g. a tax_id) to a sub dictionary containing:
@@ -856,7 +856,7 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
     ):
         """Build the report line accordingly to its type.
 
-        :param report:          The account.report record being rendered.
+        :param report:          The report.formula record being rendered.
         :param options:         The report options.
         :param default_vals:    The pre-computed report line values.
         :param str groupby_key: The groupby field name this line stands for
@@ -982,7 +982,7 @@ class AccountGenericTaxReportHandler(models.AbstractModel):
 
     @_debug.perf.timed
     def caret_option_audit_tax(self, options, params):
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         model, tax_id = report._get_model_info_from_id(params["line_id"])
 
         if model != "account.tax":

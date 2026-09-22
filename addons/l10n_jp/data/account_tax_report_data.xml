@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="tax_report" model="account.report">
+    <record id="tax_report" model="report.formula">
         <field name="name">Tax Report</field>
         <field name="name@ja_JP">税レポート</field>
         <field name="root_report_id" ref="account.generic_tax_report" />
@@ -9,14 +9,14 @@
         <field name="allow_foreign_vat" eval="True" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="tax_report_balance" model="account.report.column">
+            <record id="tax_report_balance" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="name@ja_JP">総合計</field>
                 <field name="expression_label">balance</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="l10n_jp_tax_report_to_pay" model="account.report.line">
+            <record id="l10n_jp_tax_report_to_pay" model="report.formula.line">
                 <field name="name">Total Tax Amount</field>
                 <field name="name@ja_JP">支払対象税額</field>
                 <field
@@ -25,7 +25,7 @@
                 <field name="children_ids">
                     <record
                         id="l10n_jp_tax_report_to_pay_temp_tx"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">GST Sale Amount</field>
                         <field name="name@ja_JP">仮受税額</field>
                         <field name="code">GST_SALE_AMOUNT</field>
@@ -34,14 +34,14 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_jp_tax_report_to_pay_temp_tx_output_8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">GST Sale 8%</field>
                                 <field name="name@ja_JP">仮受消費税(外) 8%</field>
                                 <field name="code">GST_SALE_8</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_to_pay_temp_tx_output_8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-GST Sale 8%</field>
@@ -50,14 +50,14 @@
                             </record>
                             <record
                                 id="l10n_jp_tax_report_to_pay_temp_tx_output_10"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">GST Sale 10%</field>
                                 <field name="name@ja_JP">仮受消費税(外) 10%</field>
                                 <field name="code">GST_SALE_10</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_to_pay_temp_tx_output_10_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-GST Sale 10%</field>
@@ -66,14 +66,14 @@
                             </record>
                             <record
                                 id="l10n_jp_tax_report_to_pay_temp_tx_duty_free"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Tax Exempt</field>
                                 <field name="name@ja_JP">免税</field>
                                 <field name="code">TAX_EXEMPT</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_to_pay_temp_tx_duty_free_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">Tax Exempt</field>
@@ -82,14 +82,14 @@
                             </record>
                             <record
                                 id="l10n_jp_tax_report_to_pay_temp_tx_tax_free"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Zero-rated Tax</field>
                                 <field name="name@ja_JP">不課税</field>
                                 <field name="code">ZERO_RATED_TAX_SALE</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_to_pay_temp_tx_tax_free_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -101,7 +101,7 @@
                     </record>
                     <record
                         id="l10n_jp_tax_report_to_pay_temp_pmt"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">GST Purchase Amount</field>
                         <field name="name@ja_JP">仮払税額</field>
                         <field name="code">GST_PURCHASE_AMOUNT</field>
@@ -110,14 +110,14 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_jp_tax_report_to_pay_temp_pmt_susp_cons_8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">GST Purchase 8%</field>
                                 <field name="name@ja_JP">仮払消費税(外) 8%</field>
                                 <field name="code">GST_PURCHASE_8</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_to_pay_temp_pmt_susp_cons_8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">GST Purchase 8%</field>
@@ -126,14 +126,14 @@
                             </record>
                             <record
                                 id="l10n_jp_tax_report_to_pay_temp_pmt_susp_cons_10"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">GST Purchase 10%</field>
                                 <field name="name@ja_JP">仮払消費税(外) 10%</field>
                                 <field name="code">GST_PURCHASE_10</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_to_pay_temp_pmt_susp_cons_10_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">GST Purchase 10%</field>
@@ -142,14 +142,14 @@
                             </record>
                             <record
                                 id="l10n_jp_tax_report_to_pay_temp_pmt_import_8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Imported</field>
                                 <field name="name@ja_JP">輸入</field>
                                 <field name="code">IMPORTED</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_to_pay_temp_pmt_import_8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">Imported</field>
@@ -158,14 +158,14 @@
                             </record>
                             <record
                                 id="l10n_jp_tax_report_to_pay_temp_pmt_tax_free"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Zero-rated Tax</field>
                                 <field name="name@ja_JP">不課税</field>
                                 <field name="code">ZERO_RATED_TAX_PURCHASE</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_to_pay_temp_pmt_tax_free_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -177,7 +177,7 @@
                     </record>
                 </field>
             </record>
-            <record id="l10n_jp_tax_report_comp_basis" model="account.report.line">
+            <record id="l10n_jp_tax_report_comp_basis" model="report.formula.line">
                 <field name="name">Taxable Amount</field>
                 <field name="name@ja_JP">税計算基準額</field>
                 <field
@@ -186,7 +186,7 @@
                 <field name="children_ids">
                     <record
                         id="l10n_jp_tax_report_comp_basis_sales"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Sale Amount</field>
                         <field name="name@ja_JP">販売基準額</field>
                         <field name="code">SALE_AMOUNT</field>
@@ -195,14 +195,14 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_jp_tax_report_comp_basis_sales_taxable_8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Taxable Sale Amount (8%)</field>
                                 <field name="name@ja_JP">課税対象売上(8%)</field>
                                 <field name="code">TAXABLE_SALE_AMOUNT_8</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_comp_basis_sales_taxable_8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -212,14 +212,14 @@
                             </record>
                             <record
                                 id="l10n_jp_tax_report_comp_basis_sales_taxable_10"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Taxable Sale Amount (10%)</field>
                                 <field name="name@ja_JP">課税対象売上(10%)</field>
                                 <field name="code">TAXABLE_SALE_AMOUNT_10</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_comp_basis_sales_taxable_10_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -229,14 +229,14 @@
                             </record>
                             <record
                                 id="l10n_jp_tax_report_comp_basis_sales_duty_free"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Tax Exempted Sale Amount</field>
                                 <field name="name@ja_JP">免税売上</field>
                                 <field name="code">TAX_EXEMPTED_SALE_AMOUNT</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_comp_basis_sales_duty_free_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -246,14 +246,14 @@
                             </record>
                             <record
                                 id="l10n_jp_tax_report_comp_basis_sales_tax_free"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Zero-rated Tax Amount</field>
                                 <field name="name@ja_JP">不課税売上</field>
                                 <field name="code">ZERO_RATED_TAX_AMOUNT</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_comp_basis_sales_tax_free_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -265,7 +265,7 @@
                     </record>
                     <record
                         id="l10n_jp_tax_report_comp_basis_purchases"
-                        model="account.report.line">
+                        model="report.formula.line">
                         <field name="name">Purchase Amount</field>
                         <field name="name@ja_JP">購買基準額</field>
                         <field name="code">PURCHASE_AMOUNT</field>
@@ -274,14 +274,14 @@
                         <field name="children_ids">
                             <record
                                 id="l10n_jp_tax_report_comp_basis_purchases_taxable_8"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Taxable Purchase Amount (8%)</field>
                                 <field name="name@ja_JP">課税対象仕入(8%)</field>
                                 <field name="code">TAXABLE_PURCHASE_AMOUNT_8</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_comp_basis_purchases_taxable_8_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -291,14 +291,14 @@
                             </record>
                             <record
                                 id="l10n_jp_tax_report_comp_basis_purchases_taxable_10"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Taxable Purchase Amount (10%)</field>
                                 <field name="name@ja_JP">課税対象仕入(10%)</field>
                                 <field name="code">TAXABLE_PURCHASE_AMOUNT_10</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_comp_basis_purchases_taxable_10_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field
@@ -308,14 +308,14 @@
                             </record>
                             <record
                                 id="l10n_jp_tax_report_comp_basis_purchases_import"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Imported Purchase</field>
                                 <field name="name@ja_JP">輸入仕入</field>
                                 <field name="code">IMPORTED_PURCHASE</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_comp_basis_purchases_import_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">Imported Purchase</field>
@@ -324,14 +324,14 @@
                             </record>
                             <record
                                 id="l10n_jp_tax_report_comp_basis_purchases_tax_free"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Zero-rated Purchase</field>
                                 <field name="name@ja_JP">不課税仕入</field>
                                 <field name="code">ZERO_RATED_PURCHASE</field>
                                 <field name="expression_ids">
                                     <record
                                         id="l10n_jp_tax_report_comp_basis_purchases_tax_free_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field

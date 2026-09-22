@@ -9,7 +9,7 @@ def migrate(cr, version):
 
     external_value_cols = [
         col
-        for col in sql.get_table_columns(env.cr, "account_report_external_value")
+        for col in sql.get_table_columns(env.cr, "report_formula_external_value")
         if col
         not in ["id", "carryover_origin_report_line_id", "target_report_expression_id"]
     ]
@@ -21,11 +21,11 @@ def migrate(cr, version):
                report_line.code,
                external_value.carryover_origin_report_line_id,
                {", ".join(f"external_value.{col}" for col in external_value_cols)}
-          FROM account_report AS report
-          JOIN account_report_line AS report_line ON report.id = report_line.report_id
-          JOIN account_report_expression AS expression ON report_line.id = expression.report_line_id
+          FROM report_formula AS report
+          JOIN report_formula_line AS report_line ON report.id = report_line.report_id
+          JOIN report_formula_expression AS expression ON report_line.id = expression.report_line_id
                                                       AND expression.engine = 'external'
-     LEFT JOIN account_report_external_value AS external_value ON expression.id = external_value.target_report_expression_id
+     LEFT JOIN report_formula_external_value AS external_value ON expression.id = external_value.target_report_expression_id
          WHERE (
                    report.id = %s
                    AND external_value.company_id IS NOT NULL
@@ -47,10 +47,10 @@ def migrate(cr, version):
         """
         SELECT DISTINCT old_report_line.id AS old_origin,
                         new_report_line.id AS new_origin
-                   FROM account_report_external_value external_value
-                   JOIN account_report_line AS old_report_line ON old_report_line.id = external_value.carryover_origin_report_line_id
+                   FROM report_formula_external_value external_value
+                   JOIN report_formula_line AS old_report_line ON old_report_line.id = external_value.carryover_origin_report_line_id
                                                               AND old_report_line.report_id = %s
-                   JOIN account_report_line AS new_report_line ON new_report_line.code = old_report_line.code
+                   JOIN report_formula_line AS new_report_line ON new_report_line.code = old_report_line.code
                                                               AND new_report_line.report_id = %s;
     """,
         (vat_report_id, monthly_vat_report_id),
@@ -72,7 +72,7 @@ def migrate(cr, version):
     ]
 
     insert_query = f"""
-        INSERT INTO account_report_external_value (
+        INSERT INTO report_formula_external_value (
                         target_report_expression_id,
                         carryover_origin_report_line_id,
                         {", ".join(col for col in external_value_cols)}
@@ -87,7 +87,7 @@ def migrate(cr, version):
     # Archive the old report
     cr.execute(
         """
-        UPDATE account_report
+        UPDATE report_formula
            SET active = FALSE
          WHERE id = %s
     """,

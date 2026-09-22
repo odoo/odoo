@@ -48,7 +48,7 @@ class TestCurrencyTable(TestAccountReportsCommon):
                 limit=1,
             )
 
-        cls.report = cls.env["account.report"].create(
+        cls.report = cls.env["report.formula"].create(
             {
                 "name": "Currency Table Test",
                 "filter_multi_company": "selector",
@@ -741,7 +741,7 @@ class TestCurrencyTable(TestAccountReportsCommon):
 
         options = self._generate_options(self.report, "2020-01-01", "2020-12-31")
         line_to_expand_id = self.report._get_generic_line_id(
-            "account.report.line", self.report.line_ids[0].id
+            "report.formula.line", self.report.line_ids[0].id
         )
         self.assertLinesValues(
             self.report.get_expanded_lines(

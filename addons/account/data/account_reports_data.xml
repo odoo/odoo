@@ -2,7 +2,7 @@
 <odoo>
 
     <data>
-        <record id="generic_tax_report" model="account.report">
+        <record id="generic_tax_report" model="report.formula">
             <field name="name">Generic Tax report</field>
             <field name="filter_multi_company">tax_units</field>
             <field name="allow_foreign_vat" eval="1" />
@@ -11,56 +11,56 @@
             <field name="column_ids">
                 <record
                     id="generic_tax_report_column_net"
-                    model="account.report.column">
+                    model="report.formula.column">
                     <field name="name">Net</field>
                     <field name="expression_label">net</field>
                     <field name="figure_type">monetary</field>
                 </record>
                 <record
                     id="generic_tax_report_column_tax"
-                    model="account.report.column">
+                    model="report.formula.column">
                     <field name="name">Tax</field>
                     <field name="expression_label">tax</field>
                     <field name="figure_type">monetary</field>
                 </record>
             </field>
         </record>
-        <record id="generic_tax_report_account_tax" model="account.report">
+        <record id="generic_tax_report_account_tax" model="report.formula">
             <field name="name">Group by: Account &gt; Tax </field>
             <field name="root_report_id" ref="generic_tax_report" />
             <field name="availability_condition">always</field>
             <field name="column_ids">
                 <record
                     id="generic_tax_report_account_tax_column_net"
-                    model="account.report.column">
+                    model="report.formula.column">
                     <field name="name">Net</field>
                     <field name="expression_label">net</field>
                     <field name="figure_type">monetary</field>
                 </record>
                 <record
                     id="generic_tax_report_account_tax_column_tax"
-                    model="account.report.column">
+                    model="report.formula.column">
                     <field name="name">Tax</field>
                     <field name="expression_label">tax</field>
                     <field name="figure_type">monetary</field>
                 </record>
             </field>
         </record>
-        <record id="generic_tax_report_tax_account" model="account.report">
+        <record id="generic_tax_report_tax_account" model="report.formula">
             <field name="name">Group by: Tax &gt; Account </field>
             <field name="root_report_id" ref="generic_tax_report" />
             <field name="availability_condition">always</field>
             <field name="column_ids">
                 <record
                     id="generic_tax_report_tax_account_column_net"
-                    model="account.report.column">
+                    model="report.formula.column">
                     <field name="name">Net</field>
                     <field name="expression_label">net</field>
                     <field name="figure_type">monetary</field>
                 </record>
                 <record
                     id="generic_tax_report_tax_account_column_tax"
-                    model="account.report.column">
+                    model="report.formula.column">
                     <field name="name">Tax</field>
                     <field name="expression_label">tax</field>
                     <field name="figure_type">monetary</field>

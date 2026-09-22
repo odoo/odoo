@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="l10n_lv_vat_main_tax_report" model="account.report">
+    <record id="l10n_lv_vat_main_tax_report" model="report.formula">
         <field name="name">VAT Report</field>
         <field name="name@lv">PVN Pārskats</field>
         <field name="root_report_id" ref="account.generic_tax_report" />
@@ -9,27 +9,27 @@
         <field name="allow_foreign_vat" eval="True" />
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="vat_report_column_code" model="account.report.column">
+            <record id="vat_report_column_code" model="report.formula.column">
                 <field name="name">Code</field>
                 <field name="name@lv">Kods</field>
                 <field name="expression_label">code</field>
                 <field name="figure_type">string</field>
             </record>
-            <record id="vat_report_column_balance" model="account.report.column">
+            <record id="vat_report_column_balance" model="report.formula.column">
                 <field name="name">Balance</field>
                 <field name="name@lv">Bilance</field>
                 <field name="expression_label">balance</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="vat_report_line_40" model="account.report.line">
+            <record id="vat_report_line_40" model="report.formula.line">
                 <field name="name">Value of activities</field>
                 <field name="name@lv">Darbību vērtība</field>
                 <field name="code">LV_40</field>
                 <field name="expression_ids">
                     <record
                         id="vat_report_line_40_code"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">code</field>
                         <field name="auditable" eval="False" />
                         <field name="engine">aggregation</field>
@@ -37,7 +37,7 @@
                     </record>
                     <record
                         id="vat_report_line_40_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -45,7 +45,7 @@
                     </record>
                 </field>
                 <field name="children_ids">
-                    <record id="vat_report_line_41" model="account.report.line">
+                    <record id="vat_report_line_41" model="report.formula.line">
                         <field
                             name="name">Transactions subject to VAT at standard rate</field>
                         <field
@@ -54,7 +54,7 @@
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_41_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -62,14 +62,14 @@
                             </record>
                             <record
                                 id="vat_report_line_41_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-41</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_411" model="account.report.line">
+                    <record id="vat_report_line_411" model="report.formula.line">
                         <field
                             name="name">Domestic transactions for which the recipient of the goods or services is liable for tax</field>
                         <field
@@ -78,7 +78,7 @@
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_411_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -86,21 +86,21 @@
                             </record>
                             <record
                                 id="vat_report_line_411_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-411</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_42" model="account.report.line">
+                    <record id="vat_report_line_42" model="report.formula.line">
                         <field name="name">Transactions subject to VAT at 12%</field>
                         <field name="name@lv">Darījumi apliekami ar 12% PVN</field>
                         <field name="code">LV_42</field>
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_42_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -108,21 +108,21 @@
                             </record>
                             <record
                                 id="vat_report_line_42_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-42</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_421" model="account.report.line">
+                    <record id="vat_report_line_421" model="report.formula.line">
                         <field name="name">Transactions subject to VAT at 5%</field>
                         <field name="name@lv">Darījumi apliekami ar 5% PVN</field>
                         <field name="code">LV_421</field>
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_421_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -130,21 +130,21 @@
                             </record>
                             <record
                                 id="vat_report_line_421_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-421</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_43" model="account.report.line">
+                    <record id="vat_report_line_43" model="report.formula.line">
                         <field name="name">Transactions subject to VAT at 0%</field>
                         <field name="name@lv">Darījumi apliekami ar 0% PVN</field>
                         <field name="code">LV_43</field>
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_43_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -152,7 +152,7 @@
                             </record>
                             <record
                                 id="vat_report_line_43_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field
@@ -160,7 +160,7 @@
                             </record>
                         </field>
                         <field name="children_ids">
-                            <record id="vat_report_line_44" model="account.report.line">
+                            <record id="vat_report_line_44" model="report.formula.line">
                                 <field
                                     name="name">Transactions carried out in free ports and SEZ</field>
                                 <field
@@ -169,7 +169,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="vat_report_line_44_code"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">code</field>
                                         <field name="auditable" eval="False" />
                                         <field name="engine">aggregation</field>
@@ -177,14 +177,14 @@
                                     </record>
                                     <record
                                         id="vat_report_line_44_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">44</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="vat_report_line_45" model="account.report.line">
+                            <record id="vat_report_line_45" model="report.formula.line">
                                 <field
                                     name="name">Goods supplied to EU Member States, other than those referred to in Article 42(16) of the Law</field>
                                 <field
@@ -193,7 +193,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="vat_report_line_45_code"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">code</field>
                                         <field name="auditable" eval="False" />
                                         <field name="engine">aggregation</field>
@@ -201,7 +201,7 @@
                                     </record>
                                     <record
                                         id="vat_report_line_45_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-45</field>
@@ -209,14 +209,14 @@
                                     <!-- Not visible, but used for EC Sales Report -->
                                     <record
                                         id="vat_report_line_ec_goods_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">ec_goods</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-45_G</field>
                                     </record>
                                     <record
                                         id="vat_report_line_ec_triangular_tag"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">ec_triangular</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-45_T</field>
@@ -225,7 +225,7 @@
                             </record>
                             <record
                                 id="vat_report_line_451"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field
                                     name="name">Goods supplied to EU Member States as referred to in Article 42(16) of the Law</field>
                                 <field
@@ -234,7 +234,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="vat_report_line_451_code"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">code</field>
                                         <field name="auditable" eval="False" />
                                         <field name="engine">aggregation</field>
@@ -242,14 +242,14 @@
                                     </record>
                                     <record
                                         id="vat_report_line_451_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">451</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="vat_report_line_46" model="account.report.line">
+                            <record id="vat_report_line_46" model="report.formula.line">
                                 <field
                                     name="name">Supplies of non-Community goods in customs warehouses and free zones</field>
                                 <field
@@ -258,7 +258,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="vat_report_line_46_code"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">code</field>
                                         <field name="auditable" eval="False" />
                                         <field name="engine">aggregation</field>
@@ -266,14 +266,14 @@
                                     </record>
                                     <record
                                         id="vat_report_line_46_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">46</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="vat_report_line_47" model="account.report.line">
+                            <record id="vat_report_line_47" model="report.formula.line">
                                 <field
                                     name="name">New vehicles delivered to EU Member States</field>
                                 <field
@@ -282,7 +282,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="vat_report_line_47_code"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">code</field>
                                         <field name="auditable" eval="False" />
                                         <field name="engine">aggregation</field>
@@ -290,14 +290,14 @@
                                     </record>
                                     <record
                                         id="vat_report_line_47_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">47</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="vat_report_line_48" model="account.report.line">
+                            <record id="vat_report_line_48" model="report.formula.line">
                                 <field name="name">For services provided</field>
                                 <field
                                     name="name@lv">Par sniegtajiem pakalpojumiem</field>
@@ -305,7 +305,7 @@
                                 <field name="expression_ids">
                                     <record
                                         id="vat_report_line_48_code"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">code</field>
                                         <field name="auditable" eval="False" />
                                         <field name="engine">aggregation</field>
@@ -313,7 +313,7 @@
                                     </record>
                                     <record
                                         id="vat_report_line_48_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-48</field>
@@ -322,14 +322,14 @@
                             </record>
                             <record
                                 id="vat_report_line_481"
-                                model="account.report.line">
+                                model="report.formula.line">
                                 <field name="name">Exported goods</field>
                                 <field name="name@lv">Eksportētās preces</field>
                                 <field name="code">LV_481</field>
                                 <field name="expression_ids">
                                     <record
                                         id="vat_report_line_481_code"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">code</field>
                                         <field name="auditable" eval="False" />
                                         <field name="engine">aggregation</field>
@@ -337,7 +337,7 @@
                                     </record>
                                     <record
                                         id="vat_report_line_481_balance"
-                                        model="account.report.expression">
+                                        model="report.formula.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-481</field>
@@ -346,14 +346,14 @@
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_482" model="account.report.line">
+                    <record id="vat_report_line_482" model="report.formula.line">
                         <field name="name">Transactions in other countries</field>
                         <field name="name@lv">Darījumi citās valstīs</field>
                         <field name="code">LV_482</field>
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_482_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -361,7 +361,7 @@
                             </record>
                             <record
                                 id="vat_report_line_482_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-482</field>
@@ -369,21 +369,21 @@
                             <!-- Not visible, but used for EC Sales Report -->
                             <record
                                 id="vat_report_line_ec_services_tag"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">ec_services</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-482_S</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_49" model="account.report.line">
+                    <record id="vat_report_line_49" model="report.formula.line">
                         <field name="name">VAT-exempt transactions</field>
                         <field name="name@lv">Ar PVN atbrīvotie darījumi</field>
                         <field name="code">LV_49</field>
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_49_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -391,14 +391,14 @@
                             </record>
                             <record
                                 id="vat_report_line_49_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">49</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_50" model="account.report.line">
+                    <record id="vat_report_line_50" model="report.formula.line">
                         <field
                             name="name">Goods and services received from EU countries (standard rate)</field>
                         <field
@@ -407,7 +407,7 @@
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_50_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -415,14 +415,14 @@
                             </record>
                             <record
                                 id="vat_report_line_50_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">50</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_51" model="account.report.line">
+                    <record id="vat_report_line_51" model="report.formula.line">
                         <field
                             name="name">Goods received from EU Member States (VAT at 12%)</field>
                         <field
@@ -431,7 +431,7 @@
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_51_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -439,14 +439,14 @@
                             </record>
                             <record
                                 id="vat_report_line_51_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">51</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_511" model="account.report.line">
+                    <record id="vat_report_line_511" model="report.formula.line">
                         <field
                             name="name">Goods received from EU Member States (VAT at 5%)</field>
                         <field
@@ -455,7 +455,7 @@
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_511_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -463,7 +463,7 @@
                             </record>
                             <record
                                 id="vat_report_line_511_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">511</field>
@@ -472,14 +472,14 @@
                     </record>
                 </field>
             </record>
-            <record id="vat_report_line_5x" model="account.report.line">
+            <record id="vat_report_line_5x" model="report.formula.line">
                 <field name="name">Calculated VAT</field>
                 <field name="name@lv">Aprēķinātais PVN</field>
                 <field name="code">LV_5x</field>
                 <field name="expression_ids">
                     <record
                         id="vat_report_line_5x_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -487,7 +487,7 @@
                     </record>
                 </field>
                 <field name="children_ids">
-                    <record id="vat_report_line_52" model="account.report.line">
+                    <record id="vat_report_line_52" model="report.formula.line">
                         <field
                             name="name">VAT at standard rate received on taxable transactions</field>
                         <field
@@ -496,7 +496,7 @@
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_52_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -504,14 +504,14 @@
                             </record>
                             <record
                                 id="vat_report_line_52_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-52</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_53" model="account.report.line">
+                    <record id="vat_report_line_53" model="report.formula.line">
                         <field
                             name="name">VAT at 12% received on taxable transactions</field>
                         <field
@@ -520,7 +520,7 @@
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_53_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -528,14 +528,14 @@
                             </record>
                             <record
                                 id="vat_report_line_53_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-53</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_531" model="account.report.line">
+                    <record id="vat_report_line_531" model="report.formula.line">
                         <field
                             name="name">VAT at 5% received on taxable transactions</field>
                         <field
@@ -544,7 +544,7 @@
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_531_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -552,21 +552,21 @@
                             </record>
                             <record
                                 id="vat_report_line_531_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-531</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_54" model="account.report.line">
+                    <record id="vat_report_line_54" model="report.formula.line">
                         <field name="name">VAT for services received</field>
                         <field name="name@lv">PVN par saņemtajiem pakalpojumiem</field>
                         <field name="code">LV_54</field>
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_54_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -574,14 +574,14 @@
                             </record>
                             <record
                                 id="vat_report_line_54_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-54</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_55" model="account.report.line">
+                    <record id="vat_report_line_55" model="report.formula.line">
                         <field
                             name="name">VAT at standard rate on goods and services received from EU countries</field>
                         <field
@@ -590,7 +590,7 @@
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_55_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -598,14 +598,14 @@
                             </record>
                             <record
                                 id="vat_report_line_55_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">55</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_56" model="account.report.line">
+                    <record id="vat_report_line_56" model="report.formula.line">
                         <field
                             name="name">VAT at 12% on goods received from EU countries</field>
                         <field
@@ -614,7 +614,7 @@
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_56_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -622,14 +622,14 @@
                             </record>
                             <record
                                 id="vat_report_line_56_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">56</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_561" model="account.report.line">
+                    <record id="vat_report_line_561" model="report.formula.line">
                         <field
                             name="name">VAT at 5% on goods and services received from EU countries</field>
                         <field
@@ -638,7 +638,7 @@
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_561_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -646,7 +646,7 @@
                             </record>
                             <record
                                 id="vat_report_line_561_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">561</field>
@@ -655,7 +655,7 @@
                     </record>
                 </field>
             </record>
-            <record id="vat_report_line_60" model="account.report.line">
+            <record id="vat_report_line_60" model="report.formula.line">
                 <field name="name">VAT paid for goods and services purchased</field>
                 <field
                     name="name@lv">PVN samaksāts par iegādātajām precēm un pakalpojumiem</field>
@@ -663,7 +663,7 @@
                 <field name="expression_ids">
                     <record
                         id="vat_report_line_60_code"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">code</field>
                         <field name="auditable" eval="False" />
                         <field name="engine">aggregation</field>
@@ -671,7 +671,7 @@
                     </record>
                     <record
                         id="vat_report_line_60_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field
@@ -679,14 +679,14 @@
                     </record>
                 </field>
                 <field name="children_ids">
-                    <record id="vat_report_line_61" model="account.report.line">
+                    <record id="vat_report_line_61" model="report.formula.line">
                         <field name="name">For imported goods</field>
                         <field name="name@lv">Importētajām precēm</field>
                         <field name="code">LV_61</field>
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_61_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -694,21 +694,21 @@
                             </record>
                             <record
                                 id="vat_report_line_61_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">61</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_62" model="account.report.line">
+                    <record id="vat_report_line_62" model="report.formula.line">
                         <field name="name">For domestic goods and services</field>
                         <field name="name@lv">Iekšzemes precēm un pakalpojumiem</field>
                         <field name="code">LV_62</field>
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_62_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -716,14 +716,14 @@
                             </record>
                             <record
                                 id="vat_report_line_62_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">62</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_63" model="account.report.line">
+                    <record id="vat_report_line_63" model="report.formula.line">
                         <field
                             name="name">VAT charged in accordance with Article 92(1)(4) of the Law (excluding line 64)</field>
                         <field
@@ -732,7 +732,7 @@
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_63_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -740,14 +740,14 @@
                             </record>
                             <record
                                 id="vat_report_line_63_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">63</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_64" model="account.report.line">
+                    <record id="vat_report_line_64" model="report.formula.line">
                         <field
                             name="name">VAT charged on goods and services received from EU countries</field>
                         <field
@@ -756,7 +756,7 @@
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_64_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -764,14 +764,14 @@
                             </record>
                             <record
                                 id="vat_report_line_64_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-64</field>
                             </record>
                         </field>
                     </record>
-                    <record id="vat_report_line_65" model="account.report.line">
+                    <record id="vat_report_line_65" model="report.formula.line">
                         <field name="name">Compensation paid to farmers</field>
                         <field
                             name="name@lv">Samaksātās kompensācijas lauksaimniekiem</field>
@@ -779,7 +779,7 @@
                         <field name="expression_ids">
                             <record
                                 id="vat_report_line_65_code"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">code</field>
                                 <field name="auditable" eval="False" />
                                 <field name="engine">aggregation</field>
@@ -787,7 +787,7 @@
                             </record>
                             <record
                                 id="vat_report_line_65_balance"
-                                model="account.report.expression">
+                                model="report.formula.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">65</field>
@@ -796,7 +796,7 @@
                     </record>
                 </field>
             </record>
-            <record id="vat_report_line_66" model="account.report.line">
+            <record id="vat_report_line_66" model="report.formula.line">
                 <field name="name">VAT paid not deductible as input tax</field>
                 <field
                     name="name@lv">Samaksātais PVN nav atskaitāms kā priekšnodoklis</field>
@@ -804,7 +804,7 @@
                 <field name="expression_ids">
                     <record
                         id="vat_report_line_66_code"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">code</field>
                         <field name="auditable" eval="False" />
                         <field name="engine">aggregation</field>
@@ -812,14 +812,14 @@
                     </record>
                     <record
                         id="vat_report_line_66_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">66</field>
                     </record>
                 </field>
             </record>
-            <record id="vat_report_line_67" model="account.report.line">
+            <record id="vat_report_line_67" model="report.formula.line">
                 <field
                     name="name">Adjustments - reduction of tax calculated in previous tax periods for payment to the state budget</field>
                 <field
@@ -828,7 +828,7 @@
                 <field name="expression_ids">
                     <record
                         id="vat_report_line_67_code"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">code</field>
                         <field name="auditable" eval="False" />
                         <field name="engine">aggregation</field>
@@ -836,7 +836,7 @@
                     </record>
                     <record
                         id="vat_report_line_67_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">external</field>
                         <field name="formula">most_recent</field>
@@ -844,7 +844,7 @@
                     </record>
                 </field>
             </record>
-            <record id="vat_report_line_57" model="account.report.line">
+            <record id="vat_report_line_57" model="report.formula.line">
                 <field
                     name="name">Adjustments - reduction of input tax deducted in previous tax periods</field>
                 <field
@@ -853,7 +853,7 @@
                 <field name="expression_ids">
                     <record
                         id="vat_report_line_57_code"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">code</field>
                         <field name="auditable" eval="False" />
                         <field name="engine">aggregation</field>
@@ -861,7 +861,7 @@
                     </record>
                     <record
                         id="vat_report_line_57_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">external</field>
                         <field name="formula">most_recent</field>
@@ -869,35 +869,35 @@
                     </record>
                 </field>
             </record>
-            <record id="vat_report_line_P" model="account.report.line">
+            <record id="vat_report_line_P" model="report.formula.line">
                 <field name="name">Total - input tax (P)</field>
                 <field name="name@lv">Kopā — priekšnodoklis (P)</field>
                 <field name="code">LV_P</field>
                 <field name="expression_ids">
                     <record
                         id="vat_report_line_P_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">LV_60.balance + LV_67.balance</field>
                     </record>
                 </field>
             </record>
-            <record id="vat_report_line_S" model="account.report.line">
+            <record id="vat_report_line_S" model="report.formula.line">
                 <field name="name">Total - tax calculated (S)</field>
                 <field name="name@lv">Kopā — aprēķinātais nodoklis (S)</field>
                 <field name="code">LV_S</field>
                 <field name="expression_ids">
                     <record
                         id="vat_report_line_S_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">LV_5x.balance + LV_57.balance</field>
                     </record>
                 </field>
             </record>
-            <record id="vat_report_line_70" model="account.report.line">
+            <record id="vat_report_line_70" model="report.formula.line">
                 <field
                     name="name">Amount of tax to be refunded from the state budget or amount of tax attributable to the next tax period, if P is greater than S</field>
                 <field
@@ -906,7 +906,7 @@
                 <field name="expression_ids">
                     <record
                         id="vat_report_line_70_code"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">code</field>
                         <field name="auditable" eval="False" />
                         <field name="engine">aggregation</field>
@@ -914,7 +914,7 @@
                     </record>
                     <record
                         id="vat_report_line_70_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">LV_P.balance - LV_S.balance</field>
@@ -923,7 +923,7 @@
                 </field>
                 <field name="aggregation_formula" />
             </record>
-            <record id="vat_report_line_80" model="account.report.line">
+            <record id="vat_report_line_80" model="report.formula.line">
                 <field
                     name="name">Amount of tax payable to the national budget if P is less than S</field>
                 <field
@@ -932,7 +932,7 @@
                 <field name="expression_ids">
                     <record
                         id="vat_report_line_80_code"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">code</field>
                         <field name="auditable" eval="False" />
                         <field name="engine">aggregation</field>
@@ -940,7 +940,7 @@
                     </record>
                     <record
                         id="vat_report_line_80_balance"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">LV_S.balance - LV_P.balance</field>

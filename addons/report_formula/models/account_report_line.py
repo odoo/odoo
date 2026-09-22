@@ -27,8 +27,8 @@ def _replace_codes_in_formula(formula, code_mapping):
 
 
 class AccountReportLine(models.Model):
-    _name = "account.report.line"
-    _description = "Accounting Report Line"
+    _name = "report.formula.line"
+    _description = "Formula Report Line"
     _order = "sequence, id"
 
     name = fields.Char(
@@ -36,12 +36,12 @@ class AccountReportLine(models.Model):
         required=True,
     )
     expression_ids = fields.One2many(
-        comodel_name="account.report.expression",
+        comodel_name="report.formula.expression",
         inverse_name="report_line_id",
         string="Expressions",
     )
     report_id = fields.Many2one(
-        comodel_name="account.report",
+        comodel_name="report.formula",
         string="Parent Report",
         compute="_compute_report_id",
         precompute=True,
@@ -62,13 +62,13 @@ class AccountReportLine(models.Model):
         required=True,
     )
     parent_id = fields.Many2one(
-        comodel_name="account.report.line",
+        comodel_name="report.formula.line",
         string="Parent Line",
         index="btree_not_null",
         ondelete="set null",
     )
     children_ids = fields.One2many(
-        comodel_name="account.report.line",
+        comodel_name="report.formula.line",
         inverse_name="parent_id",
         string="Child Lines",
     )
@@ -302,7 +302,7 @@ class AccountReportLine(models.Model):
                 expressions=source_expressions,
                 copied_lines=len(copied_line_by_id),
             )
-            self.env["account.report.expression"].create(vals_list)
+            self.env["report.formula.expression"].create(vals_list)
 
         return code_mapping
 
@@ -395,7 +395,7 @@ class AccountReportLine(models.Model):
             created=len(vals_list),
         )
         if vals_list:
-            self.env["account.report.expression"].create(vals_list)
+            self.env["report.formula.expression"].create(vals_list)
 
     @api.ondelete(at_uninstall=False)
     @_debug.perf.timed

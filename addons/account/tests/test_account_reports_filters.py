@@ -36,7 +36,7 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.single_date_report = cls.env["account.report"].create(
+        cls.single_date_report = cls.env["report.formula"].create(
             {
                 "name": "Single Date Report",
                 "filter_period_comparison": True,
@@ -44,7 +44,7 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
             }
         )
 
-        cls.date_range_report = cls.env["account.report"].create(
+        cls.date_range_report = cls.env["report.formula"].create(
             {
                 "name": "Date Range Report",
                 "filter_period_comparison": True,
@@ -52,7 +52,7 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
         )
 
         # Test the default account_report reports. Don't choose US variants based on the fiscal country.
-        cls.env["account.report"].search([]).variant_report_ids.active = False
+        cls.env["report.formula"].search([]).variant_report_ids.active = False
 
     ####################################################
     # DATES RANGE
@@ -1502,7 +1502,7 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
             }
         )
 
-        report = self.env["account.report"].create(
+        report = self.env["report.formula"].create(
             {
                 "name": "Test ir filters",
                 "filter_aml_ir_filters": True,
@@ -1650,7 +1650,7 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
             options = self.single_date_report.with_context(
                 allowed_company_ids=allowed_companies.ids
             ).get_options({})
-            computed_company_ids = self.env["account.report"].get_report_company_ids(
+            computed_company_ids = self.env["report.formula"].get_report_company_ids(
                 options
             )
             if match_active:
@@ -2251,7 +2251,7 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
             }
         ).action_post()
 
-        report = self.env["account.report"].create(
+        report = self.env["report.formula"].create(
             {
                 "name": "Simple Report",
                 "filter_multi_company": "selector",
@@ -2321,21 +2321,21 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
                 msg=f"Expected available variants {expected_variants} but got {actual_reports}",
             )
 
-        root_report = self.env["account.report"].create(
+        root_report = self.env["report.formula"].create(
             {
                 "name": "Root Report",
                 "allow_foreign_vat": True,
             }
         )
 
-        report_always = self.env["account.report"].create(
+        report_always = self.env["report.formula"].create(
             {
                 "name": "Report Always available",
                 "root_report_id": root_report.id,
             }
         )
 
-        report_generic_coa = self.env["account.report"].create(
+        report_generic_coa = self.env["report.formula"].create(
             {
                 "name": "Report generic COA",
                 "root_report_id": root_report.id,
@@ -2344,7 +2344,7 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
             }
         )
 
-        report_us_country = self.env["account.report"].create(
+        report_us_country = self.env["report.formula"].create(
             {
                 "name": "Report US country",
                 "root_report_id": root_report.id,
@@ -2353,7 +2353,7 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
             }
         )
 
-        report_be_country = self.env["account.report"].create(
+        report_be_country = self.env["report.formula"].create(
             {
                 "name": "Report BE country",
                 "root_report_id": root_report.id,
@@ -2362,7 +2362,7 @@ class TestAccountReportsFilters(TestAccountReportsCommon, odoo.tests.HttpCase):
             }
         )
 
-        report_us_coa = self.env["account.report"].create(
+        report_us_coa = self.env["report.formula"].create(
             {
                 "name": "Report US COA",
                 "root_report_id": root_report.id,

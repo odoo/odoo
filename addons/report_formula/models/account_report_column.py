@@ -6,8 +6,8 @@ from .account_report import (
 
 
 class AccountReportColumn(models.Model):
-    _name = "account.report.column"
-    _description = "Accounting Report Column"
+    _name = "report.formula.column"
+    _description = "Formula Report Column"
     _order = "sequence, id"
 
     name = fields.Char(
@@ -17,7 +17,7 @@ class AccountReportColumn(models.Model):
     expression_label = fields.Char(required=True)
     sequence = fields.Integer()
     report_id = fields.Many2one(
-        comodel_name="account.report",
+        comodel_name="report.formula",
         index="btree_not_null",
         required=True,
         ondelete="cascade",

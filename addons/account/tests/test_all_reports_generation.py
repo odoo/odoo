@@ -18,7 +18,7 @@ class TestAllReportsGeneration(AccountTestInvoicingCommon):
         cls.setup_other_currency("EUR")
 
         cls.reports = (
-            cls.env["account.report"].with_context(active_test=False).search([])
+            cls.env["report.formula"].with_context(active_test=False).search([])
         )
 
         # Make the reports always available, so that they don't clash with the company's country
@@ -42,7 +42,7 @@ class TestAllReportsGeneration(AccountTestInvoicingCommon):
                         report.id,
                         "Composite reports should always reroute.",
                     )
-                    self.env["account.report"].browse(
+                    self.env["report.formula"].browse(
                         options["report_id"]
                     ).get_report_information(options)
                 else:
@@ -238,7 +238,7 @@ class TestAllReportsGeneration(AccountTestInvoicingCommon):
             "account.last_statement_balance_forced_currency_amount",
         ]
 
-        custom_engine_expressions = self.env["account.report.expression"].search(
+        custom_engine_expressions = self.env["report.formula.expression"].search(
             [
                 ("engine", "=", "custom"),
                 (
@@ -253,7 +253,7 @@ class TestAllReportsGeneration(AccountTestInvoicingCommon):
         )
 
         expressions_per_engine = defaultdict(
-            lambda: self.env["account.report.expression"]
+            lambda: self.env["report.formula.expression"]
         )
         for expression in custom_engine_expressions:
             expressions_per_engine[

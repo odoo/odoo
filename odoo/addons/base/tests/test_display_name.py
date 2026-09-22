@@ -16,7 +16,7 @@ IGNORE_MODEL_NAMES_DISPLAY_NAME = {
 }
 
 IGNORE_MODEL_NAMES_NEW_FORM = {
-    "account.report.line",
+    "report.formula.line",
     "chatbot.script.step",
     "stock.warehouse",
     "website.visitor",

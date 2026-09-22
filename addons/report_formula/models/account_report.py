@@ -71,8 +71,8 @@ def report_option_filter_field(
 
 
 class AccountReport(models.Model):
-    _name = "account.report"
-    _description = "Accounting Report"
+    _name = "report.formula"
+    _description = "Formula Report"
     _order = "sequence, id"
 
     name = fields.Char(
@@ -82,35 +82,35 @@ class AccountReport(models.Model):
     sequence = fields.Integer()
     active = fields.Boolean(default=True)
     line_ids = fields.One2many(
-        comodel_name="account.report.line",
+        comodel_name="report.formula.line",
         inverse_name="report_id",
         string="Lines",
     )
     column_ids = fields.One2many(
-        comodel_name="account.report.column",
+        comodel_name="report.formula.column",
         inverse_name="report_id",
         string="Columns",
     )
     root_report_id = fields.Many2one(
-        comodel_name="account.report",
+        comodel_name="report.formula",
         index="btree_not_null",
         help="The report this report is a variant of.",
     )
     variant_report_ids = fields.One2many(
-        comodel_name="account.report",
+        comodel_name="report.formula",
         inverse_name="root_report_id",
         string="Variants",
     )
     section_report_ids = fields.Many2many(
-        comodel_name="account.report",
-        relation="account_report_section_rel",
+        comodel_name="report.formula",
+        relation="report_formula_section_rel",
         column1="main_report_id",
         column2="sub_report_id",
         string="Sections",
     )
     section_main_report_ids = fields.Many2many(
-        comodel_name="account.report",
-        relation="account_report_section_rel",
+        comodel_name="report.formula",
+        relation="report_formula_section_rel",
         column1="sub_report_id",
         column2="main_report_id",
         string="Section Of",
@@ -206,7 +206,7 @@ class AccountReport(models.Model):
         )
 
     def _get_variants(self, report_id):
-        source_report = self.env["account.report"].browse(report_id)
+        source_report = self.env["report.formula"].browse(report_id)
         if source_report.root_report_id:
             # We need to get the root report in order to get all variants
             source_report = source_report.root_report_id
@@ -225,7 +225,7 @@ class AccountReport(models.Model):
         for report in self:
             if report.custom_handler_model_id:
                 custom_handler_model = self.env.registry[
-                    "account.report.custom.handler"
+                    "report.formula.custom.handler"
                 ]
                 current_model = self.env[report.custom_handler_model_name]
                 if not isinstance(current_model, custom_handler_model):

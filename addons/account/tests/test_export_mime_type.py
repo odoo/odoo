@@ -8,7 +8,7 @@ class TestExportMimeType(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.report = cls.env["account.report"]
+        cls.report = cls.env["report.formula"]
 
     def test_the_seven_types_this_replaced_still_answer(self):
         self.assertEqual(

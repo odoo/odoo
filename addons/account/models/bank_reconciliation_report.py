@@ -14,7 +14,7 @@ _debug = DebugLog(__name__)
 
 class AccountBankReconciliationReportHandler(models.AbstractModel):
     _name = "account.bank.reconciliation.report.handler"
-    _inherit = ["account.report.custom.handler"]
+    _inherit = ["report.formula.custom.handler"]
     _description = "Bank Reconciliation Report Custom Handler"
 
     ######################
@@ -237,7 +237,7 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
         limit=None,
         warnings=None,
     ):
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         report._check_groupby_fields([current_groupby] if current_groupby else [])
 
         journal, journal_currency, _company_currency = (
@@ -388,7 +388,7 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
         if not journal:
             return self._prepare_custom_engine_result()
 
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         report._check_groupby_fields([current_groupby] if current_groupby else [])
 
         def prepare_result_dict(query_res_lines):
@@ -571,7 +571,7 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
         if not journal:
             return self._prepare_custom_engine_result()
 
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         report._check_groupby_fields([current_groupby] if current_groupby else [])
 
         def prepare_result_dict(query_res_lines):
@@ -757,8 +757,8 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
         last_statement = self._get_last_bank_statement(journal, options)
 
         for line in lines:
-            line_id = report._get_res_id_from_line_id(line["id"], "account.report.line")
-            code = self.env["account.report.line"].browse(line_id).code
+            line_id = report._get_res_id_from_line_id(line["id"], "report.formula.line")
+            code = self.env["report.formula.line"].browse(line_id).code
 
             if code == "balance_bank":
                 line["name"] = _(
@@ -986,7 +986,7 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
             )
             return None
 
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         domain = [
             ("account_id", "=", journal.default_account_id.id),
             ("statement_line_id", "=", False),
@@ -1023,7 +1023,7 @@ class AccountBankReconciliationReportHandler(models.AbstractModel):
     @_debug.perf.timed
     def action_audit_cell(self, options, params):
         _debug.lifecycle("action_audit_cell", records=self)
-        report_line = self.env["account.report.line"].browse(params["report_line_id"])
+        report_line = self.env["report.formula.line"].browse(params["report_line_id"])
         if report_line.code == "balance_bank":
             return self.action_redirect_to_general_ledger(options)
         elif report_line.code == "misc_operations":

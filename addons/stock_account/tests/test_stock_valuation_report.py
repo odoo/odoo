@@ -93,7 +93,7 @@ class TestStockValuationReport(TestStockValuationCommon):
             "execute_action",
             {
                 "actionId": loss.action_id.id,
-                "id": report._get_generic_line_id("account.report.line", loss.id),
+                "id": report._get_generic_line_id("report.formula.line", loss.id),
             },
         )
         self.assertEqual(action["res_model"], "stock.move")

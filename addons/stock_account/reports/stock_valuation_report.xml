@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="stock_valuation_report" model="account.report">
+    <record id="stock_valuation_report" model="report.formula">
         <field name="name">Inventory Valuation</field>
         <field name="filter_date_range" eval="False" />
         <field name="default_opening_date_filter">today</field>
@@ -13,21 +13,21 @@
         <field name="column_ids">
             <record
                 id="stock_valuation_report_column_value"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Value</field>
                 <field name="expression_label">value</field>
                 <field name="sequence">10</field>
             </record>
             <record
                 id="stock_valuation_report_column_debit"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Debit</field>
                 <field name="expression_label">debit</field>
                 <field name="sequence">20</field>
             </record>
             <record
                 id="stock_valuation_report_column_credit"
-                model="account.report.column">
+                model="report.formula.column">
                 <field name="name">Credit</field>
                 <field name="expression_label">credit</field>
                 <field name="sequence">30</field>
@@ -36,7 +36,7 @@
         <field name="line_ids">
             <record
                 id="stock_valuation_report_line_initial_balance"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Initial Balance</field>
                 <field name="code">SV_INITIAL</field>
                 <field name="sequence">10</field>
@@ -46,7 +46,7 @@
                 <field name="expression_ids">
                     <record
                         id="stock_valuation_report_line_initial_balance_value"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">value</field>
                         <field name="engine">custom</field>
                         <field
@@ -57,7 +57,7 @@
             </record>
             <record
                 id="stock_valuation_report_line_inventory_loss"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Inventory Loss</field>
                 <field name="code">SV_LOSS</field>
                 <field name="sequence">20</field>
@@ -68,7 +68,7 @@
                 <field name="expression_ids">
                     <record
                         id="stock_valuation_report_line_inventory_loss_value"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">value</field>
                         <field name="engine">custom</field>
                         <field
@@ -78,7 +78,7 @@
                     </record>
                     <record
                         id="stock_valuation_report_line_inventory_loss_debit"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">debit</field>
                         <field name="engine">custom</field>
                         <field
@@ -88,7 +88,7 @@
                     </record>
                     <record
                         id="stock_valuation_report_line_inventory_loss_credit"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">credit</field>
                         <field name="engine">custom</field>
                         <field
@@ -100,7 +100,7 @@
             </record>
             <record
                 id="stock_valuation_report_line_stock_variation"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Stock Variation</field>
                 <field name="code">SV_VARIATION</field>
                 <field name="sequence">30</field>
@@ -109,7 +109,7 @@
                 <field name="expression_ids">
                     <record
                         id="stock_valuation_report_line_stock_variation_value"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">value</field>
                         <field name="engine">custom</field>
                         <field
@@ -119,7 +119,7 @@
                     </record>
                     <record
                         id="stock_valuation_report_line_stock_variation_debit"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">debit</field>
                         <field name="engine">custom</field>
                         <field
@@ -129,7 +129,7 @@
                     </record>
                     <record
                         id="stock_valuation_report_line_stock_variation_credit"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">credit</field>
                         <field name="engine">custom</field>
                         <field
@@ -141,7 +141,7 @@
             </record>
             <record
                 id="stock_valuation_report_line_ending_stock"
-                model="account.report.line">
+                model="report.formula.line">
                 <field name="name">Ending Stock</field>
                 <field name="code">SV_ENDING</field>
                 <field name="sequence">40</field>
@@ -151,7 +151,7 @@
                 <field name="expression_ids">
                     <record
                         id="stock_valuation_report_line_ending_stock_value"
-                        model="account.report.expression">
+                        model="report.formula.expression">
                         <field name="label">value</field>
                         <field name="engine">custom</field>
                         <field

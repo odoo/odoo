@@ -8,7 +8,7 @@ class MailMessage(models.Model):
 
     def _to_store_defaults(self, target):
         if any(
-            m.model in self.env["account.report"]._get_annotatable_models()
+            m.model in self.env["report.formula"]._get_annotatable_models()
             for m in self
         ) and self.env["account.report.annotation"].has_access("read"):
             message_id_to_annotation_date = {
@@ -25,7 +25,7 @@ class MailMessage(models.Model):
                 "account_reports_annotation_date",
                 value=lambda m: message_id_to_annotation_date.get(m.id),
                 predicate=lambda m: (
-                    m.model in self.env["account.report"]._get_annotatable_models()
+                    m.model in self.env["report.formula"]._get_annotatable_models()
                 ),
             )
         ]

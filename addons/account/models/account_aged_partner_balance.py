@@ -12,7 +12,7 @@ _debug = DebugLog(__name__)
 
 class AccountAgedPartnerBalanceReportHandler(models.AbstractModel):
     _name = "account.aged.partner.balance.report.handler"
-    _inherit = ["account.report.custom.handler"]
+    _inherit = ["report.formula.custom.handler"]
     _description = "Aged Partner Balance Custom Handler"
 
     @_debug.perf.timed
@@ -167,7 +167,7 @@ class AccountAgedPartnerBalanceReportHandler(models.AbstractModel):
         offset=0,
         limit=None,
     ):
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         report._check_groupby_fields(
             (next_groupby.split(",") if next_groupby else [])
             + ([current_groupby] if current_groupby else [])
@@ -467,7 +467,7 @@ class AccountAgedPartnerBalanceReportHandler(models.AbstractModel):
         _debug.lifecycle("open_journal_items", records=self)
         params["view_ref"] = "account.view_account_move_line_list_grouped_partner"
         options_for_audit = {**options, "date": {**options["date"], "date_from": None}}
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         action = report.open_journal_items(options=options_for_audit, params=params)
         action.get("context", {}).update(
             {"search_default_group_by_account": 0, "search_default_group_by_partner": 1}
@@ -477,7 +477,7 @@ class AccountAgedPartnerBalanceReportHandler(models.AbstractModel):
     @_debug.perf.timed
     def open_customer_statement(self, options, params):
         _debug.lifecycle("open_customer_statement", records=self)
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         record_model, record_id = report._get_model_info_from_id(params.get("line_id"))
         return self.env[record_model].browse(record_id).open_customer_statement()
 
@@ -500,7 +500,7 @@ class AccountAgedPartnerBalanceReportHandler(models.AbstractModel):
                     == "_report_expand_unfoldable_line_with_groupby"
                 ):
                     report_line_id = report._get_res_id_from_line_id(
-                        line_to_expand["id"], "account.report.line"
+                        line_to_expand["id"], "report.formula.line"
                     )
                     expressions_to_evaluate = report.line_ids.expression_ids.filtered(
                         lambda x, report_line_id=report_line_id: (
@@ -622,7 +622,7 @@ class AccountAgedPartnerBalanceReportHandler(models.AbstractModel):
              * ``calling_line_dict_id``: line id containing the optional account of the cell
              * ``expression_label``: the expression label of the cell
         """
-        report = self.env["account.report"].browse(options["report_id"])
+        report = self.env["report.formula"].browse(options["report_id"])
         action = self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
             "account.action_amounts_to_settle"
         )

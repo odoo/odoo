@@ -411,7 +411,7 @@ class ResCompany(models.Model):
                 if tag_xml_id
                 else self.env["account.account.tag"]
             )
-            if tag and tag._name == "account.report.expression":
+            if tag and tag._name == "report.formula.expression":
                 tag = tag._get_matching_tags()
             mapping[repartition_line_key] = tag + oss_tag
 
