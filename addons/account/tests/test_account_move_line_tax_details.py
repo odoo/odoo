@@ -53,6 +53,39 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                                      if (x['group_tax_id'] or x['tax_id']) == tax.id)
             self.assertAlmostEqual(tax_amount, tax_details_amount)
 
+    def test_include_base_lines_without_tax_lines(self):
+        taxes = self.env['account.tax'].create([
+            {'name': '20%', 'amount': 20},
+            {'name': '0%', 'amount': 0},
+        ])
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'name': name,
+                'account_id': self.company_data['default_account_revenue'].id,
+                'price_unit': 100,
+                'tax_ids': [Command.set(tax_ids)],
+            }) for name, tax_ids in (
+                ('Taxed', taxes[0].ids), ('Zero-rated', taxes[1].ids), ('Untaxed', []),
+            )],
+        })
+        self.env.flush_all()
+        aml = self.env['account.move.line']
+        domain = [('move_id', '=', invoice.id)]
+        default_details = self._get_tax_details(domain)
+        self.assertEqual(len(default_details), 1)
+        self.cr.execute(aml._get_query_tax_details(aml._search(domain), include_all_0_taxes=True))
+        details = {row['base_line_id']: row for row in self.cr.dictfetchall()}
+        self.assertEqual(set(details), set(invoice.invoice_line_ids.ids))
+        self.assertEqual(details[default_details[0]['base_line_id']], default_details[0])
+        for line in invoice.invoice_line_ids.filtered(lambda line: line.name != 'Taxed'):
+            self.assertIsNone(details[line.id]['tax_line_id'])
+            self.assertEqual(details[line.id]['base_amount'], line.balance)
+            self.assertEqual(details[line.id]['base_amount_currency'], line.amount_currency)
+            self.assertEqual(details[line.id]['tax_amount'], 0)
+            self.assertEqual(details[line.id]['tax_amount_currency'], 0)
+
     def test_affect_base_amount_1(self):
         tax_20_affect = self.env['account.tax'].create({
             'name': "tax_20_affect",

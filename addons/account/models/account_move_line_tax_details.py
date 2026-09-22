@@ -66,10 +66,11 @@ class AccountMoveLine(models.Model):
                             END
                         ) AS applied_tax_ids
                 FROM filtered_aml aml
-                JOIN account_move_line_account_tax_rel rel ON aml.id = rel.account_move_line_id
-                JOIN account_tax tax ON tax.id = rel.account_tax_id
+                %(tax_line_join)s account_move_line_account_tax_rel rel ON aml.id = rel.account_move_line_id
+                %(tax_line_join)s account_tax tax ON tax.id = rel.account_tax_id
                 LEFT JOIN account_tax_filiation_rel tax_filiation ON tax_filiation.parent_tax = tax.id
                 LEFT JOIN account_tax child_tax ON child_tax.id = tax_filiation.child_tax
+                WHERE rel.account_tax_id IS NOT NULL OR (aml.display_type = 'product' AND aml.tax_repartition_line_id IS NULL)
                 GROUP BY aml.id
             ),
             tax_lines AS (
@@ -103,9 +104,9 @@ class AccountMoveLine(models.Model):
                     tax_line.tax_repartition_line_id,
                     base_line.account_id AS base_account_id,
                     tax.sequence,
-                    CASE WHEN tax.amount_type <> 'fixed' THEN base_line.balance ELSE base_line.quantity END AS base_value,
+                    CASE WHEN tax.amount_type = 'fixed' THEN base_line.quantity ELSE base_line.balance END AS base_value,
                     base_line.balance AS base_amount,
-                    CASE WHEN tax.amount_type <> 'fixed' THEN base_line.amount_currency ELSE base_line.quantity END AS base_value_currency,
+                    CASE WHEN tax.amount_type = 'fixed' THEN base_line.quantity ELSE base_line.amount_currency END AS base_value_currency,
                     base_line.amount_currency AS base_amount_currency,
                     curr.decimal_places AS curr_prec,
                     comp_curr.decimal_places AS comp_curr_prec,
@@ -116,14 +117,16 @@ class AccountMoveLine(models.Model):
                     ) AS tax_exigible
                 FROM base_lines base_line
                 JOIN account_move move ON move.id = base_line.move_id
-                %(tax_line_join)s tax_lines tax_line
+                JOIN res_currency curr ON curr.id = base_line.currency_id
+                JOIN res_currency comp_curr ON comp_curr.id = base_line.company_currency_id
+                %(tax_line_join)s (
+                    tax_lines tax_line
+                    JOIN account_tax tax ON tax_line.tax_line_id = tax.id
+                )
                     ON tax_line.move_id = base_line.move_id
                     AND tax_line.currency_id = base_line.currency_id
                     AND tax_line.partner_id IS NOT DISTINCT FROM base_line.partner_id
-                JOIN account_tax tax ON tax_line.tax_line_id = tax.id
-                JOIN res_currency curr ON curr.id = tax_line.currency_id
-                JOIN res_currency comp_curr ON comp_curr.id = tax_line.company_currency_id
-                WHERE (
+                AND (
                     (
                         base_line.tax_repartition_line_id IS NULL
                         AND tax_line.applied_tax_id = ANY(base_line.direct_tax_ids)
@@ -171,6 +174,7 @@ class AccountMoveLine(models.Model):
                     OR base_line.analytic_distribution IS NOT DISTINCT FROM tax_line.analytic_distribution
                 )
                 %(extra_query_base_tax_line_mapping)s
+                WHERE tax_line.id IS NOT NULL OR base_line.tax_repartition_line_id IS NULL
             ),
             aggregated AS (
                 SELECT
