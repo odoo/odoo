@@ -37,16 +37,16 @@ export class DiscussChannel extends models.ServerModel {
         relation: "discuss.channel.member",
         compute: "_compute_channel_name_member_ids",
     });
-    channel_type = fields.Generic({ default: "channel" });
+    channel_type = fields.Selection({ default: "channel" });
     discuss_category_id = fields.Many2one({
         relation: "discuss.category",
         string: "Discuss Category",
     });
-    group_public_id = fields.Generic({
+    group_public_id = fields.Many2one({
         default: () => serverState.groupId,
     });
     is_readonly = fields.Boolean({ string: "Read-only" });
-    uuid = fields.Generic({
+    uuid = fields.Char({
         default: () => uniqueId("discuss.channel_uuid-"),
     });
     last_interest_dt = fields.Datetime({ string: "Last Interest" });
