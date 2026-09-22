@@ -1538,13 +1538,16 @@ class Website(Home):
 
     @http.route('/website/save_xml', type='jsonrpc', auth='user', website=True)
     def save_xml(self, view_id, arch):
+        request.env['ir.ui.view'].browse(view_id).with_context(
+            lang=self.env.website.default_lang_id.code,
+            delay_translations=self._get_delay_translations(),
+        ).arch = arch
+
+    def _get_delay_translations(self):
         disable_delay_translations = self.env['ir.config_parameter'].sudo().get_bool(
             'website.disable_delay_translations'
         )
-        request.env['ir.ui.view'].browse(view_id).with_context(
-            lang=self.env.website.default_lang_id.code,
-            delay_translations=not disable_delay_translations,
-        ).arch = arch
+        return not disable_delay_translations
 
     @http.route("/website/get_switchable_related_views", type="jsonrpc", auth="user", website=True, readonly=True)
     def get_switchable_related_views(self, key):
@@ -1681,7 +1684,7 @@ class Website(Home):
                     modified = True
             if modified:
                 new_html_content = html.tostring(tree, encoding='unicode', method='html')
-                record.write({img['field']: new_html_content})
+                record.with_context(delay_translations=self._get_delay_translations()).write({img['field']: new_html_content})
 
     @staticmethod
     def _get_image_id(model, model_id, field, index):
@@ -1708,7 +1711,7 @@ class Website(Home):
                     modified = True
             if modified:
                 new_html_content = html.tostring(tree, encoding='unicode', method='html')
-                record.write({link['field']: new_html_content})
+                record.with_context(delay_translations=self._get_delay_translations()).write({link['field']: new_html_content})
 
     @http.route(['/website/get_seo_data'], type='jsonrpc', auth="user", website=True, readonly=True)
     def get_seo_data(self, res_id, res_model):
