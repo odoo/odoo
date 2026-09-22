@@ -263,3 +263,42 @@ class TestUI(HttpCase):
         self.assertEqual(
             res.json()["error"]["data"]["name"], "odoo.exceptions.AccessError"
         )
+
+    def test_no_access_partial_degrades_instead_of_raising(self):
+        """A public caller on /autocomplete/address gets an empty result set.
+
+        The sibling route raises AccessError; this one deliberately swallows it
+        and degrades (`except AccessError: api_key = None`), so a public page
+        embedding the widget shows no suggestions rather than an error. That
+        branch had no test of its own -- every other test of this route
+        authenticates as admin first, and test_no_access covers the *raise*
+        branch on the other route, which is a different code path.
+        """
+        self.env["credential.credential"]._set_system_secret(
+            "google_address_autocomplete.google_places_api_key", MOCK_API_KEY
+        )
+        self.patch(
+            AutoCompleteController,
+            "_call_google_route",
+            make_mock_google_route(),
+        )
+        data = {
+            "params": {
+                "partial_address": "9 rue de Bourlottes",
+                "session_id": "some_client_session_token",
+                "use_employees_key": True,
+            }
+        }
+
+        # No authenticate() call: this must run as the public user.
+        res = self.url_open(
+            "/autocomplete/address",
+            data=json.dumps(data),
+            headers={"Content-Type": "application/json"},
+        ).json()
+
+        self.assertNotIn("error", res, "the partial route must not raise")
+        self.assertEqual(
+            res["result"],
+            {"results": [], "session_id": "some_client_session_token"},
+        )
