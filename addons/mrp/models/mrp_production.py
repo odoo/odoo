@@ -2088,9 +2088,12 @@ class MrpProduction(models.Model):
                     or any(not ml.lot_id for ml in move.move_line_ids)
                 ):
                     move.lot_ids = order.lot_producing_ids.ids
-                    if move.product_id.tracking == 'lot' and order.lot_producing_ids:
-                        lines_without_lot = move.move_line_ids.filtered(lambda ml: not ml.lot_id)
-                        lines_without_lot.lot_id = order.lot_producing_ids[:1]
+                if move.product_id.tracking == 'lot' and order.lot_producing_ids:
+                    production_lot = order.lot_producing_ids[:1]
+                    move.move_line_ids.write({
+                        'lot_id': production_lot.id,
+                        'lot_name': production_lot.name,
+                    })
                 # Distribute the produced qty across the finished moves (there can be several, exemple: after a split/merge)
                 move.quantity = order.uom_id.round((order.qty_producing - order.qty_produced) * move.unit_factor, rounding_method='HALF-UP')
                 extra_vals = order._prepare_finished_extra_vals()
@@ -2108,6 +2111,11 @@ class MrpProduction(models.Model):
             order.with_company(order.company_id)._cal_price(moves_to_do_by_order[order.id])
         moves_to_finish = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_to_finish.picked = True
+        # Increasing the quantity to produce can add a line for the extra quantity. Merge equivalent
+        # lines so the finished quantity is represented by a single detailed operation.
+        for move in moves_to_finish:
+            move.move_line_ids._merge_lines()
+
         moves_to_finish = moves_to_finish._action_done(cancel_backorder=cancel_backorder)
         for order in self:
             consume_move_lines = moves_to_do_by_order[order.id].mapped('move_line_ids')

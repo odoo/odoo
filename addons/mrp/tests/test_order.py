@@ -554,6 +554,75 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         wo.button_start()
         self.assertEqual(wo.qty_producing, 4, "Changing the qty_producing in the frontend is not persisted")
 
+    def test_overproduction_untracked_finished_move_line(self):
+        """Overproduction should create one finished move line for an untracked product."""
+        product = self.env['product.product'].create({
+            'name': 'Untracked Finished Product',
+            'is_storable': True,
+        })
+        production = self.env['mrp.production'].create({
+            'product_id': product.id,
+            'product_qty': 10,
+            'uom_id': product.uom_id.id,
+        })
+        production.action_confirm()
+
+        production.qty_producing = 10
+        production._set_qty_producing(False)
+        production.qty_producing = 13
+        production._set_qty_producing(False)
+        self.assertEqual(
+            len(production.move_finished_ids.move_line_ids),
+            2,
+            "The test setup should create an additional move line for the increased quantity",
+        )
+
+        production.button_mark_done()
+
+        self.assertEqual(production.state, 'done')
+        self.assertRecordValues(production.move_finished_ids.move_line_ids, [{
+            'product_id': product.id,
+            'quantity': 13,
+        }])
+
+    def test_overproduction_lot_tracked_finished_move_line(self):
+        """Equivalent finished move lines with the same lot should be merged."""
+        product = self.env['product.product'].create({
+            'name': 'Lot-tracked Finished Product',
+            'is_storable': True,
+            'tracking': 'lot',
+        })
+        production = self.env['mrp.production'].create({
+            'product_id': product.id,
+            'product_qty': 10,
+            'uom_id': product.uom_id.id,
+        })
+        production.action_confirm()
+        lot = self.env['stock.lot'].create({
+            'name': 'LOT-OVERPRODUCTION',
+            'product_id': product.id,
+        })
+        production.lot_producing_ids = lot
+
+        production.qty_producing = 10
+        production._set_qty_producing(False)
+        production.qty_producing = 13
+        production._set_qty_producing(False)
+        self.assertEqual(
+            len(production.move_finished_ids.move_line_ids),
+            2,
+            "The test setup should create an additional move line for the increased quantity",
+        )
+
+        production.button_mark_done()
+
+        self.assertRecordValues(production.move_finished_ids.move_line_ids, [{
+            'product_id': product.id,
+            'lot_id': lot.id,
+            'lot_name': lot.name,
+            'quantity': 13,
+        }])
+
     def test_recursive_work_orders(self):
         """ When planning more than 322 work orders,
             there is a recursion error
