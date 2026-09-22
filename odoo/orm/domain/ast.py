@@ -10,6 +10,7 @@ import operator
 import types
 import typing
 import warnings
+from typing import Self
 
 from odoo.exceptions import UserError
 from odoo.libs.collections import FrozenOrderedSet
@@ -44,7 +45,7 @@ _logger = logging.getLogger("odoo.domains")
 _debug = DebugLog(__name__)
 
 
-def _parse_prefix_domain(arg, internal: bool) -> Domain:
+def _parse_prefix_domain(arg: typing.Any, internal: bool) -> Domain:
     stack: list[Domain] = []
     items = list(reversed(arg))
     total = len(items)
@@ -526,7 +527,7 @@ class DomainBool(Domain):
     _SQL_TRUE = SQL("TRUE")
     _SQL_FALSE = SQL("FALSE")
 
-    def __new__(cls, value: bool):
+    def __new__(cls, value: bool) -> Self:
         self = object.__new__(cls)
         object.__setattr__(self, "value", value)
         object.__setattr__(self, "_depth", 1)
@@ -579,7 +580,7 @@ class DomainNot(Domain):
     _hash: int
     child: Domain
 
-    def __new__(cls, child: Domain):
+    def __new__(cls, child: Domain) -> Self:
         self = object.__new__(cls)
         object.__setattr__(self, "child", child)
         object.__setattr__(self, "_depth", _check_depth(child._depth + 1))
@@ -633,7 +634,7 @@ class DomainNary(Domain):
     _hash: int
     children: tuple[Domain, ...]
 
-    def __new__(cls, children: tuple[Domain, ...]):
+    def __new__(cls, children: tuple[Domain, ...]) -> Self:
         if len(children) < 2:
             raise ValueError(
                 f"DomainNary requires at least 2 children, got {len(children)}"

@@ -8,6 +8,7 @@ from psycopg.types.json import Jsonb
 
 from odoo import api, models
 from odoo.api import MODULE_UNINSTALL_FLAG  # noqa: F401 - re-exported downstream
+from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 from odoo.tools.safe_eval import datetime, dateutil, safe_eval, time
@@ -30,10 +31,6 @@ def check_access_mode(mode: str) -> None:
         )
 
 
-def access_mode_columns(alias: str) -> dict[str, SQL]:
-    return {mode: SQL.identifier(alias, f"perm_{mode}") for mode in ACCESS_MODES}
-
-
 def unloaded_module_scope(env: Any) -> tuple[int, str | None] | None:
     registry = env.registry
     if registry.ready:
@@ -41,31 +38,29 @@ def unloaded_module_scope(env: Any) -> tuple[int, str | None] | None:
     return len(registry.loaded_modules), env.context.get("install_module")
 
 
-def unloaded_module_clause(env: Any, model: str, alias: str) -> SQL:
+def unloaded_module_domain(env: Any, model: str) -> Domain:
     registry = env.registry
     loaded_modules = list(registry.loaded_modules)
     if registry.ready or not loaded_modules:
         _debug.logic(
-            "unloaded_module_clause.skipped",
+            "unloaded_module_domain.skipped",
             model=model,
             reason="ready" if registry.ready else "no_modules",
         )
-        return SQL("")
+        return Domain.TRUE
     if install_module := env.context.get("install_module"):
         loaded_modules.append(install_module)
     _debug.logic(
-        "unloaded_module_clause.applied", model=model, modules=len(loaded_modules)
+        "unloaded_module_domain.applied", model=model, modules=len(loaded_modules)
     )
-    return SQL(
-        """AND NOT EXISTS (
-                SELECT 1 FROM ir_model_data d
-                WHERE d.model = %s AND d.res_id = %s.id
-                  AND d.module <> ALL(%s)
-            )""",
-        model,
-        SQL.identifier(alias),
-        loaded_modules,
+    unloaded = (
+        env["ir.model.data"]
+        .sudo()
+        .search_fetch(
+            [("model", "=", model), ("module", "not in", loaded_modules)], ["res_id"]
+        )
     )
+    return Domain("id", "not in", unloaded.mapped("res_id"))
 
 
 ACCESS_ERROR_HEADER = {

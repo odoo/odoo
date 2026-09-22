@@ -53,8 +53,8 @@ def missing_record_error(env: Environment, record: object) -> MissingError:
 
 
 def get_cache_miss_from_storage(
-    field: Field, record: BaseModel, env: Environment, record_id
-):
+    field: Field, record: BaseModel, env: Environment, record_id: IdType
+) -> typing.Any:
     recs = field._to_prefetch(record)
     transaction = env.transaction
 
@@ -94,8 +94,8 @@ def get_cache_miss_from_storage(
 
 
 def get_cache_miss_from_origin(
-    field: Field, record: BaseModel, env: Environment, record_id
-):
+    field: Field, record: BaseModel, env: Environment, record_id: IdType
+) -> typing.Any:
     recs = field._to_prefetch(record)
     origin_prefetch = recs._origin._prefetch_ids
     spawn = type(recs)._spawn
@@ -127,7 +127,9 @@ def get_cache_miss_from_origin(
     return field._get_cache(env)[record_id]
 
 
-def _get_tree_sibling_cached(field: Field, env: Environment, record_id) -> typing.Any:
+def _get_tree_sibling_cached(
+    field: Field, env: Environment, record_id: IdType
+) -> typing.Any:
     for sibling in field.tree_siblings:
         value = sibling._get_cache(env).get(record_id, SENTINEL)
         if value is not SENTINEL:
@@ -136,8 +138,8 @@ def _get_tree_sibling_cached(field: Field, env: Environment, record_id) -> typin
 
 
 def get_cache_miss_by_compute(
-    field: Field, record: BaseModel, env: Environment, record_id
-):
+    field: Field, record: BaseModel, env: Environment, record_id: IdType
+) -> typing.Any:
     if env.is_protected(field, record):
         # protection is a fact of the row: the value a sibling model of the
         # tree holds for it is the row's value, read through this field
@@ -185,8 +187,10 @@ def get_cache_miss_by_compute(
     return value
 
 
-def get_cache_miss_by_delegation(field: Field, record: BaseModel, env: Environment):
-    def is_inherited_field(name):
+def get_cache_miss_by_delegation(
+    field: Field, record: BaseModel, env: Environment
+) -> typing.Any:
+    def is_inherited_field(name: str) -> bool:
         candidate = record._fields[name]
         related = candidate.related
         return bool(
@@ -209,8 +213,8 @@ def get_cache_miss_by_delegation(field: Field, record: BaseModel, env: Environme
 
 
 def get_cache_miss_from_default(
-    field: Field, record: BaseModel, env: Environment, record_id
-):
+    field: Field, record: BaseModel, env: Environment, record_id: IdType
+) -> typing.Any:
     value = field.convert_to_cache(False, record, validate=False)
     field._update_cache(record, value)
     defaults = record.default_get([field.name])

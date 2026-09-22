@@ -14,6 +14,7 @@ if typing.TYPE_CHECKING:
 
     from .._typing import BaseModel, Field
     from ..primitives import IdType
+    from .environment import Environment
     from .transaction import Transaction
 
 _logger = logging.getLogger("odoo.api")
@@ -196,11 +197,11 @@ class Cache:
         for field, ids in spec:
             field._invalidate_cache(env, ids)
 
-    def clear(self):
+    def clear(self) -> None:
         _debug.lifecycle("recordset_cache.clear")
         self.transaction.core.clear_cache()
 
-    def check(self, env, *, raise_on_invalid: bool = True) -> list[tuple]:
+    def check(self, env: Environment, *, raise_on_invalid: bool = True) -> list[tuple]:
         depends_context = env.registry.field_depends_context
         core = self.transaction.core
         invalids = []
@@ -220,6 +221,7 @@ class Cache:
                 model.env.context.get("bin_size")
                 or model.env.context.get("bin_size_" + field.name)
             )
+            rows: typing.Iterable[tuple[typing.Any, typing.Any]]
             if model._table_query is None:
                 # the stored column as either backend holds it
                 rows = env.backend.columns.read(model, field.name, ids).items()
@@ -287,8 +289,8 @@ class Cache:
 class Starred:
     __slots__ = ["value"]
 
-    def __init__(self, value):
+    def __init__(self, value: typing.Any) -> None:
         self.value = value
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.value!r}*"

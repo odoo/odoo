@@ -4,17 +4,17 @@ from typing import Any, Self
 from odoo import api, fields, models, tools
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL
 
 from .ir_model_common import (
     ACCESS_ERROR_GROUPS,
     ACCESS_ERROR_HEADER,
     ACCESS_ERROR_NOGROUP,
     ACCESS_ERROR_RESOLUTION,
-    access_mode_columns,
+    ACCESS_MODES,
     check_access_mode,
-    unloaded_module_clause,
+    unloaded_module_domain,
     unloaded_module_scope,
 )
 
@@ -27,7 +27,6 @@ class IrModelAccess(models.Model):
     _description = "Model Access"
     _order = "model_id,group_id,name,id"
     _allow_sudo_commands = False
-    _PERM_COLUMNS = access_mode_columns("a")
 
     name = fields.Char(
         index=True,
@@ -125,36 +124,30 @@ class IrModelAccess(models.Model):
         self._check_access_mode(mode)
 
         group_ids = self.env.user._get_group_ids()
-        self.flush_model()
-        rows = self.env.execute_query(
-            SQL(
-                """
-            SELECT m.model
-              FROM ir_model_access a
-              JOIN ir_model m ON (m.id = a.model_id)
-             WHERE %s
-               AND a.active
-               AND (
-                    a.group_id IS NULL OR
-                    a.group_id = ANY(%s)
-                )
-               %s
-            GROUP BY m.model
-        """,
-                self._PERM_COLUMNS[mode],
-                list(group_ids),
-                unloaded_module_clause(self.env, "ir.model.access", "a"),
+        domain = (
+            Domain(f"perm_{mode}", "=", True)
+            & Domain("active", "=", True)
+            & (
+                Domain("group_id", "=", False)
+                | Domain("group_id", "in", list(group_ids))
             )
+            & unloaded_module_domain(self.env, "ir.model.access")
         )
+        accesses = (
+            self.sudo()
+            .with_context(active_test=False)
+            .search_fetch(domain, ["model_id"])
+        )
+        models_allowed = frozenset(accesses.model_id.mapped("model"))
 
         _debug.perf.count(
             "models_allowed_computed",
             mode=mode,
             uid=self.env.uid,
             groups=len(group_ids),
-            models=len(rows),
+            models=len(models_allowed),
         )
-        return frozenset(v[0] for v in rows)
+        return models_allowed
 
     def _get_unloaded_module_scope(self) -> tuple[int, str | None] | None:
         return unloaded_module_scope(self.env)
@@ -242,7 +235,7 @@ class IrModelAccess(models.Model):
     def create(self, vals_list: list[ValuesType]) -> Self:
         for vals in vals_list:
             if not vals.get("group_id") and any(
-                vals.get(f"perm_{mode}") for mode in self._PERM_COLUMNS
+                vals.get(f"perm_{mode}") for mode in ACCESS_MODES
             ):
                 _debug.logic("create.groupless_acl", name=vals.get("name"))
                 _logger.warning(

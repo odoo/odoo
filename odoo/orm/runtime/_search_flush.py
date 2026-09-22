@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from collections import defaultdict
 
 from odoo.libs.debug_log import DebugLog
@@ -5,16 +8,22 @@ from odoo.libs.debug_log import DebugLog
 from ..domain.ast import Domain, DomainCondition, DomainCustom, DomainNary, DomainNot
 from ..parsing import parse_field_expr, regex_order
 
+if typing.TYPE_CHECKING:
+    import re
+
+    from .._typing import BaseModel
+    from ..fields.base import Field
+
 _debug = DebugLog(__name__)
 
 
 class _DependencyCollector:
-    def __init__(self):
-        self.fields_by_model = defaultdict(set)
-        self.seen = set()
+    def __init__(self) -> None:
+        self.fields_by_model: defaultdict[str, set[str]] = defaultdict(set)
+        self.seen: set[tuple[str, str]] = set()
         self.opaque = False
 
-    def collect_field(self, records, expression):
+    def collect_field(self, records: BaseModel, expression: str) -> Field:
         name, prop = parse_field_expr(expression)
         field = records._fields[name]
         key = (records._name, expression)
@@ -32,19 +41,19 @@ class _DependencyCollector:
                 related = self.collect_field(target, part)
                 if related.relational:
                     target = records.env[related.comodel_name]
-        if field.is_one2many:
+        if field.is_one2many and field.inverse_name:
             self.collect_field(records.env[field.comodel_name], field.inverse_name)
         if prop and field.relational:
             self.collect_field(records.env[field.comodel_name], prop)
         return field
 
-    def _collect_inheritance_tree(self, records, name):
+    def _collect_inheritance_tree(self, records: BaseModel, name: str) -> None:
         env = records.env
         for model_name in env._table_inheritance_tree(records._name):
             if name in env[model_name]._fields:
                 self.fields_by_model[model_name].add(name)
 
-    def collect_domain(self, records, node):
+    def collect_domain(self, records: BaseModel, node: Domain) -> None:
         if isinstance(node, DomainCustom):
             if node._filtered is None:
                 raise NotImplementedError(
@@ -59,13 +68,18 @@ class _DependencyCollector:
         elif isinstance(node, DomainCondition):
             self._collect_condition(records, node)
 
-    def _collect_condition(self, records, node):
+    def _collect_condition(self, records: BaseModel, node: DomainCondition) -> None:
         field = self.collect_field(records, node.field_expr)
         if isinstance(node.value, Domain):
             target = records.env[field.comodel_name] if field.relational else records
             self.collect_domain(target, node.value)
 
-    def collect_order(self, records, specification, ordered_fields=frozenset()):
+    def collect_order(
+        self,
+        records: BaseModel,
+        specification: str,
+        ordered_fields: frozenset[Field] = frozenset(),
+    ) -> None:
         records._check_qorder(specification)
         for part in specification.split(","):
             match = regex_order.match(part)
@@ -73,7 +87,9 @@ class _DependencyCollector:
                 raise ValueError(f"Invalid order term {part!r}")
             self._collect_order_term(records, match, ordered_fields)
 
-    def _collect_order_term(self, records, match, ordered_fields):
+    def _collect_order_term(
+        self, records: BaseModel, match: re.Match[str], ordered_fields: frozenset[Field]
+    ) -> None:
         field = self.collect_field(records, match["field"])
         if field.is_many2one and not match["property"] and field not in ordered_fields:
             target = records.env[field.comodel_name]
@@ -81,7 +97,9 @@ class _DependencyCollector:
                 self.collect_order(target, target._order, ordered_fields | {field})
 
 
-def flush_search_dependencies(model, domain, order):
+def flush_search_dependencies(
+    model: BaseModel, domain: Domain, order: str | None
+) -> defaultdict[str, set[str]]:
     collector = _DependencyCollector()
     collector.collect_domain(model, domain)
     if order:

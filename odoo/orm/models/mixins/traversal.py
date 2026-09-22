@@ -34,6 +34,7 @@ if typing.TYPE_CHECKING:
     from collections.abc import Callable
 
     from ..._typing import BaseModel
+    from ...fields.base import Field
 
 T = typing.TypeVar("T")
 
@@ -42,7 +43,7 @@ T = typing.TypeVar("T")
 class ReversibleComparator:
     __slots__ = ("__item", "__none_first", "__reverse")
 
-    def __init__(self, item, reverse: bool, none_first: bool):
+    def __init__(self, item: typing.Any, reverse: bool, none_first: bool) -> None:
         self.__item = item
         self.__reverse = reverse
         self.__none_first = none_first
@@ -60,15 +61,15 @@ class ReversibleComparator:
             item, item_cmp = item_cmp, item
         return item < item_cmp
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: object) -> bool:
         if other.__class__ is not ReversibleComparator:
             return NotImplemented
         return self.__item == other.__item
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self.__item)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<ReversibleComparator {self.__item!r}{' reverse' if self.__reverse else ''}>"
 
 
@@ -585,7 +586,7 @@ class TraversalMixin(_ModelStubs):
             return not strict
         return other.id in self._get_ancestor_ids()
 
-    def _is_relation_on_self(self, field) -> bool:
+    def _is_relation_on_self(self, field: Field) -> bool:
         if field.comodel_name == self._name:
             return True
         root = self._table_inheritance_root

@@ -6,13 +6,12 @@ from odoo.api import ValuesType
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL, config
+from odoo.tools import config
 from odoo.tools.safe_eval import safe_eval
 
 from .ir_model_common import (
-    access_mode_columns,
     check_access_mode,
-    unloaded_module_clause,
+    unloaded_module_domain,
     unloaded_module_scope,
 )
 
@@ -24,7 +23,6 @@ class IrRule(models.Model):
     _name = "ir.rule"
     _description = "Record Rule"
     _order = "model_id DESC,id"
-    _PERM_COLUMNS = access_mode_columns("r")
     _allow_sudo_commands = False
 
     name = fields.Char()
@@ -195,24 +193,19 @@ class IrRule(models.Model):
             _debug.logic("rules_skipped", model=model_name, mode=mode, reason="sudo")
             return self.browse(())
 
-        sql = SQL(
-            """
-            SELECT r.id FROM ir_rule r
-            JOIN ir_model m ON (r.model_id=m.id)
-            WHERE m.model = ANY(%s) AND r.active AND %s
-                AND (r.global OR r.id IN (
-                    SELECT rule_group_id FROM rule_group_rel rg
-                    WHERE rg.group_id = ANY(%s)
-                ))
-                %s
-            ORDER BY r.id
-            """,
-            self._get_model_names_bound_by_rules(model_name),
-            self._PERM_COLUMNS[mode],
-            list(self.env.user._get_group_ids()),
-            self._get_clause_for_unloaded_module_rules(),
+        domain = (
+            Domain(
+                "model_id.model", "in", self._get_model_names_bound_by_rules(model_name)
+            )
+            & Domain("active", "=", True)
+            & Domain(f"perm_{mode}", "=", True)
+            & (
+                Domain("global", "=", True)
+                | Domain("groups", "in", list(self.env.user._get_group_ids()))
+            )
+            & self._get_domain_for_unloaded_module_rules()
         )
-        rules = self.browse(v for (v,) in self.env.execute_query(sql))
+        rules = self.sudo().with_context(active_test=False).search(domain, order="id")
         _debug.perf.count(
             "rules_fetched",
             model=model_name,
@@ -222,8 +215,8 @@ class IrRule(models.Model):
         )
         return rules
 
-    def _get_clause_for_unloaded_module_rules(self) -> SQL:
-        return unloaded_module_clause(self.env, "ir.rule", "r")
+    def _get_domain_for_unloaded_module_rules(self) -> Domain:
+        return unloaded_module_domain(self.env, "ir.rule")
 
     def _get_unloaded_module_scope(self) -> tuple[int, str | None] | None:
         return unloaded_module_scope(self.env)

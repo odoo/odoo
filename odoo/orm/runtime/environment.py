@@ -69,7 +69,9 @@ _MISSING = object()
 class _Protecting:
     __slots__ = ("_active", "_core", "_records", "_what")
 
-    def __init__(self, core: OrmCore[Field], what, records) -> None:
+    def __init__(
+        self, core: OrmCore[Field], what: typing.Any, records: typing.Any
+    ) -> None:
         self._core = core
         self._what = what
         self._records = records
@@ -355,7 +357,7 @@ class Environment(Mapping[str, "BaseModel"]):
         return self.transaction.registry
 
     @functools.cached_property
-    def cache(self):
+    def cache(self) -> typing.Any:
         return self.transaction.cache
 
     @functools.cached_property
@@ -458,7 +460,9 @@ class Environment(Mapping[str, "BaseModel"]):
             lang = "_" + lang
         return lang
 
-    def _(self, source: str | LazyGettext, *args, **kwargs) -> str:
+    def _(
+        self, source: str | LazyGettext, *args: typing.Any, **kwargs: typing.Any
+    ) -> str:
         lang = self.lang or "en_US"
         if isinstance(source, str):
             if args and kwargs:
@@ -507,7 +511,7 @@ class Environment(Mapping[str, "BaseModel"]):
     def is_protected(self, field: Field, record: BaseModel) -> bool:
         return self.core.is_protected(field, record.id)
 
-    def protecting(self, what, records=None) -> _Protecting:
+    def protecting(self, what: typing.Any, records: typing.Any = None) -> _Protecting:
         return _Protecting(self.core, what, records)
 
     def fields_to_compute(self) -> Collection[Field]:
@@ -579,7 +583,9 @@ class Environment(Mapping[str, "BaseModel"]):
     def _derived_envs(self) -> dict[tuple, Environment]:
         return {}
 
-    def _derive(self, *, su: bool | None = None, **overrides) -> Environment:
+    def _derive(
+        self, *, su: bool | None = None, **overrides: typing.Any
+    ) -> Environment:
         key = (su, tuple(sorted(overrides.items())))
         env = self._derived_envs.get(key)
         if env is None:
@@ -606,7 +612,7 @@ class Environment(Mapping[str, "BaseModel"]):
         )
 
     @functools.cached_property
-    def _field_depends_context(self):
+    def _field_depends_context(self) -> typing.Any:
         return self.registry.field_depends_context
 
     def flush_query(self, query: SQL) -> None:

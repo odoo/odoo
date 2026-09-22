@@ -150,7 +150,7 @@ class IterationMixin(_ModelStubs):
                 rs._prefetch_ids = prefetch_ids
                 yield rs
 
-    def __contains__(self, item) -> bool:
+    def __contains__(self, item: typing.Any) -> bool:
         try:
             if self._name == item._name:
                 return len(item) == 1 and item.id in self._ids
@@ -163,7 +163,7 @@ class IterationMixin(_ModelStubs):
             ) from None
 
     @api.private
-    def index(self, item, start: int = 0, stop: int | None = None) -> int:
+    def index(self, item: typing.Any, start: int = 0, stop: int | None = None) -> int:
         try:
             if self._name != item._name:
                 raise TypeError(f"inconsistent models in: {item}.index({self})")
@@ -192,7 +192,7 @@ class IterationMixin(_ModelStubs):
         raise ValueError(f"{item} is not in recordset")
 
     @api.private
-    def count(self, item) -> int:
+    def count(self, item: typing.Any) -> int:
         try:
             if self._name != item._name:
                 raise TypeError(f"inconsistent models in: {item}.count({self})")
@@ -205,7 +205,7 @@ class IterationMixin(_ModelStubs):
         target = item.id
         return sum(1 for id_ in self._ids if id_ == target)
 
-    def __add__(self, other) -> Self:
+    def __add__(self, other: Self) -> Self:
         return self.concat(other)
 
     @api.private
@@ -222,7 +222,7 @@ class IterationMixin(_ModelStubs):
                 ) from None
         return self.browse(ids)
 
-    def __sub__(self, other) -> Self:
+    def __sub__(self, other: Self) -> Self:
         try:
             if self._name != other._name:
                 raise TypeError(f"inconsistent models in: {self} - {other}")
@@ -235,7 +235,7 @@ class IterationMixin(_ModelStubs):
                 f"unsupported operand types in: {self} - {other!r}"
             ) from None
 
-    def __and__(self, other) -> Self:
+    def __and__(self, other: Self) -> Self:
         try:
             if self._name != other._name:
                 raise TypeError(f"inconsistent models in: {self} & {other}")
@@ -250,7 +250,7 @@ class IterationMixin(_ModelStubs):
                 f"unsupported operand types in: {self} & {other!r}"
             ) from None
 
-    def __or__(self, other) -> Self:
+    def __or__(self, other: Self) -> Self:
         return self.union(other)
 
     @api.private
@@ -375,5 +375,5 @@ class IterationMixin(_ModelStubs):
             ids = (self._ids[key],)
             return self._spawn(self.env, ids, self._prefetch_ids)
 
-    def __setitem__(self, key: str, value: typing.Any):
+    def __setitem__(self, key: str, value: typing.Any) -> None:
         return self._fields[key].__set__(typing.cast("BaseModel", self), value)

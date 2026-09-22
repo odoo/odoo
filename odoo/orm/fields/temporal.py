@@ -33,7 +33,7 @@ def _get_all_timezones_set() -> frozenset[str]:
     return frozenset(all_timezones())
 
 
-def _resolve_sql_timezone_name(env, tz_name: str) -> str | None:
+def _resolve_sql_timezone_name(env: Environment, tz_name: str) -> str | None:
     sql_names = env.backend.timezone_names(env)
     if tz_name in sql_names:
         return tz_name
@@ -265,7 +265,7 @@ class BaseDate[T: date](Field[T | typing.Literal[False]]):
     @override
     def convert_to_column(
         self,
-        value,
+        value: typing.Any,
         record: ModelLike,
         values: dict | None = None,
         validate: bool = True,
@@ -323,7 +323,7 @@ class Date(BaseDate[date]):
         return condition
 
     @staticmethod
-    def today(*args) -> date:
+    def today(*args: typing.Any) -> date:
         return date.today()
 
     @staticmethod
@@ -362,7 +362,7 @@ class Date(BaseDate[date]):
 
     @override
     def convert_to_cache(
-        self, value, record: ModelLike, validate: bool = True
+        self, value: typing.Any, record: ModelLike, validate: bool = True
     ) -> typing.Any:
         if not value:
             return None
@@ -404,7 +404,7 @@ class Datetime(BaseDate[datetime]):
         ):
             env = model.env
 
-            def parse(v):
+            def parse(v: typing.Any) -> typing.Any:
                 return parse_date_expression(v, env) if isinstance(v, str) else v
 
             value = condition.value
@@ -498,11 +498,11 @@ class Datetime(BaseDate[datetime]):
         return DomainCondition(field_expr, operator, value)
 
     @staticmethod
-    def now(*args) -> datetime:
+    def now(*args: typing.Any) -> datetime:
         return datetime.now().replace(microsecond=0)
 
     @staticmethod
-    def today(*args) -> datetime:
+    def today(*args: typing.Any) -> datetime:
         return Datetime.now().replace(hour=0, minute=0, second=0)
 
     @staticmethod
@@ -554,7 +554,7 @@ class Datetime(BaseDate[datetime]):
             return super().get_expression_getter(field_expr)
         get_property = self._get_expression_property_getter(property_name)
 
-        def getter(record):
+        def getter(record: BaseModel) -> typing.Any:
             dt = self.__get__(record)
             if not dt:
                 return False
@@ -568,7 +568,7 @@ class Datetime(BaseDate[datetime]):
 
     @override
     def convert_to_cache(
-        self, value, record: ModelLike, validate: bool = True
+        self, value: typing.Any, record: ModelLike, validate: bool = True
     ) -> typing.Any:
         return self.to_datetime(value)
 

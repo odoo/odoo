@@ -95,25 +95,25 @@ class _Parser:
         self._at += 1
         return True
 
-    def parse(self):
+    def parse(self) -> typing.Any:
         node = self.expr()
         if self._peek() is not None:
             raise _Unparsable(str(self._peek()))
         return node
 
-    def expr(self):
+    def expr(self) -> typing.Any:
         node = self.term()
         while self._accept("keyword", "OR"):
             node = ("or", node, self.term())
         return node
 
-    def term(self):
+    def term(self) -> typing.Any:
         node = self.factor()
         while self._accept("keyword", "AND"):
             node = ("and", node, self.factor())
         return node
 
-    def factor(self):
+    def factor(self) -> typing.Any:
         if self._accept("keyword", "NOT"):
             return ("not", self.factor())
         if self._accept("lparen"):
@@ -123,7 +123,7 @@ class _Parser:
             return node
         return self.predicate()
 
-    def operand(self):
+    def operand(self) -> typing.Any:
         kind, value = self._take()
         if kind == "name":
             return ("col", value)
@@ -137,7 +137,7 @@ class _Parser:
             return ("lit", None)
         raise _Unparsable(f"{kind} {value}")
 
-    def predicate(self):
+    def predicate(self) -> typing.Any:
         left = self.operand()
         if self._accept("keyword", "IS"):
             negated = self._accept("keyword", "NOT")
@@ -173,7 +173,7 @@ _COMPARISONS: dict[str, typing.Callable[[typing.Any, typing.Any], bool]] = {
 }
 
 
-def _value(node, row: dict) -> typing.Any:
+def _value(node: typing.Any, row: dict) -> typing.Any:
     kind, payload = node
     if kind == "lit":
         return payload
@@ -182,7 +182,7 @@ def _value(node, row: dict) -> typing.Any:
     return row[payload]
 
 
-def _evaluate(node, row: dict) -> bool | None:
+def _evaluate(node: typing.Any, row: dict) -> bool | None:
     kind = node[0]
     if kind == "and":
         left, right = _evaluate(node[1], row), _evaluate(node[2], row)
