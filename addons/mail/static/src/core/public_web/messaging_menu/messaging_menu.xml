@@ -85,17 +85,17 @@
 <t t-name="mail.MessagingMenu-action">
     <t t-set="togglesDropdown" t-value="action.subActions?.length"/>
     <button
-        class="btn btn-sm btn-primary rounded-2 py-1 d-flex align-items-center justify-content-center"
+        class="btn btn-sm btn-primary rounded-3 py-1 o-my-0_5 d-flex align-items-center justify-content-center"
         t-att-class="togglesDropdown ? 'w-100 position-relative pe-4' : 'flex-shrink-0'"
         t-att-disabled="action.isDisabled?.()"
         t-att-title="action.title"
         t-on-click="() => togglesDropdown ? undefined : this.onClickAction(action)"
     >
         <span t-if="action.icon" class="d-flex align-items-center flex-shrink-0" t-att-class="{'me-1': action.text}">
-            <i class="oi" t-att-class="action.iconClass" t-att-data-icon="action.icon"/>
+            <i class="oi oi-fw" t-att-class="action.iconClass" t-att-data-icon="action.icon"/>
         </span>
         <span t-if="action.text" class="text-truncate" t-out="action.text"/>
-        <span t-if="togglesDropdown" class="oi position-absolute end-0 me-1" data-icon="keyboard_arrow_down" aria-hidden="true"/>
+        <span t-if="togglesDropdown" class="oi oi-fw position-absolute end-0 me-1" data-icon="keyboard_arrow_down" aria-hidden="true"/>
     </button>
 </t>
 
