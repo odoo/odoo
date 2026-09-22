@@ -1,6 +1,6 @@
 {
     "name": "Documents Compliance",
-    "version": "19.0.1.14.1",
+    "version": "19.0.1.14.2",
     "category": "Productivity/Documents",
     "summary": "Document compliance management with expiration tracking",
     "description": """

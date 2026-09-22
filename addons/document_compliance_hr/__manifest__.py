@@ -1,6 +1,6 @@
 {
     "name": "Documents Compliance - Employees",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "category": "Productivity/Documents",
     "summary": "Hold employees to the mandatory document types that apply to them",
     "author": "AgroMarin",
@@ -8,6 +8,9 @@
     "depends": [
         "document_compliance",
         "hr",
+    ],
+    "data": [
+        "security/document_compliance_hr_security.xml",
     ],
     "auto_install": True,
 }

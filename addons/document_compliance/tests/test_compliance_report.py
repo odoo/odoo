@@ -1,5 +1,6 @@
 from datetime import date, timedelta
 
+from odoo.exceptions import AccessError
 from odoo.tests.common import TransactionCase
 
 from .common import ComplianceCase
@@ -17,10 +18,27 @@ class TestComplianceReportAccess(TransactionCase):
                 "group_ids": [(6, 0, [cls.env.ref("base.group_user").id])],
             }
         )
+        cls.user_manager = cls.env["res.users"].create(
+            {
+                "name": "Compliance Report Manager",
+                "login": "test_compliance_manager",
+                "group_ids": [
+                    (6, 0, [cls.env.ref("document.group_documents_manager").id])
+                ],
+            }
+        )
 
-    def test_plain_internal_user_can_read_and_group_the_report(self):
-        self.assertFalse(self.user_plain.has_group("base.group_erp_manager"))
+    def test_plain_internal_user_cannot_read_the_report(self):
         report = self.report.with_user(self.user_plain)
+
+        with self.assertRaises(AccessError):
+            report.search_count([])
+        with self.assertRaises(AccessError):
+            report._read_group([], ["entity_type"], ["__count"])
+
+    def test_documents_manager_can_read_and_group_the_report(self):
+        self.assertFalse(self.user_manager.has_group("base.group_erp_manager"))
+        report = self.report.with_user(self.user_manager)
 
         self.assertIsInstance(report.search_count([]), int)
         report.search([], limit=5).mapped("entity_name")
