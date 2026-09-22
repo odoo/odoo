@@ -10,7 +10,7 @@ from ..tools import debug_log as dbg
 HR_READABLE_FIELDS = [
     "active",
     "additional_note",
-    "bank_account_ids",
+    "salary_bank_account_ids",
     "barcode",
     "birthday",
     "birthday_public_display",
@@ -252,7 +252,9 @@ class ResUsers(models.Model):
         string="Employee's Working Hours",
         readonly=True,
     )
-    bank_account_ids = fields.Many2many(related="employee_id.bank_account_ids")
+    salary_bank_account_ids = fields.Many2many(
+        related="employee_id.salary_bank_account_ids"
+    )
 
     create_employee = fields.Boolean(
         string="Technical field, whether to create an employee",

@@ -16,12 +16,9 @@ class TestEmployeeMultipleBanksUi(HttpCase):
             timeout=200,
         )
         total = 0
-        for ba in employee.bank_account_ids:
-            ba_percentage = employee.salary_distribution[str(ba.id)]["amount"]
-            ba_is_percentage = employee.salary_distribution[str(ba.id)][
-                "amount_is_percentage"
-            ]
-            self.assertEqual(ba_is_percentage, True)
+        for allocation in employee.salary_allocation_ids:
+            ba_percentage = allocation.amount
+            self.assertEqual(allocation.amount_is_percentage, True)
             self.assertAlmostEqual(ba_percentage, 33.33, delta=0.011)
             total += ba_percentage
         self.assertAlmostEqual(total, 100.0, "Total must amount to 100.")

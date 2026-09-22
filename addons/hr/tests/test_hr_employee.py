@@ -523,7 +523,7 @@ class TestHrEmployee(TestHrCommon):
                 "name": "Test User - employee",
                 "user_id": test_user.id,
                 "company_id": test_company.id,
-                "bank_account_ids": [Command.link(bank_account.id)],
+                "salary_bank_account_ids": [Command.link(bank_account.id)],
             }
         )
         with Form(test_employee) as employee_form:

@@ -50,40 +50,29 @@ class TestHrAuditFixes(TestHrCommon):
         emp = self._new_employee("Bank Guy")
         ba1 = self._add_bank_account(emp, "BE000001")
         ba2 = self._add_bank_account(emp, "BE000002")
-        emp.bank_account_ids = [(6, 0, (ba1 | ba2).ids)]
+        emp.salary_bank_account_ids = [(6, 0, (ba1 | ba2).ids)]
 
-        dist = emp.salary_distribution
-        self.assertEqual(set(dist), {str(ba1.id), str(ba2.id)})
-        total = sum(v["amount"] for v in dist.values() if v["amount_is_percentage"])
+        allocations = emp.salary_allocation_ids
+        self.assertEqual(
+            set(allocations.mapped("bank_account_id").ids), {ba1.id, ba2.id}
+        )
+        total = sum(allocations.filtered("amount_is_percentage").mapped("amount"))
         self.assertAlmostEqual(total, 100.0, places=4)
 
+        # the percentages-total-100 rule is a constraint on the allocation now
         with self.assertRaises(ValidationError):
-            emp.salary_distribution = {
-                str(ba1.id): {
-                    "amount": 60.0,
-                    "amount_is_percentage": True,
-                    "sequence": 1,
-                },
-                str(ba2.id): {
-                    "amount": 30.0,
-                    "amount_is_percentage": True,
-                    "sequence": 2,
-                },
-            }
+            allocations.filtered(lambda a: a.bank_account_id == ba1).amount = 60.0
 
     def test_primary_bank_account_and_trust_toggle(self):
         emp = self._new_employee("Primary Guy")
         ba1 = self._add_bank_account(emp, "BE000011")
         ba2 = self._add_bank_account(emp, "BE000012")
-        emp.bank_account_ids = [(6, 0, (ba1 | ba2).ids)]
+        emp.salary_bank_account_ids = [(6, 0, (ba1 | ba2).ids)]
 
         primary = emp.primary_bank_account_id
         self.assertIn(primary, ba1 | ba2)
-        min_seq_key = min(
-            emp.salary_distribution,
-            key=lambda k: emp.salary_distribution[k]["sequence"],
-        )
-        self.assertEqual(str(primary.id), min_seq_key)
+        # `_order = "sequence, id"`, so the first allocation is the primary
+        self.assertEqual(primary, emp.salary_allocation_ids[0].bank_account_id)
 
         self.assertFalse(emp.is_trusted_bank_account)
         emp.action_toggle_primary_bank_account_trust()
@@ -94,14 +83,10 @@ class TestHrAuditFixes(TestHrCommon):
         emp = self._new_employee("Fixed Guy")
         ba1 = self._add_bank_account(emp, "BE000021")
         ba2 = self._add_bank_account(emp, "BE000022")
-        emp.bank_account_ids = [(4, ba1.id)]
-        emp.salary_distribution = {
-            str(ba1.id): {
-                "amount": 500.0,
-                "amount_is_percentage": False,
-                "sequence": 1,
-            },
-        }
+        emp.salary_bank_account_ids = [(4, ba1.id)]
+        emp.salary_allocation_ids.write(
+            {"amount": 500.0, "amount_is_percentage": False, "sequence": 1}
+        )
 
         self.assertEqual(ba1.employee_salary_amount, 500.0)
         self.assertFalse(ba1.employee_salary_amount_is_percentage)
@@ -274,7 +259,7 @@ class TestHrAuditRound2(TestHrCommon):
         )
 
         self.assertNotIn(
-            "bank_account_ids",
+            "salary_bank_account_ids",
             self.env["res.users"].SELF_WRITEABLE_FIELDS,
         )
 
@@ -282,7 +267,7 @@ class TestHrAuditRound2(TestHrCommon):
         with self.assertRaises(AccessError):
             user_self.write(
                 {
-                    "bank_account_ids": [
+                    "salary_bank_account_ids": [
                         (
                             0,
                             0,
@@ -319,7 +304,7 @@ class TestHrAuditRound2(TestHrCommon):
         ba = self.env["res.partner.bank.account"].create(
             {"acc_number": "123456", "partner_id": emp.partner_id.id}
         )
-        emp.bank_account_ids = [(4, ba.id)]
+        emp.salary_bank_account_ids = [(4, ba.id)]
         plain = mail_new_test_user(
             self.env, login="plainreader", groups="base.group_user", name="Reader"
         )

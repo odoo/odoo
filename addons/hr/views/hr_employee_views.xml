@@ -353,16 +353,16 @@
                                             name="is_trusted_bank_account"
                                             invisible="1" />
                                         <field
-                                            name="bank_account_ids"
+                                            name="salary_bank_account_ids"
                                             widget="many2many_tags"
                                             options="{'color_field': 'color'}"
                                             invisible="1" />
-                                        <label for="bank_account_ids" />
+                                        <label for="salary_bank_account_ids" />
                                         <div
                                             class="d-flex align-items-start justify-content-between"
                                             invisible="not has_multiple_bank_accounts">
                                             <field
-                                                name="bank_account_ids"
+                                                name="salary_bank_account_ids"
                                                 widget="many2many_tags_salary_bank"
                                                 context="{'default_partner_id': partner_id}"
                                                 options="{'color_field': 'color', 'no_quick_create': True, 'edit_tags': True}"
@@ -380,14 +380,14 @@
                                             class="o-row d-flex justify-content-between gap-2 align-items-start"
                                             invisible="has_multiple_bank_accounts">
                                             <field
-                                                name="bank_account_ids"
+                                                name="salary_bank_account_ids"
                                                 widget="many2many_tags_salary_bank"
                                                 context="{'default_partner_id': partner_id}"
                                                 options="{'color_field': 'color', 'no_quick_create': True, 'edit_tags': True}"
                                                 readonly="not id" />
                                             <div
                                                 class="d-flex align-items-start"
-                                                invisible="not bank_account_ids">
+                                                invisible="not salary_bank_account_ids">
                                                 <span class="d-flex w-50">
                                                     <span invisible="is_trusted_bank_account" class="text-muted">Untrusted</span>
                                                     <span invisible="not is_trusted_bank_account" class="text-success">Trusted</span>

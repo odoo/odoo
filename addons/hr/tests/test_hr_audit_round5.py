@@ -1,6 +1,8 @@
 from datetime import datetime
 from unittest.mock import patch
 
+from psycopg.errors import CheckViolation
+
 from odoo import Command, fields
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import Form
@@ -288,31 +290,41 @@ class TestFixedSalaryAllocationIsValidated(TestHrCommon):
         account = self.env["res.partner.bank.account"].create(
             {"acc_number": "R5-0001", "partner_id": employee.partner_id.id}
         )
-        employee.bank_account_ids = [Command.link(account.id)]
+        employee.salary_bank_account_ids = [Command.link(account.id)]
         return employee, account
 
     def test_a_negative_fixed_amount_is_rejected(self):
-        employee, account = self._employee_with_account()
-        with self.assertRaises(ValidationError):
-            employee.salary_distribution = {
-                str(account.id): {"amount": -500, "amount_is_percentage": False}
-            }
+        """The refusal is the database's, so it lands at the flush.
 
-    def test_a_non_numeric_fixed_amount_is_rejected(self):
-        employee, account = self._employee_with_account()
-        with self.assertRaises(ValidationError):
-            employee.salary_distribution = {
-                str(account.id): {"amount": "abc", "amount_is_percentage": False}
-            }
+        A fixed amount is not covered by the percentage total, which skips an
+        employee with no percentage row at all -- the CHECK constraint is the
+        only guard, and a constraint speaks when the rows reach storage.
+        """
+        employee, _account = self._employee_with_account()
+        with self.assertRaises(CheckViolation), self.env.cr.savepoint():
+            employee.salary_allocation_ids.write(
+                {"amount": -500, "amount_is_percentage": False}
+            )
+            self.env.flush_all()
+
+    def test_a_non_numeric_fixed_amount_cannot_be_stored(self):
+        """The JSON could hold "abc"; a Float column cannot.
+
+        This used to need a hand-written `isinstance(amount, (float, int))`
+        check, because a jsonb value carries whatever was put in it. The
+        amount is a typed column now, so the rejection is the field's rather
+        than a constraint's -- which is why the exception is a ValueError and
+        not a ValidationError.
+        """
+        employee, _account = self._employee_with_account()
+        with self.assertRaises(ValueError):
+            employee.salary_allocation_ids.write({"amount": "abc"})
 
     def test_a_fixed_amount_of_zero_or_more_is_accepted(self):
-        employee, account = self._employee_with_account()
-        employee.salary_distribution = {
-            str(account.id): {"amount": 0, "amount_is_percentage": False}
-        }
-        employee.salary_distribution = {
-            str(account.id): {"amount": 1500.5, "amount_is_percentage": False}
-        }
+        employee, _account = self._employee_with_account()
+        allocation = employee.salary_allocation_ids
+        allocation.write({"amount": 0, "amount_is_percentage": False})
+        allocation.write({"amount": 1500.5, "amount_is_percentage": False})
 
 
 class TestBatchedCreateAttachesEveryVersion(TestHrCommon):

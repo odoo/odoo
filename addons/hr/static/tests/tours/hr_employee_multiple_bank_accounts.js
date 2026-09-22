@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add("hr_employee_multiple_bank_accounts_tour
         },
         {
             content: "add bank 1",
-            trigger: "input#bank_account_ids_2",
+            trigger: "input#salary_bank_account_ids_2",
             run: "edit 1",
         },
         {
@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add("hr_employee_multiple_bank_accounts_tour
         },
         {
             content: "add bank 2",
-            trigger: "input#bank_account_ids_2",
+            trigger: "input#salary_bank_account_ids_2",
             run: "edit 2",
         },
         {
@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add("hr_employee_multiple_bank_accounts_tour
         },
         {
             content: "add bank 3",
-            trigger: "input#bank_account_ids_1",
+            trigger: "input#salary_bank_account_ids_1",
             run: "edit 3",
         },
         {

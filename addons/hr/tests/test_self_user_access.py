@@ -29,7 +29,7 @@ class TestSelfAccessPreferences(TestHrCommon):
             {
                 "name": "James",
                 "user_id": james.id,
-                "bank_account_ids": [Command.link(james_bank_account.id)],
+                "salary_bank_account_ids": [Command.link(james_bank_account.id)],
             }
         )
         view = self.env.ref("hr.res_users_view_form_preferences")
@@ -308,16 +308,18 @@ class TestSelfAccessRights(TestHrCommon):
             {
                 "name": "Hubert",
                 "user_id": hubert.id,
-                "bank_account_ids": [Command.link(hubert_acc.id)],
+                "salary_bank_account_ids": [Command.link(hubert_acc.id)],
             }
         )
         hubert.partner_id.sudo().employee_ids = hubert_emp
 
         self.assertFalse(hubert.env.user.has_group("hr.group_hr_user"))
         self.assertFalse(hubert.env.su)
-        self.assertEqual(hubert.sudo().bank_account_ids.display_name, "FR******7890")
         self.assertEqual(
-            hubert_emp.with_user(hubert).sudo().bank_account_ids.display_name,
+            hubert.sudo().salary_bank_account_ids.display_name, "FR******7890"
+        )
+        self.assertEqual(
+            hubert_emp.with_user(hubert).sudo().salary_bank_account_ids.display_name,
             "FR******7890",
         )
 
@@ -325,7 +327,7 @@ class TestSelfAccessRights(TestHrCommon):
         self.assertEqual(
             hubert_emp.with_user(hubert)
             .sudo()
-            .bank_account_ids.sudo(False)
+            .salary_bank_account_ids.sudo(False)
             .display_name,
             "FR******7890",
         )

@@ -39,10 +39,18 @@ class ResPartnerBankAccount(models.Model):
         related="bank_id.phone_ids",
         readonly=False,
     )
+    salary_allocation_ids = fields.One2many(
+        comodel_name="hr.employee.bank.allocation",
+        inverse_name="bank_account_id",
+        string="Salary Allocations",
+    )
     employee_id = fields.Many2one(
         comodel_name="hr.employee",
         compute="_compute_employee_id",
         search="_search_employee_id",
+        help="The employee whose salary is paid into this account. Where the "
+        "account's contact has employee records in several companies, the one "
+        "that actually allocated it.",
     )
     employee_salary_amount = fields.Float(
         string="Salary Allocation",
@@ -61,29 +69,28 @@ class ResPartnerBankAccount(models.Model):
         related="employee_id.has_multiple_bank_accounts"
     )
 
-    @api.depends("employee_id.salary_distribution")
+    @api.depends("salary_allocation_ids.amount", "employee_id")
     def _compute_salary_amount(self):
         for bank in self:
-            distribution = bank.employee_id.salary_distribution or {}
-            if str(bank.id) in distribution:
-                (
-                    bank.employee_salary_amount,
-                    bank.employee_salary_amount_is_percentage,
-                ) = bank.employee_id.get_bank_account_salary_allocation(bank.id)
-                continue
-            bank.employee_salary_amount_is_percentage = True
-            if distribution:
-                bank.employee_salary_amount = (
-                    bank.employee_id.get_remaining_percentage()
+            employee = bank.employee_id
+            allocation = bank.salary_allocation_ids.browse(
+                [a.id for a in bank.salary_allocation_ids if a.employee_id == employee]
+            )[:1]
+            if allocation:
+                bank.employee_salary_amount = allocation.amount
+                bank.employee_salary_amount_is_percentage = (
+                    allocation.amount_is_percentage
                 )
-            else:
-                bank.employee_salary_amount = 0
+                continue
+            # not allocated: offer what is still unclaimed, as the JSON did
+            bank.employee_salary_amount_is_percentage = True
+            bank.employee_salary_amount = (
+                bank.employee_id.get_remaining_percentage() if bank.employee_id else 0
+            )
             dbg.logic.debug(
-                "[bank:%s] not in employee %s distribution (%d entries): "
-                "allocation defaults to %s%%",
+                "[bank:%s] no allocation for employee %s: defaults to %s%%",
                 bank.id,
                 bank.employee_id.id,
-                len(distribution),
                 bank.employee_salary_amount,
             )
 

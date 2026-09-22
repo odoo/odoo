@@ -56,7 +56,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
                     "user_id": cls.expense_user_employee.id,
                     "expense_manager_id": cls.expense_user_manager.id,
                     "partner_id": cls.expense_user_employee.partner_id.id,
-                    "bank_account_ids": [
+                    "salary_bank_account_ids": [
                         Command.create(
                             {
                                 "acc_number": "BE68539007547034",

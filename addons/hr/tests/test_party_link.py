@@ -21,7 +21,7 @@ class TestPartyLink(TransactionCase):
         bank = self.env["res.partner.bank.account"].create(
             {"acc_number": "LINK-ACC-1", "partner_id": employee.partner_id.id}
         )
-        employee.bank_account_ids = bank
+        employee.salary_bank_account_ids = bank
         return employee, tag, bank
 
     def test_a_user_link_keeps_everything_that_is_the_persons(self):

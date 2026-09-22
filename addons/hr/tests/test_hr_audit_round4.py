@@ -302,9 +302,9 @@ class TestMultipleBankAccountsFlag(TestHrCommon):
                 {"acc_number": "BE68539007547036", "partner_id": partner.id},
             ]
         )
-        employee.bank_account_ids = [Command.link(first.id)]
+        employee.salary_bank_account_ids = [Command.link(first.id)]
         self.assertFalse(employee.has_multiple_bank_accounts)
-        employee.bank_account_ids = [Command.link(second.id)]
+        employee.salary_bank_account_ids = [Command.link(second.id)]
         self.assertTrue(employee.has_multiple_bank_accounts)
 
 
@@ -581,24 +581,22 @@ class TestSalaryDistributionStaysCurrencyRounded(TestHrCommon):
                 for index in range(count)
             ]
         )
-        employee.bank_account_ids = [Command.set(accounts.ids)]
+        employee.salary_bank_account_ids = [Command.set(accounts.ids)]
         self.env.flush_all()
         return employee, accounts
 
     def _assert_clean(self, employee, label):
-        distribution = employee.salary_distribution or {}
-        percentages = [
-            values["amount"]
-            for values in distribution.values()
-            if values.get("amount_is_percentage")
-        ]
+        percentages = employee.salary_allocation_ids.filtered(
+            "amount_is_percentage"
+        ).mapped("amount")
         rounding = employee.currency_id.round
         unrounded = [amount for amount in percentages if amount != rounding(amount)]
         self.assertFalse(
             unrounded,
             "%s: every stored allocation must be rounded to the currency's"
             " precision. The last entry used to take the raw float remainder, so"
-            " 14.26000000000002 reached the jsonb column and the user's screen."
+            " 14.26000000000002 was stored and shown to the user (it reached a"
+            " jsonb column before the allocations became a model)."
             " Unrounded: %s" % (label, unrounded),
         )
         self.assertEqual(
@@ -617,7 +615,7 @@ class TestSalaryDistributionStaysCurrencyRounded(TestHrCommon):
         for count in (3, 7):
             with self.subTest(accounts=count):
                 employee, accounts = self._employee_with_accounts(count, f"r{count}")
-                employee.bank_account_ids = [Command.unlink(accounts[0].id)]
+                employee.salary_bank_account_ids = [Command.unlink(accounts[0].id)]
                 self.env.flush_all()
                 self._assert_clean(employee, f"remove one of {count}")
 
@@ -631,7 +629,7 @@ class TestSalaryDistributionStaysCurrencyRounded(TestHrCommon):
                         "partner_id": employee.partner_id.id,
                     }
                 )
-                employee.bank_account_ids = [Command.link(extra.id)]
+                employee.salary_bank_account_ids = [Command.link(extra.id)]
                 self.env.flush_all()
                 self._assert_clean(employee, f"add one to {count}")
 

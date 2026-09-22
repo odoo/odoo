@@ -239,7 +239,7 @@ class TestHrAuditRound3(TestHrCommon):
         banked = self.env["res.partner.bank.account"].create(
             {"acc_number": "R3EMP00001", "partner_id": employee.partner_id.id}
         )
-        employee.bank_account_ids = [(6, 0, banked.ids)]
+        employee.salary_bank_account_ids = [(6, 0, banked.ids)]
         self.env.flush_all()
 
         scope = [("id", "in", (plain | banked).ids)]
@@ -265,7 +265,7 @@ class TestHrAuditRound3(TestHrCommon):
         banked = self.env["res.partner.bank.account"].create(
             {"acc_number": "R3NHR0002", "partner_id": employee.partner_id.id}
         )
-        employee.bank_account_ids = [(6, 0, banked.ids)]
+        employee.salary_bank_account_ids = [(6, 0, banked.ids)]
         plain_user = self.env["res.users"].create(
             {
                 "name": "R3 Plain User",
@@ -289,7 +289,7 @@ class TestHrAuditRound3(TestHrCommon):
         unlisted = self.env["res.partner.bank.account"].create(
             {"acc_number": "R3TWO0002", "partner_id": employee.partner_id.id}
         )
-        employee.bank_account_ids = [(6, 0, listed.ids)]
+        employee.salary_bank_account_ids = [(6, 0, listed.ids)]
         self.env.flush_all()
 
         self.assertEqual(unlisted.employee_id, employee, "the compute claims it")

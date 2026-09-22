@@ -11,7 +11,6 @@ from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.datetime import localize_standard, timezone
-from odoo.libs.numbers import float_is_zero
 from odoo.tools import (
     SQL,
     Query,
@@ -484,19 +483,26 @@ class HrEmployee(models.Model):
         tracking=True,
     )
 
-    bank_account_ids = fields.Many2many(
+    salary_allocation_ids = fields.One2many(
+        comodel_name="hr.employee.bank.allocation",
+        inverse_name="employee_id",
+        string="Salary Allocations",
+        groups="hr.group_hr_user",
+        help="Which bank accounts the salary is paid into, and in what share",
+    )
+    salary_bank_account_ids = fields.Many2many(
         comodel_name="res.partner.bank.account",
-        relation="employee_bank_account_rel",
-        column1="employee_id",
-        column2="bank_account_id",
         string="Bank Accounts",
+        compute="_compute_salary_bank_account_ids",
+        inverse="_inverse_salary_bank_account_ids",
+        search="_search_salary_bank_account_ids",
         domain="[('partner_id', '=', partner_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        tracking=True,
         groups="hr.group_hr_user",
         help="Employee bank accounts to pay salaries",
     )
     is_trusted_bank_account = fields.Boolean(
         compute="_compute_is_trusted_bank_account",
+        compute_sudo=True,
         groups="hr.group_hr_user",
     )
     primary_bank_account_id = fields.Many2one(
@@ -506,12 +512,6 @@ class HrEmployee(models.Model):
     )
     has_multiple_bank_accounts = fields.Boolean(
         compute="_compute_has_multiple_bank_accounts",
-        groups="hr.group_hr_user",
-    )
-    salary_distribution = fields.Json(
-        compute="_compute_salary_distribution",
-        store=True,
-        readonly=False,
         groups="hr.group_hr_user",
     )
 
@@ -719,53 +719,6 @@ class HrEmployee(models.Model):
                         employee=employee.display_name,
                         user=employee.user_id.display_name,
                         contact=employee.partner_id.display_name,
-                    )
-                )
-
-    @api.constrains("salary_distribution")
-    def _check_salary_distribution(self):
-        for employee in self:
-            dist = employee.salary_distribution
-            if not dist:
-                continue
-
-            total = 0
-            check_total = False
-            for ba_values in dist.values():
-                amount = ba_values.get("amount")
-                is_percentage = ba_values.get("amount_is_percentage", True)
-                if is_percentage and (
-                    not isinstance(amount, (float, int)) or not (0 <= amount <= 100)
-                ):
-                    raise ValidationError(
-                        self.env._(
-                            "Each amount percentage must be a number between 0 and 100."
-                        )
-                    )
-                if not is_percentage and (
-                    isinstance(amount, bool)
-                    or not isinstance(amount, (float, int))
-                    or amount < 0
-                ):
-                    raise ValidationError(
-                        self.env._(
-                            "Each fixed amount must be a number of zero or more."
-                        )
-                    )
-                if is_percentage:
-                    check_total = True
-                    total += amount
-
-            dbg.logic.debug(
-                "[employee:%s] salary distribution: %d accounts, percentage total=%s",
-                employee.id,
-                len(dist),
-                total if check_total else None,
-            )
-            if check_total and not float_is_zero(total - 100.0, precision_digits=4):
-                raise ValidationError(
-                    self.env._(
-                        "Total salary distribution on bank accounts must be exactly 100%."
                     )
                 )
 
@@ -1274,9 +1227,110 @@ class HrEmployee(models.Model):
             )
         return new_vals_list
 
+    def _compute_salary_bank_account_ids(self):
+        """Project the allocations onto the accounts this reader may see.
+
+        A stored many2many filtered itself: its read is a search on the
+        comodel, so record rules dropped what the reader cannot see and the
+        field simply came back shorter. This projection has to say so out
+        loud, or it hands out records whose first dereference raises.
+        """
+        for employee in self:
+            accounts = employee.salary_allocation_ids.bank_account_id
+            employee.salary_bank_account_ids = accounts._filtered_access("read")
+
+    def _search_salary_bank_account_ids(self, operator, value):
+        allocations = self.env["hr.employee.bank.allocation"].sudo()
+        return [
+            (
+                "id",
+                "in",
+                allocations.search(
+                    [("bank_account_id", operator, value)]
+                ).employee_id.ids,
+            )
+        ]
+
+    def _inverse_salary_bank_account_ids(self):
+        """Reconcile the allocation rows with the accounts just written.
+
+        This is what `_compute_salary_distribution` did over a JSON dict, and it
+        keeps the same two rules, because they are the behaviour and not the
+        storage: a removed account's percentage folds into the first remaining
+        percentage row, and accounts added share what percentage is left, the
+        last one taking the rounding remainder so the total stays exactly 100.
+        """
+        Allocation = self.env["hr.employee.bank.allocation"]
+        for employee in self:
+            wanted = employee.salary_bank_account_ids
+            current = employee.salary_allocation_ids
+            by_account = {a.bank_account_id.id: a.id for a in current}
+            kept = current.browse(
+                [by_account[i] for i in wanted.ids if i in by_account]
+            )
+            visible = current.bank_account_id._filtered_access("read")
+            # an account the writer could not see was never in the value they
+            # wrote, so its absence from it is not a removal
+            removed = (current - kept).filtered(
+                lambda a, visible=visible: a.bank_account_id in visible
+            )
+            added = wanted - kept.mapped("bank_account_id")
+
+            freed = sum(removed.filtered("amount_is_percentage").mapped("amount"))
+            removed.unlink()
+
+            # percentage rows first, then by sequence -- the order the JSON sorted by
+            ordered = kept.sorted(
+                key=lambda a: (not a.amount_is_percentage, a.sequence)
+            )
+            if freed and ordered and ordered[0].amount_is_percentage:
+                ordered[0].amount = employee.currency_id.round(
+                    ordered[0].amount + freed
+                )
+                dbg.logic.debug(
+                    "[employee:%s] salary allocation: %s%% of removed accounts "
+                    "folded into account %s",
+                    employee.id,
+                    freed,
+                    ordered[0].bank_account_id.id,
+                )
+
+            if not added:
+                continue
+            allocated = sum(kept.filtered("amount_is_percentage").mapped("amount"))
+            remaining = max(0.0, 100.0 - allocated)
+            sequence = max(kept.mapped("sequence"), default=0)
+            share = employee.currency_id.round(remaining / len(added))
+            rows = []
+            for index, account in enumerate(added.sorted("id")):
+                sequence += 1
+                amount = (
+                    employee.currency_id.round(remaining)
+                    if index == len(added) - 1
+                    else share
+                )
+                rows.append(
+                    {
+                        "employee_id": employee.id,
+                        "bank_account_id": account.id,
+                        "sequence": sequence,
+                        "amount": amount,
+                        "amount_is_percentage": True,
+                    }
+                )
+                remaining -= amount
+            Allocation.create(rows)
+            dbg.logic.debug(
+                "[employee:%s] salary allocation: added=%s removed=%s kept=%s",
+                employee.id,
+                added.ids,
+                removed.ids,
+                kept.ids,
+            )
+
     @api.depends(
-        "bank_account_ids.allow_out_payment",
-        "salary_distribution",
+        "salary_bank_account_ids.allow_out_payment",
+        "salary_allocation_ids.amount",
     )
     def _compute_is_trusted_bank_account(self):
         for employee in self:
@@ -1284,94 +1338,14 @@ class HrEmployee(models.Model):
                 employee.primary_bank_account_id.allow_out_payment
             )
 
-    @api.depends("bank_account_ids")
+    @api.depends("salary_bank_account_ids")
     def _compute_has_multiple_bank_accounts(self):
+        # over the accounts and not the allocations: an unsaved form carries
+        # the accounts the user just picked and no allocation row yet
         for employee in self:
-            employee.has_multiple_bank_accounts = len(employee.bank_account_ids) > 1
-
-    @api.depends("bank_account_ids")
-    def _compute_salary_distribution(self):
-        for employee in self:
-            current_salary_distribution = employee.salary_distribution or {}
-            current_ids = set(map(int, current_salary_distribution.keys()))
-            account_ids = set(employee.bank_account_ids.ids)
-
-            added_ids = account_ids - current_ids
-            removed_ids = current_ids - account_ids
-            unchanged_ids = account_ids & current_ids
-
-            ordered = sorted(
-                [
-                    (int(i), data)
-                    for i, data in current_salary_distribution.items()
-                    if int(i) in unchanged_ids
-                ],
-                key=lambda x: (
-                    not x[1].get("amount_is_percentage"),
-                    x[1].get("sequence", float("inf")),
-                ),
+            employee.has_multiple_bank_accounts = (
+                len(employee.salary_bank_account_ids) > 1
             )
-
-            new_salary_distribution = {str(i): data for i, data in ordered}
-
-            removed_percentage = sum(
-                current_salary_distribution[str(i)]["amount"]
-                for i in removed_ids
-                if str(i) in current_salary_distribution
-                and current_salary_distribution[str(i)]["amount_is_percentage"]
-            )
-            if removed_percentage and ordered:
-                first_id = str(ordered[0][0])
-                if new_salary_distribution[first_id]["amount_is_percentage"]:
-                    new_salary_distribution[first_id]["amount"] = (
-                        employee.currency_id.round(
-                            new_salary_distribution[first_id]["amount"]
-                            + removed_percentage
-                        )
-                    )
-                    dbg.logic.debug(
-                        "[employee:%s] salary distribution: %s%% of removed "
-                        "accounts folded into account %s",
-                        employee.id,
-                        removed_percentage,
-                        first_id,
-                    )
-
-            total_allocated = sum(
-                d["amount"]
-                for d in new_salary_distribution.values()
-                if d["amount_is_percentage"]
-            )
-            remaining = max(0.0, 100.0 - total_allocated)
-            seq = max(
-                (d.get("sequence", 0) for d in new_salary_distribution.values()),
-                default=0,
-            )
-            amount = (
-                employee.currency_id.round(remaining / len(added_ids))
-                if added_ids
-                else 0.0
-            )
-            for i, new_id in enumerate(sorted(added_ids)):
-                seq += 1
-                if i == len(added_ids) - 1:
-                    amount = employee.currency_id.round(remaining)
-                new_salary_distribution[str(new_id)] = {
-                    "amount": amount,
-                    "amount_is_percentage": True,
-                    "sequence": seq,
-                }
-                remaining -= amount
-
-            dbg.logic.debug(
-                "[employee:%s] salary distribution: added=%s removed=%s kept=%s -> %s",
-                employee.id,
-                sorted(added_ids),
-                sorted(removed_ids),
-                sorted(unchanged_ids),
-                new_salary_distribution,
-            )
-            employee.salary_distribution = new_salary_distribution
 
     @api.depends("private_country_id")
     def _compute_allowed_country_state_ids(self):
@@ -2639,20 +2613,19 @@ class HrEmployee(models.Model):
             self.env, "hr", "data/scenarios/hr_scenario.xml", None, mode="init"
         )
 
-    @api.depends("bank_account_ids", "salary_distribution")
+    @api.depends("salary_allocation_ids.sequence", "salary_bank_account_ids")
     def _compute_primary_bank_account_id(self):
+        # `_order = "sequence, id"` on the allocation, so the first row is the
+        # lowest sequence -- the `min(...)` the JSON needed is the ordering now.
+        # An unsaved form has the accounts and no rows, so it falls back to the
+        # first account the user picked.
         for employee in self:
-            if employee.bank_account_ids:
-                distribution = employee.salary_distribution or {}
-                primary_account = min(
-                    employee.bank_account_ids,
-                    key=lambda acc: distribution.get(str(acc.id), {}).get(
-                        "sequence", float("inf")
-                    ),
-                )
-                employee.primary_bank_account_id = primary_account
-            else:
-                employee.primary_bank_account_id = False
+            allocations = employee.salary_allocation_ids
+            employee.primary_bank_account_id = (
+                allocations[0].bank_account_id
+                if allocations
+                else employee.salary_bank_account_ids[:1]
+            )
 
     def action_unarchive(self):
         dbg.lifecycle.debug(
@@ -3037,29 +3010,25 @@ class HrEmployee(models.Model):
         return employee_fields
 
     def get_bank_account_salary_allocation(self, account_id):
-        ba_info = (self.salary_distribution or {}).get(str(account_id), {})
-        return ba_info.get("amount", 0), ba_info.get("amount_is_percentage", True)
+        allocation = self.salary_allocation_ids.filtered(
+            lambda a: a.bank_account_id.id == account_id
+        )[:1]
+        if not allocation:
+            return 0, True
+        return allocation.amount, allocation.amount_is_percentage
 
     def get_remaining_percentage(self):
         self.check_singleton()
-        distribution = self.salary_distribution or {}
-        allocated = 0.0
-
-        for vals in distribution.values():
-            if vals.get("amount_is_percentage"):
-                allocated += vals.get("amount", 0.0)
-
-        remaining = 100.0 - allocated
-        return max(0.0, remaining)
+        allocated = sum(
+            self.salary_allocation_ids.filtered("amount_is_percentage").mapped("amount")
+        )
+        return max(0.0, 100.0 - allocated)
 
     def _get_accounts_with_fixed_allocations(self):
         self.check_singleton()
-        distribution = self.salary_distribution or {}
-        return self.bank_account_ids.filtered(
-            lambda a: (
-                not distribution.get(str(a.id), {}).get("amount_is_percentage", True)
-            )
-        )
+        return self.salary_allocation_ids.filtered(
+            lambda a: not a.amount_is_percentage
+        ).mapped("bank_account_id")
 
     def _fold_version_windows(self, start, stop, fallback, per_window, combine):
         self.check_singleton()
@@ -3544,7 +3513,7 @@ class HrEmployee(models.Model):
         accounts_sudo = (
             self.env["res.partner.bank.account"]
             .sudo()
-            .browse(self.bank_account_ids.ids)
+            .browse(self.salary_bank_account_ids.ids)
         )
         to_move = accounts_sudo.filtered(
             lambda account: account.partner_id.id != partner_id
