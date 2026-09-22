@@ -947,6 +947,7 @@ class AccountJournal(models.Model):
         random_account = self.env['account.account'].with_company(company).search(
             self.env['account.account']._check_company_domain(company),
             limit=1,
+            order='id',
         )
         digits = len(random_account.code or '') if random_account else 6
 
