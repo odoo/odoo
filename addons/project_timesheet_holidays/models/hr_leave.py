@@ -228,18 +228,16 @@ class HrLeave(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        timesheet_ids_to_remove = []
+        timesheets_to_remove = self.env["account.analytic.line"].sudo()
         for leave in self:
-            if leave.number_of_days == 0 and leave.sudo().timesheet_ids:
+            if leave.number_of_days == 0 and (timesheets := leave.sudo().timesheet_ids):
                 _debug.lifecycle(
                     "leave_timesheets_dropped",
                     trigger="zero_days_after_write",
                     leaves=leave,
-                    timesheets=leave.sudo().timesheet_ids,
+                    timesheets=timesheets,
                 )
-                leave.sudo().timesheet_ids.holiday_id = False
-                timesheet_ids_to_remove.extend(leave.timesheet_ids)
-        self.env["account.analytic.line"].browse(
-            set(timesheet_ids_to_remove)
-        ).sudo().unlink()
+                timesheets.holiday_id = False
+                timesheets_to_remove |= timesheets
+        timesheets_to_remove.unlink()
         return res

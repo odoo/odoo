@@ -303,6 +303,32 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         timesheets.with_user(SUPERUSER_ID).unlink()
         self.assertFalse(timesheets.exists(), "Timesheet should be deleted")
 
+    def test_timesheets_of_a_timeoff_reduced_to_zero_days_are_deleted(self):
+        time_off = self.Requests.with_user(self.user_employee).create(
+            {
+                "name": "Covered by a public holiday",
+                "employee_id": self.empl_employee.id,
+                "holiday_status_id": self.hr_leave_type_with_ts.id,
+                "request_date_from": datetime(2022, 1, 31, 7, 0, 0, 0),
+                "request_date_to": datetime(2022, 1, 31, 18, 0, 0, 0),
+            }
+        )
+        time_off.with_user(SUPERUSER_ID).action_approve()
+        timesheets = time_off.sudo().timesheet_ids
+        self.assertTrue(timesheets)
+
+        self.env["resource.schedule.exception"].create(
+            {
+                "name": "Public Holiday Over The Time Off",
+                "calendar_id": self.employee_working_calendar.id,
+                "date_from": datetime(2022, 1, 31, 5, 0, 0, 0),
+                "date_to": datetime(2022, 1, 31, 23, 0, 0, 0),
+            }
+        )
+
+        self.assertEqual(time_off.number_of_days, 0)
+        self.assertFalse(timesheets.exists())
+
     def test_timeoff_task_creation_with_holiday_leave(self):
         company = self.env["res.company"].create({"name": "new company"})
         self.empl_employee.write(
