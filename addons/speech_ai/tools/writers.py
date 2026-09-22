@@ -47,10 +47,10 @@ class AiSpeech(BaseWriter):
         self.name = f"ai_speech_{mimetype.rsplit('/', 1)[-1]}"
         self.mimetype = mimetype
 
-    def available(self, env: Any) -> bool:
-        return bool(self._pick_model(env, env.company.id))
+    def available(self, env: Any, purpose: str | None = None) -> bool:
+        return bool(self._pick_model(env, env.company.id, purpose=purpose))
 
-    def _pick_model(self, env: Any, company_id: int) -> Any:
+    def _pick_model(self, env: Any, company_id: int, purpose: str | None = None) -> Any:
         writing = [
             vendor
             for vendor in _vendors(env)
@@ -60,7 +60,7 @@ class AiSpeech(BaseWriter):
             env,
             SYNTHESIS_KIND,
             company_id=company_id,
-            purpose=SYNTHESIS_PURPOSE,
+            purpose=purpose or SYNTHESIS_PURPOSE,
             provider_code=writing,
         )
 
@@ -71,7 +71,8 @@ class AiSpeech(BaseWriter):
                 "Speech synthesis needs an environment: pass env= to write audio"
             )
         company_id = company_id_of(env, options)
-        model = self._pick_model(env, company_id)
+        purpose = options.get("purpose") or SYNTHESIS_PURPOSE
+        model = self._pick_model(env, company_id, purpose)
         if not model:
             raise ValueError("No speech model is configured with a usable credential")
         return run(
@@ -79,7 +80,7 @@ class AiSpeech(BaseWriter):
             "synthesize",
             model,
             company_id=company_id,
-            purpose=SYNTHESIS_PURPOSE,
+            purpose=purpose,
             text=str(value),
             voice=options.get("voice"),
             mimetype=self.mimetype,

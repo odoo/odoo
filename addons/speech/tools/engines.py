@@ -19,33 +19,44 @@ def is_recording(mimetype: str) -> bool:
     return get_essential_mimetype(mimetype or "") in RECORDING_MIMETYPES
 
 
-def _is_usable(engine: Any, env: Any) -> bool:
+def _is_usable(engine: Any, env: Any, purpose: str | None) -> bool:
     declared = getattr(engine, "available", None)
-    return True if declared is None else bool(declared(env))
+    return True if declared is None else bool(declared(env, purpose=purpose))
 
 
-def transcription_engines(mimetype: str, env: Any = None) -> tuple[Any, ...]:
+def transcription_engines(
+    mimetype: str, env: Any = None, purpose: str | None = None
+) -> tuple[Any, ...]:
     return tuple(
         reader
         for reader in get_readers(get_essential_mimetype(mimetype or ""), CUES)
-        if ANY not in reader.mimetypes and (env is None or _is_usable(reader, env))
+        if ANY not in reader.mimetypes
+        and (env is None or _is_usable(reader, env, purpose))
     )
 
 
-def synthesis_engines(mimetype: str, env: Any = None) -> tuple[Any, ...]:
+def synthesis_engines(
+    mimetype: str, env: Any = None, purpose: str | None = None
+) -> tuple[Any, ...]:
     return tuple(
         writer
         for writer in get_writers(get_essential_mimetype(mimetype or ""), TEXT)
-        if writer.mimetype != ANY and (env is None or _is_usable(writer, env))
+        if writer.mimetype != ANY and (env is None or _is_usable(writer, env, purpose))
     )
 
 
-def can_transcribe(mimetype: str, env: Any = None) -> bool:
-    return is_recording(mimetype) and bool(transcription_engines(mimetype, env))
+def can_transcribe(mimetype: str, env: Any = None, purpose: str | None = None) -> bool:
+    return is_recording(mimetype) and bool(
+        transcription_engines(mimetype, env, purpose)
+    )
 
 
-def can_synthesize(mimetype: str = DEFAULT_SPEECH_MIMETYPE, env: Any = None) -> bool:
-    return bool(synthesis_engines(mimetype, env))
+def can_synthesize(
+    mimetype: str = DEFAULT_SPEECH_MIMETYPE,
+    env: Any = None,
+    purpose: str | None = None,
+) -> bool:
+    return bool(synthesis_engines(mimetype, env, purpose))
 
 
 ENGINE_ERROR = "speech_engine_error"

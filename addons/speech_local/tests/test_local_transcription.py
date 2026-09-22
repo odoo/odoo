@@ -51,7 +51,7 @@ class VendorStub(BaseReader):
         self.cues = cues
         self.error = error
 
-    def available(self, env):
+    def available(self, env, purpose=None):
         return self.usable
 
     def read(self, document):

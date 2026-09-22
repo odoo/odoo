@@ -77,15 +77,35 @@ class IrAttachment(models.Model):
 
     @api.depends("mimetype", "company_id")
     def _compute_can_transcribe(self) -> None:
+        purposes = self._transcript_purposes()
         readable = {}
         for attachment in self:
             company = attachment.company_id or self.env.company
-            key = (attachment.mimetype, company)
+            purpose = purposes.get(attachment.id)
+            key = (attachment.mimetype, company, purpose)
             if key not in readable:
                 readable[key] = can_transcribe(
-                    attachment.mimetype or "", self.with_company(company).env
+                    attachment.mimetype or "",
+                    self.with_company(company).env,
+                    purpose,
                 )
             attachment.can_transcribe = readable[key]
+
+    def _transcript_purposes(self) -> dict[int, str | None]:
+        segments = (
+            self.env["media.segment"].sudo().search([("attachment_id", "in", self.ids)])
+        )
+        options_by_owner = {}
+        purposes = {}
+        for segment in segments:
+            owner = segment._owner()
+            if owner is None or not hasattr(owner, "_media_transcription_options"):
+                continue
+            key = (owner._name, owner.id)
+            if key not in options_by_owner:
+                options_by_owner[key] = owner._media_transcription_options()
+            purposes[segment.attachment_id.id] = options_by_owner[key].get("purpose")
+        return purposes
 
     def _transcript_cues(self) -> list[Cue]:
         self.check_singleton()
@@ -151,7 +171,8 @@ class IrAttachment(models.Model):
         self.check_singleton()
         mimetype = self.mimetype or ""
         company = self.company_id or self.env.company
-        if not can_transcribe(mimetype, self.with_company(company).env):
+        purpose = self._transcript_owner_options().get("purpose")
+        if not can_transcribe(mimetype, self.with_company(company).env, purpose):
             raise UserError(
                 self.env._(
                     "No speech engine reads %(mimetype)s.", mimetype=mimetype or "?"

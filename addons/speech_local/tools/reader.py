@@ -59,7 +59,7 @@ class LocalTranscription(BaseReader):
     cost = EXPENSIVE
     defers = True
 
-    def available(self, env: Any) -> bool:
+    def available(self, env: Any, purpose: str | None = None) -> bool:
         return local_engine(env) is not None
 
     def read(self, document: Any) -> list[Cue] | None:

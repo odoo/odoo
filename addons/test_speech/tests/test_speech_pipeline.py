@@ -5,7 +5,13 @@ from odoo.exceptions import UserError
 from odoo.libs.documents import CHEAP, Cue
 from odoo.tests import tagged
 
-from .common import CUE_FIXTURE, SpeechCase, StubSpeech, StubTranscription
+from .common import (
+    CUE_FIXTURE,
+    PurposeAwareTranscription,
+    SpeechCase,
+    StubSpeech,
+    StubTranscription,
+)
 
 
 @tagged("post_install", "-at_install")
@@ -317,7 +323,7 @@ class TestSynthesis(SpeechCase):
         class Unavailable(StubSpeech):
             name = "unavailable_speech"
 
-            def available(self, env):
+            def available(self, env, purpose=None):
                 return False
 
         unusable = Unavailable(b"never-spoken")
@@ -398,3 +404,51 @@ class TestTranscriptionLater(SpeechCase):
         job = self._job(attachment)
         self.assertEqual(len(job), 1)
         self.assertEqual(job.state, "pending")
+
+
+@tagged("post_install", "-at_install")
+class TestAvailabilityFollowsThePurpose(SpeechCase):
+    def _owned(self, purpose):
+        recording = self._recording()
+        attachment = self._audio()
+        recording._add_media_segment(attachment, 0, 3000)
+        self.patch(
+            type(recording),
+            "_media_transcription_options",
+            lambda self: {"purpose": purpose},
+        )
+        return recording, attachment
+
+    def test_an_engine_is_asked_for_the_purpose_its_owner_transcribes_under(self):
+        engine = self._register(
+            PurposeAwareTranscription(serves={"speech.transcription.call"})
+        )
+        _recording, attachment = self._owned("speech.transcription.call")
+        self.assertTrue(attachment.can_transcribe)
+        self.assertEqual(engine.asked[-1], "speech.transcription.call")
+
+    def test_an_engine_that_refuses_that_purpose_cannot_transcribe_it(self):
+        self._register(PurposeAwareTranscription(serves={"speech.transcription"}))
+        _recording, attachment = self._owned("speech.transcription.call")
+        self.assertFalse(
+            attachment.can_transcribe,
+            "the owner's purpose decides, not the generic one",
+        )
+
+    def test_an_attachment_no_owner_claims_is_asked_for_no_purpose(self):
+        engine = self._register(PurposeAwareTranscription(serves={None}))
+        self.assertTrue(self._audio().can_transcribe)
+        self.assertIsNone(engine.asked[-1])
+
+    def test_transcribing_refuses_what_the_owners_purpose_may_not_reach(self):
+        self._register(PurposeAwareTranscription(serves={"speech.transcription"}))
+        _recording, attachment = self._owned("speech.transcription.call")
+        with self.assertRaisesRegex(UserError, "No speech engine reads"):
+            attachment._transcribe()
+
+    def test_the_timeline_action_asks_for_its_own_purpose(self):
+        engine = self._register(PurposeAwareTranscription(serves=set()))
+        recording, _attachment = self._owned("speech.transcription.call")
+        recording.action_transcribe_media()
+        self.assertEqual(engine.asked[-1], "speech.transcription.call")
+        self.assertEqual(recording.segment_ids.attachment_id.transcript_state, "none")

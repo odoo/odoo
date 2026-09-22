@@ -42,6 +42,19 @@ class StubTranscription(BaseReader):
         return list(self.cues)
 
 
+class PurposeAwareTranscription(StubTranscription):
+    name = "stub_purpose_aware_transcription"
+
+    def __init__(self, serves=(), cues=None):
+        super().__init__(cues=cues)
+        self.serves = set(serves)
+        self.asked = []
+
+    def available(self, env, purpose=None):
+        self.asked.append(purpose)
+        return purpose in self.serves
+
+
 class StubSpeech(BaseWriter):
     name = "stub_speech"
     mimetype = "audio/mpeg"

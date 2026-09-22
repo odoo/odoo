@@ -47,8 +47,10 @@ class AiTranscription(BaseReader):
     yields = (CUES,)
     cost = EXPENSIVE
 
-    def available(self, env: Any) -> bool:
-        return bool(_pick_timed_model(env, env.company.id, TRANSCRIPTION_PURPOSE))
+    def available(self, env: Any, purpose: str | None = None) -> bool:
+        return bool(
+            _pick_timed_model(env, env.company.id, purpose or TRANSCRIPTION_PURPOSE)
+        )
 
     def read(self, document: Any) -> list[Cue]:
         env = document.options.get("env")
