@@ -29,33 +29,34 @@ class EventEventTicket(models.Model):
             EventEventTicket, self - inactive_product_tickets
         )._compute_sale_available()
 
+    def _tax_included(self, amount, currency):
+        """`amount` with this ticket's product taxes applied, rounded in `currency`.
+
+        The two tax computes below differ only in the amount and the currency
+        they hand to compute_all; everything else was the same six lines twice.
+        """
+        self.check_singleton()
+        # sudo necessary here since the field is most probably accessed through the website
+        taxes = self.product_id.taxes_id.filtered_domain(
+            self.env["account.tax"]._check_company_domain(self.event_id.company_id)
+        )
+        return taxes.compute_all(amount, currency, 1.0, product=self.product_id)[
+            "total_included"
+        ]
+
     @api.depends("price_reduce", "product_id", "product_id.taxes_id")
     def _compute_price_reduce_taxinc(self):
-        for event in self:
-            # sudo necessary here since the field is most probably accessed through the website
-            tax_ids = event.product_id.taxes_id.filtered_domain(
-                self.env["account.tax"]._check_company_domain(event.event_id.company_id)
+        for ticket in self:
+            ticket.price_reduce_taxinc = ticket._tax_included(
+                ticket.price_reduce, ticket.event_id.company_id.currency_id
             )
-            taxes = tax_ids.compute_all(
-                event.price_reduce,
-                event.event_id.company_id.currency_id,
-                1.0,
-                product=event.product_id,
-            )
-            event.price_reduce_taxinc = taxes["total_included"]
 
     @api.depends("product_id", "product_id.taxes_id", "price")
     def _compute_price_incl(self):
-        for event in self:
-            if event.product_id and event.price:
-                tax_ids = event.product_id.taxes_id.filtered_domain(
-                    self.env["account.tax"]._check_company_domain(
-                        event.event_id.company_id
-                    )
+        for ticket in self:
+            if ticket.product_id and ticket.price:
+                ticket.price_incl = ticket._tax_included(
+                    ticket.price, ticket.currency_id
                 )
-                taxes = tax_ids.compute_all(
-                    event.price, event.currency_id, 1.0, product=event.product_id
-                )
-                event.price_incl = taxes["total_included"]
             else:
-                event.price_incl = 0
+                ticket.price_incl = 0
