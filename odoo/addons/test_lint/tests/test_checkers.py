@@ -21,6 +21,7 @@ from . import (
     _checker_receiver,
     _checker_shadowed_def,
     _checker_sql,
+    _checker_sql_placeholder,
     _checker_tax_company,
     _checker_unlink,
     _pretty_xml,
@@ -2472,6 +2473,70 @@ class TestHandRolledRangeLint(BaseCase):
             amount_min = fields.Float()
             date_min = fields.Date()
             date_max = fields.Date()
+            """),
+            [],
+        )
+
+
+@no_retry
+class TestSqlBoundPlaceholderLint(BaseCase):
+    """psycopg 3 binds server-side, so a placeholder is a value and nothing
+    else: `IN $1` and `INTERVAL $1` do not parse."""
+
+    def _check(self, snippet):
+        return [
+            v.lineno
+            for v in _checker_sql_placeholder.check(ast.parse(dedent(snippet).strip()))
+        ]
+
+    def test_a_bound_placeholder_in_a_syntax_position_is_flagged(self):
+        self.assertEqual(
+            self._check("""
+            self.env.cr.execute("SELECT id FROM t WHERE id IN %s", (ids,))
+            """),
+            [1],
+        )
+        self.assertEqual(
+            self._check("""
+            cr.execute("SELECT now() - interval %s", ("1 hours",))
+            """),
+            [1],
+        )
+
+    def test_a_statement_built_through_sql_is_not(self):
+        # SQL()'s tuple branch expands to (%s, %s, ...) and SQL.literal renders
+        # the value inline, so neither binds in a syntax position.
+        self.assertEqual(
+            self._check("""
+            cr.execute(SQL("SELECT id FROM t WHERE id IN %s", tuple(ids)))
+            """),
+            [],
+        )
+        self.assertEqual(
+            self._check("""
+            cr.execute(SQL("SELECT now() - INTERVAL %s", SQL.literal(offset)))
+            """),
+            [],
+        )
+
+    def test_the_spellings_that_do_bind_a_value_are_not(self):
+        self.assertEqual(
+            self._check("""
+            cr.execute("SELECT id FROM t WHERE id = ANY(%s)", (ids,))
+            """),
+            [],
+        )
+        self.assertEqual(
+            self._check("""
+            cr.execute("SELECT now() - %s", (timedelta(hours=1),))
+            """),
+            [],
+        )
+
+    def test_a_log_message_is_not_a_statement(self):
+        self.assertEqual(
+            self._check("""
+            _logger.warning("no %s in %s", needle, haystack)
             """),
             [],
         )

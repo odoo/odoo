@@ -20,6 +20,7 @@ from . import (
     _checker_row_counter,
     _checker_shadowed_def,
     _checker_sql,
+    _checker_sql_placeholder,
     _checker_tax_company,
     _checker_typed_route,
     _checker_unlink,
@@ -269,6 +270,15 @@ RULES: tuple[Rule, ...] = (
         "probe that must stay open takes `# noqa: E8528  <why>`",
     ),
     Rule(
+        "sql-bound-placeholder",
+        "E8534",
+        "a bound parameter cannot stand where PostgreSQL parses syntax: psycopg "
+        "binds server-side, so `IN %s` and `INTERVAL %s` in a raw `cr.execute` "
+        "reach the server as `IN $1` and never parse -- build the statement with "
+        "SQL() (its tuple branch expands, SQL.literal inlines) or pass a value "
+        "the driver adapts, such as a timedelta for an interval",
+    ),
+    Rule(
         "route-untyped",
         "E8533",
         "declare the parameters of a route a program calls: `typed=True` on a "
@@ -419,6 +429,10 @@ def _tax_company(unit: Unit) -> Iterable[object]:
     return _checker_tax_company.check(unit.tree, unit.nodes)
 
 
+def _sql_bound_placeholder(unit: Unit) -> Iterable[object]:
+    return _checker_sql_placeholder.check(unit.tree)
+
+
 def _band_range(unit: Unit) -> Iterable[object]:
     if "/addons/base/" in unit.path:
         return ()
@@ -535,6 +549,11 @@ CHECKERS: tuple[Checker, ...] = (
         _receiver_fail_open,
         _in_an_addon_outside_tests,
         frozenset({"receiver-fail-open"}),
+    ),
+    Checker(
+        _sql_bound_placeholder,
+        _anywhere,
+        frozenset({"sql-bound-placeholder"}),
     ),
     Checker(
         _route_untyped,
