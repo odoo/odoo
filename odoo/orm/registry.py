@@ -242,6 +242,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     models_to_check = registry._models_to_check
                     registry = object.__new__(cls)
                     registry.init(db_name, models_to_check=models_to_check)
+                    registry.setup_signaling()
                     cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
                     cr.transaction.reset()  # rebind the transaction to the new registry
                     upgrade_modules = install_modules = reinit_modules = ()
