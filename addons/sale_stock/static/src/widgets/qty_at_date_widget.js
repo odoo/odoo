@@ -59,6 +59,7 @@ export class QtyAtDateWidget extends Component {
             if (['draft', 'sent'].includes(data.state)) {
                 // Moves aren't created yet, then the forecasted is only based on virtual_available of quant
                 this.calcData.forecasted_issue = !this.calcData.will_be_fulfilled && !data.is_mto;
+                this.calcData.reservation_issue = data.free_qty_today < data.qty_to_deliver;
             } else {
                 // Moves are created, using the forecasted data of related moves
                 this.calcData.forecasted_issue = !this.calcData.will_be_fulfilled || this.calcData.will_be_late;
