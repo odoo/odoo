@@ -7,6 +7,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.fields import Command
 from odoo.fields import Datetime as FieldsDatetime
 from odoo.tools import OrderedSet
+from odoo.tools.authority_keys import strip_authority_keys
 from odoo.tools.cache_version import versioned, versioned_envelope
 
 
@@ -460,7 +461,9 @@ class Base(models.AbstractModel):
         )
         co_records = self.env[field.comodel_name].browse(co_ids)
         if "context" in field_spec:
-            co_records = co_records.with_context(**field_spec["context"])
+            co_records = co_records.with_context(
+                **strip_authority_keys(field_spec["context"], door="web_read")
+            )
 
         extra_fields = dict(field_spec["fields"])
         extra_fields.pop("display_name", None)
@@ -549,7 +552,9 @@ class Base(models.AbstractModel):
                 co_records = accessible.with_context(co_records.env.context)
 
         if "context" in field_spec:
-            co_records = co_records.with_context(**field_spec["context"])
+            co_records = co_records.with_context(
+                **strip_authority_keys(field_spec["context"], door="web_read")
+            )
 
         if "fields" in field_spec:
             if field_spec.get("limit") is not None:
@@ -599,7 +604,9 @@ class Base(models.AbstractModel):
             co_ids = list({co_id for _, co_id in pairs})
             CoModel = self.env[model_name]
             if "context" in field_spec:
-                CoModel = CoModel.with_context(**field_spec["context"])
+                CoModel = CoModel.with_context(
+                    **strip_authority_keys(field_spec["context"], door="web_read")
+                )
             co_recordset = CoModel.browse(co_ids)
 
             co_data = {}
@@ -647,7 +654,7 @@ class Base(models.AbstractModel):
         if not field_spec or "fields" not in field_spec:
             return
 
-        prop_ctx = field_spec.get("context")
+        prop_ctx = strip_authority_keys(field_spec.get("context"), door="web_read")
 
         batch_ids: dict[tuple[str, str], set[int]] = defaultdict(set)
         batch_specs: dict[str, dict] = {}

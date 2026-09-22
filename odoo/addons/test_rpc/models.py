@@ -25,6 +25,18 @@ class Test_RpcModel_A(models.Model):
     def not_depending_on_id(self, vals=None):
         return f"got {vals}"
 
+    @api.model
+    def echo_context_keys(self):
+        return sorted(self.env.context)
+
+    @api.model
+    def echo_context_action(self):
+        return {
+            "type": "ir.actions.client",
+            "tag": "test_rpc_echo",
+            "params": {"keys": sorted(self.env.context)},
+        }
+
 
 class Test_RpcModel_B(models.Model):
     _name = "test_rpc.model_b"

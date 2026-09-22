@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.64
+:Version: 6.65
 :Date: 2026-09-22
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -7896,7 +7896,7 @@ Every new model ships explicit access rules ``[review]``. A model with no
   optional-dependency idiom.
 
 * **A read-only tier is the lowest rung of its privilege**
-  ``[readonly_tiers]``. ``account``, ``stock``, ``sale``, ``purchase`` and
+  ``[review]``. ``account``, ``stock``, ``sale``, ``purchase`` and
   ``mrp`` each carry ``group_<app>_readonly``: sequence 5 or 10, ``privilege_id``
   set, implying ``base.group_user``. It reads every model the app shows and
   writes none (``grants_write``); where a rung of the same privilege narrows a
@@ -7909,7 +7909,12 @@ Every new model ships explicit access rules ``[review]``. A model with no
   purchase, User in stock and mrp, Invoicing in account -- and a gate on an
   affordance the tier must reach spells the pair
   ``groups="<transacting rung>,<tier>"``. A sixth app copies the rule, not a
-  module.
+  module. The ``readonly_tiers`` gate that checked the three invariants over
+  every app went with ``odoo/tooling/``. What runs now is each app's own
+  ``tests/test_group_readonly.py`` (account, stock, sale, purchase, mrp): the
+  tier's rung and implication, and that it reads and does not write
+  (``grants_write``). None of them checks ``ruleless`` or ``dead_rows``, so
+  those two are review. A sixth app ships that test file too.
 
 10.9 Configuration and secrets
 ------------------------------
@@ -7943,6 +7948,37 @@ Every new model ships explicit access rules ``[review]``. A model with no
 * Python dependencies pinned with hashes; ``pip-audit`` run regularly.
 
 ----
+
+10.11 Authority context keys
+----------------------------
+
+**The context carries preferences, never authority** ``[review]``. A key that
+skips a validation, a lock or an approval, widens what a user reaches, picks
+the company or the user, or marks an install (``skip_readonly_check``,
+``force_delete``, ``install_mode``, ``uid``) is an *authority key*: server code
+may set it in-process, a client never. Declare it in
+``odoo/tools/authority_keys.py`` (``declare_authority_keys(owner, *keys)``; an
+addon may call it at import) in the same change that reads it. Every door
+strips declared keys from the context a client sends -- ``call_kw`` (the
+browser's ``call_kw`` and ``call_button``, ``/xmlrpc/2``, MCP), the
+``context`` parameter of every JSON-RPC and json2 route, the field-spec
+contexts of ``web_read`` and ``onchange``, and the report and export
+routes -- so a forged key never reaches a model and an in-process
+``with_context`` keeps working.
+
+* **A flow that hands the key back to the browser cannot declare it yet.** A
+  wizard that returns an action whose context carries the key, and expects the
+  next click to send it back, loses it on the round trip; carry the decision
+  server-side first. ``skip_consumption`` (mrp's consumption warning, then the
+  backorder wizard) and ``skip_expired`` (product_expiry's confirmation, then
+  the backorder wizard) are the two known today.
+* **A key compared by identity to an ``object()`` sentinel needs no
+  declaration** (``bypass_audit``, ``skip_captcha_login``,
+  ``bypass_restricted_rendering``): JSON cannot produce the object.
+* **Raw SQL never takes a company, a user or a scope from the context.** It
+  reads ``self.env.company`` / ``self.env.companies``, which the ORM has
+  already checked against the user's companies, and the fields that expose it
+  carry the ``groups=`` of the model the SQL reads past (``product_margin``).
 
 11. Performance
 ===============
@@ -8828,6 +8864,12 @@ which that test should go.
    * - Version
      - Date
      - Summary
+   * - 6.65
+     - 2026-09-22
+     - §10.11: the context carries preferences, never authority; authority
+       keys are declared in ``odoo/tools/authority_keys.py`` and stripped at
+       every door. §10.8's read-only tier points at each app's
+       ``test_group_readonly.py`` instead of the deleted ``readonly_tiers``.
    * - 6.64
      - 2026-09-22
      - §11.8 states what a lock is for, measured: REPEATABLE READ already

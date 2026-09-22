@@ -19,6 +19,7 @@ from odoo.libs.filesystem import osutil
 from odoo.libs.json import dumps as json_dumps
 from odoo.libs.json import loads as json_loads
 from odoo.models import PREFETCH_MAX
+from odoo.tools.authority_keys import strip_authority_keys
 
 from ..tools import debug_log as dbg
 from .export_writers import (
@@ -553,7 +554,8 @@ class ExportFormat:
         )(params)
 
         Model = request.env[model].with_context(
-            import_compat=import_compat, **params.get("context", {})
+            import_compat=import_compat,
+            **strip_authority_keys(params.get("context", {}), door="export"),
         )
         dbg.pipeline.debug(
             "[export:%s] %s: %d fields ids=%s domain_terms=%s import_compat=%s "

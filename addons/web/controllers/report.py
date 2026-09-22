@@ -12,6 +12,7 @@ from odoo.http import (
 )
 from odoo.libs.json import dumps as json_dumps
 from odoo.libs.json import loads as json_loads
+from odoo.tools.authority_keys import strip_authority_keys
 from odoo.tools.misc import html_escape
 from odoo.tools.safe_eval import safe_eval, time
 
@@ -96,7 +97,9 @@ class ReportController(http.Controller):
                 dbg.keys(data),
             )
         if data.get("context"):
-            data["context"] = json_loads(data["context"])
+            data["context"] = strip_authority_keys(
+                json_loads(data["context"]), door="report"
+            )
             context.update(data["context"])
             dbg.logic.debug(
                 "[report:%s] routes: context extended with %s",

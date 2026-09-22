@@ -3,6 +3,7 @@ from typing import Any
 from odoo.api import NewId
 from odoo.fields import Command
 from odoo.models import BaseModel
+from odoo.tools.authority_keys import strip_authority_keys
 
 
 class RecordSnapshot(dict):
@@ -28,7 +29,11 @@ class RecordSnapshot(dict):
         if self.record._fields[field_name].type in ("one2many", "many2many"):
             lines = self.record[field_name]
             if "context" in self.fields_spec[field_name]:
-                lines = lines.with_context(**self.fields_spec[field_name]["context"])
+                lines = lines.with_context(
+                    **strip_authority_keys(
+                        self.fields_spec[field_name]["context"], door="onchange"
+                    )
+                )
             sub_fields_spec = self.fields_spec[field_name].get("fields") or {}
             self[field_name] = {
                 line.id: RecordSnapshot(line, sub_fields_spec) for line in lines

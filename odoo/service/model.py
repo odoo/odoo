@@ -26,6 +26,7 @@ from odoo.libs.worker_thread import current_worker_thread
 from odoo.models import BaseModel
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
+from odoo.tools.authority_keys import strip_authority_keys
 from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES
 
 from . import api_scope
@@ -119,6 +120,11 @@ def _scope_rules(model: BaseModel) -> api_scope.ScopeRules | None:
 
 
 def call_kw(model: BaseModel, name: str, args: Sequence, kwargs: Mapping) -> typing.Any:
+    if "context" in kwargs:
+        kwargs = {
+            **kwargs,
+            "context": strip_authority_keys(kwargs["context"], door="call_kw"),
+        }
     rules = _scope_rules(model)
     if rules is None:
         return _call_kw(model, name, args, kwargs)

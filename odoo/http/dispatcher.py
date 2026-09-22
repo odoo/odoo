@@ -20,6 +20,7 @@ from werkzeug.exceptions import (
 
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
+from odoo.tools.authority_keys import strip_authority_keys
 
 from ._cors import is_cors_preflight, stage_cors_headers, stage_preflight_headers
 from ._error_serialization import serialize_exception
@@ -381,6 +382,10 @@ class JsonRPCDispatcher(Dispatcher):
                 f"JSON-RPC params must be an object (got {type(params).__name__!r})"
             )
         self.request.params = params | args
+        if "context" in self.request.params:
+            self.request.params["context"] = strip_authority_keys(
+                self.request.params["context"], door="jsonrpc"
+            )
         _debug.pipeline(
             "http.jsonrpc.request",
             id=self.request_id,
@@ -520,6 +525,10 @@ class Json2Dispatcher(Dispatcher):
             **(self.jsonrequest or {}),
             **args,
         }
+        if "context" in self.request.params:
+            self.request.params["context"] = strip_authority_keys(
+                self.request.params["context"], door="json2"
+            )
         _debug.pipeline(
             "http.json2.request",
             method=httprequest.method,
