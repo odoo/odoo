@@ -68,6 +68,60 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         string="End Date",
         required=True,
     )
+    leave_type_request_unit = fields.Selection(
+        related="holiday_status_id.request_unit",
+    )
+    # only meaningful when the type is taken in hours
+    hour_from = fields.Float(
+        string="Hour from",
+        compute="_compute_hour_from_to",
+        readonly=False,
+        store=True,
+    )
+    hour_to = fields.Float(
+        string="Hour to",
+        compute="_compute_hour_from_to",
+        readonly=False,
+        store=True,
+    )
+    # only meaningful when the type is taken in half days
+    date_from_period = fields.Selection(
+        selection=[("am", "Morning"), ("pm", "Afternoon")],
+        string="Date Period Start",
+        default="am",
+    )
+    date_to_period = fields.Selection(
+        selection=[("am", "Morning"), ("pm", "Afternoon")],
+        string="Date Period End",
+        default="pm",
+    )
+
+    @api.depends("employee_ids", "date_from", "date_to", "leave_type_request_unit")
+    def _compute_hour_from_to(self):
+        """Propose the working hours of the days being asked for.
+
+        One shared calendar for the whole batch is the best that can be
+        proposed: the hours land on every generated request, so they cannot
+        follow each employee. Fall back to the company calendar as soon as
+        the selection does not agree on one.
+        """
+        company_calendar = self.env.company.resource_calendar_id
+        for record in self:
+            calendars = record.employee_ids.resource_calendar_id
+            calendar = calendars if len(calendars) == 1 else company_calendar
+            if (
+                record.leave_type_request_unit == "hour"
+                and record.date_from
+                and record.date_to
+                and calendar
+            ):
+                record.hour_from, _unused = calendar._get_hours_for_date(
+                    record.date_from
+                )
+                _unused, record.hour_to = calendar._get_hours_for_date(record.date_to)
+            else:
+                record.hour_from = 0.0
+                record.hour_to = 0.0
 
     def _get_employees_from_allocation_mode(self):
         self.check_singleton()
@@ -96,21 +150,37 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
             self.env.user.has_group("hr_holidays.group_hr_holidays_user")
             or self.holiday_status_id.leave_validation_type == "no_validation"
         )
-        return [
-            {
+        values = []
+        for employee in employees:
+            if not work_days_data[employee.id]["days"]:
+                continue
+            employee_values = {
                 "name": self.name,
                 "holiday_status_id": self.holiday_status_id.id,
-                "date_from": date_from_tz,
-                "date_to": date_to_tz,
                 "request_date_from": self.date_from,
                 "request_date_to": self.date_to,
-                "number_of_days": work_days_data[employee.id]["days"],
                 "employee_id": employee.id,
                 "state": "validate" if validated else "confirm",
             }
-            for employee in employees
-            if work_days_data[employee.id]["days"]
-        ]
+            if self.leave_type_request_unit == "hour":
+                employee_values["request_hour_from"] = self.hour_from
+                employee_values["request_hour_to"] = self.hour_to
+            elif self.leave_type_request_unit == "half_day":
+                employee_values["request_date_from_period"] = self.date_from_period
+                employee_values["request_date_to_period"] = self.date_to_period
+            else:
+                # a full day spans the whole window, which is already known
+                # here; letting _compute_date_from_to redo it would recompute
+                # number_of_days for every leave of the batch at once
+                employee_values.update(
+                    {
+                        "date_from": date_from_tz,
+                        "date_to": date_to_tz,
+                        "number_of_days": work_days_data[employee.id]["days"],
+                    }
+                )
+            values.append(employee_values)
+        return values
 
     def action_generate_time_off(self):
         self.check_singleton()
@@ -119,18 +189,38 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         tz = timezone(
             self.company_id.resource_calendar_id.tz or self.env.user.tz or "UTC"
         )
-        date_from_tz = (
-            datetime.combine(self.date_from, datetime.min.time())
-            .replace(tzinfo=tz)
-            .astimezone(UTC)
-            .replace(tzinfo=None)
-        )
-        date_to_tz = (
-            datetime.combine(self.date_to, datetime.max.time())
-            .replace(tzinfo=tz)
-            .astimezone(UTC)
-            .replace(tzinfo=None)
-        )
+        if self.leave_type_request_unit == "hour":
+            date_from_tz = (
+                (
+                    datetime.combine(self.date_from, datetime.min.time())
+                    + timedelta(hours=self.hour_from)
+                )
+                .replace(tzinfo=tz)
+                .astimezone(UTC)
+                .replace(tzinfo=None)
+            )
+            date_to_tz = (
+                (
+                    datetime.combine(self.date_to, datetime.min.time())
+                    + timedelta(hours=self.hour_to)
+                )
+                .replace(tzinfo=tz)
+                .astimezone(UTC)
+                .replace(tzinfo=None)
+            )
+        else:
+            date_from_tz = (
+                datetime.combine(self.date_from, datetime.min.time())
+                .replace(tzinfo=tz)
+                .astimezone(UTC)
+                .replace(tzinfo=None)
+            )
+            date_to_tz = (
+                datetime.combine(self.date_to, datetime.max.time())
+                .replace(tzinfo=tz)
+                .astimezone(UTC)
+                .replace(tzinfo=None)
+            )
 
         conflicting_leaves = (
             self.env["hr.leave"]

@@ -107,3 +107,57 @@ class TestLeaveGenerateMultiWizard(TestHrHolidaysCommon):
         wizard = self._wizard(employee_ids=[(6, 0, self.uncovered.ids)])
         action = wizard.action_generate_time_off()
         self.assertFalse(self.env["hr.leave"].search(action["domain"]))
+
+    def _typed_wizard(self, request_unit, **values):
+        leave_type = self.env["hr.leave.type"].create(
+            {
+                "name": f"Batch {request_unit}",
+                "requires_allocation": False,
+                "leave_validation_type": "no_validation",
+                "request_unit": request_unit,
+                "company_id": self.company.id,
+            }
+        )
+        return self.env["hr.leave.generate.multi.wizard"].create(
+            {
+                "name": f"Batch of {request_unit}",
+                "holiday_status_id": leave_type.id,
+                "allocation_mode": "employee",
+                "employee_ids": [(6, 0, self.covered.ids)],
+                "date_from": date(2026, 6, 10),
+                "date_to": date(2026, 6, 10),
+                **values,
+            }
+        )
+
+    def test_hourly_type_keeps_the_hours_asked_for(self):
+        """An hour-based type generated in batch spans the chosen hours, not
+        the whole day."""
+        wizard = self._typed_wizard("hour", hour_from=9.0, hour_to=12.0)
+        action = wizard.action_generate_time_off()
+        leave = self.env["hr.leave"].search(action["domain"])
+
+        self.assertEqual(len(leave), 1)
+        self.assertEqual(leave.request_hour_from, 9.0)
+        self.assertEqual(leave.request_hour_to, 12.0)
+        self.assertEqual(
+            leave.number_of_hours,
+            3.0,
+            "a 09:00-12:00 batch request should last three hours, not a full day",
+        )
+
+    def test_half_day_type_keeps_the_period_asked_for(self):
+        """A half-day type generated in batch takes the chosen half."""
+        wizard = self._typed_wizard(
+            "half_day", date_from_period="pm", date_to_period="pm"
+        )
+        action = wizard.action_generate_time_off()
+        leave = self.env["hr.leave"].search(action["domain"])
+
+        self.assertEqual(len(leave), 1)
+        self.assertEqual(leave.request_date_from_period, "pm")
+        self.assertEqual(
+            leave.number_of_days,
+            0.5,
+            "an afternoon batch request should last half a day",
+        )
