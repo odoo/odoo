@@ -6,17 +6,20 @@ def raise_event_ticket_service_tracking_error(products):
     """Raise the ValidationError shared by product.product's and
     event.type.ticket's _check_event_ticket_service_tracking constraints.
 
-    `products` only needs to be a non-empty product.product recordset;
-    fields_get() reads model metadata, not record data.
+    `products` must be the offending product.product records, not the whole
+    batch being written: they are named in the message, so a multi-record
+    write says which product to go and fix.
     """
     service_tracking = products.fields_get(
         ["service_tracking"], ["string", "selection"]
     )["service_tracking"]
     raise ValidationError(
         _(
-            'Products linked to an event ticket must have "%(tracking)s" set to "%(event)s".',
+            'Products linked to an event ticket must have "%(tracking)s" set to '
+            '"%(event)s":\n%(products)s',
             tracking=service_tracking["string"],
             event=dict(service_tracking["selection"])["event"],
+            products="\n".join(f"- {name}" for name in products.mapped("display_name")),
         )
     )
 
@@ -43,9 +46,11 @@ class ProductProduct(models.Model):
 
     @api.constrains("event_ticket_ids", "event_type_ticket_ids", "service_tracking")
     def _check_event_ticket_service_tracking(self):
-        if any(
-            product.service_tracking != "event"
-            for product in self
-            if product.event_ticket_ids or product.event_type_ticket_ids
-        ):
-            raise_event_ticket_service_tracking_error(self)
+        bad = self.filtered(
+            lambda product: (
+                (product.event_ticket_ids or product.event_type_ticket_ids)
+                and product.service_tracking != "event"
+            )
+        )
+        if bad:
+            raise_event_ticket_service_tracking_error(bad)
