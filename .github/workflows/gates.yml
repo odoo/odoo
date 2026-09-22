@@ -64,6 +64,11 @@ jobs:
         working-directory: crates/odoo_rust
         run: maturin develop --release
 
+      # a separate, test-only wheel: the lint scanner both pytest tiers import
+      - name: Build odoo_lint
+        working-directory: crates/odoo_lint
+        run: maturin develop --release
+
       - name: gates.sh
         run: ./gates.sh --perf-counts
 
