@@ -44,3 +44,4 @@ from . import test_hr_holidays_controllers
 from . import test_leave_approval_engine
 from . import test_allocation_approval_engine
 from . import test_deployed_employee_time_zone
+from . import test_search_filters

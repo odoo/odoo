@@ -34,6 +34,11 @@
                     string="Waiting For Me"
                     domain="[                         ('state','in',['confirm','validate1']),                         '|',                             ('employee_id.user_id', '!=', uid),                             '|',                                 '&amp;',                                     ('state','=','confirm'),                                     ('holiday_status_id.leave_validation_type','=','hr'),                                 ('state','=','validate1')]"
                     groups="hr_holidays.group_hr_holidays_user" />
+                <filter
+                    name="missing_document"
+                    string="Missing Document"
+                    help="Requests whose type asks for a supporting document but that carry none"
+                    domain="[                         ('holiday_status_id.support_document', '=', True),                         ('attachment_ids', '=', False),                     ]" />
                 <separator />
                 <filter
                     name="approve"
