@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="report_formula.AccountReportFilterOptionalColumns">
+        <Dropdown>
+            <button class="btn btn-secondary">
+                <i class="fa-solid fa-table-columns me-1"/>
+                Columns
+            </button>
+
+            <t t-set-slot="content">
+                <t
+                    t-foreach="controller.cachedFilterOptions.optional_columns"
+                    t-as="column"
+                    t-key="column.id"
+                >
+                    <DropdownItem
+                        class="{ 'selected': column.selected }"
+                        onSelected="() => this.toggleOptionalColumn(column.id)"
+                        closingMode="'none'"
+                    >
+                        <t t-out="column.name"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

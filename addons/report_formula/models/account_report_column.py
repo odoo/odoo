@@ -32,4 +32,11 @@ class AccountReportColumn(models.Model):
         string="Blank if Zero",
         help="When checked, 0 values will not show in this column.",
     )
+    optional = fields.Boolean(
+        help="When checked, the reader can switch this column off from the report.",
+    )
+    optional_hidden = fields.Boolean(
+        string="Optional, Hidden by Default",
+        help="When checked, an optional column starts out switched off.",
+    )
     custom_audit_action_id = fields.Many2one(comodel_name="ir.actions.act_window")

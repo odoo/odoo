@@ -84,7 +84,7 @@ class AccountReportLines(models.Model):
                         "blank_if_zero": report_column.blank_if_zero,
                         "class": f"text-nowrap {('text-end' if report_column.figure_type in NUMBER_FIGURE_TYPES else 'text-center')}",
                     }
-                    for report_column in self.column_ids
+                    for report_column in self._get_visible_columns(options)
                 )
 
         if _debug.pipeline.enabled:

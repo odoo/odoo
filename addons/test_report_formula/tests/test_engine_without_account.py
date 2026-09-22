@@ -249,3 +249,102 @@ class TestEngineWithoutAccount(TransactionCase):
     def test_a_spreadsheet_cell_naming_no_line_gets_false(self):
         january = {"range_type": "month", "year": 2020, "month": 1}
         self.assertEqual(self._fetch(("NOPE", january)), [False])
+
+    def _optional_column_report(self, hidden_by_default):
+        return self.env["report.formula"].create(
+            {
+                "name": "Amounts with an optional column",
+                "source_model": "test.report.formula.entry",
+                "source_measure_field": "amount",
+                "filter_date_range": True,
+                "column_ids": [
+                    Command.create(
+                        {
+                            "name": "Balance",
+                            "expression_label": "balance",
+                            "sequence": 1,
+                        }
+                    ),
+                    Command.create(
+                        {
+                            "name": "Doubled",
+                            "expression_label": "doubled",
+                            "sequence": 10,
+                            "optional": True,
+                            "optional_hidden": hidden_by_default,
+                        }
+                    ),
+                ],
+                "line_ids": [
+                    Command.create(
+                        {
+                            "name": "All entries",
+                            "code": "OPTALL",
+                            "expression_ids": [
+                                Command.create(
+                                    {
+                                        "label": "balance",
+                                        "engine": "domain",
+                                        "formula": "[('name', 'like', 'entry')]",
+                                        "subformula": "sum",
+                                    }
+                                ),
+                                Command.create(
+                                    {
+                                        "label": "doubled",
+                                        "engine": "aggregation",
+                                        "formula": "OPTALL.balance * 2",
+                                    }
+                                ),
+                            ],
+                        }
+                    ),
+                ],
+            }
+        )
+
+    def _column_names(self, report, **extra):
+        options = report.get_options(
+            {
+                "selected_variant_id": report.id,
+                "date": {
+                    "date_from": "2020-01-01",
+                    "date_to": "2020-01-31",
+                    "mode": "range",
+                    "filter": "custom",
+                },
+                **extra,
+            }
+        )
+        return options, [column["name"] for column in options["columns"]]
+
+    def test_an_optional_column_hidden_by_default_is_absent_until_asked_for(self):
+        report = self._optional_column_report(hidden_by_default=True)
+        options, names = self._column_names(report)
+        self.assertEqual(names, ["Balance"])
+        optional_column = report.column_ids.filtered("optional")
+        self.assertEqual(
+            options["optional_columns"],
+            [{"id": optional_column.id, "name": "Doubled", "selected": False}],
+        )
+
+        options, names = self._column_names(report, hidden_columns=[])
+        self.assertEqual(names, ["Balance", "Doubled"])
+        self.assertTrue(options["optional_columns"][0]["selected"])
+
+    def test_an_optional_column_shown_by_default_is_dropped_when_hidden(self):
+        report = self._optional_column_report(hidden_by_default=False)
+        _options, names = self._column_names(report)
+        self.assertEqual(names, ["Balance", "Doubled"])
+
+        column = report.column_ids.filtered(lambda column: column.optional)
+        options, names = self._column_names(report, hidden_columns=[column.id])
+        self.assertEqual(names, ["Balance"])
+        lines = report._get_lines(options)
+        self.assertTrue(all(len(line["columns"]) == 1 for line in lines))
+
+    def test_a_report_without_optional_columns_offers_no_choice(self):
+        options, names = self._column_names(self.report)
+        self.assertEqual(names, ["Balance"])
+        self.assertNotIn("optional_columns", options)
+        self.assertNotIn("hidden_columns", options)

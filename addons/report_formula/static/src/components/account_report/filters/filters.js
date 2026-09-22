@@ -525,6 +525,16 @@ export class AccountReportFilters extends Component {
     //------------------------------------------------------------------------------------------------------------------
     // Rounding unit
     //------------------------------------------------------------------------------------------------------------------
+    async toggleOptionalColumn(columnId) {
+        const hidden = new Set(this.controller.cachedFilterOptions.hidden_columns);
+        if (hidden.has(columnId)) {
+            hidden.delete(columnId);
+        } else {
+            hidden.add(columnId);
+        }
+        await this.controller.updateOption("hidden_columns", [...hidden], true);
+    }
+
     roundingUnitName(roundingUnit) {
         return _t(
             "In %s",

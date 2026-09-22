@@ -472,7 +472,7 @@ class AccountReportOptions(models.Model):
                         "budget_base": True,
                         "no_subheader_division": True,
                     },
-                    "colspan": len(self.column_ids),
+                    "colspan": len(self._get_visible_columns(options)),
                 }
             ]
 
@@ -490,7 +490,7 @@ class AccountReportOptions(models.Model):
                 )
                 if (
                     len(
-                        self.column_ids.filtered(
+                        self._get_visible_columns(options).filtered(
                             lambda column: column.figure_type == "monetary"
                         )
                     )
@@ -527,6 +527,37 @@ class AccountReportOptions(models.Model):
     # OPTIONS: COLUMNS
     ####################################################
     @_debug.perf.timed
+    def _init_options_optional_columns(self, options, previous_options):
+        optional_columns = self.column_ids.filtered("optional")
+        if not optional_columns:
+            return
+
+        previously_hidden = previous_options.get("hidden_columns")
+        if previously_hidden is None:
+            hidden_columns = set(optional_columns.filtered("optional_hidden").ids)
+        else:
+            hidden_columns = set(previously_hidden) & set(optional_columns.ids)
+
+        options["hidden_columns"] = sorted(hidden_columns)
+        options["optional_columns"] = [
+            {
+                "id": column.id,
+                "name": column.name,
+                "selected": column.id not in hidden_columns,
+            }
+            for column in optional_columns
+        ]
+        _debug.logic(
+            "optional_columns_resolved",
+            report=self,
+            optional=len(optional_columns),
+            hidden=len(hidden_columns),
+        )
+
+    def _get_visible_columns(self, options):
+        hidden_columns = set(options.get("hidden_columns") or ())
+        return self.column_ids.filtered(lambda column: column.id not in hidden_columns)
+
     def _init_options_columns(self, options, previous_options):
         default_group_vals = {"horizontal_groupby_element": {}, "forced_options": {}}
         all_column_group_vals_in_order = self._generate_columns_group_vals_recursively(
@@ -558,7 +589,7 @@ class AccountReportOptions(models.Model):
         options["show_horizontal_group_total"] = (
             options.get("selected_horizontal_group_id")
             and options.get("comparison", {}).get("filter") == "no_comparison"
-            and len(self.column_ids) == 1
+            and len(self._get_visible_columns(options)) == 1
             and len(options["column_headers"]) == 2
             and not selected_budgets
         )
@@ -998,6 +1029,7 @@ class AccountReportOptions(models.Model):
             "_init_options_integer_rounding": 70,
             "_init_options_consolidation": 75,
             "default": 200,
+            "_init_options_optional_columns": 980,
             "_init_options_column_headers": 990,
             "_init_options_columns": 1000,
             "_init_options_column_percent_comparison": 1010,

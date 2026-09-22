@@ -33,6 +33,13 @@
             </div>
         </t>
 
+        <!-- Optional columns filter -->
+        <t t-if="controller.cachedFilterOptions.optional_columns?.length">
+            <div id="filter_optional_columns">
+                <t t-call="report_formula.AccountReportFilterOptionalColumns"/>
+            </div>
+        </t>
+
         <!-- Variant filter -->
         <t t-if="controller.cachedFilterOptions.available_variants.length > 1">
             <div id="filter_variant">
