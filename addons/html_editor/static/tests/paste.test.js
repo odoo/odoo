@@ -16,6 +16,7 @@ import {
 } from "@html_editor/plugin_sets";
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 import { nodeSize } from "@html_editor/utils/position";
+import { Plugin } from "@html_editor/plugin";
 
 function isInline(node) {
     return ["I", "B", "U", "S", "EM", "STRONG", "IMG", "BR", "A", "FONT"].includes(node);
@@ -4040,14 +4041,25 @@ describe("Odoo editor own html", () => {
     });
 
     test("should convert unsupported base containers", async () => {
+        class TestSystemPlugin extends Plugin {
+            static id = "x";
+            resources = {
+                system_classes: ["x"],
+                system_attributes: ["data-x"],
+            };
+        }
         await testEditor({
             contentBefore: "<p>a[]</p><p>b</p>",
             stepFunction: async (editor) => {
-                pasteOdooEditorHtml(editor, `<div>c</div><div>d</div><div>e</div>`);
+                pasteOdooEditorHtml(
+                    editor,
+                    `<div>c</div><div class="x y" data-x="system">d</div><div style="color: red">e</div>`
+                );
             },
-            contentAfter: "<p>ac</p><p>d</p><p>e[]</p><p>b</p>",
+            contentAfter: `<p>ac</p><p class="y">d</p><p style="color: red">e[]</p><p>b</p>`,
             config: {
                 baseContainers: ["P"],
+                Plugins: [...MAIN_PLUGINS, TestSystemPlugin],
             },
         });
     });
