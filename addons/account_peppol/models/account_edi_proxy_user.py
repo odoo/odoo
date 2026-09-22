@@ -167,15 +167,20 @@ class AccountEdiProxyClientUser(models.Model):
         if 'is_in_extractable_state' in move._fields:
             move.is_in_extractable_state = False
         try:
-            move._extend_with_attachments(attachment, new=True)
-            move._message_log(
-                body=self.env._(
-                    "%(proxy_type)s document (UUID: %(uuid)s) has been received successfully",
-                    proxy_type=dict(self._fields['proxy_type']._description_selection(self.env))[self.proxy_type],
-                    uuid=uuid,
-                ),
-                attachment_ids=attachment.ids,
-            )
+            if move._extend_with_attachments(attachment, new=True):
+                move._message_log(
+                    body=self.env._(
+                        "%(proxy_type)s document (UUID: %(uuid)s) has been received successfully",
+                        proxy_type=dict(self._fields['proxy_type']._description_selection(self.env))[self.proxy_type],
+                        uuid=uuid,
+                    ),
+                    attachment_ids=attachment.ids,
+                )
+            else:
+                move.peppol_move_state = 'error'
+                move.message_post(
+                    body=self.env._("There was an error while importing the bill, you can find attached the incoming XML"),
+                )
             move._autopost_bill()
         except Exception:
             _logger.exception("Unexpected error occurred during the import of bill with id %s", move.id)

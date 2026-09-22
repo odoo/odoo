@@ -388,6 +388,39 @@ class TestPeppolMessage(TestPeppolMessageCommon):
                 'move_type': 'in_invoice',
             }])
 
+    def test_receive_peppol_document_parsing_failure_creates_empty_move(self):
+        # return False to simulate an error during the parsing
+        with patch(
+            'odoo.addons.account.models.account_move.AccountMove._extend_with_attachments',
+            return_value=False,
+        ):
+            self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
+
+        move = self.env['account.move'].search([('peppol_message_uuid', '=', FAKE_UUID[1])])
+        self.assertTrue(move, "the move should still have been created")
+
+        # Move should be fully empty
+        self.assertFalse(move.invoice_line_ids)
+        self.assertFalse(move.partner_id)
+        self.assertEqual(move.amount_total, 0)
+        self.assertEqual(move.peppol_move_state, 'error')
+
+        messages = self.env['mail.message'].search([
+            ('model', '=', 'account.move'),
+            ('res_id', '=', move.id),
+        ])
+        self.assertTrue(
+            messages.filtered(lambda m: 'error' in (m.body or '').lower()),
+            "an error should be surfaced to the user on the failed import",
+        )
+
+        # document must be attached even if there's nothing
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', '=', move.id),
+        ])
+        self.assertTrue(attachment, "the original document should still be attached to the move")
+
     def test_peppol_document_retrieval_with_company_context(self):
         # Ensure that the bill creation is done using the move company/proxy user context
 
