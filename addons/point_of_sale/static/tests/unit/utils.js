@@ -7,11 +7,13 @@ import {
     mountWithCleanup,
     patchWithCleanup,
     onRpc,
+    serverState,
 } from "@web/../tests/web_test_helpers";
 import { animationFrame, tick, waitFor, waitUntil } from "@odoo/hoot-dom";
 import { mountPosApp } from "@point_of_sale/../tests/unit/ui_utils";
 import { expect } from "@odoo/hoot";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { ResCurrency } from "./data/res_currency.data";
 
 const { DateTime } = luxon;
 
@@ -25,6 +27,7 @@ export const setupPosEnv = async () => {
         db: `pos-${uuidv4()}`, // Avoid indexedDB conflicts
         isEnterprise: true,
     };
+    serverState.currencies = ResCurrency._records;
 
     assignDialogTestEnv();
     await makeTestApp();

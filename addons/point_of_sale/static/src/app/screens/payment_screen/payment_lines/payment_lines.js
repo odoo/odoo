@@ -36,7 +36,7 @@ export class PaymentScreenPaymentLines extends Component {
 
     getFormattedPrice(line) {
         const amount = line.amount_currency || line.amount;
-        return this.pos.formatCurrency(amount);
+        return this.pos.formatCurrency(amount, line.currency.id);
     }
 
     async selectLine(paymentline) {
