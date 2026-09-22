@@ -15,7 +15,7 @@ const eventBoothSaleProductMixin = () => ({
     get hasConfigurationButton() {
         return (
             super.hasConfigurationButton
-            || (!this.props.record.model.root.data.locked && this.isEventBooth)
+            || (!this.props.record.evalContext.parent.locked && this.isEventBooth)
         );
     },
     onEditConfiguration() {
