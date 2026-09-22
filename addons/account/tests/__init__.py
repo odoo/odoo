@@ -104,6 +104,7 @@ from . import test_account_payment_reconcile
 from . import test_account_reconcile_wizard
 from . import test_accrual_read_group
 from . import test_auto_reconcile_regressions
+from . import test_journal_item_split
 from . import test_bank_rec_widget_regressions
 from . import test_change_lock_date_wizard
 from . import test_deferred_management

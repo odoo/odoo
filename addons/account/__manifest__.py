@@ -47,6 +47,7 @@ You could use this simplified accounting in case you work with an (external) acc
         "wizards/account_autopost_bills_wizard.xml",
         "wizards/account_unreconcile_view.xml",
         "wizards/account_bank_auto_reconcile_wizard_views.xml",
+        "wizards/account_split_journal_item_wizard_views.xml",
         "wizards/account_move_reversal_view.xml",
         "wizards/account_resequence_views.xml",
         "wizards/account_payment_register_views.xml",

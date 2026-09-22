@@ -3,7 +3,7 @@ from contextlib import contextmanager
 
 import markupsafe
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
@@ -457,6 +457,17 @@ class AccountMoveLine(models.Model):
             if (wizard.is_write_off_required or wizard.force_partials)
             else wizard.reconcile()
         )
+
+    def action_split_lines(self):
+        """Open the wizard that splits the selected journal items."""
+        return {
+            "name": self.env._("Split"),
+            "type": "ir.actions.act_window",
+            "res_model": "account.split.journal.item.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_line_ids": [Command.set(self.ids)]},
+        }
 
     @_debug.perf.timed
     def _read_group_select(self, aggregate_spec, query):
