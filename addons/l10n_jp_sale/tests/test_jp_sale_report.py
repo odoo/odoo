@@ -23,7 +23,7 @@ class TestJPSaleReport(AccountTestInvoicingCommon):
             'name': 'JPY Pricelist',
             'currency_id': cls.jpy_currency.id,
         })
-        cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jis_standard')
+        cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jp_standard')
         # l10n_din5008_sale rewrites the surcharged unit price to the monetary
         # widget for every company rather than for its own layout. These tests
         # are about what the JP rule decides, not about which module ends up

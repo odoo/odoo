@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- The JIS layout prints the date, the title, the recipient and the
-             sender in the body instead of the page header, so the page has to
-             start near the top edge rather than below the tall header band the
-             default A4 format reserves. -->
-        <record id="paperformat_jis" model="report.paperformat">
-            <field name="name">A4 for JIS</field>
+        <!-- The Japanese Business layout prints the date, the title, the
+             recipient and the sender in the body instead of the page header, so
+             the page has to start near the top edge rather than below the tall
+             header band the default A4 format reserves. -->
+        <record id="paperformat_jp" model="report.paperformat">
+            <field name="name">A4 for Japanese Business</field>
             <field name="default" eval="False"/>
             <field name="format">A4</field>
             <field name="page_height">0</field>
