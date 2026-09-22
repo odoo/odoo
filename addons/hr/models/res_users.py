@@ -12,7 +12,11 @@ HR_READABLE_FIELDS = [
     "additional_note",
     "bank_account_ids",
     "barcode",
+    "birthday",
+    "birthday_public_display",
     "child_ids",
+    "children",
+    "country_of_birth",
     "emergency_contact",
     "emergency_phone_ids",
     "employee_id",
@@ -22,7 +26,10 @@ HR_READABLE_FIELDS = [
     "is_system",
     "job_title",
     "km_home_work",
+    "legal_name",
+    "marital",
     "pin",
+    "place_of_birth",
     "private_city",
     "private_country_id",
     "private_email",
@@ -31,6 +38,9 @@ HR_READABLE_FIELDS = [
     "private_street",
     "private_street2",
     "private_zip",
+    "sex",
+    "spouse_birthdate",
+    "spouse_complete_name",
     "tag_ids",
     "visa_expire",
     "work_email",
@@ -97,6 +107,44 @@ class ResUsers(models.Model):
     )
     work_location_name = fields.Char(related="employee_id.work_location_name")
     work_location_type = fields.Selection(related="employee_id.work_location_type")
+    # Personal information the employee is recorded as having. Read-only on
+    # purpose: `test_hr_grants_no_self_write_at_all` records the decision of
+    # 2026-09-07 that an internal user does not edit their own HR data -- those
+    # changes go through `hr.employee.change.request` with an HR approval. These
+    # are here so the employee can at least SEE what is on file about them.
+    marital = fields.Selection(
+        related="employee_id.marital", related_sudo=False, readonly=False
+    )
+    spouse_complete_name = fields.Char(
+        related="employee_id.spouse_complete_name", related_sudo=False, readonly=False
+    )
+    spouse_birthdate = fields.Date(
+        related="employee_id.spouse_birthdate", related_sudo=False, readonly=False
+    )
+    children = fields.Integer(
+        related="employee_id.children", related_sudo=False, readonly=False
+    )
+    legal_name = fields.Char(
+        related="employee_id.legal_name", related_sudo=False, readonly=False
+    )
+    birthday = fields.Date(
+        related="employee_id.birthday", related_sudo=False, readonly=False
+    )
+    birthday_public_display = fields.Boolean(
+        related="employee_id.birthday_public_display",
+        related_sudo=False,
+        readonly=False,
+    )
+    place_of_birth = fields.Char(
+        related="employee_id.place_of_birth", related_sudo=False, readonly=False
+    )
+    country_of_birth = fields.Many2one(
+        related="employee_id.country_of_birth", related_sudo=False, readonly=False
+    )
+    sex = fields.Selection(
+        related="employee_id.sex", related_sudo=False, readonly=False
+    )
+
     private_street = fields.Char(
         related="employee_id.private_street",
         string="Private Street",

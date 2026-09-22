@@ -166,6 +166,31 @@
                                     widget="many2many_tags"
                                     readonly="not is_hr_user" />
                             </group>
+                            <group string="Personal Information">
+                                <field name="legal_name" readonly="not is_hr_user" />
+                                <field name="sex" readonly="not is_hr_user" />
+                                <field name="birthday" readonly="not is_hr_user" />
+                                <field
+                                    name="birthday_public_display"
+                                    readonly="not is_hr_user" />
+                                <field
+                                    name="place_of_birth"
+                                    readonly="not is_hr_user" />
+                                <field
+                                    name="country_of_birth"
+                                    options="{'no_create': True}"
+                                    readonly="not is_hr_user" />
+                                <field name="marital" readonly="not is_hr_user" />
+                                <field
+                                    name="spouse_complete_name"
+                                    invisible="marital not in ['married', 'cohabitant']"
+                                    readonly="not is_hr_user" />
+                                <field
+                                    name="spouse_birthdate"
+                                    invisible="marital not in ['married', 'cohabitant']"
+                                    readonly="not is_hr_user" />
+                                <field name="children" readonly="not is_hr_user" />
+                            </group>
                         </group>
                     </page>
                 </xpath>
