@@ -3767,6 +3767,19 @@ describe("Odoo editor own html", () => {
             contentAfter: "<p>a[]b</p>",
         });
     });
+
+    test("should convert unsupported base containuers", async () => {
+        await testEditor({
+            contentBefore: "<p>a[]</p><p>b</p>",
+            stepFunction: async (editor) => {
+                pasteOdooEditorHtml(editor, `<div>c</div><div>d</div><div>e</div>`);
+            },
+            contentAfter: "<p>ac</p><p>d</p><p>e[]</p><p>b</p>",
+            config: {
+                baseContainers: ["P"],
+            },
+        });
+    });
 });
 
 describe("editable in iframe", () => {
