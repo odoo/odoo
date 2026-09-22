@@ -424,3 +424,15 @@ test("should not add history step for underline on collapsed selection", async (
     undo(editor);
     expect(getContent(el)).toBe(`<p>abcd[]</p>`);
 });
+
+test("should not apply the style on the link itself because it can't be neutralized locally", async () => {
+    const { el, editor } = await setupEditor(`<p><a href="test">[abc]</a></p>`);
+    underline(editor);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<a href="test" class="o_link_in_selection">\ufeff<u>[abc]</u>\ufeff</a>\ufeff</p>`
+    );
+    underline(editor);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<a href="test" class="o_link_in_selection">\ufeff[abc]\ufeff</a>\ufeff</p>`
+    );
+});
