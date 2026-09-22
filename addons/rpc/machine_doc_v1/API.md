@@ -57,6 +57,11 @@ its `requestBody` is an open object — the arguments of `search_read` are
 not a fact of the route but of the model's method, and `/doc/<model_name>.json`
 answers that per model.
 
+Every operation carries `x-odoo-auth`, the route's own `auth`: what the
+server checks before the handler runs, beside the scheme that says how to
+prove it. A generator that ignores extensions loses nothing; a reader gets
+the door's name.
+
 `security` is the route's `auth`: `bearer` renders `bearerAuth` (an HTTP
 bearer token, a `res.users.apikeys` key), `user` a session cookie, and
 an open door (`public`, `none`) an empty requirement — an open door, stated as one.

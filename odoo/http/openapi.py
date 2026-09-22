@@ -5,6 +5,7 @@ import inspect
 import logging
 import re
 import typing
+from collections.abc import Callable
 from typing import Any, NamedTuple
 
 from odoo.libs.debug_log import DebugLog
@@ -192,6 +193,13 @@ _SECURITY_SCHEMES: dict[str, tuple[str, dict[str, str]]] = {
     "user": ("sessionCookie", {"type": "apiKey", "in": "cookie", "name": "session_id"}),
 }
 
+# An auth this module cannot describe on its own -- a gated door whose proof
+# is a record's, not the route's -- is described by the caller, which has a
+# registry. It answers a list of (name, definition) for one route; an empty
+# list means the door states no credential, and None that it knows nothing
+# and the operation carries no security at all.
+SecurityResolver = Callable[[RouteInfo], list[tuple[str, dict[str, Any]]] | None]
+
 
 def _get_handler_summary(handler: typing.Callable) -> str | None:
     doc = getattr(handler, "__doc__", None)
@@ -220,6 +228,7 @@ def prepare_openapi_operation(
     path_params: list[dict[str, Any]],
     security_schemes: dict[str, dict[str, str]],
     used_operation_ids: set[str] | None = None,
+    security_resolver: SecurityResolver | None = None,
 ) -> dict[str, Any]:
     operation: dict[str, Any] = {
         "operationId": _prepare_operation_id(method, template, used_operation_ids),
@@ -299,12 +308,24 @@ def prepare_openapi_operation(
         operation["parameters"] = parameters
 
     auth = route.routing.get("auth")
+    if auth:
+        # What the server checks before the handler runs, stated as the
+        # reader sees it: a scheme below says how to prove it, this says
+        # which door it is.
+        operation["x-odoo-auth"] = auth
     if auth in _SECURITY_SCHEMES:
         name, definition = _SECURITY_SCHEMES[auth]
         security_schemes[name] = definition
         operation["security"] = [{name: []}]
     elif auth in ("public", "none"):
         operation["security"] = []
+    elif security_resolver is not None:
+        resolved = security_resolver(route)
+        if resolved is not None:
+            operation["security"] = []
+            for name, definition in resolved:
+                security_schemes[name] = definition
+                operation["security"].append({name: []})
 
     _debug.pipeline(
         "http.openapi.operation",
@@ -326,6 +347,7 @@ def prepare_openapi_document(
     version: str = "19.0",
     servers: list[dict[str, Any]] | None = None,
     typed_only: bool = False,
+    security_resolver: SecurityResolver | None = None,
 ) -> dict[str, Any]:
     paths: dict[str, dict[str, Any]] = {}
     security_schemes: dict[str, dict[str, str]] = {}
@@ -383,6 +405,7 @@ def prepare_openapi_document(
                     path_params,
                     security_schemes,
                     used_operation_ids,
+                    security_resolver,
                 )
         span.set(
             routes=seen,

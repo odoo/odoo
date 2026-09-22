@@ -623,6 +623,36 @@ class TestUncoveredRoutes(HttpCase):
             resp = self.url_open("/web/openapi.json")
         self.assertEqual(resp.status_code, HTTPStatus.FORBIDDEN)
 
+    def test_a_gated_door_states_what_it_asks_of_its_caller(self):
+        self.authenticate("admin", "admin")
+        document = self.url_open("/web/openapi.json").json()
+        gated = {
+            path: operation
+            for path, item in document["paths"].items()
+            for operation in item.values()
+            if any(
+                name.startswith("receiver")
+                for requirement in operation.get("security", ())
+                for name in requirement
+            )
+        }
+        if not gated:
+            self.assertFalse(
+                [
+                    path
+                    for path, item in document["paths"].items()
+                    for operation in item.values()
+                    if operation.get("x-odoo-auth") == "receiver"
+                ],
+                "a receiver route is described with no scheme",
+            )
+            self.skipTest("this database installs no receiver route")
+        schemes = document["components"]["securitySchemes"]
+        for path, operation in gated.items():
+            for requirement in operation["security"]:
+                for name in requirement:
+                    self.assertIn(name, schemes, f"{path} requires an undefined {name}")
+
     def test_edit_custom_writes_only_the_owner_s_view(self):
         view = self.env.ref("base.view_partner_form")
         admin = self.env.ref("base.user_admin")

@@ -311,3 +311,59 @@ def test_the_lazy_builder_lets_a_duplicate_parameter_rule_into_the_map():
 
     assert [r.rule for r in routing_map.iter_rules()] == ["/dup/<int:id>/<int:id>"]
     assert "/dup/{id}/{id}" not in prepare_openapi_from_map(routing_map)["paths"]
+
+
+def test_an_auth_the_document_cannot_describe_is_described_by_its_caller():
+    gated = _route("/hook/<ident>", routing={"type": "http", "auth": "receiver"})
+
+    def resolver(route):
+        assert route is gated
+        return [("receiverBearer", {"type": "http", "scheme": "bearer"})]
+
+    doc = prepare_openapi_document([gated], security_resolver=resolver)
+    op = doc["paths"]["/hook/{ident}"]["get"]
+    assert op["security"] == [{"receiverBearer": []}]
+    assert doc["components"]["securitySchemes"]["receiverBearer"] == {
+        "type": "http",
+        "scheme": "bearer",
+    }
+
+
+def test_a_caller_that_knows_nothing_leaves_the_operation_unsecured():
+    gated = _route("/hook", routing={"type": "http", "auth": "receiver"})
+    doc = prepare_openapi_document([gated], security_resolver=lambda route: None)
+    assert "security" not in doc["paths"]["/hook"]["get"]
+    assert "components" not in doc
+
+
+def test_a_door_that_states_no_credential_says_so_with_an_empty_requirement():
+    gated = _route("/hook", routing={"type": "http", "auth": "receiver"})
+    doc = prepare_openapi_document([gated], security_resolver=lambda route: [])
+    assert doc["paths"]["/hook"]["get"]["security"] == []
+
+
+def test_the_resolver_is_not_asked_about_an_auth_the_document_knows():
+    asked = []
+    bearer = _route("/key", routing={"type": "http", "auth": "bearer"})
+    public = _route("/open", routing={"type": "http", "auth": "public"})
+
+    def resolver(route):
+        asked.append(route.rule)
+        return []
+
+    doc = prepare_openapi_document([bearer, public], security_resolver=resolver)
+    assert asked == []
+    assert doc["paths"]["/key"]["get"]["security"] == [{"bearerAuth": []}]
+    assert doc["paths"]["/open"]["get"]["security"] == []
+
+
+def test_every_operation_states_which_door_it_is():
+    doc = prepare_openapi_document(
+        [
+            _route("/open", routing={"type": "http", "auth": "public"}),
+            _route("/key", routing={"type": "http", "auth": "bearer"}),
+            _route("/hook", routing={"type": "http", "auth": "receiver"}),
+        ]
+    )
+    doors = {path: item["get"]["x-odoo-auth"] for path, item in doc["paths"].items()}
+    assert doors == {"/open": "public", "/key": "bearer", "/hook": "receiver"}

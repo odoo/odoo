@@ -16,12 +16,15 @@ class OpenAPI(http.Controller):
             dbg.logic.debug("[openapi] document: not system, refused")
             raise Forbidden("Only system administrators may read the API document.")
         with dbg.timer(request.env, "[openapi] routing_map + document"):
+            ir_http = request.env["ir.http"]
+            resolver = getattr(ir_http, "_openapi_security_for", None)
             document = prepare_openapi_from_map(
-                request.env["ir.http"].routing_map(),
+                ir_http.routing_map(),
                 title="Odoo HTTP API",
                 version=odoo.release.major_version,
                 servers=[{"url": request.httprequest.url_root.rstrip("/")}],
                 typed_only=True,
+                security_resolver=resolver,
             )
         dbg.performance.debug(
             "[openapi] document: %d paths, %d schemas",

@@ -11,5 +11,6 @@ from . import credential_access_log
 from . import credential_credential
 from . import ir_actions_server
 from . import ir_http
+from . import ir_http_openapi
 from . import integration_egress
 from . import integration_stream
