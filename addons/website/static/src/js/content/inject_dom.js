@@ -37,7 +37,6 @@ export function unhideConditionalElements() {
             mobileMegaMenuLiEl.dataset.visibilityId = visibilityId;
         }
         const selectors = conditionalEl.dataset.visibilitySelectors;
-        styleEl.sheet.insertRule(`${selectors} { display: none !important; }`);
     }
 
     // Now remove the classes that makes them always invisible
