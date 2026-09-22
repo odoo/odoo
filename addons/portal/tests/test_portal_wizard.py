@@ -185,17 +185,24 @@ class TestPortalWizard(MailCommon):
         self.assertFalse(portal_user.user_id)
         self.assertFalse(portal_user.is_portal)
 
-        for _ in range(2):
-            portal_user.action_grant_access()
-            portal_user.invalidate_recordset()
-            self.assertTrue(portal_user.user_id.active)
-            self.assertTrue(portal_user.user_id._is_portal())
-            self.assertTrue(portal_user.is_portal)
-            self.assertTrue(self.partner.signup_type)
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            for _ in range(2):
+                portal_user.action_grant_access()
+                portal_user.invalidate_recordset()
+                self.assertTrue(portal_user.user_id.active)
+                self.assertTrue(portal_user.user_id._is_portal())
+                self.assertTrue(portal_user.is_portal)
+                self.assertTrue(self.partner.signup_type)
 
-            portal_user.action_revoke_access()
-            portal_user.invalidate_recordset()
-            self.assertFalse(portal_user.user_id.active)
-            self.assertTrue(portal_user.user_id._is_portal())
-            self.assertFalse(portal_user.is_portal)
-            self.assertFalse(self.partner.signup_type)
+                last_msg = portal_user.user_id.message_ids[0]
+                self.assertIn('Portal Access Granted', last_msg.body)
+
+                portal_user.action_revoke_access()
+                portal_user.invalidate_recordset()
+                self.assertFalse(portal_user.user_id.active)
+                self.assertTrue(portal_user.user_id._is_portal())
+                self.assertFalse(portal_user.is_portal)
+                self.assertFalse(self.partner.signup_type)
+
+                last_msg = portal_user.user_id.message_ids[0]
+                self.assertIn('Portal Access Revoked', last_msg.body)
