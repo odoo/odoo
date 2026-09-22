@@ -27,7 +27,7 @@
             <t t-if="this.displayOptions">
                 <ul
                     role="menu"
-                    class="o-autocomplete--dropdown-menu ui-widget show"
+                    class="o-autocomplete--dropdown-menu o-dropdown--menu ui-widget show"
                     t-att-class="this.ulDropdownClass"
                     t-ref="this.listRef">
                     <t t-foreach="this.sources" t-as="source" t-key="source.id">
