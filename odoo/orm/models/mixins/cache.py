@@ -140,8 +140,9 @@ class CacheMixin(_ModelStubs):
 
     def _evict_x2many_scopes_reading_through(self, fnames: Collection[str]) -> None:
         env = self.env
+        core = env.core
         for field in env.registry.fields_by_comodel.get(self._name, ()):
-            if field.is_x2many and field.store:
+            if field.is_x2many and field.store and core.has_any_context_cached(field):
                 field._evict_user_scopes_reading_through(env, fnames)
 
     def _check_no_pending_write(

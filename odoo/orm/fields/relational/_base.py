@@ -659,7 +659,7 @@ class _RelationalMulti(_Relational):
                 if id_ in slot:
                     slot[id_] = cache_value
                     mirrored += 1
-        if _debug.logic.enabled and mirrored:
+        if mirrored and _debug.logic.enabled:
             _debug.logic(
                 "field.x2many.scope_mirror_pending",
                 model=self.model_name,
@@ -777,7 +777,7 @@ class _RelationalMulti(_Relational):
             for id_ in stored_ids:
                 if slot.pop(id_, None) is not None:
                     evicted += 1
-        if _debug.logic.enabled and evicted:
+        if evicted and _debug.logic.enabled:
             _debug.logic(
                 "field.x2many.scope_evict",
                 model=self.model_name,
@@ -805,7 +805,7 @@ class _RelationalMulti(_Relational):
             if isinstance(id_, int) and id_ not in slot:
                 slot[id_] = value
                 mirrored += 1
-        if _debug.logic.enabled and mirrored:
+        if mirrored and _debug.logic.enabled:
             _debug.logic(
                 "field.x2many.read_mirrored_to_superuser",
                 model=self.model_name,

@@ -58,12 +58,22 @@ a gate with no entry is a hard zero. `assert_ratchet` is exact: a count above
 the floor fails, and a count below it fails until the floor is lowered in the
 same change.
 
-Three real-dependency pytest suites are in no `testpaths` and run only when
+Four real-dependency pytest suites are in no `testpaths` and run only when
 named: `tests/contract` (`ODOO_CONTRACT_REQUIRE_DEPS=1`; PostgreSQL + psql +
-pg_dump), `tests/process` (boots real `odoo-bin` processes) and
-`tests/loading` (installs `base` into a scratch database; pins the loader
-phase order, the uninstall reload, migration ordering and migration-stage
-schema visibility).
+pg_dump), `tests/process` (boots real `odoo-bin` processes), `tests/loading`
+(installs `base` into a scratch database; pins the loader phase order, the
+uninstall reload, migration ordering and migration-stage schema visibility)
+and `tests/perf` (`./gates.sh --perf`; installs `base` into a scratch database
+and reads the ORM's cost on it: statements per `res.partner` create, batch
+create, write loop, batch write and `search_fetch` as **exact ratchets**, the
+Python time of each — wall minus driver, median of rounds — and the warm
+`Registry loaded in` as **one-sided floors** with a 25 % tolerance
+(`ODOO_PERF_TOLERANCE`), plus the in-memory tier's cost per create and per
+stored compute. The floors are `tests/perf/floors.json`, one machine's,
+moved in the same change that moves the count; a reading below a time floor
+passes and is the cue to lower it. Attribute *where* time goes with a
+signal-based sampler on the main thread, never cProfile shares or a sampling
+thread: `agromarin-knowledge/research/2026-09-22-orm-best-in-class.md` §6).
 
 **DB-backed integration suites** — run against PostgreSQL 18, **each against
 its own database**:

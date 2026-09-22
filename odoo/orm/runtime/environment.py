@@ -50,6 +50,7 @@ if typing.TYPE_CHECKING:
         IrRuleProtocol,
         IrUiViewProtocol,
         ResCountryProtocol,
+        ResCurrencyProtocol,
         ResLangProtocol,
         ResUsersProtocol,
     )
@@ -147,7 +148,7 @@ class Environment(Mapping[str, "BaseModel"]):
             )
         return super().__setattr__(name, value)
 
-    def __contains__(self, model_name) -> bool:
+    def __contains__(self, model_name: object) -> bool:
         return model_name in self.registry
 
     @typing.overload
@@ -237,6 +238,11 @@ class Environment(Mapping[str, "BaseModel"]):
 
     @typing.overload
     def __getitem__(  # type: ignore[overload-overlap]
+        self, model_name: typing.Literal["res.currency"]
+    ) -> ResCurrencyProtocol: ...
+
+    @typing.overload
+    def __getitem__(  # type: ignore[overload-overlap]
         self, model_name: typing.Literal["res.lang"]
     ) -> ResLangProtocol: ...
 
@@ -249,25 +255,30 @@ class Environment(Mapping[str, "BaseModel"]):
     def __getitem__(self, model_name: str) -> BaseModel: ...
 
     def __getitem__(self, model_name: str) -> typing.Any:
-        rs = object.__new__(self.registry[model_name])
+        registry = self.registry
+        try:
+            cls = registry.models[model_name]
+        except KeyError:
+            cls = registry[model_name]
+        rs = object.__new__(cls)
         rs.env = self
         rs._ids = ()
         rs._prefetch_ids = ()
         return rs
 
-    def __iter__(self):
+    def __iter__(self) -> typing.Iterator[str]:
         return iter(self.registry)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.registry)
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         return self is other
 
-    def __ne__(self, other):
+    def __ne__(self, other: object) -> bool:
         return self is not other
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return object.__hash__(self)
 
     def __call__(
@@ -514,12 +525,13 @@ class Environment(Mapping[str, "BaseModel"]):
         assert field.store and field.compute, (
             "Cannot add to recompute no-store or no-computed field"
         )
-        _debug.pipeline(
-            "environment.to_compute_added",
-            model=field.model_name,
-            field=field.name,
-            records=len(records),
-        )
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "environment.to_compute_added",
+                model=field.model_name,
+                field=field.name,
+                records=len(records),
+            )
         self.core.schedule(field, records._ids)
 
     def remove_to_compute(self, field: Field, records: BaseModel) -> None:

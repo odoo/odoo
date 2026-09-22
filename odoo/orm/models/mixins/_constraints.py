@@ -144,11 +144,12 @@ class _ConstraintsMixin(_ModelStubs):
 
         prof.stop()
         prof.report(_orm_crud, "_check_fields %s: %d constraints", self._name, _count)
-        _debug.perf.count(
-            "constraints.checked",
-            model=self._name,
-            records=len(self),
-            fields=len(field_names),
-            excluded=len(excluded_names),
-            candidates=len(methods),
-        )
+        if _debug.perf.enabled:
+            _debug.perf.count(
+                "constraints.checked",
+                model=self._name,
+                records=len(self),
+                fields=len(field_names),
+                excluded=len(excluded_names),
+                candidates=len(methods),
+            )

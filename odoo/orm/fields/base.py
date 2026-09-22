@@ -585,11 +585,12 @@ class Field[T](
     def mark_dirty(self, records: BaseModel, value: typing.Any) -> None:
         records, cache_value = self._mark_dirty_prologue(records, value)
         if not records:
-            _debug.logic(
-                "field.mark_dirty.unchanged",
-                model=self.model_name,
-                field=self.name,
-            )
+            if _debug.logic.enabled:
+                _debug.logic(
+                    "field.mark_dirty.unchanged",
+                    model=self.model_name,
+                    field=self.name,
+                )
             return
 
         self._update_cache(records, cache_value, dirty=True)
@@ -810,11 +811,12 @@ class Field[T](
     def _get_not_singleton(self, record: BaseModel, owner: typing.Any = None) -> T:
         if record._ids:
             record.check_singleton()
-        _debug.logic(
-            "field.get.empty_recordset",
-            model=self.model_name,
-            field=self.name,
-        )
+        if _debug.logic.enabled:
+            _debug.logic(
+                "field.get.empty_recordset",
+                model=self.model_name,
+                field=self.name,
+            )
         value = self.convert_to_cache(False, record, validate=False)
         return self.convert_to_record(value, record)
 

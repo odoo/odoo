@@ -125,6 +125,12 @@ pytest tests/process                                 # boots real odoo-bin proce
 
 `tests/contract` pins what we *assume* about psycopg, psql and pg_dump against the real programs. It is skip-guarded: without that variable a missing dependency reports green while comparing nothing.
 
+```bash
+pytest tests/perf                                    # or ./gates.sh --perf
+```
+
+`tests/perf` installs `base` into a scratch database and holds the ORM to `tests/perf/floors.json`: statement counts per flow are exact ratchets, Python time (wall minus driver) and the warm registry load are floors with a 25 % tolerance. Run it after any change under `odoo/orm/`, and move a floor in the same change that moves the count. To find *where* time goes, use a signal-based sampler on the main thread; cProfile shares and sampling threads both misattribute (`doc/architecture/qualities.md`, Scenario 0).
+
 ### Integration — through `odoo-bin`
 
 ```bash

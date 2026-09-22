@@ -36,6 +36,7 @@ if typing.TYPE_CHECKING:
     from ..domain import Domain
     from ..fields import Field
     from ..models.base import BaseModel
+    from .environment import Environment
 
 _logger = logging.getLogger("odoo.orm.backend")
 _orm_crud = logging.getLogger("odoo.orm.crud")
@@ -114,7 +115,9 @@ def _get_jsonb_storage_value(value: typing.Any) -> typing.Any:
     return value
 
 
-def _get_column_read_value(field: Field, value: typing.Any, env) -> typing.Any:
+def _get_column_read_value(
+    field: Field, value: typing.Any, env: Environment
+) -> typing.Any:
     if field.company_dependent:
         company_key = str(env.company.id)
         if value is not None and company_key in value:
@@ -144,28 +147,34 @@ def _get_column_read_value(field: Field, value: typing.Any, env) -> typing.Any:
 
 @typing.runtime_checkable
 class SequenceStore(typing.Protocol):
-    def create(self, env, name: str, *, increment: int, start: int) -> None: ...
+    def create(
+        self, env: Environment, name: str, *, increment: int, start: int
+    ) -> None: ...
 
-    def drop(self, env, names: typing.Collection[str]) -> None: ...
+    def drop(self, env: Environment, names: typing.Collection[str]) -> None: ...
 
     def alter(
         self,
-        env,
+        env: Environment,
         name: str,
         *,
         increment: int | None = None,
         restart: int | None = None,
     ) -> None: ...
 
-    def next_values(self, env, name: str, count: int) -> list[int]: ...
+    def next_values(self, env: Environment, name: str, count: int) -> list[int]: ...
 
-    def peek(self, env, names: typing.Collection[str]) -> dict[str, int]: ...
+    def peek(
+        self, env: Environment, names: typing.Collection[str]
+    ) -> dict[str, int]: ...
 
 
 class PostgresSequenceStore:
     __slots__ = ()
 
-    def create(self, env, name: str, *, increment: int, start: int) -> None:
+    def create(
+        self, env: Environment, name: str, *, increment: int, start: int
+    ) -> None:
         _debug.lifecycle(
             "backend.sequence.created", name=name, increment=increment, start=start
         )
@@ -178,7 +187,7 @@ class PostgresSequenceStore:
             )
         )
 
-    def drop(self, env, names: typing.Collection[str]) -> None:
+    def drop(self, env: Environment, names: typing.Collection[str]) -> None:
         if not names:
             return
         _debug.lifecycle("backend.sequence.dropped", sequences=len(names))
@@ -187,7 +196,7 @@ class PostgresSequenceStore:
 
     def alter(
         self,
-        env,
+        env: Environment,
         name: str,
         *,
         increment: int | None = None,
@@ -221,14 +230,16 @@ class PostgresSequenceStore:
             )
         )
 
-    def next_values(self, env, name: str, count: int) -> list[int]:
+    def next_values(self, env: Environment, name: str, count: int) -> list[int]:
         if count == 1:
             env.cr.execute("SELECT nextval(%s)", [name])
-            return [env.cr.fetchone()[0]]
-        env.cr.execute("SELECT nextval(%s) FROM generate_series(1, %s)", [name, count])
+        else:
+            env.cr.execute(
+                "SELECT nextval(%s) FROM generate_series(1, %s)", [name, count]
+            )
         return [number for (number,) in env.cr.fetchall()]
 
-    def peek(self, env, names: typing.Collection[str]) -> dict[str, int]:
+    def peek(self, env: Environment, names: typing.Collection[str]) -> dict[str, int]:
         if not names:
             return {}
         increments = dict(
@@ -440,7 +451,7 @@ class StorageBackend(typing.Protocol):
     sequences: SequenceStore
     columns: ColumnStore
 
-    def timezone_names(self, env) -> frozenset[str]: ...
+    def timezone_names(self, env: Environment) -> frozenset[str]: ...
 
     def create_rows(
         self,
@@ -735,7 +746,7 @@ class PostgresBackend:
 
     __slots__ = ()
 
-    def timezone_names(self, env) -> frozenset[str]:
+    def timezone_names(self, env: Environment) -> frozenset[str]:
         # the names the server's timezone() accepts, once per database
         names = _sql_timezone_names.get(env.cr.dbname)
         if names is None:

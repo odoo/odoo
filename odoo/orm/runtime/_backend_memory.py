@@ -62,16 +62,18 @@ class InMemorySequenceStore:
     def __init__(self, storage: DictBackend):
         self.storage = storage
 
-    def create(self, env, name: str, *, increment: int, start: int) -> None:
+    def create(
+        self, env: Environment | None, name: str, *, increment: int, start: int
+    ) -> None:
         self.storage._named_sequences[name] = NamedSequence(increment, max(start, 1))
 
-    def drop(self, env, names: typing.Collection[str]) -> None:
+    def drop(self, env: Environment | None, names: typing.Collection[str]) -> None:
         for name in names:
             self.storage._named_sequences.pop(name, None)
 
     def alter(
         self,
-        env,
+        env: Environment | None,
         name: str,
         *,
         increment: int | None = None,
@@ -86,10 +88,12 @@ class InMemorySequenceStore:
             sequence.last_value = max(restart, 1)
             sequence.is_called = False
 
-    def next_values(self, env, name: str, count: int) -> list[int]:
+    def next_values(self, env: Environment | None, name: str, count: int) -> list[int]:
         return self.storage._named_sequences[name].next_values(count)
 
-    def peek(self, env, names: typing.Collection[str]) -> dict[str, int]:
+    def peek(
+        self, env: Environment | None, names: typing.Collection[str]
+    ) -> dict[str, int]:
         sequences = self.storage._named_sequences
         return {name: sequences[name].peek() for name in names if name in sequences}
 
@@ -261,7 +265,9 @@ def _foreign_key_targets(model: BaseModel) -> list[tuple[str, str]]:
     return targets
 
 
-def _check_foreign_keys(storage, model: BaseModel, rows: list[dict]) -> None:
+def _check_foreign_keys(
+    storage: DictBackend, model: BaseModel, rows: list[dict]
+) -> None:
     # a create allocates its ids inside create_rows, after these values were
     # built, so no row of a batch can name a sibling of it: every reference
     # here is to a row that must already be stored, as it must be for the
@@ -289,7 +295,7 @@ def _check_foreign_keys(storage, model: BaseModel, rows: list[dict]) -> None:
 
 
 def _check_m2m_foreign_keys(
-    storage,
+    storage: DictBackend,
     model: BaseModel,
     relation: str,
     column1: str,
@@ -358,7 +364,9 @@ def _check_column_values(model: BaseModel, rows: list[dict]) -> None:
                     )
 
 
-def _check_table_constraints(storage, model: BaseModel, rows: list[dict]) -> None:
+def _check_table_constraints(
+    storage: DictBackend, model: BaseModel, rows: list[dict]
+) -> None:
     # what the table refuses on PostgreSQL: a NULL in a NOT NULL column and a
     # duplicate under a unique constraint (NULLs distinct, as SQL treats them)
     _check_column_values(model, rows)
@@ -542,7 +550,14 @@ class _InMemoryReadGroup:
     """read_group over the dict storage: one row per group, raw values shaped as
     the SQL rows are (a many2one is its id, a date is truncated, text NULLIF'd)."""
 
-    def __init__(self, model, domain, groupby, aggregates, storage=None):
+    def __init__(
+        self,
+        model: BaseModel,
+        domain: typing.Any,
+        groupby: typing.Iterable[str],
+        aggregates: typing.Iterable[str],
+        storage: DictBackend | None = None,
+    ) -> None:
         self.model = model
         self.storage = storage
         # the compiled query carries a GROUP BY meant for SQL; the in-memory search
@@ -1083,7 +1098,7 @@ def _order_within_grouping_set(
 class _ForeignKeyPlan:
     __slots__ = ("backend", "m2m_rows", "nulls", "registry", "rows")
 
-    def __init__(self, backend, registry) -> None:
+    def __init__(self, backend: typing.Any, registry: typing.Any) -> None:
         self.backend = backend
         self.registry = registry
         self.rows: dict[str, set[int]] = {}
@@ -1149,7 +1164,7 @@ class _ForeignKeyPlan:
             if row.get(column) in ids
         )
 
-    def apply(self, storage) -> None:
+    def apply(self, storage: DictBackend) -> None:
         for table, updates in self.nulls.items():
             storage.update_rows(table, updates)
         for relation, row_ids in self.m2m_rows.items():
@@ -1166,7 +1181,7 @@ class InMemoryBackend:
         self.sequences: SequenceStore = InMemorySequenceStore(storage)
         self.columns: ColumnStore = InMemoryColumnStore(storage)
 
-    def timezone_names(self, env) -> frozenset[str]:
+    def timezone_names(self, env: Environment) -> frozenset[str]:
         return _python_timezone_names()
 
     def create_rows(
@@ -1784,7 +1799,7 @@ class InMemoryBackend:
             env[field.model_name].browse(row_ids).modified([field.name])
         env.registry.metaschema.discard_defaults(env, model.browse(sub_ids))
 
-    def _iter_m2m_rows(self, relation: str):
+    def _iter_m2m_rows(self, relation: str) -> typing.Iterator[tuple[int, dict]]:
         for row_id in self.storage.get_table_ids(relation):
             row = self.storage.get_row(relation, row_id)
             if row is not None:

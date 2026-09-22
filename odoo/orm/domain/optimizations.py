@@ -144,7 +144,7 @@ def nary_condition_optimization(
                     merge_conditions = []
                 result.append(domain)
             flush()
-            if _debug.logic.enabled and merged_any:
+            if merged_any and _debug.logic.enabled:
                 _debug.logic(
                     "domain.nary.conditions_merged",
                     model=model._name,
@@ -164,7 +164,7 @@ def nary_condition_optimization(
 
 
 @operator_optimization(["=?"])
-def _optimize_equal_if_value(condition, _):
+def _optimize_equal_if_value(condition: DomainCondition, _: BaseModel) -> Domain:
     if not condition.value:
         _debug.logic(
             "domain.optimize.equal_if_value_true", field_expr=condition.field_expr
@@ -174,7 +174,7 @@ def _optimize_equal_if_value(condition, _):
 
 
 @operator_optimization(["<>"])
-def _optimize_different(condition, _):
+def _optimize_different(condition: DomainCondition, _: BaseModel) -> Domain:
     _debug.logic(
         "domain.optimize.deprecated_operator",
         operator="<>",
@@ -189,7 +189,7 @@ def _optimize_different(condition, _):
 
 
 @operator_optimization(["=="])
-def _optimize_equals(condition, _):
+def _optimize_equals(condition: DomainCondition, _: BaseModel) -> Domain:
     _debug.logic(
         "domain.optimize.deprecated_operator",
         operator="==",
@@ -204,7 +204,7 @@ def _optimize_equals(condition, _):
 
 
 @operator_optimization(["=", "!="])
-def _optimize_equal_as_in(condition, _):
+def _optimize_equal_as_in(condition: DomainCondition, _: BaseModel) -> Domain:
     value = condition.value
     operator = "in" if condition.operator == "=" else "not in"
     if isinstance(value, COLLECTION_TYPES):
@@ -233,7 +233,7 @@ def _optimize_equal_as_in(condition, _):
 
 
 @operator_optimization(["in", "not in"])
-def _optimize_in_set(condition, _model):
+def _optimize_in_set(condition: DomainCondition, _model: BaseModel) -> Domain:
     value = condition.value
     if isinstance(value, FrozenOrderedSet) and value:
         return condition
@@ -266,7 +266,9 @@ def _optimize_in_set(condition, _model):
 
 
 @operator_optimization(["in", "not in"])
-def _optimize_in_set_falsy_value(condition, model):
+def _optimize_in_set_falsy_value(
+    condition: DomainCondition, model: BaseModel
+) -> Domain:
     value = condition.value
     if not isinstance(value, FrozenOrderedSet):
         return condition
@@ -276,7 +278,7 @@ def _optimize_in_set_falsy_value(condition, model):
     if None not in value and not (has_falsy_alias and falsy in value):
         return condition
 
-    def is_null_alias(v):
+    def is_null_alias(v: typing.Any) -> bool:
         return v is None or (has_falsy_alias and v is not False and v == falsy)
 
     if not any(is_null_alias(v) for v in value):
@@ -297,7 +299,7 @@ def _optimize_in_set_falsy_value(condition, model):
 
 
 @operator_optimization(["in", "not in"], OptimizationLevel.FULL)
-def _optimize_in_required(condition, model):
+def _optimize_in_required(condition: DomainCondition, model: BaseModel) -> Domain:
     value = condition.value
     if False not in value:
         return condition
@@ -325,7 +327,7 @@ def _optimize_in_required(condition, model):
 
 
 @operator_optimization(["any", "not any", "any!", "not any!"])
-def _optimize_any_domain(condition, model):
+def _optimize_any_domain(condition: DomainCondition, model: BaseModel) -> Domain:
     value = condition.value
     if isinstance(value, ANY_TYPES) and not isinstance(value, Domain):
         if condition.operator in ("any", "not any"):
@@ -342,7 +344,9 @@ def _optimize_any_domain(condition, model):
     return DomainCondition(condition.field_expr, condition.operator, domain)
 
 
-def _optimize_any_domain_at_level(level: OptimizationLevel, condition, model):
+def _optimize_any_domain_at_level(
+    level: OptimizationLevel, condition: DomainCondition, model: BaseModel
+) -> Domain:
     domain = condition.value
     if not isinstance(domain, Domain):
         return condition
@@ -381,7 +385,7 @@ del _level
 
 
 @operator_optimization(LIKE_CONDITION_OPERATORS)
-def _optimize_like_str(condition, model):
+def _optimize_like_str(condition: DomainCondition, model: BaseModel) -> Domain:
     value = condition.value
     if not value:
         result = (condition.operator in NEGATIVE_CONDITION_OPERATORS) == (
@@ -452,7 +456,7 @@ def _coerce_numeric(value: typing.Any, field_type: str) -> typing.Any:
 
 
 @field_type_optimization(["integer", "float", "monetary"])
-def _optimize_numeric_comparand(condition, model):
+def _optimize_numeric_comparand(condition: DomainCondition, model: BaseModel) -> Domain:
     operator = condition.operator
     value = condition.value
     if operator not in ("in", "not in", ">", "<", ">=", "<=") or (
@@ -509,7 +513,9 @@ def _optimize_numeric_comparand(condition, model):
 @field_type_optimization(
     ["many2one", "many2one_reference", "one2many", "many2many"],
 )
-def _optimize_relational_falsy_id(condition, model):
+def _optimize_relational_falsy_id(
+    condition: DomainCondition, model: BaseModel
+) -> Domain:
     operator = condition.operator
     if operator not in ("in", "not in", ">", "<", ">=", "<="):
         return condition
@@ -519,7 +525,7 @@ def _optimize_relational_falsy_id(condition, model):
     ):
         return condition
 
-    def is_falsy_id(value):
+    def is_falsy_id(value: typing.Any) -> bool:
         return (
             not isinstance(value, bool)
             and isinstance(value, (int, float))
@@ -557,7 +563,7 @@ def _optimize_relational_falsy_id(condition, model):
 
 
 @field_type_optimization(["boolean"])
-def _optimize_boolean_in(condition, model):
+def _optimize_boolean_in(condition: DomainCondition, model: BaseModel) -> Domain:
     value = condition.value
     operator = condition.operator
     if operator not in ("in", "not in"):
@@ -600,7 +606,7 @@ def _optimize_boolean_in(condition, model):
 
 
 @field_type_optimization(["boolean"], OptimizationLevel.FULL)
-def _optimize_boolean_in_all(condition, model):
+def _optimize_boolean_in_all(condition: DomainCondition, model: BaseModel) -> Domain:
     if isinstance(condition.value, COLLECTION_TYPES) and set(condition.value) == {
         False,
         True,
@@ -616,7 +622,7 @@ def _optimize_boolean_in_all(condition, model):
 
 
 @operator_optimization(REGEX_CONDITION_OPERATORS)
-def _optimize_regex_str(condition, model):
+def _optimize_regex_str(condition: DomainCondition, model: BaseModel) -> Domain:
     value = condition.value
     if isinstance(value, str) and value:
         if condition._get_field(model).relational:
@@ -632,7 +638,9 @@ def _optimize_regex_str(condition, model):
 
 
 @operator_optimization([">", "<", ">=", "<="])
-def _optimize_inequality_against_null(condition, model):
+def _optimize_inequality_against_null(
+    condition: DomainCondition, model: BaseModel
+) -> Domain:
     value = condition.value
     if value is not False and value is not None:
         return condition
@@ -650,7 +658,9 @@ def _optimize_inequality_against_null(condition, model):
 
 
 @operator_optimization([">", "<", ">=", "<="])
-def _optimize_inequality_against_collection(condition, model):
+def _optimize_inequality_against_collection(
+    condition: DomainCondition, model: BaseModel
+) -> Domain:
     value = condition.value
     if isinstance(value, COLLECTION_TYPES):
         raise condition._prepare_condition_error(
@@ -664,7 +674,7 @@ def _optimize_inequality_against_collection(condition, model):
 
 
 @operator_optimization(["parent_of", "child_of"], OptimizationLevel.FULL)
-def _optimize_hierarchy(condition, model):
+def _optimize_hierarchy(condition: DomainCondition, model: BaseModel) -> Domain:
     hierarchy: typing.Callable[..., typing.Any]
     if condition.operator == "parent_of":
         hierarchy = _get_domain_parent_of
@@ -841,7 +851,7 @@ def _get_domain_parent_of(comodel: BaseModel, parent: str) -> OrderedSet:
 
 
 @operator_optimization(["any", "not any"], level=OptimizationLevel.FULL)
-def _optimize_any_with_rights(condition, model):
+def _optimize_any_with_rights(condition: DomainCondition, model: BaseModel) -> Domain:
     if model.env.su or condition._get_field(model).bypass_search_access:
         _debug.logic(
             "domain.any.bypass_access",
@@ -907,7 +917,9 @@ def _canonicalize_numeric_sets(
 
 
 @nary_condition_optimization(operators=("in", "not in"))
-def _optimize_merge_set_conditions_mono_value(cls: type[DomainNary], conditions, model):
+def _optimize_merge_set_conditions_mono_value(
+    cls: type[DomainNary], conditions: list[DomainCondition], model: BaseModel
+) -> list[DomainCondition]:
     field = conditions[0]._get_field(model)
     if field.is_x2many or field.is_properties:
         return conditions
@@ -919,7 +931,9 @@ def _optimize_merge_set_conditions_mono_value(cls: type[DomainNary], conditions,
 
 
 @nary_condition_optimization(operators=("in",), field_types=["many2many", "one2many"])
-def _optimize_merge_set_conditions_x2many_in(cls: type[DomainNary], conditions, model):
+def _optimize_merge_set_conditions_x2many_in(
+    cls: type[DomainNary], conditions: list[DomainCondition], model: BaseModel
+) -> list[DomainCondition]:
     if cls is DomainAnd:
         return conditions
     return _merge_set_conditions(cls, conditions)
@@ -929,8 +943,8 @@ def _optimize_merge_set_conditions_x2many_in(cls: type[DomainNary], conditions, 
     operators=("not in",), field_types=["many2many", "one2many"]
 )
 def _optimize_merge_set_conditions_x2many_not_in(
-    cls: type[DomainNary], conditions, model
-):
+    cls: type[DomainNary], conditions: list[DomainCondition], model: BaseModel
+) -> list[DomainCondition]:
     if cls is DomainOr:
         return conditions
     return _merge_set_conditions(cls, conditions)
@@ -938,7 +952,9 @@ def _optimize_merge_set_conditions_x2many_not_in(
 
 @nary_condition_optimization(["any"], ["many2one", "one2many", "many2many"])
 @nary_condition_optimization(["any!"], ["many2one", "one2many", "many2many"])
-def _optimize_merge_any(cls, conditions, model):
+def _optimize_merge_any(
+    cls: type[DomainNary], conditions: list[DomainCondition], model: BaseModel
+) -> list[DomainCondition]:
     field = conditions[0]._get_field(model)
     if not field.is_many2one and cls is DomainAnd:
         return conditions
@@ -957,7 +973,9 @@ def _optimize_merge_any(cls, conditions, model):
 
 @nary_condition_optimization(["not any"], ["many2one", "one2many", "many2many"])
 @nary_condition_optimization(["not any!"], ["many2one", "one2many", "many2many"])
-def _optimize_merge_not_any(cls, conditions, model):
+def _optimize_merge_not_any(
+    cls: type[DomainNary], conditions: list[DomainCondition], model: BaseModel
+) -> list[DomainCondition]:
     field = conditions[0]._get_field(model)
     if not field.is_many2one and cls is DomainOr:
         return conditions
@@ -975,7 +993,9 @@ def _optimize_merge_not_any(cls, conditions, model):
 
 
 @nary_optimization
-def _optimize_same_conditions(cls, conditions, model):
+def _optimize_same_conditions(
+    cls: type[DomainNary], conditions: list[DomainCondition], model: BaseModel
+) -> list[DomainCondition]:
     seen: set = set()
     for condition in conditions:
         if condition in seen:

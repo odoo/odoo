@@ -86,15 +86,16 @@ class CreateMixin(_ModelStubs):
         for model, names in parent_fields.items():
             defaults.update(env[model].default_get(names))
 
-        _debug.logic(
-            "create.default_get",
-            model=self._name,
-            requested=len(fields),
-            resolved=len(defaults),
-            from_context=sum(1 for name in fields if name in context_defaults),
-            from_ir_default=sum(1 for name in fields if name in ir_defaults),
-            parent_models=len(parent_fields),
-        )
+        if _debug.logic.enabled:
+            _debug.logic(
+                "create.default_get",
+                model=self._name,
+                requested=len(fields),
+                resolved=len(defaults),
+                from_context=sum(1 for name in fields if name in context_defaults),
+                from_ir_default=sum(1 for name in fields if name in ir_defaults),
+                parent_models=len(parent_fields),
+            )
         return defaults
 
     @api.model

@@ -148,7 +148,9 @@ def add_model_to_registry(
     return model_cls
 
 
-def _check_model_extension(model_cls: type[BaseModel], model_def: type[BaseModel]):
+def _check_model_extension(
+    model_cls: type[BaseModel], model_def: type[BaseModel]
+) -> None:
     if model_cls._abstract and not model_def._abstract:
         raise TypeError(
             f"{model_def} transforms the abstract model {model_cls._name!r} into a non-abstract model. "
@@ -177,7 +179,7 @@ def _check_model_parent_extension(
         )
 
 
-def _init_model_class_attributes(model_cls: type[BaseModel]):
+def _init_model_class_attributes(model_cls: type[BaseModel]) -> None:
     if not is_registry_class(model_cls):
         raise TypeError(f"{model_cls!r} is not a registry model class")
 
@@ -190,7 +192,7 @@ def _init_model_class_attributes(model_cls: type[BaseModel]):
         del model_cls._init_attrs_in_progress__
 
 
-def _init_model_class_attributes_once(model_cls: type[BaseModel]):
+def _init_model_class_attributes_once(model_cls: type[BaseModel]) -> None:
     model_cls._description = model_cls._name
     model_cls._table = model_cls._name.replace(".", "_")
     model_cls._log_access = model_cls._auto
@@ -235,7 +237,7 @@ def _init_model_class_attributes_once(model_cls: type[BaseModel]):
         _init_model_class_attributes(registry[child_name])
 
 
-def setup_model_classes(env: Environment):
+def setup_model_classes(env: Environment) -> None:
     registry = env.registry
 
     _reset_setup(registry["ir.model"])
@@ -263,7 +265,7 @@ def setup_model_classes(env: Environment):
         model_cls(env, (), ())._post_model_setup__()
 
 
-def _reset_setup(model_cls: type[BaseModel]):
+def _reset_setup(model_cls: type[BaseModel]) -> None:
     if model_cls._setup_done__:
         if model_cls.__bases__ != model_cls._base_classes__:
             raise TypeError(
@@ -287,7 +289,7 @@ def _reset_setup(model_cls: type[BaseModel]):
         discardattr(model_cls, _memo)
 
 
-def _setup(model_cls: type[BaseModel], env: Environment):
+def _setup(model_cls: type[BaseModel], env: Environment) -> None:
     if model_cls._setup_done__:
         return
 
@@ -333,7 +335,7 @@ def _setup_phases(model_cls: type[BaseModel], env: Environment) -> None:
     )
 
 
-def _collect_and_install_fields(model_cls: type[BaseModel], env: Environment):
+def _collect_and_install_fields(model_cls: type[BaseModel], env: Environment) -> None:
     for name in model_cls._fields:
         discardattr(model_cls, name)
     model_cls._fields__.clear()
@@ -368,7 +370,9 @@ def _collect_and_install_fields(model_cls: type[BaseModel], env: Environment):
     )
 
 
-def _patch_translate_field(model_cls: type[BaseModel], name: str, fields_: list):
+def _patch_translate_field(
+    model_cls: type[BaseModel], name: str, fields_: list
+) -> None:
     registry = get_registry_of_model(model_cls)
     key = f"{model_cls._name}.{name}"
     if key not in registry.database_translated_fields:
@@ -429,7 +433,7 @@ def _patch_company_dependent_field(
             fields_.append(type(fields_[0])(company_dependent=True))
 
 
-def _check_rec_name(model_cls: type[BaseModel]):
+def _check_rec_name(model_cls: type[BaseModel]) -> None:
     if model_cls._rec_name:
         if model_cls._rec_name not in model_cls._fields:
             raise TypeError(
@@ -487,7 +491,7 @@ def _add_table_objects(model_cls: type[BaseModel]):
         )
 
 
-def _check_inherits(model_cls: type[BaseModel]):
+def _check_inherits(model_cls: type[BaseModel]) -> None:
     for comodel_name, field_name in model_cls._inherits.items():
         field = model_cls._fields.get(field_name)
         if not field or not field.is_many2one:
@@ -555,7 +559,7 @@ def _add_inherited_fields(model_cls: type[BaseModel]):
         )
 
 
-def _setup_fields(model_cls: type[BaseModel], env: Environment):
+def _setup_fields(model_cls: type[BaseModel], env: Environment) -> None:
     bad_fields = []
     many2one_company_dependents = get_registry_of_model(
         model_cls
@@ -664,7 +668,7 @@ def _add_manual_fields(model_cls: type[BaseModel], env: Environment):
                 )
 
 
-def add_field(model_cls: type[BaseModel], name: str, field: Field):
+def add_field(model_cls: type[BaseModel], name: str, field: Field) -> None:
     is_class_field = any(
         isinstance(getattr(model, name, None), fields.Field)
         for model in [model_cls]

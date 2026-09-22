@@ -219,7 +219,7 @@ class Many2one(_Relational):
     def convert_to_record(
         self, value: int | NewId | None, record: ModelLike
     ) -> BaseModel:
-        rs = object.__new__(record.pool[self.comodel_name])
+        rs = object.__new__(record.pool.models[self.comodel_name])
         rs.env = record.env
         rs._ids = () if value is None else (value,)
         rs._prefetch_ids = PrefetchMany2one(record, self)
@@ -228,7 +228,7 @@ class Many2one(_Relational):
     def convert_to_record_multi(
         self, values: list[int | NewId | None], records: BaseModel
     ) -> BaseModel:
-        rs = object.__new__(records.pool[self.comodel_name])
+        rs = object.__new__(records.pool.models[self.comodel_name])
         rs.env = records.env
         rs._ids = tuple(unique(id_ for id_ in values if id_ is not None))
         rs._prefetch_ids = PrefetchMany2one(records, self)

@@ -4,6 +4,8 @@
 #   ./gates.sh                 lint, the two pytest tiers, bare-env mypy, the doc figures
 #   ./gates.sh --fast          lint and the two pytest tiers only
 #   ./gates.sh --rust --js     add the cargo checks and the JS toolchain
+#   ./gates.sh --perf          add tests/perf: statement-count ratchets and Python-time
+#                              floors (tests/perf/floors.json) on a scratch base database
 #   ./gates.sh --ref <rev>     run everything on a detached worktree of <rev>,
 #                              which is what the pre-push hook does (.githooks/)
 #
@@ -15,12 +17,13 @@ set -u
 
 usage() { sed -n '2,10p' "$0"; exit 2; }
 
-FAST=0 RUST=0 JS=0 REF=""
+FAST=0 RUST=0 JS=0 PERF=0 REF=""
 while [ $# -gt 0 ]; do
     case "$1" in
         --fast) FAST=1 ;;
         --rust) RUST=1 ;;
         --js) JS=1 ;;
+        --perf) PERF=1 ;;
         --ref) shift; REF="${1:-}"; [ -n "$REF" ] || usage ;;
         -h|--help) usage ;;
         *) echo "unknown option: $1" >&2; usage ;;
@@ -87,6 +90,17 @@ bare_mypy() {
     "$MYPY_ENV/bin/mypy" --no-incremental --config-file mypy.ini "$@"
 }
 
+# odoo.orm functions without complete annotations, tests excluded: an exact
+# ratchet toward zero, the floor beside mypy.ini
+untyped_orm() {
+    local floor count
+    floor="$(tr -d '[:space:]' < mypy_untyped_floor)"
+    count="$(bare_mypy --disallow-untyped-defs --disallow-incomplete-defs -p odoo.orm 2>/dev/null \
+        | grep -v '/tests/' | grep -c 'error:')"
+    echo "odoo.orm untyped defs: $count, floor $floor"
+    [ "$count" -eq "$floor" ]
+}
+
 tier2() {
     "$BIN/pytest" -q -p no:cacheprovider \
         odoo/orm/tests odoo/http/tests odoo/db/tests odoo/tools/tests \
@@ -102,6 +116,7 @@ run "pytest tier 2"               tier2
 if [ "$FAST" -eq 0 ]; then
     run "mypy core packages"      bare_mypy -p odoo.orm -p odoo.db -p odoo.libs -p odoo.http -p odoo.service -p odoo.modules
     run "mypy tools, cli, tests"  bare_mypy -p odoo.tools -p odoo.cli -p odoo.tests
+    run "mypy orm untyped ratchet" untyped_orm
     # factcheck_env.sh finds the venv beside the checkout; a --ref worktree
     # under /tmp has none beside it and would fall back to the system python3
     run "doc/architecture figures" env ODOO_VENV_PYTHON="$PYTHON" bash doc/architecture/factcheck.sh
@@ -110,6 +125,9 @@ if [ "$RUST" -eq 1 ]; then
     run "cargo fmt"               cargo fmt --all --check --manifest-path crates/Cargo.toml
     run "cargo clippy"            cargo clippy --workspace --manifest-path crates/Cargo.toml -- -D warnings
     run "cargo test"              cargo test --workspace --manifest-path crates/Cargo.toml
+fi
+if [ "$PERF" -eq 1 ]; then
+    run "perf floors (tests/perf)"  "$BIN/pytest" -q -p no:cacheprovider tests/perf
 fi
 if [ "$JS" -eq 1 ]; then
     run "eslint"                  npx eslint .

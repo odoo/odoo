@@ -36,6 +36,45 @@ costs scale with the *installed module set*, not with the framework, and a
 `base`-only figure understates a real deployment by roughly the ratio between
 the two columns.
 
+## Scenario 0 — The floors a gate holds
+
+> **Stimulus** `./gates.sh --perf` (`tests/perf`, 2026-09-22).
+> **Environment** A scratch `base` database the suite installs and drops
+> (176 models), superuser, one transaction; the in-memory tier for the last row.
+> **Response** Statement counts as exact ratchets, Python time (wall minus the
+> driver's share, median of rounds) and the warm registry load as one-sided
+> floors with 25 % tolerance, in `tests/perf/floors.json`.
+> **Measure** The readings below are that file's values when it was created.
+
+| Scenario | Statements | Python |
+|---|---:|---:|
+| `res.partner.create` one record + flush | 3 | 1.84 ms |
+| `res.partner.create` 1 000 records + flush | 21 | 369.5 ms (0.37 ms/record) |
+| write one `Char` on 1 000 partners in a loop + flush | 1 | 55.2 ms (55 µs/record) |
+| the same 1 000 as one `write()` + flush | 1 | 4.2 ms |
+| `search_fetch` 1 000 partners, two fields | 1 | 0.53 ms |
+| warm `Registry loaded in`, `base` | — | 0.285 s |
+| in-memory tier, `create` one record, no computes | — | 83 µs |
+| in-memory tier, per stored compute at batch size one | — | 28.8 µs |
+
+The same suite run on the tree one commit earlier read the write loop at 69 ms
+(the gate's first red) and the single create at 2.17 ms: what
+`_fires_constraints` reading its class memo off the registry, the x2many scope
+scan skipped when no context slot exists, six debug guards reordered to test
+the cheap condition first and nine hot debug sites guarded bought on `base`.
+On the four-module set (`sale,purchase,stock,account`, 672 models) the same
+change read −21 % on a partner create, −8 % on the write loop and −4 % on a
+sale order create+confirm, Python time, median of three alternating A/B
+rounds against a detached worktree.
+
+**Where a flow's time goes** (signal sampler, the four-module set,
+2026-09-22): a `sale.order` create+confirm spends 58 % in the ORM's own
+Python, 19 % in psycopg + PostgreSQL, 14 % in `odoo/tools` + `odoo/libs`, 4 %
+in addon business code; a `res.partner` create 76 / 8 / 10 / 2. The profile
+is flat — the hottest frame is 2 % — so the shape, not one function, is the
+cost. Method and the readings that did not survive their own re-measurement:
+`agromarin-knowledge/research/2026-09-22-orm-best-in-class.md`.
+
 ## Scenario 1 — Write throughput
 
 > **Stimulus** A loop assigns one field on each of 10,000 records.
@@ -98,6 +137,17 @@ versus once per record, and count the loop and the flush separately.
 | Warm boot, wall | 1.06 s | 1.53 s | 1.78 s | 1.82 / 1.84 s |
 | Warm steady RSS | 164 MB | 173 MB | 224 MB | 228 MB |
 | **cold ÷ warm** | 38× | 12× | **50×** | 58× |
+
+Re-read 2026-09-22: `base` at 176 models loads warm in **0.29 s** (three runs,
+0.285–0.297; the `tests/perf` floor), faster than 2026-09-11 above; the
+four-module set at 127 modules / 672 models (`sale` having absorbed
+`sale_management`) loads warm in 1.53–1.58 s, installs cold in 84 s on a
+machine at load average 4, and sits at 275 MB. Of the larger set's in-process
+1.96 s, ~1.0 s is importing the addons' Python, `setup_models` 0.29 s,
+`_new_finalize` 0.22 s (the trigger graph 0.12 s of it), `base`'s data 0.21 s,
+`register_model_hooks` 0.10 s, class assembly 0.09 s: the growth is in the
+import volume, not the ORM's per-model cost (0.43 ms per model here, 0.31 on
+`base`).
 
 Building a registry costs an order of magnitude more than loading one: the cold
 path runs DDL and module data loading, the warm path only composes classes and
@@ -332,9 +382,11 @@ grep "Invalidating caches after database signaling" <server log>
 - **Contention on anything but one row.** Scenario 5's two columns are the
   extremes: total conflict and none. Realistic workloads sit between, and where
   the retry ladder starts converging is not measured.
-- **Flush fixpoint depth.** How many passes a realistic write takes is
-  unmeasured, and non-convergence is an error the architecture asserts but this
-  page does not characterise.
+- **Flush fixpoint depth beyond one.** On a partner create, a sale order
+  create, its confirmation and an invoice post the depth is 1 (2026-09-22,
+  the maximum over every flush of the cycle); no flow has yet been found that
+  takes a second pass, and non-convergence is an error the architecture
+  asserts but this page does not characterise.
 - **Cold filestore and large attachments.** No I/O-bound scenario appears here.
 - **Upgrade of a populated database.** Scenario 2's cold path installs into an
   empty database; migrating one with data is a different, larger cost.

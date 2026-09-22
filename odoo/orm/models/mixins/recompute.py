@@ -36,7 +36,12 @@ if typing.TYPE_CHECKING:
 def _fires_constraints(env, field) -> bool:
     if field.store or not field.related:
         return False
-    return field.name in env[field.model_name]._constrained_projection_names
+    names = env.registry[field.model_name].__dict__.get(
+        "_constrained_projection_names__"
+    )
+    if names is None:
+        names = env[field.model_name]._constrained_projection_names
+    return field.name in names
 
 
 class RecomputeMixin(_ModelStubs):
@@ -488,14 +493,15 @@ class RecomputeMixin(_ModelStubs):
         # reads a sibling, which recomputes the group over the write.
         # `_expand_ids` already batches new and real ids apart.
         records = self.browse(tuple(ids))
-        _debug.pipeline(
-            "recompute.field",
-            model=field.model_name,
-            field=field.name,
-            records=len(records),
-            pending=len(ids_to_compute),
-            scoped=scoped,
-        )
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "recompute.field",
+                model=field.model_name,
+                field=field.name,
+                records=len(records),
+                pending=len(ids_to_compute),
+                scoped=scoped,
+            )
         field.recompute(records)
 
         prof.stop()

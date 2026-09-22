@@ -51,7 +51,7 @@ class RecomputeScheduler:
         if protected:
             requested = len(ids)  # debuglog
             ids = ids - protected  # noqa: PLR6104  `ids` is caller-owned: -= would mutate it in place
-            if _debug.logic.enabled and len(ids) < requested:
+            if len(ids) < requested and _debug.logic.enabled:
                 _debug.logic(
                     "recompute_scheduler.protected_trimmed",
                     field=getattr(field, "name", field),

@@ -12,6 +12,7 @@ from ..primitives import SEQUENCE_FIELD
 from .base import Field, _prepare_fast_get
 
 if typing.TYPE_CHECKING:
+    from .._protocols import ResCurrencyProtocol
     from .._typing import BaseModel, Environment, ModelClass, ModelLike, ModelType
 
 MAXINT = 2**31 - 1
@@ -24,7 +25,7 @@ def _float_to_pg_text(value: float) -> str:
     return text.removesuffix(".0")
 
 
-def _is_exact_number(value) -> bool:
+def _is_exact_number(value: typing.Any) -> bool:
     return value.__class__ in (int, float) or isinstance(value, Decimal)
 
 
@@ -57,7 +58,7 @@ class Integer(Field[int]):
     @override
     def convert_to_column(
         self,
-        value,
+        value: typing.Any,
         record: ModelLike,
         values: dict | None = None,
         validate: bool = True,
@@ -75,19 +76,21 @@ class Integer(Field[int]):
         return int(value or 0)
 
     @override
-    def _comparand_to_column(self, value, model) -> typing.Any:
+    def _comparand_to_column(self, value: typing.Any, model: BaseModel) -> typing.Any:
         if _is_exact_number(value):
             return value
         return super()._comparand_to_column(value, model)
 
     @override
-    def _get_inequality_comparand(self, value, model) -> typing.Any:
+    def _get_inequality_comparand(
+        self, value: typing.Any, model: BaseModel
+    ) -> typing.Any:
         if _is_exact_number(value):
             return value or 0
         return super()._get_inequality_comparand(value, model)
 
     @override
-    def convert_to_record(self, value, record: ModelLike) -> int:
+    def convert_to_record(self, value: typing.Any, record: ModelLike) -> int:
         return value or 0
 
     @override
@@ -111,7 +114,7 @@ class Integer(Field[int]):
         return value
 
     @override
-    def convert_to_export(self, value, record: ModelLike) -> typing.Any:
+    def convert_to_export(self, value: typing.Any, record: ModelLike) -> typing.Any:
         if value or value == 0:
             return value
         return ""
@@ -178,7 +181,7 @@ class Float(Field[float]):
     @override
     def convert_to_column(
         self,
-        value,
+        value: typing.Any,
         record: ModelLike,
         values: dict | None = None,
         validate: bool = True,
@@ -210,7 +213,7 @@ class Float(Field[float]):
         return float_round(value, precision_digits=precision)
 
     @override
-    def _comparand_to_column(self, value, model) -> typing.Any:
+    def _comparand_to_column(self, value: typing.Any, model: BaseModel) -> typing.Any:
         if not _is_exact_number(value):
             return super()._comparand_to_column(value, model)
         column_type = self.column_type
@@ -223,13 +226,15 @@ class Float(Field[float]):
         return float(value)
 
     @override
-    def _get_inequality_comparand(self, value, model) -> typing.Any:
+    def _get_inequality_comparand(
+        self, value: typing.Any, model: BaseModel
+    ) -> typing.Any:
         if _is_exact_number(value):
             return float(value) or 0.0
         return super()._get_inequality_comparand(value, model)
 
     @override
-    def convert_to_record(self, value, record: ModelLike) -> float:
+    def convert_to_record(self, value: typing.Any, record: ModelLike) -> float:
         return value or 0.0
 
     @override
@@ -239,7 +244,7 @@ class Float(Field[float]):
         return _float_to_pg_text(cache_value)
 
     @override
-    def convert_to_export(self, value, record: ModelLike) -> typing.Any:
+    def convert_to_export(self, value: typing.Any, record: ModelLike) -> typing.Any:
         if value or value == 0.0:  # noqa: RUF069  0.0 exactly, to tell a real zero from an empty value
             return value
         return ""
@@ -327,7 +332,7 @@ class Monetary(Field[float]):
             )
         return name
 
-    def _resolve_currency_record(self, record: ModelLike):
+    def _resolve_currency_record(self, record: ModelLike) -> ResCurrencyProtocol | None:
         currency_field_name = self.get_currency_field(record)
         if not currency_field_name:
             return None
@@ -363,7 +368,7 @@ class Monetary(Field[float]):
     @override
     def convert_to_column(
         self,
-        value,
+        value: typing.Any,
         record: ModelLike,
         values: dict | None = None,
         validate: bool = True,
@@ -379,7 +384,7 @@ class Monetary(Field[float]):
 
     def convert_to_column_insert(
         self,
-        value,
+        value: typing.Any,
         record: ModelLike,
         values: dict | None = None,
         validate: bool = True,
@@ -400,7 +405,8 @@ class Monetary(Field[float]):
             currency = dummy[currency_field_name]
             currency_from = "related_values"  # debuglog
         else:
-            currency = self._resolve_currency_record(record).with_env(record.env)
+            resolved = self._resolve_currency_record(record)
+            currency = resolved.with_env(record.env) if resolved is not None else None
             currency_from = "record"  # debuglog
 
         if _debug.logic.enabled:
@@ -437,19 +443,21 @@ class Monetary(Field[float]):
         return value
 
     @override
-    def _comparand_to_column(self, value, model) -> typing.Any:
+    def _comparand_to_column(self, value: typing.Any, model: BaseModel) -> typing.Any:
         if not _is_exact_number(value):
             return super()._comparand_to_column(value, model)
         return Decimal(repr(float(value))) if not isinstance(value, Decimal) else value
 
     @override
-    def _get_inequality_comparand(self, value, model) -> typing.Any:
+    def _get_inequality_comparand(
+        self, value: typing.Any, model: BaseModel
+    ) -> typing.Any:
         if _is_exact_number(value):
             return float(value) or 0.0
         return super()._get_inequality_comparand(value, model)
 
     @override
-    def convert_to_record(self, value, record: ModelLike) -> float:
+    def convert_to_record(self, value: typing.Any, record: ModelLike) -> float:
         return value or 0.0
 
     @override
@@ -465,11 +473,11 @@ class Monetary(Field[float]):
         return value
 
     @override
-    def convert_to_write(self, value, record: ModelLike) -> typing.Any:
+    def convert_to_write(self, value: typing.Any, record: ModelLike) -> typing.Any:
         return value
 
     @override
-    def convert_to_export(self, value, record: ModelLike) -> typing.Any:
+    def convert_to_export(self, value: typing.Any, record: ModelLike) -> typing.Any:
         if value or value == 0.0:  # noqa: RUF069  0.0 exactly, to tell a real zero from an empty value
             return value
         return ""

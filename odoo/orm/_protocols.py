@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Collection, Sequence
-from typing import TYPE_CHECKING, Any, Protocol
+from typing import TYPE_CHECKING, Any, Protocol, Self
 
 if TYPE_CHECKING:
     from odoo.exceptions import AccessError
@@ -224,6 +224,12 @@ class ResCountryProtocol(RecordsetProtocol, Protocol):
     currency_id: Any
 
 
+class ResCurrencyProtocol(RecordsetProtocol, Protocol):
+    def round(self, amount: float) -> float: ...
+
+    def with_env(self, env: Any) -> Self: ...
+
+
 class ResLangProtocol(RecordsetProtocol, Protocol):
     def _get_data(self, **kwargs: Any) -> Any: ...
 
@@ -281,6 +287,7 @@ FRAMEWORK_MODEL_PROTOCOLS: dict[str, type] = {
     "ir.rule": IrRuleProtocol,
     "ir.ui.view": IrUiViewProtocol,
     "res.country": ResCountryProtocol,
+    "res.currency": ResCurrencyProtocol,
     "res.lang": ResLangProtocol,
     "res.users": ResUsersProtocol,
 }

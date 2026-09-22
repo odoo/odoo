@@ -193,15 +193,16 @@ def compute_value(field: Field, records: ModelLike, validate: bool = True) -> No
         if computed.store:
             env.remove_to_compute(computed, records)
 
-    _debug.pipeline(
-        "field.compute_value",
-        model=field.model_name,
-        field=field.name,
-        records=len(records),
-        computed_together=len(fields),
-        sudo=bool(field.compute_sudo),
-        validate=validate,
-    )
+    if _debug.pipeline.enabled:
+        _debug.pipeline(
+            "field.compute_value",
+            model=field.model_name,
+            field=field.name,
+            records=len(records),
+            computed_together=len(fields),
+            sudo=bool(field.compute_sudo),
+            validate=validate,
+        )
     sudo_assigned = [
         (computed, computed._superuser_slot_snapshot(records.env, records._ids))
         for computed in fields
