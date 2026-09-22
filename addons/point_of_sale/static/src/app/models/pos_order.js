@@ -1102,6 +1102,14 @@ export class PosOrder extends PosOrderAccounting {
             line.delete();
         });
     }
+
+    transferPaymentLinesTo(order) {
+        const paymentLines = [...this.payment_ids];
+        for (const line of paymentLines) {
+            line.copy({ pos_order_id: order });
+            this.removePaymentline(line);
+        }
+    }
 }
 
 const keyMaker = (prepLine) => {

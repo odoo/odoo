@@ -1,5 +1,6 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
+import { taxKey } from "@point_of_sale/app/models/utils/currency";
 import { _t } from "@web/core/l10n/translation";
 
 patch(PosOrder.prototype, {
@@ -43,7 +44,7 @@ patch(PosOrder.prototype, {
         if (numCustomers === 0) {
             return 0;
         }
-        return this.totalDue / numCustomers;
+        return (this.priceIncl + this.amountAlreadySplitPaid) / numCustomers;
     },
     setBooked(booked) {
         this.uiState.booked = booked;
@@ -209,5 +210,69 @@ patch(PosOrder.prototype, {
                 0
             ) + 1
         );
+    },
+
+    get splitPaymentProduct() {
+        return this.config.split_payment_product_id;
+    },
+
+    get isSplitPaymentOrder() {
+        return Boolean(this.split_origin_order_id);
+    },
+
+    get splitPaymentLines() {
+        return this.lines.filter((line) => line.isSplitPaymentLine);
+    },
+
+    get nonSplitPaymentLines() {
+        return this.lines.filter((line) => !line.isSplitPaymentLine);
+    },
+
+    get amountAlreadySplitPaid() {
+        return -this.splitPaymentLines.reduce((acc, line) => acc + line.priceIncl, 0);
+    },
+
+    get splitPaymentBlockingReason() {
+        if (!this.splitPaymentProduct) {
+            return _t("The split payment product seems misconfigured.");
+        }
+        if (this.payment_ids.some((payment) => payment.payment_method_id.type === "online")) {
+            return _t("Split and pay is unavailable with an online payment method.");
+        }
+        if (!this.currency.isPositive(this.amountPaid)) {
+            return _t("Add a payment before splitting the order.");
+        }
+        if (!this.currency.isPositive(this.totalDue - this.amountPaid)) {
+            return _t("The split share must be lower than the amount due.");
+        }
+        return null;
+    },
+
+    transferSplitPaymentInfosTo(order) {
+        order.table_id = this.table_id;
+        order.partner_id = this.partner_id;
+        order.to_invoice = this.to_invoice;
+        this.partner_id = false;
+    },
+
+    computeSplitPaymentShares(splitAmount) {
+        const existingLines = new Map(
+            this.splitPaymentLines.map((line) => [taxKey(line.tax_ids), line])
+        );
+        const amount = this.amountAlreadySplitPaid + splitAmount;
+        const baseLines = this.getBaseLinesReducedToAmount(this.nonSplitPaymentLines, {
+            product: this.splitPaymentProduct,
+            type: "fixed",
+            amount: this.isRefund ? amount : -amount,
+        });
+        return baseLines.map(({ baseLine, extraTaxData }) => {
+            const existingLine = existingLines.get(taxKey(baseLine.tax_ids));
+            return {
+                baseLine,
+                extraTaxData,
+                existingLine,
+                delta: (existingLine?.price_unit || 0) - baseLine.price_unit,
+            };
+        });
     },
 });

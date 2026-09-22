@@ -990,6 +990,36 @@ patch(PosStore.prototype, {
         return !this.getOrder().table_id && super.showSaveOrderButton;
     },
 
+    async addSplitPaymentLine(order, baseLine, priceUnit, extraTaxData = undefined) {
+        const product = order.splitPaymentProduct;
+        return await this.addLineToOrder(
+            {
+                product_id: product,
+                product_tmpl_id: product.product_tmpl_id,
+                qty: baseLine.quantity,
+                price_unit: priceUnit,
+                tax_ids: [["link", ...baseLine.tax_ids]],
+                extra_tax_data: extraTaxData,
+            },
+            order,
+            { force: true },
+            false
+        );
+    },
+
+    async applySplitPaymentShares(order, splitAmount) {
+        const shares = order.computeSplitPaymentShares(splitAmount);
+        for (const { baseLine, extraTaxData, existingLine } of shares) {
+            if (existingLine) {
+                existingLine.extra_tax_data = extraTaxData;
+                existingLine.price_unit = baseLine.price_unit;
+                existingLine.setFullProductName();
+            } else {
+                await this.addSplitPaymentLine(order, baseLine, baseLine.price_unit, extraTaxData);
+            }
+        }
+    },
+
     async onFloorPlanUpdate(payload) {
         const { session_id, device_identifier } = payload;
         const isSameDevice = isSamePosDevice(session_id, device_identifier, this);
