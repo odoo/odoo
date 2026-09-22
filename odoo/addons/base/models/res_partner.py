@@ -428,7 +428,6 @@ class ResPartner(models.Model):
     )
     main_bank_account_id = fields.Many2one(
         comodel_name="res.partner.bank.account",
-        string="Main Bank Account",
         compute="_compute_main_bank_account_id",
         store=True,
         help="The account this contact is paid on when a single one is needed. "

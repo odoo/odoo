@@ -56,7 +56,6 @@ class BankAccountVerification(models.Model):
     )
     bank_account_id = fields.Many2one(
         comodel_name="res.partner.bank.account",
-        string="Bank Account",
         readonly=True,
     )
     # We need to store the bank account number itself to prevent changes on the res.partner.bank.account record
