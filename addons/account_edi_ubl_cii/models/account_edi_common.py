@@ -1643,6 +1643,7 @@ class AccountEdiCommon(models.AbstractModel):
             if account := line_collected_values['account_values'].get('account'):
                 for tax_values in line_collected_values['taxes_values']:
                     tax_values['account'] = account
+<<<<<<< fc09e262bdcf172b27d0827bdc521fb19bb23a2d
             line_tax_values_list = line_collected_values['taxes_values']
             for charge in line_collected_values['charges']:
                 if tax_values := charge.get('attempt_tax_values'):
@@ -1652,6 +1653,14 @@ class AccountEdiCommon(models.AbstractModel):
                     line_tax_values['predicted_tax_ids'] = predicted_tax_ids
             tax_values_list.extend(line_tax_values_list)
 
+||||||| 9e96e751dca0fb6f4595ff955ae89d4ebc134eaa
+            tax_values_list += line_collected_values['taxes_values']
+            for charge in line_collected_values['charges']:
+                if tax_values := charge.get('attempt_tax_values'):
+                    tax_values_list.append(tax_values)
+=======
+            tax_values_list += line_collected_values['taxes_values']
+>>>>>>> 1fbe9ec761e65a9c989b79367c4ea7720382cabb
         for allowance_charge_value in collected_values['allowances'] + collected_values['charges']:
             if tax_values := allowance_charge_value.get('taxes_values'):
                 tax_values_list.append(tax_values)
