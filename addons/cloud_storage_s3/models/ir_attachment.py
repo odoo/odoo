@@ -146,10 +146,7 @@ class IrAttachment(models.Model):
         ]
         total = 0
         backfill = self._with_field_rows()
-        while True:
-            batch = backfill.search(domain, limit=batch_size)
-            if not batch:
-                break
+        for batch in backfill.search_iter(domain, batch_size=batch_size):
             batch.s3_mirror_pending = True
             batch._s3_mirror_to_cloud()
             if commit_each_batch:

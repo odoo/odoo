@@ -401,6 +401,33 @@ class TestCloudStorageS3Hybrid(TestCloudStorageS3Common):
         doc.unlink()
         self.mock_s3_client.delete_objects.assert_not_called()
 
+    def test_backfill_ends_when_an_attachment_has_no_content(self):
+        attachment = self._make_attachment()
+        attachment.s3_mirror_pending = False
+        self.env.flush_all()
+        self.env.cr.execute(
+            "UPDATE ir_attachment SET store_fname = 'ab/missing' WHERE id = %s",
+            [attachment.id],
+        )
+        attachment.invalidate_recordset()
+        Attachment = self.registry["ir.attachment"]
+        mirror = Attachment._s3_mirror_to_cloud
+        visits = []
+
+        def record(records):
+            if attachment in records:
+                visits.append(attachment.id)
+                if len(visits) > 3:
+                    raise AssertionError("backfill re-reads the same attachment")
+            return mirror(records)
+
+        with patch.object(
+            Attachment, "_s3_mirror_to_cloud", autospec=True, side_effect=record
+        ):
+            self.env["ir.attachment"]._s3_backfill_to_s3(commit_each_batch=False)
+        self.assertEqual(visits, [attachment.id])
+        self.assertFalse(attachment.s3_blob_name)
+
     def test_disabled_environment_skips_s3(self):
         self.env["ir.config_parameter"].set_param("cloud_storage_s3_enabled", "False")
         attachment = self._make_attachment()
