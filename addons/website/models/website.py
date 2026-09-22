@@ -728,13 +728,16 @@ class Website(models.CachedModel):
             r['industries'] = []
         return r
 
-    def _get_configurator_theme_preview_url(self, theme_name):
-        preview_path = f"{theme_name}/static/description/preview.html"
-        try:
-            with file_open(preview_path):
-                return f'/{preview_path}'
-        except FileNotFoundError:
-            return None
+    def _get_configurator_theme_preview_url(self, theme_name, is_dark=False):
+        filenames = ['preview_dark.html', 'preview.html'] if is_dark else ['preview.html']
+        for filename in filenames:
+            preview_path = f"{theme_name}/static/description/{filename}"
+            try:
+                with file_open(preview_path):
+                    return f'/{preview_path}'
+            except FileNotFoundError:
+                continue
+        return None
 
     @api.model
     def configurator_recommended_themes(self, industry_id, result_nbr_max=6,
