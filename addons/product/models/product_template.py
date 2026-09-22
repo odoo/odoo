@@ -471,6 +471,8 @@ class ProductTemplate(models.Model):
         self._set_product_variant_field('standard_price')
 
     def _search_standard_price(self, operator, value):
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
         return [('product_variant_ids.standard_price', operator, value)]
 
     @api.depends('type')
@@ -503,6 +505,8 @@ class ProductTemplate(models.Model):
         return prod_available
 
     def _search_qty_available(self, operator, value):
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
         return [('product_variant_ids.qty_available', operator, value)]
 
     def _set_qty_available(self):

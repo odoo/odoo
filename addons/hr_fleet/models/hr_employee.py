@@ -45,7 +45,10 @@ class HrEmployee(models.Model):
     def _search_license_plate(self, operator, value):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
-        return [('car_ids.license_plate', operator, value)]
+        domain = Domain('car_ids.license_plate', operator, value)
+        if operator == 'in' and False in value:  # relation may be falsy
+            domain |= Domain('car_ids', '=', False)
+        return domain
 
     def _compute_employee_cars_count(self):
         rg = self.env['fleet.vehicle.assignation.log']._read_group([

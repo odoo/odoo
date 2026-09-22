@@ -35,6 +35,8 @@ class StockPicking(models.Model):
 
     @api.model
     def _search_delay_pass(self, operator, value):
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
         return [('purchase_id.date_order', operator, value)]
 
     def _create_return(self):

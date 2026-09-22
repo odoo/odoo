@@ -480,7 +480,12 @@ class ResUsers(models.Model):
             user.all_group_ids = user.group_ids.all_implied_ids
 
     def _search_all_group_ids(self, operator, value):
-        return [('group_ids.all_implied_ids', operator, value)]
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+        domain = Domain('group_ids.all_implied_ids', operator, value)
+        if operator == 'in' and False in value:  # relation may be falsy
+            domain |= Domain('group_ids', '=', False)
+        return domain
 
     @api.depends('name')
     def _compute_signature(self):

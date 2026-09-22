@@ -4,6 +4,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 
@@ -138,7 +139,12 @@ class StockPickingBatch(models.Model):
             batch.move_line_ids = batch.picking_ids.move_line_ids
 
     def _search_move_line_ids(self, operator, value):
-        return [('picking_ids.move_line_ids', operator, value)]
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+        domain = Domain('picking_ids.move_line_ids', operator, value)
+        if operator == 'in' and False in value:  # relation may be falsy
+            domain |= Domain('picking_ids', '=', False)
+        return domain
 
     @api.depends('state', 'move_ids', 'picking_type_id')
     def _compute_show_allocation(self):
