@@ -302,12 +302,20 @@ count_prod_decls() {
     # this counted 50 declarations against the 25 that exist. The exclusions
     # below are the same defence by name; not following symlinks is that defence
     # made general, and no addon in the path is reached only through a link.
+    #
+    # agromarin-knowledge is excluded for the same reason and it is not
+    # hypothetical: ADDONS is the WORKSPACE root, so the knowledge vault is in
+    # scope, and research/2026-09-13-web-core-challenge holds a challenged and a
+    # historical copy of state_machine.js. Those two made this count read 27
+    # against the 25 that exist in production, and the assertion says
+    # "production class declarations" -- a research artifact kept as evidence is
+    # not one.
     files=$(grep -rEl --include='*.js' \
         --exclude-dir=filestore --exclude-dir=sessions \
         --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=__pycache__ \
         --exclude-dir=worktrees --exclude-dir=.worktrees \
         "$pattern" "$ADDONS/" 2>/dev/null \
-        | grep -v "machine_doc\|\.test\.js\|\.md$")
+        | grep -v "machine_doc\|\.test\.js\|\.md$\|/agromarin-knowledge/")
     if [ -z "$files" ]; then
         echo 0
     else
