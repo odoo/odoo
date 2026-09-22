@@ -52,6 +52,19 @@ TIMEOUT = 2.5
 MINIMAL_INPUT_SIZE = 5
 
 
+def _scrub(error):
+    """Describe `error` without the request URL.
+
+    A connection-level `requests` exception stringifies to the full outgoing
+    URL, and ours carries `key=<the Google Places API key>` as a query
+    parameter, so logging the exception verbatim writes the credential to the
+    server log. Only `guarded_http`'s own ResponseTooSlow is safe; everything
+    post-resolution -- ConnectTimeout, ConnectionError, SSLError, ReadTimeout,
+    ChunkedEncodingError -- reaches us as the raw requests exception.
+    """
+    return type(error).__name__
+
+
 class AutoCompleteController(http.Controller):
     def _translate_google_to_standard(self, google_fields):
         standard_data = {}
@@ -130,7 +143,7 @@ class AutoCompleteController(http.Controller):
         try:
             results = self._call_google_route("/autocomplete/json", params)
         except (requests.exceptions.RequestException, ValueError) as e:
-            _logger.error(e)
+            _logger.error("Google Places autocomplete request failed: %s", _scrub(e))
             return {"results": [], "session_id": session_id}
 
         if results.get("error_message"):
@@ -172,7 +185,7 @@ class AutoCompleteController(http.Controller):
         try:
             results = self._call_google_route("/details/json", params)
         except (requests.exceptions.RequestException, ValueError) as e:
-            _logger.error(e)
+            _logger.error("Google Places details request failed: %s", _scrub(e))
             return {"address": None}
 
         if results.get("error_message"):

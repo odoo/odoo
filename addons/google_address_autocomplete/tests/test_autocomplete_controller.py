@@ -199,6 +199,65 @@ class TestAutocompleteControllerParsing(TransactionCase):
             )
         self.assertEqual(res, {"results": [], "session_id": "sess"})
 
+    def test_place_search_failure_does_not_log_the_api_key(self):
+        """The credential must never reach the log.
+
+        A connection-level ``requests`` exception stringifies to the whole
+        outgoing URL, and ours carries ``key=<api key>`` in the query string,
+        so logging the exception verbatim published the credential. Raise an
+        exception shaped exactly like the real one and assert the key is absent
+        from every record the controller emits.
+        """
+        secret = "AIza_TEST_KEY_DO_NOT_LOG"
+        realistic = requests.exceptions.ConnectionError(
+            "HTTPSConnectionPool(host='maps.googleapis.com', port=443): "
+            "Max retries exceeded with url: /maps/api/place/autocomplete/json"
+            f"?key={secret}&input=Ramillies (Caused by NewConnectionError(...))"
+        )
+
+        def _raise(_controller, _route, _params):
+            raise realistic
+
+        with (
+            self._mock_request(),
+            patch.object(AutoCompleteController, "_call_google_route", _raise),
+            self.assertLogs(CONTROLLER_MODULE, level="ERROR") as captured,
+        ):
+            res = self.controller._perform_place_search(
+                "Ramillies, somewhere", api_key=secret, session_id="sess"
+            )
+
+        self.assertEqual(res, {"results": [], "session_id": "sess"})
+        self.assertTrue(captured.output, "the failure must still be logged")
+        for line in captured.output:
+            self.assertNotIn(secret, line, "the API key leaked into the log")
+        self.assertIn("ConnectionError", "".join(captured.output))
+
+    def test_complete_search_failure_does_not_log_the_api_key(self):
+        """Same guarantee on the details route."""
+        secret = "AIza_TEST_KEY_DO_NOT_LOG"
+        realistic = requests.exceptions.ConnectionError(
+            "HTTPSConnectionPool(host='maps.googleapis.com', port=443): "
+            "Max retries exceeded with url: /maps/api/place/details/json"
+            f"?key={secret}&place_id=abc (Caused by NewConnectionError(...))"
+        )
+
+        def _raise(_controller, _route, _params):
+            raise realistic
+
+        with (
+            self._mock_request(),
+            patch.object(AutoCompleteController, "_call_google_route", _raise),
+            self.assertLogs(CONTROLLER_MODULE, level="ERROR") as captured,
+        ):
+            res = self.controller._perform_complete_place_search(
+                "9 rue de Bourlottes", api_key=secret, google_place_id="abc"
+            )
+
+        self.assertEqual(res, {"address": None})
+        for line in captured.output:
+            self.assertNotIn(secret, line, "the API key leaked into the log")
+
     # ------------------------------------------------------------------
     # _perform_complete_place_search
     # ------------------------------------------------------------------
