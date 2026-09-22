@@ -892,7 +892,7 @@ class IrCron(models.Model):
         :return: remaining time (seconds) for the cron run
         """
         # Typical use case:
-        # https://www.odoo.com/documentation/master/developer/reference/backend/actions.html#writing-cron-functions
+        # https://www.odoo.com/documentation/latest/developer/reference/backend/actions.html#writing-cron-functions
         ctx = self.env.context
         progress = self.env['ir.cron.progress'].sudo().browse(ctx.get('ir_cron_progress_id'))
         if not progress:
