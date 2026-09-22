@@ -2057,9 +2057,6 @@ class AccountTax(models.Model):
                 if current_mode == 'excluded':
                     # Price-excluded rounding.
                     raw_total_excluded = values[f'target_total_excluded{delta_currency_indicator}']
-                    if not raw_total_excluded:
-                        continue
-
                     rounded_raw_total_excluded = delta_currency.round(raw_total_excluded)
                     total_excluded = values[f'total_excluded{delta_currency_indicator}']
                     delta_total_excluded = rounded_raw_total_excluded - total_excluded
@@ -2076,9 +2073,6 @@ class AccountTax(models.Model):
                         values[f'target_total_excluded{delta_currency_indicator}']
                         + values[f'target_tax_amount{delta_currency_indicator}']
                     )
-                    if not raw_total_included:
-                        continue
-
                     rounded_raw_total_included = delta_currency.round(raw_total_included)
                     total_included = (
                         values[f'total_excluded{delta_currency_indicator}']
