@@ -12,12 +12,17 @@ class EventEventTicket(models.Model):
         compute="_compute_price_reduce_taxinc",
         compute_sudo=True,
     )
+    # Display-only: website_event_sale renders it through t-field and nothing
+    # writes it. readonly=False advertised it to the web client as editable
+    # while, being a non-stored compute with no inverse, it silently dropped
+    # whatever was written. Dropping the kwarg stops the client offering it;
+    # a programmatic write() is still discarded without error, which is how
+    # the ORM treats every compute without an inverse.
     price_incl = fields.Float(
         string="Price include",
         min_display_digits="Product Price",
         compute="_compute_price_incl",
         compute_sudo=True,
-        readonly=False,
     )
 
     @api.depends("product_id.active")
