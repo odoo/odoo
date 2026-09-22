@@ -356,3 +356,33 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.assertEqual(
             channel.livechat_expertise_ids, operator_expertise_ids | cat_expertise
         )
+
+    def test_the_empty_session_sweep_runs_and_keeps_what_was_spoken_in(self):
+        """`interval %s` is a syntax error under psycopg 3, which binds the
+        placeholder server-side, so this sweep raised on every autovacuum run
+        and collected nothing. Nothing covered it, which is why."""
+        operator = self._create_operator()
+        empty = self._create_conversation(self.livechat_channel, operator)
+        empty.message_ids.unlink()
+        spoken_in = self._create_conversation(self.livechat_channel, operator)
+        two_hours_ago = fields.Datetime.now() - timedelta(hours=2)
+        self.env.cr.execute(
+            "UPDATE discuss_channel SET write_date = %s, create_date = %s "
+            "WHERE id = ANY(%s)",
+            (two_hours_ago, two_hours_ago, (empty + spoken_in).ids),
+        )
+        (empty + spoken_in).invalidate_recordset()
+
+        self.env["discuss.channel"]._gc_empty_livechat_sessions()
+
+        self.assertFalse(empty.exists(), "an empty session older than an hour is swept")
+        self.assertTrue(spoken_in.exists(), "a session with a message is kept")
+
+    def test_the_empty_session_sweep_spares_a_recent_one(self):
+        operator = self._create_operator()
+        recent = self._create_conversation(self.livechat_channel, operator)
+        recent.message_ids.unlink()
+
+        self.env["discuss.channel"]._gc_empty_livechat_sessions()
+
+        self.assertTrue(recent.exists(), "an empty session of the last hour is kept")

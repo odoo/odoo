@@ -1,4 +1,5 @@
 import json
+from datetime import timedelta
 
 from markupsafe import Markup
 
@@ -561,7 +562,10 @@ class DiscussChannel(models.Model):
 
     @api.autovacuum
     def _gc_empty_livechat_sessions(self):
-        hours = 1
+        # psycopg 3 binds server-side, so the placeholder reaches PostgreSQL as
+        # $1 and `interval $1` is a syntax error: this swept nothing and raised
+        # on every autovacuum run. A timedelta is adapted to an interval, which
+        # needs no string spliced into the statement at all.
         self.env.cr.execute(
             """
             SELECT id as id
@@ -572,8 +576,8 @@ class DiscussChannel(models.Model):
                 WHERE M.res_id = C.id AND m.model = 'discuss.channel'
             ) AND C.channel_type = 'livechat' AND livechat_channel_id IS NOT NULL AND
                 COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp
-                < ((now() at time zone 'UTC') - interval %s)""",
-            ("%s hours" % hours,),
+                < ((now() at time zone 'UTC') - %s)""",
+            (timedelta(hours=1),),
         )
         empty_channel_ids = [item["id"] for item in self.env.cr.dictfetchall()]
         self.browse(empty_channel_ids).unlink()
