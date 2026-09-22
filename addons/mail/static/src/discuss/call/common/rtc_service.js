@@ -394,6 +394,8 @@ export class Rtc extends Record {
     /** @type {"granted" | "denied" | "prompt" | undefined} */
     microphonePermission;
     isMicrophonePermissionWarningDismissed = false;
+    /** Whether a media permission dialog is currently shown, it already conveys the permission warning. */
+    isCallPermissionDialogOpen = false;
     /** @type {"granted" | "denied" | "prompt" | undefined} */
     cameraPermission;
     /**
@@ -507,7 +509,9 @@ export class Rtc extends Record {
 
     get showMicrophonePermissionWarning() {
         return (
-            !this.isMicrophonePermissionWarningDismissed && this.microphonePermission !== "granted"
+            !this.isCallPermissionDialogOpen &&
+            !this.isMicrophonePermissionWarningDismissed &&
+            this.microphonePermission !== "granted"
         );
     }
 
@@ -1238,6 +1242,8 @@ export class Rtc extends Record {
             this.showMediaUnavailableWarning({ [media]: true }, options);
             return;
         }
+        const onClose = options.onClose;
+        this.isCallPermissionDialogOpen = true;
         this.closeCallPermissionDialog = this.dialog.add(
             CallPermissionDialog,
             {
@@ -1255,6 +1261,10 @@ export class Rtc extends Record {
             {
                 rootRef: options.rootRef || (() => this.rootEl),
                 ...options,
+                onClose: () => {
+                    this.isCallPermissionDialogOpen = false;
+                    onClose?.();
+                },
             }
         );
     }
@@ -2263,6 +2273,7 @@ export class Rtc extends Record {
             isSendingCamera: false,
             isSendingScreen: false,
             isMicAudioTrackMuted: false,
+            isCallPermissionDialogOpen: false,
             isMicrophonePermissionWarningDismissed: false,
             localChannel: undefined,
             localSession: undefined,
