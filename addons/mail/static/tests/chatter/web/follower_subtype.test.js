@@ -167,3 +167,46 @@ test("internal subtypes are only listed for internal followers", async () => {
     await contains(".o-mail-FollowerSubtypeDialog-subtype", { count: 1 });
     await contains(".o-mail-FollowerSubtypeDialog-subtype:eq(0) label:text('Messages')");
 });
+
+test("'All Notifications' checkbox toggles every subtype and reflects partial selection", async () => {
+    const pyEnv = await startServer();
+    pyEnv["mail.followers"].create({
+        display_name: "François Perusse",
+        partner_id: serverState.partnerId,
+        res_model: "res.partner",
+        res_id: serverState.partnerId,
+    });
+    const all = ".o-mail-FollowerSubtypeDialog-allSubtypes input[type='checkbox']";
+    const subtype = (index) =>
+        `.o-mail-FollowerSubtypeDialog-subtype:eq(${index}) input[type='checkbox']`;
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click(".o-mail-Followers-button");
+    await click("[title='Edit Notification Preferences']");
+    // internal follower of a res.partner: the 3 default subtypes, none followed
+    await contains(".o-mail-FollowerSubtypeDialog-subtype", { count: 3 });
+    await contains(".o-mail-FollowerSubtypeDialog-subtype:eq(0) label:text('Messages')");
+    await contains(".o-mail-FollowerSubtypeDialog-subtype:eq(1) label:text('Notes')");
+    await contains(".o-mail-FollowerSubtypeDialog-subtype:eq(2) label:text('Activities')");
+    await contains(`${all}:not(:checked):not(:indeterminate)`);
+    // checking it selects every subtype
+    await click(all);
+    await contains(`${all}:checked:not(:indeterminate)`);
+    await contains(".o-mail-FollowerSubtypeDialog-subtype input[type='checkbox']:checked", {
+        count: 3,
+    });
+    // unchecking it unselects every subtype
+    await click(all);
+    await contains(`${all}:not(:checked):not(:indeterminate)`);
+    await contains(".o-mail-FollowerSubtypeDialog-subtype input[type='checkbox']:not(:checked)", {
+        count: 3,
+    });
+    // selecting only some subtypes shows the intermediate state
+    await click(subtype(0));
+    await contains(`${all}:indeterminate:not(:checked)`);
+    await click(subtype(1));
+    await contains(`${all}:indeterminate:not(:checked)`);
+    // selecting the last one checks it
+    await click(subtype(2));
+    await contains(`${all}:checked:not(:indeterminate)`);
+});
