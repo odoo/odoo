@@ -39,8 +39,16 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.hr_attendance_config_id.auto_check_out",
         readonly=False,
     )
+    auto_check_out_mode = fields.Selection(
+        related="company_id.hr_attendance_config_id.auto_check_out_mode",
+        readonly=False,
+    )
     auto_check_out_tolerance = fields.Float(
         related="company_id.hr_attendance_config_id.auto_check_out_tolerance",
+        readonly=False,
+    )
+    auto_check_out_specific_time = fields.Float(
+        related="company_id.hr_attendance_config_id.auto_check_out_specific_time",
         readonly=False,
     )
     absence_management = fields.Boolean(

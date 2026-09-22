@@ -34,11 +34,17 @@
                         </setting>
                         <setting
                             string="Automatic Check-Out"
-                            help="Automatically Check-Out Employees based on their working schedule with an additional tolerance. Does not apply to employees with a flexible working schedule."
+                            help="Automatically Check-Out employees who forgot to. Tolerance closes them once they run past their working schedule, and so does not reach a flexible schedule or an employee with none; Specific Time closes every open attendance at a fixed hour of their own day."
                             company_dependent="1">
                             <field name="auto_check_out" />
                             <div invisible="not auto_check_out">
+                                <field name="auto_check_out_mode" widget="radio" options="{'horizontal': True}" />
+                            </div>
+                            <div invisible="not auto_check_out or auto_check_out_mode != 'tolerance'">
                                 <span class="me-2">Tolerance</span><field name="auto_check_out_tolerance" class="text-center" style="width: 5ch;" /><span class="ms-2">Hours</span>
+                            </div>
+                            <div invisible="not auto_check_out or auto_check_out_mode != 'specific_time'">
+                                <span class="me-2">At</span><field name="auto_check_out_specific_time" widget="float_time" class="text-center" style="width: 6ch;" /><span class="ms-2">every day</span>
                             </div>
                         </setting>
                         <setting

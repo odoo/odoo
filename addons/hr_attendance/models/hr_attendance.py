@@ -10,7 +10,7 @@ from odoo import _, api, exceptions, fields, models
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.libs.datetime import timezone
+from odoo.libs.datetime import float_to_time, timezone
 from odoo.libs.intervals import Intervals
 from odoo.tools import convert, format_datetime, format_duration, format_time
 from odoo.tools.date_utils import get_intervals_hours
@@ -1090,7 +1090,11 @@ class HrAttendance(models.Model):
 
     @dbg.timed
     def _cron_auto_check_out(self):
-        """Close the attendances of employees who have not checked out.
+        self._cron_auto_check_out_tolerance()
+        self._cron_auto_check_out_specific_time()
+
+    def _cron_auto_check_out_tolerance(self):
+        """Close the attendances of employees who have run past their schedule.
 
         Everything here is counted in *worked* hours -- what the employee is
         credited with and what their overtime is measured from. The four
@@ -1107,12 +1111,18 @@ class HrAttendance(models.Model):
                     "=",
                     True,
                 ),
+                (
+                    "employee_id.company_id.hr_attendance_config_id.auto_check_out_mode",
+                    "=",
+                    "tolerance",
+                ),
                 ("employee_id.resource_calendar_id.flexible_hours", "=", False),
             ]
         )
 
         dbg.lifecycle.debug(
-            "_cron_auto_check_out: %d open attendance(s) to verify", len(to_verify)
+            "_cron_auto_check_out_tolerance: %d open attendance(s) to verify",
+            len(to_verify),
         )
         if not to_verify:
             return
@@ -1134,7 +1144,8 @@ class HrAttendance(models.Model):
                 )
                 worked = attendance._worked_hours_between(attendance.check_in, now)
                 dbg.logic.debug(
-                    "_cron_auto_check_out %s: %.3fh worked against a %.3fh budget"
+                    "_cron_auto_check_out_tolerance %s: %.3fh worked against a %.3fh"
+                    " budget"
                     " on %s (%s)",
                     dbg.rec(attendance),
                     worked,
@@ -1146,7 +1157,7 @@ class HrAttendance(models.Model):
                     continue
                 check_out = attendance._worked_hours_spent_at(budget)
                 dbg.lifecycle.debug(
-                    "_cron_auto_check_out %s: closing at %s",
+                    "_cron_auto_check_out_tolerance %s: closing at %s",
                     dbg.rec(attendance),
                     check_out,
                 )
@@ -1155,6 +1166,85 @@ class HrAttendance(models.Model):
         closed._log_cron_note(
             _(
                 "This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours."
+            )
+        )
+
+    def _specific_time_cut_off(self):
+        """The first daily cut-off falling after this attendance's check-in.
+
+        Anchored on the check-in's own local day, not on today's: an attendance
+        left open over a weekend has to close on the evening it began, not on
+        the current one. Rolled forward a day when the check-in is already past
+        that evening -- a night shift starting at 21:00 under a 20:00 cut-off
+        closes the next one, never before it started.
+        """
+        self.check_singleton()
+        tz = self._schedule_tz()
+        cut_off = datetime.combine(
+            self._local_check_in().date(),
+            float_to_time(
+                self.employee_id.company_id.hr_attendance_config_id.auto_check_out_specific_time
+            ),
+        ).replace(tzinfo=tz)
+        if cut_off <= self._local_check_in():
+            cut_off += timedelta(days=1)
+        return cut_off.astimezone(UTC).replace(tzinfo=None)
+
+    def _cron_auto_check_out_specific_time(self):
+        """Close every open attendance at the company's fixed daily cut-off.
+
+        The tolerance half measures an employee against their scheduled hours,
+        so it can only reach someone who has a schedule to be measured against
+        -- it filters flexible calendars out, and an employee with no calendar
+        at all never matches either. Whoever those employees are, forgetting to
+        check out left their attendance open indefinitely, with `hours_today`
+        growing against the wall clock. This half asks nothing of the schedule
+        but its timezone.
+        """
+        to_verify = self.env["hr.attendance"].search(
+            [
+                ("check_out", "=", False),
+                (
+                    "employee_id.company_id.hr_attendance_config_id.auto_check_out",
+                    "=",
+                    True,
+                ),
+                (
+                    "employee_id.company_id.hr_attendance_config_id.auto_check_out_mode",
+                    "=",
+                    "specific_time",
+                ),
+            ]
+        )
+
+        dbg.lifecycle.debug(
+            "_cron_auto_check_out_specific_time: %d open attendance(s) to verify",
+            len(to_verify),
+        )
+        if not to_verify:
+            return
+
+        now = fields.Datetime.now()
+        closed = self.browse()
+        # One block for the whole sweep, for the same reason as the tolerance
+        # half: each `write` would otherwise regenerate the overtime of the day
+        # it lands in.
+        with to_verify._deferring_overtime() as attendances:
+            for attendance in attendances:
+                cut_off = attendance._specific_time_cut_off()
+                dbg.logic.debug(
+                    "_cron_auto_check_out_specific_time %s: cut-off %s (%s)",
+                    dbg.rec(attendance),
+                    cut_off,
+                    attendance._schedule_tz(),
+                )
+                if cut_off > now:
+                    continue
+                attendance.write({"check_out": cut_off, "out_mode": "auto_check_out"})
+                closed |= attendance
+        closed._log_cron_note(
+            _(
+                "This attendance was automatically checked out because the employee did not check out before the company's check-out time."
             )
         )
 

@@ -14,6 +14,19 @@ class HrAttendanceConfig(models.Model):
         "Two companies cannot share a kiosk key.",
     )
 
+    # `float_to_time` raises outside [0, 24], and the cron reads this straight
+    # into it once per open attendance: a 25.0 stored here would not surface as
+    # a bad setting but as a cron that dies for every employee in the company.
+    _auto_check_out_specific_time_in_day = models.Constraint(
+        """CHECK (
+            auto_check_out_mode IS DISTINCT FROM 'specific_time'
+            OR (auto_check_out_specific_time >= 0
+                AND auto_check_out_specific_time < 24)
+        )""",
+        "The automatic check-out time must fall within the day, "
+        "between 0:00 and 23:59.",
+    )
+
     hr_attendance_display_overtime = fields.Boolean(string="Display Extra Hours")
     attendance_kiosk_mode = fields.Selection(
         selection=[
@@ -55,9 +68,22 @@ class HrAttendanceConfig(models.Model):
         string="Automatic Check Out",
         default=False,
     )
+    auto_check_out_mode = fields.Selection(
+        selection=[
+            ("tolerance", "Tolerance"),
+            ("specific_time", "Specific Time"),
+        ],
+        string="Automatic Check Out Based On",
+        default="tolerance",
+        required=True,
+    )
     auto_check_out_tolerance = fields.Float(
         export_string_translation=False,
         default=2,
+    )
+    auto_check_out_specific_time = fields.Float(
+        export_string_translation=False,
+        default=20.0,
     )
     absence_management = fields.Boolean(default=False)
     attendance_device_tracking = fields.Boolean(

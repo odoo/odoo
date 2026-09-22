@@ -718,6 +718,58 @@ class TestHrAttendanceOvertime(HttpCase):
             self.assertEqual(att.worked_hours, 8)
             self.assertEqual(att.check_out, datetime(2025, 3, 12, 17, 0))
 
+    @freeze_time("2024-02-02 23:00:00")
+    def test_auto_check_out_specific_time(self):
+        """A fixed daily cut-off reaches the employees tolerance mode cannot.
+
+        `_cron_auto_check_out_tolerance` measures an employee against their
+        scheduled hours, so it filters on
+        `resource_calendar_id.flexible_hours = False` -- which matches neither
+        a flexible-schedule employee nor one with no calendar at all. Either of
+        them who forgets to check out stays open for ever, and `hours_today`
+        grows with the wall clock. The specific-time mode needs no schedule: it
+        closes every open attendance at the company's cut-off, read in the
+        employee's own zone.
+        """
+        self.company.write(
+            {
+                "auto_check_out": True,
+                "auto_check_out_mode": "specific_time",
+                "auto_check_out_specific_time": 20.0,
+            }
+        )
+        # `_schedule_tz` prefers the version's own `tz` over the calendar's, so
+        # the employee is what has to move, not the calendar.
+        self.flexible_employee.tz = "Asia/Tokyo"
+
+        # 08:00 UTC on the 1st is 17:00 in Tokyo, before that day's 20:00
+        # cut-off -- which fell at 11:00 UTC and is long past.
+        overdue = self.env["hr.attendance"].create(
+            {
+                "employee_id": self.flexible_employee.id,
+                "check_in": datetime(2024, 2, 1, 8, 0),
+            }
+        )
+        # 22:00 UTC on the 2nd is 07:00 on the 3rd in Tokyo: that day's cut-off
+        # is the evening still to come.
+        not_due_yet = self.env["hr.attendance"].create(
+            {
+                "employee_id": self.jpn_employee.id,
+                "check_in": datetime(2024, 2, 2, 22, 0),
+            }
+        )
+        self.assertFalse(overdue.check_out)
+        self.assertFalse(not_due_yet.check_out)
+
+        self.env["hr.attendance"]._cron_auto_check_out()
+
+        self.assertEqual(overdue.check_out, datetime(2024, 2, 1, 11, 0))
+        self.assertEqual(overdue.out_mode, "auto_check_out")
+        self.assertFalse(
+            not_due_yet.check_out,
+            "the cut-off for this attendance has not come round yet",
+        )
+
     def test_overtime_hours_flexible_resource(self):
         self.flexible_employee.ruleset_id = self.ruleset
         attendance = self.env["hr.attendance"].create(
