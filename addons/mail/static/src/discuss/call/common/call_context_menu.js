@@ -23,6 +23,7 @@ export class CallContextMenu extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.ui = useService("ui");
         this.props = useProps({
             rtcSession: types.instanceOf(this.store["discuss.channel.rtc.session"]),
         });

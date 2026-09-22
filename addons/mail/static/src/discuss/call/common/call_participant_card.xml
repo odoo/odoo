@@ -62,7 +62,11 @@
                 </span>
                 <!-- Top Right -->
                 <div class="o-discuss-CallParticipantCard-overlay position-absolute top-0 end-0 d-flex align-items-center w-50 flex-row-reverse gap-1 m-2" t-att-class="{ 'o-m-2_5': !this.isSmall and this.store.meetingViewOpened, 'mw-25': this.props.isSidebarItem or this.props.inset }">
-                    <Dropdown t-if="this.isContextMenuAvailable and (this.contextMenuDropdownState.isOpen or (!this.isMobileOS and this.rootHover.isHover) or (this.isMobileOS and !this.props.minimized))" state="this.contextMenuDropdownState" menuClass="'d-flex o-discuss-CallParticipantCard-contextMenu ' + this.store.discussDropdownMenuClass(this)">
+                    <Dropdown t-if="this.isContextMenuAvailable and (this.contextMenuDropdownState.isOpen or (!this.isMobileOS and this.rootHover.isHover) or (this.isMobileOS and !this.props.minimized))" state="this.contextMenuDropdownState" menuClass="this.attClassObjectToString({
+                        'd-flex o-discuss-CallParticipantCard-contextMenu': true,
+                        [this.store.discussDropdownMenuClass(this)]: true,
+                        'w-100': this.isMobileOS,
+                    })">
                         <button class="o-discuss-CallParticipantCard-contextButton h-100 d-flex justify-content-center align-items-center rounded-pill border-0 o-py-0_5 o-py-1_5 m-0 smaller o-discuss-CallParticipantCard-iconBlackBg" title="Participant options">
                             <i class="oi" data-icon="expand_more"/>
                         </button>
