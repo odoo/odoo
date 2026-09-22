@@ -450,6 +450,9 @@ class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
     def reset_changes(self) -> None:
         pass
 
+    def clear_all_caches(self) -> None:
+        self.clear_cache(*CACHES_BY_KEY)
+
     def clear_cache(self, *cache_names: str) -> None:
         for cache_name in cache_names or ("default",):
             if "." in cache_name:

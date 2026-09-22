@@ -165,7 +165,9 @@ class TraversalMixin(_ModelStubs):
             return typing.cast("Self", single) if is_recordset(single) else []
 
     @api.private
-    def filtered(self, func: str | Callable[[Self], bool] | Domain) -> Self:
+    def filtered(
+        self, func: str | Callable[..., typing.Any] | Domain
+    ) -> Self:  # a predicate binding a loop variable as a default is one argument here
         if not func:
             return self
         if not self:

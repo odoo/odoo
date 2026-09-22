@@ -30,7 +30,7 @@ import odoo.http
 import odoo.models
 import odoo.orm.runtime
 from odoo import api
-from odoo.db import Cursor, Savepoint
+from odoo.db import Cursor
 from odoo.db.utils import update_planner_stats
 from odoo.exceptions import AccessError
 from odoo.libs.debug_log import DebugLog
@@ -1720,7 +1720,9 @@ class TransactionCase(BaseCase):
         ):
             self.env.flush_all()
 
-            savepoint = Savepoint(self.cr)
+            # the cursor's own factory, so a class hosted on the DB-free tier
+            # (odoo/tests/in_memory_case.py) takes its storage snapshot here
+            savepoint = self.cr.savepoint(flush=False)
         self.addCleanup(savepoint.close)
 
     @contextmanager

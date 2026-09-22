@@ -98,10 +98,22 @@ loader's job and not a file's. `orm/tests/test_host_base_dbfree.py` (about 30 s,
 most of it the currency and country files) pins the result: 162 ACL rows, 37
 rules, an internal user reading 3 partners and refused an `ir.model.access`
 row, a portal user reading its own, an act_window read through
-`ir.actions.actions`. What is still not there is the harness step: a module's
-`TransactionCase` class run unchanged on that environment, so the eligibility
-figures ([`ARCHITECTURE.md`](ARCHITECTURE.md#forces)) still say which tests
-*could* run without a database, not which do.
+`ir.actions.actions`. **A module's own test class runs on it** (2026-09-22): `odoo/tests/
+in_memory_case.py`'s `InMemoryCase` holds a `model_test_env` open for the
+class, loads the named modules' data, and takes the per-test savepoint
+through the cursor's own factory -- which is why `TransactionCase.setUp` now
+asks `cr.savepoint(flush=False)` instead of constructing the SQL one, the one
+line either tier needed. `base/tests/test_in_memory_host.py` hosts
+`TestTypedParams` and `TestSetGetParam` from `test_config_parameter.py`
+verbatim, only the base class differing: **5 of their 6 methods pass on the
+tier**, the sixth (`test_set_param_create_race`) opening a second cursor to
+race an INSERT and staying DB-bound by design. A third class pins that the
+tier is what ran -- an `InMemoryCursor` on `:memory:`, 162 ACL rows, and a
+write rolled back between tests, the ormcache cleared with the storage.
+What that leaves: the eligibility figures
+([`ARCHITECTURE.md`](ARCHITECTURE.md#forces)) still say which tests *could*
+run without a database, and moving a suite is now a base-class change per
+class rather than a missing mechanism.
 
 **Cost.** A green DB-free run reads as "the framework works" when it means "the
 structure holds". Nearly every integration suite is run `--no-http` (R4), so
