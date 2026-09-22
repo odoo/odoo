@@ -122,7 +122,8 @@ class AttachmentController(ThreadController):
                                 exc_info=True,
                             )
 
-            raise NotFound()
+                raise NotFound()
+            raise AccessError(request.env._("You do not have the rights to delete this attachment."))
         if message:
             thread = request.env[message.model].browse(message.res_id)
             thread._message_update_content(message, body=message.body, strict=False)  # marks the message edited
