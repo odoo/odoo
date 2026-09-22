@@ -393,3 +393,34 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                     "reason": "Good service",
                 },
             )
+
+    @users("portal_test")
+    def test_feedback_rates_the_operator_and_updates_the_rating(self):
+        im_livechat_channel = (
+            self.env["im_livechat.channel"]
+            .sudo()
+            .create({"name": "support", "user_ids": [Command.link(self.users[0].id)]})
+        )
+        self.env["mail.presence"]._update_presence(self.users[0])
+        self.authenticate(self.env.user.login, self.env.user.login)
+        channel_id = self.call_jsonrpc(
+            "/im_livechat/get_session",
+            {
+                "previous_operator_id": self.users[0].partner_id.id,
+                "channel_id": im_livechat_channel.id,
+            },
+        )["channel_id"]
+        first = self.call_jsonrpc(
+            "/im_livechat/feedback",
+            {"channel_id": channel_id, "rate": 5, "reason": "Good service"},
+        )
+        second = self.call_jsonrpc(
+            "/im_livechat/feedback",
+            {"channel_id": channel_id, "rate": 1, "reason": "Changed my mind"},
+        )
+        rating = self.env["rating.rating"].sudo().browse(first)
+        self.assertEqual(second, first)
+        self.assertEqual(rating.rated_partner_id, self.users[0].partner_id)
+        self.assertEqual(rating.partner_id, self.env.user.partner_id)
+        self.assertEqual(rating.rating, 1)
+        self.assertEqual(rating.feedback, "Changed my mind")

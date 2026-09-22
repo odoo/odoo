@@ -261,7 +261,7 @@ class LivechatController(http.Controller):
                 "feedback": reason,
                 "is_internal": False,
             }
-            if not channel.sudo().rating_ids:
+            if not (ratings := channel.sudo().rating_ids):
                 values.update(
                     {
                         "res_id": channel.id,
@@ -270,15 +270,15 @@ class LivechatController(http.Controller):
                         ),
                     }
                 )
-                if channel.sudo().channel_partner_ids:
-                    values["rated_partner_id"] = channel.channel_partner_ids[0].id
+                if partners := channel.sudo().channel_partner_ids:
+                    values["rated_partner_id"] = partners[0].id
                 values["partner_id"] = (
                     request.env.user.partner_id.id if request.session.uid else False
                 )
                 rating = request.env["rating.rating"].sudo().create(values)
             else:
-                rating = channel.rating_ids[0]
-                rating.sudo().write(values)
+                rating = ratings[0]
+                rating.write(values)
             self._post_feedback_message(channel, rating, reason)
             return rating.id
         return False
