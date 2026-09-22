@@ -91,7 +91,7 @@ export class TourService {
 
         const paramsTourName = new URLSearchParams(browser.location.search).get("tour");
         if (paramsTourName) {
-            this.startTour(paramsTourName, { mode: "manual" });
+            this.startTour(paramsTourName, { mode: "manual", fromDB: true });
         }
 
         if (tourState.getCurrentTour()) {
@@ -103,6 +103,7 @@ export class TourService {
         } else if (session.current_tour) {
             this.startTour(session.current_tour.name, {
                 mode: "manual",
+                fromDB: true,
                 redirect: false,
                 rainbowManMessage: session.current_tour.rainbowManMessage,
             });
@@ -170,7 +171,7 @@ export class TourService {
      */
     async getTour(name, options) {
         // Onboarding tour (come from database (.xml files))
-        if (options.mode === "manual") {
+        if (options.fromDB) {
             const tour = await this.orm.call("web_tour.tour", "get_tour_json_by_name", [name]);
             if (!tour) {
                 console.error(`Tour '${name}' is not found in the database.`);
@@ -286,6 +287,7 @@ export class TourService {
                 if (nextTour) {
                     this.startTour(nextTour.name, {
                         mode: "manual",
+                        fromDB: true,
                         redirect: false,
                         rainbowManMessage: nextTour.rainbowManMessage,
                     });
@@ -309,6 +311,10 @@ export class TourService {
         this.removePointer();
         this.removeTourRecorder();
         const tour = await this.getTour(name, options);
+        if (!tour) {
+            tourState.clear();
+            return;
+        }
 
         if (!session.is_public && !this.toursEnabled && options.mode === "manual") {
             this.toursEnabled = await this.orm.call("res.users", "switch_tour_enabled", [
