@@ -46,6 +46,7 @@ export class UseSuggestion {
         this.fetchSuggestions = useDebounced(this.fetchSuggestions.bind(this), DELAY_FETCH);
         useEffect(
             () => {
+                this.isDismissed = false;
                 this.update();
                 if (this.search.position === undefined || !this.search.delimiter) {
                     return; // nothing else to fetch
@@ -92,6 +93,11 @@ export class UseSuggestion {
         term: "",
     };
     lastFetchedSearch;
+    /**
+     * Whether the user closed the suggestion list. Only the answer of an ongoing fetch is
+     * dropped: a new user input searches and opens the list again.
+     */
+    isDismissed = false;
     get isSearchMoreSpecificThanLastFetch() {
         return (
             this.lastFetchedSearch.delimiter === this.search.delimiter &&
@@ -114,6 +120,9 @@ export class UseSuggestion {
             term: "",
         });
         this.state.items = undefined;
+    }
+    dismiss() {
+        this.isDismissed = true;
     }
     detect() {
         let start = 0;
@@ -294,7 +303,7 @@ export class UseSuggestion {
                 this.state.isFetching = false;
             }
         }
-        if (!this.thread || status(this.comp) === "destroyed") {
+        if (!this.thread || status(this.comp) === "destroyed" || this.isDismissed) {
             return;
         }
         this.update();

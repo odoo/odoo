@@ -40,6 +40,7 @@ export class NavigableList extends Component {
     static props = {
         anchorRef: { optional: true },
         class: { type: String, optional: true },
+        onClose: { type: Function, optional: true },
         onSelect: { type: Function },
         options: { type: Array },
         optionTemplate: { type: String, optional: true },
@@ -117,6 +118,7 @@ export class NavigableList extends Component {
         if (this.props.closeOnSelect) {
             this.state.open = false;
             this.state.activeIndex = null;
+            this.props.onClose?.();
         }
     }
 
