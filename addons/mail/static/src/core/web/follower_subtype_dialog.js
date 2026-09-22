@@ -85,9 +85,12 @@ export class FollowerSubtypeDialog extends Component {
 
     async updateSubscription({ updateAll = false } = {}) {
         const thread = this.props.follower.thread;
+        const isSelfFollower = this.props.follower.eq(thread.selfFollower);
+        const followerName = this.props.follower.displayName;
         const selectedSubtypes = this.subtypes().filter((s) =>
             s.in(this.props.follower.subtype_ids)
         );
+        let followerRemoved = false;
         if (updateAll) {
             await this.env.services.orm.call(
                 thread.model,
@@ -98,22 +101,27 @@ export class FollowerSubtypeDialog extends Component {
                     subtype_ids: selectedSubtypes.map((subtype) => subtype.id),
                 }
             );
+        } else if (selectedSubtypes.length === 0) {
+            await this.props.follower.remove();
+            followerRemoved = true;
         } else {
-            if (selectedSubtypes.length === 0) {
-                await this.props.follower.remove();
-            } else {
-                await this.env.services.orm.call(thread.model, "message_subscribe", [[thread.id]], {
-                    partner_ids: [this.props.follower.partner_id.id],
-                    subtype_ids: selectedSubtypes.map((subtype) => subtype.id),
-                });
-            }
+            await this.env.services.orm.call(thread.model, "message_subscribe", [[thread.id]], {
+                partner_ids: [this.props.follower.partner_id.id],
+                subtype_ids: selectedSubtypes.map((subtype) => subtype.id),
+            });
         }
-        if (this.store.mt_comment.notIn(selectedSubtypes)) {
+        if (this.props.follower.exists() && this.store.mt_comment.notIn(selectedSubtypes)) {
             this.props.follower.removeRecipient();
         }
-        this.env.services.notification.add(_t("Notification preferences updated."), {
-            type: "success",
-        });
+        let message = _t("Notification preferences updated.");
+        if (followerRemoved) {
+            message = isSelfFollower
+                ? _t("You are no longer following this record.")
+                : _t("%(follower_name)s is no longer following this record.", {
+                      follower_name: followerName,
+                  });
+        }
+        this.env.services.notification.add(message, { type: "success" });
         this.props.onFollowerChanged(thread);
         this.props.close();
     }
