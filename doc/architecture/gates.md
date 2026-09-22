@@ -59,7 +59,9 @@ A literal lookup with missing or empty registry types reports a setup error.
 Regenerating the stub rechecks model lookups in the running mypy daemon.
 Generated methods preserve staticmethod and classmethod binding, and model
 class names avoid the stub's own imported and generated names. Optional
-parameter defaults and coroutine methods retain their call semantics. The CLI
+parameter defaults and coroutine methods retain their call semantics. Generated
+stubs preserve readable properties and whether they have a setter, without
+invoking their getters during generation. Property values remain `Any`. The CLI
 stages the complete stub on the destination filesystem before replacing it,
 so readers and failed writes preserve the preceding complete snapshot.
 Measured on `sale/models` + `stock/models`

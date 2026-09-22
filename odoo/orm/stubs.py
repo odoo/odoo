@@ -89,10 +89,19 @@ def _value_type(field: Field, classes: Mapping[str, str]) -> str:
     return _VALUE_TYPES.get(field.type, "Any")
 
 
-def _method_lines(cls: type, reserved: typing.AbstractSet[str]) -> list[str]:
+def _member_lines(cls: type, reserved: typing.AbstractSet[str]) -> list[str]:
     lines = []
     for name, member in sorted(vars_of_model(cls).items()):
         if name in reserved or not name.isidentifier() or keyword.iskeyword(name):
+            continue
+        if isinstance(member, property):
+            if member.fget is not None:
+                lines.append(f"    @property\n    def {name}(self) -> Any: ...")
+                if member.fset is not None:
+                    lines.append(
+                        f"    @{name}.setter\n"
+                        f"    def {name}(self, value: Any) -> None: ..."
+                    )
             continue
         function = (
             member.__func__
@@ -197,8 +206,8 @@ def render(
                 line += "  # type: ignore[assignment]"
             out.append(line)
         if classes_by_model is not None and model_name in classes_by_model:
-            method_reserved = set(fields) | set(reserved)
-            out.extend(_method_lines(classes_by_model[model_name], method_reserved))
+            member_reserved = set(fields) | set(reserved)
+            out.extend(_member_lines(classes_by_model[model_name], member_reserved))
         out.append("")
         out.append("")
 

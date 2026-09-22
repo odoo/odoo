@@ -46,8 +46,11 @@ def test_stubs_command_types_a_real_registry(base_db, tmp_path):
         "def use(env: Environment) -> None:\n"
         "    partner = env['res.partner'].search([], limit=1)\n"
         "    partner.address_get(['contact'])\n"
+        "    print(env['res.users'].SELF_READABLE_FIELDS)\n"
+        "    print(env['res.users'].SELF_WRITEABLE_FIELDS)\n"
         "    reveal_type(partner.parent_id.name)\n"
         "    partner.adress_get(['contact'])\n"
+        "    env['res.users'].SELF_READABLE_FIELDS = []\n"
     )
     checked = subprocess.run(
         [
@@ -68,8 +71,9 @@ def test_stubs_command_types_a_real_registry(base_db, tmp_path):
     )
     errors = [line for line in checked.stdout.splitlines() if ": error:" in line]
     assert checked.returncode == 1, checked.stdout + checked.stderr
-    assert len(errors) == 1, checked.stdout + checked.stderr
+    assert len(errors) == 2, checked.stdout + checked.stderr
     assert 'has no attribute "adress_get"' in errors[0]
+    assert '"SELF_READABLE_FIELDS"' in errors[1] and "read-only" in errors[1]
     assert 'Revealed type is "str | Literal[False]"' in checked.stdout
 
 

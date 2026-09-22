@@ -325,6 +325,57 @@ def test_mypy_preserves_literal_union_models_and_checks_every_name(tmp_path):
     assert "union-attr" in errors[2]
 
 
+def test_generated_properties_preserve_read_and_write_contracts(tmp_path):
+    class Parent:
+        @property
+        def inherited(self):
+            raise AssertionError("stub generation must not invoke properties")
+
+        @property
+        def overridden(self):
+            return None
+
+        @overridden.setter
+        def overridden(self, value):
+            pass
+
+    class Properties(Parent):
+        @property
+        def writable(self):
+            return None
+
+        @writable.setter
+        def writable(self, value):
+            pass
+
+    model_class = type(
+        "PropertyProbe", (Properties,), {"overridden": property(lambda self: None)}
+    )
+    source = render(
+        [("property.probe", {})], classes_by_model={"property.probe": model_class}
+    )
+    result = _run_mypy(
+        tmp_path,
+        source,
+        "from odoo.api import Environment\n"
+        "def valid(env: Environment) -> None:\n"
+        "    record = env['property.probe']\n"
+        "    print(record.inherited, record.overridden, record.writable)\n"
+        "    record.writable = 'new value'\n"
+        "def invalid(env: Environment) -> None:\n"
+        "    record = env['property.probe']\n"
+        "    record.inherited = 'forbidden'\n"
+        "    record.overridden = 'forbidden'\n",
+        check_stub=True,
+    )
+    errors = [line for line in result.stdout.splitlines() if ": error:" in line]
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert len(errors) == 2, result.stdout + result.stderr
+    assert all("read-only" in error for error in errors), result.stdout
+    assert '"inherited"' in errors[0]
+    assert '"overridden"' in errors[1]
+
+
 def test_generated_methods_preserve_binding_defaults_and_awaitability(tmp_path):
     class Signatures:
         @staticmethod
