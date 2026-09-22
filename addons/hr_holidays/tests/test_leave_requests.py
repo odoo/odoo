@@ -1083,7 +1083,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             leaves.action_approve()
 
             allocation_days = self.employee_emp._get_consumed_leaves(self.holidays_type_2)[0]
-            primary_unit = 'hours' if unit == 'hour' else 'days'
+            primary_unit = 'hour' if unit == 'hour' else 'day'
 
             self.assertEqual(
                 allocation_days[self.employee_emp][self.holidays_type_2][allocation_4days][f'{primary_unit}_leaves_taken'],
@@ -1239,11 +1239,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             })
 
             holidays_count_result = self.employee_emp._get_consumed_leaves(self.holidays_type_2)[0][self.employee_emp][self.holidays_type_2][allocation]
-            self.assertEqual(holidays_count_result['days_max_leaves'], 5)
-            self.assertEqual(holidays_count_result['days_remaining_leaves'], 5)
-            self.assertEqual(holidays_count_result['days_virtual_remaining_leaves'], 2)
-            self.assertEqual(holidays_count_result['days_leaves_taken'], 0)
-            self.assertEqual(holidays_count_result['days_virtual_leaves_taken'], 3)
+            self.assertEqual(holidays_count_result['day_max_leaves'], 5)
+            self.assertEqual(holidays_count_result['day_remaining_leaves'], 5)
+            self.assertEqual(holidays_count_result['day_virtual_remaining_leaves'], 2)
+            self.assertEqual(holidays_count_result['day_leaves_taken'], 0)
+            self.assertEqual(holidays_count_result['day_virtual_leaves_taken'], 3)
 
     def test_archived_allocation(self):
         with freeze_time('2022-09-15'):

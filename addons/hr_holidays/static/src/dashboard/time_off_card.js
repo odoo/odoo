@@ -10,14 +10,14 @@ export class TimeOffCardPopover extends Component {
 
     props = useProps({
         allocated: t.any(),
-        accrual_bonus: t.any(),
+        accrual_diff: t.any(),
         approved: t.any(),
         planned: t.any(),
         left: t.any(),
         warning: t.any(),
         closest: t.any(),
         unit_of_measure: t.any(),
-        exceeding_duration: t.any(),
+        future_accrual_exceeding_duration: t.any(),
         close: t.any().optional(),
         allows_negative: t.any(),
         max_allowed_negative: t.any(),
@@ -156,14 +156,14 @@ export class TimeOffCard extends Component {
         const { data, holidayStatusId, employeeId } = this.props;
         return {
             allocated: formatNumber(this.lang, data.max_leaves),
-            accrual_bonus: formatNumber(this.lang, data.accrual_bonus),
+            accrual_diff: formatNumber(this.lang, data.accrual_diff),
             approved: formatNumber(this.lang, data.leaves_approved),
             planned: formatNumber(this.lang, data.leaves_requested),
             left: formatNumber(this.lang, data.virtual_remaining_leaves),
             warning: this.warning(),
             closest: data.closest_allocation_duration,
             unit_of_measure: data.unit_of_measure,
-            exceeding_duration: data.exceeding_duration,
+            future_accrual_exceeding_duration: data.future_accrual_exceeding_duration,
             allows_negative: data.allows_negative,
             max_allowed_negative: data.max_allowed_negative,
             errorLeaves: this.errorLeaves,
@@ -177,8 +177,8 @@ export class TimeOffCard extends Component {
 
     getAccrualExcess(data) {
         return data.allows_negative
-            ? -data.exceeding_duration > data.max_allowed_negative
-            : -data.exceeding_duration > 0;
+            ? data.future_accrual_exceeding_duration > data.max_allowed_negative
+            : data.future_accrual_exceeding_duration > 0;
     }
 
     /**

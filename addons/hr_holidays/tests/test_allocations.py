@@ -299,7 +299,8 @@ class TestAllocations(TestHrHolidaysCommon):
         allocation.write({'number_of_days_display': 14, 'number_of_days': 14})
         self.assertEqual(allocation.number_of_days_display, 14)
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaisesRegex(ValidationError,
+                r'You cannot reduce the duration below the duration of leaves already taken by the employee\.'):
             allocation.write({'number_of_days_display': 2, 'number_of_days': 2})
 
         allocation_with_pending_leave = self.env['hr.leave.allocation'].create({
@@ -314,7 +315,8 @@ class TestAllocations(TestHrHolidaysCommon):
             validate=False, user=self.user_responsible,
         )
         self.assertEqual(pending_leave.state, 'confirm')
-        with self.assertRaises(ValidationError):
+        with self.assertRaisesRegex(ValidationError,
+                r'You cannot reduce the duration below the duration of leaves already taken by the employee\.'):
             allocation_with_pending_leave.write({'number_of_days_display': 4, 'number_of_days': 4})
 
     def test_disallowed_change_allocation_with_overlapping_allocations(self):
@@ -826,7 +828,8 @@ class TestAllocations(TestHrHolidaysCommon):
             allocation.write({'date_to': date(2024, 1, 11)})
             self.assertEqual(allocation.date_to, date(2024, 1, 11))
 
-            with self.assertRaises(ValidationError):
+            # Assert modifying the allocation date_to so that the leaves is not covered by any allocation anymore will raise an error!
+            with self.assertRaisesRegex(ValidationError, r'You cannot reduce the duration below the duration of leaves already taken by the employee\.'):
                 allocation.write({'date_to': date(2024, 1, 8)})
 
             allocation.write({'date_to': date(2024, 1, 20)})

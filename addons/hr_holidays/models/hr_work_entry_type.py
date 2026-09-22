@@ -503,7 +503,7 @@ been taken for this time off type. Changing it now would affect existing employe
                         'remaining_leaves': 0,
                         'virtual_remaining_leaves': 0,
                         'max_leaves': 0,
-                        'accrual_bonus': 0,
+                        'accrual_diff': 0,
                         'leaves_taken': 0,
                         'virtual_leaves_taken': 0,
                         'leaves_requested': 0,
@@ -513,7 +513,7 @@ been taken for this time off type. Changing it now would affect existing employe
                         'holds_changes': False,
                         'total_virtual_excess': 0,
                         'virtual_excess_data': {},
-                        'exceeding_duration': extra_data[employee][work_entry_type]['exceeding_duration'],
+                        'future_accrual_exceeding_duration': extra_data[employee][work_entry_type]['future_accrual_exceeding_duration'],
                         'request_unit': work_entry_type.request_unit,
                         'unit_of_measure': work_entry_type.unit_of_measure,
                         'allows_negative': work_entry_type.allows_negative,
@@ -543,7 +543,7 @@ been taken for this time off type. Changing it now would affect existing employe
                 allocations_now = self.env['hr.leave.allocation']
                 allocations_date = self.env['hr.leave.allocation']
                 allocations_with_remaining_leaves = self.env['hr.leave.allocation']
-                primary_unit = 'hours' if work_entry_type.unit_of_measure == 'hour' else 'days'
+                primary_unit = 'hour' if work_entry_type.unit_of_measure == 'hour' else 'day'
                 for allocation, data in allocations_leaves_consumed[employee][work_entry_type].items():
                     # We only need the allocation that are valid at the given date
                     if allocation:
@@ -564,7 +564,7 @@ been taken for this time off type. Changing it now would affect existing employe
                     lt_info[1]['remaining_leaves'] += data[f'{primary_unit}_remaining_leaves']
                     lt_info[1]['virtual_remaining_leaves'] += data[f'{primary_unit}_virtual_remaining_leaves']
                     lt_info[1]['max_leaves'] += data[f'{primary_unit}_max_leaves']
-                    lt_info[1]['accrual_bonus'] += data[f'{primary_unit}_accrual_bonus']
+                    lt_info[1]['accrual_diff'] += data[f'{primary_unit}_accrual_diff']
                     lt_info[1]['leaves_taken'] += data[f'{primary_unit}_leaves_taken']
                     lt_info[1]['virtual_leaves_taken'] += data[f'{primary_unit}_virtual_leaves_taken']
                     lt_info[1]['leaves_requested'] += data[f'{primary_unit}_virtual_leaves_taken'] - data[f'{primary_unit}_leaves_taken']
@@ -600,7 +600,7 @@ been taken for this time off type. Changing it now would affect existing employe
                     closest_allocation_duration = False
                 # the allocations are assumed to be different from today's allocations if there is any
                 # accrual days granted or if there is any difference between allocations now and on the selected date
-                holds_changes = (lt_info[1]['accrual_bonus'] > 0
+                holds_changes = (lt_info[1]['accrual_diff'] > 0
                     or bool(allocations_date - allocations_now)
                     or bool(allocations_now - allocations_date))\
                     and target_date != today
