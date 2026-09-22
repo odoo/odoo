@@ -84,7 +84,7 @@ class EventSlot(models.Model):
     @api.constrains("start_hour", "end_hour")
     def _check_hours(self):
         for slot in self:
-            if not (0 <= slot.start_hour <= 23.99 and 0 <= slot.end_hour <= 23.99):
+            if not (0 <= slot.start_hour < 24 and 0 <= slot.end_hour < 24):
                 raise ValidationError(_("A slot hour must be between 0:00 and 23:59."))
             if slot.end_hour <= slot.start_hour:
                 raise ValidationError(
