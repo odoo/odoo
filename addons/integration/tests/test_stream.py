@@ -208,6 +208,27 @@ class TestStream(TransactionCase):
         self.assertEqual(row.state, "failed")
         self.assertIn("bad frame", row.error_message)
 
+    def test_the_subject_hears_every_state(self):
+        self._stream()
+        heard = []
+
+        def on_stream_state(partner, stream_record, state, message):
+            heard.append((state, message))
+
+        with patch.object(
+            type(self.env["res.partner"]),
+            "_on_stream_state",
+            on_stream_state,
+            create=True,
+        ):
+            self._reconcile()
+            ProbeProtocol.opened[0]["alive"] = False
+            self._reconcile()
+        self.assertEqual(
+            [state for state, _m in heard], ["connecting", "open", "backoff"]
+        )
+        self.assertEqual(heard[-1][1], "the connection dropped")
+
     def test_the_outbox_is_sent_through_the_open_stream(self):
         stream = self._stream()
         self._reconcile()

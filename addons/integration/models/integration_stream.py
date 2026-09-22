@@ -324,6 +324,19 @@ class IntegrationStream(models.Model):
                 **vals,
             }
         )
+        subject = self._subject()
+        told = getattr(subject, "_on_stream_state", None) if subject else None
+        if told is not None:
+            try:
+                with self.env.cr.savepoint():
+                    told(self, state, message)
+            except Exception:
+                _logger.warning(
+                    "Stream %s: the subject refused the state %s",
+                    self.name,
+                    state,
+                    exc_info=True,
+                )
 
     def _drain_outbox(self, open_stream):
         self.check_singleton()
