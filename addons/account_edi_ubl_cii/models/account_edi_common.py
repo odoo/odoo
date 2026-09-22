@@ -1666,9 +1666,6 @@ class AccountEdiCommon(models.AbstractModel):
                 for tax_values in line_collected_values['taxes_values']:
                     tax_values['account'] = account
             line_tax_values_list = line_collected_values['taxes_values']
-            for charge in line_collected_values['charges']:
-                if tax_values := charge.get('attempt_tax_values'):
-                    line_tax_values_list.append(tax_values)
             if predicted_tax_ids := line_collected_values.get('predicted_vals', {}).get('tax_ids'):
                 for line_tax_values in line_tax_values_list:
                     line_tax_values['predicted_tax_ids'] = predicted_tax_ids
