@@ -39,3 +39,23 @@ class TestProductTemplate(ClickAndCollectCommon):
                 fiscal_position=request.fiscal_position,
             )
         self.assertFalse(combination_info.get("in_store_stock_data"))
+
+    def test_click_and_collect_unavailable_for_product_missing_must_have_tag(self):
+        """Pick Up in Store hidden when product misses a tag required by the delivery method."""
+        must_have_tag = self.env["product.tag"].create({"name": "Required Tag"})
+
+        self.in_store_dm.must_have_tag_ids = [Command.set(must_have_tag.ids)]
+
+        self.storable_product.all_product_tag_ids = [Command.clear()]
+
+        with self.mock_request(sale_order_id=self.cart.id) as request:
+            combination_info = self.env['product.template']._get_additional_combination_info(
+                self.storable_product,
+                quantity=3,
+                uom=self.uom_unit,
+                website=self.website,
+                pricelist=request.pricelist,
+                fiscal_position=request.fiscal_position,
+            )
+
+        self.assertFalse(combination_info.get("in_store_stock_data"))
