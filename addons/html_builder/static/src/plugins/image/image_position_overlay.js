@@ -18,6 +18,7 @@ export class ImagePositionOverlay extends Component {
         editable: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE),
         history: t.object().optional(),
         scrollToElement: t.boolean().optional(true),
+        onDiscard: t.function(),
     });
 
     setup() {
@@ -97,7 +98,8 @@ export class ImagePositionOverlay extends Component {
         this.props.close(position);
     }
 
-    discard() {
+    discard(ev) {
+        this.props.onDiscard(ev);
         this.reloadSavePoint();
         this.props.close(null);
     }

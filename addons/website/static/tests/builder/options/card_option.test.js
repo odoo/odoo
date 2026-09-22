@@ -294,6 +294,41 @@ test("cover image set to wide aspect ratio can be vertically aligned", async () 
     );
 });
 
+test("cover image position overlay toggles when clicking its option", async () => {
+    await setupWebsiteBuilderWithSnippet("s_card", {
+        loadIframeBundles: true,
+    });
+    queryOne(":iframe .s_card figure img").src = dummyBase64Img;
+    await contains(":iframe .s_card").click();
+    const positionButton = contains(
+        "[data-label='Position'] [data-action-id='coverImagePositionOverlay']"
+    );
+
+    await positionButton.click();
+    await waitFor(".o-overlay-container .o_we_overlay_dragger");
+    expect(".o-overlay-container .o_we_overlay_dragger").toHaveCount(1);
+    const cardImage = queryOne(":iframe .s_card .o_card_img");
+    const initialPosition = cardImage.style.objectPosition;
+
+    const { startDrag, endDrag } = patchDragImage(
+        ".o-overlay-container .o_we_overlay_dragger",
+        { x: 100, y: 100 },
+        { x: 120, y: 120 }
+    );
+    await endDrag(await startDrag());
+    expect(cardImage.style.objectPosition).not.toBe(initialPosition);
+
+    await positionButton.click();
+    expect(".o-overlay-container .o_we_overlay_dragger").toHaveCount(0);
+    expect("[data-action-id='coverImagePositionOverlay']").not.toHaveClass("active");
+    expect(cardImage.style.objectPosition).toBe(initialPosition);
+
+    await positionButton.click();
+    await waitFor(".o-overlay-container .o_we_overlay_dragger");
+    expect(".o-overlay-container .o_we_overlay_dragger").toHaveCount(1);
+    expect("[data-action-id='coverImagePositionOverlay']").toHaveClass("active");
+});
+
 const nestedCardsWithTwoCovers = `
     <div class="s_card o_card_img_top card outer_card o_draggable" data-snippet="s_card" data-name="Card">
         <figure class="o_card_img_wrapper mb-0 ratio ratio-16x9">
