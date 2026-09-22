@@ -150,3 +150,38 @@ test("Combined mic+camera button only shown when both permissions not granted", 
     await contains(".modal-footer button");
     await contains(".modal-footer button:text('Use microphone')");
 });
+
+test("Microphone permission warning is hidden while the permission dialog is open", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    mockGetMedia();
+    mockPermissionsPrompt();
+    await start();
+    const rtc = getService("discuss.rtc");
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains(".o_popover:text('No microphone permissions')");
+    await click(".o-discuss-CallActionList button[title='Turn camera on']");
+    await contains(".modal:has(:text('Do you want people to see you in the meeting?'))");
+    await contains(".o_popover", { count: 0 });
+    // leaving the call closes the permission dialog, the warning comes back in the next call
+    await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
+    await contains(".modal", { count: 0 });
+    await click("[title='Start Call']");
+    await contains(".o_popover:text('No microphone permissions')");
+    // dismissing the dialog without granting the permission brings the warning back
+    await click(".o-discuss-CallActionList button[title='Turn camera on']");
+    await contains(".modal:has(:text('Do you want people to see you in the meeting?'))");
+    await contains(".o_popover", { count: 0 });
+    await click(".modal .btn-close");
+    await contains(".modal", { count: 0 });
+    await contains(".o_popover:text('No microphone permissions')");
+    // granting the permissions from the dialog leaves no warning behind
+    await click(".o-discuss-CallActionList button[title='Turn camera on']");
+    await contains(".modal:has(:text('Do you want people to see you in the meeting?'))");
+    rtc.cameraPermission = "granted";
+    rtc.microphonePermission = "granted";
+    await click(".modal-footer button:text('Use microphone and camera')");
+    await contains(".o-discuss-CallActionList button[title='Turn camera off']");
+    await contains(".o_popover", { count: 0 });
+});
