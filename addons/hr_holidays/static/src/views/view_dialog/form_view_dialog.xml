@@ -28,12 +28,12 @@
                 t-if="canApprove"
                 t-attf-class="btn #{canSave ? 'btn-secondary': 'btn-primary'}"
                 t-on-click="() => this.onClick('action_approve')"
-                data-hotkey="x">Approve</button>
+                data-hotkey="v">Approve</button>
             <button
                 t-if="canValidate"
                 t-attf-class="btn #{canSave ? 'btn-secondary': 'btn-primary'}"
                 t-on-click="() => this.onClick('action_approve')"
-                data-hotkey="x">Validate</button>
+                data-hotkey="v">Validate</button>
             <button
                 t-if="canRefuse"
                 t-attf-class="btn #{(canValidate or canApprove) ? 'btn-secondary' : 'btn-primary'}"
@@ -41,10 +41,10 @@
                 data-hotkey="x">Refuse</button>
         </xpath>
         <xpath expr="." position="inside">
-            <button class="btn btn-danger ms-auto" t-if="canDelete" t-on-click="deleteRecord" data-hotkey="v">
+            <button class="btn btn-danger ms-auto" t-if="canDelete" t-on-click="deleteRecord" data-hotkey="d">
                 Delete Time Off
             </button>
-            <button class="btn btn-danger" t-att-class="{'ms-auto': !canDelete}" t-if="canCancel" t-on-click="cancelRecord" data-hotkey="x">
+            <button class="btn btn-danger" t-att-class="{'ms-auto': !canDelete}" t-if="canCancel" t-on-click="cancelRecord" data-hotkey="n">
                 Cancel Time Off
             </button>
         </xpath>
