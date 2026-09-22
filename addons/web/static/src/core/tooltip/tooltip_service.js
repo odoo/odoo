@@ -14,6 +14,10 @@ import { whenReady } from "@odoo/owl";
  * Usage:
  *   <button data-tooltip="This is a tooltip">Do something</button>
  *
+ * The tooltip isn't displayed if it would only repeat what the user can already
+ * read, i.e. if its content is exactly the text content of the element, and if
+ * that text is entirely displayed (not truncated by an overflow).
+ *
  * The ideal position of the tooltip can be specified thanks to the attribute
  * "data-tooltip-position":
  *   <button data-tooltip="This is a tooltip" data-tooltip-position="left">Do something</button>
@@ -63,6 +67,57 @@ export const tooltipService = {
                 el.textContent === "?" &&
                 (el.hasAttribute("data-tooltip") || el.hasAttribute("data-tooltip-template"))
             );
+        }
+
+        /**
+         * Detect if the content of the element is truncated by an overflow.
+         * Note that elements that can't be measured (e.g. non blockified inline
+         * elements, whose clientWidth is 0) can't truncate their own content.
+         *
+         * @param {HTMLElement} el
+         * @return {boolean}
+         */
+        function isOverflowing(el) {
+            return (
+                el.clientWidth > 0 &&
+                (el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight)
+            );
+        }
+
+        /**
+         * Detect if the tooltip would only repeat what the user can already
+         * read, i.e. if it is a plain text tooltip (no template) whose content
+         * is the text content of the element, that text being entirely
+         * displayed (i.e. not truncated by an overflow).
+         *
+         * @param {HTMLElement} el
+         * @param {string} tooltip
+         * @param {string} [template]
+         * @return {boolean}
+         */
+        function isTooltipRedundant(el, tooltip, template) {
+            if (template) {
+                return false; // dynamic content, nothing to compare
+            }
+            const normalize = (str) => str.replace(/\s+/g, " ").trim();
+            if (normalize(el.textContent) !== normalize(tooltip)) {
+                return false;
+            }
+            if (!el.clientWidth) {
+                // The element can't be measured (e.g. a non blockified inline
+                // element), so it might be truncated by one of its ancestors.
+                return false;
+            }
+            // The text isn't entirely displayed as soon as the element or one
+            // of its descendants overflows (e.g. an inner ".text-truncate").
+            // Descendants without text content are ignored, as they can't hide
+            // any part of the text (e.g. a button displaying only an icon).
+            // Note that we only get here if the tooltip is the text content of
+            // the element, so that subtree is necessarily small.
+            const textDescendants = [...el.querySelectorAll("*")].filter((descendant) =>
+                descendant.textContent.trim()
+            );
+            return ![el, ...textDescendants].some(isOverflowing);
         }
 
         /**
@@ -121,8 +176,9 @@ export const tooltipService = {
             }
             const timeoutDelay = isHelpNode(el) ? 0 : delay;
             openTooltipTimeout = browser.setTimeout(() => {
-                // verify that the element is still in the DOM
-                if (target.isConnected) {
+                // verify that the element is still in the DOM, and that the
+                // tooltip is actually useful
+                if (target.isConnected && !isTooltipRedundant(target, tooltip, template)) {
                     closeTooltip = popover.add(
                         target,
                         Tooltip,

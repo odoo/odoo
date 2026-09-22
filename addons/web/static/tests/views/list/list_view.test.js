@@ -7801,9 +7801,8 @@ test(`display a tooltip on a field`, async () => {
 
     await hover(`th[data-name="foo"] div`);
     await runAllTimers();
-    expect(`.o-tooltip .o-tooltip--technical`).toHaveCount(0);
-    expect(`.o-tooltip`).toHaveCount(1);
-    expect(`.o-tooltip`).toHaveText("Foo");
+    // the label is entirely displayed, so the tooltip would only repeat it
+    expect(`.o-tooltip`).toHaveCount(0);
 
     serverState.debug = "1";
 
@@ -7832,6 +7831,52 @@ test("field (with help) tooltip in non debug mode", async function () {
     await runAllTimers();
     expect(`.o-tooltip`).toHaveCount(1);
     expect(`.o-tooltip`).toHaveText("Foo\nThis is a foo field");
+});
+
+test.tags("desktop");
+test(`no tooltip on a column header if its label is entirely displayed`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/></list>`,
+    });
+
+    const labelEl = queryOne(`th[data-name="foo"] div span`);
+    expect(labelEl.scrollWidth).toBe(labelEl.clientWidth); // the label isn't truncated
+
+    await hover(`th[data-name="foo"] div`);
+    await runAllTimers();
+    expect(`.o-tooltip`).toHaveCount(0);
+});
+
+test.tags("desktop");
+test(`tooltip on a column header if its label is truncated`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo" string="A very long column label that certainly does not fit in the space available for that column"/>
+                <field name="bar"/>
+                <field name="int_field"/>
+                <field name="m2o"/>
+                <field name="qux"/>
+                <field name="date"/>
+                <field name="datetime"/>
+                <field name="amount"/>
+                <field name="currency_id"/>
+            </list>`,
+    });
+
+    const labelEl = queryOne(`th[data-name="foo"] div span`);
+    expect(labelEl.scrollWidth).toBeGreaterThan(labelEl.clientWidth); // the label is truncated
+
+    await hover(`th[data-name="foo"] div`);
+    await runAllTimers();
+    expect(`.o-tooltip`).toHaveCount(1);
+    expect(`.o-tooltip`).toHaveText(
+        "A very long column label that certainly does not fit in the space available for that column"
+    );
 });
 
 test(`support row decoration`, async () => {
