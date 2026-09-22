@@ -1,6 +1,5 @@
 import { openFormView, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { defineMrpModels } from "@mrp/../tests/mrp_test_helpers";
-import { getStateDecorator } from "@mrp/components/mo_overview_line/mo_overview_colors";
 import { getColorClass, getForecastAction } from "@mrp/components/mrp_overview_utils";
 import { MrpTimer } from "@mrp/widgets/timer";
 import { describe, expect, test } from "@odoo/hoot";
@@ -85,14 +84,6 @@ test("formatMinutes renders mm:ss and carries a rounded-up second into the minut
     expect(formatMinutes(0)).toBe("00:00");
     expect(formatMinutes(-2.999)).toBe("-03:00");
     expect(formatMinutes(false)).toBe("");
-});
-
-test("getStateDecorator maps a model+state to a bootstrap contextual class", () => {
-    expect(getStateDecorator("mrp.production", "done")).toBe("text-bg-success");
-    expect(getStateDecorator("mrp.workorder", "progress")).toBe("text-bg-info");
-    expect(getStateDecorator("stock.picking", "assigned")).toBe("text-bg-info");
-    expect(getStateDecorator("purchase.order", "done")).toBe("text-bg-info");
-    expect(getStateDecorator("no.such.model", "done")).toBe("");
 });
 
 test("shared overview helpers", () => {

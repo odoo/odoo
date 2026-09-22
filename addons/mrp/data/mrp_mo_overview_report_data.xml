@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mo_overview_section" model="report.formula">
+        <field name="name">Overview</field>
+        <field name="filter_date" eval="False" />
+        <field name="filter_period_comparison" eval="False" />
+        <field name="filter_growth_comparison" eval="False" />
+        <field name="filter_unfold_all" eval="True" />
+        <field name="availability_condition">always</field>
+        <field name="source_model">mrp.production</field>
+        <field
+            name="custom_handler_model_id"
+            ref="model_mrp_mo_overview_report_handler" />
+        <field name="column_ids">
+            <record id="mo_overview_report_column_status" model="report.formula.column">
+                <field name="name">Status</field>
+                <field name="expression_label">status</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">10</field>
+                <field name="optional" eval="True" />
+            </record>
+            <record
+                id="mo_overview_report_column_quantity"
+                model="report.formula.column">
+                <field name="name">Quantity</field>
+                <field name="expression_label">quantity</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">20</field>
+            </record>
+            <record id="mo_overview_report_column_uom" model="report.formula.column">
+                <field name="name">Unit</field>
+                <field name="expression_label">uom</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">30</field>
+                <field name="optional" eval="True" />
+                <field name="optional_hidden" eval="True" />
+            </record>
+            <record
+                id="mo_overview_report_column_quantity_free"
+                model="report.formula.column">
+                <field name="name">Free to Use / On Hand</field>
+                <field name="expression_label">quantity_free</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">40</field>
+                <field name="optional" eval="True" />
+            </record>
+            <record
+                id="mo_overview_report_column_quantity_reserved"
+                model="report.formula.column">
+                <field name="name">Reserved</field>
+                <field name="expression_label">quantity_reserved</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">50</field>
+                <field name="optional" eval="True" />
+            </record>
+            <record
+                id="mo_overview_report_column_receipt"
+                model="report.formula.column">
+                <field name="name">Receipt</field>
+                <field name="expression_label">receipt</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">60</field>
+                <field name="optional" eval="True" />
+            </record>
+            <record
+                id="mo_overview_report_column_unit_cost"
+                model="report.formula.column">
+                <field name="name">Unit Cost</field>
+                <field name="expression_label">unit_cost</field>
+                <field name="figure_type">monetary</field>
+                <field name="sequence">70</field>
+                <field name="optional" eval="True" />
+            </record>
+            <record
+                id="mo_overview_report_column_mo_cost"
+                model="report.formula.column">
+                <field name="name">MO Cost</field>
+                <field name="expression_label">mo_cost</field>
+                <field name="figure_type">monetary</field>
+                <field name="sequence">80</field>
+                <field name="optional" eval="True" />
+            </record>
+            <record
+                id="mo_overview_report_column_bom_cost"
+                model="report.formula.column">
+                <field name="name">BoM Cost</field>
+                <field name="expression_label">bom_cost</field>
+                <field name="figure_type">monetary</field>
+                <field name="sequence">90</field>
+                <field name="optional" eval="True" />
+            </record>
+            <record
+                id="mo_overview_report_column_real_cost"
+                model="report.formula.column">
+                <field name="name">Real Cost</field>
+                <field name="expression_label">real_cost</field>
+                <field name="figure_type">monetary</field>
+                <field name="sequence">100</field>
+                <field name="optional" eval="True" />
+                <field name="optional_hidden" eval="True" />
+            </record>
+        </field>
+    </record>
+
+    <record id="mo_cost_breakdown_section" model="report.formula">
+        <field name="name">Cost Breakdown</field>
+        <field name="filter_date" eval="False" />
+        <field name="filter_period_comparison" eval="False" />
+        <field name="filter_growth_comparison" eval="False" />
+        <field name="availability_condition">always</field>
+        <field name="source_model">mrp.production</field>
+        <field
+            name="custom_handler_model_id"
+            ref="model_mrp_mo_cost_breakdown_report_handler" />
+        <field name="column_ids">
+            <record id="mo_cost_breakdown_column_uom" model="report.formula.column">
+                <field name="name">Unit</field>
+                <field name="expression_label">uom</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">10</field>
+            </record>
+            <record
+                id="mo_cost_breakdown_column_component"
+                model="report.formula.column">
+                <field name="name">Unit Average Component Cost</field>
+                <field name="expression_label">unit_avg_cost_component</field>
+                <field name="figure_type">monetary</field>
+                <field name="sequence">20</field>
+            </record>
+            <record
+                id="mo_cost_breakdown_column_operation"
+                model="report.formula.column">
+                <field name="name">Unit Average Operation Cost</field>
+                <field name="expression_label">unit_avg_cost_operation</field>
+                <field name="figure_type">monetary</field>
+                <field name="sequence">30</field>
+            </record>
+            <record id="mo_cost_breakdown_column_total" model="report.formula.column">
+                <field name="name">Unit Average Total Cost</field>
+                <field name="expression_label">unit_avg_total_cost</field>
+                <field name="figure_type">monetary</field>
+                <field name="sequence">40</field>
+            </record>
+        </field>
+    </record>
+
+    <record id="mo_overview_report" model="report.formula">
+        <field name="name">MO Overview</field>
+        <field name="use_sections" eval="True" />
+        <field name="availability_condition">always</field>
+        <field
+            name="section_report_ids"
+            eval="[Command.set([ref('mrp.mo_overview_section'), ref('mrp.mo_cost_breakdown_section')])]" />
+    </record>
+
+</odoo>

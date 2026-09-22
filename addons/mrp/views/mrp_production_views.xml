@@ -4,8 +4,8 @@
     <data>
         <record id="action_report_mo_overview" model="ir.actions.client">
             <field name="name">MO Overview</field>
-            <field name="tag">mrp_mo_overview</field>
-            <field name="context">{'model': 'report.mrp.report_mo_overview'}</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('mrp.mo_overview_report')}" />
         </record>
         <record id="action_mrp_display" model="ir.actions.client">
             <field name="name">Mrp Display</field>
