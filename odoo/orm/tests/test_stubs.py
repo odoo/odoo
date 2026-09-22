@@ -325,6 +325,43 @@ def test_mypy_preserves_literal_union_models_and_checks_every_name(tmp_path):
     assert "union-attr" in errors[2]
 
 
+def test_with_company_accepts_company_records_and_preserves_receiver_type(tmp_path):
+    with model_test_env(Author, Book, Tag) as env:
+        book = env["stub.book"].create({"title": "Company probe"})
+        company = env["res.company"].create({"name": "Other company"})
+        switched = book.with_company(company)
+        assert type(switched) is type(book)
+        assert switched.ids == book.ids
+        assert switched.env.company == company
+        assert book.env.company != company
+        source = render_registry(env.registry)
+
+    result = _run_mypy(
+        tmp_path,
+        source,
+        "from typing import assert_type\n"
+        "from odoo.api import Environment\n"
+        "from odoo_registry_stubs import StubBook\n"
+        "def valid(env: Environment) -> None:\n"
+        "    book = env['stub.book']\n"
+        "    company = env['res.company']\n"
+        "    assert_type(book.with_company(company), StubBook)\n"
+        "    assert_type(book.with_company(env.company), StubBook)\n"
+        "    assert_type(book.with_company(env.companies[:1]), StubBook)\n"
+        "    assert_type(book.with_company(company.id), StubBook)\n"
+        "    assert_type(book.with_company(None), StubBook)\n"
+        "    assert_type(book.with_company(False), StubBook)\n"
+        "    book.with_company(company).action_publish('today')\n"
+        "def invalid(env: Environment) -> None:\n"
+        "    env['stub.book'].with_company('not a company')\n",
+    )
+    errors = [line for line in result.stdout.splitlines() if ": error:" in line]
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert len(errors) == 1, result.stdout + result.stderr
+    assert 'incompatible type "str"' in errors[0]
+    assert "arg-type" in errors[0]
+
+
 def test_generated_properties_preserve_read_and_write_contracts(tmp_path):
     class Parent:
         @property

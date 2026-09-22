@@ -67,8 +67,11 @@ so readers and failed writes preserve the preceding complete snapshot.
 Measured on `sale/models` + `stock/models`
 against the four-module set's stubs with `check_untyped_defs`: 3 222 readings
 without the plugin, 2 854 with it -- 413 attribute complaints resolved, 56
-findings that are real (a `Char` handed to `dict.get`, a recordset assigned
+additional diagnostics (a `Char` handed to `dict.get`, a recordset assigned
 where an `OrderedSet` was declared, `with_company` given `Any | BaseModel`).
+The `with_company` diagnostic was a declaration defect: a company record need
+not have the receiver's model. Its input now accepts model records and the
+environment's company protocol, while its result retains the receiver's type.
 `doc/architecture/factcheck.sh` derives the figures these pages state (mixin
 composition, base-model reaches, executed statements, dispatch sites) from the
 classes and the pin tests, and fails when a page stops citing one.

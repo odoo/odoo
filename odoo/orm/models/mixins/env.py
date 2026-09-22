@@ -16,6 +16,8 @@ from ._model_stubs import _ModelStubs
 if typing.TYPE_CHECKING:
     from collections.abc import Reversible
 
+    from ..._protocols import ResCompanyProtocol
+    from ..._typing import BaseModel
     from ...runtime import Environment
 
 _debug = DebugLog(__name__)
@@ -57,7 +59,9 @@ class EnvironmentMixin(_ModelStubs):
         return self.with_env(self.env(user=user, su=False))
 
     @api.private
-    def with_company(self, company: Self | int | None) -> Self:
+    def with_company(
+        self, company: BaseModel | ResCompanyProtocol | int | None
+    ) -> Self:
         if not company:
             return self
 

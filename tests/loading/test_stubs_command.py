@@ -5,9 +5,32 @@ import os
 import subprocess
 import sys
 
+import pytest
+
+from odoo import api
+from odoo.orm.runtime.registry import Registry
+
 from .conftest import REPO_ROOT, requires_pg
 
 pytestmark = requires_pg
+
+
+def test_company_switch_keeps_the_recordset_model(base_db):
+    with Registry(base_db).cursor() as cr:
+        env = api.Environment(cr, 1, {})
+        partner = env["res.partner"].create({"name": "Company typing probe"})
+        company = env["res.company"].create({"name": "Typing probe company"})
+
+        switched = partner.with_company(company)
+
+        assert type(switched) is type(partner)
+        assert switched.ids == partner.ids
+        assert switched.env.company == company
+        assert partner.env.company != company
+        assert partner.with_company(company.id).env.company == company
+        assert partner.with_company(None) is partner
+        with pytest.raises(ValueError, match="requires a saved"):
+            partner.with_company(env["res.company"].new({"name": "Unsaved"}))
 
 
 def test_stubs_command_types_a_real_registry(base_db, tmp_path):
@@ -46,6 +69,7 @@ def test_stubs_command_types_a_real_registry(base_db, tmp_path):
         "def use(env: Environment) -> None:\n"
         "    partner = env['res.partner'].search([], limit=1)\n"
         "    partner.address_get(['contact'])\n"
+        "    partner.with_company(env['res.company']).address_get(['contact'])\n"
         "    print(env['res.users'].SELF_READABLE_FIELDS)\n"
         "    print(env['res.users'].SELF_WRITEABLE_FIELDS)\n"
         "    reveal_type(partner.parent_id.name)\n"

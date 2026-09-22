@@ -235,6 +235,8 @@ class ResCompanyProtocol(RecordsetProtocol, Protocol):
     root_id: Any
     currency_id: Any
 
+    def __int__(self) -> int: ...
+
 
 class ResCountryProtocol(RecordsetProtocol, Protocol):
     code: Any

@@ -13,7 +13,8 @@ if typing.TYPE_CHECKING:
 
     from odoo.tools import SQL, Query
 
-    from ..._typing import DomainType, IdType, ValuesType
+    from ..._protocols import ResCompanyProtocol
+    from ..._typing import BaseModel, DomainType, IdType, ValuesType
     from ...domain import Domain
     from ...fields.base import Field
     from ...runtime import Environment
@@ -109,7 +110,9 @@ class _ModelStubs:
             self, ctx: dict[str, typing.Any] | None = None, /, **overrides: typing.Any
         ) -> Self: ...
         def with_user(self, user: typing.Any) -> Self: ...
-        def with_company(self, company: Self | int | None) -> Self: ...
+        def with_company(
+            self, company: BaseModel | ResCompanyProtocol | int | None
+        ) -> Self: ...
         def with_prefetch(
             self, prefetch_ids: Reversible[IdType] | None = None
         ) -> Self: ...
