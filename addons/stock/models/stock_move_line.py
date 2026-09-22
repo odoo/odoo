@@ -355,6 +355,7 @@ class StockMoveLine(models.Model):
                 vals.update(self._copy_quant_info(vals))
 
         mls = super().create(vals_list)
+        mls.filtered(lambda ml: ml.is_entire_pack and ml.package_id != ml.result_package_id).is_entire_pack = False
 
         created_moves = set()
 
