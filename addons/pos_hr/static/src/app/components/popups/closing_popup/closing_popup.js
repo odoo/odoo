@@ -12,4 +12,10 @@ patch(ClosePosPopup.prototype, {
             this.allowedDifference()
         );
     },
+    get showPrintReport() {
+        return (
+            this.hardwareProxy.printer &&
+            (!this.pos.config.module_pos_hr || this.pos.employeeIsAdmin)
+        );
+    },
 });
