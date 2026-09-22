@@ -465,22 +465,15 @@ class EventEvent(models.Model):
                 )
             event.seats_taken = event.seats_reserved + event.seats_used
 
-    @api.depends("date_tz", "start_sale_datetime")
+    @api.depends("start_sale_datetime")
     def _compute_event_registrations_started(self):
+        # see _compute_is_expired on event.event.ticket: converting both sides
+        # to the display timezone cannot change an ordering comparison
+        now = fields.Datetime.now()
         for event in self:
-            event = event._set_tz_context()
-            if event.start_sale_datetime:
-                current_datetime = fields.Datetime.context_timestamp(
-                    event, fields.Datetime.now()
-                )
-                start_sale_datetime = fields.Datetime.context_timestamp(
-                    event, event.start_sale_datetime
-                )
-                event.event_registrations_started = (
-                    current_datetime >= start_sale_datetime
-                )
-            else:
-                event.event_registrations_started = True
+            event.event_registrations_started = (
+                not event.start_sale_datetime or event.start_sale_datetime <= now
+            )
 
     @api.depends(
         "date_tz",
@@ -641,16 +634,9 @@ class EventEvent(models.Model):
 
     @api.depends("date_end")
     def _compute_is_finished(self):
+        now = fields.Datetime.now()
         for event in self:
-            if not event.date_end:
-                event.is_finished = False
-                continue
-            event = event._set_tz_context()
-            current_datetime = fields.Datetime.context_timestamp(
-                event, fields.Datetime.now()
-            )
-            datetime_end = fields.Datetime.context_timestamp(event, event.date_end)
-            event.is_finished = datetime_end <= current_datetime
+            event.is_finished = bool(event.date_end and event.date_end <= now)
 
     def _search_is_finished(self, operator, value):
         if operator != "in":

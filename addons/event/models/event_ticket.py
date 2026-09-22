@@ -92,34 +92,24 @@ class EventEventTicket(models.Model):
     # reports
     color = fields.Char(default="#875A7B")
 
-    @api.depends("end_sale_datetime", "event_id.date_tz")
+    @api.depends("end_sale_datetime")
     def _compute_is_expired(self):
+        # both operands are the same instant expressed in the same timezone, so
+        # the comparison does not depend on which one that is: compare the
+        # stored UTC values directly
+        now = fields.Datetime.now()
         for ticket in self:
-            ticket = ticket._set_tz_context()
-            current_datetime = fields.Datetime.context_timestamp(
-                ticket, fields.Datetime.now()
+            ticket.is_expired = bool(
+                ticket.end_sale_datetime and ticket.end_sale_datetime < now
             )
-            if ticket.end_sale_datetime:
-                end_sale_datetime = fields.Datetime.context_timestamp(
-                    ticket, ticket.end_sale_datetime
-                )
-                ticket.is_expired = end_sale_datetime < current_datetime
-            else:
-                ticket.is_expired = False
 
-    @api.depends("start_sale_datetime", "event_id.date_tz")
+    @api.depends("start_sale_datetime")
     def _compute_is_launched(self):
         now = fields.Datetime.now()
         for ticket in self:
-            if not ticket.start_sale_datetime:
-                ticket.is_launched = True
-            else:
-                ticket = ticket._set_tz_context()
-                current_datetime = fields.Datetime.context_timestamp(ticket, now)
-                start_sale_datetime = fields.Datetime.context_timestamp(
-                    ticket, ticket.start_sale_datetime
-                )
-                ticket.is_launched = start_sale_datetime <= current_datetime
+            ticket.is_launched = (
+                not ticket.start_sale_datetime or ticket.start_sale_datetime <= now
+            )
 
     @api.depends("is_expired", "is_launched", "is_sold_out")
     def _compute_sale_available(self):
@@ -263,10 +253,6 @@ class EventEventTicket(models.Model):
         description are necessary without having to encode it manually, like sales
         information."""
         return "%s\n%s" % (self.display_name, self.event_id.display_name)
-
-    def _set_tz_context(self):
-        self.check_singleton()
-        return self.with_context(tz=self.event_id.date_tz or "UTC")
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_if_registrations(self):
