@@ -245,6 +245,7 @@ class AccountMoveSend(models.AbstractModel):
                     invoice._l10n_tr_nilvera_submit_einvoice(xml_file, customer_alias)
                 else:   # E-Archive
                     invoice._l10n_tr_nilvera_submit_earchive(xml_file)
+<<<<<<< c2c11a3c5287f9683e68e9e6d77457f27ef7f4b4
 
     @api.model
     def _postprocess_invoice_ubl_xml(self, invoice, invoice_data):
@@ -255,3 +256,9 @@ class AccountMoveSend(models.AbstractModel):
             return
 
         return super()._postprocess_invoice_ubl_xml(invoice, invoice_data)
+||||||| d422c97257d8a13cc16969fcbc2ed1b8312a2c5c
+=======
+
+                if self._can_commit():
+                    self._cr.commit()
+>>>>>>> bfbf8326bf7d30efbb7304b37dff387d29229b09
