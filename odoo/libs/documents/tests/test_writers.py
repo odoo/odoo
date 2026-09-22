@@ -16,7 +16,8 @@ from odoo.libs.documents.writers import (
 class TestRegistry(unittest.TestCase):
     def test_the_built_in_writers_are_registered(self):
         self.assertEqual(
-            get_known_writer_names(), ("csv", "json", "srt", "text", "vtt", "xml")
+            get_known_writer_names(),
+            ("csv", "json", "srt", "text", "vtt", "xlsx_sheets", "xml"),
         )
 
     def test_a_writer_is_found_by_mimetype_and_representation(self):

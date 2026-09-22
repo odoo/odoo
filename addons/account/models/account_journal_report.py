@@ -1,16 +1,13 @@
 import datetime
 import io
-from collections import defaultdict
 from itertools import chain
-
-from PIL import ImageFont
 
 from odoo import _, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.documents import SheetBuilder
 from odoo.tools import SQL
-from odoo.tools.misc import file_path
 
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
 from odoo.addons.report_formula.models.account_report_export import (
@@ -444,26 +441,9 @@ class AccountJournalReportHandler(models.AbstractModel):
     ##########################################################################
 
     @_debug.perf.timed
-    def _write_report_to_xlsx_sheet(self, options, workbook):
+    def _get_xlsx_sheets(self, options):
         """Override to handle the journal report XLSX export when used in composite reports."""
         report = self.env["report.formula"].browse(options["report_id"])
-        # We need to use fonts to calculate column width otherwise column width would be ugly
-        # Using Lato as reference font is a hack and is not recommended. Customer computers don't have this font by default and so
-        # the generated xlsx wouldn't have this font. Since it is not by default, we preferred using Arial font as default and keep
-        # Lato as reference for columns width calculations.
-        fonts = {}
-        for font_size in (XLSX_FONT_SIZE_HEADING, XLSX_FONT_SIZE_DEFAULT):
-            fonts[font_size] = defaultdict()
-            for font_type in ("Reg", "Bol", "RegIta", "BolIta"):
-                try:
-                    lato_path = f"web/static/fonts/lato/Lato-{font_type}-webfont.ttf"
-                    fonts[font_size][font_type] = ImageFont.truetype(
-                        file_path(lato_path), font_size
-                    )
-                except OSError, FileNotFoundError:
-                    # This won't give great result, but it will work.
-                    fonts[font_size][font_type] = ImageFont.load_default()
-
         print_options = self._get_print_options(options, report)
         document_data = self._generate_document_data_for_export(
             report, print_options, "xlsx"
@@ -475,11 +455,13 @@ class AccountJournalReportHandler(models.AbstractModel):
             global_tax_summary=bool(document_data.get("global_tax_summary")),
         )
 
+        sheets = []
         for journal_vals in document_data["journals_vals"]:
             cursor_y = 0
 
             # Default sheet properties
-            sheet = workbook.add_worksheet(journal_vals["name"][:31])
+            sheet = SheetBuilder(journal_vals["name"])
+            sheets.append(sheet)
             columns = journal_vals["columns"]
             _debug.pipeline(
                 "xlsx_journal_sheet",
@@ -495,15 +477,12 @@ class AccountJournalReportHandler(models.AbstractModel):
                 if "o_right_alignment" in column.get("class", ""):
                     align = "right"
                 self._write_cell(
+                    sheet,
                     cursor_x,
                     cursor_y,
                     column["name"],
                     1,
                     False,
-                    report,
-                    fonts,
-                    workbook,
-                    sheet,
                     XLSX_FONT_SIZE_HEADING,
                     True,
                     XLSX_GRAY_200,
@@ -539,15 +518,12 @@ class AccountJournalReportHandler(models.AbstractModel):
                             bold = True
 
                         self._write_cell(
+                            sheet,
                             cursor_x,
                             cursor_y,
                             data,
                             1,
                             is_date,
-                            report,
-                            fonts,
-                            workbook,
-                            sheet,
                             XLSX_FONT_SIZE_DEFAULT,
                             bold,
                             "white",
@@ -560,15 +536,12 @@ class AccountJournalReportHandler(models.AbstractModel):
                     else:
                         # Empty value
                         self._write_cell(
+                            sheet,
                             cursor_x,
                             cursor_y,
                             "",
                             1,
                             False,
-                            report,
-                            fonts,
-                            workbook,
-                            sheet,
                             XLSX_FONT_SIZE_DEFAULT,
                             False,
                             "white",
@@ -595,15 +568,12 @@ class AccountJournalReportHandler(models.AbstractModel):
                     align = "right"
 
                 self._write_cell(
+                    sheet,
                     cursor_x,
                     cursor_y,
                     data,
                     1,
                     False,
-                    report,
-                    fonts,
-                    workbook,
-                    sheet,
                     XLSX_FONT_SIZE_DEFAULT,
                     True,
                     XLSX_GRAY_200,
@@ -615,71 +585,50 @@ class AccountJournalReportHandler(models.AbstractModel):
 
             cursor_x = 0
 
-            sheet.set_default_row(20)
-            sheet.set_row(0, 30)
+            sheet.default_row(20)
+            sheet.row(0, 30)
 
             # Tax tables drawing
             if journal_vals.get("tax_summary"):
                 self._write_tax_summaries_to_sheet(
                     report,
-                    workbook,
                     sheet,
-                    fonts,
                     len(columns) + 1,
                     1,
                     journal_vals["tax_summary"],
                 )
 
         if document_data.get("global_tax_summary"):
+            sheet = SheetBuilder(_("Global Tax Summary"))
+            sheets.append(sheet)
             self._write_tax_summaries_to_sheet(
-                report,
-                workbook,
-                workbook.add_worksheet(_("Global Tax Summary")[:31]),
-                fonts,
-                0,
-                0,
-                document_data["global_tax_summary"],
+                report, sheet, 0, 0, document_data["global_tax_summary"]
             )
-        return workbook
+        return sheets
 
     def export_to_xlsx(self, options, response=None):
         """Override the report.formula XLSX generation to use a custom one."""
-        import xlsxwriter
-
-        output = io.BytesIO()
         report = self.env["report.formula"].browse(options["report_id"])
         print_options = self._get_print_options(options, report)
-        with xlsxwriter.Workbook(
-            output,
-            {
-                "in_memory": True,
-                "strings_to_formulas": False,
-            },
-        ) as workbook:
-            workbook = self._write_report_to_xlsx_sheet(options, workbook)
-            report._add_options_xlsx_sheet(workbook, [print_options])
-        output.seek(0)
-        generated_file = output.read()
-        output.close()
-
+        sheets = [
+            *self._get_xlsx_sheets(options),
+            report._get_xlsx_options_sheet([print_options]),
+        ]
         return {
             "file_name": report.get_default_report_filename(options, "xlsx"),
-            "file_content": generated_file,
+            "file_content": report._write_xlsx_sheets(sheets),
             "file_type": "xlsx",
         }
 
     @_debug.perf.timed
     def _write_cell(
         self,
+        sheet,
         x,
         y,
         value,
         colspan,
         datetime,
-        report,
-        fonts,
-        workbook,
-        sheet,
         font_size,
         bold=False,
         bg_color="white",
@@ -691,16 +640,13 @@ class AccountJournalReportHandler(models.AbstractModel):
         """
         Write a value to a specific cell in the sheet with specific styling.
 
+        :param sheet:           The sheet to write on
         :param x:               The x coordinate of the cell to write in
         :param y:               The y coordinate of the cell to write in
         :param value:           The value to write
         :param colspan:         The number of columns to extend
         :param datetime:        True if the value is a date else False
-        :param report:          The current report
-        :param fonts:           The fonts used to compute the size of each cell
-        :param workbook:        The workbook currently in use
-        :param sheet:           The sheet from the workbook to write on
-        :param font_size:       The font size to write with
+        :param font_size:       The font size to write with, and to measure the cell with
         :param bold:            True if the written value should be bold, default: False
         :param bg_color:        The background color of the cell, in hex or by name, default: 'white'
         :param align:           The alignment of the text ('left', 'right', 'center'), default: 'left'
@@ -710,38 +656,34 @@ class AccountJournalReportHandler(models.AbstractModel):
         """
         # Reuse of a single helper avoids declaring a style format for every use case. Cells are
         # written in Arial but measured with Lato, since Lato cannot be embedded in the worksheet.
-        style = workbook.add_format(
-            {
-                "font_name": "Arial",
-                "font_size": font_size,
-                "bold": bold,
-                "bg_color": bg_color,
-                "align": align,
-                "bottom": border_bottom,
-                "top": border_top,
-                "border_color": border_color,
-            }
-        )
+        style = {
+            "font_name": "Arial",
+            "font_size": font_size,
+            "bold": bold,
+            "bg_color": bg_color,
+            "align": align,
+            "bottom": border_bottom,
+            "top": border_top,
+            "border_color": border_color,
+        }
 
         if colspan == 1:
             if datetime:
-                style.set_num_format("yyyy-mm-dd")
-                sheet.write_datetime(y, x, value, style)
+                sheet.cell(
+                    y, x, value, {**style, "num_format": "yyyy-mm-dd"}, date=True
+                )
             else:
                 # Some account_move_lines cells can have multiple lines: one for the title then some additional lines for text.
                 # On Xlsx it's better to keep everything on one line so when you click on cell, all the value is shown and not juste the title
                 if isinstance(value, str):
                     value = value.replace("\n", " ")
-                report._set_xlsx_cell_sizes(
-                    sheet, fonts[font_size], x, y, value, style, colspan > 1
-                )
-                sheet.write(y, x, value, style)
+                sheet.cell(y, x, value, style, measure=font_size)
         else:
-            sheet.merge_range(y, x, y, x + colspan - 1, value, style)
+            sheet.cell(y, x, value, style, colspan=colspan)
 
     @_debug.perf.timed
     def _write_tax_summaries_to_sheet(
-        self, report, workbook, sheet, fonts, start_x, start_y, tax_summary
+        self, report, sheet, start_x, start_y, tax_summary
     ):
         cursor_x = start_x
         cursor_y = start_y
@@ -776,15 +718,12 @@ class AccountJournalReportHandler(models.AbstractModel):
             # Draw Tax Applied Table
             # Write tax applied header amd columns
             self._write_cell(
+                sheet,
                 cursor_x,
                 cursor_y,
                 _("Taxes Applied"),
                 len(columns),
                 False,
-                report,
-                fonts,
-                workbook,
-                sheet,
                 XLSX_FONT_SIZE_HEADING,
                 True,
                 "white",
@@ -797,15 +736,12 @@ class AccountJournalReportHandler(models.AbstractModel):
                 if cursor_x >= start_align_right:
                     align = "right"
                 self._write_cell(
+                    sheet,
                     cursor_x,
                     cursor_y,
                     column,
                     1,
                     False,
-                    report,
-                    fonts,
-                    workbook,
-                    sheet,
                     XLSX_FONT_SIZE_DEFAULT,
                     True,
                     XLSX_GRAY_200,
@@ -824,15 +760,12 @@ class AccountJournalReportHandler(models.AbstractModel):
                         if is_country_first_line:
                             is_country_first_line = not is_country_first_line
                             self._write_cell(
+                                sheet,
                                 cursor_x,
                                 cursor_y,
                                 country,
                                 1,
                                 False,
-                                report,
-                                fonts,
-                                workbook,
-                                sheet,
                                 XLSX_FONT_SIZE_DEFAULT,
                                 True,
                                 "white",
@@ -845,15 +778,12 @@ class AccountJournalReportHandler(models.AbstractModel):
                         cursor_x += 1
 
                     self._write_cell(
+                        sheet,
                         cursor_x,
                         cursor_y,
                         tax["name"],
                         1,
                         False,
-                        report,
-                        fonts,
-                        workbook,
-                        sheet,
                         XLSX_FONT_SIZE_DEFAULT,
                         True,
                         "white",
@@ -863,15 +793,12 @@ class AccountJournalReportHandler(models.AbstractModel):
                         XLSX_BORDER_COLOR,
                     )
                     self._write_cell(
+                        sheet,
                         cursor_x + 1,
                         cursor_y,
                         tax["base_amount"],
                         1,
                         False,
-                        report,
-                        fonts,
-                        workbook,
-                        sheet,
                         XLSX_FONT_SIZE_DEFAULT,
                         False,
                         "white",
@@ -881,15 +808,12 @@ class AccountJournalReportHandler(models.AbstractModel):
                         XLSX_BORDER_COLOR,
                     )
                     self._write_cell(
+                        sheet,
                         cursor_x + 2,
                         cursor_y,
                         tax["tax_amount"],
                         1,
                         False,
-                        report,
-                        fonts,
-                        workbook,
-                        sheet,
                         XLSX_FONT_SIZE_DEFAULT,
                         False,
                         "white",
@@ -902,15 +826,12 @@ class AccountJournalReportHandler(models.AbstractModel):
 
                     if tax_summary.get("tax_non_deductible_column"):
                         self._write_cell(
+                            sheet,
                             cursor_x,
                             cursor_y,
                             tax["tax_non_deductible"],
                             1,
                             False,
-                            report,
-                            fonts,
-                            workbook,
-                            sheet,
                             XLSX_FONT_SIZE_DEFAULT,
                             False,
                             "white",
@@ -923,15 +844,12 @@ class AccountJournalReportHandler(models.AbstractModel):
 
                     if tax_summary.get("tax_deductible_column"):
                         self._write_cell(
+                            sheet,
                             cursor_x,
                             cursor_y,
                             tax["tax_deductible"],
                             1,
                             False,
-                            report,
-                            fonts,
-                            workbook,
-                            sheet,
                             XLSX_FONT_SIZE_DEFAULT,
                             False,
                             "white",
@@ -944,15 +862,12 @@ class AccountJournalReportHandler(models.AbstractModel):
 
                     if tax_summary.get("tax_due_column"):
                         self._write_cell(
+                            sheet,
                             cursor_x,
                             cursor_y,
                             tax["tax_due"],
                             1,
                             False,
-                            report,
-                            fonts,
-                            workbook,
-                            sheet,
                             XLSX_FONT_SIZE_DEFAULT,
                             False,
                             "white",
@@ -982,15 +897,12 @@ class AccountJournalReportHandler(models.AbstractModel):
             # Draw Tax Applied Table
             # Write tax applied columns and header
             self._write_cell(
+                sheet,
                 cursor_x,
                 cursor_y,
                 _("Impact On Grid"),
                 len(columns),
                 False,
-                report,
-                fonts,
-                workbook,
-                sheet,
                 XLSX_FONT_SIZE_HEADING,
                 True,
                 "white",
@@ -1004,15 +916,12 @@ class AccountJournalReportHandler(models.AbstractModel):
                 if cursor_x >= start_align_right:
                     align = "right"
                 self._write_cell(
+                    sheet,
                     cursor_x,
                     cursor_y,
                     column,
                     1,
                     False,
-                    report,
-                    fonts,
-                    workbook,
-                    sheet,
                     XLSX_FONT_SIZE_DEFAULT,
                     True,
                     XLSX_GRAY_200,
@@ -1031,15 +940,12 @@ class AccountJournalReportHandler(models.AbstractModel):
                         if is_country_first_line:
                             is_country_first_line = not is_country_first_line
                             self._write_cell(
+                                sheet,
                                 cursor_x,
                                 cursor_y,
                                 country,
                                 1,
                                 False,
-                                report,
-                                fonts,
-                                workbook,
-                                sheet,
                                 XLSX_FONT_SIZE_DEFAULT,
                                 True,
                                 "white",
@@ -1052,15 +958,12 @@ class AccountJournalReportHandler(models.AbstractModel):
                         cursor_x += 1
 
                     self._write_cell(
+                        sheet,
                         cursor_x,
                         cursor_y,
                         grid_name,
                         1,
                         False,
-                        report,
-                        fonts,
-                        workbook,
-                        sheet,
                         XLSX_FONT_SIZE_DEFAULT,
                         True,
                         "white",
@@ -1070,15 +973,12 @@ class AccountJournalReportHandler(models.AbstractModel):
                         XLSX_BORDER_COLOR,
                     )
                     self._write_cell(
+                        sheet,
                         cursor_x + 1,
                         cursor_y,
                         grids[country][grid_name].get("+", 0),
                         1,
                         False,
-                        report,
-                        fonts,
-                        workbook,
-                        sheet,
                         XLSX_FONT_SIZE_DEFAULT,
                         False,
                         "white",
@@ -1088,15 +988,12 @@ class AccountJournalReportHandler(models.AbstractModel):
                         XLSX_BORDER_COLOR,
                     )
                     self._write_cell(
+                        sheet,
                         cursor_x + 2,
                         cursor_y,
                         grids[country][grid_name].get("-", 0),
                         1,
                         False,
-                        report,
-                        fonts,
-                        workbook,
-                        sheet,
                         XLSX_FONT_SIZE_DEFAULT,
                         False,
                         "white",
@@ -1106,15 +1003,12 @@ class AccountJournalReportHandler(models.AbstractModel):
                         XLSX_BORDER_COLOR,
                     )
                     self._write_cell(
+                        sheet,
                         cursor_x + 3,
                         cursor_y,
                         grids[country][grid_name]["impact"],
                         1,
                         False,
-                        report,
-                        fonts,
-                        workbook,
-                        sheet,
                         XLSX_FONT_SIZE_DEFAULT,
                         False,
                         "white",

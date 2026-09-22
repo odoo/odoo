@@ -12,6 +12,7 @@ __all__ = [
     "IMAGES",
     "REPRESENTATIONS",
     "ROWS",
+    "SHEETS",
     "TEXT",
     "TREE",
 ]
@@ -24,8 +25,9 @@ IMAGES = "images"
 BARCODES = "barcodes"
 CHILDREN = "children"
 CUES = "cues"
+SHEETS = "sheets"
 
-REPRESENTATIONS = (ROWS, TEXT, TREE, DATA, IMAGES, BARCODES, CHILDREN, CUES)
+REPRESENTATIONS = (ROWS, TEXT, TREE, DATA, IMAGES, BARCODES, CHILDREN, CUES, SHEETS)
 
 ANY = "*"
 

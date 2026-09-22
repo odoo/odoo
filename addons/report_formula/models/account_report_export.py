@@ -6,12 +6,10 @@ import re
 from itertools import groupby
 
 import markupsafe
-from PIL import ImageFont
 
 from odoo import _, api, models
 from odoo.libs.debug_log import DebugLog
-from odoo.libs.documents import mimetype_for
-from odoo.libs.numbers import float_repr
+from odoo.libs.documents import SHEETS, SheetBuilder, get_writers, mimetype_for
 from odoo.tools.mail import html_to_inner_content
 from odoo.tools.misc import file_path
 
@@ -27,6 +25,7 @@ PDF_PAPERFORMAT_ARGS = {
     "data-report-margin-right": 7,
     "data-report-margin-bottom": 15,
 }
+XLSX_MEASURE_FONT_SIZE = 12
 
 
 class AccountReportExport(models.Model):
@@ -67,78 +66,48 @@ class AccountReportExport(models.Model):
 
     @_debug.perf.timed
     def export_to_xlsx(self, options, response=None):
-        def add_worksheet_unique_name(workbook, sheet_name):
-            existing_names = set(workbook.sheetnames.keys())
-            count = 1
-            max_length = 31
-            new_sheet_name = sheet_name[:max_length]
-
-            while new_sheet_name in existing_names:
-                suffix = f" ({count})"
-                truncated_name = sheet_name[: max_length - len(suffix)]
-                new_sheet_name = f"{truncated_name}{suffix}"
-                count += 1
-            return workbook.add_worksheet(new_sheet_name)
-
         self.check_singleton()
-        output = io.BytesIO()
-        import xlsxwriter
-
-        with xlsxwriter.Workbook(
-            output,
-            {
-                "in_memory": True,
-                "strings_to_formulas": False,
-            },
-        ) as workbook:
-            print_options = self.get_options(
-                previous_options={**options, "export_mode": "print"}
+        print_options = self.get_options(
+            previous_options={**options, "export_mode": "print"}
+        )
+        if print_options["sections"]:
+            reports_to_print = self.env["report.formula"].browse(
+                [section["id"] for section in print_options["sections"]]
             )
-            if print_options["sections"]:
-                reports_to_print = self.env["report.formula"].browse(
-                    [section["id"] for section in print_options["sections"]]
-                )
-            else:
-                reports_to_print = self
-            _debug.logic(
-                "xlsx_reports_selected",
-                report=self,
-                by_sections=bool(print_options["sections"]),
-                reports=reports_to_print,
-            )
+        else:
+            reports_to_print = self
+        _debug.logic(
+            "xlsx_reports_selected",
+            report=self,
+            by_sections=bool(print_options["sections"]),
+            reports=reports_to_print,
+        )
 
-            reports_options = []
-            for report in reports_to_print:
-                report_options = report.get_options(
-                    previous_options={**print_options, "selected_section_id": report.id}
-                )
-                reports_options.append(report_options)
-                # Use custom handler's XLSX export method if available
-                custom_handler_model = report._get_custom_handler_model()
-                with _debug.perf(
-                    "xlsx_sheet",
-                    cr=self.env.cr,
-                    report=report,
-                    custom=custom_handler_model,
+        sheets = []
+        reports_options = []
+        for report in reports_to_print:
+            report_options = report.get_options(
+                previous_options={**print_options, "selected_section_id": report.id}
+            )
+            reports_options.append(report_options)
+            custom_handler_model = report._get_custom_handler_model()
+            with _debug.perf(
+                "xlsx_sheet",
+                cr=self.env.cr,
+                report=report,
+                custom=custom_handler_model,
+            ):
+                if custom_handler_model and hasattr(
+                    self.env[custom_handler_model], "_get_xlsx_sheets"
                 ):
-                    if custom_handler_model and hasattr(
-                        self.env[custom_handler_model], "_write_report_to_xlsx_sheet"
-                    ):
-                        self.env[custom_handler_model]._write_report_to_xlsx_sheet(
-                            report_options, workbook
-                        )
-                    else:
-                        report._write_report_to_xlsx_sheet(
-                            report_options,
-                            workbook,
-                            add_worksheet_unique_name(workbook, report.name),
-                        )
+                    sheets += self.env[custom_handler_model]._get_xlsx_sheets(
+                        report_options
+                    )
+                else:
+                    sheets.append(report._get_xlsx_sheet(report_options))
 
-            self._add_options_xlsx_sheet(workbook, reports_options)
-
-        output.seek(0)
-        generated_file = output.read()
-        output.close()
+        sheets.append(self._get_xlsx_options_sheet(reports_options))
+        generated_file = self._write_xlsx_sheets(sheets)
         _debug.pipeline(
             "xlsx_workbook_written",
             report=self,
@@ -153,75 +122,39 @@ class AccountReportExport(models.Model):
         }
 
     @api.model
-    @_debug.perf.timed
-    def _set_xlsx_cell_sizes(self, sheet, fonts, col, row, value, style, has_colspan):
-        """This small helper will resize the cells if needed, to allow to get a better output."""
+    def _write_xlsx_sheets(self, sheets):
+        writer = get_writers(mimetype_for("xlsx"), SHEETS)[0]
+        return writer.write(
+            sheets,
+            measure_fonts=self._get_xlsx_measure_fonts(),
+            decimals=self.env.company.currency_id.decimal_places,
+        )
 
-        def get_string_width(font, string):
-            return font.getlength(string) / 5
-
-        # Get the correct font for the row style
-        font_type = ("Bol" if style.bold else "Reg") + ("Ita" if style.italic else "")
-        report_font = fonts[font_type]
-
-        # 8.43 is the default width of a column in Excel.
-        try:
-            col_width = sheet.col_info[col][0]
-        except KeyError:
-            col_width = 8.43
-
-        if value is None:
-            value = ""
-        else:
-            # This is needed, otherwise we could compute width on very long number such as 12.0999999998
-            # which wouldn't show well in the end result as the numbers are rounded.
-            with contextlib.suppress(ValueError, OverflowError):
-                value = float_repr(
-                    float(value), self.env.company.currency_id.decimal_places
-                )
-
-        # Start by computing the width of the cell if we are not using colspans.
-        if not has_colspan:
-            # Ensure to take indents into account when computing the width.
-            formatted_value = f"{'  ' * style.indent}{value}"
-            width = get_string_width(
-                report_font,
-                max(
-                    formatted_value.split("\n"),
-                    key=lambda line: get_string_width(report_font, line),
-                ),
-            )
-            # We set the width if it is bigger than the current one, with a limit at 75 (max to avoid taking excessive space).
-            if width > col_width:
-                sheet.set_column(
-                    col, col, min(width + 4, 75)
-                )  # We need to add a little extra padding to ensure our columns are not clipping the text
-
-    def _get_xlsx_export_fonts(self):
-        """Get the bold, italic and regular LATO font information so that we can use them for format purposes."""
+    @api.model
+    def _get_xlsx_measure_fonts(self):
         fonts = {}
         for font_type in ("Reg", "Bol", "RegIta", "BolIta"):
-            try:
-                lato_path = f"web/static/fonts/lato/Lato-{font_type}-webfont.ttf"
-                fonts[font_type] = ImageFont.truetype(file_path(lato_path), 12)
-            except OSError, FileNotFoundError:
-                # This won't give great result, but it will work.
-                fonts[font_type] = ImageFont.load_default()
+            with contextlib.suppress(FileNotFoundError):
+                fonts[font_type] = file_path(
+                    f"web/static/fonts/lato/Lato-{font_type}-webfont.ttf"
+                )
         return fonts
 
     @_debug.perf.timed
-    def _write_report_to_xlsx_sheet(self, options, workbook, sheet):
-        fonts = self._get_xlsx_export_fonts()
+    def _get_xlsx_sheet(self, options):
+        sheet = SheetBuilder(self.name)
 
         def write_cell(sheet, x, y, value, style, colspan=1, rowspan=1, datetime=False):
-            self._set_xlsx_cell_sizes(sheet, fonts, x, y, value, style, colspan > 1)
-            if colspan == 1 and rowspan == 1:
-                if datetime:
-                    sheet.write_datetime(y, x, value, style)
-                else:
-                    sheet.write(y, x, value, style)
-            else:
-                sheet.merge_range(y, x, y + rowspan - 1, x + colspan - 1, value, style)
+            sheet.cell(
+                y,
+                x,
+                value,
+                style,
+                rowspan=rowspan,
+                colspan=colspan,
+                date=datetime,
+                measure=XLSX_MEASURE_FONT_SIZE,
+            )
 
         default_format_props = {
             "font_name": "Lato",
@@ -241,90 +174,94 @@ class AccountReportExport(models.Model):
             "align": "left",
             "num_format": "yyyy-mm-dd",
         }
-        title_format = workbook.add_format(
-            {"font_name": "Lato", "font_size": 12, "bold": True, "bottom": 2}
-        )
-        annotation_format = workbook.add_format(
-            {**text_format_props, "text_wrap": True}
-        )
+        title_format = {"font_name": "Lato", "font_size": 12, "bold": True, "bottom": 2}
+        annotation_format = {**text_format_props, "text_wrap": True}
         workbook_formats = {
             0: {
-                "default": workbook.add_format(
-                    {**default_format_props, "bold": True, "font_size": 13, "bottom": 6}
-                ),
-                "text": workbook.add_format(
-                    {**text_format_props, "bold": True, "font_size": 13, "bottom": 6}
-                ),
-                "date": workbook.add_format(
-                    {**date_format_props, "bold": True, "font_size": 13, "bottom": 6}
-                ),
-                "total": workbook.add_format(
-                    {**default_format_props, "bold": True, "font_size": 13, "bottom": 6}
-                ),
+                "default": {
+                    **default_format_props,
+                    "bold": True,
+                    "font_size": 13,
+                    "bottom": 6,
+                },
+                "text": {
+                    **text_format_props,
+                    "bold": True,
+                    "font_size": 13,
+                    "bottom": 6,
+                },
+                "date": {
+                    **date_format_props,
+                    "bold": True,
+                    "font_size": 13,
+                    "bottom": 6,
+                },
+                "total": {
+                    **default_format_props,
+                    "bold": True,
+                    "font_size": 13,
+                    "bottom": 6,
+                },
             },
             1: {
-                "default": workbook.add_format(
-                    {**default_format_props, "bold": True, "font_size": 13, "bottom": 1}
-                ),
-                "text": workbook.add_format(
-                    {**text_format_props, "bold": True, "font_size": 13, "bottom": 1}
-                ),
-                "date": workbook.add_format(
-                    {**date_format_props, "bold": True, "font_size": 13, "bottom": 1}
-                ),
-                "total": workbook.add_format(
-                    {**default_format_props, "bold": True, "font_size": 13, "bottom": 1}
-                ),
-                "default_indent": workbook.add_format(
-                    {
-                        **default_format_props,
-                        "bold": True,
-                        "font_size": 13,
-                        "bottom": 1,
-                        "indent": 1,
-                    }
-                ),
-                "date_indent": workbook.add_format(
-                    {
-                        **date_format_props,
-                        "bold": True,
-                        "font_size": 13,
-                        "bottom": 1,
-                        "indent": 1,
-                    }
-                ),
+                "default": {
+                    **default_format_props,
+                    "bold": True,
+                    "font_size": 13,
+                    "bottom": 1,
+                },
+                "text": {
+                    **text_format_props,
+                    "bold": True,
+                    "font_size": 13,
+                    "bottom": 1,
+                },
+                "date": {
+                    **date_format_props,
+                    "bold": True,
+                    "font_size": 13,
+                    "bottom": 1,
+                },
+                "total": {
+                    **default_format_props,
+                    "bold": True,
+                    "font_size": 13,
+                    "bottom": 1,
+                },
+                "default_indent": {
+                    **default_format_props,
+                    "bold": True,
+                    "font_size": 13,
+                    "bottom": 1,
+                    "indent": 1,
+                },
+                "date_indent": {
+                    **date_format_props,
+                    "bold": True,
+                    "font_size": 13,
+                    "bottom": 1,
+                    "indent": 1,
+                },
             },
             2: {
-                "default": workbook.add_format({**default_format_props, "bold": True}),
-                "text": workbook.add_format({**text_format_props, "bold": True}),
-                "date": workbook.add_format({**date_format_props, "bold": True}),
-                "initial": workbook.add_format(default_format_props),
-                "total": workbook.add_format({**default_format_props, "bold": True}),
-                "default_indent": workbook.add_format(
-                    {**default_format_props, "bold": True, "indent": 2}
-                ),
-                "date_indent": workbook.add_format(
-                    {**date_format_props, "bold": True, "indent": 2}
-                ),
-                "initial_indent": workbook.add_format(
-                    {**default_format_props, "indent": 2}
-                ),
-                "total_indent": workbook.add_format(
-                    {**default_format_props, "bold": True, "indent": 1}
-                ),
+                "default": {**default_format_props, "bold": True},
+                "text": {**text_format_props, "bold": True},
+                "date": {**date_format_props, "bold": True},
+                "initial": dict(default_format_props),
+                "total": {**default_format_props, "bold": True},
+                "default_indent": {**default_format_props, "bold": True, "indent": 2},
+                "date_indent": {**date_format_props, "bold": True, "indent": 2},
+                "initial_indent": {**default_format_props, "indent": 2},
+                "total_indent": {**default_format_props, "bold": True, "indent": 1},
             },
             "default": {
-                "default": workbook.add_format(default_format_props),
-                "text": workbook.add_format(text_format_props),
-                "date": workbook.add_format(date_format_props),
-                "total": workbook.add_format(default_format_props),
-                "default_indent": workbook.add_format(
-                    {**default_format_props, "indent": 2}
-                ),
-                "date_indent": workbook.add_format({**date_format_props, "indent": 2}),
-                "total_indent": workbook.add_format(
-                    {**default_format_props, "indent": 2}
-                ),
+                "default": dict(default_format_props),
+                "text": dict(text_format_props),
+                "date": dict(date_format_props),
+                "total": dict(default_format_props),
+                "default_indent": {**default_format_props, "indent": 2},
+                "date_indent": {**date_format_props, "indent": 2},
+                "total_indent": {**default_format_props, "indent": 2},
             },
         }
 
@@ -332,15 +269,13 @@ class AccountReportExport(models.Model):
             if isinstance(level, int) and level not in workbook_formats:
                 workbook_formats[level] = {
                     **workbook_formats["default"],
-                    "default_indent": workbook.add_format(
-                        {**default_format_props, "indent": level}
-                    ),
-                    "date_indent": workbook.add_format(
-                        {**date_format_props, "indent": level}
-                    ),
-                    "total_indent": workbook.add_format(
-                        {**default_format_props, "bold": True, "indent": level - 1}
-                    ),
+                    "default_indent": {**default_format_props, "indent": level},
+                    "date_indent": {**date_format_props, "indent": level},
+                    "total_indent": {
+                        **default_format_props,
+                        "bold": True,
+                        "indent": level - 1,
+                    },
                 }
 
             level_formats = workbook_formats[level]
@@ -374,10 +309,10 @@ class AccountReportExport(models.Model):
         # Set the (Account) Name column width to 50.
         # If we have account lines and split the name and code in two columns, we will also set the code column.
         if len(account_lines_split_names) > 0:
-            sheet.set_column(0, 0, 13)
-            sheet.set_column(1, 1, 50)
+            sheet.column(0, 0, 13)
+            sheet.column(1, 1, 50)
         else:
-            sheet.set_column(0, 0, 50)
+            sheet.column(0, 0, 50)
 
         _debug.logic(
             "xlsx_columns_layout",
@@ -492,7 +427,7 @@ class AccountReportExport(models.Model):
             # If we have a separate account code column, add a title for it
             write_cell(sheet, x_offset - 2, y_offset, _("Code"), title_format)
             write_cell(sheet, x_offset - 1, y_offset, _("Account Name"), title_format)
-        sheet.set_column(x_offset, x_offset + len(options["columns"]), 10)
+        sheet.column(x_offset, x_offset + len(options["columns"]), 10)
 
         for column in options["columns"]:
             colspan = column.get("colspan", 1)
@@ -533,7 +468,7 @@ class AccountReportExport(models.Model):
             for wb_format in (
                 s for s in workbook_formats[max_level] if "total" not in s
             ):
-                workbook_formats[max_level][wb_format].set_bold(False)
+                workbook_formats[max_level][wb_format]["bold"] = False
 
         # Add lines.
         counter = 1
@@ -663,6 +598,7 @@ class AccountReportExport(models.Model):
             lines=len(lines),
             columns=len(options["columns"]),
         )
+        return sheet
 
     @_debug.perf.timed
     def _add_xlsx_currency_codes_columns(self, options, lines):
@@ -714,15 +650,12 @@ class AccountReportExport(models.Model):
             line["columns"] = new_column_values
 
     @_debug.perf.timed
-    def _add_options_xlsx_sheet(self, workbook, options_list):
-        """Adds a new sheet for xlsx report exports with a summary of all filters and options activated at the moment of the export."""
-        filters_sheet = workbook.add_worksheet(_("Filters"))
-        # Set first and second column widths.
-        filters_sheet.set_column(0, 0, 20)
-        filters_sheet.set_column(1, 1, 50)
-        name_style = workbook.add_format(
-            {"font_name": "Arial", "bold": True, "bottom": 2}
-        )
+    def _get_xlsx_options_sheet(self, options_list):
+        """A sheet summarising every filter and option active at the moment of the export."""
+        filters_sheet = SheetBuilder(_("Filters"))
+        filters_sheet.column(0, 0, 20)
+        filters_sheet.column(1, 1, 50)
+        name_style = {"font_name": "Arial", "bold": True, "bottom": 2}
         y_offset = 0
 
         if len(options_list) == 1:
@@ -732,7 +665,7 @@ class AccountReportExport(models.Model):
             )._write_report_options_to_xlsx_sheet(
                 options_list[0], filters_sheet, y_offset
             )
-            return
+            return filters_sheet
 
         # Find uncommon keys
         options_sets = list(map(set, options_list))
@@ -756,7 +689,7 @@ class AccountReportExport(models.Model):
         )
 
         # Write common options to the sheet.
-        filters_sheet.write(y_offset, 0, _("All"), name_style)
+        filters_sheet.cell(y_offset, 0, _("All"), name_style)
         y_offset += 1
         y_offset = self._write_report_options_to_xlsx_sheet(
             common_options_values, filters_sheet, y_offset
@@ -765,7 +698,7 @@ class AccountReportExport(models.Model):
         for report_options in options_list:
             report = self.env["report.formula"].browse(report_options["report_id"])
 
-            filters_sheet.write(y_offset, 0, report.name, name_style)
+            filters_sheet.cell(y_offset, 0, report.name, name_style)
             y_offset += 1
             new_offset = report._write_report_options_to_xlsx_sheet(
                 report_options, filters_sheet, y_offset, uncommon_options_keys
@@ -774,18 +707,19 @@ class AccountReportExport(models.Model):
             if y_offset == new_offset:
                 y_offset -= 1
                 # Clear the report name's cell since it didn't add any data to the xlsx.
-                filters_sheet.write(y_offset, 0, " ")
+                filters_sheet.cell(y_offset, 0, " ")
             else:
                 y_offset = new_offset
+        return filters_sheet
 
     @_debug.perf.timed
     def _write_report_options_to_xlsx_sheet(
         self, options, sheet, y_offset, options_to_print=None
     ):
         def write_filter_lines(filter_title, filter_lines, y_offset):
-            sheet.write(y_offset, 0, filter_title)
+            sheet.cell(y_offset, 0, filter_title)
             for line in filter_lines:
-                sheet.write(y_offset, 1, line)
+                sheet.cell(y_offset, 1, line)
                 y_offset += 1
             return y_offset
 

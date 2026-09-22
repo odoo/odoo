@@ -23,6 +23,7 @@ DECLARED_SUBMODULE_EXPORTS: dict[str, set[str]] = {
         "layout",
         "readers",
         "representations",
+        "sheets",
         "writers",
     },
     "filesystem": {"appdirs", "mimetypes", "osutil"},

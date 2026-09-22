@@ -8,6 +8,7 @@ from . import guess
 from . import layout
 from . import readers
 from . import representations
+from . import sheets
 from . import writers
 from .coerce import (
     infer_separators,
@@ -86,6 +87,8 @@ from .readers import (
     registered_readers,
     unregister_reader,
 )
+from .representations import SHEETS
+from .sheets import SheetBuilder
 from .writers import (
     BaseWriter,
     get_writers,
@@ -118,6 +121,7 @@ __all__ = [
     "REPRESENTATIONS",
     "RIGHT",
     "ROWS",
+    "SHEETS",
     "SIGN_STYLES",
     "TEXT",
     "TEXT_MAX_CHARS",
@@ -130,6 +134,7 @@ __all__ = [
     "Field",
     "Format",
     "Layout",
+    "SheetBuilder",
     "canonical_mimetypes",
     "coerce",
     "cues_as_text",
@@ -175,6 +180,7 @@ __all__ = [
     "render_srt",
     "render_vtt",
     "representations",
+    "sheets",
     "strip_currency_symbol",
     "to_date",
     "to_datetime",
