@@ -51,6 +51,11 @@ class ServerActions(models.Model):
             if action.state == 'sms' and (action.model_id.transient or not action.model_id.is_mail_thread):
                 raise ValidationError(_("Sending SMS can only be done on a not transient mail.thread model"))
 
+    def _get_runner_records(self, eval_context, active_ids):
+        if self.state == 'sms':
+            return eval_context['model']
+        return super()._get_runner_records(eval_context, active_ids)
+
     def _run_action_sms_multi(self, eval_context=None):
         # TDE CLEANME: when going to new api with server action, remove action
         if not self.sms_template_id or self._is_recompute():
