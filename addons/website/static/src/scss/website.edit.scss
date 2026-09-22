@@ -11,6 +11,17 @@ header#top:not(.o_header_is_scrolled) + main #wrap .oe_drop_zone:first-child {
     z-index: $o-we-dropzone-z-index + 1;
 }
 
+// Links are disabled in edit mode, so their covered blocks cannot reliably detect hover.
+*:has(> .stretched-link, > .slide-link) {
+    .o_block_hover:hover {
+        transform: none !important;
+
+        &::before {
+            display: none !important;
+        }
+    }
+}
+
 // The first and last dropzones in the “parallax” snippet are in the same place
 // as the dropzones just before and after it, so we shift them a bit.
 .parallax > .oe_structure > .oe_drop_zone {
