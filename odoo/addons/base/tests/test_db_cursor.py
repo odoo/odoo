@@ -5652,6 +5652,37 @@ class TestPartitionedTablesAreVisible(BaseCase):
             )
 
 
+class TestInheritedColumnsAreTheParents(BaseCase):
+    def test_a_member_s_inherited_column_is_named_and_kept(self):
+        # A table-inheritance member cannot drop a column its parent declares
+        # (PG: "cannot drop inherited column"); the drop path skips it and the
+        # parent's field owns it.
+        cr = db_connect(common.get_db_name()).cursor()
+        try:
+            cr.execute("DROP TABLE IF EXISTS _test_tree_child, _test_tree_root CASCADE")
+            cr.execute("CREATE TABLE _test_tree_root (id int, shared int)")
+            cr.execute(
+                "CREATE TABLE _test_tree_child (own int) INHERITS (_test_tree_root)"
+            )
+            self.assertEqual(
+                sql_schema.get_inherited_columns(
+                    cr, "_test_tree_child", ["shared", "own", "absent"]
+                ),
+                {"shared"},
+            )
+            self.assertEqual(
+                sql_schema.get_inherited_columns(cr, "_test_tree_root", ["shared"]),
+                set(),
+            )
+            self.assertEqual(
+                sql_schema.drop_columns(cr, "_test_tree_child", ["own"]), ["own"]
+            )
+            self.assertTrue(sql_schema.column_exists(cr, "_test_tree_child", "shared"))
+        finally:
+            cr.rollback()
+            cr.close()
+
+
 class TestDdlDrainsSiblingConnections(BaseCase):
     def _prepare_sibling(self, cr, tbl):
         for _ in range(5):

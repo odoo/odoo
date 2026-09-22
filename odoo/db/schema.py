@@ -528,6 +528,26 @@ def set_not_null(cr: BaseCursor, tablename: str, columnname: str) -> None:
     )
 
 
+def get_inherited_columns(
+    cr: BaseCursor, tablename: str, columnnames: Iterable[str]
+) -> set[str]:
+    names = list(columnnames)
+    if not names:
+        return set()
+    cr.execute(
+        SQL(
+            "SELECT a.attname FROM pg_attribute a "
+            "JOIN pg_class c ON c.oid = a.attrelid "
+            "JOIN pg_namespace n ON n.oid = c.relnamespace "
+            "WHERE n.nspname = current_schema() AND c.relname = %s "
+            "AND a.attname = ANY(%s) AND a.attinhcount > 0",
+            tablename,
+            names,
+        )
+    )
+    return {name for (name,) in cr.fetchall()}
+
+
 def drop_columns(
     cr: BaseCursor, tablename: str, columnnames: Iterable[str]
 ) -> list[str]:

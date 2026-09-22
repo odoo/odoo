@@ -70,7 +70,7 @@ def _split_shared_parties(cr, env):
             )
         cr.execute(
             """
-            UPDATE res_partner_bank bank
+            UPDATE res_partner_bank_account bank
                SET partner_id = %s
               FROM employee_bank_account_rel rel
              WHERE rel.employee_id = %s

@@ -813,6 +813,17 @@ class IrModelFields(models.Model):
             if sql.get_table_kind(cr, table) != sql.TableKind.Regular:
                 _debug.logic("drop_columns.skipped", table=table, reason="not_regular")
                 continue
+            inherited = sql.get_inherited_columns(cr, table, names)
+            if inherited:
+                _debug.logic(
+                    "drop_columns.skipped",
+                    table=table,
+                    columns=sorted(inherited),
+                    reason="inherited",
+                )
+                names = [name for name in names if name not in inherited]
+            if not names:
+                continue
             dropped = sql.drop_columns(cr, table, names)
             _debug.lifecycle("drop_columns", table=table, columns=dropped)
 
