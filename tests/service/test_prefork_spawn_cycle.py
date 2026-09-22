@@ -35,6 +35,7 @@ class TestTheWorkerCensusCrossesTheFork:
         obj.workers_http = dict.fromkeys((1, 2, 3), MagicMock())
         obj.workers_cron = dict.fromkeys((4,), MagicMock())
         obj.workers_job = dict.fromkeys((5, 6), MagicMock())
+        obj.workers_stream = dict.fromkeys((7,), MagicMock())
         obj._census.written_at = float("-inf")
         with server_settings.override(data_dir=str(tmp_path)):
             yield obj
@@ -51,7 +52,7 @@ class TestTheWorkerCensusCrossesTheFork:
         got = self._child_of(master)._census.read()
 
         assert got == {
-            "workers": {"http": 3, "cron": 1, "job": 2},
+            "workers": {"http": 3, "cron": 1, "job": 2, "stream": 1},
             "worker_population": 3,
             "worker_generation": 7,
             "worker_exits": dict.fromkeys(_prefork._EXIT_OUTCOMES, 0),
@@ -202,6 +203,7 @@ def prefork():
     obj.workers_http = {}
     obj.workers_cron = {}
     obj.workers_job = {}
+    obj.workers_stream = {}
     obj.long_polling_pid = None
     obj._respawn_holds = {}
     obj.queue = []
@@ -336,12 +338,17 @@ class TestProcessSpawnChecksSignallingOncePerCycle:
         checks = []
         registry = MagicMock()
         registry.check_signaling.side_effect = checks.append
-        cfg = {"http_enable": True, "max_cron_threads": 2, "job_workers": 2}
+        cfg = {
+            "http_enable": True,
+            "max_cron_threads": 2,
+            "job_workers": 2,
+            "stream_workers": 1,
+        }
         prefork.population = 4
 
         spawned, _ = self._run(prefork, {"db1": registry}, cfg)
 
-        assert len(spawned) == 8, spawned
+        assert len(spawned) == 9, spawned
         assert len(checks) == 1, (
             f"check_signaling ran {len(checks)} times for one spawn cycle that "
             f"forked {len(spawned)} workers; it must run once, before the first "
@@ -351,7 +358,12 @@ class TestProcessSpawnChecksSignallingOncePerCycle:
 
     def test_the_live_registry_cache_is_never_emptied(self, prefork):
         registries = {"db1": MagicMock()}
-        cfg = {"http_enable": False, "max_cron_threads": 1, "job_workers": 0}
+        cfg = {
+            "http_enable": False,
+            "max_cron_threads": 1,
+            "stream_workers": 0,
+            "job_workers": 0,
+        }
         self._run(prefork, registries, cfg)
         assert registries == {"db1": registries["db1"]}, (
             "spawn_missing_workers mutated the registry mapping it was handed; the "
@@ -360,7 +372,12 @@ class TestProcessSpawnChecksSignallingOncePerCycle:
         )
 
     def test_no_registries_means_no_check_and_still_spawns(self, prefork):
-        cfg = {"http_enable": False, "max_cron_threads": 1, "job_workers": 0}
+        cfg = {
+            "http_enable": False,
+            "max_cron_threads": 1,
+            "stream_workers": 0,
+            "job_workers": 0,
+        }
         spawned, fake_db = self._run(prefork, {}, cfg)
         assert spawned == ["WorkerCron"]
         fake_db.close_all.assert_not_called()
@@ -369,7 +386,12 @@ class TestProcessSpawnChecksSignallingOncePerCycle:
         bad = MagicMock()
         bad.cursor.side_effect = RuntimeError("db gone")
         good = MagicMock()
-        cfg = {"http_enable": False, "max_cron_threads": 2, "job_workers": 0}
+        cfg = {
+            "http_enable": False,
+            "max_cron_threads": 2,
+            "stream_workers": 0,
+            "job_workers": 0,
+        }
 
         spawned, _ = self._run(prefork, {"bad": bad, "good": good}, cfg)
 
@@ -379,7 +401,12 @@ class TestProcessSpawnChecksSignallingOncePerCycle:
         good.cursor.assert_called_once()
 
     def test_the_spawn_hold_suppresses_the_whole_cycle(self, prefork):
-        cfg = {"http_enable": True, "max_cron_threads": 2, "job_workers": 2}
+        cfg = {
+            "http_enable": True,
+            "max_cron_threads": 2,
+            "job_workers": 2,
+            "stream_workers": 1,
+        }
         with patch.object(_prefork.time, "monotonic", return_value=100.0):
             prefork._get_respawn_hold(_prefork.SPAWN_HOLD).not_before = 200.0
             spawned, _ = self._run(prefork, {"db1": MagicMock()}, cfg)
@@ -390,7 +417,12 @@ class TestProcessSpawnChecksSignallingOncePerCycle:
 
     def test_a_crash_loop_in_one_kind_holds_only_that_kind(self, prefork):
         """One population's early deaths do not delay another's replacements."""
-        cfg = {"http_enable": True, "max_cron_threads": 1, "job_workers": 1}
+        cfg = {
+            "http_enable": True,
+            "max_cron_threads": 1,
+            "stream_workers": 0,
+            "job_workers": 1,
+        }
         with patch.object(_prefork.time, "monotonic", return_value=100.0):
             prefork._get_respawn_hold("WorkerCron").not_before = 200.0
             spawned, _ = self._run(prefork, {"db1": MagicMock()}, cfg)
@@ -398,7 +430,12 @@ class TestProcessSpawnChecksSignallingOncePerCycle:
         assert "WorkerHTTP" in spawned and "WorkerJob" in spawned
 
     def test_a_failed_spawn_stops_the_cycle_instead_of_looping(self, prefork):
-        cfg = {"http_enable": False, "max_cron_threads": 3, "job_workers": 2}
+        cfg = {
+            "http_enable": False,
+            "max_cron_threads": 3,
+            "stream_workers": 0,
+            "job_workers": 2,
+        }
         with (
             server_settings.override(**cfg),
             patch.object(_prefork.Registry, "registries", MagicMock(snapshot={})),

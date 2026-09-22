@@ -28,6 +28,21 @@
         sequence="10" />
 
     <menuitem
+        id="menu_integration_stream_list"
+        name="Streams"
+        parent="menu_integration_services"
+        action="action_integration_stream"
+        sequence="30" />
+
+    <menuitem
+        id="menu_integration_stream_outbox"
+        name="Stream Outbox"
+        parent="menu_integration_services"
+        action="action_integration_stream_outbox"
+        sequence="31"
+        groups="group_api_transport_manager" />
+
+    <menuitem
         id="menu_integration_config"
         name="Configuration"
         parent="menu_integration_root"

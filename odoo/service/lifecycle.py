@@ -345,7 +345,12 @@ def _get_connection_budget_demand() -> tuple[int, int]:
     maxconn = settings.db_maxconn
     if not settings.workers:
         return 1, maxconn
-    children = settings.workers + settings.max_cron_threads + settings.job_workers
+    children = (
+        settings.workers
+        + settings.max_cron_threads
+        + settings.job_workers
+        + settings.stream_workers
+    )
     demand = children * maxconn
     processes = children
     if settings.http_enable:
@@ -445,7 +450,9 @@ def _get_descriptor_budget_demand() -> int:
     settings = current()
     threads, _ = compute_http_thread_limit(settings)
     http = threads + TransportLimits.from_environment().max_idle_connections
-    listeners = settings.max_cron_threads + settings.job_workers
+    listeners = (
+        settings.max_cron_threads + settings.job_workers + settings.stream_workers
+    )
     if settings.workers:
         worker = settings.db_maxconn + 1
         evented = (settings.db_maxconn_gevent or settings.db_maxconn) + http

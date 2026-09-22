@@ -267,7 +267,8 @@ class TestTheReadyLineNamesTheDeploymentShape:
             said = self._said(server)
         assert said == (
             "Ready: threaded, pid %d; HTTP 127.0.0.1:8069 (14 threads), 2 cron "
-            "thread(s), 1 job thread(s); limit_time_real 120s, cron 300s, job 300s; "
+            "thread(s), 1 job thread(s), 1 stream thread(s); limit_time_real 120s, "
+            "cron 300s, job 300s; "
             "limit_memory_soft 1024 MiB; db_maxconn 32" % server.pid
         )
 
@@ -291,7 +292,8 @@ class TestTheReadyLineNamesTheDeploymentShape:
             said = self._said(server)
         assert said == (
             "Ready: prefork, pid %d; HTTP 127.0.0.1:8069 (4 workers), websocket "
-            "127.0.0.1:8072, 2 cron worker(s), 0 job worker(s); limit_request 1000, "
+            "127.0.0.1:8072, 2 cron worker(s), 0 job worker(s), 1 stream worker(s); "
+            "limit_request 1000, "
             "limit_time_cpu 60s; limit_time_real 120s, cron 120s, job 120s; "
             "limit_memory_soft 2048 MiB; db_maxconn 64" % server.pid
         )

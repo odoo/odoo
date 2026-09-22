@@ -201,6 +201,8 @@ def server(tmp_path):
                 "0",
                 "--job-workers",
                 "0",
+                "--stream-workers",
+                "0",
                 "--db_maxconn",
                 str(DB_MAXCONN),
                 *args,

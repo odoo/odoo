@@ -59,7 +59,13 @@ def test_reload_drain_preserves_shutdown_for_the_supervisor(master, sig):
 
 @pytest.fixture
 def master():
-    with override(workers=2, http_enable=False, max_cron_threads=0, job_workers=0):
+    with override(
+        workers=2,
+        http_enable=False,
+        max_cron_threads=0,
+        job_workers=0,
+        stream_workers=0,
+    ):
         srv = _prefork.PreforkServer(None)
         srv.pipe = srv.open_pipe()
         srv.stop_workers_gracefully = MagicMock()

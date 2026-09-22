@@ -42,3 +42,4 @@ from . import test_inbound_exchange_recording
 from . import test_egress_recording
 from . import test_record_receiver
 from . import test_connection_gate
+from . import test_stream

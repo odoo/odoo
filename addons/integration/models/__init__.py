@@ -12,3 +12,4 @@ from . import credential_credential
 from . import ir_actions_server
 from . import ir_http
 from . import integration_egress
+from . import integration_stream

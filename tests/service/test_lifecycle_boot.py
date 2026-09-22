@@ -139,6 +139,7 @@ def _demand(**overrides):
         "workers": 0,
         "max_cron_threads": 0,
         "job_workers": 0,
+        "stream_workers": 0,
         "http_enable": True,
         **overrides,
     }
@@ -183,8 +184,11 @@ class TestConnectionBudgetDemand:
         _, demand = _demand(workers=1, db_maxconn=64, db_maxconn_gevent=0)
         assert demand == 2 * 64, "0 means unset, not a pool of zero"
 
-    def test_cron_and_job_workers_count_as_processes(self):
-        assert _demand(workers=1, max_cron_threads=3, job_workers=2)[0] == 6 + 1, (
+    def test_cron_job_and_stream_workers_count_as_processes(self):
+        assert (
+            _demand(workers=1, max_cron_threads=3, job_workers=2, stream_workers=1)[0]
+            == 7 + 1
+        ), (
             "they are forked children with their own pools, not threads inside "
             "an http worker"
         )

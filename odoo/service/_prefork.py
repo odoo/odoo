@@ -39,6 +39,7 @@ from ._worker import (
     WorkerCron,
     WorkerHTTP,
     WorkerJob,
+    WorkerStream,
 )
 from .lifecycle import preload_registries
 from .settings import SD_LISTEN_FDS_START
@@ -140,6 +141,7 @@ class PreforkServer(CommonServer):
                 "http": len(self.workers_http),
                 "cron": len(self.workers_cron),
                 "job": len(self.workers_job),
+                "stream": len(self.workers_stream),
             },
             "worker_population": self.population,
             "worker_generation": self.generation,
@@ -180,6 +182,7 @@ class PreforkServer(CommonServer):
         self.workers_http: dict[int, WorkerHTTP] = {}
         self.workers_cron: dict[int, WorkerCron] = {}
         self.workers_job: dict[int, WorkerJob] = {}
+        self.workers_stream: dict[int, WorkerStream] = {}
         self.workers: dict[int, Worker] = {}
         self._killed_workers: dict[int, Worker] = {}
         # Worker exits since start by outcome, for the census and /metrics:
@@ -397,6 +400,7 @@ class PreforkServer(CommonServer):
             self.workers_http.pop(pid, None)
             self.workers_cron.pop(pid, None)
             self.workers_job.pop(pid, None)
+            self.workers_stream.pop(pid, None)
             self.workers.pop(pid).close()
 
     def _record_killed_worker(self, pid: int) -> None:
@@ -601,6 +605,7 @@ class PreforkServer(CommonServer):
             len(self.workers_http) - len(self._retiring_workers) < self.population
             or len(self.workers_cron) < self.settings.max_cron_threads
             or len(self.workers_job) < self.settings.job_workers
+            or len(self.workers_stream) < self.settings.stream_workers
             or (self.settings.http_enable and not self.long_polling_pid)
         ):
             _debug.pipeline(
@@ -612,6 +617,8 @@ class PreforkServer(CommonServer):
                 max_cron_threads=self.settings.max_cron_threads,
                 job=len(self.workers_job),
                 job_workers=self.settings.job_workers,
+                stream=len(self.workers_stream),
+                stream_workers=self.settings.stream_workers,
                 long_polling=self.long_polling_pid is not None,
                 http_enable=self.settings.http_enable,
             )
@@ -660,6 +667,12 @@ class PreforkServer(CommonServer):
         ):
             check_registries()
             if self.spawn_worker(WorkerJob, self.workers_job) is None:
+                return
+        while len(self.workers_stream) < self.settings.stream_workers and not (
+            self._is_respawn_held(WorkerStream.__name__)
+        ):
+            check_registries()
+            if self.spawn_worker(WorkerStream, self.workers_stream) is None:
                 return
 
     def _retire_excess_workers(self) -> None:
@@ -806,7 +819,8 @@ class PreforkServer(CommonServer):
             )
         return (
             f"{http}, {settings.max_cron_threads} cron worker(s), "
-            f"{settings.job_workers} job worker(s); limit_request {self.limit_request}, "
+            f"{settings.job_workers} job worker(s), "
+            f"{settings.stream_workers} stream worker(s); limit_request {self.limit_request}, "
             f"limit_time_cpu {settings.limit_time_cpu}s"
         )
 
@@ -836,6 +850,8 @@ class PreforkServer(CommonServer):
         if len(self.workers_cron) < self.settings.max_cron_threads:
             return False
         if len(self.workers_job) < self.settings.job_workers:
+            return False
+        if len(self.workers_stream) < self.settings.stream_workers:
             return False
         return all(worker.ready for worker in self.workers.values())
 

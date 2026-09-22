@@ -55,7 +55,9 @@ odoo/
 │   │   children read for /web/metrics), _worker, _watcher (on libs/inotify), _transport (one
 │   │   HTTP/1.1 exchange: head, body reader, WSGI environ, response framing,
 │   │   the access log; what a prefork worker serves a connection with),
-│   │   httpd (the threaded server: selector, pool, keep-alive), _cron, lifecycle,
+│   │   httpd (the threaded server: selector, pool, keep-alive), _cron, _stream (the
+│   │   stream worker's step: one leader lease per database, the connections a
+│   │   process holds between sweeps, closed on its way out), lifecycle,
 │   │   _factory (picks and runs a server), _process_state (its two globals),
 │   │   settings (ServerSettings: derived from the live config on each current() read; a change is logged when the lifecycle channel is on)
 │   ├── db/         Database management, the /web/database/manager service

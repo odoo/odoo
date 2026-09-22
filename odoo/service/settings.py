@@ -94,6 +94,7 @@ class ServerSettings:
     websocket_socket_activation: bool = False
     max_cron_threads: int = 2
     job_workers: int = 1
+    stream_workers: int = 1
     limit_request: int = 2**16
     limit_time_real: int = 120
     limit_time_real_cron: int = INHERIT_FROM_CRON
@@ -101,6 +102,7 @@ class ServerSettings:
     limit_time_cpu: int = 60
     limit_time_worker_cron: int = 0
     limit_time_worker_job: int = INHERIT_FROM_CRON
+    limit_time_worker_stream: int = 0
     limit_memory_soft: int = 2048 * 1024 * 1024
     limit_memory_soft_gevent: int = 0
     dev_mode: tuple[str, ...] = ()
@@ -131,6 +133,7 @@ class ServerSettings:
             websocket_socket_activation=activated_sockets >= 2,
             max_cron_threads=int(config["max_cron_threads"] or 0),
             job_workers=int(config["job_workers"] or 0),
+            stream_workers=int(config["stream_workers"] or 0),
             limit_request=int(config["limit_request"] or 0),
             limit_time_real=int(config["limit_time_real"]),
             limit_time_real_cron=int(config["limit_time_real_cron"]),
@@ -138,6 +141,7 @@ class ServerSettings:
             limit_time_cpu=int(config["limit_time_cpu"]),
             limit_time_worker_cron=int(config["limit_time_worker_cron"]),
             limit_time_worker_job=int(config["limit_time_worker_job"]),
+            limit_time_worker_stream=int(config["limit_time_worker_stream"]),
             limit_memory_soft=int(config["limit_memory_soft"] or 0),
             limit_memory_soft_gevent=int(config["limit_memory_soft_gevent"] or 0),
             dev_mode=tuple(config["dev_mode"] or ()),
@@ -182,7 +186,7 @@ class ServerSettings:
     def get_real_time_budget(self, kind: str) -> float:
         if kind == "job":
             return self.job_real_time_budget
-        if kind == "cron":
+        if kind in ("cron", "stream"):
             return self.cron_real_time_budget
         return max(self.limit_time_real, 0)
 
@@ -216,6 +220,7 @@ def _get_settings_from_live_config() -> ServerSettings:
             http_port=settings.http_port,
             max_cron_threads=settings.max_cron_threads,
             job_workers=settings.job_workers,
+            stream_workers=settings.stream_workers,
             db_maxconn=settings.db_maxconn,
             test_enable=settings.test_enable,
         )

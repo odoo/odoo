@@ -289,6 +289,9 @@ class IntegrationExchange(models.Model):
     )
 
     _CHANNEL_MIXINS = ("mixin.integration.channel", "mixin.inbound.gate")
+    # Channels that are neither a gate nor an outbound service: a stream is
+    # its own kind of counterpart.
+    _CHANNEL_MODELS = ("integration.stream",)
 
     @api.model
     def _selection_channel_models(self):
@@ -300,7 +303,11 @@ class IntegrationExchange(models.Model):
         if not roots:
             return [("integration.service", "Outbound Service")]
 
-        channels = []
+        channels = [
+            (name, self.env.registry[name]._description)
+            for name in self._CHANNEL_MODELS
+            if name in self.env.registry
+        ]
         visited = set()
         queue = [child for root in roots for child in root._inherit_children]
 

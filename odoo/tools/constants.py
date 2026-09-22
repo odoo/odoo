@@ -3,11 +3,14 @@ __all__ = [
     "CRON_TRIGGER_CHANNEL",
     "JOB_QUEUE_CHANNEL",
     "REGISTRY_CACHES",
+    "STREAM_CHANNEL",
 ]
 
 CRON_TRIGGER_CHANNEL = "cron_trigger"
 
 JOB_QUEUE_CHANNEL = "job_queue"
+
+STREAM_CHANNEL = "stream_reconcile"
 
 
 REGISTRY_CACHES = {

@@ -85,6 +85,7 @@ class TestServiceMetrics:
             workers_http={1: object(), 2: object()},
             workers_cron={3: object()},
             workers_job={},
+            workers_stream={4: object()},
             population=4,
             generation=17,
             _exits={"clean": 2, "crash": 1},
@@ -99,7 +100,7 @@ class TestServiceMetrics:
         with patch.object(_process_state, "server", server):
             out = mod.get_service_metrics()
         assert out["flavor"] == "prefork"
-        assert out["workers"] == {"http": 2, "cron": 1, "job": 0}
+        assert out["workers"] == {"http": 2, "cron": 1, "job": 0, "stream": 1}
         assert out["worker_population"] == 4
         assert out["worker_generation"] == 17
         assert out["worker_exits"] == {"clean": 2, "crash": 1}
@@ -163,7 +164,7 @@ class TestServiceMetrics:
         assert out["http_threads_max"] == 31
         assert out["threads"]["http"] >= 1
         assert out["overruns_cancelled"] == 0
-        assert set(out["threads"]) == {"http", "cron", "job", "websocket"}, (
+        assert set(out["threads"]) == {"http", "cron", "job", "stream", "websocket"}, (
             "websocket threads are long-lived and hold a thread and a "
             "connection each; they are exempt from check_limits, not from "
             "being counted"
@@ -218,7 +219,7 @@ class TestEveryServerAnswersForItself:
         with patch.object(_process_state, "server", server):
             out = mod.get_service_metrics()
         assert out["flavor"] == "evented"
-        assert set(out["threads"]) == {"http", "cron", "job", "websocket"}
+        assert set(out["threads"]) == {"http", "cron", "job", "stream", "websocket"}
         assert "http_threads_max" in out
         assert "limits_reached_threads" not in out, (
             "the evented server has no limit monitor; reporting its count as "

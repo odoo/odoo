@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_integration_stream_list" model="ir.ui.view">
+        <field name="name">integration.stream.list</field>
+        <field name="model">integration.stream</field>
+        <field name="arch" type="xml">
+            <list
+                decoration-danger="state == 'error'"
+                decoration-muted="state == 'stopped'"
+                decoration-success="state == 'open'"
+                decoration-warning="state in ('connecting', 'backoff')">
+                <field name="name" />
+                <field name="protocol" />
+                <field name="url" />
+                <field name="state" widget="badge" />
+                <field name="owner" optional="show" />
+                <field name="date_last_frame" optional="show" />
+                <field name="frames_in" optional="hide" />
+                <field name="frames_out" optional="hide" />
+                <field name="outbox_pending_count" optional="show" />
+                <field
+                    name="company_id"
+                    optional="hide"
+                    groups="base.group_multi_company" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_integration_stream_form" model="ir.ui.view">
+        <field name="name">integration.stream.form</field>
+        <field name="model">integration.stream</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="action_start"
+                        type="object"
+                        string="Start"
+                        invisible="active"
+                        class="oe_highlight" />
+                    <button
+                        name="action_stop"
+                        type="object"
+                        string="Stop"
+                        invisible="not active" />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="e.g. Scale MQTT" /></h1>
+                    </div>
+                    <group>
+                        <group string="Dial">
+                            <field name="protocol" />
+                            <field name="url" />
+                            <field name="credential_id" />
+                            <field name="login" />
+                            <field name="connection_id" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company" />
+                        </group>
+                        <group string="Subject">
+                            <field name="res_model" />
+                            <field name="res_id" />
+                            <field name="active" invisible="1" />
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Timing">
+                            <field name="heartbeat_seconds" />
+                            <field name="backoff_seconds" />
+                            <field name="backoff_max_seconds" />
+                        </group>
+                        <group string="Held by">
+                            <field name="owner" />
+                            <field name="state_message" />
+                            <field name="date_state" />
+                            <field name="attempts" />
+                            <field name="date_next_attempt" />
+                            <field name="date_last_frame" />
+                            <field name="frames_in" />
+                            <field name="frames_out" />
+                            <field name="outbox_pending_count" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="subscriptions" string="Subscriptions">
+                            <field name="subscriptions" widget="json" />
+                        </page>
+                        <page name="options" string="Options">
+                            <field name="options" widget="json" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_integration_stream_search" model="ir.ui.view">
+        <field name="name">integration.stream.search</field>
+        <field name="model">integration.stream</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="url" />
+                <field name="res_model" />
+                <filter
+                    name="filter_open"
+                    string="Open"
+                    domain="[('state', '=', 'open')]" />
+                <filter
+                    name="filter_not_open"
+                    string="Not open"
+                    domain="[('state', '!=', 'open')]" />
+                <filter
+                    name="filter_inactive"
+                    string="Stopped"
+                    domain="[('active', '=', False)]" />
+                <group>
+                    <filter
+                        name="group_protocol"
+                        string="Protocol"
+                        context="{'group_by': 'protocol'}" />
+                    <filter
+                        name="group_state"
+                        string="State"
+                        context="{'group_by': 'state'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_integration_stream" model="ir.actions.act_window">
+        <field name="name">Streams</field>
+        <field name="res_model">integration.stream</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_integration_stream_search" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No stream yet</p>
+            <p>A stream is a connection the server keeps open on behalf of a record: an MQTT
+            session, a websocket, a Modbus link. The stream worker that leads this database
+            holds it, redials it when it drops and sends what its outbox holds.</p>
+        </field>
+    </record>
+
+    <record id="view_integration_stream_outbox_list" model="ir.ui.view">
+        <field name="name">integration.stream.outbox.list</field>
+        <field name="model">integration.stream.outbox</field>
+        <field name="arch" type="xml">
+            <list
+                decoration-danger="state == 'failed'"
+                decoration-muted="state == 'sent'">
+                <field name="create_date" />
+                <field name="stream_id" />
+                <field name="state" widget="badge" />
+                <field name="attempts" optional="hide" />
+                <field name="date_sent" optional="show" />
+                <field name="error" optional="show" />
+                <button
+                    name="action_retry"
+                    type="object"
+                    string="Retry"
+                    icon="fa-repeat"
+                    invisible="state != 'failed'" />
+            </list>
+        </field>
+    </record>
+
+    <record id="action_integration_stream_outbox" model="ir.actions.act_window">
+        <field name="name">Stream Outbox</field>
+        <field name="res_model">integration.stream.outbox</field>
+        <field name="view_mode">list</field>
+    </record>
+
+</odoo>

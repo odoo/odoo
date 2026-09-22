@@ -35,6 +35,7 @@ def make_config(**overrides):
         "workers": 0,
         "max_cron_threads": 2,
         "job_workers": 2,
+        "stream_workers": 1,
         "http_enable": True,
     }
     base.update(overrides)
@@ -52,18 +53,22 @@ class TestConnectionBudgetDemand:
         with server_settings.override(**make_config(workers=0)):
             assert mod._get_connection_budget_demand() == (1, 64)
 
-    def test_prefork_counts_http_cron_job_and_the_evented_child(self, mod):
+    def test_prefork_counts_http_cron_job_stream_and_the_evented_child(self, mod):
         with server_settings.override(
             **make_config(workers=4, max_cron_threads=2, job_workers=2)
         ):
             processes, demand = mod._get_connection_budget_demand()
-        assert processes == 9
-        assert demand == 9 * 64
+        assert processes == 10, "4 http, 2 cron, 2 job, 1 stream, the evented child"
+        assert demand == 10 * 64
 
     def test_evented_child_uses_its_own_ceiling_when_set(self, mod):
         with server_settings.override(
             **make_config(
-                workers=1, max_cron_threads=0, job_workers=0, db_maxconn_gevent=8
+                workers=1,
+                max_cron_threads=0,
+                job_workers=0,
+                stream_workers=0,
+                db_maxconn_gevent=8,
             )
         ):
             processes, demand = mod._get_connection_budget_demand()
@@ -73,7 +78,11 @@ class TestConnectionBudgetDemand:
     def test_no_evented_child_when_http_is_disabled(self, mod):
         with server_settings.override(
             **make_config(
-                workers=2, max_cron_threads=0, job_workers=0, http_enable=False
+                workers=2,
+                max_cron_threads=0,
+                job_workers=0,
+                stream_workers=0,
+                http_enable=False,
             )
         ):
             processes, demand = mod._get_connection_budget_demand()
@@ -82,7 +91,9 @@ class TestConnectionBudgetDemand:
 
     def test_master_process_is_excluded(self, mod):
         with server_settings.override(
-            **make_config(workers=1, max_cron_threads=0, job_workers=0)
+            **make_config(
+                workers=1, max_cron_threads=0, job_workers=0, stream_workers=0
+            )
         ):
             processes, _ = mod._get_connection_budget_demand()
         assert processes == 2
@@ -113,15 +124,15 @@ class TestWarnOnConnectionBudget:
         logger.warning.assert_called_once()
         template, *args = logger.warning.call_args[0]
         message = template % tuple(args)
-        assert "9 process" in message, message
-        assert "576" in message, message
+        assert "10 process" in message, message
+        assert "640" in message, message
         assert "97" in message, message
-        assert "to 10 or less" in message, message
+        assert "to 9 or less" in message, message
 
     def test_silent_when_the_budget_fits(self, mod):
         logger = self._run(
             mod,
-            make_config(workers=4, max_cron_threads=2, job_workers=2, db_maxconn=10),
+            make_config(workers=4, max_cron_threads=2, job_workers=2, db_maxconn=9),
         )
         logger.warning.assert_not_called()
 
@@ -600,7 +611,11 @@ class TestTheOpenFileBudgetIsEnsuredAtBoot:
 
         with (
             server_settings.override(
-                workers=0, db_maxconn=64, max_cron_threads=2, job_workers=1
+                workers=0,
+                db_maxconn=64,
+                max_cron_threads=2,
+                job_workers=1,
+                stream_workers=0,
             ),
             patch.dict(
                 os.environ,

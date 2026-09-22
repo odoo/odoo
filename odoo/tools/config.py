@@ -1450,6 +1450,25 @@ class configmanager:
             "processing on this instance. (default 1)",
             type="int",
         )
+        group.add_option(
+            "--stream-workers",
+            dest="stream_workers",
+            my_default=1,
+            help="Number of stream workers holding a database's persistent "
+            "connections (MQTT, websocket, Modbus) — processes in prefork mode, "
+            "threads in threaded mode; one of them leads each database. Set to "
+            "0 to hold no stream on this instance. (default 1)",
+            type="int",
+        )
+        group.add_option(
+            "--limit-time-worker-stream",
+            dest="limit_time_worker_stream",
+            my_default=0,
+            help="Maximum time a stream thread/worker stays alive before it is "
+            "restarted, closing every stream it holds for the next leader to "
+            "reopen. Set to 0 to disable. (default: 0)",
+            type="int",
+        )
 
     def _add_advanced_locale(self, group: optparse.OptionGroup) -> None:
         group.add_option(

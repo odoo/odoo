@@ -13,7 +13,7 @@ from odoo import db
 from odoo.libs import backoff
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, OrderedSet
-from odoo.tools.constants import CRON_TRIGGER_CHANNEL, JOB_QUEUE_CHANNEL
+from odoo.tools.constants import CRON_TRIGGER_CHANNEL, JOB_QUEUE_CHANNEL, STREAM_CHANNEL
 
 from ._dispatch import is_db_exposed
 from ._limits import BACKOFF_BASE_S, BACKOFF_CEILING_S
@@ -34,6 +34,8 @@ __all__ = [
     "JOB_LISTENER",
     "JOB_QUEUE_CHANNEL",
     "LISTENER_KINDS",
+    "STREAM_CHANNEL",
+    "STREAM_LISTENER",
     "CronListener",
     "CronSchedule",
     "ListenerKind",
@@ -50,6 +52,10 @@ __all__ = [
 ]
 
 CRON_POLL_INTERVAL_S = 60
+
+# A stream worker's pass: a lost leader is noticed, its streams reopened
+# elsewhere and a dropped connection redialled within this many seconds.
+STREAM_HEARTBEAT_S = 15
 """How long a cron or job loop waits for a notify before sweeping anyway.
 
 Named for what it is.  As `SLEEP_INTERVAL` in `_cron` it read as a generic
@@ -70,6 +76,12 @@ def _job_process_jobs() -> typing.Callable[[str], object]:
     from odoo.addons.base.models.ir_job import IrJob
 
     return IrJob._process_jobs
+
+
+def _stream_process() -> typing.Callable[[str], object]:
+    from ._stream import process_streams
+
+    return process_streams
 
 
 @dataclasses.dataclass(frozen=True, slots=True)
@@ -96,6 +108,9 @@ class ListenerKind:
     population_setting: str
     max_age_setting: str
     resolve_process_jobs: typing.Callable[[], typing.Callable[[str], object]]
+    # A kind with a heartbeat sweeps every served database each pass, at
+    # that interval, instead of the databases the cron schedule finds due.
+    heartbeat: float | None = None
 
     def population(self, settings: typing.Any = None) -> int:
         return int(getattr(settings or current(), self.population_setting))
@@ -108,6 +123,13 @@ class ListenerKind:
 
     def process_jobs(self) -> typing.Callable[[str], object]:
         return self.resolve_process_jobs()
+
+    def due_databases(
+        self, schedule: CronSchedule, notified: Iterable[str]
+    ) -> list[str]:
+        if self.heartbeat is not None:
+            return list(schedule.reset_known_databases())
+        return schedule.get_due_databases(notified)
 
 
 CRON_LISTENER = ListenerKind(
@@ -126,7 +148,24 @@ JOB_LISTENER = ListenerKind(
     resolve_process_jobs=_job_process_jobs,
 )
 
-LISTENER_KINDS: tuple[ListenerKind, ...] = (CRON_LISTENER, JOB_LISTENER)
+# A stream worker's sweep reconciles the held-open connections of a database
+# under its leader lock: what should be open is opened, what should not is
+# closed, what is queued is sent. The connections themselves outlive the sweep
+# in the worker process, so the kind is never recycled by default.
+STREAM_LISTENER = ListenerKind(
+    name="stream",
+    channel=STREAM_CHANNEL,
+    population_setting="stream_workers",
+    max_age_setting="limit_time_worker_stream",
+    resolve_process_jobs=_stream_process,
+    heartbeat=STREAM_HEARTBEAT_S,
+)
+
+LISTENER_KINDS: tuple[ListenerKind, ...] = (
+    CRON_LISTENER,
+    JOB_LISTENER,
+    STREAM_LISTENER,
+)
 
 
 def arm_cron_listen(

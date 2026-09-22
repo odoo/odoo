@@ -38,6 +38,8 @@ from ._cron import (
     CRON_LISTENER,
     CRON_POLL_INTERVAL_S,
     JOB_LISTENER,
+    STREAM_HEARTBEAT_S,
+    STREAM_LISTENER,
     CronListener,
     CronSchedule,
     ListenerKind,
@@ -723,3 +725,51 @@ class WorkerJob(WorkerCron):
     """
 
     kind: ListenerKind = JOB_LISTENER
+
+
+class WorkerStream(WorkerCron):
+    """The sweep that reconciles a database's held-open connections.
+
+    The connections live in this process between sweeps, so the loop wakes
+    on the stream channel and on a fixed heartbeat rather than the cron
+    schedule, sweeps every served database each time, and closes what it
+    holds when it stops; the next leader reopens it within one heartbeat.
+    """
+
+    kind: ListenerKind = STREAM_LISTENER
+
+    def sleep(self) -> None:
+        if not self.db_queue:
+            if self.listener.backing_off:
+                return
+            wait_for_notifies(self.listener, STREAM_HEARTBEAT_S)
+            empty_pipe(self.wakeup_pipe[0])
+
+    def process_work(self) -> None:
+        if not self.db_queue:
+            if not self.listener.connected:
+                self.listener.reconnect_after_failure(
+                    "Reconnect to postgres", self._sleep_with_watchdog
+                )
+                return
+            try:
+                self.listener.drain()
+            except psycopg.OperationalError, PoolError:
+                self.logger.warning("Lost postgres connection, reconnecting...")
+                self.listener.reconnect_after_failure(
+                    "Reconnect to postgres", self._sleep_with_watchdog
+                )
+                return
+            self.db_queue.extend(self.schedule.reset_known_databases())
+            self.db_count = len(self.db_queue)
+            if not self.db_count:
+                return
+        db_name = self.db_queue.popleft()
+        self.setproctitle(db_name)
+        sweep_database(db_name, self._run_jobs_for_database, self.logger, release=False)
+
+    def stop(self) -> None:
+        from ._stream import shutdown
+
+        shutdown()
+        super().stop()

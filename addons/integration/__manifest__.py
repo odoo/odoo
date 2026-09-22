@@ -1,6 +1,6 @@
 {
     "name": "Integration",
-    "version": "19.0.1.35.0",
+    "version": "19.0.1.36.0",
     "category": "Hidden",
     "sequence": 5,
     "summary": "Inbound and outbound API transport with auth, rate limiting, retry and logging",
@@ -13,10 +13,10 @@ Transport layer for inbound and outbound API traffic.
 Models
 ------
 * ``mixin.integration.receiver`` -- webhook and IoT receivers
+* ``mixin.integration.channel`` -- behaviour shared by both endpoint models
 * ``integration.service`` -- REST and external service callers
 * ``integration.exchange`` -- event log for both directions
 * ``integration.response.cache`` -- outbound response cache
-* ``mixin.integration.channel`` -- behaviour shared by both endpoint models
 
 Requirements
 ------------
@@ -68,6 +68,7 @@ model by company.
         "views/integration_service.xml",
         "views/integration_connection_views.xml",
         "views/integration_receiver_views.xml",
+        "views/integration_stream_views.xml",
         "views/ir_actions_server_views.xml",
         "views/response_cache_views.xml",
         "views/api_credential_views.xml",

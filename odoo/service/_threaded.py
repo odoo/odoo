@@ -19,9 +19,10 @@ from odoo.modules.registry import Registry
 from odoo.tools.cache import log_ormcache_stats
 from odoo.tools.misc import dumpstacks
 
-from . import _process_state
+from . import _process_state, _stream
 from ._base_server import SIGHUP_AVAILABLE, CommonServer
 from ._cron import (
+    CRON_LISTENER,
     CRON_POLL_INTERVAL_S,
     LISTENER_KINDS,
     CronListener,
@@ -59,7 +60,7 @@ do with how long to let in-flight HTTP requests drain; the two shared a number
 and so could not be tuned apart.
 """
 
-_TIME_LIMITED_THREAD_TYPES = ("http", "cron", "job")
+_TIME_LIMITED_THREAD_TYPES = ("http", "cron", "job", "stream")
 """Thread kinds `check_limits` may recycle the server for.
 
 "websocket" is deliberately absent.  `bus/websocket.py` re-labels the request
@@ -92,8 +93,8 @@ def _get_http_server_metrics(httpd: ThreadedHTTPServer | None) -> dict[str, Any]
 
 
 _CONSOLE_EVENT_SIGNALS = {
-    0: signal.SIGINT,  # CTRL_C_EVENT
-    1: signal.SIGINT,  # CTRL_BREAK_EVENT
+    0: signal.SIGINT,   # CTRL_C_EVENT
+    1: signal.SIGINT,   # CTRL_BREAK_EVENT
     2: signal.SIGTERM,  # CTRL_CLOSE_EVENT
     5: signal.SIGTERM,  # CTRL_LOGOFF_EVENT
     6: signal.SIGTERM,  # CTRL_SHUTDOWN_EVENT
@@ -134,7 +135,8 @@ class ThreadedServer(CommonServer):
         )
         return (
             f"{http}, {settings.max_cron_threads} cron thread(s), "
-            f"{settings.job_workers} job thread(s)"
+            f"{settings.job_workers} job thread(s), "
+            f"{settings.stream_workers} stream thread(s)"
         )
 
     def signal_handler(self, sig: int, frame: Any) -> None:
@@ -155,11 +157,6 @@ class ThreadedServer(CommonServer):
             raise KeyboardInterrupt
 
     def _handle_console_event(self, event: int) -> bool:
-        # A Windows console event is not a signal number: CTRL_C_EVENT is 0
-        # and CTRL_CLOSE_EVENT happens to be 2, SIGINT's value, which is the
-        # only reason the old `signal_handler(event, None)` ever stopped
-        # anything.  Handled means True, so the console does not go on to
-        # terminate the process before `stop()` runs.
         sig = _CONSOLE_EVENT_SIGNALS.get(event)
         if sig is None:
             return False
@@ -298,6 +295,7 @@ class ThreadedServer(CommonServer):
             process_jobs=kind.process_jobs(),
             label=kind.name,
             max_age=kind.max_age(settings),
+            kind=kind,
         )
 
     def _run_due_jobs(
@@ -331,20 +329,24 @@ class ThreadedServer(CommonServer):
         process_jobs: Any,
         cron_logger: logging.Logger,
         max_age: int,
+        kind: ListenerKind = CRON_LISTENER,
     ) -> str:
         schedule = CronSchedule()
         alive_time = time.monotonic()
         first_pass = True
+        poll_interval = (
+            kind.heartbeat
+            if kind.heartbeat is not None
+            else CRON_POLL_INTERVAL_S + number
+        )
         _debug.lifecycle(
             "server.cron.polling",
             number=number,
             max_age=max_age,
-            poll_interval_s=CRON_POLL_INTERVAL_S + number,
+            poll_interval_s=poll_interval,
         )
         while max_age <= 0 or (time.monotonic() - alive_time) <= max_age:
-            wait_for_notifies(
-                listener, 0 if first_pass else CRON_POLL_INTERVAL_S + number
-            )
+            wait_for_notifies(listener, 0 if first_pass else poll_interval)
             first_pass = False
             if self._listener_stop.is_set():
                 return _RECYCLE_STOP
@@ -359,7 +361,7 @@ class ThreadedServer(CommonServer):
                 )
                 raise
 
-            db_names = schedule.get_due_databases(notified)
+            db_names = kind.due_databases(schedule, notified)
             if _debug.pipeline.enabled and notified:
                 _debug.pipeline(
                     "server.cron.notified",
@@ -382,6 +384,7 @@ class ThreadedServer(CommonServer):
         process_jobs: Any,
         label: str,
         max_age: int,
+        kind: ListenerKind = CRON_LISTENER,
     ) -> None:
         cron_logger = self.logger.getChild(f"{label}{number}")
         cron_logger.info("Alive")
@@ -402,7 +405,7 @@ class ThreadedServer(CommonServer):
             try:
                 listener.connect()
                 reason = self._poll_cron_channel(
-                    listener, number, process_jobs, cron_logger, max_age
+                    listener, number, process_jobs, cron_logger, max_age, kind=kind
                 )
                 backoff.reset()
                 _debug.lifecycle(
@@ -593,6 +596,9 @@ class ThreadedServer(CommonServer):
         timeout = get_graceful_stop_timeout(self.logger)
         deadline = time.monotonic() + timeout
         self._listener_stop.set()
+        # The streams this process holds close now, leader locks released,
+        # so the next server reopens them rather than waiting on a dead lease.
+        _stream.shutdown()
         if self.httpd:
             self.httpd.shutdown()
             self.httpd.drain(timeout, stuck=self._count_stuck_http_threads())

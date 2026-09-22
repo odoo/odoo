@@ -177,23 +177,15 @@ class TestSpawnersTypeTheirThreadsForTheRightTimeBudget:
 
 
 class TestBothFlavoursReadOneDeclarationOfEachKind:
-    """A threaded server and a prefork server must sweep the same way.
-
-    They do not share a mechanism -- one runs a thread, the other a worker
-    process with its own watchdog -- but the four facts that say *what* a kind
-    is were stated twice, as keyword arguments here and as class attributes in
-    `_worker`, and nothing compared the two. Both now read `ListenerKind`, and
-    these tests are what keeps that true: a second declaration would have to
-    re-derive the same channel, the same population knob, the same recycle age
-    and the same processor, and it would pass review because every value
-    matched on the day it was written.
-    """
-
-    WORKERS = {"cron": _worker.WorkerCron, "job": _worker.WorkerJob}
+    WORKERS = {
+        "cron": _worker.WorkerCron,
+        "job": _worker.WorkerJob,
+        "stream": _worker.WorkerStream,
+    }
 
     def test_every_kind_has_exactly_one_worker_class(self):
         by_kind = {}
-        for cls in (_worker.WorkerCron, _worker.WorkerJob):
+        for cls in (_worker.WorkerCron, _worker.WorkerJob, _worker.WorkerStream):
             by_kind.setdefault(cls.kind.name, []).append(cls.__name__)
         assert sorted(by_kind) == sorted(k.name for k in LISTENER_KINDS)
         assert all(len(v) == 1 for v in by_kind.values()), by_kind
@@ -221,8 +213,11 @@ class TestBothFlavoursReadOneDeclarationOfEachKind:
     def test_the_worker_and_the_thread_recycle_on_the_same_setting(self, server):
         """The two flavours ask for the recycle age by different routes."""
         with server_settings.override(
-            limit_time_worker_cron=301, limit_time_worker_job=47
+            limit_time_worker_cron=301,
+            limit_time_worker_job=47,
+            limit_time_worker_stream=11,
         ):
+            ages = {}
             for kind in LISTENER_KINDS:
                 cls = self.WORKERS[kind.name]
                 worker = cls.__new__(cls)
@@ -230,7 +225,8 @@ class TestBothFlavoursReadOneDeclarationOfEachKind:
                     server.run_listener_thread(kind, 0)
                 threaded_age = listen.call_args.kwargs["max_age"]
                 assert worker.get_max_age() == threaded_age, kind.name
-            assert threaded_age == 47
+                ages[kind.name] = threaded_age
+            assert ages == {"cron": 301, "job": 47, "stream": 11}
 
     def test_the_masters_watchdog_allows_the_budget_the_kind_names(self):
         """`WorkerJob` used to set this in an `__init__` of its own.
