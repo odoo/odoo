@@ -100,9 +100,7 @@ describe("button style", () => {
                 <div>
                     <span class="display-1-fs">
                         a
-                        <a class="btn btn-fill-primary" href="#">
-                            <span class="h1-fs">[b]</span>
-                        </a>
+                        <a class="btn btn-fill-primary h1-fs" href="#">[b]</a>
                         c
                     </span>
                 </div>
