@@ -5,7 +5,7 @@
         <ActionPanel close="this.props.close" title.translate="Members" minWidth="200" initialWidth="this.env.inMeetingView ? 400 : 250" icon="'group'">
             <div class="o-discuss-ChannelMemberList-search d-flex flex-nowrap gap-1">
                 <SearchInput search="this.search" placeholder.translate="Search members"/>
-                <button name="inviteButton" t-on-click="() => this.openChannelInvitationDialog(this.env, this.props.channel)" class="btn btn-sm btn-primary rounded-3 text-nowrap" title="Add People" aria-label="Add People"><i class="oi oi-fw me-1 opacity-75" data-icon="person_add"/>Add People</button>
+                <button name="inviteButton" t-on-click="() => this.openChannelInvitationDialog(this.env, this.props.channel)" class="btn btn-sm btn-primary rounded-3 text-nowrap o-my-0_5" title="Add People" aria-label="Add People"><i class="oi oi-fw me-1 opacity-75" data-icon="person_add"/>Add People</button>
             </div>
             <t t-foreach="this.groupedCategories(this.categories())" t-as="group" t-key="group_index">
                 <t t-set="groupHasMembers" t-value="group.categories.some((c) => c.filtered.length > 0)"/>
