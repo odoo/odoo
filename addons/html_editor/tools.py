@@ -1,12 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import functools
 import logging
 import re
 
 from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.tools import remove_accents
 from odoo.tools.translate import adapt_translated_field_value
+
+from odoo.addons.web.icons import ICONS
 
 logger = logging.getLogger(__name__)
 diverging_history_regex = 'data-last-history-commits="([0-9,]+)"'
@@ -79,3 +83,46 @@ def _handle_history_divergence(record, html_field_name, incoming_html):
 
     # Save only the latest id.
     return incoming_html[0:incoming_history_matches.start(1)] + last_commit_id + incoming_html[incoming_history_matches.end(1):]
+
+
+def normalize_icon_text(text):
+    return remove_accents(text.casefold())
+
+
+# English only: the language is unknown at import time.
+ICONS_INDEX = [
+    (name, normalize_icon_text(f"{name} {icon['tags']._source}"))
+    for name, icon in ICONS.items()
+]
+
+
+@functools.cache
+def translated_icon_tags(lang) -> dict[str, str]:
+    """Return the normalized tags of every icon, translated in ``lang``.
+
+    Read from the po files, so the cache is safely shared by all databases.
+    """
+    if lang == 'en_US':
+        return {}
+    return {
+        name: normalize_icon_text(icon['tags']._translate(lang))
+        for name, icon in ICONS.items()
+    }
+
+
+def search_icons(env, needle=''):
+    """Yield the name of every icon matching all the words of ``needle``.
+
+    A word matches the icon name, its English tags or its tags translated in
+    the user's language.  An empty needle yields every icon.
+    """
+    terms = normalize_icon_text(needle).split()
+    if not terms:
+        yield from ICONS
+        return
+    translated = translated_icon_tags(env.lang or 'en_US')
+    for name, haystack in ICONS_INDEX:
+        missing = [term for term in terms if term not in haystack]
+        if missing and any(term not in translated.get(name, '') for term in missing):
+            continue
+        yield name
