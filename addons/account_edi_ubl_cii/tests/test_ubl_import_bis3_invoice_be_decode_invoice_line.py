@@ -131,14 +131,23 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
         self.assertFalse(invoice.invoice_line_ids)
 
     def test_partial_import_invoice_line_zero_line_extension_amount_with_quantity_allowance_charge(self):
+        def assert_invoice(invoice):
+            self.assertRecordValues(invoice, [{'amount_total': 0.0}])
+            self.assertRecordValues(invoice.invoice_line_ids, [{
+                'price_unit': 0.25,
+                'quantity': 2.0,
+                'discount': 100.0,
+                'tax_ids': [],
+                'price_subtotal': 0.0,
+            }])
+
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_zero_line_extension_amount_with_quantity_allowance_charge')
-        self.assertRecordValues(invoice, [{'amount_total': 0.0}])
-        self.assertRecordValues(invoice.invoice_line_ids, [{
-            'price_unit': 0.25,
-            'quantity': 2.0,
-            'discount': 100.0,
-            'price_subtotal': 0.0,
-        }])
+        assert_invoice(invoice)
+
+        # Same test but the fixed tax will be retrieved.
+        self.fixed_tax(0.25, type_tax_use='purchase')
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_zero_line_extension_amount_with_quantity_allowance_charge')
+        assert_invoice(invoice)
 
     def test_partial_import_invoice_line_zero_line_extension_amount_zero_quantity_with_price_amount(self):
         """
