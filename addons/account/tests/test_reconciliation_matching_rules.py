@@ -3092,3 +3092,111 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 },
             ],
         )
+
+    def test_user_reconcile_model_outranks_auto_created_one(self):
+        """A model the accountant wrote must be offered before one odoobot inferred.
+
+        `_create_reconciliation_rule` sets no sequence, so an auto-created model
+        takes the field default and ties with a hand-written one. The tie used
+        to break on `id ASC`, which favours whichever was created first --
+        normally the automatic one, since the user writes their rule in reaction
+        to it.
+        """
+        auto_model = self._create_reconcile_model(
+            name="Inferred by odoobot",
+            created_automatically=True,
+            sequence=1,
+            line_ids=[{}],
+        )
+        user_model = self._create_reconcile_model(
+            name="Written by the accountant",
+            created_automatically=False,
+            sequence=99,
+            line_ids=[{}],
+        )
+        st_line = self._create_st_line(amount=100.0, date="2019-01-01")
+
+        models_per_line = (
+            self.env["account.reconcile.model"]
+            .with_context(lang="en_US")
+            .get_available_reconcile_model_per_statement_line(st_line.ids)
+        )
+        offered = [model["id"] for model in models_per_line[st_line.id]]
+        self.assertIn(auto_model.id, offered)
+        self.assertIn(user_model.id, offered)
+        self.assertLess(
+            offered.index(user_model.id),
+            offered.index(auto_model.id),
+            "the accountant's model is offered before the auto-created one, even "
+            "though the auto-created one has the lower sequence",
+        )
+
+    def test_partner_mapping_prefers_the_accountants_model(self):
+        """Same ranking, on the query that fills in a missing partner."""
+        self._create_reconcile_model(
+            name="Mapped by odoobot",
+            created_automatically=True,
+            sequence=1,
+            match_label="contains",
+            match_label_param="mapme",
+            line_ids=[{"account_id": False, "partner_id": self.partner_2.id}],
+        )
+        self._create_reconcile_model(
+            name="Mapped by the accountant",
+            created_automatically=False,
+            sequence=99,
+            match_label="contains",
+            match_label_param="mapme",
+            line_ids=[{"account_id": False, "partner_id": self.partner_1.id}],
+        )
+        st_line = self._create_st_line(
+            amount=100.0,
+            date="2019-01-01",
+            payment_ref="please mapme now",
+            partner_id=False,
+        )
+        self.assertFalse(st_line.partner_id, "the mapping only runs on a blank partner")
+
+        st_line._partner_mapping(self.env["account.reconcile.model"].search([]))
+        st_line.invalidate_recordset(["partner_id"])
+
+        self.assertEqual(
+            st_line.partner_id,
+            self.partner_1,
+            "the partner comes from the accountant's model, not odoobot's lower sequence",
+        )
+
+    def test_proposed_reconcile_model_prefers_the_accountants_model(self):
+        """Same ranking, on the query that picks the single model to propose."""
+        auto_model = self._create_reconcile_model(
+            name="Proposed by odoobot",
+            created_automatically=True,
+            sequence=1,
+            match_label="contains",
+            match_label_param="proposeme",
+            line_ids=[{}],
+        )
+        user_model = self._create_reconcile_model(
+            name="Proposed by the accountant",
+            created_automatically=False,
+            sequence=99,
+            match_label="contains",
+            match_label_param="proposeme",
+            line_ids=[{}],
+        )
+        self.assertEqual(
+            (auto_model + user_model).mapped("can_be_proposed"),
+            [True, True],
+            "both models have to reach the LIMIT 1 for the ordering to decide",
+        )
+        st_line = self._create_st_line(
+            amount=100.0, date="2019-01-01", payment_ref="please proposeme now"
+        )
+
+        (auto_model + user_model)._apply_reconcile_models(st_line)
+
+        self.assertEqual(
+            st_line.line_ids[-1].reconcile_model_id,
+            user_model,
+            "the proposed model is the accountant's, not odoobot's lower sequence",
+        )

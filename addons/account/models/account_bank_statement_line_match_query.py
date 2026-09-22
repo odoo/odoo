@@ -192,7 +192,7 @@ class AccountBankStatementLine(models.Model):
                     WHERE %(match)s
                       AND reco_model.mapped_partner_id IS NOT NULL
                       AND reco_model.id = ANY(%(reco_models)s)
-                 ORDER BY reco_model.sequence ASC, reco_model.id ASC
+                 ORDER BY reco_model.created_automatically ASC NULLS FIRST, reco_model.sequence ASC, reco_model.id ASC
                     LIMIT 1
                  ) AS reco_model ON TRUE
            WHERE st_line.id = ANY(%(statement_lines)s)

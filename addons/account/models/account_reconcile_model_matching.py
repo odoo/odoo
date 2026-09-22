@@ -225,11 +225,12 @@ class AccountReconcileModel(models.Model):
             WITH %(relations)s
 
           SELECT st_line.id AS st_line_id,
-                 array_agg(reco_model.id ORDER BY reco_model.sequence ASC, reco_model.id ASC) AS reco_model_ids,
-                 array_agg(reco_model.name ORDER BY reco_model.sequence ASC, reco_model.id ASC) AS reco_model_names
+                 array_agg(reco_model.id ORDER BY reco_model.created_automatically ASC NULLS FIRST, reco_model.sequence ASC, reco_model.id ASC) AS reco_model_ids,
+                 array_agg(reco_model.name ORDER BY reco_model.created_automatically ASC NULLS FIRST, reco_model.sequence ASC, reco_model.id ASC) AS reco_model_names
             FROM account_bank_statement_line st_line
        LEFT JOIN LATERAL (
                    SELECT DISTINCT reco_model.id,
+                          reco_model.created_automatically,
                           reco_model.sequence,
                           COALESCE(reco_model.name -> %(lang)s, reco_model.name -> 'en_US') as name
                      FROM account_reconcile_model reco_model
@@ -322,7 +323,7 @@ class AccountReconcileModel(models.Model):
                     WHERE %(match)s
                       AND reco_model.id = ANY(%(reco_models)s)
                       AND reco_model.can_be_proposed IS TRUE
-                 ORDER BY reco_model.sequence ASC, reco_model.id ASC
+                 ORDER BY reco_model.created_automatically ASC NULLS FIRST, reco_model.sequence ASC, reco_model.id ASC
                     LIMIT 1
                  ) AS reco_model ON TRUE
        LEFT JOIN LATERAL (
