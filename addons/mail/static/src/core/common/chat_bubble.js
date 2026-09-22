@@ -59,9 +59,9 @@ export class ChatBubble extends Component {
             animation: false,
             onClose: () => this.isPopoverOpen.set(false),
             position: "left-middle",
-            popoverClass:
-                "dropdown-menu bg-view border-0 p-0 overflow-visible o-rounded-bubble mx-1",
+            popoverClass: "bg-view border-0 p-0 overflow-visible o-rounded-bubble mx-1",
             ref: popoverRef,
+            setActiveElement: false,
         });
         useListener(this.env.bus, "ChatBubble:preview-will-open", ({ detail }) => {
             if (detail === this) {
