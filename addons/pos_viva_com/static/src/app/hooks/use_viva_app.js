@@ -164,6 +164,12 @@ export const useVivaApp = (validateCallback) => {
         abort(line);
     };
 
+    const hasRefused = () => window.localStorage.getItem("vivawallet_app_answer") === "false";
+
+    const forgetIntegration = () => {
+        window.localStorage.removeItem("vivawallet_app_answer");
+    };
+
     return {
         use,
         process,
@@ -171,5 +177,7 @@ export const useVivaApp = (validateCallback) => {
         abort,
         isIntegrated,
         resetIntegration,
+        hasRefused,
+        forgetIntegration,
     };
 };
