@@ -345,6 +345,15 @@ class HrVersion(models.Model):
         "The contract must have a start date.",
     )
 
+    # In the database rather than in an `@api.constrains`: `wage` is written
+    # from the form, from an import and from `get_values_from_contract_template`,
+    # and only a CHECK covers all three. NULL passes it, which is what the
+    # employee-less contract templates need.
+    _check_wage_not_negative = models.Constraint(
+        "CHECK(wage >= 0)",
+        "The wage cannot be negative.",
+    )
+
     _check_unique_date_version = models.UniqueIndex(
         "(employee_id, date_version) WHERE active = TRUE AND employee_id IS NOT NULL",
         "An employee cannot have multiple active versions sharing the same effective date.",

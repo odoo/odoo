@@ -46,6 +46,34 @@ class TestHrVersion(TestHrCommon):
                 {"contract_date_start": "2021-01-01", "contract_date_end": "2020-12-31"}
             )
 
+    def test_wage_cannot_be_negative(self):
+        """A negative wage is a typo, never a fact.
+
+        The check lives in the database rather than in an `@api.constrains`
+        because `wage` is written from the form, from an import and from
+        `get_values_from_contract_template`, and only a CHECK covers all three.
+        """
+        employee = self.env["hr.employee"].create(
+            {"name": "Payroll Typo", "date_version": "2020-01-01"}
+        )
+
+        employee.write({"wage": 1500.0})
+        self.assertEqual(employee.wage, 1500.0)
+
+        employee.write({"wage": 0.0})
+        self.assertEqual(employee.wage, 0.0, "zero is a legitimate wage")
+
+        with self.assertRaises(CheckViolation), mute_logger("odoo.db"):
+            employee.write({"wage": -1.0})
+
+    def test_a_contract_template_may_have_no_wage_at_all(self):
+        """NULL passes the check, which is what employee-less templates need."""
+        template = self.env["hr.version"].create(
+            {"name": "Template with no wage", "date_version": "2020-01-01"}
+        )
+
+        self.assertFalse(template.wage)
+
     def test_contracts_no_overlap(self):
         employee = self.env["hr.employee"].create(
             {
