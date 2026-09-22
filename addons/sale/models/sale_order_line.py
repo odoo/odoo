@@ -1581,10 +1581,17 @@ class SaleOrderLine(models.Model):
 
     # === ONCHANGE METHODS ===#
 
+    def onchange(self, values, field_names, fields_spec):
+        self_with_context = self
+        if not field_names:
+            # Some onchange methods should not apply to first onchange
+            self_with_context = self.with_context(sale_onchange_first_call=True)
+        return super(SaleOrderLine, self_with_context).onchange(values, field_names, fields_spec)
+
     @api.onchange("product_id")
     def _onchange_product_id(self):
         if self._is_product_line():
-            if not self.product_id:
+            if not self.product_id or self.env.context.get("sale_onchange_first_call"):
                 self.name = ""
                 return
             self._reset_price_unit()
