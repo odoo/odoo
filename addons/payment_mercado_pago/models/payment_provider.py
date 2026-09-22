@@ -5,7 +5,7 @@ from datetime import timedelta
 from urllib.parse import urlencode
 
 from odoo import api, fields, models
-from odoo.exceptions import RedirectWarning, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
 from odoo.tools.urls import urljoin
@@ -88,7 +88,7 @@ class PaymentProvider(models.Model):
                     )
                 )
 
-    @api.constrains("is_live", "mercado_pago_access_token")
+    @api.constrains("is_live")
     def _check_mercado_pago_credentials_are_set_if_live(self):
         """Check that the Mercado Pago credentials are valid when the provider is set in live mode.
 
@@ -116,6 +116,27 @@ class PaymentProvider(models.Model):
             raise ValidationError(self.env._("Connect your account before enabling tokenization."))
 
     # === CRUD METHODS === #
+
+    def write(self, vals):
+        """Override of `payment` to lock the connection mode while an account is connected.
+
+        :raise UserError: If `is_live` is changed without supplying new credentials.
+        """
+        if "is_live" in vals and "mercado_pago_access_token" not in vals:
+            if any(
+                p.code == "mercado_pago"
+                and p.is_live != vals["is_live"]
+                and p.mercado_pago_access_token
+                for p in self
+            ):
+                raise UserError(
+                    self.env._(
+                        "The connection mode cannot be changed while a Mercado Pago account is"
+                        " connected. Disconnect the account first, then reconnect in the desired"
+                        " mode."
+                    )
+                )
+        return super().write(vals)
 
     def _get_default_payment_method_codes(self):
         """Override of `payment` to return the default payment method codes."""
@@ -156,9 +177,14 @@ class PaymentProvider(models.Model):
                 self.env._("Set the account country before connecting the account.")
             )
 
+        test_mode = bool(self.env.context.get("mercado_pago_test_mode"))
         # Encode the return URL parameters here rather than passing them in the 'state' parameter
         # from IAP, because Mercado Pago doesn't JSON dumps in that parameter.
-        return_url_params = {"provider_id": self.id, "csrf_token": request.csrf_token()}
+        return_url_params = {
+            "provider_id": self.id,
+            "csrf_token": request.csrf_token(),
+            "test_mode": int(test_mode),
+        }
         return_url = urljoin(self.get_base_url(), const.OAUTH_RETURN_ROUTE)
         proxy_url_params = {
             "return_url": f"{return_url}?{urlencode(return_url_params)}",
@@ -177,6 +203,7 @@ class PaymentProvider(models.Model):
             return super()._get_reset_values()
 
         return {
+            "is_live": False,
             "mercado_pago_access_token": None,
             "mercado_pago_access_token_expiry": None,
             "mercado_pago_public_key": None,
@@ -248,7 +275,10 @@ class PaymentProvider(models.Model):
             return super()._build_request_url(endpoint, is_proxy_request=is_proxy_request, **kwargs)
 
         if is_proxy_request:
-            return urljoin(const.PROXY_URL, endpoint)
+            # The context carries the mode during onboarding, before `is_live` is set.
+            test_mode = self.env.context.get("mercado_pago_test_mode", not self.is_live)
+            base_url = const.TEST_PROXY_URL if test_mode else const.PROXY_URL
+            return urljoin(base_url, endpoint)
 
         return urljoin("https://api.mercadopago.com", endpoint)
 
@@ -275,7 +305,11 @@ class PaymentProvider(models.Model):
         if method == "POST" and idempotency_key:
             headers["X-Idempotency-Key"] = idempotency_key
         if not is_proxy_request and not is_refresh_token_request:
-            access_token = self._mercado_pago_fetch_access_token()
+            # The onboarding verification passes the new token before it is stored.
+            access_token = (
+                self.env.context.get("mercado_pago_access_token")
+                or self._mercado_pago_fetch_access_token()
+            )
             headers["Authorization"] = f"Bearer {access_token}"
         return headers
 
@@ -318,6 +352,45 @@ class PaymentProvider(models.Model):
             "mercado_pago_refresh_token": response_content["refresh_token"],
         })
         return self.mercado_pago_access_token
+
+    def _mercado_pago_verify_account_mode(self, access_token, test_mode):
+        """Check that the authorized account matches the selected connection mode.
+
+        Note: `self.ensure_one()`
+
+        :param str access_token: The access token obtained from the OAuth exchange.
+        :param bool test_mode: Whether a test account was meant to be connected.
+        :return: None
+        :raise ValidationError: If the account does not match the selected connection mode, or if it
+                                could not be verified.
+        """
+        self.ensure_one()
+
+        account_data = self.with_context(mercado_pago_access_token=access_token)._send_api_request(
+            "GET", "users/me"
+        )
+        is_test_account = "test_user" in account_data.get("tags", [])
+        if is_test_account == test_mode:
+            return
+
+        _logger.warning(
+            "Rejected Mercado Pago account %s: account is_test=%s but connection is_test=%s.",
+            account_data.get("id"),
+            is_test_account,
+            test_mode,
+        )
+        if is_test_account:
+            raise ValidationError(
+                self.env._(
+                    'This Mercado Pago account is a test account. Use "Connect a Test Account" to'
+                    " connect it."
+                )
+            )
+        raise ValidationError(
+            self.env._(
+                'This Mercado Pago account is not a test account. Use "Connect" to connect it.'
+            )
+        )
 
     def _parse_response_error(self, response):
         """Override of `payment` to parse the error message."""
