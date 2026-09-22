@@ -6,5 +6,26 @@
 }
 
 .o-hb-button-style-btn-edit {
-    color: $o-we-color-global;
+    border-width: 0;
+    padding: 10px;
+
+    &::before {
+        color: #{$o-we-color-global};
+    }
+
+    &:hover::before {
+        color: lighten($o-we-color-global, 50%);
+    }
+}
+
+.hb-row-content {
+    .o-hb-button-style-btn-edit {
+        display: none;
+    }
+}
+
+.o-hb-select-dropdown-item {
+    &:has(.o-hb-button-style-btn-edit) {
+        padding-right: 0;
+    }
 }
