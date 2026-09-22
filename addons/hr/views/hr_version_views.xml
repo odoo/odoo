@@ -74,7 +74,7 @@
                 <filter
                     name="running_contract"
                     string="Running Contract"
-                    domain="[                             '&amp;',                                 '|',                                     ('contract_date_start', '=', False),                                     ('contract_date_start', '&lt;', 'today'),                                 '|',                                     ('contract_date_end', '=', False),                                     ('contract_date_end', '&gt;=', 'today')                         ]" />
+                    domain="[                             ('contract_date_start', '!=', False),                             ('contract_date_start', '&lt;', 'today'),                             '|',                                 ('contract_date_end', '=', False),                                 ('contract_date_end', '&gt;=', 'today')                         ]" />
                 <filter
                     name="expired_contracts"
                     string="Expired Contracts"

@@ -1,11 +1,13 @@
 from datetime import date
 
+from lxml import etree
 from psycopg.errors import CheckViolation
 
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import freeze_time
 from odoo.tools import mute_logger
+from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -73,6 +75,40 @@ class TestHrVersion(TestHrCommon):
         )
 
         self.assertFalse(template.wage)
+
+    def _running_contract_domain(self):
+        """The domain the Running Contract filter actually ships."""
+        arch = etree.fromstring(self.env.ref("hr.hr_version_search_view").arch)
+        node = arch.xpath("//filter[@name='running_contract']")[0]
+        return safe_eval(node.get("domain"))
+
+    def test_running_contract_filter_ignores_a_version_without_a_start_date(self):
+        """A version with no start date is not a running contract.
+
+        `contract_date_start = False` means nobody has said when it begins, and
+        counting it as running puts draft paperwork in the same list as people
+        actually under contract.
+        """
+        running = self.env["hr.employee"].create(
+            {
+                "name": "Under Contract",
+                "date_version": "2020-01-01",
+                "contract_date_start": "2020-01-01",
+            }
+        )
+        undated = self.env["hr.employee"].create(
+            {"name": "No Start Date", "date_version": "2020-01-01"}
+        )
+        self.assertFalse(undated.contract_date_start)
+
+        found = self.env["hr.version"].search(self._running_contract_domain())
+
+        self.assertIn(running.version_id, found, "a dated contract is still running")
+        self.assertNotIn(
+            undated.version_id,
+            found,
+            "a version with no start date must not count as a running contract",
+        )
 
     def test_contracts_no_overlap(self):
         employee = self.env["hr.employee"].create(
