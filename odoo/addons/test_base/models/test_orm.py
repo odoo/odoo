@@ -4,7 +4,7 @@ import logging
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
-from odoo.fields import Command
+from odoo.fields import Command, Domain
 from odoo.tools import SQL
 from odoo.tools.float_utils import float_round
 from odoo.tools.translate import mark_as_copy
@@ -219,7 +219,12 @@ class TestOrmMessage(models.Model):
 
     @api.model
     def _search_author_partner(self, operator, value):
-        return [('author.partner_id', operator, value)]
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+        domain = Domain('author.partner_id', operator, value)
+        if operator == 'in' and False in value:  # relation may be falsy
+            domain |= Domain('author', '=', False)
+        return domain
 
     def write(self, vals):
         if 'priority' in vals:

@@ -163,6 +163,8 @@ class WebsiteVisitor(models.Model):
         })
 
     def _search_page_ids(self, operator, value):
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
         return [('website_track_ids.page_id.name', operator, value)]
 
     @api.depends('website_track_ids.page_id')

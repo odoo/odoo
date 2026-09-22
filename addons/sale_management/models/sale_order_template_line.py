@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.fields import Command
+from odoo.fields import Command, Domain
 
 
 class SaleOrderTemplateLine(models.Model):
@@ -159,7 +159,12 @@ class SaleOrderTemplateLine(models.Model):
             line.product_template_id = line.product_id.product_tmpl_id
 
     def _search_product_template_id(self, operator, value):
-        return [("product_id.product_tmpl_id", operator, value)]
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+        domain = Domain("product_id.product_tmpl_id", operator, value)
+        if operator == 'in' and False in value:  # relation may be falsy
+            domain |= Domain('product_id', '=', False)
+        return domain
 
     @api.depends("product_id")
     def _compute_name(self):

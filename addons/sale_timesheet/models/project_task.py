@@ -58,7 +58,12 @@ class ProjectTask(models.Model):
 
     @api.model
     def _search_remaining_hours_so(self, operator, value):
-        return [('sale_line_id.remaining_hours', operator, value)]
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+        domain = Domain('sale_line_id.remaining_hours', operator, value)
+        if operator == 'in' and False in value:  # relation may be falsy
+            domain |= Domain('sale_line_id', '=', False)
+        return domain
 
     def _compute_last_sol_of_customer(self):
         sol_per_domain = dict()

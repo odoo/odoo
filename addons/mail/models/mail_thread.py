@@ -294,7 +294,12 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_needaction(self, operator, operand):
-        return [('message_ids.needaction', operator, operand)]
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+        domain = Domain('message_ids.needaction', operator, operand)
+        if operator == 'in' and False in operand:  # relation may be falsy
+            domain |= Domain('message_ids', '=', False)
+        return domain
 
     def _compute_message_has_error(self):
         res = {}

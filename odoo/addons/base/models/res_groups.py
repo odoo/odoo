@@ -329,7 +329,9 @@ class ResGroups(models.Model):
                 ))
 
     def _search_all_user_ids(self, operator, value):
-        return [('all_implied_by_ids.user_ids', operator, value)]
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+        return Domain('all_implied_by_ids.user_ids', operator, value)
 
     @api.depends('implied_ids')
     def _compute_implied_count(self):
