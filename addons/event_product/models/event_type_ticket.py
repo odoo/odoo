@@ -70,10 +70,8 @@ class EventTypeTicket(models.Model):
         # product change; it also means the two directions don't mirror each
         # other, which can read as a bug if this comment goes missing.
         for ticket in self:
-            if ticket.product_id and ticket.product_id.lst_price:
-                ticket.price = ticket.product_id.lst_price or 0
-            elif not ticket.price:
-                ticket.price = 0
+            if ticket.product_id.lst_price:
+                ticket.price = ticket.product_id.lst_price
 
     @api.depends("product_id")
     def _compute_description(self):
