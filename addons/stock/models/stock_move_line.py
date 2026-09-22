@@ -358,6 +358,9 @@ class StockMoveLine(models.Model):
                 vals.update(self._copy_quant_info(vals))
 
         mls = super().create(vals_list)
+        # A new line can break the entirety of a package it shares with lines already in the transfer.
+        if mls_not_entire_pack := (mls | mls.picking_id.move_line_ids)._get_lines_not_entire_pack():
+            mls_not_entire_pack.is_entire_pack = False
 
         created_moves = set()
 
@@ -563,8 +566,12 @@ class StockMoveLine(models.Model):
             if not float_is_zero(ml.quantity_product_uom, precision_digits=precision) and ml.move_id and not ml.move_id._should_bypass_reservation(ml.location_id):
                 self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.quantity_product_uom, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
         moves = self.mapped('move_id')
+        pickings = self.picking_id
         packages = self.env['stock.package'].browse(self.result_package_id._get_all_package_dest_ids())
         res = super().unlink()
+        # Removing a line can break the entirety of a package it shares with the remaining lines.
+        if mls_not_entire_pack := pickings.move_line_ids._get_lines_not_entire_pack():
+            mls_not_entire_pack.is_entire_pack = False
         if moves:
             # Add with_prefetch() to set the _prefecht_ids = _ids
             # because _prefecht_ids generator look lazily on the cache of move_id
