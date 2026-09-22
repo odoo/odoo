@@ -1,6 +1,6 @@
 {
     "name": "Partner Scoring",
-    "version": "19.0.1.9.0",
+    "version": "19.0.1.10.0",
     "category": "Sales/CRM",
     "summary": "Weighted attribute scoring for customers, with commercial tiers",
     "description": """
@@ -57,6 +57,7 @@ lead scoring (``crm.lead.scoring.frequency``).
         "views/partner_tier_views.xml",
         "views/partner_score_line_views.xml",
         "views/res_partner_views.xml",
+        "views/res_partner_search_views.xml",
         "views/scorecard_views.xml",
         "views/partner_scoring_menus.xml",
     ],

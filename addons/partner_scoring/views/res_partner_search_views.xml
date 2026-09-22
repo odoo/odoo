@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        The capture campaign's worklist (decided 2026-09-22): a customer is
+        scored on capture, never by a blanket recompute, because an uncaptured
+        customer scored reads zero and a tier means a measurement was taken.
+    -->
+    <record id="view_res_partner_filter_inherit_scoring" model="ir.ui.view">
+        <field name="name">res.partner.search.inherit.partner.scoring</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='without_email']" position="after">
+                <separator />
+                <filter
+                    name="never_scored"
+                    string="Never scored"
+                    domain="[('parent_id', '=', False), ('score_line_count', '=', 0)]"
+                    help="No measurement was taken: nothing captured yet" />
+                <filter
+                    name="scored"
+                    string="Scored"
+                    domain="[('score_line_count', '>', 0)]" />
+                <filter
+                    name="no_attributes"
+                    string="No profile attributes"
+                    domain="[('parent_id', '=', False), ('attribute_line_ids', '=', False)]" />
+            </xpath>
+            <xpath expr="//group[@name='group_by']" position="inside">
+                <filter
+                    name="group_tier"
+                    string="Commercial Tier"
+                    context="{'group_by': 'tier_id'}" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
