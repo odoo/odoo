@@ -283,7 +283,7 @@ class AccountMoveSend(models.AbstractModel):
         for attachment_values in attachments_to_embed:
             additional_document_reference_node = {
                 '_tag': 'cac:AdditionalDocumentReference',
-                'cbc:ID': {'_text': attachment_values['filename']},
+                'cbc:ID': attachment_values['filename'],
                 'cbc:DocumentTypeCode': attachment_values.get('document_type_node'),
                 'cac:Attachment': {
                     'cbc:EmbeddedDocumentBinaryObject': {

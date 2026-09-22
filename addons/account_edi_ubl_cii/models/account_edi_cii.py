@@ -165,14 +165,14 @@ class AccountEdiCii(models.AbstractModel):
     def _cii_add_exchanged_document_context_node(self, vals):
         node = vals['document_node'].setdefault('rsm:ExchangedDocumentContext', {})
         node['ram:GuidelineSpecifiedDocumentContextParameter'] = {
-                'ram:ID': {'_text': "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended"},
+                'ram:ID': "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended",
             }
 
     def _cii_add_exchanged_document_node(self, vals):
         invoice = vals['invoice']
         vals['document_node']['rsm:ExchangedDocument'] = {
-            'ram:ID': {'_text': invoice.name},
-            'ram:TypeCode': {'_text': '380' if invoice.move_type == 'out_invoice' else '381'},
+            'ram:ID': invoice.name,
+            'ram:TypeCode': '380' if invoice.move_type == 'out_invoice' else '381',
             'ram:IssueDateTime': self._cii_get_date_time_string_node(vals, invoice.invoice_date),
             'ram:IncludedNote': self._cii_get_included_note_node(vals)
         }
@@ -189,12 +189,12 @@ class AccountEdiCii(models.AbstractModel):
         nodes = []
         if note := self._cii_get_included_note(vals):
             nodes.append({
-                'ram:Content': {'_text': note},
+                'ram:Content': note,
             })
         for code, content in self._get_default_notes(vals).items():
             nodes.append({
-                'ram:Content': {'_text': content},
-                'ram:SubjectCode': {'_text': code},
+                'ram:Content': content,
+                'ram:SubjectCode': code,
             })
         return nodes
 
@@ -253,7 +253,7 @@ class AccountEdiCii(models.AbstractModel):
     def _cii_get_included_supply_chain_trade_line_item_node(self, vals, line_idx, base_line):
         return {
             'ram:AssociatedDocumentLineDocument': {
-                'ram:LineID': {'_text': line_idx},
+                'ram:LineID': line_idx,
             },
             'ram:SpecifiedTradeProduct': self._cii_get_line_specified_trade_product_node(vals, base_line),
             'ram:SpecifiedLineTradeAgreement': {
@@ -277,16 +277,14 @@ class AccountEdiCii(models.AbstractModel):
                 '_text': product.barcode,
                 'schemeID': "0160",
             } if product.barcode else None,
-            'ram:SellerAssignedID': {'_text': product.default_code} if product.default_code else None,
-            'ram:Name': {'_text': product.name or description},
-            'ram:Description': {
-                '_text': description,
-            } if product else None,
+            'ram:SellerAssignedID': product.default_code if product.default_code else None,
+            'ram:Name': product.name or description,
+            'ram:Description': description if product else None,
         }
 
     def _cii_get_gross_price_product_trade_price_node(self, vals, base_line):
         return {
-            'ram:ChargeAmount': {'_text': FloatFmt(base_line['tax_details']['raw_gross_price_unit_currency'], max_dp=2)},
+            'ram:ChargeAmount': FloatFmt(base_line['tax_details']['raw_gross_price_unit_currency'], max_dp=2),
             'ram:AppliedTradeAllowanceCharge': self._cii_get_applied_trade_allowance_charge_node(vals, base_line) if base_line.get('discount') else None,
         }
 
@@ -294,18 +292,14 @@ class AccountEdiCii(models.AbstractModel):
         discount_percentage = abs(base_line['discount']) / 100.0
         return {
             'ram:ChargeIndicator': {
-                'udt:Indicator': {'_text': 'false' if base_line['discount'] > 0 else 'true'},
+                'udt:Indicator': 'false' if base_line['discount'] > 0 else 'true',
             },
-            'ram:ActualAmount': {
-                '_text': FloatFmt(vals['currency_id'].round(base_line['tax_details']['raw_gross_price_unit_currency'] * discount_percentage), max_dp=2),
-            }
+            'ram:ActualAmount': FloatFmt(vals['currency_id'].round(base_line['tax_details']['raw_gross_price_unit_currency'] * discount_percentage), max_dp=2)
         }
 
     def _cii_get_net_price_product_trade_price_node(self, vals, base_line):
         return {
-            'ram:ChargeAmount': {
-                '_text': FloatFmt(base_line['tax_details']['raw_total_excluded_currency'] / (base_line['quantity'] or 1.0), max_dp=2),
-            }
+            'ram:ChargeAmount': FloatFmt(base_line['tax_details']['raw_total_excluded_currency'] / (base_line['quantity'] or 1.0), max_dp=2)
         }
 
     def _cii_get_specified_line_trade_settlement_node(self, vals, base_line):
@@ -341,9 +335,9 @@ class AccountEdiCii(models.AbstractModel):
 
     def _cii_get_line_applicable_trade_tax_node(self, vals, trade_tax_values):
         return {
-            'ram:TypeCode': {'_text': "VAT"},
-            'ram:CategoryCode': {'_text': trade_tax_values['tax_category_code']},
-            'ram:RateApplicablePercent': {'_text': trade_tax_values['rate_applicable_percent']},
+            'ram:TypeCode': "VAT",
+            'ram:CategoryCode': trade_tax_values['tax_category_code'],
+            'ram:RateApplicablePercent': trade_tax_values['rate_applicable_percent'],
         }
 
     def _cii_get_specified_line_trade_allowance_charge_nodes(self, vals, base_line):
@@ -386,13 +380,11 @@ class AccountEdiCii(models.AbstractModel):
         is_charge = recycling_contribution_values['is_charge']
         return {
             'ram:ChargeIndicator': {
-                'udt:Indicator': {'_text': 'true' if is_charge else 'false'},
+                'udt:Indicator': 'true' if is_charge else 'false',
             },
-            'ram:ReasonCode': {'_text': charge_reason_code if is_charge else '100'},
-            'ram:Reason': {'_text': tax.name},
-            'ram:ActualAmount': {
-                '_text': FloatFmt(amount, max_dp=currency.decimal_places),
-            },
+            'ram:ReasonCode': charge_reason_code if is_charge else '100',
+            'ram:Reason': tax.name,
+            'ram:ActualAmount': FloatFmt(amount, max_dp=currency.decimal_places),
         }
 
     def _cii_add_line_allowance_charge_nodes_for_excise_taxes(self, vals):
@@ -418,12 +410,10 @@ class AccountEdiCii(models.AbstractModel):
         is_charge = excise_values['is_charge']
         return {
             'ram:ChargeIndicator': {
-                'udt:Indicator': {'_text': 'true' if is_charge else 'false'},
+                'udt:Indicator': 'true' if is_charge else 'false',
             },
-            'ram:Reason': {'_text': tax.name},
-            'ram:ActualAmount': {
-                '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
-            },
+            'ram:Reason': tax.name,
+            'ram:ActualAmount': FloatFmt(abs(amount), max_dp=currency.decimal_places),
         }
 
     def _cii_get_specified_trade_settlement_line_monetary_summation_node(self, vals, base_line):
@@ -435,29 +425,26 @@ class AccountEdiCii(models.AbstractModel):
             sign = 1 if allowance_charge_node['ram:ChargeIndicator']['udt:Indicator']['_text'] == 'true' else -1
             total_excluded += sign * allowance_charge_node['ram:ActualAmount']['_text']
         return {
-            'ram:LineTotalAmount': {'_text': FloatFmt(total_excluded, max_dp=2)},
+            'ram:LineTotalAmount': FloatFmt(total_excluded, max_dp=2),
         }
 
     def _cii_get_applicable_header_trade_agreement_node(self, vals):
         invoice = vals['invoice']
         return {
-            'ram:BuyerReference': {'_text': invoice.buyer_reference
+            'ram:BuyerReference': invoice.buyer_reference
                 if 'buyer_reference' in invoice._fields and invoice.buyer_reference
                 else invoice.commercial_partner_id.ref,
-            },
             'ram:SellerTradeParty': self._cii_get_seller_trade_party_node(vals),
             'ram:BuyerTradeParty': self._cii_get_buyer_trade_party_node(vals),
             'ram:BuyerOrderReferencedDocument': {
-                'ram:IssuerAssignedID': {'_text': invoice.purchase_order_reference
+                'ram:IssuerAssignedID': invoice.purchase_order_reference
                     if 'purchase_order_reference' in invoice._fields and invoice.purchase_order_reference
-                    else invoice.ref or invoice.name
-                },
+                    else invoice.ref or invoice.name,
             },
             'ram:ContractReferencedDocument': {
-                'ram:IssuerAssignedID': {'_text': invoice.contract_reference
+                'ram:IssuerAssignedID': invoice.contract_reference
                     if 'contract_reference' in invoice._fields and invoice.contract_reference
-                    else ''
-                },
+                    else '',
             },
         }
 
@@ -499,7 +486,7 @@ class AccountEdiCii(models.AbstractModel):
                 'schemeID': '0088',
                 '_text': partner_values['gln'],
             } if partner_values['gln'] else None,
-            'ram:Name': {'_text': partner_values['name']},
+            'ram:Name': partner_values['name'],
             'ram:SpecifiedLegalOrganization': {
                 'ram:ID': {
                     '_text': partner_values['partner_specified_legal_organization'],
@@ -524,24 +511,22 @@ class AccountEdiCii(models.AbstractModel):
 
     def _cii_get_defined_trade_contact_node(self, vals, contact_values):
         return {
-            'ram:PersonName': {'_text': contact_values['name']},
+            'ram:PersonName': contact_values['name'],
             'ram:TelephoneUniversalCommunication': {
-                'ram:CompleteNumber': {'_text': contact_values['phone']},
+                'ram:CompleteNumber': contact_values['phone'],
             } if contact_values['phone'] else None,
             'ram:EmailURIUniversalCommunication': {
-                'ram:URIID': {'_text': contact_values['email']},
+                'ram:URIID': contact_values['email'],
             } if contact_values['email'] else None,
         }
 
     def _cii_get_postal_trade_address_node(self, vals, address_values):
         return {
-            'ram:PostcodeCode': {'_text': address_values['postcode']},
-            'ram:LineOne': {'_text': address_values['line_one']},
-            'ram:LineTwo': {
-                '_text': address_values['line_two'],
-            } if address_values['line_two'] else None,
-            'ram:CityName': {'_text': address_values['city']},
-            'ram:CountryID': {'_text': address_values['country_code']},
+            'ram:PostcodeCode': address_values['postcode'],
+            'ram:LineOne': address_values['line_one'],
+            'ram:LineTwo': address_values['line_two'] if address_values['line_two'] else None,
+            'ram:CityName': address_values['city'],
+            'ram:CountryID': address_values['country_code'],
         }
 
     def _cii_get_buyer_trade_party_node(self, vals):
@@ -615,13 +600,12 @@ class AccountEdiCii(models.AbstractModel):
             and invoice.reconciled_payment_ids.mandate_id.filtered(lambda m: m.mandate_type == 'sepa')
         )
         return {
-            'ram:PaymentReference': {'_text': invoice.payment_reference},
-            'ram:InvoiceCurrencyCode': {'_text': vals['currency_id'].name},
+            'ram:PaymentReference': invoice.payment_reference,
+            'ram:InvoiceCurrencyCode': vals['currency_id'].name,
             'ram:SpecifiedTradeSettlementPaymentMeans': {
-                'ram:TypeCode': {'_text': PAYMENT_MEAN_CODES['SEPA direct debit']
+                'ram:TypeCode': PAYMENT_MEAN_CODES['SEPA direct debit']
                     if has_sepa_mandate
                     else PAYMENT_MEAN_CODES['Payment to bank account'],
-                },
                 'ram:PayeePartyCreditorFinancialAccount': self._cii_get_payee_party_creditor_financial_account_node(vals),
             },
             'ram:ApplicableTradeTax': self._cii_get_applicable_trade_tax_nodes(vals),
@@ -634,11 +618,11 @@ class AccountEdiCii(models.AbstractModel):
         invoice = vals['invoice']
         if invoice.partner_bank_id.account_type == 'iban':
             return {
-                'ram:IBANID': {'_text': invoice.partner_bank_id.sanitized_account_number}
+                'ram:IBANID': invoice.partner_bank_id.sanitized_account_number
             }
         else:
             return {
-                'ram:ProprietaryID': {'_text': invoice.partner_bank_id.sanitized_account_number}
+                'ram:ProprietaryID': invoice.partner_bank_id.sanitized_account_number
             }
 
     def _cii_get_applicable_trade_tax_nodes(self, vals):
@@ -672,16 +656,14 @@ class AccountEdiCii(models.AbstractModel):
 
     def _cii_get_applicable_trade_tax_node(self, vals, trade_tax_values):
         return {
-            'ram:CalculatedAmount': {
-                '_text': FloatFmt(trade_tax_values['calculated_amount'], max_dp=2),
-            },
-            'ram:TypeCode': {'_text': "VAT"},
-            'ram:ExemptionReason': {'_text': trade_tax_values['tax_exemption_reason']},
-            'ram:BasisAmount': {'_text': FloatFmt(trade_tax_values['basis_amount'], max_dp=2)},
-            'ram:CategoryCode': {'_text': trade_tax_values['tax_category_code']},
-            'ram:ExemptionReasonCode': {'_text': trade_tax_values['tax_exemption_reason_code']},
-            'ram:DueDateTypeCode': {'_text': 5},
-            'ram:RateApplicablePercent': {'_text': trade_tax_values['rate_applicable_percent']},
+            'ram:CalculatedAmount': FloatFmt(trade_tax_values['calculated_amount'], max_dp=2),
+            'ram:TypeCode': "VAT",
+            'ram:ExemptionReason': trade_tax_values['tax_exemption_reason'],
+            'ram:BasisAmount': FloatFmt(trade_tax_values['basis_amount'], max_dp=2),
+            'ram:CategoryCode': trade_tax_values['tax_category_code'],
+            'ram:ExemptionReasonCode': trade_tax_values['tax_exemption_reason_code'],
+            'ram:DueDateTypeCode': 5,
+            'ram:RateApplicablePercent': trade_tax_values['rate_applicable_percent'],
         }
 
     def _cii_get_billing_specified_period_node(self, vals):
@@ -705,18 +687,14 @@ class AccountEdiCii(models.AbstractModel):
     def _cii_get_specified_trade_payment_terms_node(self, vals):
         invoice = vals['invoice']
         return {
-            'ram:Description': {
-                '_text': invoice.invoice_payment_term_id.name,
-            } if invoice.invoice_payment_term_id else None,
+            'ram:Description': invoice.invoice_payment_term_id.name if invoice.invoice_payment_term_id else None,
             'ram:DueDateDateTime': self._cii_get_date_time_string_node(vals, invoice.invoice_date_due) if invoice.invoice_date_due else None,
             'ram:ApplicableTradePaymentDiscountTerms': {
                 'ram:BasisPeriodMeasure': {
                     '_text': invoice.invoice_payment_term_id.discount_days,
                     'unitCode': 'DAY',
                 },
-                'ram:CalculationPercent': {
-                    '_text': invoice.invoice_payment_term_id.discount_percentage,
-                }
+                'ram:CalculationPercent': invoice.invoice_payment_term_id.discount_percentage
             } if invoice.invoice_payment_term_id.early_discount else None,
         }
 
@@ -736,20 +714,16 @@ class AccountEdiCii(models.AbstractModel):
         return node
 
     def _cii_add_monetary_summation_line_total_amount_node(self, vals):
-        vals['monetary_summation_node']['ram:LineTotalAmount'] = {
-            '_text': FloatFmt(sum(
+        vals['monetary_summation_node']['ram:LineTotalAmount'] = FloatFmt(sum(
                 tax_data['base_amount_currency']
                 for _grouping_key, tax_data in vals['tax_details'].items()
-            ), max_dp=2),
-        }
+            ), max_dp=2)
 
     def _cii_add_monetary_summation_tax_basis_total_amount_node(self, vals):
-        vals['monetary_summation_node']['ram:TaxBasisTotalAmount'] = {
-            '_text': FloatFmt(sum(
+        vals['monetary_summation_node']['ram:TaxBasisTotalAmount'] = FloatFmt(sum(
                 tax_data['base_amount_currency']
                 for _grouping_key, tax_data in vals['tax_details'].items()
-            ), max_dp=2),
-        }
+            ), max_dp=2)
 
     def _cii_add_monetary_summation_tax_total_amount_node(self, vals):
         currency = vals['currency_id']
@@ -767,27 +741,19 @@ class AccountEdiCii(models.AbstractModel):
                 for base_line in vals.setdefault('cash_rounding_base_lines', [])
             )
         if cash_rounding_amount:
-            vals['monetary_summation_node']['ram:RoundingAmount'] = {
-                '_text': FloatFmt(cash_rounding_amount, max_dp=2),
-            }
+            vals['monetary_summation_node']['ram:RoundingAmount'] = FloatFmt(cash_rounding_amount, max_dp=2)
 
     def _cii_add_monetary_summation_grand_total_amount_node(self, vals):
-        vals['monetary_summation_node']['ram:GrandTotalAmount'] = {
-            '_text': FloatFmt(sum(vals['monetary_summation_node'].get(node, {}).get('_text', 0.0)
-            for node in ['ram:LineTotalAmount', 'ram:TaxTotalAmount', 'ram:RoundingAmount']), max_dp=2),
-        }
+        vals['monetary_summation_node']['ram:GrandTotalAmount'] = FloatFmt(sum(vals['monetary_summation_node'].get(node, {}).get('_text', 0.0)
+            for node in ['ram:LineTotalAmount', 'ram:TaxTotalAmount', 'ram:RoundingAmount']), max_dp=2)
 
     def _cii_add_monetary_summation_total_prepaid_amount(self, vals):
         prepaid_amount = vals['monetary_summation_node']['ram:GrandTotalAmount']['_text'] - vals['invoice'].amount_residual
-        vals['monetary_summation_node']['ram:TotalPrepaidAmount'] = {
-            '_text': FloatFmt(prepaid_amount, max_dp=2),
-        }
+        vals['monetary_summation_node']['ram:TotalPrepaidAmount'] = FloatFmt(prepaid_amount, max_dp=2)
 
     def _cii_add_monetary_summation_due_payable_amount_node(self, vals):
-        vals['monetary_summation_node']['ram:DuePayableAmount'] = {
-            '_text': FloatFmt(vals['monetary_summation_node']['ram:GrandTotalAmount']['_text'] -
-                              vals['monetary_summation_node']['ram:TotalPrepaidAmount']['_text'], max_dp=2),
-        }
+        vals['monetary_summation_node']['ram:DuePayableAmount'] = FloatFmt(vals['monetary_summation_node']['ram:GrandTotalAmount']['_text'] -
+                              vals['monetary_summation_node']['ram:TotalPrepaidAmount']['_text'], max_dp=2)
 
     def _cii_constraints(self, invoice, vals):
         constraints = {}

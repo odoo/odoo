@@ -344,7 +344,7 @@ class AccountEdiUBL(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _ubl_add_line_id_node(self, vals):
-        vals['line_node']['cbc:ID'] = {'_text': vals['line_vals']['index']}
+        vals['line_node']['cbc:ID'] = vals['line_vals']['index']
 
     def _ubl_add_line_note_nodes(self, vals):
         vals['line_node']['cbc:Note'] = []
@@ -391,12 +391,12 @@ class AccountEdiUBL(models.AbstractModel):
             name = base_line['_removed_tax_data']['tax'].name
 
         if description:
-            item_node['cbc:Description'] = {'_text': description}
+            item_node['cbc:Description'] = description
         else:
             item_node['cbc:Description'] = None
 
         if name:
-            item_node['cbc:Name'] = {'_text': name}
+            item_node['cbc:Name'] = name
         else:
             item_node['cbc:Name'] = None
 
@@ -409,7 +409,7 @@ class AccountEdiUBL(models.AbstractModel):
 
         if product.default_code:
             item_node['cac:SellersItemIdentification'] = {
-                'cbc:ID': {'_text': product.default_code},
+                'cbc:ID': product.default_code,
             }
         else:
             item_node['cac:SellersItemIdentification'] = None
@@ -430,15 +430,15 @@ class AccountEdiUBL(models.AbstractModel):
 
         item_node['cac:AdditionalItemProperty'] = [
             {
-                'cbc:Name': {'_text': value.attribute_id.name},
-                'cbc:Value': {'_text': value.name},
+                'cbc:Name': value.attribute_id.name,
+                'cbc:Value': value.name,
             }
             for value in product.product_template_attribute_value_ids
         ]
         if 'fleet.vehicle' in self.env and base_line.get('vehicle_id'):
             item_node['cac:AdditionalItemProperty'].append({
-                'cbc:Name': {'_text': 'PlateNumber'},
-                'cbc:Value': {'_text': base_line['vehicle_id'].license_plate},
+                'cbc:Name': 'PlateNumber',
+                'cbc:Value': base_line['vehicle_id'].license_plate,
             })
 
     def _ubl_get_line_item_commodity_classification_node_from_intrastat_code(self, vals, intrastat_code):
@@ -515,13 +515,13 @@ class AccountEdiUBL(models.AbstractModel):
         """
         return {
             '_currency': tax_category['currency'],
-            'cbc:ID': {'_text': tax_category['tax_category_code']},
-            'cbc:Name': {'_text': None},
-            'cbc:Percent': {'_text': tax_category['percent']},
-            'cbc:TaxExemptionReasonCode': {'_text': None},
-            'cbc:TaxExemptionReason': {'_text': None},
+            'cbc:ID': tax_category['tax_category_code'],
+            'cbc:Name': None,
+            'cbc:Percent': tax_category['percent'],
+            'cbc:TaxExemptionReasonCode': None,
+            'cbc:TaxExemptionReason': None,
             'cac:TaxScheme': {
-                'cbc:ID': {'_text': tax_category['scheme_id']},
+                'cbc:ID': tax_category['scheme_id'],
             }
         }
 
@@ -596,9 +596,9 @@ class AccountEdiUBL(models.AbstractModel):
         is_charge = recycling_contribution_values['is_charge']
         return {
             '_currency': currency,
-            'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
-            'cbc:AllowanceChargeReasonCode': {'_text': charge_reason_code if is_charge else '100'},
-            'cbc:AllowanceChargeReason': {'_text': tax.name},
+            'cbc:ChargeIndicator': 'true' if is_charge else 'false',
+            'cbc:AllowanceChargeReasonCode': charge_reason_code if is_charge else '100',
+            'cbc:AllowanceChargeReason': tax.name,
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
                 'currencyID': currency.name,
@@ -612,8 +612,8 @@ class AccountEdiUBL(models.AbstractModel):
         is_charge = excise_values['is_charge']
         return {
             '_currency': currency,
-            'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
-            'cbc:AllowanceChargeReason': {'_text': tax.name},
+            'cbc:ChargeIndicator': 'true' if is_charge else 'false',
+            'cbc:AllowanceChargeReason': tax.name,
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
                 'currencyID': currency.name,
@@ -628,10 +628,10 @@ class AccountEdiUBL(models.AbstractModel):
         is_charge = discount_values['is_charge']
         return {
             '_currency': currency,
-            'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
-            'cbc:MultiplierFactorNumeric': {'_text': abs(percent)},
-            'cbc:AllowanceChargeReasonCode': {'_text': 'ADK' if is_charge else '95'},
-            'cbc:AllowanceChargeReason': {'_text': _("Discount")},
+            'cbc:ChargeIndicator': 'true' if is_charge else 'false',
+            'cbc:MultiplierFactorNumeric': abs(percent),
+            'cbc:AllowanceChargeReasonCode': 'ADK' if is_charge else '95',
+            'cbc:AllowanceChargeReason': _("Discount"),
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
                 'currencyID': currency.name,
@@ -753,20 +753,20 @@ class AccountEdiUBL(models.AbstractModel):
             name = partner.commercial_partner_id.display_name
 
         vals['party_node']['cac:PartyName'] = {
-            'cbc:Name': {'_text': name},
+            'cbc:Name': name,
         }
 
     def _ubl_get_partner_address_node(self, vals, partner):
         return {
-            'cbc:StreetName': {'_text': partner.street},
-            'cbc:AdditionalStreetName': {'_text': partner.street2},
-            'cbc:CityName': {'_text': partner.city},
-            'cbc:PostalZone': {'_text': partner.zip},
-            'cbc:CountrySubentity': {'_text': partner.state_id.name},
-            'cbc:CountrySubentityCode': {'_text': partner.state_id.code},
+            'cbc:StreetName': partner.street,
+            'cbc:AdditionalStreetName': partner.street2,
+            'cbc:CityName': partner.city,
+            'cbc:PostalZone': partner.zip,
+            'cbc:CountrySubentity': partner.state_id.name,
+            'cbc:CountrySubentityCode': partner.state_id.code,
             'cac:Country': {
-                'cbc:IdentificationCode': {'_text': partner.country_id.code},
-                'cbc:Name': {'_text': partner.country_id.name},
+                'cbc:IdentificationCode': partner.country_id.code,
+                'cbc:Name': partner.country_id.name,
             },
         }
 
@@ -795,9 +795,9 @@ class AccountEdiUBL(models.AbstractModel):
             normalized_value = normalize_vat_for_ubl(commercial_partner.country_code, identifier_vals['value'])
 
         nodes.append({
-            'cbc:CompanyID': {'_text': normalized_value},
+            'cbc:CompanyID': normalized_value,
             'cac:TaxScheme': {
-                'cbc:ID': {'_text': tax_scheme_id},
+                'cbc:ID': tax_scheme_id,
             },
         })
 
@@ -812,7 +812,7 @@ class AccountEdiUBL(models.AbstractModel):
         identifier_vals = commercial_partner._get_preferred_legal_entity_identifier_vals()
         scheme, value = (identifier_vals.get('scheme'), identifier_vals['value']) if identifier_vals else (None, None)
         nodes.append({
-            'cbc:RegistrationName': {'_text': commercial_partner.name},
+            'cbc:RegistrationName': commercial_partner.name,
             'cbc:CompanyID': {
                 '_text': self.env['res.partner']._validate_identifier_by_scheme(scheme, value).get('value') if scheme and value else value,
                 'schemeID': scheme if scheme in ISO_6523_ICD_CODELIST else None,
@@ -825,10 +825,10 @@ class AccountEdiUBL(models.AbstractModel):
     def _ubl_add_party_contact_node(self, vals):
         partner = vals['party_vals']['partner']
         vals['party_node']['cac:Contact'] = {
-            'cbc:ID': {'_text': None},
-            'cbc:Name': {'_text': partner.name},
-            'cbc:Telephone': {'_text': partner.phone},
-            'cbc:ElectronicMail': {'_text': partner.email},
+            'cbc:ID': None,
+            'cbc:Name': partner.name,
+            'cbc:Telephone': partner.phone,
+            'cbc:ElectronicMail': partner.email,
         }
 
     def _ubl_add_accounting_supplier_party_endpoint_id_node(self, vals):
@@ -995,7 +995,7 @@ class AccountEdiUBL(models.AbstractModel):
     def _ubl_get_delivery_node_from_delivery_address(self, vals):
         delivery_partner = vals['delivery']
         node = {
-            'cbc:ActualDeliveryDate': {'_text': None},
+            'cbc:ActualDeliveryDate': None,
             'cac:DeliveryLocation': {
                 'cbc:ID': {
                     'schemeID': None,
@@ -1089,83 +1089,81 @@ class AccountEdiUBL(models.AbstractModel):
             nodes.append(sub_vals['line_node'])
 
     def _ubl_add_version_id_node(self, vals):
-        vals['document_node']['cbc:UBLVersionID'] = {'_text': None}
+        vals['document_node']['cbc:UBLVersionID'] = None
 
     def _ubl_add_customization_id_node(self, vals):
-        vals['document_node']['cbc:CustomizationID'] = {'_text': None}
+        vals['document_node']['cbc:CustomizationID'] = None
 
     def _ubl_add_profile_id_node(self, vals):
-        vals['document_node']['cbc:ProfileID'] = {'_text': None}
+        vals['document_node']['cbc:ProfileID'] = None
 
     def _ubl_add_id_node(self, vals):
-        vals['document_node']['cbc:ID'] = {'_text': None}
+        vals['document_node']['cbc:ID'] = None
 
         if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
             vals['document_node']['cbc:ID']['_text'] = vals['invoice'].name
 
     def _ubl_add_copy_indicator_node(self, vals):
-        vals['document_node']['cbc:CopyIndicator'] = {'_text': None}
+        vals['document_node']['cbc:CopyIndicator'] = None
 
     def _ubl_add_issue_date_node(self, vals):
-        issue_date_node = vals['document_node']['cbc:IssueDate'] = {'_text': None}
-        vals['document_node']['cbc:IssueTime'] = {'_text': None}
+        issue_date_node = vals['document_node']['cbc:IssueDate'] = None
+        vals['document_node']['cbc:IssueTime'] = None
 
         if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
             issue_date_node['_text'] = vals['invoice'].invoice_date
 
     def _ubl_add_due_date_node(self, vals):
-        due_date_node = vals['document_node']['cbc:DueDate'] = {'_text': None}
+        due_date_node = vals['document_node']['cbc:DueDate'] = None
 
         if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
             due_date_node['_text'] = vals['invoice'].invoice_date_due
 
     def _ubl_add_invoice_type_code_node(self, vals):
-        vals['document_node']['cbc:InvoiceTypeCode'] = {'_text': None}
+        vals['document_node']['cbc:InvoiceTypeCode'] = None
 
     def _ubl_add_credit_note_type_code_node(self, vals):
-        vals['document_node']['cbc:CreditNoteTypeCode'] = {'_text': None}
+        vals['document_node']['cbc:CreditNoteTypeCode'] = None
 
     def _ubl_add_order_type_code_node(self, vals):
-        vals['document_node']['cbc:OrderTypeCode'] = {'_text': None}
+        vals['document_node']['cbc:OrderTypeCode'] = None
 
     def _ubl_add_notes_nodes(self, vals):
         vals['document_node']['cbc:Note'] = []
 
     def _ubl_add_document_currency_code_node_foreign_currency(self, vals):
-        vals['document_node']['cbc:DocumentCurrencyCode'] = {'_text': vals['currency'].name}
+        vals['document_node']['cbc:DocumentCurrencyCode'] = vals['currency'].name
 
     def _ubl_add_document_currency_code_node_company_currency(self, vals):
-        vals['document_node']['cbc:DocumentCurrencyCode'] = {'_text': vals['company'].currency_id.name}
+        vals['document_node']['cbc:DocumentCurrencyCode'] = vals['company'].currency_id.name
 
     def _ubl_add_document_currency_code_node(self, vals):
-        vals['document_node']['cbc:DocumentCurrencyCode'] = {'_text': None}
+        vals['document_node']['cbc:DocumentCurrencyCode'] = None
 
     def _ubl_add_tax_currency_code_node_company_currency_if_foreign_currency(self, vals):
         company = vals['company']
         currency = vals['currency_id']
-        vals['document_node']['cbc:TaxCurrencyCode'] = {'_text': None if currency == company.currency_id else company.currency_id.name}
+        vals['document_node']['cbc:TaxCurrencyCode'] = None if currency == company.currency_id else company.currency_id.name
 
     def _ubl_add_tax_currency_code_node_company_currency(self, vals):
-        vals['document_node']['cbc:TaxCurrencyCode'] = {'_text': vals['company'].currency_id.name}
+        vals['document_node']['cbc:TaxCurrencyCode'] = vals['company'].currency_id.name
 
     def _ubl_add_tax_currency_code_node_empty(self, vals):
-        vals['document_node']['cbc:TaxCurrencyCode'] = {'_text': None}
+        vals['document_node']['cbc:TaxCurrencyCode'] = None
 
     def _ubl_add_tax_currency_code_node(self, vals):
-        vals['document_node']['cbc:TaxCurrencyCode'] = {'_text': None}
+        vals['document_node']['cbc:TaxCurrencyCode'] = None
 
     def _ubl_add_buyer_reference_node(self, vals):
-        vals['document_node']['cbc:BuyerReference'] = {'_text': None}
+        vals['document_node']['cbc:BuyerReference'] = None
 
     def _ubl_add_invoice_period_nodes(self, vals):
         vals['document_node']['cac:InvoicePeriod'] = {}
 
     def _ubl_add_order_reference_node(self, vals):
         order_ref_node = vals['document_node']['cac:OrderReference'] = {
-            'cbc:ID': {'_text': None},
-            'cbc:SalesOrderID': {
-                '_text': None,
-            },
+            'cbc:ID': None,
+            'cbc:SalesOrderID': None,
         }
 
         if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
@@ -1195,15 +1193,15 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _ubl_get_partner_bank_address_node(self, vals, partner_bank):
         return {
-            'cbc:StreetName': {'_text': partner_bank.street},
-            'cbc:AdditionalStreetName': {'_text': partner_bank.street2},
-            'cbc:CityName': {'_text': partner_bank.city},
-            'cbc:PostalZone': {'_text': partner_bank.zip},
-            'cbc:CountrySubentity': {'_text': partner_bank.state_id.name},
-            'cbc:CountrySubentityCode': {'_text': partner_bank.state_id.code},
+            'cbc:StreetName': partner_bank.street,
+            'cbc:AdditionalStreetName': partner_bank.street2,
+            'cbc:CityName': partner_bank.city,
+            'cbc:PostalZone': partner_bank.zip,
+            'cbc:CountrySubentity': partner_bank.state_id.name,
+            'cbc:CountrySubentityCode': partner_bank.state_id.code,
             'cac:Country': {
-                'cbc:IdentificationCode': {'_text': partner_bank.country_id.code},
-                'cbc:Name': {'_text': partner_bank.country_id.name},
+                'cbc:IdentificationCode': partner_bank.country_id.code,
+                'cbc:Name': partner_bank.country_id.name,
             },
         }
 
@@ -1221,29 +1219,25 @@ class AccountEdiUBL(models.AbstractModel):
                     '_text': partner_bank.bank_bic,
                     'schemeID': 'BIC',
                 },
-                'cbc:Name': {'_text': partner_bank.bank_name},
+                'cbc:Name': partner_bank.bank_name,
                 'cac:Address': self._ubl_get_partner_bank_address_node(vals, partner_bank)
             }
         }
 
     def _ubl_get_payment_means_payee_financial_account_node_from_partner_bank(self, vals, partner_bank):
         return {
-            'cbc:ID': {'_text': sanitize_account_number(partner_bank.account_number)},
+            'cbc:ID': sanitize_account_number(partner_bank.account_number),
             'cac:FinancialInstitutionBranch': self._ubl_get_payment_means_payee_financial_account_institution_branch_node_from_partner_bank(vals, partner_bank),
         }
 
     def _ubl_get_payment_means_payer_financial_account_node_from_payer_bank(self, vals, payer_bank):
         return {
-            'cbc:ID': {
-                '_text': sanitize_account_number(payer_bank.account_number),
-            },
+            'cbc:ID': sanitize_account_number(payer_bank.account_number),
         }
 
     def _ubl_get_payment_means_payment_mandate_node_from_mandate(self, vals, mandate):
         return {
-            'cbc:ID': {
-                '_text': mandate.name,
-            },
+            'cbc:ID': mandate.name,
             'cac:PayerFinancialAccount': self._ubl_get_payment_means_payer_financial_account_node_from_payer_bank(vals, mandate.partner_bank_id),
         }
 
@@ -1256,7 +1250,7 @@ class AccountEdiUBL(models.AbstractModel):
             return
 
         return {
-            'cbc:Note': {'_text': note}
+            'cbc:Note': note
         }
 
     def _ubl_add_payment_terms_nodes(self, vals):
@@ -1270,20 +1264,20 @@ class AccountEdiUBL(models.AbstractModel):
     def _ubl_get_allowance_charge_early_payment_tax_category_node(self, vals, tax_category):
         return {
             '_currency': tax_category['currency'],
-            'cbc:ID': {'_text': tax_category['tax_category_code']},
-            'cbc:Percent': {'_text': tax_category['percent']},
+            'cbc:ID': tax_category['tax_category_code'],
+            'cbc:Percent': tax_category['percent'],
             'cac:TaxScheme': {
-                'cbc:ID': {'_text': tax_category['scheme_id']},
+                'cbc:ID': tax_category['scheme_id'],
             }
         }
 
     def _ubl_get_allowance_charge_global_discount_tax_category_node(self, vals, tax_category):
         return {
             '_currency': tax_category['currency'],
-            'cbc:ID': {'_text': tax_category['tax_category_code']},
-            'cbc:Percent': {'_text': tax_category['percent']},
+            'cbc:ID': tax_category['tax_category_code'],
+            'cbc:Percent': tax_category['percent'],
             'cac:TaxScheme': {
-                'cbc:ID': {'_text': tax_category['scheme_id']},
+                'cbc:ID': tax_category['scheme_id'],
             },
         }
 
@@ -1293,9 +1287,9 @@ class AccountEdiUBL(models.AbstractModel):
         is_charge = early_payment_values['is_charge']
         return {
             '_currency': currency,
-            'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
-            'cbc:AllowanceChargeReasonCode': {'_text': 'ZZZ' if is_charge else '64'},
-            'cbc:AllowanceChargeReason': {'_text': _("Conditional cash/payment discount")},
+            'cbc:ChargeIndicator': 'true' if is_charge else 'false',
+            'cbc:AllowanceChargeReasonCode': 'ZZZ' if is_charge else '64',
+            'cbc:AllowanceChargeReason': _("Conditional cash/payment discount"),
             'cbc:Amount': {
                 '_text': currency.round(abs(amount)),
                 'currencyID': currency.name,
@@ -1312,9 +1306,9 @@ class AccountEdiUBL(models.AbstractModel):
         is_charge = global_discount_values['is_charge']
         return {
             '_currency': currency,
-            'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
-            'cbc:AllowanceChargeReasonCode': {'_text': 'ADK' if is_charge else '95'},
-            'cbc:AllowanceChargeReason': {'_text': _("General upsell") if is_charge else _("General discount")},
+            'cbc:ChargeIndicator': 'true' if is_charge else 'false',
+            'cbc:AllowanceChargeReasonCode': 'ADK' if is_charge else '95',
+            'cbc:AllowanceChargeReason': _("General upsell") if is_charge else _("General discount"),
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
                 'currencyID': currency.name,
@@ -1406,13 +1400,13 @@ class AccountEdiUBL(models.AbstractModel):
         """
         return {
             '_currency': tax_category['currency'],
-            'cbc:ID': {'_text': tax_category['tax_category_code']},
-            'cbc:Name': {'_text': None},
-            'cbc:Percent': {'_text': tax_category['percent']},
-            'cbc:TaxExemptionReasonCode': {'_text': tax_category.get('tax_exemption_reason_code')},
-            'cbc:TaxExemptionReason': {'_text': tax_category.get('tax_exemption_reason')},
+            'cbc:ID': tax_category['tax_category_code'],
+            'cbc:Name': None,
+            'cbc:Percent': tax_category['percent'],
+            'cbc:TaxExemptionReasonCode': tax_category.get('tax_exemption_reason_code'),
+            'cbc:TaxExemptionReason': tax_category.get('tax_exemption_reason'),
             'cac:TaxScheme': {
-                'cbc:ID': {'_text': tax_category['scheme_id']},
+                'cbc:ID': tax_category['scheme_id'],
             }
         }
 
@@ -1437,13 +1431,9 @@ class AccountEdiUBL(models.AbstractModel):
                 '_text': FloatFmt(tax_subtotal['tax_amount'], min_dp=currency.decimal_places),
                 'currencyID': currency.name
             },
-            'cbc:Percent': {
-                '_text': (
-                    tax_subtotal['percent']
+            'cbc:Percent': tax_subtotal['percent']
                     if tax_subtotal.get('percent') is not None
-                    else None
-                ),
-            },
+                    else None,
             'cac:TaxCategory': [
                 self._ubl_get_tax_category_node(vals, tax_category)
                 for tax_category in tax_subtotal['tax_categories'].values()

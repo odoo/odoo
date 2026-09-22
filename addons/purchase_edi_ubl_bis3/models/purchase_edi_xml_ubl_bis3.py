@@ -129,15 +129,15 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
     def _add_purchase_order_header_nodes(self, document_node, vals):
         purchase_order = vals['purchase_order']
         document_node.update({
-            'cbc:CustomizationID': {'_text': 'urn:fdc:peppol.eu:poacc:trns:order:3'},
-            'cbc:ProfileID': {'_text': 'urn:fdc:peppol.eu:poacc:bis:ordering:3'},
-            'cbc:ID': {'_text': purchase_order.name},
-            'cbc:IssueDate': {'_text': purchase_order.create_date.date()},
-            'cbc:OrderTypeCode': {'_text': '105'},
-            'cbc:Note': {'_text': html2plaintext(purchase_order.note)} if purchase_order.note else None,
-            'cbc:DocumentCurrencyCode': {'_text': vals['currency_name']},
+            'cbc:CustomizationID': 'urn:fdc:peppol.eu:poacc:trns:order:3',
+            'cbc:ProfileID': 'urn:fdc:peppol.eu:poacc:bis:ordering:3',
+            'cbc:ID': purchase_order.name,
+            'cbc:IssueDate': purchase_order.create_date.date(),
+            'cbc:OrderTypeCode': '105',
+            'cbc:Note': html2plaintext(purchase_order.note) if purchase_order.note else None,
+            'cbc:DocumentCurrencyCode': vals['currency_name'],
             'cac:QuotationDocumentReference': {
-                'cbc:ID': {'_text': purchase_order.partner_ref}
+                'cbc:ID': purchase_order.partner_ref
             },
         })
 
@@ -181,7 +181,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         purchase_order = vals['purchase_order']
         if purchase_order.payment_term_id:
             document_node['cac:PaymentTerms'] = {
-                'cbc:Note': {'_text': purchase_order.payment_term_id.name}
+                'cbc:Note': purchase_order.payment_term_id.name
             }
 
     def _add_purchase_order_allowance_charge_nodes(self, document_node, vals):
@@ -304,14 +304,14 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         product = base_line['product_id']
 
         item_node['cac:BuyersItemIdentification'] = {
-            'cbc:ID': {'_text': product.default_code or product.id},
+            'cbc:ID': product.default_code or product.id,
         }
 
         # When generating purchase order (PO) we are not considered as the seller of the sale but
         # buyer. The `SellersItemIdentification` is therefore the PO's partner product ID.
         supplier_info = base_line['supplier_info']
         item_node['cac:SellersItemIdentification'] = {
-            'cbc:ID': {'_text': supplier_info.product_code or None},
+            'cbc:ID': supplier_info.product_code or None,
         }
 
     def _add_purchase_order_line_item_nodes(self, line_node, vals):
