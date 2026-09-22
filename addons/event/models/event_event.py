@@ -1006,7 +1006,7 @@ class EventEvent(models.Model):
                 else:
                     available = self.seats_available
             # ticket is constrained: max standard for either each slot / ticket, either global (no slots)
-            if available != 0 and ticket and ticket.seats_max:
+            if ticket and ticket.seats_max:
                 if slot:
                     ticket_available = (
                         ticket.seats_max
