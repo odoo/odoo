@@ -6,6 +6,7 @@ import {
     click,
     contains,
     defineMailModels,
+    focus,
     hover,
     insertText,
     listenStoreFetch,
@@ -200,6 +201,25 @@ test("Hover on chat bubble shows chat name + last message preview", async () => 
     });
     await hover(".o-mail-ChatBubble[name='Demo']");
     await contains(".o-mail-ChatBubble-preview:text('Demo You: Hi')");
+});
+
+test("Escape closes a chat bubble preview containing a focused link", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: '<a href="https://odoo.com/">https://odoo.com</a>',
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    setupChatHub({ folded: [channelId] });
+    await start();
+    await hover(".o-mail-ChatBubble[name='General']");
+    await contains(".o-mail-ChatBubble-preview");
+    // Do not focus the anchor automatically, as doing so would show an empty preview for long messages with trailing link
+    await focus('.o-mail-ChatBubble-preview a[href="https://odoo.com/"]:not(:focus)');
+    await triggerHotkey("Escape");
+    await contains(".o-mail-ChatBubble-preview", { count: 0 });
 });
 
 test("Hover on chat bubble shows message preview along with message seen indicator", async () => {
