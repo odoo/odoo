@@ -21,6 +21,10 @@ class ProductTemplate(models.Model):
             and product_or_template.is_product_variant
             and product_or_template.is_storable
             and not (in_store_dm.excluded_tag_ids & product_or_template.all_product_tag_ids)
+            and (
+                not in_store_dm.must_have_tag_ids
+                or (in_store_dm.must_have_tag_ids & product_or_template.all_product_tag_ids)
+            )
         ):
             product_sudo = product_or_template.sudo()  # To read the stock values when public user.
             order_sudo = request.cart
