@@ -137,3 +137,14 @@ class TestAttachmentController(MailControllerAttachmentCommon):
             "access_token": attachment._get_ownership_token()
         })
         self.assertFalse(msg.attachment_ids)
+
+    def test_attachment_delete_readonly(self):
+        """Test access to delete an attachment where the user has read but not write access."""
+        thread = self.env["mail.test.access"].create({"access": "internal_ro", "name": "Read only"})
+        self._execute_subtests_delete(
+            (self.user_employee,),
+            token=False,
+            allowed=False,
+            thread=thread,
+            error="odoo.exceptions.AccessError",
+        )
