@@ -367,6 +367,8 @@ class CreateMixin(_ModelStubs):
         if self._check_company_auto:
             records._check_company()
 
+        records._access_inputs_written(field_names, created=True)
+
         prof.stop("validate")
         prof.report(
             _orm_crud,

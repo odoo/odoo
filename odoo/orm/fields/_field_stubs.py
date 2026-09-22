@@ -77,7 +77,7 @@ class _FieldStubs:
         def _update_inverse(self, records: BaseModel, value: BaseModel) -> None: ...
 
         def _evict_user_scopes_reading_through(
-            self, env: Environment, fnames: Collection[str]
+            self, env: Environment, fnames: Collection[str] | None, model_name: str
         ) -> None: ...
 
         def _update_inverses(

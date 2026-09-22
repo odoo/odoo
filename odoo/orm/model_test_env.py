@@ -360,6 +360,7 @@ class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
     # A database's own ilike normalizer (Registry.get_ilike_normalizer(env)), when a
     # differential wants this registry to fold exactly as that database does.
     ilike_normalizer: Callable[[str], str] | None = None
+    cache_epoch: int = 0
 
     def __init__(
         self,
@@ -454,6 +455,7 @@ class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
         self.clear_cache(*CACHES_BY_KEY)
 
     def clear_cache(self, *cache_names: str) -> None:
+        self.cache_epoch += 1
         for cache_name in cache_names or ("default",):
             if "." in cache_name:
                 raise ValueError(

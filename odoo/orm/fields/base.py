@@ -911,10 +911,7 @@ class Field[T](
             if core.is_protected(self, record_id):
                 self.mark_dirty(records, value)
                 if record_id:
-                    # a recompute writes through here, never through write():
-                    # user scopes whose read rule tests this field must forget
-                    # what they hold, exactly as write() does after mark_dirty
-                    records._evict_x2many_scopes_reading_through((self.name,))
+                    records._access_inputs_written((self.name,))
                 return
             if not record_id:
                 self._settle_new_record_compute_group(records)
@@ -957,8 +954,7 @@ class Field[T](
         recs = _get_recordset_like(records, ids)
         self.mark_dirty(recs, value)
         if any(ids):
-            # same eviction as write(), which this protected path bypasses
-            recs._evict_x2many_scopes_reading_through((self.name,))
+            recs._access_inputs_written((self.name,))
 
     def _update_new(
         self, records: BaseModel, ids: list[typing.Any], value: typing.Any
@@ -1005,8 +1001,6 @@ class Field[T](
             self.recompute_where_scheduled(records)
 
     def recompute_where_scheduled(self, records: ModelLike) -> None:
-        # a row of a table-inheritance tree is scheduled on the model the
-        # trigger named: that model computes it, whichever member reads it
         env = records.env
         core = env.core
         for field in (self, *self.tree_siblings):

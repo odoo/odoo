@@ -2,6 +2,11 @@
 <odoo>
 
     <data noupdate="1">
+        <record id="test_orm_scope_item_rule_visible_tag" model="ir.rule">
+            <field name="name">test_orm.scope_item: its tag is visible</field>
+            <field name="model_id" ref="test_orm.model_test_orm_scope_item" />
+            <field name="domain_force">[('tag_id.visible', '=', True)]</field>
+        </record>
         <record id="test_orm_company_config_rule_company" model="ir.rule">
             <field name="name">test_orm.company_config: the reader's companies</field>
             <field name="model_id" ref="test_orm.model_test_orm_company_config" />

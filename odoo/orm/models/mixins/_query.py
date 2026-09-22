@@ -239,16 +239,23 @@ class _QueryMixin(_ModelStubs):
         )
         if query is not None:
             prof.mark("raw")
-            return query
-
-        domain = domain.optimize_full(typing.cast("BaseModel", self))
-        if domain.is_false():
-            _debug.logic("query.search.domain_false", model=self._name)
-            return self.browse()._as_query()
-
-        return backend.search(
-            self, domain, offset, limit, order, check_access=check_access, prof=prof
-        )
+        else:
+            domain = domain.optimize_full(typing.cast("BaseModel", self))
+            if domain.is_false():
+                _debug.logic("query.search.domain_false", model=self._name)
+                query = self.browse()._as_query()
+            else:
+                query = backend.search(
+                    self,
+                    domain,
+                    offset,
+                    limit,
+                    order,
+                    check_access=check_access,
+                    prof=prof,
+                )
+        self.env.transaction.access_memo.note_search(self._name, query)
+        return query
 
     def _as_query(self, ordered: bool = True) -> Query:
         return self.env.backend.as_query(self, ordered)

@@ -426,6 +426,12 @@ class Environment(Mapping[str, "BaseModel"]):
             user_company_ids.insert(0, current)
         return self["res.company"].browse(user_company_ids)
 
+    @functools.cached_property
+    def _read_access_key(self) -> tuple:
+        # what a read verdict depends on besides the data: the user, sudo and
+        # the context values the record rules read
+        return (self.uid, self.su, self.registry.access_policy.rule_context(self))
+
     def _access_scope(self) -> typing.Any:
         if self.su:
             return True

@@ -1,3 +1,4 @@
+import contextlib
 import itertools
 import typing
 from collections.abc import (
@@ -578,21 +579,36 @@ class _RelationalMulti(_Relational):
         return env(user=uid, context=context, su=False)
 
     def _scope_reads_through(
-        self, env: Environment, key: tuple, fnames: Collection[str]
+        self,
+        env: Environment,
+        key: tuple,
+        fnames: Collection[str] | None,
+        model_name: str,
     ) -> bool:
         # a user's search applies the user's read rules on the comodel; a
-        # write to a field a rule tests can move a record in or out of view.
-        # A comodel whose _search is overridden narrows by code: it declares
-        # the fields that code reads, or every write may have moved a record
+        # write to a field a rule reads, on the comodel or along a path from
+        # it, can move a record in or out of view. A comodel whose _search is
+        # overridden narrows by code: it declares the fields that code reads
+        # or every write anywhere may have moved a record, and what its
+        # searches were seen to read counts whatever it declared
+        if fnames is None:
+            return True
         comodel_cls = type(env[self.comodel_name])
+        memo = env.transaction.access_memo
         if is_search_overridden(comodel_cls):
             visibility = comodel_cls._search_visibility_fields
-            if visibility is None or not set(visibility).isdisjoint(fnames):
+            if visibility is None:
+                return True
+            observed = memo.observed_facts(self.comodel_name)
+            if model_name == self.comodel_name:
+                if not set(visibility).isdisjoint(fnames) or any(
+                    (model_name, fname) in observed for fname in fnames
+                ):
+                    return True
+            elif (model_name, "id") in observed:
                 return True
         try:
-            domain = env.registry.access_policy.record_domain(
-                self._scope_env(env, key), self.comodel_name, "read"
-            )
+            facts = memo.read_facts(self._scope_env(env, key), self.comodel_name)
         except NotImplementedError:
             # an environment without an access policy declares no rule
             return False
@@ -606,17 +622,14 @@ class _RelationalMulti(_Relational):
                 uid=key[env._field_depends_context[self].index("access")][0],
             )
             return True
-        return any(
-            condition.field_expr.split(".", 1)[0] in fnames
-            for condition in domain.iter_conditions()
-        )
+        return facts is None or any((model_name, fname) in facts for fname in fnames)
 
     def _evict_user_scopes_reading_through(
-        self, env: Environment, fnames: Collection[str]
+        self, env: Environment, fnames: Collection[str] | None, model_name: str
     ) -> None:
-        # after a write of `fnames` on comodel rows: every user scope whose
-        # read rule tests one of them forgets what it held, and its next
-        # read searches; the superuser reads through no rule
+        # after a write of `fnames` on rows of `model_name`: every user scope
+        # whose read of this field reads one of them forgets what it held,
+        # and its next read searches; the superuser reads through no rule
         verdicts: dict[tuple, bool] = {}
         evicted = 0
         for key, slot in list(env.core.iter_context_caches(self)):
@@ -627,7 +640,7 @@ class _RelationalMulti(_Relational):
             ):
                 continue
             if key not in verdicts:
-                verdicts[key] = self._scope_reads_through(env, key, fnames)
+                verdicts[key] = self._scope_reads_through(env, key, fnames, model_name)
             if verdicts[key]:
                 evicted += len(slot)
                 slot.clear()
@@ -637,9 +650,33 @@ class _RelationalMulti(_Relational):
                 model=self.model_name,
                 field=self.name,
                 comodel=self.comodel_name,
-                fields=sorted(fnames),
+                written_model=model_name,
+                fields=None if fnames is None else sorted(fnames),
                 evicted=evicted,
             )
+
+    def _observing_search(
+        self, comodel: BaseModel
+    ) -> contextlib.AbstractContextManager[None]:
+        env = comodel.env
+        if env.su or not is_search_overridden(type(comodel)):
+            return contextlib.nullcontext()
+        return env.transaction.access_memo.observing(self.comodel_name)
+
+    def _watch_user_scope(self, env: Environment) -> None:
+        # a user slot is about to hold what the user's search returns: the
+        # transaction learns which writes elsewhere may make it stale
+        if env.su or (self.compute and self.compute_sudo):
+            return
+        comodel_cls = type(env[self.comodel_name])
+        everything = (
+            is_search_overridden(comodel_cls)
+            and comodel_cls._search_visibility_fields is None
+        )
+        try:
+            env.transaction.access_memo.watch_x2many(env, self, everything)
+        except NotImplementedError:
+            return
 
     def _superuser_scope_key(self, env: Environment) -> tuple:
         own = env.get_cache_key(self)
@@ -794,6 +831,7 @@ class _RelationalMulti(_Relational):
         # compute_sudo compute that follows serves from the cache instead of
         # fetching the relation once more for its scope
         env = records.env
+        self._watch_user_scope(env)
         if env.su or not self._reads_as_superuser(env):
             super()._insert_cache(records, values)
             return
@@ -825,6 +863,7 @@ class _RelationalMulti(_Relational):
         keep_other_scopes: bool = False,
         created: bool = False,
     ) -> None:
+        self._watch_user_scope(records.env)
         if not keep_other_scopes:
             if cache_value and not all(isinstance(id_, int) for id_ in cache_value):
                 self._mirror_to_other_scopes(records.env, records._ids, cache_value)

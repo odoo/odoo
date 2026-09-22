@@ -71,11 +71,13 @@ class _RegistrySignalingMixin(_RegistryStubs):
 
     registry_sequence: int
     cache_sequences: dict[str, int]
+    cache_epoch: int = 0
     _caches: _RegistryCaches
     _invalidation_flags: threading.local
 
     def _init_signaling_state(self) -> None:
         self._caches = _RegistryCaches()
+        self.cache_epoch = 0
         self.registry_sequence = -1
         self.cache_sequences = {}
         self._invalidation_flags = threading.local()
@@ -131,6 +133,8 @@ class _RegistrySignalingMixin(_RegistryStubs):
 
     def _clear_cache_group(self, cache_name: str) -> None:
         self._caches.clear_group(cache_name)
+        # every thread's transactions drop what they derived from the caches
+        self.cache_epoch += 1
 
     def _invalidate_cache_groups(self, cache_names: Collection[str]) -> None:
         if _debug.perf.enabled:

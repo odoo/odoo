@@ -138,12 +138,30 @@ class CacheMixin(_ModelStubs):
                 flushed=flush,
             )
 
-    def _evict_x2many_scopes_reading_through(self, fnames: Collection[str]) -> None:
+    def _evict_x2many_scopes_reading_through(
+        self, fnames: Collection[str] | None
+    ) -> None:
         env = self.env
         core = env.core
         for field in env.registry.fields_by_comodel.get(self._name, ()):
             if field.is_x2many and field.store and core.has_any_context_cached(field):
-                field._evict_user_scopes_reading_through(env, fnames)
+                field._evict_user_scopes_reading_through(env, fnames, self._name)
+
+    def _access_inputs_written(
+        self, fnames: Collection[str] | None, *, created: bool = False
+    ) -> None:
+        # `fnames` of these rows changed (None: every field, the rows were
+        # deleted): a user's x2many slots over this model, or over any model
+        # whose read rule reads through it, may no longer be what the user's
+        # search would return. A created row is in no slot of its own model yet
+        env = self.env
+        if not created:
+            self._evict_x2many_scopes_reading_through(fnames)
+        memo = env.transaction.access_memo
+        core = env.core
+        for field in memo.written(env, self._name):
+            if field.comodel_name != self._name and core.has_any_context_cached(field):
+                field._evict_user_scopes_reading_through(env, fnames, self._name)
 
     def _check_no_pending_write(
         self, fields: Collection[Field], ids: Sequence[IdType] | None

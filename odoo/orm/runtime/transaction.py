@@ -15,6 +15,7 @@ from ..components.core import OrmCore
 from ..components.unit_of_work import UnitOfWork
 from ..primitives import SUPERUSER_ID, NewId
 from ._backend_memory import InMemoryBackend
+from .access_memo import AccessMemo
 from .backend import POSTGRES_BACKEND
 from .recordset_cache import Cache
 from .registry import Registry
@@ -86,6 +87,7 @@ class Transaction:
         "_last_env",
         "_recent_envs",
         "_ref_cache",
+        "access_memo",
         "backend",
         "cache",
         "core",
@@ -134,6 +136,7 @@ class Transaction:
         self._ref_cache: dict[tuple[str, int], bool] = {}
         self._create_frames: list[dict[str, set[int]]] = []
         self.prefetch_batch: tuple[str, tuple] | None = None
+        self.access_memo = AccessMemo()
 
         self.observers: tuple[OrmObserver, ...] = enabled_observers()
         _debug.lifecycle(
@@ -307,6 +310,7 @@ class Transaction:
         self._cache_store.clear()
         self._compute_engine.clear()
         self._ref_cache.clear()
+        self.access_memo.clear()
         self._last_env = None
         self._recent_envs.clear()
         if env := next(iter(self.envs), None):
@@ -338,3 +342,4 @@ class Transaction:
         _debug.lifecycle("transaction.invalidate_field_data", db=self.registry.db_name)
         self._cache_store.invalidate_all(keep=_is_new_id if keep_new_records else None)
         self._ref_cache.clear()
+        self.access_memo.clear()

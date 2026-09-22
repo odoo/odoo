@@ -185,7 +185,8 @@ class One2many(_RelationalMulti):
         if comodel._active_name:
             field_names.append(comodel._active_name)
         try:
-            lines = comodel.search_fetch(domain, field_names)
+            with self._observing_search(comodel):
+                lines = comodel.search_fetch(domain, field_names)
         except AccessError as e:
             raise AccessError(
                 records.env._("Failed to read field %s", self) + "\n" + str(e)

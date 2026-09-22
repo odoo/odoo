@@ -173,7 +173,9 @@ class TestX2manyScopeKey(TransactionCase):
         user.sudo().company_ids = [Command.set(company_a.ids)]
         self.env.registry.clear_cache()
 
-        self.assertTrue(field._scope_reads_through(self.env, user_key, {"name"}))
+        self.assertTrue(
+            field._scope_reads_through(self.env, user_key, {"name"}, "res.company")
+        )
 
 
 @tagged("post_install", "-at_install")

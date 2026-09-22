@@ -312,6 +312,7 @@ class Registry(
             return []
 
         self._caches.clear_all()
+        self.cache_epoch += 1
 
         reset_cached_properties(self)
         self.model_graph.clear_caches()
@@ -447,6 +448,7 @@ class Registry(
                     model._unregister_hook()
 
             self._caches.clear_all()
+            self.cache_epoch += 1
 
             self.model_graph.begin_invalidation()
             try:

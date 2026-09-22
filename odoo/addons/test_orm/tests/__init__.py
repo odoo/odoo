@@ -1,4 +1,5 @@
 from . import (
+    test_access_scope,
     test_attributes,
     test_autovacuum,
     test_backend_differential,

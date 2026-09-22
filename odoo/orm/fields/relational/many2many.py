@@ -213,9 +213,10 @@ class Many2many(_RelationalMulti):
 
         domain = self.get_comodel_domain(records)
         try:
-            query = comodel._search(
-                domain, order=comodel._order, bypass_access=filter_access
-            )
+            with self._observing_search(comodel):
+                query = comodel._search(
+                    domain, order=comodel._order, bypass_access=filter_access
+                )
         except AccessError as e:
             raise AccessError(
                 records.env._("Failed to read field %s", self) + "\n" + str(e)
@@ -233,15 +234,6 @@ class Many2many(_RelationalMulti):
             filter_access=filter_access,
         )
         if _debug.logic.enabled and not domain.is_true():
-            # The field's `domain=` is conventionally a UI restriction and is
-            # not enforced on write, yet it decides what this read returns: a
-            # row committed to the relation table whose comodel record does
-            # not satisfy it is stored, and absent from every read, with
-            # nothing raised and nothing logged. `~/Odoo/CLAUDE.md` §4 records
-            # the open question and asks for the cheap detector -- the ORM's
-            # answer and the table's side by side, because a single number is
-            # a fact and two that should agree are a finding. It costs two
-            # queries, and only when this channel is armed.
             cols = (relation, column1, column2)  # debuglog
             be = records.env.backend  # debuglog
             all_q = comodel._search([], bypass_access=filter_access)  # debuglog

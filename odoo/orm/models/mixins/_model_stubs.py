@@ -141,7 +141,10 @@ class _ModelStubs:
             flush: bool = True,
         ) -> None: ...
         def _evict_x2many_scopes_reading_through(
-            self, fnames: Collection[str]
+            self, fnames: Collection[str] | None
+        ) -> None: ...
+        def _access_inputs_written(
+            self, fnames: Collection[str] | None, *, created: bool = False
         ) -> None: ...
         def update_field_translations(
             self, field_name: str, translations: dict, source_lang: str = ""

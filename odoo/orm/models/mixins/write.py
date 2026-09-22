@@ -236,7 +236,7 @@ class WriteMixin(_ModelStubs):
                 field.mark_dirty(self, value)
             if real_recs:
                 written_names = [field.name for field, _value in field_values]
-                real_recs._evict_x2many_scopes_reading_through(written_names)
+                real_recs._access_inputs_written(written_names)
             prof.mark("dirty")
 
             self.modified(vals)

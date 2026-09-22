@@ -210,6 +210,8 @@ class UnlinkMixin(_ModelStubs):
         )
         Reference.discard_verified_models(env, gone)
         self._invalidate_ref_cache(gone)
+        for model_name in gone:
+            env[model_name]._access_inputs_written(None)
 
     def _invalidate_ref_cache(self, model_names: typing.Iterable[str]) -> None:
         names = set(model_names)

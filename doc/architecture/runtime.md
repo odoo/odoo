@@ -391,10 +391,20 @@ mutation is one for everyone); at create the given value is the truth for every
 scope; an inverse-side addition (a many2one write, a create, a many2many link)
 appends to the superuser's slot and the writer's and evicts every other user's
 entry; an inverse-side removal applies to every scope; a write to a field a
-scope's read rule tests, or one a comodel's `_search` override declares in
-`_search_visibility_fields` (`_evict_user_scopes_reading_through`, from
-`WriteMixin.write`), empties that scope's slots of every x2many whose comodel
-was written — the verdict may have changed, and the next read searches. None
+scope's read rule reads — on the comodel or anywhere along a path from it
+(`tag_id.visible`), a one2many's inverse and a many2many's relation siblings
+included — or one a comodel's `_search` override declares in
+`_search_visibility_fields` or was seen to read (the searches it ran under
+`AccessMemo.observing`; a whole model when it searched one) empties that
+scope's slots (`_evict_user_scopes_reading_through`, from `write`, a protected
+`__set__`, the `create` of rows the rule reads through, and `unlink`) — the
+verdict may have changed, and the next read searches. A slot whose rule the ORM
+cannot read (a custom SQL condition, a subquery, a searchable compute with no
+dependencies) and a comodel whose override declares nothing are emptied by any
+write of the transaction. The transaction's `AccessMemo` says which fields to
+visit: a user slot's first fill registers its field under every model its rule
+reads, and a cleared registry cache re-registers them under the rules as they
+now stand. None
 of it fetches mid-write (`Many2one._update_inverses` documents why there must
 be none). Three shapes are structural, not special cases: a *pending* record
 (`NewId`) has no search to decide anything, so `_ScopedSlot` routes it to one
