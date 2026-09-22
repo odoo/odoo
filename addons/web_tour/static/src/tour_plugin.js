@@ -83,7 +83,7 @@ export class TourPlugin extends Plugin {
 
         const paramsTourName = new URLSearchParams(location.search).get("tour");
         if (paramsTourName) {
-            this.startTour(paramsTourName, { mode: "manual" });
+            this.startTour(paramsTourName, { mode: "manual", fromDB: true });
         }
 
         if (tourState.getCurrentTour()) {
@@ -96,6 +96,7 @@ export class TourPlugin extends Plugin {
         } else if (session.current_tour) {
             this.startTour(session.current_tour.name, {
                 mode: "manual",
+                fromDB: true,
                 redirect: false,
                 rainbowManMessage: session.current_tour.rainbowManMessage,
             });
@@ -127,7 +128,7 @@ export class TourPlugin extends Plugin {
      */
     async getTour(name, options) {
         // Onboarding tour (come from database (.xml files))
-        if (options.mode === "manual") {
+        if (options.fromDB) {
             const tour = await this.getDBTour(name);
             if (!tour) {
                 console.error(`Tour '${name}' is not found in the database.`);
@@ -245,6 +246,7 @@ export class TourPlugin extends Plugin {
                 onChainNextTour: (nextTour) =>
                     this.startTour(nextTour.name, {
                         mode: "manual",
+                        fromDB: true,
                         redirect: false,
                         rainbowManMessage: nextTour.rainbowManMessage,
                     }),
