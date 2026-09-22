@@ -13,6 +13,7 @@ import {
 } from "@website/js/highlight_utils";
 import { useRef, useState, useSubEnv, Component, onWillStart, onMounted, status } from "@odoo/owl";
 import { onceAllImagesLoaded } from "@website/utils/images";
+import { slugify } from "@website/js/utils";
 
 const NO_OP = () => {};
 
@@ -24,6 +25,7 @@ export class AddPageConfirmDialog extends Component {
         name: String,
         sectionsArch: String,
         templateId: String,
+        showPageTitle: Boolean,
     };
     static components = {
         Switch,
@@ -486,21 +488,35 @@ export class AddPageDialog extends Component {
         this.lastTabName = name;
     }
 
-    async addPage(sectionsArch, name, templateId) {
-        if (this.props.forcedURL) {
-            // We also skip the possibility to choose to add in menu in that
-            // case (e.g. in creation from 404 page button). The user can still
-            // create its menu afterwards if needed.
-            await this.createPage(sectionsArch, this.props.forcedURL, false, this.props.pageTitle);
-        } else {
-            this.dialogs.add(AddPageConfirmDialog, {
-                createPage: (...args) => this.createPage(...args),
-                name: name || this.lastTabName,
-                sectionsArch: sectionsArch || "",
-                templateId: templateId || "",
-            });
-        }
-    }
+	async addPage(sectionsArch, name, templateId) {
+		if (this.props.forcedURL) {
+			// We also skip the possibility to choose to add in menu in that
+			// case (e.g. in creation from 404 page button). The user can still
+			// create its menu afterwards if needed.
+			await this.createPage(
+				sectionsArch,
+				slugify(this.props.forcedURL),
+				false,
+				name || this.props.pageTitle === undefined,
+			);
+		} else {
+            this.openAddPageConfirmDialog(
+                sectionsArch,
+                name || this.lastTabName,
+                templateId,
+            );
+		}
+	}
+
+    openAddPageConfirmDialog(sectionsArch, name, templateId, showPageTitle = true) {
+        this.dialogs.add(AddPageConfirmDialog, {
+            createPage: (...args) => this.createPage(...args),
+            name: name,
+            sectionsArch: sectionsArch || "",
+            templateId: templateId || "",
+            showPageTitle: showPageTitle,
+		});
+	}
 
     async createPage(sectionsArch, name = "", addMenu = false, pageTitle = "") {
         // Remove any leading slash.
