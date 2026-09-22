@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fidelity_rule_view_list" model="ir.ui.view">
+        <field name="name">fidelity.rule.view.list</field>
+        <field name="model">fidelity.rule</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+            </list>
+        </field>
+    </record>
+
+    <record id="fidelity_rule_view_form" model="ir.ui.view">
+        <field name="name">fidelity.rule.view.form</field>
+        <field name="model">fidelity.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group string="Conditions">
+                            <field name="minimum_qty" required="not minimum_amount"/>
+                            <label for="minimum_amount"/>
+                            <div class="d-flex flex-row">
+                                <field name="minimum_amount" class="oe_inline me-1" required="not minimum_qty"/>
+                                <field name="minimum_amount_tax_mode" class="ms-1"/>
+                            </div>
+                        </group>
+                        <group string="Granted Points">
+                            <field name="reward_point_amount" />
+                            <field name="reward_point_mode" widget="radio" />
+                        </group>
+                    </group>
+                    <group string="Among">
+                        <field name="product_ids" widget="many2many_tags"/>
+                        <field name="product_category_ids" widget="many2many_tags"/>
+                        <field name="product_tag_ids" widget="many2many_tags"/>
+                        <field name="nb_products" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="fidelity_rule_view_kanban" model="ir.ui.view">
+        <field name="name">fidelity.rule.view.kanban</field>
+        <field name="model">fidelity.rule</field>
+        <field name="arch" type="xml">
+            <kanban js_class="fidelity_rule_reward_kanban_view">
+                <templates>
+                    <t t-name="card">
+                        <div class="o_kanban_card_body d-flex justify-content-between h-100">
+                            <div class="d-flex flex-column">
+                                <h3>Conditions</h3>
+                                <span invisible="not minimum_qty">Minimum quantity <field name="minimum_qty"/></span>
+                                <span invisible="not minimum_amount">Minimum amount <field name="minimum_amount" /></span>
+                            </div>
+                            <div class="d-flex flex-column text-end">
+                                <h3>Granted Points</h3>
+                                <span><field name="reward_point_amount"/> (<field name="reward_point_mode"/>)</span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>
