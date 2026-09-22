@@ -260,6 +260,17 @@ export class BaseContainerPlugin extends Plugin {
                     const paragraph = this.document.createElement("p");
                     paragraph.append(...div.childNodes);
                     div.replaceWith(paragraph);
+                    // Duplicated from DomPlugin because it depends on BaseContainerPlugin.
+                    const ignoredClasses = new Set(this.getResource("system_classes"));
+                    const ignoredAttrs = new Set(this.getResource("system_attributes"));
+                    for (const attr of div.attributes) {
+                        if (attr.name === "class") {
+                            const classes = new Set(div.classList).difference(ignoredClasses);
+                            paragraph.classList.add(...classes);
+                        } else if (!ignoredAttrs.has(attr.name)) {
+                            paragraph.setAttribute(attr.name, attr.value);
+                        }
+                    }
                 }
             }
         }
