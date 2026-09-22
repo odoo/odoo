@@ -32,14 +32,6 @@ class AccountMoveLine(models.Model):
         )
 
     @api.model
-    def _get_filtered_aml_select(self):
-        return SQL("account_move_line.*")
-
-    @api.model
-    def _get_filtered_aml_join(self):
-        return SQL()
-
-    @api.model
     def _get_query_tax_details(self, domain_query, include_all_0_taxes=False) -> SQL:
         extra_query_base_tax_line_mapping = self._get_extra_query_base_tax_line_mapping()
         aml_fields = self._get_query_tax_details_aml_fields()
@@ -54,23 +46,10 @@ class AccountMoveLine(models.Model):
             for field_name in aml_fields
         )
 
-        final_select_query = SQL("""
-            SELECT * FROM base_line_tax_line_mapping
-        """)
-        if include_all_0_taxes:
-            final_select_query = SQL("""
-                SELECT *
-                  FROM filtered_aml
-             LEFT JOIN base_line_tax_line_mapping bt_map
-                    ON filtered_aml.id = bt_map.base_line_id
-                 WHERE filtered_aml.tax_repartition_line_id IS NULL
-            """)
-
         return SQL('''
             WITH filtered_aml AS MATERIALIZED (
-                SELECT %(filtered_aml_select)s
+                SELECT account_move_line.*
                 FROM %(table_references)s
-                %(filtered_aml_join)s
                 WHERE %(search_condition)s
             ),
             base_lines AS (
@@ -137,7 +116,7 @@ class AccountMoveLine(models.Model):
                     ) AS tax_exigible
                 FROM base_lines base_line
                 JOIN account_move move ON move.id = base_line.move_id
-                JOIN tax_lines tax_line
+                %(tax_line_join)s tax_lines tax_line
                     ON tax_line.move_id = base_line.move_id
                     AND tax_line.currency_id = base_line.currency_id
                     AND tax_line.partner_id IS NOT DISTINCT FROM base_line.partner_id
@@ -204,8 +183,7 @@ class AccountMoveLine(models.Model):
                 WINDOW
                     tax_partition AS (PARTITION BY tax_line_id, tax_id),
                     tax_partition_ordered AS (tax_partition ORDER BY sequence, base_line_id)
-            ),
-            base_line_tax_line_mapping AS (
+            )
                 SELECT
                     tax_line_id || '-' || base_line_id AS mapping_id,
                     base_line_id,
@@ -233,16 +211,12 @@ class AccountMoveLine(models.Model):
                 FROM aggregated
                 WINDOW tax_detail_partition AS (PARTITION BY tax_line_id, tax_id ORDER BY tax_line_id, base_line_id)
                 ORDER BY tax_line_id, base_line_id
-            )
-            %(final_select_query)s
             ''',
             table_references=domain_query.from_clause,
             search_condition=domain_query.where_clause,
-            filtered_aml_select=self._get_filtered_aml_select(),
-            filtered_aml_join=self._get_filtered_aml_join(),
             aml_fields_select=aml_fields_select,
+            tax_line_join=SQL('LEFT JOIN') if include_all_0_taxes else SQL('JOIN'),
             extra_query_base_tax_line_mapping=extra_query_base_tax_line_mapping,
-            final_select_query=final_select_query,
         )
 
     @api.model
