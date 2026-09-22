@@ -280,36 +280,7 @@ export class GridLayoutPlugin extends Plugin {
     adjustGridItem(el, shouldResizeGrid = true) {
         const gridItemEl = el.closest(".o_grid_item");
         if (gridItemEl && gridItemEl !== el && !this.config.isMobileView(gridItemEl)) {
-            adjustGridItem(gridItemEl, shouldResizeGrid);
-            // // Check if the grid item content is overflowing.
-            // const rowEl = gridItemEl.parentElement;
-            // const { rowGap, rowSize } = getGridProperties(rowEl);
-            // rowEl.style.gridAutoRows = `${rowSize}px`;
-            // const overflow = isContentOverflowing(gridItemEl);
-            // rowEl.style.removeProperty("grid-auto-rows");
-            // if (!overflow) {
-            //     return () => {};
-            // }
-            // const { rowStart, rowEnd } = getGridItemProperties(gridItemEl);
-            // const oldRowSpan = rowEnd - rowStart;
-            // // Compute the new height.
-            // const rowOverflow = Math.ceil((overflow + rowGap) / (rowSize + rowGap));
-            // const rowSpan = oldRowSpan + rowOverflow;
-            // gridItemEl.style.gridRowEnd = rowStart + rowSpan;
-            // gridItemEl.classList.remove(`g-height-${oldRowSpan}`);
-            // gridItemEl.classList.add(`g-height-${rowSpan}`);
-            // if (shouldResizeGrid) {
-            //     resizeGrid(rowEl);
-            // }
-            // return () => {
-            //     // Restore the grid item height.
-            //     gridItemEl.style.gridRowEnd = rowEnd;
-            //     gridItemEl.classList.remove(`g-height-${rowSpan}`);
-            //     gridItemEl.classList.add(`g-height-${oldRowSpan}`);
-            //     if (shouldResizeGrid) {
-            //         resizeGrid(rowEl);
-            //     }
-            // };
+            return adjustGridItem(gridItemEl, shouldResizeGrid);
         }
 
         return () => {};

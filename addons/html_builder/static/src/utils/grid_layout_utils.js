@@ -411,13 +411,15 @@ function convertImageColumn(columnEl) {
  *                           - the overflow amount otherwise.
  */
 export function isContentOverflowing(columnEl) {
-    // No overflow if the grid item is empty.
-    if (columnEl.childNodes.length === 0) {
-        return false;
-    }
+    const rowEl = columnEl.parentElement;
+    const { rowGap, rowSize } = getGridProperties(rowEl);
+    const { rowStart, rowEnd } = getGridItemProperties(columnEl);
+
     // Compute the maximum bottom position to not exceed.
+    const rowSpan = rowEnd - rowStart;
+    const columnHeight = rowSpan * (rowSize + rowGap) - rowGap;
+    const columnBottom = columnEl.getBoundingClientRect().top + columnHeight;
     const { paddingBottom, borderBottom } = window.getComputedStyle(columnEl);
-    const columnBottom = columnEl.getBoundingClientRect().bottom;
     const columnLimit = columnBottom - parseFloat(paddingBottom) - parseFloat(borderBottom);
 
     // Add a placeholder as the last element to compute the content end.

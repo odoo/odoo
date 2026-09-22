@@ -267,20 +267,33 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                     }
                 }
 
-                &.o_resizing_blocked {
-                    &::before {
-                        background: $o-we-color-danger
+                &.o_sizing_blocked {
+                    .o_handle_indicator {
+                        border-color: $o-we-blocked-handles-accent-color;
                     }
 
-                    .o_handle_indicator {
-                        border-color: $o-we-color-danger;
+                    &::before {
+                        background: $o-we-blocked-handles-accent-color;
+                        border-color: $o-we-blocked-contrast-border-color;
                     }
 
                     &:hover, &:active {
                         .o_handle_indicator {
-                            outline-color: $o-we-color-danger;
+                            background-color: $o-we-blocked-handles-accent-color;
                         }
                     }
+                }
+            }
+
+            &:has(.o_sizing_blocked) {
+                // Highlight the grid item padding.
+                &::before {
+                    content: "";
+                    position: absolute;
+                    inset: $o-we-handles-offset-to-hide 0 auto 0;
+                    height: 100%;
+                    border: solid rgba($o-we-blocked-handles-accent-color, 0.2);
+                    border-width: var(--grid-padding-y) 0;
                 }
             }
         }

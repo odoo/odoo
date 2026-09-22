@@ -129,6 +129,7 @@ export class BuilderOverlay {
         }
 
         this.updateHandleY();
+        this.updateHandleGrid();
     }
 
     toggleOverlay(show) {
@@ -375,10 +376,9 @@ export class BuilderOverlay {
             } else {
                 style.gridRowStart = currentIndex + 1;
             }
-
             // Store the `rowStart` matching the mouse position.
-            this.resizeState.rowStartAtCursor = style.gridRowStart;
-            // If the grid item content is overflowing set back `rowStart` to
+            this.resizeState.rowStartAtCursor = parseInt(style.gridRowStart);
+            // If the grid item content is overflowing, set back `rowStart` to
             // its previous value.
             if (isContentOverflowing(this.overlayTarget)) {
                 style.gridRowStart = rowStart;
@@ -392,7 +392,7 @@ export class BuilderOverlay {
                 style.gridRowEnd = currentIndex + 2;
             }
             // Store the `rowEnd` matching the mouse position.
-            this.resizeState.rowEndAtCursor = style.gridRowEnd;
+            this.resizeState.rowEndAtCursor = parseInt(style.gridRowEnd);
             // If the content is overflowing the grid item, set back `rowEnd` to
             // its previous value.
             if (isContentOverflowing(this.overlayTarget)) {
@@ -484,9 +484,20 @@ export class BuilderOverlay {
         // in that direction.
         this.gridHandles.forEach((gridHandleEl) => {
             if (gridHandleEl.matches(`.${compass}, .${fullCompass}`)) {
-                gridHandleEl.classList.toggle("o_resizing_blocked", isResizeBlocked);
+                gridHandleEl.classList.toggle("o_sizing_blocked", isResizeBlocked);
             }
         });
+    }
+
+    updateHandleGrid() {
+        if (!this.overlayTarget.classList.contains("o_grid_item")) {
+            return;
+        }
+        // Store the grid padding on the handles to highlight it when the sizing
+        // is blocked.
+        const targetStyle = getComputedStyle(this.overlayTarget);
+        const gridPaddingY = targetStyle.getPropertyValue("--grid-item-padding-y");
+        this.handlesWrapperEl.style.setProperty("--grid-padding-y", gridPaddingY);
     }
 
     getDirections(ev, handleEl, sizingConfig, heightAdjustment) {
@@ -591,7 +602,6 @@ export class BuilderOverlay {
             // account for the mouse position.
             const oldHeight = this.overlayTarget.getBoundingClientRect().bottom;
             adjustGrid(rowEl);
-            // self.trigger_up("cover_update");
             const newHeight = this.overlayTarget.getBoundingClientRect().bottom;
             adjustment = Math.round(newHeight - oldHeight);
             // Lock the grid row size so it is fixed during the resize.
@@ -710,7 +720,7 @@ export class BuilderOverlay {
                 rowEl.style.removeProperty("grid-auto-rows");
                 // Reset the handles state.
                 this.gridHandles.forEach((gridHandleEl) =>
-                    gridHandleEl.classList.remove("o_resizing_blocked")
+                    gridHandleEl.classList.remove("o_sizing_blocked")
                 );
                 resizeGrid(rowEl);
 
