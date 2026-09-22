@@ -22,6 +22,9 @@ class EventEvent(models.Model):
         "sale_order_lines_ids.currency_id",
         "sale_order_lines_ids.company_id",
         "sale_order_lines_ids.order_id.date_order",
+        # the _read_group below filters on it, so cancelling an order has to
+        # drop its lines back out of the total
+        "sale_order_lines_ids.state",
     )
     def _compute_sale_price_total(self):
         """Sum confirmed sale.order.line amounts, converted to the event company's currency."""
