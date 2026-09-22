@@ -16,12 +16,12 @@
                 <filter
                     name="never_scored"
                     string="Never scored"
-                    domain="[('parent_id', '=', False), ('score_line_count', '=', 0)]"
-                    help="No measurement was taken: nothing captured yet" />
+                    help="No measurement was taken: nothing captured yet"
+                    domain="[('parent_id', '=', False), ('score_line_count', '=', 0)]" />
                 <filter
                     name="scored"
                     string="Scored"
-                    domain="[('score_line_count', '>', 0)]" />
+                    domain="[('score_line_count', '&gt;', 0)]" />
                 <filter
                     name="no_attributes"
                     string="No profile attributes"
