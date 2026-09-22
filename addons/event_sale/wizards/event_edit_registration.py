@@ -24,13 +24,17 @@ class RegistrationEditor(models.TransientModel):
             sale_order_id = res.get("sale_order_id", self.env.context.get("active_id"))
             res["sale_order_id"] = sale_order_id
         sale_order = self.env["sale.order"].browse(res.get("sale_order_id"))
+        # `.ids` drops the empty slot, so an order mixing a slotted line with a
+        # non-slotted one used to match none of the latter's registrations: they
+        # were re-proposed as new and action_make_registration duplicated them.
+        # Keep False in the list so slot-less registrations are found too.
         registrations = self.env["event.registration"].search(
             [
                 ("sale_order_id", "=", sale_order.id),
                 (
                     "event_slot_id",
                     "in",
-                    sale_order.mapped("line_ids.event_slot_id").ids or [False],
+                    [*sale_order.mapped("line_ids.event_slot_id").ids, False],
                 ),
                 (
                     "event_ticket_id",
