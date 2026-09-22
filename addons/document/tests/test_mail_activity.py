@@ -150,7 +150,7 @@ class TestDocumentsMailActivity(TransactionCaseDocuments):
 
 @tagged("post_install", "-at_install")
 class TestDocumentsRequestActivityReschedule(TransactionCaseDocuments):
-    def test_reschedule_request_activity_as_viewer(self):
+    def test_reschedule_request_activity_as_viewer_or_owner(self):
         doc = self.env["document.document"].create(
             {
                 "type": "binary",
@@ -199,8 +199,16 @@ class TestDocumentsRequestActivityReschedule(TransactionCaseDocuments):
         activity.with_user(self.internal_user).write({"date_deadline": new_date})
         self.assertEqual(
             access.expiration_date,
-            datetime.combine(new_date, datetime.max.time()),
-            "requestee access expiration should have been synced (in sudo)",
+            old_exp,
+            "only the requester moves the requestee's expiration",
+        )
+
+        owner_date = fields.Date.add(fields.Date.today(), days=9)
+        activity.with_user(self.document_manager).write({"date_deadline": owner_date})
+        self.assertEqual(
+            access.expiration_date,
+            datetime.combine(owner_date, datetime.max.time()),
+            "the owner's reschedule syncs the requestee's expiration (in sudo)",
         )
 
     def test_request_fulfilment_is_logged_once(self):

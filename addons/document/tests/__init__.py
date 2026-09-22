@@ -3,6 +3,7 @@ from . import test_attachment_access
 from . import test_attachment_split
 from . import test_controllers
 from . import test_document_access
+from . import test_document_access_hardening
 from . import test_document_attachment_link
 from . import test_document_audit_round3_wizards
 from . import test_document_chatter

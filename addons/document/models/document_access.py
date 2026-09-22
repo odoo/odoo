@@ -70,8 +70,32 @@ class DocumentsAccess(models.Model):
             raise AccessError(_("Access documents and partners cannot be changed."))
 
         self.document_id.check_access("write")
+        self._check_membership_write(vals)
         _debug.lifecycle("access_write", access=self, fields=sorted(vals))
         return super().write(vals)
+
+    def _check_membership_write(self, vals: dict) -> None:
+        if self.env.su:
+            return
+        user = self.env.user
+        if user.share:
+            _debug.logic("access_write_refused", reason="share_user")
+            raise AccessError(
+                _("Only internal users can change who can access documents.")
+            )
+        if (
+            {"role", "expiration_date"} & set(vals)
+            and any(
+                access.partner_id == user.partner_id
+                and access.document_id.owner_id != user
+                for access in self
+            )
+            and not self.env["document.document"]._is_documents_manager()
+        ):
+            _debug.logic("access_write_refused", reason="own_membership")
+            raise AccessError(
+                _("You cannot change your own access to documents you do not own.")
+            )
 
     @api.autovacuum
     def _gc_expired(self) -> tuple[int, bool]:

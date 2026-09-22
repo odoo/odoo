@@ -1726,14 +1726,13 @@ class TestDocumentsAccess(TransactionCaseDocuments, MockEmail):
         self.assertEqual(target.access_via_link, "none")
         self.assertEqual(shortcut.access_via_link, "none")
 
+        grantee = self.env["res.partner"].sudo().create({"name": "Propagation Grantee"})
         root.with_user(self.internal_user).action_update_access_rights(
-            partners={self.internal_user.partner_id: ("edit", None)}
+            partners={grantee.id: ("edit", None)}
         )
 
         def get_access(document):
-            return document.access_ids.filtered(
-                lambda a: a.partner_id == self.internal_user.partner_id
-            ).role
+            return document.access_ids.filtered(lambda a: a.partner_id == grantee).role
 
         self.assertEqual(get_access(root), "edit")
         self.assertEqual(get_access(file_1), "edit")

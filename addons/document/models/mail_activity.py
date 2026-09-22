@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from odoo import _, api, fields, models
+from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 
@@ -58,6 +59,12 @@ class MailActivity(models.Model):
                     )
                     document.request_activity_id = activity.id
 
+        planting = upload_activities.filtered(
+            lambda act: (
+                act.res_model != "document.document" and act.activity_type_id.folder_id
+            )
+        )
+        self._check_upload_request_folders(planting.activity_type_id.folder_id)
         doc_vals = [
             {
                 "res_model": activity.res_model,
@@ -69,17 +76,28 @@ class MailActivity(models.Model):
                 "name": activity.summary or activity.res_name or "upload file request",
                 "request_activity_id": activity.id,
             }
-            for activity in upload_activities.filtered(
-                lambda act: (
-                    act.res_model != "document.document"
-                    and act.activity_type_id.folder_id
-                )
-            )
+            for activity in planting
         ]
         if doc_vals:
             _debug.pipeline("upload_requests_created", count=len(doc_vals))
             self.env["document.document"].sudo().create(doc_vals)
         return activities
+
+    @api.model
+    def _check_upload_request_folders(self, folders: models.Model) -> None:
+        if self.env.su or not folders:
+            return
+        refused = folders.with_env(self.env).filtered(
+            lambda folder: folder.user_permission != "edit"
+        )
+        if refused:
+            _debug.logic("upload_request_refused", folders=refused)
+            raise AccessError(
+                _(
+                    "This activity type files the requested document in a folder "
+                    "you cannot edit."
+                )
+            )
 
     def write(self, vals: dict) -> bool:
         deadline_changed = "date_deadline" in vals and any(
@@ -93,40 +111,60 @@ class MailActivity(models.Model):
             )
         ):
             return write_result
-        document_requestee_partner_ids = (
+        documents = (
             self.env["document.document"]
             .sudo()
-            .search_read(
+            .search(
                 [
                     ("id", "in", act_on_docs.mapped("res_id")),
                     ("requestee_partner_id", "!=", False),
-                    ("request_activity_id", "in", self.ids),
-                ],
-                ["requestee_partner_id"],
-            )
-        )
-        new_expiration_date = datetime.combine(
-            self[0].date_deadline, datetime.max.time()
-        )
-        self.env["document.access"].sudo().search(
-            Domain.OR(
-                [
-                    ("document_id", "=", document_requestee_partner_id["id"]),
-                    (
-                        "partner_id",
-                        "=",
-                        document_requestee_partner_id["requestee_partner_id"][0],
-                    ),
-                    ("expiration_date", "!=", False),
-                    ("expiration_date", "!=", new_expiration_date),
+                    ("request_activity_id", "in", act_on_docs.ids),
                 ]
-                for document_requestee_partner_id in document_requestee_partner_ids
             )
-        ).expiration_date = new_expiration_date
+        )
+        user = self.env.user
+        requested_by_user = documents.filtered(
+            lambda document: (
+                self.env.su
+                or user in (document.owner_id, document.request_activity_id.create_uid)
+            )
+        )
+        if skipped := documents - requested_by_user:
+            _debug.logic(
+                "request_deadline_not_propagated",
+                documents=skipped,
+                reason="not_requester",
+            )
+        if not requested_by_user:
+            return write_result
+        requestee_accesses = (
+            self.env["document.access"]
+            .sudo()
+            .search(
+                Domain("expiration_date", "!=", False)
+                & Domain.OR(
+                    Domain("document_id", "=", document.id)
+                    & Domain("partner_id", "=", document.requestee_partner_id.id)
+                    for document in requested_by_user
+                )
+            )
+        )
+        by_expiration = requestee_accesses.grouped(
+            lambda access: datetime.combine(
+                access.document_id.request_activity_id.date_deadline,
+                datetime.max.time(),
+            )
+        )
+        for new_expiration_date, accesses in by_expiration.items():
+            accesses.filtered(
+                lambda access, expiration=new_expiration_date: (
+                    access.expiration_date != expiration
+                )
+            ).expiration_date = new_expiration_date
         _debug.pipeline(
             "request_deadline_propagated",
             activities=act_on_docs,
-            documents=len(document_requestee_partner_ids),
+            documents=len(documents),
         )
         return write_result
 

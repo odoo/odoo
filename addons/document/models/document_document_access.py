@@ -387,6 +387,75 @@ class DocumentsDocument(models.Model):
     ) -> list | None:
         if len(self.ids) == 0:
             return None
+        self._check_access_update_allowed(
+            (access_internal, access_via_link, is_access_via_link_hidden),
+            is_download_blocked,
+            partners,
+        )
+        return self._update_access_rights(
+            access_internal,
+            access_via_link,
+            is_access_via_link_hidden,
+            partners=partners,
+            no_propagation=no_propagation,
+            is_download_blocked=is_download_blocked,
+        )
+
+    def _check_access_update_allowed(
+        self,
+        settings: tuple,
+        is_download_blocked: bool | None,
+        partners: dict | None,
+    ) -> None:
+        if self.env.su:
+            return
+        user = self.env.user
+        if user.share and (
+            partners
+            or is_download_blocked is not None
+            or any(value is not None for value in settings)
+        ):
+            _debug.logic("access_update_refused", reason="share_user", documents=self)
+            raise AccessError(
+                _("Only internal users can change who can access documents.")
+            )
+        own_change = next(
+            (
+                change
+                for partner, change in (partners or {}).items()
+                if (
+                    partner.id
+                    if isinstance(partner, models.BaseModel)
+                    else int(partner)
+                )
+                == user.partner_id.id
+            ),
+            None,
+        )
+        if (
+            own_change is not None
+            and own_change[0] is not False
+            and any(document.owner_id != user for document in self)
+            and not self._is_documents_manager()
+        ):
+            _debug.logic(
+                "access_update_refused", reason="own_membership", documents=self
+            )
+            raise AccessError(
+                _("You cannot change your own access to documents you do not own.")
+            )
+
+    def _update_access_rights(
+        self,
+        access_internal: str | None = None,
+        access_via_link: str | None = None,
+        is_access_via_link_hidden: bool | None = None,
+        partners: dict | None = None,
+        no_propagation: bool = False,
+        is_download_blocked: bool | None = None,
+    ) -> list | None:
+        if len(self.ids) == 0:
+            return None
         self._check_access_or_raise(
             "write", self.env._("You are not allowed to update these access rights.")
         )

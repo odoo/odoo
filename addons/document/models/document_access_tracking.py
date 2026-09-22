@@ -8,6 +8,13 @@ from odoo.tools import frozendict
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
+TRACKED_ACCESS_FIELDS = (
+    "access_internal",
+    "access_via_link",
+    "is_access_via_link_hidden",
+    "is_download_blocked",
+)
+
 
 class DocumentsAccessTracking(models.Model):
     _name = "document.access.tracking"
@@ -107,14 +114,9 @@ class DocumentsAccessTracking(models.Model):
             if "members" in self.changes:
                 self._add_pre_commit_members_data()
             document_ids.with_user(self.user_id)._message_track(
-                [
-                    "access_internal",
-                    "access_via_link",
-                    "is_access_via_link_hidden",
-                ],
-                initial_values,
+                list(TRACKED_ACCESS_FIELDS), initial_values
             )
-        else:
+        elif "members" in self.changes:
             _debug.logic("tracking_rendered", by="members_body", documents=document_ids)
             body = self._get_members_change_template_body()
             document_ids.with_user(self.user_id)._message_log_batch(
@@ -123,13 +125,10 @@ class DocumentsAccessTracking(models.Model):
 
     def _get_initial_values(self) -> dict:
         self.check_singleton()
-        fields_list = [
-            "access_internal",
-            "access_via_link",
-            "is_access_via_link_hidden",
-        ]
         common_values = {
-            field: self.changes[field] for field in fields_list if field in self.changes
+            field: self.changes[field]
+            for field in TRACKED_ACCESS_FIELDS
+            if field in self.changes
         }
         return {doc_id: common_values for doc_id in self.documents if common_values}
 
