@@ -11,7 +11,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockFetch, mockUserAgent } from "@odoo/hoot-mock";
-import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { patchWithCleanup, serverState, makeServerError } from "@web/../tests/web_test_helpers";
 
 import { downloadFile } from "@web/core/network/download";
 import { getOrigin } from "@web/core/utils/urls";
@@ -169,6 +169,38 @@ test("clicking on the delete attachment button multiple times in composer should
     // Let the pending deletion settle, so any extra rpc has been registered.
     await contains(".o-mail-Attachment-unlink", { count: 0 });
     await expect.waitForSteps(["attachment_unlink"]); // The unlink method must be called once
+});
+
+test("deleting a read-only attachment shows an AccessError notification and keeps the attachment", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        name: "test.txt",
+        mimetype: "text/plain",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        body: "<p>Test</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    onRpcBefore("/mail/attachment/delete", () => {
+        throw makeServerError({ 
+            errorName: "odoo.exceptions.AccessError",
+            message: "You do not have the rights to delete this attachment."
+        });
+    });
+
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Attachment-unlink");
+    await click(".modal-footer .btn-primary");
+    await contains(".o_notification", { text: "You do not have the rights to delete this attachment." });
+    await contains(".o-mail-AttachmentContainer[title='test.txt']");
 });
 
 test("view attachment", async () => {
