@@ -320,6 +320,9 @@ class AccountTestInvoicingCommon(ProductCommon):
 
         # Install the chart template
         cls.env['account.chart.template'].try_loading(chart_template_ref, company=company, install_demo=False)
+        # The new company only exists in this transaction, so the planner has no statistics for it
+        cls.env.flush_all()
+        cls.env.cr.execute("ANALYZE account_account, account_account_res_company_rel")
         if not company.account_fiscal_country_id:
             company.account_fiscal_country_id = cls.env.ref('base.us')
 
