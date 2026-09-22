@@ -59,8 +59,6 @@ declare module "fields" {
 
     export type FloatFieldDefinition = IFieldDefinition<"float"> & INumerical;
 
-    export type GenericFieldDefinition = IFieldDefinition<"generic">;
-
     export type HtmlFieldDefinition = IFieldDefinition<"html"> &
         ITextual & {
             sanitize: boolean;
@@ -115,7 +113,6 @@ declare module "fields" {
         date: DateFieldDefinition;
         datetime: DateTimeFieldDefinition;
         float: FloatFieldDefinition;
-        generic: GenericFieldDefinition;
         html: HtmlFieldDefinition;
         image: ImageFieldDefinition;
         integer: IntegerFieldDefinition;
