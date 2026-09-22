@@ -4763,8 +4763,15 @@ class Many2many(_RelationalMulti):
             **kwargs
         )
 
+    def setup_related(self, model):
+        super().setup_related(model)
+        self._setup_relation(model)
+
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
+        self._setup_relation(model)
+
+    def _setup_relation(self, model):
         # 2 cases:
         # 1) The ondelete attribute is defined and its definition makes sense
         # 2) The ondelete attribute is explicitly defined as 'set null' for a m2m,
