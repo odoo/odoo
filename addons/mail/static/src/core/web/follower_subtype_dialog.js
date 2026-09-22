@@ -35,6 +35,25 @@ export class FollowerSubtypeDialog extends Component {
         });
     }
 
+    get areAllSubtypesSelected() {
+        return this.subtypes().every((subtype) => subtype.in(this.props.follower.subtype_ids));
+    }
+
+    get areSomeSubtypesSelected() {
+        return this.subtypes().some((subtype) => subtype.in(this.props.follower.subtype_ids));
+    }
+
+    /** @param {Event} ev */
+    onChangeAllCheckbox(ev) {
+        for (const subtype of this.subtypes()) {
+            if (ev.target.checked) {
+                this.props.follower.subtype_ids.add(subtype);
+            } else {
+                this.props.follower.subtype_ids.delete(subtype);
+            }
+        }
+    }
+
     /**
      * @param {Event} ev
      * @param {SubtypeData} subtype
