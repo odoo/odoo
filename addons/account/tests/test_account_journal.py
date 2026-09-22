@@ -136,7 +136,21 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
             {"name": "OD_BLABLU"},
         ])
 
-        self.assertEqual(sorted(new_journals.mapped("code")), ["MISC1", "OD_BLAB"], "The journals should be set correctly")
+        self.assertEqual(sorted(new_journals.mapped("code")), ["OD_BLABLA", "OD_BLABLU"], "The journals should be set correctly")
+
+    def test_account_journal_duplicates_same_name(self):
+        new_journals = self.env["account.journal"].with_context(import_file=True).create([
+            {"name": "OD_BLABLA"},
+            {"name": "OD_BLABLA"},
+        ])
+
+        self.assertEqual(sorted(new_journals.mapped("code")), ["MISC1", "OD_BLABLA"], "The second journal should fall back to a default code")
+
+    def test_account_journal_import_code_name(self):
+        journal = self.env["account.journal"].with_context(import_file=True).create({'name': '512000 Bank BNP'})
+
+        self.assertEqual(journal.code, '512000')
+        self.assertEqual(journal.name, 'Bank BNP')
 
     def test_archive_used_journal(self):
         journal = self.env['account.journal'].create({

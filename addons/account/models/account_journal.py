@@ -85,7 +85,6 @@ class AccountJournal(models.Model):
     name_placeholder = fields.Char(compute='_compute_name_placeholder')
     code = fields.Char(
         string='Sequence Prefix',
-        size=7,
         compute='_compute_code', readonly=False, store=True,
         required=True, precompute=True,
         help="Shorter name used for display. "
@@ -761,9 +760,7 @@ class AccountJournal(models.Model):
             code_prefix = re.sub(r'\d+', '', copy_code).strip()
             counter = 1
             while counter <= len(all_journal_codes) and copy_code in all_journal_codes:
-                counter_str = str(counter)
-                copy_prefix = code_prefix[:journal._fields['code'].size - len(counter_str)]
-                copy_code = "%s%s" % (copy_prefix, counter_str)
+                copy_code = "%s%s" % (code_prefix, counter)
                 counter += 1
 
             if counter > len(all_journal_codes):
@@ -1034,7 +1031,11 @@ class AccountJournal(models.Model):
                 vals['default_account_id'] = default_account_id
 
         if is_import and not vals.get('code'):
-            code = vals['name'][:self._fields['code'].size]
+            code, name = self.env['account.account']._split_code_name(vals['name'])
+            if code and name:
+                vals['name'] = name
+            else:
+                code = vals['name']
             vals['code'] = code if not protected_codes or code not in protected_codes else self._get_next_journal_default_code(journal_type, company, protected_codes)
             if not vals['code']:
                 raise UserError(_("Cannot generate an unused journal code. Please change the name for journal %s.", vals['name']))
