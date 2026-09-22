@@ -191,6 +191,27 @@ test("Hover on chat bubble shows chat name + last message preview", async () => 
     await contains(".o-mail-ChatBubble-preview:text('Demo You: Hi')");
 });
 
+test("Escape closes a chat bubble preview containing a focused link", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: '<a href="https://odoo.com/">https://odoo.com</a>',
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    setupChatHub({ folded: [channelId] });
+    await start();
+    await hover(".o-mail-ChatBubble[name='General']");
+    await contains(".o-mail-ChatBubble-preview");
+    await contains('.o-mail-ChatBubble-preview a[href="https://odoo.com/"]:not(:focus)', {
+        setFocus: true,
+    });
+    await triggerHotkey("Escape");
+    await contains(".o-mail-ChatBubble-preview", { count: 0 });
+    await contains(".o-mail-ChatBubble[name='General']:not(.o-active)");
+});
+
 test("Hover on chat bubble shows message preview along with message seen indicator", async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({ name: "Marc" });
