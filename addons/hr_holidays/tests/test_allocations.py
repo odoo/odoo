@@ -7,7 +7,9 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Date, Datetime
 from odoo.tests import Form, tagged, users
 from odoo.tools import format_date
+from odoo.tools.float_utils import float_compare
 
+from odoo.addons.hr_holidays.models.hr_leave_allocation import LEAVE_CONSUMPTION_PRECISION
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
@@ -300,7 +302,8 @@ class TestAllocations(TestHrHolidaysCommon):
         allocation.write({'number_of_days_display': 14, 'number_of_days': 14})
         self.assertEqual(allocation.number_of_days_display, 14)
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaisesRegex(ValidationError,
+                r'You cannot reduce the duration below the duration of leaves already taken by the employee\.'):
             allocation.write({'number_of_days_display': 2, 'number_of_days': 2})
 
         allocation_with_pending_leave = self.env['hr.leave.allocation'].create({
@@ -315,7 +318,8 @@ class TestAllocations(TestHrHolidaysCommon):
             validate=False, user=self.user_responsible,
         )
         self.assertEqual(pending_leave.state, 'confirm')
-        with self.assertRaises(ValidationError):
+        with self.assertRaisesRegex(ValidationError,
+                r'You cannot reduce the duration below the duration of leaves already taken by the employee\.'):
             allocation_with_pending_leave.write({'number_of_days_display': 4, 'number_of_days': 4})
 
     def test_disallowed_change_allocation_with_overlapping_allocations(self):
@@ -827,7 +831,8 @@ class TestAllocations(TestHrHolidaysCommon):
             allocation.write({'date_to': date(2024, 1, 11)})
             self.assertEqual(allocation.date_to, date(2024, 1, 11))
 
-            with self.assertRaises(ValidationError):
+            # Assert modifying the allocation date_to so that the leaves is not covered by any allocation anymore will raise an error!
+            with self.assertRaisesRegex(ValidationError, r'You cannot reduce the duration below the duration of leaves already taken by the employee\.'):
                 allocation.write({'date_to': date(2024, 1, 8)})
 
             allocation.write({'date_to': date(2024, 1, 20)})
@@ -869,3 +874,200 @@ class TestAllocations(TestHrHolidaysCommon):
         self.employee.invalidate_recordset(['allocations_count', 'allocation_display'])
         self.assertEqual(self.employee.allocation_display, '0', "nothing accrued yet")
         self.assertEqual(self.employee.allocations_count, 1, "but the employee has an allocation")
+
+    # ------------------------------------------------------------------
+    # LEAVE_CONSUMPTION_PRECISION
+    # ------------------------------------------------------------------
+    # In a hr.leave.allocation, the allocated time is always stored in days (`number_of_days`)
+    # and converted back and forth into hours with the hours per day of the employee, while
+    # the leaves are measured from the working schedule.
+    #
+    # Both introduce binary representation errors, which is why the consumption of the allocations
+    # is compared with `LEAVE_CONSUMPTION_PRECISION` digits.
+    #
+    # The tests below check that this value is at the same time:
+    #   - large enough: the errors accumulated by those conversions never make a fully
+    #     consumed allocation look exceeded (which would wrongly refuse a time off);
+    #   - small enough: a real shortage, even of a few seconds, is still detected.
+
+    def _create_precision_employee(self, hours_per_day_attendances, name='Precision Employee'):
+        calendar = self.env['resource.calendar'].create({
+            'name': name,
+            'company_id': self.company.id,
+            'attendance_ids': [(5, 0, 0)] + [
+                (0, 0, {
+                    'dayofweek': str(dayofweek),
+                    'hour_from': hour_from,
+                    'hour_to': hour_to,
+                })
+                for dayofweek in range(5)
+                for hour_from, hour_to in hours_per_day_attendances
+            ],
+        })
+        employee = self.env['hr.employee'].create({
+            'name': name,
+            'company_id': self.company.id,
+            'resource_calendar_id': calendar.id,
+            'tz': 'UTC',
+        })
+        return employee
+
+    def _get_allocation_consumption(self, allocation, target_date, unit='hour'):
+        employee = allocation.employee_id
+        work_entry_type = allocation.work_entry_type_id
+        consumed_data, excess_data = employee._get_consumed_leaves(work_entry_type, target_date)
+        allocation_data = consumed_data[employee][work_entry_type][allocation]
+        return {
+            'remaining': allocation_data[f'{unit}_virtual_remaining_leaves'],
+            'taken': allocation_data[f'{unit}_virtual_leaves_taken'],
+            'excess': excess_data[employee][work_entry_type]['excess_days'],
+        }
+
+    @freeze_time('2026-11-16')
+    def test_leave_consumption_precision_no_false_excess_in_hours(self):
+        """ An allocation consumed by many leaves whose duration is not representable as a
+            float (3.1 hours) must not be considered exceeded because of the accumulated error.
+            (0.1 contains a lot of binary noise: 0.000110011001100110011, that's why we're using 3.1)
+        """
+        # 7 hours per day: 31 hours is stored as 31 / 7 days, which does not give back exactly
+        # 31 hours once converted again.
+        employee = self._create_precision_employee([(8, 12), (13, 16)])
+        self.assertEqual(employee._get_hours_per_day(date(2026, 11, 2)), 7)
+
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Hourly time off with allocation',
+            'code': 'Hourly time off with allocation',
+            'count_as': 'absence',
+            'requires_allocation': True,
+            'allocation_validation_type': 'no_validation',
+            'leave_validation_type': 'no_validation',
+            'request_unit': 'hour',
+            'unit_of_measure': 'hour',
+        })
+        allocation = self._create_validated_allocation(
+            work_entry_type, employee, date(2026, 11, 1), days=31 / 7)
+        self.assertEqual(float_compare(allocation.number_of_hours, 31, LEAVE_CONSUMPTION_PRECISION), 0,
+            "The allocation is worth 31 hours, up to the conversion error")
+
+        # 10 leaves of 3.1 hours = the whole allocation, none of them may be refused
+        working_days = [date(2026, 11, day) for day in (2, 3, 4, 5, 6, 9, 10, 11, 12, 13)]
+        leaves = self.env['hr.leave']
+        for leave_date in working_days:
+            leaves |= self._create_leave(
+                employee, work_entry_type, leave_date, leave_date, hour_from=8, hour_to=11.1, validate=True)
+
+        self.assertEqual(float_compare(sum(leaves.mapped('number_of_hours')), 31, LEAVE_CONSUMPTION_PRECISION), 0)
+
+        consumption = self._get_allocation_consumption(allocation, date(2026, 11, 16))
+        self.assertFalse(consumption['excess'],
+            "The fully consumed allocation must not be reported as exceeded")
+        self.assertEqual(float_compare(consumption['remaining'], 0, LEAVE_CONSUMPTION_PRECISION), 0)
+        self.assertAlmostEqual(consumption['remaining'], 0, places=9,
+            msg="The remaining duration is only off by a binary representation error")
+
+    @freeze_time('2026-11-16')
+    def test_leave_consumption_precision_no_false_excess_in_days(self):
+        """ Same as above with a type measured in hours but requested in days, on a schedule
+            whose average day (6.6 hours) is not representable as a float either.
+        """
+        employee = self._create_precision_employee([(8, 12), (13, 15.6)], name='6.6 hours a day')
+        self.assertEqual(float_compare(employee._get_hours_per_day(date(2026, 11, 2)), 6.6, 6), 0)
+
+        allocation = self._create_validated_allocation(
+            self.work_entry_type_diff_gran, employee, date(2026, 11, 1), days=10)
+        self.assertEqual(allocation.type_request_unit, 'hour')
+        self.assertEqual(float_compare(allocation.number_of_hours, 66, LEAVE_CONSUMPTION_PRECISION), 0)
+
+        # 10 full days of 6.6 hours: the sum of the leaves is 66 hours up to the float error
+        working_days = [date(2026, 11, day) for day in (2, 3, 4, 5, 6, 9, 10, 11, 12, 13)]
+        for leave_date in working_days:
+            self._create_leave(
+                employee, self.work_entry_type_diff_gran, leave_date, leave_date, validate=True)
+
+        consumption = self._get_allocation_consumption(allocation, date(2026, 11, 16))
+        self.assertFalse(consumption['excess'],
+            "Taking exactly the 10 allocated days must not create an excess")
+        self.assertEqual(float_compare(consumption['remaining'], 0, LEAVE_CONSUMPTION_PRECISION), 0)
+        self.assertAlmostEqual(consumption['remaining'], 0, places=9)
+        self.assertAlmostEqual(consumption['taken'], 66, places=9)
+
+    @freeze_time('2026-11-16')
+    def test_leave_consumption_precision_detects_real_shortage(self):
+        """ The tolerance only hides representation errors: a request exceeding the allocation
+            by more than the precision (3.6 seconds on an 8 hours day) is still refused.
+        """
+        employee = self._create_precision_employee([(8, 12), (13, 16)])
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Hourly time off with allocation',
+            'code': 'Hourly time off with allocation',
+            'count_as': 'absence',
+            'requires_allocation': True,
+            'allocation_validation_type': 'no_validation',
+            'leave_validation_type': 'no_validation',
+            'request_unit': 'hour',
+            'unit_of_measure': 'hour',
+        })
+
+        # 3.1 hours allocated, 3.1 hours requested: accepted
+        allocation = self._create_validated_allocation(
+            work_entry_type, employee, date(2026, 11, 1), days=3.1 / 7)
+        leave = self._create_leave(
+            employee, work_entry_type, date(2026, 11, 2), date(2026, 11, 2),
+            hour_from=8, hour_to=11.1, validate=True)
+        self.assertEqual(leave.state, 'validate')
+        leave.action_refuse()
+
+        # 7.2 seconds missing (0.002 hour): refused
+        allocation.write({'number_of_days': 3.098 / 7})
+        with self.assertRaises(ValidationError):
+            self._create_leave(
+                employee, work_entry_type, date(2026, 11, 3), date(2026, 11, 3),
+                hour_from=8, hour_to=11.1)
+
+        # 6 minutes missing: refused as well
+        allocation.write({'number_of_days': 3.0 / 7})
+        with self.assertRaises(ValidationError):
+            self._create_leave(
+                employee, work_entry_type, date(2026, 11, 4), date(2026, 11, 4),
+                hour_from=8, hour_to=11.1)
+
+    def test_leave_consumption_precision_is_above_float_errors(self):
+        """ Assert converting back and forth a duration (from hours to days then to hours,
+            like done in an hr.leave.allocation) doesn't modify the duration (at least,
+            when rounding the result to LEAVE_CONSUMPTION_PRECISION)
+        """
+        tolerance = 10 ** -LEAVE_CONSUMPTION_PRECISION
+        # Realistic numbers of hours per day, none of them representable as a float
+        hours_per_day_values = (6.6, 7.0, 7.2, 7.6, 7.8, 8.0, 38 / 5, 35 / 5, 32.5 / 5)
+        durations = (0.1, 0.25, 1 / 3, 0.5, 1.2, 2.5, 3.1, 7.7, 20.6, 31.0, 182.5)
+
+        max_error = 0
+        for hours_per_day in hours_per_day_values:
+            for duration in durations:
+                # Run the same computation as the allocation: store the duration in days, then read it back in hours
+                round_trip = (duration / hours_per_day) * hours_per_day
+                max_error = max(max_error, abs(round_trip - duration))
+                self.assertEqual(float_compare(round_trip, duration, LEAVE_CONSUMPTION_PRECISION), 0,
+                    f"{duration} hours converted with {hours_per_day} hours per day")
+                # Consuming the whole duration may not leave a positive residual
+                self.assertLessEqual(float_compare(duration - round_trip, 0, LEAVE_CONSUMPTION_PRECISION), 0)
+
+        self.assertLess(max_error, tolerance / 10 ** 6,
+            "The conversion error is at least a million times smaller than the precision")
+
+        # The error accumulated by consuming an allocation with a thousand leaves stays negligible as well
+        hours_per_day = 7.6
+        allocated = 1000 * 0.1
+        remaining = allocated
+        for _unused in range(1000):
+            remaining -= (0.1 / hours_per_day) * hours_per_day
+        self.assertNotEqual(remaining, 0, "The accumulated error is not exactly zero...")
+        self.assertEqual(float_compare(remaining, 0, LEAVE_CONSUMPTION_PRECISION), 0,
+            "...but it is not seen as a leftover nor as an excess")
+        self.assertLess(abs(remaining), tolerance / 10 ** 6)
+
+        # A duration that makes business sense is never swallowed by the tolerance
+        one_minute_in_hours = 1 / 60
+        one_minute_in_days = 1 / (8 * 60)
+        self.assertEqual(float_compare(one_minute_in_hours, 0, LEAVE_CONSUMPTION_PRECISION), 1)
+        self.assertEqual(float_compare(one_minute_in_days, 0, LEAVE_CONSUMPTION_PRECISION), 1)

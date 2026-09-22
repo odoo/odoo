@@ -190,8 +190,8 @@ class TestResource(TestHrCommon):
             handle multiple contracts with different calendars.
         """
 
-        date_from = datetime(2021, 10, 1, tzinfo=UTC)
-        date_to = datetime(2021, 11, 30, tzinfo=UTC)
+        date_from = date(2021, 10, 1)
+        date_to = date(2021, 11, 30)
 
         attendances = self.employee._get_calendar_attendances(date_from, date_to)
         self.assertEqual(21 * 7, attendances['hours'],
@@ -199,14 +199,16 @@ class TestResource(TestHrCommon):
 
         self.employee.create_version(self.contract_cdi_values)
 
+        # 21 working days of October + 22 working days of November
         attendances = self.employee._get_calendar_attendances(date_from, date_to)
-        self.assertEqual(21 * 7 + 21 * 8, attendances['hours'],
+        self.assertEqual(21 * 7 + 22 * 8, attendances['hours'],
             "Attendances should add up multiple contracts with varying work weeks.")
 
     def test_calendar_attendances_working_time_leave(self):
         """ Only leaves counted as absence are deducted from the calendar attendances. """
-        date_from = datetime(2021, 10, 4, tzinfo=UTC)
-        date_to = datetime(2021, 10, 9, tzinfo=UTC)
+        # From Monday to Friday
+        date_from = date(2021, 10, 4)
+        date_to = date(2021, 10, 8)
         self.env['resource.calendar.leaves'].create({
             'name': 'Company training',
             'calendar_id': self.calendar_35h.id,

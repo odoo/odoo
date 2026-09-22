@@ -3108,29 +3108,26 @@ class HrEmployee(models.Model):
         Without any version in contract, the current calendar
         is used for the whole period. Single employee only.
 
-        :param datetime.datetime date_from: start (timezone-aware if the employee has a timezone)
-        :param datetime.datetime date_to: end (same remark)
+        :param datetime.date date_from: start
+        :param datetime.date date_to: end (included)
         :return: ``{'days': float, 'hours': float}``
         :rtype: dict
         """
         self.ensure_one()
-        valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from.date(), date_to.date())
-        employee_tz = ZoneInfo(self.tz) if self.tz else None
+        valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from, date_to)
         if not valid_versions:
             calendar = self.resource_calendar_id
             return calendar.get_work_duration_data(
-                date_from,
-                date_to,
+                datetime.combine(date_from, time.min, UTC),
+                datetime.combine(date_to, time.max, UTC),
                 domain=[('company_id', 'in', [False, self.company_id.id]), ('count_as', '=', 'absence')])
         duration_data = {'days': 0, 'hours': 0}
         for version in valid_versions:
-            version_start = datetime.combine(version.date_start, time.min, employee_tz)
-            version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
             calendar = version.resource_calendar_id
             version_duration_data = calendar\
                 .get_work_duration_data(
-                    max(date_from, version_start),
-                    min(date_to, version_end),
+                    datetime.combine(max(date_from, version.date_start), time.min, UTC),
+                    datetime.combine(min(date_to, version.date_end or date.max), time.max, UTC),
                     domain=[('company_id', 'in', [False, version.company_id.id]), ('count_as', '=', 'absence')])
             duration_data['days'] += version_duration_data['days']
             duration_data['hours'] += version_duration_data['hours']

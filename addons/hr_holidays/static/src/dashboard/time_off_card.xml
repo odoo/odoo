@@ -39,8 +39,8 @@
                     <t t-else=""> days</t>
                 </span>
             </li>
-            <li class="d-flex justify-content-between" t-if="this.props.accrual_bonus != 0">
-                Accrual (Future): <span class="ps-1" t-out="this.props.accrual_bonus"/>
+            <li class="d-flex justify-content-between" t-if="this.props.accrual_diff != 0">
+                Accrual (Future): <span class="ps-1" t-out="this.props.accrual_diff"/>
                 <t t-if="this.props.unit_of_measure == 'hour'"> hours</t>
                 <t t-else=""> days</t>
             </li>
