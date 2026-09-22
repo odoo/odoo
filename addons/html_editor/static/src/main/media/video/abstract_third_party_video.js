@@ -107,7 +107,7 @@ export class AbstractThirdPartyVideo {
             videoId,
             embedUrl: this.getEmbedUrl(videoId, options),
             // thumbnailUrl can be a promise in some cases (see vimeo)
-            thumbnailUrl: this.getThumbnailUrl?.(videoId) || "",
+            thumbnailUrl: this.getThumbnailUrl?.(videoId, options) || "",
             options,
         };
     }
