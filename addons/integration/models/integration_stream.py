@@ -1,16 +1,18 @@
+import base64
 import logging
 import os
 import socket
 from datetime import timedelta
+from urllib.parse import urlsplit
 
-from odoo import SUPERUSER_ID, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
 from odoo.libs import backoff, redact
 from odoo.modules.registry import Registry
 from odoo.tools.constants import STREAM_CHANNEL
 
 from ..tools import stream_protocol, stream_runtime
-from ..tools.stream_protocol import StreamSnapshot
+from ..tools.stream_protocol import StreamSnapshot, TlsMaterial
 from odoo.addons.base.models.ir_cron import notify_channel, schedule_notify_after_commit
 
 _logger = logging.getLogger(__name__)
@@ -21,12 +23,6 @@ _FRAME_LOG_BYTES = 64 * 1024
 
 
 class IntegrationStream(models.Model):
-    """A connection a server keeps open on behalf of a record: an MQTT
-    session, a websocket, a Modbus link. The stream worker that leads this
-    database opens it, keeps it alive under the stream's own backoff, hands
-    every frame to the subject and sends what the outbox holds; nothing of
-    it lives in an HTTP worker."""
-
     _name = "integration.stream"
     _description = "Stream"
     _order = "name, id"
@@ -47,6 +43,17 @@ class IntegrationStream(models.Model):
         help="The secret the dial presents; its login, when the wire takes one.",
     )
     login = fields.Char(help="The login presented beside the credential.")
+    certificate_id = fields.Many2one(
+        comodel_name="certificate.certificate",
+        ondelete="restrict",
+        help="The client certificate and key the dial presents (mutual TLS).",
+    )
+    ca_certificate_id = fields.Many2one(
+        comodel_name="certificate.certificate",
+        ondelete="restrict",
+        help="The authority the peer's certificate is checked against, when it "
+        "is not one of the system's.",
+    )
     connection_id = fields.Many2one(
         comodel_name="integration.connection",
         ondelete="set null",
@@ -245,7 +252,8 @@ class IntegrationStream(models.Model):
                 elif not open_stream.protocol.alive(open_stream.handle):
                     stream_runtime.drop(db_name, stream.id)
                     open_stream = None
-                    stream._schedule_redial("the connection dropped")
+                    if not stream.date_next_attempt or stream.date_next_attempt <= now:
+                        stream._schedule_redial("the connection dropped")
             if open_stream is None:
                 if stream.date_next_attempt and stream.date_next_attempt > now:
                     continue
@@ -268,9 +276,44 @@ class IntegrationStream(models.Model):
             heartbeat_seconds=self.heartbeat_seconds,
             options=dict(self.options or {}),
             addresses=self._resolve_addresses() if addresses else (),
+            tls=self._tls_material(),
         )
 
+    def _tls_material(self):
+        certificate = self.sudo().certificate_id
+        authority = self.sudo().ca_certificate_id
+        if not certificate and not authority:
+            return None
+        material = {}
+        if certificate:
+            key = certificate.private_key_id
+            if not certificate.pem_certificate or not key:
+                raise UserError(
+                    _(
+                        "Certificate %s carries no certificate or no private key.",
+                        certificate.display_name,
+                    )
+                )
+            material["certificate"] = self._pem_text(certificate)
+            material["key"] = key._get_unencrypted_pem_key(formatting="pem").decode()
+        if authority:
+            if not authority.pem_certificate:
+                raise UserError(
+                    _("Certificate %s carries no certificate.", authority.display_name)
+                )
+            material["ca"] = self._pem_text(authority)
+        return TlsMaterial(**material)
+
+    @staticmethod
+    def _pem_text(certificate):
+        return base64.b64decode(
+            certificate.with_context(bin_size=False).pem_certificate
+        ).decode()
+
     def _resolve_addresses(self):
+        # A serial line (modbus+rtu:///dev/ttyUSB0) names no host to check.
+        if not urlsplit(self.url).hostname:
+            return ()
         destination = self.env["ir.egress"].check_url(self.url, policy="private")
         return tuple(str(address) for address in destination.addresses)
 
@@ -301,14 +344,14 @@ class IntegrationStream(models.Model):
         self._set_state("open", None, owner=self._worker_identity(), attempts=0)
         return open_stream
 
-    def _schedule_redial(self, message):
+    def _schedule_redial(self, message, state="backoff"):
         self.check_singleton()
         attempt = self.attempts + 1
         delay = backoff.get_delay(
             attempt, base=self.backoff_seconds, cap=self.backoff_max_seconds
         )
         self._set_state(
-            "backoff",
+            state,
             message,
             owner=False,
             attempts=attempt,
@@ -419,9 +462,20 @@ class IntegrationStream(models.Model):
         with registry.cursor() as cr:
             env = api.Environment(cr, SUPERUSER_ID, {})
             stream = env["integration.stream"].browse(stream_id).exists()
-            if stream and state in dict(stream._fields["state"].selection):
-                stream._set_state(state, message)
+            if stream:
+                stream._note_state(state, message)
                 cr.commit()
+
+    def _note_state(self, state, message):
+        self.check_singleton()
+        if state not in dict(self._fields["state"].selection):
+            return
+        if state in ("backoff", "error"):
+            self._schedule_redial(message, state=state)
+        elif state == "open":
+            self._set_state(state, message, date_next_attempt=False, attempts=0)
+        else:
+            self._set_state(state, message)
 
     def _subject(self):
         self.check_singleton()

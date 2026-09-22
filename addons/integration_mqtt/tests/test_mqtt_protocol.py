@@ -31,10 +31,6 @@ def _snapshot(url="mqtt://broker.example:1883", **overrides):
 
 @tagged("post_install", "-at_install", "integration")
 class TestMqttProtocol(BaseCase):
-    """The wiring between a stream row and paho: what is dialled, with what,
-    what is subscribed on connect, how a message becomes a frame and a queued
-    frame a publish. The broker itself is not here; the class is."""
-
     def setUp(self):
         super().setUp()
         self.client = MagicMock()
@@ -90,11 +86,19 @@ class TestMqttProtocol(BaseCase):
         self.assertEqual(self.states, [("open", None)])
         self.assertTrue(handle.connected.is_set())
 
-    def test_a_refused_connection_is_an_error_state(self):
+    def test_a_refused_connection_is_an_error_state_and_stops_paho_s_redial(self):
         self._open()
         self.client.on_connect(self.client, None, MagicMock(), 5, None)
         self.assertEqual(self.states[0][0], "error")
         self.assertIn("5", self.states[0][1])
+        self.client.disconnect.assert_called_once()
+
+    def test_a_tls_session_presents_the_stream_s_material(self):
+        with patch.object(mqtt_protocol, "tls_context", return_value="ctx") as builder:
+            snapshot = _snapshot(url="mqtts://broker.example")
+            self._open(snapshot)
+        builder.assert_called_once_with(snapshot)
+        self.client.tls_set_context.assert_called_once_with("ctx")
 
     def test_a_message_is_a_frame_with_its_topic(self):
         self._open()

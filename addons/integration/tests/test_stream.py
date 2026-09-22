@@ -1,19 +1,22 @@
-from datetime import timedelta
+import base64
+import ssl
+from datetime import UTC, datetime, timedelta
 from unittest.mock import patch
 
+from cryptography import x509
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
+
 from odoo import fields
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.service._stream import RUNTIME, StreamRuntime, process_streams
 from odoo.tests import TransactionCase, tagged
 
 from ..tools import stream_protocol, stream_runtime
-from ..tools.stream_protocol import StreamProtocol
+from ..tools.stream_protocol import StreamProtocol, TlsMaterial, tls_context
 
 
 class ProbeProtocol(StreamProtocol):
-    """A wire that records what the worker asked of it and lets a test push
-    a frame or drop the connection."""
-
     key = "probe"
     label = "Probe"
     schemes = ("probe",)
@@ -63,8 +66,6 @@ class TestStream(TransactionCase):
         ProbeProtocol.fail_next_open = []
         self.runtime = StreamRuntime()
         self.addCleanup(self.runtime.shutdown)
-        # The process-wide runtime is what the addon's helpers reach for; a
-        # test's runtime stands in for it and is emptied after.
         patcher = patch.object(stream_runtime, "RUNTIME", self.runtime)
         patcher.start()
         self.addCleanup(patcher.stop)
@@ -270,12 +271,132 @@ class TestStream(TransactionCase):
         channels = dict(self.env["integration.exchange"]._selection_channel_models())
         self.assertIn("integration.stream", channels)
 
+    def test_the_wire_s_own_reason_dates_the_redial(self):
+        stream = self._stream()
+        self._reconcile()
+        stream._note_state("backoff", "closed: 1006 gone")
+        self.assertEqual(
+            (stream.state, stream.attempts, stream.state_message),
+            ("backoff", 1, "closed: 1006 gone"),
+        )
+        self.assertGreater(stream.date_next_attempt, fields.Datetime.now())
+        ProbeProtocol.opened[0]["alive"] = False
+        self._reconcile()
+        self.assertEqual(stream.attempts, 1, "the sweep does not date it twice")
+        self.assertEqual(stream.state_message, "closed: 1006 gone")
+        self.assertFalse(stream_runtime.held(self.db))
+
+    def test_a_refusal_the_wire_reports_keeps_its_state_and_still_redials(self):
+        stream = self._stream()
+        self._reconcile()
+        stream._note_state("error", "connection refused: 5")
+        self.assertEqual(stream.state, "error")
+        self.assertGreater(stream.date_next_attempt, fields.Datetime.now())
+        stream._note_state("open", None)
+        self.assertEqual((stream.state, stream.attempts), ("open", 0))
+        self.assertFalse(stream.date_next_attempt)
+
+    def test_a_stream_with_no_certificate_carries_no_tls_material(self):
+        snapshot = self._stream()._snapshot(self.db, addresses=False)
+        self.assertIsNone(snapshot.tls)
+        self.assertIsInstance(tls_context(snapshot), ssl.SSLContext)
+
+    def test_the_snapshot_carries_the_certificate_the_key_and_the_authority(self):
+        certificate, authority = self._certificates()
+        stream = self._stream(
+            certificate_id=certificate.id, ca_certificate_id=authority.id
+        )
+        snapshot = stream._snapshot(self.db, addresses=False)
+        self.assertTrue(snapshot.tls.certificate.startswith("-----BEGIN CERTIFICATE"))
+        self.assertTrue(snapshot.tls.key.startswith("-----BEGIN PRIVATE KEY"))
+        self.assertTrue(snapshot.tls.ca.startswith("-----BEGIN CERTIFICATE"))
+        context = tls_context(snapshot)
+        self.assertEqual(
+            [entry["subject"][-1][0][1] for entry in context.get_ca_certs()],
+            ["Stream Test CA"],
+        )
+
+    def test_a_certificate_without_its_key_refuses_to_dial(self):
+        certificate, _authority = self._certificates()
+        certificate.private_key_id = False
+        stream = self._stream(certificate_id=certificate.id)
+        with self.assertRaises(UserError):
+            stream._snapshot(self.db, addresses=False)
+        self._reconcile()
+        self.assertEqual(stream.state, "backoff")
+        self.assertIn("no private key", stream.state_message)
+
+    def test_a_rotated_certificate_redials(self):
+        certificate, authority = self._certificates()
+        stream = self._stream(certificate_id=certificate.id)
+        self._reconcile()
+        stream.ca_certificate_id = authority
+        self._reconcile()
+        self.assertEqual(len(ProbeProtocol.opened), 2)
+        self.assertEqual(
+            ProbeProtocol.opened[1]["stream"].tls,
+            TlsMaterial(
+                certificate=ProbeProtocol.opened[0]["stream"].tls.certificate,
+                key=ProbeProtocol.opened[0]["stream"].tls.key,
+                ca=stream._pem_text(authority),
+            ),
+        )
+
+    def _certificates(self):
+        def pem(certificate):
+            return base64.b64encode(
+                certificate.public_bytes(serialization.Encoding.PEM)
+            )
+
+        def issue(name, key, issuer=None, signer=None):
+            subject = x509.Name(
+                [x509.NameAttribute(x509.oid.NameOID.COMMON_NAME, name)]
+            )
+            return (
+                x509.CertificateBuilder()
+                .subject_name(subject)
+                .issuer_name(issuer or subject)
+                .public_key(key.public_key())
+                .serial_number(x509.random_serial_number())
+                .not_valid_before(datetime.now(UTC) - timedelta(days=1))
+                .not_valid_after(datetime.now(UTC) + timedelta(days=1))
+                .add_extension(
+                    x509.BasicConstraints(ca=issuer is None, path_length=None),
+                    critical=True,
+                )
+                .sign(signer or key, hashes.SHA256())
+            )
+
+        ca_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+        ca = issue("Stream Test CA", ca_key)
+        client_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+        client = issue("stream-client", client_key, issuer=ca.subject, signer=ca_key)
+        key = self.env["certificate.key"].create(
+            {
+                "name": "stream client key",
+                "content": base64.b64encode(
+                    client_key.private_bytes(
+                        encoding=serialization.Encoding.PEM,
+                        format=serialization.PrivateFormat.PKCS8,
+                        encryption_algorithm=serialization.NoEncryption(),
+                    )
+                ),
+            }
+        )
+        Certificate = self.env["certificate.certificate"]
+        certificate = Certificate.create(
+            {
+                "name": "stream client",
+                "content": pem(client),
+                "private_key_id": key.id,
+            }
+        )
+        authority = Certificate.create({"name": "stream ca", "content": pem(ca)})
+        return certificate, authority
+
 
 @tagged("post_install", "-at_install", "integration")
 class TestStreamLease(TransactionCase):
-    """The lease: one process leads a database at a time, and a process that
-    lost its lease closes what it held."""
-
     def test_a_second_runtime_cannot_lead_while_the_first_does(self):
         first, second = StreamRuntime(), StreamRuntime()
         self.addCleanup(first.shutdown)

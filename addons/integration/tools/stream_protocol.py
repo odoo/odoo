@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import dataclasses
 import logging
+import ssl
+import tempfile
 from collections.abc import Callable, Mapping
+from pathlib import Path
 from typing import Any, ClassVar
 
 _logger = logging.getLogger(__name__)
@@ -11,6 +14,13 @@ STREAM_PROTOCOLS: dict[str, type[StreamProtocol]] = {}
 
 OnFrame = Callable[[bytes, Mapping[str, Any]], None]
 OnState = Callable[[str, str], None]
+
+
+@dataclasses.dataclass(frozen=True, slots=True)
+class TlsMaterial:
+    certificate: str | None = None
+    key: str | None = None
+    ca: str | None = None
 
 
 @dataclasses.dataclass(frozen=True, slots=True)
@@ -26,6 +36,20 @@ class StreamSnapshot:
     heartbeat_seconds: int
     options: Mapping[str, Any]
     addresses: tuple[str, ...] = ()
+    tls: TlsMaterial | None = None
+
+
+def tls_context(stream: StreamSnapshot) -> ssl.SSLContext:
+    material = stream.tls or TlsMaterial()
+    context = ssl.create_default_context(cadata=material.ca or None)
+    if material.certificate and material.key:
+        with tempfile.TemporaryDirectory(prefix="odoo-stream-tls-") as folder:
+            certificate = Path(folder, "client.crt")
+            key = Path(folder, "client.key")
+            certificate.write_text(material.certificate, encoding="ascii")
+            key.write_text(material.key, encoding="ascii")
+            context.load_cert_chain(certificate, key)
+    return context
 
 
 class StreamProtocol:

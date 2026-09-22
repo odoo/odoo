@@ -1,6 +1,6 @@
 {
     "name": "Integration",
-    "version": "19.0.1.36.0",
+    "version": "19.0.1.37.0",
     "category": "Hidden",
     "sequence": 5,
     "summary": "Inbound and outbound API transport with auth, rate limiting, retry and logging",
@@ -55,6 +55,7 @@ model by company.
     "website": "https://www.agromarin.mx",
     "license": "LGPL-3",
     "depends": [
+        "certificate",
         "credential",
     ],
     "data": [

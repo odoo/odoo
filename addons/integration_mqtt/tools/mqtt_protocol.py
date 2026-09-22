@@ -1,11 +1,14 @@
 import logging
-import ssl
 import threading
 from urllib.parse import urlsplit
 
 import paho.mqtt.client as mqtt
 
-from odoo.addons.integration.tools.stream_protocol import StreamProtocol, register
+from odoo.addons.integration.tools.stream_protocol import (
+    StreamProtocol,
+    register,
+    tls_context,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -25,9 +28,6 @@ class MqttHandle:
 
 @register
 class MqttProtocol(StreamProtocol):
-    """MQTT 5 over paho: the client's own network thread carries the session;
-    frames are the messages of the subscribed topics, a send is a publish."""
-
     key = "mqtt"
     label = "MQTT"
     schemes = ("mqtt", "mqtts")
@@ -43,10 +43,7 @@ class MqttProtocol(StreamProtocol):
         if stream.login or stream.secret:
             client.username_pw_set(stream.login or "", stream.secret or "")
         if url.scheme == "mqtts":
-            context = ssl.create_default_context()
-            if options.get("ca_certs"):
-                context.load_verify_locations(options["ca_certs"])
-            client.tls_set_context(context)
+            client.tls_set_context(tls_context(stream))
         topics = [
             (topic, int(options.get("qos", 1)))
             for topic in (stream.subscriptions or {}).get("topics", [])
@@ -62,6 +59,7 @@ class MqttProtocol(StreamProtocol):
                 on_state("open", None)
             else:
                 on_state("error", f"connection refused: {reason_code}")
+                client.disconnect()
 
         def on_disconnect(client, userdata, flags, reason_code, properties):
             handle.connected.clear()
@@ -80,8 +78,6 @@ class MqttProtocol(StreamProtocol):
         properties = mqtt.Properties(mqtt.PacketTypes.CONNECT)
         if options.get("session_expiry_interval"):
             properties.SessionExpiryInterval = int(options["session_expiry_interval"])
-        # A pinned address for a plain session; a TLS session dials by name so
-        # the certificate is checked against it.
         host = (
             stream.addresses[0]
             if stream.addresses and url.scheme == "mqtt"

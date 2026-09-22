@@ -66,6 +66,7 @@ openpyxl==3.1.5  # attachment_indexation, base_import, survey — optional
 paho-mqtt==2.1.0  # integration_mqtt
 pdfminer.six==20260107  # attachment_indexation — optional, degrades without it
 phonenumbers==9.0.39  # phone_validation
+pymodbus==3.14.0  # integration_modbus
 # AGPL-3.0-or-commercial, which is why base/ir_actions_report guards the import
 # and degrades rather than depending on it. setup.py offers the same package as
 # the `pdf-raster` extra.
@@ -86,6 +87,7 @@ rapidocr==3.9.2
 onnxruntime==1.30.0
 # The only remaining reason pytz is installed anywhere: vobject depends on it.
 vobject==0.9.9  # calendar, event, web, website_event_track — optional
+websocket-client==1.9.0  # integration_websocket
 xlrd==2.0.2  # base_import: legacy .xls (BIFF) reader — optional
 zeep==4.3.3  # account_vat, via stdnum's own SOAP client — optional
 # extract_barcode, imported as `zxingcpp`. The decoder is compiled into
