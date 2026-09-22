@@ -413,7 +413,7 @@ class BaseString(Field[str | typing.Literal[False]]):
 
         get_display_name = super().get_expression_getter("display_name")
 
-        def getter(record):
+        def getter(record: typing.Any) -> typing.Any:
             try:
                 return get_display_name(record)
             except AccessError:

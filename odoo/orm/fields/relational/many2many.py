@@ -34,7 +34,9 @@ if typing.TYPE_CHECKING:
     OnDelete = typing.Literal["cascade", "set null", "restrict"]
 
 
-def _remove_from_relations(old_relation: dict, new_relation: dict, ys) -> None:
+def _remove_from_relations(
+    old_relation: dict, new_relation: dict, ys: typing.Iterable
+) -> None:
     for ys1 in old_relation.values():
         ys1 -= ys
     for ys1 in new_relation.values():
@@ -138,7 +140,7 @@ class Many2many(_RelationalMulti):
                 )
             fields.add((self.model_name, self.name))
 
-    def _shares_inheritance_tree(self, model, field) -> bool:
+    def _shares_inheritance_tree(self, model: BaseModel, field: typing.Any) -> bool:
         if self.comodel_name != field.comodel_name:
             return False
         root = model._table_inheritance_root
@@ -413,7 +415,11 @@ class Many2many(_RelationalMulti):
             )
 
     def _write_real_apply_commands(
-        self, records_commands_list, comodel, old_relation: dict, new_relation: dict
+        self,
+        records_commands_list: typing.Any,
+        comodel: BaseModel,
+        old_relation: dict,
+        new_relation: dict,
     ) -> None:
         for recs, commands in records_commands_list:
             delta = CommandDelta.fold(commands)
@@ -432,7 +438,7 @@ class Many2many(_RelationalMulti):
             if delta.updated:
                 prefetch_ids = recs[self.name]._prefetch_ids
                 for line_id, vals in delta.updated:
-                    comodel.browse(line_id).with_prefetch(prefetch_ids).write(vals)
+                    comodel.browse((line_id,)).with_prefetch(prefetch_ids).write(vals)
             created_ids: tuple = ()
             if delta.created:
                 created_ids = comodel.create(
@@ -445,7 +451,11 @@ class Many2many(_RelationalMulti):
                 _remove_from_relations(old_relation, new_relation, delta.deleted)
 
     def _check_new_relation_access(
-        self, model, comodel, old_relation: dict, new_relation: dict
+        self,
+        model: BaseModel,
+        comodel: BaseModel,
+        old_relation: dict,
+        new_relation: dict,
     ) -> None:
         try:
             comodel.browse(
@@ -539,7 +549,7 @@ class Many2many(_RelationalMulti):
 
         model, comodel = self._get_writer_models(records_commands_list)
 
-        def new(id_):
+        def new(id_: typing.Any) -> typing.Any:
             return id_ and NewId(id_)
 
         old_relation = {

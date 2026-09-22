@@ -152,7 +152,7 @@ class _FieldDescriptionMixin(_FieldStubs):
             return field_help.get(self.name) or self.help
         return self.help
 
-    def _description_falsy_value_label(self, env) -> str | None:
+    def _description_falsy_value_label(self, env: Environment) -> str | None:
         if not self.falsy_value_label:
             return None
         return env._(self.falsy_value_label)  # noqa: E8502  _lt() at the declaration

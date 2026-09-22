@@ -73,7 +73,7 @@ class Registry(
 
     _replica: ReplicaRouter
 
-    def __new__(cls, db_name: str):
+    def __new__(cls, db_name: str) -> Registry:  # noqa: PYI034  an interned registry, not always an instance of cls
         if not db_name:
             raise ValueError("Missing database name")
         reg = cls.registries.get(db_name)
@@ -293,7 +293,7 @@ class Registry(
 
     @classmethod
     @locked
-    def remove_all(cls):
+    def remove_all(cls) -> None:
         _debug.lifecycle("registry.remove_all", registries=len(cls.registries))
         cls.registries.clear()
         gc.thaw()
@@ -396,7 +396,9 @@ class Registry(
             models_kept=len(models_field_depends_done),
         )
 
-    def _setup_field_depends(self, env, models_field_depends_done: set) -> None:
+    def _setup_field_depends(
+        self, env: typing.Any, models_field_depends_done: set
+    ) -> None:
         for model_cls in self.models.values():
             if model_cls in models_field_depends_done:
                 continue
@@ -488,7 +490,7 @@ class Registry(
         model_names: Iterable[str],
         context: dict[str, typing.Any],
         install: bool = True,
-    ):
+    ) -> None:
         model_names = list(model_names)
         if not model_names:
             return

@@ -60,7 +60,7 @@ def get_tuple_itemgetter(items: list | tuple) -> typing.Callable[[typing.Any], t
     return itemgetter(*items)
 
 
-def to_record_ids(arg) -> list[int]:
+def to_record_ids(arg: typing.Any) -> list[int]:
     if is_recordset(arg):
         return arg.ids
     elif isinstance(arg, bool):

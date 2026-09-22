@@ -1,3 +1,5 @@
+import typing
+
 from .... import decorators as api
 from ....parsing import parse_read_group_spec
 from .._model_stubs import _ModelStubs
@@ -7,7 +9,7 @@ class _ReadGroupEmptyMixin(_ModelStubs):
     __slots__ = ()
 
     @api.model
-    def _read_group_empty_value(self, spec):
+    def _read_group_empty_value(self, spec: str) -> typing.Any:
         if spec == "__count":
             return 0
         fname, chain_fnames, func = parse_read_group_spec(spec)

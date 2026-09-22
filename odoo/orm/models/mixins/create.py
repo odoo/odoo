@@ -105,20 +105,16 @@ class CreateMixin(_ModelStubs):
         _missing_defaults_cache: dict[frozenset[str], list[str]] | None = None,
         only: Collection[str] | None = None,
     ) -> ValuesType:
-        # `only` narrows the defaults to the names the caller will read.
-        # `default_get` cannot be hoisted out of a batch -- a default may have
-        # a side effect, and stock.warehouse.orderpoint's name draws from a
-        # sequence -- so the way to make a second pass cheap is to ask it for
-        # less, and the way to make it safe is to keep a side-effecting
-        # default the caller does not read out of the call entirely.
         vals_keys = frozenset(values)
-        cache_key = vals_keys if only is None else vals_keys | {"\0only"} | frozenset(only)
+        cache_key = (
+            vals_keys if only is None else vals_keys | {"\0only"} | frozenset(only)
+        )
         if _missing_defaults_cache is not None and cache_key in _missing_defaults_cache:
             missing_defaults = _missing_defaults_cache[cache_key]
         else:
             avoid_models = set()
 
-            def collect_models_to_avoid(model):
+            def collect_models_to_avoid(model: typing.Any) -> None:
                 for parent_mname, parent_fname in model._inherits.items():
                     if parent_fname in values:
                         avoid_models.add(parent_mname)
@@ -127,7 +123,7 @@ class CreateMixin(_ModelStubs):
 
             collect_models_to_avoid(self)
 
-            def avoid(field):
+            def avoid(field: Field) -> bool:
                 if avoid_models:
                     while field.inherited:
                         field = field.related_field
@@ -288,7 +284,9 @@ class CreateMixin(_ModelStubs):
                 for parent, data in zip(parents, parent_data_list, strict=True):
                     data["stored"][parent_name] = parent.id
 
-    def _create_apply_inverses(self, data_list: list[dict], inverses_by_hook) -> None:
+    def _create_apply_inverses(
+        self, data_list: list[dict], inverses_by_hook: typing.Any
+    ) -> None:
         protected_fields = [(data["protected"], data["record"]) for data in data_list]
         with self.env.protecting(protected_fields):
             for data in data_list:

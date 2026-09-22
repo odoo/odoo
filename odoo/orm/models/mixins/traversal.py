@@ -429,7 +429,10 @@ class TraversalMixin(_ModelStubs):
     ) -> Callable[[Self], typing.Any]:
         _env = self.env
 
-        def order_to_function(term):
+        def order_to_function(
+            term: typing.Any,
+        ) -> typing.Callable[[typing.Any], typing.Any]:
+            getter: typing.Callable[[typing.Any], typing.Any]
             field_name = term.field
             property_name = term.property
             reverse = term.desc
@@ -456,7 +459,7 @@ class TraversalMixin(_ModelStubs):
                     property_name or comodel._order
                 )
 
-                def getter(rec):
+                def getter(rec: typing.Any) -> typing.Any:
                     value = rec[field_name]
                     if not value:
                         return None
@@ -474,7 +477,7 @@ class TraversalMixin(_ModelStubs):
                 _S = SENTINEL
                 _P = PENDING
 
-                def getter(rec):
+                def getter(rec: typing.Any) -> typing.Any:
                     if not _checked:
                         field.check_read_access(rec)
                         field.recompute_pending(rec)
@@ -489,7 +492,7 @@ class TraversalMixin(_ModelStubs):
             else:
                 raw_getter = field.get_expression_getter(field_expr)
 
-                def getter(rec):
+                def getter(rec: typing.Any) -> typing.Any:
                     value = raw_getter(rec)
                     return value if value is not False else None
 

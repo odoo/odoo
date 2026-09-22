@@ -46,7 +46,11 @@ class Cache:
         for field in sorted(core.iter_cached_fields(), key=str):
             dirty_ids = core.get_dirty(field) or ()
 
-            def entries(values, dirty_ids=dirty_ids, field=field):
+            def entries(
+                values: typing.Any,
+                dirty_ids: typing.Any = dirty_ids,
+                field: Field = field,
+            ) -> dict:
                 return {
                     Starred(id_) if id_ in dirty_ids else id_: (
                         "<binary>" if field.is_binary else val
@@ -71,7 +75,9 @@ class Cache:
     def contains(self, record: BaseModel, field: Field) -> bool:
         return record.id in self._get_field_cache(record, field)
 
-    def get(self, record: BaseModel, field: Field, default=SENTINEL):
+    def get(
+        self, record: BaseModel, field: Field, default: typing.Any = SENTINEL
+    ) -> typing.Any:
         try:
             field_cache = self._get_field_cache(record, field)
             return field_cache[record._ids[0]]
@@ -206,7 +212,7 @@ class Cache:
         core = self.transaction.core
         invalids = []
 
-        def process(model: BaseModel, field: Field, field_cache):
+        def process(model: BaseModel, field: Field, field_cache: typing.Any) -> None:
             dirty_ids = core.get_dirty(field) or ()
             _pending = PENDING
             ids = [

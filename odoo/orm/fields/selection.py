@@ -66,7 +66,7 @@ class Selection[T = str | typing.Literal[False]](Field[T]):
             attrs["group_expand"] = self._get_group_expand
         return attrs
 
-    def _apply_selection_arg(self, field, values):
+    def _apply_selection_arg(self, field: typing.Any, values: typing.Any) -> typing.Any:
         if self.related:
             _logger.warning(
                 "%s: selection attribute will be ignored as the field is related",
@@ -107,7 +107,7 @@ class Selection[T = str | typing.Literal[False]](Field[T]):
             )
         return values
 
-    def _apply_selection_add(self, field, values):
+    def _apply_selection_add(self, field: typing.Any, values: typing.Any) -> typing.Any:
         if self.related:
             _logger.warning(
                 "%s: selection_add attribute will be ignored as the field is related",

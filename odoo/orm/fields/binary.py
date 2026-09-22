@@ -89,7 +89,7 @@ class Binary(Field[bytes | typing.Literal[False]]):
             )
 
     @functools.cached_property
-    def column_type(self):
+    def column_type(self) -> tuple[str, str] | None:  # type: ignore[override]
         return None if self.attachment else ("bytea", "bytea")
 
     @override
@@ -99,7 +99,7 @@ class Binary(Field[bytes | typing.Literal[False]]):
         depends, depends_context = super().get_depends(model)
         return depends, (*depends_context, "bin_size_" + self.name)
 
-    def _get_attrs(self, model_class, name):
+    def _get_attrs(self, model_class: typing.Any, name: str) -> dict[str, typing.Any]:
         attrs = super()._get_attrs(model_class, name)
         if not attrs.get("store", True):
             attrs["attachment"] = False

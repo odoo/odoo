@@ -139,8 +139,8 @@ class Float(Field[float]):
         string: str | Sentinel = SENTINEL,
         digits: str | tuple[int, int] | Sentinel | bool | None = SENTINEL,
         min_display_digits: str | int | Sentinel | None = SENTINEL,
-        **kwargs,
-    ):
+        **kwargs: typing.Any,
+    ) -> None:
         if digits is SENTINEL and min_display_digits is not SENTINEL:
             digits = False
         super().__init__(
@@ -274,8 +274,8 @@ class Monetary(Field[float]):
         self,
         string: str | Sentinel = SENTINEL,
         currency_field: str | Sentinel = SENTINEL,
-        **kwargs,
-    ):
+        **kwargs: typing.Any,
+    ) -> None:
         super().__init__(string=string, currency_field=currency_field, **kwargs)
 
     def _description_currency_field(self, env: Environment) -> str | None:

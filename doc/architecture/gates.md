@@ -43,7 +43,10 @@ python odoo-bin -d <db> -i test_lint --test-enable --stop-after-init
 resolves `lxml`, `psycopg`, `dateutil` to `Any`), never in the shared venv,
 over `odoo.orm`, `odoo.db`, `odoo.libs`, `odoo.http`, `odoo.service`,
 `odoo.modules`, and separately `odoo.tools`, `odoo.cli`, `odoo.tests`.
-`gates.sh` keeps that bare environment under `~/.cache/odoo-gates/`.
+`gates.sh` keeps that bare environment under `~/.cache/odoo-gates/`. `mypy.ini`
+holds `odoo.orm` to `disallow_untyped_defs` and `disallow_incomplete_defs`
+outside its test trees (0 on 2026-09-22, from 384 that morning): a function
+added to the ORM without a complete signature fails the core lane.
 `doc/architecture/factcheck.sh` derives the figures these pages state (mixin
 composition, base-model reaches, executed statements, dispatch sites) from the
 classes and the pin tests, and fails when a page stops citing one.

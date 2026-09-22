@@ -234,7 +234,7 @@ class ReadMixin(_ModelStubs):
             )
 
     def _read_format_multi(
-        self, name: str, field, data: list, use_display_name: bool
+        self, name: str, field: Field, data: list, use_display_name: bool
     ) -> None:
         if field.store:
             field.recompute_pending(self)
@@ -260,7 +260,7 @@ class ReadMixin(_ModelStubs):
             vals[name] = convert_result
 
     def _read_format_stored(
-        self, name: str, field, data: list, use_display_name: bool
+        self, name: str, field: Field, data: list, use_display_name: bool
     ) -> None:
         env = self.env
         field.recompute_pending(self)
@@ -290,7 +290,7 @@ class ReadMixin(_ModelStubs):
 
     @staticmethod
     def _read_format_by_record(
-        name: str, field, data: Iterable[tuple], use_display_name: bool
+        name: str, field: Field, data: Iterable[tuple], use_display_name: bool
     ) -> None:
         convert = field.convert_to_read
         for record, vals in data:
@@ -346,7 +346,7 @@ class ReadMixin(_ModelStubs):
 
         return [vals for record, vals in data if vals]
 
-    def _read_format_miss_record(self, id_):
+    def _read_format_miss_record(self, id_: typing.Any) -> Self:
         return self.browse((id_,)).with_prefetch(self._prefetch_ids)
 
     def _fetch_field(self, field: Field) -> None:

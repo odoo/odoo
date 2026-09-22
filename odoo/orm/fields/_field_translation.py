@@ -204,10 +204,10 @@ def edit_translations_value(
         get_base = dict(zip(translated_terms, base_terms, strict=True)).__getitem__
     else:
 
-        def get_base(term):
+        def get_base(term: str) -> str:
             return term
 
-    def translate_func(term):
+    def translate_func(term: str) -> str:
         source_term = get_base(term)
         translation_state = (
             "translated" if lang == base_lang or source_term != term else "to_translate"

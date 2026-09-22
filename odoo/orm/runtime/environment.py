@@ -110,7 +110,9 @@ class Environment(Mapping[str, "BaseModel"]):
     su: bool
     transaction: Transaction
 
-    def __new__(cls, cr: BaseCursor, uid: int | None, context: dict, su: bool = False):
+    def __new__(  # noqa: PYI034  interned per transaction, not always an instance of cls
+        cls, cr: BaseCursor, uid: int | None, context: dict, su: bool = False
+    ) -> Environment:
         if not isinstance(cr, BaseCursor):
             raise TypeError(
                 f"Environment(cr=...) expected BaseCursor, got {type(cr).__name__}"
@@ -545,7 +547,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
     def get_cache_key(self, field: Field) -> typing.Any:
 
-        def get(key, get_context=self.context.get):
+        def get(key: str, get_context: typing.Any = self.context.get) -> typing.Any:
             if key == "company":
                 return self.company.id
             elif key == "uid":

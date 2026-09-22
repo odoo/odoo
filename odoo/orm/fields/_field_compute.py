@@ -66,11 +66,13 @@ def recompute(field: Field, records: ModelLike) -> None:
     if prof.debug:
         _pending_before = len(to_compute_ids)
 
-        def _count():
+        def _count() -> int:
             remaining = records.env.core.get_pending_ids(field)
             return _pending_before - len(remaining or ())
 
-    def apply_except_missing(func, records):
+    def apply_except_missing(
+        func: typing.Callable[[typing.Any], None], records: typing.Any
+    ) -> None:
         try:
             func(records)
             return
@@ -118,7 +120,7 @@ def _recompute_singly(
 ) -> None:
     computed_ids: list = []
 
-    def recursive_compute(records):
+    def recursive_compute(records: typing.Any) -> None:
         for record in records:
             if record.id in to_compute_ids:
                 field.compute_value(record, validate=False)

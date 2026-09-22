@@ -18,6 +18,8 @@ from ._empty import _ReadGroupEmptyMixin
 if typing.TYPE_CHECKING:
     from collections.abc import Sequence
 
+    from ....fields.base import Field
+
 _debug = DebugLog(__name__)
 
 
@@ -84,7 +86,7 @@ class _ReadGroupFillMixin(_ReadGroupEmptyMixin):
             if _orders_descending_by(read_group_order, groupby):
                 values = values.browse(reversed(values._ids))
 
-            def value2key(value):
+            def value2key(value: typing.Any) -> typing.Any:
                 return value and value.id
 
         else:
@@ -92,7 +94,7 @@ class _ReadGroupFillMixin(_ReadGroupEmptyMixin):
             if _orders_descending_by(read_group_order, groupby):
                 values.reverse()
 
-            def value2key(value):
+            def value2key(value: typing.Any) -> typing.Any:
                 return value
 
         read_group_result_as_dict = {}
@@ -134,7 +136,13 @@ class _ReadGroupFillMixin(_ReadGroupEmptyMixin):
         )
         return list(result.values())
 
-    def _read_group_fill_temporal_bound(self, field, granularity, days_offset, bound):
+    def _read_group_fill_temporal_bound(
+        self,
+        field: Field,
+        granularity: typing.Any,
+        days_offset: int,
+        bound: typing.Any,
+    ) -> typing.Any:
         value: typing.Any = (
             Datetime.to_datetime if field.is_datetime else Date.to_date
         )(bound)
@@ -147,7 +155,7 @@ class _ReadGroupFillMixin(_ReadGroupEmptyMixin):
 
     def _get_read_group_temporal_bounds(
         self,
-        field,
+        field: Field,
         granularity: str,
         days_offset: int,
         existing: list,

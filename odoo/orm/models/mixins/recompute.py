@@ -33,7 +33,7 @@ if typing.TYPE_CHECKING:
     from ...runtime import TriggerTree
 
 
-def _fires_constraints(env, field) -> bool:
+def _fires_constraints(env: typing.Any, field: Field) -> bool:
     if field.store or not field.related:
         return False
     names = env.registry[field.model_name].__dict__.get(
@@ -129,7 +129,7 @@ class RecomputeMixin(_ModelStubs):
     def _modified_traverse(
         self,
         todo: list,
-        scheduler,
+        scheduler: RecomputeScheduler,
         debug: bool,
         to_validate: dict | None = None,
     ) -> tuple[int, int]:
@@ -250,7 +250,7 @@ class RecomputeMixin(_ModelStubs):
         env = self.env
         core = env.core
 
-        def select(field):
+        def select(field: Field) -> bool:
             if field.is_stored_computed or _fires_constraints(env, field):
                 return True
             if field._is_context_dependent(env):

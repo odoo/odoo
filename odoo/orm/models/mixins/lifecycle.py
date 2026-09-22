@@ -106,7 +106,7 @@ class LifecycleMixin(_ModelStubs):
         )
 
     def _apply_onchange_methods(
-        self, field_name: str, result: dict, excluded_methods=()
+        self, field_name: str, result: dict, excluded_methods: Collection = ()
     ) -> None:
         methods = self._onchange_methods.get(field_name, ())
         if _debug.pipeline.enabled and methods:

@@ -64,7 +64,7 @@ class _RegistrySchemaMixin(_RegistryStubs):
         return taken
 
     def post_constraint(
-        self, cr: BaseCursor, func: Callable[[BaseCursor], None], key
+        self, cr: BaseCursor, func: Callable[[BaseCursor], None], key: typing.Any
     ) -> None:
         try:
             if key not in self._constraint_queue:
@@ -133,7 +133,9 @@ class _RegistrySchemaMixin(_RegistryStubs):
                         elif warn:
                             _schema.warning("Missing not-null constraint on %s", field)
 
-    def _get_index_expression(self, field, index) -> tuple[str, str, str]:
+    def _get_index_expression(
+        self, field: Field, index: str | None
+    ) -> tuple[str, str, str]:
         column_expression = f'"{field.name}"'
         if index == "trigram":
             if field.translate:

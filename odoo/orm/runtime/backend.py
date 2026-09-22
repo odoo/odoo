@@ -1420,7 +1420,7 @@ class PostgresBackend:
 
     @staticmethod
     def _unlink_default_guard(
-        model: BaseModel, sub_ids: tuple[int, ...], many2one_fields
+        model: BaseModel, sub_ids: tuple[int, ...], many2one_fields: typing.Any
     ) -> None:
         referencing = model.env.registry.metaschema.default_referencing(
             model.env, many2one_fields, sub_ids

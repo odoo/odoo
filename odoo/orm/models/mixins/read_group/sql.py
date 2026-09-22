@@ -174,9 +174,9 @@ class _ReadGroupSQLMixin(_ModelStubs):
         self,
         alias: str,
         fname: str,
-        field,
+        field: Field,
         seq_fnames: str,
-        granularity,
+        granularity: str | None,
         groupby_spec: str,
         query: Query,
     ) -> SQL:

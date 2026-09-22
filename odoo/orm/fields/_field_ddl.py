@@ -158,7 +158,7 @@ def update_db_notnull(
         )
 
         @model.pool.post_init
-        def add_not_null():
+        def add_not_null() -> None:
             current = model._fields[field.name]
             if not current.required or not current.store:
                 return
@@ -196,7 +196,7 @@ def update_db_notnull(
                 applied=sql_default is not None,
             )
 
-            def apply_not_null(cr):
+            def apply_not_null(cr: typing.Any) -> None:
                 sql.set_not_null(cr, model._table, current.name)
 
             model.pool.post_constraint(
@@ -207,7 +207,9 @@ def update_db_notnull(
 
             if sql_default is not None:
 
-                def apply_default(cr, sql_default=sql_default):
+                def apply_default(
+                    cr: typing.Any, sql_default: typing.Any = sql_default
+                ) -> None:
                     sql.set_default(cr, model._table, current.name, sql_default)
 
                 model.pool.post_constraint(

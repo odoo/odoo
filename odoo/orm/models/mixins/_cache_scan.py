@@ -14,7 +14,7 @@ def as_scannable_cache(
     return typing.cast("dict[IdType, typing.Any]", field_cache)
 
 
-def is_cache_detached(field: Field, env: Environment, captured) -> bool:
+def is_cache_detached(field: Field, env: Environment, captured: object) -> bool:
     return field._get_cache(env) is not captured
 
 

@@ -986,7 +986,11 @@ class Properties(Field):
 
     @staticmethod
     def _property_in_to_sql(
-        operator: str, value, sql_left: SQL, raw_sql_field: SQL, property_name: str
+        operator: str,
+        value: typing.Any,
+        sql_left: SQL,
+        raw_sql_field: SQL,
+        property_name: str,
     ) -> SQL:
         assert isinstance(value, COLLECTION_TYPES)
         if len(value) == 1 and any(v is True for v in value):
@@ -1080,7 +1084,7 @@ class Properties(Field):
                 operator, value, sql_left, raw_sql_field, property_name
             )
 
-        def unaccent(x):
+        def unaccent(x: SQL) -> SQL:
             return x
 
         if operator.endswith("like"):

@@ -1,6 +1,7 @@
 from collections.abc import Callable, Iterable, Iterator
 from contextlib import contextmanager
 from functools import partial
+from typing import Any
 
 from odoo.libs.debug_log import DebugLog
 
@@ -61,7 +62,7 @@ class _RegistryInitPhaseMixin(_RegistryStubs):
         while post_init_queue:
             post_init_queue.popleft()()
 
-    def post_init(self, func: Callable, *args, **kwargs) -> None:
+    def post_init(self, func: Callable, *args: Any, **kwargs: Any) -> None:
         self.init_phase.post_init_queue.append(partial(func, *args, **kwargs))
 
     def register_relation_table(

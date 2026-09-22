@@ -90,17 +90,6 @@ bare_mypy() {
     "$MYPY_ENV/bin/mypy" --no-incremental --config-file mypy.ini "$@"
 }
 
-# odoo.orm functions without complete annotations, tests excluded: an exact
-# ratchet toward zero, the floor beside mypy.ini
-untyped_orm() {
-    local floor count
-    floor="$(tr -d '[:space:]' < mypy_untyped_floor)"
-    count="$(bare_mypy --disallow-untyped-defs --disallow-incomplete-defs -p odoo.orm 2>/dev/null \
-        | grep -v '/tests/' | grep -c 'error:')"
-    echo "odoo.orm untyped defs: $count, floor $floor"
-    [ "$count" -eq "$floor" ]
-}
-
 tier2() {
     "$BIN/pytest" -q -p no:cacheprovider \
         odoo/orm/tests odoo/http/tests odoo/db/tests odoo/tools/tests \
@@ -116,7 +105,6 @@ run "pytest tier 2"               tier2
 if [ "$FAST" -eq 0 ]; then
     run "mypy core packages"      bare_mypy -p odoo.orm -p odoo.db -p odoo.libs -p odoo.http -p odoo.service -p odoo.modules
     run "mypy tools, cli, tests"  bare_mypy -p odoo.tools -p odoo.cli -p odoo.tests
-    run "mypy orm untyped ratchet" untyped_orm
     # factcheck_env.sh finds the venv beside the checkout; a --ref worktree
     # under /tmp has none beside it and would fall back to the system python3
     run "doc/architecture figures" env ODOO_VENV_PYTHON="$PYTHON" bash doc/architecture/factcheck.sh

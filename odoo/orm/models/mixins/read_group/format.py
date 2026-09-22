@@ -444,7 +444,9 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
                 locale=get_lang(self.env).code,
             )
 
-    def _read_group_format_result_properties(self, rows_dict: list[dict], group: str) -> None:
+    def _read_group_format_result_properties(
+        self, rows_dict: list[dict], group: str
+    ) -> None:
         if "." not in group:
             msg = "You must choose the property you want to group by."
             raise ValueError(msg)

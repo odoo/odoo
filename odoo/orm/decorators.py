@@ -39,7 +39,7 @@ def constrains(
 def constrains(*args: str, sudo: bool = True) -> Decorator: ...
 
 
-def constrains(*args, sudo: bool = True) -> Decorator:
+def constrains(*args: typing.Any, sudo: bool = True) -> Decorator:
     if args and callable(args[0]):
         if len(args) > 1:
             raise TypeError(
@@ -74,7 +74,7 @@ def onchange(*args: str) -> Decorator:
     return attrsetter("_onchange", args)
 
 
-def _check_field_paths(what: str, args, *, dotted: bool) -> None:
+def _check_field_paths(what: str, args: typing.Iterable[str], *, dotted: bool) -> None:
     """Refuse the spellings that read as a field path and are not one.
 
     `@api.depends("a, b")` is one dependency named `a, b`, which matches no
@@ -112,7 +112,7 @@ def _check_field_paths(what: str, args, *, dotted: bool) -> None:
             raise ValueError(f"{what}() argument {arg!r} {detail}")
 
 
-def _check_depends_id(deps) -> None:
+def _check_depends_id(deps: typing.Iterable[str]) -> None:
     for arg in deps:
         if "id" in arg.split("."):
             raise NotImplementedError("Compute method cannot depend on field 'id'.")
@@ -126,7 +126,7 @@ def depends(func: Callable[[BaseModel], Collection[str]], /) -> Decorator: ...
 def depends(*args: str) -> Decorator: ...
 
 
-def depends(*args) -> Decorator:
+def depends(*args: typing.Any) -> Decorator:
     marker: typing.Any
     if args and callable(args[0]):
         if len(args) > 1:
@@ -138,7 +138,7 @@ def depends(*args) -> Decorator:
         original = args[0]
 
         @wraps(original)
-        def _depends_callable(self):
+        def _depends_callable(self: typing.Any) -> tuple[str, ...]:
             deps = tuple(original(self))
             _check_depends_id(deps)
             return deps

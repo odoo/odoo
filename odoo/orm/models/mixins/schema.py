@@ -1,4 +1,5 @@
 import logging
+import typing
 
 import psycopg
 import psycopg.errors
@@ -155,7 +156,7 @@ class SchemaMixin(_ModelStubs):
         if self._auto:
             if must_create_table:
 
-                def get_column_type(field):
+                def get_column_type(field: typing.Any) -> str:
                     return field.column_type[1] + (
                         " NOT NULL" if field.required else ""
                     )

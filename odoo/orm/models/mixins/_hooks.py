@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import functools
 import logging
+import typing
 from collections import defaultdict
 from inspect import getmembers
 
@@ -19,7 +20,7 @@ class _HooksMixin(_ModelStubs):
 
     @property
     def _ondelete_methods(self) -> list:
-        def is_ondelete(func):
+        def is_ondelete(func: typing.Any) -> bool:
             return callable(func) and hasattr(func, "_ondelete")
 
         cls = self.env.registry[self._name]
@@ -31,12 +32,12 @@ class _HooksMixin(_ModelStubs):
 
     @property
     def _onchange_methods(self) -> dict[str, list]:
-        def is_onchange(func):
+        def is_onchange(func: typing.Any) -> bool:
             return callable(func) and hasattr(func, "_onchange")
 
         cls = self.env.registry[self._name]
 
-        def get_onchange_methods():
+        def get_onchange_methods() -> dict:
             methods = defaultdict(list)
             for _attr, func in getmembers(cls, is_onchange):
                 missing = []
@@ -58,7 +59,7 @@ class _HooksMixin(_ModelStubs):
                         missing=missing,
                     )
 
-            def onchange_default(field, self):
+            def onchange_default(field: typing.Any, self: typing.Any) -> None:
                 value = field.convert_to_write(self[field.name], self)
                 condition = f"{field.name}={value}"
                 defaults = self.env.registry.metaschema.model_defaults(

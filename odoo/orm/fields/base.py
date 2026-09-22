@@ -258,7 +258,7 @@ class Field[T](
     _by_type__: dict[str, builtins.type[Field]] = {}
     _register_type: typing.ClassVar[bool] = True
 
-    def __init__(self, string: str | Sentinel = SENTINEL, **kwargs):
+    def __init__(self, string: str | Sentinel = SENTINEL, **kwargs: typing.Any) -> None:
         for key in BOOLEAN_ATTRIBUTES:
             value = kwargs.get(key, SENTINEL)
             if value is not SENTINEL and not isinstance(value, bool):
@@ -467,13 +467,15 @@ class Field[T](
     def _compute_related(self, records: BaseModel) -> None:
         _related.compute_related(self, records)
 
-    def _process_related(self, value, env: Environment) -> typing.Any:
+    def _process_related(self, value: typing.Any, env: Environment) -> typing.Any:
         return value
 
     def _inverse_related(self, records: BaseModel) -> None:
         _related.inverse_related(self, records)
 
-    def _search_related(self, records: BaseModel, operator: str, value) -> DomainType:
+    def _search_related(
+        self, records: BaseModel, operator: str, value: typing.Any
+    ) -> DomainType:
         return _related.search_related(self, records, operator, value)
 
     _related_comodel_name = property(attrgetter("comodel_name"))
@@ -563,7 +565,9 @@ class Field[T](
     def update_db_column(self, model: ModelLike, column: dict[str, typing.Any]) -> None:
         _ddl.update_db_column(self, model, column)
 
-    def _convert_db_column(self, model: ModelLike, column: dict[str, typing.Any]):
+    def _convert_db_column(
+        self, model: ModelLike, column: dict[str, typing.Any]
+    ) -> None:
         _ddl.convert_db_column(self, model, column)
 
     def update_db_notnull(

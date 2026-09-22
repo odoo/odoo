@@ -25,21 +25,21 @@ class _ConstraintsMixin(_ModelStubs):
     @property
     def _constraint_methods(self) -> list:
 
-        def is_constraint(func):
+        def is_constraint(func: typing.Any) -> bool:
             return callable(func) and hasattr(func, "_constrains")
 
-        def wrap(func, names):
+        def wrap(func: typing.Any, names: Iterable[str]) -> typing.Any:
             sudo_flag = getattr(func, "_constrains_sudo", True)
 
             @api.constrains(*names, sudo=sudo_flag)
-            def wrapper(self):
+            def wrapper(self: typing.Any) -> typing.Any:
                 return func(self)
 
             return wrapper
 
         cls = self.env.registry[self._name]
 
-        def get_constraint_methods():
+        def get_constraint_methods() -> list:
             methods = []
             for attr, func in getmembers(cls, is_constraint):
                 if callable(func._constrains):

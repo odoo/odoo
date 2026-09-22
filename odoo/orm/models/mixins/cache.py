@@ -19,12 +19,12 @@ if typing.TYPE_CHECKING:
 class RecordCache(Mapping):
     __slots__ = ["_record"]
 
-    def __init__(self, record) -> None:
+    def __init__(self, record: typing.Any) -> None:
         if len(record) != 1:
             raise ValueError(f"Unexpected RecordCache({record})")
         self._record = record
 
-    def _peek(self, field) -> Mapping | None:
+    def _peek(self, field: Field) -> Mapping | None:
         return field._peek_cache(self._record.env)
 
     def __contains__(self, name: object) -> bool:

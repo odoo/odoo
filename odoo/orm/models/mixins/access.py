@@ -233,7 +233,7 @@ class AccessMixin(_ModelStubs):
 
         return None
 
-    def _check_company_domain(self, companies) -> Domain:
+    def _check_company_domain(self, companies: typing.Any) -> Domain:
         if not companies:
             return Domain("company_id", "=", False)
         if isinstance(companies, unquote):

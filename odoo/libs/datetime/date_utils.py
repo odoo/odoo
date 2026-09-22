@@ -36,7 +36,7 @@ import math
 import time as _time
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, time, timedelta, tzinfo
-from typing import TYPE_CHECKING, Any, Literal, cast
+from typing import TYPE_CHECKING, Any, Literal
 
 from dateutil.relativedelta import FR, MO, SA, SU, TH, TU, WE, relativedelta
 
@@ -436,11 +436,11 @@ def occurrences_after[D: (date, datetime)](
     # first occurrence of a series that may be years old.
     k = max(0, _count_elapsed_units(local_start, local_after, unit) // interval - 1)
     while True:
-        candidate = local_start + delta * k
+        candidate: Any = local_start + delta * k
         if tz is not None and isinstance(candidate, datetime):
             candidate = candidate.astimezone(UTC).replace(tzinfo=None)
         if candidate > after:
-            yield cast("D", candidate)
+            yield candidate
         k += 1
 
 

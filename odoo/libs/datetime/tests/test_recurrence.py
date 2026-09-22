@@ -29,6 +29,7 @@ PLURAL: dict[TimeUnit, str] = {
 def _cron_next_call(nextcall, now, interval_type, interval_number, tz):
     # `ir.cron._get_next_call` as it stood before it delegated here, with the
     # record's context timezone passed explicitly.
+    interval: timedelta | relativedelta
     if interval_type in ("minutes", "hours"):
         interval = timedelta(**{interval_type: interval_number})
         if nextcall <= now:

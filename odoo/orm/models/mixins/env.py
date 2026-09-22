@@ -51,7 +51,7 @@ class EnvironmentMixin(_ModelStubs):
         return self.with_env(self.env(su=flag))
 
     @api.private
-    def with_user(self, user) -> Self:
+    def with_user(self, user: typing.Any) -> Self:
         if not user:
             return self
         return self.with_env(self.env(user=user, su=False))
@@ -84,7 +84,7 @@ class EnvironmentMixin(_ModelStubs):
 
     @api.private
     def with_context(
-        self, ctx: dict[str, typing.Any] | None = None, /, **overrides
+        self, ctx: dict[str, typing.Any] | None = None, /, **overrides: typing.Any
     ) -> Self:
         context = dict(ctx if ctx is not None else self.env.context, **overrides)
         if "force_company" in context:

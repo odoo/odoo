@@ -8,7 +8,7 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMA
 from odoo.tools.misc import PENDING, SENTINEL
 
 if typing.TYPE_CHECKING:
-    from .._typing import BaseModel, ModelLike
+    from .._typing import BaseModel, IdType, ModelLike
 
     M = typing.TypeVar("M", bound=BaseModel)
 
@@ -71,7 +71,7 @@ class _FieldConvertMixin[T](_FieldStubs):
         return PsycopgJson({record.env.company.id: self._to_json_value(value)})
 
     def _get_column_update_model_translation(
-        self, record: ModelLike, record_id
+        self, record: ModelLike, record_id: IdType
     ) -> typing.Any:
         langs_dict = {}
         found = False
@@ -89,11 +89,15 @@ class _FieldConvertMixin[T](_FieldStubs):
                 langs_dict[record.env.lang or "en_US"] = flat_value
         return PsycopgJson(langs_dict) if langs_dict else None
 
-    def _get_flat_column_value(self, record: ModelLike, record_id) -> typing.Any:
+    def _get_flat_column_value(
+        self, record: ModelLike, record_id: IdType
+    ) -> typing.Any:
         flat = record.env.core.get_field_data_or_none(self)
         return SENTINEL if flat is None else flat.get(record_id, SENTINEL)
 
-    def _get_column_update_plain(self, record: ModelLike, record_id) -> typing.Any:
+    def _get_column_update_plain(
+        self, record: ModelLike, record_id: IdType
+    ) -> typing.Any:
         env = record.env
         if not self._is_context_dependent(env):
             value = env.core.get_field_data(self)[record_id]
@@ -111,7 +115,7 @@ class _FieldConvertMixin[T](_FieldStubs):
         raise KeyError(record_id)
 
     def _get_column_update_company_dependent(
-        self, record: ModelLike, record_id
+        self, record: ModelLike, record_id: IdType
     ) -> typing.Any:
         values = {}
         found = False

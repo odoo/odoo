@@ -156,7 +156,7 @@ class DomainOptimizationError(ValueError):
 
 
 @contextlib.contextmanager
-def _recursion_error_as_value_error():
+def _recursion_error_as_value_error() -> typing.Iterator[None]:
     try:
         yield
     except RecursionError:
@@ -812,7 +812,7 @@ class DomainCustom(Domain):
         cls,
         sql: Callable[[BaseModel, str, Query], SQL],
         filtered: Callable[[BaseModel], bool] | None = None,
-    ):
+    ) -> Self:
         self = object.__new__(cls)
         object.__setattr__(self, "_sql", sql)
         object.__setattr__(self, "_filtered", filtered)
@@ -868,7 +868,7 @@ def _defines_the_condition(field: Field, su: bool) -> bool:
 
 
 @functools.cache
-def _search_related_function():
+def _search_related_function() -> typing.Any:
     from ..fields.base import Field as _Field
 
     return _Field._search_related
@@ -1093,7 +1093,7 @@ class DomainCondition(Domain):
         return result
 
     def _prepare_condition_error(
-        self, message: str, *args, error=ValueError
+        self, message: str, *args: typing.Any, error: type[Exception] = ValueError
     ) -> Exception:
         message += " in condition (%r, %r, %r)"
         return error(message % (*args, self.field_expr, self.operator, self.value))

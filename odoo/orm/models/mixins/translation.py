@@ -94,7 +94,11 @@ class TranslationMixin(_ModelStubs):
         return True
 
     def _update_term_translations(
-        self, field, translations: dict, digest, source_lang: str
+        self,
+        field: typing.Any,
+        translations: dict,
+        digest: typing.Any,
+        source_lang: str,
     ) -> bool:
         old_values = field._get_stored_translations(self)
         if not old_values:

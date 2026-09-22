@@ -391,7 +391,7 @@ class SearchMixin(_ModelStubs):
         offset: int = 0,
         limit: int | None = None,
         order: str | None = None,
-        **read_kwargs,
+        **read_kwargs: typing.Any,
     ) -> list[ValuesType]:
         if not fields:
             fields = self._get_fields_default_read()

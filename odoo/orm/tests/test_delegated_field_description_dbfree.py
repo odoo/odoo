@@ -37,9 +37,7 @@ class Child(models.Model):
     _inherits = {"delegate.parent": "parent_id"}
     _log_access = False
 
-    parent_id = fields.Many2one(
-        "delegate.parent", required=True, ondelete="cascade"
-    )
+    parent_id = fields.Many2one("delegate.parent", required=True, ondelete="cascade")
     note = fields.Char()
 
 

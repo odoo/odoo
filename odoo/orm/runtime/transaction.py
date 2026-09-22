@@ -97,7 +97,7 @@ class Transaction:
         "unit_of_work",
     )
 
-    def __init__(self, registry: Registry, storage=None):
+    def __init__(self, registry: Registry, storage: typing.Any = None) -> None:
         self.registry = registry
         self.backend = (
             InMemoryBackend(storage) if storage is not None else POSTGRES_BACKEND
@@ -226,10 +226,10 @@ class Transaction:
     def _flush_as(self, env: Environment) -> None:
         prof = _OrmProfile(_orm_cache)
 
-        def recompute_fn(field):
+        def recompute_fn(field: Field) -> None:
             env[field.model_name]._recompute_field(field)
 
-        def flush_fn(model_names):
+        def flush_fn(model_names: typing.Iterable[str]) -> None:
             with env.cr.pipeline():
                 for model_name in model_names:
                     env[model_name].flush_model()
@@ -297,7 +297,7 @@ class Transaction:
             with suppress(AttributeError):
                 del env._field_cache_memo
 
-    def clear(self):
+    def clear(self) -> None:
         _debug.lifecycle(
             "transaction.clear",
             db=self.registry.db_name,

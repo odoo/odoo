@@ -146,7 +146,7 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
 
     def _read_grouping_sets_query(
         self,
-        query,
+        query: Query,
         grouping_sets: Sequence[Sequence[str]],
         all_groupby_specs: tuple[str, ...],
         aggregates: Sequence[str],
@@ -701,14 +701,14 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
     )
     def read_group(
         self,
-        domain,
-        fields,
-        groupby,
-        offset=0,
-        limit=None,
-        orderby=False,
-        lazy=True,
-    ):
+        domain: typing.Any,
+        fields: typing.Any,
+        groupby: typing.Any,
+        offset: int = 0,
+        limit: int | None = None,
+        orderby: typing.Any = False,
+        lazy: bool = True,
+    ) -> list[dict]:
         groupby = [groupby] if isinstance(groupby, str) else groupby
         lazy_groupby = groupby[:1] if lazy else groupby
 

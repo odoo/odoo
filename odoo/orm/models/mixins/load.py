@@ -324,7 +324,7 @@ class LoadMixin(_ModelStubs):
 
     def _collect_load_batch(
         self,
-        converted,
+        converted: typing.Iterable,
         current_module: str,
         batch: list,
         batch_xml_ids: set,
@@ -344,13 +344,6 @@ class LoadMixin(_ModelStubs):
         return info
 
     def _collect_pending_tokens(self, vals: dict, tokens: dict[str, set]) -> None:
-        # every text a name reference could resolve to once this batch is
-        # created. A rec-name field is often computed (res.partner searches
-        # complete_name, which is not in vals), so every string value of the
-        # pending record counts, not only the searchable fields; a reference
-        # equal to a value that only exists after compute is the one shape
-        # this cannot see, and it costs a lost "multiple matches" warning,
-        # never a wrong link
         for fname, value in vals.items():
             field = self._fields.get(fname)
             if field is None:

@@ -109,12 +109,14 @@ class Reference(Selection["BaseModel | None"]):
             return None
         raise ValueError(f"Wrong value for {self}: {value!r}")
 
-    def _get_verified_pairs(self, env) -> set[tuple[str, int]]:
+    def _get_verified_pairs(self, env: typing.Any) -> set[tuple[str, int]]:
         per_field = env.cr.cache.setdefault(REFERENCE_VERIFIED_CACHE_KEY, {})
         return per_field.setdefault((self.model_name, self.name), set())
 
     @staticmethod
-    def discard_verified_models(env, model_names: typing.Iterable[str]) -> None:
+    def discard_verified_models(
+        env: typing.Any, model_names: typing.Iterable[str]
+    ) -> None:
         per_field = env.cr.cache.get(REFERENCE_VERIFIED_CACHE_KEY)
         if not per_field:
             return

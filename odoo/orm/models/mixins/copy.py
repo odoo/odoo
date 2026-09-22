@@ -40,7 +40,7 @@ class CopyMixin(_ModelStubs):
             name for name, field in self._fields.items() if not field.inherited
         }
 
-        def blacklist_given_fields(model):
+        def blacklist_given_fields(model: typing.Any) -> None:
             for parent_model, parent_field in model._inherits.items():
                 blacklist.add(parent_field)
                 if parent_field in default:
@@ -172,7 +172,7 @@ class CopyMixin(_ModelStubs):
         )
 
     def _copy_field_translations(
-        self, new: Self, name: str, field, valid_langs: set[str]
+        self, new: Self, name: str, field: typing.Any, valid_langs: set[str]
     ) -> None:
         old_stored_translations = field._get_stored_translations(
             typing.cast("BaseModel", self)

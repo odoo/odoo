@@ -221,7 +221,7 @@ class _Relational(Field["BaseModel"]):
 
     @property
     def _related_domain(self) -> DomainType | None:
-        def validated(domain):
+        def validated(domain: typing.Any) -> typing.Any:
             if isinstance(domain, str) and not self.inherited:
                 return None
             return domain
@@ -313,7 +313,7 @@ class _Relational(Field["BaseModel"]):
             expr_getter = getter
             sudo_env = records.sudo().with_context(filter_function_reset_sudo=True).env
 
-            def getter(rec):
+            def getter(rec: typing.Any) -> typing.Any:
                 return expr_getter(rec.with_env(sudo_env))
 
         corecords = getter(records)
@@ -871,7 +871,7 @@ class _RelationalMulti(_Relational):
             comodel = record.env[self.comodel_name]
             if record and not record.id:
 
-                def browse(it):
+                def browse(it: typing.Any) -> BaseModel:
                     return comodel.browse((it and NewId(it),))
             else:
                 browse = comodel.browse
@@ -988,7 +988,7 @@ class _RelationalMulti(_Relational):
 
         if is_recordset(value) and value._name == self.comodel_name:
 
-            def get_origin(val):
+            def get_origin(val: typing.Any) -> typing.Any:
                 return val._origin if hasattr(val, "_origin") else val
 
             inv_names = {field.name for field in record.pool.field_inverses[self]}

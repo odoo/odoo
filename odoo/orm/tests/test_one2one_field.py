@@ -130,6 +130,7 @@ def test_a_related_through_a_one2one_converts_to_sql():
         assert from_clause.count("LEFT JOIN") == 2
         assert sql.code.endswith('."id"')
 
+
 def test_linking_another_seat_releases_the_one_held():
     from odoo.fields import Command
 
