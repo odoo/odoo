@@ -16,7 +16,11 @@ import { isObject } from "@web/core/utils/objects";
 import { hashCode } from "@web/core/utils/strings";
 import { serverState } from "../mock_server_state.hoot";
 import { fetchModelDefinitions, globalCachedFetch, registerModelToFetch } from "../module_set.hoot";
-import { DEFAULT_FIELD_PROPERTIES, getFieldDisplayName, S_SERVER_FIELD } from "./mock_fields";
+import {
+    DEFAULT_FIELD_PROPERTIES,
+    getFieldDisplayName,
+    validateAndCleanupField,
+} from "./mock_fields";
 import {
     getRecordQualifier,
     makeKwArgs,
@@ -862,8 +866,10 @@ export class MockServer {
      */
     async _loadModels() {
         const models = this._modelSpecs;
-        const serverModelInheritances = new Set();
         this._modelSpecs = [];
+
+        const allServerFields = new Set();
+        const serverModelInheritances = new Set();
 
         let serverModels = {};
         if (this._modelNamesToFetch.size) {
@@ -910,16 +916,21 @@ export class MockServer {
                 }
 
                 // Fields (lowest priority): server fields definitions
-                for (const [fieldName, serverField] of Object.entries(fields)) {
-                    model._fields[fieldName] = {
-                        ...DEFAULT_FIELD_PROPERTIES,
-                        ...serverField,
-                        ...model._fields[fieldName],
-                        [S_SERVER_FIELD]: true,
-                    };
+                for (const [fieldName, serverFieldDefinition] of Object.entries(fields)) {
+                    const serverField = validateAndCleanupField({
+                        ...DEFAULT_FIELD_PROPERTIES, // 1. common default field properties
+                        ...serverFieldDefinition, // 2. server field properties
+                        ...model._fields[fieldName], // 3. custom properties on local model
+                    });
+                    allServerFields.add(serverField);
+                    model._fields[fieldName] = serverField;
                 }
 
                 Object.assign(model, otherProperties);
+            } else {
+                for (const field of Object.values(model._fields)) {
+                    validateAndCleanupField(field);
+                }
             }
 
             // Validate _rec_name
@@ -980,7 +991,8 @@ export class MockServer {
             for (const [fieldName, field] of Object.entries(model._fields)) {
                 // Check missing models
                 if (field.relation && !this._models[field.relation]) {
-                    if (field[S_SERVER_FIELD]) {
+                    if (allServerFields.has(field)) {
+                        // Delete server fields that are not loaded
                         delete model._fields[fieldName];
                         continue;
                     } else {

@@ -6,7 +6,7 @@ export class MailMessageLinkPreview extends models.ServerModel {
 
     link_preview_id = fields.Many2one({ relation: "mail.link.preview" });
     message_id = fields.Many2one({ relation: "mail.message" });
-    is_hidden = fields.Generic({ default: false });
+    is_hidden = fields.Boolean({ default: false });
 
     get _to_store_defaults() {
         return [mailDataHelpers.Store.one("link_preview_id"), "message_id"];
