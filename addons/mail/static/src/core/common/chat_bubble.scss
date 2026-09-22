@@ -20,10 +20,11 @@
     }
 
     &.o-bouncing {
-        animation: o-mail-ChatBubble-bouncing 0.25s;
-        animation-direction: alternate;
+        // One iteration is a full bounce, so the component can stop the
+        // animation on any iteration boundary without the bubble jumping.
+        animation: o-mail-ChatBubble-bouncing 0.5s;
         animation-timing-function: cubic-bezier(.5, 0.95, 0, .5);
-        animation-iteration-count: 16;
+        animation-iteration-count: infinite;
     }
 
 }
@@ -121,11 +122,11 @@
     right: -10px;
 }
 
-@keyframes o-mail-ChatBubble-bouncing { 
-    from { 
-        transform: translate3d(0, 0, 0); 
-    } 
-    to {
-        transform: translate3d(0, -10px, 0); 
-    } 
+@keyframes o-mail-ChatBubble-bouncing {
+    from, to {
+        transform: translate3d(0, 0, 0);
+    }
+    50% {
+        transform: translate3d(0, -10px, 0);
+    }
 } 
