@@ -2056,8 +2056,11 @@ class AccountMoveLine(models.Model):
             defaults['account_id'] = quick_encode_suggestion['account_id']
             defaults['price_unit'] = quick_encode_suggestion['price_unit']
             defaults['tax_ids'] = [Command.set(quick_encode_suggestion['tax_ids'])]
-        elif (journal := self.env['account.journal'].browse(self.env.context.get('journal_id'))) and journal.default_account_id:
-            defaults['account_id'] = journal.default_account_id
+        elif (journal := self.env['account.journal'].browse(self.env.context.get('journal_id'))):
+            if journal.type in {'bank', 'cash', 'credit'} and journal.suspense_account_id:
+                defaults['account_id'] = journal.suspense_account_id
+            elif journal.default_account_id:
+                defaults['account_id'] = journal.default_account_id
         return defaults
 
     def _sanitize_vals(self, vals):
@@ -2179,6 +2182,17 @@ class AccountMoveLine(models.Model):
         lines.move_id._synchronize_business_models(['line_ids'])
         # Remove analytic lines created for draft AMLs, after analytic_distribution has been updated
         lines.filtered(lambda l: l.parent_state == 'draft').analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
+
+        # Keep the base amount in the extra_tax_data in the context of the allocate button of the bank rec widget
+        if self.env.context.get('from_allocate_amounts'):
+            for line in lines:
+                if (line.extra_tax_data or {}).get('base_amount'):
+                    continue
+                line.extra_tax_data = {
+                    **(line.extra_tax_data or {}),
+                    'base_amount': line.amount_currency or line.balance,
+                }
+
         return lines
 
     def write(self, vals):
@@ -2213,7 +2227,7 @@ class AccountMoveLine(models.Model):
                 line_to_write -= line
                 continue
 
-            if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in ('tax_ids', 'tax_line_id')):
+            if not self.env.context.get('from_allocate_amounts') and line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in ('tax_ids', 'tax_line_id')):
                 raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
 
             # Check the lock date.
@@ -2281,6 +2295,17 @@ class AccountMoveLine(models.Model):
             if 'analytic_line_ids' in vals:
                 self.filtered(lambda l: l.parent_state == 'draft').analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
 
+        # Keep the base amount in the extra_tax_data in the context of the allocate button of the bank rec widget
+        if self.env.context.get('from_allocate_amounts'):
+            for line in self:
+                # This means that the line was modified when adding the tax
+                if self.env.context.get('dynamic_write'):
+                    continue
+                if any(field in vals for field in ['balance', 'amount_currency']):
+                    line.extra_tax_data = {
+                        **(line.extra_tax_data or {}),
+                        'base_amount': line.amount_currency,
+                    }
         return result
 
     def _parse_flush_fnames(self, fnames):
