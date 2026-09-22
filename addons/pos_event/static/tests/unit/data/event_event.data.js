@@ -21,6 +21,11 @@ export class EventEvent extends models.ServerModel {
             "seats_max",
             "is_multi_slots",
             "event_slot_ids",
+            "description",
+            "date_begin",
+            "date_end",
+            "tag_ids",
+            "address_id",
         ];
     }
 
@@ -40,6 +45,10 @@ export class EventEvent extends models.ServerModel {
             seats_max: 10,
             is_multi_slots: true,
             event_slot_ids: [1],
+            description: "Welcome to India's biggest Tech and Buisness Event",
+            date_begin: "2019-03-10 11:00:00",
+            date_end: "2019-03-10 11:00:00",
+            tag_ids: [1],
         },
         {
             id: 2,
