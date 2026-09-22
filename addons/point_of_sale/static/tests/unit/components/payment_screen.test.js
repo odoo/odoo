@@ -1,4 +1,4 @@
-import { test, expect, animationFrame } from "@odoo/hoot";
+import { test, expect, animationFrame, queryAll } from "@odoo/hoot";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupPosEnv, getFilledOrder, expectFormattedPrice } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
@@ -56,4 +56,30 @@ test("addTip startingValue uses locale decimal separator on overpayment", async 
         type: "fixed",
     });
     expect(tipAmount).toBe(405);
+});
+
+test("payment methods: select a payment currency", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const paymentMethod = store.models["pos.payment.method"].get(1);
+    const euro = store.models["res.currency"].get(125);
+
+    paymentMethod.currency_ids = [euro];
+
+    await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+
+    const currencyButtons = queryAll(".paymentmethod button");
+    expect(currencyButtons).toHaveLength(2);
+    expect(currencyButtons[0].querySelector(".text-start")).toHaveText("USD");
+    expect(currencyButtons[1].querySelector(".text-start")).toHaveText("EUR");
+
+    await currencyButtons[1].click();
+    await animationFrame();
+
+    expect(order.payment_ids).toHaveLength(1);
+    expect(order.payment_ids[0].payment_method_id).toBe(paymentMethod);
+    expect(order.payment_ids[0].currency).toBe(euro);
+    expect(currencyButtons[1]).toHaveClass("border-primary");
 });
