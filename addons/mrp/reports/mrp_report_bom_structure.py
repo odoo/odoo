@@ -19,14 +19,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
     _description = "BOM Overview Report"
 
     @api.model
-    def get_html(self, bom_id=False, searchQty=1, searchVariant=False):
-        res = self._get_report_data(
-            bom_id=bom_id, searchQty=searchQty, searchVariant=searchVariant
-        )
-        res["has_attachments"] = self._has_attachments(res["lines"])
-        return res
-
-    @api.model
     def get_warehouses(self):
         return self.env["stock.warehouse"].search_read(
             [("company_id", "in", self.env.companies.ids)],
@@ -43,9 +35,9 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 comp["base_bom_line_qty"]
             ):
                 continue
-            components_qty_to_produce[product.id] += comp[
-                "uom"
-            ]._get_quantity_report(comp["base_bom_line_qty"], product.uom_id)
+            components_qty_to_produce[product.id] += comp["uom"]._get_quantity_report(
+                comp["base_bom_line_qty"], product.uom_id
+            )
             components_qty_available[product.id] = comp["uom"]._get_quantity_report(
                 comp["free_to_manufacture_qty"], product.uom_id
             )
@@ -1241,12 +1233,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 format_date(self.env, date_today + timedelta(days=delay)),
             )
         return ""
-
-    @api.model
-    def _has_attachments(self, data):
-        return data["has_attachments"] or any(
-            self._has_attachments(component) for component in data.get("components", [])
-        )
 
     @api.model
     def _get_bom_attachment_index(self):

@@ -1349,9 +1349,9 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             if production.bom_id
             else False
         )
-        real_cost = product.standard_price * in_transit[
-            "uom_id"
-        ]._get_quantity_report(in_transit["quantity"], product.uom_id)
+        real_cost = product.standard_price * in_transit["uom_id"]._get_quantity_report(
+            in_transit["quantity"], product.uom_id
+        )
         if self._is_production_started(production) or not production.bom_id:
             mo_cost_decorator = self._get_comparison_decorator(
                 real_cost, mo_cost, currency.rounding
@@ -1583,10 +1583,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 doc_origin = self._get_origin(move_origin)
                 if doc_origin:
                     line["in_transit"] = False
-                    move_origin_qty = (
-                        move_origin.product_uom_id._get_quantity_report(
-                            move_origin.product_uom_qty, line["uom_id"]
-                        )
+                    move_origin_qty = move_origin.product_uom_id._get_quantity_report(
+                        move_origin.product_uom_qty, line["uom_id"]
                     )
                     if (
                         float_compare(

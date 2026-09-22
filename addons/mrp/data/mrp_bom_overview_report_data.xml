@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="bom_overview_report" model="report.formula">
+        <field name="name">BoM Overview</field>
+        <field name="filter_date" eval="False" />
+        <field name="filter_period_comparison" eval="False" />
+        <field name="filter_growth_comparison" eval="False" />
+        <field name="filter_unfold_all" eval="True" />
+        <field name="availability_condition">always</field>
+        <field name="source_model">mrp.bom</field>
+        <field
+            name="custom_handler_model_id"
+            ref="model_mrp_bom_overview_report_handler" />
+        <field name="column_ids">
+            <record
+                id="bom_overview_report_column_quantity"
+                model="report.formula.column">
+                <field name="name">Quantity</field>
+                <field name="expression_label">quantity</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">10</field>
+            </record>
+            <record id="bom_overview_report_column_uom" model="report.formula.column">
+                <field name="name">Unit</field>
+                <field name="expression_label">uom</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">20</field>
+                <field name="optional" eval="True" />
+                <field name="optional_hidden" eval="True" />
+            </record>
+            <record
+                id="bom_overview_report_column_quantity_available"
+                model="report.formula.column">
+                <field name="name">Free to Use / On Hand</field>
+                <field name="expression_label">quantity_available</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">30</field>
+                <field name="optional" eval="True" />
+                <field name="optional_hidden" eval="True" />
+            </record>
+            <record
+                id="bom_overview_report_column_status"
+                model="report.formula.column">
+                <field name="name">Status</field>
+                <field name="expression_label">status</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">40</field>
+                <field name="optional" eval="True" />
+                <field name="optional_hidden" eval="True" />
+            </record>
+            <record
+                id="bom_overview_report_column_availability"
+                model="report.formula.column">
+                <field name="name">Availability</field>
+                <field name="expression_label">availability</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">50</field>
+                <field name="optional" eval="True" />
+                <field name="optional_hidden" eval="True" />
+            </record>
+            <record
+                id="bom_overview_report_column_lead_time"
+                model="report.formula.column">
+                <field name="name">Lead Time</field>
+                <field name="expression_label">lead_time</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">60</field>
+                <field name="optional" eval="True" />
+                <field name="optional_hidden" eval="True" />
+            </record>
+            <record id="bom_overview_report_column_route" model="report.formula.column">
+                <field name="name">Route</field>
+                <field name="expression_label">route</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">70</field>
+                <field name="optional" eval="True" />
+                <field name="optional_hidden" eval="True" />
+            </record>
+            <record
+                id="bom_overview_report_column_bom_cost"
+                model="report.formula.column">
+                <field name="name">Cost</field>
+                <field name="expression_label">bom_cost</field>
+                <field name="figure_type">monetary</field>
+                <field name="sequence">80</field>
+            </record>
+        </field>
+    </record>
+
+</odoo>

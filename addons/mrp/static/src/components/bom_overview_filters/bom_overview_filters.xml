@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-inherit="report_formula.AccountReportFiltersCustomizable" t-inherit-mode="extension">
+        <xpath expr="//div[@id='filter_rounding_unit']" position="before">
+            <t t-if="'bom_overview_quantity' in controller.cachedFilterOptions">
+                <div id="filter_bom_overview_quantity" class="d-flex align-items-center">
+                    <label class="me-1" for="bom_overview_quantity">Quantity</label>
+                    <input
+                        id="bom_overview_quantity"
+                        type="number"
+                        min="0"
+                        class="form-control o_input w-auto"
+                        t-att-value="controller.cachedFilterOptions.bom_overview_quantity"
+                        t-on-change="(ev) => this.setBomOverviewQuantity(ev)"
+                    />
+                </div>
+            </t>
+
+            <t t-if="bomOverviewVariants.length">
+                <div id="filter_bom_overview_variant">
+                    <Dropdown>
+                        <button class="btn btn-secondary">
+                            <t
+                                t-out="bomOverviewVariantName(controller.cachedFilterOptions.bom_overview_variant_id) or 'All Variants'"
+                            />
+                        </button>
+
+                        <t t-set-slot="content">
+                            <DropdownItem
+                                class="{ 'selected': !controller.cachedFilterOptions.bom_overview_variant_id }"
+                                onSelected="() => this.setBomOverviewVariant(false)"
+                            >
+                                All Variants
+                            </DropdownItem>
+                            <t t-foreach="bomOverviewVariants" t-as="variant" t-key="variant.id">
+                                <DropdownItem
+                                    class="{ 'selected': controller.cachedFilterOptions.bom_overview_variant_id === variant.id }"
+                                    onSelected="() => this.setBomOverviewVariant(variant.id)"
+                                >
+                                    <t t-out="variant.name"/>
+                                </DropdownItem>
+                            </t>
+                        </t>
+                    </Dropdown>
+                </div>
+            </t>
+
+            <t t-if="bomOverviewWarehouses.length > 1">
+                <div id="filter_bom_overview_warehouse">
+                    <Dropdown>
+                        <button class="btn btn-secondary">
+                            <t
+                                t-out="bomOverviewWarehouseName(controller.cachedFilterOptions.bom_overview_warehouse_id)"
+                            />
+                        </button>
+
+                        <t t-set-slot="content">
+                            <t t-foreach="bomOverviewWarehouses" t-as="warehouse" t-key="warehouse.id">
+                                <DropdownItem
+                                    class="{ 'selected': controller.cachedFilterOptions.bom_overview_warehouse_id === warehouse.id }"
+                                    onSelected="() => this.setBomOverviewWarehouse(warehouse.id)"
+                                >
+                                    <t t-out="warehouse.name"/>
+                                </DropdownItem>
+                            </t>
+                        </t>
+                    </Dropdown>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

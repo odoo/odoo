@@ -1,6 +1,5 @@
 import { openFormView, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { defineMrpModels } from "@mrp/../tests/mrp_test_helpers";
-import { getColorClass, getForecastAction } from "@mrp/components/mrp_overview_utils";
 import { MrpTimer } from "@mrp/widgets/timer";
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
@@ -84,17 +83,6 @@ test("formatMinutes renders mm:ss and carries a rounded-up second into the minut
     expect(formatMinutes(0)).toBe("00:00");
     expect(formatMinutes(-2.999)).toBe("-03:00");
     expect(formatMinutes(false)).toBe("");
-});
-
-test("shared overview helpers", () => {
-    expect(getColorClass("danger")).toBe("text-danger");
-    expect(getColorClass("success")).toBe("text-success");
-    expect(getColorClass(false)).toBe("");
-    expect(getForecastAction("product.product")).toBe("action_product_forecast_report");
-    expect(getForecastAction("product.template")).toBe(
-        "action_product_tmpl_forecast_report",
-    );
-    expect(getForecastAction("mrp.bom")).toBe(undefined);
 });
 
 test("MrpTimer ticks while ongoing and cleans up (no leaked timers)", async () => {

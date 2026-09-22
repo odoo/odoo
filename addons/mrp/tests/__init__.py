@@ -25,3 +25,4 @@ from . import test_stock_move_audit
 from . import test_workorder
 from . import test_group_readonly
 from . import test_mo_overview_report
+from . import test_bom_overview_report

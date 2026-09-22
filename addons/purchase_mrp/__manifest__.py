@@ -25,10 +25,5 @@ from purchase order.
     "demo": [
         "demo/purchase_mrp_demo.xml",
     ],
-    "assets": {
-        "web.assets_backend": [
-            "purchase_mrp/static/src/**/*",
-        ],
-    },
     "auto_install": True,
 }

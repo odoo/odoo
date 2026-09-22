@@ -48,4 +48,4 @@ class TestReportBom(HttpCase):
 
         action_id = self.env.ref("mrp.action_report_mrp_bom")
         url = "/web#action=%s&active_id=%s" % (str(action_id.id), str(bom.id))
-        self.start_tour(url, "mrp_bom_report_tour", login="admin")
+        self.start_tour(url, "mrp_bom_overview_tour", login="admin")

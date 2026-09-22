@@ -4,8 +4,10 @@
     <data>
         <record id="action_report_mrp_bom" model="ir.actions.client">
             <field name="name">BoM Overview</field>
-            <field name="tag">mrp_bom_report</field>
-            <field name="context">{'model': 'report.mrp.report_bom_structure'}</field>
+            <field name="tag">account_report</field>
+            <field
+                name="context"
+                eval="{'report_id': ref('mrp.bom_overview_report')}" />
         </record>
         <record id="mrp_bom_byproduct_form_view" model="ir.ui.view">
             <field name="name">mrp.bom.byproduct.form</field>

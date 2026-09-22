@@ -19,6 +19,7 @@
         "data/mail_templates.xml",
         "data/mrp_data.xml",
         "data/mrp_mo_overview_report_data.xml",
+        "data/mrp_bom_overview_report_data.xml",
         "data/mail_message_subtype_data.xml",
         "wizards/change_production_qty_views.xml",
         "wizards/mrp_workcenter_block_view.xml",

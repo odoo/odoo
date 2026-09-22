@@ -1404,7 +1404,9 @@ class TestProcurement(TestMrpCommon):
         kg = self.env.ref("uom.product_uom_kgm")
         gram = self.env.ref("uom.product_uom_gram")
         self.assertEqual(gram._get_quantity_in_unit(1.0, kg), 0.01)
-        self.assertEqual(kg.round(gram._get_quantity_in_unit(1.0, kg, round=False)), 0.0)
+        self.assertEqual(
+            kg.round(gram._get_quantity_in_unit(1.0, kg, round=False)), 0.0
+        )
 
         product = self.env["product.product"].create(
             {"name": "Rounded", "is_storable": True, "uom_id": kg.id}

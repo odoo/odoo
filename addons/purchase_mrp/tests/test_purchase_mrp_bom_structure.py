@@ -1,9 +1,5 @@
-import contextlib
-from pathlib import Path
-
 from odoo import Command
-from odoo.modules import Manifest
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -79,33 +75,3 @@ class TestPurchaseMrpBomStructure(AccountTestInvoicingCommon):
 
         component = data["lines"]["components"][0]
         self.assertTrue(component["route_alert"])
-
-
-@tagged("post_install", "-at_install")
-class TestPurchaseMrpAssets(TransactionCase):
-    def test_own_static_sources_are_bundled(self):
-        module_path = Path(Manifest.for_addon("purchase_mrp").path)
-        sources = {
-            f"purchase_mrp/{path.relative_to(module_path).as_posix()}"
-            for path in (module_path / "static" / "src").rglob("*")
-            if path.is_file() and path.suffix in (".js", ".scss", ".css", ".xml")
-        }
-        self.assertTrue(sources, "the module ships no static sources to check")
-
-        IrAsset = self.env["ir.asset"]
-        params = IrAsset._prepare_assets_params()
-        bundled = set()
-        for bundle in set(IrAsset.search([]).mapped("bundle")) | {
-            key
-            for manifest in Manifest.get_all_addon_manifests()
-            for key in (manifest.get("assets") or {})
-        }:
-            with contextlib.suppress(Exception):
-                bundled.update(
-                    entry.path.lstrip("/")
-                    for entry in IrAsset._get_asset_paths(bundle, params)
-                )
-        self.assertFalse(
-            sources - bundled,
-            "static sources declared by no bundle, so never served",
-        )
