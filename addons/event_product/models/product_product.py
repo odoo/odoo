@@ -30,11 +30,22 @@ class ProductProduct(models.Model):
         string="Event Tickets",
     )
 
-    @api.constrains("event_ticket_ids", "service_tracking")
+    # Template tickets need the same guard as event tickets: without this the
+    # product could leave service_tracking='event' while an event.type still
+    # pointed at it, and the failure only surfaced later and elsewhere, when
+    # creating an event from that type copied the product onto an
+    # event.event.ticket that does carry the guard.
+    event_type_ticket_ids = fields.One2many(
+        comodel_name="event.type.ticket",
+        inverse_name="product_id",
+        string="Event Template Tickets",
+    )
+
+    @api.constrains("event_ticket_ids", "event_type_ticket_ids", "service_tracking")
     def _check_event_ticket_service_tracking(self):
         if any(
             product.service_tracking != "event"
             for product in self
-            if product.event_ticket_ids
+            if product.event_ticket_ids or product.event_type_ticket_ids
         ):
             raise_event_ticket_service_tracking_error(self)
