@@ -496,7 +496,7 @@ def test_write_after_invalidate_with_log_access():
         record.write({"name": "b"})
         assert record.name == "b"
         assert record.write_uid.id == 1
-        assert env["res.users"].browse(1).login == "admin"
+        assert env["res.users"].browse(1).login == "__system__"
 
 
 def test_company_ids_are_a_tuple_like_the_protocol():

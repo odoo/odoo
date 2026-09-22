@@ -1,7 +1,7 @@
 import logging
 import threading
 from collections import defaultdict
-from collections.abc import Callable, Iterable, Mapping
+from collections.abc import Callable, Collection, Iterable, Mapping
 from contextlib import contextmanager, suppress
 from datetime import UTC, datetime
 from functools import partial
@@ -662,6 +662,50 @@ class _InstalledLangs(Locale):
         return code in self.codes
 
 
+def module_model_classes(module: str) -> list[type[BaseModel]]:
+    # the model definition classes a module's `models` package binds, in
+    # import order, so a registry can be built from an addon's real models
+    import importlib
+    import pkgutil
+
+    package = importlib.import_module(f"odoo.addons.{module}.models")
+    classes: list[type[BaseModel]] = []
+    for info in pkgutil.iter_modules(package.__path__):
+        mod = importlib.import_module(f"{package.__name__}.{info.name}")
+        for name, value in vars(mod).items():
+            if (
+                isinstance(value, MetaModel)
+                and value.__module__ == mod.__name__
+                and (value._name or value._inherit)
+                and not name.startswith("_")
+            ):
+                classes.append(cast("type[BaseModel]", value))
+    return classes
+
+
+def load_module_data(
+    env: Environment, module: str, *, skip: Collection[str] = ()
+) -> list[str]:
+    # the module's data files in manifest order through the same converter
+    # the loader uses; what the loader itself creates before any file (the
+    # module rows and categories of `Module.update_list`) is not here, so a
+    # file naming those is passed in `skip`
+    from odoo.modules.module import get_manifest
+    from odoo.tools.convert import convert_file
+
+    loaded: list[str] = []
+    env = env(user=SUPERUSER_ID, context={**env.context, "install_module": module})
+    for filename in get_manifest(module)["data"]:
+        if filename in skip:
+            continue
+        convert_file(env, module, filename, {}, mode="init", noupdate=False)
+        loaded.append(filename)
+    _debug.lifecycle(
+        "model_test_env.module_data_loaded", module=module, files=len(loaded)
+    )
+    return loaded
+
+
 @contextmanager
 def model_test_env(
     *model_classes: type[BaseModel],
@@ -670,6 +714,7 @@ def model_test_env(
     fixtures: dict[str | tuple[str, tuple], list[tuple]] | None = None,
     langs: Iterable[str] = (),
     check_cache: bool = True,
+    seed: bool = True,
 ) -> Any:
     if registry is None:
         registry = ModelRegistry(model_classes, db_name=db_name)
@@ -688,8 +733,13 @@ def model_test_env(
             delattr(registry, attr)
 
     cr = InMemoryCursor(cast("Registry", registry), fixtures=fixtures)
+    for model_cls in registry.models.values():
+        root = model_cls._table_inheritance_root
+        if root and root != model_cls._table and not model_cls._abstract:
+            cr.storage.declare_inherits(model_cls._table, root)
 
-    _create_fixtures(cr.storage, registry)
+    if seed:
+        _create_fixtures(cr.storage, registry)
 
     env = Environment(cr, SUPERUSER_ID, {})
     env.transaction.default_env = env
@@ -810,13 +860,15 @@ def _create_fixtures(storage: DictBackend, registry: ModelRegistry) -> None:
         xmlids.append(("main_company", "res.company"))
 
     if "res.users" in registry:
+        # the row base_data.sql bootstraps: the superuser, inactive, with the
+        # login no data file ever claims, so base's own data files load over it
         _insert_row(
             "res_users",
             1,
             {
-                "name": "Admin",
-                "login": "admin",
-                "active": True,
+                "name": "System",
+                "login": "__system__",
+                "active": False,
                 "company_id": 1,
                 "partner_id": 1,
             },

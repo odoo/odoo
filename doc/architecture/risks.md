@@ -86,11 +86,22 @@ the in-memory unlink lets a referrer the batch deletes refuse nothing, as the SQ
 scan after DELETE does -- one "same verdict" note in the inventory was false until
 then. Access rights and record rules stay outside the tier by design and raise
 loud markers.
-The gap that remains is not in the port but in the harness: a module's test
-class cannot yet be hosted on the in-memory tier, because building a registry
-from `base`'s real models and their data files stops at the shared id space of
-`ir.actions` -- so the eligibility figures ([`ARCHITECTURE.md`](ARCHITECTURE.md#forces))
-say which tests *could* run without a database, not which do.
+Re-read 2026-09-22: `base` itself is hosted. `module_model_classes("base")`
+builds a 151-model registry from its real definition classes, the dict storage
+reads a root table through its children as PostgreSQL's `INHERITS` does (the
+shared id space of `ir.actions` that stopped it before), `_create_fixtures`
+mirrors `base_data.sql`'s superuser row so base's own `res_users_data.xml`
+loads over it, and `load_module_data(env, "base")` runs 66 of the 67 data
+files through the loader's own converter -- the one left, `ir_module_module.xml`,
+names categories `Module.update_list()` creates from manifests, which is the
+loader's job and not a file's. `orm/tests/test_host_base_dbfree.py` (about 30 s,
+most of it the currency and country files) pins the result: 162 ACL rows, 37
+rules, an internal user reading 3 partners and refused an `ir.model.access`
+row, a portal user reading its own, an act_window read through
+`ir.actions.actions`. What is still not there is the harness step: a module's
+`TransactionCase` class run unchanged on that environment, so the eligibility
+figures ([`ARCHITECTURE.md`](ARCHITECTURE.md#forces)) still say which tests
+*could* run without a database, not which do.
 
 **Cost.** A green DB-free run reads as "the framework works" when it means "the
 structure holds". Nearly every integration suite is run `--no-http` (R4), so

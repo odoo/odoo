@@ -74,15 +74,13 @@ def test_a_query_on_the_root_writes_the_leaf_rows_first():
         assert env.cr.storage.get_row(leaf._table, leaf.id)["kind"] == "new"
 
 
-# The DB-free storage keeps one table per model and knows nothing of
-# PostgreSQL inheritance, so each pair below is a root row and a leaf row
-# sharing an id: what the tree makes one row is here two rows kept in step
-# by the flush and invalidation being tested.
+# The DB-free storage reads a root table through its children as PostgreSQL
+# does, so each pair below is one row, the leaf's, browsed through both models.
 def _root_and_leaf(env):
-    root = env["tree.root"].create({"name": "r", "kind": "old"})
     leaf = env["tree.leaf"].create({"name": "l", "kind": "old", "extra": "e"})
     env.flush_all()
-    assert root.id == leaf.id
+    root = env["tree.root"].browse(leaf.id)
+    assert root.kind == "old"
     return root, leaf
 
 
@@ -211,10 +209,9 @@ def test_a_compute_done_through_one_model_is_done_for_its_siblings():
     # it again on its own pending mark: with nine subtypes that repetition
     # nested one tree flush per sibling per row
     with model_test_env(CountedRoot, CountedLeaf) as env:
-        root = env["counted.root"].create({"name": "one"})
         leaf = env["counted.leaf"].create({"name": "one"})
         env.flush_all()
-        assert root.id == leaf.id
+        root = env["counted.root"].browse(leaf.id)
         CountedRoot.computed_ids = []
         root_loud = env["counted.root"]._fields["loud"]
         leaf_loud = env["counted.leaf"]._fields["loud"]
@@ -231,9 +228,9 @@ def test_a_protection_through_one_model_covers_its_siblings():
     # while the leaf computes a row, the root's read of the same row must see
     # the value as in progress, not go to storage for a stale one
     with model_test_env(CountedRoot, CountedLeaf) as env:
-        root = env["counted.root"].create({"name": "one"})
         leaf = env["counted.leaf"].create({"name": "one"})
         env.flush_all()
+        root = env["counted.root"].browse(leaf.id)
         root_loud = env["counted.root"]._fields["loud"]
         leaf_loud = env["counted.leaf"]._fields["loud"]
         assert root_loud.tree_siblings == (leaf_loud,)
@@ -247,9 +244,9 @@ def test_a_read_through_a_sibling_computes_where_the_row_is_scheduled():
     # not compute a row it does not own, the root computes it and the mark
     # is done for both
     with model_test_env(CountedRoot, CountedLeaf) as env:
-        root = env["counted.root"].create({"name": "one"})
         leaf = env["counted.leaf"].create({"name": "one"})
         env.flush_all()
+        root = env["counted.root"].browse(leaf.id)
         root_loud = env["counted.root"]._fields["loud"]
         leaf_loud = env["counted.leaf"]._fields["loud"]
         CountedRoot.computed_ids = []
@@ -266,9 +263,9 @@ def test_a_compute_through_one_model_evicts_the_value_the_others_cached():
     # the root recomputed the row: the leaf's cached copy of that stored
     # value is stale and must be re-read, as after a write through the root
     with model_test_env(CountedRoot, CountedLeaf) as env:
-        root = env["counted.root"].create({"name": "one"})
         leaf = env["counted.leaf"].create({"name": "one"})
         env.flush_all()
+        root = env["counted.root"].browse(leaf.id)
         leaf.invalidate_recordset(["loud"])
         leaf.loud
         assert "loud" in leaf._cache
