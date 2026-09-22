@@ -420,3 +420,44 @@ registry.category("web_tour.tours").add("test_ticket_screen_keeps_variants_colla
             ProductScreen.productCardCountIs("Variant Soup", 1),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_synced_products_keep_variants_collapsed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.productCardCountIs("Variant Soup", 1),
+            {
+                content: "receive the paid order's products as another device would",
+                trigger: ".pos",
+                run: async () => {
+                    const pos = odoo.__WOWL_DEBUG__.root.env.services.pos;
+                    const [order] = await pos.data.orm.searchRead(
+                        "pos.order",
+                        [["pos_reference", "=", "Test/0001"]],
+                        ["id"]
+                    );
+                    const data = await pos.data.orm.call(
+                        "pos.order",
+                        "get_ticket_screen_order_data",
+                        [[order.id]]
+                    );
+                    await pos.deviceSync.processStaticRecords({
+                        "product.product": data["product.product"],
+                    });
+                    // The variant grouping runs after an RPC, give it time to settle.
+                    const settled = () =>
+                        pos.models["product.product"].filter(
+                            (p) => p.name === "Variant Soup" && p.available_in_pos
+                        ).length === 1 &&
+                        [...document.querySelectorAll(".product-list .product-name")].filter(
+                            (el) => el.textContent.trim() === "Variant Soup"
+                        ).length === 1;
+                    for (let i = 0; i < 50 && !settled(); i++) {
+                        await new Promise((resolve) => setTimeout(resolve, 100));
+                    }
+                },
+            },
+            ProductScreen.productCardCountIs("Variant Soup", 1),
+        ].flat(),
+});
