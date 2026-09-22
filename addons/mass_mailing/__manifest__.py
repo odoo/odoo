@@ -112,12 +112,9 @@
             'html_editor/static/src/scss/html_editor.frontend.scss',
             'html_editor/static/src/scss/base_style.scss',
 
-            ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
-
             'html_builder/static/src/scss/background.scss',
 
             ('include', 'mass_mailing.assets_mail_themes'),
-            'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
             'mass_mailing/static/src/snippets/**/*.scss',
         ],
