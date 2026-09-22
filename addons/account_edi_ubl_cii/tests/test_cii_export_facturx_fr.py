@@ -195,6 +195,7 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
     def test_invoice_partner_siret(self):
         self.partner_fr.additional_identifiers = {'FR_SIRET': '93062183400322'}
         self.company.partner_id.additional_identifiers = {'FR_SIRET': '65933441140047'}
+        self.company.partner_id.routing_identifier = '0009:65933441140047'
 
         invoice = self._create_invoice_one_line(
             product_id=self.product,
