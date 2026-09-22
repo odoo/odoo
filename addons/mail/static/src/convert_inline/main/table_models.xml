@@ -1,0 +1,11 @@
+<templates>
+    <t t-name="mail.TableRow">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+            t-att="this.model.renderAttributes()">
+            <tr t-att="this.model.renderAttributes('row')">
+                <t t-call="mail.NodePositionManager"
+                    t-call-context="this.nodePositionManager.renderContext({ renderPositionedNodes: this.renderPositionedNodes })"/>
+            </tr>
+        </table>
+    </t>
+</templates>
