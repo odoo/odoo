@@ -492,6 +492,32 @@ class TestAccountMove(AccountTestInvoicingCommon):
             {'name': 'credit_line_1',            'debit': 0.0,       'credit': 1200.0,   'tax_ids': [],                                  'tax_line_id': False},
         ])
 
+    def test_unlink_or_reverse_never_posted_entry_in_locked_period(self):
+        """ An entry that was never posted is deleted even when its date falls in a locked period: there is
+        nothing to reverse. A posted entry in the same period is reversed. """
+        posted_move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': fields.Date.from_string('2016-01-01'),
+            'line_ids': [
+                (0, None, self.entry_line_vals_1),
+                (0, None, self.entry_line_vals_2),
+            ],
+        })
+        posted_move.action_post()
+        self.assertFalse(self.test_move.posted_before)
+        self.test_move.company_id.fiscalyear_lock_date = fields.Date.from_string('2017-01-01')
+
+        (self.test_move + posted_move)._unlink_or_reverse()
+
+        self.assertFalse(self.test_move.exists(), 'The never-posted entry should have been deleted')
+        self.assertFalse(
+            self.env['account.move'].search([('reversed_entry_id', '=', self.test_move.id)]),
+            'A never-posted entry must not be reversed',
+        )
+        self.assertEqual(posted_move.state, 'posted')
+        reversal = self.env['account.move'].search([('reversed_entry_id', '=', posted_move.id)])
+        self.assertEqual(reversal.state, 'posted', 'The posted entry in the locked period should have been reversed')
+
     def test_misc_prevent_unlink_posted_items(self):
         def unlink_posted_items():
             self.test_move.line_ids.filtered(lambda l: not l.tax_repartition_line_id).balance = 0

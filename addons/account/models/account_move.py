@@ -5762,6 +5762,9 @@ class AccountMove(models.Model):
 
     def _can_be_unlinked(self):
         self.ensure_one()
+        if not self.posted_before:
+            # an entry that was never posted is deleted, reversing it would post amounts that never were posted
+            return True
         lock_date = self.company_id._get_user_fiscal_lock_date(self.journal_id)
         posted_caba_entry = self.state == 'posted' and (self.tax_cash_basis_rec_id or self.tax_cash_basis_origin_move_id)
         posted_exchange_diff_entry = self.state == 'posted' and self.exchange_diff_partial_ids
