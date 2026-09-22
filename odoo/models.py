@@ -532,6 +532,9 @@ class BaseModel(metaclass=MetaModel):
     through an environment using `sudo` or a more priviledged user.
     """
 
+    _allow_sudo_display_name: bool = True
+    """Whether display names may be read as sudo through a Many2one."""
+
     _depends = frozendict()
     """dependencies of models backed up by SQL views
     ``{model_name: field_names}``, where ``field_names`` is an iterable.
@@ -1567,7 +1570,10 @@ class BaseModel(metaclass=MetaModel):
         might differ, and it is important to select which of `display_name` or
         `name_get()[0][1]` to call depending on the desired result.
         """
-        names = dict(self.name_get())
+        if not self._allow_sudo_display_name and self.env.context.get('restrict_display_name'):
+            names = dict(self.name_get_restricted())
+        else:
+            names = dict(self.name_get())
         for record in self:
             record.display_name = names.get(record.id)
 
@@ -1595,6 +1601,23 @@ class BaseModel(metaclass=MetaModel):
             for record in self:
                 result.append((record.id, "%s,%s" % (record._name, record.id)))
 
+        return result
+
+    def name_get_restricted(self):
+        def has_read_access(record):
+            try:
+                record.check_access_rights('read')
+                record.check_access_rule('read')
+                return True
+            except AccessError:
+                return False
+        accessible_records = self.filtered(has_read_access)
+        inaccessible_records = self - accessible_records
+        result = accessible_records.name_get()
+        result += [
+            (record.id, _("Restricted Record"))
+            for record in inaccessible_records
+        ]
         return result
 
     @api.model
