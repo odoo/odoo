@@ -6,7 +6,8 @@ from typing import TYPE_CHECKING, cast
 from mypy.nodes import MypyFile, StrExpr, TypeInfo
 from mypy.plugin import MethodContext, Plugin
 from mypy.server.trigger import make_trigger, make_wildcard_trigger
-from mypy.types import Instance, LiteralType, Type, get_proper_type
+from mypy.typeops import make_simplified_union
+from mypy.types import Instance, LiteralType, Type, UnionType, get_proper_type
 
 if TYPE_CHECKING:
     from mypy.checker import TypeChecker
@@ -15,18 +16,23 @@ STUB_MODULE = "odoo_registry_stubs"
 ENVIRONMENT_GETITEM = "odoo.orm.runtime.environment.Environment.__getitem__"
 
 
-def _model_name(ctx: MethodContext) -> str | None:
+def _model_names(ctx: MethodContext) -> list[str] | None:
     if not ctx.args or not ctx.args[0]:
         return None
     expr = ctx.args[0][0]
     if isinstance(expr, StrExpr):
-        return expr.value
+        return [expr.value]
     arg_type = get_proper_type(ctx.arg_types[0][0]) if ctx.arg_types[0] else None
-    if isinstance(arg_type, Instance) and arg_type.last_known_value is not None:
-        arg_type = arg_type.last_known_value
-    if isinstance(arg_type, LiteralType) and isinstance(arg_type.value, str):
-        return arg_type.value
-    return None
+    alternatives = arg_type.items if isinstance(arg_type, UnionType) else [arg_type]
+    names = []
+    for alternative in alternatives:
+        literal = get_proper_type(alternative)
+        if isinstance(literal, Instance) and literal.last_known_value is not None:
+            literal = literal.last_known_value
+        if not isinstance(literal, LiteralType) or not isinstance(literal.value, str):
+            return None
+        names.append(literal.value)
+    return names
 
 
 class RegistryStubsPlugin(Plugin):
@@ -55,24 +61,30 @@ class RegistryStubsPlugin(Plugin):
         return classes
 
     def _typed_model(self, ctx: MethodContext) -> Type:
-        model_name = _model_name(ctx)
-        classes = self._registry_classes(ctx) if model_name is not None else {}
-        info = classes.get(model_name) if model_name is not None else None
-        if info is None:
-            if model_name is not None and not classes:
-                ctx.api.fail(
-                    "No generated registry model types were loaded; run odoo-bin stubs "
-                    "and add the output directory to MYPYPATH",
-                    ctx.context,
-                )
-            elif model_name is not None:
+        model_names = _model_names(ctx)
+        if model_names is None:
+            return ctx.default_return_type
+        classes = self._registry_classes(ctx)
+        if not classes:
+            ctx.api.fail(
+                "No generated registry model types were loaded; run odoo-bin stubs "
+                "and add the output directory to MYPYPATH",
+                ctx.context,
+            )
+            return ctx.default_return_type
+        result: list[Type] = []
+        for model_name in model_names:
+            info = classes.get(model_name)
+            if info is None:
                 ctx.api.fail(
                     f"Model {model_name!r} is absent from the generated registry; "
                     "check the name or regenerate the stubs after installing its addon",
                     ctx.context,
                 )
-            return ctx.default_return_type
-        return Instance(info, [])
+                result.append(ctx.default_return_type)
+            else:
+                result.append(Instance(info, []))
+        return make_simplified_union(result)
 
     def get_additional_deps(self, file: MypyFile) -> list[tuple[int, str, int]]:
         # the stub is imported by nobody; every checked file depends on it so

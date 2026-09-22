@@ -53,6 +53,8 @@ an addon's `self.env` is typed; `odoo-bin stubs -d <db>` writes
 (repo root, standalone so the checker never runs the framework bootstrap)
 types every `env["<name>"]` from it. With generated registry types loaded, an
 unknown literal model name is an error; dynamic strings retain the base type.
+Finite unions of literal names retain the union of their model types and check
+every alternative against the generated registry.
 A literal lookup with missing or empty registry types reports a setup error.
 Regenerating the stub rechecks model lookups in the running mypy daemon.
 Generated methods preserve staticmethod and classmethod binding, and model

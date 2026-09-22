@@ -170,13 +170,15 @@ def test_mypy_accepts_registry_methods_and_rejects_unknown_models(tmp_path):
 
 
 @pytest.mark.parametrize("source", [None, render([])], ids=["missing", "empty"])
-def test_mypy_refuses_missing_or_empty_registry_types(tmp_path, source):
+@pytest.mark.parametrize("names", ["'stub.book'", "'stub.book', 'stub.author'"])
+def test_mypy_refuses_missing_or_empty_registry_types(tmp_path, source, names):
     result = _run_mypy(
         tmp_path,
         source,
+        "from typing import Literal\n"
         "from odoo.api import Environment\n"
-        "def lookup(env: Environment) -> None:\n"
-        "    env['stub.book'].search([])\n",
+        f"def lookup(env: Environment, name: Literal[{names}]) -> None:\n"
+        "    env[name].search([])\n",
     )
     assert result.returncode == 1, result.stdout + result.stderr
     assert "No generated registry model types were loaded" in result.stdout
@@ -207,7 +209,8 @@ def test_an_empty_registry_generates_a_valid_stub(tmp_path):
     assert result.returncode == 0, result.stdout + result.stderr
 
 
-def test_mypy_daemon_sees_regenerated_models(tmp_path):
+@pytest.mark.parametrize("union", [False, True], ids=["literal", "literal-union"])
+def test_mypy_daemon_sees_regenerated_models(tmp_path, union):
     root = Path(__file__).resolve().parents[3]
     stub = tmp_path / "odoo_registry_stubs.pyi"
     client = tmp_path / "client.py"
@@ -242,7 +245,7 @@ def test_mypy_daemon_sees_regenerated_models(tmp_path):
 
     def snapshot(names, lookup):
         revision = next(revisions)
-        stub.write_text(render([(name, {}) for name in names]))
+        stub.write_text(render([(name, {}) for name in [*names, "stub.tag"]]))
         # mypy's watcher rounds mtimes to seconds for same-sized files.
         os.utime(stub, (revision, revision))
         source = (
@@ -250,6 +253,14 @@ def test_mypy_daemon_sees_regenerated_models(tmp_path):
             "def lookup(env: Environment) -> None:\n"
             f"    env[{lookup!r}].search([])\n"
         )
+        if union:
+            source = (
+                "from typing import Literal\n"
+                "from odoo.api import Environment\n"
+                "def lookup(env: Environment, "
+                f"name: Literal[{lookup!r}, 'stub.tag']) -> None:\n"
+                "    env[name].search([])\n"
+            )
         if not client.exists() or client.read_text() != source:
             client.write_text(source)
             os.utime(client, (revision, revision))
@@ -279,6 +290,39 @@ def test_mypy_daemon_sees_regenerated_models(tmp_path):
     finally:
         stopped = run("stop")
         assert stopped.returncode == 0, stopped.stdout + stopped.stderr
+
+
+def test_mypy_preserves_literal_union_models_and_checks_every_name(tmp_path):
+    with model_test_env(Author, Book, Tag) as env:
+        source = render_registry(env.registry)
+    result = _run_mypy(
+        tmp_path,
+        source,
+        "from typing import Final, Literal, assert_type\n"
+        "from odoo.api import Environment\n"
+        "from odoo.models import BaseModel\n"
+        "from odoo_registry_stubs import StubAuthor, StubBook\n"
+        "BOOK: Final = 'stub.book'\n"
+        "def valid(env: Environment, name: Literal['stub.book', 'stub.author'], "
+        "dynamic: str) -> None:\n"
+        "    assert_type(env[name], StubBook | StubAuthor)\n"
+        "    assert_type(env[dynamic], BaseModel)\n"
+        "    assert_type(env[BOOK], StubBook)\n"
+        "    if name == 'stub.book':\n"
+        "        env[name].action_publish('today')\n"
+        "def invalid(env: Environment, "
+        "name: Literal['stub.book', 'stub.bok', 'stub.authr']) -> None:\n"
+        "    env[name].search([])\n"
+        "def unsafe(env: Environment, name: Literal['stub.book', 'stub.author']) -> None:\n"
+        "    env[name].action_publish('today')\n",
+    )
+    assert result.returncode == 1, result.stdout + result.stderr
+    errors = [line for line in result.stdout.splitlines() if ": error:" in line]
+    assert len(errors) == 3, result.stdout + result.stderr
+    assert "Model 'stub.bok' is absent" in errors[0]
+    assert "Model 'stub.authr' is absent" in errors[1]
+    assert 'has no attribute "action_publish"' in errors[2]
+    assert "union-attr" in errors[2]
 
 
 def test_generated_methods_preserve_binding_defaults_and_awaitability(tmp_path):
