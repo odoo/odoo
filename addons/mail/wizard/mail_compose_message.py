@@ -1149,7 +1149,8 @@ class MailComposer(models.TransientModel):
                 message_inmem = self.env['mail.message'].new({
                     'body': mail_values['body'],
                 })
-                for _lang, render_values, recipients_group_data in record._notify_get_classified_recipients_iterator(
+                layout_record = record if isinstance(record, self.pool['mail.thread']) else self.env['mail.thread']
+                for _lang, render_values, recipients_group_data in layout_record._notify_get_classified_recipients_iterator(
                     message_inmem,
                     [{
                         'active': True,
@@ -1164,7 +1165,7 @@ class MailComposer(models.TransientModel):
                     model_description=False,  # force dynamic computation
                     force_email_lang=lang,
                 ):
-                    mail_body = record._notify_by_email_render_layout(
+                    mail_body = layout_record._notify_by_email_render_layout(
                         message_inmem,
                         recipients_group_data,
                         msg_vals=msg_vals,
