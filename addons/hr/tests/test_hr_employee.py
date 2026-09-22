@@ -2,6 +2,7 @@ from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+from lxml import etree
 from psycopg.errors import NotNullViolation, UniqueViolation
 
 from odoo import Command, fields
@@ -1205,3 +1206,42 @@ class TestPresenceOutOfContract(TestHrCommon):
         self.assertTrue(employee.is_in_contract)
 
         self.assertEqual(employee.hr_presence_state, "present")
+
+
+@tagged("post_install", "-at_install")
+class TestEmployeeKanbanLaunchPlan(TestHrCommon):
+    """The employee list offers Launch Plan from its header; the kanban did not.
+
+    Same records, same permission, same action -- switching to the kanban simply
+    lost the button.
+    """
+
+    def _kanban_arch(self):
+        return etree.fromstring(self.env.ref("hr.hr_kanban_view_employees").arch)
+
+    def test_employee_kanban_offers_launch_plan_to_hr(self):
+        arch = self._kanban_arch()
+
+        buttons = arch.xpath("//kanban/header/button")
+
+        self.assertTrue(buttons, "the kanban must carry a header with an action")
+        launch = [b for b in buttons if b.get("string") == "Launch Plan"]
+        self.assertEqual(len(launch), 1)
+        self.assertEqual(launch[0].get("type"), "action")
+        self.assertEqual(
+            launch[0].get("groups"),
+            "hr.group_hr_user",
+            "gated the same way the list's button is",
+        )
+
+    def test_the_kanban_declares_the_renderer_that_was_registered_for_it(self):
+        """`hr_employee_kanban` is registered in JS and no view asked for it.
+
+        `static/src/views/kanban_view.js` adds it to the views registry, so it is
+        built on every page load and then never used -- the kanban falls back to
+        the generic renderer.
+        """
+        self.assertEqual(
+            self._kanban_arch().get("js_class"),
+            "hr_employee_kanban",
+        )

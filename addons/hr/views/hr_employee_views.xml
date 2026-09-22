@@ -922,7 +922,18 @@
             <field name="model">hr.employee</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <kanban duplicate="false" sample="1" class="o_hr_employee_kanban">
+                <kanban
+                    duplicate="false"
+                    sample="1"
+                    class="o_hr_employee_kanban"
+                    js_class="hr_employee_kanban">
+                    <header>
+                        <button
+                            name="%(plan_wizard_action)d"
+                            type="action"
+                            string="Launch Plan"
+                            groups="hr.group_hr_user" />
+                    </header>
                     <field name="show_hr_icon_display" />
                     <field name="image_128" />
                     <field name="company_id" />
