@@ -210,7 +210,7 @@ class TestSaleProjectServices(TestSaleProjectCommon):
             self.env,
             login="sale_project_salesman",
             groups="base.group_user,project.group_project_manager"
-            ",sales_team.group_sale_salesman_all_leads",
+            ",sale.group_sale_salesman_all_leads",
         )
         parent_actions = (
             "project.act_project_project_2_project_task_all",

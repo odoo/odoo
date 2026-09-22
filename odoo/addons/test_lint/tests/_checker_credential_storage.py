@@ -46,6 +46,7 @@ JUDGED_NOT_SECRET = frozenset(
         "appointment_google_reserve.google_reserve_access_token",
         "appointment_google_reserve.google_reserve_idempotency_token",
         "approval.subject_key",
+        "base_order.tax_ids_auto_key",
         "conversation_ai.conversation_key",
         "conversation_ai.tool_key",
         "auth_passkey.credential_identifier",

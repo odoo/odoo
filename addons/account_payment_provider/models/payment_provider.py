@@ -19,10 +19,10 @@ class PaymentProvider(models.Model):
         help="The journal in which the successful transactions are posted.",
     )
     available_pricelist_ids = fields.Many2many(
+        comodel_name="product.pricelist",
         string="Pricelists",
         help="Only allow this payment provider when the customer's pricelist is one of these. "
         "Leave empty to allow it whatever the customer's pricelist.",
-        comodel_name="product.pricelist",
     )
 
     # === COMPUTE METHODS ===#

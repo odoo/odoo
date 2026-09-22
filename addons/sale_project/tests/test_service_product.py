@@ -134,7 +134,7 @@ class TestServiceProductConfig(TestSaleProjectCommon):
         links are irrelevant to it.
         """
         root = etree.parse(
-            file_path("sale_project/data/sale_project_demo.xml")
+            file_path("sale_project/demo/sale_project_demo.xml")
         ).getroot()
         node = root.find('.//record[@id="so_template_project"]')
         self.assertIsNotNone(node, "The demo template record must still exist.")
