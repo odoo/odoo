@@ -13,6 +13,7 @@ import {
     isPhrasingContent,
     isProtected,
     isProtecting,
+    isTextNode,
     isVisible,
     isZwnbsp,
 } from "@html_editor/utils/dom_info";
@@ -22,8 +23,9 @@ import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { removeFormat } from "@html_editor/core/format_plugin";
 import { isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_detection";
-import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
+import { FONT_SIZE_CLASSES, formatsSpecs } from "@html_editor/utils/formatting";
 
 const FONT_SIZED_SPAN_SELECTOR = [
     ...FONT_SIZE_CLASSES.map((className) => `span.${className}`),
@@ -351,6 +353,7 @@ export class LinkPlugin extends Plugin {
         delete_forward_overrides: withSequence(15, this.handleDeleteForward.bind(this)),
         double_click_overrides: this.doubleClickLinkOverrides.bind(this),
         triple_click_overrides: this.tripleClickButtonOverrides.bind(this),
+        format_selection_overrides: this.applyFormatToLinks.bind(this),
 
         /** Processors */
         clean_for_save_processors: (root) => {
@@ -552,6 +555,56 @@ export class LinkPlugin extends Plugin {
             },
         };
         return pasteAsURLCommand;
+    }
+
+    /**
+     * Apply the format on the fully selected links.
+     *
+     * @param {string} formatName
+     * @param {Set<Node>} formattedNodes
+     * @param {Object} options
+     */
+    applyFormatToLinks(formatName, formattedNodes, { applyStyle, formatProps } = {}) {
+        const formatSpec = formatsSpecs[formatName];
+        if (!formatSpec.addNeutralStyle) {
+            return;
+        }
+        // Links often have styles applied to them by css which can only be
+        // overriden by applying the style to the link itself. Buttons are
+        // excluded as their font size only applies from inside them.
+        const links = new Set();
+        for (const node of this.dependencies.selection.getTargetedNodes()) {
+            if (!isTextNode(node)) {
+                continue;
+            }
+            const link = closestElement(node, "a:not(.btn)");
+            // Keep only the selected text that can be edited and formatted.
+            if (
+                link &&
+                isContentEditable(node) &&
+                (this.checkPredicates("is_formattable_node_predicates", node) ?? true) &&
+                !formatSpec.isFormatted(link.parentElement, formatProps) &&
+                this.dependencies.selection.areNodeContentsFullySelected(link)
+            ) {
+                links.add(link);
+            }
+        }
+        if (!links.size) {
+            return;
+        }
+        const cursors = this.dependencies.selection.preserveSelection();
+        for (const link of links) {
+            for (const node of [link, ...descendants(link).filter(isElement)]) {
+                removeFormat(node, formatSpec, cursors);
+            }
+            if (applyStyle && !formatSpec.isFormatted(link, formatProps)) {
+                formatSpec.addStyle(link, formatProps);
+            } else if (!applyStyle && formatSpec.isFormatted(link, formatProps)) {
+                formatSpec.addNeutralStyle(link);
+            }
+            [link, ...descendants(link)].forEach((n) => formattedNodes.add(n));
+        }
+        cursors.restore();
     }
 
     isLinkAllowedOnSelection() {

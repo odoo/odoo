@@ -792,7 +792,7 @@ function getOrCreateSpan(node, ancestors, cursor) {
         return span;
     }
 }
-function removeFormat(node, formatSpec, cursor) {
+export function removeFormat(node, formatSpec, cursor) {
     const document = node.ownerDocument;
     node = closestElement(node);
     if (formatSpec.hasStyle(node)) {
