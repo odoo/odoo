@@ -8,17 +8,22 @@
             onStateChanged.bind="this.onDropdownStateChanged"
         >
             <button t-attf-class="btn btn-outline-secondary border-top-0 rounded-0 w-100">
-                <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-baseline justify-content-between">
                     <div class="d-flex align-items-baseline gap-2">
                         <span>Apply to attributes</span>
-                        <span class="badge rounded-pill text-bg-300">
+                        <span class="badge rounded-pill text-bg-secondary">
                             <t t-out="this.selectedValuesCount"/>
                         </span>
                     </div>
-                    <i
-                        class="oi"
-                        t-att-data-icon="this.dropdownState.isOpen ? 'arrow_drop_up' : 'arrow_drop_down'"
-                    />
+                    <div class="d-flex align-items-baseline gap-2">
+                        <span t-if="this.imageType" class="badge rounded-pill text-bg-info">
+                            <t t-out="this.imageType"/>
+                        </span>
+                        <i
+                            class="oi"
+                            t-att-data-icon="this.dropdownState.isOpen ? 'arrow_drop_up' : 'arrow_drop_down'"
+                        />
+                    </div>
                 </div>
             </button>
             <t t-set-slot="content">
