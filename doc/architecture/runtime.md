@@ -409,9 +409,11 @@ finds no value after such a fetch is served from there once
 (`_value_after_delegated_fetch`). The events `field.x2many.scope_sync`,
 `scope_evict`, `scope_evict_rule_field_written`, `scope_mirror_pending`,
 `scope_handover`, `read_mirrored_to_superuser` and `delegated_fetch_served` on
-the `orm.fields.relational._base` channels show each decision; the plan that
-weighed the alternative (one slot holding the truth, visibility applied on the
-way out) is `agromarin-knowledge/plans/2026-09-14-x2many-cache-access-scope.md`.
+the `orm.fields.relational._base` channels show each decision. The mechanism and
+its invariant are surveyed in
+`agromarin-knowledge/research/2026-09-22-access-fork-machinery-survey.md` §8; the
+plan that weighed the alternative (one slot holding the truth, visibility applied
+on the way out) is no longer in the vault.
 
 **A many2many write reaches only the links its writer can read.** `Many2many.write_real`
 builds the old relation from the writer's own slot, and `_apply_relation_delta` deletes only

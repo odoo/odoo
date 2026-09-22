@@ -183,8 +183,9 @@ hands it back in the caller's scope, the link's search runs in the caller's scop
 configuration model ships a record rule keyed on `company_id` (`test_orm`'s `TestCompanyConfig`
 asserts it for every model on the mixin), so a user reads the configuration of the companies it
 may read and nothing of the others. The identity fields a tenant reads under its own access are
-written under it too (`_inherits_sudo_fields`, both directions). Audit and plan of record:
-`agromarin-knowledge/research/2026-09-20-company-party-integration-audit.md`.
+written under it too (`_inherits_sudo_fields`, both directions). Plan of record:
+`agromarin-knowledge/plans/2026-09-19-company-tenant-party-architecture.md` (the
+integration audit that preceded it is no longer in the vault).
 
 ## Lifecycle and the operations that cross stores
 
