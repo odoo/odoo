@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="external_layout_jis_standard">
+        <template id="external_layout_jp_standard">
             <t t-set="jp_recipient_partner" t-value="(o and 'partner_id' in o and o.partner_id) or False"/>
             <t t-set="jp_recipient_lang" t-value="(jp_recipient_partner and jp_recipient_partner.lang) or company.partner_id.lang or ''"/>
             <t t-set="jp_honorific" t-value="jp_recipient_lang.startswith('ja') and (' 御中' if jp_recipient_partner and jp_recipient_partner.is_company else ' 様') or ''"/>
@@ -42,7 +42,7 @@
 
         <template id="document_tax_totals_template" inherit_id="account.document_tax_totals_template">
             <xpath expr="//t[@t-set='same_tax_base']" position="after">
-                <t t-set="jp_layout_selected" t-value="company and company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard'"/>
+                <t t-set="jp_layout_selected" t-value="company and company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard'"/>
             </xpath>
             <xpath expr='//span[@t-out="tax_group[&apos;group_name&apos;]"]' position="attributes">
                 <attribute name="t-out">('%s対象額' % tax_group['group_name']) if jp_layout_selected else tax_group['group_name']</attribute>

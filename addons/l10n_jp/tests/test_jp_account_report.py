@@ -16,7 +16,7 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
         cls.env['res.lang']._activate_lang('ja_JP')
         cls.partner_a.lang = 'ja_JP'
         cls.env.ref('base.JPY').active = True
-        cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jis_standard')
+        cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jp_standard')
         # l10n_din5008 rewrites the unit price cell to the monetary widget for
         # every company rather than for its own layout, and it inherits the
         # report after us, so on a database holding it the cell is never ours.
