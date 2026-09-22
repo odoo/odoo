@@ -193,21 +193,30 @@ class EventRegistration(models.Model):
             if not self.env.user._is_public()
             else self.env.ref("base.user_admin").id
         )
-        for registration in self:
+        record_type = (
+            _("Ticket") if new_record_field == "event_ticket_id" else _("Slot")
+        )
+        # One activity per (order, event), not per registration: moving a batch
+        # of attendees to another ticket used to bury a single order under one
+        # identical warning each. Grouping on the event as well keeps the
+        # responsible user exactly what the per-registration expression picked,
+        # since it reads event_id.user_id first.
+        for (sale_order, event), registrations in self.grouped(
+            lambda registration: (registration.sale_order_id, registration.event_id)
+        ).items():
             render_context = {
-                "registration": registration,
-                "record_type": _("Ticket")
-                if new_record_field == "event_ticket_id"
-                else _("Slot"),
-                "old_name": registration[new_record_field].display_name,
+                "changes": [
+                    {
+                        "registration": registration,
+                        "old_name": registration[new_record_field].display_name,
+                    }
+                    for registration in registrations
+                ],
+                "record_type": record_type,
                 "new_name": new_record.display_name,
             }
-            user_id = (
-                registration.event_id.user_id.id
-                or registration.sale_order_id.user_id.id
-                or fallback_user_id
-            )
-            registration.sale_order_id._activity_schedule_with_view(
+            user_id = event.user_id.id or sale_order.user_id.id or fallback_user_id
+            sale_order._activity_schedule_with_view(
                 "mail.mail_activity_data_warning",
                 user_id=user_id,
                 views_or_xmlid="event_sale.event_registration_change_exception",
