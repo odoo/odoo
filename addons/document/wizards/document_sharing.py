@@ -283,6 +283,11 @@ class DocumentsSharing(models.TransientModel):
             self.access_via_link_mode = f"{self.WRITE_VALUE_PREFIX}link_required"
         return self.action_update_rights()
 
+    def action_rotate_links(self) -> dict:
+        self.check_singleton()
+        self.document_ids.action_rotate_document_token()
+        return self.action_open(self.document_ids.ids)
+
     @api.model
     def action_open(self, document_ids: list[int]) -> dict:
         """Open documents sharing wizard on one or more documents."""

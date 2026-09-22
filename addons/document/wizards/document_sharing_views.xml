@@ -224,6 +224,23 @@
                                             class="oe_inline ms-auto o_documents_sharing_form" />
                                     </div>
                                 </div>
+                                <div
+                                    class="row mb-2"
+                                    groups="base.group_user"
+                                    invisible="is_readonly or is_access_modified or access_via_link in ('none', 'write_none')">
+                                    <div class="col-12 col-md-9 d-flex flex-column">
+                                        <span class="fs-6 text-muted">Replace the link: whoever
+                                            holds the current one loses access.</span>
+                                    </div>
+                                    <div class="col-12 col-md-3 d-flex">
+                                        <button
+                                            name="action_rotate_links"
+                                            type="object"
+                                            string="Rotate Link"
+                                            confirm="The current link stops working for everyone who has it. Rotate it?"
+                                            class="btn-secondary ms-auto" />
+                                    </div>
+                                </div>
                                 <!-- Only means anything while somebody can view:
                                     it narrows what a viewer may do, and editors
                                     can replace the content regardless. -->

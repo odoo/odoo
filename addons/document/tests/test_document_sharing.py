@@ -3,6 +3,7 @@ from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command, fields
+from odoo.exceptions import AccessError
 from odoo.tests import Form, freeze_time, users
 
 from odoo.addons.document.tests.test_document_common import TransactionCaseDocuments
@@ -737,3 +738,28 @@ class TestDocumentsSharing(TransactionCaseDocuments, MockEmail):
                 doc_sharing = self.assert_open_wizard(action, documents)
                 self.assertEqual(set(documents.mapped("access_internal")), {"view"})
                 self.assertTrue(doc_sharing.has_warning_link_with_more_rights)
+
+    @users("documents@example.com")
+    def test_an_editor_rotates_the_link_from_the_sharing_dialog(self):
+        self.set_documents_env_user_to_current()
+        self.user_doc.access_via_link = "view"
+        old_token = self.user_doc.document_token
+        doc_sharing = self.create_documents_sharing(self.user_doc)
+        arch = doc_sharing.get_views([(False, "form")])["views"]["form"]["arch"]
+        self.assertIn('name="action_rotate_links"', arch)
+
+        action = doc_sharing.action_rotate_links()
+
+        self.assert_open_wizard(action, self.user_doc)
+        self.assertNotEqual(self.user_doc.document_token, old_token)
+
+    @users("documents@example.com")
+    def test_a_viewer_cannot_rotate_the_link_from_the_sharing_dialog(self):
+        self.set_documents_env_user_to_current()
+        old_token = self.manager_doc.sudo().document_token
+        doc_sharing = self.create_documents_sharing(self.manager_doc)
+        self.assertTrue(doc_sharing.is_readonly)
+
+        with self.assertRaises(AccessError):
+            doc_sharing.action_rotate_links()
+        self.assertEqual(self.manager_doc.sudo().document_token, old_token)
