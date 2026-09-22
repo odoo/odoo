@@ -24,7 +24,7 @@
             <field name="subtype">receipt_printer</field>
             <field name="manufacturer" />
             <field name="connection">network</field>
-            <field name="connected_status">disconnected</field>
+            <field name="connection_state">disconnected</field>
         </record>
         <record id="iot_scanner" model="iot.device">
             <field name="name">Barcode Scanner</field>
@@ -33,7 +33,7 @@
             <field name="type">scanner</field>
             <field name="manufacturer" />
             <field name="connection">direct</field>
-            <field name="connected_status">disconnected</field>
+            <field name="connection_state">disconnected</field>
         </record>
         <record id="iot_payment" model="iot.device">
             <field name="name">Payment Terminal</field>
@@ -42,7 +42,7 @@
             <field name="type">payment</field>
             <field name="manufacturer" />
             <field name="connection">network</field>
-            <field name="connected_status">disconnected</field>
+            <field name="connection_state">disconnected</field>
         </record>
         <record id="iot_scale" model="iot.device">
             <field name="name">Scale</field>
@@ -51,7 +51,7 @@
             <field name="type">scale</field>
             <field name="manufacturer" />
             <field name="connection">serial</field>
-            <field name="connected_status">disconnected</field>
+            <field name="connection_state">disconnected</field>
         </record>
         <record id="iot_display" model="iot.device">
             <field name="name">Customer Display</field>
@@ -60,7 +60,7 @@
             <field name="type">display</field>
             <field name="manufacturer" />
             <field name="connection">hdmi</field>
-            <field name="connected_status">disconnected</field>
+            <field name="connection_state">disconnected</field>
         </record>
         <record id="iot_fdm" model="iot.device">
             <field name="name">Fiscal Data Module</field>
@@ -69,7 +69,7 @@
             <field name="type">fiscal_data_module</field>
             <field name="manufacturer" />
             <field name="connection">serial</field>
-            <field name="connected_status">disconnected</field>
+            <field name="connection_state">disconnected</field>
         </record>
         <record id="iot_keyboard" model="iot.device">
             <field name="name">USB Keyboard</field>
@@ -78,7 +78,7 @@
             <field name="type">keyboard</field>
             <field name="manufacturer" />
             <field name="connection">direct</field>
-            <field name="connected_status">disconnected</field>
+            <field name="connection_state">disconnected</field>
         </record>
         <record id="iot_camera" model="iot.device">
             <field name="name">Camera</field>
@@ -87,7 +87,7 @@
             <field name="type">camera</field>
             <field name="manufacturer" />
             <field name="connection">direct</field>
-            <field name="connected_status">disconnected</field>
+            <field name="connection_state">disconnected</field>
         </record>
         <record id="iot_device" model="iot.device">
             <field name="name">Caliper</field>
@@ -96,7 +96,7 @@
             <field name="type">device</field>
             <field name="manufacturer" />
             <field name="connection">bluetooth</field>
-            <field name="connected_status">disconnected</field>
+            <field name="connection_state">disconnected</field>
         </record>
         <record id="iot_unsupported_device" model="iot.device">
             <field name="name">Unsupported Device</field>
@@ -105,7 +105,7 @@
             <field name="type">unsupported</field>
             <field name="manufacturer" />
             <field name="connection">serial</field>
-            <field name="connected_status">disconnected</field>
+            <field name="connection_state">disconnected</field>
         </record>
     </data>
 

@@ -9,7 +9,7 @@ from urllib.parse import urlsplit
 import psycopg
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.tools import SQL
 
@@ -42,10 +42,24 @@ class DeviceDevice(models.Model):
     )
     config_id = fields.Many2one(
         comodel_name="device.profile",
-        required=True,
         tracking=True,
         help="Configuration profile with communication settings, authentication, and data retention policies",
     )
+    parent_id = fields.Many2one(
+        comodel_name="device.device",
+        string="Part Of",
+        index=True,
+        ondelete="cascade",
+        tracking=True,
+        help="The device this one is a part of: a peripheral belongs to the "
+        "box that carries it, and goes with it.",
+    )
+    child_ids = fields.One2many(
+        comodel_name="device.device",
+        inverse_name="parent_id",
+        string="Parts",
+    )
+    child_count = fields.Count(count_of="child_ids")
     device_category_id = fields.Many2one(
         comodel_name="device.kind",
         ondelete="restrict",
@@ -222,6 +236,22 @@ class DeviceDevice(models.Model):
         "max_payload_size": 1048576,
         "duplicate_detection_enabled": False,
     }
+
+    def action_view_parts(self):
+        self.check_singleton()
+        return {
+            "name": self.env._("Parts of %(device)s", device=self.display_name),
+            "type": "ir.actions.act_window",
+            "res_model": "device.device",
+            "view_mode": "list,form,kanban",
+            "domain": [("parent_id", "=", self.id)],
+            "context": {"default_parent_id": self.id},
+        }
+
+    @api.constrains("parent_id")
+    def _check_parent_id(self):
+        if self._has_cycle():
+            raise ValidationError(self.env._("A device cannot be part of itself."))
 
     @api.model_create_multi
     def create(self, vals_list):

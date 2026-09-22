@@ -89,7 +89,7 @@
                                     <field name="identifier" />
                                     <field name="type" />
                                     <field name="connection" />
-                                    <field name="connected_status" string="Status" />
+                                    <field name="connection_state" string="Status" />
                                 </list>
                             </field>
                         </page>
@@ -196,7 +196,7 @@
                         string="Test"
                         invisible="type not in ['printer', 'fiscal_data_module']"
                         class="btn btn-primary" />
-                    <field name="connected_status" widget="statusbar" />
+                    <field name="connection_state" widget="statusbar" />
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -252,7 +252,7 @@
                 group_create="false">
                 <field name="type" />
                 <field name="connection" />
-                <field name="connected_status" />
+                <field name="connection_state" />
                 <templates>
                     <t t-name="card" class="row g-0 p-0">
                         <aside class="col-3 text-center align-self-center">
@@ -271,7 +271,7 @@
                                 <field name="name" class="text-truncate" />
                                 <i
                                     class="fa-solid fa-circle text-success"
-                                    t-if="record.connected_status.raw_value == 'connected'" />
+                                    t-if="record.connection_state.raw_value == 'connected'" />
                                 <i class="fa-solid fa-circle text-danger" t-else="" />
                             </div>
                             <div class="d-flex align-items-center gap-2">
@@ -301,7 +301,7 @@
                 <field name="name" />
                 <field name="iot_id" />
                 <field name="identifier" />
-                <field name="connected_status" />
+                <field name="connection_state" />
             </list>
         </field>
     </record>

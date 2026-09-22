@@ -12,10 +12,28 @@ _logger = logging.getLogger(__name__)
 
 IOT_TOKEN_VALIDITY = timedelta(minutes=15)
 
+# What a box and its peripherals are in the registry: pushed to, admitted by
+# the identifier the box sends (`_verify_inbound_request`), and holding no
+# credential of their own until the box image sends a device token.
+REGISTRY_DEFAULTS = {
+    "link_mode": "push",
+    "auth_type": "none",
+    "credential_id": False,
+}
+
 
 class IotBox(models.Model):
     _name = "iot.box"
     _description = "IoT Box"
+    _inherits = {"device.device": "device_id"}
+
+    device_id = fields.Many2one(
+        comodel_name="device.device",
+        required=True,
+        ondelete="cascade",
+        help="The registry entry for this box. A box is a device like any "
+        "other: it is what custody, maintenance and its peripherals hang on.",
+    )
 
     @api.model
     def _receiver_for_handlers(self, **path_args):
@@ -69,8 +87,6 @@ class IotBox(models.Model):
         self.check_singleton()
         return True
 
-    name = fields.Char(required=True)
-    identifier = fields.Char(readonly=True)
     device_ids = fields.One2many(
         comodel_name="iot.device",
         inverse_name="iot_id",
@@ -78,8 +94,9 @@ class IotBox(models.Model):
     )
     device_count = fields.Count(count_of="device_ids")
     ip = fields.Char(
+        related="device_id.endpoint",
         string="Domain Address",
-        readonly=True,
+        readonly=False,
     )
     drivers_auto_update = fields.Boolean(
         string="Automatic drivers update",
@@ -94,7 +111,6 @@ class IotBox(models.Model):
         compute="_compute_version_commit_url",
         readonly=True,
     )
-    company_id = fields.Many2one(comodel_name="res.company")
     ssl_certificate_end_date = fields.Datetime(
         string="SSL Certificate End Date",
         readonly=True,
@@ -141,6 +157,24 @@ class IotBox(models.Model):
         default=lambda self: self._default_token(),
         readonly=True,
     )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        kind = self.env.ref("iot.kind_iot_box", raise_if_not_found=False)
+        for vals in vals_list:
+            for field_name, default in REGISTRY_DEFAULTS.items():
+                vals.setdefault(field_name, default)
+            if kind and not vals.get("device_category_id"):
+                vals["device_category_id"] = kind.id
+        return super().create(vals_list)
+
+    def unlink(self):
+        # The registry row is this box, not a row about it: it goes when the
+        # box goes, and takes its peripherals' rows with it by cascade.
+        registry_rows = self.device_id
+        result = super().unlink()
+        registry_rows.unlink()
+        return result
 
     @api.ondelete(at_uninstall=True)
     def _unlink_iot_box(self):

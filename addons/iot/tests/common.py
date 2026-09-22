@@ -36,7 +36,7 @@ class IotCommonTest(HttpCase):
                     "type": "printer",
                     "subtype": "receipt_printer",
                     "connection": "network",
-                    "connected_status": "connected",
+                    "connection_state": "connected",
                 }
             )
         )

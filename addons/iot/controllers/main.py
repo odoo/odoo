@@ -80,7 +80,7 @@ class IoTController(IoTBoxLookup, http.Controller):
     )
     def get_handlers(self, identifier: str, auto: bool):
         box = request.admission.subject
-        if auto == "True" and not box.drivers_auto_update:
+        if auto and not box.drivers_auto_update:
             raise Unauthorized(
                 description="Auto update is disabled on the box '%s'." % identifier
             )
@@ -296,7 +296,7 @@ class IoTController(IoTBoxLookup, http.Controller):
         known = Device.search([("iot_id", "=", box.id)])
         by_identifier = {device.identifier: device for device in known}
         previously_connected = known.filtered(
-            lambda device: device.connected_status == "connected"
+            lambda device: device.connection_state == "connected"
         )
         available_types = {s[0] for s in Device._fields["type"].selection}
         available_connections = {s[0] for s in Device._fields["connection"].selection}
@@ -342,8 +342,8 @@ class IoTController(IoTBoxLookup, http.Controller):
             connected |= device
 
         # Mark the received devices as connected, disconnect the others.
-        connected.write({"connected_status": "connected"})
-        (previously_connected - connected).write({"connected_status": "disconnected"})
+        connected.write({"connection_state": "connected"})
+        (previously_connected - connected).write({"connection_state": "disconnected"})
 
     @http.route("/iot/box/update_certificate_status", type="jsonrpc", auth="public")
     def update_certificate_status(self, identifier, ssl_certificate_end_date):

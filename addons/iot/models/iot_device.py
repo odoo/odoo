@@ -1,10 +1,19 @@
 from odoo import api, fields, models
 
+from .iot_box import REGISTRY_DEFAULTS
+
 
 class IotDevice(models.Model):
     _name = "iot.device"
     _description = "IOT Device"
+    _inherits = {"device.device": "device_id"}
 
+    device_id = fields.Many2one(
+        comodel_name="device.device",
+        required=True,
+        ondelete="cascade",
+        help="The registry entry for this peripheral, a part of its box's.",
+    )
     iot_id = fields.Many2one(
         comodel_name="iot.box",
         string="IoT Box",
@@ -12,8 +21,6 @@ class IotDevice(models.Model):
         required=True,
         ondelete="cascade",
     )
-    name = fields.Char()
-    identifier = fields.Char(readonly=True)
     type = fields.Selection(
         selection=[
             ("printer", "Printer"),
@@ -48,19 +55,6 @@ class IotDevice(models.Model):
         string="Reports",
     )
     iot_ip = fields.Char(related="iot_id.ip")
-    company_id = fields.Many2one(
-        comodel_name="res.company",
-        related="iot_id.company_id",
-        string="Company",
-    )
-    connected_status = fields.Selection(
-        selection=[
-            ("disconnected", "Disconnected"),
-            ("connected", "Connected"),
-        ],
-        default="disconnected",
-        readonly=True,
-    )
     keyboard_layout = fields.Many2one(comodel_name="iot.keyboard.layout")
     display_url = fields.Char(
         string="Display URL",
@@ -86,6 +80,55 @@ class IotDevice(models.Model):
         default="",
         help="Subtype of device.",
     )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        boxes = self.env["iot.box"].browse(
+            {vals["iot_id"] for vals in vals_list if vals.get("iot_id")}
+        )
+        by_box = {box.id: box for box in boxes}
+        kinds = self._device_kinds()
+        for vals in vals_list:
+            for field_name, default in REGISTRY_DEFAULTS.items():
+                vals.setdefault(field_name, default)
+            box = by_box.get(vals.get("iot_id"))
+            if box:
+                vals.setdefault("parent_id", box.device_id.id)
+                vals.setdefault("company_id", box.company_id.id)
+            kind = kinds.get(vals.get("type") or "device")
+            if kind and not vals.get("device_category_id"):
+                vals["device_category_id"] = kind
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if "iot_id" in vals:
+            box = self.env["iot.box"].browse(vals["iot_id"])
+            vals.setdefault("parent_id", box.device_id.id)
+        if "type" in vals:
+            kind = self._device_kinds().get(vals["type"] or "device")
+            if kind:
+                vals.setdefault("device_category_id", kind)
+        return super().write(vals)
+
+    def unlink(self):
+        registry_rows = self.device_id
+        result = super().unlink()
+        registry_rows.unlink()
+        return result
+
+    @api.model
+    def _device_kinds(self) -> dict[str, int]:
+        """The registry kind that answers for each device type.
+
+        Read by xml id rather than stored on the selection, so a module that
+        adds a type ships its kind beside it and nothing here has to know.
+        """
+        kinds = {}
+        for value, _label in self._fields["type"].selection:
+            record = self.env.ref(f"iot.kind_iot_{value}", raise_if_not_found=False)
+            if record:
+                kinds[value] = record.id
+        return kinds
 
     @api.depends("name", "iot_id", "connection")
     @api.depends_context("formatted_display_name")

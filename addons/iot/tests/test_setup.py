@@ -74,7 +74,7 @@ class TestBoxEnrolment(HttpCase):
         self._setup(self._payload(token), {"printer_a": two["printer_a"]})
         devices = self._box().device_ids
         self.assertEqual(len(devices), 2, "the absent device is kept, not deleted")
-        by_identifier = {d.identifier: d.connected_status for d in devices}
+        by_identifier = {d.identifier: d.connection_state for d in devices}
         self.assertEqual(by_identifier["printer_a"], "connected")
         self.assertEqual(by_identifier["scale_b"], "disconnected")
 
@@ -96,4 +96,4 @@ class TestBoxEnrolment(HttpCase):
             "the moved fiscal data module should be re-pointed, not duplicated",
         )
         self.assertEqual(devices.identifier, "serial_ttyS1")
-        self.assertEqual(devices.connected_status, "connected")
+        self.assertEqual(devices.connection_state, "connected")

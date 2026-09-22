@@ -1,5 +1,6 @@
 {
     "name": "Internet of Things",
+    "version": "1.1",
     "category": "Supply Chain/IoT",
     "sequence": 250,
     "summary": "Connect and manage IoT Boxes and the devices attached to them.",
@@ -13,10 +14,12 @@ their own ``iot_*`` modules, so installing one never drags an application in.
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
+        "device",
         "integration",
         "mail",
     ],
     "data": [
+        "data/device_kind_data.xml",
         "wizards/add_iot_box_views.xml",
         "wizards/select_printers_views.xml",
         "security/iot_security.xml",

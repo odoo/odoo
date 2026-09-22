@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!--
+        One registry kind per kind of thing an IoT box carries, so a
+        scale on a box and a scale on Modbus group as one.
+    -->
+    <record id="kind_iot_box" model="device.kind">
+        <field name="name">IoT Box</field>
+        <field name="code">iot_box</field>
+        <field name="sequence" eval="10" />
+        <field name="icon">fa-hdd-o</field>
+        <field name="color" eval="1" />
+        <field name="link_mode">push</field>
+        <field
+            name="description">The box itself: what the peripherals hang on and what talks to Odoo.</field>
+    </record>
+
+    <record id="kind_iot_printer" model="device.kind">
+        <field name="name">Printer</field>
+        <field name="code">iot_printer</field>
+        <field name="sequence" eval="20" />
+        <field name="icon">fa-print</field>
+        <field name="color" eval="2" />
+        <field name="link_mode">push</field>
+        <field name="description">A printer reached through an IoT box.</field>
+    </record>
+
+    <record id="kind_iot_camera" model="device.kind">
+        <field name="name">Camera</field>
+        <field name="code">iot_camera</field>
+        <field name="sequence" eval="30" />
+        <field name="icon">fa-camera</field>
+        <field name="color" eval="6" />
+        <field name="link_mode">push</field>
+        <field name="description">A camera reached through an IoT box.</field>
+    </record>
+
+    <record id="kind_iot_keyboard" model="device.kind">
+        <field name="name">Keyboard</field>
+        <field name="code">iot_keyboard</field>
+        <field name="sequence" eval="40" />
+        <field name="icon">fa-keyboard-o</field>
+        <field name="color" eval="4" />
+        <field name="link_mode">push</field>
+        <field name="description">A keyboard reached through an IoT box.</field>
+    </record>
+
+    <record id="kind_iot_scanner" model="device.kind">
+        <field name="name">Barcode Scanner</field>
+        <field name="code">iot_scanner</field>
+        <field name="sequence" eval="50" />
+        <field name="icon">fa-barcode</field>
+        <field name="color" eval="4" />
+        <field name="link_mode">push</field>
+        <field name="description">A barcode scanner reached through an IoT box.</field>
+    </record>
+
+    <record id="kind_iot_device" model="device.kind">
+        <field name="name">Device</field>
+        <field name="code">iot_device</field>
+        <field name="sequence" eval="60" />
+        <field name="icon">fa-microchip</field>
+        <field name="color" eval="0" />
+        <field name="link_mode">push</field>
+        <field
+            name="description">A device an IoT box carries that names itself no more precisely.</field>
+    </record>
+
+    <record id="kind_iot_payment" model="device.kind">
+        <field name="name">Payment Terminal</field>
+        <field name="code">iot_payment</field>
+        <field name="sequence" eval="70" />
+        <field name="icon">fa-credit-card</field>
+        <field name="color" eval="3" />
+        <field name="link_mode">push</field>
+        <field name="description">A payment terminal reached through an IoT box.</field>
+    </record>
+
+    <record id="kind_iot_scale" model="device.kind">
+        <field name="name">Scale</field>
+        <field name="code">iot_scale</field>
+        <field name="sequence" eval="80" />
+        <field name="icon">fa-balance-scale</field>
+        <field name="color" eval="5" />
+        <field name="link_mode">push</field>
+        <field name="description">A weighing scale reached through an IoT box.</field>
+    </record>
+
+    <record id="kind_iot_display" model="device.kind">
+        <field name="name">Display</field>
+        <field name="code">iot_display</field>
+        <field name="sequence" eval="90" />
+        <field name="icon">fa-desktop</field>
+        <field name="color" eval="7" />
+        <field name="link_mode">push</field>
+        <field name="description">A customer display reached through an IoT box.</field>
+    </record>
+
+    <record id="kind_iot_fiscal_data_module" model="device.kind">
+        <field name="name">Fiscal Data Module</field>
+        <field name="code">iot_fiscal_data_module</field>
+        <field name="sequence" eval="100" />
+        <field name="icon">fa-lock</field>
+        <field name="color" eval="9" />
+        <field name="link_mode">push</field>
+        <field
+            name="description">A fiscal data module reached through an IoT box.</field>
+    </record>
+
+    <record id="kind_iot_unsupported" model="device.kind">
+        <field name="name">Unsupported</field>
+        <field name="code">iot_unsupported</field>
+        <field name="sequence" eval="110" />
+        <field name="icon">fa-question</field>
+        <field name="color" eval="8" />
+        <field name="link_mode">push</field>
+        <field name="description">A device the box found and no driver claims.</field>
+    </record>
+
+</odoo>

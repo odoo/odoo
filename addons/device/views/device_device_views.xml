@@ -129,12 +129,13 @@
                                         <div
                                             class="o_kanban_record_subtitle text-muted">
                                             <field name="device_category_id" />
-                                        </div>
-                                    </div>
-                                    <span
-                                        t-attf-class="badge rounded-pill #{record.connection_state.raw_value == 'connected' ? 'text-bg-success' : record.connection_state.raw_value == 'error' ? 'text-bg-danger' : 'text-bg-secondary'}">
-                                        <field name="connection_state" />
-                                    </span>
+                            <field name="parent_id" />
+                                </div>
+                                </div>
+                                <span
+                                    t-attf-class="badge rounded-pill #{record.connection_state.raw_value == 'connected' ? 'text-bg-success' : record.connection_state.raw_value == 'error' ? 'text-bg-danger' : 'text-bg-secondary'}">
+                                    <field name="connection_state" />
+                                </span>
                                 </div>
                                 <div class="o_kanban_record_body">
                                     <div class="text-muted">
@@ -207,6 +208,17 @@
                             <field
                                 name="log_count"
                                 string="Data Points (24h)"
+                                widget="statinfo" />
+                        </button>
+                        <button
+                            name="action_view_parts"
+                            type="object"
+                            icon="fa-sitemap"
+                            invisible="child_count == 0"
+                            class="oe_stat_button">
+                            <field
+                                name="child_count"
+                                string="Parts"
                                 widget="statinfo" />
                         </button>
                     </div>
