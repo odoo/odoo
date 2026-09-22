@@ -5,7 +5,7 @@ from operator import attrgetter
 from xmlrpc.client import MAXINT  # TODO change this
 
 from odoo.exceptions import AccessError
-from odoo.tools import float_compare, float_is_zero, float_repr, float_round
+from odoo.tools import SQL, float_compare, float_is_zero, float_repr, float_round
 from odoo.tools.misc import SENTINEL, Sentinel
 
 from .fields import Field
@@ -315,3 +315,25 @@ class Monetary(Field[float]):
             )
         )
         return records.__class__(records.env, ids_to_update, records._prefetch_ids)
+
+    def expression_getter(self, field_expr):
+        if field_expr == f'{self.name}.in_company':
+            def in_company(record):
+                value = self.__get__(record)
+                if not value:
+                    return value
+                currency_field = self.get_currency_field(record)
+                # sudo and only fetch the currency record in case the user doesn't
+                # have the read permission of the currency field.
+                currency = record.sudo().with_context(prefetch_fields=False)[currency_field].with_env(record.env)
+                return value / currency.rate
+            return in_company
+        return super().expression_getter(field_expr)
+
+    def property_to_sql(self, field_sql, property_name, query, alias, model):
+        if property_name == 'in_company':
+            table = field_sql._table
+            currency_field_name = self.get_currency_field(model)
+            rate_sql = model.env['res.currency']._current_rate_sql(table, currency_field_name)
+            return SQL("(%s / %s)", field_sql, rate_sql)
+        return super().property_to_sql(field_sql, property_name, query, alias, model)
