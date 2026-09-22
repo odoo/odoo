@@ -3336,3 +3336,98 @@ class TestAccountReturn(TestAccountReportsCommon):
                     lambda c: c.code == "check_partner_vies"
                 )
                 self.assertEqual(vies_check.result, data["expected_check"][with_fp])
+
+
+@tagged("post_install", "-at_install")
+class TestAuditAccountSeeding(TestAccountReportsCommon):
+    """Creating an audit return seeds one `account.audit.account.status` per account,
+    marked `todo` when the account was touched during the period. Which accounts were
+    touched is a set of yes/no questions, not a census.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.audit_type = cls.env["account.return.type"].search(
+            [("category", "=", "audit")], limit=1
+        )
+        cls.touched = cls.company_data["default_account_revenue"]
+        cls.untouched = cls.env["account.account"].create(
+            {
+                "name": "Never touched",
+                "code": "909091",
+                "account_type": "asset_current",
+                "company_ids": [Command.link(cls.env.company.id)],
+            }
+        )
+        cls.env["account.move"].create(
+            {
+                "move_type": "entry",
+                "date": "2020-06-15",
+                "line_ids": [
+                    Command.create({"account_id": cls.touched.id, "balance": 300.0}),
+                    Command.create(
+                        {
+                            "account_id": cls.company_data[
+                                "default_account_expense"
+                            ].id,
+                            "balance": -300.0,
+                        }
+                    ),
+                ],
+            }
+        ).action_post()
+
+    def _create_audit(self):
+        return self.env["account.return"].create(
+            {
+                "name": "Audit 2020",
+                "type_id": self.audit_type.id,
+                "company_id": self.env.company.id,
+                "date_from": "2020-01-01",
+                "date_to": "2020-12-31",
+            }
+        )
+
+    def _status_of(self, audit, account):
+        return (
+            self.env["account.audit.account.status"]
+            .search([("audit_id", "=", audit.id), ("account_id", "=", account.id)])
+            .status
+        )
+
+    def test_accounts_touched_during_the_period_are_marked_to_review(self):
+        """The control: whatever the query shape, the answer must not change."""
+        self.assertTrue(self.audit_type, "the fixture needs an audit return type")
+        audit = self._create_audit()
+
+        self.assertEqual(self._status_of(audit, self.touched), "todo")
+        self.assertFalse(self._status_of(audit, self.untouched))
+
+    def test_seeding_does_not_aggregate_the_period_ledger(self):
+        """An audit covers a fiscal year: grouping the period's move lines by account
+        scans the whole year's ledger to answer questions that stop at the first hit.
+        """
+        captured = []
+        cursor_cls = type(self.env.cr)
+        original = cursor_cls.execute
+
+        def _capture(cr, query, params=None, *args, **kwargs):
+            captured.append(str(query))
+            return original(cr, query, params, *args, **kwargs)
+
+        with patch.object(cursor_cls, "execute", _capture):
+            self._create_audit()
+
+        aggregates = [
+            query
+            for query in captured
+            if "account_move_line" in query
+            and "GROUP BY" in query.upper()
+            and "account_id" in query
+        ]
+        self.assertFalse(
+            aggregates,
+            "seeding must not group the period's move lines by account; it ran"
+            f" {len(aggregates)} such quer(y/ies): {aggregates[:1]}",
+        )

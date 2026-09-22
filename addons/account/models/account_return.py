@@ -327,30 +327,43 @@ class AccountReturn(models.Model):
                         )
                         .account_id
                     )
-                aml_count_by_accounts = dict(
-                    self.env["account.move.line"]._read_group(  # noqa: E8507 - audit returns are created one or two at a time; every probe is keyed by the return's own companies and period
-                        # Scoped to the audit's own companies, as the account search
-                        # above is: without it the entries that decide which accounts
-                        # are "to review" are whichever ones the creating user happens
-                        # to be allowed to see.
-                        domain=[
-                            *self.env["account.move.line"]._check_company_domain(
-                                record.company_ids
-                            ),
-                            ("date", ">=", record.date_from),
-                            ("date", "<=", record.date_to),
-                            ("parent_state", "=", "posted"),
-                        ],
-                        groupby=["account_id"],
-                        aggregates=["id:count_distinct"],
+                # Which accounts an entry touched during the period is a set of
+                # yes/no questions, not a census. An audit covers a fiscal year, so
+                # grouping the period's move lines by account scans the whole year's
+                # ledger to answer them; correlating an EXISTS lets the query stop
+                # at the first hit per account. Same shape as the account-code probe
+                # in models/account_move_line.py:2824.
+                period_lines_query = self.env["account.move.line"]._search(
+                    # Scoped to the audit's own companies, as the account search
+                    # above is: without it the entries that decide which accounts
+                    # are "to review" are whichever ones the creating user happens
+                    # to be allowed to see.
+                    [
+                        *self.env["account.move.line"]._check_company_domain(
+                            record.company_ids
+                        ),
+                        ("date", ">=", record.date_from),
+                        ("date", "<=", record.date_to),
+                        ("parent_state", "=", "posted"),
+                    ],
+                    limit=1,
+                )
+                period_lines_query.add_where(
+                    SQL("account_account.id = account_move_line.account_id")
+                )
+                accounts_query = self.env["account.account"]._search(
+                    self.env["account.account"]._check_company_domain(
+                        record.company_ids
                     )
                 )
+                accounts_query.add_where(SQL("EXISTS(%s)", period_lines_query.select()))
+                accounts_used_during_period = set(accounts_query)
                 _debug.logic(
                     "audit_account_statuses_seeded",
                     tax_return=record,
                     previous_return=previous_return,
                     accounts=len(accounts),
-                    accounts_with_entries=len(aml_count_by_accounts),
+                    accounts_with_entries=len(accounts_used_during_period),
                     previously_reviewed=previous_accounts_with_status,
                 )
 
@@ -360,7 +373,7 @@ class AccountReturn(models.Model):
                         "account_id": account["id"],
                         "status": "todo"
                         if (account in previous_accounts_with_status)
-                        or (account in aml_count_by_accounts)
+                        or (account.id in accounts_used_during_period)
                         else False,
                     }
                     for account in accounts
