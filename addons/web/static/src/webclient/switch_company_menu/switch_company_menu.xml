@@ -53,7 +53,7 @@
         </div>
     </div>
 
-    <div class="o_switch_company_menu_items">
+    <div class="o_switch_company_menu_items d-flex flex-column gap-1">
         <t t-foreach="this.visibleCompanies" t-as="entry" t-key="entry.company.id">
             <SwitchCompanyItem company="entry.company" level="entry.level"/>
         </t>
