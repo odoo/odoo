@@ -20,6 +20,8 @@ export class Vimeo extends AbstractThirdPartyVideo {
             params: ["fullscreen"],
             reversed: true,
         },
+        autopause: { default: true, type: BooleanInt, params: ["autopause"] },
+        dnt: { default: false, type: BooleanInt, params: ["dnt"] },
     };
     /**
      * Returns the embed url for a vimeo video.
@@ -29,6 +31,9 @@ export class Vimeo extends AbstractThirdPartyVideo {
      * @return {string} url
      */
     static getEmbedUrl(videoId, options = {}) {
+        if (options.autoplay) {
+            options.autopause = false;
+        }
         const params = encodeOptionsToParams(options, Vimeo.optionsConfig);
         let embedUrl = `https://player.vimeo.com/video/${videoId}${params ? "?" + params : ""}`;
         if (options.startFrom) {
@@ -54,6 +59,14 @@ export class Vimeo extends AbstractThirdPartyVideo {
         }
         const data = await apiResponse.json();
         return data.thumbnail_url || "";
+    }
+    /**
+     * @override
+     */
+    static getCustomUrlOptions() {
+        return {
+            dnt: true, // Always enable "do not track".
+        };
     }
 
     /**
