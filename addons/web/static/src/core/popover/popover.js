@@ -54,9 +54,16 @@ function useClickAway(popover, callback, targetWindow = window) {
         callback(ev.composedPath()[0]);
     }
 
+    function clickHandler(ev) {
+        if (ev.detail === 0) {
+            callback(ev.composedPath()[0]);
+        }
+    }
+
     useEarlyExternalListener(targetWindow, "pointerdown", pointerDownHandler, { capture: true });
     useEarlyExternalListener(targetWindow, "blur", blurHandler, { capture: true });
     useEarlyExternalListener(targetWindow, "popstate", navigationHandler, { capture: true });
+    useEarlyExternalListener(window, "click", clickHandler, { capture: true });
     for (const iframeEl of document.querySelectorAll("iframe")) {
         try {
             useEarlyExternalListener(
