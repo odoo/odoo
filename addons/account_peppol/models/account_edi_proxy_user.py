@@ -274,8 +274,12 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             move.is_in_extractable_state = False
 
         try:
-            move._extend_with_attachments(files_data, new=True)
-            move._autopost_bill()
+            if not move._extend_with_attachments(files_data, new=True):
+                move.message_post(
+                    body=self.env._("There was an error while importing the bill, you can find attached the incoming XML"),
+                )
+            else:
+                move._autopost_bill()
         except Exception as err:
             _logger.exception(
                 "Unexpected error occurred during the import of bill with id %s (%s uuid: %s, attachment: %s)",
