@@ -12,7 +12,7 @@
             </div>
             <select class="form-select form-select-lg mb-5" t-custom-model="this.state.selectedSlot">
                 <option value="0">
-                    Select a hour
+                    Select an hour
                 </option>
                 <t t-foreach="this.slots" t-as="slot" t-key="slot_index">
                     <option t-att-value="slot[0]" t-out="slot[0]" disabled="1" />
@@ -28,7 +28,7 @@
                         Continue
                     </t>
                     <t t-else="">
-                        Select a hour
+                        Select an hour
                     </t>
             </a>
         </div>
