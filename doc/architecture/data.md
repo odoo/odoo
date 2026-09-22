@@ -168,7 +168,10 @@ derived `logo_web` / `uses_default_logo`. The party behind a tenant has no conta
 name is unique among tenants (`res.partner._check_company_party_name_unique`). Two model
 attributes say who may read what through a delegation: `_inherits_rules = False` keeps the
 party's record rules off the tenant's rows (a portal user reads the tenant it belongs to even
-though its party is outside the user's partner rules), and `_inherits_sudo_fields` names the
+though its party is outside the user's partner rules; without it a delegation binds the parent's
+rules whether its link is a column or, like `hr.employee.version_id`, a compute with a search,
+which is how the rules reach the row; only a create check skips a computed link, settled after the
+row exists, as the parent's own create checked the parent's rule), and `_inherits_sudo_fields` names the
 party fields that are the tenant's public identity, read under the tenant's access; every other
 delegated field is read under the party's rules. Configuration that an
 application keys on the company is the application's, not the tenant's: it lives on the

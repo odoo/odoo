@@ -133,3 +133,40 @@ class TestMultiCompany(TestHrCommon):
             presence_state,
             {"present", "absent", "out_of_working_hour", "archive"},
         )
+
+    def test_an_employee_is_read_under_its_version_rule(self):
+        # hr.employee delegates to hr.version through the computed version_id:
+        # a version held by a company the reader cannot reach is not read
+        # through the employee either
+        hr_manager_a = mail_new_test_user(
+            self.env,
+            login="hr_manager_a",
+            company_id=self.company_a.id,
+            company_ids=self.company_a.ids,
+            groups="base.group_user,hr.group_hr_manager",
+        )
+        other = self.employee_other_a
+        other.version_id.write({"wage": 4321.0, "company_id": self.company_b.id})
+        Employee = (
+            self.env["hr.employee"].with_user(hr_manager_a).with_company(self.company_a)
+        )
+        self.assertFalse(Employee.search([("id", "=", other.id)]))
+        self.assertFalse(Employee.search([("wage", "=", 4321.0)]))
+        with self.assertRaises(AccessError):
+            Employee.browse(other.id).read(["wage"])
+        self.assertEqual(
+            Employee.search([("id", "=", self.employee_a.id)]), self.employee_a
+        )
+
+    def test_a_relationship_reads_the_version_through_both_doors(self):
+        # user_b reports to employee_a, of company A: what lets user_b read its
+        # manager's employee record lets it read the manager's version
+        Version = (
+            self.env["hr.version"].with_user(self.user_b).with_company(self.company_b)
+        )
+        self.assertEqual(
+            Version.search([("employee_id", "=", self.employee_a.id)]),
+            self.employee_a.version_ids,
+        )
+        with self.assertRaises(AccessError):
+            Version.browse(self.employee_other_a.version_id.id).read(["name"])

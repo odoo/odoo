@@ -240,8 +240,21 @@ class IrRule(models.Model):
 
         global_domains: list[Domain] = []
         for parent_model_name, parent_field_name in model._inherits.items():
-            if not model._inherits_rules or not model._fields[parent_field_name].store:
+            if not model._inherits_rules:
                 continue
+            delegate = model._fields[parent_field_name]
+            if not delegate.store and mode == "create":
+                # a computed delegate is settled after the row is inserted, so
+                # the create check cannot read it; the parent's own create,
+                # which made the row it points to, checked the parent's rule
+                continue
+            if not (delegate.store or delegate.search or delegate.related):
+                raise ValueError(
+                    f"{delegate} delegates {model_name} to {parent_model_name} "
+                    f"without a column or a search: the parent's record rules "
+                    f"cannot bind through it. Give it a search method, or set "
+                    f"_inherits_rules = False and state what replaces them."
+                )
             if domain := self._get_domain_accessible_records(parent_model_name, mode):
                 _debug.logic(
                     "rule_domain_inherited",

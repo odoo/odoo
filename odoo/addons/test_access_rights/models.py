@@ -68,6 +68,42 @@ class Test_Access_RightInherits(models.Model):
     )
 
 
+class Test_Access_RightInheritsComputed(models.Model):
+    _name = "test_access_right.inherits_computed"
+    _description = "Object delegating through a computed, searchable link"
+
+    _inherits = {"test_access_right.some_obj": "some_id"}
+
+    held_id = fields.Many2one(
+        comodel_name="test_access_right.some_obj",
+        ondelete="restrict",
+    )
+    some_id = fields.Many2one(
+        comodel_name="test_access_right.some_obj",
+        compute="_compute_some_id",
+        search="_search_some_id",
+        compute_sudo=True,
+        store=False,
+        required=True,
+        ondelete="cascade",
+    )
+
+    @api.depends("held_id")
+    def _compute_some_id(self):
+        for record in self:
+            record.some_id = record.held_id
+
+    def _search_some_id(self, operator, value):
+        return Domain("held_id", operator, value)
+
+    def _create_parent_records(self, data_list):
+        for data in data_list:
+            data["stored"]["some_id"] = data["stored"].get("held_id")
+        super()._create_parent_records(data_list)
+        for data in data_list:
+            data["stored"]["held_id"] = data["stored"].pop("some_id")
+
+
 class Test_Access_RightChild(models.Model):
     _name = "test_access_right.child"
     _description = "Object for testing company ir rule"

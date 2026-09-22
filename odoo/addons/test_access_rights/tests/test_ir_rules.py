@@ -202,6 +202,29 @@ class TestRules(TransactionCase):
         self.assertEqual(search_result, allowed_child)
         self.assertEqual(filter_result, allowed_child)
 
+    def test_parent_rules_bind_through_a_computed_delegate(self):
+        # hr.employee delegates to hr.version through a computed version_id:
+        # the version's company rule must hold on the employee's rows too
+        ChildModel = self.env["test_access_right.inherits_computed"]
+        allowed_child, forbidden_child = children = ChildModel.create(
+            [
+                {"held_id": self.allowed.id},
+                {"held_id": self.forbidden.id},
+            ]
+        )
+        self.assertEqual(forbidden_child.some_id, self.forbidden)
+
+        user_children = children.with_user(self.env.ref("base.public_user"))
+        self.assertEqual(
+            user_children.search([("id", "in", children.ids)], order="id"),
+            allowed_child,
+        )
+        self.assertEqual(user_children.search([("val", "=", -1)]), ChildModel.browse())
+        self.assertEqual(user_children._filtered_access("read"), allowed_child)
+        user_children.invalidate_model()
+        with self.assertRaises(AccessError):
+            user_children[1].read(["val"])
+
     def test_flush_with_inherits(self):
         ChildModel = self.env["test_access_right.inherits"]
         child = ChildModel.create([{"some_id": self.allowed.id}])
