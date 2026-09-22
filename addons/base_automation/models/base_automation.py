@@ -1156,7 +1156,11 @@ class BaseAutomation(models.Model):
                         last_run,
                         compute_leaves=True,
                     )
-                return past_last_run[calendar.id] <= record_dt < past_until[calendar.id]
+                return (
+                    past_last_run[calendar.id]
+                    and past_until[calendar.id]
+                    and past_last_run[calendar.id] <= record_dt < past_until[calendar.id]
+                )
 
             return records.filtered(calendar_filter)
 
