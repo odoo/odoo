@@ -247,7 +247,11 @@ export class ClipboardPlugin extends Plugin {
                 return true;
             }
             if (fragment.hasChildNodes()) {
-                this.dependencies.dom.insert(fragment);
+                let processedFragment = fragment;
+                for (const processor of this.getResource("paste_odoo_editor_html_processors")) {
+                    processedFragment = processor(processedFragment);
+                }
+                this.dependencies.dom.insert(processedFragment);
             }
             return true;
         }
