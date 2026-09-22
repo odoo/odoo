@@ -239,7 +239,7 @@ class StockPicking(models.Model):
 
     def cancel_shipment(self):
         for picking in self:
-            picking.carrier_id.cancel_shipment(self)
+            picking.carrier_id.cancel_shipment(picking)
             msg = "Shipment %s cancelled" % picking.carrier_tracking_ref
             picking.message_post(body=msg)
             picking.carrier_tracking_ref = False
