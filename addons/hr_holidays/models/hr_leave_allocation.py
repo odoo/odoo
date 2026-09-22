@@ -104,6 +104,7 @@ class HrLeaveAllocation(models.Model):
         compute="_compute_holiday_status_id",
         default=_default_holiday_status_id,
         store=True,
+        index="btree",
         readonly=False,
         required=True,
         domain=_domain_holiday_status_id,

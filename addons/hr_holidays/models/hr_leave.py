@@ -144,6 +144,7 @@ class HrLeave(models.Model):
         string="Time Off Type",
         compute="_compute_holiday_status_id",
         store=True,
+        index="btree",
         readonly=False,
         required=True,
         domain="""[
@@ -183,6 +184,7 @@ class HrLeave(models.Model):
         comodel_name="res.company",
         compute="_compute_company_id",
         store=True,
+        index="btree_not_null",
     )
     active_employee = fields.Boolean(
         related="employee_id.active",
