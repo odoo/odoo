@@ -175,8 +175,23 @@ class ResUsers(models.Model):
     )
     def _compute_xp_progress(self) -> None:
         """Compute XP progress toward the next rank for progress bar display."""
+        # One read of the ladder for the whole recordset. _get_next_rank() runs
+        # its own search per call, so asking it per user cost one query each:
+        # 5 users measured 7 queries and 40 measured 42. Its public behaviour is
+        # a contract with website_profile and website_slides, so the batching
+        # lives here rather than in it.
+        ladder = self.env["gamification.karma.rank"].search([], order="karma_min")
+
+        def next_above(rank):
+            """Lowest rank strictly above `rank`, mirroring _get_next_rank()."""
+            floor = rank.karma_min if rank else None
+            for candidate in ladder:
+                if floor is None or candidate.karma_min > floor:
+                    return candidate
+            return self.env["gamification.karma.rank"]
+
         for user in self:
-            next_rank = user.next_rank_id or user._get_next_rank()
+            next_rank = user.next_rank_id or next_above(user.rank_id)
             if not next_rank or not user.rank_id:
                 user.xp_to_next_rank = next_rank.karma_min if next_rank else 0
                 user.xp_progress_percent = 0.0

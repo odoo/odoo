@@ -1613,3 +1613,83 @@ class TestXpProgressFollowsRankThresholds(common.TransactionCase):
 
         self.assertEqual(self.user.rank_id, self.upper, "rank must move")
         self.assertEqual(self.user.xp_to_next_rank, 0)
+
+
+class TestXpProgressBatchesRankLookup(common.TransactionCase):
+    """Computing the XP bar reads the rank ladder once, not once per user.
+
+    ``_get_next_rank()`` issues its own search, so calling it inside the
+    per-user loop cost one query each. The batched pick must agree with it for
+    every rank state, including a user with no rank at all.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Rank = cls.env["gamification.karma.rank"]
+        cls.Users = cls.env["res.users"].with_context(no_reset_password=True)
+
+    def _users(self, count, tag):
+        users = self.Users.create(
+            [
+                {"name": f"{tag}{i}", "login": f"{tag}_{i}", "karma": 0}
+                for i in range(count)
+            ]
+        )
+        self.env.flush_all()
+        # Set karma without going through the karma hooks, so the only thing
+        # under test is the compute itself.
+        self.env.cr.execute(
+            "UPDATE res_users SET karma = 2500 WHERE id = ANY(%s)", (users.ids,)
+        )
+        self.env.invalidate_all()
+        users.next_rank_id = False
+        self.env.flush_all()
+        self.env.invalidate_all()
+        return users
+
+    def test_matches_get_next_rank_for_every_rank_state(self):
+        """The batched pick must equal _get_next_rank() at every rung."""
+        ranks = self.Rank.search([], order="karma_min")
+        self.assertTrue(ranks, "the ladder must not be empty for this test")
+
+        for index, rank in enumerate([*ranks, self.Rank]):
+            user = self.Users.create(
+                {"name": f"rung{index}", "login": f"rung_{index}", "karma": 0}
+            )
+            self.env.flush_all()
+            user.sudo().rank_id = rank.id if rank else False
+            user.sudo().next_rank_id = False
+            self.env.flush_all()
+            self.env.invalidate_all()
+
+            expected = user._get_next_rank()
+            if not expected or not user.rank_id:
+                self.assertEqual(
+                    user.xp_to_next_rank, expected.karma_min if expected else 0
+                )
+            elif expected.karma_min - user.rank_id.karma_min <= 0:
+                self.assertEqual(user.xp_to_next_rank, 0)
+            else:
+                self.assertEqual(
+                    user.xp_to_next_rank, max(expected.karma_min - user.karma, 0)
+                )
+
+    def test_does_not_issue_one_query_per_user(self):
+        """Query count must be flat in the size of the recordset."""
+
+        def cost(count, tag):
+            users = self._users(count, tag)
+            self.env.invalidate_all()
+            before = self.env.cr.sql_log_count
+            users.mapped("xp_progress_percent")
+            return self.env.cr.sql_log_count - before
+
+        few = cost(2, "few")
+        many = cost(10, "many")
+        self.assertEqual(
+            few,
+            many,
+            "reading the XP bar must not cost a query per user "
+            f"({few} for 2 users vs {many} for 10)",
+        )
