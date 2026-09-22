@@ -1,7 +1,5 @@
 import { loadBundle } from "@web/core/assets";
 
-// TODO EGGMAIL: move this file in web or in mail/utils
-
 /**
  * Execute a callback once an iframe is ready/loaded in the DOM. The iframe must
  * have same origin sandbox policy enabled, and must be in the DOM (Chrome does

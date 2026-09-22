@@ -46,7 +46,7 @@ class MailComposeMessage(models.TransientModel):
             return mail_values_all
 
         trace_values_all = self._prepare_mail_values_mailing_traces(mail_values_all)
-        with file_open("mass_mailing/static/src/scss/mass_mailing_mail.scss", "r") as fd:
+        with file_open("mass_mailing/static/src/mail_clients_css/mass_mailing_mail.css", "r") as fd:
             styles = fd.read()
         for res_id, mail_values in mail_values_all.items():
             if mail_values.get('body_html'):
