@@ -118,3 +118,69 @@ class TestHrAttendance(TransactionCase):
         attendance_form.check_in = False
         with self.assertRaises(AssertionError):
             attendance_form.save()
+
+    def test_group_attendances_by_weekday(self):
+        """Attendances can be grouped by the weekday they were worked on.
+
+        `date` is stored, but nothing derived the weekday from it, so a manager
+        could not separate Saturday work from weekday work without exporting
+        and pivoting by hand.
+        """
+        # `_schedule_tz` reads the version's own `tz` ahead of the calendar's,
+        # so pinning the employee is what fixes which day `date` lands on.
+        self.employee_kiosk.tz = "UTC"
+        self.env["hr.attendance"].create(
+            [
+                {
+                    "employee_id": self.employee_kiosk.id,
+                    "check_in": "2025-08-01 08:00:00",  # a Friday
+                    "check_out": "2025-08-01 17:00:00",
+                },
+                {
+                    "employee_id": self.employee_kiosk.id,
+                    "check_in": "2025-08-02 08:00:00",  # a Saturday
+                    "check_out": "2025-08-02 12:00:00",
+                },
+                {
+                    "employee_id": self.employee_kiosk.id,
+                    "check_in": "2025-08-08 08:00:00",  # the next Friday
+                    "check_out": "2025-08-08 17:00:00",
+                },
+            ]
+        )
+
+        count_by_weekday = dict(
+            self.env["hr.attendance"]._read_group(
+                [("employee_id", "=", self.employee_kiosk.id)],
+                groupby=["day_of_date"],
+                aggregates=["__count"],
+            )
+        )
+        self.assertEqual(count_by_weekday, {"4": 2, "5": 1})
+
+    def test_attendance_carries_the_working_schedule(self):
+        """The employee's schedule is reachable from the attendance itself, so
+        attendances can be searched and grouped by it."""
+        attendance = self.env["hr.attendance"].create(
+            {
+                "employee_id": self.employee_kiosk.id,
+                "check_in": "2025-08-01 08:00:00",
+                "check_out": "2025-08-01 17:00:00",
+            }
+        )
+        self.assertEqual(
+            attendance.resource_calendar_id,
+            self.employee_kiosk.resource_calendar_id,
+        )
+        self.assertIn(
+            attendance,
+            self.env["hr.attendance"].search(
+                [
+                    (
+                        "resource_calendar_id",
+                        "=",
+                        self.employee_kiosk.resource_calendar_id.id,
+                    ),
+                ]
+            ),
+        )

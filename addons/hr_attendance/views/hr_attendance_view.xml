@@ -133,6 +133,9 @@
                                     placeholder="Currently Working"
                                     options="{'rounding': 0}"
                                     readonly="not is_manager" />
+                                <field
+                                    name="resource_calendar_id"
+                                    groups="base.group_no_one" />
                             </group>
                             <group col="2">
                                 <field
@@ -347,6 +350,8 @@
                 <field name="employee_id" />
                 <field name="department_id" operator="child_of" />
                 <field name="check_in" />
+                <field name="day_of_date" />
+                <field name="resource_calendar_id" />
                 <filter
                     name="myattendances"
                     string="My Attendances"
@@ -402,6 +407,14 @@
                         name="groupby_mode_in"
                         string="Method"
                         context="{'group_by': 'in_mode'}" />
+                    <filter
+                        name="groupby_day_of_date"
+                        string="Day of Week"
+                        context="{'group_by': 'day_of_date'}" />
+                    <filter
+                        name="groupby_resource_calendar"
+                        string="Working Schedule"
+                        context="{'group_by': 'resource_calendar_id'}" />
                     <filter
                         name="groupby_name"
                         string="Date"
