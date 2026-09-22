@@ -1,7 +1,7 @@
 import odoo.release
 from odoo.http import request, route
 
-from . import common, json2
+from . import common, doc, json2
 from .xmlrpc import XMLRPC
 
 

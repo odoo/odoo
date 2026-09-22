@@ -13,10 +13,20 @@ than a running server to ask.
 | XML-RPC | `/xmlrpc/2/<service>` | `none` | deprecated; warns once per client |
 | XML-RPC (legacy) | `/xmlrpc/<service>` | `none` | the pre-2 path, same services |
 | Version | `/json/version`, `/web/version` | `none` | the server's version, for a client's handshake |
+| Contract | `/doc/index.json`, `/doc/<model_name>.json` | `user` | every model this reader may reach, its fields and its public methods |
+| Contract (key) | `/doc-bearer/index.json`, `/doc-bearer/<model_name>.json` | `bearer` | the same documents for a program holding a key |
 
 `/jsonrpc` is gone (odoo `3e11e95be4d2`): a client that posted
 `{"service": …, "method": …, "args": …}` there speaks to a door that no
 longer exists.
+
+The contract routes were `api_doc`'s until 2026-09-22. They are the doors'
+own reflection -- what a client reads before it calls `/json/2` -- so they
+live with the doors, behind `rpc.group_allow_doc`, cached per audience in
+`ir.attachment` and swept by `ir.attachment._gc_doc_index`. `api_doc` is the
+page that renders them, and depends on `rpc` and `web`; `rpc` keeps
+depending on `base` alone, so a database with no web client still serves
+both the doors and their contract.
 
 ## The document
 
@@ -44,9 +54,9 @@ and an annotation per parameter (E8533 `route-untyped` holds every machine
 route to that). `POST /json/2/<model>/<method>` takes the model and the
 method in its path and the method's own keyword arguments in its body, so
 its `requestBody` is an open object — the arguments of `search_read` are
-not a fact of the route but of the model's method, and `/doc` (api_doc)
+not a fact of the route but of the model's method, and `/doc/<model_name>.json`
 answers that per model.
 
 `security` is the route's `auth`: `bearer` renders `bearerAuth` (an HTTP
 bearer token, a `res.users.apikeys` key), `user` a session cookie, and
-`public`/`none` an empty requirement — an open door, stated as one.
+an open door (`public`, `none`) an empty requirement — an open door, stated as one.

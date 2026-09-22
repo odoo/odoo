@@ -132,16 +132,36 @@ assert_doc_cites "ODOO_WRITE_OPENAPI" "the variable that rewrites openapi.json"
 assert_doc_cites "TestOpenAPIContract" "the test that validates the document"
 assert_doc_cites "E8533" "the lint that keeps every machine route declared"
 
-# Every backticked path in the docs resolves.
-path_report=$("$PY" - "$SCRIPT_DIR" "$MOD" "$_fc_root" <<'PY'
+# Every backticked file resolves, and every backticked route is a route the
+# document describes -- a `/doc/<model>.json` is not a file and must not be
+# checked as one.
+path_report=$("$PY" - "$SCRIPT_DIR" "$MOD" "$_fc_root" "$DOCUMENT" <<'PY'
+import json
 import pathlib
 import re
 import sys
 
-doc_dir, mod, repo = (pathlib.Path(p) for p in sys.argv[1:4])
+doc_dir, mod, repo, document = (pathlib.Path(p) for p in sys.argv[1:5])
+described = set(json.loads(document.read_text())["paths"])
+ARG = re.compile(r"<(?:[a-zA-Z_]\w*:)?(\w+)>")
 TOKEN = re.compile(r"`([^`\s]+\.(?:py|json|md|sh|xml|js))`")
+ROUTE = re.compile(r"`(/[^`\s]{2,})`")
+# Routes the prose names that belong to another module, and are named as
+# such: the per-database document web serves, and the door this one replaced.
+ELSEWHERE = {"/web/openapi.json", "/jsonrpc"}
+
 for doc in sorted(doc_dir.glob("*.md")):
-    for token in TOKEN.findall(doc.read_text()):
+    text = doc.read_text()
+    for token in ROUTE.findall(text):
+        template = ARG.sub(lambda match: "{" + match.group(1) + "}", token)
+        if template in described or template in ELSEWHERE:
+            print(f"OK|{token}")
+        else:
+            print(f"BAD|{doc.name} backticks the route {token}, which "
+                  f"openapi.json does not describe")
+    for token in TOKEN.findall(text):
+        if token.startswith("/"):
+            continue
         if any((base / token).exists() for base in (doc_dir, mod, repo)):
             print(f"OK|{token}")
         elif list(mod.rglob(pathlib.PurePath(token).name)):

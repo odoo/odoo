@@ -8,19 +8,19 @@ from odoo.models import Model
 from odoo.tests import new_test_user, tagged
 
 from .dummy_methods import DummyMethods
-from odoo.addons.api_doc.tools.cache import (
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.rpc.tools.cache import (
     ACCESS_CACHE_SEQUENCES,
     doc_cache_generation,
     stale_index_domain,
 )
-from odoo.addons.api_doc.tools.registry import (
+from odoo.addons.rpc.tools.registry import (
     _describing_docstring,
     describe_method,
     is_public_method,
     public_method_names,
     reflect_callable,
 )
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
 @tagged("-at_install", "post_install")
@@ -30,7 +30,7 @@ class TestDoc(HttpCaseWithUserDemo):
         super().setUpClass()
         cls.user_demo.write(
             {
-                "group_ids": [Command.link(cls.env.ref("api_doc.group_allow_doc").id)],
+                "group_ids": [Command.link(cls.env.ref("rpc.group_allow_doc").id)],
             }
         )
 
@@ -395,7 +395,7 @@ class TestDoc(HttpCaseWithUserDemo):
             {
                 "_name": "model.dummy.methods",
                 "_register": False,
-                "__module__": "odoo.addons.api_doc",
+                "__module__": "odoo.addons.rpc",
             },
         )
         FakeModel = FakeCls(self.env, (), ())
@@ -459,7 +459,7 @@ class TestDoc(HttpCaseWithUserDemo):
         docstring; walking it blindly documents Contact with `mixin.mail.thread`'s
         "allow sending messages related to the current model".
         """
-        from odoo.addons.api_doc.tools.registry import describe_model_doc
+        from odoo.addons.rpc.tools.registry import describe_model_doc
 
         Partner = self.env["res.partner"]
         doc = describe_model_doc(Partner)
@@ -472,7 +472,7 @@ class TestDoc(HttpCaseWithUserDemo):
 
     def test_model_doc_of_a_documented_model(self):
         """A class that documents itself has that prose published."""
-        from odoo.addons.api_doc.tools.registry import describe_model_doc
+        from odoo.addons.rpc.tools.registry import describe_model_doc
 
         # A throwaway model class carrying a docstring: that is the prose the
         # page must publish.
@@ -482,7 +482,7 @@ class TestDoc(HttpCaseWithUserDemo):
             {
                 "_name": "documented.dummy",
                 "_register": False,
-                "__module__": "odoo.addons.api_doc",
+                "__module__": "odoo.addons.rpc",
                 "__doc__": "A documented dummy model.",
             },
         )

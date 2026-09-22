@@ -6,18 +6,22 @@
 Odoo Dynamic API Documentation
 ==============================
 
-This module provides a dynamic documentation page for developpers at the
-/doc URL. The documentation is generated using the database to list the
-models and their fields and methods. It also provides a playground to run
-the methods over HTTP, with examples in various programming languages.
+This module renders the contract documents `rpc` serves -- /doc/index.json
+and /doc/<model>.json, the registry's models, fields and methods -- as a
+single page at /doc, with a playground that runs a method over HTTP and
+shows the call in several languages.
+
+The documents themselves, the group that may read them and their cache are
+`rpc`'s: a client that reads the contract needs no page, and a database with
+no web client still serves it.
 """,
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
+        "rpc",
         "web",
     ],
     "data": [
-        "security/res_groups.xml",
         "views/docclient.xml",
     ],
     "assets": {

@@ -4,7 +4,7 @@ import base64
 
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.api_doc.tools.cache import doc_cache_generation
+from odoo.addons.rpc.tools.cache import doc_cache_generation
 
 
 @tagged("post_install", "-at_install")

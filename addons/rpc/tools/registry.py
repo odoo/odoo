@@ -126,7 +126,7 @@ def describe_method(model, method_name):
         # NameError class that used to land here is fixed at the source, in
         # parse_signature's annotation_format.
         logger.warning(
-            "api_doc: could not reflect %s.%s (%s): %s",
+            "rpc/doc: could not reflect %s.%s (%s): %s",
             model._name,
             method_name,
             type(exc).__name__,

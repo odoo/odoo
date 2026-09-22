@@ -8,6 +8,7 @@ generator reads them from the copy beside this file.
 
 import json
 import os
+import re
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
@@ -17,6 +18,7 @@ from odoo.http.openapi import OPENAPI_VERSION, iter_map_routes
 from odoo.tests import common
 
 DOCUMENT = Path(__file__).parent.parent / "machine_doc_v1" / "openapi.json"
+TEMPLATE_ARG = re.compile(r"{(\w+)}")
 WRITE = "ODOO_WRITE_OPENAPI"
 REGENERATE = (
     f"{WRITE}=1 odoo-bin -d <db> --test-enable --test-tags "
@@ -65,7 +67,7 @@ class TestOpenAPIContract(common.TransactionCase):
         document = self.document()
         operation_ids = []
         for path, item in document["paths"].items():
-            expected = {part[1:-1] for part in path.split("/") if part.startswith("{")}
+            expected = set(TEMPLATE_ARG.findall(path))
             for verb, operation in item.items():
                 operation_ids.append(operation["operationId"])
                 declared = {
