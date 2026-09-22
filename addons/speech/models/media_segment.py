@@ -9,3 +9,7 @@ class MediaSegment(models.Model):
         string="Transcription",
     )
     transcript_cues = fields.Json(related="attachment_id.transcript_cues")
+    live = fields.Boolean(
+        readonly=True,
+        help="A chunk sent during a live capture, transcribed as soon as it arrives.",
+    )

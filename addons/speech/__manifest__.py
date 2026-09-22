@@ -1,6 +1,6 @@
 {
     "name": "Speech",
-    "version": "19.0.1.4.0",
+    "version": "19.0.1.5.0",
     "category": "Hidden",
     "sequence": 10,
     "summary": "Transcription and synthesis for every stored recording",
@@ -65,6 +65,20 @@ rolled-up state and three hooks, and ``media.segment`` with its attachment's
 cues and state. The ``transcript_timeline`` widget is the ``media_timeline``
 player with the words following along.
 
+Live capture
+------------
+``mixin.media.live`` turns a timeline into one that fills while someone talks:
+the client sends five-to-ten-second chunks, each becomes a ``live`` segment
+transcribed by a high-priority job through the same engines, policy and
+retention as any recording, and each chunk's words are pushed on the bus under
+``speech.live``. The channel ``speech.live/<model>/<id>`` is served to whoever
+may read the record. ``speech.dictation`` is the live timeline of one person
+dictating into an editor -- its chunks are transcribed under
+``speech.transcription.dictation`` and kept a week -- and
+``static/src/live_capture`` holds the browser side: a recorder that cuts WAV
+chunks at pauses and a session that sends them and hands back their words in
+order.
+
 Vocabulary
 ----------
 ``speech.vocabulary`` holds the brands, places and names a transcriber must spell
@@ -83,6 +97,7 @@ False everywhere and the actions say so rather than failing at a vendor call.
     "license": "LGPL-3",
     "depends": [
         "media",
+        "bus",
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -95,6 +110,13 @@ False everywhere and the actions say so rather than failing at a vendor call.
     "assets": {
         "web.assets_backend": [
             "speech/static/src/**/*",
+            (
+                "remove",
+                "speech/static/src/worklets/**/*",
+            ),
+        ],
+        "web.assets_unit_tests": [
+            "speech/static/tests/**/*",
         ],
     },
 }
