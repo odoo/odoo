@@ -377,7 +377,6 @@ const chatterPatch = {
     },
 
     onFollowerChanged() {
-        document.body.click(); // hack to close dropdown
         this.reloadParentView();
     },
 
