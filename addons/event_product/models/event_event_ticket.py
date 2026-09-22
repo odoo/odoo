@@ -34,8 +34,15 @@ class EventEventTicket(models.Model):
     def _tax_included(self, amount, currency):
         """`amount` with this ticket's product taxes applied, rounded in `currency`.
 
-        The two tax computes below differ only in the amount and the currency
-        they hand to compute_all; everything else was the same six lines twice.
+        The two tax computes below differ only in the amount they hand to
+        compute_all; everything else was the same six lines twice.
+
+        `currency` is the tax jurisdiction's currency -- the event company's --
+        for both callers. price_incl used to round in the product's currency
+        instead, which is company_id.currency_id or the MAIN company's when the
+        product has no company, so a product shared across companies rounded the
+        two figures of one ticket in two different currencies while the website
+        rendered them side by side.
         """
         self.check_singleton()
         # sudo necessary here since the field is most probably accessed through the website
@@ -50,19 +57,21 @@ class EventEventTicket(models.Model):
     # the pricelist has to be part of this field's cache key too -- without it the
     # ORM hands back whichever pricelist's value was computed first.
     @api.depends_context(*PRICE_CONTEXT_KEYS)
-    @api.depends("price_reduce", "product_id", "product_id.taxes_id")
+    @api.depends(
+        "price_reduce", "product_id", "product_id.taxes_id", "event_id.company_id"
+    )
     def _compute_price_reduce_taxinc(self):
         for ticket in self:
             ticket.price_reduce_taxinc = ticket._tax_included(
                 ticket.price_reduce, ticket.event_id.company_id.currency_id
             )
 
-    @api.depends("product_id", "product_id.taxes_id", "price")
+    @api.depends("product_id", "product_id.taxes_id", "price", "event_id.company_id")
     def _compute_price_incl(self):
         for ticket in self:
             if ticket.product_id and ticket.price:
                 ticket.price_incl = ticket._tax_included(
-                    ticket.price, ticket.currency_id
+                    ticket.price, ticket.event_id.company_id.currency_id
                 )
             else:
                 ticket.price_incl = 0
