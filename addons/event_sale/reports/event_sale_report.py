@@ -152,7 +152,11 @@ WITH
         # Extra clauses formatted as `cte1.column1 AS new_column1`, `table1.column2 AS new_column2`...
         return """
 SELECT
-    ROW_NUMBER() OVER (ORDER BY event_registration.id) AS id,
+    -- One row per registration and no aggregation below, so the registration's
+    -- own id is unique here and, unlike ROW_NUMBER(), stable: deleting a
+    -- registration used to renumber every row after it, so a stored id then
+    -- pointed at a different attendee.
+    event_registration.id AS id,
 
     event_registration.id AS event_registration_id,
     event_event.company_id AS company_id,
