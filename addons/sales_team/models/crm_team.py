@@ -2,6 +2,7 @@ import random
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 
 
 class CrmTeam(models.Model):
@@ -182,7 +183,12 @@ class CrmTeam(models.Model):
                                   )
 
     def _search_member_ids(self, operator, value):
-        return [('crm_team_member_ids.user_id', operator, value)]
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+        domain = Domain('crm_team_member_ids.user_id', operator, value)
+        if operator == 'in' and False in value:  # relation may be falsy
+            domain |= Domain('crm_team_member_ids', '=', False)
+        return domain
 
     # 'name' should not be in the trigger, but as 'company_id' is possibly not present in the view
     # because it depends on the multi-company group, we use it as fake trigger to force computation

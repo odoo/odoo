@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command, api, fields, models
+from odoo import api, fields, models
+from odoo.fields import Command, Domain
 
 from odoo.addons.web.controllers.utils import clean_action
 
@@ -36,6 +37,8 @@ class StockPicking(models.Model):
     zip = fields.Char(related='partner_id.zip', string='Zip', search="_search_zip")
 
     def _search_zip(self, operator, value):
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
         return [('partner_id.zip', operator, value)]
 
     def write(self, vals):

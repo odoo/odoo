@@ -3,6 +3,7 @@
 import logging
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 
 _logger = logging.getLogger(__name__)
 
@@ -36,7 +37,12 @@ class MailAliasMixinOptional(models.AbstractModel):
             record.alias_email = f"{record.alias_name}@{record.alias_domain}"
 
     def _search_alias_email(self, operator, operand):
-        return [('alias_id.alias_full_name', operator, operand)]
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+        domain = Domain('alias_id.alias_full_name', operator, operand)
+        if operator == 'in' and False in operand:  # relation may be falsy
+            domain |= Domain('alias_id', '=', False)
+        return domain
 
     # --------------------------------------------------
     # CRUD
