@@ -11,6 +11,9 @@ import { CountryFlag } from "@mail/core/common/country_flag";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 
+/** Minimum time the bubble keeps bouncing after important messages, in ms. */
+export const BOUNCE_DURATION = 4000;
+
 class ChatBubblePreview extends Component {
     static components = { MessageSeenIndicator };
     static template = "mail.ChatBubblePreview";
@@ -75,13 +78,37 @@ export class ChatBubble extends Component {
             onAway: () => this.popover.close(),
         });
         this.bouncing = signal(false);
-        const isImportant = computed(() => Boolean(this.channel?.importantCounter));
-        useEffect(() => this.bouncing.set(isImportant));
+        const importantCounter = computed(() => this.channel?.importantCounter ?? 0);
+        // Bounce only when new important messages come in, not on mount nor
+        // when the counter merely goes down (e.g. messages being read).
+        let previousCounter = importantCounter();
+        useEffect(() => {
+            const counter = importantCounter();
+            if (counter > previousCounter) {
+                this.startBouncing();
+            } else if (counter === 0) {
+                this.bouncing.set(false);
+            }
+            previousCounter = counter;
+        });
         useSubEnv({ inChatBubble: true });
     }
 
     /** @returns {import("models").Channel} */
     get channel() {
         return this.props.chatWindow.channel;
+    }
+
+    /** Bounces for at least BOUNCE_DURATION, without restarting the animation. */
+    startBouncing() {
+        this.bounceDeadline = Date.now() + BOUNCE_DURATION;
+        this.bouncing.set(true);
+    }
+
+    /** Called at the end of each bounce, i.e. when the bubble is back down. */
+    onBounceEnd() {
+        if (Date.now() >= this.bounceDeadline) {
+            this.bouncing.set(false);
+        }
     }
 }
