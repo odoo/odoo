@@ -487,7 +487,7 @@ class MixinApproval(models.AbstractModel):
         and an unchanged partner written back must not take an approval away.
         """
         protected = set(self._get_fields_approval_protected()) & vals.keys()
-        if not protected or self.env.context.get("approval_keep_on_subject_change"):
+        if not protected:
             return []
         invalidated = []
         for record in self:
@@ -580,13 +580,25 @@ class MixinApproval(models.AbstractModel):
                 )
 
     def unlink(self) -> bool:
-        draft_requests = self.env["approval.request"]
+        draft_requests = self.env["approval.request"].sudo()
+        names = {}
         for record in self:
             if record.approval_request_id and record.approval_state == "new":
                 draft_requests |= record.approval_request_id
+                names[record.approval_request_id.id] = record.display_name
+        kept = draft_requests._get_requests_with_decision_log()
         res = super().unlink()
-        if draft_requests:
-            draft_requests.sudo().unlink()
+        (draft_requests - kept).unlink()
+        for request in kept:
+            request._force_terminal(
+                "cancelled",
+                body=self.env._(
+                    "%(user)s deleted %(document)s; the request is kept with its "
+                    "decision history.",
+                    user=self.env.user.name,
+                    document=names[request.id],
+                ),
+            )
         return res
 
     def action_view_approval_request(self) -> dict[str, Any]:

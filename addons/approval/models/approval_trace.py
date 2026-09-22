@@ -599,7 +599,7 @@ CALL_TRACES: dict[str, dict[str, str]] = {
         "_unregister_hook": "registry",
         "_apply_to_registry": "registry",
         "_gate": "binding",
-        "_admit": "binding",
+        "_run_admitted": "binding",
         "_enforce_at_checkpoint": "binding",
         "_raise_requests_for": "binding",
         "_replay": "binding",

@@ -35,7 +35,7 @@ class ApprovalDecisionLog(models.Model):
         index=True,
         readonly=True,
         required=True,
-        ondelete="cascade",
+        ondelete="restrict",
     )
     company_id = fields.Many2one(
         related="request_id.company_id",

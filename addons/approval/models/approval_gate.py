@@ -95,8 +95,7 @@ class ApprovalGate(models.Model):
         it. `_check_approval_admits` is called from that checkpoint and nowhere
         else, so without one there is no path for enforcement to close: the
         toggle would govern nothing and the count beside it could never leave
-        zero. `mixin.approval.lifecycle` is the standing case -- it declares
-        `action_confirm` for every order-like document and names no checkpoint.
+        zero.
         """
         declared = set()
         unenforceable = set()

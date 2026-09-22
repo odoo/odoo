@@ -317,7 +317,7 @@ requester re-submits (`action_resubmit`).
 | `create()` | request.py | Approval minimum from category, subscribe owner, sync approvers (no name assignment — deferred to confirm) |
 | `write()` | request.py | Access check, forged-compute and locked-fields business rules, category-change guard, owner re-subscription, sync approvers when a field in `_get_fields_approver_sync_trigger()` is written |
 | `copy()` | request.py | Duplicate with a "Duplicated from" log; `approval_app` overrides `copy_data()` to seed smart defaults from the owner's history (`_smart_clone_defaults`) |
-| `unlink()` | request.py | Two-layer validation (access + business rules: draft only) |
+| `unlink()` | request.py | Two-layer validation (access + business rules: draft only, and never a request with decision-log rows, for any caller, the superuser included; 19.0.2.10.3) |
 | `_compute_display_name()` | request.py | Translated "New" placeholder for unnumbered drafts |
 | `_compute_state()` | request.py | Core state machine (no side effects) |
 | `_compute_sla_status()` / `_search_sla_status()` | compute.py | Non-stored SLA status + SQL search (CASE mirrors the compute) |
@@ -547,7 +547,7 @@ What the engine asks of any record a request is raised for, whichever adopter sh
 | `_approval_side_effect(failure_note)` | Context manager wrapping any document-advancing call made from a hook: savepoint + `UserError`/`ValidationError` catch + chatter note. Hooks run inside the approver's transaction — do not hand-roll this |
 | `_approval_decider_names(state)` | The filter-and-join over `approver_ids` that opens a decision message |
 | `write()` / `_get_fields_approval_protected()` | Freezes the listed source-document fields while an approval is in flight |
-| `unlink()` | Blocks deleting a document with a live approval |
+| `unlink()` | Blocks deleting a document with a live approval. A draft request goes with its document unless it holds decision-log rows (a refused request reset to draft): that one is kept and forced to `cancelled`, naming the deleted document (19.0.2.10.3) |
 | `_check_can_request_approval()` / `_compute_can_request_approval()` | Gate on the "Request Approval" button |
 | `_before_approval_request_submit(approval)` | Hook between request creation and auto-confirm |
 | `_get_approval_submitted_action()` / `_get_approval_request_view_action()` | Client actions returned after submit / when opening the request |
@@ -747,7 +747,7 @@ For a document that gates its own terminal transitions — confirming, posting, 
 | `_approval_request_gates(operation)` | Whether the linked request was raised for this operation. A grant clears the operation it was asked for and no other |
 | `_check_approval_covers(operation)` | Hook: raises when the grant no longer covers what the operation would do |
 | `_check_approval_admits(operation)` | Called from the operation's checkpoint, so a caller that did not come through the gate is caught. Records an `approval.observation` and refuses only once `approval.gate_enforced` is set |
-| `_is_operation_run_on_approval(operation)` / `_run_operation_on_approval()` | Whether a grant re-enters the transition, and the re-entry itself: once, as superuser, through the gated method so its validations run again |
+| `_is_operation_run_on_approval(operation)` / `_run_operation_on_approval()` | Whether a grant re-enters the transition, and the re-entry itself: once, through the gated method so its validations run again, as the request's owner in the owner's companies (the document's first) -- never the approver, never under sudo, as a binding replays; the superuser account keeps its `su` (19.0.2.10.3). A requester who can no longer run the operation leaves the grant standing and a chatter note, like any failed side effect |
 | `_refuse_pending_approval()` | Refuses a waiting request, for an adopter's cancel path |
 
 Adopted by `mixin.approval.lifecycle`. Covered by `test_approval/tests/test_gate.py` against `approval.test.gated`.
@@ -762,11 +762,12 @@ Adopted by `mixin.approval.lifecycle`. Covered by `test_approval/tests/test_gate
 | File | `models/mixin_approval_lifecycle.py` |
 | Inherits | `mixin.approval.gate`, `mixin.lifecycle` |
 
-For a document with a declared lifecycle whose confirmation is the approval gate. It is `mixin.approval.gate` with `_approval_operations = ("action_confirm",)`, so the split, the coverage check and the re-entry are the gate's; only the lifecycle's own wiring lives here. The adopter supplies `_get_domain_approval_category`; with no category matching, confirming is the plain lifecycle.
+For a document with a declared lifecycle whose confirmation is the approval gate. It is `mixin.approval.gate` with `_approval_operations = ("action_confirm",)`, so the split, the coverage check and the re-entry are the gate's; only the lifecycle's own wiring lives here. Entering the confirmed state is the operation, whatever the door (19.0.2.10.3): `_operation_checkpoints = {"action_confirm": "_check_confirm_transition"}`, reached by a write that moves a record into `_get_confirmed_state()` (the state `_prepare_confirmation_values` writes) and by a create that starts there -- which covers `load()`. So every adopter has an `approval.gate` row, and a record that needs approval is watched, then refused once enforced, however it is confirmed without its grant. The adopter supplies `_get_domain_approval_category`; with no category matching, confirming is the plain lifecycle.
 
 | Method | What it does |
 |--------|--------------|
 | `action_confirm` | Runs the confirm checks, then `_run_through_approval("action_confirm", ...)` |
+| `_check_confirm_transition` | The checkpoint: `_check_approval_admits("action_confirm")` for the records entering the confirmed state |
 | `_is_operation_run_on_approval` | A grant re-enters `action_confirm` while the document is still a draft |
 | `action_cancel` | Cancels, then `_refuse_pending_approval`, so an adopter whose refusal callback cancels meets an already cancelled document |
 | `action_draft` | Clears a refused or cancelled request's link, so confirming asks again |
@@ -923,7 +924,7 @@ Kill switch: `ir.config_parameter` `approval.binding_enabled`.
 | `check_button_approval(model, res_id, method, action_id)` | `_gate` with a no-op operation: `{approved, request_id}`. It raises or reuses the request and marks the one-shot, because the browser runs the action next |
 | `action_decide_approval(..., approve, step_id)` / `action_withdraw_decision(..., approver_id, step_id)` | Decide as the caller, for the step the button drew the control under (`_get_button_decision_steps` refuses a step of another button), or withdraw through `action_withdraw_approver` (a refusal through `action_reset_to_draft`); the rights are `_can_withdraw_approver` / `_can_reopen_refusal`, the same predicates the checks raise from, judged against the withdrawn step |
 | `_get_checkpoint_guard(model, checkpoint, operations)` / `_enforce_at_checkpoint(records, bindings, operation)` | Operation checkpoints. A model that declares `_operation_checkpoints = {operation: private_hook}` (`account.move`: `action_post` -> `_post_check_business_rules`) has the hook wrapped too, so a binding on the operation holds on every path that crosses it. The paths that never reach the operation's own wrapper get Block semantics: a checkpoint can neither ask for an approval nor keep a request, so a record Block or Request mode would stop is refused there |
-| `_admit(records, operation)` / `_get_admitted_ids(records, operation)` | The operation's wrapper marks the records it lets through, as (model, operation, ids) in `approval_binding_admitted`; their checkpoint does not check them again. Records the admitted call touches on its own (a reversal a posting creates) are still checked |
+| `_run_admitted(records, operation, call)` / `_get_admitted_ids(records, operation)` | The operation's wrapper runs `call(records)` with the records it lets through admitted, as (transaction, model, operation, ids) on a stack the process holds for the length of the call; their checkpoint does not check them again. Nothing in the context admits anything, so no client can forge an admission. Records the admitted call touches on its own (a reversal a posting creates) are still checked |
 | `create_step_for_button(model, method, action_id)` | Adds a step to a button; the first one binds the button in Studio's shape (Request, approve-on-invoke, run-on-approval off, a category that requests its steps in order). A step starts with the Internal User group and the gated model as subject model; its sequence is the last plus one, capped at 9 |
 | `action_open_button_steps(model, method, action_id)` | A button's steps as a kanban (then list and form), with a quick-create card -- the card Studio's rule kanban showed: name, exclusivity, group, order, approvers |
 | `_has_anyone_to_ask()` | False when the category has no active step, no approver and no routing rule; `_get_selected` then selects nothing outside Observe mode, so a button whose steps are all archived is no longer gated |
@@ -993,10 +994,10 @@ An operation earns a row only where the model also names it in
 `_operation_checkpoints`. `_check_approval_admits` is called from that checkpoint
 and nowhere else, so without one enforcement has no path to close: the toggle
 would govern nothing and the count beside it could never leave zero.
-`mixin.approval.lifecycle` is the standing case -- it declares `action_confirm`
-for every order-like document and names no checkpoint, so `sale.order`,
-`purchase.order`, `maintenance.order` and `rma.order` have no row. The pairs left
-out are named on `trace.REGISTRY` at each sync.
+`approval.test.gated`'s `action_bill` is the standing case. `mixin.approval.lifecycle`
+was one until 19.0.2.10.3, when entering the confirmed state became its checkpoint;
+`sale.order`, `purchase.order`, `maintenance.order` and `rma.order` have their row
+since. The pairs left out are named on `trace.REGISTRY` at each sync.
 
 The only field a person may write is `enforced`, and that is the point: the row
 is a place to put the decision the counts beside it inform. Enforcement is **per
@@ -1210,7 +1211,7 @@ closure with it. Read their fields in those modules.
 
 | Field | Type | Notes |
 |-------|------|-------|
-| `request_id` | Many2one(`approval.request`) | required, cascade |
+| `request_id` | Many2one(`approval.request`) | required, restrict (19.0.2.10.3): the database refuses to delete a request with a ledger |
 | `approver_id` | Many2one(`approval.approver`) | the row the fact is about, if any |
 | `step_ids` | Many2many(`approval.category.step`) | the steps a decision was given for, or withdrawn from |
 | `verdict` | Selection | approved, refused, withdrawn, granted, revoked, cancelled, reset |
@@ -1227,7 +1228,7 @@ closure with it. Read their fields in those modules.
 
 **Separation of duties (19.0.2.1.0).** `approval.category.allow_self_approval`, mirrored on the request: when false, `_get_desired_approvers` never stages the request owner, on any routing path, and `_check_not_deciding_own_request` refuses a decision on a row whose effective approver is the owner -- checked before `_check_decision_actor`'s superuser return, so `sudo()` does not reopen it. Categories existing at the upgrade were migrated to allowing. The Studio editor's categories allow it by design: a button's approval restricts who may press, and the presser is the approver.
 
-**Subject integrity (19.0.2.2.0).** After approval, a write that actually changes a field of `_get_fields_approval_protected()` -- compared value by value, x2many commands included -- sends the request back to draft through `_force_draft`, logged as a `reset` naming the fields, unless `_is_approval_invalidated_by_changes(fields)` says the document re-checks those fields itself. Applies to every caller; a request whose `_check_reset_allowed` refuses makes the write refuse instead. Context key `approval_keep_on_subject_change` skips it.
+**Subject integrity (19.0.2.2.0).** After approval, a write that actually changes a field of `_get_fields_approval_protected()` -- compared value by value, x2many commands included -- sends the request back to draft through `_force_draft`, logged as a `reset` naming the fields, unless `_is_approval_invalidated_by_changes(fields)` says the document re-checks those fields itself. Applies to every caller, and no context key skips it; a request whose `_check_reset_allowed` refuses makes the write refuse instead.
 
 **Coverage integrity (19.0.2.1.0).** `mixin.approval` refuses writes to `approval_state`, `date_approval_granted` and `date_approval_requested` for every caller, and accepts an `approval_request_id` only for a request about the record itself, a subject-less request still in `new`, which the write binds to the record, or a request whose category's `target_model` is the record's model linking what it produced. The last is written inside `approval.request._link_produced_documents` (or its `_producing_documents` window), which is kept on the cursor so that no RPC caller can open it: pointing an order at an approved request that produces orders is refused. Re-writing the link a record already has is not checked.
 

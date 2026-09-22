@@ -302,4 +302,21 @@
         <field name="perm_unlink" eval="1" />
     </record>
 
+    <!--
+        An app that grants its managers write on approval.category scopes it to
+        its own approval types with a group rule. Rules of different groups are
+        OR'ed, and a group with no rule adds nothing, so an approval manager who
+        also manages such an app needs this rule to keep every category.
+    -->
+    <record id="approval_category_manager_write" model="ir.rule">
+        <field name="name">Approval Category: approval manager writes all types</field>
+        <field name="model_id" ref="model_approval_category" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_approval_manager'))]" />
+        <field name="perm_read" eval="0" />
+        <field name="perm_write" eval="1" />
+        <field name="perm_create" eval="1" />
+        <field name="perm_unlink" eval="1" />
+    </record>
+
 </odoo>

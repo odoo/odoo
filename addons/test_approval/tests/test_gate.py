@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
@@ -56,6 +58,49 @@ class TestApprovalGate(ApprovalCommon):
         document.approval_request_id.with_user(self.approver_1).action_withdraw()
         self._approve(document)
         self.assertEqual(document.ship_count, 1)
+
+    def _asked_by_owner(self):
+        access = self.env["ir.model.access"].create(
+            {
+                "name": "approval.test.gated requester",
+                "model_id": self.env["ir.model"]._get("approval.test.gated").id,
+                "group_id": self.env.ref("base.group_user").id,
+                "perm_read": True,
+                "perm_write": True,
+            }
+        )
+        document = self._document()
+        document.with_user(self.owner_user).action_ship()
+        self.assertEqual(document.approval_request_id.request_owner_id, self.owner_user)
+        return document, access
+
+    def test_the_grant_runs_the_operation_as_its_requester(self):
+        document, _access = self._asked_by_owner()
+        Gated = self.registry["approval.test.gated"]
+        ship = Gated._ship
+        ran_as = []
+
+        def spy(records, shipped):
+            ran_as.append((shipped.env.uid, shipped.env.su))
+            return ship(records, shipped)
+
+        with patch.object(Gated, "_ship", spy):
+            self._approve(document)
+        self.assertEqual(ran_as, [(self.owner_user.id, False)])
+        self.assertEqual(document.ship_count, 1)
+
+    def test_a_requester_who_lost_the_right_is_not_run_as_superuser(self):
+        document, access = self._asked_by_owner()
+        access.unlink()
+        self._approve(document)
+        self.assertEqual(document.approval_state, "approved")
+        self.assertEqual(document.ship_count, 0, "nobody may ship it any more")
+        self.assertTrue(
+            any(
+                "could not go through" in body
+                for body in document.message_ids.mapped("body")
+            )
+        )
 
     def test_a_grant_that_does_not_run_leaves_the_operation_to_its_caller(self):
         document = self._document(runs_on_approval=False)
@@ -118,6 +163,19 @@ class TestApprovalGate(ApprovalCommon):
         with self.assertRaises(UserError):
             document.action_ship_from_elsewhere()
         self.assertEqual(document.ship_count, 0)
+
+    def test_a_forged_admission_in_the_context_admits_nothing(self):
+        self._enforce("action_ship")
+        document = self._document()
+        forged = document.with_context(
+            approval_binding_admitted=[
+                ["approval.test.gated", "action_ship", [document.id]]
+            ]
+        )
+        with self.assertRaises(UserError):
+            forged.action_ship_from_elsewhere()
+        self.assertEqual(document.ship_count, 0)
+        self.assertFalse(document.approval_request_id)
 
     def test_the_gate_admits_what_it_let_through(self):
         self._enforce("action_ship")

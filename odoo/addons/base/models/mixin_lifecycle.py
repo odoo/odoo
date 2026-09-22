@@ -20,6 +20,13 @@ class MixinLifecycle(models.AbstractModel):
         help="A locked document cannot be modified.",
     )
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        if not self.env.su:
+            records._check_create_state_transition()
+        return records
+
     def write(self, vals):
         with _debug.perf(
             "write_guards", cr=self.env.cr, records=self, fields=len(vals)
@@ -311,6 +318,32 @@ class MixinLifecycle(models.AbstractModel):
                         name=record.display_name,
                         src=record._get_state_label(record.state),
                         dst=record._get_state_label(target),
+                    ),
+                )
+
+    def _check_create_state_transition(self):
+        state_field = self._fields["state"]
+        initial = state_field.default(self) if state_field.default else False
+        for record in self:
+            if record.state == initial:
+                continue
+            _debug.lifecycle(
+                "state_transition", record=record, src=initial, dst=record.state
+            )
+            if record.state not in self._STATE_TRANSITIONS.get(initial, set()):
+                _debug.logic(
+                    "create_refused",
+                    record=record,
+                    reason="illegal_state_transition",
+                    src=initial,
+                    dst=record.state,
+                )
+                raise UserError(
+                    self.env._(
+                        "Cannot create %(name)s as %(dst)s: it starts as %(src)s.",
+                        name=record.display_name,
+                        src=record._get_state_label(initial),
+                        dst=record._get_state_label(record.state),
                     ),
                 )
 

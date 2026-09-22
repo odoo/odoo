@@ -19,3 +19,5 @@ from . import (
 )
 from . import test_gate
 from . import test_gate_batch
+from . import test_lifecycle_gate
+from . import test_decision_ledger_kept

@@ -44,7 +44,7 @@ class ApprovalTestGated(models.Model):
     def _ship(self, records) -> bool:
         records._check_ship()
         for record in records:
-            record.sudo().write(
+            record.write(
                 {
                     "ship_count": record.ship_count + 1,
                     "shipped_amount": record.amount_total,

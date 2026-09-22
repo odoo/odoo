@@ -1,4 +1,5 @@
 import annotationlib
+import contextvars
 import datetime
 import inspect
 import logging
@@ -31,8 +32,13 @@ ENABLED_PARAM = "approval.binding_enabled"
 REPLAY_CONTEXT_KEY = "approval_binding_replay"
 INVOKE_CONTEXT_KEY = "approval_binding_invoking"
 SYNC_CONTEXT_KEY = "approval_binding_syncing"
-ADMITTED_CONTEXT_KEY = "approval_binding_admitted"
 ENFORCEABLE_ACTION_TYPES = frozenset({"ir.actions.server", "ir.actions.report"})
+
+# Held in the process, never in the context: a context is whatever the client
+# sent, and an admission is the server's word that a wrapper let a call through.
+_ADMISSIONS: contextvars.ContextVar[tuple] = contextvars.ContextVar(
+    "approval_admissions", default=()
+)
 
 
 class ApprovalBinding(models.Model):
@@ -1253,8 +1259,10 @@ class ApprovalBinding(models.Model):
                 records,
                 bindings,
                 method_name,
-                lambda runnable: origin(
-                    Binding._admit(runnable, method_name), *args, **kwargs
+                lambda runnable: Binding._run_admitted(
+                    runnable,
+                    method_name,
+                    lambda admitted: origin(admitted, *args, **kwargs),
                 ),
             )
 
@@ -1263,30 +1271,34 @@ class ApprovalBinding(models.Model):
         return guarded
 
     @api.model
-    def _admit(self, records, operation: str):
-        """Mark these records as let through `operation`'s own wrapper.
+    def _run_admitted(self, records, operation: str, call):
+        """Run `call(records)` with `records` let through `operation`'s own wrapper.
 
-        The ids are part of the mark: an operation that posts other records inside
-        the admitted call leaves those records to be checked on their own.
+        The ids are part of the admission: an operation that posts other records
+        inside the admitted call leaves those records to be checked on their own.
+        The admission lives on the transaction for the length of the call only.
         """
-        admitted = records.env.context.get(ADMITTED_CONTEXT_KEY, ())
-        return records.with_context(
-            **{
-                ADMITTED_CONTEXT_KEY: (
-                    *admitted,
-                    (records._name, operation, tuple(records.ids)),
-                )
-            }
+        frame = (
+            records.env.transaction,
+            records._name,
+            operation,
+            frozenset(records.ids),
         )
+        token = _ADMISSIONS.set((*_ADMISSIONS.get(), frame))
+        try:
+            return call(records)
+        finally:
+            _ADMISSIONS.reset(token)
 
     @api.model
     def _get_admitted_ids(self, records, operation: str) -> set[int]:
+        transaction = records.env.transaction
         return {
             record_id
-            for model_name, admitted_operation, ids in records.env.context.get(
-                ADMITTED_CONTEXT_KEY, ()
-            )
-            if model_name == records._name and admitted_operation == operation
+            for admitted_in, model_name, admitted_operation, ids in _ADMISSIONS.get()
+            if admitted_in is transaction
+            and model_name == records._name
+            and admitted_operation == operation
             for record_id in ids
         }
 

@@ -75,9 +75,20 @@ class TestBindingCheckpoint(ApprovalCommon):
 
     def test_admitting_one_record_does_not_admit_another(self):
         other = self._document("Posted inside an admitted call")
-        admitted = self.env["approval.binding"]._admit(
-            self.doc, "action_record_operation"
+        with self.assertRaises(UserError):
+            self.env["approval.binding"]._run_admitted(
+                self.doc,
+                "action_record_operation",
+                lambda admitted: other.action_record_operation_from_list(),
+            )
+        self.assertEqual(other.operation_count, 0)
+
+    def test_a_forged_admission_in_the_context_admits_nothing(self):
+        forged = self.doc.with_context(
+            approval_binding_admitted=[
+                ["approval.test.document", "action_record_operation", [self.doc.id]]
+            ]
         )
         with self.assertRaises(UserError):
-            other.with_env(admitted.env).action_record_operation_from_list()
-        self.assertEqual(other.operation_count, 0)
+            forged.action_record_operation_from_list()
+        self.assertEqual(self.doc.operation_count, 0)

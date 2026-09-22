@@ -354,6 +354,15 @@ class ApprovalRequestAccess(models.Model):
                 )
 
     def _check_business_rules_unlink(self) -> None:
+        if decided := self._get_requests_with_decision_log():
+            trace.REFUSAL.event("unlink_with_decision_log", requests=decided.ids)
+            raise ValidationError(
+                self.env._(
+                    "Cannot delete %(names)s: decisions were recorded about it, and "
+                    "a request with a decision history stays on file.",
+                    names=", ".join(request._label() for request in decided),
+                ),
+            )
         for request in self:
             if request.state != "new":
                 trace.REFUSAL.event(
@@ -370,6 +379,14 @@ class ApprovalRequestAccess(models.Model):
                         state=request.state,
                     ),
                 )
+
+    def _get_requests_with_decision_log(self):
+        logged = (
+            self.env["approval.decision.log"]
+            .sudo()
+            ._read_group([("request_id", "in", self.ids)], ["request_id"])
+        )
+        return self.browse(request.id for (request,) in logged)
 
     def _skip_check_access(self) -> bool:
         skipped = self.env.su or is_approval_manager(self.env)

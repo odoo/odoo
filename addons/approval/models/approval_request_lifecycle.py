@@ -1640,7 +1640,7 @@ class ApprovalRequestLifecycle(models.Model):
             )
             return None
         try:
-            source_doc = self.env[self.res_model].browse(self.res_id)
+            source_doc = self.env[self.res_model].sudo().browse(self.res_id)
             mixin_cls = self.env.registry["mixin.approval"]
             subjects_cls = self.env.registry["mixin.approval.subjects"]
         except KeyError:
@@ -1665,6 +1665,15 @@ class ApprovalRequestLifecycle(models.Model):
                 "no_notifiable_source",
                 request=self.id,
                 why="not_an_adopter",
+                model=self.res_model,
+                res_id=self.res_id,
+            )
+            return None
+        if not source_doc.exists():
+            trace.SYNC.event(
+                "no_notifiable_source",
+                request=self.id,
+                why="gone",
                 model=self.res_model,
                 res_id=self.res_id,
             )

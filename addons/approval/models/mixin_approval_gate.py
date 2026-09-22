@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import SUPERUSER_ID, fields, models
 from odoo.exceptions import UserError
 
 from . import approval_trace as trace
@@ -16,7 +16,7 @@ class MixinApprovalGate(models.AbstractModel):
 
     def _run_through_approval(self, operation, run):
         ready, need_approval = self._split_for_approval(operation)
-        result = run(ready._admitted_for(operation)) if ready else True
+        result = ready._run_admitted(operation, run) if ready else True
         if not need_approval:
             return result
         trace.MIXIN.note(
@@ -222,8 +222,8 @@ class MixinApprovalGate(models.AbstractModel):
                 )
             )
 
-    def _admitted_for(self, operation):
-        return self.env["approval.binding"]._admit(self, operation)
+    def _run_admitted(self, operation, run):
+        return self.env["approval.binding"]._run_admitted(self, operation, run)
 
     def _get_admitted_ids(self, operation):
         return self.env["approval.binding"]._get_admitted_ids(self, operation)
@@ -297,8 +297,17 @@ class MixinApprovalGate(models.AbstractModel):
             return
         trace.MIXIN.note("operation_on_approval", record=self, operation=operation)
         request.date_operation_run = fields.Datetime.now()
+        owner = request.request_owner_id
+        document = self.with_user(owner).with_context(
+            allowed_company_ids=owner.company_ids.ids
+        )
+        company = self["company_id"] if "company_id" in self._fields else None
+        if company and company in owner.company_ids:
+            document = document.with_company(company)
+        if owner.id == SUPERUSER_ID:
+            document = document.sudo()
         with self._approval_side_effect(self._get_operation_failure_note(operation)):
-            getattr(self.sudo(), operation)()
+            getattr(document, operation)()
 
     def _get_operation_failure_note(self, operation):
         self.check_singleton()

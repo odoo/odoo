@@ -51,6 +51,17 @@ class TestSubjectIntegrity(ApprovalCommon):
         document.sudo().write({"partner_id": self.other_partner.id})
         self.assertEqual(document.approval_state, "new")
 
+    def test_no_context_key_keeps_an_approval_across_a_change(self):
+        document = self._approved()
+        document.with_context(approval_keep_on_subject_change=True).write(
+            {"partner_id": self.other_partner.id}
+        )
+        self.assertEqual(
+            document.approval_state,
+            "new",
+            "a client-sent context is no authority over what was approved",
+        )
+
     def test_writing_the_approved_values_back_changes_nothing(self):
         document = self._approved()
         document.write({"amount": 100.0, "partner_id": self.partner.id})
