@@ -149,6 +149,9 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
             value = record[field.name]
             if field.is_boolean:
                 return value
+            if field.is_many2one:
+                # the SQL tier aggregates the column, which holds the id
+                return value.id or None
             return None if value is False else value
 
         def present(records: BaseModel) -> list:

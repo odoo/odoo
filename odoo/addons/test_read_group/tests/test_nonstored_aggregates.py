@@ -57,6 +57,36 @@ class TestNonStoredAggregates(common.TransactionCase):
         )
         self.assertEqual((total, biggest), (30, 16))
 
+    def test_many2one_folds_to_ids(self):
+        # the SQL tier aggregates a many2one column, which holds ids; the fold
+        # must too, or the web client receives "res.currency(33,)" where a
+        # monetary list asks `currency_id:array_agg_distinct` of a group
+        first, second = self.env["test_read_group.user"].create(
+            [{"name": "first"}, {"name": "second"}]
+        )
+        self.tasks[0].user_ids = second
+        self.tasks[1].user_ids = first
+        self.tasks[2].user_ids = first
+        groups = self.Task._read_group(
+            self.domain,
+            ["key"],
+            [
+                "lead_user_id:array_agg_distinct",
+                "lead_user_id:min",
+                "lead_user_id:max",
+                "lead_user_id:count_distinct",
+            ],
+            order="key",
+        )
+        self.assertEqual(
+            groups,
+            [
+                ("x", [first.id, second.id], first.id, second.id, 2),
+                ("y", [first.id, None], first.id, first.id, 1),
+                ("z", [None], False, False, 0),
+            ],
+        )
+
     def test_an_empty_group_folds_to_the_empty_value(self):
         # the aggregate of a group whose records have no value is the aggregate's
         # empty value, as a column of NULLs gives
