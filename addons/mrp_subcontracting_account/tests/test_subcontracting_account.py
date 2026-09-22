@@ -71,6 +71,9 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
             # Receipt from subcontractor
             {'account_id': self.account_production.id,    'product_id': self.finished.id,    'debit': 0.0,   'credit': 60.0},
             {'account_id': self.account_stock_valuation.id,   'product_id': self.finished.id,    'debit': 60.0, 'credit': 0.0},
+            # _should_create_account_move
+            {'account_id': self.account_stock_valuation.id,   'product_id': self.finished.id,    'debit': 30.0, 'credit': 0.0},
+            {'account_id': self.account_stock_variation.id,   'product_id': self.finished.id,    'debit': 0.0, 'credit': 30.0},
         ])
 
         self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
@@ -276,6 +279,9 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
             {'account_id': self.account_stock_valuation.id,   'product_id': self.comp1.id,       'debit': 0.0,   'credit': 10.0},
             {'account_id': self.account_stock_valuation.id,   'product_id': self.comp2.id,       'debit': 0.0,   'credit': 20.0},
             {'account_id': self.account_stock_valuation.id,   'product_id': self.finished.id,    'debit': 40.0,  'credit': 0.0},
+            # _should_create_account_move
+            {'account_id': self.account_stock_valuation.id,   'product_id': self.finished.id,    'debit': 15.0,  'credit': 0.0},
+            {'account_id': self.account_stock_variation.id,   'product_id': self.finished.id,    'debit': 0.0,  'credit': 15.0},
         ])
 
     def test_subcontract_without_prod_account(self):
