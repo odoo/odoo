@@ -1789,7 +1789,22 @@ class TestAnyDomainSearchContext(TransactionCase):
     built from the model's ir.rule records.
     """
 
+    def setUp(self):
+        super().setUp()
+
+        self.restricted_user = self.env['res.users'].create({
+            'name': 'Restricted user',
+            'login': 'test_any_domain_search_context_user',
+            'group_ids': [Command.set([self.env.ref('base.group_user').id])],
+        })
+
     def test_any_domain_search_context_narrows_scan(self):
+        with self.subTest("res_access_read referenced"):
+            self._test_any_domain_search_context_narrows_scan([('attachment_id.res_access_read', '=', True)])
+        with self.subTest("access operator"):
+            self._test_any_domain_search_context_narrows_scan([('attachment_id', 'access', 'read')])
+
+    def _test_any_domain_search_context_narrows_scan(self, input_domain):
         partner = self.env.ref('base.main_partner')
         target = self.env['ir.attachment'].create({
             'name': 'target', 'res_model': 'res.partner', 'res_id': partner.id, 'raw': b'x',
@@ -1803,15 +1818,9 @@ class TestAnyDomainSearchContext(TransactionCase):
         self.env['ir.access'].create({
             'name': 'test any domain search context',
             'model_id': model_id,
-            'domain': "[('attachment_id.res_access_read', '=', True)]",
+            'domain': str(input_domain),
             'group_id': self.env.ref('base.group_user').id,
             'operation': 'r',
-        })
-
-        restricted_user = self.env['res.users'].create({
-            'name': 'Restricted user',
-            'login': 'test_any_domain_search_context_user',
-            'group_ids': [Command.set([self.env.ref('base.group_user').id])],
         })
 
         Attachment = self.registry['ir.attachment']
@@ -1822,14 +1831,15 @@ class TestAnyDomainSearchContext(TransactionCase):
             self.assertFalse(domain.is_true(), "search_domain is not constrained enough")
             return original_res_access(s, operation, domain_operator)
 
-        self.enterContext(patch.object(Attachment, '_search_res_access', _search_res_access))
-        result = link.with_user(restricted_user).search(
-            [('attachment_id', 'in', [target.id])],
-        )
-        self.assertEqual(result, link)
+        with patch.object(Attachment, '_search_res_access', _search_res_access):
+            restricted_user = self.restricted_user
+            result = link.with_user(restricted_user).search(
+                [('attachment_id', 'in', [target.id])],
+            )
+            self.assertEqual(result, link)
 
-        link.invalidate_model()
-        link.with_user(restricted_user).attachment_id  # just read it
+            link.invalidate_model()
+            link.with_user(restricted_user).attachment_id  # just read it
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
