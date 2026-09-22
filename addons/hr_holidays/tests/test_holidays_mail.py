@@ -76,3 +76,64 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
                     len(admin_emails), 1, "Mitchell Admin should receive an email"
                 )
                 self.assertTrue("has been accepted" in admin_emails.preview)
+
+    def test_notify_officers_when_the_type_asks_for_it(self):
+        """A type flagged to notify officers reaches every officer of the
+        employee's company, without anyone maintaining a list."""
+        leave_type = self.env["hr.leave.type"].create(
+            {
+                "name": "Notifying Time Off",
+                "requires_allocation": False,
+                "notify_time_off_officers": True,
+            }
+        )
+        with self.mock_mail_gateway():
+            self.env["hr.leave"].create(
+                {
+                    "name": "Someone should hear about this",
+                    "holiday_status_id": leave_type.id,
+                    "employee_id": self.employee_emp_id,
+                    "request_date_from": date(2026, 5, 6),
+                    "request_date_to": date(2026, 5, 6),
+                }
+            )
+        notifications = self._new_mails.filtered(
+            lambda mail: "New Time Off Request" in (mail.subject or "")
+        )
+        self.assertTrue(notifications, "the officers were not notified")
+        officers = self.env.ref(
+            "hr_holidays.group_hr_holidays_user"
+        ).all_user_ids.filtered(
+            lambda user: self.employee_emp.company_id in user.company_ids
+        )
+        self.assertTrue(officers, "sanity: the fixture has officers to notify")
+        self.assertEqual(
+            notifications.recipient_ids,
+            officers.partner_id,
+            "every officer of the employee's company should be reached, and no one else",
+        )
+
+    def test_no_officer_notification_unless_the_type_asks(self):
+        """The flag is off by default, so nothing changes for existing types."""
+        leave_type = self.env["hr.leave.type"].create(
+            {"name": "Quiet Time Off", "requires_allocation": False}
+        )
+        self.assertFalse(
+            leave_type.notify_time_off_officers, "the flag must default to off"
+        )
+        with self.mock_mail_gateway():
+            self.env["hr.leave"].create(
+                {
+                    "name": "Nobody needs to hear about this",
+                    "holiday_status_id": leave_type.id,
+                    "employee_id": self.employee_emp_id,
+                    "request_date_from": date(2026, 5, 7),
+                    "request_date_to": date(2026, 5, 7),
+                }
+            )
+        self.assertFalse(
+            self._new_mails.filtered(
+                lambda mail: "New Time Off Request" in (mail.subject or "")
+            ),
+            "no officer notification should be sent when the flag is off",
+        )

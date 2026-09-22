@@ -1365,6 +1365,11 @@ Versions:
         for partner_ids, leaves in leaves_by_audience.items():
             leaves.message_subscribe(partner_ids=list(partner_ids))
 
+        to_notify = self.filtered(
+            lambda leave: leave.holiday_status_id.notify_time_off_officers
+        )
+        to_notify._notify_time_off_officers()
+
         automatic = self.filtered(
             lambda leave: leave.validation_type == "no_validation"
         )
@@ -2110,6 +2115,67 @@ is approved, validated or refused."
                     partner_ids=[recipient],
                     subject=_("Your Time Off"),
                 )
+
+    def _notify_time_off_officers(self):
+        """Notify every time off officer of the employee's company.
+
+        The recipients come from the officer group rather than from a list
+        kept on the leave type, so appointing an officer is enough for them
+        to start receiving these: nothing has to be edited type by type.
+        """
+        officers = self.env.ref("hr_holidays.group_hr_holidays_user").all_user_ids
+        for leave in self:
+            recipients = officers.filtered_domain(
+                [("company_ids", "in", leave.employee_company_id.ids)]
+            )
+            if not recipients:
+                continue
+            body = Markup(
+                "<p>%(intro)s</p>"
+                "<ul>"
+                "<li><strong>%(employee_label)s:</strong> %(employee)s</li>"
+                "<li><strong>%(type_label)s:</strong> %(type)s</li>"
+                "<li><strong>%(period_label)s:</strong> %(date_from)s to %(date_to)s</li>"
+                "<li><strong>%(duration_label)s:</strong> %(duration)s</li>"
+                "</ul>"
+            ) % {
+                "intro": _("A new time off request has been submitted."),
+                "employee_label": _("Employee"),
+                "employee": leave.employee_id.name,
+                "type_label": _("Type"),
+                "type": leave.holiday_status_id.name,
+                "period_label": _("Period"),
+                "date_from": format_date(self.env, leave.request_date_from),
+                "date_to": format_date(self.env, leave.request_date_to),
+                "duration_label": _("Duration"),
+                "duration": leave.duration_display or "",
+            }
+            leave.message_notify(
+                partner_ids=recipients.partner_id.ids,
+                subject=_(
+                    "New Time Off Request: %(leave_type)s",
+                    leave_type=leave.holiday_status_id.name,
+                ),
+                body=body,
+                email_layout_xmlid="mail.mail_notification_layout",
+            )
+
+    def _track_subtype(self, init_values):
+        if "state" in init_values and self.state == "validate":
+            leave_notif_subtype = self.holiday_status_id.leave_notif_subtype_id
+            return leave_notif_subtype or self.env.ref("hr_holidays.mt_leave")
+        return super()._track_subtype(init_values)
+
+    def message_subscribe(self, partner_ids=None, subtype_ids=None):
+        # due to record rule can not allow to add follower and mention on validated leave so subscribe through sudo
+        if any(holiday.state in ["validate", "validate1"] for holiday in self):
+            self.check_access("read")
+            return super(HrLeave, self.sudo()).message_subscribe(
+                partner_ids=partner_ids, subtype_ids=subtype_ids
+            )
+        return super().message_subscribe(
+            partner_ids=partner_ids, subtype_ids=subtype_ids
+        )
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
