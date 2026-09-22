@@ -7,6 +7,7 @@ from collections import defaultdict
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, RedirectWarning
 from odoo.tools import SQL
+from odoo.fields import Domain
 from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING, OPMAP
 
 PROJECT_TASK_READABLE_FIELDS = {
@@ -22,13 +23,16 @@ PROJECT_TASK_READABLE_FIELDS = {
     'subtask_effective_hours',
     'subtask_allocated_hours',
     'show_portal_timesheets',
-    'timesheet_ids',
     'total_hours_spent',
 }
 
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
+
+    @api.model
+    def _get_portal_timesheet_domain(self):
+        return Domain('project_id', '!=', False)
 
     project_id = fields.Many2one(domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id), ('is_internal_project', '=', False), ('is_template', 'in', [is_template, False])]")
     analytic_account_active = fields.Boolean("Active Analytic Account", related='project_id.analytic_account_active', export_string_translation=False)
@@ -44,7 +48,7 @@ class ProjectTask(models.Model):
     overtime = fields.Float(compute='_compute_progress_hours', store=True)
     subtask_effective_hours = fields.Float("Time Spent on Sub-tasks", compute='_compute_subtask_effective_hours', recursive=True, store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets', export_string_translation=False)
-    portal_timesheet_ids = fields.One2many('account.analytic.line', 'task_id', export_string_translation=False)
+    portal_timesheet_ids = fields.One2many('account.analytic.line', 'task_id', domain=lambda self: self._get_portal_timesheet_domain(), export_string_translation=False)
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=lambda self: self._uom_in_days(), export_string_translation=False)
     display_name = fields.Char(help="""Use these keywords in the title to set new tasks:\n
         30h Allocate 30 hours to the task
