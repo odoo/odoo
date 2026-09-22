@@ -4,6 +4,46 @@ from odoo.fields import Command
 from odoo.tests import new_test_user
 from odoo.tests.common import TransactionCase
 
+from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
+
+
+class TestLiveChatResUsersSessionLogin(TestImLivechatCommon):
+    def test_join_livechat_sessions_from_guest_keeps_chat_window_open(self):
+        portal_user = new_test_user(
+            self.env, login="portal_user", groups="base.group_portal",
+        )
+        guest = self.env["mail.guest"].create({"name": "Visitor"})
+        channel_id = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {"channel_id": self.livechat_channel.id},
+            cookies={guest._cookie_name: guest._format_auth_cookie()},
+        )["channel_id"]
+        channel = self.env["discuss.channel"].browse(channel_id)
+        guest_member = channel.channel_member_ids.filtered(lambda m: m.guest_id == guest)
+        with self.assertBus(
+            [
+                BusResult(channel),
+                BusResult(portal_user, "discuss.channel/joined"),
+                BusResult(channel),
+                BusResult((channel, "internal_users")),
+                BusResult(
+                    channel,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel": [{"id": channel.id, "member_count": 2}],
+                        "discuss.channel.member": [{"_DELETE": True, "id": guest_member.id}],
+                    },
+                ),
+                BusResult(channel, "discuss.channel/new_message"),
+            ],
+        ):
+            portal_user.with_context(guest=guest)._join_livechat_sessions_from_guest(guest)
+        visitor_member = channel.channel_member_ids.filtered(
+            lambda m: m.livechat_member_type == "visitor",
+        )
+        self.assertEqual(visitor_member.partner_id, portal_user.partner_id)
+
 
 class TestLiveChatResUsers(TransactionCase):
 
