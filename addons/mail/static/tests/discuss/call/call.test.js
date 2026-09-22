@@ -48,7 +48,6 @@ import {
     test,
 } from "@odoo/hoot";
 import { press, waitUntil } from "@odoo/hoot-dom";
-import { markup } from "@odoo/owl";
 import {
     Command,
     getService,
@@ -2083,7 +2082,18 @@ test("active call with a recording shows a processing link", async () => {
         channel_type: "channel",
         name: "General",
     });
-    const callHistoryId = 42;
+    const messageId = pyEnv["mail.message"].create({
+        body: '<div data-oe-type="call" class="o_mail_notification"></div>',
+        message_type: "notification",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const callHistoryId = pyEnv["discuss.call.history"].create({
+        channel_id: channelId,
+        has_recording: true,
+        start_call_message_id: messageId,
+        start_dt: "2026-01-01 10:00:00",
+    });
     mockService("action", {
         doAction(action) {
             if (action.res_model !== "discuss.call.history") {
@@ -2100,21 +2110,6 @@ test("active call with a recording shows a processing link", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    const store = getService("mail.store");
-    const channel = await store["discuss.channel"].getOrFetch(channelId);
-    const thread = channel.thread;
-    thread.setAsDiscussThread(false);
-    const activeCallMessage = store["mail.message"].insert({
-        body: markup`<div data-oe-type="call" class="o_mail_notification"></div>`,
-        call_history_ids: [{ id: callHistoryId, has_recording: true }],
-        date: deserializeDateTime("2026-01-01 10:00:00"),
-        id: 42,
-        message_type: "notification",
-        model: "discuss.channel",
-        res_id: channelId,
-        thread,
-    });
-    thread.addOrReplaceMessage(activeCallMessage);
     await contains(
         ".o-mail-NotificationMessage div:text('A recording is being processed and will be available here.')",
         { count: 1 }
