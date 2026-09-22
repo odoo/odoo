@@ -146,7 +146,7 @@ export class ImStatus extends Component {
             case "away":
                 return "o-yellow";
             case "busy":
-                return "text-danger";
+                return "o-text-red";
             case "offline":
                 return "text-700 opacity-75";
             default:

@@ -10,7 +10,7 @@
                 <hr class="my-1"/>
                 <DropdownItem class="{ 'active': this.store.self_user.imStatusUI === 'away' }" onSelected="() => this.setManualImStatus('away')"><i class="oi o-yellow me-1" data-icon="contrast" title="Away" role="img"/> Away</DropdownItem>
                 <DropdownItem class="{ 'active': this.store.self_user.imStatusUI === 'busy' }" onSelected="() => this.setManualImStatus('busy')">
-                    <i class="oi oi-filled text-danger me-1" data-icon="remove_circle" title="Busy" role="img"/> Do Not Disturb
+                    <i class="oi oi-filled o-text-red me-1" data-icon="remove_circle" title="Busy" role="img"/> Do Not Disturb
                     <div class="small text-muted">You will not receive any notifications</div>
                 </DropdownItem>
                 <DropdownItem class="{ 'active': this.store.self_user.imStatusUI === 'offline' }" onSelected="() => this.setManualImStatus('offline')"><i class="oi text-700 opacity-75 me-1" data-icon="circle" title="Offline" role="img"/> Offline</DropdownItem>
