@@ -804,7 +804,14 @@ class AccountAccount(models.Model):
     def _order_to_sql(self, table, order: str, reverse=False) -> SQL:
         sql_order = super()._order_to_sql(table, order, reverse)
 
-        if order == self._order and (preferred_account_type := self.env.context.get('preferred_account_type')):
+        preferred_account_type = self.env.context.get('preferred_account_type')
+        if not preferred_account_type:
+            # In the case of the bank rec widget, in the allocate amouts view, we want to be able to have a preferred_account_type
+            move_id = self.env['account.move'].browse(self.env.context.get('move_id')).exists()
+            if move_id and (statement_line := move_id.statement_line_id):
+                preferred_account_type = 'income' if statement_line.amount > 0 else 'expense'
+
+        if order == self._order and preferred_account_type:
             sql_order = SQL(
                 "%(field_sql)s = %(preferred_account_type)s %(direction)s, %(base_order)s",
                 field_sql=table.account_type,
