@@ -433,3 +433,61 @@ class TestProductMargin(AccountTestInvoicingCommon):
         # 4. []
         res_all = result[3]
         self.assertEqual(res_all[0], (94200, 70500))
+
+    def test_margin_figures_need_invoice_read_access(self):
+        self.invoices.action_post()
+        turnover = (20.0 * 750.00) + (10.0 * 550.00)
+        plain = new_test_user(
+            self.env, login="product_margin_plain", groups="base.group_user"
+        )
+        with self.assertRaises(AccessError):
+            self.ipad.with_user(plain).read(["turnover"])
+        with self.assertRaises(AccessError):
+            self.env["product.product"].with_user(plain)._read_group(
+                [("id", "=", self.ipad.id)], aggregates=["total_margin:sum"]
+            )
+        for group in (
+            "account.group_account_invoice",
+            "account.group_account_readonly",
+        ):
+            reader = new_test_user(
+                self.env, login=f"product_margin_{group.split('.')[1]}", groups=group
+            )
+            [values] = self.ipad.with_user(reader).read(["turnover"])
+            self.assertEqual(values["turnover"], turnover, group)
+
+    def test_margin_figures_never_come_from_another_company(self):
+        other_company = self.setup_other_company()["company"]
+        other_invoice = (
+            self.env["account.move"]
+            .with_company(other_company)
+            .create(
+                {
+                    "move_type": "out_invoice",
+                    "partner_id": self.customer.id,
+                    "invoice_date": self.invoices[0].date,
+                    "invoice_line_ids": [
+                        Command.create(
+                            {
+                                "product_id": self.ipad.id,
+                                "quantity": 3.0,
+                                "price_unit": 100.0,
+                            }
+                        )
+                    ],
+                }
+            )
+        )
+        other_invoice.action_post()
+        self.invoices.action_post()
+        accountant = new_test_user(
+            self.env,
+            login="product_margin_one_company",
+            groups="account.group_account_invoice",
+            company_id=self.env.company.id,
+        )
+        product = self.ipad.with_user(accountant)
+        with self.assertWarns(DeprecationWarning):
+            forged = product.with_context(force_company=other_company.id)
+        self.assertEqual(forged.sale_num_invoiced, 30.0)
+        self.assertEqual(forged.turnover, (20.0 * 750.00) + (10.0 * 550.00))
