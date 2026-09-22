@@ -9,6 +9,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs import backoff, redact
 from odoo.modules.registry import Registry
+from odoo.service.transaction import retrying
 from odoo.tools.constants import STREAM_CHANNEL
 
 from ..tools import stream_protocol, stream_runtime
@@ -420,14 +421,27 @@ class IntegrationStream(models.Model):
 
     @staticmethod
     def _record_frame(db_name, stream_id, payload, meta):
+        IntegrationStream._on_wire(
+            db_name,
+            stream_id,
+            lambda stream: stream._handle_frame(payload, dict(meta or {})),
+        )
+
+    @staticmethod
+    def _on_wire(db_name, stream_id, act):
+        # The wire's thread writes beside the sweep's own transaction, which
+        # may still hold the row it just dialled: a serialization failure is
+        # retried, as a request's would be.
         registry = Registry(db_name)
         with registry.cursor() as cr:
             env = api.Environment(cr, SUPERUSER_ID, {})
-            stream = env["integration.stream"].browse(stream_id).exists()
-            if not stream:
-                return
-            stream._handle_frame(payload, dict(meta or {}))
-            cr.commit()
+
+            def work():
+                stream = env["integration.stream"].browse(stream_id).exists()
+                if stream:
+                    act(stream)
+
+            retrying(work, env)
 
     def _handle_frame(self, payload, meta):
         self.check_singleton()
@@ -458,13 +472,9 @@ class IntegrationStream(models.Model):
 
     @staticmethod
     def _record_state(db_name, stream_id, state, message):
-        registry = Registry(db_name)
-        with registry.cursor() as cr:
-            env = api.Environment(cr, SUPERUSER_ID, {})
-            stream = env["integration.stream"].browse(stream_id).exists()
-            if stream:
-                stream._note_state(state, message)
-                cr.commit()
+        IntegrationStream._on_wire(
+            db_name, stream_id, lambda stream: stream._note_state(state, message)
+        )
 
     def _note_state(self, state, message):
         self.check_singleton()
