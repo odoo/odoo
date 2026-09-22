@@ -179,6 +179,18 @@ class Message(models.Model):
     canned_response_ids = fields.One2many('mail.shortcode', 'message_ids', string="Canned Responses", store=False)
     reaction_ids = fields.One2many('mail.message.reaction', 'message_id', string="Reactions", groups="base.group_system")
 
+    def _compute_display_name(self):
+        def has_read_access(record):
+            try:
+                record.check_access_rights('read')
+                record.check_access_rule('read')
+                return True
+            except AccessError:
+                return False
+        inaccessible_records = self.sudo(False).filtered(lambda r: not has_read_access(r))
+        inaccessible_records.display_name = _('Restricted Record')
+        super(Message, self - inaccessible_records)._compute_display_name()
+
     @api.depends('body', 'subject')
     def _compute_description(self):
         for message in self:
