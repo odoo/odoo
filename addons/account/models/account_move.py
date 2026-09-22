@@ -1685,6 +1685,8 @@ class AccountMove(models.Model):
         'invoice_line_ids.tax_line_id',
         'invoice_line_ids.price_total',
         'invoice_line_ids.price_subtotal',
+        'line_ids.amount_currency',
+        'line_ids.balance',
         'invoice_payment_term_id',
         'partner_id',
         'currency_id',
@@ -3093,6 +3095,16 @@ class AccountMove(models.Model):
             elif field_has_changed(moves_values_before, move, 'invoice_currency_rate'):
                 # Changing the rate should preserve the tax amounts in foreign currency but reapply the currency rate.
                 round_from_tax_lines = 'reapply_currency_rate'
+            elif (
+                'is_tax_computed_externally' in move._fields
+                and move.is_tax_computed_externally
+            ):
+                continue
+            elif (
+                any_field_has_changed(move_tax_lines_values_before, tax_lines, fields=['amount_currency', 'balance'])
+                and not any_field_has_changed(move_base_lines_values_before, base_lines, fields=['amount_currency', 'balance'])
+            ):
+                round_from_tax_lines = True
             else:
                 continue
 
