@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="menu_device_root"
+        name="Remote"
+        sequence="80"
+        groups="group_device_user"
+        web_icon="remote,static/description/icon.svg" />
+
+    <menuitem
+        id="menu_device_devices"
+        name="Devices"
+        parent="menu_device_root"
+        sequence="10" />
+
+    <menuitem
+        id="menu_device_device"
+        name="All Devices"
+        parent="menu_device_devices"
+        action="action_device_device"
+        sequence="10" />
+
+    <menuitem
+        id="menu_device_dashboard"
+        name="IoT Dashboard"
+        parent="menu_device_devices"
+        action="action_device_dashboard"
+        sequence="40" />
+
+    <menuitem
+        id="menu_device_data_analytics"
+        name="Data &amp; Analytics"
+        parent="menu_device_root"
+        sequence="20" />
+
+    <menuitem
+        id="menu_device_general_iot_analysis"
+        name="General IoT Analysis"
+        parent="menu_device_data_analytics"
+        sequence="20" />
+
+    <menuitem
+        id="menu_device_data_log_analysis"
+        name="Data Analysis"
+        parent="menu_device_general_iot_analysis"
+        action="action_device_data_log_report"
+        sequence="10" />
+
+    <menuitem
+        id="menu_device_data_volume_analysis"
+        name="Data Volume"
+        parent="menu_device_general_iot_analysis"
+        action="action_device_data_log_report_volume"
+        sequence="20" />
+
+    <menuitem
+        id="menu_device_device_activity_analysis"
+        name="Device Activity"
+        parent="menu_device_general_iot_analysis"
+        action="action_device_data_log_report_device"
+        sequence="30" />
+
+    <menuitem
+        id="menu_device_data_type_analysis"
+        name="Data Types"
+        parent="menu_device_general_iot_analysis"
+        action="action_device_data_log_report_type"
+        sequence="40" />
+
+    <menuitem
+        id="menu_device_gps_raw_data"
+        name="General IoT Raw Data"
+        parent="menu_device_data_analytics"
+        sequence="30" />
+
+    <menuitem
+        id="menu_device_data_log_log"
+        name="Data Logs"
+        parent="menu_device_gps_raw_data"
+        action="action_device_data_log"
+        sequence="10" />
+
+    <menuitem
+        id="menu_device_profileuration"
+        name="Configuration"
+        parent="menu_device_root"
+        sequence="100"
+        groups="group_device_manager" />
+
+    <menuitem
+        id="menu_device_kind"
+        name="Device Types"
+        parent="menu_device_profileuration"
+        action="device_kind_action"
+        sequence="100" />
+
+    <menuitem
+        id="menu_device_profile"
+        name="Device Configurations"
+        parent="menu_device_profileuration"
+        action="action_device_profile"
+        sequence="200" />
+
+</odoo>

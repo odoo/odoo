@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="demo_device_http_api_01" model="device.device">
+        <field name="name">Building Energy Monitor</field>
+        <field name="identifier">EM-BLDG-001</field>
+        <field name="config_id" ref="demo_config_http_api" />
+        <field name="device_category_id" ref="device_category_energy_monitor" />
+        <field name="comm_protocol">http</field>
+        <field name="endpoint">energy-monitor.local</field>
+        <field name="port">8080</field>
+        <field name="http_endpoint_path">/api/v1/readings</field>
+        <field
+            name="http_headers">{"Accept": "application/json", "X-API-Version": "1.0"}</field>
+        <field name="connection_state">disconnected</field>
+        <field name="location">Main Building - Electrical Room</field>
+        <field name="serial_number">SN-EM-2024-567</field>
+        <field name="firmware_version">4.2.1</field>
+        <field name="auto_reconnect_override">on</field>
+        <field name="is_demo" eval="True" />
+        <field
+            name="description">Real-time building energy consumption monitoring via REST API (PowerMetrics Inc. PM-EM-1000)</field>
+    </record>
+
+    <record id="demo_device_https_api_01" model="device.device">
+        <field name="name">Security Camera System</field>
+        <field name="identifier">CAM-SEC-001</field>
+        <field name="config_id" ref="demo_config_https_basic" />
+        <field name="device_category_id" ref="device_category_camera" />
+        <field name="comm_protocol">https</field>
+        <field name="endpoint">camera-system.example.com</field>
+        <field name="port">443</field>
+        <field name="http_endpoint_path">/api/v2/connection_state</field>
+        <field name="connection_state">disconnected</field>
+        <field name="location">Perimeter - North Entrance</field>
+        <field name="serial_number">SN-CAM-2024-890</field>
+        <field name="firmware_version">5.0.2</field>
+        <field name="hardware_version">v3.0</field>
+        <field name="auto_reconnect_override">on</field>
+        <field name="is_demo" eval="True" />
+        <field
+            name="description">4K security camera with motion detection and night vision (SecureVision Ltd. SV-CAM-4K-PRO)</field>
+    </record>
+
+    <record id="demo_device_generic_01" model="device.device">
+        <field name="name">Custom IoT Sensor Array</field>
+        <field name="identifier">IOT-CUSTOM-001</field>
+        <field name="config_id" ref="demo_config_http_simple" />
+        <field name="device_category_id" ref="device_category_generic" />
+        <field name="comm_protocol">http</field>
+        <field name="endpoint">192.168.1.50</field>
+        <field name="port">80</field>
+        <field name="http_endpoint_path">/data</field>
+        <field name="connection_state">disconnected</field>
+        <field name="location">R&amp;D Lab - Test Bench 3</field>
+        <field name="serial_number">SN-IOT-2024-999</field>
+        <field name="firmware_version">1.0.0-beta</field>
+        <field name="auto_reconnect_override">on</field>
+        <field name="is_demo" eval="True" />
+        <field
+            name="description">Custom IoT device array for R&amp;D experiments and prototyping (Custom Built ESP32-DevKit)</field>
+    </record>
+
+</odoo>

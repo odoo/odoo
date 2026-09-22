@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="module_category_device_device" model="ir.module.category">
+        <field name="name">Remote Devices</field>
+        <field name="description">Manage access to IoT and remote devices</field>
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="res_groups_privilege_device_device" model="res.groups.privilege">
+        <field name="name">Remote Devices</field>
+        <field name="category_id" ref="module_category_device_device" />
+    </record>
+
+    <record id="group_device_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="sequence" eval="10" />
+        <field name="privilege_id" ref="res_groups_privilege_device_device" />
+        <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]" />
+    </record>
+
+    <record id="group_device_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="sequence" eval="20" />
+        <field name="privilege_id" ref="res_groups_privilege_device_device" />
+        <field name="implied_ids" eval="[Command.link(ref('group_device_user'))]" />
+        <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]" />
+    </record>
+
+    <record id="device_device_company_rule" model="ir.rule">
+        <field name="name">Remote Device: multi-company</field>
+        <field name="model_id" ref="model_device_device" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="device_data_log_company_rule" model="ir.rule">
+        <field name="name">Remote Data Point: multi-company</field>
+        <field name="model_id" ref="model_device_data_log" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="device_data_log_report_company_rule" model="ir.rule">
+        <field name="name">Remote Data Log Report: multi-company</field>
+        <field name="model_id" ref="model_device_data_log_report" />
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+</odoo>

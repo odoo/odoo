@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="demo_config_http_api" model="device.profile">
+        <field name="name">HTTP REST API Configuration</field>
+        <field name="description">Configuration for HTTP/REST API devices</field>
+        <field name="protocol">http</field>
+        <field name="http_method">GET</field>
+        <field name="http_timeout">30</field>
+        <field name="auth_type">bearer</field>
+        <field name="auth_token">demo_api_token_123456789</field>
+        <field name="alert_on_disconnect" eval="True" />
+        <field name="disconnect_timeout">600</field>
+        <field name="data_retention_days">90</field>
+    </record>
+
+    <record id="demo_config_https_basic" model="device.profile">
+        <field name="name">HTTPS with Basic Auth</field>
+        <field
+            name="description">Secure HTTPS configuration for cameras and security devices</field>
+        <field name="protocol">https</field>
+        <field name="http_method">GET</field>
+        <field name="http_timeout">45</field>
+        <field name="auth_type">basic</field>
+        <field name="auth_username">camera_admin</field>
+        <field name="auth_password">secure_demo_pass</field>
+        <field name="alert_on_disconnect" eval="True" />
+        <field name="disconnect_timeout">900</field>
+        <field name="data_retention_days">180</field>
+    </record>
+
+    <record id="demo_config_http_simple" model="device.profile">
+        <field name="name">HTTP Simple Configuration</field>
+        <field
+            name="description">Simple HTTP configuration for local devices without authentication</field>
+        <field name="protocol">http</field>
+        <field name="http_method">GET</field>
+        <field name="http_timeout">20</field>
+        <field name="auth_type">none</field>
+        <field name="alert_on_disconnect" eval="False" />
+        <field name="data_retention_days">30</field>
+    </record>
+
+</odoo>

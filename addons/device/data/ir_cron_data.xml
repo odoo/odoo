@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="ir_cron_poll_devices" model="ir.cron">
+        <field name="name">Remote: Poll Devices</field>
+        <field name="model_id" ref="model_device_device" />
+        <field name="state">code</field>
+        <field name="code">model._cron_poll_devices()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="repeat_interval" eval="1" />
+        <field name="repeat_unit">minute</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="ir_cron_check_device_health" model="ir.cron">
+        <field name="name">Remote: Check Device Health</field>
+        <field name="model_id" ref="model_device_device" />
+        <field name="state">code</field>
+        <field name="code">model._cron_check_health()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="repeat_interval" eval="5" />
+        <field name="repeat_unit">minute</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="ir_cron_auto_reconnect" model="ir.cron">
+        <field name="name">Remote: Auto Reconnect</field>
+        <field name="model_id" ref="model_device_device" />
+        <field name="state">code</field>
+        <field name="code">model._cron_auto_reconnect()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="repeat_interval" eval="10" />
+        <field name="repeat_unit">minute</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="ir_cron_refresh_data_log_report" model="ir.cron">
+        <field name="name">Remote: Refresh Data Log Report</field>
+        <field name="model_id" ref="model_device_data_log_report" />
+        <field name="state">code</field>
+        <field name="code">model._cron_refresh_materialized_view()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="repeat_interval" eval="1" />
+        <field name="repeat_unit">hour</field>
+        <field name="active" eval="True" />
+    </record>
+
+</odoo>

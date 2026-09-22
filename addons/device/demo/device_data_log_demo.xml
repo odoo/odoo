@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="demo_data_energy_01" model="device.data.log">
+        <field name="device_id" ref="demo_device_http_api_01" />
+        <field name="data_type">json</field>
+        <field name="source">iot</field>
+        <field
+            name="raw_payload">{"total_kwh": 1234.56, "current_watts": 875, "voltage": 230, "frequency": 60}</field>
+        <field
+            name="timestamp"
+            eval="(datetime.now() - timedelta(hours=6)).strftime('%Y-%m-%d %H:%M:%S')" />
+    </record>
+
+    <record id="demo_data_energy_02" model="device.data.log">
+        <field name="device_id" ref="demo_device_http_api_01" />
+        <field name="data_type">json</field>
+        <field name="source">iot</field>
+        <field
+            name="raw_payload">{"total_kwh": 1235.12, "current_watts": 920, "voltage": 229, "frequency": 60}</field>
+        <field
+            name="timestamp"
+            eval="(datetime.now() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+    </record>
+
+</odoo>

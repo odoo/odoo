@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_device_data_log_report_search" model="ir.ui.view">
+        <field name="name">device.data.log.report.search</field>
+        <field name="model">device.data.log.report</field>
+        <field name="arch" type="xml">
+            <search string="Data Log Analysis">
+                <field name="device_id" />
+                <field name="device_category_id" />
+                <field name="config_id" />
+                <field name="data_type" />
+                <field name="source" />
+                <separator />
+                <filter name="filter_date" date="date" default_period="month" />
+                <filter
+                    name="filter_last_7_days"
+                    string="Last 7 Days"
+                    domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]" />
+                <filter
+                    name="filter_last_30_days"
+                    string="Last 30 Days"
+                    domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]" />
+                <separator />
+                <filter
+                    name="filter_json"
+                    string="JSON Data"
+                    domain="[('data_type', '=', 'json')]" />
+                <filter
+                    name="filter_numeric"
+                    string="Numeric Data"
+                    domain="[('data_type', '=', 'numeric')]" />
+                <filter
+                    name="filter_iot"
+                    string="IoT Source"
+                    domain="[('source', '=', 'iot')]" />
+                <filter
+                    name="filter_webhook"
+                    string="Webhook Source"
+                    domain="[('source', '=', 'webhook')]" />
+                <group>
+                    <filter
+                        name="group_by_device"
+                        string="Device"
+                        context="{'group_by': 'device_id'}" />
+                    <filter
+                        name="group_by_category"
+                        string="Device Category"
+                        context="{'group_by': 'device_category_id'}" />
+                    <filter
+                        name="group_by_config"
+                        string="Configuration"
+                        context="{'group_by': 'config_id'}" />
+                    <filter
+                        name="group_by_company"
+                        string="Company"
+                        context="{'group_by': 'company_id'}" />
+                    <separator />
+                    <filter
+                        name="group_by_data_type"
+                        string="Data Type"
+                        context="{'group_by': 'data_type'}" />
+                    <filter
+                        name="group_by_source"
+                        string="Source"
+                        context="{'group_by': 'source'}" />
+                    <separator />
+                    <filter
+                        name="group_by_date"
+                        string="Date"
+                        context="{'group_by': 'date'}" />
+                    <filter
+                        name="group_by_hour"
+                        string="Hour"
+                        context="{'group_by': 'hour'}" />
+                    <filter
+                        name="group_by_day_of_week"
+                        string="Day of Week"
+                        context="{'group_by': 'day_of_week'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_device_data_log_report_list" model="ir.ui.view">
+        <field name="name">device.data.log.report.list</field>
+        <field name="model">device.data.log.report</field>
+        <field name="arch" type="xml">
+            <list string="Data Log Analysis" create="false" delete="false">
+                <field name="date" />
+                <field name="hour" optional="show" />
+                <field name="device_id" />
+                <field name="device_category_id" optional="show" />
+                <field name="config_id" optional="hide" />
+                <field name="data_type" optional="show" />
+                <field name="source" optional="show" />
+                <field name="log_count" sum="Total Data Points" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_device_data_log_report_pivot" model="ir.ui.view">
+        <field name="name">device.data.log.report.pivot</field>
+        <field name="model">device.data.log.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Data Log Analysis" sample="1">
+                <field name="device_id" type="row" />
+                <field name="date" type="col" interval="month" />
+                <field name="log_count" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_device_data_log_report_graph_line" model="ir.ui.view">
+        <field name="name">device.data.log.report.graph.line</field>
+        <field name="model">device.data.log.report</field>
+        <field name="arch" type="xml">
+            <graph type="line" string="Data Volume Over Time" sample="1">
+                <field name="date" interval="day" />
+                <field name="log_count" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_device_data_log_report_graph_bar" model="ir.ui.view">
+        <field name="name">device.data.log.report.graph.bar</field>
+        <field name="model">device.data.log.report</field>
+        <field name="arch" type="xml">
+            <graph type="bar" string="Data Points by Device" sample="1" order="DESC">
+                <field name="device_id" />
+                <field name="log_count" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_device_data_log_report_graph_pie" model="ir.ui.view">
+        <field name="name">device.data.log.report.graph.pie</field>
+        <field name="model">device.data.log.report</field>
+        <field name="arch" type="xml">
+            <graph type="pie" string="Data Type Distribution" sample="1">
+                <field name="data_type" />
+                <field name="log_count" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_device_data_log_report_graph_source" model="ir.ui.view">
+        <field name="name">device.data.log.report.graph.source</field>
+        <field name="model">device.data.log.report</field>
+        <field name="arch" type="xml">
+            <graph type="pie" string="Data Source Distribution" sample="1">
+                <field name="source" />
+                <field name="log_count" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_device_data_log_report" model="ir.actions.act_window">
+        <field name="name">Data Analysis</field>
+        <field name="res_model">device.data.log.report</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="view_id" ref="view_device_data_log_report_graph_line" />
+        <field name="search_view_id" ref="view_device_data_log_report_search" />
+        <field
+            name="context">{
+            'search_default_filter_last_30_days': 1,
+            'search_default_group_by_device': 1,
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No IoT data logs found
+            </p>
+            <p> This report provides analytical insights into IoT device data including: <ul>
+                <li>Data volume trends over time</li>
+                <li>Data points distribution by device</li>
+                <li>Data type and source analysis</li>
+                <li>Hourly and daily patterns</li>
+                </ul>
+            </p>
+        </field>
+    </record>
+
+    <record id="action_device_data_log_report_volume" model="ir.actions.act_window">
+        <field name="name">Data Volume</field>
+        <field name="res_model">device.data.log.report</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="view_id" ref="view_device_data_log_report_graph_line" />
+        <field name="search_view_id" ref="view_device_data_log_report_search" />
+        <field
+            name="context">{
+            'search_default_filter_last_30_days': 1,
+            'search_default_group_by_date': 1,
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data volume to display
+            </p>
+            <p> Track data ingestion trends: <ul>
+                <li>Daily and hourly data volume</li>
+                <li>Peak data ingestion times</li>
+                <li>Anomaly detection in data flow</li>
+                </ul>
+            </p>
+        </field>
+    </record>
+
+    <record id="action_device_data_log_report_device" model="ir.actions.act_window">
+        <field name="name">Device Activity</field>
+        <field name="res_model">device.data.log.report</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="view_id" ref="view_device_data_log_report_graph_bar" />
+        <field name="search_view_id" ref="view_device_data_log_report_search" />
+        <field
+            name="context">{
+            'search_default_filter_last_30_days': 1,
+            'search_default_group_by_device': 1,
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No device activity to display
+            </p>
+            <p> Analyze device activity patterns: <ul>
+                <li>Data points per device</li>
+                <li>Most active devices</li>
+                <li>Device category comparisons</li>
+                </ul>
+            </p>
+        </field>
+    </record>
+
+    <record id="action_device_data_log_report_type" model="ir.actions.act_window">
+        <field name="name">Data Types</field>
+        <field name="res_model">device.data.log.report</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="view_id" ref="view_device_data_log_report_graph_pie" />
+        <field name="search_view_id" ref="view_device_data_log_report_search" />
+        <field
+            name="context">{
+            'search_default_filter_last_30_days': 1,
+            'search_default_group_by_data_type': 1,
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data type information available
+            </p>
+            <p> Understand your data composition: <ul>
+                <li>JSON vs Numeric vs Boolean vs Text</li>
+                <li>Data type trends over time</li>
+                <li>Device-specific data patterns</li>
+                </ul>
+            </p>
+        </field>
+    </record>
+
+</odoo>

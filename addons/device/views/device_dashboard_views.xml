@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="device_dashboard_kanban_view" model="ir.ui.view">
+        <field name="name">device.device.dashboard.kanban</field>
+        <field name="model">device.device</field>
+        <field name="priority" eval="32" />
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard o_device_device_kanban">
+                <field name="id" />
+                <field name="name" />
+                <field name="connection_state" />
+                <field name="comm_protocol" />
+                <field name="device_category_id" />
+                <field name="category_icon" />
+                <field name="category_color" />
+                <field name="imei" />
+                <field name="plate" />
+                <field name="log_count" />
+                <field name="log_last_id" />
+                <templates>
+                    <t t-name="card" t-if="!selection_mode">
+                        <div
+                            t-attf-class="o_device_device_card o_rd_state_#{record.connection_state.raw_value} o_rd_color_#{record.category_color.raw_value or 0}">
+                            <div class="o_rd_header">
+                                <div class="o_rd_type_icon">
+                                    <i
+                                        t-attf-class="fa #{record.category_icon.raw_value}"
+                                        t-att-title="record.device_category_id.value" />
+                                </div>
+                                <div class="o_rd_titles">
+                                    <div class="o_rd_name">
+                                        <field name="name" />
+                                    </div>
+                                    <div class="o_rd_protocol text-muted">
+                                        <i
+                                            class="fa fa-exchange me-1"
+                                            title="Protocol" />
+                                        <field name="comm_protocol" />
+                                    </div>
+                                </div>
+                                <span
+                                    t-attf-class="o_rd_status o_rd_status_#{record.connection_state.raw_value} align-self-start">
+                                    <field name="connection_state" />
+                                </span>
+                            </div>
+
+                            <div class="o_rd_meta text-muted">
+                                <div
+                                    class="o_rd_meta_row"
+                                    t-if="record.imei.raw_value and record.imei.raw_value !== record.name.raw_value">
+                                    <i class="fa fa-id-card" title="IMEI" role="img" aria-label="IMEI" /><span>IMEI: </span>
+                                    <field name="imei" />
+                                </div>
+                                <div
+                                    class="o_rd_meta_row"
+                                    t-if="record.plate.raw_value">
+                                    <i class="fa fa-car" title="License plate" role="img" aria-label="License plate" /><span>Placa: </span>
+                                    <field name="plate" />
+                                </div>
+                                <div
+                                    class="o_rd_meta_row"
+                                    t-if="record.log_count.raw_value">
+                                    <i
+                                        class="fa fa-database"
+                                        title="Data points"
+                                        role="img"
+                                        aria-label="Data points" />
+                                    <field name="log_count" /> data points (24h)
+                                </div>
+                            </div>
+
+                            <div class="o_rd_footer">
+                                <button
+                                    name="action_connect"
+                                    type="object"
+                                    invisible="connection_state == 'connected'"
+                                    class="btn btn-sm o_rd_btn_connect">
+                                    <i class="fa fa-plug me-1" />Connect
+                                </button>
+                                <button
+                                    name="action_disconnect"
+                                    type="object"
+                                    invisible="connection_state != 'connected'"
+                                    class="btn btn-sm btn-warning">
+                                    <i class="fa fa-chain-broken me-1" />Disconnect
+                                </button>
+                            </div>
+
+                            <div
+                                class="o_kanban_card_manage_pane dropdown-menu"
+                                role="menu">
+                                <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                <div class="dropdown-divider" />
+                                <a role="menuitem" name="action_connect" type="object" class="dropdown-item">Connect</a>
+                                <a role="menuitem" name="action_disconnect" type="object" class="dropdown-item">Disconnect</a>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="device_dashboard_graph_view" model="ir.ui.view">
+        <field name="name">device.device.dashboard.graph</field>
+        <field name="model">device.device</field>
+        <field name="priority" eval="32" />
+        <field name="arch" type="xml">
+            <graph type="pie" string="Device Distribution">
+                <field name="comm_protocol" type="row" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="device_dashboard_pivot_view" model="ir.ui.view">
+        <field name="name">device.device.dashboard.pivot</field>
+        <field name="model">device.device</field>
+        <field name="priority" eval="32" />
+        <field name="arch" type="xml">
+            <pivot string="Device Statistics">
+                <field name="connection_state" type="row" />
+                <field name="comm_protocol" type="col" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_device_dashboard" model="ir.actions.act_window">
+        <field name="name">IoT Dashboard</field>
+        <field name="res_model">device.device</field>
+        <field name="view_mode">kanban,graph,pivot</field>
+        <field name="search_view_id" ref="view_device_device_search" />
+        <field
+            name="context">{
+            'search_default_filter_connected': 1,
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                IoT Device Dashboard
+            </p>
+            <p> Monitor your connected IoT devices in real-time.<br /> View device status, protocol
+                distribution, and recent activity. </p>
+        </field>
+        <field
+            name="view_ids"
+            eval="[                 Command.clear(),                 Command.create({'view_mode': 'kanban', 'view_id': ref('device_dashboard_kanban_view')}),                 Command.create({'view_mode': 'graph', 'view_id': ref('device_dashboard_graph_view')}),                 Command.create({'view_mode': 'pivot', 'view_id': ref('device_dashboard_pivot_view')}),             ]" />
+    </record>
+
+</odoo>

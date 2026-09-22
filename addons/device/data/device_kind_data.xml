@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="device_category_camera" model="device.kind">
+        <field name="name">IP Camera</field>
+        <field name="code">ip_camera</field>
+        <field name="sequence" eval="50" />
+        <field name="icon">fa-video-camera</field>
+        <field name="color" eval="6" />
+        <field name="comm_protocol">http</field>
+        <field name="description">IP-based surveillance camera</field>
+        <field
+            name="capabilities">{"sensors": ["image", "motion"], "commands": ["snapshot",
+            "ptz_control"]}</field>
+    </record>
+
+    <record id="device_category_energy_monitor" model="device.kind">
+        <field name="name">Energy Monitor</field>
+        <field name="code">energy_monitor</field>
+        <field name="sequence" eval="60" />
+        <field name="icon">fa-bolt</field>
+        <field name="color" eval="7" />
+        <field name="comm_protocol">http</field>
+        <field name="description">Energy consumption monitoring device</field>
+        <field
+            name="capabilities">{"sensors": ["voltage", "current", "power", "energy"], "units":
+            {"voltage": "V", "current": "A", "power": "W", "energy": "kWh"}}</field>
+    </record>
+
+    <record id="device_category_generic" model="device.kind">
+        <field name="name">Generic Remote Device</field>
+        <field name="code">generic_remote</field>
+        <field name="sequence" eval="100" />
+        <field name="icon">fa-microchip</field>
+        <field name="color" eval="0" />
+        <field name="comm_protocol">http</field>
+        <field name="description">Generic Remote device with custom capabilities</field>
+        <field name="capabilities">{}</field>
+    </record>
+
+    <record id="device_category_gps" model="device.kind">
+        <field name="name">GPS Tracker</field>
+        <field name="code">gps_tracker</field>
+        <field name="sequence" eval="100" />
+        <field name="icon">fa-map-marker</field>
+        <field name="color" eval="0" />
+        <field name="disconnect_timeout_seconds" eval="3600" />
+        <field name="description">GPS tracking device</field>
+        <field
+            name="capabilities"
+            eval="{                 'gps_tracking': True,                 'geofencing': True,                 'speed_monitoring': True,                 'route_tracking': True,                 'position_history': True,                 'vehicle_telemetry': True,                 'ignition_detection': True,                 'battery_monitoring': True,             }" />
+    </record>
+
+    <record id="device_category_humidity_sensor" model="device.kind">
+        <field name="name">Humidity Sensor</field>
+        <field name="code">humidity_sensor</field>
+        <field name="sequence" eval="20" />
+        <field name="icon">fa-tint</field>
+        <field name="color" eval="1" />
+        <field name="description">Humidity monitoring sensor</field>
+        <field
+            name="capabilities">{"sensors": ["humidity"], "units": {"humidity": "%"}}</field>
+    </record>
+
+    <record id="device_category_industrial_plc" model="device.kind">
+        <field name="name">Industrial PLC</field>
+        <field name="code">industrial_plc</field>
+        <field name="sequence" eval="40" />
+        <field name="icon">fa-industry</field>
+        <field name="color" eval="2" />
+        <field
+            name="description">Programmable Logic Controller for industrial automation</field>
+        <field
+            name="capabilities">{"sensors": ["registers"], "actuators": ["coils"]}</field>
+    </record>
+
+    <record id="device_category_smart_switch" model="device.kind">
+        <field name="name">Smart Switch</field>
+        <field name="code">smart_switch</field>
+        <field name="sequence" eval="30" />
+        <field name="icon">fa-toggle-on</field>
+        <field name="color" eval="4" />
+        <field name="description">Smart on/off switch with remote control</field>
+        <field
+            name="capabilities">{"actuators": ["switch"], "sensors": ["state", "power"],
+            "commands": ["turn_on", "turn_off", "toggle"]}</field>
+    </record>
+
+    <record id="device_category_temperature_sensor" model="device.kind">
+        <field name="name">Temperature Sensor</field>
+        <field name="code">temp_sensor</field>
+        <field name="sequence" eval="10" />
+        <field name="icon">fa-thermometer-half</field>
+        <field name="color" eval="3" />
+        <field
+            name="description">Temperature monitoring sensor for environmental control</field>
+        <field
+            name="capabilities">{"sensors": ["temperature"], "units": {"temperature": "°C"}}</field>
+    </record>
+
+    <record id="device_category_temp_humidity" model="device.kind">
+        <field name="name">Temperature &amp; Humidity Sensor</field>
+        <field name="code">temp_humidity</field>
+        <field name="sequence" eval="15" />
+        <field name="icon">fa-thermometer-three-quarters</field>
+        <field name="color" eval="5" />
+        <field
+            name="description">Combined temperature and humidity environmental sensor</field>
+        <field
+            name="capabilities">{"sensors": ["temperature", "humidity"], "units": {"temperature":
+            "°C", "humidity": "%"}}</field>
+    </record>
+
+</odoo>

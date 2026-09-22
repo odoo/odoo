@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_device_profile_search" model="ir.ui.view">
+        <field name="name">device.profile.search</field>
+        <field name="model">device.profile</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="manufacturer" />
+                <field name="model" />
+                <field name="protocol" />
+                <filter
+                    name="active"
+                    string="Active"
+                    domain="[('active', '=', True)]" />
+                <filter
+                    name="inactive"
+                    string="Inactive"
+                    domain="[('active', '=', False)]" />
+                <separator />
+                <group>
+                    <filter
+                        name="group_protocol"
+                        string="Protocol"
+                        context="{'group_by': 'protocol'}" />
+                    <filter
+                        name="group_manufacturer"
+                        string="Manufacturer"
+                        context="{'group_by': 'manufacturer'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_device_profile_list" model="ir.ui.view">
+        <field name="name">device.profile.list</field>
+        <field name="model">device.profile</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="manufacturer" optional="show" />
+                <field name="model" optional="show" />
+                <field name="protocol" />
+                <field name="active" widget="boolean_toggle" />
+                <field name="device_count" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_device_profile_form" model="ir.ui.view">
+        <field name="name">device.profile.form</field>
+        <field name="model">device.profile</field>
+        <field name="arch" type="xml">
+            <form string="Device Configuration">
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        invisible="active"
+                        bg_color="text-bg-danger" />
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_devices"
+                            type="object"
+                            icon="fa-server"
+                            class="oe_stat_button">
+                            <field
+                                name="device_count"
+                                string="Devices"
+                                widget="statinfo" />
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Configuration Name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Device Information">
+                            <field name="manufacturer" />
+                            <field name="model" />
+                            <field name="protocol" />
+                        </group>
+                        <group string="General Settings">
+                            <field name="active" />
+                            <field name="auto_reconnect" />
+                            <field name="description" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="protocol_settings" string="Protocol Settings">
+                            <group string="Shared Connection Settings">
+                                <field
+                                    name="endpoint_url"
+                                    placeholder="https://xxxxx-ats.iot.region.amazonaws.com:8883" />
+                                <field name="service_id" />
+                                <field name="disconnect_timeout" />
+                            </group>
+
+                            <group string="HTTP/HTTPS Settings">
+                                <group>
+                                    <field name="http_method" />
+                                    <field name="http_timeout" />
+                                    <field
+                                        name="http_headers"
+                                        placeholder="{&quot;Accept&quot;: &quot;application/json&quot;}" />
+                                </group>
+                            </group>
+                        </page>
+                        <page name="authentication" string="Authentication">
+                            <group>
+                                <group string="Authentication Settings">
+                                    <field name="auth_type" />
+                                    <field
+                                        name="credential_id"
+                                        groups="base.group_system" />
+                                    <field
+                                        name="auth_username"
+                                        invisible="auth_type not in ['basic', 'digest']" />
+                                    <field
+                                        name="auth_password"
+                                        password="True"
+                                        invisible="auth_type not in ['basic', 'digest']" />
+                                    <field
+                                        name="auth_token"
+                                        invisible="auth_type not in ['bearer', 'api_key']" />
+                                    <field
+                                        name="ca_certificate_id"
+                                        options="{'no_create': True}" />
+                                </group>
+                            </group>
+                        </page>
+                        <page name="data_collection" string="Data Collection">
+                            <group>
+                                <group string="Data Retention">
+                                    <field name="data_retention_days" />
+                                </group>
+                            </group>
+                        </page>
+                        <page name="alerts" string="Alerts">
+                            <group>
+                                <group string="Connection Alerts">
+                                    <field name="alert_on_disconnect" />
+                                </group>
+                            </group>
+                        </page>
+                        <page name="devices" string="Devices">
+                            <field name="device_ids" readonly="1">
+                                <list>
+                                    <field name="name" />
+                                    <field name="identifier" />
+                                    <field name="connection_state" widget="badge" />
+                                    <field name="date_last_data_received" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_device_profile" model="ir.actions.act_window">
+        <field name="name">Device Configurations</field>
+        <field name="res_model">device.profile</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a device configuration profile
+            </p>
+            <p>
+                Configuration profiles define how devices communicate,
+                authenticate, and manage data retention.
+            </p>
+        </field>
+    </record>
+
+</odoo>

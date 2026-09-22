@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_device_data_log_search" model="ir.ui.view">
+        <field name="name">device.data.log.search</field>
+        <field name="model">device.data.log</field>
+        <field name="arch" type="xml">
+            <search string="Search Data Points">
+                <field name="device_id" />
+                <field name="timestamp" />
+                <field name="source" />
+                <separator />
+                <filter
+                    name="filter_today"
+                    string="Today"
+                    domain="[('timestamp', '&gt;=', context_today().strftime('%Y-%m-%d'))]" />
+                <filter
+                    name="filter_last_week"
+                    string="Last 7 Days"
+                    domain="[('timestamp', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]" />
+                <separator />
+                <filter
+                    name="filter_numeric"
+                    string="Numeric"
+                    domain="[('data_type', '=', 'numeric')]" />
+                <filter
+                    name="filter_json"
+                    string="JSON"
+                    domain="[('data_type', '=', 'json')]" />
+                <separator />
+                <group>
+                    <filter
+                        name="group_device"
+                        string="Device"
+                        context="{'group_by': 'device_id'}" />
+                    <filter
+                        name="group_data_type"
+                        string="Data Type"
+                        context="{'group_by': 'data_type'}" />
+                    <filter
+                        name="group_source"
+                        string="Source"
+                        context="{'group_by': 'source'}" />
+                    <separator />
+                    <filter
+                        name="group_hour"
+                        string="Hour"
+                        context="{'group_by': 'timestamp:hour'}" />
+                    <filter
+                        name="group_day"
+                        string="Day"
+                        context="{'group_by': 'timestamp:day'}" />
+                    <filter
+                        name="group_week"
+                        string="Week"
+                        context="{'group_by': 'timestamp:week'}" />
+                    <filter
+                        name="group_month"
+                        string="Month"
+                        context="{'group_by': 'timestamp:month'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_device_data_log_tree" model="ir.ui.view">
+        <field name="name">device.data.log.list</field>
+        <field name="model">device.data.log</field>
+        <field name="arch" type="xml">
+            <list string="Data Points" default_order="timestamp desc" create="false">
+                <field name="timestamp" string="Time" />
+                <field name="device_id" string="Device" />
+                <field name="data_type" optional="show" />
+                <field name="source" optional="show" />
+                <field name="raw_payload" optional="hide" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_device_data_log_form" model="ir.ui.view">
+        <field name="name">device.data.log.form</field>
+        <field name="model">device.data.log</field>
+        <field name="arch" type="xml">
+            <form string="Data Point" create="false" edit="false">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_device"
+                            type="object"
+                            icon="fa-microchip"
+                            class="oe_stat_button">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">View</span>
+                                <span class="o_stat_text">Device</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group string="General Information">
+                            <field name="device_id" />
+                            <field name="timestamp" />
+                            <field name="data_type" />
+                            <field name="source" />
+                        </group>
+                        <group string="Company">
+                            <field name="company_id" />
+                        </group>
+                    </group>
+                    <group string="Raw Data">
+                        <field
+                            name="raw_payload"
+                            widget="ace"
+                            options="{'mode': 'text'}" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_device_data_log_graph" model="ir.ui.view">
+        <field name="name">device.data.log.graph</field>
+        <field name="model">device.data.log</field>
+        <field name="arch" type="xml">
+            <graph type="line" string="Data Points" sample="1">
+                <field name="timestamp" interval="hour" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_device_data_log_pivot" model="ir.ui.view">
+        <field name="name">device.data.log.pivot</field>
+        <field name="model">device.data.log</field>
+        <field name="arch" type="xml">
+            <pivot string="Data Points Analysis" sample="1">
+                <field name="device_id" type="row" />
+                <field name="timestamp" type="col" interval="day" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_device_data_log" model="ir.actions.act_window">
+        <field name="name">Data Points</field>
+        <field name="res_model">device.data.log</field>
+        <field name="view_mode">list,graph,pivot,form</field>
+        <field name="search_view_id" ref="view_device_data_log_search" />
+        <field
+            name="context">{
+            'search_default_filter_today': 1,
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data points yet!
+            </p>
+            <p>
+                Data points are automatically created when devices send or receive data.
+                Connect your devices and start collecting data to see it here.
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.base.remote</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="priority" eval="25" />
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app
+                    name="device"
+                    string="IoT Remote"
+                    groups="device.group_device_manager"
+                    data-string="IoT Remote">
+
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane" />
+                            <div class="o_setting_right_pane">
+                                <div class="content-group">
+                                    <div class="row">
+                                        <label
+                                            for="device_data_retention_days"
+                                            string="Data Retention"
+                                            class="col-lg-4 o_light_label" />
+                                        <field
+                                            name="device_data_retention_days"
+                                            class="col-lg-8" />
+                                    </div>
+                                    <div class="text-muted">
+                                        Number of days to keep device data before automatic cleanup
+                                    </div>
+                                    <div class="row mt8">
+                                        <label
+                                            for="device_raw_payload_retention_days"
+                                            string="Keep Raw Payloads"
+                                            class="col-lg-4 o_light_label" />
+                                        <field
+                                            name="device_raw_payload_retention_days"
+                                            class="col-lg-8" />
+                                    </div>
+                                    <div class="text-muted">
+                                        Days to keep the verbatim device payload on each data point.
+                                        0 keeps it forever. The row and every parsed column are kept
+                                        either way; only the debugging copy is discarded, and not
+                                        reversibly.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane" />
+                            <div class="o_setting_right_pane">
+                                <div class="content-group">
+                                    <div class="row">
+                                        <label
+                                            for="device_polling_interval"
+                                            string="Poll Devices Every"
+                                            class="col-lg-4 o_light_label" />
+                                        <field
+                                            name="device_polling_interval"
+                                            class="col-lg-8" />
+                                    </div>
+                                    <div class="text-muted">
+                                        Minutes between polls of pull-based devices.
+                                        This is the schedule of the "Poll Devices" scheduled action.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane" />
+                            <div class="o_setting_right_pane">
+                                <div class="content-group">
+                                    <div class="row">
+                                        <label
+                                            for="device_health_check_interval"
+                                            string="Check Device Health Every"
+                                            class="col-lg-4 o_light_label" />
+                                        <field
+                                            name="device_health_check_interval"
+                                            class="col-lg-8" />
+                                    </div>
+                                    <div class="text-muted">
+                                        Minutes between recomputations of device connection state.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane" />
+                            <div class="o_setting_right_pane">
+                                <div class="content-group">
+                                    <div class="row">
+                                        <label
+                                            for="device_disconnect_timeout"
+                                            string="Disconnect Timeout"
+                                            class="col-lg-4 o_light_label" />
+                                        <field
+                                            name="device_disconnect_timeout"
+                                            class="col-lg-8" />
+                                    </div>
+                                    <div class="text-muted">
+                                        Seconds without inbound data before a device counts as
+                                        disconnected. A device category or a configuration profile
+                                        may override it.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

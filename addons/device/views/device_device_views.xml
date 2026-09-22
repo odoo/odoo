@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_device_device_search" model="ir.ui.view">
+        <field name="name">device.device.search</field>
+        <field name="model">device.device</field>
+        <field name="arch" type="xml">
+            <search string="Search Devices">
+                <field
+                    name="name"
+                    string="Device"
+                    filter_domain="['|', ('name', 'ilike', self), ('identifier', 'ilike', self)]" />
+                <field name="device_category_id" />
+                <field name="comm_protocol" />
+                <separator />
+                <filter
+                    name="filter_connected"
+                    string="Connected"
+                    domain="[('connection_state', '=', 'connected')]" />
+                <filter
+                    name="filter_disconnected"
+                    string="Disconnected"
+                    domain="[('connection_state', '=', 'disconnected')]" />
+                <filter
+                    name="filter_error"
+                    string="Error"
+                    domain="[('connection_state', '=', 'error')]" />
+                <separator />
+                <filter
+                    name="filter_auto_reconnect"
+                    string="Auto Reconnect"
+                    domain="[('use_auto_reconnect', '=', True)]" />
+                <separator />
+                <filter
+                    name="filter_push"
+                    string="Pushing"
+                    domain="[('link_mode', '=', 'push')]" />
+                <filter
+                    name="filter_pull"
+                    string="Dialled"
+                    domain="[('link_mode', '=', 'pull')]" />
+                <filter
+                    name="filter_stream"
+                    string="Streamed"
+                    domain="[('link_mode', '=', 'stream')]" />
+                <filter
+                    name="filter_inactive"
+                    string="Archived"
+                    domain="[('active', '=', False)]" />
+                <group>
+                    <filter
+                        name="group_device_type"
+                        string="Device Type"
+                        context="{'group_by': 'device_category_id'}" />
+                    <filter
+                        name="group_protocol"
+                        string="Protocol"
+                        context="{'group_by': 'comm_protocol'}" />
+                    <filter
+                        name="group_link_mode"
+                        string="Link"
+                        context="{'group_by': 'link_mode'}" />
+                    <filter
+                        name="group_connection_state"
+                        string="Connection State"
+                        context="{'group_by': 'connection_state'}" />
+                    <filter
+                        name="group_company"
+                        string="Company"
+                        context="{'group_by': 'company_id'}"
+                        groups="base.group_multi_company" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_device_device_list" model="ir.ui.view">
+        <field name="name">device.device.list</field>
+        <field name="model">device.device</field>
+        <field name="arch" type="xml">
+            <list
+                string="Devices"
+                decoration-danger="connection_state == 'error'"
+                decoration-muted="connection_state == 'disconnected'"
+                decoration-success="connection_state == 'connected'">
+                <field name="name" />
+                <field name="device_category_id" />
+                <field name="comm_protocol" />
+                <field name="link_mode" optional="show" />
+                <field name="display_endpoint" />
+                <field
+                    name="connection_state"
+                    widget="badge"
+                    decoration-danger="connection_state == 'error'"
+                    decoration-info="connection_state == 'disconnected'"
+                    decoration-success="connection_state == 'connected'" />
+                <field name="date_last_data_received" optional="hide" />
+                <field name="location" optional="hide" />
+                <field
+                    name="company_id"
+                    optional="show"
+                    groups="base.group_multi_company" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_device_device_kanban" model="ir.ui.view">
+        <field name="name">device.device.kanban</field>
+        <field name="model">device.device</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id" />
+                <field name="name" />
+                <field name="device_category_id" />
+                <field name="connection_state" />
+                <field name="comm_protocol" />
+                <field name="activity_ids" />
+                <field name="activity_state" />
+                <templates>
+                    <t t-name="card">
+                        <div
+                            t-attf-class="oe_kanban_card oe_kanban_global_click #{record.connection_state.raw_value == 'connected' ? 'oe_kanban_color_5' : record.connection_state.raw_value == 'error' ? 'oe_kanban_color_2' : ''}">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name" />
+                                        </strong>
+                                        <div
+                                            class="o_kanban_record_subtitle text-muted">
+                                            <field name="device_category_id" />
+                                        </div>
+                                    </div>
+                                    <span
+                                        t-attf-class="badge rounded-pill #{record.connection_state.raw_value == 'connected' ? 'text-bg-success' : record.connection_state.raw_value == 'error' ? 'text-bg-danger' : 'text-bg-secondary'}">
+                                        <field name="connection_state" />
+                                    </span>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div class="text-muted">
+                                        <i
+                                            class="fa-solid fa-right-left"
+                                            title="Protocol" />
+                                        <field name="comm_protocol" />
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field
+                                            name="activity_ids"
+                                            widget="kanban_activity" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_device_device_form" model="ir.ui.view">
+        <field name="name">device.device.form</field>
+        <field name="model">device.device</field>
+        <field name="arch" type="xml">
+            <form string="Device">
+                <header>
+                    <button
+                        name="action_connect"
+                        type="object"
+                        string="Connect"
+                        invisible="connection_state == 'connected'"
+                        class="oe_highlight" />
+                    <button
+                        name="action_disconnect"
+                        type="object"
+                        string="Disconnect"
+                        invisible="connection_state != 'connected'" />
+                    <button
+                        name="action_read_data"
+                        type="object"
+                        string="Read Data"
+                        invisible="connection_state != 'connected'"
+                        class="btn-primary" />
+                    <button
+                        name="action_test_connection"
+                        type="object"
+                        string="Test Connection" />
+                    <field
+                        name="connection_state"
+                        widget="statusbar"
+                        statusbar_visible="disconnected,connected" />
+                </header>
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        invisible="active"
+                        bg_color="text-bg-danger" />
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="%(action_device_data_log)d"
+                            type="action"
+                            icon="fa-line-chart"
+                            context="{'search_default_device_id': id, 'default_device_id': id}"
+                            class="oe_stat_button">
+                            <field
+                                name="log_count"
+                                string="Data Points (24h)"
+                                widget="statinfo" />
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1>
+                            <field
+                                name="name"
+                                placeholder="e.g., Warehouse Temperature Sensor 01" />
+                        </h1>
+                        <group>
+                            <field
+                                name="identifier"
+                                placeholder="MAC address, Serial number, etc." />
+                            <field
+                                name="plate"
+                                placeholder="Vehicle license plate (GPS assets)" />
+                        </group>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="device_category_id" />
+                            <field
+                                name="comm_protocol"
+                                widget="radio"
+                                readonly="connection_state == 'connected'" />
+                            <field name="link_mode" />
+                            <field name="active" widget="boolean_toggle" />
+                        </group>
+                        <group>
+                            <field name="connection_state_message" readonly="1" />
+                            <field name="date_last_data_received" readonly="1" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company" />
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page name="connection" string="Connection">
+                            <group string="Endpoint Configuration">
+                                <group>
+                                    <field
+                                        name="endpoint"
+                                        readonly="connection_state == 'connected'" />
+                                    <field
+                                        name="port"
+                                        readonly="connection_state == 'connected'" />
+                                    <field name="display_endpoint" readonly="1" />
+                                </group>
+                                <group>
+                                    <field
+                                        name="config_id"
+                                        readonly="connection_state == 'connected'" />
+                                    <field
+                                        name="certificate_id"
+                                        options="{'no_create': True}" />
+                                    <field
+                                        name="dial_credential_id"
+                                        groups="base.group_system" />
+                                    <field
+                                        name="connection_id"
+                                        invisible="not connection_id" />
+                                    <field name="auto_reconnect_override" />
+                                    <field name="use_auto_reconnect" readonly="1" />
+                                </group>
+                            </group>
+
+                            <group
+                                string="HTTP Configuration"
+                                invisible="comm_protocol not in ['http', 'https']">
+                                <group>
+                                    <field
+                                        name="http_endpoint_path"
+                                        placeholder="/api/data"
+                                        readonly="connection_state == 'connected'" />
+                                </group>
+                                <group>
+                                    <field
+                                        name="http_headers"
+                                        placeholder="{&quot;Content-Type&quot;: &quot;application/json&quot;}"
+                                        widget="text"
+                                        readonly="connection_state == 'connected'" />
+                                </group>
+                            </group>
+                        </page>
+
+                        <page name="api_auth" string="Inbound Authentication">
+                            <group string="What This Device Must Send">
+                                <field name="contract_routes" readonly="1" />
+                                <field name="contract_scheme" readonly="1" />
+                                <field name="contract_limits" readonly="1" />
+                                <field
+                                    name="contract_last_call"
+                                    invisible="not contract_last_call"
+                                    readonly="1" />
+                            </group>
+                            <group string="Authentication Configuration">
+                                <group>
+                                    <field name="credential_id" />
+                                    <field name="auth_type" />
+                                </group>
+                            </group>
+
+                            <group
+                                string="HMAC Signature Configuration"
+                                invisible="auth_type not in ['hmac_sha256', 'hmac_sha512']">
+                                <group>
+                                    <field name="signature_header" />
+                                    <field name="signature_prefix" />
+                                </group>
+                                <group>
+                                    <div class="alert alert-info" role="status">
+                                        <p>
+                                            <strong>HMAC Authentication:</strong>
+                                        </p>
+                                        <p>Devices must sign each request with HMAC using the shared
+                                            secret from the credential.</p>
+                                        <p>
+                                            <strong>Example:</strong>
+                                            <code>X-Hub-Signature-256: sha256=&lt;hmac_hex&gt;</code>
+                                        </p>
+                                    </div>
+                                </group>
+                            </group>
+
+                            <separator string="Replay Attack Prevention" />
+                            <group>
+                                <group>
+                                    <field name="timestamp_verification_enabled" />
+                                    <field
+                                        name="timestamp_header"
+                                        invisible="not timestamp_verification_enabled" />
+                                    <field
+                                        name="timestamp_max_age_seconds"
+                                        invisible="not timestamp_verification_enabled" />
+                                </group>
+                                <group invisible="not timestamp_verification_enabled">
+                                    <div class="alert alert-warning" role="status">
+                                        <p>
+                                            <strong>Timestamp Verification Enabled:</strong>
+                                        </p>
+                                        <p>Requests must include a timestamp header. Requests older
+                                            than the max age will be rejected.</p>
+                                        <p>
+                                            <strong>Example:</strong>
+                                            <code>X-Webhook-Timestamp: 1704088800</code>
+                                        </p>
+                                    </div>
+                                </group>
+                            </group>
+
+                            <separator string="Device Integration" />
+                            <group>
+                                <group>
+                                    <div class="alert alert-info" role="status">
+                                        <p>
+                                            <strong>Endpoint:</strong>
+                                            <code>/remote/device/&lt;identifier&gt;/data</code>
+                                        </p>
+                                        <p><strong>Method:</strong> POST</p>
+                                        <p><strong>Authentication:</strong> Based on selected type
+                                            above</p>
+                                    </div>
+                                </group>
+                            </group>
+
+                            <separator string="Outbound Authentication" />
+                            <group>
+                                <div class="alert alert-info" role="status">
+                                    <p>Outbound authentication (when Odoo connects to devices) is
+                                        configured in the <strong>Configuration Profile</strong>.</p>
+                                </div>
+                            </group>
+                        </page>
+
+                        <page name="device_info" string="Device Information">
+                            <group>
+                                <group string="Version Information">
+                                    <field name="serial_number" />
+                                    <field name="hardware_version" />
+                                    <field name="firmware_version" />
+                                </group>
+                                <group string="Physical Location">
+                                    <field
+                                        name="location"
+                                        placeholder="e.g., Building A, Floor 2, Room 201" />
+                                </group>
+                            </group>
+                            <group string="Description">
+                                <field
+                                    name="description"
+                                    placeholder="Additional notes about this device..."
+                                    nolabel="1" />
+                            </group>
+                            <group string="Debug Settings" groups="base.group_no_one">
+                                <field
+                                    name="is_demo"
+                                    help="Demo devices skip network connections to prevent timeout errors" />
+                            </group>
+                        </page>
+
+                        <page name="data_history" string="Data &amp; History">
+                            <group>
+                                <group string="Latest Data">
+                                    <field name="log_count" />
+                                    <field name="log_last_id" />
+                                    <field name="date_last_data_received" />
+                                </group>
+                            </group>
+                            <group string="Recent Data Points">
+                                <field
+                                    name="log_ids"
+                                    mode="list"
+                                    nolabel="1"
+                                    create="false"
+                                    delete="false">
+                                    <list>
+                                        <field name="timestamp" />
+                                        <field name="data_type" />
+                                        <field name="source" />
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+
+                        <page name="activity" string="Activity">
+                            <field name="activity_ids" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <record id="action_device_device" model="ir.actions.act_window">
+        <field name="name">Devices</field>
+        <field name="res_model">device.device</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_device_device_search" />
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Connect your first Remote device
+            </p>
+            <p> Register and manage Remote devices over HTTP/REST and
+                HTTPS/REST. Every other transport arrives as its own module. </p>
+        </field>
+        <field
+            name="view_ids"
+            eval="[                 Command.clear(),                 Command.create({'view_mode': 'kanban', 'view_id': ref('view_device_device_kanban')}),                 Command.create({'view_mode': 'list', 'view_id': ref('view_device_device_list')}),                 Command.create({'view_mode': 'form', 'view_id': ref('view_device_device_form')}),             ]" />
+    </record>
+
+</odoo>
