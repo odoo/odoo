@@ -6,10 +6,7 @@ export class MassMailingSetupPlugin extends Plugin {
     static id = "mass_mailing_setup_plugin";
     resources = {
         savable_selectors: ".o_mail_wrapper_td",
-        snippet_preview_dialog_bundles: [
-            "mass_mailing.assets_iframe_style",
-            "mass_mailing.iframe_add_dialog",
-        ],
+        snippet_preview_dialog_bundles: ["mass_mailing.assets_inside_builder_iframe"],
         clean_for_save_processors: this.cleanForSave.bind(this),
         powerbox_blacklist_selectors: ".o_mail_wrapper_td",
     };
