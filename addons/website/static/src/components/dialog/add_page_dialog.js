@@ -12,11 +12,10 @@ import {
     useListener,
 } from "@odoo/owl";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_utils";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useAutofocus, useService, useTabsKeyboardNavigation } from "@web/core/utils/hooks";
 import { renderToElement } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";
 import { useSubEnv } from "@web/owl2/utils";
@@ -376,6 +375,11 @@ class AddPageTemplates extends Component {
         super.setup();
         this.website = useService("website");
         useAutofocus({ ref: this.autofocusRef });
+        useTabsKeyboardNavigation({
+            ref: this.tabsRef,
+            isTabActive: (el) => el.dataset.id === this.state.activePageId,
+            recomputeTabsDependencies: [this.autofocusRef],
+        });
 
         const isMobile = isMobileView();
         this.state = proxy({
@@ -477,19 +481,6 @@ class AddPageTemplates extends Component {
 
     onMobileBackClick() {
         this.state.activePageId = null;
-    }
-
-    onTabListBtnKeydown(ev) {
-        const hotkey = getActiveHotkey(ev);
-        if (!["arrowleft", "arrowright", "arrowdown", "arrowup"].includes(hotkey)) {
-            return;
-        }
-        const currentTabEl = this.tabsRef().querySelector(`[data-id=${ev.target.dataset.id}]`);
-        if (["arrowleft", "arrowup"].includes(hotkey)) {
-            currentTabEl.previousElementSibling?.focus();
-        } else {
-            currentTabEl.nextElementSibling?.focus();
-        }
     }
 }
 

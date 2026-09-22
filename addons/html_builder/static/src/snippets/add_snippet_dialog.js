@@ -8,7 +8,7 @@ import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { getFirstAndLastTabableElements } from "@web/core/ui/ui_utils";
 import { cookie } from "@web/core/browser/cookie";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useAutofocus, useService, useTabsKeyboardNavigation } from "@web/core/utils/hooks";
 import { SnippetViewer } from "./snippet_viewer";
 
 /**
@@ -31,6 +31,7 @@ export class AddSnippetDialog extends Component {
 
     iframeRef = signal.ref();
     autofocusRef = signal.ref();
+    tabListRef = signal.ref();
 
     setup() {
         useAutofocus({ ref: this.autofocusRef });
@@ -58,6 +59,10 @@ export class AddSnippetDialog extends Component {
                 ? "rtl"
                 : "ltr",
         };
+        useTabsKeyboardNavigation({
+            ref: this.tabListRef,
+            isTabActive: (el) => `tab_${this.state.groupSelected}` === el.id,
+        });
 
         const app = useApp();
         let root;
@@ -171,23 +176,6 @@ export class AddSnippetDialog extends Component {
         metaElement.content = colorScheme;
         iframeDocument.head.appendChild(metaElement);
         iframeDocument.body.parentElement.classList.add("o_add_snippets_preview--" + colorScheme);
-    }
-
-    /**
-     * Handles the tablist navigation.
-     *
-     * @param {KeyboardEvent} ev
-     */
-    onTabKeydown(ev) {
-        const hotkey = getActiveHotkey(ev);
-        if (!["arrowleft", "arrowright", "arrowdown", "arrowup"].includes(hotkey)) {
-            return;
-        }
-        if (["arrowleft", "arrowup"].includes(hotkey)) {
-            ev.currentTarget.previousElementSibling?.focus();
-        } else {
-            ev.currentTarget.nextElementSibling?.focus();
-        }
     }
     /**
      * The mix of focused elements within the dialog and within the iframe does

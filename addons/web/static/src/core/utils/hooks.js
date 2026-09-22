@@ -388,6 +388,7 @@ export function useTabsKeyboardNavigation({
     isTabActive,
     getTabEls = (el) => el.querySelectorAll("[role=tab]"),
     loop = false,
+    recomputeTabsDependencies = [],
 }) {
     const navKeys = ["arrowleft", "arrowup", "arrowright", "arrowdown", "home", "end"];
     const tabEls = [];
@@ -424,7 +425,7 @@ export function useTabsKeyboardNavigation({
     };
 
     useOnChange(
-        () => [ref()],
+        () => [ref(), ...recomputeTabsDependencies.map((d) => d())],
         (el) => {
             if (!el) {
                 return;
