@@ -1,5 +1,7 @@
 from odoo import api, fields, models
 
+from odoo.addons.product.models.product_template import PRICE_CONTEXT_KEYS
+
 
 class EventEventTicket(models.Model):
     _inherit = "event.event.ticket"
@@ -44,6 +46,10 @@ class EventEventTicket(models.Model):
             "total_included"
         ]
 
+    # price_reduce is contextual (see event.type.ticket._compute_price_reduce), so
+    # the pricelist has to be part of this field's cache key too -- without it the
+    # ORM hands back whichever pricelist's value was computed first.
+    @api.depends_context(*PRICE_CONTEXT_KEYS)
     @api.depends("price_reduce", "product_id", "product_id.taxes_id")
     def _compute_price_reduce_taxinc(self):
         for ticket in self:
