@@ -209,6 +209,20 @@ class TestOnchange(SavepointCaseWithUserDemo):
             Command.create({}),
         ])
 
+    def test_onchange_one2many_virtual_id(self):
+        """ the client may reference a line that is not saved yet """
+        discussion = self.Discussion.create({'name': "Foo"})
+        message = self.Message.create({'body': "ABC"})
+        values = {
+            'name': "Bar",
+            'messages': [
+                (Command.SET, 0, [message.id, "virtual3"]),
+                (Command.UPDATE, "virtual3", {'body': "XYZ"}),
+            ],
+        }
+        result = discussion.onchange(values, ['name'], self.Discussion._get_fields_spec())
+        self.assertIn('messages', result['value'])
+
     def test_onchange_one2many_reference(self):
         """ test the effect of onchange() on one2many fields with line references """
         BODY = "What a beautiful day!"

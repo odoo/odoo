@@ -914,6 +914,24 @@ class Base(models.AbstractModel):
                 if field_name in defaults:
                     field_names.append(field_name)
 
+        # the client refers to a line it has not saved yet by a virtual id
+        # ("virtual_42"): that line is not in database, it can only be created
+        for field_name, value in values.items():
+            field = self._fields.get(field_name)
+            if not (field and field.type in ('one2many', 'many2many') and isinstance(value, list)):
+                continue
+            commands = []
+            for cmd in value:
+                if not isinstance(cmd, (list, tuple)):
+                    commands.append(cmd)
+                elif cmd[0] == Command.SET:
+                    commands.append((Command.SET, 0, [id_ for id_ in cmd[2] if isinstance(id_, int)]))
+                elif cmd[0] == Command.UPDATE and isinstance(cmd[1], str):
+                    commands.append((Command.CREATE, cmd[1], cmd[2]))
+                elif not (cmd[0] == Command.LINK and isinstance(cmd[1], str)):
+                    commands.append(cmd)
+            values[field_name] = commands
+
         # prefetch x2many lines: this speeds up the initial snapshot by avoiding
         # computing fields on new records as much as possible, as that can be
         # costly and is not necessary at all
