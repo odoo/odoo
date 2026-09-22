@@ -98,22 +98,47 @@ loader's job and not a file's. `orm/tests/test_host_base_dbfree.py` (about 30 s,
 most of it the currency and country files) pins the result: 162 ACL rows, 37
 rules, an internal user reading 3 partners and refused an `ir.model.access`
 row, a portal user reading its own, an act_window read through
-`ir.actions.actions`. **A module's own test class runs on it** (2026-09-22): `odoo/tests/
-in_memory_case.py`'s `InMemoryCase` holds a `model_test_env` open for the
-class, loads the named modules' data, and takes the per-test savepoint
-through the cursor's own factory -- which is why `TransactionCase.setUp` now
-asks `cr.savepoint(flush=False)` instead of constructing the SQL one, the one
-line either tier needed. `base/tests/test_in_memory_host.py` hosts
-`TestTypedParams` and `TestSetGetParam` from `test_config_parameter.py`
-verbatim, only the base class differing: **5 of their 6 methods pass on the
-tier**, the sixth (`test_set_param_create_race`) opening a second cursor to
-race an INSERT and staying DB-bound by design. A third class pins that the
-tier is what ran -- an `InMemoryCursor` on `:memory:`, 162 ACL rows, and a
-write rolled back between tests, the ormcache cleared with the storage.
+`ir.actions.actions`. **A module's own test classes run on it** (2026-09-22): `InMemoryCase`
+(`odoo/tests/in_memory_case.py`) is a `TransactionCase` that overrides one
+method, `_open_class_transaction` -- the whole of what binds a case to a
+database, extracted for it -- so the per-test savepoint, the cache clears and
+the callback restore are inherited, and **a hosted class's own `setUpClass`
+builds its fixtures in the environment the case actually uses**. That
+ordering is what made hosting general: while the in-memory environment was
+installed *after* the hosted `setUpClass` ran, every class fixture landed in
+the database and the tests then ran against an environment that did not have
+it. `base/tests/test_in_memory_host.py` now hosts thirteen classes from six
+of base's own test modules -- config parameters, groups (including the
+cache-invalidation and privilege-sorting suites), currencies, languages and
+the three `Form` suites -- bodies untouched, only the base class differing:
+**72 tests, 0 failed, of which 4 are skipped by name as database-bound**
+(three read through hand-written SQL, one opens a second cursor to race an
+INSERT). The `Form` classes say `hosts_modules = ("base", "web")`, `web`
+being where `onchange()` lives. `/base` reads 4043 tests with them against
+3980 without.
+One environment is built per module set and shared by every class naming it,
+each class taking a savepoint over it: the thirteen classes cost 1 m 43 s in
+total against some 30 s *each* when every class built its own.
+Three defects were found by hosting these classes, and two are the tier's
+fidelity rather than the harness's:
+- **A search over a relation answered differently here than on PostgreSQL.**
+  To SQL a many2many is a table and a join reads the link row without
+  consulting the comodel's `active`; the in-memory search evaluates the
+  domain with `filtered_domain`, whose relational read applied `active_test`.
+  `res.company` searched on `user_ids` therefore missed the inactive
+  superuser, which is every `env.companies` of a test. The evaluation runs
+  with `active_test=False` now -- the model's own active condition is already
+  in the domain the optimizer hands the backend.
+- **The tier reflected a model once, under the module that defines it.** The
+  loader reflects it once per module that defines *or extends* it, so
+  `web.model_res_company` exists on a database and web's report bindings name
+  it. The seeding mirrors `_reflect_models`/`_reflect_field_params` now.
+- A query budget cannot be graded where there are no statements:
+  `assertQueryCount` and `assertQueriesConstant` run the body and leave the
+  count to the database-backed run of the same test.
 What that leaves: the eligibility figures
 ([`ARCHITECTURE.md`](ARCHITECTURE.md#forces)) still say which tests *could*
-run without a database, and moving a suite is now a base-class change per
-class rather than a missing mechanism.
+run without a database, and moving a suite is a base-class change per class.
 
 **Cost.** A green DB-free run reads as "the framework works" when it means "the
 structure holds". Nearly every integration suite is run `--no-http` (R4), so

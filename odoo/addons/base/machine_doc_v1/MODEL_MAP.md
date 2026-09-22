@@ -988,6 +988,21 @@ reach through the ORM first; `ir.model.unlink` does so before it drops tables.
 - `_constrain_type_to_table()` — `CHECK (type = '<model>')` on each leaf table one model owns; skipped, with an error, while rows naming another model remain
 - `_apply_ondelete_unenforced()` — Cascade / set null / restrict for every relation the database cannot enforce
 
+### models/mixin_owner_access.py
+
+#### MixinOwnerAccess — `mixin.owner.access` (`_name`, AbstractModel)
+
+A record whose access rights are its owner's. The host names the owning field
+in `_access_owner_field` — a many2one or a many2one_reference — and reads,
+searches, writes and unlinks are then decided by what the user may do with the
+owner record: `read` on the owner for a read, `write` for everything else
+(`odoo.tools.access_scan`). `_search` narrows by chunks so a search over many
+rows does not resolve every owner, `_check_access` adds the forbidden ids to
+whatever the ACLs and rules already refused, and a constraint refuses a row
+whose owner does not exist. `_of(records)` is the rows owned by those records
+and `_owner()` the owner of one row. Hosts outside base: `speech.speaker`,
+`media.segment`, `mixin.speech.finding`.
+
 ### models/mixin_module_link.py
 
 #### MixinModuleLink — `mixin.module.link` (`_name`, AbstractModel)

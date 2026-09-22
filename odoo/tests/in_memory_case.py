@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import atexit
 import typing
 
 from odoo.libs.debug_log import DebugLog
@@ -9,7 +10,7 @@ from odoo.orm.model_test_env import (
     module_model_classes,
 )
 
-from .transaction_case import BaseCase
+from .transaction_case import TransactionCase
 
 _debug = DebugLog(__name__)
 
@@ -17,8 +18,49 @@ _debug = DebugLog(__name__)
 # categories come from Module.update_list(), which reads the manifests
 LOADER_OWNED_DATA = ("data/ir_module_module.xml",)
 
+# building the environment is the whole cost of hosting a class -- some 30 s
+# for `base`, most of it the currency and country files -- and it is the same
+# environment for every class naming the same modules, so the process builds
+# one per module set and each class takes a savepoint over it
+_HOSTS: dict[tuple[str, ...], typing.Any] = {}
 
-class InMemoryCase(BaseCase):
+
+def _close_hosts() -> None:
+    while _HOSTS:
+        modules, context = _HOSTS.popitem()
+        _ENVS.pop(modules, None)
+        context.__exit__(None, None, None)
+
+
+atexit.register(_close_hosts)
+
+
+_ENVS: dict[tuple[str, ...], typing.Any] = {}
+
+
+def _host_environment(modules: tuple[str, ...]) -> typing.Any:
+    env = _ENVS.get(modules)
+    if env is None:
+        classes: list[typing.Any] = []
+        for module in modules:
+            classes.extend(module_model_classes(module))
+        context = model_test_env(*classes, check_cache=False)
+        env = context.__enter__()
+        for module in modules:
+            load_module_data(env, module, skip=InMemoryCase.skip_data_files)
+        env.flush_all()
+        env.invalidate_all()
+        _HOSTS[modules] = context
+        _ENVS[modules] = env
+        _debug.lifecycle(
+            "test.in_memory.host_built",
+            modules=len(modules),
+            models=len(env.registry.models),
+        )
+    return env
+
+
+class InMemoryCase(TransactionCase):
     # the point of the class is to run another class's methods, which the
     # loader collects only for a class that says so
     allow_inherited_tests_method = True
@@ -26,49 +68,27 @@ class InMemoryCase(BaseCase):
     hosts_modules: typing.ClassVar[tuple[str, ...]] = ("base",)
     skip_data_files: typing.ClassVar[tuple[str, ...]] = LOADER_OWNED_DATA
 
-    _env_context: typing.ClassVar[typing.Any] = None
-
     @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        classes: list[typing.Any] = []
-        for module in cls.hosts_modules:
-            classes.extend(module_model_classes(module))
-        # the same environment the DB-free unit tests build, held open for
-        # the class: its fixtures mirror base_data.sql, it reflects ir.model
-        # and it declares the table-inheritance trees
-        cls._env_context = model_test_env(*classes, check_cache=False)
-        cls.env = cls._env_context.__enter__()
-        cls.addClassCleanup(cls._close_env_context)
+    def _open_class_transaction(cls) -> None:
+        # everything a TransactionCase does around the transaction -- the
+        # per-test savepoint, the cache clears, the callback restore -- is
+        # inherited; only what opens it differs, and a hosted class's own
+        # setUpClass therefore builds its fixtures here rather than in the
+        # database the run is otherwise using
+        cls.env = typing.cast("typing.Any", _host_environment(cls.hosts_modules))
         cls.cr = typing.cast("typing.Any", cls.env.cr)
         cls.registry = typing.cast("typing.Any", cls.env.registry)
-        for module in cls.hosts_modules:
-            load_module_data(cls.env, module, skip=cls.skip_data_files)
+        cls.env.transaction.default_env = cls.env
+        # the class's own snapshot over the shared environment, so what its
+        # setUpClass creates is gone before the next class takes one
         cls.env.flush_all()
-        cls.env.invalidate_all()
+        savepoint = cls.cr.savepoint(flush=False)
+        cls.addClassCleanup(savepoint.close)
+        cls.addClassCleanup(cls.env.transaction.clear)
+        cls.addClassCleanup(cls.registry.clear_all_caches)
         _debug.lifecycle(
             "test.in_memory.class_hosted",
             cls=cls.__qualname__,
             modules=len(cls.hosts_modules),
             models=len(cls.registry.models),
         )
-
-    @classmethod
-    def _close_env_context(cls) -> None:
-        context, cls._env_context = cls._env_context, None
-        if context is not None:
-            context.__exit__(None, None, None)
-
-    def setUp(self) -> None:
-        # the per-test rollback, which a class hosting another one gets from
-        # TransactionCase's own setUp below and a class inheriting only this
-        # one would not get at all; nesting the two is harmless, the outer
-        # snapshot being the one restored last
-        self.env.flush_all()
-        savepoint = self.env.cr.savepoint(flush=False)
-        # the ormcache is not storage and the snapshot does not hold it: a
-        # value the test read back is still cached after the rollback
-        self.addCleanup(self.registry.clear_all_caches)
-        self.addCleanup(self.env.transaction.clear)
-        self.addCleanup(savepoint.close)
-        super().setUp()

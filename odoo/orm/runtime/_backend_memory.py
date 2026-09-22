@@ -1517,7 +1517,17 @@ class InMemoryBackend:
         )
 
         if not domain.is_true():
-            matching = all_records.filtered_domain(domain)
+            # to SQL a relation is a table: a join reads the link row without
+            # consulting the comodel's `active`, and the optimizer has already
+            # put this model's own active condition into the domain. Evaluating
+            # with active_test still on would read `record.x2many_field`
+            # filtered, and a search over a relation whose other side is
+            # archived would answer differently here than on PostgreSQL --
+            # `res.company` searched on `user_ids` misses the inactive
+            # superuser, which is every `env.companies` of a test
+            matching = model.browse(
+                all_records.with_context(active_test=False).filtered_domain(domain)._ids
+            )
         else:
             matching = all_records
 

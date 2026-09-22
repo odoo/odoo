@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (4042 methods, 817 classes, 142 files)
+# All base tests (4064 methods, 824 classes, 144 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -154,7 +154,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_module_data_rename_module.py` | `post_install`, `-at_install` | 1 | 5 | TransactionCase |
 | `test_neutralize.py` | `post_install`, `-at_install`, `neutralize` | 2 | 2 | TransactionCase, BaseCase |
 | `test_nplusone.py` | `-standard`, `nplusone` | 3 | 12 | TransactionCase, TestNplusOneDetection |
-| `test_orm.py` | `post_install`, `-at_install` | 6 | 30 | TransactionCase |
+| `test_orm.py` | `post_install`, `-at_install` | 6 | 33 | TransactionCase |
 | `test_orm_profiler.py` | `-standard`, `profiler` | 2 | 9 | TransactionCase |
 | `test_ormcache.py` | `-at_install`, `post_install` | 2 | 7 | BaseCase, TransactionCase |
 | `test_overrides.py` | `-at_install`, `post_install` | 1 | 4 | TransactionCase |
@@ -189,7 +189,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_views.py` | `post_install`, `-at_install`, `-standard`, `migration`, `render_all_views`, `post_install_l10n`, `at_install`, `modifiers` | 57 | 309 | TransactionCase, ViewCase, BaseCase, TransactionCaseWithUserDemo |
 | `test_x2many_cache_scope.py` | `post_install`, `-at_install` | 4 | 15 | TransactionCase |
 
-### Untagged Files (60 files)
+### Untagged Files (62 files)
 
 These run in **both** at_install and post_install phases by default.
 
@@ -215,6 +215,7 @@ These run in **both** at_install and post_install phases by default.
 - `test_format_address_mixin.py` — Address formatting
 - `test_i18n.py` — Internationalization
 - `test_image.py` — Image processing
+- `test_in_memory_host.py` — TestSetGetParamInMemory, TestResCurrencyInMemory, TestResCurrencyRateMemoScopeInMemory, TestResLangInMemory, TestTheHostIsTheDbFreeTier
 - `test_init.py` — Module initialization
 - `test_install.py` — Module installation
 - `test_inverse_cache_alignment.py` — Inverse-write cache pruning, `env.ref` memo
@@ -242,6 +243,7 @@ These run in **both** at_install and post_install phases by default.
 - `test_res_lang.py` — Language management
 - `test_res_partner_bank_account.py` — Bank accounts
 - `test_search.py` — Search operations
+- `test_server_action_tools.py` — TestServerActionTools
 - `test_signature.py` — Digital signatures
 - `test_sort_collation.py` — TestSortCollation
 - `test_sql.py` — SQL tools
@@ -258,14 +260,14 @@ These run in **both** at_install and post_install phases by default.
 
 | Metric | Value |
 |--------|-------|
-| Total test files | 142 |
-| Total test classes | 817 |
-| Total test methods | 4042 |
-| Files with @tagged | 82 (58%) |
-| Files without @tagged | 60 (42%) |
+| Total test files | 144 |
+| Total test classes | 824 |
+| Total test methods | 4064 |
+| Files with @tagged | 82 (57%) |
+| Files without @tagged | 62 (43%) |
 | Classes using post_install | 279 |
 | Unique tags | 29 |
-| Largest test file | test_db_cursor.py (117 classes, 389 tests) |
+| Largest test file | test_db_cursor.py (118 classes, 390 tests) |
 
 Counted as unittest collects them: a method whose name starts with `test`, not
 `test_` — a `testCamelCase` method would run too, so it is counted. A class with

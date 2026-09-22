@@ -805,11 +805,18 @@ class BaseCase(TestCase):
     def capturedQueries(self, flush: bool = True) -> Generator[list[str]]:
         yield from self._patchExecute([], flush)
 
+    def _counts_no_statements(self) -> bool:
+        # a backend that issues no SQL has no statement budget to grade: the
+        # body of the assertion still runs, so a class hosted on the DB-free
+        # tier gets everything the test says about behaviour and leaves the
+        # budget to the database-backed run of the same test
+        return not hasattr(self.cr, "sql_statement_count")
+
     @contextmanager
     def assertQueryCount(
         self, default: int = 0, flush: bool = True, **counters: int
     ) -> Generator[None]:
-        if self.warm:
+        if self.warm and not self._counts_no_statements():
             with patch("random.random", lambda: 1):
                 login = self.env.user.login  # type: ignore[attr-defined]  # res.users is an addon model
                 expected = counters.get(login, default)
@@ -866,7 +873,11 @@ class BaseCase(TestCase):
                             linenum,
                         )
         else:
-            _debug.logic("test.assert.query_count_cold", test=self.canonical_tag)
+            _debug.logic(
+                "test.assert.query_count_cold",
+                test=self.canonical_tag,
+                graded=not self._counts_no_statements(),
+            )
             if flush:
                 self.env.flush_all()
                 self.env.cr.flush()
@@ -883,6 +894,14 @@ class BaseCase(TestCase):
         # whatever the pinned number. Each run gets a savepoint and a cold
         # record cache; the first run is a warm-up that pays the one-off
         # costs (rules, users, ormcaches) neither measured run then meets
+        if self._counts_no_statements():
+            # same rule as assertQueryCount: run the work, grade the shape
+            # where the statements are
+            _debug.logic(
+                "test.assert.queries_constant_ungraded", test=self.canonical_tag
+            )
+            run(small)
+            return
         counts = {}
         for index, size in enumerate((small, small, large)):
             with (
@@ -1599,8 +1618,11 @@ class TransactionCase(BaseCase):
     _starts_freeze_time_itself = True
 
     @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
+    def _open_class_transaction(cls) -> None:
+        # the whole of what binds the class to a database: a case that runs on
+        # another backend (odoo/tests/in_memory_case.py) replaces this method
+        # and inherits everything else, so a hosted class's own setUpClass
+        # builds its fixtures in the environment the case actually uses
         cls.registry = Registry(get_db_name())
         cls._registry_guard = guard = _RegistryGuard(cls.registry, cls.__qualname__)
         cls.addClassCleanup(guard.reset_changes)
@@ -1613,6 +1635,14 @@ class TransactionCase(BaseCase):
         cls._open_class_cursor()
 
         cls.addClassCleanup(release_stranded_test_cursors, cls.__name__)
+
+        cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
+        cls.env.transaction.default_env = cls.env
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls._open_class_transaction()
 
         if cls.freeze_time:
             cls.startClassPatcher(cls.freeze_time)
@@ -1640,9 +1670,6 @@ class TransactionCase(BaseCase):
         cls.startClassPatcher(cls.rollback_patcher)
         cls.close_patcher = patch.object(cls.cr, "close", forbid("close"))
         cls.startClassPatcher(cls.close_patcher)
-
-        cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
-        cls.env.transaction.default_env = cls.env
 
         def _get_crypt_context(self):
             return CryptContext(

@@ -70,7 +70,7 @@ access control, and ORM extensions that those controllers depend on.
 odoo/addons/base/
 ├── __manifest__.py              # Module metadata + asset/data file declarations
 ├── __init__.py                  # Imports models, report, wizard + post_init hook
-├── models/                      # 110 Python model files (core ORM infrastructure)
+├── models/                      # 111 Python model files (core ORM infrastructure)
 │   ├── assetsbundle/            #   Asset compilation package (bundle, JS/CSS/XML pipelines, store)
 │   ├── decimal_precision.py         #   Configurable decimal precision
 │   ├── ir_actions_act_url.py        #   URL action
@@ -142,6 +142,7 @@ odoo/addons/base/
 │   ├── mixin_image.py               #   Multi-resolution image fields
 │   ├── mixin_merge.py               #   Record merge engine (reference repointing)
 │   ├── mixin_module_link.py         #   Manifest-named module link (abstract)
+│   ├── mixin_owner_access.py        #   Access following an owner record (abstract)
 │   ├── mixin_properties_base_definition.py #   Properties support mixin
 │   ├── mixin_recurrence_anchored.py #   Fixed points inside a period: weekday, day, month, twice
 │   ├── mixin_recurrence_interval.py #   Every N units: repeat_interval, repeat_unit, next occurrence
@@ -194,7 +195,7 @@ odoo/addons/base/
 │   ├── reset_view_arch.py           #   Reset view to original arch (soft/hard)
 │   ├── server_action_history.py     #   Server-action run history (diff + restore)
 │   └── wizard_ir_model_menu_create.py #   Create menu item for custom model
-├── tests/                       # 142 Python test files + test assets
+├── tests/                       # 144 Python test files + test assets
 │   ├── common.py                #   Base test classes (demo user, portal user)
 │   └── test_*.py                #   Test modules -- counts in TEST_TAGS.md, derived by factcheck.sh
 ├── views/                       # 38 XML view definition files
@@ -281,9 +282,9 @@ Derived by `factcheck.sh`, which re-measures every row against the tree.
 
 | Category | Count |
 |----------|-------|
-| Python (models) | 110 |
+| Python (models) | 111 |
 | Python (wizards) | 11 |
-| Python (tests) | 142 |
+| Python (tests) | 144 |
 | XML (views) | 38 |
 | Data files | 21 |
 | XML (reports) | 0 |

@@ -802,24 +802,62 @@ def _reflect_models(
 
     for model_cls in registry.models.values():
         model = model_cls(env, (), ())
-        module = getattr(model_cls, "_original_module", None) or "base"
+        # the loader reflects a model once per module that defines or extends
+        # it -- `model._module` is the module being loaded at the time -- so a
+        # module's data file may name `<that module>.model_<slug>`, as web's
+        # report bindings name `web.model_res_company`
+        modules = list(
+            dict.fromkeys(
+                cls._module
+                for cls in getattr(model_cls, "_base_classes__", ())
+                if getattr(cls, "_module", None)
+            )
+        ) or ["base"]
+        original = getattr(model_cls, "_original_module", None) or modules[0]
         slug = model_cls._name.replace(".", "_")
         model_id = storage.allocate_next_id("ir_model")
         row = stored(registry["ir.model"], IrModel._prepare_model_vals(model))
         row["id"] = model_id
         storage.put_rows("ir_model", [row])
-        xmlid(module, f"model_{slug}", "ir.model", model_id)
+        for module in modules:
+            xmlid(module, f"model_{slug}", "ir.model", model_id)
         rows = []
         for field in model_cls._fields.values():
             vals = IrModelFields._prepare_field_vals(field, model_id)
             frow = stored(registry["ir.model.fields"], vals)
             frow["id"] = storage.allocate_next_id("ir_model_fields")
             rows.append(frow)
-            xmlid(module, f"field_{slug}__{field.name}", "ir.model.fields", frow["id"])
+            for module in modules:
+                if _declares_field(registry, model_cls, field, module, original):
+                    xmlid(
+                        module,
+                        f"field_{slug}__{field.name}",
+                        "ir.model.fields",
+                        frow["id"],
+                    )
         if rows:
             storage.put_rows("ir_model_fields", rows)
     if "ir.model.data" in registry and xmlids:
         storage.put_rows("ir_model_data", xmlids)
+
+
+def _declares_field(
+    registry: ModelRegistry,
+    model_cls: type[BaseModel],
+    field: Any,
+    module: str,
+    original: str,
+) -> bool:
+    # ir.model.fields._reflect_field_params' own rule, so a data file naming
+    # `<module>.field_<model>__<name>` resolves exactly where it would on a
+    # database
+    if module == original or module in getattr(field, "_modules", ()):
+        return True
+    return any(
+        parent in registry and field.name in registry[parent]._fields
+        for parent, parent_module in model_cls._inherit_module.items()
+        if module == parent_module
+    )
 
 
 def _create_fixtures(storage: DictBackend, registry: ModelRegistry) -> None:
