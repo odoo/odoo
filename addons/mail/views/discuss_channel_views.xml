@@ -7,7 +7,7 @@
             <field name="model">discuss.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <kanban default_order="last_interest_dt desc" action="open_chat_window_action" type="object" default_group_by="discuss_category_id" js_class="discuss_category_kanban">
+                <kanban default_order="last_interest_dt desc" action="open_chat_window_action" type="object" default_group_by="discuss_category_id" js_class="discuss_category_kanban" group_create="0">
                     <templates>
                         <t t-name="menu">
                             <a type="open" class="dropdown-item" role="menuitem">Advanced Settings</a>
