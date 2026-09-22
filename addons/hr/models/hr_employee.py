@@ -164,6 +164,15 @@ class HrEmployee(models.Model):
         string="Employee Versions",
         groups="hr.group_hr_user",
     )
+    first_contract_date = fields.Date(
+        compute="_compute_first_contract_date",
+        compute_sudo=True,
+        store=True,
+        groups="hr.group_hr_manager",
+        help="Start of the employee's current, unbroken occupation in this "
+        "company. A gap of four days or more between two versions starts a new "
+        "occupation, so an earlier stint does not count towards it.",
+    )
     versions_count = fields.Integer(
         compute="_compute_versions_count",
         groups="hr.group_hr_user",
@@ -1655,6 +1664,13 @@ class HrEmployee(models.Model):
     @api.model
     def _get_new_hire_field_name(self):
         return "create_date"
+
+    @api.depends("version_ids.date_start", "version_ids.date_end")
+    def _compute_first_contract_date(self):
+        # compute_sudo: `_get_first_version_date` refuses a non-HR reader, and a
+        # stored compute runs for whoever writes the version.
+        for employee in self:
+            employee.first_contract_date = employee._get_first_version_date()
 
     def _get_first_versions(self):
         self.check_singleton()
