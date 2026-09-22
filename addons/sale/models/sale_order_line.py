@@ -773,9 +773,11 @@ class SaleOrderLine(models.Model):
             ):
                 continue
 
+            manual_price = has_manual_price(line)
+
             # If the price was manually set (!= technical_price_unit), price shouldn't be reset
             # unless it was requested (pricelist change).
-            if not force_recompute and (manual_price := has_manual_price(line)):
+            if not force_recompute and manual_price:
                 continue
 
             # The price of productless lines shouldn't be reset when the pricelist changes
