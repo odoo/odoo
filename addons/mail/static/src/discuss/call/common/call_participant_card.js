@@ -23,6 +23,7 @@ import { rpc } from "@web/core/network/rpc";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { attClassObjectToString } from "@mail/utils/common/format";
 
 const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
 
@@ -40,6 +41,7 @@ export class CallParticipantCard extends Component {
         this.cardBgColor = signal();
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
+        this.attClassObjectToString = attClassObjectToString;
         this.props = useProps({
             cardData: types.object({
                 key: types.string(),
