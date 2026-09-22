@@ -762,7 +762,7 @@ class AccountEdiCommon(models.AbstractModel):
                     body=_("The bank account couldn't be fetched: %s", str(e))
                 )
         if banks:
-            invoice.partner_bank_id = banks[0]
+            invoice.bank_account_id = banks[0]
 
     def _import_document_allowance_charges(self, tree, record, tax_type, qty_factor=1):
         logs = []

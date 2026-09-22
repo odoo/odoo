@@ -50,7 +50,7 @@ class ResPartnerBankAccount(models.Model):
     partner_customer_rank = fields.Integer(related="partner_id.customer_rank")
     related_moves = fields.One2many(
         comodel_name="account.move",
-        inverse_name="partner_bank_id",
+        inverse_name="bank_account_id",
     )
 
     bank_id = fields.Many2one(tracking=True)

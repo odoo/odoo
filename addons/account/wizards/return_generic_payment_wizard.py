@@ -10,23 +10,23 @@ class AccountReturnGenericPaymentWizard(models.TransientModel):
 
     company_id = fields.Many2one(comodel_name="res.company")
     # compute_sudo=False on both: a related field is privileged by default
-    # (coding_guidelines.rst 10.5), and partner_bank_id is a plain many2one the user
+    # (coding_guidelines.rst 10.5), and bank_account_id is a plain many2one the user
     # sets, so the default would hand back the IBAN of any bank account in the
     # database -- including ones the reader's record rules hide.
     partner_id = fields.Many2one(
         comodel_name="res.partner",
-        related="partner_bank_id.partner_id",
+        related="bank_account_id.partner_id",
         compute_sudo=False,
     )
     acc_number = fields.Char(
-        related="partner_bank_id.acc_number",
+        related="bank_account_id.acc_number",
         string="IBAN",
         compute_sudo=False,
     )
     # No check_company= here on purpose: this model does not set _check_company_auto,
     # so the flag would enforce nothing while reading as though it did. The reader's
     # own record rules are what scope this now, via compute_sudo=False above.
-    partner_bank_id = fields.Many2one(comodel_name="res.partner.bank.account")
+    bank_account_id = fields.Many2one(comodel_name="res.partner.bank.account")
     communication = fields.Char(compute="_compute_communication")
 
     amount_to_pay = fields.Monetary(

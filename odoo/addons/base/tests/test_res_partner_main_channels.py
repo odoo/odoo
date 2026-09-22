@@ -69,10 +69,10 @@ class TestMainChannelsPickTheRightRecord(TransactionCase):
         near = Bank.create(
             {"acc_number": "MAIN-2", "partner_id": self.partner.id, "sequence": 5}
         )
-        self.assertEqual(self.partner.main_bank_id, near)
+        self.assertEqual(self.partner.main_bank_account_id, near)
 
         near.active = False
-        self.assertEqual(self.partner.main_bank_id, far)
+        self.assertEqual(self.partner.main_bank_account_id, far)
 
     def test_they_are_stored_so_a_domain_and_a_group_by_reach_them(self):
         mobile = self._number("+52 55 3333 3333", "mobile")
@@ -87,9 +87,9 @@ class TestMainChannelsPickTheRightRecord(TransactionCase):
             Partner.search([("main_mobile_id", "=", mobile.id)]), self.partner
         )
         grouped = Partner._read_group(
-            [("id", "=", self.partner.id)], ["main_bank_id"], ["__count"]
+            [("id", "=", self.partner.id)], ["main_bank_account_id"], ["__count"]
         )
-        self.assertEqual(grouped[0][0], self.partner.main_bank_id)
+        self.assertEqual(grouped[0][0], self.partner.main_bank_account_id)
 
     def test_preference_lifecycle_and_typed_selection(self):
         self.partner.phone_ids = [

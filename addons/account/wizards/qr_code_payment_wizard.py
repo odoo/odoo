@@ -14,17 +14,17 @@ class QRCodePaymentWizard(models.TransientModel):
 
     qr_code = fields.Html(compute="_compute_qr_code")
 
-    @api.depends("partner_bank_id", "communication", "amount_to_pay")
+    @api.depends("bank_account_id", "communication", "amount_to_pay")
     @_debug.perf.timed
     def _compute_qr_code(self):
         for wizard in self:
             qr_html = False
             if (
-                wizard.partner_bank_id
+                wizard.bank_account_id
                 and not wizard.is_recoverable
                 and wizard.communication
             ):
-                b64_qr = wizard.partner_bank_id.prepare_qr_code_base64(
+                b64_qr = wizard.bank_account_id.prepare_qr_code_base64(
                     amount=wizard.amount_to_pay,
                     free_communication=wizard.communication,
                     structured_communication=wizard.communication,

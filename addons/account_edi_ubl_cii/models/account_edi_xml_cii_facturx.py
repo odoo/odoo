@@ -41,14 +41,14 @@ class AccountEdiXmlCii(models.AbstractModel):
         constraints = self._invoice_constraints_common(invoice)
         if invoice.move_type == "out_invoice":
             # [BR-DE-1] An Invoice must contain information on "PAYMENT INSTRUCTIONS" (BG-16)
-            # first check that a partner_bank_id exists, then check that there is an account number
+            # first check that a bank_account_id exists, then check that there is an account number
             constraints.update(
                 {
                     "seller_payment_instructions_1": self._check_required_fields(
-                        vals["record"], "partner_bank_id"
+                        vals["record"], "bank_account_id"
                     ),
                     "seller_payment_instructions_2": self._check_required_fields(
-                        vals["record"]["partner_bank_id"],
+                        vals["record"]["bank_account_id"],
                         "sanitized_acc_number",
                         _(
                             "The field 'Sanitized Account Number' is required on the Recipient Bank."
@@ -409,7 +409,7 @@ class AccountEdiXmlCii(models.AbstractModel):
             tree, ".//{*}InvoiceCurrencyCode"
         )
 
-        # ==== partner_bank_id ====
+        # ==== bank_account_id ====
         bank_detail_nodes = tree.findall(".//{*}SpecifiedTradeSettlementPaymentMeans")
         bank_details = [
             bank_detail_node.findtext("{*}PayeePartyCreditorFinancialAccount/{*}IBANID")

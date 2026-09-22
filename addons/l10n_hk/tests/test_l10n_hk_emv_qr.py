@@ -43,7 +43,7 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
                 "move_type": "out_invoice",
                 "partner_id": cls.partner_a.id,
                 "currency_id": cls.env.ref("base.HKD").id,
-                "partner_bank_id": cls.acc_emv_hk.id,
+                "bank_account_id": cls.acc_emv_hk.id,
                 "company_id": cls.company_data["company"].id,
                 "invoice_line_ids": [
                     Command.create({"quantity": 1, "price_unit": 100})
@@ -56,7 +56,7 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
                 "move_type": "out_invoice",
                 "partner_id": cls.partner_a.id,
                 "currency_id": cls.env.ref("base.HKD").id,
-                "partner_bank_id": cls.acc_emv_hk.id,
+                "bank_account_id": cls.acc_emv_hk.id,
                 "company_id": cls.company_data["company"].id,
                 "invoice_line_ids": [
                     Command.create({"quantity": 1, "price_unit": 100.5})
@@ -83,7 +83,7 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
 
         # Without fps infomation should fail
         self.company_data["company"].partner_id.city = "HK"
-        self.emv_qr_invoice.partner_bank_id = self.acc_emv_hk_without_fps_info
+        self.emv_qr_invoice.bank_account_id = self.acc_emv_hk_without_fps_info
         with self.assertRaises(
             UserError,
             msg="The account receiving the payment must have a FPS type and a FPS identifier set.",
@@ -93,7 +93,7 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
     def test_emv_qr_vals(self):
         self.emv_qr_invoice.qr_code_method = "emv_qr"
         demo_payment_reference = "INV/TEST/0001"
-        emv_qr_vals = self.emv_qr_invoice.partner_bank_id._prepare_qr_payload(
+        emv_qr_vals = self.emv_qr_invoice.bank_account_id._prepare_qr_payload(
             qr_method=self.emv_qr_invoice.qr_code_method,
             amount=self.emv_qr_invoice.amount_residual,
             currency=self.emv_qr_invoice.currency_id,
@@ -112,7 +112,7 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
     def test_emv_qr_vals_with_non_integer_amount(self):
         self.emv_qr_invoice_with_non_integer_amount.qr_code_method = "emv_qr"
         unstruct_ref = "INV/TEST/0002"
-        emv_qr_vals = self.emv_qr_invoice_with_non_integer_amount.partner_bank_id._prepare_qr_payload(
+        emv_qr_vals = self.emv_qr_invoice_with_non_integer_amount.bank_account_id._prepare_qr_payload(
             qr_method=self.emv_qr_invoice_with_non_integer_amount.qr_code_method,
             amount=self.emv_qr_invoice_with_non_integer_amount.amount_residual,
             currency=self.emv_qr_invoice_with_non_integer_amount.currency_id,

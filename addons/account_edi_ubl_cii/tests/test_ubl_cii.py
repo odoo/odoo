@@ -850,11 +850,11 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             }
         )
         self.env["account.edi.common"]._import_partner_bank(invoice, [acc_number])
-        self.assertFalse(invoice.partner_bank_id)
+        self.assertFalse(invoice.bank_account_id)
 
         partner_bank.active = True
         self.env["account.edi.common"]._import_partner_bank(invoice, [acc_number])
-        self.assertEqual(invoice.partner_bank_id, partner_bank)
+        self.assertEqual(invoice.bank_account_id, partner_bank)
 
     def test_importing_bill_shouldnt_set_current_company_bank_account(self):
         partner = self.env["res.partner"].create({"name": "My Belgian Partner"})
@@ -1073,7 +1073,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
                 "move_type": "out_invoice",
                 "invoice_line_ids": [Command.create({"product_id": self.product_a.id})],
                 "delivery_date": "2024-12-31",
-                "partner_bank_id": partner_bank.id,
+                "bank_account_id": partner_bank.id,
             }
         )
         invoice.action_post()
@@ -1109,7 +1109,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             mandate = self.env["sdd.mandate"].create(
                 {
                     "name": "mandate " + (self.partner_a.name or ""),
-                    "partner_bank_id": partner_bank.id,
+                    "bank_account_id": partner_bank.id,
                     "one_off": True,
                     "start_date": fields.Date.today(),
                     "partner_id": self.partner_a.id,
@@ -1266,7 +1266,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
                 "partner_id": partner.id,
                 "move_type": "out_invoice",
                 "invoice_date": fields.Date.from_string("2025-12-22"),
-                "partner_bank_id": company_bank.id,
+                "bank_account_id": company_bank.id,
                 "invoice_line_ids": [Command.create({"product_id": self.product_a.id})],
             }
         )

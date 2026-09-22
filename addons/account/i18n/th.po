@@ -3998,8 +3998,8 @@ msgid "Available Journal"
 msgstr "สมุดรายวันที่มีอยู่"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
-#: model:ir.model.fields,field_description:account.field_account_payment_register__available_partner_bank_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__available_bank_account_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__available_bank_account_ids
 msgid "Available Partner Bank"
 msgstr "ธนาคารของพาร์ทเนอร์ที่มีอยู่"
 
@@ -4171,8 +4171,8 @@ msgid "Bank Account Number"
 msgstr "หมายเลขบัญชีธนาคาร"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_bank_id
-#: model:ir.model.fields,help:account.field_account_move__partner_bank_id
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_account_id
+#: model:ir.model.fields,help:account.field_account_move__bank_account_id
 msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
@@ -14858,14 +14858,14 @@ msgid "Receive invoices"
 msgstr "รับใบแจ้งหนี้"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
-#: model:ir.model.fields,field_description:account.field_account_move__partner_bank_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__bank_account_id
+#: model:ir.model.fields,field_description:account.field_account_move__bank_account_id
 msgid "Recipient Bank"
 msgstr "ธนาคารผู้รับ"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__partner_bank_id
-#: model:ir.model.fields,field_description:account.field_account_payment_register__partner_bank_id
+#: model:ir.model.fields,field_description:account.field_account_payment__bank_account_id
+#: model:ir.model.fields,field_description:account.field_account_payment_register__bank_account_id
 msgid "Recipient Bank Account"
 msgstr "บัญชีธนาคารของผู้รับ"
 
@@ -15206,7 +15206,7 @@ msgid "Require Partner Bank Account"
 msgstr "ต้องการบัญชีธนาคารของพาร์ทเนอร์"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__res_partner_bank_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_account_id
 msgid "Res Partner Bank"
 msgstr "ธนาคารพาร์ทเนอร์ Res"
 
@@ -19639,7 +19639,7 @@ msgid "Untrusted"
 msgstr "ไม่น่าเชื่อถือ"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment_register__untrusted_bank_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__untrusted_bank_account_ids
 msgid "Untrusted Bank"
 msgstr "ธนาคารที่ไม่น่าเชื่อถือ"
 
@@ -26664,8 +26664,8 @@ msgid "Parent Wizard"
 msgstr "ตัวช่วยหลัก"
 
 #. module: account_reports
-#: model:ir.model.fields,field_description:account_reports.field_account_return_payment_wizard__partner_bank_id
-#: model:ir.model.fields,field_description:account_reports.field_qr_code_payment_wizard__partner_bank_id
+#: model:ir.model.fields,field_description:account_reports.field_account_return_payment_wizard__bank_account_id
+#: model:ir.model.fields,field_description:account_reports.field_qr_code_payment_wizard__bank_account_id
 msgid "Partner Bank"
 msgstr ""
 
@@ -26750,7 +26750,7 @@ msgid "Payment Partner"
 msgstr ""
 
 #. module: account_reports
-#: model:ir.model.fields,field_description:account_reports.field_account_return_type__payment_partner_bank_id
+#: model:ir.model.fields,field_description:account_reports.field_account_return_type__payment_bank_account_id
 msgid "Payment Partner Bank"
 msgstr ""
 

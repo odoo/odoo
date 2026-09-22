@@ -210,7 +210,7 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
         invoice = vals["invoice"]
         supplier = vals["supplier"]
         if (
-            invoice.partner_bank_id in supplier.bank_ids
+            invoice.bank_account_id in supplier.bank_ids
             and payment_means_node.get("cac:PayeeFinancialAccount")
             and payment_means_node["cac:PayeeFinancialAccount"].get(
                 "cac:FinancialInstitutionBranch"

@@ -2092,7 +2092,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         res = self.order.action_pos_order_invoice()
         invoice = self.env["account.move"].browse(res["res_id"])
         self.assertEqual(
-            invoice.partner_bank_id,
+            invoice.bank_account_id,
             self.cash_payment_method.journal_id.bank_account_id,
             "The invoice should have the partner's bank account set.",
         )

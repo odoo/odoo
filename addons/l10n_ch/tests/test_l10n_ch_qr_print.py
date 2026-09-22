@@ -40,7 +40,7 @@ class QRPrintTest(AccountTestInvoicingCommon):
             {
                 "move_type": "out_invoice",
                 "partner_id": cls.partner.id,
-                "partner_bank_id": cls.qr_bank_account.id,
+                "bank_account_id": cls.qr_bank_account.id,
                 "currency_id": cls.env.ref("base.CHF").id,
                 "invoice_date": "2019-01-01",
                 "invoice_line_ids": [(0, 0, {"product_id": cls.product_a.id})],
@@ -51,7 +51,7 @@ class QRPrintTest(AccountTestInvoicingCommon):
             {
                 "move_type": "out_invoice",
                 "partner_id": cls.partner.id,
-                "partner_bank_id": cls.qr_bank_account.id,
+                "bank_account_id": cls.qr_bank_account.id,
                 "currency_id": cls.env.ref("base.EUR").id,
                 "invoice_date": "2019-01-01",
                 "invoice_line_ids": [(0, 0, {"product_id": cls.product_a.id})],
@@ -62,7 +62,7 @@ class QRPrintTest(AccountTestInvoicingCommon):
             {
                 "move_type": "out_invoice",
                 "partner_id": cls.partner_a.id,
-                "partner_bank_id": cls.qr_bank_account.id,
+                "bank_account_id": cls.qr_bank_account.id,
                 "currency_id": cls.env.ref("base.EUR").id,
                 "invoice_date": "2019-01-01",
                 "invoice_line_ids": [(0, 0, {"product_id": cls.product_a.id})],

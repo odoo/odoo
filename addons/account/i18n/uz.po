@@ -4709,8 +4709,8 @@ msgid "Available Journal"
 msgstr "Mavjud jurnal"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
-#: model:ir.model.fields,field_description:account.field_account_payment_register__available_partner_bank_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__available_bank_account_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__available_bank_account_ids
 #, fuzzy
 msgid "Available Partner Bank"
 msgstr "Mavjud hamkor bank"
@@ -4908,8 +4908,8 @@ msgid "Bank Account Number"
 msgstr "Bank hisob raqami"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_bank_id
-#: model:ir.model.fields,help:account.field_account_move__partner_bank_id
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_account_id
+#: model:ir.model.fields,help:account.field_account_move__bank_account_id
 #, fuzzy
 msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
@@ -17393,15 +17393,15 @@ msgid "Receive invoices"
 msgstr "Hisob-fakturalarni qabul qilish"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
-#: model:ir.model.fields,field_description:account.field_account_move__partner_bank_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__bank_account_id
+#: model:ir.model.fields,field_description:account.field_account_move__bank_account_id
 #, fuzzy
 msgid "Recipient Bank"
 msgstr "Qabul qiluvchi bank"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__partner_bank_id
-#: model:ir.model.fields,field_description:account.field_account_payment_register__partner_bank_id
+#: model:ir.model.fields,field_description:account.field_account_payment__bank_account_id
+#: model:ir.model.fields,field_description:account.field_account_payment_register__bank_account_id
 #, fuzzy
 msgid "Recipient Bank Account"
 msgstr "Qabul qiluvchining bank hisobi"
@@ -17805,7 +17805,7 @@ msgid "Require Partner Bank Account"
 msgstr "Hamkor bank hisobini talab qilish"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__res_partner_bank_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_account_id
 #, fuzzy
 msgid "Res Partner Bank"
 msgstr "Hamkor banki"
@@ -23015,7 +23015,7 @@ msgid "Untrusted"
 msgstr "Ishonchsiz"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment_register__untrusted_bank_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__untrusted_bank_account_ids
 #, fuzzy
 msgid "Untrusted Bank"
 msgstr "Ishonchsiz bank"
@@ -31702,8 +31702,8 @@ msgid "Parent Wizard"
 msgstr "Ota-ona ustasi"
 
 #. module: account_reports
-#: model:ir.model.fields,field_description:account_reports.field_account_return_payment_wizard__partner_bank_id
-#: model:ir.model.fields,field_description:account_reports.field_qr_code_payment_wizard__partner_bank_id
+#: model:ir.model.fields,field_description:account_reports.field_account_return_payment_wizard__bank_account_id
+#: model:ir.model.fields,field_description:account_reports.field_qr_code_payment_wizard__bank_account_id
 #, fuzzy
 msgid "Partner Bank"
 msgstr "Hamkor banki"
@@ -31810,7 +31810,7 @@ msgid "Payment Partner"
 msgstr "To‘lov hamkori"
 
 #. module: account_reports
-#: model:ir.model.fields,field_description:account_reports.field_account_return_type__payment_partner_bank_id
+#: model:ir.model.fields,field_description:account_reports.field_account_return_type__payment_bank_account_id
 #, fuzzy
 msgid "Payment Partner Bank"
 msgstr "To‘lov hamkor banki"

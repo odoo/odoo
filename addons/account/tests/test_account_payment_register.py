@@ -856,8 +856,8 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             }
         )
 
-        self.in_invoice_1.with_context(skip_readonly_check=True).partner_bank_id = bank1
-        self.in_invoice_2.with_context(skip_readonly_check=True).partner_bank_id = bank2
+        self.in_invoice_1.with_context(skip_readonly_check=True).bank_account_id = bank1
+        self.in_invoice_2.with_context(skip_readonly_check=True).bank_account_id = bank2
 
         active_ids = (self.in_invoice_1 + self.in_invoice_2 + self.in_refund_1).ids
         payments = (
@@ -1055,10 +1055,10 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
     def test_register_payment_multi_batches_not_grouped(self):
         self.in_invoice_1.with_context(
             skip_readonly_check=True
-        ).partner_bank_id = self.partner_bank_account1
+        ).bank_account_id = self.partner_bank_account1
         self.in_invoice_2.with_context(
             skip_readonly_check=True
-        ).partner_bank_id = self.partner_bank_account2
+        ).bank_account_id = self.partner_bank_account2
 
         active_ids = (self.in_invoice_1 + self.in_invoice_2 + self.in_invoice_3).ids
         payments = (
@@ -1079,19 +1079,19 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
                     "journal_id": self.bank_journal_1.id,
                     "memo": "BILL/2017/01/0001",
                     "payment_channel_id": self.outbound_payment_channel.id,
-                    "partner_bank_id": self.partner_bank_account1.id,
+                    "bank_account_id": self.partner_bank_account1.id,
                 },
                 {
                     "journal_id": self.bank_journal_1.id,
                     "memo": "BILL/2017/01/0002",
                     "payment_channel_id": self.outbound_payment_channel.id,
-                    "partner_bank_id": self.partner_bank_account2.id,
+                    "bank_account_id": self.partner_bank_account2.id,
                 },
                 {
                     "journal_id": self.bank_journal_1.id,
                     "memo": "BILL/2017/01/0003",
                     "payment_channel_id": self.outbound_payment_channel.id,
-                    "partner_bank_id": False,
+                    "bank_account_id": False,
                 },
             ],
         )
@@ -1659,7 +1659,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
     def test_suggested_default_partner_bank_inbound_payment(self):
         self.out_invoice_1.with_context(
             skip_readonly_check=True
-        ).partner_bank_id = False
+        ).bank_account_id = False
 
         ctx = {"active_model": "account.move", "active_ids": self.out_invoice_1.ids}
         wizard = self.env["account.payment.register"].with_context(**ctx).create({})
@@ -1668,15 +1668,15 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             [
                 {
                     "journal_id": self.bank_journal_1.id,
-                    "available_partner_bank_ids": [],
-                    "partner_bank_id": False,
+                    "available_bank_account_ids": [],
+                    "bank_account_id": False,
                 }
             ],
         )
 
         self.out_invoice_1.with_context(
             skip_readonly_check=True
-        ).partner_bank_id = self.comp_bank_account2
+        ).bank_account_id = self.comp_bank_account2
         self.bank_journal_2.bank_account_id = self.comp_bank_account2
         wizard = self.env["account.payment.register"].with_context(**ctx).create({})
         self.assertRecordValues(
@@ -1684,8 +1684,8 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             [
                 {
                     "journal_id": self.bank_journal_2.id,
-                    "available_partner_bank_ids": self.comp_bank_account2.ids,
-                    "partner_bank_id": self.comp_bank_account2.id,
+                    "available_bank_account_ids": self.comp_bank_account2.ids,
+                    "bank_account_id": self.comp_bank_account2.id,
                 }
             ],
         )
@@ -1696,14 +1696,14 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             [
                 {
                     "journal_id": self.bank_journal_1.id,
-                    "available_partner_bank_ids": [],
-                    "partner_bank_id": False,
+                    "available_bank_account_ids": [],
+                    "bank_account_id": False,
                 }
             ],
         )
 
     def test_suggested_default_partner_bank_outbound_payment(self):
-        self.in_invoice_1.with_context(skip_readonly_check=True).partner_bank_id = False
+        self.in_invoice_1.with_context(skip_readonly_check=True).bank_account_id = False
 
         ctx = {"active_model": "account.move", "active_ids": self.in_invoice_1.ids}
         wizard = self.env["account.payment.register"].with_context(**ctx).create({})
@@ -1712,23 +1712,23 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             [
                 {
                     "journal_id": self.bank_journal_1.id,
-                    "available_partner_bank_ids": self.partner_a.bank_ids.ids,
-                    "partner_bank_id": self.partner_bank_account1.id,
+                    "available_bank_account_ids": self.partner_a.bank_ids.ids,
+                    "bank_account_id": self.partner_bank_account1.id,
                 }
             ],
         )
 
         self.in_invoice_1.with_context(
             skip_readonly_check=True
-        ).partner_bank_id = self.partner_bank_account2
+        ).bank_account_id = self.partner_bank_account2
         wizard = self.env["account.payment.register"].with_context(**ctx).create({})
         self.assertRecordValues(
             wizard,
             [
                 {
                     "journal_id": self.bank_journal_1.id,
-                    "available_partner_bank_ids": self.partner_a.bank_ids.ids,
-                    "partner_bank_id": self.partner_bank_account2.id,
+                    "available_bank_account_ids": self.partner_a.bank_ids.ids,
+                    "bank_account_id": self.partner_bank_account2.id,
                 }
             ],
         )
@@ -1739,8 +1739,8 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             [
                 {
                     "journal_id": self.bank_journal_2.id,
-                    "available_partner_bank_ids": self.partner_a.bank_ids.ids,
-                    "partner_bank_id": self.partner_bank_account2.id,
+                    "available_bank_account_ids": self.partner_a.bank_ids.ids,
+                    "bank_account_id": self.partner_bank_account2.id,
                 }
             ],
         )
@@ -1748,10 +1748,10 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
     def test_register_payment_inbound_multiple_bank_account(self):
         self.out_invoice_1.with_context(
             skip_readonly_check=True
-        ).partner_bank_id = self.comp_bank_account1
+        ).bank_account_id = self.comp_bank_account1
         self.out_invoice_2.with_context(
             skip_readonly_check=True
-        ).partner_bank_id = self.comp_bank_account2
+        ).bank_account_id = self.comp_bank_account2
         self.bank_journal_2.bank_account_id = self.comp_bank_account2
 
         ctx = {
@@ -1771,12 +1771,12 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
                 {
                     "journal_id": self.bank_journal_2.id,
                     "memo": "INV/2017/00001",
-                    "partner_bank_id": self.comp_bank_account2.id,
+                    "bank_account_id": self.comp_bank_account2.id,
                 },
                 {
                     "journal_id": self.bank_journal_2.id,
                     "memo": "INV/2017/00002",
-                    "partner_bank_id": self.comp_bank_account2.id,
+                    "bank_account_id": self.comp_bank_account2.id,
                 },
             ],
         )

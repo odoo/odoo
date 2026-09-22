@@ -66,17 +66,17 @@ class AccountPaymentRegister(models.TransientModel):
         comodel_name="account.journal",
         compute="_compute_available_journal_ids",
     )
-    available_partner_bank_ids = fields.Many2many(
+    available_bank_account_ids = fields.Many2many(
         comodel_name="res.partner.bank.account",
-        compute="_compute_available_partner_bank_ids",
+        compute="_compute_available_bank_account_ids",
     )
-    partner_bank_id = fields.Many2one(
+    bank_account_id = fields.Many2one(
         comodel_name="res.partner.bank.account",
         string="Recipient Bank Account",
-        compute="_compute_partner_bank_id",
+        compute="_compute_bank_account_id",
         store=True,
         readonly=False,
-        domain="[('id', 'in', available_partner_bank_ids)]",
+        domain="[('id', 'in', available_bank_account_ids)]",
     )
     company_currency_id = fields.Many2one(
         comodel_name="res.currency",
@@ -252,7 +252,7 @@ class AccountPaymentRegister(models.TransientModel):
     )
     actionable_errors = fields.Json(compute="_compute_actionable_errors")
 
-    untrusted_bank_ids = fields.Many2many(
+    untrusted_bank_account_ids = fields.Many2many(
         comodel_name="res.partner.bank.account",
         compute="_compute_trust_values",
     )
@@ -298,11 +298,11 @@ class AccountPaymentRegister(models.TransientModel):
     def _get_batch_journal(self, batch_result):
         payment_values = batch_result["payment_values"]
         foreign_currency_id = payment_values["currency_id"]
-        partner_bank_id = payment_values["partner_bank_id"]
+        bank_account_id = payment_values["bank_account_id"]
         company = self._get_payment_company(batch_result["lines"])
 
         currency_domain = [("currency_id", "=", foreign_currency_id)]
-        partner_bank_domain = [("bank_account_id", "=", partner_bank_id)]
+        partner_bank_domain = [("bank_account_id", "=", bank_account_id)]
 
         default_domain = [
             *self.env["account.journal"]._check_company_domain(company),
@@ -310,7 +310,7 @@ class AccountPaymentRegister(models.TransientModel):
             ("id", "in", self.available_journal_ids.ids),
         ]
 
-        if partner_bank_id:
+        if bank_account_id:
             extra_domains = (
                 currency_domain + partner_bank_domain,
                 partner_bank_domain,
@@ -331,7 +331,7 @@ class AccountPaymentRegister(models.TransientModel):
                     register=self,
                     journal=journal,
                     company=company,
-                    with_partner_bank=bool(partner_bank_id),
+                    with_partner_bank=bool(bank_account_id),
                     extra_domain=extra_domain,
                 )
                 return journal
@@ -340,7 +340,7 @@ class AccountPaymentRegister(models.TransientModel):
             "batch_journal_not_found",
             register=self,
             company=company,
-            with_partner_bank=bool(partner_bank_id),
+            with_partner_bank=bool(bank_account_id),
             currency_id=foreign_currency_id,
         )
         return self.env["account.journal"]
@@ -371,13 +371,13 @@ class AccountPaymentRegister(models.TransientModel):
 
         partner_bank_account = self.env["res.partner.bank.account"]
         if move.is_invoice(include_receipts=True):
-            partner_bank_account = move.partner_bank_id._origin
+            partner_bank_account = move.bank_account_id._origin
 
         return {
             "partner_id": line.partner_id.id,
             "account_id": line.account_id.id,
             "currency_id": line.currency_id.id,
-            "partner_bank_id": partner_bank_account.id,
+            "bank_account_id": partner_bank_account.id,
             "partner_type": "customer"
             if line.account_type == "asset_receivable"
             else "supplier",
@@ -467,7 +467,7 @@ class AccountPaymentRegister(models.TransientModel):
                 vals["lines"] += line
                 banks_per_partner[batch_key["partner_id"]][
                     "inbound" if line.balance > 0.0 else "outbound"
-                ].add(batch_key["partner_bank_id"])
+                ].add(batch_key["bank_account_id"])
 
             partner_unique_inbound = {
                 p for p, b in banks_per_partner.items() if len(b["inbound"]) == 1
@@ -495,7 +495,7 @@ class AccountPaymentRegister(models.TransientModel):
                         if all(
                             other_vals["payment_values"][k] == v
                             for k, v in vals["payment_values"].items()
-                            if k not in ("partner_bank_id", "payment_type")
+                            if k not in ("bank_account_id", "payment_type")
                         ):
                             lines += other_vals["lines"]
                             seen_keys.add(other_key)
@@ -505,7 +505,7 @@ class AccountPaymentRegister(models.TransientModel):
                 )
                 if merge:
                     partner_banks = banks_per_partner[key["partner_id"]]
-                    vals["payment_values"]["partner_bank_id"] = next(
+                    vals["payment_values"]["bank_account_id"] = next(
                         iter(partner_banks[vals["payment_values"]["payment_type"]])
                     )
                     vals["lines"] = lines
@@ -530,7 +530,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.batches
             )
 
-    @api.depends("payment_channel_id", "line_ids", "group_payment", "partner_bank_id")
+    @api.depends("payment_channel_id", "line_ids", "group_payment", "bank_account_id")
     @_debug.perf.timed
     def _compute_trust_values(self):
         for wizard in self:
@@ -544,7 +544,7 @@ class AccountPaymentRegister(models.TransientModel):
                 total_payment_count = len(total_amount_values["lines"])
 
             for batch in wizard.batches:
-                batch_account = wizard.partner_bank_id or wizard._get_batch_account(
+                batch_account = wizard.bank_account_id or wizard._get_batch_account(
                     batch
                 )
                 if wizard.require_partner_bank_account:
@@ -576,7 +576,7 @@ class AccountPaymentRegister(models.TransientModel):
                 {
                     "total_payments_amount": total_payment_count,
                     "untrusted_payments_count": untrusted_payments_count,
-                    "untrusted_bank_ids": untrusted_accounts or False,
+                    "untrusted_bank_account_ids": untrusted_accounts or False,
                     "missing_account_partners": missing_account_partners or False,
                 }
             )
@@ -712,31 +712,31 @@ class AccountPaymentRegister(models.TransientModel):
                 )[:1]
 
     @api.depends("can_edit_wizard", "journal_id")
-    def _compute_available_partner_bank_ids(self):
+    def _compute_available_bank_account_ids(self):
         for wizard in self:
             if wizard.can_edit_wizard:
                 batch = wizard.batches[0]
-                wizard.available_partner_bank_ids = (
+                wizard.available_bank_account_ids = (
                     wizard._get_batch_available_partner_banks(batch, wizard.journal_id)
                 )
             else:
-                wizard.available_partner_bank_ids = None
+                wizard.available_bank_account_ids = None
 
-    @api.depends("journal_id", "available_partner_bank_ids")
-    def _compute_partner_bank_id(self):
+    @api.depends("journal_id", "available_bank_account_ids")
+    def _compute_bank_account_id(self):
         for wizard in self:
             if wizard.can_edit_wizard:
                 batch = wizard.batches[0]
-                partner_bank_id = batch["payment_values"]["partner_bank_id"]
-                available_partner_banks = wizard.available_partner_bank_ids._origin
-                if partner_bank_id and partner_bank_id in available_partner_banks.ids:
-                    wizard.partner_bank_id = self.env[
+                bank_account_id = batch["payment_values"]["bank_account_id"]
+                available_partner_banks = wizard.available_bank_account_ids._origin
+                if bank_account_id and bank_account_id in available_partner_banks.ids:
+                    wizard.bank_account_id = self.env[
                         "res.partner.bank.account"
-                    ].browse(partner_bank_id)
+                    ].browse(bank_account_id)
                 else:
-                    wizard.partner_bank_id = available_partner_banks[:1]
+                    wizard.bank_account_id = available_partner_banks[:1]
             else:
-                wizard.partner_bank_id = None
+                wizard.bank_account_id = None
 
     @api.depends("payment_type", "journal_id", "currency_id")
     def _compute_available_payment_channel_ids(self):
@@ -1293,7 +1293,7 @@ class AccountPaymentRegister(models.TransientModel):
             wizard.hide_writeoff_section = wizard.early_payment_discount_mode
 
     @api.depends(
-        "partner_bank_id",
+        "bank_account_id",
         "amount",
         "currency_id",
         "payment_channel_id",
@@ -1466,7 +1466,7 @@ class AccountPaymentRegister(models.TransientModel):
             "company_id": self.company_id.id,
             "currency_id": self.currency_id.id,
             "partner_id": self.partner_id.id,
-            "partner_bank_id": self.partner_bank_id.id,
+            "bank_account_id": self.bank_account_id.id,
             "payment_channel_id": self.payment_channel_id.id,
             "destination_account_id": self.line_ids[0].account_id.id,
             "write_off_line_vals": [],
@@ -1528,9 +1528,9 @@ class AccountPaymentRegister(models.TransientModel):
         batch_values = self._get_wizard_values_from_batch(batch_result)
 
         if batch_values["payment_type"] == "inbound":
-            partner_bank_id = self.journal_id.bank_account_id.id
+            bank_account_id = self.journal_id.bank_account_id.id
         else:
-            partner_bank_id = batch_result["payment_values"]["partner_bank_id"]
+            bank_account_id = batch_result["payment_values"]["bank_account_id"]
 
         payment_channel = self.payment_channel_id
 
@@ -1554,8 +1554,8 @@ class AccountPaymentRegister(models.TransientModel):
             "write_off_line_vals": [],
         }
 
-        if partner_bank_id:
-            payment_vals["partner_bank_id"] = partner_bank_id
+        if bank_account_id:
+            payment_vals["bank_account_id"] = bank_account_id
 
         total_amount_values = self._get_total_amounts_to_pay([batch_result])
         total_amount = total_amount_values["amount_by_default"]
@@ -1578,7 +1578,7 @@ class AccountPaymentRegister(models.TransientModel):
                 register=self,
                 payment_type=batch_values["payment_type"],
                 channel_rerouted=payment_channel != self.payment_channel_id,
-                partner_bank_id=partner_bank_id,
+                bank_account_id=bank_account_id,
                 epd_applied=total_amount_values["epd_applied"],
                 amount=payment_vals["amount"],
                 write_offs=len(payment_vals["write_off_line_vals"]),
@@ -1925,12 +1925,12 @@ class AccountPaymentRegister(models.TransientModel):
         return action
 
     def _get_batch_account(self, batch_result):
-        partner_bank_id = batch_result["payment_values"]["partner_bank_id"]
+        bank_account_id = batch_result["payment_values"]["bank_account_id"]
         available_partner_banks = self._get_batch_available_partner_banks(
             batch_result, self.journal_id
         )
-        if partner_bank_id and partner_bank_id in available_partner_banks.ids:
-            return self.env["res.partner.bank.account"].browse(partner_bank_id)
+        if bank_account_id and bank_account_id in available_partner_banks.ids:
+            return self.env["res.partner.bank.account"].browse(bank_account_id)
         else:
             return available_partner_banks[:1]
 
@@ -1941,14 +1941,14 @@ class AccountPaymentRegister(models.TransientModel):
         _debug.logic(
             "untrusted_banks_view_chosen",
             register=self,
-            banks=self.untrusted_bank_ids,
+            banks=self.untrusted_bank_account_ids,
         )
-        if len(self.untrusted_bank_ids) == 1:
+        if len(self.untrusted_bank_account_ids) == 1:
             action = {
                 "view_mode": "form",
                 "res_model": "res.partner.bank.account",
                 "type": "ir.actions.act_window",
-                "res_id": self.untrusted_bank_ids.id,
+                "res_id": self.untrusted_bank_account_ids.id,
                 "views": [
                     [
                         self.env.ref(
@@ -1971,7 +1971,7 @@ class AccountPaymentRegister(models.TransientModel):
                         "form",
                     ],
                 ],
-                "domain": [["id", "in", self.untrusted_bank_ids.ids]],
+                "domain": [["id", "in", self.untrusted_bank_account_ids.ids]],
             }
 
         return action

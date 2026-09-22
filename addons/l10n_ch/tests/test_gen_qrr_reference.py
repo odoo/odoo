@@ -49,7 +49,7 @@ class TestGenQRRReference(AccountTestInvoicingCommon):
             {
                 "move_type": "out_invoice",
                 "partner_id": self.partner.id,
-                "partner_bank_id": self.bank_acc_qriban.id,
+                "bank_account_id": self.bank_acc_qriban.id,
                 "currency_id": self.env.ref("base.EUR").id,
                 "invoice_date": "2019-01-01",
                 "invoice_line_ids": [Command.create({"product_id": self.product_a.id})],
@@ -64,7 +64,7 @@ class TestGenQRRReference(AccountTestInvoicingCommon):
             {
                 "move_type": "out_invoice",
                 "partner_id": self.partner.id,
-                "partner_bank_id": self.bank_acc_qriban.id,
+                "bank_account_id": self.bank_acc_qriban.id,
                 "currency_id": self.env.ref("base.EUR").id,
                 "invoice_date": "2019-01-01",
                 "invoice_line_ids": [Command.create({"product_id": self.product_a.id})],
@@ -75,10 +75,10 @@ class TestGenQRRReference(AccountTestInvoicingCommon):
         self.assertEqual(test_invoice.get_l10n_ch_qrr_number(), expected_qrr)
 
     def test_no_bank_account(self):
-        self.invoice.partner_bank_id = False
+        self.invoice.bank_account_id = False
         self.assertFalse(self.invoice.get_l10n_ch_qrr_number())
 
     def test_wrong_currency(self):
-        self.invoice.partner_bank_id = self.bank_acc_qriban
+        self.invoice.bank_account_id = self.bank_acc_qriban
         self.invoice.currency_id = self.env.ref("base.BTN")
         self.assertFalse(self.invoice.get_l10n_ch_qrr_number())

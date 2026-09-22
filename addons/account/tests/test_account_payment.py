@@ -654,8 +654,8 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
             payment,
             [
                 {
-                    "available_partner_bank_ids": self.partner_a.bank_ids.ids,
-                    "partner_bank_id": self.partner_bank_account1.id,
+                    "available_bank_account_ids": self.partner_a.bank_ids.ids,
+                    "bank_account_id": self.partner_bank_account1.id,
                 }
             ],
         )
@@ -665,8 +665,8 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
             payment,
             [
                 {
-                    "available_partner_bank_ids": [],
-                    "partner_bank_id": False,
+                    "available_bank_account_ids": [],
+                    "bank_account_id": False,
                 }
             ],
         )
@@ -678,8 +678,8 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
             payment,
             [
                 {
-                    "available_partner_bank_ids": self.comp_bank_account2.ids,
-                    "partner_bank_id": self.comp_bank_account2.id,
+                    "available_bank_account_ids": self.comp_bank_account2.ids,
+                    "bank_account_id": self.comp_bank_account2.id,
                 }
             ],
         )

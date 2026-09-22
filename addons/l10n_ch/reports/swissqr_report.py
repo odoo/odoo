@@ -11,7 +11,7 @@ class ReportL10n_ChQr_Report_Main(models.AbstractModel):
 
         qr_code_urls = {}
         for invoice in docs:
-            qr_code_urls[invoice.id] = invoice.partner_bank_id.prepare_qr_code_base64(
+            qr_code_urls[invoice.id] = invoice.bank_account_id.prepare_qr_code_base64(
                 invoice.amount_residual,
                 invoice.payment_reference or invoice.name,
                 invoice.payment_reference,

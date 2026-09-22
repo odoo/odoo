@@ -32,11 +32,11 @@
                 <field name="require_partner_bank_account" invisible="1" />
                 <field name="available_journal_ids" invisible="1" />
                 <field name="available_payment_channel_ids" invisible="1" />
-                <field name="available_partner_bank_ids" invisible="1" />
+                <field name="available_bank_account_ids" invisible="1" />
                 <field name="company_currency_id" invisible="1" />
                 <field name="hide_writeoff_section" invisible="1" />
                 <field name="writeoff_is_exchange_account" invisible="1" />
-                <field name="untrusted_bank_ids" invisible="1" />
+                <field name="untrusted_bank_account_ids" invisible="1" />
                 <field name="missing_account_partners" invisible="1" />
 
                 <div
@@ -93,7 +93,7 @@
                             options="{'no_create': True, 'no_open': True}"
                             required="1" />
                         <field
-                            name="partner_bank_id"
+                            name="bank_account_id"
                             placeholder="Account Number"
                             context="{'display_account_trust': True, 'default_partner_ids': [partner_id]}"
                             invisible="not show_partner_bank_account or not can_edit_wizard or (can_group_payments and not group_payment)"

@@ -25,7 +25,7 @@ class TestL10nBrPix(AccountTestInvoicingCommon):
             {
                 "move_type": "out_invoice",
                 "partner_id": cls.partner_a.id,
-                "partner_bank_id": cls.partner_bank.id,
+                "bank_account_id": cls.partner_bank.id,
                 "invoice_line_ids": [
                     Command.create({"quantity": 1, "price_unit": 12.30})
                 ],  # .30 to make sure we keep the trailing zero
@@ -62,7 +62,7 @@ class TestL10nBrPix(AccountTestInvoicingCommon):
         self.invoice.qr_code_method = "emv_qr"
         demo_payment_reference = "NFe TÉST 0001"  # É and spaces should be removed
 
-        emv_qr_vals = self.invoice.partner_bank_id._prepare_qr_payload(
+        emv_qr_vals = self.invoice.bank_account_id._prepare_qr_payload(
             qr_method=self.invoice.qr_code_method,
             amount=self.invoice.amount_residual,
             currency=self.invoice.currency_id,

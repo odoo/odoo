@@ -131,11 +131,11 @@ class AccountFinancialYearOp(models.TransientModel):
 
 class AccountSetupBankManualConfig(models.TransientModel):
     _name = "account.setup.bank.manual.config"
-    _inherits = {"res.partner.bank.account": "res_partner_bank_id"}
+    _inherits = {"res.partner.bank.account": "bank_account_id"}
     _description = "Bank setup manual config"
     _check_company_auto = True
 
-    res_partner_bank_id = fields.Many2one(
+    bank_account_id = fields.Many2one(
         comodel_name="res.partner.bank.account",
         required=True,
         ondelete="cascade",
@@ -273,12 +273,12 @@ class AccountSetupBankManualConfig(models.TransientModel):
                         "code": new_journal_code,
                         "type": journal_type,
                         "company_id": company.id,
-                        "bank_account_id": record.res_partner_bank_id.id,
+                        "bank_account_id": record.bank_account_id.id,
                         "bank_statements_source": "undefined",
                     }
                 )
             else:
-                selected_journal.bank_account_id = record.res_partner_bank_id.id
+                selected_journal.bank_account_id = record.bank_account_id.id
                 selected_journal.name = record.new_journal_name
 
     def action_finish_bank_setup(self):

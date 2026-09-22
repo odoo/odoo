@@ -312,7 +312,7 @@
                         <field name="show_partner_bank_account" invisible="1" />
                         <field name="require_partner_bank_account" invisible="1" />
                         <field name="available_payment_channel_ids" invisible="1" />
-                        <field name="available_partner_bank_ids" invisible="1" />
+                        <field name="available_bank_account_ids" invisible="1" />
                         <field name="country_code" invisible="1" />
                         <field name="partner_type" invisible="1" />
                         <field name="reconciled_invoices_type" invisible="1" />
@@ -445,21 +445,21 @@
                                     required="1" />
 
                                 <field
-                                    name="partner_bank_id"
+                                    name="bank_account_id"
                                     string="Customer Bank Account"
                                     context="{'default_partner_ids': [partner_id], 'display_account_trust': True}"
                                     invisible="not show_partner_bank_account or partner_type != 'customer' or payment_type == 'inbound'"
                                     required="require_partner_bank_account" />
 
                                 <field
-                                    name="partner_bank_id"
+                                    name="bank_account_id"
                                     string="Vendor Bank Account"
                                     context="{'default_partner_ids': [partner_id], 'display_account_trust': True}"
                                     invisible="not show_partner_bank_account or partner_type != 'supplier' or payment_type == 'inbound'"
                                     required="require_partner_bank_account" />
 
                                 <field
-                                    name="partner_bank_id"
+                                    name="bank_account_id"
                                     string="Company Bank Account"
                                     context="{'default_partner_ids': [partner_id], 'display_account_trust': True}"
                                     invisible="not show_partner_bank_account or payment_type == 'outbound'"

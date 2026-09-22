@@ -378,7 +378,7 @@ class TestItEdiExport(TestItEdi):
             "invoice_date": "2022-03-24",
             "invoice_date_due": "2022-03-24",
             "partner_id": self.italian_partner_a.id,
-            "partner_bank_id": self.test_bank.id,
+            "bank_account_id": self.test_bank.id,
             "invoice_line_ids": [
                 Command.create(
                     {
@@ -415,7 +415,7 @@ class TestItEdiExport(TestItEdi):
                     "invoice_date": "2022-03-24",
                     "invoice_date_due": "2022-03-24",
                     "partner_id": self.italian_partner_a.id,
-                    "partner_bank_id": self.test_bank.id,
+                    "bank_account_id": self.test_bank.id,
                     "invoice_line_ids": [
                         Command.create(
                             {
@@ -470,7 +470,7 @@ class TestItEdiExport(TestItEdi):
                     "invoice_date": "2022-03-24",
                     "invoice_date_due": "2022-03-24",
                     "partner_id": self.italian_partner_a.id,
-                    "partner_bank_id": self.test_bank.id,
+                    "bank_account_id": self.test_bank.id,
                     "invoice_line_ids": [
                         Command.create(
                             {

@@ -139,7 +139,7 @@ class AccountInvoiceReport(models.Model):
             "invoice_date",
             "invoice_date_due",
             "invoice_payment_term_id",
-            "partner_bank_id",
+            "bank_account_id",
             "invoice_currency_rate",
         ],
         "account.move.line": [

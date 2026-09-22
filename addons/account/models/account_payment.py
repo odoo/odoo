@@ -145,17 +145,17 @@ class AccountPayment(models.Model):
         copy=False,
         readonly=True,
     )
-    available_partner_bank_ids = fields.Many2many(
+    available_bank_account_ids = fields.Many2many(
         comodel_name="res.partner.bank.account",
-        compute="_compute_available_partner_bank_ids",
+        compute="_compute_available_bank_account_ids",
     )
-    partner_bank_id = fields.Many2one(
+    bank_account_id = fields.Many2one(
         comodel_name="res.partner.bank.account",
         string="Recipient Bank Account",
-        compute="_compute_partner_bank_id",
+        compute="_compute_bank_account_id",
         store=True,
         readonly=False,
-        domain="[('id', 'in', available_partner_bank_ids)]",
+        domain="[('id', 'in', available_bank_account_ids)]",
         ondelete="restrict",
         check_company=True,
         tracking=True,
@@ -796,20 +796,20 @@ class AccountPayment(models.Model):
     @api.depends(
         "partner_id", "company_id", "payment_type", "journal_id.bank_account_id"
     )
-    def _compute_available_partner_bank_ids(self):
+    def _compute_available_bank_account_ids(self):
         for pay in self:
             if pay.payment_type == "inbound":
-                pay.available_partner_bank_ids = pay.journal_id.bank_account_id
+                pay.available_bank_account_ids = pay.journal_id.bank_account_id
             else:
-                pay.available_partner_bank_ids = pay.partner_id.bank_ids.filtered(
+                pay.available_bank_account_ids = pay.partner_id.bank_ids.filtered(
                     lambda x, pay=pay: x.company_id.id in (False, pay.company_id.id)
                 )._origin
 
-    @api.depends("available_partner_bank_ids", "journal_id")
-    def _compute_partner_bank_id(self):
+    @api.depends("available_bank_account_ids", "journal_id")
+    def _compute_bank_account_id(self):
         for pay in self:
-            if pay.partner_bank_id not in pay.available_partner_bank_ids:
-                pay.partner_bank_id = pay.available_partner_bank_ids[:1]._origin
+            if pay.bank_account_id not in pay.available_bank_account_ids:
+                pay.bank_account_id = pay.available_bank_account_ids[:1]._origin
 
     @api.depends("available_payment_channel_ids", "partner_id", "company_id")
     @_debug.perf.timed
@@ -953,7 +953,7 @@ class AccountPayment(models.Model):
             )
 
     @api.depends(
-        "partner_bank_id",
+        "bank_account_id",
         "amount",
         "memo",
         "currency_id",
@@ -1440,7 +1440,7 @@ class AccountPayment(models.Model):
                 "date": pay.date,
                 "partner_id": pay.partner_id.id,
                 "currency_id": pay.currency_id.id,
-                "partner_bank_id": pay.partner_bank_id.id,
+                "bank_account_id": pay.bank_account_id.id,
                 "line_ids": line_ids_commands,
             }
             if "journal_id" in changed_fields:
@@ -1464,7 +1464,7 @@ class AccountPayment(models.Model):
             "currency_id",
             "partner_id",
             "destination_account_id",
-            "partner_bank_id",
+            "bank_account_id",
             "journal_id",
         )
 
@@ -1506,7 +1506,7 @@ class AccountPayment(models.Model):
             "company_id": self.company_id.id,
             "partner_id": self.partner_id.id,
             "currency_id": self.currency_id.id,
-            "partner_bank_id": self.partner_bank_id.id,
+            "bank_account_id": self.bank_account_id.id,
             "line_ids": line_ids
             or [
                 Command.create(line_vals)
@@ -1536,7 +1536,7 @@ class AccountPayment(models.Model):
         for payment in self:
             if (
                 payment.require_partner_bank_account
-                and not payment.partner_bank_id.allow_out_payment
+                and not payment.bank_account_id.allow_out_payment
                 and payment.payment_type == "outbound"
             ):
                 raise UserError(

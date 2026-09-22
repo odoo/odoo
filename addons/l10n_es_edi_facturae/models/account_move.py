@@ -600,7 +600,7 @@ class AccountMove(models.Model):
         """
         self.check_singleton()
         installments = []
-        if self.is_inbound() and self.partner_bank_id:
+        if self.is_inbound() and self.bank_account_id:
             for payment_term in self.line_ids.filtered(
                 lambda l: l.display_type == "payment_term"
             ).sorted("date_maturity"):
@@ -610,8 +610,8 @@ class AccountMove(models.Model):
                         "InstallmentAmount": payment_term.amount_residual_currency,
                         "PaymentMeans": self.l10n_es_payment_means or "04",
                         "AccountToBeCredited": {
-                            "IBAN": self.partner_bank_id.sanitized_acc_number,
-                            "BIC": self.partner_bank_id.bank_bic,
+                            "IBAN": self.bank_account_id.sanitized_acc_number,
+                            "BIC": self.bank_account_id.bank_bic,
                         },
                     }
                 )

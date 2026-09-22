@@ -36,7 +36,7 @@ class TestMergePartner(AccountTestInvoicingCommon):
         cls.payment1 = cls.Payment.create(
             {
                 "partner_id": cls.partner1.id,
-                "partner_bank_id": cls.bank1.id,
+                "bank_account_id": cls.bank1.id,
                 "amount": 100,
                 "payment_type": "outbound",
                 "payment_method_id": cls.env.ref(
@@ -48,7 +48,7 @@ class TestMergePartner(AccountTestInvoicingCommon):
         cls.payment2 = cls.Payment.create(
             {
                 "partner_id": cls.partner2.id,
-                "partner_bank_id": cls.bank2.id,
+                "bank_account_id": cls.bank2.id,
                 "amount": 200,
                 "payment_type": "outbound",
                 "payment_method_id": cls.env.ref(
@@ -60,7 +60,7 @@ class TestMergePartner(AccountTestInvoicingCommon):
         cls.payment3 = cls.Payment.create(
             {
                 "partner_id": cls.partner3.id,
-                "partner_bank_id": cls.bank3.id,
+                "bank_account_id": cls.bank3.id,
                 "amount": 200,
                 "payment_type": "outbound",
                 "payment_method_id": cls.env.ref(
@@ -91,12 +91,12 @@ class TestMergePartner(AccountTestInvoicingCommon):
             "Payment should be linked to the destination partner",
         )
         self.assertEqual(
-            self.payment1.partner_bank_id.partner_id,
+            self.payment1.bank_account_id.partner_id,
             self.partner1,
             "Payment's bank account should belong to the destination partner",
         )
         self.assertEqual(
-            self.payment2.partner_bank_id.partner_id,
+            self.payment2.bank_account_id.partner_id,
             self.partner1,
             "Payment's bank account should belong to the destination partner",
         )
@@ -122,12 +122,12 @@ class TestMergePartner(AccountTestInvoicingCommon):
             "Payment should be linked to the destination partner",
         )
         self.assertEqual(
-            self.payment1.partner_bank_id.partner_id,
+            self.payment1.bank_account_id.partner_id,
             self.partner1,
             "Payment's bank account should belong to the destination partner",
         )
         self.assertEqual(
-            self.payment3.partner_bank_id.partner_id,
+            self.payment3.bank_account_id.partner_id,
             self.partner1,
             "Payment's bank account should belong to the destination partner",
         )

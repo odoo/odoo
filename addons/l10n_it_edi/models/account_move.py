@@ -1130,7 +1130,7 @@ class AccountMove(models.Model):
             if not is_self_invoice
             else "RF18",
             "is_self_invoice": is_self_invoice,
-            "partner_bank": self.partner_bank_id,
+            "partner_bank": self.bank_account_id,
             "formato_trasmissione": formato_trasmissione,
             "document_type": document_type,
             "payment_method": self.l10n_it_payment_method,
@@ -2059,7 +2059,7 @@ class AccountMove(models.Model):
                             limit=1,
                         )
                     if bank:
-                        self.partner_bank_id = bank
+                        self.bank_account_id = bank
                     else:
                         message = Markup("<br/>").join(
                             (

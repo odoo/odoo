@@ -36,7 +36,7 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
                 "move_type": "out_invoice",
                 "partner_id": cls.partner_a.id,
                 "currency_id": cls.env.ref("base.CHF").id,
-                "partner_bank_id": cls.swiss_iban.id,
+                "bank_account_id": cls.swiss_iban.id,
                 "company_id": cls.company_data["company"].id,
                 "payment_reference": "Papa a vu le fifi de lolo",
                 "invoice_line_ids": [
@@ -84,7 +84,7 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
         self.ch_qr_invoice._generate_qr_code()
 
         # Now, check with a QR-IBAN as the payment account
-        self.ch_qr_invoice.partner_bank_id = self.swiss_qr_iban
+        self.ch_qr_invoice.bank_account_id = self.swiss_qr_iban
 
         with self.assertRaises(
             UserError,
@@ -112,7 +112,7 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
         unstruct_ref = (
             self.ch_qr_invoice.ref and self.ch_qr_invoice.ref
         ) or self.ch_qr_invoice.name
-        vals = self.ch_qr_invoice.partner_bank_id._prepare_qr_code_vals(
+        vals = self.ch_qr_invoice.bank_account_id._prepare_qr_code_vals(
             self.ch_qr_invoice.amount_residual,
             unstruct_ref,
             self.ch_qr_invoice.payment_reference,
@@ -120,7 +120,7 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
             self.ch_qr_invoice.partner_id,
             self.ch_qr_invoice.qr_code_method,
         )
-        value_list = self.ch_qr_invoice.partner_bank_id._prepare_qr_payload(**vals)
+        value_list = self.ch_qr_invoice.bank_account_id._prepare_qr_payload(**vals)
 
         self.assertEqual(
             "".join(value_list).count("\n"),

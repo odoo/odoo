@@ -58,7 +58,7 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
     def test_invoice_and_credit_note(self):
         with freeze_time("2024-02-01"):
             invoice = self.create_invoice_simple()
-            invoice.partner_bank_id = self.bank_company
+            invoice.bank_account_id = self.bank_company
             invoice.action_post()
             invoice._l10n_hu_edi_set_chain_index()
             invoice_xml = invoice._l10n_hu_edi_generate_xml()
@@ -75,7 +75,7 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
             invoice.write({"l10n_hu_edi_state": "confirmed"})
 
             credit_note = self.create_reversal(invoice)
-            credit_note.partner_bank_id = self.bank_partner
+            credit_note.bank_account_id = self.bank_partner
             credit_note.action_post()
             credit_note._l10n_hu_edi_set_chain_index()
             credit_note_xml = credit_note._l10n_hu_edi_generate_xml()
@@ -159,7 +159,7 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
     def test_tax_audit_export(self):
         with freeze_time("2024-02-01"):
             invoice = self.create_invoice_simple()
-            invoice.partner_bank_id = self.bank_company
+            invoice.bank_account_id = self.bank_company
             invoice.action_post()
 
             tax_audit_export = self.env["l10n_hu_edi.tax_audit_export"].create(

@@ -305,15 +305,15 @@
 
                         <!-- Bank account. -->
                         <ram:SpecifiedTradeSettlementPaymentMeans
-                            t-if="record.partner_bank_id.sanitized_acc_number">
+                            t-if="record.bank_account_id.sanitized_acc_number">
                             <ram:TypeCode t-out="payment_means_code" />
                             <ram:PayeePartyCreditorFinancialAccount>
                                 <ram:IBANID
-                                    t-if="record.partner_bank_id.acc_type == 'iban'"
-                                    t-out="record.partner_bank_id.sanitized_acc_number" />
+                                    t-if="record.bank_account_id.acc_type == 'iban'"
+                                    t-out="record.bank_account_id.sanitized_acc_number" />
                                 <ram:ProprietaryID
-                                    t-if="record.partner_bank_id.acc_type != 'iban'"
-                                    t-out="record.partner_bank_id.sanitized_acc_number" />
+                                    t-if="record.bank_account_id.acc_type != 'iban'"
+                                    t-out="record.bank_account_id.sanitized_acc_number" />
                             </ram:PayeePartyCreditorFinancialAccount>
                         </ram:SpecifiedTradeSettlementPaymentMeans>
 

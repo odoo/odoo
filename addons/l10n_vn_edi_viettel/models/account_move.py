@@ -779,11 +779,11 @@ class AccountMove(models.Model):
             "buyerNotGetInvoice": 0,  # Set to 1 to no send the invoice to the buyer.
         }
 
-        if self.partner_bank_id:
+        if self.bank_account_id:
             buyer_information.update(
                 {
-                    "buyerBankName": self.partner_bank_id.bank_name,
-                    "buyerBankAccount": self.partner_bank_id.acc_number,
+                    "buyerBankName": self.bank_account_id.bank_name,
+                    "buyerBankAccount": self.bank_account_id.acc_number,
                 }
             )
 
@@ -807,18 +807,18 @@ class AccountMove(models.Model):
             "sellerWebsite": self.company_id.website,
         }
 
-        if self.partner_bank_id:
+        if self.bank_account_id:
             seller_information.update(
                 {
-                    "sellerBankName": self.partner_bank_id.bank_name,
-                    "sellerBankAccount": self.partner_bank_id.acc_number,
+                    "sellerBankName": self.bank_account_id.bank_name,
+                    "sellerBankAccount": self.bank_account_id.acc_number,
                 }
             )
 
-            if self.partner_bank_id.proxy_type == "merchant_id":
+            if self.bank_account_id.proxy_type == "merchant_id":
                 seller_information.update(
                     {
-                        "merchantCode": self.partner_bank_id.proxy_value,
+                        "merchantCode": self.bank_account_id.proxy_value,
                         "merchantName": self.company_id.name,
                         "merchantCity": self.company_id.city,
                     }

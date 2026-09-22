@@ -2136,7 +2136,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 "ref": "Reversal of: %s, %s"
                 % (self.invoice.name, move_reversal.reason),
                 "payment_state": "not_paid",
-                "partner_bank_id": bank1.id,
+                "bank_account_id": bank1.id,
                 "invoice_origin": "S00001",
             },
         )
@@ -3163,7 +3163,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move.action_switch_move_type()
 
         self.assertEqual(move.bank_partner_id, self.partner_a)
-        self.assertEqual(move.partner_bank_id, bank)
+        self.assertEqual(move.bank_account_id, bank)
 
     def test_out_invoice_reverse_move_tags(self):
         country = self.env.ref("base.us")
@@ -5931,10 +5931,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             )
         )
         self.assertEqual(company_1.partner_id, invoice_new.bank_partner_id)
-        self.assertEqual(bank, invoice_new.partner_bank_id)
+        self.assertEqual(bank, invoice_new.bank_account_id)
         invoice_new.company_id = company_2
         self.assertEqual(company_2.partner_id, invoice_new.bank_partner_id)
-        self.assertEqual(bank_2, invoice_new.partner_bank_id)
+        self.assertEqual(bank_2, invoice_new.bank_account_id)
 
     def test_out_invoice_tax_tags(self):
         country = self.env.ref("base.us")

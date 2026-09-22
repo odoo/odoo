@@ -1582,9 +1582,9 @@ class HrExpense(models.Model):
 
     def action_pay(self):
         return self.account_move_id.with_context(
-            default_partner_bank_id=(
-                self.account_move_id.partner_bank_id.id
-                if len(self.account_move_id.partner_bank_id) <= 1
+            default_bank_account_id=(
+                self.account_move_id.bank_account_id.id
+                if len(self.account_move_id.bank_account_id) <= 1
                 else None
             )
         ).action_register_payment()
@@ -2161,7 +2161,7 @@ class HrExpense(models.Model):
                         Command.create(expense_sudo._prepare_move_lines_vals())
                         for expense_sudo in expenses_sudo
                     ],
-                    "partner_bank_id": employee_sudo.primary_bank_account_id.id,
+                    "bank_account_id": employee_sudo.primary_bank_account_id.id,
                     "attachment_ids": attachments_data,
                 }
             )

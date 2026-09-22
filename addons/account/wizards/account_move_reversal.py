@@ -244,7 +244,7 @@ class AccountMoveReversal(models.TransientModel):
 
         default_values_list = [
             {
-                "partner_bank_id": False,
+                "bank_account_id": False,
                 **self._prepare_default_reversal(move),
             }
             for move in moves
@@ -269,7 +269,7 @@ class AccountMoveReversal(models.TransientModel):
             new_moves = batch_moves._reverse_moves(
                 batch_default_values, cancel=is_cancel_needed
             )
-            new_moves._compute_partner_bank_id()
+            new_moves._compute_bank_account_id()
             batch_moves._message_log_batch(
                 bodies={
                     move.id: move.env._(
@@ -282,7 +282,7 @@ class AccountMoveReversal(models.TransientModel):
 
             if is_modify:
                 new_moves = self._get_modified_reversal_moves(batch_moves)
-                new_moves._compute_partner_bank_id()
+                new_moves._compute_bank_account_id()
 
             moves_to_redirect |= new_moves
 

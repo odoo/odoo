@@ -1242,7 +1242,7 @@
                                 invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
                                 readonly="inalterable_hash != False" />
                             <field
-                                name="partner_bank_id"
+                                name="bank_account_id"
                                 domain="[('partner_id', '=', bank_partner_id)]"
                                 context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
                                 invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
@@ -1867,13 +1867,13 @@
                                         force_save="1"
                                         invisible="1" />
                                     <field
-                                        name="partner_bank_id"
+                                        name="bank_account_id"
                                         domain="[('partner_id.ref_company_ids', 'parent_of', company_id)]"
                                         context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
                                         invisible="move_type != 'out_invoice'"
                                         readonly="is_move_sent and state != 'draft'" />
                                     <field
-                                        name="partner_bank_id"
+                                        name="bank_account_id"
                                         domain="[('partner_id', '=', bank_partner_id)]"
                                         context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
                                         invisible="move_type != 'out_refund'"

@@ -22,7 +22,7 @@
             <t
                 t-set="currency"
                 t-value="record.currency_id or record.company_currency_id" />
-            <t t-set="bank" t-value="record.partner_bank_id" />
+            <t t-set="bank" t-value="record.bank_account_id" />
             <p:FatturaElettronicaSemplificata
                 xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
                 xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.0"

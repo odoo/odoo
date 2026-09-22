@@ -98,7 +98,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
     def swissqr_not_generated(self, invoice):
         """Prints the given invoice and tests that no Swiss QR generation is triggered."""
         self.assertTrue(
-            invoice.partner_bank_id._get_error_messages_for_qr(
+            invoice.bank_account_id._get_error_messages_for_qr(
                 "ch_qr", invoice.partner_id, invoice.currency_id
             ),
             "No Swiss QR should be generated for this invoice",
@@ -108,7 +108,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
         """Ensure correct params for Swiss QR generation."""
 
         self.assertFalse(
-            invoice.partner_bank_id._get_error_messages_for_qr(
+            invoice.bank_account_id._get_error_messages_for_qr(
                 "ch_qr", invoice.partner_id, invoice.currency_id
             ),
             "A Swiss QR can be generated",
@@ -150,7 +150,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
             "{unstr_msg}\n"
             "EPD"
         ).format(
-            iban=invoice.partner_bank_id.sanitized_acc_number,
+            iban=invoice.bank_account_id.sanitized_acc_number,
             ref_type=ref_type,
             struct_ref=struct_ref or "",
             unstr_msg=unstr_msg,
@@ -166,7 +166,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
             "value": payload,
         }
 
-        params = invoice.partner_bank_id._prepare_qr_rendering_params(
+        params = invoice.bank_account_id._prepare_qr_rendering_params(
             "ch_qr",
             42.0,
             invoice.currency_id,
@@ -185,7 +185,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
         # Now we add an account for payment to our invoice
         # Here we don't use a structured reference
         iban_account = self.create_account(CH_IBAN)
-        self.invoice1.partner_bank_id = iban_account
+        self.invoice1.bank_account_id = iban_account
         self.invoice1.action_post()
         self.swissqr_generated(self.invoice1, ref_type="NON")
 
@@ -193,7 +193,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
         # Now use a proper QR-IBAN, we are good to print a QR Bill
         qriban_account = self.create_account(QR_IBAN)
         self.assertTrue(qriban_account.l10n_ch_qr_iban)
-        self.invoice1.partner_bank_id = qriban_account
+        self.invoice1.bank_account_id = qriban_account
         self.invoice1.action_post()
         self.swissqr_generated(self.invoice1, ref_type="QRR")
 

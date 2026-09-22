@@ -45,7 +45,7 @@ class TestQris(AccountTestInvoicingCommon):
                     "move_type": "out_invoice",
                     "partner_id": cls.partner_a.id,
                     "currency_id": cls.env.ref("base.IDR").id,
-                    "partner_bank_id": cls.acc_qris_id.id,
+                    "bank_account_id": cls.acc_qris_id.id,
                     "company_id": cls.company_data["company"].id,
                     "invoice_line_ids": [
                         Command.create({"quantity": 1, "price_unit": 100})

@@ -737,10 +737,10 @@ class AccountMove(models.Model):
         compute="_compute_partner_shipping_domain",
         help="Dynamic domain limiting delivery address selection.",
     )
-    partner_bank_id = fields.Many2one(
+    bank_account_id = fields.Many2one(
         comodel_name="res.partner.bank.account",
         string="Recipient Bank",
-        compute="_compute_partner_bank_id",
+        compute="_compute_bank_account_id",
         store=True,
         index="btree_not_null",
         readonly=False,
@@ -1515,7 +1515,7 @@ class AccountMove(models.Model):
 
     @api.depends("bank_partner_id", "currency_id", "preferred_payment_channel_id")
     @_debug.perf.timed
-    def _compute_partner_bank_id(self):
+    def _compute_bank_account_id(self):
         def _bank_selection_key(bank):
             if bank.currency_id == move.currency_id or not bank.currency_id:
                 currency_priority = 0
@@ -1534,16 +1534,16 @@ class AccountMove(models.Model):
                 )
                 and payment_method.journal_id
             ):
-                move.partner_bank_id = payment_method.journal_id.bank_account_id
+                move.bank_account_id = payment_method.journal_id.bank_account_id
                 _debug.logic(
                     "partner_bank_payment_channel",
                     move=move,
-                    partner_bank_id=move.partner_bank_id,
+                    bank_account_id=move.bank_account_id,
                     payment_method=payment_method,
                 )
                 continue
 
-            move.partner_bank_id = move.bank_partner_id.bank_ids.filtered_domain(
+            move.bank_account_id = move.bank_partner_id.bank_ids.filtered_domain(
                 [
                     *self.env["res.partner.bank.account"]._check_company_domain(
                         move.company_id
@@ -1554,7 +1554,7 @@ class AccountMove(models.Model):
             _debug.logic(
                 "partner_bank_bank_partner",
                 move=move,
-                partner_bank_id=move.partner_bank_id,
+                bank_account_id=move.bank_account_id,
                 bank_partner_id=move.bank_partner_id,
                 bank_ids_count=len(move.bank_partner_id.bank_ids),
             )
@@ -5835,9 +5835,9 @@ class AccountMove(models.Model):
 
     @_debug.perf.timed
     def _check_post_partner_bank(self, invoice, validation_msgs):
-        if invoice.partner_bank_id and not invoice.partner_bank_id.active:
+        if invoice.bank_account_id and not invoice.bank_account_id.active:
             _debug.logic(
-                "partner_bank_archived", move=invoice, bank=invoice.partner_bank_id
+                "partner_bank_archived", move=invoice, bank=invoice.bank_account_id
             )
             validation_msgs.add(
                 _(
@@ -5846,29 +5846,29 @@ class AccountMove(models.Model):
                 )
             )
         if (
-            invoice.partner_bank_id
+            invoice.bank_account_id
             and invoice.is_inbound()
-            and not invoice.partner_bank_id.allow_out_payment
+            and not invoice.bank_account_id.allow_out_payment
         ):
             _debug.logic(
                 "partner_bank_untrusted",
                 move=invoice,
-                bank=invoice.partner_bank_id,
+                bank=invoice.bank_account_id,
                 su=self.env.su,
             )
             if self.env.su or self.env.user.has_groups(
                 "base.group_public,base.group_portal"
             ):
                 _debug.logic("partner_bank_cleared", move=invoice)
-                invoice.partner_bank_id = False
-            elif invoice.partner_bank_id._can_user_trust():
+                invoice.bank_account_id = False
+            elif invoice.bank_account_id._can_user_trust():
                 raise RedirectWarning(
                     _(
                         "The company bank account (%(account_number)s) linked to this invoice is not trusted. "
                         "Go to the Bank Settings, double-check that it is yours or correct the number, and click on Send Money to trust it.",
-                        account_number=invoice.partner_bank_id.display_name,
+                        account_number=invoice.bank_account_id.display_name,
                     ),
-                    invoice.partner_bank_id._get_records_action(),
+                    invoice.bank_account_id._get_records_action(),
                     _("Bank settings"),
                 )
             else:
@@ -7677,7 +7677,7 @@ class AccountMove(models.Model):
     def _get_qr_code_method(self):
         self.check_singleton()
         if self.qr_code_method:
-            error_msg = self.partner_bank_id._get_error_messages_for_qr(
+            error_msg = self.bank_account_id._get_error_messages_for_qr(
                 self.qr_code_method, self.partner_id, self.currency_id
             )
             if error_msg:
@@ -7689,7 +7689,7 @@ class AccountMove(models.Model):
         for candidate_method, _candidate_name in self.env[
             "res.partner.bank.account"
         ].get_available_qr_methods_in_sequence():
-            if not self.partner_bank_id._get_error_messages_for_qr(
+            if not self.bank_account_id._get_error_messages_for_qr(
                 candidate_method, self.partner_id, self.currency_id
             ):
                 _debug.logic(
@@ -7719,7 +7719,7 @@ class AccountMove(models.Model):
             return None
 
         unstruct_ref = self.payment_reference or self.name
-        rslt = self.partner_bank_id.prepare_qr_code_base64(
+        rslt = self.bank_account_id.prepare_qr_code_base64(
             self.amount_residual,
             unstruct_ref,
             self.payment_reference,

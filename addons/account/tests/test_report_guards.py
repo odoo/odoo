@@ -456,7 +456,7 @@ class TestMultiCompanyScoping(TestAccountReportsCommon):
 class TestPaymentWizardBankExposure(TestAccountReportsCommon):
     """A related field is privileged by default (coding_guidelines.rst 10.5).
 
-    partner_bank_id is a plain many2one the user sets, so a privileged read of
+    bank_account_id is a plain many2one the user sets, so a privileged read of
     acc_number hands back the IBAN of any bank account in the database.
     """
 
@@ -520,7 +520,7 @@ class TestPaymentWizardBankExposure(TestAccountReportsCommon):
         return (
             self.env["account.return.payment.wizard"]
             .with_user(self.accountant_a)
-            .create({"return_id": self.account_return.id, "partner_bank_id": bank.id})
+            .create({"return_id": self.account_return.id, "bank_account_id": bank.id})
         )
 
     def test_the_wizard_does_not_reveal_a_bank_account_the_reader_cannot_read(self):

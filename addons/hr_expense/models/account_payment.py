@@ -37,7 +37,7 @@ class AccountPayment(models.Model):
             "currency_id",
             "partner_id",
             "destination_account_id",
-            "partner_bank_id",
+            "bank_account_id",
             "journal_id",
             "ref",
             "payment_channel_id",

@@ -438,7 +438,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
 
     def test_payment_bank_account_details(self):
         """
-        Test that RachunekBankowy is generated when a partner_bank_id is set on the invoice.
+        Test that RachunekBankowy is generated when a bank_account_id is set on the invoice.
         """
         # Create a Bank Account for the Company
         bank_acc = self.env["res.partner.bank.account"].create(
@@ -455,7 +455,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
                 "move_type": "out_invoice",
                 "partner_id": self.partner_pl.id,
                 "invoice_date": fields.Date.today(),
-                "partner_bank_id": bank_acc.id,
+                "bank_account_id": bank_acc.id,
                 "invoice_line_ids": [
                     Command.create(
                         {"product_id": self.product_a.id, "price_unit": 100.0}

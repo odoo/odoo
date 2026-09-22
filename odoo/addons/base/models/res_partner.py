@@ -426,10 +426,10 @@ class ResPartner(models.Model):
         inverse_name="partner_id",
         string="Banks",
     )
-    main_bank_id = fields.Many2one(
+    main_bank_account_id = fields.Many2one(
         comodel_name="res.partner.bank.account",
         string="Main Bank Account",
-        compute="_compute_main_bank_id",
+        compute="_compute_main_bank_account_id",
         store=True,
         help="The account this contact is paid on when a single one is needed. "
         "The first active account, by the order bank accounts carry.",
@@ -838,10 +838,10 @@ class ResPartner(models.Model):
             )[:1]
 
     @api.depends("bank_ids", "bank_ids.sequence", "bank_ids.active")
-    def _compute_main_bank_id(self) -> None:
+    def _compute_main_bank_account_id(self) -> None:
         sources = self.with_context(active_test=False)
         for partner, source in zip(self, sources, strict=True):
-            partner.main_bank_id = source.bank_ids.filtered("active")[:1]
+            partner.main_bank_account_id = source.bank_ids.filtered("active")[:1]
 
     @api.depends("industry_ids")
     def _compute_primary_industry_id(self) -> None:

@@ -178,7 +178,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
                 )
             )
             self.assertEqual(
-                payment_register.partner_bank_id.partner_id,
+                payment_register.bank_account_id.partner_id,
                 expenses.employee_id.partner_id,
             )
             return payment_register._create_payments()

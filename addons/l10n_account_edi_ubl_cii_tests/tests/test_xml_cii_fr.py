@@ -162,7 +162,7 @@ class TestCIIFR(TestUBLCommon):
             self.partner_1,
             self.partner_2,
             move_type="out_invoice",
-            partner_bank_id=acc_bank.id,
+            bank_account_id=acc_bank.id,
             invoice_line_ids=[
                 {
                     "product_id": self.product_a.id,

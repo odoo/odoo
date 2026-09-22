@@ -430,7 +430,7 @@ class AccountMove(models.Model):
                 "action_text": _("View Company/ies"),
             },
             "partner_bank_account_invalid": {
-                "records": self.partner_bank_id.filtered(
+                "records": self.bank_account_id.filtered(
                     lambda p: not hu_bank_account_regex.fullmatch(p.acc_number)
                 ),
                 "message": _("Please set a valid recipient bank account number!"),
@@ -1115,13 +1115,13 @@ class AccountMove(models.Model):
         customer = self.partner_id.commercial_partner_id
 
         supplier_bank = (
-            self.partner_bank_id
-            if self.partner_bank_id and self.move_type == "out_invoice"
+            self.bank_account_id
+            if self.bank_account_id and self.move_type == "out_invoice"
             else supplier.bank_ids[:1]
         )
         customer_bank = (
-            self.partner_bank_id
-            if self.partner_bank_id and self.move_type == "out_refund"
+            self.bank_account_id
+            if self.bank_account_id and self.move_type == "out_refund"
             else customer.bank_ids[:1]
         )
 

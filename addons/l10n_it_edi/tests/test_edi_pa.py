@@ -31,7 +31,7 @@ class TestItEdiPa(TestItEdi):
             "invoice_date": datetime.date(2022, 3, 24),
             "invoice_date_due": datetime.date(2022, 3, 24),
             "partner_id": cls.italian_partner_b.id,
-            "partner_bank_id": cls.test_bank.id,
+            "bank_account_id": cls.test_bank.id,
             "invoice_line_ids": [
                 Command.create(cls.split_payment_line_data),
             ],

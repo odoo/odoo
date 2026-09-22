@@ -735,7 +735,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             # note: Payment account identifier is <cac:PayeeFinancialAccount>
             # note: no need to check account_number, because it's a required field for a partner_bank
             "cen_en16931_payment_account_identifier": self._check_required_fields(
-                invoice, "partner_bank_id"
+                invoice, "bank_account_id"
             )
             if vals["document_node"]["cac:PaymentMeans"]["cbc:PaymentMeansCode"][
                 "_text"
@@ -911,7 +911,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                     else "",
                     # [NL-R-007] For suppliers in the Netherlands, the supplier MUST provide a means of payment
                     # (cac:PaymentMeans) if the payment is from customer to supplier
-                    "nl_r_007": self._check_required_fields(invoice, "partner_bank_id"),
+                    "nl_r_007": self._check_required_fields(invoice, "bank_account_id"),
                 }
             )
 

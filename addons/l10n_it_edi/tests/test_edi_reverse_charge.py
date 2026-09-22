@@ -166,7 +166,7 @@ class TestItEdiReverseCharge(TestItEdi):
                     "invoice_date": "2022-03-24",
                     "invoice_date_due": "2022-03-24",
                     "partner_id": self.french_partner.id,
-                    "partner_bank_id": self.test_bank.id,
+                    "bank_account_id": self.test_bank.id,
                     "invoice_line_ids": [
                         Command.create(
                             {
@@ -201,7 +201,7 @@ class TestItEdiReverseCharge(TestItEdi):
                     "invoice_date": "2022-03-24",
                     "invoice_date_due": "2022-03-24",
                     "partner_id": self.italian_partner_a.id,
-                    "partner_bank_id": self.test_bank.id,
+                    "bank_account_id": self.test_bank.id,
                     "invoice_line_ids": [
                         Command.create(
                             {
@@ -236,7 +236,7 @@ class TestItEdiReverseCharge(TestItEdi):
                         "invoice_date_due": "2022-03-24",
                         "date": "2022-04-01",
                         "partner_id": self.french_partner.id,
-                        "partner_bank_id": self.test_bank.id,
+                        "bank_account_id": self.test_bank.id,
                         "invoice_line_ids": [
                             Command.create(
                                 {
@@ -307,7 +307,7 @@ class TestItEdiReverseCharge(TestItEdi):
                     "invoice_date_due": "2022-03-24",
                     "date": "2022-04-01",
                     "partner_id": self.french_partner.id,
-                    "partner_bank_id": self.test_bank.id,
+                    "bank_account_id": self.test_bank.id,
                     "invoice_line_ids": [
                         Command.create(
                             {
@@ -347,7 +347,7 @@ class TestItEdiReverseCharge(TestItEdi):
                     "date": "2022-04-01",
                     "invoice_date_due": "2022-03-24",
                     "partner_id": self.san_marino_partner.id,
-                    "partner_bank_id": self.test_bank.id,
+                    "bank_account_id": self.test_bank.id,
                     "invoice_line_ids": [
                         Command.create(
                             {

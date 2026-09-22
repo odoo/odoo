@@ -27,7 +27,7 @@ class L10nPlAccountPaymentRegister(models.TransientModel):
         compute="_compute_l10n_pl_bank_verification",
     )
 
-    @api.depends("line_ids", "partner_bank_id")
+    @api.depends("line_ids", "bank_account_id")
     def _compute_l10n_pl_bank_verification(self):
         date = fields.Date.context_today(self.with_context(tz="Europe/Warsaw"))
         for wizard in self:
@@ -61,7 +61,7 @@ class L10nPlAccountPaymentRegister(models.TransientModel):
             wizard.l10n_pl_bank_verification_invalid_bank_account_ids = (
                 verifications.filtered(
                     lambda verif: verif.verification_status == "invalid"
-                ).partner_bank_id
+                ).bank_account_id
             )
             wizard.l10n_pl_not_found_partner_ids = verifications.filtered(
                 lambda verif: verif.verification_status == "not_found_partner"
@@ -108,7 +108,7 @@ class L10nPlAccountPaymentRegister(models.TransientModel):
 
         partner_bank = self._get_partner_bank_from_batch(batch_result)
         verification = self.sudo().l10n_pl_bank_verification_ids.filtered(
-            lambda verif: verif.partner_bank_id == partner_bank
+            lambda verif: verif.bank_account_id == partner_bank
         )
         payment_vals.update(
             {
@@ -120,7 +120,7 @@ class L10nPlAccountPaymentRegister(models.TransientModel):
 
     @api.model
     def _get_partner_bank_from_batch(self, batch):
-        if partner_bank_id := batch["payment_values"]["partner_bank_id"]:
-            return self.env["res.partner.bank.account"].browse(partner_bank_id)
+        if bank_account_id := batch["payment_values"]["bank_account_id"]:
+            return self.env["res.partner.bank.account"].browse(bank_account_id)
         partner = self.env["res.partner"].browse(batch["payment_values"]["partner_id"])
         return partner.bank_ids[:1]

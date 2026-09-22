@@ -15,7 +15,7 @@
             <t t-if="qr_code" t-call="account.report_invoice_qr_code_preview" />
         </xpath>
         <xpath
-            expr="//p[@name='payment_communication']//t[@t-if='o.partner_bank_id']"
+            expr="//p[@name='payment_communication']//t[@t-if='o.bank_account_id']"
             position="replace">
             <t t-if="account_number">
                 <br /> on this account: <span t-out="account_number" class="fw-bold" />

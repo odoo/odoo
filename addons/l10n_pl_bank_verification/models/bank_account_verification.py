@@ -54,7 +54,7 @@ class BankAccountVerification(models.Model):
         string="Correlation ID",
         readonly=True,
     )
-    partner_bank_id = fields.Many2one(
+    bank_account_id = fields.Many2one(
         comodel_name="res.partner.bank.account",
         string="Bank Account",
         readonly=True,
@@ -120,13 +120,13 @@ class BankAccountVerification(models.Model):
         for verification in self:
             verification.verification_date = verification.verification_timestamp.date()
 
-    @api.depends("partner_bank_id")
+    @api.depends("bank_account_id")
     def _compute_partner_bank_account_number(self):
         for verification in self:
             # Only write at creation, to prevent account number changes
             if not verification.partner_bank_account_number:
                 verification.partner_bank_account_number = (
-                    verification.partner_bank_id.sanitized_acc_number
+                    verification.bank_account_id.sanitized_acc_number
                 )
 
     @api.depends("partner_id")
@@ -438,7 +438,7 @@ class BankAccountVerification(models.Model):
             vals = dict(default_vals)
             vals.update(
                 {
-                    "partner_bank_id": partner_bank.id,
+                    "bank_account_id": partner_bank.id,
                     "partner_bank_account_number": partner_bank.sanitized_acc_number,
                     "partner_id": partner_bank.partner_id.id,
                     "partner_vat": partner_bank.partner_id.vat,

@@ -17,7 +17,7 @@ class AccountPayment(models.Model):
             if (
                 payment.payment_type == "outbound"
                 and payment.partner_id.country_code in ["CH", "LI"]
-                and payment.partner_bank_id.l10n_ch_qr_iban
+                and payment.bank_account_id.l10n_ch_qr_iban
                 and not payment._l10n_ch_reference_is_valid(payment.memo)
             ):
                 payment.l10n_ch_reference_warning_msg = _(

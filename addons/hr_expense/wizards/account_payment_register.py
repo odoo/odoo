@@ -13,9 +13,9 @@ class AccountPaymentRegister(models.TransientModel):
         expense = line.move_id.expense_ids.filtered(
             lambda expense: expense.payment_mode == "own_account"
         )
-        if expense and not line.move_id.partner_bank_id:
+        if expense and not line.move_id.bank_account_id:
             _debug.logic("payment_bank_from_employee", expense=expense, line=line)
-            res["partner_bank_id"] = (
+            res["bank_account_id"] = (
                 expense.employee_id.sudo().primary_bank_account_id.id
                 or (line.partner_id.bank_ids and line.partner_id.bank_ids.ids[0])
             )

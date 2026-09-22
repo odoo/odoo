@@ -103,7 +103,7 @@ class AccountBankStatementLine(models.Model):
             self.with_context(
                 skip_account_move_synchronization=True,
                 skip_readonly_check=True,
-            ).partner_bank_id = self._get_or_create_bank_account()
+            ).bank_account_id = self._get_or_create_bank_account()
 
         self._post_matching_done_confirmation()
 

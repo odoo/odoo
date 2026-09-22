@@ -43,7 +43,7 @@ class TestL10nSGEmvQrCode(AccountTestInvoicingCommon):
                 "move_type": "out_invoice",
                 "partner_id": cls.partner_a.id,
                 "currency_id": cls.env.ref("base.SGD").id,
-                "partner_bank_id": cls.acc_emv_sg.id,
+                "bank_account_id": cls.acc_emv_sg.id,
                 "company_id": cls.company_data["company"].id,
                 "invoice_line_ids": [
                     Command.create({"quantity": 1, "price_unit": 100})
@@ -70,7 +70,7 @@ class TestL10nSGEmvQrCode(AccountTestInvoicingCommon):
 
         # Without paynow infomation should fail
         self.company_data["company"].partner_id.city = "Singapore"
-        self.emv_qr_invoice.partner_bank_id = self.acc_emv_sg_without_paynow_info
+        self.emv_qr_invoice.bank_account_id = self.acc_emv_sg_without_paynow_info
         with self.assertRaises(
             UserError,
             msg="The account receiving the payment must have a Proxy type and a Proxy value set.",
@@ -80,7 +80,7 @@ class TestL10nSGEmvQrCode(AccountTestInvoicingCommon):
     def test_emv_qr_vals(self):
         self.emv_qr_invoice.qr_code_method = "emv_qr"
         unstruct_ref = "INV/TEST/0001"
-        emv_qr_vals = self.emv_qr_invoice.partner_bank_id._prepare_qr_payload(
+        emv_qr_vals = self.emv_qr_invoice.bank_account_id._prepare_qr_payload(
             qr_method=self.emv_qr_invoice.qr_code_method,
             amount=self.emv_qr_invoice.amount_residual,
             currency=self.emv_qr_invoice.currency_id,

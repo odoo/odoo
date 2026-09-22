@@ -302,7 +302,7 @@ class TestUBLDE(TestUBLCommon):
             self.partner_2,
             move_type="out_invoice",
             partner_id=self.partner_1.id,
-            partner_bank_id=acc_bank.id,
+            bank_account_id=acc_bank.id,
             invoice_date="2017-01-01",
             date="2017-01-01",
             invoice_line_ids=[
@@ -359,7 +359,7 @@ class TestUBLDE(TestUBLCommon):
             partner,
             move_type="out_invoice",
             partner_id=partner.id,
-            partner_bank_id=acc_bank.id,
+            bank_account_id=acc_bank.id,
             invoice_date="2025-12-01",
             invoice_line_ids=[{"product_id": self.product_a.id}],
         )

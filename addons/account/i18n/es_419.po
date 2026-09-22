@@ -4440,8 +4440,8 @@ msgid "Available Journal"
 msgstr "Diario disponible"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
-#: model:ir.model.fields,field_description:account.field_account_payment_register__available_partner_bank_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__available_bank_account_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__available_bank_account_ids
 msgid "Available Partner Bank"
 msgstr "Banco del contacto disponible"
 
@@ -4614,8 +4614,8 @@ msgid "Bank Account Number"
 msgstr "Número de cuenta bancaria"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_bank_id
-#: model:ir.model.fields,help:account.field_account_move__partner_bank_id
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_account_id
+#: model:ir.model.fields,help:account.field_account_move__bank_account_id
 msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
@@ -15515,14 +15515,14 @@ msgid "Receive invoices"
 msgstr "Reciba facturas"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
-#: model:ir.model.fields,field_description:account.field_account_move__partner_bank_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__bank_account_id
+#: model:ir.model.fields,field_description:account.field_account_move__bank_account_id
 msgid "Recipient Bank"
 msgstr "Banco receptor"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__partner_bank_id
-#: model:ir.model.fields,field_description:account.field_account_payment_register__partner_bank_id
+#: model:ir.model.fields,field_description:account.field_account_payment__bank_account_id
+#: model:ir.model.fields,field_description:account.field_account_payment_register__bank_account_id
 msgid "Recipient Bank Account"
 msgstr "Cuenta bancaria receptora"
 
@@ -15868,7 +15868,7 @@ msgid "Require Partner Bank Account"
 msgstr "Requerir cuenta bancaria del contacto"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__res_partner_bank_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_account_id
 msgid "Res Partner Bank"
 msgstr "Banco del contacto"
 
@@ -20429,7 +20429,7 @@ msgid "Untrusted"
 msgstr "No confiable"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment_register__untrusted_bank_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__untrusted_bank_account_ids
 msgid "Untrusted Bank"
 msgstr "Banco no confiable"
 
@@ -28204,8 +28204,8 @@ msgid "Parent Wizard"
 msgstr "Asistente principal"
 
 #. module: account_reports
-#: model:ir.model.fields,field_description:account_reports.field_account_return_payment_wizard__partner_bank_id
-#: model:ir.model.fields,field_description:account_reports.field_qr_code_payment_wizard__partner_bank_id
+#: model:ir.model.fields,field_description:account_reports.field_account_return_payment_wizard__bank_account_id
+#: model:ir.model.fields,field_description:account_reports.field_qr_code_payment_wizard__bank_account_id
 msgid "Partner Bank"
 msgstr "Contacto de banco"
 
@@ -28290,7 +28290,7 @@ msgid "Payment Partner"
 msgstr "Contacto de pago"
 
 #. module: account_reports
-#: model:ir.model.fields,field_description:account_reports.field_account_return_type__payment_partner_bank_id
+#: model:ir.model.fields,field_description:account_reports.field_account_return_type__payment_bank_account_id
 msgid "Payment Partner Bank"
 msgstr "Contacto de banco de pago"
 

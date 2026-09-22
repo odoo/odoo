@@ -184,7 +184,7 @@
                     <field
                         name="name"
                         string="Transaction"
-                        filter_domain="['|', '|', '|', '|', '|', '|', ('payment_ref', 'ilike', self), ('narration', 'ilike', self), ('partner_id', 'ilike', self), ('partner_name', 'ilike', self), ('partner_bank_id', 'ilike', self), ('account_number', 'ilike', self), ('amount', 'ilike', self)]" />
+                        filter_domain="['|', '|', '|', '|', '|', '|', ('payment_ref', 'ilike', self), ('narration', 'ilike', self), ('partner_id', 'ilike', self), ('partner_name', 'ilike', self), ('bank_account_id', 'ilike', self), ('account_number', 'ilike', self), ('amount', 'ilike', self)]" />
                     <field name="id" invisible="1" />
                     <field name="payment_ref" />
                     <field name="date" />

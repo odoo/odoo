@@ -1499,33 +1499,33 @@ class PosOrder(models.Model):
         currency = self.currency_id
         return currency.round(amount) if currency else amount
 
-    def _get_partner_bank_id(self):
-        partner_bank_id = False
+    def _get_bank_account_id(self):
+        bank_account_id = False
         amount_total = sum(order.amount_total for order in self)
 
         def get_first_allowed_bank(bank_ids):
             return bank_ids.filtered(lambda b: b.allow_out_payment)[:1]
 
         if amount_total <= 0 and self.partner_id.bank_ids:
-            partner_bank_id = get_first_allowed_bank(self.partner_id.bank_ids)
+            bank_account_id = get_first_allowed_bank(self.partner_id.bank_ids)
 
         elif amount_total >= 0 and self.payment_ids:
             journal_bank = self.payment_ids[
                 0
             ].payment_method_id.journal_id.bank_account_id
             if journal_bank and journal_bank.allow_out_payment:
-                partner_bank_id = journal_bank
+                bank_account_id = journal_bank
 
         if (
-            not partner_bank_id
+            not bank_account_id
             and amount_total >= 0
             and self.company_id.partner_id.bank_ids
         ):
-            partner_bank_id = get_first_allowed_bank(
+            bank_account_id = get_first_allowed_bank(
                 self.company_id.partner_id.bank_ids
             )
 
-        return partner_bank_id.id if partner_bank_id else False
+        return bank_account_id.id if bank_account_id else False
 
     @dbg.timed
     def _create_invoice(self, move_vals):
@@ -1738,7 +1738,7 @@ class PosOrder(models.Model):
             "partner_shipping_id": self.partner_id.address_get(["delivery"])[
                 "delivery"
             ],
-            "partner_bank_id": self._get_partner_bank_id(),
+            "bank_account_id": self._get_bank_account_id(),
             "currency_id": self.currency_id.id,
             "invoice_date": invoice_date.replace(tzinfo=UTC)
             .astimezone(timezone)

@@ -84,7 +84,7 @@ class L10n_ChQr_InvoiceWizard(models.TransientModel):
 
         # Log a message inside the chatter explaining why the invoice is faulty.
         for inv in faulty_invoices:
-            error_msg = inv.partner_bank_id._get_error_messages_for_qr(
+            error_msg = inv.bank_account_id._get_error_messages_for_qr(
                 "ch_qr", inv.partner_id, inv.currency_id
             )
             if error_msg:

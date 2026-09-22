@@ -159,7 +159,7 @@ class AccountPayment(models.Model):
                     "date": pay.date,
                     "partner_id": pay.partner_id.id,
                     "currency_id": pay.currency_id.id,
-                    "partner_bank_id": pay.partner_bank_id.id,
+                    "bank_account_id": pay.bank_account_id.id,
                     "line_ids": line_ids_commands,
                     "journal_id": pay.journal_id.id,
                 }

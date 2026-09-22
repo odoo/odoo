@@ -878,10 +878,10 @@ class PurchaseOrder(models.Model):
 
     def _prepare_invoice_vals(self):
         values = super()._prepare_invoice_vals()
-        partner_bank_id = self.commercial_partner_id.bank_ids.filtered_domain(
+        bank_account_id = self.commercial_partner_id.bank_ids.filtered_domain(
             [("company_id", "in", (False, self.company_id.id))],
         )[:1]
-        values["partner_bank_id"] = partner_bank_id.id
+        values["bank_account_id"] = bank_account_id.id
         return values
 
     def _prepare_supplierinfo(self, partner, line, price, currency):

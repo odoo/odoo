@@ -18,7 +18,7 @@ class AccountMove(models.Model):
     @api.depends("partner_id", "currency_id")
     def _compute_l10n_ch_qr_is_valid(self):
         for move in self:
-            error_messages = move.partner_bank_id._get_error_messages_for_qr(
+            error_messages = move.bank_account_id._get_error_messages_for_qr(
                 "ch_qr", move.partner_id, move.currency_id
             )
             move.l10n_ch_is_qr_valid = (
@@ -30,9 +30,9 @@ class AccountMove(models.Model):
                     == "CH"
                     or (
                         # QR code is also printed if the fiscal country is not Switzerland but the receivale account is eligible
-                        move.partner_bank_id.acc_type == "iban"
+                        move.bank_account_id.acc_type == "iban"
                         and (
-                            iban := (move.partner_bank_id.acc_number or "").replace(
+                            iban := (move.bank_account_id.acc_number or "").replace(
                                 " ", ""
                             )
                         ).startswith("CH")
@@ -52,7 +52,7 @@ class AccountMove(models.Model):
         """
         self.check_singleton()
         if (
-            self.partner_bank_id.l10n_ch_qr_iban
+            self.bank_account_id.l10n_ch_qr_iban
             and self.l10n_ch_is_qr_valid
             and self.name
         ):

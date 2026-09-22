@@ -374,7 +374,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         invoice = vals["invoice"]
         if invoice.move_type == "out_invoice":
-            if invoice.partner_bank_id:
+            if invoice.bank_account_id:
                 payment_means_code, payment_means_name = 30, "credit transfer"
             else:
                 payment_means_code, payment_means_name = "ZZZ", "mutually defined"
@@ -397,9 +397,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             "cbc:InstructionID": {"_text": invoice.payment_reference},
             "cbc:PaymentID": {"_text": invoice.payment_reference or invoice.name},
             "cac:PayeeFinancialAccount": self._get_financial_account_node(
-                {**vals, "partner_bank": invoice.partner_bank_id}
+                {**vals, "partner_bank": invoice.bank_account_id}
             )
-            if invoice.partner_bank_id
+            if invoice.bank_account_id
             else None,
         }
 
@@ -1363,7 +1363,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         invoice_values["invoice_date_due"] = self._find_value(
             ("./cbc:DueDate", ".//cbc:PaymentDueDate"), tree
         )
-        # ==== partner_bank_id ====
+        # ==== bank_account_id ====
         bank_detail_nodes = tree.findall(".//{*}PaymentMeans")
         bank_details = [
             bank_detail_node.findtext("{*}PayeeFinancialAccount/{*}ID")

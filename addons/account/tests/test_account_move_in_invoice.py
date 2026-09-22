@@ -1337,7 +1337,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 "ref": "Reversal of: %s, %s"
                 % (self.invoice.name, move_reversal.reason),
                 "payment_state": "not_paid",
-                "partner_bank_id": bank1.id,
+                "bank_account_id": bank1.id,
             },
         )
 

@@ -4112,8 +4112,8 @@ msgid "Available Journal"
 msgstr "יומן זמין"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
-#: model:ir.model.fields,field_description:account.field_account_payment_register__available_partner_bank_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__available_bank_account_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__available_bank_account_ids
 msgid "Available Partner Bank"
 msgstr "שותף בנק זמין"
 
@@ -4285,8 +4285,8 @@ msgid "Bank Account Number"
 msgstr "מספר חשבון בנק"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_bank_id
-#: model:ir.model.fields,help:account.field_account_move__partner_bank_id
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_account_id
+#: model:ir.model.fields,help:account.field_account_move__bank_account_id
 msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
@@ -14888,14 +14888,14 @@ msgid "Receive invoices"
 msgstr "קבל חשבוניות"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
-#: model:ir.model.fields,field_description:account.field_account_move__partner_bank_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__bank_account_id
+#: model:ir.model.fields,field_description:account.field_account_move__bank_account_id
 msgid "Recipient Bank"
 msgstr "בנק מקבל"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__partner_bank_id
-#: model:ir.model.fields,field_description:account.field_account_payment_register__partner_bank_id
+#: model:ir.model.fields,field_description:account.field_account_payment__bank_account_id
+#: model:ir.model.fields,field_description:account.field_account_payment_register__bank_account_id
 msgid "Recipient Bank Account"
 msgstr "חשבון בנק מקבל"
 
@@ -15234,7 +15234,7 @@ msgid "Require Partner Bank Account"
 msgstr "דרוש חשבון בנק של הלקוח/ספק"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__res_partner_bank_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_account_id
 msgid "Res Partner Bank"
 msgstr "מילוי שותף בנק"
 
@@ -19565,7 +19565,7 @@ msgid "Untrusted"
 msgstr "לא מהימן"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment_register__untrusted_bank_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__untrusted_bank_account_ids
 msgid "Untrusted Bank"
 msgstr "בנק לא מהימן"
 
@@ -26136,8 +26136,8 @@ msgid "Parent Wizard"
 msgstr "אשף אב"
 
 #. module: account_reports
-#: model:ir.model.fields,field_description:account_reports.field_account_return_payment_wizard__partner_bank_id
-#: model:ir.model.fields,field_description:account_reports.field_qr_code_payment_wizard__partner_bank_id
+#: model:ir.model.fields,field_description:account_reports.field_account_return_payment_wizard__bank_account_id
+#: model:ir.model.fields,field_description:account_reports.field_qr_code_payment_wizard__bank_account_id
 msgid "Partner Bank"
 msgstr ""
 
@@ -26222,7 +26222,7 @@ msgid "Payment Partner"
 msgstr ""
 
 #. module: account_reports
-#: model:ir.model.fields,field_description:account_reports.field_account_return_type__payment_partner_bank_id
+#: model:ir.model.fields,field_description:account_reports.field_account_return_type__payment_bank_account_id
 msgid "Payment Partner Bank"
 msgstr ""
 
