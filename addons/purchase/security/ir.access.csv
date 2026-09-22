@@ -5,9 +5,8 @@ purchase_order_invoicing_rule,Invoicing User Purchase Orders,purchase.order,acco
 portal_purchase_order_user_rule,Portal Purchase Orders,purchase.order,base.group_portal,r,"[('partner_id', 'child_of', [user.commercial_partner_id.id])]"
 purchase_order_comp_rule,Purchase Order multi-company,purchase.order,,crud,"[('company_id', 'in', company_ids)]"
 purchase_order_line_user_rule,Purchase User Purchase Order Lines,purchase.order.line,purchase.group_purchase_user,crud,
-purchase_order_line_invoicing_readonly_rule,Invoicing Readonly User Purchase Order Lines,purchase.order.line,account.group_account_readonly,r,
-purchase_order_line_invoicing_rule,Invoicing User Purchase Order Lines,purchase.order.line,account.group_account_invoice,ru,
-purchase_order_line_rule,Purchase Order Lines,purchase.order.line,base.group_portal,r,"[('order_id','access','read')]"
+purchase_order_line_invoicing_rule,Invoicing User Purchase Order Lines,purchase.order.line,account.group_account_invoice,u,
+purchase_order_line_rule,Purchase Order Lines,purchase.order.line,base.group_everyone,r,"[('order_id','access','read')]"
 purchase_order_line_comp_rule,Purchase Order Line multi-company,purchase.order.line,,crud,"[('company_id', 'in', company_ids)]"
 access_purchase_bill_line_match,purchase.bill.line.match user,purchase.bill.line.match,purchase.group_purchase_user,r,
 access_purchase_bill_line_match_readonly,purchase.bill.line.match readonly,purchase.bill.line.match,account.group_account_readonly,r,
