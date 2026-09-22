@@ -483,6 +483,7 @@ test("Selecting a section template should append its section and lines to the or
 
     await contains("button:contains(Add Section)").click();
     expect(".o_section_templates_dropdown").toBeVisible();
+    expect(".o_section_templates_dropdown .o-dropdown-item:contains(Search more...)").toHaveCount(0);
 
     await contains("span.o-dropdown-item:contains(Section Template 1)").click();
     expect(queryAllTexts(".o_data_row td[name=product_and_description]")).toEqual([
@@ -491,6 +492,27 @@ test("Selecting a section template should append its section and lines to the or
         "line1",
         "line2",
     ]);
+});
+
+test.tags("desktop");
+test("Search more section templates when there are more than 9 templates", async () => {
+    saleManagementModels.SaleOrderTemplate._records = [...Array(11).keys()].map((index) => ({
+        id: index + 1,
+        name: `Section Template ${index + 1}`,
+        template_type: "section",
+        user_has_access: true,
+    }));
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: 1,
+    });
+
+    await contains("button:contains(Add Section)").click();
+    expect(".o_section_templates_dropdown .o-dropdown-item:not(.text-action)").toHaveCount(9);
+
+    await contains(".o_section_templates_dropdown .o-dropdown-item:contains(Search more...)").click();
+    expect(".o_dialog .o_data_row").toHaveCount(11);
 });
 
 test("Editing a subsection's quantity applies the ratio to its line and recomputes its price", async () => {
