@@ -27,5 +27,3 @@ class EventRegistration(models.Model):
             for reg in self:
                 if not reg.sale_status:
                     reg.sale_status = "free"
-                if not reg.state:
-                    reg.state = "open"
