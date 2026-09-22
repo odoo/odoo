@@ -1158,15 +1158,40 @@ Versions:
                 )
                 raise ValidationError(message)
 
-    def _raise_missing_allocation(self):
-        raise ValidationError(
-            _(
-                "You do not have any allocation for this time off type.\n"
-                "Please request an allocation before submitting your time off request."
-            )
+    def _missing_allocation_message(self):
+        return _(
+            "You do not have any allocation for this time off type.\n"
+            "Please request an allocation before submitting your time off request."
         )
 
+    def _raise_missing_allocation(self):
+        raise ValidationError(self._missing_allocation_message())
+
     def _check_validity(self):
+        """Check every leave against the allocations that have to cover it.
+
+        A single request wants the first failure to abort the write, and that
+        is what every caller gets by default. A batch does not: one employee
+        short of days would cost all their colleagues their time off. So when
+        `multi_leave_request` is in the context, the employees no allocation
+        can cover are collected and returned instead, and the caller decides
+        what to do with them.
+
+        The batch says so through the context and not through an argument
+        because this method has three callers -- `create` and `write` here,
+        and `models/resource.py:125` -- and none of them wants to know that
+        batches exist.
+        """
+        collecting = self.env.context.get("multi_leave_request", False)
+        uncovered = self.env["hr.employee"]
+
+        def reject(employee, message):
+            """Abort on the first failure, or note the employee for a batch."""
+            nonlocal uncovered
+            if not collecting:
+                raise ValidationError(message)
+            uncovered |= employee
+
         if any(not leave.date_from or not leave.date_to for leave in self):
             raise ValidationError(
                 _("A time off request needs both a start date and an end date.")
@@ -1185,18 +1210,20 @@ Versions:
                     continue
                 for employee in employees:
                     if not leave_data[employee][0][1]["max_leaves"]:
-                        self._raise_missing_allocation()
+                        reject(employee, self._missing_allocation_message())
+                        continue
                     if (
                         leave_data[employee]
                         and leave_data[employee][0][1]["virtual_remaining_leaves"]
                         < -max_excess
                     ):
-                        raise ValidationError(
+                        reject(
+                            employee,
                             _(
                                 "%(employee)s has no valid allocation of %(leave_type)s to cover that request.",
                                 employee=employee.name,
                                 leave_type=leave_type.name,
-                            )
+                            ),
                         )
                 continue
 
@@ -1213,24 +1240,28 @@ Versions:
                     and leave_data[employee][0][1]["virtual_excess_data"]
                 )
                 if not leave_data[employee][0][1]["max_leaves"]:
-                    self._raise_missing_allocation()
+                    reject(employee, self._missing_allocation_message())
+                    continue
                 if not previous_emp_data and not emp_data:
                     continue
                 if previous_emp_data != emp_data and len(emp_data) >= len(
                     previous_emp_data
                 ):
-                    raise ValidationError(
+                    reject(
+                        employee,
                         _(
                             "%(employee)s has no valid allocation of %(leave_type)s to cover that request.",
                             employee=employee.name,
                             leave_type=leave_type.name,
-                        )
+                        ),
                     )
         is_leave_user = self.env.user.has_group("hr_holidays.group_hr_holidays_user")
         if not is_leave_user and any(leave.has_mandatory_day for leave in self):
             raise ValidationError(
                 _("You are not allowed to request time off on a Mandatory Day")
             )
+
+        return uncovered
 
     @api.depends(
         "tz",
@@ -1348,7 +1379,15 @@ Versions:
         _debug.lifecycle(
             "create", leaves=holidays, count=len(vals_list), fast=bool(fast_create)
         )
-        holidays._check_validity()
+        uncovered = holidays._check_validity()
+        if uncovered:
+            # Only ever non-empty for a batch: every other caller got a
+            # ValidationError out of _check_validity instead of a recordset.
+            uncovered_leaves = holidays.filtered(
+                lambda leave: leave.employee_id in uncovered
+            )
+            holidays -= uncovered_leaves
+            uncovered_leaves.with_context(leave_skip_state_check=True).unlink()
         self._invalidate_allocation_computes()
         if not fast_create:
             holidays.sudo()._follow_up_on_creation()

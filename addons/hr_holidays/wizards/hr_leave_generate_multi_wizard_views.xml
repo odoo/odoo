@@ -6,10 +6,7 @@
         <field name="arch" type="xml">
             <form string="Generate time off for multiple employees">
                 <group>
-                    <field
-                        name="holiday_status_id"
-                        domain="[('requires_allocation', '=', False)]"
-                        class="w-100" />
+                    <field name="holiday_status_id" class="w-100" />
                     <field
                         name="allocation_mode"
                         string="Mode"
@@ -18,8 +15,7 @@
                         name="employee_ids"
                         placeholder="Everyone"
                         widget="many2many_avatar_employee"
-                        invisible="allocation_mode != 'employee'"
-                        required="allocation_mode == 'employee'" />
+                        invisible="allocation_mode != 'employee'" />
                     <field name="company_id" invisible="allocation_mode != 'company'" />
                     <field
                         name="department_id"

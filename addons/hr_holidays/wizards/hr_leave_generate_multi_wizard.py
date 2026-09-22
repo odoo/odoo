@@ -179,6 +179,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
                 leave_fast_create=True,
                 no_calendar_sync=True,
                 leave_skip_state_check=True,
+                multi_leave_request=True,
             )
             .create(vals_list)
         )
@@ -188,6 +189,26 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         # and its approval would then reserve the same period a second time,
         # because `_action_validate` applies it again.
         leaves.filtered(lambda leave: leave.state == "validate")._apply_leave_request()
+
+        # create() drops the leaves of employees no allocation can cover; the
+        # wizard is the only side that knows the request was a batch, so it is
+        # the one that reports them. Employees who simply do not work those
+        # days never made it into vals_list and are not "left out".
+        requested = self.env["hr.employee"].browse(
+            [vals["employee_id"] for vals in vals_list]
+        )
+        uncovered = requested - leaves.employee_id
+        if uncovered:
+            self.env.user._bus_send(
+                "simple_notification",
+                {
+                    "type": "danger",
+                    "message": self.env._(
+                        "No valid allocation covers this request for: %(employees)s",
+                        employees=", ".join(uncovered.mapped("name")),
+                    ),
+                },
+            )
 
         return {
             "type": "ir.actions.act_window",
