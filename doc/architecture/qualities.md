@@ -314,6 +314,33 @@ the backoff is doing what it looks like it does. A *lower* failure rate at
 higher concurrency would mean the loss is queueing, not serialization; it is
 not, since the control at the same concurrency loses nothing.
 
+**Taking the row lock first does not help, and this was measured because the
+opposite was assumed** (2026-09-22, same shape: 16 threads × 200
+`test_performance.base.contended_increment` over XML-RPC on a prefork server,
+`--workers 4`, three runs of the contended pair):
+
+| | Throughput | p50 | p99 | Failed of 3 200 |
+|---|---|---|---|---|
+| 16 rows, no lock (control) | 542 /s | 27 ms | 74 ms | **0** |
+| 1 row, no lock | 147 / 140 / 108 /s | 82–117 ms | 541–762 ms | 5 / 7 / 8 |
+| 1 row, `lock_for_update(wait=True)` first | 115 / 125 / 99 /s | 98–125 ms | 663–982 ms | 3 / 6 / 12 |
+| 16 rows, `lock_for_update(wait=True)` | 438 /s | 36 ms | 52 ms | **0** |
+
+The loss is unchanged (the three-run spreads overlap) and throughput falls
+10–22 % contended, 19 % uncontended. **Under REPEATABLE READ a `SELECT … FOR
+UPDATE` on a row a concurrent transaction has already written raises the same
+`could not serialize access due to concurrent update`**, so the lock moves the
+failure earlier instead of preventing it, and adds a round trip.
+
+What the lock *is* for is a conflict PostgreSQL would otherwise not see: two
+transactions that read the same **set**, decide from its size and write
+different rows both commit, and a cap is exceeded with no error anywhere.
+`TestORM.test_the_lock_is_what_makes_a_read_of_a_set_conflict` pins both
+halves — unlocked, two seats are taken against a cap of two and the third
+would be too; locked, the second transaction cannot read the set until the
+first has released it. Lock to serialize a decision, never to relieve
+contention on a row the writer is about to write anyway.
+
 Reproduce: boot prefork on a free port, create enough records for the control,
 then drive N client threads through XML-RPC `execute_kw(..., "res.partner",
 "write", ...)` — all on one id for the contended column, one id each for the

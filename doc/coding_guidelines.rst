@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.63
+:Version: 6.64
 :Date: 2026-09-22
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -8226,6 +8226,16 @@ in-memory tier answers it too ``[review]``:
        key column, so a concurrent ``INSERT`` referencing the row is not
        blocked.
 
+**Lock to serialize a decision, not to relieve contention** ``[review]``.
+REPEATABLE READ already refuses a second write to a row another transaction
+has written, and ``retrying()`` turns that into a second attempt: locking the
+row first changes nothing but the moment of the failure, and costs 10--22 %
+throughput (``doc/architecture/qualities.md``, Scenario 5, measured
+2026-09-22). The lock earns its keep where there would otherwise be **no**
+conflict at all -- a decision read from a *set* of rows and written to a
+different row, where two transactions both commit and the rule they enforce is
+broken silently (``TestORM.test_the_lock_is_what_makes_a_read_of_a_set_conflict``).
+
 Raw ``FOR UPDATE`` SQL is for a statement the verbs cannot express -- a lock
 that also reads a column in the same round trip, or the lock-and-touch
 ``UPDATE ... SET write_date = write_date`` that forces a serialization
@@ -8818,6 +8828,12 @@ which that test should go.
    * - Version
      - Date
      - Summary
+   * - 6.64
+     - 2026-09-22
+     - §11.8 states what a lock is for, measured: REPEATABLE READ already
+       detects a same-row write conflict, so locking first only moves the
+       failure earlier at 10-22 % throughput; the lock is for a decision read
+       from a set, where there would otherwise be no conflict at all.
    * - 6.63
      - 2026-09-22
      - §11.7 names ``search_iter`` (new: a keyset walk, one search per batch

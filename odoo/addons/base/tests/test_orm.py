@@ -200,6 +200,58 @@ class TestORM(TransactionCase):
         with self.assertRaises(LockError):
             inexisting.lock_for_update(wait=True)
 
+    def test_the_lock_is_what_makes_a_read_of_a_set_conflict(self):
+        # REPEATABLE READ detects a write-write conflict on one row by
+        # itself, so locking a row about to be written buys nothing (measured:
+        # qualities.md scenario 5). What it buys is a conflict where there
+        # would be none -- two transactions that read the same *set*, decide
+        # from its size and write different rows both commit, and the cap is
+        # exceeded silently.
+        gate = self.env.ref("base.partner_root")
+        cap = 2
+        self.addCleanup(self._drop_capped_partners)
+
+        def admit(env, *, lock: bool) -> bool:
+            if lock:
+                env["res.partner"].browse(gate.id).lock_for_update(wait=True)
+            taken = env["res.partner"].search_count([("ref", "=", "capped")])
+            if taken >= cap:
+                return False
+            env["res.partner"].create({"name": f"seat {taken}", "ref": "capped"})
+            return True
+
+        # unlocked: each sees the same free seats, each takes one, and the
+        # cap is broken with no error anywhere
+        with (
+            self.env.registry.cursor() as cr_a,
+            self.env.registry.cursor() as cr_b,
+        ):
+            self.assertTrue(admit(self.env(cr=cr_a), lock=False))
+            self.assertTrue(admit(self.env(cr=cr_b), lock=False))
+            cr_a.commit()
+            cr_b.commit()
+        with self.env.registry.cursor() as cr:
+            cr.execute("SELECT count(*) FROM res_partner WHERE ref = 'capped'")
+            self.assertEqual(cr.fetchone()[0], 2)
+
+        # locked: the second transaction cannot read the set until the first
+        # has finished writing it, which is the conflict there was none of
+        with (
+            self.env.registry.cursor() as cr_a,
+            self.env.registry.cursor() as cr_b,
+        ):
+            self.env(cr=cr_a)["res.partner"].browse(gate.id).lock_for_update(wait=True)
+            cr_b.execute("SET LOCAL lock_timeout = '300ms'")
+            with self.assertRaises(psycopg.errors.LockNotAvailable):
+                admit(self.env(cr=cr_b), lock=True)
+            cr_b.rollback()
+            cr_a.rollback()
+
+    def _drop_capped_partners(self):
+        with self.env.registry.cursor() as cr:
+            cr.execute("DELETE FROM res_partner WHERE ref = 'capped'")
+            cr.commit()
+
     def test_search_iter_walks_in_batches_and_rereads_a_shrinking_domain(self):
         partner = self.env["res.partner"]
         created = partner.create(
