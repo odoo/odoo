@@ -124,8 +124,8 @@ class HrLeaveAccrualLevel(models.Model):
         digits=(16, 2),
     )
     yearly_gain = fields.Float(
-        compute="_compute_yearly_gain",
         export_string_translation=False,
+        compute="_compute_yearly_gain",
     )
     can_be_carryover = fields.Boolean(
         related="accrual_plan_id.can_be_carryover",

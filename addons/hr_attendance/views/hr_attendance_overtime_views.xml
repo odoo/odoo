@@ -15,20 +15,20 @@
                 <field
                     name="manual_duration"
                     widget="float_time"
-                    readonly="1"
-                    optional="hide" />
+                    optional="hide"
+                    readonly="1" />
                 <field
                     name="rule_ids"
                     widget="many2many_tags"
-                    readonly="1"
-                    optional="hide" />
+                    optional="hide"
+                    readonly="1" />
                 <field name="amount_rate" widget="percentage" readonly="1" />
-                <field name="status" readonly="1" optional="show" />
+                <field name="status" optional="show" readonly="1" />
                 <button
                     name="action_open_linked_attendance"
                     type="object"
-                    icon="fa-external-link"
-                    title="Open the attendance" />
+                    title="Open the attendance"
+                    icon="fa-external-link" />
             </list>
         </field>
     </record>
@@ -49,7 +49,7 @@
         <field name="name">hr.attendance.overtime.line.analysis.graph</field>
         <field name="model">hr.attendance.overtime.line</field>
         <field name="arch" type="xml">
-            <graph string="Extra Hours Analysis" type="bar" stacked="0" sample="1">
+            <graph type="bar" string="Extra Hours Analysis" sample="1" stacked="0">
                 <field name="employee_id" type="row" />
                 <field name="duration" type="measure" widget="float_time" />
             </graph>

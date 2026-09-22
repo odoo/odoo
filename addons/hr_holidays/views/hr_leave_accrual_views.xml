@@ -139,17 +139,15 @@
                             <span class="text-muted">
                                 <field
                                     name="yearly_gain"
-                                    nolabel="1"
                                     widget="float_without_trailing_zeros"
+                                    nolabel="1"
                                     class="me-1 o_field_accrual" />
                                 <field
                                     name="added_value_type"
                                     nolabel="1"
                                     readonly="1"
                                     class="o_field_accrual" />
-                                <span
-                                    invisible="not cap_accrued_time_yearly and not cap_accrued_time"
-                                    class="ms-3">(Caps can affect that gain)</span>
+                                <span invisible="not cap_accrued_time_yearly and not cap_accrued_time" class="ms-3">(Caps can affect that gain)</span>
                             </span>
                             <label
                                 for="milestone_date"

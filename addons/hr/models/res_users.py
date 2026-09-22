@@ -113,22 +113,34 @@ class ResUsers(models.Model):
     # changes go through `hr.employee.change.request` with an HR approval. These
     # are here so the employee can at least SEE what is on file about them.
     marital = fields.Selection(
-        related="employee_id.marital", related_sudo=False, readonly=False
+        related="employee_id.marital",
+        related_sudo=False,
+        readonly=False,
     )
     spouse_complete_name = fields.Char(
-        related="employee_id.spouse_complete_name", related_sudo=False, readonly=False
+        related="employee_id.spouse_complete_name",
+        related_sudo=False,
+        readonly=False,
     )
     spouse_birthdate = fields.Date(
-        related="employee_id.spouse_birthdate", related_sudo=False, readonly=False
+        related="employee_id.spouse_birthdate",
+        related_sudo=False,
+        readonly=False,
     )
     children = fields.Integer(
-        related="employee_id.children", related_sudo=False, readonly=False
+        related="employee_id.children",
+        related_sudo=False,
+        readonly=False,
     )
     legal_name = fields.Char(
-        related="employee_id.legal_name", related_sudo=False, readonly=False
+        related="employee_id.legal_name",
+        related_sudo=False,
+        readonly=False,
     )
     birthday = fields.Date(
-        related="employee_id.birthday", related_sudo=False, readonly=False
+        related="employee_id.birthday",
+        related_sudo=False,
+        readonly=False,
     )
     birthday_public_display = fields.Boolean(
         related="employee_id.birthday_public_display",
@@ -136,13 +148,19 @@ class ResUsers(models.Model):
         readonly=False,
     )
     place_of_birth = fields.Char(
-        related="employee_id.place_of_birth", related_sudo=False, readonly=False
+        related="employee_id.place_of_birth",
+        related_sudo=False,
+        readonly=False,
     )
     country_of_birth = fields.Many2one(
-        related="employee_id.country_of_birth", related_sudo=False, readonly=False
+        related="employee_id.country_of_birth",
+        related_sudo=False,
+        readonly=False,
     )
     sex = fields.Selection(
-        related="employee_id.sex", related_sudo=False, readonly=False
+        related="employee_id.sex",
+        related_sudo=False,
+        readonly=False,
     )
 
     private_street = fields.Char(

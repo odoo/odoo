@@ -75,14 +75,14 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     hour_from = fields.Float(
         string="Hour from",
         compute="_compute_hour_from_to",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     hour_to = fields.Float(
         string="Hour to",
         compute="_compute_hour_from_to",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     # only meaningful when the type is taken in half days
     date_from_period = fields.Selection(

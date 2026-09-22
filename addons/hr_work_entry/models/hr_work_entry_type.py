@@ -41,8 +41,8 @@ class HrWorkEntryType(models.Model):
     )
     country_id = fields.Many2one(
         comodel_name="res.country",
-        tracking=True,
         domain=lambda self: [("id", "in", self.env.companies.country_id.ids)],
+        tracking=True,
     )
     country_code = fields.Char(related="country_id.code")
     is_leave = fields.Boolean(

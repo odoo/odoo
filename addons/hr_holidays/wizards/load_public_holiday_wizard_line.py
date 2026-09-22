@@ -7,8 +7,13 @@ class LoadPublicHolidayWizardLine(models.TransientModel):
     _order = "company_id, start_date, name"
 
     wizard_id = fields.Many2one(
-        "load.public.holiday.wizard", required=True, ondelete="cascade"
+        comodel_name="load.public.holiday.wizard",
+        required=True,
+        ondelete="cascade",
     )
     name = fields.Char(required=True)
     start_date = fields.Date(required=True)
-    company_id = fields.Many2one("res.company", required=True)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        required=True,
+    )

@@ -21,14 +21,14 @@
                         string="Reconcile"
                         class="btn-primary"
                         data-hotkey="q" />
-                    <button string="Discard" special="cancel" data-hotkey="x" />
+                    <button special="cancel" string="Discard" data-hotkey="x" />
                 </footer>
             </form>
         </field>
     </record>
 
     <record id="action_open_bank_auto_reconcile_wizard" model="ir.actions.act_window">
-        <field name="name">Run auto-reconciliation</field>
+        <field name="name">Run Auto-Reconciliation…</field>
         <field name="res_model">account.bank.auto.reconcile.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>

@@ -19,12 +19,13 @@ class LoadPublicHolidayWizard(models.TransientModel):
     _description = "Load Public Holidays"
 
     year = fields.Integer(
-        required=True, default=lambda self: fields.Date.context_today(self).year
+        default=lambda self: fields.Date.context_today(self).year,
+        required=True,
     )
     warning_message = fields.Html(compute="_compute_warning_message")
     line_ids = fields.One2many(
-        "load.public.holiday.wizard.line",
-        "wizard_id",
+        comodel_name="load.public.holiday.wizard.line",
+        inverse_name="wizard_id",
         string="Public Holidays",
         compute="_compute_line_ids",
         store=True,

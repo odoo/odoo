@@ -1,31 +1,46 @@
-<?xml version='1.0' encoding='UTF-8' ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="load_public_holiday_wizard_view_form" model="ir.ui.view">
         <field name="name">load.public.holiday.wizard.form</field>
         <field name="model">load.public.holiday.wizard</field>
         <field name="arch" type="xml">
             <form string="Load Public Holidays">
-                <div class="alert alert-warning mb-3" role="alert" invisible="not warning_message">
-                    <field name="warning_message" nolabel="1" class="mb-0"/>
+                <div
+                    class="alert alert-warning mb-3"
+                    role="alert"
+                    invisible="not warning_message">
+                    <field name="warning_message" class="mb-0" />
                 </div>
                 <group>
                     <group>
-                        <field name="year"/>
+                        <field name="year" />
                     </group>
                 </group>
-                <separator string="Public Holidays" class="mt-0 mb-3" invisible="not line_ids"/>
-                <field name="line_ids" nolabel="1" invisible="not line_ids">
-                    <list create="0" delete="1" editable="bottom" open_form_view="0">
-                        <field name="name"/>
-                        <field name="start_date"/>
-                        <field name="company_id" options="{'no_open': True, 'no_create': True}"/>
+                <separator
+                    string="Public Holidays"
+                    invisible="not line_ids"
+                    class="mt-0 mb-3" />
+                <field name="line_ids" invisible="not line_ids">
+                    <list editable="bottom" create="0" delete="1" open_form_view="0">
+                        <field name="name" />
+                        <field name="start_date" />
+                        <field
+                            name="company_id"
+                            options="{'no_open': True, 'no_create': True}" />
                     </list>
                 </field>
                 <footer>
-                    <button name="action_add_public_holidays" type="object" string="Add Public Holidays" class="btn-primary" invisible="not line_ids"/>
-                    <button string="Cancel" special="cancel"/>
+                    <button
+                        name="action_add_public_holidays"
+                        type="object"
+                        string="Add Public Holidays"
+                        invisible="not line_ids"
+                        class="btn-primary" />
+                    <button special="cancel" string="Cancel" />
                 </footer>
             </form>
         </field>
     </record>
+
 </odoo>

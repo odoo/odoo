@@ -16,20 +16,20 @@ class AccountBankAutoReconcileWizard(models.TransientModel):
         comodel_name="account.journal",
         string="Journal",
         required=True,
-        check_company=True,
         domain="[('type', 'in', ('bank', 'cash', 'credit'))]",
+        check_company=True,
     )
     from_date = fields.Date(
         string="From",
-        required=True,
         default=lambda self: fields.Date.subtract(
             fields.Date.context_today(self), months=1
         ),
+        required=True,
     )
     to_date = fields.Date(
         string="To",
-        required=True,
         default=fields.Date.context_today,
+        required=True,
     )
 
     def action_auto_reconcile(self):

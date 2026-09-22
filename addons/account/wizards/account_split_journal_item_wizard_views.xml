@@ -14,8 +14,8 @@
                     <field name="amount" invisible="show_simple_wizard" />
                     <field
                         name="account_id"
-                        invisible="show_simple_wizard"
-                        options="{'no_create': True}" />
+                        options="{'no_create': True}"
+                        invisible="show_simple_wizard" />
                 </group>
                 <footer>
                     <button
@@ -24,7 +24,7 @@
                         string="Split"
                         class="btn-primary"
                         data-hotkey="q" />
-                    <button string="Discard" special="cancel" data-hotkey="x" />
+                    <button special="cancel" string="Discard" data-hotkey="x" />
                 </footer>
             </form>
         </field>
