@@ -5,6 +5,7 @@ from . import (
     test_work_entry,
     test_work_entry_invariants,
     test_work_entry_type,
+    test_work_entry_type_order,
 )
 from . import test_employee_work_entries
 from . import test_work_entry_access
