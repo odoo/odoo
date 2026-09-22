@@ -94,6 +94,32 @@ describe("custom selection", () => {
         expect(firstTd.clientWidth).not.toBe(initialCellWidth); // Resize worked
         expect(firstTd).toHaveClass("o_selected_td");
     });
+
+    test("should not throw error when selection extends outside editor", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+            <table>
+                <tbody>
+                    <tr>
+                        <td>cell1</td>
+                        <td>cell2</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>text outside</p>`)
+        );
+
+        const table = el.querySelector("table");
+        const paragraph = el.querySelector("p");
+
+        const selection = document.getSelection();
+        selection.setBaseAndExtent(table, 0, paragraph, 1);
+
+        manuallyDispatchProgrammaticEvent(document, "selectionchange");
+        await tick();
+
+        expect(el.querySelector("table")).not.toBe(null);
+    });
 });
 
 describe("select a full table on cross over", () => {
