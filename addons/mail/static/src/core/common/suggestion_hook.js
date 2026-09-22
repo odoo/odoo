@@ -57,6 +57,7 @@ export const optionType = (store) =>
 export class UseSuggestion {
     constructor(comp) {
         this.comp = comp;
+<<<<<<< 59645d9636e083cd238dd3bb56361ae4f232e1cb
         this.suggestionService = useService("mail.suggestion");
         this.detection = proxy({
             /** @type {SuggestionDelimiter|undefined} */
@@ -72,6 +73,52 @@ export class UseSuggestion {
             isActive: () => !!this.detection.delimiter,
         });
         useLayoutEffect(
+||||||| d25cac3c68f828624a1f00b6f476078308ef524b
+        this.fetchSuggestions = useDebounced(this.fetchSuggestions.bind(this), DELAY_FETCH);
+        useEffect(
+            () => {
+                this.update();
+                if (this.search.position === undefined || !this.search.delimiter) {
+                    return; // nothing else to fetch
+                }
+                if (!this.composer.store.self_user) {
+                    return; // guests cannot access fetch suggestion method
+                }
+                if (
+                    this.lastFetchedSearch?.count === 0 &&
+                    (!this.search.delimiter || this.isSearchMoreSpecificThanLastFetch)
+                ) {
+                    return; // no need to fetch since this is more specific than last and last had no result
+                }
+                this.fetchSuggestions();
+            },
+            () => [this.search.delimiter, this.search.position, this.search.term]
+        );
+        useEffect(
+=======
+        this.fetchSuggestions = useDebounced(this.fetchSuggestions.bind(this), DELAY_FETCH);
+        useEffect(
+            () => {
+                this.isDismissed = false;
+                this.update();
+                if (this.search.position === undefined || !this.search.delimiter) {
+                    return; // nothing else to fetch
+                }
+                if (!this.composer.store.self_user) {
+                    return; // guests cannot access fetch suggestion method
+                }
+                if (
+                    this.lastFetchedSearch?.count === 0 &&
+                    (!this.search.delimiter || this.isSearchMoreSpecificThanLastFetch)
+                ) {
+                    return; // no need to fetch since this is more specific than last and last had no result
+                }
+                this.fetchSuggestions();
+            },
+            () => [this.search.delimiter, this.search.position, this.search.term]
+        );
+        useEffect(
+>>>>>>> 90465741e154bd85122f65fdb233b61f582e05a3
             () => {
                 this.detect();
             },
@@ -88,6 +135,53 @@ export class UseSuggestion {
     get composer() {
         return this.comp.props.composer;
     }
+<<<<<<< 59645d9636e083cd238dd3bb56361ae4f232e1cb
+||||||| d25cac3c68f828624a1f00b6f476078308ef524b
+    suggestionService = useService("mail.suggestion");
+    state = useState({
+        count: 0,
+        items: undefined,
+        isFetching: false,
+    });
+    search = {
+        delimiter: undefined,
+        position: undefined,
+        term: "",
+    };
+    lastFetchedSearch;
+    get isSearchMoreSpecificThanLastFetch() {
+        return (
+            this.lastFetchedSearch.delimiter === this.search.delimiter &&
+            this.search.term.startsWith(this.lastFetchedSearch.term) &&
+            this.lastFetchedSearch.position >= this.search.position
+        );
+    }
+=======
+    suggestionService = useService("mail.suggestion");
+    state = useState({
+        count: 0,
+        items: undefined,
+        isFetching: false,
+    });
+    search = {
+        delimiter: undefined,
+        position: undefined,
+        term: "",
+    };
+    lastFetchedSearch;
+    /**
+     * Whether the user closed the suggestion list. Only the answer of an ongoing fetch is
+     * dropped: a new user input searches and opens the list again.
+     */
+    isDismissed = false;
+    get isSearchMoreSpecificThanLastFetch() {
+        return (
+            this.lastFetchedSearch.delimiter === this.search.delimiter &&
+            this.search.term.startsWith(this.lastFetchedSearch.term) &&
+            this.lastFetchedSearch.position >= this.search.position
+        );
+    }
+>>>>>>> 90465741e154bd85122f65fdb233b61f582e05a3
     clearRawMentions() {
         this.composer.mentionedPartners.length = 0;
         this.composer.mentionedRoles.length = 0;
@@ -102,6 +196,9 @@ export class UseSuggestion {
             term: "",
         });
         this.search.reset();
+    }
+    dismiss() {
+        this.isDismissed = true;
     }
     detect() {
         let start = 0;
@@ -279,7 +376,7 @@ export class UseSuggestion {
             }
             throw e;
         }
-        if (!this.thread || status(this.comp) === "destroyed") {
+        if (!this.thread || status(this.comp) === "destroyed" || this.isDismissed) {
             return;
         }
         const { suggestions } = this.suggestionService.searchSuggestions(this.detection, {

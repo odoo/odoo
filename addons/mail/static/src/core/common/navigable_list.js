@@ -32,6 +32,45 @@ function optionsToString(options) {
 export class NavigableList extends Component {
     static components = { DiscussAvatar };
     static template = "mail.NavigableList";
+<<<<<<< 59645d9636e083cd238dd3bb56361ae4f232e1cb
+||||||| d25cac3c68f828624a1f00b6f476078308ef524b
+    static props = {
+        anchorRef: { optional: true },
+        class: { type: String, optional: true },
+        onSelect: { type: Function },
+        options: { type: Array },
+        optionTemplate: { type: String, optional: true },
+        position: { type: String, optional: true },
+        closeOnSelect: { type: Boolean, optional: true },
+        isLoading: { type: Boolean, optional: true },
+        rememberPosition: { type: Boolean, optional: true }
+    };
+    static defaultProps = {
+        position: "bottom",
+        closeOnSelect: true,
+        isLoading: false,
+    };
+
+=======
+    static props = {
+        anchorRef: { optional: true },
+        class: { type: String, optional: true },
+        onClose: { type: Function, optional: true },
+        onSelect: { type: Function },
+        options: { type: Array },
+        optionTemplate: { type: String, optional: true },
+        position: { type: String, optional: true },
+        closeOnSelect: { type: Boolean, optional: true },
+        isLoading: { type: Boolean, optional: true },
+        rememberPosition: { type: Boolean, optional: true }
+    };
+    static defaultProps = {
+        position: "bottom",
+        closeOnSelect: true,
+        isLoading: false,
+    };
+
+>>>>>>> 90465741e154bd85122f65fdb233b61f582e05a3
     setup() {
         super.setup();
         this.store = useService("mail.store");
@@ -110,6 +149,7 @@ export class NavigableList extends Component {
         if (this.props.closeOnSelect) {
             this.state.open = false;
             this.state.activeIndex = null;
+            this.props.onClose?.();
         }
     }
 

@@ -11,8 +11,17 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+<<<<<<< 59645d9636e083cd238dd3bb56361ae4f232e1cb
 import { fields, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
+||||||| d25cac3c68f828624a1f00b6f476078308ef524b
+import { Deferred } from "@odoo/hoot-mock";
+import { fields, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
+=======
+import { advanceTime, Deferred } from "@odoo/hoot-mock";
+import { fields, mockService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+>>>>>>> 90465741e154bd85122f65fdb233b61f582e05a3
 
+import { DELAY_FETCH } from "@mail/core/common/suggestion_hook";
 import { rpc } from "@web/core/network/rpc";
 import { range } from "@web/core/utils/numbers";
 import { ResFake } from "@mail/../tests/mock_server/mock_models/res_fake";
@@ -65,6 +74,9 @@ test("reply: discard on pressing escape", async () => {
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
+    onRpc("res.partner", "get_mention_suggestions", () => {
+        expect.step("get_mention_suggestions");
+    });
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
@@ -79,12 +91,20 @@ test("reply: discard on pressing escape", async () => {
     await contains(".o-mail-Composer");
     // Escape on suggestion prompt does not stop replying
     await insertText(".o-mail-Composer-input", "@");
+<<<<<<< 59645d9636e083cd238dd3bb56361ae4f232e1cb
     // wait for the fetched suggestions
     await contains(
         ".o-mail-Composer-suggestionList .o-open .o-mail-Composer-suggestion:has(:text('TestPartner'))"
     );
+||||||| d25cac3c68f828624a1f00b6f476078308ef524b
+    await contains(".o-mail-Composer-suggestionList .o-open .o-mail-NavigableList-item"); // wait for the fetched suggestions
+=======
+    await contains(".o-mail-Composer-suggestionList .o-open .o-mail-NavigableList-item");
+>>>>>>> 90465741e154bd85122f65fdb233b61f582e05a3
     triggerHotkey("Escape");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await advanceTime(DELAY_FETCH);
+    await expect.waitForSteps(["get_mention_suggestions"]);
     await contains(".o-mail-Composer");
     await click(".o-mail-Composer-input").catch(() => {});
     await contains(".o-mail-Composer.o-focused");
