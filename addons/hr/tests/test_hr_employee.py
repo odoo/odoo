@@ -1102,3 +1102,46 @@ class TestHrEmployeeWebJson(HttpCase):
         }
         res = self.url_open(url, headers=CSRF_USER_HEADERS)
         self.assertEqual(res.status_code, 200)
+
+
+@tagged("post_install", "-at_install")
+class TestPublicBirthdayLanguage(TestHrCommon):
+    """The public birthday showed an English month to every reader.
+
+    `datetime.strftime("%d %B")` takes the month name from the locale of the
+    server PROCESS, not from whoever is looking at the screen, so a Spanish user
+    saw "15 March".
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env["res.lang"]._activate_lang("es_MX")
+        cls.celebrant = cls.env["hr.employee"].create(
+            {
+                "name": "Birthday Haver",
+                "birthday": "1990-03-15",
+                "birthday_public_display": True,
+            }
+        )
+
+    def _string_for(self, lang):
+        employee = self.celebrant.with_context(lang=lang)
+        employee.invalidate_recordset(["birthday_public_display_string"])
+        return employee.birthday_public_display_string
+
+    def test_public_birthday_string_follows_the_reader_language(self):
+        self.assertEqual(self._string_for("en_US"), "15 March")
+        self.assertEqual(
+            self._string_for("es_MX"),
+            "15 marzo",
+            "the month name must come from the reader's language, not the"
+            " server process locale",
+        )
+
+    def test_a_hidden_birthday_stays_hidden(self):
+        """The other branch must not move."""
+        self.celebrant.birthday_public_display = False
+        self.celebrant.invalidate_recordset(["birthday_public_display_string"])
+
+        self.assertEqual(self.celebrant.birthday_public_display_string, "hidden")
