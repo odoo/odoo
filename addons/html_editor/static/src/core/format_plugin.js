@@ -378,7 +378,21 @@ export class FormatPlugin extends Plugin {
                 .filter((node) => node && this.dependencies.selection.isNodeEditable(node))
         );
         const formatSpec = formatsSpecs[formatName];
+        const targetedLinks = new Set();
         for (const node of unformattedTextNodes) {
+            // Links often have styles applied to them by css which can only be
+            // overriden by applying the style to the link itself. Buttons are
+            // excluded as their font size only applies from inside them.
+            const closestLink = closestElement(node, "a:not(.btn)");
+            if (
+                closestLink &&
+                formatSpec.addNeutralStyle &&
+                !formatSpec.isFormatted(closestLink.parentElement, formatProps) &&
+                this.dependencies.selection.areNodeContentsFullySelected(closestLink)
+            ) {
+                targetedLinks.add(closestLink);
+                continue;
+            }
             const inlineAncestors = [];
             /** @type { Node } */
             let currentNode = node;
@@ -486,6 +500,16 @@ export class FormatPlugin extends Plugin {
                         formatProps
                     );
                 }
+            }
+        }
+        for (const link of targetedLinks) {
+            for (const node of [link, ...descendants(link).filter(isElement)]) {
+                removeFormat(node, formatSpec, cursor);
+            }
+            if (applyStyle && !formatSpec.isFormatted(link, formatProps)) {
+                formatSpec.addStyle(link, formatProps);
+            } else if (!applyStyle && formatSpec.isFormatted(link, formatProps)) {
+                formatSpec.addNeutralStyle(link);
             }
         }
         for (const targetedFieldNode of tagetedFieldNodes) {
