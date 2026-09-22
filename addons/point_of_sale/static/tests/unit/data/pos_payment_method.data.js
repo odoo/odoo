@@ -51,7 +51,7 @@ export class PosPaymentMethod extends models.ServerModel {
             sequence: 0,
             payment_method_type: "none",
             default_qr: false,
-            currency_ids: [1],
+            currency_ids: [125],
             write_date: "2025-01-01 10:00:00",
         },
     ];

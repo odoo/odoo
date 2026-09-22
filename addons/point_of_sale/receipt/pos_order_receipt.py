@@ -67,8 +67,11 @@ class PosOrderReceipt(models.AbstractModel):
         preset_fields = self.env['pos.preset']._load_pos_data_fields(self.config_id)
         order_fields = self.env['pos.order']._load_pos_data_fields(self.config_id)
         config_fields = self.env['pos.config']._load_pos_data_fields(self.config_id)
+        order_data = self.read(order_fields, load=False)[0]
+        foreign_currency = self.payment_ids and self.payment_ids[0].foreign_currency_id
+        order_data['amount_return_currency'] = 0 if not foreign_currency else order_data['amount_return'] * foreign_currency.rate
         return {
-            'order': self.read(order_fields, load=False)[0],
+            'order': order_data,
             'config': self.config_id.read(config_fields, load=False)[0],
             'company': self.company_id.read(company_fields, load=False)[0],
             'partner': self.partner_id.read(partner_fields, load=False)[0] if self.partner_id else False,
@@ -118,7 +121,7 @@ class PosOrderReceipt(models.AbstractModel):
             data = line.read(payment_fields, load=False)[0]
             data['payment_method_data'] = {'name': line.payment_method_id.name}
             currency = line.foreign_currency_id or self.currency_id
-            data['amount'] = self._order_receipt_format_currency(data['amount'], currency)
+            data['amount'] = self._order_receipt_format_currency(data['amount_currency'] or data['amount'], currency)
             payments.append(data)
 
         return payments
