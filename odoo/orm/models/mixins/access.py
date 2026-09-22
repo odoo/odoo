@@ -51,7 +51,7 @@ class AccessMixin(_ModelStubs):
             return False
         if callable(write_groups):
             return bool(call_hook(write_groups, self))
-        return self.env.user.has_groups(write_groups)
+        return self.env.user.has_groups(write_groups or "")
 
     @api.model
     def _check_fields_write_access(self, field_names: typing.Iterable[str]) -> None:

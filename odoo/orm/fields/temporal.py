@@ -327,7 +327,7 @@ class Date(BaseDate[date]):
         return date.today()
 
     @staticmethod
-    def context_today(record: BaseModel, timestamp: datetime | None = None) -> date:
+    def context_today(record: ModelLike, timestamp: datetime | None = None) -> date:
         today = timestamp or datetime.now()
         tz = record.env.tz
         today_utc = today.replace(tzinfo=utc)

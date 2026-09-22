@@ -21,6 +21,8 @@ from ....primitives import SQL_OPERATORS
 from .._model_stubs import _ModelStubs
 
 if typing.TYPE_CHECKING:
+    from odoo.db import Cursor
+
     from ...._typing import BaseModel
     from ....fields import Field
 
@@ -336,7 +338,7 @@ class _ReadGroupSQLMixin(_ModelStubs):
         elif field.is_text:
             sql_expr = SQL("NULLIF(%s, '')", sql_expr)
 
-        return sql_expr.inlined(self.env.cr)
+        return sql_expr.inlined(typing.cast("Cursor", self.env.cr))
 
     def _read_group_groupby_temporal(
         self,
@@ -579,7 +581,7 @@ class _ReadGroupSQLMixin(_ModelStubs):
         return SQL(", ").join(orderby_terms)
 
     def _get_property_comodel(self, definition: dict, property_name: str) -> BaseModel:
-        comodel = self.env.get(definition.get("comodel"))
+        comodel = self.env.get(typing.cast("str", definition.get("comodel")))
         if comodel is None or comodel._transient or comodel._abstract:
             raise UserError(
                 _(

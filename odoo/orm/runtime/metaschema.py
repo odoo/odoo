@@ -9,7 +9,7 @@ from odoo.libs.json import loads as json_loads
 from ..primitives import SUPERUSER_ID
 
 if typing.TYPE_CHECKING:
-    from .._typing import BaseModel
+    from .._typing import ModelLike
     from .environment import Environment
 
 _debug = DebugLog(__name__)
@@ -63,7 +63,7 @@ class MetaSchema:
 
     def reflect_constraint(
         self,
-        model: BaseModel,
+        model: ModelLike,
         name: str,
         kind: str,
         definition: str | None,
@@ -161,7 +161,7 @@ class MetaSchema:
         field = env[ir_field.model]._fields[ir_field.name]
         return field, json_loads(default.json_value)
 
-    def discard_defaults(self, env: Environment, records: BaseModel) -> None:
+    def discard_defaults(self, env: Environment, records: ModelLike) -> None:
         if env.registry["ir.default"]._abstract:
             return
         env["ir.default"].sudo().discard_records(records)

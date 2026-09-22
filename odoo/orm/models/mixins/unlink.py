@@ -18,6 +18,9 @@ _UNLINK_LOG_MAX_IDS = 1000
 
 _debug = DebugLog(__name__)
 
+if typing.TYPE_CHECKING:
+    from ..._typing import BaseModel
+
 
 class UnlinkMixin(_ModelStubs):
     __slots__ = ()
@@ -94,9 +97,9 @@ class UnlinkMixin(_ModelStubs):
             uninstalling=bool(self.env.context.get(MODULE_UNINSTALL_FLAG)),
         )
         if ir_model_data_unlink:
-            ir_model_data_unlink.unlink()
+            typing.cast("BaseModel", ir_model_data_unlink).unlink()
         if ir_attachment_unlink:
-            ir_attachment_unlink.unlink()
+            typing.cast("BaseModel", ir_attachment_unlink).unlink()
 
         self._log_unlinked_ids(deleted_ids)
 

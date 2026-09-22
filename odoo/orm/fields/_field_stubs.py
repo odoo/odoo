@@ -34,6 +34,7 @@ class _FieldStubs:
         is_temporal: bool
         groups: str | None
         inverse_name: str
+        domain: typing.Any
         _column_type: tuple[str, str] | None
 
         @property

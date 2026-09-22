@@ -121,7 +121,7 @@ class InMemoryColumnStore:
 
     def write(
         self,
-        model: BaseModel,
+        model: ModelLike,
         column: str,
         rows: typing.Collection[tuple[int, typing.Any]],
     ) -> None:
@@ -130,7 +130,7 @@ class InMemoryColumnStore:
         )
 
     def fetch_and_add(
-        self, model: BaseModel, column: str, record_id: int, delta: int
+        self, model: ModelLike, column: str, record_id: int, delta: int
     ) -> int | None:
         row = self.storage.get_row(model._table, record_id)
         if row is None:
@@ -144,7 +144,7 @@ class InMemoryColumnStore:
         return value
 
     def try_write(
-        self, model: BaseModel, column: str, record_id: int, value: typing.Any
+        self, model: ModelLike, column: str, record_id: int, value: typing.Any
     ) -> bool:
         # a value the table refuses under a unique constraint is an answer,
         # not an error: the caller picks the next candidate (mirrors the
@@ -161,7 +161,7 @@ class InMemoryColumnStore:
 
     def merge_json(
         self,
-        model: BaseModel,
+        model: ModelLike,
         column: str,
         record_id: int,
         fallback: dict[str, typing.Any],
@@ -185,7 +185,7 @@ class InMemoryColumnStore:
 
     def get_column_values(
         self,
-        model: BaseModel,
+        model: ModelLike,
         column: str,
         *,
         containing: typing.Any = None,
@@ -243,7 +243,7 @@ def _carries_a_python_predicate(domain: Domain) -> bool:
     )
 
 
-def _foreign_key_targets(model: BaseModel) -> list[tuple[str, str]]:
+def _foreign_key_targets(model: ModelLike) -> list[tuple[str, str]]:
     # the same conditions as _field_ddl.update_db_foreign_key, read off the
     # fields: the DDL never runs on this tier, so the registry's
     # add_foreign_key is never called and the declaration has to be derived
@@ -267,7 +267,7 @@ def _foreign_key_targets(model: BaseModel) -> list[tuple[str, str]]:
 
 
 def _check_foreign_keys(
-    storage: DictBackend, model: BaseModel, rows: list[dict]
+    storage: DictBackend, model: ModelLike, rows: list[dict]
 ) -> None:
     # a create allocates its ids inside create_rows, after these values were
     # built, so no row of a batch can name a sibling of it: every reference
@@ -297,7 +297,7 @@ def _check_foreign_keys(
 
 def _check_m2m_foreign_keys(
     storage: DictBackend,
-    model: BaseModel,
+    model: ModelLike,
     relation: str,
     column1: str,
     column2: str,
@@ -343,7 +343,7 @@ _INT4_MIN = -(2**31)
 _INT4_MAX = 2**31 - 1
 
 
-def _check_column_values(model: BaseModel, rows: list[dict]) -> None:
+def _check_column_values(model: ModelLike, rows: list[dict]) -> None:
     # what the driver and the column type refuse before any table constraint
     # is consulted: psycopg rejects a NUL in a text parameter, and an int4
     # column rejects a value outside its range
@@ -366,7 +366,7 @@ def _check_column_values(model: BaseModel, rows: list[dict]) -> None:
 
 
 def _check_table_constraints(
-    storage: DictBackend, model: BaseModel, rows: list[dict]
+    storage: DictBackend, model: ModelLike, rows: list[dict]
 ) -> None:
     # what the table refuses on PostgreSQL: a NULL in a NOT NULL column and a
     # duplicate under a unique constraint (NULLs distinct, as SQL treats them)
@@ -553,7 +553,7 @@ class _InMemoryReadGroup:
 
     def __init__(
         self,
-        model: BaseModel,
+        model: ModelLike,
         domain: typing.Any,
         groupby: typing.Iterable[str],
         aggregates: typing.Iterable[str],
@@ -563,7 +563,9 @@ class _InMemoryReadGroup:
         self.storage = storage
         # the compiled query carries a GROUP BY meant for SQL; the in-memory search
         # answers the domain itself
-        self.records = model.browse(model._search(domain).get_result_ids())
+        self.records = typing.cast(
+            "BaseModel", model.browse(model._search(domain).get_result_ids())
+        )
         self.groupby_specs = list(groupby)
         self.aggregate_specs = list(aggregates)
         self.groupby = [self._groupby_reader(spec) for spec in groupby]
@@ -578,7 +580,7 @@ class _InMemoryReadGroup:
         )
 
     def _groupby_reader(
-        self, spec: typing.Any, model: BaseModel | None = None
+        self, spec: typing.Any, model: ModelLike | None = None
     ) -> typing.Callable[[BaseModel], typing.Any]:
         model = self.model if model is None else model
         fname, seq_fnames, granularity = parse_read_group_spec(spec)
@@ -606,7 +608,7 @@ class _InMemoryReadGroup:
                 # the SQL path groups in UTC when the server does not know the zone
                 tz = None
 
-        def read(record: BaseModel) -> typing.Any:
+        def read(record: ModelLike) -> typing.Any:
             value = record[fname]
             if field.is_many2one:
                 return value.id or None
@@ -621,7 +623,7 @@ class _InMemoryReadGroup:
         return read
 
     def _many2many_reader(
-        self, model: BaseModel, field: Field, spec: str
+        self, model: ModelLike, field: Field, spec: str
     ) -> typing.Callable[[BaseModel], typing.Any]:
         # the relation rows whose comodel side the user may see under the
         # field's domain, as the LEFT JOIN's IN (subselect) keeps
@@ -635,7 +637,7 @@ class _InMemoryReadGroup:
             ).get_result_ids()
         )
 
-        def read(record: BaseModel) -> typing.Any:
+        def read(record: ModelLike) -> typing.Any:
             ids = [id_ for id_ in record[field.name]._ids if id_ in allowed]
             return _MultiValued(ids or [None])
 
@@ -643,7 +645,7 @@ class _InMemoryReadGroup:
 
     def _property_reader(
         self,
-        model: BaseModel,
+        model: ModelLike,
         field: Field,
         property_name: str | None,
         granularity: str | None,
@@ -672,7 +674,7 @@ class _InMemoryReadGroup:
             # the SQL path LEFT JOINs the json array's elements that the
             # definition (or the comodel's table) knows: one key per element,
             # a NULL row when none qualifies
-            def read_collection(record: BaseModel) -> typing.Any:
+            def read_collection(record: ModelLike) -> typing.Any:
                 values = record[field.name]
                 raw = (values._values or {}).get(property_name)
                 if not isinstance(raw, list):
@@ -695,7 +697,7 @@ class _InMemoryReadGroup:
         if granularity == "week":
             first_week_day = int(get_lang(model.env).week_start) - 1
 
-        def read(record: BaseModel) -> typing.Any:
+        def read(record: ModelLike) -> typing.Any:
             values = record[field.name]
             raw = (values._values or {}).get(property_name)
             if property_type == "selection":
@@ -723,7 +725,7 @@ class _InMemoryReadGroup:
 
     def _many2one_path_reader(
         self,
-        model: BaseModel,
+        model: ModelLike,
         fname: str,
         field: Field,
         seq_fnames: typing.Sequence[str],
@@ -748,7 +750,7 @@ class _InMemoryReadGroup:
         rest = f"{seq_fnames}:{granularity}" if granularity else seq_fnames
         read_rest = self._groupby_reader(rest, comodel)
 
-        def read(record: BaseModel) -> typing.Any:
+        def read(record: ModelLike) -> typing.Any:
             corecord = record[fname]
             if not corecord:
                 return None
@@ -773,7 +775,7 @@ class _InMemoryReadGroup:
         storage = self.storage
         table = self.model._table
 
-        def raw(record: BaseModel) -> typing.Any:
+        def raw(record: ModelLike) -> typing.Any:
             value = record[fname]
             if field.relational:
                 return value.id or None if field.is_many2one else list(value.ids)
@@ -788,10 +790,10 @@ class _InMemoryReadGroup:
                     return None
             return None if value is False else value
 
-        def values(records: BaseModel) -> list:
+        def values(records: ModelLike) -> list:
             return [raw(record) for record in records]
 
-        def present(records: BaseModel) -> list:
+        def present(records: ModelLike) -> list:
             return [v for v in values(records) if v is not None]
 
         def distinct_sorted(all_values: list) -> list | None:
@@ -864,10 +866,10 @@ class _InMemoryReadGroup:
             env, env.company, Date.context_today(self.model)
         )
 
-        def read(records: BaseModel) -> typing.Any:
+        def read(records: ModelLike) -> typing.Any:
             present = [
                 (value, record[typing.cast("str", currency_field_name)].id)
-                for record in records
+                for record in typing.cast("BaseModel", records)
                 if (value := raw(record)) is not None
             ]
             if not present:
@@ -1144,7 +1146,7 @@ class _ForeignKeyPlan:
         self.nulls: dict[str, list[tuple[int, dict]]] = {}
         self.m2m_rows: dict[str, set[int]] = {}
 
-    def add_removal(self, model: BaseModel, ids: set[int]) -> None:
+    def add_removal(self, model: ModelLike, ids: set[int]) -> None:
         storage = self.backend.storage
         seen = self.rows.setdefault(model._table, set())
         ids = ids.difference(seen)
@@ -1225,7 +1227,7 @@ class InMemoryBackend:
 
     def create_rows(
         self,
-        model: BaseModel,
+        model: ModelLike,
         stored_list: list[dict[str, typing.Any]],
         columns: list[str],
         col_fields: list[Field],
@@ -1257,7 +1259,7 @@ class InMemoryBackend:
         return new_ids
 
     @staticmethod
-    def _strip_company_fallbacks(model: BaseModel, field: Field, merged: dict) -> dict:
+    def _strip_company_fallbacks(model: ModelLike, field: Field, merged: dict) -> dict:
         kept = {}
         for key, item in merged.items():
             rec = model.with_company(int(key))
@@ -1271,7 +1273,7 @@ class InMemoryBackend:
         return kept
 
     def update_rows(
-        self, model: BaseModel, fnames: tuple[str, ...], rows: list[tuple]
+        self, model: ModelLike, fnames: tuple[str, ...], rows: list[tuple]
     ) -> None:
         fields_map = model._fields
         updates = []
@@ -1315,11 +1317,11 @@ class InMemoryBackend:
 
     def fetch(
         self,
-        model: BaseModel,
+        model: ModelLike,
         query: Query,
         column_fields: typing.Iterable[Field],
         other_fields: typing.Iterable[Field],
-    ) -> BaseModel:
+    ) -> ModelLike:
         column_fields = list(column_fields)
         result_ids = query._ids
         if result_ids is None:
@@ -1342,15 +1344,15 @@ class InMemoryBackend:
 
         if fetched:
             for field in other_fields:
-                field.read(fetched)
+                field.read(typing.cast("BaseModel", fetched))
         return fetched
 
     def _load_column_cache(
         self,
-        model: BaseModel,
+        model: ModelLike,
         record_ids: typing.Sequence[int],
         column_fields: list[Field],
-        records: BaseModel,
+        records: ModelLike,
     ) -> None:
         if not column_fields:
             return
@@ -1436,7 +1438,7 @@ class InMemoryBackend:
 
     def search_raw(
         self,
-        model: BaseModel,
+        model: ModelLike,
         domain: Domain,
         offset: int,
         limit: int | None,
@@ -1448,7 +1450,7 @@ class InMemoryBackend:
 
     @staticmethod
     def _refuse_what_sql_cannot_compile(
-        model: BaseModel, domain: Domain, order: str | None
+        model: ModelLike, domain: Domain, order: str | None
     ) -> None:
         """A search this tier can answer and PostgreSQL cannot is a test that
         passes here and fails there.
@@ -1474,13 +1476,15 @@ class InMemoryBackend:
         """
         query = Query(model.env, model._table, model._table_sql)
         if not domain.is_true() and not _carries_a_python_predicate(domain):
-            query.add_where(domain._to_sql(model, model._table, query))
+            query.add_where(
+                domain._to_sql(typing.cast("BaseModel", model), model._table, query)
+            )
         if order:
             model._order_to_sql(order, query)
 
     def search(
         self,
-        model: BaseModel,
+        model: ModelLike,
         domain: Domain,
         offset: int,
         limit: int | None,
@@ -1490,7 +1494,9 @@ class InMemoryBackend:
         prof: typing.Any = None,
     ) -> Query:
         self._refuse_what_sql_cannot_compile(model, domain, order)
-        searched_fnames = flush_search_dependencies(model, domain, order)
+        searched_fnames = flush_search_dependencies(
+            typing.cast("BaseModel", model), domain, order
+        )
         # a SQL search fills no field cache; the in-memory one evaluates the
         # domain and the order through the records, so what it loads to do
         # that is dropped again, and a test sees the cache PostgreSQL leaves
@@ -1553,13 +1559,13 @@ class InMemoryBackend:
         query._ids = tuple(ids)
         return query
 
-    def as_query(self, model: BaseModel, ordered: bool = True) -> Query:
+    def as_query(self, model: ModelLike, ordered: bool = True) -> Query:
         query = Query(model.env, model._table, model._table_sql)
         query._ids = tuple(model._ids)
         return query
 
     def ancestors(
-        self, model: BaseModel, parent_field: str, ids: typing.Collection[int]
+        self, model: ModelLike, parent_field: str, ids: typing.Collection[int]
     ) -> list[tuple[int, int | None]]:
         rows: dict[int, int | None] = {}
         frontier = list(ids)
@@ -1580,7 +1586,7 @@ class InMemoryBackend:
 
     def descendants(
         self,
-        model: BaseModel,
+        model: ModelLike,
         parent_field: str,
         root_ids: typing.Collection[int],
         *,
@@ -1600,7 +1606,7 @@ class InMemoryBackend:
                 ).get_result_ids()
             )
 
-            def same_key(record: BaseModel) -> tuple:
+            def same_key(record: ModelLike) -> tuple:
                 # COALESCE(col::text, '') on the SQL side: only NULL collapses
                 # to '', a stored 0 or false compares as its text -- which
                 # takes the stored cell, since the cache reads NULL as the
@@ -1622,7 +1628,7 @@ class InMemoryBackend:
 
             parent_values = {parent.id: same_key(parent) for parent in parents}
             frontier = [
-                typing.cast("int", child.id)
+                child.id
                 for child in children
                 if child.id not in found
                 and same_key(child) == parent_values[child[parent_field].id]
@@ -1632,7 +1638,7 @@ class InMemoryBackend:
 
     def read_group_rows(
         self,
-        model: BaseModel,
+        model: ModelLike,
         select: SQL,
         *,
         domain: Domain,
@@ -1650,7 +1656,7 @@ class InMemoryBackend:
 
     def read_grouping_sets_rows(
         self,
-        model: BaseModel,
+        model: ModelLike,
         select: SQL,
         *,
         domain: Domain,
@@ -1704,15 +1710,15 @@ class InMemoryBackend:
         )
         return rows
 
-    def get_existing_ids(self, model: BaseModel, ids: typing.Iterable[int]) -> set[int]:
+    def get_existing_ids(self, model: ModelLike, ids: typing.Iterable[int]) -> set[int]:
         return set(self.storage.get_existing_ids(model._table, list(ids)))
 
-    def has_rows_beyond(self, model: BaseModel, count: int) -> bool:
+    def has_rows_beyond(self, model: ModelLike, count: int) -> bool:
         return self.storage.get_row_count(model._table) > count
 
     def has_cycle(
         self,
-        model: BaseModel,
+        model: ModelLike,
         relation: str,
         column1: str,
         column2: str,
@@ -1741,7 +1747,7 @@ class InMemoryBackend:
         return False
 
     def increment_columns_skip_locked(
-        self, model: BaseModel, columns: typing.Sequence[str], ids: typing.Sequence[int]
+        self, model: ModelLike, columns: typing.Sequence[str], ids: typing.Sequence[int]
     ) -> int:
         table = model._table
         updates = []
@@ -1755,7 +1761,7 @@ class InMemoryBackend:
         return len(updates)
 
     def lock_for_update(
-        self, model: BaseModel, *, allow_referencing: bool = False, wait: bool = False
+        self, model: ModelLike, *, allow_referencing: bool = False, wait: bool = False
     ) -> None:
         ids = {id_ for id_ in model._ids if id_}
         if not ids:
@@ -1765,11 +1771,11 @@ class InMemoryBackend:
 
     def try_lock_for_update(
         self,
-        model: BaseModel,
+        model: ModelLike,
         *,
         allow_referencing: bool = False,
         limit: int | None = None,
-    ) -> BaseModel:
+    ) -> ModelLike:
         # the PostgreSQL twin's selection rule: saturating new ids win the
         # whole limit; otherwise the limit buys real rows only, and every
         # new id rides along, all in the recordset's order
@@ -1785,7 +1791,7 @@ class InMemoryBackend:
         valid = set(lockable_real) | set(new_ids)
         return model.browse(i for i in model._ids if i in valid)
 
-    def unlink_rows(self, model: BaseModel, sub_ids: tuple[int, ...]) -> None:
+    def unlink_rows(self, model: ModelLike, sub_ids: tuple[int, ...]) -> None:
         env = model.env
         wanted = set(sub_ids)
         # what the database's foreign keys do on DELETE -- cascade through,
@@ -1849,7 +1855,7 @@ class InMemoryBackend:
 
     def _read_m2m_pairs(
         self,
-        model: BaseModel,
+        model: ModelLike,
         relation: str,
         column1: str,
         column2: str,
@@ -1863,7 +1869,7 @@ class InMemoryBackend:
         ]
 
     def set_parent_paths(
-        self, model: BaseModel, ids: typing.Sequence[int]
+        self, model: ModelLike, ids: typing.Sequence[int]
     ) -> list[tuple[int, str]]:
         table, parent_column = model._table, model._parent_name
         updated: list[tuple[int, str]] = []
@@ -1884,7 +1890,7 @@ class InMemoryBackend:
         return updated
 
     def records_with_parent_changed(
-        self, model: BaseModel, parent_to_ids: dict[typing.Any, list[int]]
+        self, model: ModelLike, parent_to_ids: dict[typing.Any, list[int]]
     ) -> list[int]:
         table, parent_column = model._table, model._parent_name
         changed: list[int] = []
@@ -1899,7 +1905,7 @@ class InMemoryBackend:
         return sorted(changed)
 
     def move_parent_paths(
-        self, model: BaseModel, ids: typing.Sequence[int], prefix: str
+        self, model: ModelLike, ids: typing.Sequence[int], prefix: str
     ) -> dict[int, str]:
         table = model._table
         moved: dict[int, str] = {}
@@ -1921,7 +1927,7 @@ class InMemoryBackend:
 
     def read_m2m_groups(
         self,
-        records: BaseModel,
+        records: ModelLike,
         relation: str,
         column1: str,
         column2: str,
@@ -1940,7 +1946,7 @@ class InMemoryBackend:
 
     def count_m2m_groups(
         self,
-        records: BaseModel,
+        records: ModelLike,
         relation: str,
         column1: str,
         column2: str,
@@ -1951,7 +1957,7 @@ class InMemoryBackend:
 
     def link_m2m_pairs(
         self,
-        model: BaseModel,
+        model: ModelLike,
         relation: str,
         column1: str,
         column2: str,
@@ -1975,7 +1981,7 @@ class InMemoryBackend:
 
     def unlink_m2m_pairs(
         self,
-        model: BaseModel,
+        model: ModelLike,
         relation: str,
         column1: str,
         column2: str,

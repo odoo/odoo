@@ -563,7 +563,10 @@ class ReadMixin(_ModelStubs):
             self._flush_table_inheritance_siblings(
                 [field.name for field in (*column_fields, *other_fields)], self._ids
             )
-        return self.env.backend.fetch(self, query, column_fields, other_fields)
+        # the port answers with the recordset it was handed
+        return typing.cast(
+            "Self", self.env.backend.fetch(self, query, column_fields, other_fields)
+        )
 
     def get_metadata(self) -> list[ValuesType]:
 

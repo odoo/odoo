@@ -9,7 +9,7 @@ if typing.TYPE_CHECKING:
     from odoo.tools import Query
 
     from .._protocols import IrAttachmentProtocol
-    from .._typing import BaseModel
+    from .._typing import BaseModel, ModelLike
     from .environment import Environment
 
 _debug = DebugLog(__name__)
@@ -36,7 +36,7 @@ class FileStore:
         return env["ir.attachment"].sudo()
 
     def read_field(
-        self, records: BaseModel, field_name: str, *, bin_size: bool
+        self, records: ModelLike, field_name: str, *, bin_size: bool
     ) -> dict[int, typing.Any]:
         if "ir.attachment" not in records.env.registry:
             # nothing stored, nothing to read: the field answers False
@@ -49,12 +49,12 @@ class FileStore:
             )
         }
 
-    def of_field(self, records: BaseModel, field_name: str) -> BaseModel:
+    def of_field(self, records: ModelLike, field_name: str) -> BaseModel:
         return self._attachments(records.env).search(
             _field_domain(records._name, field_name, records.ids)
         )
 
-    def of_records(self, records: BaseModel) -> BaseModel:
+    def of_records(self, records: ModelLike) -> ModelLike:
         if "ir.attachment" not in records.env.registry:
             return records.browse()
         return (
@@ -84,7 +84,7 @@ class FileStore:
             ]
         )
 
-    def field_set_query(self, model: BaseModel, field_name: str) -> Query:
+    def field_set_query(self, model: ModelLike, field_name: str) -> Query:
         attachments = typing.cast("BaseModel", self._attachments(model.env))
         return attachments._search(
             [

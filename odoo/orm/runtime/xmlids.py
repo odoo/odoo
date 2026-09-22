@@ -7,7 +7,7 @@ from collections import defaultdict
 from odoo.libs.debug_log import DebugLog
 
 if typing.TYPE_CHECKING:
-    from .._typing import BaseModel, IdType
+    from .._typing import IdType, ModelLike
     from .environment import Environment
 
 _debug = DebugLog(__name__)
@@ -16,7 +16,7 @@ _debug = DebugLog(__name__)
 class Xmlids:
     __slots__ = ()
 
-    def of_records(self, records: BaseModel) -> dict[int, list[tuple[str, bool]]]:
+    def of_records(self, records: ModelLike) -> dict[int, list[tuple[str, bool]]]:
         result: dict[int, list[tuple[str, bool]]] = defaultdict(list)
         if "ir.model.data" not in records.env.registry:
             return result
@@ -39,7 +39,7 @@ class Xmlids:
             )
         return result
 
-    def records_of(self, records: BaseModel) -> BaseModel:
+    def records_of(self, records: ModelLike) -> ModelLike:
         if "ir.model.data" not in records.env.registry:
             return records.browse()
         return (
@@ -50,7 +50,7 @@ class Xmlids:
         )
 
     def resolve(
-        self, env: Environment, xml_ids: list[str], model: BaseModel
+        self, env: Environment, xml_ids: list[str], model: ModelLike
     ) -> list[tuple]:
         if not xml_ids:
             return []
@@ -81,7 +81,7 @@ class Xmlids:
         env["ir.model.data"].sudo().browse(ids).unlink()
 
     def get_or_create_for_records(
-        self, records: BaseModel, module: str
+        self, records: ModelLike, module: str
     ) -> dict[IdType, str]:
         xids: dict[IdType, str] = {
             res_id: names[0][0] for res_id, names in self.of_records(records).items()

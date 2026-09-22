@@ -347,7 +347,7 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
     def _format_properties_many2one(
         self, rows_dict: list[dict], fullname: str, definition: dict
     ) -> None:
-        comodel = self.env[definition.get("comodel")]
+        comodel = self.env[typing.cast("str", definition.get("comodel"))]
         prefetch_ids = all_groups = tuple(
             row[fullname] for row in rows_dict if row[fullname]
         )
@@ -366,7 +366,7 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
     def _format_properties_many2many(
         self, rows_dict: list[dict], fullname: str, definition: dict
     ) -> None:
-        comodel = self.env[definition.get("comodel")]
+        comodel = self.env[typing.cast("str", definition.get("comodel"))]
         prefetch_ids = all_groups = tuple(
             row[fullname] for row in rows_dict if row[fullname]
         )

@@ -5,7 +5,6 @@ import typing
 from collections import defaultdict
 from collections.abc import Collection, Iterable, Sequence
 from itertools import batched
-from typing import Self
 
 from odoo.exceptions import MissingError
 from odoo.libs.debug_log import DebugLog
@@ -28,7 +27,7 @@ _debug = DebugLog(__name__)
 _SQL_IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 
 if typing.TYPE_CHECKING:
-    from ..._typing import IdType
+    from ..._typing import BaseModel, IdType
     from ...fields.base import Field
     from ...runtime import TriggerTree
 
@@ -245,7 +244,9 @@ class RecomputeMixin(_ModelStubs):
 
     def _modified(
         self, fields: list[Field], create: bool
-    ) -> Iterable[tuple[Field, Self, bool]]:
+    ) -> Iterable[tuple[Field, BaseModel, bool]]:
+        # this model's records for its own fields, and a dependent model's
+        # where the trigger walks into one
 
         env = self.env
         core = env.core
@@ -269,12 +270,15 @@ class RecomputeMixin(_ModelStubs):
 
     def _modified_triggers(
         self, tree: TriggerTree, create: bool = False
-    ) -> Iterable[tuple[Field, Self, bool]]:
+    ) -> Iterable[tuple[Field, BaseModel, bool]]:
+        # the walk descends into the dependent models, so what comes out of it
+        # is this model's records only for the fields of the tree's own root
         if not self:
             return
 
+        own = typing.cast("BaseModel", self)
         for field in tree.root:
-            yield field, self, create
+            yield field, own, create
 
         for field, subtree in tree.items():
             if create and (field.is_many2one or field.is_many2one_reference):
@@ -355,7 +359,8 @@ class RecomputeMixin(_ModelStubs):
 
     def _modified_cache_only(
         self, field: Field, subtree: TriggerTree
-    ) -> Iterable[tuple[Field, Self, bool]]:
+    ) -> Iterable[tuple[Field, BaseModel, bool]]:
+        # the records yielded are the *dependent* field's, not this model's
         env = self.env
         model = env[field.model_name]
         self_ids = set(self._ids)
@@ -478,11 +483,13 @@ class RecomputeMixin(_ModelStubs):
     ) -> None:
         ids_to_compute = self.env.core.get_pending_ids(field)
         scoped = ids is not None  # debuglog
-        if ids is None:
-            ids = ids_to_compute
-        else:
-            ids = [id_ for id_ in ids if id_ in ids_to_compute]
-        if not ids:
+        # not rebound: the pending set is passed through rather than copied
+        selected: Collection[IdType] = (
+            ids_to_compute
+            if ids is None
+            else [id_ for id_ in ids if id_ in ids_to_compute]
+        )
+        if not selected:
             return
 
         prof = _OrmProfile(_orm_compute)
@@ -492,7 +499,7 @@ class RecomputeMixin(_ModelStubs):
         # write to one field of a compute group survives until something
         # reads a sibling, which recomputes the group over the write.
         # `_expand_ids` already batches new and real ids apart.
-        records = self.browse(tuple(ids))
+        records = self.browse(tuple(selected))
         if _debug.pipeline.enabled:
             _debug.pipeline(
                 "recompute.field",

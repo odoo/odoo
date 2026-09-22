@@ -38,6 +38,7 @@ if typing.TYPE_CHECKING:
         IrConfigParameterProtocol,
         IrCronProtocol,
         IrDefaultProtocol,
+        IrFieldsConverterProtocol,
         IrModelAccessProtocol,
         IrModelConstraintProtocol,
         IrModelDataProtocol,
@@ -49,6 +50,7 @@ if typing.TYPE_CHECKING:
         IrModuleModuleProtocol,
         IrRuleProtocol,
         IrUiViewProtocol,
+        ResCompanyProtocol,
         ResCountryProtocol,
         ResCurrencyProtocol,
         ResLangProtocol,
@@ -238,6 +240,16 @@ class Environment(Mapping[str, "BaseModel"]):
 
     @typing.overload
     def __getitem__(  # type: ignore[overload-overlap]
+        self, model_name: typing.Literal["ir.fields.converter"]
+    ) -> IrFieldsConverterProtocol: ...
+
+    @typing.overload
+    def __getitem__(  # type: ignore[overload-overlap]
+        self, model_name: typing.Literal["res.company"]
+    ) -> ResCompanyProtocol: ...
+
+    @typing.overload
+    def __getitem__(  # type: ignore[overload-overlap]
         self, model_name: typing.Literal["res.country"]
     ) -> ResCountryProtocol: ...
 
@@ -396,7 +408,7 @@ class Environment(Mapping[str, "BaseModel"]):
         return company_ids
 
     @functools.cached_property
-    def company(self) -> BaseModel:
+    def company(self) -> ResCompanyProtocol:
         if company_ids := self._get_allowed_company_ids():
             return self["res.company"].browse(company_ids[0])
         _debug.logic("environment.company.fallback_to_user", uid=self.uid)

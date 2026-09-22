@@ -462,6 +462,9 @@ class SearchMixin(_ModelStubs):
     def try_lock_for_update(
         self, *, allow_referencing: bool = False, limit: int | None = None
     ) -> Self:
-        return self.env.backend.try_lock_for_update(
-            self, allow_referencing=allow_referencing, limit=limit
+        return typing.cast(
+            "Self",
+            self.env.backend.try_lock_for_update(
+                self, allow_referencing=allow_referencing, limit=limit
+            ),
         )

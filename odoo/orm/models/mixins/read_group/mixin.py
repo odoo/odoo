@@ -260,7 +260,7 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
         row_values = self.env.backend.read_grouping_sets_rows(
             self,
             query.select(*select_args),
-            domain=domain,
+            domain=Domain(domain),
             query=query,
             grouping_sets=grouping_sets,
             groupby_terms=groupby_terms,
@@ -433,7 +433,7 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
                     empty_rows = self.env.backend.read_group_rows(
                         self,
                         empty_query.select(SQL("COUNT(*)")),
-                        domain=domain,
+                        domain=Domain(domain),
                         query=empty_query,
                         groupby=(),
                         aggregates=aggregates,
@@ -475,7 +475,7 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
         row_values = self.env.backend.read_group_rows(
             self,
             query.select(*select_args),
-            domain=domain,
+            domain=Domain(domain),
             query=query,
             groupby=groupby,
             aggregates=aggregates,

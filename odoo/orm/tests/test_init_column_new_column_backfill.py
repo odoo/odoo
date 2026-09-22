@@ -24,7 +24,7 @@ def _model(default):
     class _Model(SchemaMixin):
         _table = "res_company"
         _fields = {"active": field}
-        env = _Env()
+        env: typing.Any = _Env()
 
     return typing.cast("typing.Any", object.__new__(_Model))
 

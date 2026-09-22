@@ -362,7 +362,7 @@ class LoadMixin(_ModelStubs):
 
     def _get_o2m_only_row_predicate(
         self, field_paths: FieldPaths
-    ) -> Callable[[list[str]], bool]:
+    ) -> Callable[[typing.Any], bool]:
         fields = self._fields
 
         def is_o2m(fnames: Sequence[str | None]) -> bool:
@@ -378,7 +378,7 @@ class LoadMixin(_ModelStubs):
             [index for index, fnames in enumerate(field_paths) if not is_o2m(fnames)]
         )
 
-        def is_only_o2m_row(row: Sequence) -> bool:
+        def is_only_o2m_row(row: typing.Any) -> bool:
             return any(get_o2m_values(row)) and not any(get_other_values(row))
 
         return is_only_o2m_row
@@ -412,7 +412,7 @@ class LoadMixin(_ModelStubs):
         self,
         relfield: str,
         field_paths: FieldPaths,
-        record_span: list[list[str]],
+        record_span: Sequence[Sequence[str]],
         property_definitions: dict,
         log: Callable,
     ) -> list[dict]:
@@ -455,7 +455,7 @@ class LoadMixin(_ModelStubs):
     def _extract_records(
         self,
         field_paths: FieldPaths,
-        data: list[list[str]],
+        data: Sequence[Sequence[str]],
         log: Callable = lambda a: None,
         limit: float = float("inf"),
     ) -> Generator[tuple[dict, dict]]:

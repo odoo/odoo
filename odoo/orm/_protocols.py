@@ -225,6 +225,17 @@ class IrModuleModuleProtocol(RecordsetProtocol, Protocol):
     def update_list(self) -> Any: ...
 
 
+class IrFieldsConverterProtocol(RecordsetProtocol, Protocol):
+    def _get_converter_record(self, model: Any) -> Any: ...
+
+    def _prefetch_name_references(self, model: Any, records: Any) -> None: ...
+
+
+class ResCompanyProtocol(RecordsetProtocol, Protocol):
+    root_id: Any
+    currency_id: Any
+
+
 class ResCountryProtocol(RecordsetProtocol, Protocol):
     code: Any
     currency_id: Any
@@ -285,6 +296,7 @@ FRAMEWORK_MODEL_PROTOCOLS: dict[str, type] = {
     "ir.config_parameter": IrConfigParameterProtocol,
     "ir.cron": IrCronProtocol,
     "ir.default": IrDefaultProtocol,
+    "ir.fields.converter": IrFieldsConverterProtocol,
     "ir.model": IrModelProtocol,
     "ir.model.access": IrModelAccessProtocol,
     "ir.model.constraint": IrModelConstraintProtocol,
@@ -296,6 +308,7 @@ FRAMEWORK_MODEL_PROTOCOLS: dict[str, type] = {
     "ir.module.module": IrModuleModuleProtocol,
     "ir.rule": IrRuleProtocol,
     "ir.ui.view": IrUiViewProtocol,
+    "res.company": ResCompanyProtocol,
     "res.country": ResCountryProtocol,
     "res.currency": ResCurrencyProtocol,
     "res.lang": ResLangProtocol,

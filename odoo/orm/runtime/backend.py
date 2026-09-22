@@ -285,22 +285,22 @@ class ColumnStore(typing.Protocol):
 
     def write(
         self,
-        model: BaseModel,
+        model: ModelLike,
         column: str,
         rows: typing.Collection[tuple[int, typing.Any]],
     ) -> None: ...
 
     def fetch_and_add(
-        self, model: BaseModel, column: str, record_id: int, delta: int
+        self, model: ModelLike, column: str, record_id: int, delta: int
     ) -> int | None: ...
 
     def try_write(
-        self, model: BaseModel, column: str, record_id: int, value: typing.Any
+        self, model: ModelLike, column: str, record_id: int, value: typing.Any
     ) -> bool: ...
 
     def merge_json(
         self,
-        model: BaseModel,
+        model: ModelLike,
         column: str,
         record_id: int,
         fallback: dict[str, typing.Any],
@@ -309,7 +309,7 @@ class ColumnStore(typing.Protocol):
 
     def get_column_values(
         self,
-        model: BaseModel,
+        model: ModelLike,
         column: str,
         *,
         containing: typing.Any = None,
@@ -337,7 +337,7 @@ class PostgresColumnStore:
 
     def write(
         self,
-        model: BaseModel,
+        model: ModelLike,
         column: str,
         rows: typing.Collection[tuple[int, typing.Any]],
     ) -> None:
@@ -352,7 +352,7 @@ class PostgresColumnStore:
         )
 
     def fetch_and_add(
-        self, model: BaseModel, column: str, record_id: int, delta: int
+        self, model: ModelLike, column: str, record_id: int, delta: int
     ) -> int | None:
         # the row is locked for the statement, so two callers never take the same
         # value: NOWAIT surfaces the contention instead of queueing behind it
@@ -376,7 +376,7 @@ class PostgresColumnStore:
         return value
 
     def try_write(
-        self, model: BaseModel, column: str, record_id: int, value: typing.Any
+        self, model: ModelLike, column: str, record_id: int, value: typing.Any
     ) -> bool:
         # a value the table refuses (a unique or exclusion constraint) is an
         # answer, not an error: the caller picks the next candidate
@@ -400,7 +400,7 @@ class PostgresColumnStore:
 
     def merge_json(
         self,
-        model: BaseModel,
+        model: ModelLike,
         column: str,
         record_id: int,
         fallback: dict[str, typing.Any],
@@ -425,7 +425,7 @@ class PostgresColumnStore:
 
     def get_column_values(
         self,
-        model: BaseModel,
+        model: ModelLike,
         column: str,
         *,
         containing: typing.Any = None,
@@ -459,27 +459,27 @@ class StorageBackend(typing.Protocol):
 
     def create_rows(
         self,
-        model: BaseModel,
+        model: ModelLike,
         stored_list: list[dict[str, typing.Any]],
         columns: list[str],
         col_fields: list[Field],
     ) -> list[int]: ...
 
     def update_rows(
-        self, model: BaseModel, fnames: tuple[str, ...], rows: list[tuple]
+        self, model: ModelLike, fnames: tuple[str, ...], rows: list[tuple]
     ) -> None: ...
 
     def fetch(
         self,
-        model: BaseModel,
+        model: ModelLike,
         query: Query,
         column_fields: typing.Iterable[Field],
         other_fields: typing.Iterable[Field],
-    ) -> BaseModel: ...
+    ) -> ModelLike: ...
 
     def search(
         self,
-        model: BaseModel,
+        model: ModelLike,
         domain: Domain,
         offset: int,
         limit: int | None,
@@ -491,7 +491,7 @@ class StorageBackend(typing.Protocol):
 
     def search_raw(
         self,
-        model: BaseModel,
+        model: ModelLike,
         domain: Domain,
         offset: int,
         limit: int | None,
@@ -500,11 +500,11 @@ class StorageBackend(typing.Protocol):
         check_access: bool = True,
     ) -> Query | None: ...
 
-    def as_query(self, model: BaseModel, ordered: bool = True) -> Query: ...
+    def as_query(self, model: ModelLike, ordered: bool = True) -> Query: ...
 
     def descendants(
         self,
-        model: BaseModel,
+        model: ModelLike,
         parent_field: str,
         root_ids: typing.Collection[int],
         *,
@@ -514,12 +514,12 @@ class StorageBackend(typing.Protocol):
     ) -> Query: ...
 
     def ancestors(
-        self, model: BaseModel, parent_field: str, ids: typing.Collection[int]
+        self, model: ModelLike, parent_field: str, ids: typing.Collection[int]
     ) -> list[tuple[int, int | None]]: ...
 
     def read_group_rows(
         self,
-        model: BaseModel,
+        model: ModelLike,
         select: SQL,
         *,
         domain: Domain,
@@ -534,7 +534,7 @@ class StorageBackend(typing.Protocol):
 
     def read_grouping_sets_rows(
         self,
-        model: BaseModel,
+        model: ModelLike,
         select: SQL,
         *,
         domain: Domain,
@@ -546,14 +546,14 @@ class StorageBackend(typing.Protocol):
     ) -> list[tuple]: ...
 
     def get_existing_ids(
-        self, model: BaseModel, ids: typing.Iterable[int]
+        self, model: ModelLike, ids: typing.Iterable[int]
     ) -> set[int]: ...
 
-    def has_rows_beyond(self, model: BaseModel, count: int) -> bool: ...
+    def has_rows_beyond(self, model: ModelLike, count: int) -> bool: ...
 
     def has_cycle(
         self,
-        model: BaseModel,
+        model: ModelLike,
         relation: str,
         column1: str,
         column2: str,
@@ -561,26 +561,26 @@ class StorageBackend(typing.Protocol):
     ) -> bool: ...
 
     def increment_columns_skip_locked(
-        self, model: BaseModel, columns: typing.Sequence[str], ids: typing.Sequence[int]
+        self, model: ModelLike, columns: typing.Sequence[str], ids: typing.Sequence[int]
     ) -> int: ...
 
     def lock_for_update(
-        self, model: BaseModel, *, allow_referencing: bool = False, wait: bool = False
+        self, model: ModelLike, *, allow_referencing: bool = False, wait: bool = False
     ) -> None: ...
 
     def try_lock_for_update(
         self,
-        model: BaseModel,
+        model: ModelLike,
         *,
         allow_referencing: bool = False,
         limit: int | None = None,
-    ) -> BaseModel: ...
+    ) -> ModelLike: ...
 
-    def unlink_rows(self, model: BaseModel, sub_ids: tuple[int, ...]) -> None: ...
+    def unlink_rows(self, model: ModelLike, sub_ids: tuple[int, ...]) -> None: ...
 
     def read_m2m_groups(
         self,
-        records: BaseModel,
+        records: ModelLike,
         relation: str,
         column1: str,
         column2: str,
@@ -589,7 +589,7 @@ class StorageBackend(typing.Protocol):
 
     def count_m2m_groups(
         self,
-        records: BaseModel,
+        records: ModelLike,
         relation: str,
         column1: str,
         column2: str,
@@ -597,20 +597,20 @@ class StorageBackend(typing.Protocol):
     ) -> dict[int, int]: ...
 
     def set_parent_paths(
-        self, model: BaseModel, ids: typing.Sequence[int]
+        self, model: ModelLike, ids: typing.Sequence[int]
     ) -> list[tuple[int, str]]: ...
 
     def records_with_parent_changed(
-        self, model: BaseModel, parent_to_ids: dict[typing.Any, list[int]]
+        self, model: ModelLike, parent_to_ids: dict[typing.Any, list[int]]
     ) -> list[int]: ...
 
     def move_parent_paths(
-        self, model: BaseModel, ids: typing.Sequence[int], prefix: str
+        self, model: ModelLike, ids: typing.Sequence[int], prefix: str
     ) -> dict[int, str]: ...
 
     def link_m2m_pairs(
         self,
-        model: BaseModel,
+        model: ModelLike,
         relation: str,
         column1: str,
         column2: str,
@@ -619,7 +619,7 @@ class StorageBackend(typing.Protocol):
 
     def unlink_m2m_pairs(
         self,
-        model: BaseModel,
+        model: ModelLike,
         relation: str,
         column1: str,
         column2: str,
@@ -675,7 +675,7 @@ def _prepare_postgres_search_query(
     return query
 
 
-def _total_order(model: BaseModel, order: str, order_sql: SQL) -> SQL:
+def _total_order(model: ModelLike, order: str, order_sql: SQL) -> SQL:
     id_sql = SQL.identifier(model._table, "id")
     if not order_sql:
         return id_sql
@@ -684,7 +684,7 @@ def _total_order(model: BaseModel, order: str, order_sql: SQL) -> SQL:
     return SQL("%s, %s", order_sql, id_sql)
 
 
-def _single_table_where(model: BaseModel, domain: Domain) -> SQL | None:
+def _single_table_where(model: ModelLike, domain: Domain) -> SQL | None:
     if domain.is_true():
         return None
     query = model._search(domain)
@@ -697,7 +697,7 @@ def _single_table_where(model: BaseModel, domain: Domain) -> SQL | None:
     return query.where_clause if query._where_clauses else None
 
 
-def _get_fetch_term(model: BaseModel, field: Field, query: Query) -> SQL:
+def _get_fetch_term(model: ModelLike, field: Field, query: Query) -> SQL:
     # the memo is keyed by field alone: a _field_to_sql override that answers
     # the bare identifier under one environment and an expression under
     # another would be served the identifier from the second call on, so an
@@ -723,7 +723,7 @@ def _get_fetch_term(model: BaseModel, field: Field, query: Query) -> SQL:
     return sql
 
 
-def _get_translated_fetch_term(model: BaseModel, field: Field, query: Query) -> SQL:
+def _get_translated_fetch_term(model: ModelLike, field: Field, query: Query) -> SQL:
     if model.env.context.get("prefetch_langs"):
         return model._field_to_sql(model._table, field.name, query)
     langs = field.get_translation_fallback_langs(model.env)
@@ -763,7 +763,7 @@ class PostgresBackend:
 
     def create_rows(
         self,
-        model: BaseModel,
+        model: ModelLike,
         stored_list: list[dict[str, typing.Any]],
         columns: list[str],
         col_fields: list[Field],
@@ -836,7 +836,7 @@ class PostgresBackend:
 
     @staticmethod
     def _prepare_insert_rows(
-        model: BaseModel,
+        model: ModelLike,
         stored_list: list[dict[str, typing.Any]],
         columns: list[str],
         col_fields: list[Field],
@@ -854,7 +854,7 @@ class PostgresBackend:
         ]
 
     def update_rows(
-        self, model: BaseModel, fnames: tuple[str, ...], rows: list[tuple]
+        self, model: ModelLike, fnames: tuple[str, ...], rows: list[tuple]
     ) -> None:
         if (values := self._resolve_uniform_update_values(rows)) is not None:
             _debug.logic(
@@ -900,7 +900,7 @@ class PostgresBackend:
 
     @staticmethod
     def _update_assignments(
-        model: BaseModel,
+        model: ModelLike,
         fnames: tuple[str, ...],
         value_sql: Callable[[int, str, SQL, SQL], SQL],
     ) -> tuple[list[SQL], list[SQL]]:
@@ -957,7 +957,7 @@ class PostgresBackend:
 
     def _update_rows_values(
         self,
-        model: BaseModel,
+        model: ModelLike,
         fnames: tuple[str, ...],
         rows: tuple[tuple, ...] | list[tuple],
     ) -> None:
@@ -981,7 +981,7 @@ class PostgresBackend:
         )
 
     def _update_rows_uniform(
-        self, model: BaseModel, fnames: tuple[str, ...], ids: list[int], values: tuple
+        self, model: ModelLike, fnames: tuple[str, ...], ids: list[int], values: tuple
     ) -> None:
         _columns, assignments = self._update_assignments(
             model,
@@ -999,11 +999,11 @@ class PostgresBackend:
 
     def fetch(
         self,
-        model: BaseModel,
+        model: ModelLike,
         query: Query,
         column_fields: typing.Iterable[Field],
         other_fields: typing.Iterable[Field],
-    ) -> BaseModel:
+    ) -> ModelLike:
         prof = _OrmProfile(_orm_read)
         env = model.env
         context = env.context
@@ -1086,7 +1086,7 @@ class PostgresBackend:
 
         if fetched:
             for field in other_fields:
-                field.read(fetched)
+                field.read(typing.cast("BaseModel", fetched))
 
         prof.stop("other")
         prof.report(
@@ -1102,7 +1102,7 @@ class PostgresBackend:
 
     def search(
         self,
-        model: BaseModel,
+        model: ModelLike,
         domain: Domain,
         offset: int,
         limit: int | None,
@@ -1111,13 +1111,21 @@ class PostgresBackend:
         check_access: bool = True,
         prof: typing.Any = None,
     ) -> Query:
+        # a mixin hands the port its own recordset; compiling its SQL needs
+        # the model rather than the fragment that called
         return _prepare_postgres_search_query(
-            model, domain, offset, limit, order, check_access=check_access, prof=prof
+            typing.cast("BaseModel", model),
+            domain,
+            offset,
+            limit,
+            order,
+            check_access=check_access,
+            prof=prof,
         )
 
     def search_raw(
         self,
-        model: BaseModel,
+        model: ModelLike,
         domain: Domain,
         offset: int,
         limit: int | None,
@@ -1127,13 +1135,13 @@ class PostgresBackend:
     ) -> Query | None:
         return None
 
-    def as_query(self, model: BaseModel, ordered: bool = True) -> Query:
+    def as_query(self, model: ModelLike, ordered: bool = True) -> Query:
         query = Query(model.env, model._table, model._table_sql)
         query.set_result_ids(model._ids, ordered)
         return query
 
     def ancestors(
-        self, model: BaseModel, parent_field: str, ids: typing.Collection[int]
+        self, model: ModelLike, parent_field: str, ids: typing.Collection[int]
     ) -> list[tuple[int, int | None]]:
         if not ids:
             return []
@@ -1160,7 +1168,7 @@ class PostgresBackend:
 
     def descendants(
         self,
-        model: BaseModel,
+        model: ModelLike,
         parent_field: str,
         root_ids: typing.Collection[int],
         *,
@@ -1210,7 +1218,7 @@ class PostgresBackend:
 
     def read_group_rows(
         self,
-        model: BaseModel,
+        model: ModelLike,
         select: SQL,
         *,
         domain: Domain,
@@ -1226,7 +1234,7 @@ class PostgresBackend:
 
     def read_grouping_sets_rows(
         self,
-        model: BaseModel,
+        model: ModelLike,
         select: SQL,
         *,
         domain: Domain,
@@ -1238,7 +1246,7 @@ class PostgresBackend:
     ) -> list[tuple]:
         return model.env.execute_query(select)
 
-    def get_existing_ids(self, model: BaseModel, ids: typing.Iterable[int]) -> set[int]:
+    def get_existing_ids(self, model: ModelLike, ids: typing.Iterable[int]) -> set[int]:
         ids = list(ids)
         query = Query(model.env, model._table, model._table_sql)
         query.add_where(SQL("%s = ANY(%s)", SQL.identifier(model._table, "id"), ids))
@@ -1251,7 +1259,7 @@ class PostgresBackend:
         )
         return existing
 
-    def has_rows_beyond(self, model: BaseModel, count: int) -> bool:
+    def has_rows_beyond(self, model: ModelLike, count: int) -> bool:
         cr = model.env.cr
         cr.execute(
             SQL(
@@ -1264,7 +1272,7 @@ class PostgresBackend:
 
     def has_cycle(
         self,
-        model: BaseModel,
+        model: ModelLike,
         relation: str,
         column1: str,
         column2: str,
@@ -1296,7 +1304,7 @@ class PostgresBackend:
         return cr.fetchone() is not None
 
     def increment_columns_skip_locked(
-        self, model: BaseModel, columns: typing.Sequence[str], ids: typing.Sequence[int]
+        self, model: ModelLike, columns: typing.Sequence[str], ids: typing.Sequence[int]
     ) -> int:
         cr = model.env.cr
         table = SQL.identifier(model._table)
@@ -1328,7 +1336,7 @@ class PostgresBackend:
         return strength if wait else SQL("%s SKIP LOCKED", strength)
 
     def lock_for_update(
-        self, model: BaseModel, *, allow_referencing: bool = False, wait: bool = False
+        self, model: ModelLike, *, allow_referencing: bool = False, wait: bool = False
     ) -> None:
         ids = {id_ for id_ in model._ids if id_}
         if not ids:
@@ -1354,11 +1362,11 @@ class PostgresBackend:
 
     def try_lock_for_update(
         self,
-        model: BaseModel,
+        model: ModelLike,
         *,
         allow_referencing: bool = False,
         limit: int | None = None,
-    ) -> BaseModel:
+    ) -> ModelLike:
         new_ids, ids = partition(lambda i: isinstance(i, NewId), model._ids)
         if limit is not None and len(new_ids) >= limit:
             return model.browse(new_ids[:limit])
@@ -1384,7 +1392,7 @@ class PostgresBackend:
         )
         return model.browse(i for i in model._ids if i in valid_ids)
 
-    def unlink_rows(self, model: BaseModel, sub_ids: tuple[int, ...]) -> None:
+    def unlink_rows(self, model: ModelLike, sub_ids: tuple[int, ...]) -> None:
         env = model.env
         cr = env.cr
         records = model.browse(sub_ids)
@@ -1424,7 +1432,7 @@ class PostgresBackend:
 
     @staticmethod
     def _unlink_default_guard(
-        model: BaseModel, sub_ids: tuple[int, ...], many2one_fields: typing.Any
+        model: ModelLike, sub_ids: tuple[int, ...], many2one_fields: typing.Any
     ) -> None:
         referencing = model.env.registry.metaschema.default_referencing(
             model.env, many2one_fields, sub_ids
@@ -1449,7 +1457,7 @@ class PostgresBackend:
 
     @staticmethod
     def _unlink_restrict_guard(
-        model: BaseModel, referrer: BaseModel, field: Field, sub_ids: tuple[int, ...]
+        model: ModelLike, referrer: BaseModel, field: Field, sub_ids: tuple[int, ...]
     ) -> None:
         if res := model.env.execute_query(
             SQL(
@@ -1523,7 +1531,7 @@ class PostgresBackend:
             affected_recs.modified([field.name])
 
     def set_parent_paths(
-        self, model: BaseModel, ids: typing.Sequence[int]
+        self, model: ModelLike, ids: typing.Sequence[int]
     ) -> list[tuple[int, str]]:
         return model.env.execute_query(
             SQL(
@@ -1542,7 +1550,7 @@ class PostgresBackend:
         )
 
     def records_with_parent_changed(
-        self, model: BaseModel, parent_to_ids: dict[typing.Any, list[int]]
+        self, model: ModelLike, parent_to_ids: dict[typing.Any, list[int]]
     ) -> list[int]:
         sql_parent = SQL.identifier(model._parent_name)
         conditions = []
@@ -1564,7 +1572,7 @@ class PostgresBackend:
         return [row[0] for row in rows]
 
     def move_parent_paths(
-        self, model: BaseModel, ids: typing.Sequence[int], prefix: str
+        self, model: ModelLike, ids: typing.Sequence[int], prefix: str
     ) -> dict[int, str]:
         return dict(
             model.env.execute_query(
@@ -1586,7 +1594,7 @@ class PostgresBackend:
 
     def read_m2m_groups(
         self,
-        records: BaseModel,
+        records: ModelLike,
         relation: str,
         column1: str,
         column2: str,
@@ -1608,7 +1616,7 @@ class PostgresBackend:
 
     def count_m2m_groups(
         self,
-        records: BaseModel,
+        records: ModelLike,
         relation: str,
         column1: str,
         column2: str,
@@ -1633,7 +1641,7 @@ class PostgresBackend:
 
     def link_m2m_pairs(
         self,
-        model: BaseModel,
+        model: ModelLike,
         relation: str,
         column1: str,
         column2: str,
@@ -1658,7 +1666,7 @@ class PostgresBackend:
 
     def unlink_m2m_pairs(
         self,
-        model: BaseModel,
+        model: ModelLike,
         relation: str,
         column1: str,
         column2: str,
