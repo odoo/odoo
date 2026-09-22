@@ -837,6 +837,7 @@ class AccountReportOptions(models.Model):
     def _init_options_filters(self, options, previous_options):
         options["filters"] = {
             "show_all": self.filter_unfold_all,
+            "show_date": self.filter_date,
             "show_analytic": options.get("display_analytic", False),
             "show_analytic_groupby": options.get("display_analytic_groupby", False),
             "show_analytic_plan_groupby": options.get(

@@ -63,6 +63,7 @@ from . import test_stock_scrap_audit_2026_08
 from . import test_stock_package_type_audit_2026_08
 from . import test_stock_move_audit_fixes
 from . import test_traceability
+from . import test_traceability_report
 from . import test_warehouse
 from . import test_orderpoint_audit
 from . import test_quant_audit_2026_08

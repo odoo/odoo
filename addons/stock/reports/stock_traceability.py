@@ -1,8 +1,7 @@
 from collections import deque
 
-from markupsafe import Markup
-
 from odoo import _, api, models
+from odoo.exceptions import UserError
 from odoo.tools import format_datetime
 
 from ..tools import debug_log as dbg
@@ -278,90 +277,178 @@ class StockTraceabilityReport(models.TransientModel):
     def _get_models_allowed_line(self):
         return {"stock.lot", "stock.move.line", "stock.picking"}
 
-    @api.model
-    def _get_models_allowed_pdf_line(self):
-        return {"stock.move.line"}
 
-    def get_pdf_lines(self, line_data=None):
-        final_vals = []
-        allowed_models = self._get_models_allowed_pdf_line()
-        for line in line_data or []:
-            try:
-                model_name = line["model_name"]
-                model_id = int(line["model_id"])
-                level = int(line["level"])
-                parent_id = int(line["id"])
-            except KeyError, TypeError, ValueError:
-                continue
-            if model_name not in allowed_models:
-                continue
-            move_line = self.env[model_name].browse(model_id)
-            final_vals.append(
-                self._prepare_dict_move(
-                    level,
-                    parent_id=parent_id,
-                    move_line=move_line,
-                    unfoldable=bool(line.get("unfoldable", False)),
-                )
-            )
-        return self._final_vals_to_lines(final_vals)
+TRACEABILITY_COLUMNS = (
+    "reference",
+    "product",
+    "date",
+    "lot",
+    "location_source",
+    "location_destination",
+    "quantity",
+)
 
-    @dbg.timed
-    def get_pdf(self, line_data=None):
-        lines = self.with_context(print_mode=True).get_pdf_lines(line_data or [])
-        dbg.pipeline.debug("traceability get_pdf: %d lines to render", len(lines))
-        base_url = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
-        rcontext = {
-            "mode": "print",
-            "base_url": base_url,
+
+class StockTraceabilityReportHandler(models.AbstractModel):
+    _name = "stock.traceability.report.handler"
+    _inherit = ["report.formula.custom.handler"]
+    _description = "Traceability Report Custom Handler"
+
+    def _custom_options_initializer(self, report, options, previous_options):
+        super()._custom_options_initializer(report, options, previous_options)
+        context = self.env.context
+        if context.get("active_id"):
+            target = {
+                "model": context.get("active_model") or context.get("model") or False,
+                "id": context["active_id"],
+                "lot_name": context.get("lot_name") or False,
+            }
+        else:
+            target = previous_options.get("traceability") or {
+                "model": False,
+                "id": False,
+                "lot_name": False,
+            }
+        options["traceability"] = target
+        if context.get("auto_unfold"):
+            options["unfold_all"] = True
+
+    def _caret_options_initializer(self):
+        return {
+            "stock.move.line": [
+                {
+                    "name": _("Open Reference"),
+                    "action": "caret_option_open_traceability_reference",
+                },
+                {
+                    "name": _("Open Lot/Serial Number"),
+                    "action": "caret_option_open_traceability_lot",
+                },
+                {
+                    "name": _("Open Partner"),
+                    "action": "caret_option_open_traceability_partner",
+                },
+                {
+                    "name": _("Upstream and Downstream"),
+                    "action": "caret_option_open_traceability_stream",
+                },
+            ],
         }
 
-        context = dict(self.env.context)
-        active_model = context.get("active_model")
-        if (
-            context.get("active_id")
-            and active_model
-            and active_model in self._get_models_allowed_line()
-        ):
-            rcontext["reference"] = (
-                self.env[active_model].browse(int(context["active_id"])).display_name
+    def _dynamic_lines_generator(
+        self, report, options, all_column_groups_expression_totals, warnings=None
+    ):
+        target = options["traceability"]
+        rows = (
+            self.env["stock.traceability.report"]
+            .with_context(
+                model=target["model"],
+                active_id=target["id"],
+                lot_name=target["lot_name"],
             )
+            .get_lines()
+        )
+        return [(0, self._traceability_line(report, options, row)) for row in rows]
 
-        body = (
-            self.env["ir.ui.view"]
-            .with_context(context)
-            ._render_template(
-                "stock.report_stock_inventory_print",
-                values=dict(rcontext, lines=lines, report=self, context=self),
-            )
+    def _report_expand_unfoldable_line_traceability(
+        self,
+        line_dict_id,
+        groupby,
+        options,
+        progress,
+        offset,
+        unfold_all_batch_data=None,
+    ):
+        report = self.env["report.formula"].browse(options["report_id"])
+        _markup, model, record_id = report._parse_line_id(line_dict_id)[-1]
+        rows = self.env["stock.traceability.report"].get_lines(
+            record_id, model_name=model, model_id=record_id
+        )
+        lines = [
+            self._traceability_line(report, options, row, parent_line_id=line_dict_id)
+            for row in rows
+        ]
+        return {
+            "lines": lines,
+            "offset_increment": len(lines),
+            "has_more": False,
+            "progress": progress,
+        }
+
+    def _traceability_line(self, report, options, row, parent_line_id=None):
+        line_id = report._get_generic_line_id(
+            row["model"], row["model_id"], parent_line_id=parent_line_id
+        )
+        values = dict(zip(TRACEABILITY_COLUMNS, row["columns"], strict=True))
+        return {
+            "id": line_id,
+            "parent_id": parent_line_id,
+            "name": values["reference"] or "",
+            "columns": [
+                report._prepare_column_dict(
+                    values[column["expression_label"]], column, options=options
+                )
+                for column in options["columns"]
+            ],
+            "level": sum(
+                model == "stock.move.line"
+                for _markup, model, _id in report._parse_line_id(line_id)
+            ),
+            "unfoldable": row["unfoldable"],
+            "unfolded": line_id in options["unfolded_lines"] or options["unfold_all"],
+            "expand_function": "_report_expand_unfoldable_line_traceability",
+            "caret_options": "stock.move.line",
+        }
+
+    def _clicked_move_line(self, options, params):
+        report = self.env["report.formula"].browse(options["report_id"])
+        model, record_id = report._get_model_info_from_id(params["line_id"])
+        if model != "stock.move.line":
+            return self.env["stock.move.line"]
+        return self.env["stock.move.line"].browse(record_id)
+
+    def _form_action(self, record, message):
+        if not record:
+            raise UserError(message)
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": record._name,
+            "res_id": record.id,
+            "views": [(False, "form")],
+            "target": "current",
+        }
+
+    def caret_option_open_traceability_reference(self, options, params):
+        move_line = self._clicked_move_line(options, params)
+        res_model, res_id, _reference = self.env[
+            "stock.traceability.report"
+        ]._get_reference(move_line)
+        record = self.env[res_model].browse(res_id) if res_model else move_line.browse()
+        return self._form_action(record, _("This operation has no reference to open."))
+
+    def caret_option_open_traceability_lot(self, options, params):
+        move_line = self._clicked_move_line(options, params)
+        return self._form_action(
+            move_line.lot_id, _("This operation moves no lot or serial number.")
         )
 
-        header = self.env["ir.actions.report"]._render_template(
-            "web.internal_layout", values=rcontext
-        )
-        header = self.env["ir.actions.report"]._render_template(
-            "web.minimal_layout",
-            values=dict(rcontext, subst=True, body=Markup(header.decode())),
+    def caret_option_open_traceability_partner(self, options, params):
+        move_line = self._clicked_move_line(options, params)
+        return self._form_action(
+            move_line.picking_partner_id, _("This operation has no partner.")
         )
 
-        IrReport = self.env["ir.actions.report"]
-        body_with_header = IrReport._get_html_with_header_footer(
-            body, header=header.decode()
-        )
-        return IrReport._render_html_to_pdf(
-            [body_with_header],
-            landscape=True,
-            specific_paperformat_args={
-                "data-report-margin-top": 30,
+    def caret_option_open_traceability_stream(self, options, params):
+        move_line = self._clicked_move_line(options, params)
+        return {
+            "type": "ir.actions.client",
+            "tag": "account_report",
+            "name": _("Traceability Report"),
+            "context": {
+                "report_id": options["report_id"],
+                "active_id": move_line.id,
+                "active_model": "stock.move.line",
+                "lot_name": move_line.lot_id.name or False,
+                "auto_unfold": True,
             },
-        )
-
-    @api.model
-    def get_main_lines(self, given_context=None):
-        report = self.search([("create_uid", "=", self.env.uid)], limit=1)
-        if not report:
-            dbg.lifecycle.debug(
-                "traceability: creating transient report for uid %s", self.env.uid
-            )
-            report = self.create({})
-        return report.with_context(given_context or {}).get_lines()
+        }

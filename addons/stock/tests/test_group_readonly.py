@@ -209,8 +209,13 @@ class TestStockGroupReadonly(TransactionCase):
         action = history.create({}).action_view_products_at_date()
         self.assertEqual(action["res_model"], "product.product")
 
-        report = self.env["stock.traceability.report"].with_user(self.user_readonly)
-        self.assertIsInstance(report.get_main_lines(), list)
+        report = self.env.ref("stock.stock_traceability_report").with_user(
+            self.user_readonly
+        )
+        info = report.get_report_information(
+            report.get_options({"selected_variant_id": report.id})
+        )
+        self.assertIsInstance(info["lines"], list)
 
         if self.warehouse:
             rules = self.env["stock.rules.report"].with_user(self.user_readonly)

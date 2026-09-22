@@ -1,11 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="stock_traceability_report" model="report.formula">
+        <field name="name">Traceability Report</field>
+        <field name="filter_date" eval="False" />
+        <field name="filter_period_comparison" eval="False" />
+        <field name="filter_growth_comparison" eval="False" />
+        <field name="filter_unfold_all" eval="True" />
+        <field name="availability_condition">always</field>
+        <field name="source_model">stock.move.line</field>
+        <field
+            name="custom_handler_model_id"
+            ref="model_stock_traceability_report_handler" />
+        <field name="column_ids">
+            <record
+                id="stock_traceability_report_column_product"
+                model="report.formula.column">
+                <field name="name">Product</field>
+                <field name="expression_label">product</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">10</field>
+            </record>
+            <record
+                id="stock_traceability_report_column_date"
+                model="report.formula.column">
+                <field name="name">Date</field>
+                <field name="expression_label">date</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">20</field>
+            </record>
+            <record
+                id="stock_traceability_report_column_lot"
+                model="report.formula.column">
+                <field name="name">Lot/Serial Number</field>
+                <field name="expression_label">lot</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">30</field>
+            </record>
+            <record
+                id="stock_traceability_report_column_location_source"
+                model="report.formula.column">
+                <field name="name">From</field>
+                <field name="expression_label">location_source</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">40</field>
+            </record>
+            <record
+                id="stock_traceability_report_column_location_destination"
+                model="report.formula.column">
+                <field name="name">To</field>
+                <field name="expression_label">location_destination</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">50</field>
+            </record>
+            <record
+                id="stock_traceability_report_column_quantity"
+                model="report.formula.column">
+                <field name="name">Quantity</field>
+                <field name="expression_label">quantity</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">60</field>
+            </record>
+        </field>
+    </record>
+
     <record id="action_stock_report" model="ir.actions.client">
         <field name="name">Traceability Report</field>
-        <field name="tag">stock_report_generic</field>
+        <field name="tag">account_report</field>
         <field
-            name="context">{'url': '/stock/output_format?active_id=:active_id&amp;active_model=:active_model', 'model': 'stock.traceability.report'}</field>
+            name="context"
+            eval="{'report_id': ref('stock.stock_traceability_report')}" />
     </record>
 
 </odoo>

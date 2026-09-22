@@ -6,7 +6,7 @@
 
     <t t-name="report_formula.AccountReportFiltersCustomizable">
         <!-- Date filter -->
-        <t t-if="'date' in controller.cachedFilterOptions">
+        <t t-if="'date' in controller.cachedFilterOptions and controller.filters.show_date !== false">
             <div id="filter_date" class="filter_date">
                 <t t-call="report_formula.AccountReportFilterDate"/>
             </div>

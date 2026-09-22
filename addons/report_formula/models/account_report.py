@@ -171,6 +171,13 @@ class AccountReport(models.Model):
         ],
     )
 
+    filter_date = report_option_filter_field(
+        fields.Boolean,
+        "filter_date",
+        "Date Filter",
+        default=True,
+        help="A report whose figures do not depend on a period hides the date filter.",
+    )
     filter_date_range = report_option_filter_field(
         fields.Boolean,
         "filter_date_range",

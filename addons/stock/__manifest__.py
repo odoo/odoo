@@ -11,6 +11,7 @@
         "product",
         "barcodes_gs1_nomenclature",
         "digest",
+        "report_formula",
     ],
     "data": [
         "security/stock_security.xml",
@@ -73,7 +74,6 @@
         "views/stock_orderpoint_views.xml",
         "views/stock_storage_category_views.xml",
         "wizards/res_config_settings_views.xml",
-        "views/report_stock_traceability.xml",
         "views/stock_template.xml",
         "views/stock_rule_views.xml",
         "views/stock_package_history_views.xml",
@@ -101,9 +101,6 @@
             "stock/static/src/**/*.js",
             "stock/static/src/**/*.xml",
             "stock/static/src/**/*.scss",
-        ],
-        "web.assets_frontend": [
-            "stock/static/src/scss/stock_traceability_report.scss",
         ],
         "web.assets_tests": [
             "stock/static/tests/tours/*.js",

@@ -796,6 +796,8 @@ class AccountReport(models.Model):
 
     @_debug.perf.timed
     def _init_options_return_periodicity(self, options, previous_options):
+        if not self._reads_ledger():
+            return
         if (
             previous_options.get("return_periodicity")
             and previous_options["return_periodicity"].get("return_type_id")
@@ -1010,6 +1012,8 @@ class AccountReport(models.Model):
         return Domain.OR(selected_domains or all_domains)
 
     def _init_options_hierarchy(self, options, previous_options):
+        if not self._reads_ledger():
+            return
         company_ids = self.get_report_company_ids(options)
         if self.filter_hierarchy != "never" and self.env["account.group"].search_count(
             self.env["account.group"]._check_company_domain(company_ids), limit=1
@@ -1314,6 +1318,9 @@ class AccountReport(models.Model):
         )
 
     def _apply_branch_rules_to_buttons(self, options):
+        if not self._reads_ledger():
+            super()._apply_branch_rules_to_buttons(options)
+            return
         options_companies = self.env["res.company"].browse(
             self.get_report_company_ids(options)
         )
@@ -1545,6 +1552,8 @@ class AccountReport(models.Model):
 
     def _init_options_buttons(self, options, previous_options):
         super()._init_options_buttons(options, previous_options)
+        if not self._reads_ledger():
+            return
         if self.return_type_ids and self.env.user.has_group(
             "account.group_account_user"
         ):
@@ -2145,6 +2154,9 @@ class AccountReport(models.Model):
             query.add_where(SQL("budget_id = %s", options["compute_budget"]))
 
     def _init_options_horizontal_groups(self, options, previous_options):
+        if not self._reads_ledger():
+            super()._init_options_horizontal_groups(options, previous_options)
+            return
         options["available_horizontal_groups"] = [
             {
                 "id": horizontal_group.id,
@@ -2172,6 +2184,8 @@ class AccountReport(models.Model):
         }
 
     def _get_totals_below_sections(self):
+        if not self._reads_ledger():
+            return super()._get_totals_below_sections()
         return self.env.company.account_config_id.totals_below_sections
 
     def _prepare_info_popup_data(
@@ -2182,6 +2196,14 @@ class AccountReport(models.Model):
         target_line_res_dict,
         line_expressions_map,
     ):
+        if not self._reads_ledger():
+            return super()._prepare_info_popup_data(
+                options,
+                col_group_key,
+                column_expr_label,
+                target_line_res_dict,
+                line_expressions_map,
+            )
         info_popup_data = {}
 
         # Check carryover
@@ -2231,6 +2253,8 @@ class AccountReport(models.Model):
         :return: for each annotated line_id, the list of annotations linked to it.
         :rtype: dict
         """
+        if not self._reads_ledger():
+            return super().get_annotations(options, lines)
         self.check_singleton()
         annotations_by_line = defaultdict(list)
         line_dict_ids_by_record = defaultdict(set)
@@ -2315,9 +2339,13 @@ class AccountReport(models.Model):
         return "balance"
 
     def _get_year_bounds(self, date):
+        if not self._reads_ledger():
+            return super()._get_year_bounds(date)
         return self.env.company.compute_fiscalyear_dates(date)
 
     def _get_year_end(self):
+        if not self._reads_ledger():
+            return super()._get_year_end()
         config = self.env.company.account_config_id
         return config.fiscalyear_last_day, int(config.fiscalyear_last_month)
 
@@ -2433,6 +2461,9 @@ class AccountReport(models.Model):
     @_debug.perf.timed
     def _add_common_warnings(self, options, warnings):
         # Display a warning if we're displaying only the data of the current company, but it's also part of a tax unit
+        if not self._reads_ledger():
+            super()._add_common_warnings(options, warnings)
+            return
         if options.get("available_tax_units") and options["tax_unit"] == "company_only":
             warnings["account.common_warning_tax_unit"] = {}
 
@@ -2478,6 +2509,8 @@ class AccountReport(models.Model):
             )
 
     def _add_account_status_on_lines(self, lines, options):
+        if not self._reads_ledger():
+            return super()._add_account_status_on_lines(lines, options)
         if not self.allow_account_audit_status_on_lines:
             return lines
         if not options["audit"]["id"]:
@@ -2519,6 +2552,9 @@ class AccountReport(models.Model):
         """When grouping by account_code, in order to make the consolidation clearer, we add the account name in the context
         of the current company next to the account_code.
         """
+        if not self._reads_ledger():
+            super()._update_line_names_for_consolidation(lines)
+            return
         account_codes = []
         for line in lines:
             markup = self._get_markup(line["id"])
@@ -2842,6 +2878,8 @@ class AccountReport(models.Model):
         Only the options initialized by init_options with a more prioritary sequence than _init_options_variants are guaranteed to
         be in the provided options' dict (since this function is called by _init_options_variants, while resolving a call to get_options()).
         """
+        if not self._reads_ledger():
+            return super()._is_available_for(options)
         companies = self.env["res.company"].browse(self.get_report_company_ids(options))
 
         reports = self.filtered(lambda r: r.availability_condition == "always")
@@ -3079,6 +3117,9 @@ class AccountReport(models.Model):
     @_debug.perf.timed
     def _set_budget_column_comparisons(self, options, line):
         """Set the percentage values in the budget columns."""
+        if not self._reads_ledger():
+            super()._set_budget_column_comparisons(options, line)
+            return
         for col_index, col in enumerate(line["columns"]):
             col_group_data = options["column_groups"][col["column_group_key"]]
             if "budget_percentage" in col_group_data.get("forced_options", {}):
@@ -3147,6 +3188,10 @@ class AccountReport(models.Model):
         The chassis knows a cell may be editable; which cells those are is a ledger question.
         Here it is a budget column grouped by account, for a user who may manage accounting.
         """
+        if not self._reads_ledger():
+            return super()._prepare_editable_cell_data(
+                options, col_group_key, groupby_model, column_expression, column_value
+            )
         editable_budget = groupby_model == "account.account" and options[
             "column_groups"
         ][col_group_key]["forced_options"].get("compute_budget")
@@ -3175,6 +3220,8 @@ class AccountReport(models.Model):
         untouched, only the lines related to an account.account are put in a hierarchy
         according to the account.group's and their prefixes.
         """
+        if not self._reads_ledger():
+            return super()._create_hierarchy(lines, options)
         if not lines:
             _debug.logic("hierarchy_skipped", report=self, reason="no_lines")
             return lines
@@ -3529,6 +3576,9 @@ class AccountReport(models.Model):
         """Add the chatter information on lines that can be annotated, so that it's then possible to open the right
         chatter for that line.
         """
+        if not self._reads_ledger():
+            super()._postprocess_chatter_for_annotations(lines)
+            return
         aml_id_to_report_lines_map = defaultdict(list)
         for line in lines:
             if line.get("unfoldable"):
