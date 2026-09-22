@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_attendance_overtime_analysis_view_list" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.line.analysis.list</field>
+        <field name="model">hr.attendance.overtime.line</field>
+        <field name="arch" type="xml">
+            <list string="Extra Hours Analysis" create="0">
+                <field
+                    name="employee_id"
+                    widget="many2one_avatar_employee"
+                    readonly="1" />
+                <field name="date" readonly="1" />
+                <field name="duration" widget="float_time" readonly="1" />
+                <field
+                    name="manual_duration"
+                    widget="float_time"
+                    readonly="1"
+                    optional="hide" />
+                <field
+                    name="rule_ids"
+                    widget="many2many_tags"
+                    readonly="1"
+                    optional="hide" />
+                <field name="amount_rate" widget="percentage" readonly="1" />
+                <field name="status" readonly="1" optional="show" />
+                <button
+                    name="action_open_linked_attendance"
+                    type="object"
+                    icon="fa-external-link"
+                    title="Open the attendance" />
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_analysis_view_pivot" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.line.analysis.pivot</field>
+        <field name="model">hr.attendance.overtime.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Extra Hours Analysis" sample="1">
+                <field name="employee_id" type="row" />
+                <field name="date" type="col" interval="month" />
+                <field name="duration" type="measure" widget="float_time" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_analysis_view_graph" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.line.analysis.graph</field>
+        <field name="model">hr.attendance.overtime.line</field>
+        <field name="arch" type="xml">
+            <graph string="Extra Hours Analysis" type="bar" stacked="0" sample="1">
+                <field name="employee_id" type="row" />
+                <field name="duration" type="measure" widget="float_time" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_analysis_view_filter" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.line.analysis.search</field>
+        <field name="model">hr.attendance.overtime.line</field>
+        <field name="arch" type="xml">
+            <search string="Extra Hours Analysis">
+                <field name="employee_id" />
+                <field name="rule_ids" />
+                <filter
+                    name="myteam"
+                    string="My Team"
+                    domain="[('employee_id.parent_id.user_id', '=', uid)]" />
+                <separator />
+                <filter
+                    name="to_approve"
+                    string="To Approve"
+                    domain="[('status', '=', 'to_approve')]" />
+                <filter
+                    name="approved"
+                    string="Approved"
+                    domain="[('status', '=', 'approved')]" />
+                <separator />
+                <filter name="date_filter" string="Date" date="date" />
+                <separator />
+                <filter
+                    name="activeemployees"
+                    string="Active Employees"
+                    domain="[('employee_id.active', '=', True)]" />
+                <filter
+                    name="archivedemployees"
+                    string="Archived Employees"
+                    domain="[('employee_id.active', '=', False)]" />
+                <separator invisible="1" />
+                <filter
+                    name="last_three_months"
+                    string="Last 3 Months"
+                    domain="[('date', '&gt;=', '-3m')]"
+                    invisible="1" />
+                <group>
+                    <filter
+                        name="groupby_employee"
+                        string="Employee"
+                        context="{'group_by': 'employee_id'}" />
+                    <filter
+                        name="groupby_status"
+                        string="Status"
+                        context="{'group_by': 'status'}" />
+                    <filter
+                        name="groupby_date"
+                        string="Date"
+                        context="{'group_by': 'date:month'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_analysis_action" model="ir.actions.act_window">
+        <field name="name">Extra Hours Analysis</field>
+        <field name="res_model">hr.attendance.overtime.line</field>
+        <field name="path">extra-hours-analysis</field>
+        <field name="view_mode">list,pivot,graph</field>
+        <field
+            name="search_view_id"
+            ref="hr_attendance_overtime_analysis_view_filter" />
+        <field
+            name="context">{'search_default_activeemployees': 1, 'search_default_last_three_months': 1, 'search_default_groupby_employee': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No extra hours found
+            </p>
+            <p>
+                The extra hours earned by your employees will be displayed here.
+            </p>
+        </field>
+    </record>
+
+</odoo>

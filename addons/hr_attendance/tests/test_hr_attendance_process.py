@@ -184,3 +184,66 @@ class TestHrAttendance(TransactionCase):
                 ]
             ),
         )
+
+    def test_extra_hours_analysis_report(self):
+        """The Extra Hours Analysis report compiles and aggregates lines.
+
+        Extra hours were only visible one attendance at a time; there was no
+        action, and no list/pivot/graph, over `hr.attendance.overtime.line`.
+        """
+        Line = self.env["hr.attendance.overtime.line"]
+        action = self.env.ref("hr_attendance.hr_attendance_overtime_analysis_action")
+        self.assertEqual(action.res_model, "hr.attendance.overtime.line")
+
+        for xmlid, view_type in [
+            ("hr_attendance_overtime_analysis_view_list", "list"),
+            ("hr_attendance_overtime_analysis_view_pivot", "pivot"),
+            ("hr_attendance_overtime_analysis_view_graph", "graph"),
+            ("hr_attendance_overtime_analysis_view_filter", "search"),
+        ]:
+            view = self.env.ref(f"hr_attendance.{xmlid}")
+            self.assertTrue(Line.get_view(view.id, view_type)["arch"])
+
+        Line.create(
+            [
+                {
+                    "employee_id": self.employee_kiosk.id,
+                    "date": "2025-08-01",
+                    "duration": 2,
+                },
+                {
+                    "employee_id": self.employee_kiosk.id,
+                    "date": "2025-08-02",
+                    "duration": 3,
+                },
+            ]
+        )
+        totals = dict(
+            Line._read_group(
+                [("employee_id", "=", self.employee_kiosk.id)],
+                groupby=["employee_id"],
+                aggregates=["duration:sum"],
+            )
+        )
+        self.assertEqual(totals[self.employee_kiosk], 5)
+
+    def test_open_the_attendance_behind_an_extra_hours_line(self):
+        """The report's row button opens the attendance the line came from."""
+        attendance = self.env["hr.attendance"].create(
+            {
+                "employee_id": self.employee_kiosk.id,
+                "check_in": "2025-08-01 08:00:00",
+                "check_out": "2025-08-01 20:00:00",
+            }
+        )
+        line = self.env["hr.attendance.overtime.line"].create(
+            {
+                "employee_id": self.employee_kiosk.id,
+                "date": "2025-08-01",
+                "duration": 2,
+                "attendance_id": attendance.id,
+            }
+        )
+        action = line.action_open_linked_attendance()
+        self.assertEqual(action["res_model"], "hr.attendance")
+        self.assertEqual(action["res_id"], attendance.id)

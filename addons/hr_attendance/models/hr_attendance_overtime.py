@@ -136,3 +136,14 @@ class HrAttendanceOvertimeLine(models.Model):
 
     def _linked_attendances(self):
         return self.attendance_id
+
+    def action_open_linked_attendance(self):
+        """Open the attendance this overtime line was computed from."""
+        self.check_singleton()
+        return {
+            "name": self.env._("Linked Attendance"),
+            "type": "ir.actions.act_window",
+            "res_model": "hr.attendance",
+            "view_mode": "form",
+            "res_id": self._linked_attendances()[:1].id,
+        }

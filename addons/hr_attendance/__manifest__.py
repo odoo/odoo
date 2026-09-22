@@ -32,6 +32,7 @@ actions(Check in/Check out) performed by them.
         "views/res_config_settings_views.xml",
         "views/hr_attendance_kiosk_templates.xml",
         "views/hr_attendance_overtime_rule_views.xml",
+        "views/hr_attendance_overtime_views.xml",
         "views/hr_attendance_menus.xml",
     ],
     "demo": [
