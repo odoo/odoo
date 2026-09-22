@@ -621,11 +621,13 @@ class AccountGeneralLedgerReportHandler(models.AbstractModel):
         )
         if account_move_lines:
             line_ids = (line["chatter"]["id"] for line in account_move_lines)
+            # load=False keeps move_id a bare id -- same reasoning as the
+            # chatter map in account_report_ledger.py.
             account_moves = {
-                line["id"]: line["move_id"][0]
+                line["id"]: line["move_id"]
                 for line in self.env["account.move.line"]
                 .browse(line_ids)
-                .read(["id", "move_id"])
+                .read(["id", "move_id"], load=False)
             }
             for line in account_move_lines:
                 line["chatter"]["id"] = account_moves[line["chatter"]["id"]]

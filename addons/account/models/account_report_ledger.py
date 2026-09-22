@@ -3593,11 +3593,14 @@ class AccountReport(models.Model):
                     "id": record_id,
                 }
 
+        # load=False keeps move_id a bare id instead of an (id, display_name)
+        # pair: the chatter only needs the number, and resolving a display
+        # name for every annotated line's move is pure waste.
         aml_id_to_account_move_id = {
-            line["id"]: line["move_id"][0]
+            line["id"]: line["move_id"]
             for line in self.env["account.move.line"]
             .browse(aml_id_to_report_lines_map.keys())
-            .read(["id", "move_id"])
+            .read(["id", "move_id"], load=False)
         }
         _debug.pipeline(
             "annotation_chatter_mapped",

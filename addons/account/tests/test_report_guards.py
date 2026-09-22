@@ -1,3 +1,4 @@
+import json
 from unittest.mock import patch
 
 from dateutil.relativedelta import relativedelta
@@ -1330,3 +1331,105 @@ class TestCoverageReportDomainRewrite(TestAccountReportsCommon):
             )
         )
         self.assertEqual(both, four + five)
+
+
+@tagged("post_install", "-at_install")
+class TestAnnotationChatterLoad(TestAccountReportsCommon):
+    """The chatter map behind annotations needs one number per line: the move id of
+    each annotatable move line. Reading `move_id` the ordinary way makes the ORM
+    resolve every one of those moves to a display name as well, and nothing ever
+    displays them -- the map is consumed as `{"model": "account.move", "id": <id>}`.
+    """
+
+    def _annotatable_line(self):
+        move = self.env["account.move"].create(
+            {
+                "move_type": "entry",
+                "date": "2020-01-01",
+                "line_ids": [
+                    Command.create(
+                        {
+                            "account_id": self.company_data[
+                                "default_account_revenue"
+                            ].id,
+                            "balance": 500.0,
+                        }
+                    ),
+                    Command.create(
+                        {
+                            "account_id": self.company_data[
+                                "default_account_expense"
+                            ].id,
+                            "balance": -500.0,
+                        }
+                    ),
+                ],
+            }
+        )
+        return move.line_ids[0]
+
+    def _spy_on_display_name(self):
+        """Returns (context manager, list that collects every resolved move id)."""
+        resolved = []
+        move_cls = type(self.env["account.move"])
+        original = move_cls._compute_display_name
+
+        def _spy(records):
+            resolved.append(records.ids)
+            return original(records)
+
+        return patch.object(move_cls, "_compute_display_name", _spy), resolved
+
+    def test_chatter_map_does_not_resolve_move_display_names(self):
+        aml = self._annotatable_line()
+        report = self.env.ref("account.general_ledger_report")
+        lines = [{"id": report._get_generic_line_id("account.move.line", aml.id)}]
+
+        spy, resolved = self._spy_on_display_name()
+        with spy:
+            report._postprocess_chatter_for_annotations(lines)
+
+        self.assertEqual(
+            lines[0]["chatter"],
+            {"model": "account.move", "id": aml.move_id.id},
+            "the chatter must still point at the line's move",
+        )
+        self.assertFalse(
+            resolved,
+            "building the chatter map must not resolve any account.move display"
+            f" name; it resolved {resolved}",
+        )
+
+    def test_general_ledger_postprocessor_does_not_resolve_display_names(self):
+        """The general ledger keeps its own copy of the same map."""
+        aml = self._annotatable_line()
+        report = self.env.ref("account.general_ledger_report")
+        handler = self.env["account.general.ledger.report.handler"]
+        # The general ledger only attaches a chatter to its own accumulated-balance
+        # rows: no model, that markup, and a JSON res_id whose second element is
+        # the move line id (models/account_general_ledger.py:605-612).
+        lines = [
+            {
+                "id": report._get_generic_line_id(
+                    None,
+                    json.dumps(["account.move.line", aml.id]),
+                    markup={"groupby": "id_with_accumulated_balance"},
+                ),
+                "columns": [],
+            }
+        ]
+
+        spy, resolved = self._spy_on_display_name()
+        with spy:
+            handler._custom_line_postprocessor(report, {}, lines)
+
+        self.assertEqual(
+            lines[0]["chatter"],
+            {"model": "account.move", "id": aml.move_id.id},
+            "the general ledger rewrites the chatter onto the move",
+        )
+        self.assertFalse(
+            resolved,
+            "the general ledger must not resolve display names either;"
+            f" it resolved {resolved}",
+        )
