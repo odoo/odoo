@@ -340,10 +340,22 @@ export class LinkPlugin extends Plugin {
         is_node_fully_selected_predicates: (node, selection) => {
             if (
                 node.nodeName === "A" &&
-                !node.classList.contains("btn") &&
                 cleanZWChars(selection.toString()) === cleanZWChars(node.innerText)
             ) {
                 return true;
+            }
+        },
+
+        formattable_node_providers: (node, { formatSpec }) => {
+            // Links often have styles applied to them by css which can only be
+            // overriden by applying the style to the link itself.
+            const closestLink = closestElement(node, "A");
+            if (
+                closestLink &&
+                formatSpec.addNeutralStyle &&
+                this.dependencies.selection.areNodeContentsFullySelected(closestLink)
+            ) {
+                return closestLink;
             }
         },
 
