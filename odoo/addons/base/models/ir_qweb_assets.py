@@ -10,6 +10,7 @@ from psycopg.errors import LockNotAvailable, ReadOnlySqlTransaction
 from rjsmin import jsmin as _rjsmin
 
 from odoo import SUPERUSER_ID, api, models, tools
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.libs.asset_log import get_asset_logger, log_event
 from odoo.libs.debug_log import DebugLog
@@ -1868,7 +1869,7 @@ class IrQweb(models.AbstractModel):
             indexed=bool(source_key),
         )
         if code_is_new:
-            self._log_esm_artifacts_superseded(bundle, url)
+            self._clean_esm_artifacts_superseded(bundle, url)
         log_event(
             _attach_log,
             logging.INFO if code_is_new else logging.DEBUG,
@@ -1906,32 +1907,35 @@ class IrQweb(models.AbstractModel):
         _debug.logic("esm_row_planned", name=name, action="insert", bytes=len(content))
         return True
 
-    def _log_esm_artifacts_superseded(self, bundle: str, keep_url: str) -> None:
-        if not _attach_log.isEnabledFor(logging.INFO):
-            return
-        stale_count = (
-            self.env["ir.attachment"]
-            .sudo()
-            .search_count(
+    def _clean_esm_artifacts_superseded(self, bundle: str, keep_url: str) -> None:
+        IrAttachment = self.env["ir.attachment"].sudo()
+        # Every artifact of one build shares the unique segment of its url, so
+        # what survives a rebuild is that whole directory, not a single row:
+        # the sidecars planned alongside `keep_url` carry their own urls, and
+        # excluding only `keep_url` would delete the sourcemap and the metafile
+        # in the very transaction that wrote them.
+        keep_prefix = keep_url.rsplit("/", 1)[0] + "/"
+        superseded = IrAttachment.search(
+            IrAttachment._get_domain_generated_assets()
+            & Domain.OR(
                 [
-                    "|",
-                    "|",
-                    ("url", "=like", f"/web/assets/%/{bundle}.esm.js"),
-                    ("url", "=like", f"/web/assets/%/{bundle}.esm.js.map"),
-                    ("url", "=like", f"/web/assets/%/{bundle}.meta.json"),
-                    ("url", "!=", keep_url),
-                    ("public", "=", True),
+                    [("url", "=like", f"/web/assets/%/{bundle}.esm.js")],
+                    [("url", "=like", f"/web/assets/%/{bundle}.esm.js.map")],
+                    [("url", "=like", f"/web/assets/%/{bundle}.meta.json")],
                 ]
             )
+        ).filtered(lambda attachment: not attachment.url.startswith(keep_prefix))
+        if not superseded:
+            return
+        count = len(superseded)
+        superseded.unlink()
+        log_event(
+            _attach_log,
+            logging.INFO,
+            "stale_cleaned",
+            bundle=bundle,
+            count=count,
         )
-        if stale_count:
-            log_event(
-                _attach_log,
-                logging.INFO,
-                "stale_deferred",
-                bundle=bundle,
-                count=stale_count,
-            )
 
     @staticmethod
     def _lock_esm_publication(cr, lock_timeout: str | None = None) -> None:
