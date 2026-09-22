@@ -2693,7 +2693,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_price_extra_pricelist_based_pricelist', login="pos_user")
 
-    def _check_ticket_screen_keeps_variants_collapsed(self, sold_variant_index):
+    def _check_ticket_screen_keeps_variants_collapsed(self, sold_variant_index, tour='test_ticket_screen_keeps_variants_collapsed'):
         attribute = self.env['product.attribute'].create({
             'name': 'Side',
             'create_variant': 'always',
@@ -2735,7 +2735,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         order.action_pos_order_paid()
 
-        self.start_pos_tour('test_ticket_screen_keeps_variants_collapsed')
+        self.start_pos_tour(tour)
 
     def test_ticket_screen_keeps_variants_collapsed(self):
         """ Fetching paid orders in the ticket screen must not undo the
@@ -2746,6 +2746,12 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_ticket_screen_keeps_displayed_variant(self):
         """ Same, when the paid order holds the variant displayed on the card. """
         self._check_ticket_screen_keeps_variants_collapsed(-1)
+
+    def test_synced_products_keep_variants_collapsed(self):
+        """ Products synced from another device must not undo the client-side
+            grouping of a template's variants into one card.
+        """
+        self._check_ticket_screen_keeps_variants_collapsed(0, 'test_synced_products_keep_variants_collapsed')
 
 
 # This class just runs the same tests as above but with mobile emulation
