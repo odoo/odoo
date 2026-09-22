@@ -86,32 +86,43 @@ class MailActivityPlanTemplate(models.Model):
             employee.user_id.id,
         )
         if self.responsible_type == "coach":
-            if not employee.coach_id:
-                result["error"] = self.env._(
-                    "Coach of employee %s is not set.", employee.name
-                )
             result["responsible"] = employee.coach_id.user_id
-            if employee.coach_id and not result["responsible"]:
+            if not result["responsible"]:
+                # No usable coach: walk up from the coach's manager until
+                # somebody has a user, and fall back to whoever is launching the
+                # plan if nobody does. A missing coach starts that walk from
+                # nothing and lands on the same fallback -- an employee still
+                # being onboarded is precisely who these plans are for, and
+                # refusing to launch at all is worse than saying who it went to.
                 result = self._get_responsible_result_from_parents(
                     employee=employee,
                     responsible=employee.coach_id.parent_id,
-                    error_message=self.env._(
-                        "The user of %s's coach is not set.", employee.name
+                    error_message=(
+                        self.env._("The user of %s's coach is not set.", employee.name)
+                        if employee.coach_id
+                        else self.env._(
+                            "Coach of employee %s is not set.", employee.name
+                        )
                     ),
                 )
 
         elif self.responsible_type == "manager":
-            if not employee.parent_id:
-                result["error"] = self.env._(
-                    "Manager of employee %s is not set.", employee.name
-                )
             result["responsible"] = employee.parent_id.user_id
-            if employee.parent_id and not result["responsible"]:
+            if not result["responsible"]:
+                # Same walk as above, one level up: from the manager's manager,
+                # and from nothing when there is no manager yet.
                 result = self._get_responsible_result_from_parents(
                     employee=employee,
                     responsible=employee.parent_id.parent_id,
-                    error_message=self.env._(
-                        "The manager of %s should be linked to a user.", employee.name
+                    error_message=(
+                        self.env._(
+                            "The manager of %s should be linked to a user.",
+                            employee.name,
+                        )
+                        if employee.parent_id
+                        else self.env._(
+                            "Manager of employee %s is not set.", employee.name
+                        )
                     ),
                 )
 

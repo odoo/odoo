@@ -1,7 +1,7 @@
 from freezegun import freeze_time
 
 from odoo import Command, fields
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tests import tagged, users
 
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -308,19 +308,21 @@ class TestActivitySchedule(ActivityScheduleHRCase):
 
             self.employee_1.parent_id = False
             self.employee_1.coach_id = False
+            # An employee whose manager and coach are not set yet: the plan
+            # still launches, and says who the activities went to instead.
             form = self._instantiate_activity_schedule_wizard(employees)
             form.plan_id = self.plan_onboarding
-            self.assertTrue(form.has_error)
-            n_error = form.error.count("<li>")
-            self.assertEqual(n_error, 2)
+            self.assertFalse(form.has_error)
+            self.assertTrue(form.has_warning)
+            n_warning = form.warning.count("<li>")
+            self.assertEqual(n_warning, 2)
             self.assertIn(
-                f"Manager of employee {self.employee_1.name} is not set.", form.error
+                f"Manager of employee {self.employee_1.name} is not set.", form.warning
             )
             self.assertIn(
-                f"Coach of employee {self.employee_1.name} is not set.", form.error
+                f"Coach of employee {self.employee_1.name} is not set.", form.warning
             )
-            with self.assertRaises(ValidationError):
-                form.save()
+            form.save()
             self.employee_1.parent_id = self.employee_manager
             self.employee_1.coach_id = self.employee_coach
             self.employee_coach.user_id = False
@@ -377,3 +379,69 @@ class TestActivitySchedule(ActivityScheduleHRCase):
         with self._instantiate_activity_schedule_wizard(customers) as form:
             form.plan_id = self.plan_party
             self.assertEqual(form.plan_date, fields.Date.from_string("2023-08-31"))
+
+
+@tagged("post_install", "-at_install")
+class TestPlanResponsibleWithoutOrgChart(ActivityScheduleHRCase):
+    """An onboarding plan is exactly what you run for an employee who is still
+    being set up -- so a blank org chart must not be what stops it. When nobody
+    up the chain has a user the walk already falls back to the current user and
+    downgrades the complaint to a warning; it just was not reached when the
+    coach or the manager was missing outright.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Created bare on purpose: no coach, no manager -- the org chart a
+        # brand-new hire has before anyone fills it in.
+        cls.fresh_hire = cls.env["hr.employee"].create({"name": "Fresh Hire"})
+
+    def _template(self, responsible_type):
+        return self.env["mail.activity.plan.template"].create(
+            {
+                "plan_id": self.plan_onboarding.id,
+                "activity_type_id": self.activity_type_todo.id,
+                "responsible_type": responsible_type,
+                "summary": f"Step for {responsible_type}",
+            }
+        )
+
+    def test_a_missing_coach_no_longer_blocks_the_plan(self):
+        result = self._template("coach")._get_responsible_and_complaints(
+            False, self.fresh_hire
+        )
+
+        self.assertFalse(
+            result["error"],
+            "a blank coach must not be a blocking error on an onboarding plan",
+        )
+        self.assertEqual(
+            result["responsible"],
+            self.env.user,
+            "with nobody up the chain the step falls to whoever launches it",
+        )
+        self.assertIn(
+            "Coach",
+            result["warning"],
+            "and the user is told why, instead of the plan simply refusing",
+        )
+
+    def test_a_missing_manager_no_longer_blocks_the_plan(self):
+        result = self._template("manager")._get_responsible_and_complaints(
+            False, self.fresh_hire
+        )
+
+        self.assertFalse(result["error"])
+        self.assertEqual(result["responsible"], self.env.user)
+        self.assertIn("Manager", result["warning"])
+
+    def test_a_configured_coach_is_still_the_responsible(self):
+        """The control: where the org chart is filled in, nothing changes."""
+        result = self._template("coach")._get_responsible_and_complaints(
+            False, self.employee_1
+        )
+
+        self.assertFalse(result["error"])
+        self.assertFalse(result["warning"])
+        self.assertEqual(result["responsible"], self.employee_coach.user_id)
