@@ -2182,9 +2182,18 @@ class HrEmployee(models.Model):
     @dbg.timed
     @api.depends("user_id.im_status", "active")
     def _compute_hr_presence_state(self):
+        # sudo: `is_in_contract` reaches the version through a field owned by
+        # hr.group_hr_manager, while hr_presence_state is read by everyone.
+        # Resolved once for the whole recordset rather than per record inside
+        # the filter, so the versions are fetched in a single batch.
+        in_contract_ids = set(self.sudo().filtered("is_in_contract")._ids)
+        # Only employees under contract whose company uses login-based presence
+        # control consult `working_now_list` below. Anyone else is out of
+        # working hours whatever their session says.
         employee_to_check_working = self.filtered(
             lambda e: (
-                e.company_id.sudo().hr_config_id.hr_presence_control_login
+                e.id in in_contract_ids
+                and e.company_id.sudo().hr_config_id.hr_presence_control_login
                 and (e.user_id.sudo().presence_ids.status or "offline") == "offline"
             )
         )
@@ -2198,7 +2207,10 @@ class HrEmployee(models.Model):
         )
         for employee in self:
             state = "out_of_working_hour"
-            if employee.company_id.sudo().hr_config_id.hr_presence_control_login:
+            if (
+                employee.id in in_contract_ids
+                and employee.company_id.sudo().hr_config_id.hr_presence_control_login
+            ):
                 presence_status = (
                     employee.user_id.sudo().presence_ids.status or "offline"
                 )

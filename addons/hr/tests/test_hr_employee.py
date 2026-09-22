@@ -1145,3 +1145,63 @@ class TestPublicBirthdayLanguage(TestHrCommon):
         self.celebrant.invalidate_recordset(["birthday_public_display_string"])
 
         self.assertEqual(self.celebrant.birthday_public_display_string, "hidden")
+
+
+@tagged("post_install", "-at_install")
+class TestPresenceOutOfContract(TestHrCommon):
+    """Somebody whose contract has ended is neither Present nor Absent.
+
+    Under login-based presence control the state was decided purely by whether
+    the user's session was online, so a leaver whose account is still open --
+    notice period, handover, an account nobody has closed yet -- kept showing up
+    as Present on the employee list.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.company.hr_config_id.hr_presence_control_login = True
+
+    def _online_employee(self, **version_values):
+        user = self.env["res.users"].create(
+            {
+                "name": "Presence Subject",
+                "login": f"presence_{len(self.env['res.users'].search([]))}",
+            }
+        )
+        employee = self.env["hr.employee"].create(
+            {"name": "Presence Subject", "user_id": user.id, **version_values}
+        )
+        self.env["mail.presence"].create(
+            {
+                "user_id": user.id,
+                "last_presence": datetime.now(),
+                "status": "online",
+            }
+        )
+        self.env.flush_all()
+        employee.invalidate_recordset(["hr_presence_state"])
+        return employee
+
+    def test_presence_state_ignores_an_employee_out_of_contract(self):
+        employee = self._online_employee(
+            date_version="2020-01-01",
+            contract_date_start="2020-01-01",
+            contract_date_end="2020-12-31",
+        )
+        self.assertFalse(employee.is_in_contract, "the contract has ended")
+
+        self.assertEqual(
+            employee.hr_presence_state,
+            "out_of_working_hour",
+            "an online session does not make a leaver Present",
+        )
+
+    def test_an_employee_under_contract_is_still_reported_present(self):
+        """The control: the state must keep working for everybody else."""
+        employee = self._online_employee(
+            date_version="2020-01-01", contract_date_start="2020-01-01"
+        )
+        self.assertTrue(employee.is_in_contract)
+
+        self.assertEqual(employee.hr_presence_state, "present")
