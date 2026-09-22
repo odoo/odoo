@@ -1556,3 +1556,60 @@ class TestStreakConcurrentFirstVisit(common.TransactionCase):
             ),
             1,
         )
+
+
+class TestXpProgressFollowsRankThresholds(common.TransactionCase):
+    """The XP bar tracks a rank threshold move that leaves the rank alone.
+
+    ``gamification.karma.rank.write`` already re-ranks whoever changes rank, so
+    the gap was the residue: a user whose rank is unchanged but whose distance
+    to the next one moved got no recompute, because the depends named the
+    many2one and not the threshold on it.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env["gamification.karma.rank"].search([]).unlink()
+        cls.lower, cls.upper = cls.env["gamification.karma.rank"].create(
+            [
+                {"name": "Lower", "karma_min": 100},
+                {"name": "Upper", "karma_min": 1000},
+            ]
+        )
+        cls.user = (
+            cls.env["res.users"]
+            .with_context(no_reset_password=True)
+            .create({"name": "XP Probe", "login": "xp_probe", "karma": 0})
+        )
+        cls.user.sudo()._add_karma(500, reason="setup")
+
+    def test_threshold_move_without_rank_change_refreshes_bar(self):
+        """Raising the next rank's floor must move the bar with no invalidation."""
+        self.env.invalidate_all()
+        self.assertEqual(self.user.rank_id, self.lower)
+        self.assertEqual(self.user.xp_to_next_rank, 500)
+
+        # Read once so the value is cached, then move only the far threshold.
+        # The user stays on `lower`, so the re-rank hook does not touch them.
+        self.upper.karma_min = 1500
+        self.env.flush_all()
+
+        self.assertEqual(self.user.rank_id, self.lower, "rank must not move")
+        self.assertEqual(
+            self.user.xp_to_next_rank,
+            1000,
+            "XP to next rank must follow the threshold without an invalidation",
+        )
+
+    def test_rank_change_still_refreshes_bar(self):
+        """The path the write hook already covered must keep working."""
+        self.env.invalidate_all()
+        self.assertEqual(self.user.xp_to_next_rank, 500)
+
+        # Move the floor under the user so they actually change rank.
+        self.upper.karma_min = 400
+        self.env.flush_all()
+
+        self.assertEqual(self.user.rank_id, self.upper, "rank must move")
+        self.assertEqual(self.user.xp_to_next_rank, 0)

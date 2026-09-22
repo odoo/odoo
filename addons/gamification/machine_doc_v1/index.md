@@ -19,7 +19,7 @@ adaptive difficulty, and smart nudges.
 | Wizards | 2 transient models |
 | Cron jobs | 8 |
 | Test files | 19 (common + 18 test modules) |
-| Total tests | 269 (`--test-tags /gamification`) |
+| Total tests | 271 (`--test-tags /gamification`) |
 | OWL components | 2 (dashboard + notification service) |
 
 ## File Inventory

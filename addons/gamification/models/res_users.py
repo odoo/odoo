@@ -162,7 +162,17 @@ class ResUsers(models.Model):
             # levels are gold, silver, bronze but fields have _badge postfix
             self.browse(user_id)[f"{level}_badge"] = count
 
-    @api.depends("karma", "rank_id", "next_rank_id")
+    # The thresholds are read off the rank records, so the m2o alone is not
+    # enough: gamification.karma.rank.write() re-ranks whoever actually changes
+    # rank, but a user whose rank is unchanged and whose *distance* to the next
+    # one moved gets no trigger without these two.
+    @api.depends(
+        "karma",
+        "rank_id",
+        "rank_id.karma_min",
+        "next_rank_id",
+        "next_rank_id.karma_min",
+    )
     def _compute_xp_progress(self) -> None:
         """Compute XP progress toward the next rank for progress bar display."""
         for user in self:
