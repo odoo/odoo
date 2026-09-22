@@ -5,8 +5,17 @@ import re
 from lxml import etree
 from stdnum.be import vat as be_vat
 
+<<<<<<< d0a05578cb32d84d1670bd7fbd01106df0bc5d89
 from odoo import Command, _, api, fields, models
 from odoo.tools import formatLang, frozendict, groupby, html2plaintext, html_escape, pdf, str2bool, unique
+||||||| d422c97257d8a13cc16969fcbc2ed1b8312a2c5c
+from odoo import Command, _, fields, models
+from odoo.tools import formatLang, frozendict, html2plaintext, html_escape
+=======
+from odoo import Command, _, fields, models
+from odoo.tools import formatLang, frozendict, html2plaintext, html_escape
+from odoo.tools.float_utils import float_compare
+>>>>>>> db4ab32a141f2c16623ab03f5e9e24db280514f3
 
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
@@ -3336,7 +3345,14 @@ class AccountEdiUBL(models.AbstractModel):
         return tax_values
 
     def _import_ubl_invoice_line_prepare_charge_tax_values(self, collected_values, charge):
-        if charge['reason_code'] != 'AEO':
+        discount_precision_digits = self.env['decimal.precision'].precision_get('Discount')
+        if (
+            charge['reason_code'] != 'AEO'
+            # Since a fixed tax is not affected by the discount, if the discount is 100.0,
+            # we don't search for a matching tax since it will create a tax amount that is not expected
+            # for the document.
+            or not float_compare(collected_values['to_write']['discount'], 100.0, precision_digits=discount_precision_digits)
+        ):
             return
 
         odoo_document_type = collected_values['odoo_document_type']
