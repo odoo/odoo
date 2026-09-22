@@ -165,7 +165,7 @@ class AccountMove(models.Model):
         """
         invoice_needing_new_document = self.env['account.move']
         myinvois_documents = self.env['myinvois.document']
-        for move in self.filtered(lambda m: m.state == 'posted'):
+        for move in self.filtered(lambda m: m.state == 'posted' and m.is_invoice()):
             # It already has a valid document active on the platform, we don't want to send it again.
             if move.l10n_my_edi_state:
                 continue
