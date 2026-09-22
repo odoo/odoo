@@ -47,7 +47,7 @@
                     <div class="center-content d-flex flex-column flex-grow-1 gap-2 py-2 pe-2"
                         t-attf-class="{{ !this.paymentLines.length ? 'justify-content-center align-items-center' : '' }}">
                         <t t-call="point_of_sale.PaymentScreenDue" />
-                        <div t-if="this.paymentLines.length" class="payment-summary d-flex flex-grow-1 flex-column gap-1 overflow-y-auto py-3">
+                        <div t-if="this.paymentLines.length" class="payment-summary d-flex flex-column gap-1 overflow-y-auto py-3">
                             <PaymentScreenPaymentLines
                                 paymentLines="this.sortedPaymentLines"
                                 deleteLine.bind="this.deletePaymentLine"

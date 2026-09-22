@@ -18,6 +18,7 @@ This module adds several features to the Point of Sale that are specific to rest
     'website': 'https://www.odoo.com/app/point-of-sale-restaurant',
     'data': [
         'data/scenarios/restaurant_preset.xml',
+        'data/pos_restaurant_data.xml',
         'views/pos_category_view.xml',
         'views/pos_course_views.xml',
         'views/pos_order_views.xml',

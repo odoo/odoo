@@ -16,3 +16,9 @@ class ProductTemplate(models.Model):
                 if session.config_id.module_pos_restaurant:
                     defaults["is_storable"] = False
         return defaults
+
+    def _get_special_products_to_archive(self):
+        split_payment_product = self.env.ref(
+            "pos_restaurant.product_product_split_payment", raise_if_not_found=False
+        ) or self.env["product.product"]
+        return super()._get_special_products_to_archive() | split_payment_product.product_tmpl_id
