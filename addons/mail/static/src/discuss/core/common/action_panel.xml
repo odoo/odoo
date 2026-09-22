@@ -11,7 +11,7 @@
     </t>
 
     <t t-name="mail.ActionPanel.content">
-        <div class="o-mail-ActionPanel-header position-sticky top-0 pt-2 pb-1 d-flex flex-column bg-inherit smaller" t-att-class="{ 'px-1 pb-1': this.env.inChatWindow, 'ps-1 pe-2 pb-2': !this.env.inChatWindow and !this.env.inMeetingView, 'o-ps-2_5 pe-2': this.env.inMeetingChat, 'ps-1': this.env.inMeetingView and !this.env.inMeetingChat }">
+        <div class="o-mail-ActionPanel-header position-sticky top-0 pt-2 pb-1 d-flex flex-column bg-inherit smaller" t-att-class="{ 'px-1 pb-1': this.env.inChatWindow, 'px-2 pb-2': !this.env.inChatWindow and !this.env.inMeetingView, 'o-ps-2_5 pe-2': this.env.inMeetingView }">
             <div class="d-flex align-items-center gap-1">
                 <button t-if="this.props.close and (this.env.inChatWindow or this.env.hasPreviousActionPanel?.())" class="btn p-1 opacity-75 opacity-100-hover" t-att-title="this.backButtonTitle" t-on-click.stop="this.props.close" data-available-offline="">
                     <i class="oi oi-fw" data-icon="west"/>
