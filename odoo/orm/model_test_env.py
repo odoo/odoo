@@ -66,7 +66,7 @@ class _TestIrDefault(AbstractModel):
     _register = False
     _module = None
 
-    def _get_model_defaults(self, model_name, condition=False):
+    def _get_model_defaults(self, model_name: str, condition: Any = False) -> dict:
         return {}
 
 
@@ -91,7 +91,7 @@ class _TestResUsers(Model):
     # gives a user instead of res.groups rows
     group_xmlids = Char()
 
-    def _get_company_ids(self):
+    def _get_company_ids(self) -> tuple[int, ...]:
         # the protocol and the real res.users answer tuple[int, ...]
         return (self.company_id | self.company_ids)._ids
 
@@ -135,7 +135,7 @@ class _TestResUsers(Model):
         return self._has_group("base.group_public")
 
     @api.model
-    def context_get(self):
+    def context_get(self) -> dict:
         return {"lang": "en_US", "tz": False, "uid": self.env.uid}
 
 
@@ -151,7 +151,7 @@ class _TestResCompany(Model):
     # a stub company is its own root, as a company without a parent is
     root_id = Many2one("res.company", compute="_compute_root_id")
 
-    def _compute_root_id(self):
+    def _compute_root_id(self) -> None:
         for company in self:
             company.root_id = company
 
@@ -182,7 +182,7 @@ class InMemorySavepoint:
     def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+    def __exit__(self, exc_type: object, exc_val: object, exc_tb: object) -> None:
         self.close(rollback=exc_type is not None)
 
     def rollback(self) -> None:
@@ -229,8 +229,8 @@ class InMemoryCursor(BaseCursor):
 
     def execute(
         self,
-        query,
-        params=None,
+        query: Any,
+        params: Any = None,
         log_exceptions: bool = True,
         prepare: bool | None = None,
     ) -> None:
@@ -314,11 +314,11 @@ class InMemoryCursor(BaseCursor):
             self._now = datetime.now(UTC).replace(tzinfo=None)
         return self._now
 
-    def savepoint(self, flush: bool = True):
+    def savepoint(self, flush: bool = True) -> Any:
         return InMemorySavepoint(self, flush=flush)
 
     @contextmanager
-    def pipeline(self, log_exceptions: bool = True, query: Any = None):
+    def pipeline(self, log_exceptions: bool = True, query: Any = None) -> Any:
         yield
 
     def commit(self) -> None:
@@ -435,16 +435,16 @@ class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
         # ir.model.access is a NotImplementedError, not a KeyError
         return model_name in self.models
 
-    def record_xmlids_written(self, xml_ids) -> None:
+    def record_xmlids_written(self, xml_ids: Iterable[str]) -> None:
         self.loaded_xmlids.update(xml_ids)
 
-    def post_init(self, func, *args, **kwargs) -> None:
+    def post_init(self, func: Callable, *args: Any, **kwargs: Any) -> None:
         pass
 
-    def post_constraint(self, cr, func, key) -> None:
+    def post_constraint(self, cr: Any, func: Callable, key: Any) -> None:
         pass
 
-    def add_foreign_key(self, *args, **kwargs) -> None:
+    def add_foreign_key(self, *args: Any, **kwargs: Any) -> None:
         pass
 
     def reset_changes(self) -> None:
@@ -459,7 +459,7 @@ class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
             for container in CACHES_BY_KEY.get(cache_name, (cache_name,)):
                 self.ormcache_lrus[container].clear()
 
-    def is_an_ordinary_table(self, model) -> bool:
+    def is_an_ordinary_table(self, model: Any) -> bool:
         # the live registry asks pg_class for relkind='r'. There is no
         # catalog here, but the facts that decide it are on the model: an
         # abstract model has no table at all, and one that is not `_auto` or
@@ -472,18 +472,18 @@ class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
         )
 
     @staticmethod
-    def unaccent(text):
+    def unaccent(text: str) -> str:
         return text
 
     @staticmethod
-    def unaccent_python(text):
+    def unaccent_python(text: str) -> str:
         return text
 
-    def get_ilike_normalizer(self, env):
+    def get_ilike_normalizer(self, env: Any) -> Callable[[str], str]:
         if self.ilike_normalizer is not None:
             return self.ilike_normalizer
 
-        def normalize(value):
+        def normalize(value: str) -> str:
             text = self.unaccent_python(value)
             if text.isascii():
                 return text.lower()
@@ -491,7 +491,7 @@ class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
 
         return normalize
 
-    def _collect_field_depends(self, env) -> None:
+    def _collect_field_depends(self, env: Environment) -> None:
         for model_cls in self.models.values():
             model = model_cls(env, (), ())
             for field in model._fields.values():
@@ -516,7 +516,7 @@ class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
             )
 
     @staticmethod
-    def _modules_of(model_defs) -> set[str]:
+    def _modules_of(model_defs: Iterable[type[BaseModel]]) -> set[str]:
         # only the modules the named classes declare: once a test imports
         # odoo.addons.base.models, "base" holds every base model class and an
         # implicit "base" would drag them into every registry of the process
@@ -670,7 +670,7 @@ def model_test_env(
     fixtures: dict[str | tuple[str, tuple], list[tuple]] | None = None,
     langs: Iterable[str] = (),
     check_cache: bool = True,
-):
+) -> Any:
     if registry is None:
         registry = ModelRegistry(model_classes, db_name=db_name)
     # a reused registry keeps its own locale only for this call: without a
@@ -712,7 +712,9 @@ def model_test_env(
             env.cache.check(env)
 
 
-def _reflect_models(storage: DictBackend, registry: ModelRegistry, env) -> None:
+def _reflect_models(
+    storage: DictBackend, registry: ModelRegistry, env: Environment
+) -> None:
     # the rows init_models reflects on PostgreSQL, so ir.model / ir.model.fields answer
     # the same questions in memory (defaults, xmlids on fields, selection labels)
     if "ir.model" not in registry or "ir.model.fields" not in registry:
@@ -720,7 +722,7 @@ def _reflect_models(storage: DictBackend, registry: ModelRegistry, env) -> None:
     IrModel = env["ir.model"]
     IrModelFields = env["ir.model.fields"]
 
-    def stored(model_cls, vals: dict) -> dict:
+    def stored(model_cls: type[BaseModel], vals: dict) -> dict:
         row = {}
         for name, value in vals.items():
             field = model_cls._fields.get(name)

@@ -7,7 +7,6 @@ from markupsafe import Markup, escape
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import SQL
 
 from . import approval_trace as trace
 
@@ -184,13 +183,7 @@ class MixinApproval(models.AbstractModel):
     def action_create_approval_request(self) -> dict[str, Any]:
         self.check_singleton()
 
-        self.env.cr.execute(
-            SQL(
-                "SELECT id FROM %s WHERE id = %s FOR UPDATE",
-                SQL.identifier(self._table),
-                self.id,
-            )
-        )
+        self.lock_for_update(wait=True)
         self.invalidate_recordset(["approval_request_id"])
 
         self._check_can_request_approval()

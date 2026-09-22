@@ -329,10 +329,7 @@ class MixinCredentialStore(models.AbstractModel):
         if self.storage_method != "json":
             return {}
         if self.id:
-            self.env.cr.execute(
-                "SELECT id FROM credential_credential WHERE id = %s FOR NO KEY UPDATE",
-                [self.id],
-            )
+            self.lock_for_update(wait=True, allow_referencing=True)
             self.invalidate_recordset(["credential_value_encrypted"])
         encrypted = self.with_context(bin_size=False).credential_value_encrypted
         if not encrypted:

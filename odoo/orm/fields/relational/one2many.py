@@ -236,11 +236,11 @@ class One2many(_RelationalMulti):
         update_line: typing.Callable[..., None],
     ) -> None:
 
-        def link(record, lines):
+        def link(record: BaseModel, lines: BaseModel) -> None:
             ids = record[self.name]._ids
             self._update_cache(record, tuple(unique(ids + lines._ids)))
 
-        def unlink(lines):
+        def unlink(lines: BaseModel) -> None:
             for record in records:
                 self._update_cache(record, (record[self.name] - lines)._ids)
 
@@ -271,7 +271,14 @@ class One2many(_RelationalMulti):
             if delta.linked:
                 link(recs[-1], browse_lines(list(delta.linked)))
 
-    def _get_orphan_lines(self, comodel, model, recs, lines, inverse):
+    def _get_orphan_lines(
+        self,
+        comodel: BaseModel,
+        model: BaseModel,
+        recs: BaseModel,
+        lines: BaseModel,
+        inverse: str,
+    ) -> BaseModel:
         domain = (
             self.get_comodel_domain(recs)
             & Domain(inverse, "in", recs.ids)
@@ -290,9 +297,13 @@ class One2many(_RelationalMulti):
         return orphans
 
     def _write_real_stored(
-        self, records_commands_list, model, comodel, create: bool
+        self,
+        records_commands_list: Sequence[tuple[BaseModel, list[CommandValue]]],
+        model: BaseModel,
+        comodel: BaseModel,
+        create: bool,
     ) -> None:
-        inverse = self.inverse_name
+        inverse = typing.cast("str", self.inverse_name)
         inverse_field = comodel._fields[inverse]
         reference_model_field = (
             inverse_field.model_field if inverse_field.is_many2one_reference else None
@@ -302,7 +313,7 @@ class One2many(_RelationalMulti):
         to_link: defaultdict[typing.Any, OrderedSet] = defaultdict(OrderedSet)
         allow_full_delete = not create
 
-        def unlink(lines):
+        def unlink(lines: BaseModel) -> None:
             cascade = getattr(comodel._fields[inverse], "ondelete", False) == "cascade"
             _debug.logic(
                 "field.one2many.unlink_strategy",
@@ -316,7 +327,7 @@ class One2many(_RelationalMulti):
             else:
                 lines[inverse] = False
 
-        def flush():
+        def flush() -> None:
             _debug.pipeline(
                 "field.one2many.flush",
                 model=self.model_name,
@@ -360,7 +371,7 @@ class One2many(_RelationalMulti):
             if delta.updated:
                 prefetch_ids = recs[self.name]._prefetch_ids
                 for line_id, vals in delta.updated:
-                    comodel.browse(line_id).with_prefetch(prefetch_ids).write(vals)
+                    comodel.browse((line_id,)).with_prefetch(prefetch_ids).write(vals)
             to_delete.extend(delta.deleted)
             if delta.unlinked:
                 unlink(comodel.browse(list(delta.unlinked)))
@@ -383,7 +394,11 @@ class One2many(_RelationalMulti):
 
         flush()
 
-    def _write_real_unstored(self, records_commands_list, comodel) -> None:
+    def _write_real_unstored(
+        self,
+        records_commands_list: Sequence[tuple[BaseModel, list[CommandValue]]],
+        comodel: BaseModel,
+    ) -> None:
         ids = OrderedSet(rid for recs, cs in records_commands_list for rid in recs._ids)
         records = records_commands_list[0][0].browse(ids)
         self._write_nonstored_commands(
@@ -441,7 +456,7 @@ class One2many(_RelationalMulti):
             groups=len(records_commands_list),
         )
 
-        def browse(ids):
+        def browse(ids: typing.Iterable[typing.Any]) -> BaseModel:
             return comodel.browse([id_ and NewId(id_) for id_ in ids])
 
         records[self.name]

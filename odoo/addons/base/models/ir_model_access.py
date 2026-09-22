@@ -133,12 +133,12 @@ class IrModelAccess(models.Model):
             )
             & unloaded_module_domain(self.env, "ir.model.access")
         )
-        accesses = (
+        rows = (
             self.sudo()
             .with_context(active_test=False)
-            .search_fetch(domain, ["model_id"])
+            ._read_group(domain, ["model_id.model"], [])
         )
-        models_allowed = frozenset(accesses.model_id.mapped("model"))
+        models_allowed = frozenset(model for (model,) in rows)
 
         _debug.perf.count(
             "models_allowed_computed",

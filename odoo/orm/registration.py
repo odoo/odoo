@@ -172,7 +172,7 @@ def _check_model_parent_extension(
     model_cls: type[BaseModel],
     model_def: type[BaseModel],
     parent_cls: type[BaseModel],
-):
+) -> None:
     if model_cls._abstract and not parent_cls._abstract:
         raise TypeError(
             f"In {model_def}, abstract model {model_cls._name!r} cannot inherit from non-abstract model {parent_cls._name!r}."
@@ -403,7 +403,7 @@ def _patch_translate_field(
 
 def _patch_company_dependent_field(
     model_cls: type[BaseModel], env: Environment, name: str, fields_: list
-):
+) -> None:
     key = f"{model_cls._name}.{name}"
     if key not in get_registry_of_model(model_cls).database_company_dependent_fields:
         return
@@ -446,7 +446,7 @@ def _check_rec_name(model_cls: type[BaseModel]) -> None:
         model_cls._rec_name = "x_name"
 
 
-def _check_active_name(model_cls: type[BaseModel]):
+def _check_active_name(model_cls: type[BaseModel]) -> None:
     if model_cls._active_name:
         if (
             model_cls._active_name not in model_cls._fields
@@ -469,7 +469,7 @@ def _check_active_name(model_cls: type[BaseModel]):
         )
 
 
-def _add_table_objects(model_cls: type[BaseModel]):
+def _add_table_objects(model_cls: type[BaseModel]) -> None:
     if model_cls._table_object_definitions:
         raise TypeError(
             f"Model {model_cls._name!r}: registry class must not own "
@@ -510,7 +510,7 @@ def _check_inherits(model_cls: type[BaseModel]) -> None:
             )
 
 
-def _add_inherited_fields(model_cls: type[BaseModel]):
+def _add_inherited_fields(model_cls: type[BaseModel]) -> None:
     if model_cls._abstract or not model_cls._inherits:
         return
 
@@ -592,7 +592,7 @@ def _setup_fields(model_cls: type[BaseModel], env: Environment) -> None:
         pop_field(model_cls, name)
 
 
-def _add_manual_models(env: Environment):
+def _add_manual_models(env: Environment) -> None:
     removed_fields: OrderedSet = OrderedSet()
     for name, model_cls in list(env.registry.items()):
         if model_cls._custom:
@@ -638,7 +638,7 @@ def _add_manual_models(env: Environment):
         add_model_to_registry(env.registry, model_def)
 
 
-def _add_manual_fields(model_cls: type[BaseModel], env: Environment):
+def _add_manual_fields(model_cls: type[BaseModel], env: Environment) -> None:
     metaschema = env.registry.metaschema
     fields_data = metaschema.manual_field_data(env, model_cls._name)
     if _debug.pipeline.enabled and fields_data:

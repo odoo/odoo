@@ -31,6 +31,7 @@ if typing.TYPE_CHECKING:
 
     from odoo.libs.datetime import Granularity
 
+    from ....fields.base import Field
     from ...base import BaseModel
 
 _debug = DebugLog(__name__)
@@ -70,7 +71,7 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
             )
             prefetch_ids = tuple(raw_value for raw_value in raw_values if raw_value)
 
-            def recordset(value):
+            def recordset(value: typing.Any) -> typing.Any:
                 return Model(self.env, (value,), prefetch_ids) if value else empty_value
 
             return (recordset(value) for value in raw_values)
@@ -122,7 +123,7 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
                 )
             )
 
-            def recordset(value):
+            def recordset(value: typing.Any) -> typing.Any:
                 if not value:
                     return empty_value
                 ids = tuple(unique(id_ for id_ in value if id_))
@@ -133,24 +134,24 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
         return ((value if value is not None else empty_value) for value in raw_values)
 
     def _read_group_fold_through_records(
-        self, field, func: str, raw_values: Sequence, empty_value
+        self, field: Field, func: str, raw_values: Sequence, empty_value: typing.Any
     ) -> Generator:
         Model = self.env.registry[self._name]
         prefetch_ids = tuple(
             unique(id_ for ids in raw_values if ids for id_ in ids if id_)
         )
         if func == "sum_currency":
-            currency_field = self._fields[field.get_currency_field(self)]
+            currency_field = self._fields[field._get_currency_field_name(self)]
             to_currency = self.env.company.currency_id
             today = fields.Date.context_today(typing.cast("BaseModel", self))
 
-        def value_of(record):
+        def value_of(record: BaseModel) -> typing.Any:
             value = record[field.name]
             if field.is_boolean:
                 return value
             return None if value is False else value
 
-        def present(records):
+        def present(records: BaseModel) -> list:
             return [v for v in (value_of(r) for r in records) if v is not None]
 
         _debug.logic(
@@ -162,7 +163,7 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
             groups=len(raw_values),
         )
 
-        def fold(ids):
+        def fold(ids: typing.Any) -> typing.Any:
             if not ids:
                 return empty_value
             records = Model(self.env, tuple(unique(i for i in ids if i)), prefetch_ids)
@@ -216,7 +217,13 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
         return (fold(ids) for ids in raw_values)
 
     def _read_group_temporal_range(
-        self, value, field, interval, granularity: str, locale: str, fmt: str
+        self,
+        value: typing.Any,
+        field: Field,
+        interval: typing.Any,
+        granularity: str,
+        locale: str,
+        fmt: str,
     ) -> tuple[str, str, str]:
         range_start = value
         range_end = value + interval
@@ -437,7 +444,7 @@ class _ReadGroupFormatMixin(_ReadGroupEmptyMixin):
                 locale=get_lang(self.env).code,
             )
 
-    def _read_group_format_result_properties(self, rows_dict, group):
+    def _read_group_format_result_properties(self, rows_dict: list[dict], group: str) -> None:
         if "." not in group:
             msg = "You must choose the property you want to group by."
             raise ValueError(msg)

@@ -1,3 +1,5 @@
+import psycopg.errors
+
 from odoo import Command
 from odoo.exceptions import AccessError, LockError
 from odoo.tests.common import TransactionCase, tagged
@@ -180,6 +182,23 @@ class TestORM(TransactionCase):
         self.assertFalse(inexisting.exists())
         with self.assertRaises(LockError):
             inexisting.lock_for_update()
+
+    def test_lock_for_update_wait_queues_behind_the_holder(self):
+        partner = self.env["res.partner"]
+        p1 = partner.search([("name", "!=", False)], limit=1)
+        p1.lock_for_update()
+
+        with self.env.registry.cursor() as cr:
+            other = p1.with_env(partner.env(cr=cr))
+            cr.execute("SET LOCAL lock_timeout = '200ms'")
+            with self.assertRaises(psycopg.errors.LockNotAvailable):
+                other.lock_for_update(wait=True)
+            cr.rollback()
+
+        inexisting = partner.create({"name": "inexisting"})
+        inexisting.unlink()
+        with self.assertRaises(LockError):
+            inexisting.lock_for_update(wait=True)
 
     def test_try_lock_for_update(self):
         partner = self.env["res.partner"]

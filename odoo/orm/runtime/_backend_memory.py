@@ -576,7 +576,9 @@ class _InMemoryReadGroup:
             "supported in memory; use a DB-backed TransactionCase"
         )
 
-    def _groupby_reader(self, spec: str, model: BaseModel | None = None):
+    def _groupby_reader(
+        self, spec: typing.Any, model: BaseModel | None = None
+    ) -> typing.Callable[[BaseModel], typing.Any]:
         model = self.model if model is None else model
         fname, seq_fnames, granularity = parse_read_group_spec(spec)
         field = model._fields[fname]
@@ -603,7 +605,7 @@ class _InMemoryReadGroup:
                 # the SQL path groups in UTC when the server does not know the zone
                 tz = None
 
-        def read(record):
+        def read(record: BaseModel) -> typing.Any:
             value = record[fname]
             if field.is_many2one:
                 return value.id or None
@@ -617,7 +619,9 @@ class _InMemoryReadGroup:
 
         return read
 
-    def _many2many_reader(self, model, field, spec):
+    def _many2many_reader(
+        self, model: BaseModel, field: Field, spec: str
+    ) -> typing.Callable[[BaseModel], typing.Any]:
         # the relation rows whose comodel side the user may see under the
         # field's domain, as the LEFT JOIN's IN (subselect) keeps
         if not field.store:
@@ -630,13 +634,20 @@ class _InMemoryReadGroup:
             ).get_result_ids()
         )
 
-        def read(record):
+        def read(record: BaseModel) -> typing.Any:
             ids = [id_ for id_ in record[field.name]._ids if id_ in allowed]
             return _MultiValued(ids or [None])
 
         return read
 
-    def _property_reader(self, model, field, property_name, granularity, spec):
+    def _property_reader(
+        self,
+        model: BaseModel,
+        field: Field,
+        property_name: str | None,
+        granularity: str | None,
+        spec: str,
+    ) -> typing.Callable[[BaseModel], typing.Any]:
         # the SQL path groups by the property's raw json value shaped by its
         # definition type; a collection property and html stay refused
         if not property_name:
@@ -653,14 +664,14 @@ class _InMemoryReadGroup:
                 model.env[definition["comodel"]].sudo().with_context(active_test=False)
             )
 
-        def is_id(raw):
+        def is_id(raw: typing.Any) -> bool:
             return isinstance(raw, int) and not isinstance(raw, bool)
 
         if property_type in ("tags", "many2many"):
             # the SQL path LEFT JOINs the json array's elements that the
             # definition (or the comodel's table) knows: one key per element,
             # a NULL row when none qualifies
-            def read_collection(record):
+            def read_collection(record: BaseModel) -> typing.Any:
                 values = record[field.name]
                 raw = (values._values or {}).get(property_name)
                 if not isinstance(raw, list):
@@ -683,7 +694,7 @@ class _InMemoryReadGroup:
         if granularity == "week":
             first_week_day = int(get_lang(model.env).week_start) - 1
 
-        def read(record):
+        def read(record: BaseModel) -> typing.Any:
             values = record[field.name]
             raw = (values._values or {}).get(property_name)
             if property_type == "selection":
@@ -709,7 +720,15 @@ class _InMemoryReadGroup:
 
         return read
 
-    def _many2one_path_reader(self, model, fname, field, seq_fnames, granularity, spec):
+    def _many2one_path_reader(
+        self,
+        model: BaseModel,
+        fname: str,
+        field: Field,
+        seq_fnames: typing.Sequence[str],
+        granularity: str | None,
+        spec: str,
+    ) -> typing.Callable[[BaseModel], typing.Any]:
         # the SQL path LEFT JOINs the comodel under the user's record rules
         # and groups by the rest of the spec on the joined row
         if not field.is_many2one:
@@ -728,7 +747,7 @@ class _InMemoryReadGroup:
         rest = f"{seq_fnames}:{granularity}" if granularity else seq_fnames
         read_rest = self._groupby_reader(rest, comodel)
 
-        def read(record):
+        def read(record: BaseModel) -> typing.Any:
             corecord = record[fname]
             if not corecord:
                 return None
@@ -740,7 +759,7 @@ class _InMemoryReadGroup:
 
         return read
 
-    def _aggregate_reader(self, spec: str):
+    def _aggregate_reader(self, spec: str) -> typing.Callable[[BaseModel], typing.Any]:
         if spec == "__count":
             return len
         fname, _property, func = parse_read_group_spec(spec)
@@ -753,7 +772,7 @@ class _InMemoryReadGroup:
         storage = self.storage
         table = self.model._table
 
-        def raw(record):
+        def raw(record: BaseModel) -> typing.Any:
             value = record[fname]
             if field.relational:
                 return value.id or None if field.is_many2one else list(value.ids)
@@ -763,36 +782,38 @@ class _InMemoryReadGroup:
                 # the cache reads a stored NULL as the type's falsy value
                 # (0, 0.0, ""), which SQL aggregates would have skipped:
                 # only the stored cell tells NULL apart from a real zero
-                row = storage.get_row(table, record.id)
+                row = storage.get_row(table, typing.cast("int", record.id))
                 if row is None or row.get(fname) is None:
                     return None
             return None if value is False else value
 
-        def values(records):
+        def values(records: BaseModel) -> list:
             return [raw(record) for record in records]
 
-        def present(records):
+        def present(records: BaseModel) -> list:
             return [v for v in values(records) if v is not None]
 
-        def distinct_sorted(all_values):
+        def distinct_sorted(all_values: list) -> list | None:
             distinct = set(all_values)
             has_null = None in distinct
             distinct.discard(None)
             return [*sorted(distinct), *([None] if has_null else [])] or None
 
+        total: typing.Callable[[list], typing.Any]
+        mean: typing.Callable[[list], typing.Any]
         if field.column_type and field.column_type[0] == "numeric":
             # a numeric column holds the decimal the float spells, and SUM
             # is exact: 0.1 + 0.2 answers 0.3, not the double's 0.30000000000000004
-            def total(present_values):
+            def total(present_values: list) -> typing.Any:
                 return float(sum(Decimal(repr(v)) for v in present_values))
 
-            def mean(present_values):
+            def mean(present_values: list) -> typing.Any:
                 exact = sum(Decimal(repr(v)) for v in present_values)
                 return float(exact / len(present_values))
         else:
             total = sum
 
-            def mean(present_values):
+            def mean(present_values: list) -> typing.Any:
                 return sum(present_values) / len(present_values)
 
         readers = {
@@ -827,7 +848,9 @@ class _InMemoryReadGroup:
             self._unsupported(f"aggregate {spec!r}")
         return readers[func]
 
-    def _sum_currency_reader(self, field, fname: str, raw):
+    def _sum_currency_reader(
+        self, field: Field, fname: str, raw: typing.Callable[[BaseModel], typing.Any]
+    ) -> typing.Callable[[BaseModel], typing.Any]:
         # the SQL path divides each value by the rate of its currency, 1.0
         # for a currency without one; the port picks the rate as its subquery does
         if not field.is_monetary:
@@ -840,9 +863,9 @@ class _InMemoryReadGroup:
             env, env.company, Date.context_today(self.model)
         )
 
-        def read(records):
+        def read(records: BaseModel) -> typing.Any:
             present = [
-                (value, record[currency_field_name].id)
+                (value, record[typing.cast("str", currency_field_name)].id)
                 for record in records
                 if (value := raw(record)) is not None
             ]
@@ -855,7 +878,9 @@ class _InMemoryReadGroup:
 
         return read
 
-    def rows(self, having, order, limit, offset) -> list[tuple]:
+    def rows(
+        self, having: list | None, order: str | None, limit: int | None, offset: int
+    ) -> list[tuple]:
         self._select_order_aggregates(order)
         groups: dict[tuple, list] = {}
         for record in self.records:
@@ -918,7 +943,7 @@ class _InMemoryReadGroup:
             self.order_specs.append(term)
             self.order_aggregates.append(reader)
 
-    def _having_predicate(self, having: list):
+    def _having_predicate(self, having: list) -> typing.Callable[[tuple], typing.Any]:
         # the SQL path's polish-notation walk, with three-valued comparisons:
         # a NULL on either side answers None and the row is not kept
         specs = [*self.groupby_specs, *self.aggregate_specs]
@@ -931,7 +956,7 @@ class _InMemoryReadGroup:
             ">=": pyoperator.ge,
         }
 
-        def condition(item):
+        def condition(item: typing.Any) -> typing.Callable[[tuple], typing.Any]:
             left, op, right = item
             if left not in specs:
                 raise ValueError(
@@ -960,11 +985,16 @@ class _InMemoryReadGroup:
                 None if row[index] is None or right is None else test(row[index], right)
             )
 
-        def negate(pred):
+        def negate(
+            pred: typing.Callable[[tuple], typing.Any],
+        ) -> typing.Callable[[tuple], typing.Any]:
             return lambda row: None if (v := pred(row)) is None else not v
 
-        def both(a, b):
-            def pred(row):
+        def both(
+            a: typing.Callable[[tuple], typing.Any],
+            b: typing.Callable[[tuple], typing.Any],
+        ) -> typing.Callable[[tuple], typing.Any]:
+            def pred(row: tuple) -> typing.Any:
                 x, y = a(row), b(row)
                 if x is False or y is False:
                     return False
@@ -972,8 +1002,11 @@ class _InMemoryReadGroup:
 
             return pred
 
-        def either(a, b):
-            def pred(row):
+        def either(
+            a: typing.Callable[[tuple], typing.Any],
+            b: typing.Callable[[tuple], typing.Any],
+        ) -> typing.Callable[[tuple], typing.Any]:
+            def pred(row: tuple) -> typing.Any:
                 x, y = a(row), b(row)
                 if x is True or y is True:
                     return True
@@ -1011,7 +1044,12 @@ class _InMemoryReadGroup:
             # of the pass: None-is-True ascending puts it last, descending first
             null_is_true = nulls_first == desc
 
-            def key(row, index=index, rank=rank, null_is_true=null_is_true):
+            def key(
+                row: tuple,
+                index: int = index,
+                rank: typing.Any = rank,
+                null_is_true: bool = null_is_true,
+            ) -> tuple:
                 value = row[index]
                 if value is not None and rank is not None:
                     value = rank(value)
@@ -1023,7 +1061,7 @@ class _InMemoryReadGroup:
 
             rows.sort(key=key, reverse=desc)
 
-    def _day_of_week_rank(self, spec: str):
+    def _day_of_week_rank(self, spec: str) -> typing.Any:
         if parse_read_group_spec(spec)[2] != "day_of_week":
             return None
         # mod(7 - week_start + dow, 7): the language's first day sorts first
@@ -1561,12 +1599,15 @@ class InMemoryBackend:
                 ).get_result_ids()
             )
 
-            def same_key(record):
+            def same_key(record: BaseModel) -> tuple:
                 # COALESCE(col::text, '') on the SQL side: only NULL collapses
                 # to '', a stored 0 or false compares as its text -- which
                 # takes the stored cell, since the cache reads NULL as the
                 # type's falsy value
-                row = self.storage.get_row(model._table, record.id) or {}
+                row = (
+                    self.storage.get_row(model._table, typing.cast("int", record.id))
+                    or {}
+                )
                 key = []
                 for column in same_columns:
                     value = row.get(column)
@@ -1713,7 +1754,7 @@ class InMemoryBackend:
         return len(updates)
 
     def lock_for_update(
-        self, model: BaseModel, *, allow_referencing: bool = False
+        self, model: BaseModel, *, allow_referencing: bool = False, wait: bool = False
     ) -> None:
         ids = {id_ for id_ in model._ids if id_}
         if not ids:

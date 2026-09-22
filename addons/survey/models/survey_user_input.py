@@ -586,9 +586,7 @@ class SurveyUser_Input(models.Model):
         if not self.ids:
             return
         self.flush_recordset()
-        self.env.cr.execute(
-            "SELECT id FROM survey_user_input WHERE id = ANY(%s) FOR UPDATE", [self.ids]
-        )
+        self.lock_for_update(wait=True)
 
     def _mark_in_progress(self) -> None:
         self.write({"start_datetime": fields.Datetime.now(), "state": "in_progress"})

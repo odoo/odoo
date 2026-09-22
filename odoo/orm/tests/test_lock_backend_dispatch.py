@@ -26,6 +26,15 @@ def test_lock_for_update_dispatches_to_backend():
         recs.lock_for_update(allow_referencing=True)
 
 
+def test_lock_for_update_wait_dispatches_and_checks_existence():
+    with model_test_env(LockThing) as env:
+        recs = env["lock.thing"].create({"name": "a"})
+        recs.lock_for_update(wait=True)
+        recs.lock_for_update(wait=True, allow_referencing=True)
+        with pytest.raises(LockError):
+            env["lock.thing"].browse(999_999).lock_for_update(wait=True)
+
+
 def test_lock_for_update_raises_on_missing_row():
     with model_test_env(LockThing) as env:
         with pytest.raises(LockError):

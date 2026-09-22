@@ -95,8 +95,6 @@ class SurveyQuota(models.Model):
         )
         if not relevant:
             return self.browse()
-        self.env.cr.execute(
-            "SELECT id FROM survey_quota WHERE id = ANY(%s) FOR UPDATE", [relevant.ids]
-        )
+        relevant.lock_for_update(wait=True)
         relevant.invalidate_recordset(["current_count", "is_full"])
         return relevant.filtered("is_full")

@@ -4,8 +4,8 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.61
-:Date: 2026-09-21
+:Version: 6.62
+:Date: 2026-09-22
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
 
@@ -8173,36 +8173,50 @@ much time is left.
 11.8 Locking
 ------------
 
+A row lock is a recordset verb, dispatched through ``env.backend`` so the
+in-memory tier answers it too ``[review]``:
+
 .. code-block:: python
 
-   # fail immediately if another transaction holds the lock
-   self.env.cr.execute(SQL(
-       "SELECT id FROM %s WHERE id = %s FOR UPDATE NOWAIT",
-       SQL.identifier(self._table), self.id,
-   ))
+   # fail fast: every row or LockError -- sequences, payment processing
+   records.lock_for_update()
 
-   # skip locked rows — job queues, cron dispatch
-   self.env.cr.execute(SQL(
-       "SELECT id FROM %s WHERE state = %s FOR UPDATE SKIP LOCKED",
-       SQL.identifier(self._table), "pending",
-   ))
+   # queue behind the holder, rows taken in id order so two writers cannot
+   # deadlock -- a document whose state one request at a time may advance
+   records.lock_for_update(wait=True)
+
+   # the lockable subset, in the recordset's order -- job queues, cron dispatch
+   ready = records.try_lock_for_update(limit=100)
+
+   # a lock that lets other transactions still reference the row
+   records.lock_for_update(wait=True, allow_referencing=True)
 
 .. list-table::
    :header-rows: 1
-   :widths: 32 68
+   :widths: 40 60
 
-   * - Mode
-     - Use for
-   * - ``FOR UPDATE NOWAIT``
-     - critical sections -- sequences, payment processing. Raises
-       ``OperationalError`` when locked; always handle it.
-   * - ``FOR UPDATE SKIP LOCKED``
-     - job queues and cron dispatch; silently skips locked rows
-   * - ``FOR NO KEY UPDATE``
-     - updates that do not touch foreign-key columns
+   * - Verb
+     - Statement and use
+   * - ``lock_for_update()``
+     - ``FOR UPDATE SKIP LOCKED``; raises ``LockError`` unless every row was
+       taken. Critical sections that must not wait.
+   * - ``lock_for_update(wait=True)``
+     - ``FOR UPDATE`` ordered by ``id``; blocks until the holder commits, so a
+       second request on the same document sees the first one's write. Set a
+       ``lock_timeout`` around it where waiting forever is wrong.
+   * - ``try_lock_for_update(limit=)``
+     - ``FOR UPDATE SKIP LOCKED``; returns the rows it could take. Job queues
+       and cron dispatch.
+   * - ``allow_referencing=True``
+     - ``FOR NO KEY UPDATE`` in any of the above: an update that touches no
+       key column, so a concurrent ``INSERT`` referencing the row is not
+       blocked.
 
-Lock, operate and commit as fast as possible. Prefer an ORM ``search()`` with a
-domain over a table-level lock.
+Raw ``FOR UPDATE`` SQL is for a statement the verbs cannot express -- a lock
+that also reads a column in the same round trip, or the lock-and-touch
+``UPDATE ... SET write_date = write_date`` that forces a serialization
+failure on the peer. Lock, operate and commit as fast as possible. Prefer an
+ORM ``search()`` with a domain over a table-level lock.
 
 ----
 
@@ -8790,6 +8804,12 @@ which that test should go.
    * - Version
      - Date
      - Summary
+   * - 6.62
+     - 2026-09-22
+     - §11.8 names the recordset lock verbs -- ``lock_for_update()``, its
+       ``wait=True`` form (new: ``FOR UPDATE`` ordered by id, queueing
+       behind the holder) and ``try_lock_for_update(limit=)`` -- and leaves
+       raw ``FOR UPDATE`` to the two shapes they cannot express.
    * - 6.61
      - 2026-09-21
      - Appendix D states its own 6.10-6.16 collision: two §2.4 campaigns

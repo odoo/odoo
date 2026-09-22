@@ -58,7 +58,9 @@ class _ReadGroupSQLMixin(_ModelStubs):
 
     __slots__ = ()
 
-    def _read_group_select_sum_currency(self, field, fname: str, query: Query) -> SQL:
+    def _read_group_select_sum_currency(
+        self, field: Field, fname: str, query: Query
+    ) -> SQL:
         if not field.is_monetary:
             raise ValueError(
                 f'Aggregator "sum_currency" only works on currency field for {fname!r}'
@@ -110,7 +112,7 @@ class _ReadGroupSQLMixin(_ModelStubs):
             SQL.identifier(alias_rate, "rate"),
         )
 
-    def _aggregates_through_records(self, field, func: str) -> bool:
+    def _aggregates_through_records(self, field: Field, func: str) -> bool:
         return (
             not field.store
             and not field.related
@@ -211,7 +213,7 @@ class _ReadGroupSQLMixin(_ModelStubs):
         )
 
     def _read_group_groupby_many2many(
-        self, alias: str, field, groupby_spec: str, query: Query
+        self, alias: str, field: Field, groupby_spec: str, query: Query
     ) -> SQL:
         if field.related and not field.store:
             access_model, field, alias = self._traverse_related_sql(alias, field, query)
@@ -484,7 +486,11 @@ class _ReadGroupSQLMixin(_ModelStubs):
                 query._order_groupby.clear()
 
     def _read_group_orderby_day_of_week(
-        self, term: str, groupby_terms: dict[str, SQL], sql_direction, sql_nulls
+        self,
+        term: str,
+        groupby_terms: dict[str, SQL],
+        sql_direction: SQL,
+        sql_nulls: SQL,
     ) -> SQL:
         first_week_day = int(get_lang(self.env).week_start)
         sql_expr = SQL(
@@ -572,7 +578,7 @@ class _ReadGroupSQLMixin(_ModelStubs):
 
         return SQL(", ").join(orderby_terms)
 
-    def _get_property_comodel(self, definition: dict, property_name: str):
+    def _get_property_comodel(self, definition: dict, property_name: str) -> BaseModel:
         comodel = self.env.get(definition.get("comodel"))
         if comodel is None or comodel._transient or comodel._abstract:
             raise UserError(

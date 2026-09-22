@@ -67,7 +67,7 @@ class Integer(Field[int]):
 
     @override
     def convert_to_cache(
-        self, value, record: ModelLike, validate: bool = True
+        self, value: typing.Any, record: ModelLike, validate: bool = True
     ) -> typing.Any:
         if value.__class__ is int:
             return value
@@ -101,7 +101,7 @@ class Integer(Field[int]):
 
     @override
     def convert_to_read(
-        self, value, record: ModelLike, use_display_name: bool = True
+        self, value: typing.Any, record: ModelLike, use_display_name: bool = True
     ) -> typing.Any:
         if value and not (-MAXINT - 1 <= value <= MAXINT):
             _debug.logic(
@@ -197,7 +197,7 @@ class Float(Field[float]):
 
     @override
     def convert_to_cache(
-        self, value, record: ModelLike, validate: bool = True
+        self, value: typing.Any, record: ModelLike, validate: bool = True
     ) -> typing.Any:
         if value.__class__ is float and self._digits is None:
             return value
@@ -425,7 +425,7 @@ class Monetary(Field[float]):
 
     @override
     def convert_to_cache(
-        self, value, record: ModelLike, validate: bool = True
+        self, value: typing.Any, record: ModelLike, validate: bool = True
     ) -> typing.Any:
         value = float(value or 0.0)
         if value and validate:
@@ -468,7 +468,7 @@ class Monetary(Field[float]):
 
     @override
     def convert_to_read(
-        self, value, record: ModelLike, use_display_name: bool = True
+        self, value: typing.Any, record: ModelLike, use_display_name: bool = True
     ) -> typing.Any:
         return value
 

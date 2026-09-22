@@ -208,7 +208,12 @@ class LoadMixin(_ModelStubs):
 
         batch_tokens: dict[str, set] = defaultdict(set)
 
-        def flush(*, xml_id=None, model=None, name=None) -> bool:
+        def flush(
+            *,
+            xml_id: str | None = None,
+            model: str | None = None,
+            name: str | None = None,
+        ) -> bool:
             if not batch:
                 return False
 
@@ -221,7 +226,7 @@ class LoadMixin(_ModelStubs):
                 return False
             if model and model not in creatable_models:
                 return False
-            if name is not None and name not in batch_tokens.get(model, ()):
+            if name is not None and name not in batch_tokens.get(model or "", ()):
                 # the batch holds no record this name could resolve to, so
                 # the reference is settled by storage alone and the batch
                 # stays whole; flushing here split an import into one create
@@ -367,7 +372,7 @@ class LoadMixin(_ModelStubs):
     ) -> Callable[[list[str]], bool]:
         fields = self._fields
 
-        def is_o2m(fnames) -> bool:
+        def is_o2m(fnames: Sequence[str | None]) -> bool:
             fname0 = fnames[0]
             return (
                 fname0 is not None and fname0 in fields and fields[fname0].is_one2many
@@ -380,7 +385,7 @@ class LoadMixin(_ModelStubs):
             [index for index, fnames in enumerate(field_paths) if not is_o2m(fnames)]
         )
 
-        def is_only_o2m_row(row) -> bool:
+        def is_only_o2m_row(row: Sequence) -> bool:
             return any(get_o2m_values(row)) and not any(get_other_values(row))
 
         return is_only_o2m_row
@@ -474,7 +479,7 @@ class LoadMixin(_ModelStubs):
             if defn.get("type") in ("many2one", "many2many")
         }
 
-        def is_relational(fname):
+        def is_relational(fname: str | None) -> bool:
             return fname in relational_fnames
 
         _debug.pipeline(
@@ -540,7 +545,9 @@ class LoadMixin(_ModelStubs):
         converter = self.env["ir.fields.converter"]
         convert = converter._get_converter_record(self)
 
-        def _log(base, record, field, exception):
+        def _log(
+            base: dict, record: typing.Any, field: str, exception: Exception
+        ) -> None:
             type = "warning" if isinstance(exception, Warning) else "error"
             field_name = field_names.get(field, field)
             exc_vals = dict(base, record=record, field=field_name)

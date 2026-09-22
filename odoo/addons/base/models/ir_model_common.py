@@ -53,14 +53,13 @@ def unloaded_module_domain(env: Any, model: str) -> Domain:
     _debug.logic(
         "unloaded_module_domain.applied", model=model, modules=len(loaded_modules)
     )
-    unloaded = (
-        env["ir.model.data"]
-        .sudo()
-        .search_fetch(
-            [("model", "=", model), ("module", "not in", loaded_modules)], ["res_id"]
-        )
+    data = env["ir.model.data"].sudo()
+    unloaded = data._search(
+        [("model", "=", model), ("module", "not in", loaded_modules)]
     )
-    return Domain("id", "not in", unloaded.mapped("res_id"))
+    return Domain(
+        "id", "not in", unloaded.subselect(SQL.identifier(data._table, "res_id"))
+    )
 
 
 ACCESS_ERROR_HEADER = {

@@ -85,10 +85,7 @@ class DiscussChannelRtcSession(models.Model):
             ).bus_send()
         channels = rtc_sessions.channel_id
         if channels:
-            self.env.cr.execute(
-                "SELECT id FROM discuss_channel WHERE id = ANY(%s) FOR UPDATE",
-                [channels.ids],
-            )
+            channels.lock_for_update(wait=True)
             channels.invalidate_recordset(["rtc_session_ids"])
         _debug.lifecycle(
             "create",
@@ -114,10 +111,7 @@ class DiscussChannelRtcSession(models.Model):
     def unlink(self) -> Literal[True]:
         channels = self.channel_id
         if channels:
-            self.env.cr.execute(
-                "SELECT id FROM discuss_channel WHERE id = ANY(%s) FOR UPDATE",
-                [channels.ids],
-            )
+            channels.lock_for_update(wait=True)
             channels.invalidate_recordset(["rtc_session_ids"])
         call_ended_channels = channels.filtered(
             lambda c: not (c.rtc_session_ids - self)

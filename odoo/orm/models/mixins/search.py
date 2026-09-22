@@ -415,14 +415,20 @@ class SearchMixin(_ModelStubs):
         return records._read_format(fnames=fields, **read_kwargs)
 
     @api.private
-    def lock_for_update(self, *, allow_referencing: bool = False) -> None:
-        _debug.pipeline(
-            "search.lock_for_update",
-            model=self._name,
-            records=len(self),
-            allow_referencing=allow_referencing,
+    def lock_for_update(
+        self, *, allow_referencing: bool = False, wait: bool = False
+    ) -> None:
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "search.lock_for_update",
+                model=self._name,
+                records=len(self),
+                allow_referencing=allow_referencing,
+                wait=wait,
+            )
+        self.env.backend.lock_for_update(
+            self, allow_referencing=allow_referencing, wait=wait
         )
-        self.env.backend.lock_for_update(self, allow_referencing=allow_referencing)
 
     @api.private
     def try_lock_for_update(

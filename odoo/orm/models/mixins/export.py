@@ -22,6 +22,8 @@ if typing.TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
     from datetime import datetime
 
+    from ...fields import Field
+
 
 class ExportMixin(_ModelStubs):
     __slots__ = ()
@@ -54,7 +56,9 @@ class ExportMixin(_ModelStubs):
         )
         return ((record, xids[record.id]) for record in self)
 
-    def _export_get_cell_value(self, record, name, cache_properties):
+    def _export_get_cell_value(
+        self, record: Self, name: str, cache_properties: dict
+    ) -> typing.Any:
         if "." in name:
             fname, prop_name = name.split(".")
             field = record._fields[fname]
@@ -69,7 +73,9 @@ class ExportMixin(_ModelStubs):
         return field, field_type, value
 
     @staticmethod
-    def _export_convert_cell(field, field_type, value, record):
+    def _export_convert_cell(
+        field: Field, field_type: str, value: typing.Any, record: typing.Any
+    ) -> typing.Any:
         if field.is_properties and field_type == "datetime" and value:
             # a property is stored as the client stores it, in UTC; export it
             # in the user's timezone exactly like a datetime column, so the
@@ -79,7 +85,9 @@ class ExportMixin(_ModelStubs):
             return Datetime.to_datetime(Datetime.to_string(localized))
         return field.convert_to_export(value, record)
 
-    def _export_get_many2many_cell(self, value, fields2, index_fallback):
+    def _export_get_many2many_cell(
+        self, value: typing.Any, fields2: list, index_fallback: int
+    ) -> typing.Any:
         index = None
         subfield = None
         for candidate in (".id", "id", "name", "display_name"):
@@ -187,8 +195,12 @@ class ExportMixin(_ModelStubs):
         return lines
 
     def _export_update_properties_cache(
-        self, records, fnames_by_path, fname, cache_properties
-    ):
+        self,
+        records: typing.Any,
+        fnames_by_path: dict,
+        fname: str,
+        cache_properties: dict,
+    ) -> None:
         cache_properties_field = cache_properties[records._fields[fname]]
 
         for row in records.read([fname]):
@@ -226,7 +238,12 @@ class ExportMixin(_ModelStubs):
                     value = dict(prop["selection"]).get(value, "")
                 cache_by_id[rec_id] = value
 
-    def _export_prefetch_fields(self, records, field_paths, cache_properties):
+    def _export_prefetch_fields(
+        self,
+        records: Self,
+        field_paths: Sequence[Sequence[str]],
+        cache_properties: dict,
+    ) -> None:
         if not records:
             return
 
@@ -284,7 +301,7 @@ class ExportMixin(_ModelStubs):
             paths = [path[1:] or ["display_name"] for path in paths]
             self._export_prefetch_fields(subrecords, paths, cache_properties)
 
-    def _update_export_xids(self, lines, fields):
+    def _update_export_xids(self, lines: list, fields: Sequence[Sequence[str]]) -> None:
         bymodels = collections.defaultdict(set)
         xidmap = collections.defaultdict(list)
         for i, line in enumerate(lines):

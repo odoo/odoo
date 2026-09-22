@@ -17,7 +17,9 @@ from .format import _ReadGroupFormatMixin
 from .sql import _ReadGroupSQLMixin
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Iterable, Sequence
+
+    from ....fields import Field
 
 _debug = DebugLog(__name__)
 
@@ -285,7 +287,7 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
             result,
         )
 
-    def _can_groupby_spec_duplicate_rows(self, model, spec) -> bool:
+    def _can_groupby_spec_duplicate_rows(self, model: typing.Any, spec: str) -> bool:
         fname, property_name, __ = parse_read_group_spec(spec)
         field = model._fields[fname]
         if field.group_by_field:
@@ -513,7 +515,9 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
         return list(zip(*column_result, strict=False))
 
     @api.model
-    def _check_read_group_spec_access(self, groupby, aggregates, query) -> None:
+    def _check_read_group_spec_access(
+        self, groupby: Iterable[str], aggregates: Iterable[str], query: Query
+    ) -> None:
         for spec in groupby:
             model = self
             sub_spec = spec
@@ -543,7 +547,7 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
             _fname, _func, field = self._parse_aggregate_spec(spec)
             self._check_spec_field_read_access(field)
 
-    def _check_spec_field_read_access(self, field) -> None:
+    def _check_spec_field_read_access(self, field: Field) -> None:
         if field.related and not field.store:
             if not (self.env.su or field.compute_sudo or field.inherited):
                 raise ValueError(
@@ -631,7 +635,9 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
 
     @staticmethod
     def _read_group_annotate_orderby(
-        orderby, annotated_groupby: dict[str, str], annotated_aggregates: dict[str, str]
+        orderby: str,
+        annotated_groupby: dict[str, str],
+        annotated_aggregates: dict[str, str],
     ) -> str:
         if not orderby:
             return ",".join(annotated_groupby.values())

@@ -561,7 +561,7 @@ class StorageBackend(typing.Protocol):
     ) -> int: ...
 
     def lock_for_update(
-        self, model: BaseModel, *, allow_referencing: bool = False
+        self, model: BaseModel, *, allow_referencing: bool = False, wait: bool = False
     ) -> None: ...
 
     def try_lock_for_update(
@@ -1319,13 +1319,12 @@ class PostgresBackend:
         return cr.rowcount
 
     @staticmethod
-    def _lock_clause(allow_referencing: bool) -> SQL:
-        if allow_referencing:
-            return SQL("FOR NO KEY UPDATE SKIP LOCKED")
-        return SQL("FOR UPDATE SKIP LOCKED")
+    def _lock_clause(allow_referencing: bool, wait: bool = False) -> SQL:
+        strength = SQL("FOR NO KEY UPDATE") if allow_referencing else SQL("FOR UPDATE")
+        return strength if wait else SQL("%s SKIP LOCKED", strength)
 
     def lock_for_update(
-        self, model: BaseModel, *, allow_referencing: bool = False
+        self, model: BaseModel, *, allow_referencing: bool = False, wait: bool = False
     ) -> None:
         ids = {id_ for id_ in model._ids if id_}
         if not ids:
@@ -1334,7 +1333,10 @@ class PostgresBackend:
         query.add_where(
             SQL("%s = ANY(%s)", SQL.identifier(model._table, "id"), list(ids))
         )
-        sql = SQL("%s %s", query.select(), self._lock_clause(allow_referencing))
+        if wait:
+            # two writers queueing on the same rows take them in one order
+            query.order = SQL.identifier(model._table, "id")
+        sql = SQL("%s %s", query.select(), self._lock_clause(allow_referencing, wait))
         rows = model.env.execute_query(sql)
         if len(rows) != len(ids):
             _debug.logic(

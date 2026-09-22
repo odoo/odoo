@@ -131,7 +131,7 @@ class _FieldSqlMixin(_FieldStubs):
         self,
         field_expr: str,
         operator: str,
-        value,
+        value: typing.Any,
         model: BaseModel,
         alias: str,
         query: Query,
@@ -145,13 +145,20 @@ class _FieldSqlMixin(_FieldStubs):
             )
         return sql_expr
 
-    def _get_comparand_converter(self, field_expr: str, model: BaseModel):
+    def _get_comparand_converter(
+        self, field_expr: str, model: BaseModel
+    ) -> Callable[[typing.Any], typing.Any]:
         if field_expr == self.name:
             return lambda v: self._comparand_to_column(v, model)
         return lambda v: v
 
     def _condition_in_to_sql(
-        self, sql_field: SQL, operator: str, value, _value_to_column, can_be_null: bool
+        self,
+        sql_field: SQL,
+        operator: str,
+        value: typing.Any,
+        _value_to_column: Callable[[typing.Any], typing.Any],
+        can_be_null: bool,
     ) -> SQL:
         assert isinstance(value, COLLECTION_TYPES), (
             f"condition_to_sql() 'in' operator expects a collection, not a {value!r}"
@@ -221,7 +228,12 @@ class _FieldSqlMixin(_FieldStubs):
         return sql
 
     def _condition_like_to_sql(
-        self, sql_field: SQL, operator: str, value, model: BaseModel, can_be_null: bool
+        self,
+        sql_field: SQL,
+        operator: str,
+        value: typing.Any,
+        model: BaseModel,
+        can_be_null: bool,
     ) -> SQL:
         sql_left = sql_field if self.is_text else SQL("%s::text", sql_field)
 
@@ -249,7 +261,7 @@ class _FieldSqlMixin(_FieldStubs):
         return sql
 
     def _condition_regex_to_sql(
-        self, sql_field: SQL, operator: str, value, can_be_null: bool
+        self, sql_field: SQL, operator: str, value: typing.Any, can_be_null: bool
     ) -> SQL:
         sql_left = sql_field if self.is_text else SQL("%s::text", sql_field)
         sql = SQL("%s%s%s", sql_left, SQL_OPERATORS[operator], str(value))
@@ -261,9 +273,9 @@ class _FieldSqlMixin(_FieldStubs):
         self,
         sql_field: SQL,
         operator: str,
-        value,
+        value: typing.Any,
         model: BaseModel,
-        _value_to_column,
+        _value_to_column: Callable[[typing.Any], typing.Any],
         can_be_null: bool,
     ) -> SQL:
         accept_null_value = False
@@ -286,7 +298,7 @@ class _FieldSqlMixin(_FieldStubs):
         return sql
 
     @staticmethod
-    def _condition_any_to_sql(sql_field: SQL, operator: str, value) -> SQL:
+    def _condition_any_to_sql(sql_field: SQL, operator: str, value: typing.Any) -> SQL:
         if isinstance(value, Query):
             subselect = value.subselect()
         elif isinstance(value, SQL):
@@ -418,7 +430,7 @@ class _FieldSqlMixin(_FieldStubs):
 
         return render
 
-    def _filter_in(self, getter, value) -> Callable:
+    def _filter_in(self, getter: Callable, value: typing.Any) -> Callable:
         assert isinstance(value, COLLECTION_TYPES) and value, (
             f"filter_function() 'in' operator expects a collection, not a {type(value)}"
         )
@@ -431,14 +443,19 @@ class _FieldSqlMixin(_FieldStubs):
         return lambda rec: getter(rec) in value
 
     def _filter_like(
-        self, records: M, field_expr: str, getter, operator: str, value
+        self,
+        records: M,
+        field_expr: str,
+        getter: Callable,
+        operator: str,
+        value: typing.Any,
     ) -> Callable:
         if operator.endswith("ilike"):
             unaccent = records.env.registry.get_ilike_normalizer(records.env)
 
         else:
 
-            def unaccent(x):
+            def unaccent(x: str) -> str:
                 return x
 
         pattern = value if isinstance(value, str) else self._get_pattern_text(value)
@@ -448,18 +465,22 @@ class _FieldSqlMixin(_FieldStubs):
         render = self._get_pattern_getter(records, field_expr, getter)
         return lambda rec: like_regex.match(unaccent(render(rec)))
 
-    def _filter_regex(self, records: M, field_expr: str, getter, value) -> Callable:
+    def _filter_regex(
+        self, records: M, field_expr: str, getter: Callable, value: typing.Any
+    ) -> Callable:
         regex = re.compile(str(value))
         render = self._get_pattern_getter(records, field_expr, getter)
         return lambda rec: regex.search(render(rec)) is not None
 
-    def _filter_inequality(self, records: M, getter, pyop, value) -> Callable:
+    def _filter_inequality(
+        self, records: M, getter: Callable, pyop: Callable, value: typing.Any
+    ) -> Callable:
         can_be_null = False
         if (null_value := self.falsy_value) is not None:
             value = self._get_inequality_comparand(value, records)
             can_be_null = pyop(null_value, value)
 
-        def is_inequality_satisfied(rec):
+        def is_inequality_satisfied(rec: BaseModel) -> bool:
             rec_value = getter(rec)
             try:
                 if rec_value is False or rec_value is None:

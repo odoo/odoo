@@ -163,14 +163,7 @@ class ApprovalDelegateWizard(models.TransientModel):
         approvers = self.env["approval.approver"].search(self._get_domain_approver())
 
         if approvers:
-            self.env.cr.execute(
-                """
-                SELECT id FROM approval_approver
-                WHERE id = ANY(%s)
-                FOR UPDATE
-                """,
-                [list(approvers.ids)],
-            )
+            approvers.lock_for_update(wait=True)
             approvers.invalidate_recordset(["state", "delegate_id"])
             approvers = approvers.filtered(
                 lambda a: a.state in self._delegatable_states(),

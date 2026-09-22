@@ -1394,15 +1394,7 @@ class ApprovalRequestLifecycle(models.Model):
         if not self.ids:
             return
 
-        self.env.cr.execute(
-            """
-            SELECT id FROM approval_request
-            WHERE id = ANY(%s)
-            ORDER BY id
-            FOR UPDATE
-            """,
-            [list(self.ids)],
-        )
+        self.lock_for_update(wait=True)
 
     def _lock_and_reload(self, with_approvers: bool = False) -> None:
         with trace.LIFECYCLE.span(
