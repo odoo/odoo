@@ -20,6 +20,7 @@ class GelatoController(Controller):
         receiver="sale.order:_receiver_for_gelato_webhook",
         receiver_event="gelato_order_status_updated",
         csrf=False,
+        typed=True,
     )
     def gelato_webhook(self):
         order_sudo = request.admission.subject

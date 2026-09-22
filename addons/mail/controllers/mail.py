@@ -305,6 +305,7 @@ class MailController(http.Controller):
         receiver="mixin.mail.thread:_receiver_for_unfollow_link",
         receiver_event="mail_unfollow",
         csrf=False,
+        typed=True,
     )
     def mail_action_unfollow(
         self, model: str, res_id: str, pid: str, token: str, **kwargs

@@ -29,6 +29,7 @@ class AsiaPayController(http.Controller):
         receiver="payment.transaction:_receiver_for_asiapay_webhook",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
     def asiapay_webhook(self, **data):
         """Process the payment data sent by AsiaPay to the webhook.

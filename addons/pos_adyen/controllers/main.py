@@ -19,6 +19,7 @@ class PosAdyenController(http.Controller):
         receiver_event="adyen_terminal",
         csrf=False,
         save_session=False,
+        typed=True,
     )
     def notification(self):
         adyen_pm_sudo = request.admission.subject

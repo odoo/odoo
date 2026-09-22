@@ -17,6 +17,7 @@ class CustomController(Controller):
         receiver="payment.transaction:_receiver_for_custom_process",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
     def custom_process_transaction(self, **post):
         _logger.info("Handling custom processing with data:\n%s", pprint.pformat(post))

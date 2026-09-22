@@ -24,6 +24,7 @@ class MailPluginController(http.Controller):
         scope="odoo.plugin.outlook",
         csrf=False,
         cors="*",
+        typed=True,
     )
     def modules_get(self, **kwargs):
         return {"modules": ["contacts", "crm"]}
@@ -34,8 +35,9 @@ class MailPluginController(http.Controller):
         auth="bearer",
         scope="odoo.plugin.outlook",
         cors="*",
+        typed=True,
     )
-    def res_partner_enrich_and_create_company(self, partner_id):
+    def res_partner_enrich_and_create_company(self, partner_id: int):
 
         partner = request.env["res.partner"].browse(partner_id).exists()
 
@@ -69,8 +71,9 @@ class MailPluginController(http.Controller):
         auth="bearer",
         scope="odoo.plugin.outlook",
         cors="*",
+        typed=True,
     )
-    def res_partner_enrich_and_update_company(self, partner_id):
+    def res_partner_enrich_and_update_company(self, partner_id: int):
         partner = request.env["res.partner"].browse(partner_id).exists()
 
         if not partner:
@@ -162,8 +165,15 @@ class MailPluginController(http.Controller):
         auth="bearer",
         scope="odoo.plugin.outlook",
         cors="*",
+        typed=True,
     )
-    def res_partner_get(self, email=None, name=None, partner_id=None, **kwargs):
+    def res_partner_get(
+        self,
+        email: str | None = None,
+        name: str | None = None,
+        partner_id: int | None = None,
+        **kwargs,
+    ):
 
         if not (partner_id or (name and email)):
             return {
@@ -237,8 +247,9 @@ class MailPluginController(http.Controller):
         auth="bearer",
         scope="odoo.plugin.outlook",
         cors="*",
+        typed=True,
     )
-    def res_partners_search(self, search_term, limit=30, **kwargs):
+    def res_partners_search(self, search_term: str, limit: int = 30, **kwargs):
         normalized_email = tools.email_normalize(search_term)
 
         if normalized_email:
@@ -263,8 +274,9 @@ class MailPluginController(http.Controller):
         auth="bearer",
         scope="odoo.plugin.outlook",
         cors="*",
+        typed=True,
     )
-    def res_partner_create(self, email, name, company):
+    def res_partner_create(self, email: str, name: str, company: int):
         notification_emails = (
             request.env["mail.alias.domain"]
             .sudo()
@@ -291,8 +303,11 @@ class MailPluginController(http.Controller):
         auth="bearer",
         scope="odoo.plugin.outlook",
         cors="*",
+        typed=True,
     )
-    def log_mail_content(self, model, res_id, message, attachments=None):
+    def log_mail_content(
+        self, model: str, res_id: int, message: str, attachments: list | None = None
+    ):
         if model not in self._mail_content_logging_models_whitelist():
             raise Forbidden()
 
@@ -312,6 +327,7 @@ class MailPluginController(http.Controller):
         auth="bearer",
         scope="odoo.plugin.outlook",
         cors="*",
+        typed=True,
     )
     def get_translations(self):
         return self._prepare_translations()

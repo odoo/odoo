@@ -76,8 +76,9 @@ class IoTController(IoTBoxLookup, http.Controller):
         receiver="iot.box:_receiver_for_handlers",
         receiver_event="iot_handlers",
         csrf=False,
+        typed=True,
     )
-    def get_handlers(self, identifier, auto):
+    def get_handlers(self, identifier: str, auto: bool):
         box = request.admission.subject
         if auto == "True" and not box.drivers_auto_update:
             raise Unauthorized(
@@ -376,6 +377,7 @@ class IoTLogController(IoTBoxLookup, http.Controller):
         receiver="iot.box:_receiver_for_logs",
         receiver_event="iot_log",
         csrf=False,
+        typed=True,
     )
     def receive_iot_log(self):
         IOT_LOG_LINE_SEPARATOR = b","

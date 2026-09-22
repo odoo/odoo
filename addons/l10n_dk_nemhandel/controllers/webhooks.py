@@ -11,8 +11,9 @@ class NemhandelWebhookController(http.Controller):
         receiver_event="nemhandel_new_message",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
-    def webhook_nemhandel_new_message(self, token):
+    def webhook_nemhandel_new_message(self, token: str):
         return self._trigger("l10n_dk_nemhandel.ir_cron_nemhandel_get_new_documents")
 
     @http.route(
@@ -23,8 +24,9 @@ class NemhandelWebhookController(http.Controller):
         receiver_event="nemhandel_message_state_update",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
-    def webhook_nemhandel_message_update(self, token):
+    def webhook_nemhandel_message_update(self, token: str):
         return self._trigger("l10n_dk_nemhandel.ir_cron_nemhandel_get_message_status")
 
     @http.route(
@@ -35,8 +37,9 @@ class NemhandelWebhookController(http.Controller):
         receiver_event="nemhandel_user_state_update",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
-    def webhook_nemhandel_user_update(self, token):
+    def webhook_nemhandel_user_update(self, token: str):
         return self._trigger(
             "l10n_dk_nemhandel.ir_cron_nemhandel_get_participant_status"
         )

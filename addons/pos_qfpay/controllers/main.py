@@ -15,6 +15,7 @@ class QFPayNotificationController(Controller):
         receiver_event="qfpay_terminal",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
     def qfpay_notify(self, **kwargs):
         """Receive a QFPay asynchronous payment/refund notification, admitted

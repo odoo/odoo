@@ -11,8 +11,9 @@ class PeppolWebhookController(http.Controller):
         receiver_event="peppol_new_message",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
-    def webhook_new_message(self, token):
+    def webhook_new_message(self, token: str):
         return self._trigger("account_peppol.ir_cron_peppol_get_new_documents")
 
     @http.route(
@@ -23,8 +24,9 @@ class PeppolWebhookController(http.Controller):
         receiver_event="peppol_message_state_update",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
-    def webhook_message_update(self, token):
+    def webhook_message_update(self, token: str):
         return self._trigger("account_peppol.ir_cron_peppol_get_message_status")
 
     @http.route(
@@ -35,8 +37,9 @@ class PeppolWebhookController(http.Controller):
         receiver_event="peppol_user_state_update",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
-    def webhook_user_update(self, token):
+    def webhook_user_update(self, token: str):
         return self._trigger("account_peppol.ir_cron_peppol_get_participant_status")
 
     def _trigger(self, cron_xmlid):

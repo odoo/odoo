@@ -21,6 +21,7 @@ from . import (
     _checker_shadowed_def,
     _checker_sql,
     _checker_tax_company,
+    _checker_typed_route,
     _checker_unlink,
 )
 
@@ -268,6 +269,15 @@ RULES: tuple[Rule, ...] = (
         "probe that must stay open takes `# noqa: E8528  <why>`",
     ),
     Rule(
+        "route-untyped",
+        "E8533",
+        "declare the parameters of a route a program calls: `typed=True` on a "
+        '`json2` route or one with `auth in {"bearer", "receiver"}`, and an '
+        "annotation on every parameter it names, so each one is coerced and "
+        "refused at the door instead of reaching the handler as a string, and "
+        "the OpenAPI document states the contract",
+    ),
+    Rule(
         "auth-method-outside-owner",
         "E8531",
         "an identity is a scheme on a receiver row, not a method on ir.http: put "
@@ -433,6 +443,10 @@ def _receiver_fail_open(unit: Unit) -> Iterable[object]:
     return _checker_receiver.check(unit.tree)
 
 
+def _route_untyped(unit: Unit) -> Iterable[object]:
+    return _checker_typed_route.check(unit.tree)
+
+
 def _auth_method_outside_owner(unit: Unit) -> Iterable[object]:
     return _checker_auth_method.check(unit.tree, unit.path)
 
@@ -521,6 +535,11 @@ CHECKERS: tuple[Checker, ...] = (
         _receiver_fail_open,
         _in_an_addon_outside_tests,
         frozenset({"receiver-fail-open"}),
+    ),
+    Checker(
+        _route_untyped,
+        _in_an_addon_outside_tests,
+        frozenset({"route-untyped"}),
     ),
     Checker(
         _auth_method_outside_owner,

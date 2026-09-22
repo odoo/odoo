@@ -18,6 +18,7 @@ class RedsysController(http.Controller):
         auth="receiver",
         receiver="payment.transaction:_receiver_for_redsys_return",
         methods=["GET"],
+        typed=True,
     )
     def redsys_return_from_checkout(self, **encoded_data):
         """Process the payment data sent by Redsys after redirection.
@@ -38,6 +39,7 @@ class RedsysController(http.Controller):
         receiver="payment.transaction:_receiver_for_redsys_webhook",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
     def redsys_webhook(self, **encoded_data):
         """Process the payment data sent by Redsys to the webhook.

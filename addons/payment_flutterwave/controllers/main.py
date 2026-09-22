@@ -49,6 +49,7 @@ class FlutterwaveController(http.Controller):
         auth="receiver",
         receiver="payment.transaction:_receiver_for_flutterwave_webhook",
         csrf=False,
+        typed=True,
     )
     def flutterwave_webhook(self):
         """Process the payment data sent by Flutterwave to the webhook.

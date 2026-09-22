@@ -66,6 +66,7 @@ class MercadoPagoPaymentController(http.Controller):
         methods=["GET"],
         auth="receiver",
         receiver="payment.transaction:_receiver_for_mercado_pago_return",
+        typed=True,
     )
     def mercado_pago_return_from_checkout(self, **data):
         """Process the payment data sent by Mercado Pago after redirection from checkout.
@@ -87,8 +88,9 @@ class MercadoPagoPaymentController(http.Controller):
         receiver="payment.transaction:_receiver_for_mercado_pago_webhook",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
-    def mercado_pago_webhook(self, reference, **_kwargs):
+    def mercado_pago_webhook(self, reference: str, **_kwargs):
         """Process the payment data sent by Mercado Pago to the webhook.
 
         :param str reference: The transaction reference embedded in the webhook URL.

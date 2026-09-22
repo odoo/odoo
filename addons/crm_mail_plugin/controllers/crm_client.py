@@ -12,8 +12,9 @@ class CrmClient(MailPluginController):
         auth="bearer",
         scope="odoo.plugin.outlook",
         cors="*",
+        typed=True,
     )
-    def log_single_mail_content(self, lead, message, **kw):
+    def log_single_mail_content(self, lead: int, message: str, **kw):
         crm_lead = request.env["crm.lead"].browse(lead)
         crm_lead.message_post(body=message)
 
@@ -23,8 +24,11 @@ class CrmClient(MailPluginController):
         auth="bearer",
         scope="odoo.plugin.outlook",
         cors="*",
+        typed=True,
     )
-    def crm_lead_get_by_partner_id(self, partner, limit=5, offset=0, **kwargs):
+    def crm_lead_get_by_partner_id(
+        self, partner: int, limit: int = 5, offset: int = 0, **kwargs
+    ):
         partner_instance = request.env["res.partner"].browse(partner)
         return {"leads": self._get_partner_leads(partner_instance, limit, offset)}
 
@@ -48,8 +52,9 @@ class CrmClient(MailPluginController):
         auth="bearer",
         scope="odoo.plugin.outlook",
         cors="*",
+        typed=True,
     )
-    def crm_lead_create(self, partner_id, email_body, email_subject):
+    def crm_lead_create(self, partner_id: int, email_body: str, email_subject: str):
         partner = request.env["res.partner"].browse(partner_id).exists()
         if not partner:
             return {"error": "partner_not_found"}

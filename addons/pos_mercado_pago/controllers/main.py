@@ -15,6 +15,7 @@ class PosMercadoPagoWebhook(http.Controller):
         receiver="pos.payment.method:_receiver_for_mercado_pago_terminal",
         receiver_event="mercado_pago_terminal",
         csrf=False,
+        typed=True,
     )
     def notification(self):
         """Process the notification sent by Mercado Pago (always JSON)."""

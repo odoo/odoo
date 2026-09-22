@@ -20,8 +20,9 @@ class RazorpayController(http.Controller):
         methods=["POST"],
         csrf=False,
         save_session=False,
+        typed=True,
     )
-    def razorpay_return_from_checkout(self, reference, **data):
+    def razorpay_return_from_checkout(self, reference: str, **data):
         """Process the payment data sent by Razorpay after redirection from checkout.
 
         The route is configured with save_session=False to prevent Odoo from creating a new session
@@ -48,6 +49,7 @@ class RazorpayController(http.Controller):
         auth="receiver",
         receiver="payment.transaction:_receiver_for_razorpay_webhook",
         csrf=False,
+        typed=True,
     )
     def razorpay_webhook(self):
         """Process the payment data sent by Razorpay to the webhook.

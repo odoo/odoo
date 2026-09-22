@@ -59,8 +59,9 @@ class CalendarController(http.Controller):
         auth="receiver",
         receiver="calendar.attendee:_receiver_for_invitation",
         receiver_event="calendar_invitation",
+        typed=True,
     )
-    def accept_meeting(self, token, id, **kwargs):
+    def accept_meeting(self, token: str, id: int, **kwargs):
         attendee = self._attendee_from_token(token, [("state", "!=", "accepted")])
         attendee.do_accept()
         return self.view_meeting(token, id)
@@ -71,8 +72,9 @@ class CalendarController(http.Controller):
         auth="receiver",
         receiver="calendar.attendee:_receiver_for_invitation",
         receiver_event="calendar_invitation",
+        typed=True,
     )
-    def accept_recurrence(self, token, id, **kwargs):
+    def accept_recurrence(self, token: str, id: int, **kwargs):
         attendee = self._attendee_from_token(token, [("state", "!=", "accepted")])
         if attendee:
             attendees = (
@@ -99,8 +101,9 @@ class CalendarController(http.Controller):
         auth="receiver",
         receiver="calendar.attendee:_receiver_for_invitation",
         receiver_event="calendar_invitation",
+        typed=True,
     )
-    def decline_meeting(self, token, id, **kwargs):
+    def decline_meeting(self, token: str, id: int, **kwargs):
         attendee = self._attendee_from_token(token, [("state", "!=", "declined")])
         attendee.do_decline()
         return self.view_meeting(token, id)
@@ -111,8 +114,9 @@ class CalendarController(http.Controller):
         auth="receiver",
         receiver="calendar.attendee:_receiver_for_invitation",
         receiver_event="calendar_invitation",
+        typed=True,
     )
-    def decline_recurrence(self, token, id, **kwargs):
+    def decline_recurrence(self, token: str, id: int, **kwargs):
         attendee = self._attendee_from_token(token, [("state", "!=", "declined")])
         if attendee:
             attendees = (
@@ -450,8 +454,9 @@ class CalendarController(http.Controller):
         auth="receiver",
         receiver="calendar.attendee:_receiver_for_invitation",
         receiver_event="calendar_invitation",
+        typed=True,
     )
-    def view_meeting(self, token, id, **kwargs):
+    def view_meeting(self, token: str, id: int, **kwargs):
         try:
             event_id = int(id)
         except TypeError, ValueError:

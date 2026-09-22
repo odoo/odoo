@@ -16,8 +16,9 @@ class PosMollie(http.Controller):
         type="http",
         save_session=False,
         csrf=False,
+        typed=True,
     )
-    def mollie_webhook(self, id, payload):
+    def mollie_webhook(self, id: str, payload: str):
         _logger.info("Received webhook from Mollie for payment '%s'", id)
         payment_method_sudo = request.admission.subject
         pos_session_id = request.admission.extra["payload"]["pos_session_id"]

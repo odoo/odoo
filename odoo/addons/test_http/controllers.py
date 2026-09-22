@@ -81,8 +81,9 @@ class TestHttp(http.Controller):
         type="http",
         auth="bearer",
         readonly=_readonly,
+        typed=True,
     )
-    def greeting_bearer(self, readonly=True):
+    def greeting_bearer(self, readonly: bool = True):
         assert self.env.user, "ORM should be initialized"
         assert self.env.cr.readonly == (
             str2bool(readonly) and is_readonly_cursor_enabled()
@@ -94,6 +95,7 @@ class TestHttp(http.Controller):
         type="http",
         auth="bearer",
         scope="test_http.greeting",
+        typed=True,
     )
     def greeting_bearer_scoped(self):
         return f"Tek'ma'te; user={self.env.user.login}; lang={self.env.lang}"
@@ -131,7 +133,7 @@ class TestHttp(http.Controller):
     def typed_list(self, vals: list[int] | None = None):
         return repr(vals)
 
-    @http.route("/test_http/echo-json2", type="json2", auth="none")
+    @http.route("/test_http/echo-json2", type="json2", auth="none", typed=True)
     def echo_json2(self, **kwargs):
         return kwargs
 

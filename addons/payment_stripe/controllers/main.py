@@ -93,6 +93,7 @@ class StripeController(http.Controller):
         receiver="payment.transaction:_receiver_for_stripe_notification",
         receiver_refusal="payment.transaction:_refuse_stripe_notification",
         csrf=False,
+        typed=True,
     )
     def stripe_webhook(self):
         """Process the payment data sent by Stripe to the webhook.

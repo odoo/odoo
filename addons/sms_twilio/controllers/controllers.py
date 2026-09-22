@@ -33,9 +33,15 @@ class SmsTwilioController(Controller):
         receiver_event="sms_twilio_status",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
     def update_sms_status(
-        self, uuid, SmsStatus=None, ErrorCode=None, ErrorMessage=None, **kwargs
+        self,
+        uuid: str,
+        SmsStatus: str | None = None,
+        ErrorCode: str | None = None,
+        ErrorMessage: str | None = None,
+        **kwargs,
     ):
         if SmsStatus not in TWILIO_TO_SMS_STATE:
             _logger.warning(

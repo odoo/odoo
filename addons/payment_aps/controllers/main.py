@@ -20,6 +20,7 @@ class APSController(http.Controller):
         methods=["POST"],
         csrf=False,
         save_session=False,
+        typed=True,
     )
     def aps_return_from_checkout(self, **data):
         """Process the payment data sent by APS after redirection.
@@ -48,6 +49,7 @@ class APSController(http.Controller):
         receiver="payment.transaction:_receiver_for_aps_webhook",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
     def aps_webhook(self, **data):
         """Process the payment data sent by APS to the webhook.

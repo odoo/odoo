@@ -18,6 +18,7 @@ class PaymobController(http.Controller):
         auth="receiver",
         receiver="payment.transaction:_receiver_for_paymob_return",
         methods=["GET"],
+        typed=True,
     )
     def paymob_return_from_checkout(self, **data):
         """Process the payment data sent by Paymob after redirection from checkout.
@@ -37,6 +38,7 @@ class PaymobController(http.Controller):
         receiver="payment.transaction:_receiver_for_paymob_webhook",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
     def paymob_webhook(self, **data):
         """Process the payment data sent by Paymob to the webhook.

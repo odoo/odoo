@@ -15,8 +15,9 @@ class PosVivaComController(http.Controller):
         receiver_event="viva_com_terminal",
         csrf=False,
         readonly=False,
+        typed=True,
     )
-    def notification(self, company_id, token):
+    def notification(self, company_id: int, token: str):
         _logger.info("notification received from Viva.com")
         payment_method_sudo = request.admission.subject
         if request.httprequest.data:

@@ -266,8 +266,9 @@ class PortalMailGroup(http.Controller):
         receiver_event="group_unsubscribe",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
-    def group_unsubscribe_oneclick(self, group_id, token, email):
+    def group_unsubscribe_oneclick(self, group_id: int, token: str, email: str):
         request.admission.subject._leave_group(request.admission.extra["email"])
         return Response(status=200)
 

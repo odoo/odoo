@@ -21,6 +21,7 @@ class MollieController(http.Controller):
         methods=["GET", "POST"],
         csrf=False,
         save_session=False,
+        typed=True,
     )
     def mollie_return_from_checkout(self, **data):
         """Process the payment data sent by Mollie after redirection from checkout.
@@ -49,6 +50,7 @@ class MollieController(http.Controller):
         receiver="payment.transaction:_receiver_for_mollie_notification",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
     def mollie_webhook(self, **data):
         """Process the payment data sent by Mollie to the webhook.

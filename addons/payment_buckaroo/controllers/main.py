@@ -20,6 +20,7 @@ class BuckarooController(http.Controller):
         methods=["POST"],
         csrf=False,
         save_session=False,
+        typed=True,
     )
     def buckaroo_return_from_checkout(self, **raw_data):
         """Process the payment data sent by Buckaroo after redirection from checkout.
@@ -48,6 +49,7 @@ class BuckarooController(http.Controller):
         receiver="payment.transaction:_receiver_for_buckaroo_webhook",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
     def buckaroo_webhook(self, **raw_data):
         """Process the payment data sent by Buckaroo to the webhook.

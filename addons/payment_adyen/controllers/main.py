@@ -241,6 +241,7 @@ class AdyenController(http.Controller):
         receiver="payment.transaction:_receiver_for_adyen_return",
         csrf=False,
         save_session=False,
+        typed=True,
     )
     def adyen_return_from_3ds_auth(self, **data):
         """Process the authentication data sent by Adyen after redirection from the 3DS1 page.
@@ -290,6 +291,7 @@ class AdyenController(http.Controller):
         auth="receiver",
         receiver="payment.provider:_receiver_for_adyen_webhook",
         csrf=False,
+        typed=True,
     )
     def adyen_webhook(self):
         """Process the data sent by Adyen to the webhook based on the event code.

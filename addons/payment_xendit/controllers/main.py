@@ -37,6 +37,7 @@ class XenditController(http.Controller):
         auth="receiver",
         receiver="payment.transaction:_receiver_for_xendit_webhook",
         csrf=False,
+        typed=True,
     )
     def xendit_webhook(self):
         """Process the payment data sent by Xendit to the webhook.

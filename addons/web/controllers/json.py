@@ -33,7 +33,9 @@ class WebJsonController(http.Controller):
             HTTPStatus.TEMPORARY_REDIRECT,
         )
 
-    @http.route("/json/1/<path:subpath>", auth="bearer", type="http", readonly=True)
+    @http.route(
+        "/json/1/<path:subpath>", auth="bearer", type="http", readonly=True, typed=True
+    )
     def web_json_1(self, subpath: str, **kwargs: str) -> Response:
         dbg.lifecycle.debug(
             "[json:%s] request: %s params=%s", subpath, dbg.req(), dbg.keys(kwargs)

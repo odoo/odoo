@@ -18,8 +18,11 @@ class NuveiController(http.Controller):
         auth="receiver",
         receiver="payment.transaction:_receiver_for_nuvei_return",
         methods=["GET"],
+        typed=True,
     )
-    def nuvei_return_from_checkout(self, tx_ref=None, error_access_token=None, **data):
+    def nuvei_return_from_checkout(
+        self, tx_ref: str | None = None, error_access_token: str | None = None, **data
+    ):
         """Process the payment data sent by Nuvei after redirection.
 
         :param str tx_ref: The optional reference of the transaction having been canceled/errored.
@@ -42,6 +45,7 @@ class NuveiController(http.Controller):
         receiver="payment.transaction:_receiver_for_nuvei_webhook",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
     def nuvei_webhook(self, **data):
         """Process the payment data sent by Nuvei to the webhook.

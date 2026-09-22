@@ -26,8 +26,11 @@ class DigestController(Controller):
         receiver_event="digest_unsubscribe",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
-    def digest_unsubscribe_oneclick(self, digest_id, token=None, user_id=None):
+    def digest_unsubscribe_oneclick(
+        self, digest_id: int, token: str | None = None, user_id: int | None = None
+    ):
         """Propose a one click button to the user to unsubscribe as defined in
         rfc8058. Only POST method is allowed preventing the risk that anti-spam
         trigger unwanted unsubscribe (scenario explained in the same rfc). Note:

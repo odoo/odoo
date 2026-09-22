@@ -53,6 +53,7 @@ class PaypalController(http.Controller):
         receiver="payment.transaction:_receiver_for_paypal_webhook",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
     def paypal_webhook(self):
         """Process the payment data sent by PayPal to the webhook.

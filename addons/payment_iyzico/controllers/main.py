@@ -19,8 +19,9 @@ class IyzicoController(http.Controller):
         methods=["POST"],
         csrf=False,
         save_session=False,
+        typed=True,
     )
-    def iyzico_return_from_payment(self, tx_ref="", **data):
+    def iyzico_return_from_payment(self, tx_ref: str = "", **data):
         """Process the payment data sent by Iyzico after redirection from checkout.
 
         The route is flagged with `save_session=False` to prevent Odoo from assigning a new session
@@ -47,6 +48,7 @@ class IyzicoController(http.Controller):
         receiver="payment.transaction:_receiver_for_iyzico_webhook",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
     def iyzico_webhook(self):
         """Process the payment data sent by Iyzico to the webhook.

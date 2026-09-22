@@ -15,8 +15,9 @@ class AutomationRuleController(Controller):
         methods=["GET", "POST"],
         csrf=False,
         save_session=False,
+        typed=True,
     )
-    def call_webhook_http(self, webhook_uuid, **kwargs):
+    def call_webhook_http(self, webhook_uuid: str, **kwargs):
         admission = request.admission
         rule = admission.subject
         data = get_webhook_request_payload()

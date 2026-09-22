@@ -44,8 +44,9 @@ class WebJson2Controller(http.Controller):
         type="json2",
         readonly=True,
         methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+        typed=True,
     )
-    def web_json_2_404(self, subpath=None):
+    def web_json_2_404(self, subpath: str | None = None):
         e = "Did you mean POST /json/2/<model>/<method>?"
         raise request.prepare_not_found_error(e)
 
@@ -56,6 +57,7 @@ class WebJson2Controller(http.Controller):
         type="json2",
         readonly=_web_json_2_rpc_readonly,
         save_session=False,
+        typed=True,
     )
     def web_json_2_rpc(
         self,

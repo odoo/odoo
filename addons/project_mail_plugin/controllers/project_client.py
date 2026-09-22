@@ -9,8 +9,9 @@ class ProjectClient(http.Controller):
         auth="bearer",
         scope="odoo.plugin.outlook",
         cors="*",
+        typed=True,
     )
-    def projects_search(self, search_term, limit=5):
+    def projects_search(self, search_term: str, limit: int = 5):
         projects = request.env["project.project"].search(
             [("name", "ilike", search_term)], limit=limit
         )
@@ -31,8 +32,11 @@ class ProjectClient(http.Controller):
         auth="bearer",
         scope="odoo.plugin.outlook",
         cors="*",
+        typed=True,
     )
-    def task_create(self, email_subject, email_body, project_id, partner_id):
+    def task_create(
+        self, email_subject: str, email_body: str, project_id: int, partner_id: int
+    ):
         partner = request.env["res.partner"].browse(partner_id).exists()
         if not partner:
             return {"error": "partner_not_found"}
@@ -65,7 +69,8 @@ class ProjectClient(http.Controller):
         auth="bearer",
         scope="odoo.plugin.outlook",
         cors="*",
+        typed=True,
     )
-    def project_create(self, name):
+    def project_create(self, name: str):
         record = request.env["project.project"].create({"name": name})
         return {"project_id": record.id, "name": record.name}

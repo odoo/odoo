@@ -55,6 +55,7 @@ class WorldlineController(http.Controller):
         receiver="payment.transaction:_receiver_for_worldline_webhook",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
     def worldline_webhook(self):
         """Process the payment data sent by Worldline to the webhook.

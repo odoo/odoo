@@ -39,11 +39,11 @@ class DocController(http.Controller):
         res.headers["X-Frame-Options"] = "deny"
         return res
 
-    @http.route("/doc-bearer/index.json", type="json2", auth="bearer")
+    @http.route("/doc-bearer/index.json", type="json2", auth="bearer", typed=True)
     def doc_bearer_index(self):
         return self.doc_index()
 
-    @http.route("/doc/index.json", type="json2", auth="user")
+    @http.route("/doc/index.json", type="json2", auth="user", typed=True)
     def doc_index(self):
         """Get a listing of all models, methods and fields, limited to their
         technical name and translated "human" name.
@@ -94,13 +94,19 @@ class DocController(http.Controller):
         return response
 
     @http.route(
-        "/doc-bearer/<model_name>.json", type="json2", auth="bearer", readonly=True
+        "/doc-bearer/<model_name>.json",
+        type="json2",
+        auth="bearer",
+        readonly=True,
+        typed=True,
     )
-    def doc_bearer_model(self, model_name):
+    def doc_bearer_model(self, model_name: str):
         return self.doc_model(model_name)
 
-    @http.route("/doc/<model_name>.json", type="json2", auth="user", readonly=True)
-    def doc_model(self, model_name):
+    @http.route(
+        "/doc/<model_name>.json", type="json2", auth="user", readonly=True, typed=True
+    )
+    def doc_model(self, model_name: str):
         """Get a complete listing of the fields and methods of one model: an
         enriched ``fields_get()`` plus, for each method, its signature,
         parameters and htmlified docstring.

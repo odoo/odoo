@@ -107,9 +107,15 @@ class MassMailController(http.Controller):
         receiver_event="mailing_unsubscribe",
         methods=["POST"],
         csrf=False,
+        typed=True,
     )
     def mailing_unsubscribe_oneclick(
-        self, mailing_id, document_id=None, email=None, hash_token=None, **post
+        self,
+        mailing_id: int,
+        document_id: int | None = None,
+        email: str | None = None,
+        hash_token: str | None = None,
+        **post,
     ):
         self.mailing_unsubscribe(
             mailing_id,
