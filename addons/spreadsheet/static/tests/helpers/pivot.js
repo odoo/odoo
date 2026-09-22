@@ -98,12 +98,14 @@ export async function insertPivotInSpreadsheet(model, pivotId, params) {
  * @param {object} [params.serverData]
  * @param {function} [params.mockRPC]
  * @param {"dynamic"|"static"} [params.pivotType]
+ * @param {boolean} [params.createMockApp]
  * @returns {Promise<{ model: OdooSpreadsheetModel, env: object, pivotId: string}>}
  */
 export async function createSpreadsheetWithPivot(params = {}) {
     const { model, env } = await createModelWithDataSource({
         mockRPC: params.mockRPC,
         serverData: params.serverData,
+        createMockApp: params.createMockApp,
     });
     const arch = params.arch || getBasicPivotArch();
     const pivotId = "PIVOT#1";
