@@ -5299,9 +5299,11 @@ class MailThread(models.AbstractModel):
         if "attachments" in request_list:
             res.many(
                 "attachments",
-                "_store_attachment_fields",
+                lambda res: (
+                    res.from_method("_store_attachment_fields", chatter_fields=kwargs.get("chatter_fields", False)),
+                    res.from_method("_store_thread_message_fields"),
+                ),
                 value=lambda t: t._get_mail_thread_data_attachments(),
-                fields_params={"chatter_fields": kwargs.get("chatter_fields", False)},
             )
             res.append({"areAttachmentsLoaded": True, "isLoadingAttachments": False})
         if "contact_fields" in request_list:
