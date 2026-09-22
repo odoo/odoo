@@ -34,7 +34,13 @@ class EventEventConfigurator(models.TransientModel):
     def check_event_id(self):
         error_messages = []
         for record in self:
-            if record.event_id.id != record.event_ticket_id.event_id.id:
+            # guard on the ticket being set, as the slot branch below does:
+            # otherwise a not-yet-chosen ticket is reported as a wrong one and
+            # the message renders the empty recordset's name
+            if (
+                record.event_ticket_id
+                and record.event_id.id != record.event_ticket_id.event_id.id
+            ):
                 error_messages.append(
                     _(
                         'Invalid ticket choice "%(ticket_name)s" for event "%(event_name)s".',
