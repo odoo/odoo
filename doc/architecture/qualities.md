@@ -39,8 +39,9 @@ the two columns.
 ## Scenario 0 — The floors a gate holds
 
 > **Stimulus** `./gates.sh --perf` (`tests/perf`, 2026-09-22).
-> **Environment** A scratch `base` database the suite installs and drops
-> (176 models), superuser, one transaction; the in-memory tier for the last row.
+> **Environment** Two scratch databases the suite installs and drops — `base`
+> (176 models) and the four-module set (127 modules, 672 models) — superuser,
+> one transaction; the in-memory tier for its two rows. About 95 s per run.
 > **Response** Statement counts as exact ratchets, Python time (wall minus the
 > driver's share, median of rounds) and the warm registry load as one-sided
 > floors with 25 % tolerance, in `tests/perf/floors.json`.
@@ -56,6 +57,9 @@ the two columns.
 | warm `Registry loaded in`, `base` | — | 0.285 s |
 | in-memory tier, `create` one record, no computes | — | 83 µs |
 | in-memory tier, per stored compute at batch size one | — | 28.8 µs |
+| four-module set (`sale,purchase,stock,account`): `sale.order.create`, 3 lines + flush | 12 | 18.35 ms |
+| four-module set: create + `action_confirm` + flush | 43 | 44.2 ms |
+| four-module set: `res.partner.create` one record + flush | 4 | 6.83 ms |
 
 The same suite run on the tree one commit earlier read the write loop at 69 ms
 (the gate's first red) and the single create at 2.17 ms: what

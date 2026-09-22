@@ -63,13 +63,12 @@ def odoo_config(tmp_path_factory):
     return config
 
 
-@pytest.fixture(scope="session")
-def base_db(odoo_config):
+def _install(modules: str, label: str):
     if not pg_reachable():
         pytest.skip("no reachable PostgreSQL")
     if dropdb_path() is None:
         pytest.skip("dropdb not on PATH")
-    name = f"odoo_perf_{uuid.uuid4().hex[:12]}"
+    name = f"odoo_perf_{label}_{uuid.uuid4().hex[:10]}"
     proc = subprocess.run(
         [
             sys.executable,
@@ -79,20 +78,20 @@ def base_db(odoo_config):
             "-d",
             name,
             "-i",
-            "base",
+            modules,
             "--stop-after-init",
             "--log-level",
             "warn",
         ],
         capture_output=True,
         text=True,
-        timeout=900,
+        timeout=1800,
         check=False,
     )
     if proc.returncode != 0:
         subprocess.run([dropdb_path(), "--if-exists", "--force", name], check=False)
         pytest.fail(
-            f"could not install base:\n{proc.stdout[-4000:]}\n{proc.stderr[-4000:]}"
+            f"could not install {modules}:\n{proc.stdout[-4000:]}\n{proc.stderr[-4000:]}"
         )
     try:
         yield name
@@ -102,3 +101,15 @@ def base_db(odoo_config):
             check=False,
             capture_output=True,
         )
+
+
+@pytest.fixture(scope="session")
+def base_db(odoo_config):
+    yield from _install("base", "base")
+
+
+# the four-module set qualities.md measures: the order flows exercise the
+# compute graph, the x2many write path and the confirmation's stock moves
+@pytest.fixture(scope="session")
+def sale_db(odoo_config):
+    yield from _install("sale,purchase,stock,account", "sale")
