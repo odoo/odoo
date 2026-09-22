@@ -159,7 +159,7 @@ class TestRegexFallbackCommentsAndBounds(unittest.TestCase):
         from odoo.tools.assets import esm_bridges, esm_graph
 
         src = (
-            '/** @import { DynamicList }'
+            "/** @import { DynamicList }"
             ' from "@web/model/relational_model/dynamic_list" */\n'
             'import { real } from "@web/core/registry";\n'
         )
