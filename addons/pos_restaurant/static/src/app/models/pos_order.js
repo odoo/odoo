@@ -1,5 +1,8 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
+import { taxKey } from "@point_of_sale/app/models/utils/currency";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 
 patch(PosOrder.prototype, {
@@ -43,7 +46,10 @@ patch(PosOrder.prototype, {
         if (numCustomers === 0) {
             return 0;
         }
-        return this.totalDue / numCustomers;
+        return (
+            (this.priceIncl - this.splitPaymentLines.reduce((acc, l) => acc + l["priceIncl"], 0)) /
+            numCustomers
+        );
     },
     setBooked(booked) {
         this.uiState.booked = booked;
@@ -208,6 +214,83 @@ patch(PosOrder.prototype, {
                 (maxIndex, course) => (course.index > maxIndex ? course.index : maxIndex),
                 0
             ) + 1
+        );
+    },
+
+    get splitPaymentLines() {
+        return this.lines.filter((line) => line.isSplitPaymentLine);
+    },
+
+    get amountAllreadySplitPaid() {
+        return this.splitPaymentLines.reduce((acc, line) => acc - line.priceIncl, 0);
+    },
+
+    get isSplitPaymentAvailable() {
+        const paidAmount = this.amountPaid;
+        if (paidAmount <= 0) {
+            return false;
+        }
+        if (paidAmount >= this.totalDue) {
+            return false;
+        }
+        return true;
+    },
+
+    get splitPaymentProduct() {
+        const splitProduct = this.config.split_payment_product_id;
+        if (!splitProduct) {
+            this.dialog.add(AlertDialog, {
+                title: _t("No split payment product found"),
+                body: _t("The split payment product seems misconfigured."),
+            });
+            return false;
+        }
+        return splitProduct;
+    },
+
+    transferSplitPaymentInfosTo(order) {
+        order.table_id = this.table_id;
+        order.partner_id = this.partner_id;
+        this.partner_id = false;
+    },
+
+    get splitPaymentShares() {
+        const existingSplitLines = new Map(
+            this.splitPaymentLines.map((line) => [taxKey(line.tax_ids), line])
+        );
+
+        return this.splitPaymentBaseLines.map((baseLine) => {
+            const key = taxKey(baseLine.tax_ids);
+            const old = existingSplitLines.get(key);
+            return {
+                key,
+                baseLine,
+                old,
+                delta: (old ? old.price_unit : 0) - baseLine.price_unit,
+            };
+        });
+    },
+
+    get splitPaymentBaseLines() {
+        const splitProduct = this.splitPaymentProduct;
+        const lines = this.getOrderlines().filter((l) => !l.isSplitPaymentLine);
+        const baseLines = lines.map((line) => line.getBaseLine());
+        accountTaxHelpers.add_tax_details_in_base_lines(baseLines, this.company_id);
+        accountTaxHelpers.round_base_lines_tax_details(baseLines, this.company_id);
+        const amount = this.amountAllreadySplitPaid + this.amountPaid;
+
+        return accountTaxHelpers.prepare_global_discount_lines(
+            baseLines,
+            this.company_id,
+            "fixed",
+            this.isRefund ? -amount : amount,
+            {
+                computation_key: "split_payment",
+                grouping_function: () => ({
+                    grouping_key: { product_id: splitProduct },
+                    raw_grouping_key: { product_id: splitProduct.id },
+                }),
+            }
         );
     },
 });

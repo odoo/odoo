@@ -1112,6 +1112,22 @@ export class PosOrder extends PosOrderAccounting {
             line.delete();
         });
     }
+
+    /**
+     * Moves all payment lines from the current order to a target order,
+     * preserving the payment method and amount.
+     *
+     * @param {PosOrder} order - The target order receiving the payments.
+     */
+    transferPaymentLinesTo(order) {
+        for (const line of this.payment_ids) {
+            const result = order.addPaymentline(line.payment_method_id);
+            if (result.status && result.data) {
+                result.data.setAmount(line.amount);
+            }
+            this.removePaymentline(line);
+        }
+    }
 }
 
 const keyMaker = (prepLine) => {
