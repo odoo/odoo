@@ -205,11 +205,11 @@ class IterationMixin(_ModelStubs):
         target = item.id
         return sum(1 for id_ in self._ids if id_ == target)
 
-    def __add__(self, other: Self) -> Self:
+    def __add__(self, other: typing.Any) -> Self:
         return self.concat(other)
 
     @api.private
-    def concat(self, *args: Self) -> Self:
+    def concat(self, *args: typing.Any) -> Self:
         ids = list(self._ids)
         for arg in args:
             try:
@@ -222,7 +222,7 @@ class IterationMixin(_ModelStubs):
                 ) from None
         return self.browse(ids)
 
-    def __sub__(self, other: Self) -> Self:
+    def __sub__(self, other: typing.Any) -> Self:
         try:
             if self._name != other._name:
                 raise TypeError(f"inconsistent models in: {self} - {other}")
@@ -235,7 +235,7 @@ class IterationMixin(_ModelStubs):
                 f"unsupported operand types in: {self} - {other!r}"
             ) from None
 
-    def __and__(self, other: Self) -> Self:
+    def __and__(self, other: typing.Any) -> Self:
         try:
             if self._name != other._name:
                 raise TypeError(f"inconsistent models in: {self} & {other}")
@@ -250,11 +250,11 @@ class IterationMixin(_ModelStubs):
                 f"unsupported operand types in: {self} & {other!r}"
             ) from None
 
-    def __or__(self, other: Self) -> Self:
+    def __or__(self, other: typing.Any) -> Self:
         return self.union(other)
 
     @api.private
-    def union(self, *args: Self) -> Self:
+    def union(self, *args: typing.Any) -> Self:
         if len(args) == 1:
             arg = args[0]
             try:

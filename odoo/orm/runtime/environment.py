@@ -52,9 +52,10 @@ if typing.TYPE_CHECKING:
         ResCountryProtocol,
         ResCurrencyProtocol,
         ResLangProtocol,
+        ResUsersApikeysScopeProtocol,
         ResUsersProtocol,
     )
-    from .._typing import BaseModel, Field
+    from .._typing import BaseModel, Field, ModelLike
     from ..components.core import OrmCore
     from ..primitives import IdType
     from .backend import StorageBackend
@@ -254,6 +255,11 @@ class Environment(Mapping[str, "BaseModel"]):
     def __getitem__(  # type: ignore[overload-overlap]
         self, model_name: typing.Literal["res.users"]
     ) -> ResUsersProtocol: ...
+
+    @typing.overload
+    def __getitem__(  # type: ignore[overload-overlap]
+        self, model_name: typing.Literal["res.users.apikeys.scope"]
+    ) -> ResUsersApikeysScopeProtocol: ...
 
     @typing.overload
     def __getitem__(self, model_name: str) -> BaseModel: ...
@@ -510,7 +516,7 @@ class Environment(Mapping[str, "BaseModel"]):
     def flush_all(self) -> None:
         self.transaction.flush(self)
 
-    def is_protected(self, field: Field, record: BaseModel) -> bool:
+    def is_protected(self, field: Field, record: ModelLike) -> bool:
         return self.core.is_protected(field, record.id)
 
     def protecting(self, what: typing.Any, records: typing.Any = None) -> _Protecting:
@@ -525,7 +531,7 @@ class Environment(Mapping[str, "BaseModel"]):
     def is_to_compute(self, field: Field, record: BaseModel) -> bool:
         return self.core.is_pending(field, record.id)
 
-    def add_to_compute(self, field: Field, records: BaseModel) -> None:
+    def add_to_compute(self, field: Field, records: ModelLike) -> None:
         if not records:
             return
         assert field.store and field.compute, (
@@ -540,7 +546,7 @@ class Environment(Mapping[str, "BaseModel"]):
             )
         self.core.schedule(field, records._ids)
 
-    def remove_to_compute(self, field: Field, records: BaseModel) -> None:
+    def remove_to_compute(self, field: Field, records: ModelLike) -> None:
         if not records:
             return
         self.core.mark_done(field, records._ids)

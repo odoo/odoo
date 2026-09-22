@@ -204,7 +204,9 @@ class Field[T](
     tree_siblings: tuple[Field, ...] = ()
     inherited_field: typing.Any = None
 
-    comodel_name: str | None = None
+    # a relational field's comodel, typed as the name every reader indexes the
+    # environment with; unset (None at runtime) on any other field
+    comodel_name: str = None  # type: ignore[assignment]
     context: ContextType = frozendict({})
 
     delegate: bool = False

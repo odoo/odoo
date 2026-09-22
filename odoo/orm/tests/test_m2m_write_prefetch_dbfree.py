@@ -29,7 +29,7 @@ class Line(models.Model):
         tags = self.env["mwp.tag"].search([])
         for line in self:
             code = line.code
-            line.tag_ids = tags.filtered(lambda tag, code=code: tag.name == code)
+            line.tag_ids = tags.filtered(lambda tag: tag["name"] == code)  # noqa: B023
 
 
 def test_a_compute_assigning_a_many2many_per_record_reads_the_batch_once():

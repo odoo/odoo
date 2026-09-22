@@ -47,6 +47,7 @@ from .backend import (
 )
 
 if typing.TYPE_CHECKING:
+    from .._typing import ModelLike
     from ..components.storage import DictBackend
     from ..fields import Field
     from ..models.base import BaseModel
@@ -113,7 +114,7 @@ class InMemoryColumnStore:
         self.storage = storage
 
     def read(
-        self, model: BaseModel, column: str, ids: typing.Collection[int]
+        self, model: ModelLike, column: str, ids: typing.Collection[int]
     ) -> dict[int, typing.Any]:
         rows = self.storage.get_rows(model._table, list(ids))
         return {id_: _load(row.get(column)) for id_, row in rows.items()}

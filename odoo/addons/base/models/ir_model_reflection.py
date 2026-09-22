@@ -148,8 +148,8 @@ class IrModelConstraint(models.Model):
         model: Any,
         conname: str,
         type: str,
-        definition: str,
-        module: str,
+        definition: str | None,
+        module: str | None,
         message: str | None = None,
     ) -> Self | None:
         if not module:

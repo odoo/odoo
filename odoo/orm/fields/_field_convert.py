@@ -9,6 +9,7 @@ from odoo.tools.misc import PENDING, SENTINEL
 
 if typing.TYPE_CHECKING:
     from .._typing import BaseModel, IdType, ModelLike
+    from .base import Field
 
     M = typing.TypeVar("M", bound=BaseModel)
 
@@ -75,7 +76,9 @@ class _FieldConvertMixin[T](_FieldStubs):
     ) -> typing.Any:
         langs_dict = {}
         found = False
-        for cache_key, sub_cache in record.env.core.iter_context_caches(self):
+        for cache_key, sub_cache in record.env.core.iter_context_caches(
+            typing.cast("Field", self)
+        ):
             if (value := sub_cache.get(record_id, SENTINEL)) is not SENTINEL:
                 found = True
                 if value is not None:
@@ -92,7 +95,7 @@ class _FieldConvertMixin[T](_FieldStubs):
     def _get_flat_column_value(
         self, record: ModelLike, record_id: IdType
     ) -> typing.Any:
-        flat = record.env.core.get_field_data_or_none(self)
+        flat = record.env.core.get_field_data_or_none(typing.cast("Field", self))
         return SENTINEL if flat is None else flat.get(record_id, SENTINEL)
 
     def _get_column_update_plain(
@@ -100,12 +103,12 @@ class _FieldConvertMixin[T](_FieldStubs):
     ) -> typing.Any:
         env = record.env
         if not self._is_context_dependent(env):
-            value = env.core.get_field_data(self)[record_id]
+            value = env.core.get_field_data(typing.cast("Field", self))[record_id]
             if value is PENDING:
                 return PENDING
             return self.convert_to_column(value, record, validate=False)
         found = False
-        for _key, cache in env.core.iter_context_caches(self):
+        for _key, cache in env.core.iter_context_caches(typing.cast("Field", self)):
             if (value := cache.get(record_id, SENTINEL)) is not SENTINEL:
                 found = True
                 if value is not PENDING:
@@ -121,7 +124,9 @@ class _FieldConvertMixin[T](_FieldStubs):
         found = False
         saw_pending = False
         company_index = record.env.registry.field_depends_context[self].index("company")
-        for ctx_key, cache in record.env.core.iter_context_caches(self):
+        for ctx_key, cache in record.env.core.iter_context_caches(
+            typing.cast("Field", self)
+        ):
             if (value := cache.get(record_id, SENTINEL)) is not SENTINEL:
                 found = True
                 if value is PENDING:
@@ -148,7 +153,9 @@ class _FieldConvertMixin[T](_FieldStubs):
         if self.translate is True:
             return self._get_column_update_model_translation(record, record_id)
         if self.translate:
-            value = record.env.core.get_field_data(self)[record_id]
+            value = record.env.core.get_field_data(typing.cast("Field", self))[
+                record_id
+            ]
             return PsycopgJson(value) if value else None
         if not self.company_dependent:
             return self._get_column_update_plain(record, record_id)

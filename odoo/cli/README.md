@@ -23,6 +23,7 @@ merged by `start`).
 | `neutralize.py` | `neutralize` | `DatabaseCommand` | `bootstrap_config` |
 | `obfuscate.py` | `obfuscate` | `DatabaseCommand` | `bootstrap_config` |
 | `cloc.py` | `cloc` | `DatabaseCommand` | `bootstrap_config` only when `-d` is given or `-p` is not |
+| `stubs.py` | `stubs` | `DatabaseCommand` | `bootstrap_config`; writes `odoo_registry_stubs.pyi` (one class per model of the database's registry, every field typed, relational fields typed to their comodel's class, the models' own methods) for mypy through the repo-root `mypy_registry_plugin.py`, which types `env["<name>"]` from it |
 | `deploy.py` | `deploy` | `Command` | **never** — an HTTP client, no config, no logging setup |
 | `scaffold.py` | `scaffold` | `Command` | **never** |
 | `help.py` | `help` | `Command` | **never** |

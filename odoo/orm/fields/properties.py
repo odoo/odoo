@@ -203,9 +203,12 @@ class Properties(Field):
             and self.definition_record
             and self.definition_record_field
         ):
-            definition_record_field = model.env[
-                model._fields[self.definition_record].comodel_name
-            ]._fields[self.definition_record_field]
+            definition_record_field = typing.cast(
+                "PropertiesDefinition",
+                model.env[model._fields[self.definition_record].comodel_name]._fields[
+                    self.definition_record_field
+                ],
+            )
             if self not in definition_record_field.properties_fields:
                 definition_record_field.properties_fields += (self,)
         return super().setup(model)
@@ -903,7 +906,8 @@ class Properties(Field):
                 return value or False
 
             if not value and definition["type"] in RELATIONAL_PROPERTY_TYPES:
-                return record.env.get(definition.get("comodel"))
+                comodel = definition.get("comodel")
+                return record.env.get(comodel) if comodel else None
             return value
 
         return get_property
@@ -1087,9 +1091,11 @@ class Properties(Field):
         def unaccent(x: SQL) -> SQL:
             return x
 
+        unaccent_fn: typing.Callable[..., typing.Any] = unaccent
+
         if operator.endswith("like"):
             if operator.endswith("ilike"):
-                unaccent = model.env.registry.unaccent
+                unaccent_fn = model.env.registry.unaccent
             if "=" in operator:
                 value = str(value)
             else:
@@ -1114,9 +1120,9 @@ class Properties(Field):
             sql_right = SQL("%s", value)
             sql = SQL(
                 "%s%s%s",
-                unaccent(sql_left),
+                unaccent_fn(sql_left),
                 sql_operator,
-                unaccent(sql_right),
+                unaccent_fn(sql_right),
             )
             if operator in Domain.NEGATIVE_OPERATORS:
                 sql = SQL("(%s OR %s IS NULL)", sql, sql_left)

@@ -138,8 +138,9 @@ def get_stored_translations(
     field: BaseString, record: ModelLike
 ) -> dict[str, str] | None:
     record.flush_recordset([field.name])
-    stored = record.env.backend.columns.read(record, field.name, [record.id])
-    res = _as_translations(stored.get(record.id))
+    record_id = typing.cast("int", record.id)
+    stored = record.env.backend.columns.read(record, field.name, [record_id])
+    res = _as_translations(stored.get(record_id))
     _debug.perf.count(
         "field.translate.stored_translations_read",
         model=field.model_name,

@@ -34,6 +34,9 @@ from .mixins._metadata import _ModelMetadataMixin
 from .mixins._properties import _PropertiesMixin
 from .mixins._query import _QueryMixin
 
+if typing.TYPE_CHECKING:
+    from ..runtime import Environment
+
 
 class BaseModel(
     CreateMixin,
@@ -65,6 +68,12 @@ class BaseModel(
     metaclass=MetaModel,
 ):
     __slots__ = ["_ids", "_prefetch_ids", "env"]
+
+    if typing.TYPE_CHECKING:
+        # the mixins keep `env: Any` for their own shortcuts; a model class an
+        # addon writes sees the environment, and through the registry stubs'
+        # plugin the model each `env["<name>"]` answers
+        env: Environment
 
     _register: bool = False
 

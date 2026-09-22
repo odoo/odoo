@@ -76,9 +76,9 @@ class _RegistryFieldsMixin(_RegistryStubs):
         return result
 
     @functools.cached_property
-    def order_key_inverses(self) -> dict[Field, tuple[Field, ...]]:
+    def order_key_inverses(self) -> dict[Field, tuple[typing.Any, ...]]:
         field_inverses = self.field_inverses
-        result: dict[Field, tuple[Field, ...]] = {}
+        result: dict[Field, tuple[typing.Any, ...]] = {}
         for model_cls in self.models.values():
             fields = model_cls._fields
             many2ones = tuple(

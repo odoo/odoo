@@ -264,7 +264,11 @@ class Binary(Field[bytes | typing.Literal[False]]):
             env,
             self.model_name,
             self.name,
-            [(record.id, value) for record, value in record_values if value],
+            [
+                (typing.cast("int", record.id), value)
+                for record, value in record_values
+                if value
+            ],
         )
         _debug.lifecycle(
             "field.binary.attachments_created",
@@ -315,7 +319,7 @@ class Binary(Field[bytes | typing.Literal[False]]):
                         records.env,
                         self.model_name,
                         self.name,
-                        [(record.id, value) for record in missing],
+                        [(typing.cast("int", record.id), value) for record in missing],
                     )
             else:
                 _debug.logic(

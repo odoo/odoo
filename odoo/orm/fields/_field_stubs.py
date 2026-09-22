@@ -33,7 +33,7 @@ class _FieldStubs:
         inherited_field: typing.Any
         is_temporal: bool
         groups: str | None
-        inverse_name: str | None
+        inverse_name: str
         _column_type: tuple[str, str] | None
 
         @property

@@ -33,6 +33,9 @@ from ..primitives import (
 )
 
 if typing.TYPE_CHECKING:
+    from odoo.db import Cursor
+
+    from .._typing import ModelLike
     from ..domain import Domain
     from ..fields import Field
     from ..models.base import BaseModel
@@ -277,7 +280,7 @@ class PostgresSequenceStore:
 @typing.runtime_checkable
 class ColumnStore(typing.Protocol):
     def read(
-        self, model: BaseModel, column: str, ids: typing.Collection[int]
+        self, model: ModelLike, column: str, ids: typing.Collection[int]
     ) -> dict[int, typing.Any]: ...
 
     def write(
@@ -318,7 +321,7 @@ class PostgresColumnStore:
     __slots__ = ()
 
     def read(
-        self, model: BaseModel, column: str, ids: typing.Collection[int]
+        self, model: ModelLike, column: str, ids: typing.Collection[int]
     ) -> dict[int, typing.Any]:
         if not ids:
             return {}
@@ -342,7 +345,8 @@ class PostgresColumnStore:
             return
         table = SQL.identifier(model._table).code
         column_sql = SQL.identifier(column).code
-        model.env.cr.executemany(  # noqa: E8501  both names are SQL.identifier().code; executemany takes no SQL params
+        cr = typing.cast("Cursor", model.env.cr)
+        cr.executemany(  # noqa: E8501  both names are SQL.identifier().code; executemany takes no SQL params
             f"UPDATE {table} SET {column_sql} = %s WHERE id = %s",
             [(value, id_) for id_, value in rows],
         )
@@ -764,7 +768,7 @@ class PostgresBackend:
         columns: list[str],
         col_fields: list[Field],
     ) -> list[int]:
-        cr = model.env.cr
+        cr = typing.cast("Cursor", model.env.cr)
         ids: list[int] = []
         use_copy = (
             not COPY_DISABLED
@@ -793,7 +797,7 @@ class PostgresBackend:
                 returning_ids=True,
                 binary=True,
             )
-            ids.extend(batch_ids)
+            ids.extend(batch_ids or ())
             subprof.stop()
             subprof.report(
                 _orm_crud,

@@ -37,7 +37,8 @@ class One2many(_RelationalMulti):
     type = "one2many"
     is_one2many = True
 
-    inverse_name: str | None = None
+    # set by every declaration and read as a field name; None only before setup
+    inverse_name: str = None  # type: ignore[assignment]
     copy: bool = False
     _inverse_is_computed: bool = False
 
@@ -303,7 +304,7 @@ class One2many(_RelationalMulti):
         comodel: BaseModel,
         create: bool,
     ) -> None:
-        inverse = typing.cast("str", self.inverse_name)
+        inverse = self.inverse_name
         inverse_field = comodel._fields[inverse]
         reference_model_field = (
             inverse_field.model_field if inverse_field.is_many2one_reference else None

@@ -869,6 +869,7 @@ class _RelationalMulti(_Relational):
 
         elif isinstance(value, (list, tuple)):
             comodel = record.env[self.comodel_name]
+            browse: typing.Callable[[typing.Any], BaseModel]
             if record and not record.id:
 
                 def browse(it: typing.Any) -> BaseModel:

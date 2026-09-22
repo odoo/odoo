@@ -119,8 +119,8 @@ class IrModelConstraintProtocol(RecordsetProtocol, Protocol):
         model: Any,
         conname: str,
         type: str,
-        definition: str,
-        module: str,
+        definition: str | None,
+        module: str | None,
         message: str | None = None,
     ) -> Any: ...
 
@@ -173,6 +173,8 @@ class IrUiViewProtocol(RecordsetProtocol, Protocol):
     ) -> Any: ...
 
     def _get_custom_views(self, models: Any = None) -> Any: ...
+
+    def _get_view_refs(self, node: Any) -> dict[str, str]: ...
 
     def _check_module_views(self, module: str) -> None: ...
 
@@ -242,6 +244,10 @@ class ResLangProtocol(RecordsetProtocol, Protocol):
     def get_installed(self) -> list[tuple[str, str]]: ...
 
 
+class ResUsersApikeysScopeProtocol(RecordsetProtocol, Protocol):
+    def _rules(self) -> Any: ...
+
+
 class ResUsersProtocol(RecordsetProtocol, Protocol):
     company_id: Any
     company_ids: Any
@@ -294,4 +300,5 @@ FRAMEWORK_MODEL_PROTOCOLS: dict[str, type] = {
     "res.currency": ResCurrencyProtocol,
     "res.lang": ResLangProtocol,
     "res.users": ResUsersProtocol,
+    "res.users.apikeys.scope": ResUsersApikeysScopeProtocol,
 }

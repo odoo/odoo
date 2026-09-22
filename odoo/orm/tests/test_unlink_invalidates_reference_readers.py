@@ -27,8 +27,8 @@ class Pointer(models.Model):
     @api.depends("res_model", "res_id")
     def _compute_res_name(self):
         for record in self:
-            target = self.env[record.res_model].browse(record.res_id)
-            record.res_name = target.exists().name or False
+            target = self.env[record.res_model or ""].browse(record.res_id)
+            record.res_name = target.exists()["name"] or False
 
     ref = fields.Reference(selection=[("uirr.target", "Target")])
     ref_name = fields.Char(compute="_compute_ref_name")

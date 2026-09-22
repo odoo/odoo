@@ -37,7 +37,7 @@ class Payment(models.Model):
 
     def _search_invoice_ids(self, operator, value):
         invoices = self.env["tsf.invoice"].browse(value)
-        return [("id", "in", invoices.payment_id.ids)]
+        return [("id", "in", invoices["payment_id"].ids)]
 
     @api.depends("invoice_ids.state")
     def _compute_state(self):

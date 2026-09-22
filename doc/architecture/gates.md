@@ -46,7 +46,16 @@ over `odoo.orm`, `odoo.db`, `odoo.libs`, `odoo.http`, `odoo.service`,
 `gates.sh` keeps that bare environment under `~/.cache/odoo-gates/`. `mypy.ini`
 holds `odoo.orm` to `disallow_untyped_defs` and `disallow_incomplete_defs`
 outside its test trees (0 on 2026-09-22, from 384 that morning): a function
-added to the ORM without a complete signature fails the core lane.
+added to the ORM without a complete signature fails the core lane. `BaseModel`
+declares `env: Environment` (the mixins keep `Any` for their own shortcuts), so
+an addon's `self.env` is typed; `odoo-bin stubs -d <db>` writes
+`odoo_registry_stubs.pyi` from a live registry and `mypy_registry_plugin.py`
+(repo root, standalone so the checker never runs the framework bootstrap)
+types every `env["<name>"]` from it. Measured on `sale/models` + `stock/models`
+against the four-module set's stubs with `check_untyped_defs`: 3 222 readings
+without the plugin, 2 854 with it -- 413 attribute complaints resolved, 56
+findings that are real (a `Char` handed to `dict.get`, a recordset assigned
+where an `OrderedSet` was declared, `with_company` given `Any | BaseModel`).
 `doc/architecture/factcheck.sh` derives the figures these pages state (mixin
 composition, base-model reaches, executed statements, dispatch sites) from the
 classes and the pin tests, and fails when a page stops citing one.

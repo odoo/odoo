@@ -203,8 +203,10 @@ class Many2one(_Relational):
             id_ = (value[0] or None) if value else None
         elif isinstance(value, dict):
             comodel = record.env[self.comodel_name]
-            origin = comodel.browse(value.get("id"))
-            id_ = comodel.new(value, origin=origin).id
+            origin = comodel.browse(value.get("id") or ())
+            id_ = typing.cast(
+                "int | NewId | None", comodel.new(value, origin=origin).id
+            )
         elif validate and value:
             raise ValueError(f"Wrong value for {self}: {value!r}")
         else:
@@ -304,7 +306,10 @@ class Many2one(_Relational):
             self._reject_command_tuple(value)
             return value[0] if value else False
         if isinstance(value, dict):
-            return record.env[self.comodel_name].new(value).id
+            return typing.cast(
+                "int | NewId | typing.Literal[False]",
+                record.env[self.comodel_name].new(value).id,
+            )
         raise ValueError(f"Wrong value for {self}: {value!r}")
 
     def _reject_command_tuple(self, value: tuple) -> None:
@@ -341,7 +346,9 @@ class Many2one(_Relational):
                 uid=records.env.uid,
             )
             try:
-                records.env[self.comodel_name].browse(cache_value).check_access("read")
+                records.env[self.comodel_name].browse(
+                    (cache_value,) if cache_value else ()
+                ).check_access("read")
             except AccessError as e:
                 raise AccessError(
                     records.env._("Failed to write field %s", self) + "\n" + str(e)

@@ -20,6 +20,21 @@ if typing.TYPE_CHECKING:
     from .environment import Environment
 
 
+class _Unaccent(typing.Protocol):
+    @typing.overload
+    def __call__(self, x: SQL) -> SQL: ...
+    @typing.overload
+    def __call__(self, x: str) -> str: ...
+    @typing.overload
+    def __call__(self, x: psycopg_sql.Composable) -> psycopg_sql.Composed: ...
+
+
+@typing.overload
+def _unaccent(x: SQL) -> SQL: ...
+@typing.overload
+def _unaccent(x: str) -> str: ...
+@typing.overload
+def _unaccent(x: psycopg_sql.Composable) -> psycopg_sql.Composed: ...
 def _unaccent(
     x: SQL | str | psycopg_sql.Composable,
 ) -> SQL | str | psycopg_sql.Composed:
@@ -131,9 +146,8 @@ class _RegistryCapabilitiesMixin(_RegistryStubs):
     __slots__ = ()
 
     has_unaccent: FunctionStatus
-
     has_trigram: bool
-    unaccent: typing.Callable[..., SQL | str | psycopg_sql.Composed]
+    unaccent: _Unaccent
 
     _text_transforms: _TextTransforms | None
     _ilike_folded: dict[str, str]
