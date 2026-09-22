@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields
-from odoo.tests import Form
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 import random
 import logging
@@ -578,25 +577,21 @@ class TestArCommon(AccountTestInvoicingCommon):
                 invoice_values.pop('invoice_date')
                 cls.demo_invoices[invoice_key] = cls._create_invoice_ar(**invoice_values)
         else:
+            form_fields = ('move_type', 'ref', 'partner_id', 'invoice_payment_term_id', 'invoice_date', 'invoice_incoterm_id', 'journal_id')
             for key, values in test_invoices_map.items():
-                values['invoice_line_ids'] = [line_data for _, _, line_data in values['invoice_line_ids']]
-                with Form(cls.env['account.move'].with_context(default_move_type=values['move_type'])) as invoice_form:
-                    invoice_form.ref = values['ref']
-                    invoice_form.partner_id = values['partner_id']
-                    invoice_form.invoice_payment_term_id = values['invoice_payment_term_id']
-                    invoice_form.invoice_date = values['invoice_date']
-                    if values.get('invoice_incoterm_id'):
-                        invoice_form.invoice_incoterm_id = values['invoice_incoterm_id']
-                    for line in values['invoice_line_ids']:
-                        with invoice_form.invoice_line_ids.new() as line_form:
-                            line_form.product_id = cls.env['product.product'].browse(line.get('product_id'))
-                            line_form.price_unit = line.get('price_unit')
-                            line_form.quantity = line.get('quantity')
-                            if line.get('tax_ids'):
-                                line_form.tax_ids = cls.env['account.tax'].browse(line.get('tax_ids'))
-                            line_form.name = 'xxxx'
-                            line_form.account_id = cls.company_data['default_account_revenue']
-                cls.demo_invoices[key] = invoice_form.save()
+                cls.demo_invoices[key] = cls._create_invoice(
+                    **{field: values[field] for field in form_fields if field in values},
+                    invoice_line_ids=[
+                        cls._prepare_invoice_line(
+                            product_id=line['product_id'],
+                            price_unit=line.get('price_unit', 0.0),
+                            quantity=line['quantity'],
+                            name='xxxx',
+                            account_id=cls.company_data['default_account_revenue'],
+                        )
+                        for _command, _id, line in values['invoice_line_ids']
+                    ],
+                )
 
     # -------------------------------------------------------------------------
     # Helpers
