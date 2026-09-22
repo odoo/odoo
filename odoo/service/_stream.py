@@ -42,7 +42,8 @@ class StreamRuntime:
                     "SELECT pg_try_advisory_lock(%s, %s)",
                     [zlib.crc32(_LEASE_KEY.encode()) & 0x7FFFFFFF, _db_key(db_name)],
                 )
-                taken = bool(cursor.fetchone()[0])
+                row = cursor.fetchone()
+                taken = bool(row and row[0])
             except Exception:
                 cursor.close()
                 raise
@@ -128,7 +129,7 @@ def process_streams(db_name: str) -> None:
             return
         if not RUNTIME.lease(db_name, registry):
             return
-        registry[STREAM_MODEL]._reconcile(db_name, RUNTIME)
+        registry[STREAM_MODEL]._reconcile(db_name, RUNTIME)  # type: ignore[attr-defined]
 
 
 def shutdown() -> None:

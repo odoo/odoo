@@ -229,7 +229,7 @@ def _closed_field_names(
 def _touches_hidden(
     env: Environment, hidden: dict[str, set[str]], model_name: str, path: str
 ) -> bool:
-    model = model_name
+    model: str | None = model_name
     for token in str(path).split("."):
         if model is None or model not in env:
             return False
@@ -329,7 +329,7 @@ def default_projection(rules: ScopeRules, records: Any) -> list[str]:
 
 class Argument(NamedTuple):
     kind: str
-    index: int | None
+    position: int | None
     name: str
     key: str | None = None
 
@@ -443,8 +443,12 @@ def arguments(method: str, kind: str, args: Any, kwargs: Mapping[str, Any]) -> l
         if argument.kind != kind:
             continue
         value = kwargs.get(argument.name)
-        if value is None and argument.index is not None and len(args) > argument.index:
-            value = args[argument.index]
+        if (
+            value is None
+            and argument.position is not None
+            and len(args) > argument.position
+        ):
+            value = args[argument.position]
         if argument.key is not None:
             value = value.get(argument.key) if isinstance(value, dict) else None
         if value is not None:
