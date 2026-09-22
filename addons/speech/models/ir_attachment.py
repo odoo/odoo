@@ -18,6 +18,7 @@ from ..tools.engines import (
     DEFAULT_SPEECH_MIMETYPE,
     can_transcribe,
     engine_error,
+    is_recording,
     synthesis_engines,
 )
 
@@ -77,9 +78,13 @@ class IrAttachment(models.Model):
 
     @api.depends("mimetype", "company_id")
     def _compute_can_transcribe(self) -> None:
-        purposes = self._transcript_purposes()
+        self.can_transcribe = False
+        recordings = self.filtered(lambda a: is_recording(a.mimetype or ""))
+        if not recordings:
+            return
+        purposes = recordings._transcript_purposes()
         readable = {}
-        for attachment in self:
+        for attachment in recordings:
             company = attachment.company_id or self.env.company
             purpose = purposes.get(attachment.id)
             key = (attachment.mimetype, company, purpose)
