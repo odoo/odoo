@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from lxml import html
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
@@ -61,7 +62,11 @@ class TestMailingUi(MassMailCommon, HttpCaseWithUserDemo):
         self.assertTrue(mailing)
         self.assertIn('data-snippet="s_title"', mailing.body_arch)
         self.assertTrue(mailing.body_arch.startswith('<div'))
-        self.assertIn('data-snippet="s_title"', mailing.body_html)
+        body = html.fromstring(mailing.body_html)
+        self.assertTrue(
+            body.xpath("//h1[normalize-space(.)='Your Title']"),
+            "Expected an <h1> containing 'Your Title'",
+        )
         self.assertTrue(mailing.body_html.startswith('<table'))
 
     def test_mailing_editor_theme_tour(self):
