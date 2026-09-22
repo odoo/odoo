@@ -45,7 +45,10 @@ class SaleOrderLine(models.Model):
     def _search_event_booth_pending_ids(self, operator, value):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
-        return [('event_booth_registration_ids.event_booth_id', operator, value)]
+        domain = Domain('event_booth_registration_ids.event_booth_id', operator, value)
+        if operator == 'in' and False in value:  # relation may be falsy
+            domain |= Domain('event_booth_registration_ids', '=', False)
+        return domain
 
     @api.constrains('event_booth_registration_ids')
     def _check_event_booth_registration_ids(self):
