@@ -30,7 +30,10 @@ def test_01_cow_views_inherit_on_module_update(env):
     parent_view.with_context(force_delete=True, active_test=False)._get_specific_views().unlink()
     child_view.with_context(force_delete=True, active_test=False)._get_specific_views().unlink()
     # Change `inherit_id` so the module update will set it back to the XML value
-    child_view.write({'inherit_id': parent_view.id, 'arch': child_view.arch_db.replace('o_footer_copyright_name', 'text-center')})
+    child_view.write({
+        'inherit_id': parent_view.id,
+        'arch': child_view.arch_db.replace('id="language_selector_hook"', 't-if="custom_html"'),
+    })
     # Trigger COW on view
     child_view.with_context(website_id=env.ref('base.default_website').id).write({'name': 'COW Website 1'})
     child_cow_view = child_view._get_specific_views()
