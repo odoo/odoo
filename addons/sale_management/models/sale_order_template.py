@@ -74,9 +74,10 @@ class SaleOrderTemplate(models.Model):
     share_template = fields.Boolean(string="Share", default=True)
     team_ids = fields.Many2many(string="Sales Team", comodel_name="crm.team")
     user_has_access = fields.Boolean(
-        string="Can User access",
+        string="Can User Access",
         compute="_compute_user_has_access",
         search="_search_user_has_access",
+        compute_sudo=True,
     )
     has_productless_lines = fields.Boolean(compute="_compute_has_productless_lines")
 
@@ -102,33 +103,22 @@ class SaleOrderTemplate(models.Model):
     @api.depends_context("uid")
     @api.depends("team_ids", "share_template", "team_ids.member_ids", "team_ids.user_id")
     def _compute_user_has_access(self):
-        for template in self:
-            template.user_has_access = (
-                template.share_template
-                and (
-                    not template.team_ids
-                    or self.env.user in template.team_ids.member_ids
-                    or self.env.user in template.team_ids.user_id
-                )
-            ) or template.create_uid == self.env.user
+        accessible = self.filtered_domain(self._search_user_has_access('in', {True}))
+        accessible.user_has_access = True
+        (self - accessible).user_has_access = False
 
     def _search_user_has_access(self, operator, value):
-        if operator not in {"=", "!="}:
+        if operator != 'in':
             return NotImplemented
 
-        if (operator == "=" and value) or (operator == "!=" and not value):
-            x2many_operator = "in"
-        else:
-            x2many_operator = "not in"
-
         return (
-            Domain("share_template", operator, value)
+            Domain("share_template", '!=', False)
             & (
-                Domain("team_ids", operator, not value)
-                | Domain("team_ids.member_ids", x2many_operator, self.env.user.ids)
-                | Domain("team_ids.user_id", x2many_operator, self.env.user.ids)
+                Domain("team_ids", '=', False)
+                | Domain("team_ids.member_ids", 'in', self.env.user.ids)
+                | Domain("team_ids.user_id", 'in', self.env.user.ids)
             )
-        ) | Domain("create_uid", x2many_operator, self.env.user.ids)
+        ) | Domain("create_uid", 'in', self.env.user.ids)
 
     @api.depends("sale_order_template_line_ids")
     def _compute_has_productless_lines(self):
