@@ -283,6 +283,44 @@ def test_mypy_daemon_sees_regenerated_models(tmp_path, union):
         renamed = run("recheck")
         assert renamed.returncode == 1, renamed.stdout + renamed.stderr
         assert "Model 'stub.author' is absent" in renamed.stdout
+        if not union:
+            with model_test_env(Author, Book, Tag) as env:
+                relation = env["stub.book"]._fields["author_id"]
+            client.write_text(
+                "from typing import Literal, assert_type\n"
+                "from odoo.api import Environment\n"
+                "def lookup(env: Environment) -> None:\n"
+                "    assert_type(env['stub.book'].mapped('author_id.name'), "
+                "list[str | Literal[False]])\n"
+            )
+            for field, expected in (
+                (fields.Char(), None),
+                (fields.Integer(), "assert-type"),
+                (None, "Unknown field 'name'"),
+                (fields.Char(), None),
+            ):
+                revision = next(revisions)
+                stub.write_text(
+                    render(
+                        [
+                            (
+                                "stub.book",
+                                {"author_id": relation},
+                            ),
+                            (
+                                "stub.author",
+                                {"name": field} if field is not None else {},
+                            ),
+                        ]
+                    )
+                )
+                os.utime(stub, (revision, revision))
+                changed = run("recheck")
+                assert changed.returncode == int(expected is not None), (
+                    changed.stdout + changed.stderr
+                )
+                if expected is not None:
+                    assert expected in changed.stdout
         stub.unlink()
         missing = run("recheck")
         assert missing.returncode == 1, missing.stdout + missing.stderr
@@ -323,6 +361,66 @@ def test_mypy_preserves_literal_union_models_and_checks_every_name(tmp_path):
     assert "Model 'stub.authr' is absent" in errors[1]
     assert 'has no attribute "action_publish"' in errors[2]
     assert "union-attr" in errors[2]
+
+
+def test_mapped_preserves_scalar_lists_and_related_recordsets(tmp_path):
+    with model_test_env(Author, Book, Tag) as env:
+        author = env["stub.author"].create({"name": "Author"})
+        books = env["stub.book"].create(
+            [
+                {"title": "First", "pages": 10, "author_id": author.id},
+                {"title": "Second", "pages": 20, "author_id": author.id},
+            ]
+        )
+        assert books.mapped("pages") == [10, 20]
+        assert books.mapped("author_id") == author
+        assert books.mapped(lambda book: book.author_id) == author
+        assert books[:0].mapped("author_id") == author[:0]
+        assert books.mapped("") is books
+        source = render_registry(env.registry)
+
+    result = _run_mypy(
+        tmp_path,
+        source,
+        "from typing import Any, Literal, assert_type\n"
+        "from odoo.api import Environment\n"
+        "from odoo.models import BaseModel\n"
+        "from odoo_registry_stubs import StubBook, StubAuthor\n"
+        "class Other:\n"
+        "    def mapped(self, value: str) -> int: return 1\n"
+        "def generic(records: BaseModel, related: BaseModel) -> None:\n"
+        "    assert_type(records.mapped(lambda record: related), BaseModel)\n"
+        "    assert_type(records.mapped(''), BaseModel)\n"
+        "    assert_type(records.mapped('unknown'), Any)\n"
+        "    assert_type(Other().mapped('unknown'), int)\n"
+        "def valid(env: Environment, path: str, "
+        "choice: Literal['pages', 'author_id']) -> None:\n"
+        "    books = env['stub.book']\n"
+        "    assert_type(books.mapped('pages'), list[int])\n"
+        "    assert_type(books.mapped('author_id'), StubAuthor)\n"
+        "    assert_type(books[:0].mapped('author_id'), StubAuthor)\n"
+        "    assert_type(books.mapped('author_id.book_ids'), StubBook)\n"
+        "    assert_type(books.mapped('author_id.name'), list[str | Literal[False]])\n"
+        "    assert_type(books.mapped(''), StubBook)\n"
+        "    assert_type(books.mapped(lambda book: book.author_id), StubAuthor)\n"
+        "    assert_type(books.mapped(lambda book: book.pages), list[int])\n"
+        "    assert_type(books.mapped(lambda book: book.author_id if book.pages else book.pages), Any)\n"
+        "    assert_type(books.mapped(lambda book: getattr(book, 'unknown')), Any)\n"
+        "    assert_type(books.mapped(path), Any)\n"
+        "    assert_type(books.mapped(choice), list[int] | StubAuthor)\n"
+        "def invalid(env: Environment) -> None:\n"
+        "    env['stub.book'].mapped('author_id').missing_method()\n"
+        "    env['stub.book'].mapped('author_id.naem')\n"
+        "    env['stub.book'].mapped('pages.name')\n"
+        "    env['stub.book'].mapped('action_publish')\n",
+    )
+    errors = [line for line in result.stdout.splitlines() if ": error:" in line]
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert len(errors) == 4, result.stdout + result.stderr
+    assert '"StubAuthor" has no attribute "missing_method"' in errors[0]
+    assert "Unknown field 'naem'" in errors[1]
+    assert "Cannot traverse non-relational field" in errors[2]
+    assert "Unknown field 'action_publish'" in errors[3]
 
 
 def test_with_company_accepts_company_records_and_preserves_receiver_type(tmp_path):

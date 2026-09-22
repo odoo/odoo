@@ -55,6 +55,11 @@ types every `env["<name>"]` from it. With generated registry types loaded, an
 unknown literal model name is an error; dynamic strings retain the base type.
 Finite unions of literal names retain the union of their model types and check
 every alternative against the generated registry.
+On generated recordsets, `mapped()` uses literal field paths to distinguish
+scalar lists from related recordsets, including dotted paths and empty paths.
+Unknown fields and scalar traversal are errors. Record-valued callbacks retain
+their recordset type; dynamic paths and mixed scalar/record callbacks remain
+`Any`. Field metadata changes recheck mapped callers in a running daemon.
 A literal lookup with missing or empty registry types reports a setup error.
 Regenerating the stub rechecks model lookups in the running mypy daemon.
 Generated methods preserve staticmethod and classmethod binding, and model

@@ -15,6 +15,25 @@ from .conftest import REPO_ROOT, requires_pg
 pytestmark = requires_pg
 
 
+def test_mapped_returns_related_recordsets_and_scalar_lists(base_db):
+    with Registry(base_db).cursor() as cr:
+        env = api.Environment(cr, 1, {})
+        parent = env["res.partner"].create({"name": "Mapped parent"})
+        children = env["res.partner"].create(
+            [
+                {"name": "First", "parent_id": parent.id},
+                {"name": "Second", "parent_id": parent.id},
+            ]
+        )
+
+        assert children.mapped("name") == ["First", "Second"]
+        assert children.mapped("parent_id") == parent
+        assert children.mapped("parent_id.name") == ["Mapped parent"]
+        assert children.mapped(lambda child: child.parent_id) == parent
+        assert children[:0].mapped("parent_id") == parent[:0]
+        assert children.mapped("") is children
+
+
 def test_company_switch_keeps_the_recordset_model(base_db):
     with Registry(base_db).cursor() as cr:
         env = api.Environment(cr, 1, {})
@@ -65,10 +84,15 @@ def test_stubs_command_types_a_real_registry(base_db, tmp_path):
     )
     client = tmp_path / "client.py"
     client.write_text(
+        "from typing import Literal, assert_type\n"
         "from odoo.api import Environment\n"
+        "from odoo_registry_stubs import ResPartner\n"
         "def use(env: Environment) -> None:\n"
         "    partner = env['res.partner'].search([], limit=1)\n"
         "    partner.address_get(['contact'])\n"
+        "    assert_type(partner.mapped('parent_id'), ResPartner)\n"
+        "    assert_type(partner.mapped('name'), list[str | Literal[False]])\n"
+        "    assert_type(partner.mapped(lambda record: record.parent_id), ResPartner)\n"
         "    partner.with_company(env['res.company']).address_get(['contact'])\n"
         "    print(env['res.users'].SELF_READABLE_FIELDS)\n"
         "    print(env['res.users'].SELF_WRITEABLE_FIELDS)\n"
