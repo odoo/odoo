@@ -1,0 +1,503 @@
+{
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "title": "Odoo RPC",
+    "version": "19.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/json/2": {
+      "delete": {
+        "operationId": "delete_json_2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "subpath": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          }
+        },
+        "security": []
+      },
+      "get": {
+        "operationId": "get_json_2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "subpath": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          }
+        },
+        "security": []
+      },
+      "patch": {
+        "operationId": "patch_json_2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "subpath": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "operationId": "post_json_2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "subpath": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          }
+        },
+        "security": []
+      },
+      "put": {
+        "operationId": "put_json_2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "subpath": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          }
+        },
+        "security": []
+      }
+    },
+    "/json/2/{__model__}/{__method__}": {
+      "post": {
+        "operationId": "post_json_2_model_method",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "__model__",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "__method__",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/json/2/{subpath}": {
+      "delete": {
+        "operationId": "delete_json_2_subpath",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subpath",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          }
+        },
+        "security": []
+      },
+      "get": {
+        "operationId": "get_json_2_subpath",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subpath",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          }
+        },
+        "security": []
+      },
+      "patch": {
+        "operationId": "patch_json_2_subpath",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subpath",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "operationId": "post_json_2_subpath",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subpath",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          }
+        },
+        "security": []
+      },
+      "put": {
+        "operationId": "put_json_2_subpath",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subpath",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          }
+        },
+        "security": []
+      }
+    },
+    "/json/version": {
+      "delete": {
+        "operationId": "delete_json_version",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      },
+      "get": {
+        "operationId": "get_json_version",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      },
+      "patch": {
+        "operationId": "patch_json_version",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "operationId": "post_json_version",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      },
+      "put": {
+        "operationId": "put_json_version",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/web/version": {
+      "delete": {
+        "operationId": "delete_web_version",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      },
+      "get": {
+        "operationId": "get_web_version",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      },
+      "patch": {
+        "operationId": "patch_web_version",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "operationId": "post_web_version",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      },
+      "put": {
+        "operationId": "put_web_version",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/xmlrpc/2/{service}": {
+      "post": {
+        "operationId": "post_xmlrpc_2_service",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "service",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/xmlrpc/{service}": {
+      "post": {
+        "operationId": "post_xmlrpc_service",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "service",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    }
+  }
+}

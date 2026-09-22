@@ -69,6 +69,7 @@ database, and `test_checkers.py` does exactly that.
 | `_checker_egress.py` | `raw-egress`, `secret-in-environ` |
 | `_checker_credential_storage.py` | `credential-storage` |
 | `_checker_receiver.py` | `receiver-fail-open` |
+| `_checker_typed_route.py` | `route-untyped` |
 | `_checker_auth_method.py` | `auth-method-outside-owner` |
 | `_checker_band_range.py` | `hand-rolled-range` |
 | `_checker_row_counter.py` | `row-counter-in-test` |
@@ -126,6 +127,17 @@ one, website's `public`, is not a new scheme). An identity is a scheme on a rece
 row or a resolver's verifier, never a fourth method -- `mail_plugin`'s `outlook` and
 `calendar`'s attendee token were the two that went that way before the rule.
 `hand-rolled-range` (E8532) counts models that declare a numeric `<x>_min`/`<x>_max` (or `min_<x>`/`max_<x>`) pair without `mixin.band` or a `mixin.score.*` scale. A range that classifies a value belongs on the mixin -- half-open, overlap-checked, scoped -- because a pair rolled by hand is inclusive in one model and half-open in the next, and `credit.grade`'s integer pair over a float score proposed no grade between 79 and 80. Ratcheted: a tolerance, a slider or a filter bound is a pair and not a scale, so the floor names the debt and moving a scale onto the mixin lowers it.
+`route-untyped` (E8533) counts a route a program calls -- `type="json2"`, or
+`auth in {"bearer", "receiver"}` -- that does not declare its parameters: no
+`typed=True`, or `typed=True` over a named parameter with no annotation. The second
+half is what makes it worth counting, because `typed=True` on a handler that takes
+only `**kwargs` declares nothing and would satisfy a shallower rule. A declared
+parameter is coerced by `odoo/http/_params.py` and a malformed call is refused at
+the door, and the OpenAPI document states the contract instead of an empty object.
+Hard zero, reached in one change across the four repos (126 routes: 77 here, 40 in
+agromarin, 9 in enterprise); `_type_machine_routes.py` beside the checker is the
+fixer that declared 81 of them from the rule's own converters and the defaults.
+
 `receiver-fail-open` (E8528) counts routes that take calls from machines without
 declaring who may make them: `auth="public"` or `"none"` with `csrf=False`. Since
 2026-09-21 it is a fact of the routing map, not of the handler: a route that admits
