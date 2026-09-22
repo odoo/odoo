@@ -588,7 +588,9 @@ class HrEmployee(models.Model):
     @api.model
     def get_public_holidays_data(self, date_start, date_end):
         self = self._get_contextual_employee()
-        employee_tz = timezone(self._get_schedule_tz() if self else self.env.user.tz or "utc")
+        employee_tz = timezone(
+            self._get_schedule_tz() if self else self.env.user.tz or "utc"
+        )
         public_holidays = self._get_public_holidays(date_start, date_end).sorted(
             "date_from"
         )
@@ -634,13 +636,24 @@ class HrEmployee(models.Model):
             ]
         )
 
+    def _calendar_companies(self):
+        """The companies a calendar screen about this employee may read.
+
+        The one the employee belongs to, and nothing else -- which is already
+        what the day grid does, through the company `hr.employee._get_unusual_days`
+        hands to `resource.calendar`. Reading `env.companies` instead let a
+        sister company's days land on this employee's calendar, and made the
+        grid and the side panel of the same screen disagree about a day.
+        """
+        return self.company_id or self.env.company
+
     def _get_public_holidays(self, date_start, date_end):
         leaves = self.env["resource.schedule.exception"]
         return leaves.search(
             leaves._get_domain_public_holidays(
                 date_start,
                 date_end,
-                companies=self.env.companies,
+                companies=self._calendar_companies(),
                 calendars=self.resource_calendar_id,
             )
         )
@@ -681,7 +694,7 @@ class HrEmployee(models.Model):
         domain = [
             ("start_date", "<=", end_date),
             ("end_date", ">=", start_date),
-            ("company_id", "in", self.env.companies.ids),
+            ("company_id", "in", self._calendar_companies().ids),
             "|",
             ("resource_calendar_id", "=", False),
             ("resource_calendar_id", "in", self.resource_calendar_id.ids),
