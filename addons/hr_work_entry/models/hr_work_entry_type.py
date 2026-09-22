@@ -8,39 +8,47 @@ _debug = DebugLog(__name__)
 class HrWorkEntryType(models.Model):
     _name = "hr.work.entry.type"
     _description = "HR Work Entry Type"
+    _inherit = ["mixin.mail.thread"]
     _order = "sequence, id"
 
     name = fields.Char(
         translate=True,
         required=True,
+        tracking=True,
     )
     display_code = fields.Char(
         size=3,
         translate=True,
+        tracking=True,
         help="This code can be changed, it is only for a display purpose (3 letters max)",
     )
     code = fields.Char(
         string="Payroll Code",
         required=True,
+        tracking=True,
         help="Careful, the Code is used in many references, changing it could lead to unwanted changes.",
     )
     external_code = fields.Char(
-        help="Use this code to export your data to a third party"
+        tracking=True,
+        help="Use this code to export your data to a third party",
     )
     color = fields.Integer(default=0)
     sequence = fields.Integer(default=25)
     active = fields.Boolean(
         default=True,
+        tracking=True,
         help="If the active field is set to false, it will allow you to hide the work entry type without removing it.",
     )
     country_id = fields.Many2one(
         comodel_name="res.country",
+        tracking=True,
         domain=lambda self: [("id", "in", self.env.companies.country_id.ids)],
     )
     country_code = fields.Char(related="country_id.code")
     is_leave = fields.Boolean(
         string="Time Off",
         default=False,
+        tracking=True,
         help="Allow the work entry type to be linked with time off types.",
     )
     is_work = fields.Boolean(
@@ -53,10 +61,12 @@ class HrWorkEntryType(models.Model):
     amount_rate = fields.Float(
         string="Rate",
         default=1.0,
+        tracking=True,
         help="If you want the hours should be paid double, the rate should be 200%.",
     )
     is_extra_hours = fields.Boolean(
         string="Added to Monthly Pay",
+        tracking=True,
         help="Check this setting if you want the hours to be considered as extra time and added as a bonus to the basic salary.",
     )
 
