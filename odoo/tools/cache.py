@@ -363,28 +363,6 @@ class ormcache:
         self.key = unsafe_eval(code, {_METHOD_NAME: self.method, **arg_globals})
 
 
-class ormcache_context(ormcache):
-    def __init__(self, *args: str, keys: tuple[str, ...], skiparg: None = None) -> None:
-        assert skiparg is None, "ormcache_context() no longer supports skiparg"
-        warnings.warn(
-            "Since 19.0, use ormcache directly, context values are available as `self.env.context.get`",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        self.keys = keys
-        super().__init__(*args)
-
-    def set_key(self) -> None:
-        assert self.method is not None
-        sign = signature(self.method)
-        cont_expr = (
-            "(context or {})" if "context" in sign.parameters else "self.env.context"
-        )
-        keys_expr = "tuple(%s.get(k) for k in %r)" % (cont_expr, self.keys)
-        self.args += (keys_expr,)
-        super().set_key()
-
-
 class _StatsLine:
     __slots__ = ["counter", "method", "nb_entries", "sz_entries_max", "sz_entries_sum"]
 

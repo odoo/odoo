@@ -1,6 +1,6 @@
 import unittest
 
-from odoo.tools.cache import ormcache, ormcache_context
+from odoo.tools.cache import ormcache
 
 
 class TestOrmcacheUnknownKwargs(unittest.TestCase):
@@ -23,10 +23,6 @@ class TestOrmcacheUnknownKwargs(unittest.TestCase):
     def test_an_invented_keyword_raises(self):
         with self.assertRaises(TypeError):
             ormcache("self.id", lru_size=99)  # type: ignore[call-arg]
-
-    def test_ormcache_context_does_not_reopen_the_hole(self):
-        with self.assertRaises(TypeError):
-            ormcache_context("self.id", keys=("lang",), cach="stable")  # type: ignore[call-arg]
 
 
 def _shadows_the_method(self, __ormcache_method, value):

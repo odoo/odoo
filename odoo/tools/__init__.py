@@ -18,7 +18,7 @@ from odoo.libs.numbers import (
 from odoo.libs.parse_version import parse_version
 from odoo.libs.set_expression import SetDefinitions, SetExpressionError
 
-from .cache import TransactionMemo, ormcache, ormcache_context
+from .cache import TransactionMemo, ormcache
 from .config import config
 from .convert import (
     convert_csv_import,
@@ -200,7 +200,6 @@ __all__ = [
     "mute_logger",
     "normalize_identifier",
     "ormcache",
-    "ormcache_context",
     "parse_contact_from_email",
     "parse_date",
     "parse_version",

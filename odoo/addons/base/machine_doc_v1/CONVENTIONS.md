@@ -108,9 +108,8 @@ def _get_domain_accessible_records(self, model_name, mode="read"): ...
 **Cache invalidation**: Most cached methods are invalidated via `clear_caches()` in
 `write()` and `unlink()` methods. Missing cache invalidation is a common source of bugs.
 
-### `@tools.ormcache_context()`
-
-Cache varies by context keys (e.g., `lang`, `company_id`).
+A cache that varies by context names the keys it reads, e.g.
+`@tools.ormcache("self.env.context.get('lang')")`.
 
 ## Access Control Architecture
 
