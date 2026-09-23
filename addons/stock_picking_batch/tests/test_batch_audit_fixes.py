@@ -222,6 +222,13 @@ class TestBatchAuditFixes(TransactionCase):
             self.assertEqual(
                 criterion.batch_path, f"picking_ids.{criterion.picking_path}"
             )
+            self.assertEqual(
+                criterion.line_path,
+                f"picking_id.{criterion.picking_path}",
+                "A line is keyed on its transfer's value, the one a wave "
+                "reads back through picking_ids; the move's own contact or "
+                "the line's shelf would key it apart from its wave.",
+            )
 
     def test_a_wave_criterion_reads_from_the_move_lines(self):
         for criterion in self.picking_type._get_wave_grouping_criteria().values():
@@ -575,3 +582,78 @@ class TestBatchAuditFixes(TransactionCase):
         )
         picking.batch_id = batch
         self.assertEqual(picking.user_id, self.env.user)
+
+    def test_a_line_added_from_detailed_operations_stays_in_that_list(self):
+        picking = self._picking()
+        batch = self._batch(picking)
+        action = batch.action_batch_detailed_operations()
+        line = (
+            self.env["stock.move.line"]
+            .with_context(action["context"])
+            .create(
+                {
+                    "product_id": self.product.id,
+                    "quantity": 1,
+                    "location_id": self.stock_location.id,
+                    "location_dest_id": self.customer_location.id,
+                }
+            )
+        )
+        self.assertEqual(line.picking_id, picking)
+        self.assertIn(line, self.env["stock.move.line"].search(action["domain"]))
+
+    def test_the_batch_wizard_refuses_to_run_without_transfers(self):
+        wizard = self.env["stock.picking.to.batch"].create({"mode": "new"})
+        with self.assertRaises(UserError):
+            wizard.attach_pickings()
+
+    def test_the_batch_wizard_refuses_an_existing_mode_without_a_batch(self):
+        picking = self._picking()
+        batch = self._batch(picking)
+        wizard = self.env["stock.picking.to.batch"].create({"mode": "existing"})
+        with self.assertRaises(UserError):
+            wizard.with_context(active_ids=picking.ids).attach_pickings()
+        self.assertEqual(picking.batch_id, batch)
+
+    def test_the_batch_wizard_links_to_the_batch_it_filled(self):
+        picking = self._picking()
+        wizard = self.env["stock.picking.to.batch"].create({"mode": "new"})
+        action = wizard.with_context(active_ids=picking.ids).attach_pickings()
+        [link] = action["params"]["links"]
+        self.assertEqual(link["label"], picking.batch_id.name)
+        self.assertTrue(link["url"].endswith(f"/{picking.batch_id.id}"))
+
+    def test_the_batch_report_prints_a_serial_typed_before_its_lot_exists(self):
+        self.env.user.group_ids |= self.env.ref("stock.group_production_lot")
+        tracked = self.env["product.product"].create(
+            {"name": "Tracked audit product", "is_storable": True, "tracking": "lot"}
+        )
+        receipt_type = self.env.ref("stock.picking_type_in")
+        supplier = self.env.ref("stock.stock_location_suppliers")
+        receipt = self.env["stock.picking"].create(
+            {
+                "picking_type_id": receipt_type.id,
+                "location_id": supplier.id,
+                "location_dest_id": self.stock_location.id,
+                "move_ids": [
+                    Command.create(
+                        {
+                            "product_id": tracked.id,
+                            "product_uom_qty": 2,
+                            "location_id": supplier.id,
+                            "location_dest_id": self.stock_location.id,
+                        }
+                    )
+                ],
+            }
+        )
+        receipt.action_confirm()
+        receipt.move_line_ids.lot_name = "LOT-TYPED-0001"
+        self.assertFalse(receipt.move_line_ids.lot_id)
+        batch = self.env["stock.picking.batch"].create(
+            {"picking_ids": [Command.set(receipt.ids)]}
+        )
+        html, __ = self.env["ir.actions.report"]._render_qweb_html(
+            "stock_picking_batch.report_picking_batch", batch.ids
+        )
+        self.assertIn(b"LOT-TYPED-0001", html)

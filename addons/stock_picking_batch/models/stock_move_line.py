@@ -74,10 +74,6 @@ class StockMoveLine(models.Model):
         }
 
     def _prepare_wave_picking_vals(self, wave, picking, lines):
-        if lines == picking.move_line_ids and lines.move_id == picking.move_ids:
-            wave.picking_ids = [Command.link(picking.id)]
-            return None
-
         picking_to_wave_vals = picking.copy_data(
             {
                 "move_ids": [],
@@ -116,22 +112,7 @@ class StockMoveLine(models.Model):
                 "type": "ir.actions.client",
                 "tag": "soft_reload",
             }
-        return {
-            "type": "ir.actions.client",
-            "tag": "display_notification",
-            "params": {
-                "title": notification_title,
-                "message": "%s",
-                "links": [
-                    {
-                        "label": wave.name,
-                        "url": f"/odoo/action-stock_picking_batch.action_picking_tree_wave/{wave.id}",
-                    }
-                ],
-                "sticky": False,
-                "next": {"type": "ir.actions.act_window_close"},
-            },
-        }
+        return wave._get_notification_action(notification_title)
 
     def _add_to_wave(self, wave=False):
         _debug.pipeline("wave_add_enter", lines=self, wave=wave and wave.id)
@@ -150,15 +131,27 @@ class StockMoveLine(models.Model):
             notification_title = self.env._(
                 "The following wave transfer has been updated"
             )
-        picking_to_wave_vals_list = []
+        whole_pickings = self.env["stock.picking"]
         split_pickings = self.env["stock.picking"]
+        picking_to_wave_vals_list = []
         for picking, lines in self.grouped("picking_id").items():
+            if lines == picking.move_line_ids and lines.move_id == picking.move_ids:
+                whole_pickings |= picking
+                continue
             picking_to_wave_vals = self._prepare_wave_picking_vals(wave, picking, lines)
             if picking_to_wave_vals is None:
                 continue
             split_pickings |= picking
             picking_to_wave_vals_list.append(picking_to_wave_vals)
 
+        _debug.logic(
+            "wave_add_split",
+            wave=wave.id,
+            whole=whole_pickings,
+            split=split_pickings,
+        )
+        if whole_pickings:
+            whole_pickings.batch_id = wave
         if picking_to_wave_vals_list:
             split_pickings |= split_pickings.create(picking_to_wave_vals_list)
             split_pickings._add_to_wave_post_picking_split_hook()

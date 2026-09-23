@@ -209,7 +209,8 @@ class TestBatchPicking(TransactionCase):
         wizard = wizard_form.save()
         res = wizard.attach_pickings()
         self.assertEqual(
-            set(res["context"]["picking_to_wave"]), set(self.all_pickings.ids)
+            self.env["stock.move.line"].search(res["domain"]).picking_id,
+            self.all_pickings,
         )
 
     def test_add_to_existing_wave_from_lines(self):
@@ -266,7 +267,8 @@ class TestBatchPicking(TransactionCase):
         wizard = wizard_form.save()
         res = wizard.attach_pickings()
         self.assertEqual(
-            set(res["context"]["picking_to_wave"]), set(self.all_pickings.ids)
+            self.env["stock.move.line"].search(res["domain"]).picking_id,
+            self.all_pickings,
         )
         self.assertEqual(res["context"]["active_wave_id"], wave.id)
 

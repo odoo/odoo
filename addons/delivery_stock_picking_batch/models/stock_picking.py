@@ -42,7 +42,7 @@ class StockPickingType(models.Model):
         _debug.logic("batch_grouping_criteria", picking_types=self)
         criteria = super()._get_batch_grouping_criteria()
         criteria["batch_group_by_carrier"] = GroupingCriterion(
-            "picking_id.carrier_id", "name", "carrier_id", "wave_carrier_id"
+            "carrier_id", "name", "wave_carrier_id", on_picking=True
         )
         return criteria
 

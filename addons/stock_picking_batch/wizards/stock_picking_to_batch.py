@@ -31,12 +31,14 @@ class StockPickingToBatch(models.TransientModel):
     def attach_pickings(self):
         self.check_singleton()
         pickings = self.env["stock.picking"].browse(self.env.context.get("active_ids"))
+        if not pickings:
+            raise UserError(self.env._("Select the transfers to add to a batch."))
         if self.mode == "new":
             company = pickings.company_id
             if len(company) > 1:
                 raise UserError(
                     self.env._(
-                        "The selected pickings should belong to an unique company."
+                        "The selected transfers should belong to a unique company."
                     )
                 )
             batch = self.env["stock.picking.batch"].create(
@@ -52,6 +54,10 @@ class StockPickingToBatch(models.TransientModel):
             )
         else:
             batch = self.batch_id
+            if not batch:
+                raise UserError(
+                    self.env._("Choose the batch transfer to add the transfers to.")
+                )
             notification_title = self.env._(
                 "The following batch transfer has been updated"
             )
@@ -59,19 +65,4 @@ class StockPickingToBatch(models.TransientModel):
         pickings.write({"batch_id": batch.id})
         if self.mode == "new" and not self.is_create_draft:
             batch.action_confirm()
-        return {
-            "type": "ir.actions.client",
-            "tag": "display_notification",
-            "params": {
-                "title": notification_title,
-                "message": "%s",
-                "links": [
-                    {
-                        "label": batch.name,
-                        "url": f"/odoo/action-stock_picking_batch.stock_picking_batch_action/{batch.id}",
-                    }
-                ],
-                "sticky": False,
-                "next": {"type": "ir.actions.act_window_close"},
-            },
-        }
+        return batch._get_notification_action(notification_title)

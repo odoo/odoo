@@ -54,18 +54,27 @@ class StockPickingBatch(models.Model):
         target_batch.picking_ids |= other_batches.picking_ids
         target_batch.write(merged_batch_vals)
         other_batches.unlink()
+        return target_batch._get_notification_action(
+            self.env._(
+                "Batch/Wave transfers have been merged into the following transfer"
+            )
+        )
+
+    def _get_notification_action(self, title):
+        self.check_singleton()
+        action = (
+            "action_picking_tree_wave" if self.is_wave else "stock_picking_batch_action"
+        )
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
-                "title": self.env._(
-                    "Batch/Wave transfers have been merged into the following transfer"
-                ),
+                "title": title,
                 "message": "%s",
                 "links": [
                     {
-                        "label": target_batch.name,
-                        "url": f"/odoo/action-stock_picking_batch.{'action_picking_tree_wave' if target_batch.is_wave else 'stock_picking_batch_action'}/{target_batch.id}",
+                        "label": self.name,
+                        "url": f"/odoo/action-stock_picking_batch.{action}/{self.id}",
                     }
                 ],
                 "sticky": False,
@@ -83,7 +92,7 @@ class StockPickingBatch(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "stock.move.line",
             "views": [(view_id, "list")],
-            "domain": [("id", "in", self.picking_ids.move_line_ids.ids)],
+            "domain": [("batch_id", "=", self.id)],
             "context": {
                 "default_company_id": self.company_id.id,
                 "default_picking_id": self.picking_ids[:1].id,

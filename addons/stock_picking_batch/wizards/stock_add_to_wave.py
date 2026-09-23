@@ -90,10 +90,5 @@ class StockAddToWave(models.TransientModel):
                 ("picking_id", "in", self.picking_ids.ids),
                 ("state", "!=", "done"),
             ],
-            "context": dict(
-                self.env.context,
-                picking_to_wave=self.picking_ids.ids,
-                active_wave_id=wave.id,
-                from_wave_form=self.env.context.get("from_wave_form"),
-            ),
+            "context": dict(self.env.context, active_wave_id=wave.id),
         }

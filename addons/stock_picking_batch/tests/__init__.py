@@ -6,3 +6,4 @@ from . import test_consignment_interface
 from . import test_grouping_registry
 from . import test_batch_view_arch
 from . import test_batch_move_details
+from . import test_wave_grouping_keys

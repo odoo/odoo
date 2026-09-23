@@ -9,16 +9,24 @@ from ..tools import debug_log as dbg
 
 
 class GroupingCriterion(NamedTuple):
-    line_path: str
+    path: str
     label_field: str
-    picking_path: str = ""
     wave_field: str = ""
+    on_picking: bool = False
+
+    @property
+    def picking_path(self):
+        return self.path if self.on_picking else ""
+
+    @property
+    def line_path(self):
+        return f"picking_id.{self.path}" if self.on_picking else self.path
 
     @property
     def batch_path(self):
-        if self.picking_path:
-            return f"picking_ids.{self.picking_path}"
-        return f"move_line_ids.{self.line_path}"
+        if self.on_picking:
+            return f"picking_ids.{self.path}"
+        return f"move_line_ids.{self.path}"
 
 
 class StockPickingType(models.Model):
@@ -784,22 +792,22 @@ class StockPickingType(models.Model):
     def _get_batch_grouping_criteria(self):
         return {
             "batch_group_by_partner": GroupingCriterion(
-                "move_id.partner_id", "name", "partner_id", "wave_partner_id"
+                "partner_id", "name", "wave_partner_id", on_picking=True
             ),
             "batch_group_by_destination": GroupingCriterion(
-                "move_id.partner_id.country_id",
-                "name",
-                "partner_id.country_id",
-                "wave_country_id",
+                "partner_id.country_id", "name", "wave_country_id", on_picking=True
             ),
             "batch_group_by_src_loc": GroupingCriterion(
-                "location_id", "display_name", "location_id", "wave_source_location_id"
+                "location_id",
+                "display_name",
+                "wave_source_location_id",
+                on_picking=True,
             ),
             "batch_group_by_dest_loc": GroupingCriterion(
                 "location_dest_id",
                 "display_name",
-                "location_dest_id",
                 "wave_dest_location_id",
+                on_picking=True,
             ),
         }
 
@@ -807,10 +815,10 @@ class StockPickingType(models.Model):
     def _get_wave_grouping_criteria(self):
         return {
             "wave_group_by_product": GroupingCriterion(
-                "product_id", "display_name", wave_field="wave_product_id"
+                "product_id", "display_name", "wave_product_id"
             ),
             "wave_group_by_category": GroupingCriterion(
-                "product_id.categ_id", "complete_name", wave_field="wave_category_id"
+                "product_id.categ_id", "complete_name", "wave_category_id"
             ),
         }
 
