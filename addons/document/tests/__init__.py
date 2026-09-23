@@ -37,5 +37,6 @@ from . import test_mail_activity
 from . import test_mail_gateway
 from . import test_tools
 from . import test_mixin_documents_contract
+from . import test_document_migrations
 from . import test_wizard_isolation
 from .tours import *
