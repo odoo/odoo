@@ -31,7 +31,9 @@ class TestClosingTheWorkerUndoesTheDisable(unittest.TestCase):
         self.worker._disable()
         self.worker.close()
         with (
-            mock.patch.object(self.worker, "_spawn", return_value=None) as spawn,
+            mock.patch.object(
+                self.worker, "_spawn", return_value=(None, "no_node")
+            ) as spawn,
             mock.patch.object(esm_lexer.os, "name", "posix"),
         ):
             self.assertIsNone(self.worker.request("export const a = 1;"))

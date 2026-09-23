@@ -397,12 +397,22 @@ Worker robustness contract (`esm_lexer.py`):
   gated by a wall-clock deadline (`_write_all` / `_read_line`), so a worker
   that stopped reading (full ~64 KB pipe) or emitted a partial line can never
   block a caller past the budget — a plain `stdin.write` / `readline` could.
-- **Respawn-once, then pause.** A worker that dies mid-request is respawned
-  and the request retried once; a *spawn* failure (no `node`) or
-  `_MAX_CONSECUTIVE_FAILURES` (2) consecutive request failures pause the worker
-  for `_DISABLE_COOLDOWN_S` (60s) — so a present-but-broken worker degrades to
-  the regex path fast instead of paying the 10s budget on every module, and a
-  single slow reply under load does not blind the process for its lifetime.
+- **A worker that cannot start is unavailable, not failing.** The worker
+  writes `{"ready": true}` once es-module-lexer has loaded, and `_spawn` reads
+  that line before any request. No `node`, or a worker that dies before its
+  greeting (`npm install` never run, so the package is missing), is a spawn
+  failure: no request is sent, the worker pauses for `_UNAVAILABLE_COOLDOWN_S`
+  (600s), and `worker_unavailable` is logged at INFO once per process (DEBUG
+  after, until `close_lexer_worker`).
+- **Respawn-once, then pause.** A worker that started and then fails a request
+  (timeout, EOF, desynchronised reply) is respawned and the request retried
+  once; `_MAX_CONSECUTIVE_FAILURES` (2) consecutive failures pause it for
+  `_DISABLE_COOLDOWN_S` (60s). That is not free: one caller per pause spends up
+  to two `_REQUEST_TIMEOUT_S` deadlines (20s) on a worker that never answers
+  before the pause starts, and a WARNING marks each pause. Callers queued on
+  the worker's lock meanwhile re-read the pause once they hold it and return
+  `None` without spawning, so the cost is one caller's, not one per thread.
+  A single slow reply under load does not blind the process for its lifetime.
   An outage is never memoised: only the worker's answers are cached (a
   refusal, `ok: false`, included), keyed on a blake2b digest of the source.
 - **Discovery parity.** The regex fallback (`_IMPORT_ANY_RE`) covers named /

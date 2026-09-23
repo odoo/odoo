@@ -20,7 +20,9 @@ class TestLexerWorkerDegradation(BaseCase):
         from odoo.tools.assets import esm_lexer
 
         worker = self._worker()
-        with patch.object(esm_lexer._LexerWorker, "_spawn", return_value=None):
+        with patch.object(
+            esm_lexer._LexerWorker, "_spawn", return_value=(None, "no_node")
+        ):
             with self.assertLogs("odoo.assets.lexer", level="INFO") as logged:
                 self.assertIsNone(worker.request("export const a = 1;"))
             self.assertIsNone(worker.request("export const a = 1;"))
@@ -34,7 +36,7 @@ class TestLexerWorkerDegradation(BaseCase):
         worker = self._worker()
         alive = SimpleNamespace(poll=lambda: None)
         with (
-            patch.object(esm_lexer._LexerWorker, "_spawn", return_value=alive),
+            patch.object(esm_lexer._LexerWorker, "_spawn", return_value=(alive, "")),
             patch.object(esm_lexer._LexerWorker, "_write_all"),
             patch.object(esm_lexer._LexerWorker, "_kill"),
             patch.object(
@@ -63,7 +65,7 @@ class TestLexerWorkerDegradation(BaseCase):
             ),
         ]
         with (
-            patch.object(esm_lexer._LexerWorker, "_spawn", return_value=alive),
+            patch.object(esm_lexer._LexerWorker, "_spawn", return_value=(alive, "")),
             patch.object(esm_lexer._LexerWorker, "_write_all"),
             patch.object(esm_lexer._LexerWorker, "_kill"),
             patch.object(esm_lexer._LexerWorker, "_read_line", side_effect=replies),
@@ -81,7 +83,7 @@ class TestLexerWorkerDegradation(BaseCase):
         worker = self._worker()
         alive = SimpleNamespace(poll=lambda: None)
         with (
-            patch.object(esm_lexer._LexerWorker, "_spawn", return_value=alive),
+            patch.object(esm_lexer._LexerWorker, "_spawn", return_value=(alive, "")),
             patch.object(esm_lexer._LexerWorker, "_write_all"),
             patch.object(
                 esm_lexer._LexerWorker,

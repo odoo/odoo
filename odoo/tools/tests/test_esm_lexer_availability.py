@@ -1,4 +1,11 @@
+import logging
+import shutil
+import subprocess
+import tempfile
+import threading
+import time
 import unittest
+from pathlib import Path
 from types import SimpleNamespace
 from unittest import mock
 
@@ -58,7 +65,7 @@ class TestAFailingWorkerIsRetriedLater(unittest.TestCase):
         with (
             mock.patch.object(esm_lexer.os, "name", "posix"),
             mock.patch.object(
-                esm_lexer._LexerWorker, "_spawn", return_value=self.alive
+                esm_lexer._LexerWorker, "_spawn", return_value=(self.alive, "")
             ) as spawn,
             mock.patch.object(esm_lexer._LexerWorker, "_write_all"),
             mock.patch.object(esm_lexer._LexerWorker, "_kill"),
@@ -86,6 +93,112 @@ class TestAFailingWorkerIsRetriedLater(unittest.TestCase):
         response, spawn = self._ask(answer)
         self.assertEqual(response["names"], ["a"])
         self.assertFalse(self.worker._disabled())
+
+
+class _PausedByAnotherCaller:
+    def __init__(self, worker):
+        self.worker = worker
+        self.lock = threading.Lock()
+
+    def __enter__(self):
+        self.lock.acquire()
+        self.worker._disable()
+        return self
+
+    def __exit__(self, *exc_info):
+        self.lock.release()
+
+
+class TestACallerQueuedDuringAPauseWaitsItOut(unittest.TestCase):
+    def setUp(self):
+        self.worker = esm_lexer._LexerWorker()
+        self.spawns = 0
+
+        def spawn(_self):
+            self.spawns += 1
+            return SimpleNamespace(poll=lambda: None), ""
+
+        def silent(_self, _proc, _deadline):
+            time.sleep(0.05)
+            raise TimeoutError("a worker that never answers")
+
+        for patcher in (
+            mock.patch.object(esm_lexer.os, "name", "posix"),
+            mock.patch.object(esm_lexer._LexerWorker, "_spawn", spawn),
+            mock.patch.object(esm_lexer._LexerWorker, "_write_all"),
+            mock.patch.object(
+                esm_lexer._LexerWorker,
+                "_kill",
+                lambda worker: setattr(worker, "_proc", None),
+            ),
+            mock.patch.object(esm_lexer._LexerWorker, "_read_line", silent),
+        ):
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
+    def test_the_pause_is_read_again_once_the_lock_is_held(self):
+        self.worker._lock = _PausedByAnotherCaller(self.worker)
+        self.assertIsNone(self.worker.request("export const a = 1;"))
+        self.assertEqual(self.spawns, 0)
+
+    def test_queued_callers_spend_no_attempts_of_their_own(self):
+        callers = 6
+        barrier = threading.Barrier(callers)
+
+        def ask():
+            barrier.wait()
+            self.worker.request("export const a = 1;")
+
+        threads = [threading.Thread(target=ask) for _ in range(callers)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+        self.assertEqual(self.spawns, esm_lexer._MAX_CONSECUTIVE_FAILURES)
+        self.assertTrue(self.worker._disabled())
+
+
+@unittest.skipUnless(shutil.which("node"), "needs node")
+class TestAWorkerThatCannotStartIsUnavailable(unittest.TestCase):
+    def setUp(self):
+        scripts = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, scripts, True)
+        script = scripts / "worker.mjs"
+        script.write_text('import { init } from "es-module-lexer-not-installed";\n')
+        for patcher in (
+            mock.patch.object(esm_lexer, "_WORKER_SCRIPT", script),
+            mock.patch.object(esm_lexer.os, "name", "posix"),
+        ):
+            patcher.start()
+            self.addCleanup(patcher.stop)
+        self.worker = esm_lexer._LexerWorker()
+        self.addCleanup(self.worker.close)
+
+    def _ask(self):
+        with mock.patch.object(
+            esm_lexer.subprocess, "Popen", wraps=subprocess.Popen
+        ) as popen:
+            self.assertIsNone(self.worker.request("export const a = 1;"))
+        return popen.call_count
+
+    def test_the_package_missing_is_a_spawn_failure_noticed_once(self):
+        with self.assertLogs(esm_lexer._lexer_log, logging.DEBUG) as logs:
+            self.assertEqual(self._ask(), 1)
+            self.assertGreaterEqual(
+                self.worker._disabled_until - time.monotonic(),
+                esm_lexer._UNAVAILABLE_COOLDOWN_S - 5,
+            )
+            self.worker._disabled_until = 0.0
+            self.assertEqual(self._ask(), 1)
+        levels = [
+            record.levelno
+            for record in logs.records
+            if "worker_unavailable" in record.getMessage()
+        ]
+        self.assertEqual(levels, [logging.INFO, logging.DEBUG])
+        self.assertFalse(
+            [record for record in logs.records if record.levelno >= logging.WARNING]
+        )
 
 
 class TestAForkedChildLeavesTheParentsWorkerAlone(unittest.TestCase):

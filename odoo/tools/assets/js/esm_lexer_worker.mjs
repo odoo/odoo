@@ -3,6 +3,10 @@ import { createInterface } from "node:readline";
 
 await init;
 
+// the parent reads this before its first request: a worker that dies before
+// it (es-module-lexer not installed) could not start, it did not fail a request
+process.stdout.write(JSON.stringify({ ready: true }) + "\n");
+
 const rl = createInterface({ input: process.stdin, terminal: false });
 rl.on("line", (line) => {
     let req;

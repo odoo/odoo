@@ -28,6 +28,10 @@ _MAX_CONSECUTIVE_FAILURES = 2
 
 _DISABLE_COOLDOWN_S = 60.0
 
+# a worker that cannot start (no node, no `npm install`) will not start on
+# the next call either: nothing changes that but an install
+_UNAVAILABLE_COOLDOWN_S = 600.0
+
 
 class _LexerWorker:
     def __init__(self) -> None:
@@ -35,14 +39,15 @@ class _LexerWorker:
         self._counter = 0
         self._disabled_until = 0.0
         self._consec_failures = 0
+        self._unavailable_noticed = False
         self._inbuf = b""
         self._lock = threading.Lock()
 
     def _disabled(self) -> bool:
         return time.monotonic() < self._disabled_until
 
-    def _disable(self) -> None:
-        self._disabled_until = time.monotonic() + _DISABLE_COOLDOWN_S
+    def _disable(self, cooldown_s: float = _DISABLE_COOLDOWN_S) -> None:
+        self._disabled_until = time.monotonic() + cooldown_s
 
     def _forget_after_fork(self) -> None:
         # the worker and its pipes belong to the parent: signalling it or
@@ -56,10 +61,10 @@ class _LexerWorker:
                     with contextlib.suppress(OSError):
                         pipe.close()
 
-    def _spawn(self) -> subprocess.Popen | None:
+    def _spawn(self) -> tuple[subprocess.Popen | None, str]:
         node = shutil.which("node")
         if not node:
-            return None
+            return None, "no_node"
         odoo_root = Path(odoo.__path__[0]).parent
         try:
             proc = subprocess.Popen(
@@ -71,36 +76,58 @@ class _LexerWorker:
                 cwd=odoo_root,
             )
         except OSError:
-            return None
+            return None, "popen_failed"
         if proc.stdin is None or proc.stdout is None:
-            return None
+            self._reap(proc)
+            return None, "no_pipes"
         os.set_blocking(proc.stdin.fileno(), False)
         os.set_blocking(proc.stdout.fileno(), False)
         self._inbuf = b""
         _register_worker_cleanup()
+        # the worker says it is ready once es-module-lexer has loaded: one that
+        # dies before that (the package missing) is a worker that cannot start,
+        # not a request that failed
+        try:
+            greeting = json.loads(
+                self._read_line(proc, time.monotonic() + _REQUEST_TIMEOUT_S)
+            )
+        except (EOFError, TimeoutError, ValueError) as exc:
+            self._reap(proc)
+            return None, f"not_ready:{type(exc).__name__}"
+        if not (isinstance(greeting, dict) and greeting.get("ready") is True):
+            self._reap(proc)
+            return None, "not_ready:bad_greeting"
         _debug.lifecycle("esm_lexer.worker_spawned", pid=proc.pid, node=node)
-        return proc
+        return proc, ""
 
     def close(self) -> None:
         with self._lock:
             self._kill()
             self._disabled_until = 0.0
             self._consec_failures = 0
+            self._unavailable_noticed = False
 
     def _kill(self) -> None:
         proc, self._proc = self._proc, None
         self._inbuf = b""
         if proc is not None:
-            with contextlib.suppress(OSError):
-                proc.kill()
-            with contextlib.suppress(subprocess.TimeoutExpired, OSError):
-                proc.wait(timeout=5)
-            _debug.lifecycle(
-                "esm_lexer.worker_killed",
-                pid=proc.pid,
-                exit_code=proc.returncode,
-                requests=self._counter,
-            )
+            self._reap(proc)
+
+    def _reap(self, proc: subprocess.Popen) -> None:
+        with contextlib.suppress(OSError):
+            proc.kill()
+        with contextlib.suppress(subprocess.TimeoutExpired, OSError):
+            proc.wait(timeout=5)
+        for pipe in (proc.stdin, proc.stdout):
+            if pipe is not None:
+                with contextlib.suppress(OSError):
+                    pipe.close()
+        _debug.lifecycle(
+            "esm_lexer.worker_killed",
+            pid=proc.pid,
+            exit_code=proc.returncode,
+            requests=self._counter,
+        )
 
     def _write_all(self, proc: subprocess.Popen, data: bytes, deadline: float) -> None:
         assert proc.stdin is not None
@@ -147,20 +174,29 @@ class _LexerWorker:
         if self._disabled() or os.name != "posix":
             return None
         with self._lock:
+            # a caller that queued on the lock while another paused the
+            # worker must not spend the pause's fresh attempts
+            if self._disabled():
+                return None
             for _attempt in range(2):
                 proc = self._proc
                 if proc is None or proc.poll() is not None:
-                    proc = self._proc = self._spawn()
+                    proc, reason = self._spawn()
+                    self._proc = proc
                     if proc is None:
-                        self._disable()
+                        self._disable(_UNAVAILABLE_COOLDOWN_S)
                         log_event(
                             _lexer_log,
-                            logging.INFO,
+                            logging.DEBUG
+                            if self._unavailable_noticed
+                            else logging.INFO,
                             "worker_unavailable",
+                            reason=reason,
                             hint="node + `npm install` provide es-module-lexer;"
                             " using the regex extractor",
-                            retry_s=_DISABLE_COOLDOWN_S,
+                            retry_s=_UNAVAILABLE_COOLDOWN_S,
                         )
+                        self._unavailable_noticed = True
                         return None
                 self._counter += 1
                 request_id = self._counter
