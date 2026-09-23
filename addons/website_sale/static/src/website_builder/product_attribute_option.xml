@@ -2,7 +2,14 @@
 <templates xml:space="preserve">
 
 <t t-name="website_sale.ProductAttributeOption">
-    <BuilderRow label.translate="Display Type">
+    <BuilderRow
+        t-if="this.domState.canShowThumbnails"
+        label.translate="Thumbnails"
+        tooltip.translate="Use product variant images instead of the attribute values displays"
+    >
+        <BuilderCheckbox action="'productAttributeThumbnail'"/>
+    </BuilderRow>
+    <BuilderRow t-if="!this.domState.isThumbnailVisible" label.translate="Display Type">
         <BuilderSelect action="'productAttributeDisplay'">
             <BuilderSelectItem actionValue="'radio'">Radio</BuilderSelectItem>
             <BuilderSelectItem actionValue="'pills'">Pills</BuilderSelectItem>
