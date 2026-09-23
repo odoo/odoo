@@ -32,6 +32,21 @@ class ResUsers(models.Model):
         self._unsubscribe_from_non_public_channels()
         return super().unlink()
 
+    @api.model
+    def _get_regular_users_domain(self):
+        """Domain of the internal users with regular access, who are the ones having access to
+        Discuss (unlike light users). Implied groups are considered, as for menu access."""
+        return Domain("share", "=", False) & Domain(
+            "all_group_ids", "in", self.env.ref("base.group_user_regular").id
+        )
+
+    @api.model
+    def _get_light_users_domain(self):
+        """Domain of the internal users without regular access, who do not have access to Discuss."""
+        return Domain("share", "=", False) & Domain(
+            "group_ids", "not any", [("all_implied_ids", "in", self.env.ref("base.group_user_regular").id)]
+        )
+
     def _unsubscribe_from_non_public_channels(self, reset_role=False):
         """This method un-subscribes users from group restricted channels. Main purpose
         of this method is to prevent sending internal communication to archived / deleted users.

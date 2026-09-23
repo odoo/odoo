@@ -375,3 +375,46 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             name, channel_id=group_chat.id, with_portal_users=True
         )
         self.assertEqual(result["partner_ids"], joel.partner_id.ids)
+
+    @mute_logger("odoo.http")
+    def test_13_light_users_cannot_be_added_to_conversations(self):
+        # MailCommon grants template editing to all internal users, which implies regular access.
+        self.env["ir.config_parameter"].set_bool("mail.restrict.template.rendering", True)
+        bob = new_test_user(
+            self.env, "bob", groups="base.group_user,base.group_user_regular", email="bob@test.com"
+        )
+        name = f"Light Leo {uuid4()}"
+        leo = new_test_user(self.env, "leo", groups="base.group_user", name=name)
+        self.assertEqual(bob.role, "regular_user")
+        self.assertEqual(leo.role, "light_user")
+        group_chat = self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
+        for with_portal_users in (False, True):
+            result = (
+                self.env["res.partner"]
+                .with_user(bob)
+                .search_for_channel_invite(
+                    name, channel_id=group_chat.id, with_portal_users=with_portal_users
+                )
+            )
+            self.assertFalse(result["partner_ids"])
+        self.authenticate("bob", "bob")
+        for route, params in [
+            ("/discuss/channel/add_members", {"channel_id": group_chat.id, "user_ids": leo.ids}),
+            ("/discuss/channel/add_members", {"channel_id": group_chat.id, "partner_ids": leo.partner_id.ids}),
+            ("/discuss/get_or_create_chat", {"partners_to": leo.partner_id.ids}),
+            ("/discuss/create_group", {"users_to": (bob + leo).ids}),
+        ]:
+            with self.subTest(route=route, params=params), self.assertRaises(
+                JsonRpcException, msg="odoo.exceptions.UserError"
+            ):
+                self.make_jsonrpc_request("/mail/store", {"fetch_params": [[route, params]]})
+        self.assertNotIn(leo.partner_id, self.env["discuss.channel.member"].search([]).partner_id)
+        # light users are not auto-subscribed, until they become regular users
+        channel = self.env["discuss.channel"].create(
+            {"name": "All employees", "group_ids": self.env.ref("base.group_user").ids}
+        )
+        self.assertIn(bob.partner_id, channel.channel_member_ids.partner_id)
+        self.assertNotIn(leo.partner_id, channel.channel_member_ids.partner_id)
+        leo.group_ids += self.env.ref("base.group_user_regular")
+        self.assertEqual(leo.role, "regular_user")
+        self.assertIn(leo.partner_id, channel.channel_member_ids.partner_id)

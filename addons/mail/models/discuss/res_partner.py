@@ -2,9 +2,9 @@
 
 from odoo import api, fields, models
 from odoo.fields import Domain
-from odoo.tools import email_normalize, single_email_re
+from odoo.tools import email_normalize, format_list, single_email_re
 from odoo.addons.mail.tools.discuss import Store
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 
 
 class ResPartner(models.Model):
@@ -118,13 +118,39 @@ class ResPartner(models.Model):
                 [("user_ids.active", "=", True)],
             ],
         )
-        if not with_portal_users:
-            domain &= Domain("user_ids.share", "=", False)
+        # light users are internal users that are not meant to use Discuss
+        users_domain = self.env["res.users"]._get_regular_users_domain()
+        if with_portal_users:
+            users_domain |= Domain("share", "=", True)
+        if self.env.user._is_internal():
+            domain &= Domain("user_ids", "any", users_domain)
+        else:
+            # sudo: res.users - portal users and guests may search for users to invite (e.g. from
+            # "/discuss/search") without having access to their groups
+            domain &= Domain("user_ids", "in", self.env["res.users"].sudo()._search(users_domain))
         if channel:
             domain &= Domain("channel_ids", "not in", channel.id)
             if channel.group_public_id:
                 domain &= Domain("user_ids.all_group_ids", "in", channel.group_public_id.id)
         return domain
+
+    def _check_can_be_added_to_channel(self):
+        """Raise if some of these partners are light users, as they are not meant to use Discuss.
+        The current user is not checked: this is about adding other people to a conversation."""
+        if not (partners := self - self.env.user.partner_id):
+            return
+        # sudo: res.users - checking whether the users of the partners to add are light is acceptable
+        light_users = self.env["res.users"].sudo().search_fetch(
+            Domain("partner_id", "in", partners.ids) & self.env["res.users"]._get_light_users_domain(),
+            ["name"],
+        )
+        if light_users:
+            raise UserError(
+                self.env._(
+                    "%(names)s cannot be added to a conversation, as light users do not have access to Discuss.",
+                    names=format_list(self.env, light_users.mapped("name")),
+                )
+            )
 
     @api.readonly
     @api.model
