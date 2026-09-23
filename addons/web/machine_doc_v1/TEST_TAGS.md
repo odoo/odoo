@@ -255,9 +255,15 @@ select, and **generates one test method per remaining addon**
 (`AddonSuite.test_<addon>`, tag `addon_js`, `-web_js` to drop the inherited tag).
 A new addon is covered the day it lands.
 
-- Selection is per **suite**, not per addon: `point_of_sale` has a runner for
-  `@point_of_sale/unit` and bundles one file outside it, so its generated method
-  runs only that file.
+- Selection is per **suite**, not per addon: an addon with a runner for part of
+  its tests gets a generated method for the rest only.
+- A suite counts only if `web.assets_unit_tests` actually bundles its file:
+  `unit_bundle_test_files()` resolves every manifest's entries for the bundle,
+  `remove` included. `im_livechat/static/tests/embed/**` is removed there (it
+  has its own `im_livechat.embed_assets_unit_tests`), and a file no entry
+  reaches -- `point_of_sale`'s `generic_components/`, `hr_gamification`'s
+  `messaging_menu_patch` -- runs nowhere; a generated method naming it failed
+  with HOOT's "no suite or test matches".
 - A method **skips** when its addon is not installed on the test database —
   coverage follows whatever module set the CI job built.
 - `KNOWN_FAILING_ADDONS` in that module is the remaining debt: addons whose

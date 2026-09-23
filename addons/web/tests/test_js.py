@@ -1,4 +1,5 @@
 import ast
+import functools
 import os
 import re
 from contextlib import suppress
@@ -125,8 +126,43 @@ def has_runnable_tests(test_file):
     return False
 
 
+@functools.cache
+def unit_bundle_test_files(bundle="web.assets_unit_tests"):
+    roots = [Path(p) for p in odoo.addons.__path__]
+    addon_root = {}
+    for root in reversed(roots):
+        for manifest in root.glob("*/__manifest__.py"):
+            addon_root[manifest.parent.name] = root
+    added, removed = set(), set()
+    for root in roots:
+        for manifest in root.glob("*/__manifest__.py"):
+            text = manifest.read_text(encoding="utf-8")
+            if bundle not in text:
+                continue
+            with suppress(ValueError, SyntaxError):
+                commands = ast.literal_eval(text).get("assets", {}).get(bundle, [])
+                for command in commands:
+                    directive = "append" if isinstance(command, str) else command[0]
+                    if directive == "include":
+                        continue
+                    pattern = command if isinstance(command, str) else command[-1]
+                    root = addon_root.get(pattern.lstrip("/").partition("/")[0])
+                    if root is None or (
+                        ".test.js" not in pattern and "*" not in pattern
+                    ):
+                        continue
+                    matched = {
+                        path.resolve()
+                        for path in root.glob(pattern.lstrip("/"))
+                        if path.name.endswith(".test.js")
+                    }
+                    (removed if directive == "remove" else added).update(matched)
+    return added - removed
+
+
 def addons_bundling_unit_tests():
     bundled = {}
+    in_bundle = unit_bundle_test_files()
     for root in (Path(p) for p in odoo.addons.__path__):
         for manifest in root.glob("*/__manifest__.py"):
             addon = manifest.parent
@@ -137,7 +173,7 @@ def addons_bundling_unit_tests():
                 f"@{addon.name}/"
                 + test_file.relative_to(tests_root).as_posix()[: -len(".test.js")]
                 for test_file in sorted(tests_root.rglob("*.test.js"))
-                if has_runnable_tests(test_file)
+                if test_file.resolve() in in_bundle and has_runnable_tests(test_file)
             ]
             if suites:
                 bundled.setdefault(addon.name, []).extend(suites)
