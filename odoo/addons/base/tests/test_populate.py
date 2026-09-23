@@ -1,5 +1,5 @@
 from odoo.tests import TransactionCase
-from odoo.tools import SQL
+from odoo.tools import SQL, mute_logger
 from odoo.tools.populate import (
     PopulateContext,
     infer_many2many_model,
@@ -173,6 +173,7 @@ class TestPopulateIndexRestore(TransactionCase):
 
         with (
             self.assertLogs("odoo.tools.populate", "ERROR") as logs,
+            mute_logger("odoo.db.cursor"),
             PopulateContext().ignore_indexes(self.env["res.partner"]),
         ):
             cr.execute(SQL("CREATE TABLE res_partner_0_populate_probe (x int)"))
