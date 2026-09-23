@@ -66,3 +66,13 @@ class TestEventIcs(HttpCase):
         self.assertEqual(fetch_timestamps(), event_dts, msg="No slot -> Expected event timestamps")
         self.assertEqual(fetch_timestamps(event.event_slot_ids.id), slot_dts, msg="Valid slot for event")
         self._assertRaises404(fetch_timestamps, slot_id=other_event.event_slot_ids.id, msg="Invalid slot for event")
+        # Verify non-UTC timezones are correctly serialized
+        event_tz = self.env['event.event'].create({
+            'name': 'TZ Event',
+            'date_begin': datetime(2025, 4, 21, 6, 30, 0),
+            'date_end': datetime(2025, 4, 21, 20, 0, 0),
+            'date_tz': 'Australia/Perth',
+            'website_published': True,
+        })
+        response = self.url_open(f'/event/{event_tz.id}/ics')
+        self.assertIn('TZID:Australia/Perth', response.content.decode())
