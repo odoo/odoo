@@ -94,6 +94,7 @@ class PopulateContext:
                AND schemaname = current_schema
                AND indexname NOT LIKE %s
                AND indexdef NOT LIKE %s
+             ORDER BY indexname
         """,
                 model._table,
                 "%pkey",
@@ -121,7 +122,8 @@ class PopulateContext:
                 ):
                     for index in indexes:
                         try:
-                            model.env.cr.execute(index["definition"])
+                            with model.env.cr.savepoint():
+                                model.env.cr.execute(index["definition"])
                         except Exception:
                             _logger.exception(
                                 "Could not restore index %s on %s; the table is left "
@@ -221,12 +223,31 @@ def get_field_variation(
             return SQL.identifier(field.name)
 
 
+def _id_table(model: Model) -> str:
+    return model._table_inheritance_root or model._table
+
+
 def get_last_id(model: Model) -> int:
     query = SQL(
-        "SELECT id FROM %s ORDER BY id DESC LIMIT 1",
-        SQL.identifier(model._table),
+        "SELECT COALESCE(MAX(id), 0) FROM %s",
+        SQL.identifier(_id_table(model)),
     )
     return model.env.execute_query(query)[0][0]
+
+
+def _tree_members(model: Model) -> list[Model]:
+    root = model._table_inheritance_root
+    if not root or model._table != root:
+        return [model]
+    by_table: dict[str, Model] = {root: model}
+    names = model.env.registry.model_names_by_inheritance_root.get(root, ())
+    members = [model.env[name] for name in names]
+    for member in sorted(
+        members, key=lambda m: (m._table != m._name.replace(".", "_"), m._name)
+    ):
+        if member._auto and member._is_an_ordinary_table():
+            by_table.setdefault(member._table, member)
+    return list(by_table.values())
 
 
 def populate_field(
@@ -237,6 +258,7 @@ def populate_field(
     table_alias: str = "t",
     series_alias: str = "s",
     unique_columns: frozenset[str] | None = None,
+    id_offset: int | None = None,
 ) -> SQL | None:
 
     def copy_noop():
@@ -252,7 +274,7 @@ def populate_field(
             return copy_raw(field_)
 
     def copy_id():
-        last_id = get_last_id(model)
+        last_id = get_last_id(model) if id_offset is None else id_offset
         populated[model] = last_id
         return SQL(
             "id + %(last_id)s * %(series_alias)s",
@@ -295,13 +317,15 @@ def populate_model(
     populated: dict[Any, int],
     factors: dict[Any, int],
     separator_code: int,
+    id_offset: int | None = None,
 ) -> None:
     def update_sequence(model_):
         model_.env.execute_query(
             SQL(
-                "SELECT SETVAL(%(sequence)s, %(last_id)s, TRUE)",
-                sequence=f"{model_._table}_id_seq",
-                last_id=get_last_id(model_),
+                "SELECT SETVAL(PG_GET_SERIAL_SEQUENCE(QUOTE_IDENT(%(table)s), 'id'), "
+                "MAX(id), TRUE) FROM %(id_table)s",
+                table=_id_table(model_),
+                id_table=SQL.identifier(_id_table(model_)),
             )
         )
 
@@ -335,6 +359,7 @@ def populate_model(
                 table_alias,
                 series_alias,
                 unique_columns,
+                id_offset,
             ):
                 dest_fields.append(SQL.identifier(field.name))
                 src_fields.append(src)
@@ -354,7 +379,7 @@ def populate_model(
             ", ".join(field.name for field in update_fields),
         )
         query = SQL(
-            "UPDATE %(table)s SET (%(src_columns)s) = ROW(%(dest_columns)s)",
+            "UPDATE ONLY %(table)s SET (%(src_columns)s) = ROW(%(dest_columns)s)",
             table=SQL.identifier(model._table),
             src_columns=SQL(", ").join(
                 SQL.identifier(field.name) for field in update_fields
@@ -368,7 +393,7 @@ def populate_model(
     query = SQL(
         """
         INSERT INTO %(table)s (%(dest_columns)s)
-        SELECT %(src_columns)s FROM %(table)s %(table_alias)s,
+        SELECT %(src_columns)s FROM ONLY %(table)s %(table_alias)s,
         GENERATE_SERIES(1, %(factor)s) %(series_alias)s
     """,
         table=SQL.identifier(model._table),
@@ -397,6 +422,8 @@ class Many2oneFieldWrapper(Many2one):
 
 
 class Many2manyModelWrapper:
+    _table_inheritance_root = ""
+
     def __init__(self, env: Environment, field: Field) -> None:
         self._name = field.relation
         self._table = field.relation
@@ -432,8 +459,12 @@ def infer_many2many_model(
 
 def populate_models(model_factors: dict[Any, int], separator_code: int) -> None:
 
-    def has_records(model_):
-        query = SQL("SELECT EXISTS (SELECT 1 FROM %s)", SQL.identifier(model_._table))
+    def has_records(model_, only=False):
+        query = SQL(
+            "SELECT EXISTS (SELECT 1 FROM %s%s)",
+            SQL("ONLY ") if only else SQL(),
+            SQL.identifier(model_._table),
+        )
         return model_.env.execute_query(query)[0][0]
 
     populated: dict[Model, int] = defaultdict(int)
@@ -442,37 +473,61 @@ def populate_models(model_factors: dict[Any, int], separator_code: int) -> None:
     def process(model_):
         if model_ in populated:
             return
+        members = [
+            member for member in _tree_members(model_) if member not in populated
+        ]
         if not has_records(model_):
             _debug.logic("populate.model_empty", model=model_._name)
-            populated[model_] = 0
+            for member in members:
+                populated[member] = 0
             return
 
-        for model_name in model_._inherits:
-            delegated = model_.env[model_name]
-            model_factors.setdefault(delegated, model_factors[model_])
-            process(delegated)
+        for member in members:
+            model_factors.setdefault(member, model_factors[model_])
+            for model_name in member._inherits:
+                delegated = member.env[model_name]
+                model_factors.setdefault(delegated, model_factors[member])
+                process(delegated)
 
-        with _debug.perf(
-            "populate.model",
-            cr=model_.env.cr,
+        # The tables of an inheritance tree share the root's id sequence: their
+        # copies take one offset past the whole tree, or they collide.
+        id_offset = get_last_id(model_) if model_._table_inheritance_root else None
+        _debug.logic(
+            "populate.members",
             model=model_._name,
-            factor=model_factors[model_],
-        ):
-            with ctx.ignore_fkey_constraints(model_), ctx.ignore_indexes(model_):
-                populate_model(model_, populated, model_factors, separator_code)
+            tables=[member._table for member in members],
+            id_offset=id_offset,
+        )
+        for member in members:
+            if member in populated:
+                continue
+            if len(members) > 1 and not has_records(member, only=True):
+                populated[member] = id_offset or 0
+                continue
+            with _debug.perf(
+                "populate.model",
+                cr=member.env.cr,
+                model=member._name,
+                factor=model_factors[member],
+            ):
+                with ctx.ignore_fkey_constraints(member), ctx.ignore_indexes(member):
+                    populate_model(
+                        member, populated, model_factors, separator_code, id_offset
+                    )
 
-        for field in model_._fields.values():
-            if field.store and field.copy:
-                match field.type:
-                    case "one2many":
-                        comodel = model_.env[field.comodel_name]
-                        if comodel != model_:
-                            model_factors[comodel] = model_factors[model_]
-                            process(comodel)
-                    case "many2many":
-                        m2m_model = infer_many2many_model(model_.env, field)
-                        model_factors[m2m_model] = model_factors[model_]
-                        process(m2m_model)
+        for member in members:
+            for field in member._fields.values():
+                if field.store and field.copy:
+                    match field.type:
+                        case "one2many":
+                            comodel = member.env[field.comodel_name]
+                            if comodel != member:
+                                model_factors.setdefault(comodel, model_factors[member])
+                                process(comodel)
+                        case "many2many":
+                            m2m_model = infer_many2many_model(member.env, field)
+                            model_factors.setdefault(m2m_model, model_factors[member])
+                            process(m2m_model)
 
     _debug.pipeline(
         "populate.start",
