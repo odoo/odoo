@@ -24,6 +24,9 @@ class StockMove(models.Model):
                 and picking.batch_id
                 and any(p.state != "cancel" for p in picking.batch_id.picking_ids)
             ):
+                _debug.pipeline(
+                    "cancelled_picking_detach", picking=picking, batch=picking.batch_id
+                )
                 picking.batch_id = None
         return res
 
@@ -35,8 +38,11 @@ class StockMove(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        if "state" in vals and vals["state"] in ("partially_available", "assigned"):
-            for picking in self.picking_id:
+        if vals.get("state") in ("partially_available", "assigned") and (
+            pickings := self.picking_id
+        ):
+            _debug.logic("reserved_moves_rebatch", moves=self, pickings=pickings)
+            for picking in pickings:
                 if picking.state != "assigned":
                     continue
                 picking._resolve_auto_batch()
@@ -45,7 +51,8 @@ class StockMove(models.Model):
 
     def _action_assign(self, force_qty=False):
         super()._action_assign(force_qty=force_qty)
-        self.move_line_ids._auto_wave()
+        if lines := self.move_line_ids:
+            lines._auto_wave()
 
     def action_show_details(self):
         action = super().action_show_details()

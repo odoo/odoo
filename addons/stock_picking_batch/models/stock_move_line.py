@@ -41,6 +41,14 @@ class WaveFill:
             pickings=len(self.new_picking_ids) + 1 if adds_a_picking else 0,
             weight=self.weight + line_weight,
         ):
+            _debug.logic(
+                "wave_fill_refused",
+                wave=self.wave,
+                line=line,
+                new_moves=len(self.new_move_ids),
+                new_pickings=len(self.new_picking_ids),
+                weight=self.weight + line_weight,
+            )
             return False
         if adds_a_move:
             self.new_move_ids.add(move_id)
@@ -182,6 +190,7 @@ class StockMoveLine(models.Model):
             return False
         return True
 
+    @_debug.perf.timed
     def _auto_wave(self):
         _debug.pipeline("auto_wave_enter", lines=self)
         nearest_parent_locations = defaultdict(lambda: self.env["stock.location"])
@@ -198,6 +207,12 @@ class StockMoveLine(models.Model):
             if nearest_parent_location:
                 nearest_parent_locations[line] = nearest_parent_location
                 batchable_lines |= line
+            else:
+                _debug.logic(
+                    "auto_wave_outside_wave_locations",
+                    line=line,
+                    location=line.location_id,
+                )
 
         remaining_lines = batchable_lines._auto_wave_lines_into_existing_waves(
             nearest_parent_locations
@@ -223,7 +238,9 @@ class StockMoveLine(models.Model):
             domains.append(domain)
         if batches_to_validate_ids:
             domains.append(Domain("id", "not in", batches_to_validate_ids))
-        return self.env["stock.picking.batch"].search(Domain.AND(domains))
+        waves = self.env["stock.picking.batch"].search(Domain.AND(domains))
+        _debug.logic("wave_candidates_found", picking_type=picking_type.id, waves=waves)
+        return waves
 
     def _get_waves_nearest_parent_locations(self, picking_type, potential_waves):
         waves_nearest_parent_locations = defaultdict(lambda: self.env["stock.location"])
@@ -278,6 +295,11 @@ class StockMoveLine(models.Model):
             for fills in fills_by_key.values():
                 for fill in fills:
                     if fill.line_ids:
+                        _debug.pipeline(
+                            "auto_wave_fill_existing",
+                            wave=fill.wave,
+                            lines=len(fill.line_ids),
+                        )
                         self.browse(fill.line_ids)._add_to_wave(fill.wave)
         return remaining_lines
 
@@ -304,6 +326,7 @@ class StockMoveLine(models.Model):
         while potential_lines:
             wave_lines = potential_lines._select_lines_for_one_wave(picking_type)
             if not wave_lines:
+                _debug.logic("auto_wave_line_fits_no_wave", line=potential_lines[:1])
                 potential_lines -= potential_lines[:1]
                 continue
             first_line = wave_lines[:1]
@@ -316,6 +339,7 @@ class StockMoveLine(models.Model):
                     ),
                 }
             )
+            _debug.pipeline("auto_wave_new", wave=new_wave, lines=wave_lines)
             wave_lines._add_to_wave(new_wave)
             potential_lines -= wave_lines
 

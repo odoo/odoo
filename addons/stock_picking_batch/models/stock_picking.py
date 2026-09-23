@@ -1,5 +1,8 @@
 from odoo import api, models
 from odoo.fields import Command, Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPicking(models.Model):
@@ -14,6 +17,10 @@ class StockPicking(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
+        if "batch_id" in vals:
+            _debug.lifecycle(
+                "picking_batch_write", pickings=self, batch=vals["batch_id"]
+            )
         if vals.get("batch_id"):
             self.batch_id._update_picking_type_from_pickings()
             self.batch_id._check_pickings_are_allowed()
@@ -31,11 +38,13 @@ class StockPicking(models.Model):
         res = super().button_validate()
         to_assign_ids = set()
         if not any(picking.state == "done" for picking in self):
+            _debug.logic("batch_validate_stopped_early", pickings=self)
             return res
         if self and self.env.context.get("pickings_to_detach"):
             pickings_to_detach = self.env["stock.picking"].browse(
                 self.env.context["pickings_to_detach"]
             )
+            _debug.pipeline("batch_validate_detach_empty", pickings=pickings_to_detach)
             pickings_to_detach.batch_id = False
             pickings_to_detach.move_ids.filtered(
                 lambda m: not m.quantity
@@ -48,15 +57,20 @@ class StockPicking(models.Model):
             if picking.batch_id and any(
                 p.state != "done" for p in picking.batch_id.picking_ids
             ):
+                _debug.pipeline(
+                    "batch_validate_detach_done",
+                    picking=picking,
+                    batch=picking.batch_id,
+                )
                 picking.batch_id = None
             to_assign_ids.update(picking.backorder_ids.ids)
 
         assignable_pickings = self.env["stock.picking"].browse(to_assign_ids)
+        _debug.pipeline("batch_validate_rebatch", pickings=assignable_pickings)
         for picking in assignable_pickings:
             picking._resolve_auto_batch()
-        assignable_pickings.move_line_ids.with_context(
-            skip_auto_waveable=True
-        )._auto_wave()
+        if lines := assignable_pickings.move_line_ids:
+            lines.with_context(skip_auto_waveable=True)._auto_wave()
 
         return res
 
@@ -73,6 +87,9 @@ class StockPicking(models.Model):
                     for p in picking.batch_id.picking_ids - pickings_to_detach
                 )
             ):
+                _debug.pipeline(
+                    "backorder_detach", picking=picking, batch=picking.batch_id
+                )
                 picking.batch_id = None
         return super()._create_backorder(backorder_moves)
 
@@ -82,14 +99,21 @@ class StockPicking(models.Model):
             return False
         return super()._is_transfer_display_required()
 
+    @_debug.perf.timed
     def _resolve_auto_batch(self):
         self.check_singleton()
-        if (
-            not self.picking_type_id._is_auto_batch_grouped()
-            or self.batch_id
-            or not self.move_ids
-            or not self._is_auto_batchable()
-        ):
+        if not self.picking_type_id._is_auto_batch_grouped():
+            skip = "type_not_grouped"
+        elif self.batch_id:
+            skip = "already_batched"
+        elif not self.move_ids:
+            skip = "no_moves"
+        elif not self._is_auto_batchable():
+            skip = "not_batchable"
+        else:
+            skip = None
+        if skip:
+            _debug.logic("auto_batch_skip", picking=self, reason=skip)
             return False
 
         possible_batches = (
@@ -97,8 +121,10 @@ class StockPicking(models.Model):
             .sudo()
             .search(self._get_domain_possible_batches())
         )
+        _debug.logic("auto_batch_candidates", picking=self, batches=possible_batches)
         for batch in possible_batches:
             if batch._is_auto_mergeable(**self._get_auto_merge_amounts()):
+                _debug.pipeline("auto_batch_join", picking=self, batch=batch)
                 batch.picking_ids |= self
                 return batch
 
@@ -117,6 +143,14 @@ class StockPicking(models.Model):
                 new_batch_data["picking_ids"].append(Command.link(picking.id))
                 break
         new_batch = self.env["stock.picking.batch"].sudo().create(new_batch_data)
+        _debug.pipeline(
+            "auto_batch_create",
+            picking=self,
+            batch=new_batch,
+            partner_pickings=len(new_batch_data["picking_ids"]) - 1,
+            candidates=len(possible_pickings),
+            auto_confirm=self.picking_type_id.batch_auto_confirm,
+        )
         if self.picking_type_id.batch_auto_confirm:
             new_batch.action_confirm()
         return new_batch
@@ -138,6 +172,14 @@ class StockPicking(models.Model):
             )
         if self.picking_type_id.batch_max_pickings:
             res = res and self.picking_type_id.batch_max_pickings > 1
+        _debug.logic(
+            "auto_batchable",
+            picking=self,
+            partner=picking,
+            max_lines=self.picking_type_id.batch_max_lines,
+            max_pickings=self.picking_type_id.batch_max_pickings,
+            result=res,
+        )
         return res
 
     def _get_domain_possible_pickings(self):
@@ -196,6 +238,12 @@ class StockPicking(models.Model):
 
     def update_batch_user(self, user_id):
         pickings = self.filtered(lambda p: p.user_id.id != user_id)
+        _debug.lifecycle(
+            "batch_user_propagate",
+            pickings=pickings,
+            user=user_id,
+            unchanged=len(self) - len(pickings),
+        )
         pickings.write({"user_id": user_id})
         for pick in pickings:
             if user_id:

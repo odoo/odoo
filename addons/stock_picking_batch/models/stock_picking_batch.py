@@ -51,6 +51,13 @@ class StockPickingBatch(models.Model):
         planned_batches = self.filtered("date_planned").sorted("date_planned")
         earliest_batch = planned_batches[:1] or target_batch
         merged_batch_vals = earliest_batch._prepare_merged_batch_vals()
+        _debug.pipeline(
+            "batch_merge",
+            target=target_batch,
+            merged=other_batches,
+            pickings=other_batches.picking_ids,
+            vals_from=earliest_batch,
+        )
         target_batch.picking_ids |= other_batches.picking_ids
         target_batch.write(merged_batch_vals)
         other_batches.unlink()

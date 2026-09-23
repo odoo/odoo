@@ -1,5 +1,8 @@
 from odoo import fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPickingToBatch(models.TransientModel):
@@ -31,6 +34,13 @@ class StockPickingToBatch(models.TransientModel):
     def attach_pickings(self):
         self.check_singleton()
         pickings = self.env["stock.picking"].browse(self.env.context.get("active_ids"))
+        _debug.pipeline(
+            "picking_to_batch",
+            mode=self.mode,
+            pickings=pickings,
+            batch=self.batch_id,
+            draft=self.is_create_draft,
+        )
         if not pickings:
             raise UserError(self.env._("Select the transfers to add to a batch."))
         if self.mode == "new":

@@ -1,5 +1,8 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockAddToWave(models.TransientModel):
@@ -56,6 +59,14 @@ class StockAddToWave(models.TransientModel):
 
         self = self.with_context(active_owner_id=self.user_id.id)
         wave = self.wave_id if self.mode == "existing" else self.wave_id.browse()
+        _debug.pipeline(
+            "add_to_wave",
+            mode=self.mode,
+            wave=wave,
+            lines=self.line_ids,
+            pickings=self.picking_ids,
+            user=self.user_id,
+        )
         if self.line_ids:
             company = self.line_ids.company_id
             if len(company) > 1:
