@@ -289,3 +289,46 @@ then create a vehicle and assign both plus a tag — the tag appears as a colore
 pill, and the driver's form now lists that vehicle under "Assigned Vehicles".
 Verified the same round-trip via the Odoo shell (`driver.vehicle_ids`,
 `vehicle.driver_id`, `vehicle.tag_ids` all resolve correctly).
+
+---
+
+## Chapter 8 — Computed Fields And Onchanges
+
+**Concept.** A **computed field** (`compute=...`, `@api.depends(...)`) derives
+its value from other fields in Python instead of being typed in by a user.
+An **onchange** (`@api.onchange(...)`) runs client-side, in the form, the
+moment a field changes — before saving — to adjust other fields or warn the
+user.
+
+**Why?** Some data shouldn't be typed by hand because it's always derivable
+(a vehicle's age from its acquisition date) — computing it keeps it correct by
+construction. Onchanges give live feedback *while filling the form*, which a
+stored computed field alone cannot do (it only reacts on save).
+
+**Where?**
+- [`models/fleet_vehicle.py`](models/fleet_vehicle.py) — `age_years` (compute) and `_onchange_driver_id` (onchange)
+- [`models/fleet_driver.py`](models/fleet_driver.py) — `vehicle_count` (compute)
+
+**Code explanation.** `age_years` is `store=True`: it is written to the
+database column and kept in sync automatically whenever `acquisition_date`
+changes (declared via `@api.depends`), which also makes it sortable/groupable
+in views and searches. `vehicle_count` on the driver is **not** stored — it's
+cheap to compute from the already-loaded `vehicle_ids` and rarely needs to be
+searched on, so recomputing on read is simpler and avoids an extra DB column.
+`_onchange_driver_id` returns a `{'warning': {...}}` dict, which the web client
+turns into a dialog the moment a driver without a phone number is picked —
+purely advisory, it does not block saving.
+
+**Fleet functionality.** The vehicle list/form now shows a live "Fleet Age"
+column; a driver's list shows how many vehicles they currently have; assigning
+a driver with no phone on file now visibly warns the user in the form.
+
+**What changed.** Updated `models/fleet_vehicle.py` (`age_years`,
+`_onchange_driver_id`), `models/fleet_driver.py` (`vehicle_count`),
+`views/fleet_vehicle_views.xml`, `views/fleet_driver_views.xml`.
+
+**Testing.** Upgrade the module. In the shell: create a vehicle with
+`acquisition_date='2018-01-01'` and confirm `age_years` computes to the correct
+number of years; set its `driver_id` to a driver with no phone and call
+`_onchange_driver_id()` — confirm it returns the warning dict. In the UI: pick
+a driver with no phone on a vehicle form and see the warning dialog appear.
