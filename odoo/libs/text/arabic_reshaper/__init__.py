@@ -3,9 +3,7 @@ from itertools import repeat
 from typing import Final
 
 from .letters import (
-    UNSHAPED,
     ISOLATED,
-    TATWEEL,
     ZWJ,
     LETTERS_ARABIC,
     FINAL,
@@ -145,7 +143,7 @@ def reshape(text: str) -> str:
     result = []
     for o in output:
         if o[LETTER]:
-            if o[FORM] == NOT_SUPPORTED or o[FORM] == UNSHAPED:
+            if o[FORM] == NOT_SUPPORTED:
                 result.append(o[LETTER])
             else:
                 result.append(LETTERS_ARABIC[o[LETTER]][o[FORM]])
