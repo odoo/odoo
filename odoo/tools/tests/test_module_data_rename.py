@@ -78,6 +78,69 @@ class TestModuleRenameReachesXmlIdsOnly(unittest.TestCase):
         )
 
 
+class TestModuleRenameReachesEveryQuotedNameItOwns(unittest.TestCase):
+    def setUp(self):
+        self.rename = _ModuleRename(
+            "sales_team",
+            "sale_team",
+            names={
+                "crm_team_view_kanban",
+                "crm_team_view_form",
+                "action_team",
+                "group_sale_manager",
+                "mt_team",
+                "tpl_team",
+                "membership_multi",
+                "box",
+            },
+            models={"box"},
+        )
+
+    def test_an_arch_names_its_xml_ids_in_contexts_options_urls_and_kanbans(self):
+        arch = (
+            '<form><field name="team_id" context="{'
+            "'kanban_view_ref': 'sales_team.crm_team_view_kanban', "
+            "'form_view_ref': &quot;sales_team.crm_team_view_form&quot;}\" "
+            "options=\"{'action': 'sales_team.action_team'}\"/>"
+            '<kanban on_create="sales_team.action_team"/>'
+            '<a href="/odoo/action-sales_team.action_team?view_type=list"/></form>'
+        )
+        renamed = self.rename.in_arch(arch)
+        self.assertNotIn("sales_team.", renamed)
+        for expected in (
+            "'sale_team.crm_team_view_kanban'",
+            "&quot;sale_team.crm_team_view_form&quot;",
+            "'action': 'sale_team.action_team'",
+            'on_create="sale_team.action_team"',
+            "/odoo/action-sale_team.action_team?view_type=list",
+        ):
+            self.assertIn(expected, renamed)
+
+    def test_stored_code_names_its_xml_ids_and_keys_through_any_call(self):
+        code = (
+            "env['ir.actions.act_window']._for_xml_id('sales_team.action_team')\n"
+            "user.has_group('sales_team.group_sale_manager')\n"
+            "website.is_view_active('sales_team.tpl_team')\n"
+            "record.activity_schedule('sales_team.mt_team')\n"
+            'record.message_post(subtype_xmlid="sales_team.mt_team")\n'
+            "env['ir.config_parameter'].get_param('sales_team.membership_multi')\n"
+        )
+        self.assertEqual(
+            self.rename.in_text(code), code.replace("sales_team.", "sale_team.")
+        )
+
+    def test_a_model_name_or_a_name_it_does_not_own_is_left_alone(self):
+        code = (
+            "env['sales_team.box'].search([])\n"
+            "env.cr.execute('see sales_team.action_team now')\n"
+            "'sales_team.unknown'\n"
+            "'sales_team.action_team.extra'\n"
+        )
+        self.assertEqual(self.rename.in_text(code), code)
+        arch = '<form><div data-oe-model="sales_team.box"/></form>'
+        self.assertEqual(self.rename.in_arch(arch), arch)
+
+
 class TestFieldRenameScopesAnArch(unittest.TestCase):
     def test_a_node_placed_beside_a_relational_field_is_the_view_model(self):
         arch = (

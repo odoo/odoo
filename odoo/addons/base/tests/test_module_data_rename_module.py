@@ -157,6 +157,65 @@ class TestRenameModule(TransactionCase):
             [("probe_new.assets_probe",)],
         )
 
+    def test_a_quoted_xml_id_or_key_of_the_module_follows_and_a_model_name_not(self):
+        for name in ("probe_kanban", "probe_act", "box"):
+            self._insert_xmlid("probe_old", name)
+        self.env.cr.execute(
+            'INSERT INTO ir_model (model, name, "order", state) '
+            "VALUES ('probe_old.box', '{\"en_US\": \"probe\"}', 'id', 'base')"
+        )
+        window = self.env["ir.actions.act_window"].create(
+            {
+                "name": "probe",
+                "res_model": "res.partner",
+                "context": "{'kanban_view_ref': 'probe_old.probe_kanban'}",
+            }
+        )
+        code = (
+            "act = env['ir.actions.act_window']._for_xml_id('probe_old.probe_act')\n"
+            "multi = env['ir.config_parameter'].get_param('probe_old.setting')\n"
+            "ok = env.user.has_group('probe_old.probe_kanban')\n"
+            "boxes = env['probe_old.box']"
+        )
+        self.action.code = code
+        form_arch = (
+            '<form><field name="child_ids" '
+            "context=\"{'form_view_ref': 'probe_old.probe_kanban'}\"/>"
+            '<kanban on_create="probe_old.probe_act"/>'
+            '<a href="/odoo/action-probe_old.probe_act"/></form>'
+        )
+        self.env.cr.execute(
+            "UPDATE ir_ui_view SET arch_db = jsonb_build_object('en_US', %s::text) "
+            "WHERE id = %s",
+            [form_arch, self.form.id],
+        )
+        self.env.flush_all()
+        rename_module(self.env.cr, "probe_old", "probe_new")
+        self.assertEqual(
+            self._read("SELECT context FROM ir_act_window WHERE id = %s", [window.id]),
+            [("{'kanban_view_ref': 'probe_new.probe_kanban'}",)],
+        )
+        renamed = code.replace("'probe_old.probe_", "'probe_new.probe_").replace(
+            "'probe_old.setting'", "'probe_new.setting'"
+        )
+        self.assertIn("env['probe_old.box']", renamed)
+        self.assertEqual(
+            self._read(
+                "SELECT code FROM ir_act_server WHERE id = %s", [self.action.id]
+            ),
+            [(renamed,)],
+        )
+        [(arch,)] = self._read(
+            "SELECT arch_db->>'en_US' FROM ir_ui_view WHERE id = %s", [self.form.id]
+        )
+        self.assertNotIn("probe_old.", arch)
+        for expected in (
+            "'form_view_ref': 'probe_new.probe_kanban'",
+            'on_create="probe_new.probe_act"',
+            'href="/odoo/action-probe_new.probe_act"',
+        ):
+            self.assertIn(expected, arch)
+
     def test_a_database_without_the_module_is_left_alone(self):
         self.assertFalse(rename_module(self.env.cr, "probe_absent", "probe_new"))
         self.assertEqual(

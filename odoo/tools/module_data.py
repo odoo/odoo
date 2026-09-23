@@ -347,6 +347,7 @@ def rename_module(cr: BaseCursor, old: str, new: str) -> bool:
     if not cr.fetchone():
         return False
     _drop_uninstalled_placeholder(cr, old, new)
+    rename = _ModuleRename(old, new, *_module_names(cr, old))
     cr.execute(
         SQL(
             "UPDATE ir_module_module SET name = %s, data_file_checksums = NULL "
@@ -395,7 +396,7 @@ def rename_module(cr: BaseCursor, old: str, new: str) -> bool:
             like=_like_prefix(f"{old}."),
         )
     )
-    _rename_module_references(cr, old, new)
+    _rename_module_references(cr, rename)
     cr.execute(
         SQL(
             "UPDATE ir_ui_view SET key = %s || substring(key from %s) WHERE key LIKE %s",
@@ -490,6 +491,31 @@ def _rename_module_xmlids(cr: _SqlCursor, old: str, new: str) -> int:
     return moved
 
 
+def _module_names(cr: BaseCursor, module: str) -> tuple[set[str], set[str]]:
+    # what `module.` opens as stored data knows it: the module's xml ids and its
+    # config-parameter keys, and the model names it opens, which it must not touch
+    prefix = f"{module}."
+    cr.execute(SQL("SELECT name FROM ir_model_data WHERE module = %s", module))
+    names = {name for (name,) in cr.fetchall()}
+    for table, column in (("ir_config_parameter", "key"), ("ir_model", "model")):
+        if not table_exists(cr, table):
+            continue
+        cr.execute(
+            SQL(
+                "SELECT %s FROM %s WHERE %s LIKE %s",
+                SQL.identifier(column),
+                SQL.identifier(table),
+                SQL.identifier(column),
+                _like_prefix(prefix),
+            )
+        )
+        found = {value[len(prefix) :] for (value,) in cr.fetchall()}
+        if table == "ir_model":
+            return names, found
+        names |= found
+    return names, set()
+
+
 def _like_prefix(prefix: str) -> str:
     return prefix.replace("_", "\\_") + "%"
 
@@ -545,22 +571,42 @@ _XMLID_ATTRIBUTES = frozenset({"t-call", "t-call-assets", "t-snippet"})
 
 class _ModuleRename:
     # A module's name as it stands in stored data: the prefix of an xml id in
-    # the positions that hold one, and nowhere else, since `sale_team.` also
-    # opens model names (`env['iot.box']`) that no module rename touches.
-    def __init__(self, old: str, new: str) -> None:
+    # the positions that hold one, and of a quoted name the module owns (an xml
+    # id, a config-parameter key), never of a model name, since `iot.` also opens
+    # model names (`env['iot.box']`) that no module rename touches.
+    def __init__(
+        self,
+        old: str,
+        new: str,
+        names: Iterable[str] = (),
+        models: Iterable[str] = (),
+    ) -> None:
         self.old = old
         self.new = new
+        self.names = frozenset(names) - frozenset(models)
         module = re.escape(old)
         self.text = re.compile(
             rf"(?P<lead>{_XMLID_CALL}['\"]|%\(|\bt-call(?:-assets)?\s*=\s*['\"])"
             rf"{module}\.(?=\w)"
         )
+        self.quoted = re.compile(
+            rf"(?P<lead>['\"]|\baction-){module}\.(?P<name>[\w.-]+)(?=(?P<end>['\"/?#&\s]|$))"
+        )
+        self.whole = re.compile(rf"\s*{module}\.(?P<name>[\w.-]+)\s*")
         self.lead = re.compile(rf"^(?P<lead>\s*){module}\.(?=\w)")
         self.items = re.compile(rf"(?P<lead>(?:^|,)\s*!?\s*){module}\.(?=\w)")
         self.action = re.compile(rf"{module}\.\w[\w.]*")
 
     def in_text(self, value: str) -> str:
-        return self.text.sub(lambda m: f"{m['lead']}{self.new}.", value)
+        value = self.text.sub(lambda m: f"{m['lead']}{self.new}.", value)
+        return self.quoted.sub(self._quoted, value)
+
+    def _quoted(self, match: re.Match[str]) -> str:
+        lead, name = match["lead"], match["name"]
+        # a quoted name must close where it ends; a URL's `action-` need not
+        if (lead in ("'", '"') and match["end"] != lead) or name not in self.names:
+            return match[0]
+        return f"{lead}{self.new}.{name}"
 
     def in_attribute(self, element: etree._Element, attribute: str, value: str) -> str:
         if attribute == "groups":
@@ -576,6 +622,10 @@ class _ModuleRename:
             and self.action.fullmatch(value)
         ):
             return f"{self.new}{value[len(self.old) :]}"
+        # an attribute whose whole value is an xml id of the module (a kanban's
+        # on_create, a widget's action)
+        if (whole := self.whole.fullmatch(value)) and whole["name"] in self.names:
+            return value.replace(f"{self.old}.", f"{self.new}.", 1)
         return self.in_text(value)
 
     def in_arch(self, value: str) -> str:
@@ -608,8 +658,8 @@ class _ModuleRename:
         return etree.tostring(root, encoding="unicode") if renamed else value
 
 
-def _rename_module_references(cr: BaseCursor, old: str, new: str) -> int:
-    rename = _ModuleRename(old, new)
+def _rename_module_references(cr: BaseCursor, rename: _ModuleRename) -> int:
+    old, new = rename.old, rename.new
     needle = f"{old}."
     rewritten = 0
     if table_exists(cr, "ir_ui_view"):
