@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from unittest import mock
 
+from odoo.tools import config
 from odoo.tools import subprocess as tools_subprocess
 from odoo.tools.subprocess import (
     get_executable_path,
@@ -80,6 +81,56 @@ class TestStrippedSysArgv(unittest.TestCase):
 
     def test_a_database_named_like_a_module_is_not_confused(self):
         self.assertEqual(strip(["odoo-bin", "-d", "base"]), ["odoo-bin", "-d", "base"])
+
+    def test_an_abbreviated_long_option_is_stripped(self):
+        self.assertEqual(
+            strip(["odoo-bin", "--upd", "web", "--ini=sale", "-d", "db"]),
+            ["odoo-bin", "-d", "db"],
+        )
+
+    def test_an_abbreviated_flag_is_stripped_and_the_next_option_kept(self):
+        self.assertEqual(
+            strip(["odoo-bin", "-u", "web", "--i18n-over", "-d", "db"]),
+            ["odoo-bin", "-d", "db"],
+        )
+
+    def test_a_value_starting_with_a_dash_belongs_to_its_option(self):
+        argv = ["odoo-bin", "--test-tags", "-standard,/web", "-d", "db"]
+        self.assertEqual(strip(argv), argv)
+        argv = ["odoo-bin", "-d", "-staging", "--http-port", "8070"]
+        self.assertEqual(strip(argv), argv)
+
+    def test_a_short_cluster_keeps_its_other_options(self):
+        self.assertEqual(strip(["odoo-bin", "-sd", "db"]), ["odoo-bin", "-d", "db"])
+        self.assertEqual(strip(["odoo-bin", "-sddb"]), ["odoo-bin", "-ddb"])
+        self.assertEqual(
+            strip(["odoo-bin", "-su", "web", "-d", "db"]), ["odoo-bin", "-d", "db"]
+        )
+
+    def test_an_optional_value_option_does_not_swallow_the_next_option(self):
+        argv = ["odoo-bin", "--without-demo", "-d", "db"]
+        self.assertEqual(strip(argv), argv)
+        argv = ["odoo-bin", "--without-demo", "False", "-d", "db"]
+        self.assertEqual(strip(argv), argv)
+
+    def test_everything_after_a_double_dash_is_positional(self):
+        self.assertEqual(
+            strip(["odoo-bin", "-d", "db", "--", "-u", "x"]),
+            ["odoo-bin", "-d", "db", "--", "-u", "x"],
+        )
+
+    def test_the_stripped_argv_parses_back(self):
+        for argv in (
+            ["odoo-bin", "--test-tags", "-standard,/web", "-d", "db"],
+            ["odoo-bin", "-u", "web", "--i18n-over", "-d", "db"],
+            ["odoo-bin", "-sd", "db"],
+        ):
+            with self.subTest(argv=argv):
+                options, rest = config.parser.parse_args(strip(argv)[1:])
+                self.assertEqual(rest, [])
+                self.assertEqual(options.db_name, ["db"])
+                self.assertIsNone(options.update)
+                self.assertIsNone(options.save)
 
 
 class TestToolLookup(unittest.TestCase):

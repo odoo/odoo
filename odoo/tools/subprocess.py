@@ -1,4 +1,5 @@
 import logging
+import optparse  # noqa: TID251  the argv is optparse's; stripping it must tokenize the same way
 import os
 import shutil
 import sys
@@ -65,47 +66,85 @@ def exec_pg_environ() -> dict[str, str]:
     return env
 
 
+_STRIPPED_DESTS = frozenset(
+    {"save", "init", "update", "overwrite_existing_translations"}
+)
+
+
+def _consumed_values(option: optparse.Option, arg: str, rest: list[str]) -> int:
+    if not option.takes_value():
+        return 0
+    if (
+        arg in config.optional_options
+        and "=" not in arg
+        and (not rest or rest[0].startswith("-"))
+    ):
+        return 0
+    return option.nargs or 1
+
+
+def _strip_long(
+    parser: optparse.OptionParser, arg: str, rest: list[str], dests: frozenset[str]
+) -> tuple[list[str], int]:
+    name, eq, _value = arg.partition("=")
+    try:
+        option = parser._long_opt[parser._match_long_opt(name)]
+    except optparse.BadOptionError:
+        return [arg], 0
+    consumed = 0 if eq else _consumed_values(option, arg, rest)
+    if option.dest in dests:
+        return [], consumed
+    return [arg, *rest[:consumed]], consumed
+
+
+def _strip_short(
+    parser: optparse.OptionParser, arg: str, rest: list[str], dests: frozenset[str]
+) -> tuple[list[str], int]:
+    kept = ""
+    for pos, char in enumerate(arg[1:], start=2):
+        option = parser._short_opt.get("-" + char)
+        if option is None:
+            return ["-" + kept + arg[pos - 1 :]], 0
+        if not option.takes_value():
+            if option.dest not in dests:
+                kept += char
+            continue
+        attached = arg[pos:]
+        consumed = 0 if attached else option.nargs or 1
+        if option.dest in dests:
+            return (["-" + kept] if kept else []), consumed
+        return ["-" + kept + char + attached, *rest[:consumed]], consumed
+    return (["-" + kept] if kept else []), 0
+
+
 def stripped_sys_argv(*strip_args: str) -> list[str]:
-    stripped = sorted(
-        set(strip_args)
-        | {
-            "-s",
-            "--save",
-            "-u",
-            "--update",
-            "-i",
-            "--init",
-            "--i18n-overwrite",
-        }
-    )
-    unknown = [s for s in stripped if not config.parser.has_option(s)]
+    parser = config.parser
+    unknown = [s for s in strip_args if not parser.has_option(s)]
     if unknown:
         msg = f"Unknown option(s) to strip: {', '.join(unknown)}"
         raise ValueError(msg)
-    takes_value = {
-        s: opt.takes_value()
-        for s in stripped
-        if (opt := config.parser.get_option(s)) is not None
-    }
-
-    longs = tuple(a for a in stripped if a.startswith("--"))
-    shorts = tuple(a for a in stripped if not a.startswith("--"))
-    longs_eq = tuple(l + "=" for l in longs if takes_value[l])
+    dests = _STRIPPED_DESTS | {parser.get_option(s).dest for s in strip_args}
 
     args = sys.argv[:]
-
-    def strip(args, i):
-        return (
-            args[i].startswith(shorts)
-            or args[i].startswith(longs_eq)
-            or (args[i] in longs)
-            or (i >= 1 and (args[i - 1] in stripped) and takes_value[args[i - 1]])
-        )
-
-    kept = [x for i, x in enumerate(args) if not strip(args, i)]
+    kept = args[:1]
+    i = 1
+    while i < len(args):
+        arg = args[i]
+        rest = args[i + 1 :]
+        if arg == "--":
+            kept.extend(args[i:])
+            break
+        if arg.startswith("--"):
+            tokens, consumed = _strip_long(parser, arg, rest, dests)
+        elif arg.startswith("-") and arg != "-":
+            tokens, consumed = _strip_short(parser, arg, rest, dests)
+        else:
+            tokens, consumed = [arg], 0
+        kept.extend(tokens)
+        i += 1 + consumed
     _debug.logic(
         "subprocess.argv_stripped",
-        stripped=list(stripped),
+        stripped=sorted(dests),
         before=len(args),
         after=len(kept),
     )
