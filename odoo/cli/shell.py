@@ -4,6 +4,7 @@ import logging
 import os
 import signal
 import sys
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any, NoReturn
 
@@ -167,7 +168,7 @@ class Shell(Command):
                     )
                 continue
             try:
-                shell_func = getattr(self, shell)
+                shell_func = self._get_repl_launchers()[shell]
                 _debug.lifecycle("cli.shell.repl_started", shell=shell)
                 result = shell_func(local_vars, pythonstartup)
                 _debug.lifecycle("cli.shell.repl_exited", shell=shell)
@@ -183,6 +184,16 @@ class Shell(Command):
                 _logger.debug("Shell error:", exc_info=True)
         _debug.logic("cli.shell.no_repl", candidates=len(shells_to_try))
         return None
+
+    def _get_repl_launchers(
+        self,
+    ) -> dict[str, Callable[[dict[str, Any], str | None], None]]:
+        return {
+            "ipython": self.ipython,
+            "ptpython": self.ptpython,
+            "bpython": self.bpython,
+            "python": self.python,
+        }
 
     def ipython(
         self, local_vars: dict[str, Any], pythonstartup: str | None = None

@@ -83,12 +83,27 @@ class BenchmarkStats:
 
     raw_times_us: list[float] = field(default_factory=list, repr=False)
 
+    def _get_values_us(self) -> dict[str, float]:
+        return {
+            "mean": self.mean_us,
+            "median": self.median_us,
+            "std_dev": self.std_dev_us,
+            "min": self.min_us,
+            "max": self.max_us,
+            "p5": self.p5_us,
+            "p25": self.p25_us,
+            "p75": self.p75_us,
+            "p95": self.p95_us,
+            "p99": self.p99_us,
+            "db_time": self.db_time_us,
+            "python_time": self.python_time_us,
+        }
+
     def __getattr__(self, name: str) -> float:
         if name.endswith("_ms"):
-            try:
-                return getattr(self, f"{name[:-3]}_us") / 1000
-            except AttributeError:
-                pass
+            values_us = self._get_values_us()
+            if name[:-3] in values_us:
+                return values_us[name[:-3]] / 1000
         raise AttributeError(
             f"{type(self).__name__!r} object has no attribute {name!r}"
         )
@@ -110,23 +125,8 @@ class BenchmarkStats:
 
     def _summary(self, unit: str) -> str:
         p = 1 if unit == "us" else 3
-        v = {
-            field: getattr(self, f"{field}_{unit}")
-            for field in (
-                "mean",
-                "median",
-                "std_dev",
-                "min",
-                "max",
-                "p5",
-                "p25",
-                "p75",
-                "p95",
-                "p99",
-                "db_time",
-                "python_time",
-            )
-        }
+        divisor = 1 if unit == "us" else 1000
+        v = {field: value / divisor for field, value in self._get_values_us().items()}
         symbol = "\u00b5s" if unit == "us" else "ms"
         if self.cv < 0.1:
             stability = "stable"

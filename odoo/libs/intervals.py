@@ -1,4 +1,4 @@
-__all__ = ["Intervals", "boundaries", "intervals_overlap", "invert_intervals"]
+__all__ = ["Intervals", "intervals_overlap", "invert_intervals"]
 
 import itertools
 from typing import TYPE_CHECKING
