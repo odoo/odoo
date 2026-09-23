@@ -33,7 +33,7 @@ class DeliveryCommon(SaleCommon):
         default_values = {
             "name": "Test Carrier",
             "fixed_price": 5.0,
-            "delivery_type": "fixed",
+            "delivery_type": "in_house",
             "product_id": product.id,
         }
         return cls.env["delivery.carrier"].create(dict(default_values, **values))

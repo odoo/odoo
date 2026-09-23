@@ -3,6 +3,7 @@
 {
     "name": "Delivery Costs",
     "category": "Sales/Delivery",
+    "sequence": 1,  # First in the shipping providers kanban, as in-house delivery.
     "description": """
 Allows you to add delivery methods in sale orders.
 ==================================================

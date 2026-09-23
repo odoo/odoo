@@ -7,8 +7,11 @@ import psycopg2
 
 from odoo import SUPERUSER_ID, Command, api, fields, models
 from odoo.exceptions import UserError
+from odoo.modules.module import get_module_icon
 from odoo.modules.registry import Registry
 from odoo.tools.safe_eval import expr_eval
+
+from odoo.addons.delivery import const
 
 
 class DeliveryCarrier(models.Model):
@@ -38,10 +41,12 @@ class DeliveryCarrier(models.Model):
     # This field will be overwritten by internal shipping providers by adding their own type.
     delivery_type = fields.Selection(
         string="Provider",
-        selection=[("base_on_rule", "Based on Rules"), ("fixed", "Fixed Price")],
-        default="fixed",
+        selection=[("in_house", "In-house Delivery")],
+        default="in_house",
         required=True,
     )
+    provider_icon = fields.Char(string="Provider Icon", compute="_compute_provider_icon")
+    available_delivery_types = fields.Char(compute="_compute_available_delivery_types")
     supports_cash_on_delivery = fields.Boolean(compute="_compute_supports_cash_on_delivery")
     allow_cash_on_delivery = fields.Boolean(
         string="Cash on Delivery",
@@ -109,16 +114,20 @@ class DeliveryCarrier(models.Model):
         column1="carrier_id",
         column2="zip_prefix_id",
     )
-
-    max_weight = fields.Float(
-        help="If the total weight of the order is over this weight, the method won't be available."
+    pricelist_ids = fields.Many2many(
+        string="Pricelists",
+        help="The method is available only if the order uses one of these pricelists.",
+        comodel_name="product.pricelist",
+        relation="delivery_carrier_pricelist_rel",
+        column1="carrier_id",
+        column2="pricelist_id",
     )
+
+    max_weight = fields.Float()
     weight_uom_name = fields.Char(
         string="Weight unit of measure label", compute="_compute_weight_uom_name"
     )
-    max_volume = fields.Float(
-        help="If the total volume of the order is over this volume, the method won't be available."
-    )
+    max_volume = fields.Float()
     volume_uom_name = fields.Char(
         string="Volume unit of measure label", compute="_compute_volume_uom_name"
     )
@@ -148,7 +157,7 @@ class DeliveryCarrier(models.Model):
     margin = fields.Float(help="This percentage will be added to the shipping price.")
     fixed_margin = fields.Float(help="This fixed amount will be added to the shipping price.")
     free_over = fields.Boolean(
-        string="Free if order amount is above",
+        string="Free above",
         help="If the order total amount (shipping excluded) is above or equal to this value, the"
         " customer benefits from a free shipping.",
     )
@@ -208,7 +217,7 @@ class DeliveryCarrier(models.Model):
     @api.depends("delivery_type")
     def _compute_support_test_environment(self):
         for carrier in self:
-            carrier.support_test_environment = carrier.delivery_type not in ['fixed', 'base_on_rule']
+            carrier.support_test_environment = carrier.delivery_type != "in_house"
 
     @api.depends("support_test_environment")
     def _compute_prod_environment(self):
@@ -231,9 +240,58 @@ class DeliveryCarrier(models.Model):
             carrier.can_generate_return = False
 
     @api.depends("delivery_type")
+    def _compute_provider_icon(self):
+        """Use the icon of the module that adds the delivery type."""
+        icon_by_type = {
+            delivery_type: get_module_icon(module)
+            for delivery_type, module in self._get_module_by_delivery_type().items()
+        }
+        for carrier in self:
+            carrier.provider_icon = icon_by_type.get(carrier.delivery_type, False)
+
+    @api.depends("delivery_type")
+    def _compute_available_delivery_types(self):
+        """Hide the delivery types of legacy providers, unless already used by the carrier."""
+        legacy_types = {
+            delivery_type
+            for delivery_type, module in self._get_module_by_delivery_type().items()
+            if module in const.LEGACY_DELIVERY_PROVIDERS
+        }
+        delivery_types = self._fields["delivery_type"].get_values(self.env)
+        for carrier in self:
+            carrier.available_delivery_types = ",".join(
+                delivery_type
+                for delivery_type in delivery_types
+                if delivery_type not in legacy_types or delivery_type == carrier.delivery_type
+            )
+
+    @api.model
+    def _get_module_by_delivery_type(self):
+        """Return the name of the module that adds each delivery type.
+
+        :return: The module names, by delivery type.
+        :rtype: dict[str, str]
+        """
+        selections = (
+            self
+            .env["ir.model.fields.selection"]
+            .sudo()
+            .search([
+                ("field_id.model", "=", "delivery.carrier"),
+                ("field_id.name", "=", "delivery_type"),
+            ])
+        )
+        xmlids = selections._get_external_ids()
+        return {
+            selection.value: xmlids[selection.id][0].split(".")[0]
+            for selection in selections
+            if xmlids.get(selection.id)
+        }
+
+    @api.depends("delivery_type")
     def _compute_supports_cash_on_delivery(self):
         for carrier in self:
-            carrier.supports_cash_on_delivery = carrier.delivery_type in {"base_on_rule", "fixed"}
+            carrier.supports_cash_on_delivery = carrier.delivery_type == "in_house"
 
     @api.depends("delivery_type")
     def _compute_supports_shipping_insurance(self):
@@ -253,14 +311,21 @@ class DeliveryCarrier(models.Model):
         # replace it by `stock_delivery` (with additional condition on `group_stock_picking_batch` ?)
         exclude_apps = ["delivery_barcode", "delivery_stock_picking_batch", "delivery_iot"]
         return {
-            "name": self.env._("New Providers"),
+            "name": self.env._("Shipping Providers"),
             "res_model": "ir.module.module",
             "view_mode": "kanban,list",
             "views": [
                 (self.env.ref("delivery.delivery_provider_module_kanban").id, "kanban"),
                 (self.env.ref("delivery.delivery_provider_module_list").id, "list"),
             ],
-            "domain": [["name", "=like", "delivery_%"], ["name", "not in", exclude_apps]],
+            "search_view_id": [self.env.ref("delivery.delivery_provider_module_search").id],
+            "domain": [
+                "|",
+                ["name", "in", ["delivery", "website_sale_collect"]],
+                ["name", "=like", "delivery_%"],
+                ["name", "not in", exclude_apps],
+            ],
+            "context": {"legacy_delivery_providers": False},
             "type": "ir.actions.act_window",
             "help": self.env._("""<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
@@ -270,13 +335,7 @@ class DeliveryCarrier(models.Model):
     def _is_available_for_order(self, order):
         self.ensure_one()
         order.ensure_one()
-        if not self._match(order.partner_shipping_id, order):
-            return False
-
-        if self.delivery_type == "base_on_rule":
-            return self.rate_shipment(order).get("success")
-
-        return True
+        return self._match(order.partner_shipping_id, order)
 
     def available_carriers(self, partner, source):
         return self.filtered(lambda c: c._match(partner, source))
@@ -285,6 +344,7 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
         return (
             self._match_address(partner)
+            and self._match_pricelist(source)
             and self._match_must_have_tags(source)
             and self._match_excluded_tags(source)
             and self._match_weight(source)
@@ -304,6 +364,20 @@ class DeliveryCarrier(models.Model):
             if not partner.zip or not re.match(regex, partner.zip.upper()):
                 return False
         return True
+
+    def _match_pricelist(self, source):
+        self.ensure_one()
+        if not self.pricelist_ids:
+            return True
+        if source._name == "sale.order":
+            pricelist = source.pricelist_id
+        elif source._name == "stock.picking":
+            if "sale_id" not in source or not source.sale_id:
+                return True
+            pricelist = source.sale_id.pricelist_id
+        else:
+            raise UserError(self.env._("Invalid source document type"))
+        return pricelist in self.pricelist_ids
 
     def _match_must_have_tags(self, source):
         self.ensure_one()
@@ -394,8 +468,6 @@ class DeliveryCarrier(models.Model):
 
     def _apply_margins(self, price, order=False):
         self.ensure_one()
-        if self.delivery_type == "fixed":
-            return float(price)
         fixed_margin_in_sale_currency = (
             self._compute_currency(order, self.fixed_margin, "company_to_pricelist")
             if order
@@ -444,7 +516,6 @@ class DeliveryCarrier(models.Model):
             if (
                 res["success"]
                 and self.free_over
-                and self.delivery_type != "base_on_rule"
                 and self._compute_currency(order, amount_without_delivery, "pricelist_to_company")
                 >= self.amount
             ):
@@ -486,12 +557,13 @@ class DeliveryCarrier(models.Model):
             except psycopg2.Error:
                 pass
 
-    # ------------------------------------------------ #
-    # Fixed price shipping, aka a very simple provider #
-    # ------------------------------------------------ #
+    # ------------------------------ #
+    # In-house delivery type methods #
+    # ------------------------------ #
 
     fixed_price = fields.Float(
-        string="Fixed Price",
+        string="Price",
+        help="Price of the delivery when no pricing rule matches.",
         compute="_compute_fixed_price",
         inverse="_set_product_fixed_price",
         store=True,
@@ -506,7 +578,7 @@ class DeliveryCarrier(models.Model):
         for carrier in self:
             carrier.product_id.list_price = carrier.fixed_price
 
-    def fixed_rate_shipment(self, order):
+    def in_house_rate_shipment(self, order):
         carrier = self._match_address(order.partner_shipping_id)
         if not carrier:
             return {
@@ -517,43 +589,22 @@ class DeliveryCarrier(models.Model):
                 ),
                 "warning_message": False,
             }
-        price = order.pricelist_id._get_product_price(self.product_id, 1.0)
+        return self._get_in_house_rate(order)
+
+    def _get_in_house_rate(self, order):
+        """Compute the rate of the order shipment from the first matching pricing rule, or from the
+        price if no pricing rule matches.
+
+        :param sale.order order: The order to compute the rate for.
+        :return: The rate, as returned by `rate_shipment`.
+        :rtype: dict
+        """
+        price = self._get_price_available(order)
+        if price is None:
+            price = order.pricelist_id._get_product_price(self.product_id, 1.0)
+        else:
+            price = self._compute_currency(order, price, "company_to_pricelist")
         return {"success": True, "price": price, "error_message": False, "warning_message": False}
-
-    # ----------------------------------- #
-    # Based on rule delivery type methods #
-    # ----------------------------------- #
-
-    def base_on_rule_rate_shipment(self, order):
-        carrier = self._match_address(order.partner_shipping_id)
-        if not carrier:
-            return {
-                "success": False,
-                "price": 0.0,
-                "error_message": self.env._(
-                    "Error: this delivery method is not available for this address."
-                ),
-                "warning_message": False,
-            }
-
-        try:
-            price_unit = self._get_price_available(order)
-        except UserError as e:
-            return {
-                "success": False,
-                "price": 0.0,
-                "error_message": e.args[0],
-                "warning_message": False,
-            }
-
-        price_unit = self._compute_currency(order, price_unit, "company_to_pricelist")
-
-        return {
-            "success": True,
-            "price": price_unit,
-            "error_message": False,
-            "warning_message": False,
-        }
 
     def _get_conversion_currencies(self, order, conversion):
         company_currency = (
@@ -616,19 +667,12 @@ class DeliveryCarrier(models.Model):
         }
 
     def _get_price_from_picking(self, total, weight, volume, quantity, wv=0.0):
-        price = 0.0
-        criteria_found = False
+        """Return the price of the first matching pricing rule, or `None` if no rule matches."""
         price_dict = self._get_price_dict(total, weight, volume, quantity, wv=wv)
         for line in self.price_rule_ids:
-            test = expr_eval(line.variable + line.operator + str(line.max_value), price_dict)
-            if test:
-                price = line.list_base_price + line.list_price * price_dict[line.variable_factor]
-                criteria_found = True
-                break
-        if not criteria_found:
-            raise UserError(self.env._("Not available for current order"))
-
-        return price
+            if expr_eval(line.variable + line.operator + str(line.max_value), price_dict):
+                return line.list_base_price + line.list_price * price_dict[line.variable_factor]
+        return None
 
     @api.depends_context("wizard_currency_id")
     def _compute_delivery_currency_id(self):

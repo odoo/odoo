@@ -15,9 +15,24 @@
             <field name="invoice_policy" position="attributes">
                 <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
             </field>
-            <p name="availability_description" position="attributes">
+            <field name="fixed_price" position="attributes">
+                <attribute name="invisible">delivery_type not in ('in_house', 'in_store')</attribute>
+            </field>
+            <page name="pricing" position="attributes">
+                <attribute name="invisible" add="delivery_type != 'in_store'" separator=" and "/>
+            </page>
+            <xpath expr="//field[@name='margin'][not(@groups)]" position="attributes">
                 <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
-            </p>
+            </xpath>
+            <xpath expr="//field[@name='margin'][@groups]" position="attributes">
+                <attribute name="invisible" add="delivery_type != 'in_store'" separator=" and "/>
+            </xpath>
+            <xpath expr="//field[@name='fixed_margin'][not(@groups)]" position="attributes">
+                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
+            </xpath>
+            <xpath expr="//field[@name='fixed_margin'][@groups]" position="attributes">
+                <attribute name="invisible" add="delivery_type != 'in_store'" separator=" and "/>
+            </xpath>
             <group name="country_details" position="attributes">
                 <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
             </group>
@@ -33,24 +48,20 @@
             <div name="max_volume_row" position="attributes">
                 <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
             </div>
-            <p name="country_warning" position="attributes">
-                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
-            </p>
             <field name="enable_delivery_estimate" position="attributes">
                 <attribute name="invisible" add="delivery_type != 'in_store'" separator=" and "/>
             </field>
             <div name="estimated_delivery_fields" position="attributes">
-                <attribute name="invisible">not enable_delivery_estimate or delivery_type not in ['fixed', 'base_on_rule', 'in_store']</attribute>
+                <attribute name="invisible">not enable_delivery_estimate or delivery_type not in ['in_house', 'in_store']</attribute>
             </div>
             <page name="pricing" position="before">
                 <page string="Stores" name="warehouses" invisible="delivery_type != 'in_store'">
-                    <field name="warehouse_ids">
+                    <field name="warehouse_ids" class="o_delivery_carrier_list_no_header">
                         <list create="False">
+                            <control>
+                                <create string="Add a store"/>
+                            </control>
                             <field name="name"/>
-                            <field name="opening_hours"/>
-                            <field name="lot_stock_id" groups="stock.group_stock_multi_locations"/>
-                            <field name="partner_id"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
                         </list>
                     </field>
                 </page>

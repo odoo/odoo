@@ -195,7 +195,6 @@ class Delivery(WebsiteSale):
                 {
                     "id": dm.id,
                     "name": dm.name,
-                    "description": dm.website_description,
                     "minorAmount": payment_utils.to_minor_currency_units(
                         price, order_sudo.currency_id
                     ),

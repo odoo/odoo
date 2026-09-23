@@ -188,7 +188,7 @@ patch(ExpressCheckout.prototype, {
                         shippingOptions: delivery_methods.map(carrier => ({
                             id: String(carrier.id),
                             label: carrier.name,
-                            detail: carrier.description ? carrier.description:'',
+                            detail: '',
                             amount: carrier.minorAmount,
                         })),
                         ...this._getOrderDetails(

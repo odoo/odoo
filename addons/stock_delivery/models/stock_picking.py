@@ -152,11 +152,11 @@ class StockPicking(models.Model):
     def send_to_shipper(self):
         self.ensure_one()
         res = self.carrier_id.send_shipping(self)[0]
+        self.carrier_price = self.carrier_id._apply_margins(res['exact_price'], self.sale_id)
         if self.carrier_id.free_over and self.sale_id:
             amount_without_delivery = self.sale_id._compute_amount_total_without_delivery()
             if self.carrier_id._compute_currency(self.sale_id, amount_without_delivery, 'pricelist_to_company') >= self.carrier_id.amount:
-                res['exact_price'] = 0.0
-        self.carrier_price = self.carrier_id._apply_margins(res['exact_price'], self.sale_id)
+                self.carrier_price = 0.0
         if res['tracking_number']:
             related_pickings = self.env['stock.picking'] if self.carrier_tracking_ref and res['tracking_number'] in self.carrier_tracking_ref else self
             accessed_moves = previous_moves = self.move_ids.move_orig_ids
@@ -293,7 +293,7 @@ class StockPicking(models.Model):
         if not self.carrier_id:
             return None
         carrier_key = self.carrier_id._get_delivery_type()
-        if carrier_key in ("fixed", "base_on_rule"):
+        if carrier_key == "in_house":
             carrier_key = self.carrier_id.name
         return carrier_key
 
