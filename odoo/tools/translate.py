@@ -2552,16 +2552,18 @@ class CodeTranslations:
         )
         return translations
 
-    def _load_python_translations(self, module_name: str, lang: str) -> None:
+    @staticmethod
+    def _load_python_translations(module_name: str, lang: str) -> Mapping[str, str]:
         def filter_func(row):
             return row.get("value") and PYTHON_TRANSLATION_COMMENT in row["comments"]
 
         translations = CodeTranslations._get_code_translations(
             module_name, lang, filter_func
         )
-        self.python_translations[(module_name, lang)] = ReadonlyDict(translations)
+        return ReadonlyDict(translations)
 
-    def _load_web_translations(self, module_name: str, lang: str) -> None:
+    @staticmethod
+    def _load_web_translations(module_name: str, lang: str) -> Mapping:
         def filter_func(row):
             return (
                 row.get("value") and JAVASCRIPT_TRANSLATION_COMMENT in row["comments"]
@@ -2570,7 +2572,7 @@ class CodeTranslations:
         translations = CodeTranslations._get_code_translations(
             module_name, lang, filter_func
         )
-        self.web_translations[(module_name, lang)] = ReadonlyDict(
+        return ReadonlyDict(
             {
                 "messages": tuple(
                     ReadonlyDict({"id": src, "string": value})
@@ -2591,18 +2593,28 @@ class CodeTranslations:
             self.web_translations.clear()
             return
         for cache in (self.python_translations, self.web_translations):
-            for key in [k for k in cache if k[0] == module_name]:
-                del cache[key]
+            # list() snapshots the keys in one step: request threads insert
+            # while a registry reload clears
+            for key in [k for k in list(cache) if k[0] == module_name]:
+                cache.pop(key, None)
 
     def get_python_translations(self, module_name: str, lang: str) -> Mapping[str, str]:
-        if (module_name, lang) not in self.python_translations:
-            self._load_python_translations(module_name, lang)
-        return self.python_translations[(module_name, lang)]
+        key = (module_name, lang)
+        try:
+            return self.python_translations[key]
+        except KeyError:
+            translations = self._load_python_translations(module_name, lang)
+            self.python_translations[key] = translations
+            return translations
 
     def get_web_translations(self, module_name: str, lang: str) -> Mapping:
-        if (module_name, lang) not in self.web_translations:
-            self._load_web_translations(module_name, lang)
-        return self.web_translations[(module_name, lang)]
+        key = (module_name, lang)
+        try:
+            return self.web_translations[key]
+        except KeyError:
+            translations = self._load_web_translations(module_name, lang)
+            self.web_translations[key] = translations
+            return translations
 
 
 code_translations = CodeTranslations()
