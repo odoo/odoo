@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    "name": "Click & Collect",
+    "name": "Pick up in store",
+    "summary": "Let customers collect their online orders in your stores.",
     "category": "Website/Website",
+    "sequence": 20,
     "description": """
 Allows customers to check in-store stock, pay on site, and pick up their orders at the shop.
 """,

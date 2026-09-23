@@ -61,9 +61,10 @@ class ProductTemplate(models.Model):
                 )
             partner_sudo = self.env["res.partner"].new({"country_id": country_id.id})
         virtual_order_sudo = self.env["sale.order"].new({
+            "pricelist_id": pricelist.id,
             "order_line": [
                 Command.create({"product_id": product_sudo.id, "product_uom_qty": quantity})
-            ]
+            ],
         })
         valid_delivery_methods = available_delivery_methods_sudo.available_carriers(
             partner_sudo, virtual_order_sudo

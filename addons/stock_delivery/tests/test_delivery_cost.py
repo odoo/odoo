@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
+from odoo.fields import Command
 from odoo.tests import common, Form
 
 @common.tagged('post_install', '-at_install')
@@ -20,8 +21,7 @@ class TestDeliveryCost(common.TransactionCase):
         cls.delivery_carrier = cls.env['delivery.carrier'].create({
             'name': 'Delivery Now Free Over 100',
             'fixed_price': 40,
-            'margin': 50,
-            'delivery_type': 'fixed',
+            'delivery_type': 'in_house',
             'invoice_policy': 'real',
             'product_id': cls.product_delivery.id,
             'free_over': False,
@@ -124,3 +124,27 @@ class TestDeliveryCost(common.TransactionCase):
         picking._action_done()
         self.assertEqual(picking.carrier_price, 40.0)
         self.assertEqual(delivery_line.price_unit, picking.carrier_price)
+
+    def test_delivery_real_cost_free_over_with_margins(self):
+        """Margins must not be added to the real shipping cost once it is free."""
+        self.delivery_carrier.write({'free_over': True, 'amount': 100, 'fixed_margin': 10})
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_18.id,
+            'order_line': [Command.create({
+                'product_id': self.product_4.id,
+                'product_uom_qty': 1,
+                'price_unit': 120.00,
+            })],
+        })
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': so.id,
+            'default_carrier_id': self.delivery_carrier.id,
+        }))
+        delivery_wizard.save().button_confirm()
+        so.action_confirm()
+
+        picking = so.picking_ids[0]
+        picking.move_ids.quantity = 1.0
+        picking.move_ids.picked = True
+        picking._action_done()
+        self.assertEqual(picking.carrier_price, 0.0)
