@@ -53,6 +53,12 @@ _schema = logging.getLogger("odoo.schema")
 _debug = DebugLog(__name__)
 
 
+def _thaw_evicted_registry(db_name: str, registry: object) -> None:
+    gc.thaw()
+    remove_counters(db_name)
+    _debug.lifecycle("registry.evicted_capacity", db=db_name)
+
+
 class Registry(
     _RegistryFieldsMixin,
     _RegistrySchemaMixin,
@@ -65,7 +71,7 @@ class Registry(
 ):
     _lock: threading.RLock | DummyRLock = threading.RLock()
 
-    registries = LRU[str, "Registry"](42)
+    registries = LRU[str, "Registry"](42, on_evict=_thaw_evicted_registry)
 
     idle_timeout: float = 0
 

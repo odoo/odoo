@@ -2,6 +2,7 @@ import threading
 import typing
 from collections import OrderedDict
 from collections.abc import (
+    Callable,
     ItemsView,
     Iterable,
     Iterator,
@@ -16,15 +17,22 @@ __all__ = ["LRU"]
 
 
 class LRU[K, V](MutableMapping[K, V]):
-    __slots__ = ("_count", "_generation", "_lock", "_map")
+    __slots__ = ("_count", "_generation", "_lock", "_map", "_on_evict")
 
-    def __init__(self, count: int, pairs: Iterable[tuple[K, V]] = ()) -> None:
+    def __init__(
+        self,
+        count: int,
+        pairs: Iterable[tuple[K, V]] = (),
+        *,
+        on_evict: Callable[[K, V], None] | None = None,
+    ) -> None:
         if count <= 0:
             raise ValueError(f"LRU count must be positive, got {count!r}")
         self._count = count
         self._generation = 0
         self._lock = threading.RLock()
         self._map: OrderedDict[K, V] = OrderedDict()
+        self._on_evict = on_evict
 
         for key, value in pairs:
             self[key] = value
@@ -44,8 +52,20 @@ class LRU[K, V](MutableMapping[K, V]):
     def _trim(self) -> None:
         map_ = self._map
         count = self._count
+        on_evict = self._on_evict
         while len(map_) > count:
-            map_.popitem(last=False)
+            key, value = map_.popitem(last=False)
+            if on_evict is not None:
+                on_evict(key, value)
+
+    def _store_locked(self, key: K, value: V) -> None:
+        map_ = self._map
+        existing = key in map_
+        map_[key] = value
+        if existing:
+            map_.move_to_end(key)
+        else:
+            self._trim()
 
     def __contains__(self, key: object) -> bool:
         return key in self._map
@@ -60,13 +80,7 @@ class LRU[K, V](MutableMapping[K, V]):
 
     def __setitem__(self, key: K, value: V) -> None:
         with self._lock:
-            map_ = self._map
-            existing = key in map_
-            map_[key] = value
-            if existing:
-                map_.move_to_end(key)
-            else:
-                self._trim()
+            self._store_locked(key, value)
 
     def __delitem__(self, key: K) -> None:
         self.pop(key)
@@ -122,13 +136,7 @@ class LRU[K, V](MutableMapping[K, V]):
         with self._lock:
             if self._generation != expected_generation:
                 return False
-            map_ = self._map
-            existing = key in map_
-            map_[key] = value
-            if existing:
-                map_.move_to_end(key)
-            else:
-                self._trim()
+            self._store_locked(key, value)
             return True
 
     @property

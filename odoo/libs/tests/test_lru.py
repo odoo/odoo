@@ -48,5 +48,35 @@ class TestLRURepr(unittest.TestCase):
         self.assertTrue(repr(Sub(2)).startswith("Sub("))
 
 
+class TestLRUEviction(unittest.TestCase):
+    def test_capacity_eviction_reports_the_evicted_pair(self):
+        evicted = []
+        lru = LRU(2, on_evict=lambda k, v: evicted.append((k, v)))
+        lru["a"], lru["b"], lru["c"] = 1, 2, 3
+        self.assertEqual(evicted, [("a", 1)])
+
+    def test_shrinking_the_count_reports_every_eviction(self):
+        evicted = []
+        lru = LRU(
+            3, [(i, i) for i in range(3)], on_evict=lambda k, v: evicted.append(k)
+        )
+        lru.count = 1
+        self.assertEqual(evicted, [0, 1])
+
+    def test_a_generation_guarded_store_evicts_too(self):
+        evicted = []
+        lru = LRU(1, [("a", 1)], on_evict=lambda k, v: evicted.append(k))
+        self.assertTrue(lru.set_if_generation("b", 2, lru.generation))
+        self.assertEqual(evicted, ["a"])
+
+    def test_overwrite_pop_and_clear_are_not_evictions(self):
+        evicted = []
+        lru = LRU(2, [("a", 1), ("b", 2)], on_evict=lambda k, v: evicted.append(k))
+        lru["a"] = 3
+        lru.pop("b")
+        lru.clear()
+        self.assertEqual(evicted, [])
+
+
 if __name__ == "__main__":
     unittest.main()

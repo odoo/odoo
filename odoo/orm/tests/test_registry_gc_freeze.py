@@ -56,3 +56,28 @@ def test_a_ready_registry_freezes_what_survives():
         freeze.assert_called_once_with()
     finally:
         Registry.registries.pop(DB, None)
+
+
+def test_a_registry_evicted_for_capacity_thaws_the_heap():
+    saved = Registry.registries.snapshot
+    count = Registry.registries.count
+    try:
+        Registry.registries.clear()
+        Registry.registries.count = 1
+        Registry.registries[DB] = object.__new__(Registry)
+        with (
+            patch.object(reg_mod.gc, "thaw") as thaw,
+            patch.object(reg_mod, "remove_counters") as counters,
+        ):
+            Registry.registries[DB + "_next"] = object.__new__(Registry)
+        assert DB not in Registry.registries
+        (
+            thaw.assert_called_once_with(),
+            ("a registry the LRU pushes out is otherwise frozen for good"),
+        )
+        counters.assert_called_once_with(DB)
+    finally:
+        Registry.registries.clear()
+        Registry.registries.count = count
+        for db_name, registry in saved.items():
+            Registry.registries[db_name] = registry
