@@ -46,6 +46,15 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
             f"Expected constraint error for missing item name was not found. Actual errors: {errors}"
         )
 
+    def test_invoice_line_zero_quantity_not_missing(self):
+        """ [IBR-022] A quantity of 0.0 is a valid value and must not be reported as missing. """
+        invoice = self._create_invoice_one_line(product_id=False, quantity=0.0, post=True)
+        _xml_content, errors = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)
+        self.assertFalse(
+            any("Invoiced quantity is missing" in str(err) for err in errors),
+            "Quantity 0.0 should not be reported as missing [IBR-022]"
+        )
+
     def test_invoice_buyer_reference_uses_partner_ref(self):
         tax_21 = self.percent_tax(21.0)
         product = self._create_product(lst_price=100.0, taxes_id=tax_21)
