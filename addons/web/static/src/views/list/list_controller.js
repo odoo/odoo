@@ -454,7 +454,7 @@ export class ListController extends Component {
             export: {
                 isAvailable: () => this.isExportEnable,
                 sequence: 10,
-                icon: "upload",
+                icon: "download",
                 description: _t("Export"),
                 callback: () => this.exportRecords(),
             },
@@ -498,8 +498,8 @@ export class ListController extends Component {
     get actionMenuItems() {
         const { actionMenus } = this.props.info;
         const staticActionItems = Object.entries(this.getStaticActionMenuItems())
-            .filter(([key, item]) => item.isAvailable === undefined || item.isAvailable())
-            .sort(([k1, item1], [k2, item2]) => (item1.sequence || 0) - (item2.sequence || 0))
+            .filter(([, item]) => item.isAvailable === undefined || item.isAvailable())
+            .sort(([, item1], [, item2]) => (item1.sequence || 0) - (item2.sequence || 0))
             .map(([key, item]) =>
                 Object.assign(
                     { key, groupNumber: STATIC_ACTIONS_GROUP_NUMBER },
