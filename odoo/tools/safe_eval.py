@@ -324,6 +324,26 @@ def assert_no_dunder_format_field(code_obj: CodeType, expr: str) -> None:
 
 _FORMAT_METHOD_NAMES = frozenset(("format", "format_map"))
 
+_GUARD_LOADS = frozenset(("LOAD_NAME", "LOAD_GLOBAL"))
+
+
+def assert_format_guard_not_bound(code_obj: CodeType, expr: str) -> None:
+    # the format guard is a builtin the compiler calls by name; an expression
+    # that binds that name (a lambda parameter, a comprehension variable, a
+    # walrus, an assignment) would replace the guard with whatever it bound
+    bound = {*code_obj.co_varnames, *code_obj.co_cellvars, *code_obj.co_freevars}
+    if _GUARD_FORMAT_NAME not in bound and _GUARD_FORMAT_NAME not in code_obj.co_names:
+        return
+    if _GUARD_FORMAT_NAME not in bound and all(
+        _GUARD_FORMAT_NAME
+        not in (i.argval if isinstance(i.argval, tuple) else (i.argval,))
+        for i in dis.get_instructions(code_obj)
+        if i.opname not in _GUARD_LOADS
+    ):
+        return
+    _debug.logic("safe_eval.format_guard_bound", expr_len=len(expr))
+    raise NameError("Binding the format guard is not allowed (%r)" % (expr,))
+
 
 _field_name_split = string._string.formatter_field_name_split  # type: ignore[attr-defined]
 
@@ -441,6 +461,7 @@ def assert_valid_codeobj(
             code_obj.co_consts,
             code_obj.co_freevars,
             code_obj.co_cellvars,
+            code_obj.co_varnames,
             frozenset(allowed_codes),
         )
         if cache_key in _validated_bytecode_cache:
@@ -449,6 +470,7 @@ def assert_valid_codeobj(
     expr_text = expr.decode() if isinstance(expr, bytes) else expr
     assert_no_dunder_name(code_obj, expr_text)
     assert_no_dunder_format_field(code_obj, expr_text)
+    assert_format_guard_not_bound(code_obj, expr_text)
 
     code_codes = {i.opcode for i in dis.get_instructions(code_obj)}
     if not allowed_codes >= code_codes:
@@ -626,6 +648,11 @@ def safe_eval(
         raise TypeError(msg)
 
     check_values(context)
+    if context and _GUARD_FORMAT_NAME in context:
+        # a global of that name would shadow the builtin guard for every
+        # .format the expression calls
+        msg = f"safe_eval() context must not define {_GUARD_FORMAT_NAME!r}"
+        raise ValueError(msg)
 
     globals_dict = dict(context or {}, __builtins__=dict(_SAFE_BUILTINS))
 

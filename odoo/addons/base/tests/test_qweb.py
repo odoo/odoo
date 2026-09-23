@@ -4899,6 +4899,16 @@ class TestQWebFormatFieldReflection(TransactionCase):
         self._assert_refused("t.format(1)", {"t": "{0.__class__}"})
         self._assert_refused("str.format(t, 1)", {"t": "{0.__class__}"})
 
+    def test_an_expression_cannot_rebind_the_guard(self):
+        guard = "_odoo_guarded_format_receiver"
+        for expr in (
+            f"(lambda {guard}: t.format(1))(str)",
+            f"[t.format(1) for {guard} in [str]][0]",
+        ):
+            with self.subTest(expr=expr), self.assertRaises(QWebError) as caught:
+                self._out(expr, {"t": "{0.__class__}"})
+            self.assertIn("not allowed", repr(caught.exception.__cause__))
+
     def test_a_compatibility_spelled_format_is_guarded_too(self):
         self._assert_refused("t.ｆormat(1)", {"t": "{0.__class__}"})
 

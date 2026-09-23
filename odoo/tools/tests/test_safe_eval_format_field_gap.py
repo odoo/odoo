@@ -50,6 +50,31 @@ class TestFormatReflectionEscapeClosed(unittest.TestCase):
                 safe_eval(expr, {"f": _victim, "d": dunder})
             self.assertIn("attribute access is not allowed", str(caught.exception))
 
+    def test_the_guard_cannot_be_rebound_by_the_expression(self):
+        guard = "_odoo_guarded_format_receiver"
+        template = '("{0." + d + "}")'
+        for mode, expr in (
+            ("eval", f"(lambda {guard}: {template}.format(f))(str)"),
+            ("eval", f"[{template}.format(f) for {guard} in [str]][0]"),
+            ("eval", f"[({guard} := str), {template}.format(f)][1]"),
+            ("exec", f"{guard} = str\nr = {template}.format(f)"),
+            ("exec", f"def g():\n    global {guard}\n    {guard} = str\ng()"),
+            ("exec", f"del {guard}"),
+        ):
+            with self.subTest(expr=expr), self.assertRaises(NameError):
+                safe_eval(expr, {"f": _victim, "d": "__globals__"}, mode=mode)
+
+    def test_the_guard_cannot_be_shadowed_from_the_context(self):
+        with self.assertRaises(ValueError):
+            safe_eval(
+                '("{0." + d + "}").format(f)',
+                {
+                    "f": _victim,
+                    "d": "__globals__",
+                    "_odoo_guarded_format_receiver": str,
+                },
+            )
+
     def test_the_recordset_public_attribute_pivot_is_refused(self):
 
         class Rec:
