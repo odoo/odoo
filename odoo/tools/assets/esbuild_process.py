@@ -21,6 +21,59 @@ _debug = DebugLog(__name__)
 _CHUNK_NAME = re.compile(r"chunk-[A-Z0-9]{8}\.esm\.js")
 
 
+def _rewrite_chunk_references(content: str, names: dict[str, str]) -> str:
+    return _CHUNK_NAME.sub(lambda match: names.get(match[0], match[0]), content)
+
+
+def _chunk_name(digest: str) -> str:
+    return f"chunk-{digest[:8].upper()}.esm.js"
+
+
+def _name_chunk_cycles(
+    members: list[str], files: dict[str, str], named: dict[str, str]
+) -> dict[str, str]:
+    # A chunk in an import cycle cannot be named after its dependencies' final
+    # names, so its name is a colour refined over the cycle: its own text with
+    # the cycle's references masked, then, member by member, the colours of the
+    # chunks it references. Two members left with one colour are symmetric, and
+    # either assignment of their names yields the same files.
+    cyclic = set(members)
+    references = {
+        name: [dep for dep in _CHUNK_NAME.findall(files[name]) if dep in cyclic]
+        for name in members
+    }
+    colour = {
+        name: cache_hash(
+            _CHUNK_NAME.sub(
+                lambda match: (
+                    named.get(match[0])
+                    or ("chunk-" if match[0] in cyclic else match[0])
+                ),
+                files[name],
+            ).encode("utf-8")
+        )
+        for name in members
+    }
+    for _ in members:
+        colour = {
+            name: cache_hash(
+                "\0".join(
+                    [colour[name], *(colour[dep] for dep in references[name])]
+                ).encode("utf-8")
+            )
+            for name in members
+        }
+    taken = set(named.values())
+    names: dict[str, str] = {}
+    for name in sorted(members, key=lambda member: (colour[member], member)):
+        digest = colour[name]
+        while (fresh := _chunk_name(digest)) in taken:
+            digest = cache_hash(digest.encode("utf-8"))
+        taken.add(fresh)
+        names[name] = fresh
+    return names
+
+
 def canonicalize_chunk_names(files: dict[str, str]) -> dict[str, str]:
     chunks = {name for name in files if _CHUNK_NAME.fullmatch(name)}
     if not chunks:
@@ -32,32 +85,29 @@ def canonicalize_chunk_names(files: dict[str, str]) -> dict[str, str]:
     }
     renamed: dict[str, str] = {}
     pending = set(chunks)
-    while pending:
-        ready = sorted(name for name in pending if imports[name] <= set(renamed))
-        if not ready:
-            break
+    while ready := sorted(name for name in pending if imports[name] <= renamed.keys()):
         for name in ready:
-            content = files[name]
-            for old, new in renamed.items():
-                content = content.replace(old, new)
-            fresh = f"chunk-{cache_hash(content.encode('utf-8'))[:8].upper()}.esm.js"
+            fresh = _chunk_name(
+                cache_hash(
+                    _rewrite_chunk_references(files[name], renamed).encode("utf-8")
+                )
+            )
             renamed[name] = fresh
-            files[fresh] = content
-            if fresh != name:
-                del files[name]
             pending.discard(name)
-    for name in list(files):
-        if name in renamed.values():
-            continue
-        content = files[name]
-        for old, new in renamed.items():
-            content = content.replace(old, new)
-        files[name] = content
+    cyclic = len(pending)
+    if pending:
+        renamed |= _name_chunk_cycles(sorted(pending), files, renamed)
+    rewritten = {
+        renamed.get(name, name): _rewrite_chunk_references(content, renamed)
+        for name, content in files.items()
+    }
+    files.clear()
+    files.update(rewritten)
     _debug.logic(
         "esbuild.chunks_canonicalized",
         chunks=len(chunks),
         renamed=sum(old != new for old, new in renamed.items()),
-        cycle=len(pending),
+        cycle=cyclic,
     )
     return renamed
 
