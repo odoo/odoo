@@ -30,7 +30,7 @@ class TestRequireModel(unittest.TestCase):
         )
         self.assertTrue([n for n in ast.walk(function) if isinstance(n, ast.Raise)])
 
-    def test_both_call_sites_validate_before_building_the_context(self):
+    def test_the_search_validates_before_building_the_context(self):
         source = inspect.getsource(convert)
         tree = ast.parse(source)
         checked = 0
@@ -50,7 +50,7 @@ class TestRequireModel(unittest.TestCase):
                 calls.index("_prepare_eval_context"),
                 f"{node.name} builds the eval context before validating the model",
             )
-        self.assertEqual(checked, 2, "expected both <search> evaluators")
+        self.assertEqual(checked, 1, "expected the one <search> evaluator")
 
 
 if __name__ == "__main__":

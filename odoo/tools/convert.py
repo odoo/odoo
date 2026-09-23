@@ -103,37 +103,32 @@ def _substitute_xml_ids(self: Any, s: str) -> str:
     return re.sub(r"%%|%\((.*?)\)[ds]", repl, s)
 
 
-def _eval_xml_search(
-    self: Any,
-    node: etree._Element,
-    env: Environment,
-    f_model: str | None,
-    f_search: str,
-) -> Any:
-    f_use = node.get("use", "id")
-    f_name = node.get("name")
+def _search_ids(
+    self: Any, env: Environment, f_model: str | None, f_search: str
+) -> list[int]:
     f_model = _check_model_name(f_model)
     context = _prepare_eval_context(self, env, f_model)
-    q = safe_eval(f_search, context)
-    records = env[f_model].search(q)
-    ids = records.ids
-    if f_use != "id":
-        ids = [x[f_use] for x in records.read([f_use])]
-    _fields = env[f_model]._fields
+    ids = env[f_model].search(safe_eval(f_search, context)).ids
     _debug.logic(
-        "convert.value.search",
-        module=self.module,
-        model=f_model,
-        field=f_name,
-        use=f_use,
-        matches=len(ids),
+        "convert.value.search", module=self.module, model=f_model, matches=len(ids)
     )
-    if (f_name in _fields) and _fields[f_name].type == "many2many":
-        return ids
-    if not ids:
-        return False
-    f_val = ids[0]
-    return f_val[0] if isinstance(f_val, tuple) else f_val
+    return ids
+
+
+def _eval_xml_search(
+    self: Any, env: Environment, f_model: str | None, f_search: str
+) -> Any:
+    ids = _search_ids(self, env, f_model, f_search)
+    if len(ids) > 1:
+        _logger.warning(
+            "%s: <value model=%r search=%r> matches %d records and stands for the "
+            "first one only",
+            self.module,
+            f_model,
+            f_search,
+            len(ids),
+        )
+    return ids[0] if ids else False
 
 
 def _eval_xml_markup(self: Any, node: etree._Element, t: str) -> str:
@@ -191,7 +186,7 @@ def _eval_xml_field(self: Any, node: etree._Element, env: Environment) -> Any:
     t = node.get("type", "char")
     f_model = node.get("model")
     if f_search := node.get("search"):
-        return _eval_xml_search(self, node, env, f_model, f_search)
+        return _eval_xml_search(self, env, f_model, f_search)
 
     if a_eval := node.get("eval"):
         context = _prepare_eval_context(self, env, f_model)
@@ -312,18 +307,24 @@ class xml_import:
         return "%s.%s" % (self.module, xml_id)
 
     def _test_xml_id(self, xml_id: str) -> None:
-        if "." in xml_id:
-            module, id = xml_id.split(".", 1)
-            assert "." not in id, """The ID reference "%s" must contain
-maximum one dot. They are used to refer to other modules ID, in the
-form: module.record_id""" % (xml_id,)
-            if module != self.module:
-                modcnt = self.env["ir.module.module"].search_count(
-                    [("name", "=", module), ("state", "=", "installed")]
-                )
-                assert modcnt == 1, (
-                    """The ID "%s" refers to an uninstalled module""" % (xml_id,)
-                )
+        if "." not in xml_id:
+            return
+        module, name = xml_id.split(".", 1)
+        if "." in name:
+            raise ValueError(
+                f"The ID reference {xml_id!r} must contain at most one dot: other "
+                "modules' IDs are referred to as module.record_id"
+            )
+        if module == self.module:
+            return
+        if self._installed_modules is None:
+            self._installed_modules = frozenset(
+                self.env["ir.module.module"]
+                .search([("state", "=", "installed")])
+                .mapped("name")
+            )
+        if module not in self._installed_modules:
+            raise ValueError(f"The ID {xml_id!r} refers to an uninstalled module")
 
     def _tag_delete(self, rec: etree._Element) -> None:
         d_model = rec.get("model")
@@ -479,22 +480,17 @@ form: module.record_id""" % (xml_id,)
         self,
         env: Environment,
         rec_model: str,
-        field: etree._Element,
         f_name: str,
         f_model: str | None,
         f_search: str,
     ) -> Any:
         from odoo.fields import Command
 
-        f_model = _check_model_name(f_model)
-        context = _prepare_eval_context(self, env, f_model)
-        q = safe_eval(f_search, context)
-        s = env[f_model].search(q)
-        f_use = field.get("use", "") or "id"
-        _fields = env[rec_model]._fields
-        if (f_name in _fields) and _fields[f_name].type == "many2many":
-            return [Command.set([x[f_use] for x in s])]
-        return s[0][f_use] if len(s) else False
+        ids = _search_ids(self, env, f_model, f_search)
+        field = env[rec_model]._fields.get(f_name)
+        if field is not None and field.type == "many2many":
+            return [Command.set(ids)]
+        return ids[0] if ids else False
 
     def _eval_field_ref(
         self,
@@ -588,7 +584,7 @@ form: module.record_id""" % (xml_id,)
 
             if f_search := field.get("search"):
                 f_val = self._eval_field_search(
-                    env, rec_model, field, f_name, f_model, f_search
+                    env, rec_model, f_name, f_model, f_search
                 )
             elif f_ref := field.get("ref"):
                 f_val = self._eval_field_ref(rec, model, f_name, f_ref, xid)
@@ -944,6 +940,7 @@ form: module.record_id""" % (xml_id,)
         self._noupdate = [noupdate]
         self._sequences: list[int | None] = [None]
         self.xml_filename = xml_filename
+        self._installed_modules: frozenset[str] | None = None
         self._tags: dict[str, Callable[[etree._Element], Any]] = {
             "record": self._tag_record,
             "delete": self._tag_delete,
@@ -1010,8 +1007,8 @@ def convert_file(
         elif ext == ".js":
             pass
         else:
-            msg = "Can't load unknown file type %s."
-            raise ValueError(msg, filename)
+            msg = f"Can't load unknown file type {filename}."
+            raise ValueError(msg)
 
 
 def convert_sql_import(env: Environment, fp: IO[bytes]) -> None:
