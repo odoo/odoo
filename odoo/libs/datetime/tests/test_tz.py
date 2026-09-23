@@ -46,3 +46,37 @@ class TestCountryTimezones(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_localize_standard_reads_a_repeated_hour_outside_daylight_saving():
+    from datetime import UTC, datetime, timedelta
+    from zoneinfo import ZoneInfo
+
+    from odoo.libs.datetime.tz import localize_standard
+
+    cases = [
+        # zone, repeated wall time, offset of the instant outside daylight saving
+        ("Europe/Brussels", datetime(2024, 10, 27, 2, 30), timedelta(hours=1)),
+        # tzdata models Irish winter as negative DST: IST is the standard side
+        ("Europe/Dublin", datetime(2024, 10, 27, 1, 30), timedelta(hours=1)),
+        ("Australia/Lord_Howe", datetime(2024, 4, 7, 1, 45), timedelta(hours=10.5)),
+    ]
+    for name, wall, offset in cases:
+        localized = localize_standard(wall, ZoneInfo(name))
+        assert localized.utcoffset() == offset, name
+        assert (
+            localized.astimezone(UTC).astimezone(ZoneInfo(name)).replace(tzinfo=None)
+            == wall
+        )
+
+
+def test_localize_standard_moves_a_skipped_wall_time_by_the_earlier_offset():
+    from datetime import datetime, timedelta
+    from zoneinfo import ZoneInfo
+
+    from odoo.libs.datetime.tz import localize_standard
+
+    skipped = localize_standard(
+        datetime(2024, 3, 31, 2, 30), ZoneInfo("Europe/Brussels")
+    )
+    assert skipped.utcoffset() == timedelta(hours=1)

@@ -175,7 +175,11 @@ def localize_standard(dt: datetime, tz: ZoneInfo | dt_timezone) -> datetime:
     if first.utcoffset() == second.utcoffset():
         return first
     if first.astimezone(UTC).astimezone(tz).replace(tzinfo=None) == dt:
-        return second
+        # a wall time read twice is the one outside daylight saving, which is
+        # the earlier instant where tzdata models winter as negative DST
+        # (Europe/Dublin); the later instant when no side reads as standard
+        standard = [instant for instant in (first, second) if not instant.dst()]
+        return standard[0] if len(standard) == 1 else second
     return first
 
 
