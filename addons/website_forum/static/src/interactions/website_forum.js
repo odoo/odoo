@@ -223,8 +223,9 @@ export class WebsiteForum extends Interaction {
                 currentTarget
                     .querySelectorAll("button[type='submit'], a.a-submit")
                     .forEach((btnEl) => {
-                        btnEl.querySelector("i").remove();
+                        btnEl.querySelector("span").remove();
                         btnEl.disabled = false;
+                        btnEl.classList.remove("o_btn_loading", "disabled", "pe-none");
                     });
             }, 0);
         }
