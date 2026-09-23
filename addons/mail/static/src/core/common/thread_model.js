@@ -886,7 +886,12 @@ export class Thread extends Record {
         try {
             this.isLoaded = false;
             this.scrollTop = undefined;
-            this.messages = await this.fetchMessages({ around: messageId });
+            const knownMessages = [...this.messages];
+            const fetched = await this.fetchMessages({ around: messageId });
+            const receivedMessages = this.messages.filter((message) =>
+                message.notIn(knownMessages)
+            );
+            this.messages = fetched;
             this.isLoaded = true;
             this.loadNewer = messageId !== undefined ? true : false;
             this.loadOlder = true;
@@ -903,6 +908,13 @@ export class Thread extends Record {
                 }
             }
             this._enrichMessagesWithTransient();
+            if (!this.loadNewer) {
+                const missingMessages = receivedMessages.filter((message) =>
+                    message.notIn(this.messages)
+                );
+                this.messages.push(...missingMessages);
+                this.messages.sort((m1, m2) => m1.id - m2.id);
+            }
         } catch {
             // handled in fetchMessages
         }
