@@ -83,6 +83,32 @@ class PopulateContext:
     def __init__(self) -> None:
         self.has_session_replication_role: bool = True
 
+    @staticmethod
+    def _restore_indexes(model: Model, indexes: list[dict]) -> None:
+        _logger.info("Adding indexes back on table %s...", model._table)
+        with _debug.perf(
+            "populate.indexes_restored",
+            cr=model.env.cr,
+            table=model._table,
+            indexes=len(indexes),
+        ):
+            for index in indexes:
+                try:
+                    with model.env.cr.savepoint():
+                        model.env.cr.execute(index["definition"])
+                except Exception:
+                    _logger.exception(
+                        "Could not restore index %s on %s; the table is left "
+                        "without it",
+                        index["name"],
+                        model._table,
+                    )
+                    _debug.logic(
+                        "populate.index_restore_failed",
+                        table=model._table,
+                        index=index["name"],
+                    )
+
     @contextmanager
     def ignore_indexes(self, model: Model) -> Generator[None]:
         indexes = model.env.execute_query_dict(
@@ -113,29 +139,14 @@ class PopulateContext:
             try:
                 yield
             finally:
-                _logger.info("Adding indexes back on table %s...", model._table)
-                with _debug.perf(
-                    "populate.indexes_restored",
-                    cr=model.env.cr,
-                    table=model._table,
-                    indexes=len(indexes),
-                ):
-                    for index in indexes:
-                        try:
-                            with model.env.cr.savepoint():
-                                model.env.cr.execute(index["definition"])
-                        except Exception:
-                            _logger.exception(
-                                "Could not restore index %s on %s; the table is left "
-                                "without it",
-                                index["name"],
-                                model._table,
-                            )
-                            _debug.logic(
-                                "populate.index_restore_failed",
-                                table=model._table,
-                                index=index["name"],
-                            )
+                # on an aborted transaction nothing can be restored, and the
+                # rollback that follows puts the dropped indexes back itself
+                if model.env.cr.in_failed_transaction():
+                    _debug.logic(
+                        "populate.indexes_left_to_rollback", table=model._table
+                    )
+                else:
+                    self._restore_indexes(model, indexes)
         else:
             yield
 

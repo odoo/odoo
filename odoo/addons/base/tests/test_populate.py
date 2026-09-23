@@ -1,3 +1,5 @@
+from psycopg.errors import DivisionByZero
+
 from odoo.tests import TransactionCase
 from odoo.tools import SQL, mute_logger
 from odoo.tools.populate import (
@@ -180,3 +182,13 @@ class TestPopulateIndexRestore(TransactionCase):
 
         self.assertEqual(len(logs.records), 1)
         self.assertEqual(self._indexes(), before - {"res_partner_0_populate_probe"})
+
+    def test_a_failed_insert_is_not_hidden_by_the_index_restore(self):
+        with (
+            self.assertNoLogs("odoo.tools.populate", "ERROR"),
+            mute_logger("odoo.db.cursor"),
+            self.assertRaises(DivisionByZero),
+            self.env.cr.savepoint(),
+            PopulateContext().ignore_indexes(self.env["res.partner"]),
+        ):
+            self.env.cr.execute(SQL("SELECT 1 / 0"))
