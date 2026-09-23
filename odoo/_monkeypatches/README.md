@@ -75,8 +75,7 @@ it is deferred, waiting for its target's import — not failed.
 
 | File | Purpose | Type |
 |------|---------|------|
-| `xlsxwriter.py` | Sanitize Excel sheet names; default `strings_to_formulas` off, so an exported cell starting `=` is never a live formula | COMPAT |
-| `_excel_utils.py` | Excel sheet-name sanitization: all four of xlsxwriter's rules, including de-duplicating the clashes truncation creates | UTIL |
+| `xlsxwriter.py` | Sanitize Excel sheet names through odoo/libs/sheet_names.py (all four of xlsxwriter's rules, including de-duplicating the clashes truncation creates); default `strings_to_formulas` off, so an exported cell starting `=` is never a live formula | COMPAT |
 
 ### PDF Patches
 
