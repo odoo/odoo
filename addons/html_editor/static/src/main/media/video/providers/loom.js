@@ -14,13 +14,21 @@ export class Loom extends AbstractThirdPartyVideo {
         muted: { default: false, type: BooleanInt, params: ["muted"] },
         hideControls: {
             default: false,
-            type: BooleanInt,
+            type: Boolean,
             params: ["hideEmbedTopBar"],
             linkedParams: ["hide_share", "hide_title", "hide_owner", "hide_speed"],
-            reversed: true,
         },
         isVertical: { default: false, type: Boolean },
     };
+    /**
+     * @override
+     * @param {URL} url
+     */
+    static getCustomUrlOptions(url) {
+        // Loom hides the top bar whatever the value, e.g. the "hideEmbedTopBar=0"
+        // saved by older versions.
+        return { hideControls: url.searchParams.has("hideEmbedTopBar") };
+    }
     /**
      * Returns the embed url for a loom video.
      *
@@ -47,6 +55,6 @@ export class Loom extends AbstractThirdPartyVideo {
         embed: "https://www.loom.com/embed/e5b8c04bca094dd8a5507925ab887002",
         Params: "loom.com/share/e5b8c04bca094dd8a5507925ab887002?autoplay=1&t=62",
         embedParams:
-            "https://www.loom.com/embed/e5b8c04bca094dd8a5507925ab887002?autoplay=1&t=62s&hide_share=1&hideEmbedTopBar=0&hide_title=0&hide_owner=1&hide_speed=1",
+            "https://www.loom.com/embed/e5b8c04bca094dd8a5507925ab887002?autoplay=1&t=62s&hide_share=true&hideEmbedTopBar=true&hide_title=true&hide_owner=true&hide_speed=true",
     };
 }
