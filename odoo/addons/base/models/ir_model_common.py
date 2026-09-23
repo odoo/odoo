@@ -38,18 +38,26 @@ def unloaded_module_scope(env: Any) -> tuple[int, str | None] | None:
     return len(registry.loaded_modules), env.context.get("install_module")
 
 
-def unloaded_module_domain(env: Any, model: str) -> Domain:
+def loaded_module_names(env: Any) -> list[str] | None:
     registry = env.registry
     loaded_modules = list(registry.loaded_modules)
     if registry.ready or not loaded_modules:
+        return None
+    if install_module := env.context.get("install_module"):
+        loaded_modules.append(install_module)
+    return loaded_modules
+
+
+def unloaded_module_domain(env: Any, model: str) -> Domain:
+    registry = env.registry
+    loaded_modules = loaded_module_names(env)
+    if loaded_modules is None:
         _debug.logic(
             "unloaded_module_domain.skipped",
             model=model,
             reason="ready" if registry.ready else "no_modules",
         )
         return Domain.TRUE
-    if install_module := env.context.get("install_module"):
-        loaded_modules.append(install_module)
     _debug.logic(
         "unloaded_module_domain.applied", model=model, modules=len(loaded_modules)
     )

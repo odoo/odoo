@@ -121,4 +121,26 @@
             eval="[Command.link(ref('website.website_page_controller_expose'))]" />
     </record>
 
+    <record id="access_ir_ui_view_controller_page_public" model="ir.access">
+        <field
+            name="name">Website: visitors read the visible views of exposed pages</field>
+        <field name="model_id" ref="base.model_ir_ui_view" />
+        <field name="group_id" ref="base.group_public" />
+        <field name="kind">permission</field>
+        <field name="operation">r</field>
+        <field
+            name="domain">[('controller_page_ids', '!=', False), '|', ('type', '!=', 'qweb'), ('visibility', 'in', ('public', False))]</field>
+    </record>
+
+    <record id="access_ir_ui_view_controller_page_portal" model="ir.access">
+        <field
+            name="name">Website: portal users read the visible views of exposed pages</field>
+        <field name="model_id" ref="base.model_ir_ui_view" />
+        <field name="group_id" ref="base.group_portal" />
+        <field name="kind">permission</field>
+        <field name="operation">r</field>
+        <field
+            name="domain">[('controller_page_ids', '!=', False), '|', ('type', '!=', 'qweb'), ('visibility', 'in', ('public', 'connected', False))]</field>
+    </record>
+
 </odoo>

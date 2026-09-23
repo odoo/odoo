@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="access_integration_service_ml_provider_read" model="ir.access">
+        <field
+            name="name">Outbound Service: AI users read the services of AI providers</field>
+        <field name="model_id" ref="integration.model_integration_service" />
+        <field name="group_id" ref="group_ai_user" />
+        <field name="kind">permission</field>
+        <field name="operation">r</field>
+        <field name="domain">[('ml_provider_ids', '!=', False)]</field>
+    </record>
+
+    <record id="access_integration_service_ml_provider_edit" model="ir.access">
+        <field
+            name="name">Outbound Service: AI administrators edit the services of AI providers</field>
+        <field name="model_id" ref="integration.model_integration_service" />
+        <field name="group_id" ref="group_ai_admin" />
+        <field name="kind">permission</field>
+        <field name="operation">cud</field>
+        <field name="domain">[('ml_provider_ids', '!=', False)]</field>
+    </record>
+
     <record id="gateway_ml_config_rule_company" model="ir.rule">
         <field name="name">gateway_ml.config: the reader's companies</field>
         <field name="model_id" ref="model_gateway_ml_config" />

@@ -1,5 +1,5 @@
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests.common import tagged
+from odoo.tests.common import new_test_user, tagged
 
 from .common import ExchangeCase
 
@@ -66,3 +66,18 @@ class TestExchangeChannel(ExchangeCase):
         self.assertEqual(self.channel.count_transmission, 2)
         self.assertEqual(self.channel.count_transmission_open, 1)
         self.assertEqual(first.state, "queued")
+
+
+@tagged("post_install", "-at_install")
+class TestExchangeChannelReaders(ExchangeCase):
+    def test_an_internal_user_reads_a_channel_and_only_its_service(self):
+        # the channel binds its service's read permission (plan section 3.1):
+        # an internal user reads a channel's endpoint and no other service
+        user = new_test_user(
+            self.env, login="exchange_reader", groups="base.group_user"
+        )
+        other = self.endpoint.copy({"code": "demo_no_channel"})
+        channel = self.channel.with_user(user)
+        self.assertEqual(channel.name, self.endpoint.name)
+        self.assertTrue(self.endpoint.with_user(user).has_access("read"))
+        self.assertFalse(other.with_user(user).has_access("read"))

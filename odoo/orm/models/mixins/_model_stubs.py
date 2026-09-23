@@ -68,7 +68,6 @@ class _ModelStubs:
         _display_name_search_exact: tuple[str, ...]
         _inherits_sudo_fields: tuple[str, ...]
         _inherits_rules: bool
-        _access_store: typing.Literal["ir.model.access", "ir.access"]
         _table_objects: dict
         _table_inheritance_root: str
         _check_company_auto: bool

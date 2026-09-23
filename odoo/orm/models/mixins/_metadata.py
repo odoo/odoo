@@ -64,7 +64,6 @@ class _ModelMetadataMixin(_ModelStubs):
     _display_name_search_exact: tuple[str, ...] = ()
     _inherits_sudo_fields: tuple[str, ...] = ()
     _inherits_rules: bool = True
-    _access_store: typing.Literal["ir.model.access", "ir.access"] = "ir.model.access"
     _fold_name: str = "fold"
 
     _translate: bool = True

@@ -9,6 +9,11 @@ from ..tools.usage import USAGE_READERS, SpendCapReached, usage_cost
 class IntegrationService(models.Model):
     _inherit = "integration.service"
 
+    ml_provider_ids = fields.One2many(
+        comodel_name="gateway.ml.provider",
+        inverse_name="endpoint_id",
+    )
+
     def _exchange_usage_values(self, url, request_kwargs, response_body):
         values = super()._exchange_usage_values(url, request_kwargs, response_body)
         wire, provider_ids = self._ml_wire_and_providers(self.id)

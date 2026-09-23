@@ -363,9 +363,12 @@ class TestRules(TransactionCase):
             self.fail("Previous line should raise AccessError")
 
     def _count_rule_reports(self):
-        IrRule = type(self.env["ir.rule"])
+        IrAccess = type(self.env["ir.access"])
         return patch.object(
-            IrRule, "_get_failing", autospec=True, side_effect=IrRule._get_failing
+            IrAccess,
+            "_get_failed_accesses",
+            autospec=True,
+            side_effect=IrAccess._get_failed_accesses,
         )
 
     @mute_logger("odoo.addons.base.models.ir_rule")

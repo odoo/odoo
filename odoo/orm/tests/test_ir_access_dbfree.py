@@ -1,7 +1,3 @@
-"""ir.access decides for a model that reads its access from it: base's own
-ir.access, res.users and res.groups hosted on the DB-free tier beside two
-models that opt in, so the formula runs without PostgreSQL."""
-
 import sys
 
 import pytest
@@ -19,7 +15,6 @@ class Shelf(models.Model):
     _name = "iad.shelf"
     _module = _MOD
     _description = "a shelf"
-    _access_store = "ir.access"
 
     name = fields.Char()
     featured_book_id = fields.Many2one("iad.book")
@@ -29,7 +24,6 @@ class Book(models.Model):
     _name = "iad.book"
     _module = _MOD
     _description = "a book"
-    _access_store = "ir.access"
 
     name = fields.Char()
     shelf_id = fields.Many2one("iad.shelf")

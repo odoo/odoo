@@ -1,19 +1,14 @@
 import logging
 from typing import Any, Self
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import config
 from odoo.tools.safe_eval import safe_eval
 
-from .ir_model_common import (
-    check_access_mode,
-    unloaded_module_domain,
-    unloaded_module_scope,
-)
+from .ir_model_common import check_access_mode, unloaded_module_domain
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -218,90 +213,15 @@ class IrRule(models.Model):
     def _get_domain_for_unloaded_module_rules(self) -> Domain:
         return unloaded_module_domain(self.env, "ir.rule")
 
-    def _get_unloaded_module_scope(self) -> tuple[int, str | None] | None:
-        return unloaded_module_scope(self.env)
-
     @api.model
-    @tools.conditional(
-        "xml" not in config["dev_mode"],
-        tools.ormcache(
-            "self.env.uid",
-            "self.env.su",
-            "model_name",
-            "mode",
-            "tuple(self._get_context_values_in_domains())",
-            "self._get_unloaded_module_scope()",
-        ),
-    )
     def _get_domain_accessible_records(
         self, model_name: str, mode: str = "read"
     ) -> Domain:
+        check_access_mode(mode)
         model = self.env[model_name]
-
-        global_domains: list[Domain] = []
-        for parent_model_name, parent_field_name in model._inherits.items():
-            if not model._inherits_rules:
-                continue
-            delegate = model._fields[parent_field_name]
-            if not delegate.store and mode == "create":
-                # a computed delegate is settled after the row is inserted, so
-                # the create check cannot read it; the parent's own create,
-                # which made the row it points to, checked the parent's rule
-                continue
-            if not (delegate.store or delegate.search or delegate.related):
-                raise ValueError(
-                    f"{delegate} delegates {model_name} to {parent_model_name} "
-                    f"without a column or a search: the parent's record rules "
-                    f"cannot bind through it. Give it a search method, or set "
-                    f"_inherits_rules = False and state what replaces them."
-                )
-            if domain := self._get_domain_accessible_records(parent_model_name, mode):
-                _debug.logic(
-                    "rule_domain_inherited",
-                    model=model_name,
-                    parent=parent_model_name,
-                    field=parent_field_name,
-                )
-                global_domains.append(Domain(parent_field_name, "any", domain))
-
-        rules = self._get_rules(model_name, mode=mode)
-        if not rules:
-            _debug.logic(
-                "rule_domain_none", model=model_name, mode=mode, uid=self.env.uid
-            )
-            return Domain.AND(global_domains).optimize(model)
-
-        eval_context = self._eval_context()
-        user_groups = self.env.user.all_group_ids
-        group_domains: list[Domain] = []
-        for rule in rules.sudo():
-            if rule.groups and not (rule.groups & user_groups):
-                _debug.logic(
-                    "rule_skipped", rule=rule.id, model=model_name, reason="no_group"
-                )
-                continue
-            dom = (
-                Domain(safe_eval(rule.domain_force, eval_context))
-                if rule.domain_force
-                else Domain.TRUE
-            )
-            if rule.groups and rule.composition == "grant":
-                group_domains.append(dom)
-            else:
-                global_domains.append(dom)
-
-        if group_domains:
-            global_domains.append(Domain.OR(group_domains))
-        _debug.logic(
-            "rule_domain_computed",
-            model=model_name,
-            mode=mode,
-            uid=self.env.uid,
-            rules=len(rules),
-            global_domains=len(global_domains),
-            group_domains=len(group_domains),
-        )
-        return Domain.AND(global_domains).optimize(model)
+        if self.env.su:
+            return Domain.TRUE
+        return model._access_domain(mode).optimize(model)
 
     def _get_context_values_in_domains(self) -> Any:
         for k in self._get_context_keys_in_domains():
@@ -313,7 +233,7 @@ class IrRule(models.Model):
     def unlink(self) -> bool:
         _debug.lifecycle("unlink", count=len(self))
         res = super().unlink()
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache("stable")
         return res
 
     @api.model_create_multi
@@ -321,102 +241,18 @@ class IrRule(models.Model):
         res = super().create(vals_list)
         _debug.lifecycle("create", count=len(res))
         self.env.flush_all()
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache("stable")
         return res
 
     def write(self, vals: dict[str, Any]) -> bool:
         _debug.lifecycle("write", count=len(self), fields=list(vals))
         res = super().write(vals)
         self.env.flush_all()
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache("stable")
         return res
 
     def _prepare_access_error(self, operation: str, records: Any) -> AccessError:
-        _logger.info(
-            "Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s",
-            operation,
-            records.ids[:6],
-            self.env.uid,
-            records._name,
-        )
-        self = self.with_context(self.env.user.context_get())
-
-        model = records._name
-        description = self.env["ir.model"]._get(model).name or model
-        operations = {
-            "read": _("read"),
-            "write": _("write"),
-            "create": _("create"),
-            "unlink": _("unlink"),
-        }
-        user_description = f"{self.env.user.name} (id={self.env.user.id})"
-        operation_error = _(
-            "Uh-oh! Looks like you have stumbled upon some top-secret records.\n\n"
-            "Sorry, %(user)s doesn't have '%(operation)s' access to:",
-            user=user_description,
-            operation=operations.get(operation, operation),
-        )
-        failing_model = _(
-            "- %(description)s (%(model)s)",
-            description=description,
-            model=model,
-        )
-
-        resolution_info = _(
-            "If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."
-        )
-
-        rules = self._get_failing(records, mode=operation).sudo()
-
-        display_records = records[:6].sudo()
-        company_related = any("company_id" in (r.domain_force or "") for r in rules)
-        _debug.logic(
-            "access_error.prepared",
-            model=model,
-            operation=operation,
-            uid=self.env.uid,
-            records=len(records),
-            rules=len(rules),
-            company_related=company_related,
-        )
-
-        def get_record_description(rec):
-            if (
-                company_related
-                and "company_id" in rec
-                and rec.company_id in self.env.user.company_ids
-            ):
-                return f"{description}, {rec.display_name} ({model}: {rec.id}, company={rec.company_id.display_name})"
-            return f"{description}, {rec.display_name} ({model}: {rec.id})"
-
-        context = None
-        if company_related:
-            resolution_info, context = self._get_company_resolution_info(
-                display_records, resolution_info
-            )
-
-        if (
-            not self.env.user.has_group("base.group_no_one")
-            or not self.env.user._is_internal()
-        ):
-            _debug.logic(
-                "access_error.terse", uid=self.env.uid, reason="not_debug_user"
-            )
-            msg = f"{operation_error}\n{failing_model}\n\n{resolution_info}"
-        else:
-            failing_records = "\n".join(
-                f"- {get_record_description(rec)}" for rec in display_records
-            )
-            rules_description = "\n".join(f"- {rule.name}" for rule in rules)
-            failing_rules = _("Blame the following rules:\n%s", rules_description)
-            msg = f"{operation_error}\n{failing_records}\n\n{failing_rules}\n\n{resolution_info}"
-
-        records.invalidate_recordset()
-
-        exception = AccessError(msg)
-        if context:
-            exception.context = context
-        return exception
+        return self.env["ir.access"]._make_record_access_error(records, operation)
 
     def _get_company_resolution_info(
         self, display_records: Any, resolution_info: str

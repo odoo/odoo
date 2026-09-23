@@ -30,7 +30,10 @@ class TestX2manyCacheScope(TransactionCase):
                 "name": "scope: no hidden partners",
                 "model_id": cls.env["ir.model"]._get_id("res.partner"),
                 "domain_force": "[('name', 'not like', 'scope hidden')]",
-                "groups": [Command.link(cls.env.ref("base.group_user").id)],
+                "groups": [
+                    Command.link(cls.env.ref("base.group_user").id),
+                    Command.link(cls.env.ref("base.group_partner_manager").id),
+                ],
             }
         )
         cls.env.invalidate_all()

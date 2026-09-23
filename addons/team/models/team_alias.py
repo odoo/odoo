@@ -6,6 +6,7 @@ class TeamAlias(models.Model):
     _name = "team.alias"
     _inherits = {"mail.alias": "alias_id"}
     _description = "Team Email Alias"
+    _inherits_rules = False
     _rec_name = "alias_name"
 
     team_id = fields.Many2one(

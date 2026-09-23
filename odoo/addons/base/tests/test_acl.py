@@ -554,8 +554,6 @@ class TestIrRule(TransactionCaseWithUserDemo):
     @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
     def test_ir_rule_access_error_message(self):
         model_res_partner = self.env.ref("base.model_res_partner")
-        group_user = self.env.ref("base.group_user")
-
         partner = self.env["res.partner"].create({"name": "T3 partner"})
 
         self.env["ir.rule"].create(
@@ -563,7 +561,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
                 "name": "test_rule_t3_deny",
                 "model_id": model_res_partner.id,
                 "domain_force": "[('id', '=', False)]",
-                "groups": [Command.set(group_user.ids)],
+                "groups": [Command.set(self._partner_readers().ids)],
             }
         )
 
@@ -588,6 +586,11 @@ class TestIrRule(TransactionCaseWithUserDemo):
             "Debug access-error message should name the blaming rule.",
         )
 
+    def _partner_readers(self):
+        return self.env.ref("base.group_user") + self.env.ref(
+            "base.group_partner_manager"
+        )
+
     def _partner_rule(self, name, domain, groups, composition="grant"):
         return self.env["ir.rule"].create(
             {
@@ -602,7 +605,10 @@ class TestIrRule(TransactionCaseWithUserDemo):
     def test_a_grant_rule_widens_what_another_grant_rule_denied(self):
         group_user = self.env.ref("base.group_user")
         partner = self.env["res.partner"].create({"name": "composition partner"})
-        self._partner_rule("deny", "[('id', '=', False)]", group_user)
+        # the rule narrows the access line of every group demo reads partners
+        # through: a group's rule no longer narrows another group's line (plan
+        # section 17, the monotone conversion), and demo is Contact Creation
+        self._partner_rule("deny", "[('id', '=', False)]", self._partner_readers())
         with self.assertRaises(AccessError):
             partner.with_user(self.user_demo).check_access("read")
         self._partner_rule("allow everything", "[]", group_user)
@@ -869,6 +875,8 @@ class TestIrModelAccessUnknownModel(TransactionCaseWithUserDemo):
 
 
 class TestIrModelAccessCacheInvalidation(TransactionCaseWithUserDemo):
+    # res.partner.tag: its access is ACL lines only, whereas res.partner also
+    # holds ir.access permissions an ACL write cannot revoke
     def _granting_acls(self, model_name, user, mode="write"):
         group_ids = set(user._get_group_ids())
         return (
@@ -887,17 +895,17 @@ class TestIrModelAccessCacheInvalidation(TransactionCaseWithUserDemo):
     def test_revoke_takes_effect_in_the_writing_worker(self):
         admin = self.env.ref("base.user_admin")
         Access = self.env(user=admin.id)["ir.model.access"]
-        acls = self._granting_acls("res.partner", admin)
-        self.assertTrue(acls, "expected admin to have a write ACL on res.partner")
+        acls = self._granting_acls("res.partner.tag", admin)
+        self.assertTrue(acls, "expected admin to have a write ACL on res.partner.tag")
 
         self.env.flush_all()
         self.env.registry.clear_cache()
-        self.assertIn("res.partner", Access._get_models_allowed("write"))
+        self.assertIn("res.partner.tag", Access._get_models_allowed("write"))
 
         Access.browse(acls.ids).write({"perm_write": False})
 
         self.assertNotIn(
-            "res.partner",
+            "res.partner.tag",
             Access._get_models_allowed("write"),
             "revoking a model ACL must take effect in the worker that revoked it",
         )
@@ -905,27 +913,27 @@ class TestIrModelAccessCacheInvalidation(TransactionCaseWithUserDemo):
     def test_grant_takes_effect_in_the_writing_worker(self):
         admin = self.env.ref("base.user_admin")
         Access = self.env(user=admin.id)["ir.model.access"]
-        acls = self._granting_acls("res.partner", admin)
+        acls = self._granting_acls("res.partner.tag", admin)
         Access.browse(acls.ids).write({"perm_write": False})
         self.env.registry.clear_cache()
-        self.assertNotIn("res.partner", Access._get_models_allowed("write"))
+        self.assertNotIn("res.partner.tag", Access._get_models_allowed("write"))
 
         Access.browse(acls.ids).write({"perm_write": True})
 
-        self.assertIn("res.partner", Access._get_models_allowed("write"))
+        self.assertIn("res.partner.tag", Access._get_models_allowed("write"))
 
     def test_unlink_takes_effect_in_the_writing_worker(self):
         admin = self.env.ref("base.user_admin")
         Access = self.env(user=admin.id)["ir.model.access"]
-        acls = self._granting_acls("res.partner", admin, mode="unlink")
-        self.assertTrue(acls, "expected admin to have an unlink ACL on res.partner")
+        acls = self._granting_acls("res.partner.tag", admin, mode="unlink")
+        self.assertTrue(acls, "expected admin to have an unlink ACL on res.partner.tag")
         self.env.flush_all()
         self.env.registry.clear_cache()
-        self.assertIn("res.partner", Access._get_models_allowed("unlink"))
+        self.assertIn("res.partner.tag", Access._get_models_allowed("unlink"))
 
         Access.browse(acls.ids).unlink()
 
-        self.assertNotIn("res.partner", Access._get_models_allowed("unlink"))
+        self.assertNotIn("res.partner.tag", Access._get_models_allowed("unlink"))
 
 
 class TestResGroupsCacheInvalidation(TransactionCaseWithUserDemo):

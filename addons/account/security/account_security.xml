@@ -319,6 +319,16 @@
                 name="groups"
                 eval="[Command.link(ref('account.group_account_invoice'))]" />
         </record>
+        <record id="access_res_partner_bank_account_company_manager" model="ir.access">
+            <field
+                name="name">Accounting: managers set up their companies' bank accounts</field>
+            <field name="model_id" ref="base.model_res_partner_bank_account" />
+            <field name="group_id" ref="account.group_account_manager" />
+            <field name="kind">permission</field>
+            <field name="operation">cu</field>
+            <field
+                name="domain">[('partner_id', 'in', user.company_ids.partner_id.ids)]</field>
+        </record>
     </data>
 
 </odoo>

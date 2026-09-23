@@ -16,6 +16,7 @@ class MixinMailAlias(models.AbstractModel):
     _inherit = ["mixin.mail.alias.optional"]
     _inherits = {"mail.alias": "alias_id"}
     _description = "Email Aliases Mixin"
+    _inherits_rules = False
 
     alias_id: MailAlias = fields.Many2one(required=True)
     alias_name = fields.Char(inherited=True)

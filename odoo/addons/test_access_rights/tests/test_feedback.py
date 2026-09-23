@@ -182,11 +182,12 @@ class TestIRRuleFeedback(Feedback):
         cls.maxDiff = None
 
     def _make_rule(self, name, domain, global_=False, attr="write"):
+        group = self.env.ref("base.group_user")
         return self.env["ir.rule"].create(
             {
                 "name": name,
                 "model_id": self.model.id,
-                "groups": [] if global_ else [Command.link(self.group2.id)],
+                "groups": [] if global_ else [Command.link(group.id)],
                 "domain_force": domain,
                 "perm_read": False,
                 "perm_write": False,

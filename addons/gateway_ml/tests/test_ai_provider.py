@@ -4,7 +4,7 @@ from unittest.mock import patch
 from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, new_test_user
 
 from odoo.addons.gateway_ml.tools.ai_clients import (
     ClaudeClient,
@@ -176,3 +176,31 @@ class TestSeededDefaultsMatchTheChatOperation(TransactionCase):
             ._service_for("chat")
             .model_id.code,
         )
+
+
+@tagged("post_install", "-at_install")
+class TestAIProviderReaders(TransactionCase):
+    def test_ai_users_reach_the_providers_services_and_no_other(self):
+        # a provider binds its service's permission (plan section 3.1): the AI
+        # groups reach the services of providers, not every service
+        provider = self.env["gateway.ml.provider"].search([], limit=1)
+        if not provider:
+            self.skipTest("no provider seed")
+        other = self.env["integration.service"].create(
+            {"name": "no provider", "code": "gateway_ml_no_provider"}
+        )
+        reader = new_test_user(
+            self.env,
+            login="ml_reader",
+            groups="base.group_user,gateway_ml.group_ai_user",
+        )
+        admin = new_test_user(
+            self.env,
+            login="ml_admin",
+            groups="base.group_user,gateway_ml.group_ai_admin",
+        )
+        self.assertEqual(provider.with_user(reader).name, provider.name)
+        self.assertFalse(other.with_user(reader).has_access("read"))
+        provider.with_user(admin).write({"name": "renamed by the admin"})
+        self.assertEqual(provider.endpoint_id.name, "renamed by the admin")
+        self.assertFalse(other.with_user(admin).has_access("write"))

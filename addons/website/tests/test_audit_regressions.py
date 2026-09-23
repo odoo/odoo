@@ -340,6 +340,17 @@ class TestControllerPageSlugPerWebsite(TransactionCase):
             }
         )
 
+    def test_a_visitor_reads_a_published_page_whose_view_it_may_see(self):
+        # a controller page binds its view's read permission (plan section
+        # 3.1): a visitor reads the page when the view's visibility lets it
+        website = self.env["website"].browse(1)
+        page = self._make_page(website, "audit_visitor_page")
+        page.website_published = True
+        visitor = self.env.ref("base.public_user")
+        self.assertTrue(page.with_user(visitor).has_access("read"))
+        page.view_id.visibility = "connected"
+        self.assertFalse(page.with_user(visitor).has_access("read"))
+
     def test_same_slug_allowed_on_two_websites(self):
         website_1 = self.env["website"].browse(1)
         website_2 = self.env["website"].create({"name": "Audit Slug W2"})

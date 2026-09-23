@@ -316,6 +316,16 @@
         <field name="perm_unlink" eval="False" />
     </record>
 
+    <record id="access_res_partner_erp_manager_users" model="ir.access">
+        <field
+            name="name">res.partner: access rights managers edit the partners of users</field>
+        <field name="model_id" ref="base.model_res_partner" />
+        <field name="group_id" ref="base.group_erp_manager" />
+        <field name="kind">permission</field>
+        <field name="operation">cud</field>
+        <field name="domain">[('user_ids', '!=', False)]</field>
+    </record>
+
     <record id="res_partner_private_address_rule" model="ir.rule">
         <field name="name">res.partner: a private address is its subject's</field>
         <field name="model_id" ref="base.model_res_partner" />

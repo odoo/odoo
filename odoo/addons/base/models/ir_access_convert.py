@@ -608,6 +608,28 @@ def convert(
     return rows, converter.report
 
 
+def synthesize(
+    acl_lines: Sequence[Mapping[str, Any]],
+    rules: Sequence[Mapping[str, Any]],
+    group_implications: Mapping[str, Iterable[str]],
+) -> list[dict[str, Any]]:
+    converter = _Converter(acl_lines, rules, group_implications, None)
+    return [
+        {
+            "kind": row["kind"],
+            "model": row["model"],
+            "group": row["group"],
+            "guard_scope": row["guard_scope"],
+            "operation": operation_string(row["ops"]),
+            "domain": row["domain"],
+            "name": row["name"],
+            "from_rule": row["from_rule"],
+        }
+        for model in sorted(set(converter.acls) | set(converter.rules))
+        for row in converter._convert_model(model)
+    ]
+
+
 _PERM_COLUMNS = ("perm_read", "perm_write", "perm_create", "perm_unlink")
 
 

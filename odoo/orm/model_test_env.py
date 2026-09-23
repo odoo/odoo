@@ -23,7 +23,7 @@ from .models import AbstractModel, MetaModel, Model
 from .primitives import SUPERUSER_ID
 from .runtime._registry_fields import _RegistryFieldsMixin
 from .runtime._registry_models import _RegistryModelsMixin
-from .runtime.access_policy import ACCESS_POLICY
+from .runtime.access_policy import HOSTED_ACCESS_POLICY
 from .runtime.environment import Environment
 from .runtime.filestore import FILE_STORE
 from .runtime.locale import LOCALE, Locale
@@ -352,7 +352,7 @@ class InMemoryCursor(BaseCursor):
 class ModelRegistry(_RegistryFieldsMixin, _RegistryModelsMixin, Mapping):
     _lock: threading.RLock = threading.RLock()
     metaschema = META_SCHEMA
-    access_policy = ACCESS_POLICY
+    access_policy = HOSTED_ACCESS_POLICY
     xmlids = XMLIDS
     file_store = FILE_STORE
     settings = SYSTEM_SETTINGS

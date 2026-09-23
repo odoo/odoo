@@ -321,10 +321,13 @@ Selection field options.
 
 One row says who may do what to which records: a `permission` adds its
 domain's records to what its group reaches (permissions are OR-ed), a `guard`
-is AND-ed and no permission widens it. A model reads its access from these rows
-only when it declares `_access_store = "ir.access"`; every other model still
-answers from `ir.model.access` and `ir.rule` (`registry.access_policy` routes
-per model).
+is AND-ed and no permission widens it. Every model reads its access from these
+rows. Until `ir.model.access` and `ir.rule` are converted, `_get_all_access`
+also holds the rows `ir_access_convert.synthesize()` makes of them (read in one
+statement by `_read_legacy_tables`, or through the ORM by `_read_legacy_records`
+on the in-memory tier), so the old APIs (`ir.model.access.check`,
+`ir.rule._get_domain_accessible_records`, their error builders) answer the same
+decision.
 
 **Fields:**
 - `name` (Char, required), `active` (Boolean, default=True), `note` (Html)
@@ -336,7 +339,7 @@ per model).
 - `is_standard` (Boolean, computed, searchable) — the row comes from a module
 
 **Key Methods:**
-- `_get_all_access()` — every active row by model, literal domains pre-parsed (ormcache stable); refuses a cycle of `'access'` conditions
+- `_get_all_access()` — every active row by model, with the rows synthesized from `ir.model.access` and `ir.rule`, literal domains pre-parsed (ormcache stable, dropped by any write to the four tables or to a group); refuses a cycle of `'access'` conditions
 - `_check_domain()` — a domain validates against the registry, never tests the user's groups, and closes no `'access'` cycle
 - `customize()` — archive a module's row and open an editable copy
 - `_make_model_access_error()`, `_make_record_access_error()` — the AccessError texts, with the failing rows in debug mode
@@ -358,11 +361,11 @@ Model-level access control lists.
 - `perm_read`, `perm_write`, `perm_create`, `perm_unlink` (Boolean)
 
 **Key Methods:**
-- `check(model, mode, raise_exception)` — Check current user has access
-- `_get_groups_with_access(model_name, access_mode)` — Get group expression (ormcache)
-- `_get_models_allowed(mode)` — Models accessible to current user (ormcache)
+- `check(model, mode, raise_exception)` — Check current user has access (asks the model's `_access_allowed`: the ir.access decision)
+- `_get_groups_with_access(model_name, access_mode)` — Group expression of the groups holding a permission (ormcache)
+- `_get_models_allowed(mode)` — Models on which the current user holds a permission (ormcache)
 - `group_names_with_access(model_name, access_mode)` — Visible group names with access
-- `_prepare_access_error(model, mode)` — Build detailed AccessError message
+- `_prepare_access_error(model, mode)` — Build detailed AccessError message (ir.access's)
 
 #### IrModelConstraint — `ir.model.constraint` (`_name`)
 
@@ -442,7 +445,7 @@ Record-level access rules — domain-based filtering per model/group/operation.
 - `perm_read`, `perm_write`, `perm_create`, `perm_unlink` (Boolean, default=True)
 
 **Key Methods:**
-- `_get_domain_accessible_records(model_name, mode)` — Compute effective domain for current user (ormcache)
+- `_get_domain_accessible_records(model_name, mode)` — The ir.access record domain for the current user (`_access_domain`, which ormcaches it); FALSE without a permission
 - `_get_rules(model_name, mode)` — Get applicable rules
 - `_get_failing(for_records, mode)` — Get rules failing on specific records
 - `_eval_context()` — Build safe_eval context (user, company_ids, company_id)

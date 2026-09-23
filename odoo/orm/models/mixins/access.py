@@ -12,7 +12,7 @@ from odoo.tools.misc import unquote
 from odoo.tools.translate import LazyTranslate, _
 
 from ... import decorators as api
-from ...domain import Domain
+from ...domain import Domain, DomainCondition, OptimizationLevel
 from ...domain.constants import ACCESS_OPERATIONS
 from ...fields.base import call_hook
 from ...helpers import to_record_ids
@@ -260,6 +260,26 @@ class AccessMixin(_ModelStubs):
             )
 
         return None
+
+    @api.model
+    def _access_allowed(self, operation: str) -> bool:
+        # the model-level answer: the principal holds a permission whose
+        # domain can hold, with any 'access' condition resolved for it
+        if self.env.su:
+            return True
+        domain = self._access_domain(operation)
+        if domain.is_false():
+            return False
+        if not any(c.operator == "access" for c in domain.iter_conditions()):
+            return True
+        model = self.sudo()
+
+        def resolve(condition: DomainCondition) -> Domain:
+            if condition.operator != "access":
+                return condition
+            return condition._optimize(model, OptimizationLevel.DYNAMIC_VALUES)
+
+        return not domain.map_conditions(resolve).optimize(model).is_false()
 
     @api.model
     @ormcache("operation", "self.env.registry.access_policy.access_signature(self.env)")

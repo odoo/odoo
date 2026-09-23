@@ -73,7 +73,7 @@ odoo/addons/base/
 ├── models/                      # 113 Python model files (core ORM infrastructure)
 │   ├── assetsbundle/            #   Asset compilation package (bundle, JS/CSS/XML pipelines, store)
 │   ├── decimal_precision.py         #   Configurable decimal precision
-│   ├── ir_access.py                 #   ir.access: permissions and guards with domains, for models that opt in
+│   ├── ir_access.py                 #   ir.access: permissions and guards with domains, the decision of every model
 │   ├── ir_access_convert.py         #   ir.model.access + ir.rule to ir.access rows, with the audit report (pure)
 │   ├── ir_actions_act_url.py        #   URL action
 │   ├── ir_actions_act_window.py     #   Window actions (open views on a model)

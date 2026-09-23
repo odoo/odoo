@@ -5,7 +5,6 @@ from odoo.fields import Domain
 class TestIrAccessCategory(models.Model):
     _name = "test_ir_access.category"
     _description = "Category read through ir.access"
-    _access_store = "ir.access"
 
     name = fields.Char()
     featured_item_id = fields.Many2one(comodel_name="test_ir_access.item")
@@ -14,7 +13,6 @@ class TestIrAccessCategory(models.Model):
 class TestIrAccessItem(models.Model):
     _name = "test_ir_access.item"
     _description = "Item read through ir.access"
-    _access_store = "ir.access"
 
     name = fields.Char()
     val = fields.Integer()
@@ -24,7 +22,6 @@ class TestIrAccessItem(models.Model):
 class TestIrAccessNode(models.Model):
     _name = "test_ir_access.node"
     _description = "Tree node read through ir.access"
-    _access_store = "ir.access"
 
     name = fields.Char()
     parent_id = fields.Many2one(comodel_name="test_ir_access.node")
@@ -33,7 +30,6 @@ class TestIrAccessNode(models.Model):
 class TestIrAccessDelegated(models.Model):
     _name = "test_ir_access.delegated"
     _description = "Delegates to an item through a column"
-    _access_store = "ir.access"
     _inherits = {"test_ir_access.item": "item_id"}
 
     item_id = fields.Many2one(
@@ -46,7 +42,6 @@ class TestIrAccessDelegated(models.Model):
 class TestIrAccessDelegatedComputed(models.Model):
     _name = "test_ir_access.delegated_computed"
     _description = "Delegates to an item through a computed, searchable link"
-    _access_store = "ir.access"
     _inherits = {"test_ir_access.item": "item_id"}
 
     held_id = fields.Many2one(

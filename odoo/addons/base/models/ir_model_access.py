@@ -4,19 +4,10 @@ from typing import Any, Self
 from odoo import api, fields, models, tools
 from odoo.api import ValuesType
 from odoo.exceptions import AccessError
-from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 
-from .ir_model_common import (
-    ACCESS_ERROR_GROUPS,
-    ACCESS_ERROR_HEADER,
-    ACCESS_ERROR_NOGROUP,
-    ACCESS_ERROR_RESOLUTION,
-    ACCESS_MODES,
-    check_access_mode,
-    unloaded_module_domain,
-    unloaded_module_scope,
-)
+from .ir_access import ANY_GROUP
+from .ir_model_common import ACCESS_MODES, check_access_mode, unloaded_module_scope
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -57,50 +48,26 @@ class IrModelAccess(models.Model):
     @api.model
     def group_names_with_access(self, model_name: str, access_mode: str) -> list[str]:
         self._check_access_mode(access_mode)
-        rows = self.sudo()._read_group(
-            [
-                ("model_id.model", "=", model_name),
-                (f"perm_{access_mode}", "=", True),
-                ("group_id", "!=", False),
-            ],
-            ["group_id", "group_id.privilege_id.name", "group_id.name"],
-            [],
-        )
-        names = sorted(
-            ((privilege or None, group) for _group, privilege, group in rows),
-            key=lambda pair: (pair[0] is None, pair[0] or "", pair[1]),
-        )
-        _debug.perf.count(
-            "group_names_with_access",
-            model=model_name,
-            mode=access_mode,
-            groups=len(names),
-        )
-        return [
-            f"{privilege}/{group}" if privilege else group for privilege, group in names
-        ]
+        return self.env["ir.access"]._group_names_with_access(model_name, access_mode)
 
     @api.model
     @tools.ormcache("model_name", "access_mode", cache="stable")
     def _get_groups_with_access(
         self, model_name: str, access_mode: str = "read"
     ) -> Any:
-        self._check_access_mode(access_mode)
-        model = self.env["ir.model"]._get(model_name)
-        accesses = self.sudo().search(
-            [
-                (f"perm_{access_mode}", "=", True),
-                ("model_id", "=", model.id),
-            ]
-        )
-
+        letter = self.env["ir.access"]._operation_letter(access_mode)
+        group_ids = {
+            row.group_id
+            for row in self.env["ir.access"]._get_all_access().get(model_name, ())
+            if row.kind == "permission" and letter in row.operation
+        }
         group_definitions = self.env["res.groups"]._get_group_definitions()
-        if not accesses:
+        if not group_ids:
             _debug.logic(
                 "groups_with_access", model=model_name, mode=access_mode, result="empty"
             )
             return group_definitions.empty
-        if not all(access.group_id for access in accesses):
+        if ANY_GROUP in group_ids:
             _debug.logic(
                 "groups_with_access",
                 model=model_name,
@@ -113,33 +80,27 @@ class IrModelAccess(models.Model):
             model=model_name,
             mode=access_mode,
             result="groups",
-            groups=len(accesses.group_id),
+            groups=len(group_ids),
         )
-        return group_definitions.from_ids(accesses.group_id.ids)
+        return group_definitions.from_ids(sorted(group_ids))
 
     @tools.ormcache(
         "self.env.user._get_group_ids()", "mode", "self._get_unloaded_module_scope()"
     )
     def _get_models_allowed(self, mode: str = "read") -> frozenset[str]:
         self._check_access_mode(mode)
-
-        group_ids = self.env.user._get_group_ids()
-        domain = (
-            Domain(f"perm_{mode}", "=", True)
-            & Domain("active", "=", True)
-            & (
-                Domain("group_id", "=", False)
-                | Domain("group_id", "in", list(group_ids))
+        letter = self.env["ir.access"]._operation_letter(mode)
+        group_ids = set(self.env.user._get_group_ids())
+        models_allowed = frozenset(
+            model_name
+            for model_name, rows in self.env["ir.access"]._get_all_access().items()
+            if any(
+                row.kind == "permission"
+                and letter in row.operation
+                and (row.group_id in group_ids or row.group_id == ANY_GROUP)
+                for row in rows
             )
-            & unloaded_module_domain(self.env, "ir.model.access")
         )
-        rows = (
-            self.sudo()
-            .with_context(active_test=False)
-            ._read_group(domain, ["model_id.model"], [])
-        )
-        models_allowed = frozenset(model for (model,) in rows)
-
         _debug.perf.count(
             "models_allowed_computed",
             mode=mode,
@@ -180,11 +141,8 @@ class IrModelAccess(models.Model):
             _logger.warning("Missing model %s", model)
             return False
 
-        allowed = self._get_models_allowed(mode)
-        has_access = any(
-            name in allowed
-            for name in self.env["ir.rule"]._get_model_names_bound_by_rules(model)
-        )
+        self._check_access_mode(mode)
+        has_access = self.env[model]._access_allowed(mode)
         if _debug.logic.enabled and not has_access:
             _debug.logic(
                 "acl_denied",
@@ -198,32 +156,7 @@ class IrModelAccess(models.Model):
         return has_access
 
     def _prepare_access_error(self, model: str, mode: str) -> AccessError:
-        _logger.info(
-            "Access Denied by ACLs for operation: %s, uid: %s, model: %s",
-            mode,
-            self.env.uid,
-            model,
-        )
-
-        operation_error = str(ACCESS_ERROR_HEADER[mode]) % {
-            "document_kind": self.env["ir.model"]._get(model).name or model,
-            "document_model": model,
-        }
-
-        groups = "\n".join(
-            f"\t- {g}" for g in self.group_names_with_access(model, mode)
-        )
-        if groups:
-            group_info = str(ACCESS_ERROR_GROUPS) % {"groups_list": groups}
-        else:
-            _debug.logic("access_error.no_group_grants", model=model, mode=mode)
-            group_info = str(ACCESS_ERROR_NOGROUP)
-
-        resolution_info = str(ACCESS_ERROR_RESOLUTION)
-
-        return AccessError(
-            operation_error + "\n\n" + group_info + "\n\n" + resolution_info
-        )
+        return self.env["ir.access"]._make_model_access_error(model, mode)
 
     @api.model
     def call_cache_clearing_methods(self) -> None:

@@ -15,4 +15,14 @@
             name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
     </record>
 
+    <record id="access_integration_service_exchange_channel_read" model="ir.access">
+        <field name="name">Outbound Service: the services of exchange channels</field>
+        <field name="model_id" ref="integration.model_integration_service" />
+        <field name="group_id" ref="base.group_user" />
+        <field name="kind">permission</field>
+        <field name="operation">r</field>
+        <field
+            name="domain">[('exchange_channel_ids', '!=', False), '|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
 </odoo>
