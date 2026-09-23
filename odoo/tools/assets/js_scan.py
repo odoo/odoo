@@ -180,14 +180,29 @@ def scan(src: str) -> tuple[list[Span], bool]:
     return scanner.spans, scanner.nested
 
 
-def has_nested_template_literal(source: str) -> bool:
+# rjsmin (1.2) knows a regex only after punctuation or `return`; after any
+# other keyword it reads the slash as division and minifies the body as code
+_KEYWORDS_RJSMIN_MISREADS = _KEYWORDS_BEFORE_REGEX - {"return"}
+_KEYWORD_THEN_SLASH_RE = re.compile(
+    r"\b(?:%s)\s*/(?![/*])" % "|".join(sorted(_KEYWORDS_RJSMIN_MISREADS))
+)
+
+
+def rjsmin_misreads(source: str) -> bool:
     # rjsmin reads a template literal as backtick to backtick: a backtick
     # anywhere inside a substitution -- a nested literal, or one inside a
     # string, regex or comment there -- cuts it short and the rest is minified
-    # as code
-    if "`" not in source or "${" not in source:
+    # as code. It also collapses the body of a regex that follows a keyword it
+    # does not know (`typeof /a  b/` becomes `typeof/a b/`)
+    templates = "`" in source and "${" in source
+    keyword_regex = bool(_KEYWORD_THEN_SLASH_RE.search(source))
+    if not (templates or keyword_regex):
         return False
-    return scan(source)[1]
+    spans, nested = scan(source)
+    return nested or any(
+        kind == "regex" and _token_before(source, start) in _KEYWORDS_RJSMIN_MISREADS
+        for kind, start, _end in spans
+    )
 
 
 def scrub(src: str) -> str:

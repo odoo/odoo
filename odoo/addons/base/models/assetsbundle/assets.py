@@ -17,7 +17,7 @@ from odoo.tools.assets.esm_graph import (
     _parse_odoo_module_header,
     url_to_module_path,
 )
-from odoo.tools.assets.js_scan import has_nested_template_literal
+from odoo.tools.assets.js_scan import rjsmin_misreads
 from odoo.tools.json import scriptsafe as json
 from odoo.tools.misc import file_open, file_path
 from odoo.tools.sass_embedded import (
@@ -179,7 +179,7 @@ class JavascriptAsset(WebAsset):
 
     def minify(self) -> str:
         content = self.content
-        if not has_nested_template_literal(content):
+        if not rjsmin_misreads(content):
             with _debug.perf("js_minify", name=self.name, tool="rjsmin"):
                 return self.with_header(rjsmin(content, keep_bang_comments=True))
         with _debug.perf("js_minify", name=self.name, tool="esbuild") as span:

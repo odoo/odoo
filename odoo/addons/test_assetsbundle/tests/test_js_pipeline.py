@@ -6,7 +6,7 @@ from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import config
 from odoo.tools.assets.esm_graph import _MODULE_SYNTAX_RE
 from odoo.tools.assets.esm_registry import esm_registry
-from odoo.tools.assets.js_scan import has_nested_template_literal
+from odoo.tools.assets.js_scan import rjsmin_misreads
 from odoo.tools.json import scriptsafe as json
 
 from .common import asset_file, make_bundle
@@ -224,7 +224,7 @@ class TestJsContentPredicates(BaseCase):
 
 class TestNestedTemplateLiteralDetection(BaseCase):
     def test_nesting_is_detected(self):
-        self.assertTrue(has_nested_template_literal("const a = `A${`B  ${1}  C`}D`;"))
+        self.assertTrue(rjsmin_misreads("const a = `A${`B  ${1}  C`}D`;"))
 
     def test_a_plain_interpolated_literal_is_not_nesting(self):
         for source in (
@@ -234,11 +234,11 @@ class TestNestedTemplateLiteralDetection(BaseCase):
             "const a = `line one\n   two`;",
             "const a = `esc \\` still one ${x}`;",
         ):
-            self.assertFalse(has_nested_template_literal(source), source)
+            self.assertFalse(rjsmin_misreads(source), source)
 
     def test_a_file_without_both_markers_short_circuits(self):
-        self.assertFalse(has_nested_template_literal("const a = `plain`;"))
-        self.assertFalse(has_nested_template_literal("const a = '${notatemplate}';"))
+        self.assertFalse(rjsmin_misreads("const a = `plain`;"))
+        self.assertFalse(rjsmin_misreads("const a = '${notatemplate}';"))
 
     def test_every_file_rjsmin_corrupts_is_flagged(self):
         must_flag = [
@@ -253,14 +253,14 @@ class TestNestedTemplateLiteralDetection(BaseCase):
             "const a = `${ x.map(({v}) => `  ${v}  `).join('') }`;",
         ]
         for source in must_flag:
-            self.assertTrue(has_nested_template_literal(source), source)
+            self.assertTrue(rjsmin_misreads(source), source)
 
     def test_a_brace_in_a_substitution_is_not_its_end(self):
         for source in (
             "const a = `${ f({b:1}) }`;",
             "const a = `${ {a:{b:2}} }` + `${ 1 }`;",
         ):
-            self.assertFalse(has_nested_template_literal(source), source)
+            self.assertFalse(rjsmin_misreads(source), source)
 
     def test_a_backtick_in_a_comment_or_string_does_not_hide_nesting(self):
         for source in (
@@ -269,7 +269,28 @@ class TestNestedTemplateLiteralDetection(BaseCase):
             'const a = `${ "}" + `n  o` }`;',
         ):
             with self.subTest(source=source):
-                self.assertTrue(has_nested_template_literal(source))
+                self.assertTrue(rjsmin_misreads(source))
+
+    def test_a_regex_after_a_keyword_rjsmin_does_not_know_is_flagged(self):
+        for source in (
+            "x = typeof /a  b/;",
+            "function* g() { yield /a  b/; }",
+            "async function f() { await /a  b/; }",
+            "function* g() { yield /`/;\n}\nconst m = `a    b`;",
+        ):
+            with self.subTest(source=source):
+                self.assertTrue(rjsmin_misreads(source))
+
+    def test_a_regex_rjsmin_reads_as_one_is_left_to_it(self):
+        for source in (
+            "function f() { return /a  b/; }",
+            "x = (/a  b/);",
+            "x = y / 2 / z;",
+            "// typeof /a  b/\nconst t = 1;",
+            "const s = 'yield /a  b/';",
+        ):
+            with self.subTest(source=source):
+                self.assertFalse(rjsmin_misreads(source))
 
     def test_rjsmin_really_does_break_what_is_flagged(self):
         from rjsmin import jsmin
@@ -278,9 +299,11 @@ class TestNestedTemplateLiteralDetection(BaseCase):
             ("const a = `A${`B  ${1}  C`}D`;", "B  ${1}  C"),
             ("const a = `${ f({}) + `n  o` }`;", "n  o"),
             ("const a = `${ (()=>{})() + `n  o` }`;", "n  o"),
+            ("x = typeof /a  b/;", "a  b"),
+            ("function* g() { yield /`/;\n}\nconst m = `a    b`;", "a    b"),
         ):
             with self.subTest(source=source):
-                self.assertTrue(has_nested_template_literal(source))
+                self.assertTrue(rjsmin_misreads(source))
                 self.assertNotIn(intact, jsmin(source, keep_bang_comments=True))
 
     def test_the_minifier_takes_the_in_process_path(self):

@@ -5,7 +5,7 @@ from unittest import mock
 from rjsmin import jsmin
 
 from odoo.tools.assets import esm_bridges, esm_graph
-from odoo.tools.assets.js_scan import has_nested_template_literal, scrub
+from odoo.tools.assets.js_scan import rjsmin_misreads, scrub
 
 from odoo.addons.base.models.assetsbundle import assets
 from odoo.addons.base.models.assetsbundle.assets import JavascriptAsset
@@ -24,7 +24,7 @@ class TestNestedTemplateLiteral(unittest.TestCase):
         for source, intact in self.CORRUPTED_BY_RJSMIN:
             with self.subTest(source=source):
                 self.assertNotIn(intact, jsmin(source, keep_bang_comments=True))
-                self.assertTrue(has_nested_template_literal(source))
+                self.assertTrue(rjsmin_misreads(source))
 
     def test_what_rjsmin_keeps_is_not_flagged(self):
         for source in (
@@ -38,16 +38,16 @@ class TestNestedTemplateLiteral(unittest.TestCase):
             "const c = 'a ` b';\nconst t = `${x}  y`;",
         ):
             with self.subTest(source=source):
-                self.assertFalse(has_nested_template_literal(source))
+                self.assertFalse(rjsmin_misreads(source))
                 self.assertIn("  ", jsmin(source, keep_bang_comments=True))
 
     def test_an_unterminated_literal_is_left_to_esbuild(self):
-        self.assertTrue(has_nested_template_literal("const a = `x ${y}"))
+        self.assertTrue(rjsmin_misreads("const a = `x ${y}"))
 
     def test_nesting_deeper_than_the_recursion_limit_is_still_scanned(self):
         depth = sys.getrecursionlimit()
         source = "const a = " + "`${" * depth + "1" + "}`" * depth + ";\nconst b = 2;"
-        self.assertTrue(has_nested_template_literal(source))
+        self.assertTrue(rjsmin_misreads(source))
         self.assertEqual(scrub(source), 'const a = "";\nconst b = 2;')
 
     def test_the_minifier_hands_deep_nesting_to_esbuild(self):
