@@ -45,7 +45,6 @@ from odoo.libs.lru import LRU
 from odoo.libs.numbers.float_utils import float_invert
 from odoo.libs.password import CryptContext
 from odoo.libs.sql.builder import SQL
-from odoo.libs.sql.utils import reverse_order
 from odoo.libs.text.address import street_split
 from odoo.libs.text.html import html2plaintext, html_sanitize
 from odoo.libs.text.strings import is_encodable
@@ -429,25 +428,6 @@ class TestFormataddrHeaderInjection:
             formataddr(("John Doe", "john@example.com"))
             == '"John Doe" <john@example.com>'
         )
-
-
-class TestReverseOrderCommas:
-    def test_function_call_arglist_not_split(self):
-        assert reverse_order("coalesce(a, b) desc") == "coalesce(a, b) asc"
-
-    def test_mixed_items(self):
-        assert (
-            reverse_order("coalesce(a, b) desc, name asc")
-            == "coalesce(a, b) asc, name desc"
-        )
-
-    def test_quoted_identifier_with_comma(self):
-        assert reverse_order('"a,b" asc') == '"a,b" desc'
-
-    def test_simple_cases_unchanged(self):
-        assert reverse_order("name asc, date desc") == "name desc, date asc"
-        assert reverse_order("id") == "id desc"
-        assert reverse_order("name desc nulls last") == "name asc nulls first"
 
 
 class TestOrderedSetIntersectionAliasing:

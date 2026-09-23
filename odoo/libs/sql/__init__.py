@@ -9,7 +9,6 @@ from .utils import (
     get_index_name,
     pg_size_pretty,
     pg_varchar,
-    reverse_order,
 )
 
 __all__ = [
@@ -20,6 +19,5 @@ __all__ = [
     "pattern_to_translated_trigram_pattern",
     "pg_size_pretty",
     "pg_varchar",
-    "reverse_order",
     "value_to_translated_trigram_pattern",
 ]
