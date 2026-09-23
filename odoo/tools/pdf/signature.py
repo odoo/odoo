@@ -73,13 +73,14 @@ class PdfSigner:
         company: ResCompany | None = None,
         signing_time=None,
     ) -> None:
-        self.signing_time = signing_time
+        moment = signing_time or datetime.datetime.now(datetime.UTC)
+        self.signing_time = (
+            moment.astimezone(datetime.UTC)
+            if moment.tzinfo
+            else moment.replace(tzinfo=datetime.UTC)
+        )
         self.company = company
         self.writer = PdfWriter()
-        self.usable = "clone_document_from_reader" in dir(PdfWriter)
-        if not self.usable:
-            _logger.info("PDF signature needs a pypdf with clone_document_from_reader")
-            return
         self.writer.clone_document_from_reader(PdfReader(stream))
 
     def sign_pdf(
@@ -88,12 +89,11 @@ class PdfSigner:
         field_name: str = "Odoo Signature",
         signer: ResUsers | None = None,
     ) -> io.BytesIO | None:
-        if not self.company or not HAS_CRYPTOGRAPHY or not self.usable:
+        if not self.company or not HAS_CRYPTOGRAPHY:
             _debug.logic(
                 "pdf.signature_skipped",
                 company=getattr(self.company, "id", None),
                 cryptography=HAS_CRYPTOGRAPHY,
-                usable=self.usable,
             )
             return None
 
@@ -159,6 +159,7 @@ class PdfSigner:
                                 NameObject("/Type"): NameObject("/Font"),
                                 NameObject("/Subtype"): NameObject("/Type1"),
                                 NameObject("/BaseFont"): NameObject("/Helvetica"),
+                                NameObject("/Encoding"): NameObject("/WinAnsiEncoding"),
                             }
                         )
                     }
@@ -198,7 +199,7 @@ class PdfSigner:
         stream._data = (
             f"q 0.5 0 0 0.5 0 0 cm BT /F1 12 Tf 0 TL 0 10 Td "
             f"({_escape_pdf_literal(content)}) Tj ET Q"
-        ).encode()
+        ).encode("cp1252", errors="replace")
         signature_appearence = DictionaryObject()
         signature_appearence.update({NameObject("/N"): stream})
         return rect, signature_appearence
@@ -217,9 +218,7 @@ class PdfSigner:
                 NameObject("/Filter"): NameObject("/Adobe.PPKLite"),
                 NameObject("/SubFilter"): NameObject("/adbe.pkcs7.detached"),
                 NameObject("/M"): create_string_object(
-                    (self.signing_time or datetime.datetime.now(datetime.UTC)).strftime(
-                        "D:%Y%m%d%H%M%S"
-                    )
+                    self.signing_time.strftime("D:%Y%m%d%H%M%SZ")
                 ),
             }
         )
@@ -228,12 +227,12 @@ class PdfSigner:
     def _register_signature_field(
         self, form: DictionaryObject, page, signature_field_ref
     ) -> None:
-        if "/Fields" not in self.writer._root_object:
+        existing = form.get("/Fields")
+        fields = existing.get_object() if existing is not None else None
+        if not isinstance(fields, ArrayObject):
             fields = ArrayObject()
-        else:
-            fields = self.writer._root_object["/Fields"].get_object()
+            form[NameObject("/Fields")] = fields
         fields.append(signature_field_ref)
-        form.update({NameObject("/Fields"): fields})
 
         if "/Annots" not in page:
             page[NameObject("/Annots")] = ArrayObject()
@@ -309,14 +308,7 @@ class PdfSigner:
                     {
                         "type": "signing_time",
                         "values": [
-                            cms.Time(
-                                {
-                                    "utc_time": core.UTCTime(
-                                        self.signing_time
-                                        or datetime.datetime.now(datetime.UTC)
-                                    )
-                                }
-                            )
+                            cms.Time({"utc_time": core.UTCTime(self.signing_time)})
                         ],
                     }
                 ),

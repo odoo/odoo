@@ -17,24 +17,7 @@ def _sample_pdf() -> io.BytesIO:
 _ANY_COMPANY: Any = object()
 
 
-class _WriterWithoutClone:
-    pass
-
-
 class TestSignPdfKeepsItsContract(unittest.TestCase):
-    def test_an_unusable_pypdf_yields_none_rather_than_raising(self):
-        with mock.patch.object(pdf_signature, "PdfWriter", _WriterWithoutClone):
-            signer = PdfSigner(_sample_pdf(), company=_ANY_COMPANY)
-            self.assertFalse(signer.usable)
-            self.assertIsNone(signer.sign_pdf())
-
-    def test_the_object_is_never_left_half_built(self):
-        with mock.patch.object(pdf_signature, "PdfWriter", _WriterWithoutClone):
-            signer = PdfSigner(_sample_pdf(), company=_ANY_COMPANY)
-        for attribute in ("writer", "usable", "company", "signing_time"):
-            with self.subTest(attribute=attribute):
-                self.assertTrue(hasattr(signer, attribute))
-
     def test_no_company_yields_none(self):
         self.assertIsNone(PdfSigner(_sample_pdf()).sign_pdf())
 

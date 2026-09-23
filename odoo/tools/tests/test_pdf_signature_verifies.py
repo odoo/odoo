@@ -51,8 +51,6 @@ class TestTheSignatureVerifies(unittest.TestCase):
     def _sign_with(self, key):
         certificate = _self_signed(key)
         signer = PdfSigner(_sample_pdf(), company=cast("ResCompany", object()))
-        if not signer.usable:
-            self.skipTest("this pypdf has no clone_document_from_reader")
         with mock.patch.object(
             PdfSigner,
             "_load_key_and_certificate",
