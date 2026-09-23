@@ -1,3 +1,7 @@
+from unittest.mock import patch
+
+from werkzeug.routing import Map, Rule
+
 from odoo.tests import TransactionCase, tagged
 
 
@@ -77,10 +81,54 @@ class TestInboundGateContract(TransactionCase):
         self.assertNotIn("Called from", gate.contract_limits)
 
     def test_the_routes_are_read_from_the_routing_map(self):
-        routes = self.receivers._inbound_routes_by_model()
+        def endpoint(routing):
+            def handler():
+                return None
 
-        self.assertTrue(routes, "no route declares a receiver on this database")
-        for model_name, rules in routes.items():
+            handler.routing = routing
+            return handler
+
+        routing_map = Map(
+            [
+                Rule(
+                    "/hook/<int:ident>",
+                    endpoint=endpoint({"receiver": "res.partner:_hook_subject"}),
+                    methods=["POST"],
+                ),
+                Rule(
+                    "/hook/<int:ident>/state",
+                    endpoint=endpoint({"receiver": "res.partner:_hook_subject"}),
+                    methods=["GET"],
+                ),
+                Rule(
+                    "/gate/<string:code>",
+                    endpoint=endpoint({"receiver": "integration.receiver:code"}),
+                ),
+                Rule(
+                    "/page",
+                    endpoint=endpoint({"auth": "user"}),
+                    methods=["GET"],
+                ),
+            ]
+        )
+        with patch.object(
+            type(self.env["ir.http"]), "routing_map", return_value=routing_map
+        ):
+            routes = self.receivers._inbound_routes_by_model()
+
+        self.assertEqual(
+            routes,
+            {
+                "res.partner": [
+                    "POST /hook/<int:ident>",
+                    "GET /hook/<int:ident>/state",
+                ],
+                "integration.receiver": ["GET, POST /gate/<string:code>"],
+            },
+        )
+
+    def test_every_model_a_receiver_route_names_is_a_model(self):
+        for model_name, rules in self.receivers._inbound_routes_by_model().items():
             self.assertIn(model_name, self.env, f"{model_name} is not a model")
             for rule in rules:
                 methods, _, path = rule.rpartition(" ")
