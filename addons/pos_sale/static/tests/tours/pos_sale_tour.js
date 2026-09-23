@@ -754,3 +754,16 @@ registry.category("web_tour.tours").add("test_variant_popup_qty_free", {
             Dialog.confirm("Add"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_settled_line_price_is_not_crossed_out", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            {
+                content: "The price of the settled line is not crossed out",
+                trigger: Utils.negate(".oldPrice", ".order-container .orderline"),
+            },
+        ].flat(),
+});
