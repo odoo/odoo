@@ -5,7 +5,7 @@ import threading
 import tracemalloc
 import types
 from contextlib import ExitStack, nullcontext
-from typing import TYPE_CHECKING, Any, Self
+from typing import TYPE_CHECKING, Any, Self, override
 
 from psycopg import OperationalError
 
@@ -83,7 +83,7 @@ class Collector:
     _registry: dict[str, type[Collector]] = {}
 
     @classmethod
-    def __init_subclass__(cls):
+    def __init_subclass__(cls) -> None:
         if cls.name:
             cls._registry[cls.name] = cls
 
@@ -209,6 +209,7 @@ class SQLCollector(Collector):
             }
         )
 
+    @override
     def summary(self) -> str:
         entries = self.processed_entries if self._processed else self._entries
         total_time = sum(entry["time"] for entry in entries) or 1
@@ -275,7 +276,12 @@ class _BasePeriodicCollector(Collector):
 class PeriodicCollector(_BasePeriodicCollector):
     name = "traces_async"
 
-    def add(self, entry=None, frame=None):
+    @override
+    def add(
+        self,
+        entry: dict[str, Any] | None = None,
+        frame: FrameType | None = None,
+    ) -> None:
         if self.last_frame:
             duration = real_time() - self._last_time
             if duration > self.frame_interval * 10:
@@ -308,7 +314,8 @@ class MemoryCollector(_BasePeriodicCollector):
     _lock_acquired = False
     _owns_tracing = False
 
-    def start(self):
+    @override
+    def start(self) -> None:
         self._lock_acquired = _lock.acquire(timeout=5)
         if not self._lock_acquired:
             _logger.warning(
@@ -329,7 +336,11 @@ class MemoryCollector(_BasePeriodicCollector):
             self._lock_acquired = False
             raise
 
-    def add(self, entry=None, frame=None):
+    def add(
+        self,
+        entry: dict[str, Any] | None = None,
+        frame: FrameType | None = None,
+    ) -> None:
         self._entries.append(
             {
                 "start": real_time(),
@@ -337,7 +348,8 @@ class MemoryCollector(_BasePeriodicCollector):
             }
         )
 
-    def stop(self):
+    @override
+    def stop(self) -> None:
         if not self._lock_acquired:
             return
         try:
@@ -352,7 +364,7 @@ class MemoryCollector(_BasePeriodicCollector):
             tracemalloc.stop()
             self._owns_tracing = False
 
-    def post_process(self):
+    def post_process(self) -> None:
         for i, entry in enumerate(self._entries):
             if entry.get("memory", False):
                 entry_statistics = entry["memory"].statistics("traceback")
@@ -376,7 +388,7 @@ class SyncCollector(Collector):
         super().__init__()
         self._hook = self.hook
 
-    def start(self):
+    def start(self) -> None:
         if (existing := sys.gettrace()) is not None:
             msg = (
                 f"Cannot start SyncCollector: sys.settrace is already set to "
@@ -388,11 +400,13 @@ class SyncCollector(Collector):
             raise RuntimeError(msg)
         sys.settrace(self._hook)
 
-    def stop(self):
+    def stop(self) -> None:
         if sys.gettrace() is self._hook:
             sys.settrace(None)
 
-    def hook(self, _frame, event, _arg=None):
+    def hook(
+        self, _frame: FrameType, event: str, _arg: Any = None
+    ) -> Callable[[FrameType, str, Any], Any] | None:
         # the profiler's own teardown (__exit__, end, stop) runs traced
         if event == "line" or _frame.f_code.co_filename == __file__:
             return None
@@ -402,10 +416,13 @@ class SyncCollector(Collector):
         self.progress(entry, frame=_frame)
         return self._hook
 
-    def _get_stack_trace(self, frame=None):
+    def _get_stack_trace(
+        self, frame: FrameType | None = None
+    ) -> list[tuple[str, int, str, str]] | None:
         return None
 
-    def post_process(self):
+    @override
+    def post_process(self) -> None:
         stack: list[tuple[str, int, str, str]] = []
         for entry in self._entries:
             frame = entry.pop("frame")
@@ -507,16 +524,18 @@ class QwebTracker:
 class QwebCollector(Collector):
     name = "qweb"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.events: list[tuple[str, dict[str, Any], int, float]] = []
 
-        def hook(event, sql_log_count, **kwargs):
+        def hook(event: str, sql_log_count: int, **kwargs: Any) -> None:
             self.events.append((event, kwargs, sql_log_count, real_time()))
 
         self.hook = hook
 
-    def _get_directive_profiling_name(self, directive, attrib):
+    def _get_directive_profiling_name(
+        self, directive: str, attrib: dict[str, str]
+    ) -> str:
         expr = ""
         if directive == "set":
             if "t-set" in attrib:
@@ -525,25 +544,25 @@ class QwebCollector(Collector):
                     expr += f" t-value={attrib['t-value']!r}"
                 if "t-valuef" in attrib:
                     expr += f" t-valuef={attrib['t-valuef']!r}"
-            for key in attrib:
+            for key, value in attrib.items():
                 if key.startswith(("t-set-", "t-setf-")):
                     if expr:
                         expr += " "
-                    expr += f"{key}={attrib[key]!r}"
+                    expr += f"{key}={value!r}"
         elif directive == "foreach":
             expr = f"t-foreach={attrib['t-foreach']!r} t-as={attrib['t-as']!r}"
         elif directive == "options":
             if attrib.get("t-options"):
                 expr = f"t-options={attrib['t-options']!r}"
-            for key in attrib:
+            for key, value in attrib.items():
                 if key.startswith("t-options-"):
-                    expr = f"{expr}  {key}={attrib[key]!r}"
+                    expr = f"{expr}  {key}={value!r}"
         elif directive == "att":
-            for key in attrib:
+            for key, value in attrib.items():
                 if key == "t-att" or key.startswith(("t-att-", "t-attf-")):
                     if expr:
                         expr += " "
-                    expr += f"{key}={attrib[key]!r}"
+                    expr += f"{key}={value!r}"
         elif ("t-" + directive) in attrib:
             expr = f"t-{directive}={attrib['t-' + directive]!r}"
         else:
@@ -551,16 +570,17 @@ class QwebCollector(Collector):
 
         return expr
 
-    def start(self):
+    def start(self) -> None:
         init_thread = self.profiler.init_thread
         if not hasattr(init_thread, "qweb_hooks"):
             init_thread.qweb_hooks = []
         init_thread.qweb_hooks.append(self.hook)
 
-    def stop(self):
+    def stop(self) -> None:
         self.profiler.init_thread.qweb_hooks.remove(self.hook)
 
-    def post_process(self):
+    @override
+    def post_process(self) -> None:
         last_event_query = 0
         last_event_time = 0.0
         stack: list[dict[str, Any]] = []

@@ -464,7 +464,7 @@ class _ModuleRename:
     def in_text(self, value: str) -> str:
         return self.text.sub(lambda m: f"{m['lead']}{self.new}.", value)
 
-    def in_attribute(self, element, attribute: str, value: str) -> str:
+    def in_attribute(self, element: etree._Element, attribute: str, value: str) -> str:
         if attribute == "groups":
             return self.items.sub(lambda m: f"{m['lead']}{self.new}.", value)
         if attribute in _XMLID_ATTRIBUTES:
@@ -940,7 +940,7 @@ class _Scope(NamedTuple):
     located: Any = _UNKNOWN_MODEL
 
 
-def _rename_in_node(node, scope: _Scope, rename: _FieldRename) -> bool:
+def _rename_in_node(node: etree._Element, scope: _Scope, rename: _FieldRename) -> bool:
     renamed = False
     in_scope = rename.is_target(scope.model)
     for attribute, value in node.attrib.items():
@@ -973,7 +973,13 @@ def _rename_in_node(node, scope: _Scope, rename: _FieldRename) -> bool:
     return renamed
 
 
-def _rename_in_attribute(node, attribute, value, scope: _Scope, rename: _FieldRename):
+def _rename_in_attribute(
+    node: etree._Element,
+    attribute: str,
+    value: str,
+    scope: _Scope,
+    rename: _FieldRename,
+) -> str:
     if not rename.precise or attribute.startswith("t-") or attribute == "eval":
         # a QWeb expression reads variables (`partner.comment`) whose model no
         # attribute states: the word rewrite, on the nodes of the model
@@ -997,7 +1003,7 @@ def _rename_in_attribute(node, attribute, value, scope: _Scope, rename: _FieldRe
     )
 
 
-def _child_scope(node, scope: _Scope, rename: _FieldRename) -> _Scope:
+def _child_scope(node: etree._Element, scope: _Scope, rename: _FieldRename) -> _Scope:
     position = node.get("position") or "inside"
     inner = position == "inside" or (
         position == "replace" and node.get("mode") == "inner"

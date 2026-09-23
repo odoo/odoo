@@ -3,10 +3,13 @@ import threading
 from collections import Counter
 from collections.abc import Collection, Mapping
 from types import MappingProxyType
-from typing import NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
 
 from odoo.libs.asset_log import get_asset_logger, log_event
 from odoo.libs.debug_log import DebugLog
+
+if TYPE_CHECKING:
+    from odoo.modules import Manifest
 
 __all__ = [
     "EsmRegistry",
@@ -197,7 +200,7 @@ def _merge_external_libs(
         owner_by_spec[spec] = module
 
 
-def _validated_esm_section(manifest) -> Mapping | None:
+def _validated_esm_section(manifest: Manifest) -> Mapping | None:
     esm = manifest.get("esm")
     if not esm:
         return None
@@ -215,7 +218,7 @@ def _validated_esm_section(manifest) -> Mapping | None:
     return esm
 
 
-def _bundle_name_list(esm: Mapping, key: str, module: str):
+def _bundle_name_list(esm: Mapping, key: str, module: str) -> Collection[str]:
     declared = esm.get(key, ())
     if isinstance(declared, str):
         raise TypeError(

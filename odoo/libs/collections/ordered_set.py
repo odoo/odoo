@@ -12,7 +12,7 @@ from collections.abc import (
 )
 from functools import reduce
 from types import MappingProxyType
-from typing import Self
+from typing import Self, override
 
 
 class FrozenOrderedSet[T](AbstractSet[T]):
@@ -110,6 +110,7 @@ class OrderedSet[T](MutableSet[T]):
 class LastOrderedSet[T](OrderedSet[T]):
     __slots__ = ()
 
+    @override
     def add(self, elem: T) -> None:
         self.discard(elem)
         super().add(elem)

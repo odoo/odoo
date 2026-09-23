@@ -6,6 +6,7 @@ import os
 import threading
 from collections.abc import Iterator
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from odoo.libs import inotify as _inotify_lib
 from odoo.libs.debug_log import DebugLog
@@ -38,6 +39,9 @@ if not inotify:
         watchdog = None  # type: ignore[assignment]
 else:
     watchdog = None  # type: ignore[assignment]
+
+if TYPE_CHECKING:
+    from watchdog.events import FileSystemEvent
 
 _logger = logging.getLogger("odoo.service.server")
 _debug = DebugLog(__name__)
@@ -323,7 +327,7 @@ class FSWatcherWatchdog(FSWatcherBase):
             self.observer.schedule(self, path, recursive=True)
         _debug.lifecycle("watcher.scheduled", backend="watchdog", paths=len(paths))
 
-    def dispatch(self, event) -> None:
+    def dispatch(self, event: FileSystemEvent) -> None:
         if isinstance(event, (FileCreatedEvent, FileModifiedEvent, FileMovedEvent)):
             if not event.is_directory:
                 path = getattr(event, "dest_path", "") or event.src_path

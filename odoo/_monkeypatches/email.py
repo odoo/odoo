@@ -1,6 +1,6 @@
 import email.message
 import email.policy
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, override
 
 if TYPE_CHECKING:
     _EmailPolicyBase = email.policy.EmailPolicy[email.message.EmailMessage[Any, Any]]
@@ -20,6 +20,7 @@ class IdentificationFieldsNoFoldPolicy(_EmailPolicyBase):
     _no_fold_policy: Any
     _max_fold_policy: Any
 
+    @override
     def _fold(self, name: str, value: str, *args, **kwargs) -> str:  # type: ignore[misc]
         lname = name.lower()
         if lname in RFC5322_IDENTIFICATION_HEADERS:

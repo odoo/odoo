@@ -11,7 +11,7 @@ _debug = DebugLog(__name__)
 class ConnectionBudget:
     __slots__ = ("_cond", "_exhausted", "_in_use", "maxconn")
 
-    def __init__(self, maxconn: int):
+    def __init__(self, maxconn: int) -> None:
         if maxconn <= 0:
             raise ValueError(f"ConnectionBudget maxconn must be >= 1, got {maxconn}")
         self.maxconn = maxconn

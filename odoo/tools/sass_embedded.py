@@ -378,7 +378,9 @@ class SassEmbeddedCompiler:
 
     @staticmethod
     def _compile_response_css(
-        resp, url: str, deprecations: collections.Counter[str]
+        resp: OutboundMessage.CompileResponse,
+        url: str,
+        deprecations: collections.Counter[str],
     ) -> str:
         result_type = resp.WhichOneof("result")
         if result_type == "failure":
@@ -405,7 +407,9 @@ class SassEmbeddedCompiler:
         return resp.success.css
 
     @staticmethod
-    def _record_log_event(event, deprecations: collections.Counter[str]) -> None:
+    def _record_log_event(
+        event: OutboundMessage.LogEvent, deprecations: collections.Counter[str]
+    ) -> None:
         if event.type == 2:
             _logger.debug("Sass debug: %s", event.message)
             return
@@ -417,7 +421,9 @@ class SassEmbeddedCompiler:
             deprecations["(repeats omitted by sass)"] += int(omitted.group(1))
 
     @staticmethod
-    def _canonicalize_response(req, importer: SassImporter | None) -> InboundMessage:
+    def _canonicalize_response(
+        req: OutboundMessage.CanonicalizeRequest, importer: SassImporter | None
+    ) -> InboundMessage:
         response = InboundMessage()
         canon_resp = response.canonicalize_response
         canon_resp.id = req.id
@@ -440,7 +446,9 @@ class SassEmbeddedCompiler:
         return response
 
     @staticmethod
-    def _import_response(req, importer: SassImporter | None) -> InboundMessage:
+    def _import_response(
+        req: OutboundMessage.ImportRequest, importer: SassImporter | None
+    ) -> InboundMessage:
         response = InboundMessage()
         import_resp = response.import_response
         import_resp.id = req.id

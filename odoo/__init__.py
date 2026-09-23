@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 __all__ = ["SUPERUSER_ID", "Command", "_", "_lt", "evented"]
 
@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from odoo.tools.translate import _lt as _lt
 
 
-def __getattr__(name: str):
+def __getattr__(name: str) -> Any:
     if name in ("SUPERUSER_ID", "Command"):
         from odoo.orm import primitives
 

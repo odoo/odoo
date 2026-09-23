@@ -60,7 +60,7 @@ _debug = DebugLog(__name__)
 class InMemorySequenceStore:
     __slots__ = ("storage",)
 
-    def __init__(self, storage: DictBackend):
+    def __init__(self, storage: DictBackend) -> None:
         self.storage = storage
 
     def create(
@@ -110,7 +110,7 @@ def _load(value: typing.Any) -> typing.Any:
 class InMemoryColumnStore:
     __slots__ = ("storage",)
 
-    def __init__(self, storage: DictBackend):
+    def __init__(self, storage: DictBackend) -> None:
         self.storage = storage
 
     def read(
@@ -1217,7 +1217,7 @@ class _ForeignKeyPlan:
 class InMemoryBackend:
     __slots__ = ("columns", "sequences", "storage")
 
-    def __init__(self, storage: DictBackend):
+    def __init__(self, storage: DictBackend) -> None:
         self.storage = storage
         self.sequences: SequenceStore = InMemorySequenceStore(storage)
         self.columns: ColumnStore = InMemoryColumnStore(storage)

@@ -1,4 +1,4 @@
-from typing import Any, ClassVar
+from typing import Any, ClassVar, override
 
 from docutils import nodes
 from docutils.parsers.rst import directives, roles, states
@@ -36,6 +36,7 @@ class _AdmonitionWithLead(Note):
     optional_arguments = 1
     final_argument_whitespace = True
 
+    @override
     def run(self) -> list[nodes.Node]:
         if not self.content:
             self.content = StringList(

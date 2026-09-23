@@ -1,6 +1,12 @@
+from __future__ import annotations
+
 import sys
 import types
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import pytest
 
 __all__ = ["stub_odoo_packages"]
 
@@ -55,7 +61,9 @@ def _stub_for_target(target: Path) -> None:
         _stub_package(name, path)
 
 
-def pytest_load_initial_conftests(early_config, parser, args) -> None:
+def pytest_load_initial_conftests(
+    early_config: pytest.Config, parser: pytest.Parser, args: list[str]
+) -> None:
     rootpath = Path(early_config.rootpath)
 
     testpaths = [

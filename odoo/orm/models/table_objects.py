@@ -119,7 +119,7 @@ class Constraint(TableObject):
 class Index(TableObject):
     unique: bool = False
 
-    def __init__(self, definition: IndexDefinitionType):
+    def __init__(self, definition: IndexDefinitionType) -> None:
         super().__init__()
         self._index_definition = definition
 
@@ -192,7 +192,7 @@ class UniqueIndex(Index):
         self,
         definition: IndexDefinitionType,
         message: ConstraintMessageType = "",
-    ):
+    ) -> None:
         super().__init__(definition)
         if message:
             self.message = message

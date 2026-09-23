@@ -11,7 +11,7 @@ import tempfile
 import time
 from collections.abc import Callable, Collection, Iterator, Mapping, Sequence
 from pathlib import Path
-from typing import NamedTuple
+from typing import NamedTuple, Protocol
 
 import odoo
 from odoo.libs.asset_log import get_asset_logger, log_event
@@ -26,7 +26,18 @@ _debug = DebugLog(__name__)
 EXTERNAL_SPECIFIER_PREFIX = "@odoo/"
 
 
-def module_specifiers(asset) -> tuple[str, ...]:
+class EntryAsset(Protocol):
+    @property
+    def module_path(self) -> str: ...
+
+    @property
+    def url(self) -> str | None: ...
+
+    @property
+    def _filename(self) -> str | None: ...
+
+
+def module_specifiers(asset: EntryAsset) -> tuple[str, ...]:
     names = [asset.module_path]
     if (asset.url or "").endswith("/index.js"):
         names.append(asset.module_path + "/index")
@@ -704,7 +715,7 @@ class EsbuildCompiler:
             "@odoo/owl" in (asset.raw_content or "") for asset in self.native_modules
         )
 
-    def _entry_path(self, asset, odoo_root: Path) -> str:
+    def _entry_path(self, asset: EntryAsset, odoo_root: Path) -> str:
         url = asset.url or ""
         mirrored = self._mirrored_path(url)
         if mirrored is not None:

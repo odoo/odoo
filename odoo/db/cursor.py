@@ -313,7 +313,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
         *,
         borrow_timeout: float | None = None,
         fail_fast: bool = False,
-    ):
+    ) -> None:
         super().__init__()
         self._init_metrics_state()
 
@@ -1254,7 +1254,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, _PipelineMixin, BaseCursor):
 class Connection:
     __slots__ = ("__dbname", "__dsn", "__key", "__pool")
 
-    def __init__(self, pool: ConnectionPool, dbname: str, dsn: dict):
+    def __init__(self, pool: ConnectionPool, dbname: str, dsn: dict) -> None:
         self.__dbname = dbname
         self.__dsn = dict(dsn)
         self.__pool = pool

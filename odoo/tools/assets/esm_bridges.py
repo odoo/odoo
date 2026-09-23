@@ -2,7 +2,7 @@ import logging
 import re
 from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime, timedelta
-from typing import Any, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 from urllib.parse import quote
 
 from odoo import modules
@@ -25,6 +25,9 @@ from odoo.tools.assets.esm_graph import (
 )
 from odoo.tools.assets.esm_lexer import lex_module
 from odoo.tools.assets.esm_registry import esm_registry, external_libs
+
+if TYPE_CHECKING:
+    from odoo.models import BaseModel
 
 __all__ = ["BridgeShimManager", "NativeModuleLike"]
 
@@ -58,14 +61,16 @@ class BridgeShimManager:
         self.bundle_name = bundle_name
         self.native_modules = native_modules
 
-    def _update_reused_shim_dates(self, existing) -> None:
+    def _update_reused_shim_dates(self, existing: BaseModel) -> None:
         if not existing:
             return
         cutoff = datetime.now(UTC).replace(tzinfo=None) - timedelta(
             days=ESM_BRIDGE_REFRESH_DAYS
         )
         stale = [
-            row.id for row in existing if row.write_date and row.write_date < cutoff
+            row.id
+            for row in existing
+            if row["write_date"] and row["write_date"] < cutoff
         ]
         if not stale:
             return

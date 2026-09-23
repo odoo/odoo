@@ -44,6 +44,7 @@ class Integer(Field[int]):
     if not typing.TYPE_CHECKING:
         __get__ = _prepare_fast_get(lambda field, value, record: value or 0)
 
+    @override
     def _get_attrs(self, model_class: ModelClass, name: str) -> dict[str, typing.Any]:
         res = super()._get_attrs(model_class, name)
         if "aggregator" not in res and name == SEQUENCE_FIELD:
@@ -292,6 +293,7 @@ class Monetary(Field[float]):
             return dynamic | {"aggregator"}
         return dynamic
 
+    @override
     def _description_aggregator(self, env: Environment) -> str | None:
         model = env[self.model_name]
         currency_field_name = self._get_currency_field_name(model)
@@ -342,12 +344,14 @@ class Monetary(Field[float]):
             .with_env(record.env._derive(su=True, prefetch_fields=False))
         )[currency_field_name]
 
+    @override
     def setup_nonrelated(self, model: BaseModel) -> None:
         super().setup_nonrelated(model)
         assert self.get_currency_field(model) in model._fields, (
             f"Field {self} with unknown currency_field {self.get_currency_field(model)!r}"
         )
 
+    @override
     def setup_related(self, model: BaseModel) -> None:
         super().setup_related(model)
         if self.inherited:
@@ -510,6 +514,7 @@ class Monetary(Field[float]):
             return value
         return ""
 
+    @override
     def _filter_not_equal(
         self, records: ModelType, cache_value: typing.Any
     ) -> ModelType:

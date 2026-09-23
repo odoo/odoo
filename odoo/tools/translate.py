@@ -45,6 +45,8 @@ from .misc import SKIPPED_ELEMENT_TYPES
 if typing.TYPE_CHECKING:
     from odoo.api import Environment
     from odoo.db import BaseCursor
+    from odoo.orm.fields._field_stubs import TranslateDialect
+    from odoo.orm.fields.textual import BaseString
 
 __all__ = [
     "LazyTranslate",
@@ -179,7 +181,7 @@ def translate_format_string_expression(
 ) -> str | None:
     expressions: dict[str, str] = {}
 
-    def add(exp_py):
+    def add(exp_py: str) -> str:
         index = len(expressions)
         expressions[str(index)] = exp_py
         return "{{%s}}" % index
@@ -416,7 +418,9 @@ def sanitize_translated_fragment(
 def xml_term_adapter(term_en: str) -> Callable[[str], str | None]:
     orig_node = parse_xml(f"<div>{term_en}</div>")
 
-    def same_struct_iter(left, right):
+    def same_struct_iter(
+        left: etree._Element, right: etree._Element
+    ) -> Iterator[tuple[etree._Element, etree._Element]]:
         if left.tag != right.tag or len(left) != len(right):
             msg = "Non matching struct"
             raise ValueError(msg)
@@ -426,7 +430,7 @@ def xml_term_adapter(term_en: str) -> Callable[[str], str | None]:
         for lc, rc in zip(left_iter, right_iter, strict=False):
             yield from same_struct_iter(lc, rc)
 
-    def adapter(term):
+    def adapter(term: str) -> str | None:
         new_node = parse_xml(f"<div>{term}</div>")
         if not sanitize_translated_fragment(orig_node, new_node):
             return None
@@ -621,7 +625,7 @@ def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> 
             )
     if has_iterable:
 
-        def translate_arg(v):
+        def translate_arg(v: Any) -> Any:
             if _is_iterable_arg(v):
                 v = [
                     el._translate(lang) if isinstance(el, LazyGettext) else el
@@ -1046,7 +1050,7 @@ class XMLDataFileReader:
 
 class PoFileReader:
     def __init__(self, source: str | IO[bytes]) -> None:
-        def get_pot_path(source_name):
+        def get_pot_path(source_name: str | IO[bytes]) -> str | typing.Literal[False]:
             if isinstance(source_name, str) and source_name.endswith(".po"):
                 path = Path(source_name)
                 filename = path.parent.parent.name + ".pot"
@@ -1418,7 +1422,7 @@ def babel_extract_qweb(
 ) -> list[tuple]:
     result: list[tuple] = []
 
-    def handle_text(text, lineno):
+    def handle_text(text: str, lineno: int) -> None:
         result.append((lineno, None, text, []))
 
     tree = etree.parse(fileobj)
@@ -1535,7 +1539,7 @@ class TranslationReader:
             )
         )
 
-    def _export_imdinfo(self, model: str, imd_per_id: dict[int, ImdInfo]):
+    def _export_imdinfo(self, model: str, imd_per_id: dict[int, ImdInfo]) -> None:
         records = self._get_records_translatable(imd_per_id.values())
         if not records:
             _debug.logic(
@@ -2217,7 +2221,7 @@ class TranslationImporter:
 
     @staticmethod
     def _merge_translation_dictionary(
-        field,
+        field: BaseString,
         values: dict,
         record_dictionary: dict,
         noupdate: bool,
@@ -2250,7 +2254,7 @@ class TranslationImporter:
 
     @staticmethod
     def _changed_translation_values(
-        field,
+        translate: TranslateDialect,
         value_en: str,
         values: dict,
         langs: set[str],
@@ -2258,12 +2262,12 @@ class TranslationImporter:
     ) -> dict:
         changed_values = {}
         for lang in langs:
-            new_val = field.translate(
-                lambda term, td=translation_dictionary, lang=lang: td.get(term, {}).get(
-                    lang
-                ),
-                value_en,
-            )
+            terms = {
+                term: translations[lang]
+                for term, translations in translation_dictionary.items()
+                if lang in translations
+            }
+            new_val = translate(terms.get, value_en)
             if values.get(lang) != new_val:
                 changed_values[lang] = new_val
             if f"_{lang}" in values:
@@ -2330,7 +2334,11 @@ class TranslationImporter:
                             )
                         )
                         changed_values = self._changed_translation_values(
-                            field, _value_en, values, langs, translation_dictionary
+                            field.translate,
+                            _value_en,
+                            values,
+                            langs,
+                            translation_dictionary,
                         )
                         if changed_values:
                             rows.append((id_, Json(changed_values)))
@@ -2560,8 +2568,10 @@ class CodeTranslations:
 
     @staticmethod
     def _load_python_translations(module_name: str, lang: str) -> Mapping[str, str]:
-        def filter_func(row):
-            return row.get("value") and PYTHON_TRANSLATION_COMMENT in row["comments"]
+        def filter_func(row: dict) -> bool:
+            return (
+                bool(row.get("value")) and PYTHON_TRANSLATION_COMMENT in row["comments"]
+            )
 
         translations = CodeTranslations._get_code_translations(
             module_name, lang, filter_func
@@ -2570,9 +2580,10 @@ class CodeTranslations:
 
     @staticmethod
     def _load_web_translations(module_name: str, lang: str) -> Mapping:
-        def filter_func(row):
+        def filter_func(row: dict) -> bool:
             return (
-                row.get("value") and JAVASCRIPT_TRANSLATION_COMMENT in row["comments"]
+                bool(row.get("value"))
+                and JAVASCRIPT_TRANSLATION_COMMENT in row["comments"]
             )
 
         translations = CodeTranslations._get_code_translations(

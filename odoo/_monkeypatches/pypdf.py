@@ -1,7 +1,9 @@
 from pypdf.generic import DictionaryObject, NameObject
 
 
-def _unwrapping_get(self: DictionaryObject, key: object, default: object = None):
+def _unwrapping_get(
+    self: DictionaryObject, key: object, default: object = None
+) -> object:
     try:
         return self[key]
     except KeyError:

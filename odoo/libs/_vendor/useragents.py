@@ -59,7 +59,7 @@ class UserAgentParser:
         r"(?:\(|\[|;)\s*(\b\w{2}\b(?:-\b\w{2}\b)?)\s*(?:\]|\)|;)"
     )
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.platforms = tuple(
             (b, re.compile(a, re.IGNORECASE)) for a, b in self.platforms
         )
@@ -69,10 +69,14 @@ class UserAgentParser:
         )
         self._parse_cached = functools.lru_cache(maxsize=2048)(self._parse)
 
-    def __call__(self, user_agent):
+    def __call__(
+        self, user_agent: str
+    ) -> tuple[str | None, str | None, str | None, str | None]:
         return self._parse_cached(user_agent)
 
-    def _parse(self, user_agent):
+    def _parse(
+        self, user_agent: str
+    ) -> tuple[str | None, str | None, str | None, str | None]:
         for platform, regex in self.platforms:
             match = regex.search(user_agent)
             if match is not None:
@@ -98,7 +102,7 @@ class UserAgent:
 
     _parser = UserAgentParser()
 
-    def __init__(self, environ_or_string):
+    def __init__(self, environ_or_string: dict[str, str] | str) -> None:
         if isinstance(environ_or_string, dict):
             environ_or_string = environ_or_string.get("HTTP_USER_AGENT", "")
         self.string = environ_or_string
@@ -106,14 +110,14 @@ class UserAgent:
             environ_or_string
         )
 
-    def to_header(self):
+    def to_header(self) -> str:
         return self.string
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.string
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return bool(self.browser)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.browser!r}/{self.version}>"

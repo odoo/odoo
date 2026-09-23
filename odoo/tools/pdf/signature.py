@@ -41,6 +41,9 @@ from odoo.tools.pdf import (
 )
 
 if TYPE_CHECKING:
+    from pypdf import PageObject
+    from pypdf.generic import IndirectObject
+
     from odoo.addons.base.models.res_company import ResCompany
     from odoo.addons.base.models.res_users import ResUsers
 
@@ -71,7 +74,7 @@ class PdfSigner:
         self,
         stream: io.BytesIO,
         company: ResCompany | None = None,
-        signing_time=None,
+        signing_time: datetime.datetime | None = None,
     ) -> None:
         moment = signing_time or datetime.datetime.now(datetime.UTC)
         self.signing_time = (
@@ -168,7 +171,7 @@ class PdfSigner:
         )
 
     def _visible_appearance(
-        self, page, signer: ResUsers | None
+        self, page: PageObject, signer: ResUsers | None
     ) -> tuple[list[float], DictionaryObject]:
         origin = page.mediabox.upper_right
         rect_size = (200, 20)
@@ -225,7 +228,10 @@ class PdfSigner:
         return signature_field_value
 
     def _register_signature_field(
-        self, form: DictionaryObject, page, signature_field_ref
+        self,
+        form: DictionaryObject,
+        page: PageObject,
+        signature_field_ref: IndirectObject,
     ) -> None:
         existing = form.get("/Fields")
         fields = existing.get_object() if existing is not None else None
@@ -342,7 +348,10 @@ class PdfSigner:
 
     @staticmethod
     def _signer_info(
-        cert, attrs: cms.CMSAttributes, signature: bytes, algorithm: _SignatureAlgorithm
+        cert: x509.Certificate,
+        attrs: cms.CMSAttributes,
+        signature: bytes,
+        algorithm: _SignatureAlgorithm,
     ) -> cms.SignerInfo:
         return cms.SignerInfo(
             {

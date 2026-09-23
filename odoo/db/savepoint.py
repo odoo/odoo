@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import itertools
 from collections.abc import Callable
-from typing import TYPE_CHECKING, Any, Protocol, Self
+from typing import TYPE_CHECKING, Any, Protocol, Self, override
 
 import psycopg.errors
 
@@ -25,7 +25,7 @@ class Savepoint:
 
     _restores_orm_state: bool = False
 
-    def __init__(self, cr: SavepointHost):
+    def __init__(self, cr: SavepointHost) -> None:
         self.name = f"sp{next(_savepoint_counter)}"
         self._cr = cr
         self.closed: bool = False
@@ -102,6 +102,7 @@ class _FlushingSavepoint(Savepoint):
     def _restore_orm_state(self, cr: BaseCursor) -> None:
         pass
 
+    @override
     def rollback(self) -> None:
         cr = self._cr
         super().rollback()
@@ -109,6 +110,7 @@ class _FlushingSavepoint(Savepoint):
             with _debug.perf("savepoint.orm_state_restored", cr=cr, name=self.name):
                 self._restore_orm_state(cr)
 
+    @override
     def _close(self, rollback: bool) -> None:
         cr = self._cr
         try:

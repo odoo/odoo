@@ -179,7 +179,9 @@ def cleanup_xml_node(
         parser = etree.XMLParser(recover=True, resolve_entities=False)
         xml_node = etree.fromstring(remove_control_characters(xml_node), parser=parser)
 
-    def leaf_iter(parent_node, node, level):
+    def leaf_iter(
+        parent_node: etree._Element | None, node: etree._Element, level: int
+    ) -> None:
         for child_node in node:
             leaf_iter(node, child_node, level if level < 0 else level + 1)
 

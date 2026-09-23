@@ -64,7 +64,7 @@ class ReplicaLagGate:
         "sample_interval",
     )
 
-    def __init__(self, max_lag: float, sample_interval: float | None = None):
+    def __init__(self, max_lag: float, sample_interval: float | None = None) -> None:
         if max_lag < 0:
             raise ValueError(f"max_lag must be >= 0, got {max_lag}")
         self.max_lag = max_lag

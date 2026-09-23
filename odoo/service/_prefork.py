@@ -12,7 +12,7 @@ import sys
 import time
 from collections import deque
 from pathlib import Path
-from typing import Any
+from typing import Any, override
 
 import psutil
 
@@ -623,7 +623,7 @@ class PreforkServer(CommonServer):
                 http_enable=self.settings.http_enable,
             )
 
-        def check_registries():
+        def check_registries() -> None:
             nonlocal checked
             if checked or not registries:
                 return
@@ -962,6 +962,7 @@ class PreforkServer(CommonServer):
             seconds=time.monotonic() - (deadline - stop_timeout),
         )
 
+    @override
     def stop(self, graceful: bool = True) -> None:
         _debug.lifecycle(
             "prefork.stop",

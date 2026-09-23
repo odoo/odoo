@@ -32,7 +32,7 @@ else:
         class InvalidRequirement(Exception): ...
 
         class Requirement:
-            def __init__(self, pydep):
+            def __init__(self, pydep: str) -> None:
                 if not re.fullmatch(r"[\w\-]+", pydep):
                     msg = f"Package `packaging` is required to parse `{pydep}` external dependency and is not installed"
                     raise ImportError(msg)
@@ -230,7 +230,7 @@ class Manifest(Mapping[str, typing.Any]):
         "static_path",
     )
 
-    def __init__(self, *, path: str, manifest_content: dict):
+    def __init__(self, *, path: str, manifest_content: dict) -> None:
         if not Path(path).is_absolute():
             raise ValueError("path of module must be absolute")
         self.path = path

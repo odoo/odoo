@@ -34,6 +34,7 @@ from ._session_store import (
     FilesystemSessionStore,
     MemorySessionStore,
     PostgresSessionStore,
+    SessionStore,
     prepare_session_dir,
 )
 from .constants import (
@@ -221,7 +222,7 @@ class Application:
             return None
 
     @_locked_cached_property
-    def nodb_routing_map(self):
+    def nodb_routing_map(self) -> werkzeug.routing.Map:
         with _debug.perf(
             "http.nodb_routing_map",
             modules=len(current_settings().server_wide_modules),
@@ -234,7 +235,7 @@ class Application:
             )
 
     @_locked_cached_property
-    def session_store(self):
+    def session_store(self) -> SessionStore:
         settings = current_settings()
         if settings.session_store == "postgres":
             _debug.lifecycle("http.session_store.opened", backend="postgres")
@@ -257,7 +258,7 @@ class Application:
         _debug.logic("http.routing_map.selected", db=db, source="ir.http")
         return get_ir_http(router_env).routing_map()
 
-    def _open_geoip_reader(self, kind: str, path: str) -> Any:
+    def _open_geoip_reader(self, kind: str, path: str) -> geoip2.database.Reader | None:
         if geoip2 is None:
             _debug.logic("http.geoip.db_unavailable", db=kind, reason="no_geoip2")
             return None

@@ -3,8 +3,13 @@ from __future__ import annotations
 import threading
 from bisect import bisect_left
 from time import monotonic
+from typing import TYPE_CHECKING
 
 from odoo.libs.debug_log import DebugLog
+
+if TYPE_CHECKING:
+    from .budget import ConnectionBudget
+    from .leaks import CheckoutTracker
 
 _debug = DebugLog(__name__)
 
@@ -18,7 +23,7 @@ _COUNTERS: dict[str, str] = {
     "borrow_wait_max": "borrow_wait_seconds_max",
     "pools_created": "pools_created",
     "pools_reaped": "pools_reaped",
-    "pools_evicted_stale": "pools_evicted_stale",
+    "pools_discarded_stale": "pools_evicted_stale",
     "connections_discarded": "connections_discarded",
     "connections_trimmed": "connections_trimmed",
     "leaks_reported": "leaks_reported",
@@ -48,7 +53,7 @@ class PoolStats:
         "connections_trimmed",
         "leaks_reported",
         "pools_created",
-        "pools_evicted_stale",
+        "pools_discarded_stale",
         "pools_reaped",
         "probe_permanent",
         "probe_run",
@@ -66,7 +71,7 @@ class PoolStats:
         self.borrow_wait_buckets = [0] * (len(_WAIT_BUCKETS) + 1)
         self.pools_created = 0
         self.pools_reaped = 0
-        self.pools_evicted_stale = 0
+        self.pools_discarded_stale = 0
         self.connections_discarded = 0
         self.connections_trimmed = 0
         self.leaks_reported = 0
@@ -118,9 +123,9 @@ class PoolStats:
         with self._lock:
             self.pools_reaped += count
 
-    def record_pools_evicted_stale(self, count: int) -> None:
+    def record_pools_discarded_stale(self, count: int) -> None:
         with self._lock:
-            self.pools_evicted_stale += count
+            self.pools_discarded_stale += count
 
     def record_connection_discarded(self) -> None:
         with self._lock:
@@ -131,7 +136,12 @@ class PoolStats:
             self.leaks_reported += 1
 
     def get_snapshot(
-        self, *, budget=None, direct_out: int = 0, pools: int = 0, checkouts=None
+        self,
+        *,
+        budget: ConnectionBudget | None = None,
+        direct_out: int = 0,
+        pools: int = 0,
+        checkouts: CheckoutTracker | None = None,
     ) -> dict:
         with self._lock:
             buckets = list(self.borrow_wait_buckets)

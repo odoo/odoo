@@ -37,7 +37,7 @@ class Cache:
 
     __slots__ = ("transaction",)
 
-    def __init__(self, transaction: Transaction):
+    def __init__(self, transaction: Transaction) -> None:
         self.transaction = transaction
 
     def __repr__(self) -> str:

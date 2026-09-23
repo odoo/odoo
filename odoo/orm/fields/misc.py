@@ -72,6 +72,7 @@ class Boolean(Field[bool]):
     def convert_to_export(self, value: typing.Any, record: ModelLike) -> bool:
         return bool(value)
 
+    @override
     def _condition_to_sql(
         self,
         field_expr: str,
@@ -254,6 +255,7 @@ class Id(Field[IdType | typing.Literal[False]]):
             value = self.convert_to_column(value, records, validate=False)
         return super().filter_function(records, field_expr, operator, value)
 
+    @override
     def get_expression_getter(self, field_expr: str) -> typing.Any:
         if field_expr != "id.origin":
             return super().get_expression_getter(field_expr)

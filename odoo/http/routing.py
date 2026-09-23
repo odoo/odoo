@@ -266,7 +266,9 @@ def route(route: str | Iterable[str] | None = None, **routing: Any) -> Callable:
         )
 
         @functools.wraps(endpoint)
-        def route_wrapper(controller_self, /, *args, **params):
+        def route_wrapper(
+            controller_self: Controller, /, *args: Any, **params: Any
+        ) -> Any:
             if not args and not params.keys() >= required_params:
                 missing = sorted(required_params - params.keys())
                 _debug.logic(
@@ -492,7 +494,7 @@ def _prepare_route_fragment(
 
 def fragment_to_query_string(func: Callable) -> Callable:
     @functools.wraps(func)
-    def fragment_wrapper(self, *a, **kw):
+    def fragment_wrapper(self: Controller, *a: Any, **kw: Any) -> Any:
         if not (kw.keys() - {"debug"}):
             _debug.logic("http.route.fragment_redirect", endpoint=func.__qualname__)
             return Response("""<!DOCTYPE html>

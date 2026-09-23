@@ -12,7 +12,7 @@ import socket
 import threading
 import time
 from collections import deque
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, override
 
 import psutil
 import psycopg
@@ -592,6 +592,7 @@ class WorkerCron(Worker):
     def get_max_age(self) -> int:
         return self.kind.max_age()
 
+    @override
     def check_limits(self) -> None:
         super().check_limits()
 
@@ -704,6 +705,7 @@ class WorkerCron(Worker):
                 )
                 break
 
+    @override
     def stop(self) -> None:
         super().stop()
         self.listener.close()
@@ -768,6 +770,7 @@ class WorkerStream(WorkerCron):
         self.setproctitle(db_name)
         sweep_database(db_name, self._run_jobs_for_database, self.logger, release=False)
 
+    @override
     def stop(self) -> None:
         from ._stream import shutdown
 

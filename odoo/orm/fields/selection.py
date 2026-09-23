@@ -48,10 +48,12 @@ class Selection[T = str | typing.Literal[False]](Field[T]):
         super().__init__(selection=selection, string=string, **kwargs)
         self._selection = dict(selection) if isinstance(selection, list) else None
 
+    @override
     def setup_nonrelated(self, model: BaseModel) -> None:
         super().setup_nonrelated(model)
         assert self.selection is not None, f"Field {self} without selection"
 
+    @override
     def setup_related(self, model: BaseModel) -> None:
         super().setup_related(model)
         field = self.related_field
@@ -59,6 +61,7 @@ class Selection[T = str | typing.Literal[False]](Field[T]):
         self.selection = lambda model: field._description_selection(model.env)
         self._selection = None
 
+    @override
     def _get_attrs(self, model_class: ModelClass, name: str) -> dict[str, typing.Any]:
         attrs = super()._get_attrs(model_class, name)
         attrs.pop("selection_add", None)
@@ -175,6 +178,7 @@ class Selection[T = str | typing.Literal[False]](Field[T]):
         )
         return values
 
+    @override
     def _setup_attrs__(self, model_class: ModelClass, name: str) -> None:
         super()._setup_attrs__(model_class, name)
         if not self._base_fields__:

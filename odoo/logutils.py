@@ -10,7 +10,7 @@ import traceback
 import warnings
 from io import TextIOWrapper
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Final, Protocol, TextIO, cast
+from typing import TYPE_CHECKING, Any, Final, Protocol, TextIO, cast, override
 
 from . import db, release, tools
 from .db.replica import is_readonly_cursor_enabled
@@ -21,6 +21,7 @@ from .libs.worker_thread import current_worker_thread
 
 if TYPE_CHECKING:
     import types
+    from collections.abc import Collection, Iterable
 
 _logger = logging.getLogger(__name__)
 
@@ -166,7 +167,9 @@ class ColoredPerfFilter(PerfFilter):
     def format_perf(
         self, query_count: int, query_time: float, remaining_time: float
     ) -> tuple[str, str, str]:
-        def colorize_time(time, format, low=1, high=5):
+        def colorize_time(
+            time: float, format: str, low: float = 1, high: float = 5
+        ) -> str:
             if time > high:
                 return colorize(format % time, RED)
             if time > low:
@@ -179,6 +182,7 @@ class ColoredPerfFilter(PerfFilter):
             colorize_time(remaining_time, "%.3f", 1, 5),
         )
 
+    @override
     def format_cursor_mode(self, cursor_mode: str | None) -> str:
         cursor_mode = super().format_cursor_mode(cursor_mode)
         cursor_mode_color = (
@@ -188,6 +192,7 @@ class ColoredPerfFilter(PerfFilter):
 
 
 class ColoredFormatter(logging.Formatter):
+    @override
     def format(self, record: logging.LogRecord) -> str:
         fg_color, bg_color = LEVEL_COLOR_MAPPING.get(record.levelno, (GREEN, DEFAULT))
         record.levelname = colorize(record.levelname, fg_color, bg_color)
@@ -201,7 +206,11 @@ def root_handler_uses_colors() -> bool:
 
 class JSONFormatter(logging.Formatter):
     def __init__(
-        self, *args, record_keys=None, ignore_record_keys=None, **kwargs
+        self,
+        *args: Any,
+        record_keys: Collection[str] | None = None,
+        ignore_record_keys: Iterable[str] | None = None,
+        **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
         self.record_keys = record_keys
@@ -404,7 +413,7 @@ def _install_log_handler() -> None:
                 "ERROR: couldn't create the logfile directory. Logging to the standard output.\n"
             )
 
-    def is_a_tty(stream):
+    def is_a_tty(stream: TextIO) -> bool:
         return hasattr(stream, "fileno") and os.isatty(stream.fileno())
 
     if (

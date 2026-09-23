@@ -29,7 +29,7 @@ class IterationMixin(_ModelStubs):
         env: Environment,
         ids: tuple[IdType, ...],
         prefetch_ids: Reversible[IdType],
-    ):
+    ) -> None:
         self.env = env
         self._ids = ids
         self._prefetch_ids = prefetch_ids

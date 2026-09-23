@@ -5,12 +5,16 @@ import shutil
 import sys
 import threading
 import traceback
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from odoo.libs.datetime import real_time
 from odoo.libs.debug_log import DebugLog
 
 from .config import config
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+    from types import FrameType
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -161,7 +165,7 @@ def dumpstacks(
 ) -> None:
     code = []
 
-    def extract_stack(stack):
+    def extract_stack(stack: FrameType) -> Iterator[str]:
         for filename, lineno, name, line in traceback.extract_stack(stack):
             yield f'File: "{filename}", line {lineno}, in {name}'
             if line:

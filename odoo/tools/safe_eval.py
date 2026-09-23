@@ -20,7 +20,7 @@ from odoo.libs.datetime import tz as _tz_module
 from odoo.libs.debug_log import DebugLog
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable, Iterator
+    from collections.abc import Callable, Iterator, Mapping, Sequence
 
 unsafe_eval = eval  # noqa: S307  the raw builtin, kept so safe_eval can wrap it
 
@@ -358,13 +358,25 @@ def _reject_attribute_fields(field_name: str) -> None:
 
 
 class _StrictFormatter(string.Formatter):
-    def get_field(self, field_name, args, kwargs):
+    @typing.override
+    def get_field(
+        self,
+        field_name: str,
+        args: Sequence[typing.Any],
+        kwargs: Mapping[str, typing.Any],
+    ) -> typing.Any:
         _reject_attribute_fields(field_name)
         return super().get_field(field_name, args, kwargs)
 
 
 class _StrictEscapeFormatter(EscapeFormatter):
-    def get_field(self, field_name, args, kwargs):
+    @typing.override
+    def get_field(
+        self,
+        field_name: str,
+        args: Sequence[typing.Any],
+        kwargs: Mapping[str, typing.Any],
+    ) -> typing.Any:
         _reject_attribute_fields(field_name)
         return super().get_field(field_name, args, kwargs)
 
@@ -372,14 +384,22 @@ class _StrictEscapeFormatter(EscapeFormatter):
 _STRICT_FORMATTER = _StrictFormatter()
 
 
+class _FormatMapping(typing.Protocol):
+    def __getitem__(self, key: str, /) -> typing.Any: ...
+
+
 class _GuardedStr(str):
     __slots__ = ()
 
-    def format(self, *args, **kwargs):
+    @typing.override
+    def format(self, *args: object, **kwargs: object) -> str:
         return _STRICT_FORMATTER.vformat(self, args, kwargs)
 
-    def format_map(self, mapping):
-        return _STRICT_FORMATTER.vformat(self, (), mapping)
+    @typing.override
+    def format_map(self, mapping: _FormatMapping) -> str:
+        return _STRICT_FORMATTER.vformat(
+            self, (), typing.cast("Mapping[str, typing.Any]", mapping)
+        )
 
 
 class _GuardedFormat:
@@ -394,11 +414,11 @@ class _GuardedFormat:
             return _StrictEscapeFormatter(recv.escape), type(recv)
         return _STRICT_FORMATTER, str
 
-    def format(self, *args, **kwargs):
+    def format(self, *args: object, **kwargs: object) -> str:
         formatter, rewrap = self._formatter()
         return rewrap(formatter.vformat(self._recv, args, kwargs))
 
-    def format_map(self, mapping):
+    def format_map(self, mapping: Mapping[str, typing.Any]) -> str:
         formatter, rewrap = self._formatter()
         return rewrap(formatter.vformat(self._recv, (), mapping))
 

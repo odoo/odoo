@@ -12,7 +12,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.tools import view_ir
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Iterator
 
     type Validator = Callable[..., bool]
 
@@ -425,13 +425,13 @@ for _view_type in ("activity", "calendar", "graph", "list", "pivot", "search"):
 del _view_type
 
 
-def att_names(name):
+def att_names(name: str) -> Iterator[str]:
     yield name
     yield f"t-att-{name}"
     yield f"t-attf-{name}"
 
 
-def get_dropdown_menu_warnings(node):
+def get_dropdown_menu_warnings(node: etree._Element) -> list[str]:
     warnings = []
     if any("dropdown-menu" in node.get(cl, "") for cl in att_names("class")):
         if node.get("role") != "menu":
@@ -439,7 +439,7 @@ def get_dropdown_menu_warnings(node):
     return warnings
 
 
-def get_progress_bar_warnings(node):
+def get_progress_bar_warnings(node: etree._Element) -> list[str]:
     warnings = []
     if any("o_progressbar" in node.get(cl, "") for cl in att_names("class")):
         if node.get("role") != "progressbar":
@@ -453,7 +453,9 @@ def get_progress_bar_warnings(node):
     return warnings
 
 
-def get_fa_class_accessibility_warnings(node, description):
+def get_fa_class_accessibility_warnings(
+    node: etree._Element, description: str
+) -> list[str]:
     valid_aria_attrs = {
         *att_names("title"),
         *att_names("aria-label"),
@@ -467,7 +469,7 @@ def get_fa_class_accessibility_warnings(node, description):
     ):
         return []
 
-    def has_text(elem):
+    def has_text(elem: etree._Element | None) -> bool:
         if elem is None:
             return False
         if elem.tag == "span" and elem.text:
@@ -479,7 +481,7 @@ def get_fa_class_accessibility_warnings(node, description):
     if has_text(node.getnext()) or has_text(node.getprevious()):
         return []
 
-    def has_title_or_aria_label(node):
+    def has_title_or_aria_label(node: etree._Element) -> bool:
         return any(node.get(attr) for attr in valid_aria_attrs)
 
     if any(map(has_title_or_aria_label, node.iterancestors())):
@@ -488,7 +490,7 @@ def get_fa_class_accessibility_warnings(node, description):
     if node.get("string"):
         return []
 
-    def contains_description(node, depth=0):
+    def contains_description(node: etree._Element, depth: int = 0) -> bool:
         if any(node.get(attr) for attr in valid_t_attrs):
             return True
         if has_title_or_aria_label(node):
@@ -507,7 +509,7 @@ def get_fa_class_accessibility_warnings(node, description):
     ]
 
 
-def get_class_accessibility_warnings(node, expr):
+def get_class_accessibility_warnings(node: etree._Element, expr: str) -> list[str]:
     warnings = []
     classes = set(expr.split(" "))
     if "modal" in classes and node.get("role") != "dialog":

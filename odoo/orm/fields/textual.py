@@ -174,6 +174,7 @@ class BaseString(Field[str | typing.Literal[False]]):
                 self,
             )
 
+    @override
     def get_depends(self, model: BaseModel) -> tuple[Iterable[str], Iterable[str]]:
         if self.translate is True:
             dep, dep_ctx = super().get_depends(model)
@@ -317,6 +318,7 @@ class BaseString(Field[str | typing.Literal[False]]):
     def get_translation_fallback_langs(self, env: Environment) -> tuple[str, ...]:
         return _translation.get_fallback_langs(self, env)
 
+    @override
     def _get_cache_impl(self, env: Environment) -> MutableMapping[IdType, typing.Any]:
         if self.translate is True:
             return super()._get_cache_impl(env)
@@ -326,11 +328,13 @@ class BaseString(Field[str | typing.Literal[False]]):
         lang = self.get_translation_lang(env)
         return LangProxyDict(self, cache, lang)
 
+    @override
     def _iter_cache_missing_ids(self, records: ModelLike) -> typing.Iterator[IdType]:
         if callable(self.translate) and records.env.context.get("prefetch_langs"):
             records = records.with_context(prefetch_langs=False)
         return super()._iter_cache_missing_ids(records)
 
+    @override
     def _to_prefetch(self, record: ModelType) -> ModelType:
         if callable(self.translate) and record.env.context.get("prefetch_langs"):
             return (
@@ -340,12 +344,14 @@ class BaseString(Field[str | typing.Literal[False]]):
             )
         return super()._to_prefetch(record)
 
+    @override
     def _insert_cache(self, records: ModelLike, values: Iterable[typing.Any]) -> None:
         if not self.translate:
             super()._insert_cache(records, values)
             return
         _translation.insert_cache(self, records, values)
 
+    @override
     def _update_cache(
         self, records: ModelLike, cache_value: typing.Any, dirty: bool = False
     ) -> None:
@@ -405,6 +411,7 @@ class BaseString(Field[str | typing.Literal[False]]):
             return SQL("COALESCE(%s)", SQL(", ").join(sql_field_langs))
         return sql_field
 
+    @override
     def get_expression_getter(
         self, field_expr: str
     ) -> Callable[[BaseModel], typing.Any]:
@@ -492,6 +499,7 @@ class Char(BaseString):
     cache_is_read_value = True
     trim: bool = True
 
+    @override
     def _setup_attrs__(self, model_class: ModelClass, name: str) -> None:
         super()._setup_attrs__(model_class, name)
         assert self.size is None or isinstance(self.size, int), (
@@ -512,6 +520,7 @@ class Char(BaseString):
     _description_size = property(attrgetter("size"))
     _description_trim = property(attrgetter("trim"))
 
+    @override
     def get_depends(self, model: BaseModel) -> tuple[Iterable[str], Iterable[str]]:
         depends, depends_context = super().get_depends(model)
 

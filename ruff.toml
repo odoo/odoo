@@ -166,10 +166,8 @@ select = [
     # Code quality
     "SIM",        # flake8-simplify
     "C4",         # flake8-comprehensions
-    # C90 (mccabe) is deliberately NOT selected here. Its only rule is C901, the
-    # main run ignores it, and the two cancelled out: selecting the family while
-    # ignoring its sole member is a no-op that reads like a live gate. Complexity
-    # IS gated, on its own floor — see the C901 note in `ignore` below.
+    "C90",        # mccabe: C901 at `[lint.mccabe] max-complexity`, a hard zero for
+                  # the core package; addons are carved out in [lint.per-file-ignores]
     "RET",        # flake8-return
     "PIE",        # flake8-pie
     "FLY",        # flynt (f-string conversion)
@@ -613,22 +611,9 @@ ignore = [
     "PERF203",    # try-except-in-loop (Odoo processes records individually in try/except)
 
     # --- PLR adjustments (Odoo models are inherently complex) ---
-    # C901 is ignored HERE so it stays out of the aggregate `ruff check` reports;
-    # `ruff check odoo/ --no-cache --select C901` overrides this ignore and reads
-    # `[lint.mccabe] max-complexity` below, which is live config, not a leftover.
-    #
-    # Splitting it out rather than folding it into the 761 aggregate keeps it
-    # legible: in one bucket a complexity fix could be masked by an unrelated new
-    # finding, and the point of the floor is that a cleanup locks in.
-    #
-    # The rationale this replaces -- "Odoo ORM/QWeb methods are inherently
-    # complex" -- was an argument about upstream's code, and it paired with
-    # PLR0912's "redundant with C90" so that each rule's suppression pointed at
-    # the other while both were off.
-    "C901",       # mccabe-complexity (ratcheted separately; see above)
     "PLR0904",    # too-many-public-methods (Odoo models have 50+ methods)
     "PLR0911",    # too-many-return-statements (dispatch methods)
-    "PLR0912",    # too-many-branches (branch count is covered by C901's ratchet)
+    "PLR0912",    # too-many-branches (branch count is covered by C901)
     "PLR0913",    # too-many-arguments (Odoo API methods)
     "PLR0915",    # too-many-statements (Odoo has long methods)
     "PLR0917",    # too-many-positional-arguments (same as PLR0913)
@@ -707,8 +692,15 @@ ignore = [
 # (the documented `# pylint: disable=wrong-import-position` pattern, e.g. account/portal).
 "**/__init__.py" = ["F401", "F403", "I001", "E402"]
 
+# C901 is a hard zero for the core package and its tests. The bundled addons
+# still carry complex methods; they are carved out here until paid down, and the
+# carve-out is deleted with the last of them. ANN: see strict-package scoping.
+"addons/**" = ["C901"]
+"odoo/addons/**" = ["C901", "ANN"]
+
 # Tests: More permissive
 "**/tests/**" = [
+    "ANN",        # tests carry no mandatory annotations (see strict-package scoping)
     "B017",       # assert-raises-too-broad
     "RUF015",     # unnecessary-iterable-allocation-for-first-element
     "PLW0603",    # global-statement (test fixtures)
@@ -752,7 +744,7 @@ ignore = [
 ]
 
 # --- Strict-package scoping -------------------------------------------------
-# D / ANN / ARG / FBT003 / RUF012 are enforced ONLY in the two packages that have zero
+# ARG / FBT003 / RUF012 are enforced ONLY in the two packages that have zero
 # Odoo ORM imports and can be held to library standards:
 #   odoo/libs/            — pure utility library
 #   odoo/orm/components/  — pure ORM data structures (the free-threading CI target)
@@ -768,7 +760,13 @@ ignore = [
 #
 # (Two dirs, ONE entry: separate `!a/**` and `!b/**` entries would each match the
 # other's files and cancel the rule everywhere. The brace alternation is required.)
-"!{odoo/libs,odoo/orm/components}/**" = ["ANN", "ARG", "FBT003", "RUF012"]
+"!{odoo/libs,odoo/orm/components}/**" = ["ARG", "FBT003", "RUF012"]
+
+# ANN is enforced in the whole core package: every framework parameter and return
+# is annotated (coding_guidelines §2.9.11). Outside `odoo/` -- the bundled addons,
+# the repo-level tests/, setup/, doc/ tooling -- and in the addons and test trees
+# nested inside it, annotations are not required.
+"!odoo/**" = ["ANN"]
 
 # Tests inside the strict packages are exempt again, matching the project-wide
 # convention that tests carry neither docstrings nor full annotations. Structural
@@ -940,9 +938,7 @@ extend-immutable-calls = [
 ]
 
 [lint.mccabe]
-# The threshold `ruff check --select C901` reads, NOT dead config: the main run
-# ignores C901, but a CLI re-select reads this. Raising this number lowers the
-# count without fixing anything.
+# The C901 threshold. Raising this number lowers the count without fixing anything.
 max-complexity = 20
 
 [lint.flake8-builtins]

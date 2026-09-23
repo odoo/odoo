@@ -196,7 +196,7 @@ class _SeedCursor:
         self.statements: list[tuple[str, tuple]] = []
         self.blocked = blocked
         self.rolled_back = 0
-        self._row = None
+        self._row: tuple = ()
 
     def execute(self, query, params=None, log_exceptions=True):
         self.statements.append((" ".join(query.split()), tuple(params or ())))
@@ -209,8 +209,8 @@ class _SeedCursor:
                 )
             self._row = (7,)
 
-    def fetchone(self):
-        return self._row
+    def fetchscalar(self):
+        return self._row[0]
 
     def savepoint(self, flush=True):
         cursor = self

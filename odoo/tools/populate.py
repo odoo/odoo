@@ -32,7 +32,7 @@ def get_field_variation_date(
     assert field._column_type is not None
     cast_type = SQL(field._column_type[1])
 
-    def redistribute(value):
+    def redistribute(value: SQL) -> SQL:
         return SQL(
             "(%(value)s - (%(factor)s - %(series_alias)s) * (%(total_days)s::float/%(factor)s) * interval '1 days')::%(cast_type)s",
             value=value,
@@ -272,19 +272,16 @@ def populate_field(
     id_offset: int | None = None,
 ) -> SQL | None:
 
-    def copy_noop():
-        return None
-
-    def copy_raw(field_):
+    def copy_raw(field_: Field) -> SQL:
         return SQL.identifier(field_.name)
 
-    def copy(field_):
+    def copy(field_: Field) -> SQL:
         if is_field_variation_required(model, field_, unique_columns):
             return get_field_variation(model, field_, factors[model], series_alias)
         else:
             return copy_raw(field_)
 
-    def copy_id():
+    def copy_id() -> SQL:
         last_id = get_last_id(model) if id_offset is None else id_offset
         populated[model] = last_id
         return SQL(
@@ -293,8 +290,9 @@ def populate_field(
             series_alias=SQL.identifier(series_alias),
         )
 
-    def copy_many2one(field_):
-        if (comodel := model.env[field_.comodel_name]) in populated:
+    def copy_many2one(field_: Field) -> SQL:
+        comodel = typing.cast("Model", model.env[field_.comodel_name])
+        if comodel in populated:
             comodel_max_id = populated[comodel]
             return SQL(
                 "%(table_alias)s.%(field_name)s + %(comodel_max_id)s * (MOD(%(series_alias)s - 1, %(factor)s) + 1)",
@@ -309,16 +307,14 @@ def populate_field(
     if field.name == "id":
         return copy_id()
     match field.type:
-        case "one2many":
-            return copy_noop()
-        case "many2many":
-            return copy_noop()
+        case "one2many" | "many2many":
+            return None
         case "many2one":
             return copy_many2one(field)
         case "many2one_reference":
             return copy(field)
         case "binary":
-            return copy(field) if not field.attachment else copy_noop()
+            return None if field.attachment else copy(field)
         case _:
             return copy(field)
 
@@ -330,7 +326,7 @@ def populate_model(
     separator_code: int,
     id_offset: int | None = None,
 ) -> None:
-    def update_sequence(model_):
+    def update_sequence(model_: Model) -> None:
         model_.env.execute_query(
             SQL(
                 "SELECT SETVAL(PG_GET_SERIAL_SEQUENCE(QUOTE_IDENT(%(table)s), 'id'), "
@@ -340,7 +336,7 @@ def populate_model(
             )
         )
 
-    def has_column(field_):
+    def has_column(field_: Field) -> bool:
         return field_.is_column
 
     assert model not in populated, (
@@ -470,7 +466,7 @@ def infer_many2many_model(
 
 def populate_models(model_factors: dict[Any, int], separator_code: int) -> None:
 
-    def has_records(model_, only=False):
+    def has_records(model_: Model, only: bool = False) -> bool:
         query = SQL(
             "SELECT EXISTS (SELECT 1 FROM %s%s)",
             SQL("ONLY ") if only else SQL(),
@@ -481,7 +477,7 @@ def populate_models(model_factors: dict[Any, int], separator_code: int) -> None:
     populated: dict[Model, int] = defaultdict(int)
     ctx: PopulateContext = PopulateContext()
 
-    def process(model_):
+    def process(model_: Model) -> None:
         if model_ in populated:
             return
         members = [
@@ -496,7 +492,7 @@ def populate_models(model_factors: dict[Any, int], separator_code: int) -> None:
         for member in members:
             model_factors.setdefault(member, model_factors[model_])
             for model_name in member._inherits:
-                delegated = member.env[model_name]
+                delegated = typing.cast("Model", member.env[model_name])
                 model_factors.setdefault(delegated, model_factors[member])
                 process(delegated)
 
@@ -531,12 +527,16 @@ def populate_models(model_factors: dict[Any, int], separator_code: int) -> None:
                 if field.store and field.copy:
                     match field.type:
                         case "one2many":
-                            comodel = member.env[field.comodel_name]
+                            comodel = typing.cast(
+                                "Model", member.env[field.comodel_name]
+                            )
                             if comodel != member:
                                 model_factors.setdefault(comodel, model_factors[member])
                                 process(comodel)
                         case "many2many":
-                            m2m_model = infer_many2many_model(member.env, field)
+                            m2m_model = typing.cast(
+                                "Model", infer_many2many_model(member.env, field)
+                            )
                             model_factors.setdefault(m2m_model, model_factors[member])
                             process(m2m_model)
 

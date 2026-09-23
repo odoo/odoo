@@ -182,7 +182,7 @@ class Query:
         return self._order
 
     @order.setter
-    def order(self, value: SQL | None):
+    def order(self, value: SQL | None) -> None:
         self._order = value
         self._invalidate_ids()
 
@@ -191,7 +191,7 @@ class Query:
         return self._groupby
 
     @groupby.setter
-    def groupby(self, value: SQL | None):
+    def groupby(self, value: SQL | None) -> None:
         self._groupby = value
         self._invalidate_ids()
 
@@ -200,7 +200,7 @@ class Query:
         return self._having
 
     @having.setter
-    def having(self, value: SQL | None):
+    def having(self, value: SQL | None) -> None:
         self._having = value
         self._invalidate_ids()
 
@@ -209,7 +209,7 @@ class Query:
         return self._limit
 
     @limit.setter
-    def limit(self, value: int | None):
+    def limit(self, value: int | None) -> None:
         self._limit = value
         self._drop_ids()
 
@@ -218,7 +218,7 @@ class Query:
         return self._offset
 
     @offset.setter
-    def offset(self, value: int | None):
+    def offset(self, value: int | None) -> None:
         self._offset = value
         self._drop_ids()
 

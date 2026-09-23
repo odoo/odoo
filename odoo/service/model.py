@@ -330,7 +330,7 @@ def execute_cr(
     thread.rpc_model_method = f"{obj}.{method}"
     _debug.pipeline("rpc.execute_cr", model=obj, method=method, uid=uid)
 
-    def invoke():
+    def invoke() -> typing.Any:
         # Deferred model work belongs to the attempt, before flush and commit.
         return _force_lazy_values(call_kw(recs, method, args, kw))
 

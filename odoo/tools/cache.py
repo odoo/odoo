@@ -230,7 +230,7 @@ class ormcache:
         )
 
         @functools.wraps(method)
-        def get_cached_result(*args, **kwargs):
+        def get_cached_result(*args: Any, **kwargs: Any) -> Any:
             model = args[0]
             pool = model.pool
             d = pool.ormcache_lrus[_cache_name]

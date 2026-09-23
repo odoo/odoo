@@ -60,14 +60,17 @@ class _EnvironmentSet(WeakSet):
             and (env.context is context or env.context == context)
         )
 
+    @typing.override
     def add(self, env: Environment) -> None:
         super().add(env)
         self._index[self.key(env.uid, env.su, env.context)] = env
 
+    @typing.override
     def clear(self) -> None:
         super().clear()
         self._index.clear()
 
+    @typing.override
     def discard(self, env: Environment) -> None:
         super().discard(env)
         key = self.key(env.uid, env.su, env.context)

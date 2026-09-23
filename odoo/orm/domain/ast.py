@@ -10,7 +10,7 @@ import operator
 import types
 import typing
 import warnings
-from typing import Self
+from typing import Self, override
 
 from odoo.exceptions import UserError
 from odoo.libs.collections import FrozenOrderedSet
@@ -1015,6 +1015,7 @@ class DomainCondition(Domain):
             return DomainCondition(self.field_expr, neg_op, self.value)
         return super().__invert__()
 
+    @override
     def _negate(self, model: BaseModel) -> Domain:
         if neg_op := INVERSE_INEQUALITY.get(self.operator):
             condition: Domain = DomainCondition(self.field_expr, neg_op, self.value)

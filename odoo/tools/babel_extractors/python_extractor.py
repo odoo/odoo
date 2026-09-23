@@ -122,7 +122,7 @@ def extract_python(
     encoding = parse_encoding(fileobj) or options.get("encoding", "utf-8")
     future_flags = parse_future_flags(fileobj, encoding)
 
-    def next_line():
+    def next_line() -> str:
         return fileobj.readline().decode(encoding)
 
     tokens = generate_tokens(next_line)

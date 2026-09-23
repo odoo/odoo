@@ -6,7 +6,7 @@ import os
 import signal
 import threading
 import time
-from typing import Any
+from typing import Any, override
 
 import psutil
 import psycopg
@@ -93,8 +93,8 @@ def _get_http_server_metrics(httpd: ThreadedHTTPServer | None) -> dict[str, Any]
 
 
 _CONSOLE_EVENT_SIGNALS = {
-    0: signal.SIGINT,   # CTRL_C_EVENT
-    1: signal.SIGINT,   # CTRL_BREAK_EVENT
+    0: signal.SIGINT,  # CTRL_C_EVENT
+    1: signal.SIGINT,  # CTRL_BREAK_EVENT
     2: signal.SIGTERM,  # CTRL_CLOSE_EVENT
     5: signal.SIGTERM,  # CTRL_LOGOFF_EVENT
     6: signal.SIGTERM,  # CTRL_SHUTDOWN_EVENT
@@ -571,6 +571,7 @@ class ThreadedServer(CommonServer):
         if serve_http:
             self.spawn_http_server()
 
+    @override
     def stop(self) -> None:
         _debug.lifecycle(
             "server.threaded.stop",
@@ -846,6 +847,7 @@ class WebsocketServer(CommonServer):
         self.logger.info("Evented/WebSocket service stopped")
         _debug.lifecycle("server.evented.stopped", pid=self.pid)
 
+    @override
     def stop(self) -> None:
         _debug.lifecycle("server.evented.stop", httpd=self.httpd is not None)
         if self.httpd:

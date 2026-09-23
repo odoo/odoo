@@ -104,7 +104,7 @@ def _create_faketime_now_function(db_name: str) -> None:
         _debug.logic("database.faketime_failed", db=db_name, error=type(e).__name__)
 
 
-def _warn_on_non_c_template(cr, template: str) -> None:
+def _warn_on_non_c_template(cr: BaseCursor, template: str) -> None:
     cr.execute("SELECT datcollate FROM pg_database WHERE datname = %s", (template,))
     row = cr.fetchone()
     if row is not None and row[0] != "C":

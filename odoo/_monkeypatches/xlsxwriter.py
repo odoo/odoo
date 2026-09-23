@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, override
 
 import xlsxwriter
 
@@ -20,6 +20,7 @@ class PatchedXlsxWorkbook(xlsxwriter.Workbook):
             name, [sheet.name for sheet in self.worksheets()]
         )
 
+    @override
     def add_worksheet(
         self, name: str | None = None, worksheet_class: type | None = None
     ) -> Any:
@@ -27,6 +28,7 @@ class PatchedXlsxWorkbook(xlsxwriter.Workbook):
             self._sanitized(name), worksheet_class=worksheet_class
         )
 
+    @override
     def add_chartsheet(
         self, name: str | None = None, chartsheet_class: type | None = None
     ) -> Any:

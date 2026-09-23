@@ -1,5 +1,5 @@
 import functools
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, NoReturn
 
 from odoo.libs.debug_log import DebugLog
 
@@ -12,34 +12,34 @@ _debug = DebugLog(__name__)
 class _GeoIPNull:
     __slots__ = ()
 
-    def __getattr__(self, _name):
+    def __getattr__(self, _name: str) -> _GeoIPNull:
         return self
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return False
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         return other is self or other is None
 
-    def __ne__(self, other):
+    def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(None)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[object]:
         return iter(())
 
-    def __len__(self):
+    def __len__(self) -> int:
         return 0
 
-    def __getitem__(self, _key):
+    def __getitem__(self, _key: object) -> NoReturn:
         raise IndexError
 
-    def __str__(self):
+    def __str__(self) -> str:
         return ""
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<GeoIPNull>"
 
 
@@ -104,7 +104,7 @@ class GeoIP:
         self.ip = ip
 
     @functools.cached_property
-    def _city_record(self):
+    def _city_record(self) -> geoip2.models.City | _GeoIPNull:
         root = self.app
 
         city_db = root.geoip_city_db
@@ -126,7 +126,7 @@ class GeoIP:
             return GEOIP_EMPTY_CITY
 
     @functools.cached_property
-    def _country_record(self):
+    def _country_record(self) -> geoip2.models.Country | _GeoIPNull:
         root = self.app
 
         country_db = root.geoip_country_db

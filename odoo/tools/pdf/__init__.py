@@ -6,7 +6,7 @@ from collections.abc import Iterable
 from datetime import UTC, datetime
 from hashlib import md5
 from logging import getLogger
-from typing import Any, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING, override
 from zlib import compress, decompress, decompressobj
 
 from PIL import Image, PdfImagePlugin
@@ -20,7 +20,11 @@ from odoo.tools.files import file_open
 from . import _pypdf as pypdf
 
 if TYPE_CHECKING:
-    from collections.abc import Generator
+    from collections.abc import Generator, Iterator
+
+    from pypdf import PageObject
+
+    from odoo.addons.base.models.ir_attachment import IrAttachment
 
 from ._pypdf import PdfReader as PdfReaderBase
 from ._pypdf import PdfWriter, create_string_object, errors, filters, generic
@@ -62,6 +66,7 @@ _ = PdfImagePlugin.__name__
 
 
 class BrandedFileWriter(PdfWriter):
+    @override
     def write_stream(self, *args: Any, **kwargs: Any) -> None:
         self.add_metadata(
             {
@@ -112,7 +117,7 @@ def rotate_pdf(pdf: bytes) -> bytes:
             return _buffer.getvalue()
 
 
-def to_pdf_stream(attachment) -> io.BytesIO | None:
+def to_pdf_stream(attachment: IrAttachment) -> io.BytesIO | None:
     if attachment_raw := attachment._get_pdf_raw():
         _debug.logic(
             "pdf.stream_source",
@@ -129,7 +134,7 @@ def to_pdf_stream(attachment) -> io.BytesIO | None:
         return None
 
     stream = io.BytesIO(raw)
-    if attachment.mimetype.startswith("image"):
+    if (attachment.mimetype or "").startswith("image"):
         output_stream = io.BytesIO()
         with _debug.perf(
             "pdf.image_converted",
@@ -151,7 +156,7 @@ def to_pdf_stream(attachment) -> io.BytesIO | None:
     return None
 
 
-def extract_page(attachment, num_page=0) -> io.BytesIO | None:
+def extract_page(attachment: IrAttachment, num_page: int = 0) -> io.BytesIO | None:
     pdf_stream = to_pdf_stream(attachment)
     if not pdf_stream:
         return None
@@ -264,7 +269,7 @@ class OdooPdfFileReader(PdfReader):
         if self.is_encrypted:
             self.decrypt("")
 
-        def _traverse_nodes(obj):
+        def _traverse_nodes(obj: DictionaryObject) -> Iterator[tuple[str, bytes]]:
             for p in obj.get("/Names", [])[1::2]:
                 attachment = p.get_object()
                 try:
@@ -405,6 +410,7 @@ class OdooPdfFileWriter(BrandedFileWriter):
             afrelationship=afrelationship,
         )
 
+    @override
     def clone_reader_document_root(self, reader: PdfReader) -> None:
         super().clone_reader_document_root(reader)
         self._reader = reader

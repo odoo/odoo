@@ -126,6 +126,7 @@ class GuardedAdapter(HTTPAdapter):
             return _egress_proxy
         return self._proxy
 
+    @typing.override
     def send(  # type: ignore[override]
         self,
         request: PreparedRequest,
@@ -195,6 +196,7 @@ class GuardedAdapter(HTTPAdapter):
             if added_host:
                 del request.headers["Host"]
 
+    @typing.override
     def get_connection_with_tls_context(
         self,
         request: PreparedRequest,
@@ -315,6 +317,7 @@ def _start_watchdog(response: Response, deadline: float | None) -> _Watchdog | N
 
 
 class GuardedSession(requests.Session):
+    @typing.override
     def merge_environment_settings(  # type: ignore[override]
         self,
         url: str | None,
@@ -330,6 +333,7 @@ class GuardedSession(requests.Session):
         settings["proxies"] = {}
         return settings
 
+    @typing.override
     def send(self, request: PreparedRequest, **kwargs: typing.Any) -> Response:  # type: ignore[override]
         adapter = self.get_adapter(url=request.url or "")
         if isinstance(adapter, GuardedAdapter):

@@ -5,8 +5,14 @@ import logging
 import math
 import threading
 from time import monotonic
+from typing import TYPE_CHECKING
 
 import psycopg
+
+if TYPE_CHECKING:
+    from collections.abc import Collection
+
+    from .stats import PoolStats
 
 from odoo.libs.debug_log import DebugLog
 
@@ -46,7 +52,7 @@ class _InFlightProbe:
 
 
 class ReachabilityProbe:
-    def __init__(self, stats) -> None:
+    def __init__(self, stats: PoolStats) -> None:
         self._lock = threading.Lock()
         self._proven: set[frozenset] = set()
         self._inflight: dict[frozenset, _InFlightProbe] = {}
@@ -77,7 +83,7 @@ class ReachabilityProbe:
                 _debug.lifecycle("pool.reachability_revoked", db=_get_key_dbname(key))
             self._proven.discard(key)
 
-    def clear_keys(self, keys) -> None:
+    def clear_keys(self, keys: Collection[frozenset]) -> None:
         with self._lock:
             _debug.lifecycle("pool.reachability_revoked", count=len(keys))
             self._proven.difference_update(keys)

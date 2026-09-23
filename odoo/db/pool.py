@@ -157,7 +157,7 @@ class ConnectionPool:
         budget: ConnectionBudget | None = None,
         pool_workers: int | None = None,
         settings: PoolSettings | None = None,
-    ):
+    ) -> None:
         settings = resolve(settings)
         if minconn is None:
             minconn = settings.minconn
@@ -319,7 +319,7 @@ class ConnectionPool:
         for sp in stale_pools:
             self._close_pool_safely(sp)
         if stale_pools:
-            self.stats.record_pools_evicted_stale(len(stale_pools))
+            self.stats.record_pools_discarded_stale(len(stale_pools))
             _debug.lifecycle("pool.stale_credential_evicted", count=len(stale_pools))
             _logger.info(
                 "%r: evicted %d stale-credential pool(s) after key change",

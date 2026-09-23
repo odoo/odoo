@@ -148,7 +148,7 @@ class Request(
         self.update_env(context=context)
 
     @functools.cached_property
-    def best_lang(self):
+    def best_lang(self) -> str | None:
         lang = self.httprequest.accept_languages.best
         if not lang:
             return None
@@ -166,7 +166,7 @@ class Request(
             return None
 
     @property
-    def cookies(self):
+    def cookies(self) -> werkzeug.datastructures.ImmutableMultiDict[str, str]:
         registry = self.registry
         sanitized = registry is not None
         memo = self._cookies_memo

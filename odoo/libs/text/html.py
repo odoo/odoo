@@ -2,7 +2,7 @@ import html as htmllib
 import itertools
 import logging
 import re
-from typing import TYPE_CHECKING, Any, Literal, overload
+from typing import TYPE_CHECKING, Any, Literal, overload, override
 from urllib.parse import urlparse
 
 import markupsafe
@@ -291,6 +291,7 @@ class _Cleaner(clean.Cleaner):
             else:
                 del el.attrib["style"]
 
+    @override
     def kill_conditional_comments(self, doc: etree._Element) -> None:
         if self.conditional_comments:
             super().kill_conditional_comments(doc)

@@ -1,6 +1,7 @@
 import logging
 import os
 import warnings
+from typing import TYPE_CHECKING, Any, Protocol
 from urllib.parse import parse_qsl, urlsplit
 
 import psycopg
@@ -8,6 +9,18 @@ import psycopg
 from odoo.libs.debug_log import DebugLog
 
 from .settings import PoolSettings, resolve
+
+if TYPE_CHECKING:
+    from contextlib import AbstractContextManager
+
+
+class _PlannerStatsCursor(Protocol):
+    def execute(
+        self, query: str, params: tuple | None = None, log_exceptions: bool = True
+    ) -> None: ...
+    def fetchscalar(self) -> Any: ...
+    def savepoint(self, flush: bool = True) -> AbstractContextManager[object]: ...
+
 
 _ODOO_PGAPPNAME_WARNED = False
 _logger = logging.getLogger(__name__)
@@ -124,7 +137,7 @@ PLANNER_STATS_LOCK_TIMEOUT = 2.0
 # the previous value back by hand, because a released savepoint keeps its
 # SET LOCAL for the rest of the transaction.
 def update_planner_stats(
-    cr,
+    cr: _PlannerStatsCursor,
     *,
     reltuples: float = 1000.0,
     relpages: int = 100,
@@ -134,7 +147,7 @@ def update_planner_stats(
         "db.planner_stats_seeded", cr=cr, reltuples=reltuples, relpages=relpages
     ) as span:
         cr.execute("SELECT current_setting('lock_timeout')")
-        previous: str = cr.fetchone()[0]
+        previous: str = cr.fetchscalar()
         try:
             with cr.savepoint(flush=False):
                 cr.execute(
@@ -143,7 +156,7 @@ def update_planner_stats(
                 cr.execute(
                     _SEED_PLANNER_STATS_SQL, (relpages, reltuples), log_exceptions=False
                 )
-                seeded: int = cr.fetchone()[0]
+                seeded: int = cr.fetchscalar()
                 cr.execute("SET LOCAL lock_timeout = %s", (previous,))
         except psycopg.errors.LockNotAvailable:
             _debug.logic(

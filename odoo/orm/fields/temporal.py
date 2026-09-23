@@ -176,6 +176,7 @@ class BaseDate[T: date](Field[T | typing.Literal[False]]):
     add = staticmethod(date_utils.add)
     subtract = staticmethod(date_utils.subtract)
 
+    @override
     def get_expression_getter(
         self, field_expr: str
     ) -> Callable[[BaseModel], typing.Any]:
@@ -544,6 +545,7 @@ class Datetime(BaseDate[datetime]):
     ) -> str | typing.Literal[False]:
         return value.strftime(DATETIME_FORMAT) if value else False
 
+    @override
     def get_expression_getter(
         self, field_expr: str
     ) -> Callable[[BaseModel], typing.Any]:

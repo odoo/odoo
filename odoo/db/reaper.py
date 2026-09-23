@@ -7,17 +7,19 @@ from typing import TYPE_CHECKING, Any
 from odoo.libs.debug_log import DebugLog
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
+    from collections.abc import Callable, Mapping
+
+    from psycopg_pool import ConnectionPool
 
 _LAST_BORROW_ATTR = "_odoo_last_borrow"
 _debug = DebugLog(__name__)
 
 
-def mark_active(pool) -> None:
+def mark_active(pool: ConnectionPool) -> None:
     setattr(pool, _LAST_BORROW_ATTR, monotonic())
 
 
-def get_checked_out_count(pool) -> int:
+def get_checked_out_count(pool: ConnectionPool) -> int:
     stats = pool.get_stats()
     return stats.get("pool_size", 0) - stats.get("pool_available", 0)
 
@@ -26,7 +28,7 @@ def get_checked_out_count(pool) -> int:
 # the oldest idle connections go, under the pool's lock, never below
 # min_size. `tests/contract/test_psycopg_pool_internals.py` pins the four
 # attributes this reads against the installed psycopg_pool.
-def close_idle_connections(pool, count: int) -> int:
+def close_idle_connections(pool: ConnectionPool, count: int) -> int:
     to_close: list[Any] = []
     with pool._lock:
         while len(to_close) < count and pool._pool and pool._nconns > pool.min_size:
@@ -68,7 +70,7 @@ def trim_idle_to_ceiling(pools: Mapping[Any, Any], ceiling: int) -> int:
 class IdlePoolReaper:
     __slots__ = ("_last_check", "check_interval", "ttl")
 
-    def __init__(self, ttl: float):
+    def __init__(self, ttl: float) -> None:
         self.ttl = ttl
         self.check_interval = max(1.0, ttl / 4) if ttl > 0 else 0.0
         self._last_check = 0.0
@@ -122,6 +124,10 @@ class IdlePoolReaper:
         return reapable
 
     @staticmethod
-    def close_pools_in_background(target, pools: list, name: str) -> None:
+    def close_pools_in_background(
+        target: Callable[[list[ConnectionPool]], None],
+        pools: list[ConnectionPool],
+        name: str,
+    ) -> None:
         _debug.lifecycle("pool.reaper_thread_started", count=len(pools), name=name)
         threading.Thread(target=target, args=(pools,), name=name, daemon=True).start()

@@ -9,10 +9,10 @@ import os
 import sys
 import tempfile
 import warnings
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from os.path import expandvars, normcase
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Self
+from typing import TYPE_CHECKING, Any, Self, override
 
 import odoo
 from odoo import release
@@ -166,13 +166,15 @@ class _FileOnlyOption(_OdooOption):
     def __init__(self, **attrs: Any) -> None:
         super().__init__(**attrs, cli_loadable=False, help=optparse.SUPPRESS_HELP)
 
-    def _check_opt_strings(self, opts):
+    @override
+    def _check_opt_strings(self, opts: Iterable[str | None]) -> list[str]:
         if opts:
             msg = "No option can be supplied"
             raise TypeError(msg)
         return []
 
-    def _set_opt_strings(self, opts):
+    @override
+    def _set_opt_strings(self, opts: Iterable[str]) -> None:
         return
 
 
@@ -264,24 +266,29 @@ class _CountingDict(dict[str, Any]):
         super().__delitem__(key)
         self._bump()
 
+    @override
     def pop(self, *args: Any) -> Any:
         result = super().pop(*args)
         self._bump()
         return result
 
+    @override
     def popitem(self) -> tuple[str, Any]:
         result = super().popitem()
         self._bump()
         return result
 
+    @override
     def clear(self) -> None:
         super().clear()
         self._bump()
 
+    @override
     def update(self, *args: Any, **kwargs: Any) -> None:
         super().update(*args, **kwargs)
         self._bump()
 
+    @override
     def setdefault(self, key: str, default: Any = None) -> Any:
         result = super().setdefault(key, default)
         self._bump()
@@ -2548,19 +2555,19 @@ class configmanager:
             _debug.lifecycle("config.patch.exit", options=sorted(values))
 
     @functools.cached_property
-    def root_path(self):
+    def root_path(self) -> str:
         return self._normalize(str(Path(__file__).parent.parent))
 
     @property
-    def addons_base_dir(self):
+    def addons_base_dir(self) -> str:
         return str(Path(self.root_path, "addons"))
 
     @property
-    def addons_community_dir(self):
+    def addons_community_dir(self) -> str:
         return str(Path(self.root_path).parent / "addons")
 
     @property
-    def addons_data_dir(self):
+    def addons_data_dir(self) -> str:
         add_dir = str(Path(self["data_dir"], "addons"))
         d = str(Path(add_dir, release.series))
         if not Path(d).exists():
@@ -2598,9 +2605,9 @@ class configmanager:
         return False
 
     @property
-    def http_socket_activation(self):
+    def http_socket_activation(self) -> bool:
         return (
-            self["http_enable"]
+            bool(self["http_enable"])
             and os.getenv("LISTEN_FDS") == "1"
             and os.getenv("LISTEN_PID") == str(os.getpid())
         )

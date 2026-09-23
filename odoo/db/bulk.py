@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Sized
 from contextlib import nullcontext as _nullcontext
 from decimal import Decimal as _Decimal
 from itertools import chain
@@ -23,7 +24,6 @@ from .errors import CURSOR_LOGGER_NAME, has_reached_server
 _logger = logging.getLogger(CURSOR_LOGGER_NAME)
 _debug = DebugLog(__name__)
 
-_NO_ROWS = object()
 
 _TEXT_OID = 25
 _NUMERIC_OID = 1700
@@ -47,7 +47,7 @@ def _get_table_identifier(table: str) -> _sql.Identifier:
 
 if TYPE_CHECKING:
     import threading
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Iterable, Iterator, Sequence
     from contextlib import AbstractContextManager
     from typing import Protocol
 
@@ -128,7 +128,7 @@ if TYPE_CHECKING:
             self,
             table: str,
             columns: list[str],
-            rows: Any,
+            rows: Iterable[Sequence[Any]],
             returning_ids: bool,
         ) -> tuple[list[str], Any, list[int] | None] | None: ...
 
@@ -343,7 +343,7 @@ class _BulkAccessMixin:
         self: _CursorInternals,
         table: str,
         columns: list[str],
-        rows,
+        rows: Iterable[Sequence[Any]],
         *,
         returning_ids: bool = False,
         binary: bool = False,
@@ -433,11 +433,11 @@ class _BulkAccessMixin:
         self: _CursorInternals,
         table: str,
         columns: list[str],
-        rows,
+        rows: Iterable[Sequence[Any]],
         returning_ids: bool,
     ) -> tuple[list[str], Any, list[int] | None] | None:
         if returning_ids:
-            if not hasattr(rows, "__len__"):
+            if not isinstance(rows, Sized):
                 rows = list(rows)
             count = len(rows)
             if count == 0:
@@ -448,15 +448,15 @@ class _BulkAccessMixin:
                 [(id_, *row) for id_, row in zip(ids, rows, strict=True)],
                 ids,
             )
-        if hasattr(rows, "__len__"):
+        if isinstance(rows, Sized):
             if len(rows) == 0:
                 return None
         else:
             # Peeled rather than materialised: this branch exists to stream,
             # and a generator has no length to test before the round trip.
             iterator = iter(rows)
-            first = next(iterator, _NO_ROWS)
-            if first is _NO_ROWS:
+            first = next(iterator, None)
+            if first is None:
                 return None
             rows = chain((first,), iterator)
             _debug.logic("bulk.copy.streamed", table=table, columns=len(columns))
