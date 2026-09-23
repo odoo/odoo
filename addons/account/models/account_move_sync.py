@@ -810,15 +810,25 @@ class AccountMove(models.Model):
                 )
             )
 
+        def concerned(move):
+            return move.is_purchase_document(include_receipts=True) or any(
+                line.display_type in NON_DEDUCTIBLE_BASE_DISPLAY_TYPES
+                for line in move.line_ids
+            )
+
         def prepare():
             return {
-                move: product_line_fingerprint(move) for move in container["records"]
+                move: product_line_fingerprint(move)
+                for move in container["records"]
+                if concerned(move)
             }
 
         def commit(before):
             to_delete = []
             to_create = []
             for move in container["records"]:
+                if not concerned(move):
+                    continue
                 if product_line_fingerprint(move) == before.get(move):
                     continue
 

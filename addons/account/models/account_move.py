@@ -3721,7 +3721,16 @@ class AccountMove(models.Model):
         self._conditional_add_to_compute(
             "payment_reference", lambda move: move.name and move.name != "/"
         )
-        self._update_sequence_made_gap()
+        # a move without a real name has no sequence neighbours (none shares its
+        # empty prefix with a lower or higher number), and _has_sequence_gap_around
+        # is false for it: the neighbour query can only clear its own flag, which
+        # is done here without flushing the sequence fields or querying
+        named = self.filtered(lambda move: move.name and move.name != "/")
+        cleared = (self - named).filtered("made_sequence_gap")
+        if cleared:
+            cleared.made_sequence_gap = False
+            cleared.journal_id.invalidate_recordset(["has_sequence_holes"])
+        named._update_sequence_made_gap()
 
     def _get_computed_payment_reference_moves(self):
         computed_ref_moves = self.browse()
@@ -4465,9 +4474,13 @@ class AccountMove(models.Model):
 
     @_debug.perf.timed
     def _check_write_journal_change(self, move, vals):
+        # both refusals are about a written journal: without one there is
+        # nothing to check, and reading move.name first would force its compute
+        # on every write of a move whose name is still pending
+        if "journal_id" not in vals:
+            return
         if (
             move.posted_before
-            and "journal_id" in vals
             and move.journal_id.id != vals["journal_id"]
             and not (
                 move.name == "/"
@@ -4489,7 +4502,6 @@ class AccountMove(models.Model):
             move.name
             and move.name != "/"
             and move.sequence_number not in (0, 1)
-            and "journal_id" in vals
             and move.journal_id.id != vals["journal_id"]
             and not move.quick_edit_mode
             and not ("name" in vals and (vals["name"] == "/" or not vals["name"]))
