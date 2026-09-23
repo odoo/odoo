@@ -93,7 +93,7 @@ export class AbstractThirdPartyVideo {
         const videoId = urlMatch.groups.id;
         const options = {
             ...getUrlOptions(baseUrl, this.optionsConfig || {}),
-            ...(this?.getCustomUrlOptions?.(baseUrl) || {}),
+            ...(this?.getCustomUrlOptions?.(baseUrl, urlMatch) || {}),
             ...forcedOptions,
         };
         // always mute video when autoplay is enabled
