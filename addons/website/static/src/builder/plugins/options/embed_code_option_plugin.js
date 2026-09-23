@@ -46,13 +46,13 @@ class EmbedCodeOptionPlugin extends Plugin {
 export class EditCodeAction extends BuilderAction {
     static id = "editCode";
     async load({ editingElement }) {
-        let newContent;
+        let newContent = this.getTemplateEl(editingElement).innerHTML.trim();
         await new Promise((resolve) => {
             this.services.dialog.add(
                 EmbedCodeOptionDialog,
                 {
                     title: _t("Edit embedded code"),
-                    value: this.getTemplateEl(editingElement).innerHTML.trim(),
+                    value: newContent,
                     mode: "xml",
                     confirm: (newValue) => {
                         newContent = newValue;
