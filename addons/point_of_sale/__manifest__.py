@@ -110,6 +110,7 @@
         ],
         "web.assets_unit_tests": [
             "point_of_sale/static/tests/unit/**/*",
+            "point_of_sale/static/tests/generic_components/**/*",
         ],
         "point_of_sale.base_app": [
             (

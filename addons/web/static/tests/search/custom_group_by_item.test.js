@@ -41,7 +41,6 @@ test(`simple rendering`, async () => {
         "Birthday",
         "Created on",
         "Date",
-        "Display name",
         "Foo",
         "Last Modified on",
     ]);

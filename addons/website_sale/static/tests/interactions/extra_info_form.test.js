@@ -1,6 +1,6 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
-import { onRpc } from "@web/../tests/web_test_helpers";
+import { defineWebModels, onRpc } from "@web/../tests/web_test_helpers";
 import {
     setupInteractionWhiteList,
     startInteractions,
@@ -8,6 +8,7 @@ import {
 
 setupInteractionWhiteList("website.form");
 describe.current.tags("interaction_dev");
+beforeEach(defineWebModels);
 
 test("only checkout form submits via main button", async () => {
     onRpc("/website/form/shop.sale.order", async () => {

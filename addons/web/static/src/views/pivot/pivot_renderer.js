@@ -180,7 +180,8 @@ export class PivotRenderer extends Component {
         let items = this.env.searchModel.getSearchItems(
             (searchItem) =>
                 ["groupBy", "dateGroupBy"].includes(searchItem.type) &&
-                !searchItem.custom,
+                !searchItem.custom &&
+                !searchItem.isProperty,
         );
         if (!items.length) {
             items = [...this.fields];
@@ -243,11 +244,26 @@ export class PivotRenderer extends Component {
      */
     onGroupBySelected({ itemId, optionId }) {
         const { fieldName } = this.groupByItems.find(({ id }) => id === itemId);
-        this.model.addGroupBy({
-            ...this.dropdown.cellInfo,
-            fieldName,
-            interval: optionId,
-        });
+        this.addGroupBy(fieldName, optionId);
+    }
+
+    /**
+     * @param {Object} param0
+     * @param {number} param0.itemId
+     * @param {number} [param0.optionId]
+     */
+    onPropertyGroupBySelected({ itemId, optionId }) {
+        const { fieldName } = this.env.searchModel.searchItems[itemId];
+        log.logic("onPropertyGroupBySelected", () => ({ itemId, optionId, fieldName }));
+        this.addGroupBy(fieldName, optionId);
+    }
+
+    /**
+     * @param {string} fieldName
+     * @param {string} [interval]
+     */
+    addGroupBy(fieldName, interval) {
+        this.model.addGroupBy({ ...this.dropdown.cellInfo, fieldName, interval });
     }
     /**
      * @param {PointerEvent} ev

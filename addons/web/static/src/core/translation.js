@@ -1,6 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { localization } from "@web/core/l10n/localization";
 import { formatList, pyToJsLocale } from "@web/core/l10n/utils";
 import { isIterable } from "@web/core/utils/collections/arrays";
@@ -10,6 +11,8 @@ import { mapSubstitutions, sprintf } from "@web/core/utils/format/strings";
 import { globalSingleton } from "@web/core/utils/global_singleton";
 
 /** @typedef {any} Markup */
+
+const log = makeLogger("web.translation");
 
 /**
  * @param {unknown} value
@@ -91,10 +94,15 @@ export function _pl(count, forms) {
  * @returns {string | Markup | TranslatedString}
  */
 export function appTranslateFn(source, moduleName, ...substitutions) {
+    if (!isNotBlank(source)) {
+        log.logic("untranslatable source", () => ({
+            type: isMarkup(source) ? "markup" : typeof source,
+            source: String(source).slice(0, 80),
+            moduleName,
+        }));
+        return String(source);
+    }
     if (translatedTerms[translationLoaded]) {
-        if (!isNotBlank(source)) {
-            return String(source);
-        }
         const context = moduleName || DEFAULT_MODULE;
         const translation =
             translatedTerms[context]?.[source] ??

@@ -217,7 +217,7 @@ test("load view description with given id if it is not provided and loadSearchVi
         "True domain",
         "Custom Filter...",
         "Name",
-        "Custom Group\nCreated on\nDisplay name\nLast Modified on\nName",
+        "Custom Group\nCreated on\nLast Modified on\nName",
         "Save current search",
     ]);
 });

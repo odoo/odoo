@@ -2,6 +2,7 @@
 /** @odoo-module native */
 
 import { App, Component } from "@odoo/owl";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { reportUncaught } from "@web/core/errors/error_utils";
 import { registry } from "@web/core/registry";
 import { makeAppConfig } from "@web/env";
@@ -288,7 +289,7 @@ export class InteractionService {
                 throw errors[0];
             }
             if (errors.length) {
-                throw new AggregateError(errors, "Could not start some interactions");
+                throw new AggregateError(errors, startFailureMessage(errors));
             }
         });
         this.trackProm(prom);
@@ -460,11 +461,24 @@ export class InteractionService {
             }
             throw new AggregateError(
                 [...errors],
-                "Could not start some interactions" +
+                startFailureMessage([...errors]) +
                     (dropped ? ` (and ${dropped} more, not kept)` : ""),
             );
         });
     }
+}
+
+const log = makeLogger("web.public.interaction_service");
+
+/** @param {unknown[]} errors */
+function startFailureMessage(errors) {
+    for (const error of errors) {
+        log.logic("interaction start failed", () => ({ error }));
+    }
+    const causes = errors.map((error) =>
+        error instanceof Error ? error.message : String(error),
+    );
+    return `Could not start some interactions: ${causes.join("; ")}`;
 }
 
 export const publicInteractionService = {

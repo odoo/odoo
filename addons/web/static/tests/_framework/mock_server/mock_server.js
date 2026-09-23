@@ -1148,6 +1148,8 @@ export class MockServer {
 
                 field.name = fieldName;
                 field.string ||= getFieldDisplayName(fieldName);
+                field.sortable ??= field.store || globalThis.Boolean(field.related);
+                field.groupable ??= field.store || globalThis.Boolean(field.related);
 
                 const onChange = field.onChange;
                 if (typeof onChange === "function") {

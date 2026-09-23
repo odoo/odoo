@@ -76,7 +76,7 @@
                 <div class="dropdown-divider" role="separator"/>
             </t>
             <t t-if="item.fieldType === 'properties'">
-                <PropertiesGroupByItem item="item" onGroup.bind="onGroupBySelected"/>
+                <PropertiesGroupByItem item="item" onGroup.bind="onPropertyGroupBySelected"/>
             </t>
             <t t-elif="item.options">
                 <Dropdown>

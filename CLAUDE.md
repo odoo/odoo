@@ -191,7 +191,7 @@ Gates that read the *installed registry* rather than the tree cannot be graded a
 
 ### Other gates
 
-`./gates.sh` from the repo root runs every database-free gate — ruff's hard zeros, both pytest tiers, bare-env mypy, `doc/architecture/factcheck.sh` — with one exit code; `--fast` skips mypy and the figures, `--rust`/`--js` add the cargo and JS toolchains, `--ref <rev>` runs on a detached worktree. `.github/workflows/gates.yml` runs the same script on a runner. The Rust checks are the crate workspace's own `cargo` commands. There is no other gate tree.
+`./gates.sh` from the repo root runs every database-free gate — ruff's hard zeros, both pytest tiers, every module's `machine_doc_v*/factcheck.sh`, bare-env mypy, `doc/architecture/factcheck.sh` — with one exit code; `--fast` skips mypy and the architecture figures, `--rust`/`--js` add the cargo and JS toolchains, `--ref <rev>` runs on a detached worktree. `.github/workflows/gates.yml` runs the same script on a runner. The Rust checks are the crate workspace's own `cargo` commands. There is no other gate tree.
 
 ### Changing the guidelines
 

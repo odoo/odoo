@@ -1,8 +1,11 @@
 /** @odoo-module native */
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
+
+const log = makeLogger("hr_gamification.messaging_menu");
 
 patch(MessagingMenu.prototype, {
     setup() {
@@ -24,11 +27,17 @@ patch(MessagingMenu.prototype, {
             "hr.employee",
             [
                 ["user_id", "=", user.userId],
-                ["company_id", "in", user.activeCompany.id],
+                ["company_id", "=", user.activeCompany.id],
             ],
             ["id"],
         );
 
+        log.logic("openEmployeeView", () => ({
+            badgeUserId: thread.id,
+            userId: user.userId,
+            companyId: user.activeCompany.id,
+            employeeIds: employeeId.map((employee) => employee.id),
+        }));
         if (employeeId.length > 0) {
             await this.action.doAction({
                 type: "ir.actions.act_window",

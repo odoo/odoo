@@ -468,6 +468,13 @@ test("can lazy translate", async () => {
     expect("#main").toHaveText("Bonjour");
 });
 
+test("a blank or non-string source is returned as a string before translations load", () => {
+    translatedTerms[translationLoaded] = false;
+    expect(basic_t("")).toBe("");
+    expect(basic_t("  ")).toBe("  ");
+    expect(basic_t(markup("<p>help</p>"))).toBe("<p>help</p>");
+});
+
 test.tags("headless");
 test("luxon is configured in the correct lang", async () => {
     await mockLang("fr_BE");

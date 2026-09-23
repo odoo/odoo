@@ -127,10 +127,17 @@ def unresolved_extensions(paths) -> list[str]:
                 return None
             tree = copy.deepcopy(parent)
             for operation in template:
-                if (
-                    isinstance(operation.tag, str)
-                    and _locate(tree, operation) is not None
-                ):
+                if not isinstance(operation.tag, str):
+                    continue
+                if _locate(tree, operation) is None:
+                    target = (
+                        operation.get("expr")
+                        or etree.tostring(operation).decode()[:120]
+                    )
+                    findings.append(
+                        f"{name}: t-inherit={parent_name!r}: {target} locates nothing"
+                    )
+                else:
                     tree = _apply(tree, operation)
         else:
             tree = copy.deepcopy(template)
@@ -199,6 +206,18 @@ class TestTemplateExtensionLookup(BaseCase):
         )
         self.assertEqual(len(findings), 1)
         self.assertIn("//Layout locates nothing", findings[0])
+
+    def test_a_primary_child_operation_that_locates_nothing_is_reported(self):
+        findings = self._findings(
+            """<templates>
+                <t t-name="p.Base"><t t-component="this.props.Renderer" model="this.model"/></t>
+                <t t-name="p.Child" t-inherit="p.Base" t-inherit-mode="primary">
+                    <t model="model" position="after"><div/></t>
+                </t>
+            </templates>"""
+        )
+        self.assertEqual(len(findings), 1)
+        self.assertIn("p.Child", findings[0])
 
     def test_hasclass_matches_like_the_browser(self):
         self.assertFalse(

@@ -96,12 +96,24 @@ tier2() {
         tests/service tests/framework
 }
 
+machine_docs() {
+    local failed=0 harness
+    while IFS= read -r harness; do
+        if ! env ODOO_VENV_PYTHON="$PYTHON" bash "$harness" >/dev/null 2>&1; then
+            echo "  red: $harness"
+            failed=1
+        fi
+    done < <(find . -path ./node_modules -prune -o -path '*/machine_doc_v*/factcheck.sh' -print | sort)
+    return $failed
+}
+
 echo "gates on $(git -C "$TREE" rev-parse --short HEAD)${REF:+ ($REF)} — $TREE"
 run "ruff check odoo/"            "$BIN/ruff" check odoo/ --no-cache
 run "ruff check tests/"           "$BIN/ruff" check tests/ --no-cache
 run "ruff format --check tests/"  "$BIN/ruff" format --check tests/
 run "pytest tier 1"               "$BIN/pytest" -q -p no:cacheprovider
 run "pytest tier 2"               tier2
+run "module machine docs"         machine_docs
 if [ "$FAST" -eq 0 ]; then
     run "mypy core packages"      bare_mypy -p odoo.orm -p odoo.db -p odoo.libs -p odoo.http -p odoo.service -p odoo.modules
     run "mypy tools, cli, tests"  bare_mypy -p odoo.tools -p odoo.cli -p odoo.tests

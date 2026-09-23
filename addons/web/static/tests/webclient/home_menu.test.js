@@ -365,6 +365,25 @@ test("the search input takes the focus back after a blur onto the body", async (
     getService("ui").deactivateElement(activeElement);
 });
 
+test("the search input leaves the focus alone when it moved to a control that then went away", async () => {
+    await mountWithCleanup(HomeMenu, {
+        props: getDefaultHomeMenuProps(),
+    });
+    expect(".o_home_menu_search").toBeFocused();
+
+    const button = document.createElement("button");
+    queryOne(".o_home_menu").appendChild(button);
+    await pointerDown(button);
+    expect(button).toBeFocused();
+    button.remove();
+    expect(document.body).toBeFocused();
+    await runAllTimers();
+    expect(document.body).toBeFocused({
+        message:
+            "the user chose another control; its removal is not a blur onto the body",
+    });
+});
+
 test("The HomeMenu input does not take the focus if it is already on another input", async () => {
     await mountWithCleanup(HomeMenu, {
         props: getDefaultHomeMenuProps(),

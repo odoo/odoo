@@ -73,6 +73,11 @@ function makeFieldGenerator(type, { aggregator, defaults, requiredKeys = [] } = 
             if (isComputed(field)) {
                 field.readonly = properties.readonly ?? true;
                 field.store = properties.store ?? false;
+                for (const key of ["sortable", "groupable"]) {
+                    if (properties[key] === undefined) {
+                        delete field[key];
+                    }
+                }
             }
 
             return /** @type {any} */ (field);

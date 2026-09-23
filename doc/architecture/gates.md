@@ -16,7 +16,7 @@ boundary is `test_lint`'s; the rest are held by review.
 
 ```bash
 ./gates.sh                                     # everything below the line, one exit code
-./gates.sh --fast                              # lint and the two tiers only
+./gates.sh --fast                              # lint, the two tiers and the module machine docs
 ./gates.sh --ref <rev>                         # the same, on a worktree of <rev>
 ./gates.sh --rust --js                         # add the cargo and JS toolchains
 ```
@@ -78,6 +78,9 @@ environment's company protocol, while its result retains the receiver's type.
 `doc/architecture/factcheck.sh` derives the figures these pages state (mixin
 composition, base-model reaches, executed statements, dispatch sites) from the
 classes and the pin tests, and fails when a page stops citing one.
+Every module's `machine_doc_v*/factcheck.sh` runs in the same lane set, each as
+its own harness: a module that adds a model, a file or a test without its
+machine doc fails `gates.sh` instead of leaving a red for the next reader.
 
 **`test_lint`** (`odoo/addons/test_lint/tests/`) holds the rules no general
 linter knows — SQL-injection shapes, gettext discipline, N+1 query shapes,

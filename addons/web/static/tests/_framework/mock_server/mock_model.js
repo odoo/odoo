@@ -1736,8 +1736,10 @@ export class Model extends Array {
             const recordId = /** @type {number} */ (record.id);
             ids.push(recordId);
             this.push(record);
+            const given = pick(values, ...Object.keys(values));
             this._applyDefaults(/** @type {any} */ (values), kwargs.context);
             this._write(/** @type {any} */ (values), recordId);
+            this._writeRelatedTargets(given, [recordId]);
         }
         this.browse(ids)._applyComputesAndValidate();
         return shouldReturnList ? ids : ids[0];
@@ -3346,8 +3348,50 @@ export class Model extends Array {
             originalRecords[id] = { ...this.browse(id)[0] };
             this._write(/** @type {any} */ (values), /** @type {number} */ (id));
         }
+        this._writeRelatedTargets(/** @type {any} */ (values), ids);
         this.browse(ids)._applyComputesAndValidate(originalRecords);
         return true;
+    }
+
+    /**
+     * @private
+     * @param {Record<string, any>} values
+     * @param {number[]} ids
+     */
+    _writeRelatedTargets(values, ids) {
+        for (const [fieldName, value] of Object.entries(values)) {
+            const field = this._fields[fieldName];
+            if (!field?.related || field.readonly) {
+                continue;
+            }
+            const path = safeSplit(field.related, ".");
+            const targetFieldName = path.pop();
+            /** @type {any} */
+            let model = this;
+            let targetIds = ids;
+            for (const name of path) {
+                const pathField = model._fields[name];
+                const relation =
+                    pathField?.relation &&
+                    pathField.relation in
+                        /** @type {any} */ (MockServer.current)._models &&
+                    getRelation(pathField);
+                const records = model.browse(targetIds);
+                if (!relation || !records.length) {
+                    targetIds = [];
+                    break;
+                }
+                targetIds = records.flatMap((record) => ensureArray(record[name]));
+                model = relation;
+            }
+            const targets = targetIds.length ? model.browse(targetIds) : [];
+            if (targets.length && targetFieldName in model._fields) {
+                model.write(
+                    targets.map((record) => record.id),
+                    { [targetFieldName]: value },
+                );
+            }
+        }
     }
 
     /**

@@ -20,9 +20,9 @@ against this document. None of them is typed by hand here or there.
 | License | LGPL-3 |
 | Dependencies | `hr`, `barcodes`, `geocoding` |
 | ORM models (new) | 5 in `models/` |
-| Models extended | `hr.employee`, `hr.version`, `ir.http`, `res.company`, `res.config.settings`, `res.users` |
-| Python model files | 11 |
-| Python test files | 21 |
+| Models extended | `hr.employee`, `hr.version`, `ir.http`, `res.company`, `res.config.settings`, `res.users`, `resource.calendar`, `resource.calendar.attendance` |
+| Python model files | 12 |
+| Python test files | 22 |
 | HTTP routes | 13 |
 | Cron jobs | 2 |
 | Security groups | 5 |
@@ -72,6 +72,7 @@ overtime deferral; the absence one deliberately does not, for a reason
 | `test_hr_attendance_constraints.py` | overlap, ordering and the future check-in |
 | `test_hr_attendance_derived_fields.py` | an attendance follows its overtime lines |
 | `test_hr_attendance_derived_freshness.py` | the hour totals follow the attendances, and `expected_hours` ignores a manager's correction |
+| `test_hr_attendance_schedule_refresh.py` | a stored `worked_hours` and `date` are re-priced when the schedule they were priced against changes |
 | `test_hr_attendance_schedule_zone.py` | one attendance, one zone — lunch, `date`, the version fixed point, flexible resources |
 | `test_hr_attendance_timezone.py` | which day an overtime line is filed under, and schedule zone beating personal zone |
 | `test_hr_attendance_night_window.py` | a timing rule whose window wraps midnight |

@@ -4,6 +4,7 @@
 import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { hasTouch, isMacOS } from "@web/core/browser/feature_detection";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -19,6 +20,8 @@ class FooterComponent extends Component {
 }
 
 /** @param {{ onQueryChanged: () => void }} params */
+const log = makeLogger("web.webclient.home_menu.search");
+
 export function useHomeMenuSearch({ onQueryChanged }) {
     const command = useService("command");
     const ui = useService("ui");
@@ -75,15 +78,27 @@ export function useHomeMenuSearch({ onQueryChanged }) {
             handOverToPalette(command, `/${state.query}`, () => search.focus());
         },
 
-        onBlur() {
+        /** @param {FocusEvent} [ev] */
+        onBlur(ev) {
             if (hasTouch()) {
                 return;
             }
+            const target = ev?.relatedTarget;
+            const focusedElsewhere = Boolean(target) && target !== document.body;
             browser.setTimeout(() => {
-                if (
+                const refocus =
+                    !focusedElsewhere &&
                     document.activeElement === document.body &&
-                    ui.activeElement === document
-                ) {
+                    ui.activeElement === document;
+                log.logic("blur", () => ({
+                    refocus,
+                    focusedElsewhere,
+                    relatedTarget: target?.outerHTML?.slice(0, 80) ?? null,
+                    activeElement: document.activeElement?.tagName,
+                    uiActiveElement:
+                        ui.activeElement === document ? "document" : "overlay",
+                }));
+                if (refocus) {
                     search.focus();
                 }
             });

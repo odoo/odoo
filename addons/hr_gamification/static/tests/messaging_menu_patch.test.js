@@ -8,7 +8,6 @@ import {
     serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
-import { user } from "@web/core/user";
 
 defineHrGamificationModels();
 
@@ -24,7 +23,7 @@ test("badge notification opens employee form", async () => {
     const employeeId = env["hr.employee"].create({
         name: "Demo",
         user_id: serverState.userId,
-        company_id: user.activeCompany.id,
+        company_id: serverState.companies[0].id,
     });
 
     const messageId = env["mail.message"].create({
@@ -44,9 +43,11 @@ test("badge notification opens employee form", async () => {
 
     mockService("action", {
         doAction(action) {
+            if (action?.res_model !== "hr.employee") {
+                return;
+            }
             asyncStep("do_action");
             expect(action.type).toBe("ir.actions.act_window");
-            expect(action.res_model).toBe("hr.employee");
             expect(action.views).toEqual([[false, "form"]]);
             expect(action.res_id).toBe(employeeId);
         },

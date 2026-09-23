@@ -561,8 +561,35 @@ export class AutoComplete extends Component {
         }
         this.isOptionSelected = true;
         this.forceValFromProp = true;
-        option.onSelect();
+        const selection = option.onSelect();
         this.close();
+        this.syncInputAfterSelection(selection);
+    }
+
+    /**
+     * A selection that leaves the value unchanged updates no prop, so the parent
+     * never hands the value back and the input would keep what was typed. A
+     * selection that changes it is corrected again by the parent's render,
+     * which lands before the next paint.
+     *
+     * @param {any} selection
+     */
+    async syncInputAfterSelection(selection) {
+        await selection;
+        log.logic("syncInputAfterSelection", () => ({
+            resync:
+                this.forceValFromProp &&
+                !this.inEdition &&
+                status(this) !== "destroyed",
+            forceValFromProp: this.forceValFromProp,
+            inEdition: this.inEdition,
+            typed: this.inputRef.el?.value,
+            value: this.props.value,
+        }));
+        if (this.forceValFromProp && !this.inEdition && status(this) !== "destroyed") {
+            this.forceValFromProp = false;
+            this.setInputValue(this.props.value);
+        }
     }
 
     onInputBlur() {

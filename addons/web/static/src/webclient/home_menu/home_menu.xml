@@ -7,7 +7,7 @@
             <div class="o_home_menu_header d-flex flex-wrap align-items-center gap-2 mt-4">
               <div class="o_home_menu_search_wrapper position-relative flex-grow-1 mx-auto">
                 <i class="oi oi-search o_home_menu_search_icon position-absolute top-50 translate-middle-y" aria-hidden="true"/>
-                <input t-ref="input" type="search" class="o_home_menu_search form-control form-control-lg" data-allow-hotkeys="true" t-on-input="() => this.search.onInput()" t-on-blur="() => this.search.onBlur()" t-on-compositionstart="() => this.search.onCompositionStart()" t-on-compositionend="() => this.search.onCompositionEnd()"
+                <input t-ref="input" type="search" class="o_home_menu_search form-control form-control-lg" data-allow-hotkeys="true" t-on-input="() => this.search.onInput()" t-on-blur="(ev) => this.search.onBlur(ev)" t-on-compositionstart="() => this.search.onCompositionStart()" t-on-compositionend="() => this.search.onCompositionEnd()"
                     aria-label="Search apps and menus"
                     placeholder="Search apps and menus..."
                     autocomplete="off"

@@ -18,6 +18,7 @@ import {
 } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { childNodeIndex, DIRECTIONS } from "@html_editor/utils/position";
+import { makeLogger } from "@web/core/debug/debug_logger";
 
 const tabHtml = '<span class="oe-tabs" contenteditable="false">\u0009</span>\u200B';
 const GRID_COLUMN_WIDTH = 40;
@@ -26,6 +27,8 @@ const GRID_COLUMN_WIDTH = 40;
  * @param {HTMLElement} tab
  * @returns {boolean}
  */
+const log = makeLogger("html_editor.tabulation");
+
 function isIndentationTab(tab) {
     return !getAdjacentPreviousSiblings(tab).some(
         (sibling) => isTextNode(sibling) && !/^[\u200B\s]*$/.test(sibling.textContent),
@@ -79,10 +82,18 @@ export class TabulationPlugin extends Plugin {
 
     handleTab() {
         if (this.delegateTo("tab_overrides")) {
+            log.logic("tab", () => ({ delegated: true }));
             return;
         }
 
         const selection = this.dependencies.selection.getEditableSelection();
+        log.logic("tab", () => ({
+            collapsed: selection.isCollapsed,
+            anchor: selection.anchorNode?.nodeName,
+            anchorOffset: selection.anchorOffset,
+            focus: selection.focusNode?.nodeName,
+            focusOffset: selection.focusOffset,
+        }));
         if (selection.isCollapsed) {
             this.insertTab();
         } else {

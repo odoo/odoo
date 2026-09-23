@@ -15,6 +15,7 @@
 | `models/res_config_settings.py` | their settings mirror |
 | `models/res_users.py` | `_clean_attendance_officers()` |
 | `models/ir_http.py` | `attendance_user_data` in the session |
+| `models/resource_calendar.py` | re-prices the stored `worked_hours` and `date` of every attendance priced against a calendar when its `tz`, `two_weeks_calendar`, `flexible_hours` or attendance lines change: `_schedule_version()` resolves the schedule as a fixed point over versions, which `@api.depends` cannot express, so the calendar schedules the recompute itself |
 | `controllers/main.py` | every HTTP route, kiosk and systray alike |
 | `tools/debug_log.py` | the four debug loggers |
 | `tools/demo.py` | the sample-data generation `demo/` calls |

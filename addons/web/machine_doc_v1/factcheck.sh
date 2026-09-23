@@ -293,6 +293,10 @@ SIGNALSTORE_PATTERN='^(\s*export\s+)?class\s+\w+\s+extends\s+SignalStore\b'
 # "green in CI, unusable in the workspace" shape the roots above were written to
 # avoid. Pruned, and restricted to the files the pattern is about, the same call
 # answers in 0.4s with the same counts (SignalStore 25, Reactive 0).
+DECL_ROOTS=("$REPO")
+for sibling in enterprise agromarin design-themes; do
+    [ -d "$ADDONS/$sibling" ] && DECL_ROOTS+=("$ADDONS/$sibling")
+done
 count_prod_decls() {
     local pattern="$1"
     local files
@@ -303,19 +307,17 @@ count_prod_decls() {
     # below are the same defence by name; not following symlinks is that defence
     # made general, and no addon in the path is reached only through a link.
     #
-    # agromarin-knowledge is excluded for the same reason and it is not
-    # hypothetical: ADDONS is the WORKSPACE root, so the knowledge vault is in
-    # scope, and research/2026-09-13-web-core-challenge holds a challenged and a
-    # historical copy of state_machine.js. Those two made this count read 27
-    # against the 25 that exist in production, and the assertion says
-    # "production class declarations" -- a research artifact kept as evidence is
-    # not one.
+    # The roots are the fork and its named sibling checkouts, never the
+    # directory that holds them: that directory is whatever the machine keeps
+    # beside the checkouts. It counted the knowledge vault's research copies of
+    # state_machine.js (27 against 25), and an upstream clone in a scratch
+    # directory (12 against 0) when the fork was a worktree there.
     files=$(grep -rEl --include='*.js' \
         --exclude-dir=filestore --exclude-dir=sessions \
         --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=__pycache__ \
         --exclude-dir=worktrees --exclude-dir=.worktrees \
-        "$pattern" "$ADDONS/" 2>/dev/null \
-        | grep -v "machine_doc\|\.test\.js\|\.md$\|/agromarin-knowledge/")
+        "$pattern" "${DECL_ROOTS[@]}" 2>/dev/null \
+        | grep -v "machine_doc\|\.test\.js\|\.md$")
     if [ -z "$files" ]; then
         echo 0
     else

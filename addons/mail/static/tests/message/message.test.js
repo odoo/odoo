@@ -2429,10 +2429,7 @@ test("display the notification message's posting date and time", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "Hogwarts" });
     const partnerId = pyEnv["res.partner"].create({ name: "Tom Riddle" });
-    const userId = pyEnv["res.users"].create({
-        name: "Harry Potter",
-        partner_id: partnerId,
-    });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     await openDiscuss(channelId);
     await withUser(userId, () => {

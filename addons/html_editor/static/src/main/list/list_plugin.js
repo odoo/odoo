@@ -808,7 +808,6 @@ export class ListPlugin extends Plugin {
     }
 
     handleTab() {
-        this.dependencies.split.splitBlockSegments();
         const selection = this.dependencies.selection.getEditableSelection();
         const closestLI = closestElement(selection.anchorNode, "LI");
         if (closestLI) {
@@ -822,6 +821,11 @@ export class ListPlugin extends Plugin {
                 return;
             }
         }
+        const targeted = this.separateListItems();
+        if (!targeted.listItems.length && !targeted.navListItems.length) {
+            return;
+        }
+        this.dependencies.split.splitBlockSegments();
         const { listItems, navListItems, nonListItems } = this.separateListItems();
         if (listItems.length || navListItems.length) {
             this.indentListNodes(listItems);
