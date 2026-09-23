@@ -7,5 +7,6 @@ from . import hr_employee
 from . import hr_version
 from . import ir_http
 from . import hr_attendance_config
+from . import resource_calendar
 from . import res_company
 from . import res_users
