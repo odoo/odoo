@@ -36,15 +36,15 @@ class ProductAttribute(models.Model):
         required=True)
     display_type = fields.Selection(
         selection=[
-            ('radio', 'Radio'),
             ('pills', 'Pills'),
+            ('radio', 'Radio'),
             ('select', 'Select'),
             ('color', 'Color'),
             ('multi', 'Multi-checkbox'),
             ('image', 'Image'),
             ('range', 'Range'),
         ],
-        default='radio',
+        default='pills',
         required=True,
         help="The display type used in the Product Configurator.")
     sequence = fields.Integer(string="Sequence", help="Determine the display order", index=True, default=20)
