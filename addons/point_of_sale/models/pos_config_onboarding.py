@@ -216,7 +216,7 @@ class PosConfigOnboarding(models.Model):
             convert.convert_file(
                 self._get_env_with_clean_context(),
                 "point_of_sale",
-                "data/orders_demo.xml",
+                "demo/orders_demo.xml",
                 idref=None,
                 mode="init",
                 noupdate=True,
