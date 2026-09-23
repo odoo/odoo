@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_fleet_vehicle_info" model="ir.actions.report">
+        <field name="name">Vehicle Info Sheet</field>
+        <field name="model">fleet_training.vehicle</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">fleet_training.report_vehicle_info</field>
+        <field name="print_report_name">'Vehicle Info - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_fleet_training_vehicle"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_vehicle_info_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <h2>
+                    Vehicle Info Sheet - <span t-field="doc.name"/>
+                </h2>
+                <table class="table table-sm o_main_table">
+                    <tbody>
+                        <tr>
+                            <td><strong>License Plate</strong></td>
+                            <td><span t-field="doc.license_plate"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Chassis Number</strong></td>
+                            <td><span t-field="doc.vin_sn"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Category</strong></td>
+                            <td><span t-field="doc.category_id.name"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Model Year</strong></td>
+                            <td><span t-field="doc.model_year"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Seats</strong></td>
+                            <td><span t-field="doc.seats"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fleet Age (years)</strong></td>
+                            <td><span t-field="doc.age_years"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Status</strong></td>
+                            <td><span t-field="doc.state"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Assigned Driver</strong></td>
+                            <td><span t-field="doc.driver_id.name"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p t-if="doc.notes">
+                    <strong>Notes</strong><br/>
+                    <span t-field="doc.notes"/>
+                </p>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_vehicle_info">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="fleet_training.report_vehicle_info_document"/>
+            </t>
+        </t>
+    </template>
+</odoo>

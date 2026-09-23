@@ -585,3 +585,44 @@ creation - by design, to avoid a noisy "created, then immediately changed"
 double-log). In the UI: change a vehicle's status and see it logged in the
 chatter; open a driver's linked contact and click the new "Fleet Drivers"
 smart button.
+
+---
+
+## Chapter 14 — A Brief History Of QWeb
+
+**Concept.** **QWeb** is Odoo's XML templating engine — the same engine that
+renders every web client view under the hood also renders **reports**: a
+`<template>` with `t-*` directives (`t-foreach`, `t-if`, `t-field`, `t-call`)
+that gets turned into HTML, and for PDF reports, piped through wkhtmltopdf.
+An `ir.actions.report` record connects a template to a model and (via
+`binding_model_id`/`binding_type="report"`) to that model's Print menu — the
+same binding mechanism Chapter 9's server action used.
+
+**Why?** Business documents (an info sheet, an invoice, a delivery slip) need
+to be printable, and printing "the same data the form shows" from a second,
+hand-maintained system would drift out of sync. Reusing QWeb means the report
+is just another view of the same records, with the same `t-field`
+formatting Odoo already uses everywhere else.
+
+**Where?** [`reports/fleet_vehicle_report.xml`](reports/fleet_vehicle_report.xml)
+
+**Code explanation.** Two templates, layered the way core reports do it:
+`report_vehicle_info` wraps `web.html_container` around a `t-foreach="docs"`
+loop (`docs` is the recordset the action was triggered on) and calls
+`report_vehicle_info_document` once per vehicle; that inner template calls
+`web.external_layout` (Odoo's standard header/footer/company-info frame) around
+a plain info table using `t-field` for each value (so dates, selections, etc.
+get formatted the same way the UI would show them). The `ir.actions.report`'s
+`report_name` points at the *outer* template by its full XML ID.
+
+**Fleet functionality.** Every vehicle can now be printed/downloaded as a PDF
+"Vehicle Info Sheet" — identification, specs, status, driver and notes — from
+the form's Print menu or in bulk from the list.
+
+**What changed.** Added `reports/fleet_vehicle_report.xml`; manifest loads it.
+
+**Testing.** Upgrade the module. In the shell:
+`env.ref('fleet_training.action_report_fleet_vehicle_info')._render_qweb_pdf('fleet_training.report_vehicle_info', vehicle.ids)`
+- confirmed it returns real PDF bytes (wkhtmltopdf is installed in this
+environment). In the UI: open a vehicle, Print > Vehicle Info Sheet, confirm
+the PDF downloads with the right data.
