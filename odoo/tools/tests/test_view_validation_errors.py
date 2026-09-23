@@ -74,6 +74,18 @@ class TestCallKeywordArguments(unittest.TestCase):
         )
         self.assertEqual(get_domain_value_names(domain), ({"date"}, {"lead_days"}))
 
+    def test_a_keyword_value_it_cannot_read_is_opaque(self):
+        for expression, expected in (
+            (
+                "sorted(line_ids, key=lambda line: line.sequence)",
+                {"sorted", "line_ids"},
+            ),
+            ("format(amount, spec=f'{precision}')", {"format", "amount"}),
+            ("max(line_ids, default=[x for x in other_ids])", {"max", "line_ids"}),
+        ):
+            with self.subTest(expression=expression):
+                self.assertEqual(get_expression_field_names(expression), expected)
+
 
 if __name__ == "__main__":
     unittest.main()

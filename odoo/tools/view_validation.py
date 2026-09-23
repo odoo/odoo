@@ -193,7 +193,7 @@ _CONTEXTUAL_CHILDREN: dict[type, Callable[[typing.Any], tuple]] = {
     ast.BinOp: lambda n: (n.left, n.right),
     ast.BoolOp: lambda n: tuple(n.values),
     ast.UnaryOp: lambda n: (n.operand,),
-    ast.Call: lambda n: (n.func, *n.args, *(k.value for k in n.keywords)),
+    ast.Call: lambda n: (n.func, *n.args),
     ast.IfExp: lambda n: (n.test, n.body, n.orelse),
     ast.Dict: lambda n: (*n.keys, *n.values),
 }
@@ -213,7 +213,27 @@ def _get_expression_contextual_values(item_ast: ast.AST) -> set[str]:
     children = _CONTEXTUAL_CHILDREN.get(type(item_ast))
     if children is None:
         raise ValueError(f"Unsupported expression: {type(item_ast).__name__}.")
-    return _get_contextual_values_of_nodes(*children(item_ast))
+    values = _get_contextual_values_of_nodes(*children(item_ast))
+    if isinstance(item_ast, ast.Call):
+        values |= _get_keyword_contextual_values(item_ast)
+    return values
+
+
+def _get_keyword_contextual_values(call: ast.Call) -> set[str]:
+    # a keyword value nothing here can read (a lambda, a comprehension) is opaque:
+    # its names are missed, as they were before keywords were read at all, rather
+    # than the whole view refused
+    values: set[str] = set()
+    for keyword in call.keywords:
+        try:
+            values |= _get_expression_contextual_values(keyword.value)
+        except ValueError:
+            _debug.logic(
+                "view_validation.keyword_opaque",
+                keyword=keyword.arg,
+                node=type(keyword.value).__name__,
+            )
+    return values
 
 
 def get_expression_field_names(expression: str) -> set[str]:
