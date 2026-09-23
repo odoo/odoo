@@ -148,3 +148,58 @@ class TestPoSSaleReport(TestPoSCommon, TestPointOfSaleHttpCommon):
         move_id = self.env['account.move'].browse(order_ids['pos.order'][0]['account_move'])
         self.assertEqual(move_id.partner_id.id, self.customer.id)
         self.assertEqual(move_id.partner_shipping_id.id, self.other_customer.id)
+
+    def test_pos_sale_margin_report(self):
+        product1 = self.create_product('Product 1', self.categ_basic, 150, standard_price=50)
+        self.open_new_session()
+        session = self.pos_session
+
+        self.env['pos.order'].create({
+            'session_id': session.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': product1.id,
+                'price_unit': 450,
+                'discount': 5.0,
+                'qty': 1.0,
+                'price_subtotal': 150,
+                'price_subtotal_incl': 150,
+                'total_cost': 50,
+            })],
+            'amount_total': 150.0,
+            'amount_tax': 0.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+
+        # PoS Orders have negative IDs to avoid conflict, so reports[0] will correspond to the newest order
+        reports = self.env['sale.report'].sudo().search([('product_id', '=', product1.id)], order='id')
+
+        self.assertEqual(reports[0].margin, 100)
+
+    def test_pos_sale_margin_report_refund_sign(self):
+        product = self.create_product('Refund Product', self.categ_basic, 150, standard_price=75)
+
+        self.open_new_session()
+        self.env['pos.order'].create({
+            'session_id': self.pos_session.id,
+            'is_refund': True,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 150,
+                'qty': -1.0,
+                'price_subtotal': 150,
+                'price_subtotal_incl': 150,
+                'total_cost': -75,
+            })],
+            'amount_total': -150.0,
+            'amount_tax': 0.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+
+        reports = self.env['sale.report'].sudo().search([('product_id', '=', product.id)], order='id')
+        self.assertEqual(reports[0].margin, -75)
+        self.assertAlmostEqual(reports[0].margin_percent, 0.5)
+        self.assertEqual(reports[0].purchase_price, -75)
