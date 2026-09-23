@@ -162,15 +162,44 @@ class TestLeaksClosed:
 
 
 class TestKeyBoundaries:
-    @pytest.mark.parametrize("key", ["author", "author_id", "oauth_provider_name"])
-    def test_a_word_that_merely_contains_auth_is_not_sensitive(self, key):
+    @pytest.mark.parametrize("key", ["author", "author_id", "co_author", "Authors"])
+    def test_an_author_is_not_sensitive(self, key):
         assert not redact.is_sensitive_key(key)
 
     @pytest.mark.parametrize(
-        "key", ["auth", "x-auth", "authToken", "AuthHeader", "accessToken", "apiKey"]
+        "key",
+        [
+            "auth",
+            "x-auth",
+            "authToken",
+            "AuthHeader",
+            "accessToken",
+            "apiKey",
+            "passWord",
+            "PassWd",
+            "authkey",
+            "oauth",
+            "authentication",
+            "WWW-Authenticate",
+            "basicauth",
+        ],
     )
-    def test_auth_as_a_word_and_camel_case_secrets_are_sensitive(self, key):
+    def test_every_spelling_of_a_secret_is_sensitive(self, key):
         assert redact.is_sensitive_key(key)
+
+    def test_a_camel_cased_secret_in_a_url_is_masked(self):
+        assert "hunter2" not in redact.mask_url("https://h.invalid/p?passWord=hunter2")
+
+    @pytest.mark.parametrize(
+        "text", ["token_" * 8000, "pwd-" * 8000, "auth_" * 8000, "secret-x" * 8000]
+    )
+    def test_a_run_of_repeated_keys_is_linear(self, text):
+        start = time.perf_counter()
+        redact.mask_text(text + "=v")
+        assert time.perf_counter() - start < 1.0
+
+    def test_bearer_followed_by_two_spaces_is_masked(self):
+        assert "abcdefghij" not in redact.mask_text("Authorization: Bearer  abcdefghij")
 
     def test_an_author_label_in_text_keeps_its_value(self):
         assert redact.mask_text("author: Bob") == "author: Bob"
