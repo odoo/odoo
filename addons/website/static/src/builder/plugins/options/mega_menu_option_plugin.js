@@ -1,3 +1,4 @@
+import { prepareElementForSave } from "@html_builder/core/save_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
@@ -38,20 +39,22 @@ export class MegaMenuOptionPlugin extends Plugin {
     async saveMegaMenuClasses() {
         const proms = [];
         for (const megaMenuEl of this.editable.querySelectorAll(
-            "[data-oe-field='mega_menu_content']"
+            "[data-oe-field='mega_menu_content'].o_dirty"
         )) {
+            const cleanedMegaMenuEl = prepareElementForSave(this, megaMenuEl);
             // On top of saving the mega menu content like any other field
             // content, we must save the custom classes that were set on the
             // menu itself.
-            const classes = [...megaMenuEl.classList].filter(
-                (megaMenuClass) =>
-                    !["dropdown-menu", "o_mega_menu", "o_savable"].includes(megaMenuClass)
+            const classes = [...cleanedMegaMenuEl.classList].filter(
+                (megaMenuClass) => !["dropdown-menu", "o_mega_menu"].includes(megaMenuClass)
             );
 
             proms.push(
-                this.services.orm.write("website.menu", [parseInt(megaMenuEl.dataset.oeId)], {
-                    mega_menu_classes: classes.join(" "),
-                })
+                this.services.orm.write(
+                    "website.menu",
+                    [parseInt(cleanedMegaMenuEl.dataset.oeId)],
+                    { mega_menu_classes: classes.join(" ") }
+                )
             );
         }
         await Promise.all(proms);

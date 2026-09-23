@@ -19,3 +19,23 @@ export const getTranslatedElements = async () => {
     }
     return translatedElements;
 };
+
+let translatedAttributes;
+export const getTranslatedAttributes = async () => {
+    if (!translatedAttributes) {
+        translatedAttributes = globals
+            .fetch("/website/get_translated_attributes", {
+                body: JSON.stringify({}),
+                headers: { "Content-Type": "application/json" },
+                method: "POST",
+            })
+            .then(async (response) => {
+                const { error, result } = await response.json();
+                if (error) {
+                    throw error;
+                }
+                return result;
+            });
+    }
+    return translatedAttributes;
+};
