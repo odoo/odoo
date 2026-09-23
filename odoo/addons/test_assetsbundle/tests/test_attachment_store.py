@@ -754,9 +754,22 @@ class TestEsmAssetGc(TransactionCase):
         young = self._mk(
             "aa334455667788bb.js", "/web/assets/esm/bridges/aa334455667788bb.js", 5
         )
-        self.env["ir.attachment"]._gc_esm_bridges()
+        self.assertEqual(self.env["ir.attachment"]._gc_esm_bridges(), (1, 0))
         self.assertFalse(old.exists())
         self.assertTrue(young.exists())
+
+    def test_a_full_bridge_batch_reports_remaining_work(self):
+        # the autovacuum runner reads (done, remaining) and ignores anything else
+        self.env["ir.config_parameter"].sudo().set_param(
+            "web.esm.bridge_gc_grace_days", "10"
+        )
+        for name in ("11aa22bb33cc44dd.js", "55ee66ff77aa88bb.js"):
+            self._mk(name, f"/web/assets/esm/bridges/{name}", 30)
+        Attachment = self.env["ir.attachment"]
+        with patch.object(type(Attachment), "_ESM_GC_BATCH", 1):
+            self.assertEqual(Attachment._gc_esm_bridges(), (1, 1))
+            self.assertEqual(Attachment._gc_esm_bridges(), (1, 0))
+            self.assertEqual(Attachment._gc_esm_bridges(), (0, 0))
 
     def test_gc_grace_window_configurable(self):
         self.env["ir.config_parameter"].sudo().set_param("web.esm.gc_grace_days", "60")

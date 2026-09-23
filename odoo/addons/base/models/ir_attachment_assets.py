@@ -114,24 +114,26 @@ class IrAttachment(models.Model):
         )
 
     @api.autovacuum
-    def _gc_esm_bridges(self) -> int:
+    def _gc_esm_bridges(self) -> tuple[int, int]:
         # a bridge shim belongs to no build: pages import it by content, and a
         # reuse refreshes its write_date, so age alone says it is unused.
         # Every other generated ESM file is a build's, collected with it
         cutoff = fields.Datetime.now() - timedelta(
             days=self._get_esm_bridge_gc_grace_days()
         )
-        aged = self.sudo().search(
-            self._get_domain_generated_assets(url_pattern=f"{ESM_BRIDGES_URL_PREFIX}%")
-            & Domain("write_date", "<", cutoff),
-            limit=self._ESM_GC_BATCH,
-        )
+        domain = self._get_domain_generated_assets(
+            url_pattern=f"{ESM_BRIDGES_URL_PREFIX}%"
+        ) & Domain("write_date", "<", cutoff)
+        aged = self.sudo().search(domain, limit=self._ESM_GC_BATCH)
         _debug.lifecycle("esm_bridges_gc", aged=len(aged), batch=self._ESM_GC_BATCH)
         if aged:
             with _debug.perf("esm_gc_unlink", cr=self.env.cr, count=len(aged)):
                 aged.unlink()
             _logger.info("GC'd %d aged ESM bridge shim(s)", len(aged))
-        return len(aged)
+        remaining = (
+            self.sudo().search_count(domain) if len(aged) == self._ESM_GC_BATCH else 0
+        )
+        return len(aged), remaining
 
     @api.model
     def regenerate_assets_bundles(self) -> None:
