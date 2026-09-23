@@ -389,20 +389,49 @@ class Monetary(Field[float]):
         values: dict | None = None,
         validate: bool = True,
     ) -> typing.Any:
+        value = float(value or 0.0)
+        if not value:
+            # zero rounds to zero in every currency: nothing to resolve
+            return value
         currency_field_name = self._get_currency_field_name(record)
         currency_field = record._fields[currency_field_name]
+        currency: ResCurrencyProtocol | None
         if values and currency_field_name in values:
-            dummy = record.new({currency_field_name: values[currency_field_name]})
-            currency = dummy[currency_field_name]
+            currency_id = values[currency_field_name]
+            if isinstance(currency_id, int):
+                currency = typing.cast(
+                    "ResCurrencyProtocol",
+                    record.env[currency_field.comodel_name].browse(currency_id),
+                )
+            else:
+                dummy = record.new({currency_field_name: currency_id})
+                currency = dummy[currency_field_name]
             currency_from = "values"  # debuglog
         elif (
             values
             and currency_field.related
             and currency_field.related.split(".")[0] in values
         ):
-            related_field_name = currency_field.related.split(".")[0]
-            dummy = record.new({related_field_name: values[related_field_name]})
-            currency = dummy[currency_field_name]
+            path = currency_field.related.split(".")
+            root_id = values[path[0]]
+            if isinstance(root_id, int):
+                # the stored row carries the root's id: browse it and walk the
+                # path, so every row of one parent reads its currency once
+                # instead of computing the related on a throwaway new record
+                root_env = (
+                    record.env._derive(su=True)
+                    if currency_field.compute_sudo
+                    else record.env
+                )
+                target = root_env[record._fields[path[0]].comodel_name].browse(root_id)
+                for name in path[1:]:
+                    target = target[name]
+                currency = typing.cast(
+                    "ResCurrencyProtocol", target.with_env(record.env)
+                )
+            else:
+                dummy = record.new({path[0]: root_id})
+                currency = dummy[currency_field_name]
             currency_from = "related_values"  # debuglog
         else:
             resolved = self._resolve_currency_record(record)
@@ -418,7 +447,6 @@ class Monetary(Field[float]):
                 currency_from=currency_from,
                 currency=currency.id if currency else None,
             )
-        value = float(value or 0.0)
         if currency:
             return currency.round(value)
         return value

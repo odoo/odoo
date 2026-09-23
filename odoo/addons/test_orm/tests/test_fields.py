@@ -1198,6 +1198,32 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         [total] = self.env.cr.fetchone()
         self.assertEqual(total, 0.33)
 
+    def test_20_monetary_related_insert_reads_the_parent_currency(self):
+        monetary_base = self.env["test_orm.monetary_base"].create(
+            {"base_currency_id": self.env.ref("base.USD").id}
+        )
+        Related = self.env["test_orm.monetary_related"]
+        new = type(Related).new
+        dummies = []
+
+        def spy(self, values=None, *args, **kwargs):
+            dummies.append(set(values or ()))
+            return new(self, values, *args, **kwargs)
+
+        with patch.object(type(Related), "new", spy):
+            records = Related.create(
+                [{"monetary_id": monetary_base.id, "total": i / 3} for i in range(5)]
+            )
+            records.flush_recordset()
+        self.assertNotIn({"monetary_id"}, dummies)
+        self.env.cr.execute(
+            "SELECT total FROM test_orm_monetary_related WHERE id = ANY(%s) ORDER BY id",
+            [records.ids],
+        )
+        self.assertEqual(
+            [row[0] for row in self.env.cr.fetchall()], [0.0, 0.33, 0.67, 1.0, 1.33]
+        )
+
     def test_20_like(self):
         record = self.env["test_orm.multi.tag"].create({"name": "Foo"})
         self.assertTrue(record.filtered_domain([("name", "like", "F")]))
