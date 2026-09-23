@@ -27,7 +27,7 @@ export class QuantityButtons extends Component {
             isNaN(quantity) ? 0 : quantity,
         );
         if (!didUpdateQuantity) {
-            this.render();
+            event.target.value = this.props.quantity;
         }
     }
 }

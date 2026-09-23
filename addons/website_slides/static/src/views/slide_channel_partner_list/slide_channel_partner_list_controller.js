@@ -22,7 +22,6 @@ export default class SlideChannelPartnerListController extends ListController {
             onClose: async () => {
                 await this.model.load();
                 this.model.useSampleModel = false;
-                this.render(true);
             },
         });
     }

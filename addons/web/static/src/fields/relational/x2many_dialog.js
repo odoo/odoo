@@ -1,7 +1,14 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, useComponent, useEffect, useEnv, useSubEnv } from "@odoo/owl";
+import {
+    Component,
+    useComponent,
+    useEffect,
+    useEnv,
+    useState,
+    useSubEnv,
+} from "@odoo/owl";
 import { useAction } from "@web/core/action_port";
 import { makeContext } from "@web/core/context";
 import { ModelEvent } from "@web/core/events";
@@ -51,16 +58,26 @@ export class X2ManyFieldDialog extends Component {
     setup() {
         this.actionService = useAction();
         this.archInfo = this.props.archInfo;
-        this.record = this.props.record;
-        this.title = this.props.title;
+        this.state = useState({
+            title: this.props.title,
+            recordId: null,
+            modelUpdates: 0,
+            readonly: false,
+            canCreate: false,
+        });
+        this.setRecord(this.props.record);
+        useBus(
+            this.record.model.bus,
+            ModelEvent.UPDATE,
+            () => this.state.modelUpdates++,
+        );
+
         this.contentClass = shared.get("computeViewClassName")(
             "form",
             this.archInfo.xmlDoc,
         );
         useSubEnv({ config: this.props.config });
         this.env.dialogData.dismiss = () => this.discard();
-
-        useBus(this.record.model.bus, ModelEvent.UPDATE, () => this.render());
 
         this.modalRef = useChildRef();
 
@@ -70,8 +87,6 @@ export class X2ManyFieldDialog extends Component {
             reload,
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
         });
-
-        this._computePermissions();
 
         if (this.archInfo.xmlDoc.querySelector("footer:not(field footer)")) {
             this.archInfo = {
@@ -123,13 +138,31 @@ export class X2ManyFieldDialog extends Component {
         shared.get("useFormViewInDialog")();
     }
 
-    _computePermissions() {
-        this.readonly = Boolean(this.record.resId && !this.archInfo.activeActions.edit);
-        this.canCreate = !this.record.resId;
+    get title() {
+        return this.state.title;
+    }
+
+    get readonly() {
+        return this.state.readonly;
+    }
+
+    get canCreate() {
+        return this.state.canCreate;
+    }
+
+    setRecord(record) {
+        this.record = record;
+        this.state.recordId = record.id;
+        this.state.readonly = Boolean(
+            this.record.resId && !this.archInfo.activeActions.edit,
+        );
+        this.state.canCreate = !this.record.resId;
     }
 
     /** @returns {Object} */
     get dialogProps() {
+        void this.state.recordId;
+        void this.state.modelUpdates;
         const props = {
             title: this.title,
             withBodyPadding: false,
@@ -191,8 +224,7 @@ export class X2ManyFieldDialog extends Component {
                     await this.props.save(this.record);
                     if (saveAndNew) {
                         await this.record.switchMode("readonly");
-                        this.record = await this.props.addNew();
-                        this._computePermissions();
+                        this.setRecord(await this.props.addNew());
                     }
                 } else {
                     return false;
@@ -213,8 +245,7 @@ export class X2ManyFieldDialog extends Component {
     async saveAndNew() {
         const saved = await this.save({ saveAndNew: true });
         if (saved) {
-            this.title = this.props.newRecordTitle || this.title;
-            this.render(true);
+            this.state.title = this.props.newRecordTitle || this.title;
         }
     }
 }

@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, onWillDestroy, xml } from "@odoo/owl";
+import { Component, markRaw, onWillDestroy, useState, xml } from "@odoo/owl";
 import { makeLogger } from "@web/core/debug/debug_logger";
 import { useLifecycleLog } from "@web/core/debug/logger_hooks";
 import { AppEvent } from "@web/core/events";
@@ -13,13 +13,13 @@ export class ActionContainer extends Component {
     static template = xml`
         <t t-name="web.ActionContainer">
           <div class="o_action_manager">
-            <t t-if="this.info.Component" t-component="this.info.Component" className="'o_action'" t-props="this.info.componentProps" t-key="this.info.id"/>
+            <t t-set="info" t-value="this.state.info"/>
+            <t t-if="info.Component" t-component="info.Component" className="'o_action'" t-props="info.componentProps" t-key="info.id"/>
           </div>
         </t>`;
 
     setup() {
-        /** @type {Record<string, any>} */
-        this.info = {};
+        this.state = useState({ info: markRaw({}) });
         /** @param {CustomEvent} event */
         useLifecycleLog(log);
         this.onActionManagerUpdate = ({ detail: info }) => {
@@ -28,8 +28,7 @@ export class ActionContainer extends Component {
                 component: info.Component?.name,
                 jsId: info.componentProps?.jsId,
             }));
-            this.info = info;
-            this.render();
+            this.state.info = markRaw(info);
         };
         this.env.bus.addEventListener(
             AppEvent.ACTION_MANAGER_UPDATE,

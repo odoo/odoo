@@ -26,7 +26,7 @@ export class DocumentsSearchPanelUserFolderId extends Component {
             active: { 1: activeValueId },
             expanded: { 1: {} },
         });
-        this.category = {
+        this.category = useState({
             activeValueId,
             description: "Folders",
             icon: "fa-folder",
@@ -44,7 +44,7 @@ export class DocumentsSearchPanelUserFolderId extends Component {
                     },
                 ],
             ]),
-        };
+        });
         this._treeValues = [];
         this.inputRef = useRef("searchInput");
 
@@ -100,7 +100,6 @@ export class DocumentsSearchPanelUserFolderId extends Component {
     onFilterChange(ev) {
         const query = ev.target.value;
         this._createCategoryTree({ values: this._treeValues, query });
-        this.render(true);
     }
 
     onClickClear() {

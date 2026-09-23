@@ -8,6 +8,7 @@ import {
     onWillDestroy,
     onWillUnmount,
     reactive,
+    useState,
     xml,
 } from "@odoo/owl";
 import { makeLogger } from "@web/core/debug/debug_logger";
@@ -134,7 +135,7 @@ export class HomeMenuAction extends Component {
     static components = { HomeMenu };
     static target = "current";
     static props = { ...standardActionServiceProps };
-    static template = xml`<HomeMenu t-props="this.homeMenuProps"/>`;
+    static template = xml`<HomeMenu t-props="this.state.homeMenuProps"/>`;
     static displayName = _t("Home");
 
     /** @type {import("services").ServiceFactories["menu"]} */
@@ -145,7 +146,9 @@ export class HomeMenuAction extends Component {
     setup() {
         this.menus = useService("menu");
         this.homeMenu = useService("home_menu");
-        this.homeMenuProps = computeHomeMenuProps(this.menus);
+        this.state = useState({
+            homeMenuProps: markRaw(computeHomeMenuProps(this.menus)),
+        });
         this.homeMenu.currentAction = markRaw(this);
         this.homeMenu.hasHomeMenu = true;
         this.homeMenu.hasBackgroundAction = this.env.config.breadcrumbs.length > 0;
@@ -170,8 +173,7 @@ export class HomeMenuAction extends Component {
             this._release();
         });
         const refresh = () => {
-            this.homeMenuProps = computeHomeMenuProps(this.menus);
-            this.render();
+            this.state.homeMenuProps = markRaw(computeHomeMenuProps(this.menus));
         };
         useBus(this.env.bus, AppEvent.MENUS_APP_CHANGED, refresh);
         useHomeMenuLayoutSync(refresh);

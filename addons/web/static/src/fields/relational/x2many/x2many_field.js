@@ -307,7 +307,6 @@ export class X2ManyField extends FieldComponent {
                         limit -= 1;
                     }
                     await list.load({ limit, offset });
-                    this.render();
                 }
             },
             withAccessKey: false,

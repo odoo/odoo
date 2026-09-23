@@ -122,6 +122,7 @@ export class ComboConfiguratorDialog extends Component {
                 ...this._getAdditionalRpcParams(),
             }),
         );
+        return true;
     }
 
     /**

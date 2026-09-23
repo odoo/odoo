@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, onWillDestroy, onWillStart, useState } from "@odoo/owl";
+import { Component, markRaw, onWillDestroy, onWillStart, useState } from "@odoo/owl";
 import { AccordionItem } from "@web/components/dropdown/accordion_item";
 import { CheckboxItem } from "@web/components/dropdown/checkbox_item";
 import { Dropdown } from "@web/components/dropdown/dropdown";
@@ -55,16 +55,17 @@ export class SearchBarMenu extends Component {
         dropdownState: { ...Dropdown.props.state },
     };
 
-    /** @type {{Component: Function, groupNumber: number, key: string}[]} */
-    otherItems = [];
-
-    /** @type {{ sharedFavoritesExpanded: boolean }} */
+    /** @type {{ sharedFavoritesExpanded: boolean, otherItems: Object[], searchModelUpdates: number }} */
     state;
 
     setup() {
         this.facet_icons = FACET_ICONS;
         this.actionService = useAction();
-        this.state = useState({ sharedFavoritesExpanded: false });
+        this.state = useState({
+            sharedFavoritesExpanded: false,
+            otherItems: markRaw([]),
+            searchModelUpdates: 0,
+        });
         const keepLast = new KeepLast({ rejectSuperseded: true });
         const refreshRegistryItems = async () => {
             let generation;
@@ -76,7 +77,7 @@ export class SearchBarMenu extends Component {
                     log.logic("visibility-continuation-superseded");
                     return;
                 }
-                this.otherItems = items;
+                this.state.otherItems = markRaw(items);
             } catch (error) {
                 if (
                     error instanceof SupersededError ||
@@ -88,14 +89,25 @@ export class SearchBarMenu extends Component {
                 throw error;
             }
             log.logic("visibility-applied", () => ({ count: this.otherItems.length }));
-            this.render();
         };
         onWillStart(refreshRegistryItems);
         onWillDestroy(() => keepLast.cancel());
         // the registry predicates read the search model, not this component's
         // props (a parent's slot object is new on every render), so they are
         // re-asked when the model changes and not per keystroke in the bar
-        useBus(this.env.searchModel, SearchModelEvent.UPDATE, refreshRegistryItems);
+        useBus(this.env.searchModel, SearchModelEvent.UPDATE, () => {
+            this.state.searchModelUpdates++;
+            return refreshRegistryItems();
+        });
+    }
+
+    get searchModel() {
+        void this.state.searchModelUpdates;
+        return this.env.searchModel;
+    }
+
+    get otherItems() {
+        return this.state.otherItems;
     }
 
     /** @returns {Promise<{Component: Function, groupNumber: number, key: string}[]>} */
@@ -108,21 +120,21 @@ export class SearchBarMenu extends Component {
 
     /** @returns {Object[]} */
     get fields() {
-        return groupableFields(this.env.searchModel.searchViewFields, (name, field) =>
+        return groupableFields(this.searchModel.searchViewFields, (name, field) =>
             this.isGroupableField(name, field),
         );
     }
 
     /** @returns {Object[]} */
     get filterItems() {
-        return this.env.searchModel.getSearchItems(
+        return this.searchModel.getSearchItems(
             (/** @type {EnrichedSearchItem} */ searchItem) =>
                 ["filter", "dateFilter"].includes(searchItem.type),
         );
     }
 
     async onAddCustomFilterClick() {
-        this.env.searchModel.spawnCustomFilterDialog();
+        this.searchModel.spawnCustomFilterDialog();
     }
 
     /**
@@ -132,20 +144,20 @@ export class SearchBarMenu extends Component {
      */
     onFilterSelected({ itemId, optionId }) {
         if (optionId) {
-            this.env.searchModel.toggleDateFilter(itemId, optionId);
+            this.searchModel.toggleDateFilter(itemId, optionId);
         } else {
-            this.env.searchModel.toggleSearchItem(itemId);
+            this.searchModel.toggleSearchItem(itemId);
         }
     }
 
     /** @returns {boolean} */
     get hideCustomGroupBy() {
-        return this.env.searchModel.hideCustomGroupBy || false;
+        return this.searchModel.hideCustomGroupBy || false;
     }
 
     /** @returns {Object[]} */
     get groupByItems() {
-        return this.env.searchModel.getSearchItems(
+        return this.searchModel.getSearchItems(
             (/** @type {EnrichedSearchItem} */ searchItem) =>
                 ["groupBy", "dateGroupBy"].includes(searchItem.type) &&
                 !(/** @type {any} */ (searchItem).isProperty),
@@ -168,20 +180,20 @@ export class SearchBarMenu extends Component {
      */
     onGroupBySelected({ itemId, optionId }) {
         if (optionId) {
-            this.env.searchModel.toggleDateGroupBy(itemId, optionId);
+            this.searchModel.toggleDateGroupBy(itemId, optionId);
         } else {
-            this.env.searchModel.toggleSearchItem(itemId);
+            this.searchModel.toggleSearchItem(itemId);
         }
     }
 
     /** @param {string} fieldName */
     onAddCustomGroup(fieldName) {
-        this.env.searchModel.createNewGroupBy(fieldName);
+        this.searchModel.createNewGroupBy(fieldName);
     }
 
     /** @returns {Object[]} */
     get favorites() {
-        return this.env.searchModel.getSearchItems(
+        return this.searchModel.getSearchItems(
             (/** @type {any} */ searchItem) =>
                 searchItem.type === "favorite" && searchItem.userIds.length === 1,
         );
@@ -189,7 +201,7 @@ export class SearchBarMenu extends Component {
 
     /** @returns {Object[]} */
     get allSharedFavorites() {
-        return this.env.searchModel.getSearchItems(
+        return this.searchModel.getSearchItems(
             (/** @type {any} */ searchItem) =>
                 searchItem.type === "favorite" && searchItem.userIds.length !== 1,
         );
@@ -205,14 +217,14 @@ export class SearchBarMenu extends Component {
 
     /** @param {number} itemId */
     onFavoriteSelected(itemId) {
-        this.env.searchModel.toggleSearchItem(itemId);
+        this.searchModel.toggleSearchItem(itemId);
     }
 
     /** @param {number} itemId */
     editFavorite(itemId) {
         editFavoriteFilter(
             this.actionService,
-            this.env.searchModel.searchItems[itemId].serverSideId,
+            this.searchModel.searchItems[itemId].serverSideId,
         );
     }
 

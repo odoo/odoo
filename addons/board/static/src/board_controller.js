@@ -1,7 +1,6 @@
 /** @odoo-module native */
 import { blockDom, Component, useRef, useState } from "@odoo/owl";
 import { Dropdown, DropdownItem } from "@web/components/dropdown";
-import { browser } from "@web/core/browser/browser";
 import { rpc, rpcBus } from "@web/core/network";
 import { _t } from "@web/core/translation";
 import { useSortable } from "@web/core/utils/dnd";
@@ -90,11 +89,6 @@ export class BoardController extends Component {
         this.board.colNumber = nextColNbr;
         if (save) {
             this.saveBoard();
-        }
-        if (document.querySelector("canvas")) {
-            // horrible hack to force charts to be recreated so they pick up the
-            // proper size. also, no idea why raf is needed :(
-            browser.requestAnimationFrame(() => this.render(true));
         }
     }
 

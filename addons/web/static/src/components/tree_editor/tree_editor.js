@@ -10,7 +10,7 @@
 
 /** @import { OperatorEditorInfo } from "@web/components/tree_editor/tree_editor_operator_editor" */
 
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 import { Dropdown } from "@web/components/dropdown/dropdown";
 import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import {
@@ -87,6 +87,7 @@ export class TreeEditor extends Component {
         this.fieldService = useService("field");
         this.treeProcessor = useService("tree_processor");
         this.keepLastInfo = new KeepLast({ rejectSuperseded: true });
+        this.state = useState({ revision: 0 });
         onWillStart(() => this.onPropsUpdated(this.props));
         onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
     }
@@ -176,6 +177,12 @@ export class TreeEditor extends Component {
             NODE_KEYS.set(node, key);
         }
         return key;
+    }
+
+    /** @returns {Tree} */
+    get rootNode() {
+        void this.state.revision;
+        return this.tree;
     }
 
     /** @returns {string} */
@@ -431,7 +438,7 @@ export class TreeEditor extends Component {
         }));
         try {
             if (parentWillNotRerenderUs && (await this.prepareInfo(this.props))) {
-                this.render();
+                this.state.revision++;
             }
         } finally {
             this.notifyChanges();

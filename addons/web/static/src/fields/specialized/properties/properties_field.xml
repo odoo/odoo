@@ -48,6 +48,7 @@
  <i
  t-if="this.state.isInEditMode"
  class="o_field_property_open_popover fa-solid fa-pencil ms-2"
+ t-att-class="{'o_property_popover_pending': this.state.popoverPropertyName === propertyConfiguration.name}"
  t-on-click="(event) => this.onPropertyEdit(event, propertyConfiguration.name)"/>
  <i t-if="this.state.isInEditMode"
  class="oi oi-draggable ms-1 d-none d-sm-block mt-1"/>

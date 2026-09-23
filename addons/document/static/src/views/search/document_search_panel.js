@@ -93,7 +93,7 @@ export class DocumentsSearchPanel extends SearchPanel {
 
         useBus(this.env.searchModel, "update-search-panel", async () => {
             this.updateActiveValues();
-            this.render();
+            this.state.searchModelUpdates++;
         });
 
         useNestedSortable({
@@ -274,7 +274,6 @@ export class DocumentsSearchPanel extends SearchPanel {
      * @param {number|String} param0.folderId
      */
     _expandFolder({ folderId }) {
-        let needRefresh = false;
         const sectionId = this.sections[0].id;
         const folders = this.env.searchModel.getFolderAndParents(
             this.env.searchModel.getFolderById(folderId),
@@ -287,14 +286,8 @@ export class DocumentsSearchPanel extends SearchPanel {
             this.state.expanded[sectionId][folders[0].rootId]
         ) {
             for (const folder of folders) {
-                if (!this.state.expanded[sectionId][folder.id]) {
-                    this.state.expanded[sectionId][folder.id] = true;
-                    needRefresh = true;
-                }
+                this.state.expanded[sectionId][folder.id] = true;
             }
-        }
-        if (needRefresh) {
-            this.render(true);
         }
     }
 

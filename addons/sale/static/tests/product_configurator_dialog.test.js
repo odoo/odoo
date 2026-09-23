@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, press, queryFirst, queryText } from "@odoo/hoot-dom";
+import { click, edit, press, queryFirst, queryText } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { ProductProduct } from "@sale/js/models/product_product";
@@ -157,4 +157,19 @@ test("ProductCard is operable from the keyboard", async () => {
     });
     card.dispatchEvent(spaceEvent);
     expect(spaceEvent.defaultPrevented).toBe(true);
+});
+
+test("quantity: a refused main-product quantity puts the input back to the current one", async () => {
+    onRpc("/sale/product_configurator/get_values", () => ({
+        products: [productPayload(10)],
+        optional_products: [],
+        currency_id: 1,
+    }));
+
+    await openConfigurator();
+    click("[name='sale_quantity']");
+    await edit("0", { confirm: "blur" });
+    await animationFrame();
+
+    expect(quantity()).toBe("1");
 });

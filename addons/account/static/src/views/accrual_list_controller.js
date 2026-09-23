@@ -1,5 +1,5 @@
 /** @odoo-module native */
-import { reactive, useEnv, useRef } from "@odoo/owl";
+import { useEnv, useRef, useState } from "@odoo/owl";
 import { useDateTimePicker } from "@web/components/datetime";
 import { serializeDate } from "@web/core/l10n/dates";
 import { ListController } from "@web/views/list";
@@ -9,7 +9,7 @@ export class AccrualListController extends ListController {
     setup() {
         super.setup();
         this.accrualContext = useEnv().accrualContext;
-        this.state = reactive({
+        this.state = useState({
             date: DateTime.now(),
         });
         this.dateAsString = serializeDate(this.state.date);
@@ -36,7 +36,6 @@ export class AccrualListController extends ListController {
             onApply: (newDate) => {
                 if (newDate) {
                     this.setDate(newDate);
-                    this.render();
                 }
             },
         });

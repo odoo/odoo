@@ -5,7 +5,7 @@
         <div class="o_tree_editor w-100" aria-atomic="true" t-att-class="this.className">
             <div t-attf-class="o_tree_editor_node d-flex flex-column #{this.props.readonly ? (this.props.isSubTree ? 'gap-0' : 'gap-2') : 'gap-1'}">
                 <t t-set="ancestors" t-value="[]"/>
-                <t t-set="node" t-value="this.tree" />
+                <t t-set="node" t-value="this.rootNode" />
                 <div class="o_tree_editor_row o_tree_editor_connector d-flex align-items-center flex-wrap" t-att-class="{'ps-4': this.props.isSubTree}">
                     <div class="d-flex flex-grow-1 align-items-center">
                         <t t-if="node.children.length">

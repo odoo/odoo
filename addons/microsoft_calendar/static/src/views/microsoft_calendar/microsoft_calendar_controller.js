@@ -45,7 +45,6 @@ patch(AttendeeCalendarController.prototype, {
             }
         } else {
             await this.model.load();
-            this.render(true);
         }
     },
 
@@ -54,7 +53,6 @@ patch(AttendeeCalendarController.prototype, {
             [user.userId],
         ]);
         await this.model.load();
-        this.render(true);
     },
 
     async onUnpauseMicrosoftSynchronization() {
@@ -62,6 +60,5 @@ patch(AttendeeCalendarController.prototype, {
             [user.userId],
         ]);
         await this.onStopMicrosoftSynchronization();
-        this.render(true);
     },
 });

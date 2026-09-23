@@ -12,8 +12,6 @@ function makePanel(folders) {
     const panel = Object.create(DocumentsSearchPanel.prototype);
     Object.defineProperty(panel, "sections", { value: [{ id: 1 }] });
     panel.state = { expanded: { 1: {} } };
-    panel.renderCount = 0;
-    panel.render = () => (panel.renderCount += 1);
     panel.env = {
         searchModel: {
             getFolderById: (id) => values.get(id) || false,
@@ -42,14 +40,12 @@ describe("_expandFolder", () => {
         panel.state.expanded[1].COMPANY = true;
         panel._expandFolder({ folderId: 2 });
         expect(panel.state.expanded[1]).toEqual({ COMPANY: true, 1: true, 2: true });
-        expect(panel.renderCount).toBe(1);
     });
 
     test("does nothing when the chain's root is still folded", () => {
         const panel = makePanel(COMPANY_TREE);
         panel._expandFolder({ folderId: 2 });
         expect(panel.state.expanded[1]).toEqual({});
-        expect(panel.renderCount).toBe(0);
     });
 
     test("an id the panel does not hold is a no-op, not a crash", () => {
@@ -63,7 +59,6 @@ describe("_expandFolder", () => {
         }
         expect(thrown).toBe(null);
         expect(panel.state.expanded[1]).toEqual({ COMPANY: true });
-        expect(panel.renderCount).toBe(0);
     });
 });
 

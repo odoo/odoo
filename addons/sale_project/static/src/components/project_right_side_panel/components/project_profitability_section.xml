@@ -41,7 +41,7 @@
  </tr>
  </thead>
  <tbody>
- <tr t-foreach="this.sale_items" t-as="sale_item" t-key="sale_item.id">
+ <tr t-foreach="this.state.saleItems" t-as="sale_item" t-key="sale_item.id">
  <t t-set="uom_name" t-value="sale_item.product_uom_id and sale_item.product_uom_id[1]"/>
  <td class="ps-4">
  <a t-if="sale_item.action" href="#" t-on-click="() => this.onSaleItemActionClick(sale_item.action)">

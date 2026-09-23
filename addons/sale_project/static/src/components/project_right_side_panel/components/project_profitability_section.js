@@ -21,8 +21,8 @@ export class ProjectProfitabilitySection extends Component {
         this.state = useState({
             isFolded: true,
             displayLoadMore: null,
+            saleItems: [],
         });
-        this.sale_items = [];
     }
 
     get revenue() {
@@ -48,7 +48,7 @@ export class ProjectProfitabilitySection extends Component {
     }
 
     async onLoadMoreClick() {
-        const offset = this.sale_items.length;
+        const offset = this.state.saleItems.length;
         const orm_value = this._getOrmValue(offset, this.props.revenue.id);
         const newItems = await this.orm.call(
             "project.project",
@@ -58,9 +58,8 @@ export class ProjectProfitabilitySection extends Component {
                 context: this.props.context,
             },
         );
-        this.sale_items = [...this.sale_items, ...newItems.sol_items];
+        this.state.saleItems.push(...newItems.sol_items);
         this.state.displayLoadMore = newItems.displayLoadMore;
-        this.render();
     }
 
     async onSaleItemActionClick(params) {

@@ -5,7 +5,6 @@ import {
     FileUploadProgressKanbanRecord,
 } from "@web/components/file_upload";
 import { _t } from "@web/core/translation";
-import { useBus } from "@web/core/utils/hooks";
 import { KanbanRenderer } from "@web/views/kanban";
 
 import { DocumentsRightPanel } from "@document/components/document_right_panel/document_right_panel";
@@ -54,14 +53,6 @@ export class DocumentsKanbanRenderer extends DocumentsRendererMixin(KanbanRender
             },
         );
 
-        useBus(this.documentService.bus, "DOCUMENT_ACTIVITY_CHANGED", ({ detail }) => {
-            if (
-                this.props.list.selection.length === 1 &&
-                this.props.list.selection[0].data.id === detail.recordId
-            ) {
-                this.render(true);
-            }
-        });
         onMounted(() => {
             if (this.isMobile && this.isRecentFolder) {
                 this.root.el.classList.add("o_documents_recent");

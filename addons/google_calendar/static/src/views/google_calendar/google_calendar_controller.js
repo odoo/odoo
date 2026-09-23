@@ -46,7 +46,6 @@ patch(AttendeeCalendarController.prototype, {
             }
         } else {
             await this.model.load();
-            this.render(true);
         }
     },
 
@@ -55,7 +54,6 @@ patch(AttendeeCalendarController.prototype, {
             [user.userId],
         ]);
         await this.model.load();
-        this.render(true);
     },
 
     async onUnpauseGoogleSynchronization() {
@@ -63,6 +61,5 @@ patch(AttendeeCalendarController.prototype, {
             [user.userId],
         ]);
         await this.onStopGoogleSynchronization();
-        this.render(true);
     },
 });

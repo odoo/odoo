@@ -55,6 +55,7 @@ export class SearchPanel extends Component {
         this.state = useState({
             expanded: {},
             sidebarExpanded: true,
+            searchModelUpdates: 0,
         });
         this.hasImportedState = false;
         this.root = useRef("root");
@@ -73,7 +74,7 @@ export class SearchPanel extends Component {
         useBus(this.env.searchModel, SearchModelEvent.UPDATE, async () => {
             await this.env.searchModel.sectionsPromise;
             this.updateActiveValues();
-            await this.render();
+            this.state.searchModelUpdates++;
         });
 
         useEffect(
@@ -111,6 +112,7 @@ export class SearchPanel extends Component {
 
     /** @returns {Object[]} */
     get sections() {
+        void this.state.searchModelUpdates;
         return this.env.searchModel.getSections((s) => !s.empty);
     }
 

@@ -102,7 +102,6 @@ export class Many2ManyTagsAvatarFieldPopover extends Many2ManyTagsAvatarField {
 
     async _saveUpdate() {
         await this.props.record.save({ reload: false });
-        this.render();
         this.autoCompleteRef.el?.querySelector("input")?.click();
     }
 

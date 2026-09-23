@@ -397,7 +397,6 @@ export class KanbanController extends MultiRecordController {
                     if (!noReload) {
                         await root.load();
                         this.model.useSampleModel = false;
-                        this.render();
                     }
                 },
             };

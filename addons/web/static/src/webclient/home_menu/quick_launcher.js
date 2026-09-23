@@ -1,7 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 
-import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
+import { Component, markRaw, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { AppEvent } from "@web/core/events";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { menuUsage } from "@web/webclient/menus/menu_usage";
@@ -27,10 +27,8 @@ export class QuickLauncher extends Component {
     homeMenu;
     /** @type {import("services").ServiceFactories["command"]} */
     command;
-    /** @type {{ badges: Record<string, number> }} */
+    /** @type {{ badges: Record<string, number>, apps: import("./home_menu.js").HomeMenuApp[] }} */
     state;
-    /** @type {import("./home_menu.js").HomeMenuApp[]} */
-    apps;
 
     badgeRequest = 0;
     composing = false;
@@ -41,11 +39,10 @@ export class QuickLauncher extends Component {
         this.menus = useService("menu");
         this.homeMenu = useService("home_menu");
         this.command = useService("command");
-        this.state = useState({ badges: {} });
+        this.state = useState({ badges: {}, apps: markRaw([]) });
         const refresh = () => {
             this._loadCatalog();
             this.loadBadges();
-            this.render();
         };
         this._loadCatalog();
         useHomeMenuLayoutSync(refresh);
@@ -60,7 +57,7 @@ export class QuickLauncher extends Component {
     _loadCatalog() {
         const { apps, config } = computeHomeMenuLayout(this.menus);
         this.catalog = apps;
-        this.apps = this._pickApps(apps, config);
+        this.state.apps = markRaw(this._pickApps(apps, config));
     }
 
     async loadBadges() {

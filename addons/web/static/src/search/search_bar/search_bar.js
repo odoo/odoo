@@ -129,6 +129,7 @@ export class SearchBar extends Component {
             expanded: [],
             query: "",
             subItemsLimits: {},
+            searchModelUpdates: 0,
         });
 
         this.items = useState([]);
@@ -156,7 +157,16 @@ export class SearchBar extends Component {
             this.inputRef.el?.focus();
         });
 
-        useBus(this.env.searchModel, SearchModelEvent.UPDATE, () => this.render());
+        useBus(
+            this.env.searchModel,
+            SearchModelEvent.UPDATE,
+            () => this.state.searchModelUpdates++,
+        );
+    }
+
+    get searchModel() {
+        void this.state.searchModelUpdates;
+        return this.env.searchModel;
     }
 
     get searchItemsFields() {

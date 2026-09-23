@@ -5,7 +5,7 @@
     <div class="o_quick_launcher p-2" role="dialog" aria-label="App launcher">
         <input type="search" class="o_quick_launcher_search form-control form-control-sm mb-2" placeholder="Search apps and menus..." aria-label="Search apps and menus" autocomplete="off" t-on-input="this.onSearchInput" t-on-compositionstart="this.onCompositionStart" t-on-compositionend="this.onCompositionEnd"/>
         <nav class="o_quick_launcher_apps d-flex flex-wrap" aria-label="Apps">
-            <a t-foreach="this.apps" t-as="app" t-key="app.id" class="o_app position-relative d-flex flex-column align-items-center text-decoration-none p-1 rounded-2" t-att-href="app.href" t-att-data-menu-xmlid="app.xmlid" t-on-click.prevent="() => this.onAppClick(app)">
+            <a t-foreach="this.state.apps" t-as="app" t-key="app.id" class="o_app position-relative d-flex flex-column align-items-center text-decoration-none p-1 rounded-2" t-att-href="app.href" t-att-data-menu-xmlid="app.xmlid" t-on-click.prevent="() => this.onAppClick(app)">
                 <img t-if="app.webIconData" class="o_app_icon rounded-2" alt="" t-attf-src="{{app.webIconData}}"/>
                 <div t-else="" class="o_app_icon d-flex justify-content-center align-items-center rounded-2" t-attf-style="background-color: {{app.webIcon.backgroundColor}};">
                     <i t-attf-class="{{app.webIcon.iconClass}}" t-attf-style="color: {{app.webIcon.color}};"/>

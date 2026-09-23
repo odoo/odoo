@@ -69,6 +69,7 @@ export class PropertiesField extends FieldComponent {
             canChangeDefinition: false,
             isInEditMode: false,
             movedPropertyName: null,
+            popoverPropertyName: null,
         });
 
         let currentResId;
@@ -273,8 +274,7 @@ export class PropertiesField extends FieldComponent {
         }
         await this._unfoldPropertyGroup(movedTargetIndex, movedValues);
 
-        this.movePopoverToProperty = propertyName;
-        this.render();
+        this.state.popoverPropertyName = propertyName;
     }
 
     /**
@@ -391,7 +391,7 @@ export class PropertiesField extends FieldComponent {
                 [propertyDefinition.name],
                 propertyDefinition.fold_by_default,
             );
-            this.movePopoverToProperty = propertyDefinition.name;
+            this.state.popoverPropertyName = propertyDefinition.name;
         } else if (oldType === "separator" && newType !== "separator") {
             if (previousSeparatorName) {
                 await this._toggleSeparators(
@@ -399,7 +399,7 @@ export class PropertiesField extends FieldComponent {
                     propertyDefinition.fold_by_default,
                 );
             }
-            this.movePopoverToProperty = propertyDefinition.name;
+            this.state.popoverPropertyName = propertyDefinition.name;
         }
     }
 
@@ -610,20 +610,20 @@ export class PropertiesField extends FieldComponent {
     }
 
     _movePopoverIfNeeded() {
-        if (!this.movePopoverToProperty) {
+        const propertyName = this.state.popoverPropertyName;
+        if (!propertyName) {
             return;
         }
-        const propertyName = this.movePopoverToProperty;
-        this.movePopoverToProperty = null;
+        this.state.popoverPropertyName = null;
 
         const target = this.propertiesRef.el?.querySelector(
-            `*[property-name="${propertyName}"] .o_field_property_open_popover`,
+            ".o_property_popover_pending",
         );
         if (!target) {
             return;
         }
 
-        if (!this.popover.isOpen) {
+        if (!this.popover.isOpen || this.popoverTarget !== target) {
             this._openPropertyDefinition(
                 /** @type {HTMLElement} */ (target),
                 propertyName,
@@ -728,6 +728,7 @@ export class PropertiesField extends FieldComponent {
             }
         };
 
+        this.popoverTarget = target;
         this.popover.open(/** @type {HTMLElement} */ (target), {
             fieldName: this.props.name,
             readonly: this.props.readonly || !this.state.canChangeDefinition,

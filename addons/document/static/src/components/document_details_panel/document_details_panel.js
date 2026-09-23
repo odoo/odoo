@@ -1,5 +1,4 @@
 /** @odoo-module native */
-import { useComputed } from "@web/core/utils/computed";
 import { humanSize } from "@web/core/utils/format/binary";
 import { _t } from "@web/core/translation";
 import { ModelSelector } from "@web/components/model_selector";
@@ -38,11 +37,6 @@ export class DocumentsDetailsPanel extends Component {
         this.documentService = useService("document.document");
         this.orm = useService("orm");
         this.dialog = useService("dialog");
-        this.detailsRecord = useComputed(
-            () => wrapAsDetailsPanelRecord(this.props.record),
-            () => [this.props.record],
-        );
-
         this.state = useState({
             resModel: this.props.record.data.res_model,
             resModelName: this.props.record.data.res_model_name || "",
@@ -61,7 +55,7 @@ export class DocumentsDetailsPanel extends Component {
     }
 
     get record() {
-        return this.detailsRecord();
+        return wrapAsDetailsPanelRecord(this.props.record);
     }
 
     async openLinkedRecord() {

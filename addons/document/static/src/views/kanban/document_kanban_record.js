@@ -20,16 +20,7 @@ export class DocumentsKanbanRecord extends KanbanRecord {
 
     setup() {
         super.setup();
-        const { bus, uploads } = useService("file_upload");
-        this.documentUploads = uploads;
-        useBus(bus, "FILE_UPLOAD_ADDED", (ev) => {
-            if (
-                Number(ev.detail.upload.data.get("document_id")) ===
-                this.props.record.resId
-            ) {
-                this.render(true);
-            }
-        });
+        this.documentUploads = useState(useService("file_upload").uploads);
 
         this.documentService = useService("document.document");
         this.thumbnailService = useService("documents_client_thumbnail");

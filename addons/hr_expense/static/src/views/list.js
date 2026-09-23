@@ -80,7 +80,6 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
                         return;
                     }
                     await this.model.root.load();
-                    this.render(true);
                 },
             });
         }

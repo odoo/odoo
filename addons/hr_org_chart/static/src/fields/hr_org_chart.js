@@ -46,7 +46,14 @@ export class HrOrgChart extends Component {
         this.popover = usePopover(HrOrgChartPopover);
 
         this.state = useState({ employee_id: null });
-        this.max_level = null;
+        this.chart = useState({
+            managers: [],
+            children: [],
+            managers_more: false,
+            self: null,
+            view_employee_id: null,
+            max_level: null,
+        });
         this.lastEmployeeId = null;
         this._onEmployeeSubRedirect = onEmployeeSubRedirect();
 
@@ -58,7 +65,7 @@ export class HrOrgChart extends Component {
                 this.state.employee_id !== newEmployeeId
             ) {
                 this.lastParent = newParentId;
-                this.max_level = null;
+                this.chart.max_level = null;
                 await this.fetchEmployeeData(newEmployeeId, newParentId, true);
             }
             this.state.employee_id = newEmployeeId;
@@ -67,33 +74,27 @@ export class HrOrgChart extends Component {
 
     async fetchEmployeeData(employeeId, newParentId = null, force = false) {
         if (!employeeId) {
-            this.managers = [];
-            this.children = [];
-            if (this.view_employee_id) {
-                this.render(true);
-            }
-            this.view_employee_id = null;
-        } else if (employeeId !== this.view_employee_id || force) {
-            this.view_employee_id = employeeId;
-            let orgData = await rpc("/hr/get_org_chart", {
+            Object.assign(this.chart, {
+                managers: [],
+                children: [],
+                view_employee_id: null,
+            });
+        } else if (employeeId !== this.chart.view_employee_id || force) {
+            this.chart.view_employee_id = employeeId;
+            const orgData = await rpc("/hr/get_org_chart", {
                 employee_id: employeeId,
                 new_parent_id: newParentId,
                 context: {
                     ...user.context,
-                    max_level: this.max_level,
+                    max_level: this.chart.max_level,
                 },
             });
-            if (Object.keys(orgData).length === 0) {
-                orgData = {
-                    managers: [],
-                    children: [],
-                };
-            }
-            this.managers = orgData.managers;
-            this.children = orgData.children;
-            this.managers_more = orgData.managers_more;
-            this.self = orgData.self;
-            this.render(true);
+            Object.assign(this.chart, {
+                managers: orgData.managers || [],
+                children: orgData.children || [],
+                managers_more: orgData.managers_more,
+                self: orgData.self,
+            });
         }
     }
 
@@ -113,7 +114,7 @@ export class HrOrgChart extends Component {
     }
 
     async _onEmployeeMoreManager() {
-        this.max_level = 100;
+        this.chart.max_level = 100;
         await this.fetchEmployeeData(this.state.employee_id, null, true);
     }
 }
