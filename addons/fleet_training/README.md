@@ -38,3 +38,37 @@ module is organized the way it is.
 **What changed.** `README.md` only.
 
 **Testing.** N/A.
+
+---
+
+## Chapter 2 — A New Application
+
+**Concept.** An Odoo module is a folder with a `__manifest__.py` (its identity card:
+name, version, dependencies, which data files to load) and an `__init__.py` (the
+Python package entry point). `'application': True` tells Odoo this module is a
+top-level app, not just a technical extension.
+
+**Why?** The manifest is how Odoo's module loader knows what a module needs
+(`depends`), what to load and in what order (`data`), and how to present it in the
+Apps list — all without hardcoding anything in the core.
+
+**Where?**
+- [`__manifest__.py`](__manifest__.py)
+- [`__init__.py`](__init__.py)
+
+**Code explanation.** `depends: ['base']` means this module only needs Odoo's core
+(`res.partner`, `res.users`, security, ...). `data: []` is empty for now — there is
+no model, view or security file yet, so there is nothing to load. The manifest
+doesn't set `installable` at all — it already defaults to `True`; setting it
+explicitly is a no-op that Odoo's own manifest linter flags as noise.
+
+**Fleet functionality.** None yet — an empty, installable shell.
+
+**What changed.** Added `__manifest__.py`, `__init__.py`.
+
+**Testing.** Update the apps list and install: the module installs cleanly with no
+errors (it declares nothing yet, so there is nothing to see in the UI — that's
+expected, and exactly what Chapter 5 fixes).
+```
+./odoo-bin -d fleet_training_demo -i fleet_training --addons-path=addons,odoo/addons --stop-after-init
+```
