@@ -72,10 +72,9 @@ export class OperationPlugin extends Plugin {
 
 export function useOperation() {
     const comp = useComponent();
-    return (apply, ...args) => {
+    return (apply, ...args) =>
         comp.env.editor.shared.operation.next(async (...args) => {
             await apply(...args);
             comp.env.editor.shared.history.addStep();
         }, ...args);
-    };
 }
