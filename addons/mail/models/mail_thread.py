@@ -111,6 +111,8 @@ class MailThread(models.AbstractModel):
        record thread. False by default, as creating = following;
      - ``mail_create_nolog``: at create, do not log the automatic '<Document>
        created' message
+     - ``mail_create_source_doc``: at create, log creation as being coming from
+       record given in context (should be a valid model record);
      - ``mail_notrack``: at create and write, do not perform the value tracking
        creating messages;
      - ``tracking_disable``: at create and write, perform no MailThread features
@@ -514,6 +516,13 @@ class MailThread(models.AbstractModel):
         """
         self.ensure_one()
         doc_name = self.env['ir.model']._get(self._name).name
+        source_doc = self.env.context.get('mail_create_source_doc')
+        if source_doc and isinstance(source_doc, models.Model):  # cannot be forged through rpc
+            return self.env._(
+                "%(record_name)s created from %(link)s",
+                record_name=doc_name,
+                link=source_doc._get_html_link()
+            )
         return _('%s created', doc_name)
 
     def _check_can_update_message_content(self, messages):
