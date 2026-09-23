@@ -375,3 +375,26 @@ class TestDocutilsHardeningHasOneDefinition:
         settings = docstring._html_settings()
         assert settings.raw_enabled is False
         assert settings.file_insertion_enabled is False
+
+
+def test_parsing_leaves_the_process_stderr_alone():
+    import sys
+    import threading
+
+    from odoo.libs.docstring import to_doctree
+
+    before = sys.stderr
+    seen = []
+
+    def parse():
+        for _ in range(50):
+            to_doctree("Title\n===\n\n* unclosed *emphasis")
+            seen.append(sys.stderr is before)
+
+    threads = [threading.Thread(target=parse) for _ in range(4)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    assert sys.stderr is before
+    assert all(seen)

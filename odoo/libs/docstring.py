@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import contextlib
+import copy
 import dataclasses
 import functools
 import inspect
@@ -104,14 +104,13 @@ def _get_empty_root_factory() -> Callable[[], nodes.document]:
 
 
 def to_doctree(docstring: str) -> nodes.document:
-    with contextlib.redirect_stderr(io.StringIO()) as stderr:
-        doctree = docutils.core.publish_doctree(
-            docstring, settings=_prepare_tree_settings()
-        )
-        if stderr.tell():
-            _debug.logic("docstring.parse_warnings", chars=len(docstring))
-            _logger.warning(PARSE_ERROR.format(docstring, stderr.getvalue()))
-        return doctree
+    settings = copy.copy(_prepare_tree_settings())
+    settings.warning_stream = warnings = io.StringIO()
+    doctree = docutils.core.publish_doctree(docstring, settings=settings)
+    if warnings.tell():
+        _debug.logic("docstring.parse_warnings", chars=len(docstring))
+        _logger.warning(PARSE_ERROR.format(docstring, warnings.getvalue()))
+    return doctree
 
 
 def render_doctree_html(tree: nodes.Node) -> str:
