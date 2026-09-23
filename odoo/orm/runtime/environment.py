@@ -493,7 +493,7 @@ class Environment(Mapping[str, "BaseModel"]):
         return lang
 
     def _(
-        self, source: str | LazyGettext, *args: typing.Any, **kwargs: typing.Any
+        self, source: str | LazyGettext, /, *args: typing.Any, **kwargs: typing.Any
     ) -> str:
         lang = self.lang or "en_US"
         if isinstance(source, str):
