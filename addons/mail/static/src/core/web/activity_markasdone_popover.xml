@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityMarkAsDone">
-        <div class="o-mail-ActivityMarkAsDone">
-            <h6 t-if="this.hasHeader" class="p-2 fw-bolder bg-200 border-bottom">Mark Done</h6>
-            <div class="py-2 px-3">
+        <div class="o-mail-ActivityMarkAsDone card o_popover_card">
+            <div t-if="this.hasHeader" class="card-header bg-inherit pb-0">
+                <h6 class="fw-bolder">Mark Done</h6>
+            </div>
+            <div class="card-body bg-inherit">
                 <textarea class="form-control" style="min-height: 70px" rows="3" placeholder="Write Feedback" t-model.proxy="this.activity().feedback" t-ref="this.textArea"/>
                 <div class="mt-2">
                     <button type="button" class="btn btn-sm btn-primary" aria-label="Done and Schedule Next" t-on-click="this.onClickDoneAndScheduleNext">
